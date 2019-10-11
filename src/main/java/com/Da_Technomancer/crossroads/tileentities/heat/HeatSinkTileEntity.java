@@ -3,19 +3,32 @@ package com.Da_Technomancer.crossroads.tileentities.heat;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
+import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 
+@ObjectHolder(Crossroads.MODID)
 public class HeatSinkTileEntity extends ModuleTE{
+
+	@ObjectHolder("heat_sink")
+	private static TileEntityType<HeatSinkTileEntity> type = null;
 
 	public static final int[] MODES = {5, 10, 15, 20, 25};
 	private int mode = 0;
+
+	public HeatSinkTileEntity(){
+		super(type);
+	}
 
 	public int cycleMode(){
 		mode = (mode + 1) % MODES.length;
@@ -29,9 +42,9 @@ public class HeatSinkTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, PlayerEntity player, Direction side, BlockRayTraceResult hit){
-		chat.add("Current Loss: -" + MODES[mode] + "°C/t");
-		super.addInfo(chat, player, side, hitX, hitY, hitZ);
+	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+		chat.add(new TranslationTextComponent("tt.crossroads.heat_sink.loss",  MODES[mode]));
+		super.addInfo(chat, player, hit);
 	}
 
 	@Override
@@ -65,9 +78,9 @@ public class HeatSinkTileEntity extends ModuleTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, Direction facing){
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing){
 		if(capability == Capabilities.HEAT_CAPABILITY){
-			return (T) heatHandler;
+			return (LazyOptional<T>) heatOpt;
 		}
 
 		return super.getCapability(capability, facing);

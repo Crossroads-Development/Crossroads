@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneAxisTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -25,7 +25,7 @@ public class RedstoneAxis extends ContainerBlock{
 		String name = "redstone_axis";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);

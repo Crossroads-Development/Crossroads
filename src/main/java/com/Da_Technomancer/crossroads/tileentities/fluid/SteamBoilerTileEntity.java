@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
@@ -79,7 +79,7 @@ public class SteamBoilerTileEntity extends InventoryTE{
 
 				if(salty){
 					if(inventory[0].isEmpty()){
-						inventory[0] = new ItemStack(CrossroadsItems.dustSalt, batches);
+						inventory[0] = new ItemStack(CRItems.dustSalt, batches);
 					}else{
 						inventory[0].grow(batches);
 					}
@@ -95,7 +95,7 @@ public class SteamBoilerTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			if(facing == null){

@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.API.packets.SendDimLoadToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -57,7 +57,7 @@ public class ModDimensions{
 			}
 			CrossroadsPackets.network.sendToAll(new SendDimLoadToClient(playerDim.values().toArray(new Integer[0])));
 		}catch(Exception ex){
-			if(CrossroadsConfig.wipeInvalidMappings.getBoolean()){
+			if(CRConfig.wipeInvalidMappings.getBoolean()){
 				if(playerDim != null){
 					playerDim.clear();
 					data.markDirty();

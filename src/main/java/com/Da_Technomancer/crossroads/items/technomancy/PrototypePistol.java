@@ -14,13 +14,13 @@ import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
 import com.Da_Technomancer.crossroads.EventHandlerCommon;
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldProvider;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldSavedData;
 import com.Da_Technomancer.crossroads.entity.EntityBullet;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -57,10 +57,10 @@ public class PrototypePistol extends BeamUsingItem{
 		String name = "prototype_pistol";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setMaxStackSize(1);
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.itemAddQue(this);
+		CRItems.toRegister.add(this);
+		CRItems.itemAddQue(this);
 	}
 
 	@Override
@@ -143,7 +143,7 @@ public class PrototypePistol extends BeamUsingItem{
 	}
 
 	private int getDamage(double gearSpeed){
-		int maxDamage = CrossroadsConfig.maximumPistolDamage.get();
+		int maxDamage = CRConfig.maximumPistolDamage.get();
 
 		return maxDamage < 0 ? (int) Math.round(gearSpeed * 4F) : Math.min(maxDamage, (int) Math.round(Math.abs(gearSpeed) * 4F));
 	}
@@ -174,7 +174,7 @@ public class PrototypePistol extends BeamUsingItem{
 
 			PrototypeWorldProvider.tickChunk(((index % 100) * 2) - 99, (index / 50) - 99);
 
-			if(entityIn instanceof PlayerEntity && BeamManager.beamStage == 0 && ((PlayerEntity) entityIn).getHeldItem(Hand.OFF_HAND).getItem() == CrossroadsItems.beamCage && ((PlayerEntity) entityIn).getHeldItem(Hand.OFF_HAND).hasTag()){
+			if(entityIn instanceof PlayerEntity && BeamManager.beamStage == 0 && ((PlayerEntity) entityIn).getHeldItem(Hand.OFF_HAND).getItem() == CRItems.beamCage && ((PlayerEntity) entityIn).getHeldItem(Hand.OFF_HAND).hasTag()){
 				CompoundNBT nbt = stack.getTag();
 				PrototypeInfo info = data.prototypes.get(index);
 				BlockPos portPos = info.ports[5] == PrototypePortTypes.MAGIC_IN ? info.portPos[5] : null;
@@ -303,7 +303,7 @@ public class PrototypePistol extends BeamUsingItem{
 				if(mag != null && user instanceof LivingEntity){
 					LivingEntity ent = (LivingEntity) user;
 					ItemStack offhand = ent.getHeldItem(Hand.OFF_HAND);
-					if(offhand.getItem() == CrossroadsItems.beamCage){
+					if(offhand.getItem() == CRItems.beamCage){
 						BeamUnit cageBeam = BeamCage.getStored(offhand);
 						if(cageBeam == null){
 							cageBeam = new BeamUnit(0, 0, 0, 0);

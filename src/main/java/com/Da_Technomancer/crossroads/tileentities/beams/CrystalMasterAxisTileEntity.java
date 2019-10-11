@@ -9,7 +9,7 @@ import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -59,9 +59,9 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 		}else{
 			sumEnergy = RotaryUtil.getTotalEnergy(rotaryMembers);
 			if(currentElement == EnumBeamAlignments.ENERGY){
-				sumEnergy += ((ForgeConfigSpec.DoubleValue) CrossroadsConfig.crystalAxisMult).get() * (Math.signum(sumEnergy) == 0 ? 1 : Math.signum(sumEnergy));
+				sumEnergy += ((ForgeConfigSpec.DoubleValue) CRConfig.crystalAxisMult).get() * (Math.signum(sumEnergy) == 0 ? 1 : Math.signum(sumEnergy));
 			}else if(currentElement == EnumBeamAlignments.CHARGE){
-				sumEnergy += ((ForgeConfigSpec.DoubleValue) CrossroadsConfig.crystalAxisMult).get();
+				sumEnergy += ((ForgeConfigSpec.DoubleValue) CRConfig.crystalAxisMult).get();
 			}else if(currentElement == EnumBeamAlignments.EQUALIBRIUM){
 				sumEnergy = (sumEnergy + 3D * lastSumEnergy) / 4D;
 			}
@@ -135,7 +135,7 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.BEAM_CAPABILITY && side != getFacing()){
 			return (T) magicHandler;
 		}

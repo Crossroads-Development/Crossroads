@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
 import com.Da_Technomancer.crossroads.entity.EntityFlyingMachine;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,9 +19,9 @@ public class FlyingMachine extends Item{
 		maxStackSize = 1;
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.itemAddQue(this);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
+		CRItems.toRegister.add(this);
+		CRItems.itemAddQue(this);
 	}
 
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn){

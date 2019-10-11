@@ -3,22 +3,46 @@ package com.Da_Technomancer.crossroads.tileentities.heat;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.gui.container.IceboxContainer;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.recipes.IceboxRec;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.IntReferenceHolder;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.registries.ObjectHolder;
 
+import javax.annotation.Nullable;
+import java.util.Optional;
+
+@ObjectHolder(Crossroads.MODID)
 public class IceboxTileEntity extends InventoryTE{
+
+	@ObjectHolder("icebox")
+	private static TileEntityType<IceboxTileEntity> type = null;
+
+	public static int RATE = 10;
+	public static int MIN_TEMP = -20;
 
 	private int burnTime;
 	private int maxBurnTime = 0;
+	public IntReferenceHolder coolProg = IntReferenceHolder.single();
 
 	public IceboxTileEntity(){
-		super(1);
+		super(type, 1);
 	}
 
 	@Override
@@ -33,17 +57,20 @@ public class IceboxTileEntity extends InventoryTE{
 			return;
 		}
 
-		if(burnTime != 0 && temp > -20){
-			temp = Math.max(-20, temp - 10);
+		if(burnTime != 0 && temp > MIN_TEMP){
+			temp = Math.max(MIN_TEMP, temp - RATE);
 			if(--burnTime == 0){
 				world.setBlockState(pos, CrossroadsBlocks.icebox.getDefaultState().with(CrossroadsProperties.ACTIVE, false), 18);
 			}
+			coolProg.set(maxBurnTime == 0 ? 0 : 100 * burnTime / maxBurnTime);
 			markDirty();
 		}
 
-		if(burnTime == 0 && RecipeHolder.coolingRecipes.get(inventory[0]) > 0){
-			burnTime = RecipeHolder.coolingRecipes.get(inventory[0]);
+		Optional<IceboxRec> rec;
+		if(burnTime == 0 && (rec = world.getRecipeManager().getRecipe(RecipeHolder.COOLING_TYPE, this, world)).isPresent()){
+			burnTime = Math.round(rec.get().getCooling());
 			maxBurnTime = burnTime;
+			coolProg.set(100 * burnTime / maxBurnTime);
 			Item item = inventory[0].getItem();
 			inventory[0].shrink(1);
 			if(inventory[0].isEmpty() && item.hasContainerItem(inventory[0])){
@@ -59,6 +86,7 @@ public class IceboxTileEntity extends InventoryTE{
 		super.read(nbt);
 		burnTime = nbt.getInt("burn");
 		maxBurnTime = nbt.getInt("max_burn");
+		coolProg.set(maxBurnTime == 0 ? 0 : 100 * burnTime / maxBurnTime);
 	}
 
 	@Override
@@ -69,46 +97,29 @@ public class IceboxTileEntity extends InventoryTE{
 		return nbt;
 	}
 
-	private ItemHandler itemHandler = new ItemHandler(null);
+	@Override
+	public void remove(){
+		super.remove();
+		itemOpt.invalidate();
+	}
+
+	private LazyOptional<IItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, Direction facing){
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing){
 		if(capability == Capabilities.HEAT_CAPABILITY && (facing == Direction.UP || facing == null)){
-			return (T) heatHandler;
+			return (LazyOptional<T>) heatOpt;
 		}
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-			return (T) itemHandler;
+			return (LazyOptional<T>) itemOpt;
 		}
 		return super.getCapability(capability, facing);
 	}
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && RecipeHolder.coolingRecipes.get(stack) > 0;
-	}
-
-	@Override
-	public int getField(int id){
-		if(id == getFieldCount() - 1){
-			return world.isRemote || maxBurnTime == 0 ? burnTime : burnTime * 100 / maxBurnTime;
-		}else{
-			return super.getField(id);
-		}
-	}
-
-	@Override
-	public void setField(int id, int value){
-		super.setField(id, value);
-
-		if(id == getFieldCount() - 1){
-			burnTime = value;
-		}
-	}
-
-	@Override
-	public int getFieldCount(){
-		return super.getFieldCount() + 1;
+		return index == 0 && world.getRecipeManager().getRecipe(RecipeHolder.COOLING_TYPE, this, world).isPresent();
 	}
 
 	@Override
@@ -117,7 +128,13 @@ public class IceboxTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public String getName(){
-		return "container.icebox";
+	public ITextComponent getDisplayName(){
+		return new TranslationTextComponent("container.icebox");
+	}
+
+	@Nullable
+	@Override
+	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
+		return new IceboxContainer(id, playerInv, createContainerBuf());
 	}
 }

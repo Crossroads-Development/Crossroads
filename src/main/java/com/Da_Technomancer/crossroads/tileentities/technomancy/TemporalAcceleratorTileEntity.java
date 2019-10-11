@@ -189,7 +189,7 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.BEAM_CAPABILITY && (side == null || side == getFacing().getOpposite())){
 			return (T) magicHandler;
 		}

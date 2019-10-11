@@ -2,9 +2,9 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.*;
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.items.crafting.PredicateMap;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
@@ -83,8 +83,8 @@ public final class AlchemyCore{
 		REAGENTS.put(VANADIUM.id(), new StaticReagent(VANADIUM.id(), 690D, 1750D, (EnumMatterPhase phase) -> Color.YELLOW, CRItemTags.VANADIUM, 0, null));// Vanadium (V) oxide. This should decompose at the specified boiling point, but there isn't any real point to adding that.
 		REAGENTS.put(REDSTONE.id(), new StaticReagent(REDSTONE.id(), 580D, Short.MAX_VALUE, (EnumMatterPhase phase) -> Color.RED, Tags.Items.DUSTS_REDSTONE, 0, null));// Mercury (II) sulfide.
 		REAGENTS.put(SLAG.id(), new StaticReagent(SLAG.id(), 2000D, 3000D, (EnumMatterPhase phase) -> Color.DARK_GRAY, CRItemTags.SLAG, 0, null));
-		REAGENTS.put(PHILOSOPHER.id(), new StaticReagent(PHILOSOPHER.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> FAINT_BLUE_COLOR, (item) -> item == CrossroadsItems.philosopherStone, () -> CrossroadsItems.philosopherStone, 2, new SpawnItemAlchemyEffect(CrossroadsItems.philosopherStone)));
-		REAGENTS.put(PRACTITIONER.id(), new StaticReagent(PRACTITIONER.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> FAINT_RED_COLOR, (item) -> item == CrossroadsItems.practitionerStone, () -> CrossroadsItems.practitionerStone, 2, new SpawnItemAlchemyEffect(CrossroadsItems.practitionerStone)));
+		REAGENTS.put(PHILOSOPHER.id(), new StaticReagent(PHILOSOPHER.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> FAINT_BLUE_COLOR, (item) -> item == CRItems.philosopherStone, () -> CRItems.philosopherStone, 2, new SpawnItemAlchemyEffect(CRItems.philosopherStone)));
+		REAGENTS.put(PRACTITIONER.id(), new StaticReagent(PRACTITIONER.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> FAINT_RED_COLOR, (item) -> item == CRItems.practitionerStone, () -> CRItems.practitionerStone, 2, new SpawnItemAlchemyEffect(CRItems.practitionerStone)));
 		REAGENTS.put(CHLORINE.id(), new StaticReagent(CHLORINE.id(), -100D, -35D, (EnumMatterPhase phase) -> TRANSLUCENT_LIME_COLOR, null, null, 0, new ChlorineAlchemyEffect()));
 		REAGENTS.put(CRYSTAL.id(), new StaticReagent(CRYSTAL.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> FAINT_BLUE_COLOR, CRItemTags.ALCH_CRYSTAL, 0, null));
 		REAGENTS.put(IRON.id(), new StaticReagent(IRON.id(), 1500D, 2560D, (EnumMatterPhase phase) -> phase == EnumMatterPhase.SOLID ? Color.GRAY : Color.RED, Tags.Items.NUGGETS_IRON, 0, null));
@@ -102,9 +102,9 @@ public final class AlchemyCore{
 
 		//Dynamic reagents
 		REAGENTS.put(ELEM_LIGHT.id(), new ElementalReagent(ELEM_LIGHT.id(), -275, -274, new LumenEffect(), false, EnumBeamAlignments.LIGHT, new Color(200, 255, 255), null));
-		REAGENTS.put(ELEM_RIFT.id(), new ElementalReagent(ELEM_RIFT.id(), -100, 350, new EldrineEffect(), true, EnumBeamAlignments.RIFT, Color.MAGENTA, CrossroadsItems.solidEldrine));
-		REAGENTS.put(ELEM_EQUAL.id(), new ElementalReagent(ELEM_EQUAL.id(), 800, 1800, new StasisolEffect(), false, EnumBeamAlignments.EQUALIBRIUM, new Color(255, 128, 255), CrossroadsItems.solidStasisol));
-		REAGENTS.put(ELEM_FUSION.id(), new ElementalReagent(ELEM_FUSION.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, null, false, EnumBeamAlignments.FUSION, new Color(128, 255, 255), CrossroadsItems.solidFusas));
+		REAGENTS.put(ELEM_RIFT.id(), new ElementalReagent(ELEM_RIFT.id(), -100, 350, new EldrineEffect(), true, EnumBeamAlignments.RIFT, Color.MAGENTA, CRItems.solidEldrine));
+		REAGENTS.put(ELEM_EQUAL.id(), new ElementalReagent(ELEM_EQUAL.id(), 800, 1800, new StasisolEffect(), false, EnumBeamAlignments.EQUALIBRIUM, new Color(255, 128, 255), CRItems.solidStasisol));
+		REAGENTS.put(ELEM_FUSION.id(), new ElementalReagent(ELEM_FUSION.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, null, false, EnumBeamAlignments.FUSION, new Color(128, 255, 255), CRItems.solidFusas));
 		REAGENTS.put(ELEM_CHARGE.id(), new ElementalReagent(ELEM_CHARGE.id(), -275, -274, new VoltusEffect(), true, EnumBeamAlignments.CHARGE, new Color(255, 255, 64, 255), null));
 		REAGENTS.put(ELEM_TIME.id(), new ElementalReagent(ELEM_TIME.id(), 2000, Short.MAX_VALUE, null, false, EnumBeamAlignments.TIME, new Color(255, 130, 0, 255), OreSetup.nuggetCopshowium));
 		IReagent hellfire;
@@ -234,7 +234,7 @@ public final class AlchemyCore{
 		//Tin decomposition
 		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(TIN.id()), 5)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(NITRIC_ACID.id()), 1), new ReagentStack(REAGENTS.get(QUICKSILVER.id()), 5)}, REAGENTS.get(PHILOSOPHER.id()), -40D, 560D, -10D, false));
 		//Ignus Infernum production
-		if(CrossroadsConfig.allowHellfire.get()){
+		if(CRConfig.allowHellfire.get()){
 			REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(PHELOSTOGEN.id()), 5), new ReagentStack(REAGENTS.get(SULFUR_DIOXIDE.id()), 1), new ReagentStack(REAGENTS.get(CHLORINE.id()), 1), new ReagentStack(REAGENTS.get(ELEM_CHARGE.id()), 2)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(HELLFIRE.id()), 1)}, REAGENTS.get(PRACTITIONER.id()), 2250D, Short.MAX_VALUE, -200D, false));
 		}
 		//Densus production

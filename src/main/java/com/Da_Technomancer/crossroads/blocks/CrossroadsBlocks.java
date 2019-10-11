@@ -9,8 +9,10 @@ import com.Da_Technomancer.crossroads.blocks.fluid.*;
 import com.Da_Technomancer.crossroads.blocks.heat.*;
 import com.Da_Technomancer.crossroads.blocks.rotary.*;
 import com.Da_Technomancer.crossroads.blocks.technomancy.*;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
+import com.Da_Technomancer.essentials.blocks.redstone.RedstoneReceiver;
+import com.Da_Technomancer.essentials.blocks.redstone.RedstoneTransmitter;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
@@ -150,7 +152,7 @@ public class CrossroadsBlocks{
 	public static FluxStabilizerElectric fluxStabilizerElectric;
 	public static FluxStabilizerElectric fluxStabilizerCrystalElectric;
 
-	public static final Item.Properties itemBlockProp = new Item.Properties().group(CrossroadsItems.TAB_CROSSROADS);
+	public static final Item.Properties itemBlockProp = new Item.Properties().group(CRItems.TAB_CROSSROADS);
 	public static final ArrayList<Block> toRegister = new ArrayList<>();
 	
 	/**
@@ -170,9 +172,9 @@ public class CrossroadsBlocks{
 	 */
 	public static <T extends Block> T blockAddQue(T block, boolean registerModel){
 		Item item = new BlockItem(block, itemBlockProp).setRegistryName(block.getRegistryName());
-		CrossroadsItems.toRegister.add(item);
+		CRItems.toRegister.add(item);
 		if(registerModel){
-			CrossroadsItems.itemAddQue(item);
+			CRItems.itemAddQue(item);
 		}
 		return block;
 	}
@@ -186,8 +188,8 @@ public class CrossroadsBlocks{
 	 */
 	public static <T extends Block> T blockAddQue(T block, int meta, ModelResourceLocation location){
 		Item item = new BlockItem(block, itemBlockProp).setRegistryName(block.getRegistryName());
-		CrossroadsItems.toRegister.add(item);
-		CrossroadsItems.toClientRegister.put(Pair.of(item, meta), location);
+		CRItems.toRegister.add(item);
+		CRItems.toClientRegister.put(Pair.of(item, meta), location);
 		return block;
 	}
 

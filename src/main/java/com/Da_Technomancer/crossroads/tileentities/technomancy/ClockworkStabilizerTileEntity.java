@@ -90,7 +90,7 @@ public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> cap, Direction dir){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction dir){
 		if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
 			return (T) redsHandler;
 		}

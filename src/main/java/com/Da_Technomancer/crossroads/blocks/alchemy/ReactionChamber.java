@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactionChamberTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.ContainerBlock;
@@ -41,7 +41,7 @@ public class ReactionChamber extends ContainerBlock{
 		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(.5F);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setSoundType(SoundType.GLASS);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this, 0, new ModelResourceLocation(Crossroads.MODID + ':' + name, "inventory"));

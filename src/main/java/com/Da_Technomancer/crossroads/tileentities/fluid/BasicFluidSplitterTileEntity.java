@@ -41,7 +41,7 @@ public class BasicFluidSplitterTileEntity extends ModuleTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			if(side == null){
 				return (T) centerHandler;

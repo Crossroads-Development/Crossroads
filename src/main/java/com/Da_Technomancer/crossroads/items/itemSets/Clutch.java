@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.items.itemSets;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
@@ -36,9 +36,9 @@ public class Clutch extends Item{
 		String name = "clutch_" + (inverted ? "inverted_" : "") + typeIn.toString().toLowerCase();
 		setTranslationKey(inverted ? "clutch_inverted_metal" : "clutch_metal");
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_GEAR);
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.toClientRegister.put(Pair.of(this, 0), inverted ? LOCAT_INV : LOCAT);
+		setCreativeTab(CRItems.TAB_GEAR);
+		CRItems.toRegister.add(this);
+		CRItems.toClientRegister.put(Pair.of(this, 0), inverted ? LOCAT_INV : LOCAT);
 	}
 
 

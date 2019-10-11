@@ -2,33 +2,54 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.gui.container.BlastFurnaceContainer;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Items;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.IntReferenceHolder;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.registries.ObjectHolder;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
+@ObjectHolder(Crossroads.MODID)
 public class BlastFurnaceTileEntity extends InventoryTE{
 
-	private int carbon = 0;
+	@ObjectHolder("ind_blast_furnace")
+	private static TileEntityType<BlastFurnaceTileEntity> type = null;
+
 	public static final int CARBON_LIMIT = 32;
-	private int progress = 0;
+	public static final double POWER = 5;
 	public static final double REQUIRED_SPD = 2.5;
 	public static final int REQUIRED_PRG = 40;
+	public static final double INERTIA = 200;
+
+	private int carbon = 0;
+	private int progress = 0;
+	public IntReferenceHolder carbRef = IntReferenceHolder.single();
+	public IntReferenceHolder progRef = IntReferenceHolder.single();
 
 	public BlastFurnaceTileEntity(){
-		super(3);//0: Input; 1: Carbon; 2: Slag
-		fluidProps[0] = new TankProperty(0, 4_000, false, true);
+		super(type, 3);//0: Input; 1: Carbon; 2: Slag
+		fluidProps[0] = new TankProperty(4_000, false, true);
 	}
 
 	@Override
@@ -37,10 +58,10 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
-		chat.add("Progress: " + progress + "/" + REQUIRED_PRG);
-		chat.add("Carbon: " + carbon);
-		super.addInfo(chat, player, side, hitX, hitY, hitZ);
+	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+		chat.add(new TranslationTextComponent("tt.crossroads.blast_furncace.prog", progress, REQUIRED_PRG));
+		chat.add(new TranslationTextComponent("tt.crossroads.blast_furnace.carbon", carbon));
+		super.addInfo(chat, player, hit);
 	}
 
 	@Override
@@ -50,7 +71,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 
 	@Override
 	public double getMoInertia(){
-		return 200;
+		return INERTIA;
 	}
 
 	@Override
@@ -64,6 +85,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 		int carbonAvailable = getCarbonValue(inventory[1]);
 		if(carbon < CARBON_LIMIT && carbonAvailable != 0 && carbonAvailable + carbon <= CARBON_LIMIT){
 			carbon += carbonAvailable;
+			carbRef.set(carbon);
 			inventory[1].shrink(1);
 			markDirty();
 		}
@@ -73,15 +95,16 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 			return;
 		}
 
+		//TODO switch to JSON recipes
 		Pair<FluidStack, Integer> recipe = RecipeHolder.blastFurnaceRecipes.get(inventory[0]);
 
-		if(recipe == null || carbon < recipe.getRight() || inventory[2].getCount() + recipe.getRight() > CrossroadsItems.slag.getItemStackLimit(inventory[2]) || (fluids[0] != null && (recipe.getLeft().getFluid() != fluids[0].getFluid() || fluidProps[0].getCapacity() < fluids[0].amount + recipe.getLeft().amount))){
+		if(recipe == null || carbon < recipe.getRight() || inventory[2].getCount() + recipe.getRight() > CRItems.slag.getItemStackLimit(inventory[2]) || (fluids[0] != null && (recipe.getLeft().getFluid() != fluids[0].getFluid() || fluidProps[0].capacity < fluids[0].getAmount() + recipe.getLeft().getAmount()))){
 			progress = 0;
 			return;
 		}
 
 		progress++;
-		axleHandler.addEnergy(-5, false, false);
+		axleHandler.addEnergy(-POWER, false, false);
 		markDirty();
 
 		if(progress >= REQUIRED_PRG){
@@ -89,17 +112,19 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 
 			inventory[0].shrink(1);
 			carbon -= recipe.getRight();
+			carbRef.set(carbon);
 			if(inventory[2].isEmpty()){
-				inventory[2] = new ItemStack(CrossroadsItems.slag, recipe.getRight());
+				inventory[2] = new ItemStack(CRItems.slag, recipe.getRight());
 			}else{
 				inventory[2].grow(recipe.getRight());
 			}
-			if(fluids[0] == null){
+			if(fluids[0].isEmpty()){
 				fluids[0] = recipe.getLeft().copy();
 			}else{
-				fluids[0].amount += recipe.getLeft().amount;
+				fluids[0].grow(recipe.getLeft().getAmount());
 			}
 		}
+		progRef.set(progress);
 	}
 
 	private static int getCarbonValue(ItemStack stack){
@@ -121,35 +146,6 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public int getField(int id){
-		int fieldCount = getFieldCount();
-		if(id == fieldCount - 2){
-			return progress;
-		}
-		if(id == fieldCount - 1){
-			return carbon;
-		}
-		return super.getField(id);
-	}
-
-	@Override
-	public void setField(int id, int value){
-		int fieldCount = getFieldCount();
-		if(id == fieldCount - 2){
-			progress = value;
-		}else if(id == fieldCount - 1){
-			carbon = value;
-		}else{
-			super.setField(id, value);
-		}
-	}
-
-	@Override
-	public int getFieldCount(){
-		return 2 + super.getFieldCount();
-	}
-
-	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
 		nbt.putInt("prog", progress);
@@ -162,30 +158,36 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 		super.read(nbt);
 		progress = nbt.getInt("prog");
 		carbon = nbt.getInt("carbon");
-
+		progRef.set(progress);
+		carbRef.set(carbon);
 	}
 
 	@Override
-	public String getName(){
-		return "container.blast_furnace";
+	public ITextComponent getDisplayName(){
+		return new TranslationTextComponent("container.blast_furnace");
 	}
 
-	private final ItemHandler itemHandler = new ItemHandler(null);
-	private final FluidHandler fluidHandler = new FluidHandler(0);
+	private final LazyOptional<IItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-			return (T) itemHandler;
+			return (LazyOptional<T>) itemOpt;
 		}
-		if(cap == Capabilities.AXLE_CAPABILITY && side == Direction.UP){
-			return (T) axleHandler;
+		if(cap == Capabilities.AXLE_CAPABILITY && (side == Direction.UP || side == null)){
+			return (LazyOptional<T>) axleOpt;
 		}
 		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
-			return (T) fluidHandler;
+			return (LazyOptional<T>) globalFluidOpt;
 		}
 
 		return super.getCapability(cap, side);
+	}
+
+	@Nullable
+	@Override
+	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
+		return new BlastFurnaceContainer(id, playerInv, createContainerBuf());
 	}
 }

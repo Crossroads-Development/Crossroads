@@ -12,7 +12,7 @@ import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldSavedData;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.TemporalAcceleratorTileEntity;
 import com.google.common.base.Predicate;
 import net.minecraft.entity.Entity;
@@ -68,7 +68,7 @@ public final class EventHandlerCommon{
 		}
 
 
-		if(e.getEntity() instanceof CreeperEntity && (float) AtmosChargeSavedData.getCharge(e.getWorld()) / (float) AtmosChargeSavedData.getCapacity() >= 0.9F && (CrossroadsConfig.atmosEffect.get() & 2) == 2){
+		if(e.getEntity() instanceof CreeperEntity && (float) AtmosChargeSavedData.getCharge(e.getWorld()) / (float) AtmosChargeSavedData.getCapacity() >= 0.9F && (CRConfig.atmosEffect.get() & 2) == 2){
 			CompoundNBT nbt = new CompoundNBT();
 			e.getEntityLiving().writeEntityToNBT(nbt);
 			nbt.putBoolean("powered", true);
@@ -185,12 +185,12 @@ public final class EventHandlerCommon{
 
 		//Temporal Entropy decay
 		if(!e.world.isRemote && e.phase == TickEvent.Phase.START){
-			EntropySavedData.addEntropy(e.world, -CrossroadsConfig.entropyDecayRate.get());
+			EntropySavedData.addEntropy(e.world, -CRConfig.entropyDecayRate.get());
 		}
 
 
 		//Atmospheric overcharge effect
-		if(!e.world.isRemote && (CrossroadsConfig.atmosEffect.get() & 1) == 1){
+		if(!e.world.isRemote && (CRConfig.atmosEffect.get() & 1) == 1){
 			e.world.getProfiler().startSection(Crossroads.MODNAME + ": Overcharge lightning effects");
 			float chargeLevel = (float) AtmosChargeSavedData.getCharge(e.world) / (float) AtmosChargeSavedData.getCapacity();
 			if(chargeLevel > 0.5F){
@@ -248,12 +248,12 @@ public final class EventHandlerCommon{
 
 	@SubscribeEvent
 	public void buildRetrogenList(ChunkDataEvent.Load e) {
-		if (!CrossroadsConfig.retrogen.getString().isEmpty()) {
+		if (!CRConfig.retrogen.getString().isEmpty()) {
 			CompoundNBT tag = e.getData().getCompound(Crossroads.MODID);
 			e.getData().put(Crossroads.MODID, tag);
 
-			if (!tag.contains(CrossroadsConfig.retrogen.getString())) {
-				tag.putBoolean(CrossroadsConfig.retrogen.getString(), true);
+			if (!tag.contains(CRConfig.retrogen.getString())) {
+				tag.putBoolean(CRConfig.retrogen.getString(), true);
 				TO_RETROGEN.add(e.getChunk());
 			}
 		}
@@ -261,7 +261,7 @@ public final class EventHandlerCommon{
 
 	@SubscribeEvent
 	public void craftGoggles(AnvilUpdateEvent e){
-		if(e.getLeft().getItem() == CrossroadsItems.moduleGoggles){
+		if(e.getLeft().getItem() == CRItems.moduleGoggles){
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				if(lens.matchesRecipe(e.getRight()) && (!e.getLeft().hasTag() || !e.getLeft().getTag().contains(lens.name()))){
 					ItemStack out = e.getLeft().copy();
@@ -293,7 +293,7 @@ public final class EventHandlerCommon{
 			LivingEntity ent = e.getEntityLiving();
 
 			ItemStack boots = ent.getItemStackFromSlot(EquipmentSlotType.FEET);
-			if(boots.getItem() == CrossroadsItems.chickenBoots){
+			if(boots.getItem() == CRItems.chickenBoots){
 				e.setCanceled(true);
 				ent.getEntityWorld().playSound(null, ent.posX, ent.posY, ent.posZ, SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.PLAYERS, 2.5F, 1F);
 				return;
@@ -301,7 +301,7 @@ public final class EventHandlerCommon{
 
 			if(ent instanceof PlayerEntity){
 				PlayerEntity player = (PlayerEntity) ent;
-				if(player.inventory.clearMatchingItems(s -> s.getItem() == CrossroadsItems.nitroglycerin, -1) > 0){
+				if(player.inventory.clearMatchingItems(s -> s.getItem() == CRItems.nitroglycerin, -1) > 0){
 					player.world.createExplosion(null, player.posX, player.posY, player.posZ, 5F, Explosion.Mode.BREAK);
 				}
 			}

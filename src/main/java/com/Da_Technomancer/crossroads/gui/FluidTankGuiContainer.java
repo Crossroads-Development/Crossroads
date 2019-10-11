@@ -29,7 +29,7 @@ public class FluidTankGuiContainer extends MachineGUI{
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
 		mc.getTextureManager().bindTexture(TEXTURE);
-		drawTexturedModalRect((width - xSize) / 2, (height - ySize) / 2, 0, 0, xSize, ySize);
+		blit((width - xSize) / 2, (height - ySize) / 2, 0, 0, xSize, ySize);
 		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
 	}
 }

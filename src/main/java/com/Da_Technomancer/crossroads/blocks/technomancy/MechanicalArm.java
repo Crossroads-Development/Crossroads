@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalArmTileEntity;
 
 import net.minecraft.block.*;
@@ -28,7 +28,7 @@ public class MechanicalArm extends ContainerBlock{
 		String name = "mechanical_arm";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);

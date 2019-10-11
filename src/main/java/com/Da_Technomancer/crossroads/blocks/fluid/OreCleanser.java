@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.OreCleanserTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -31,7 +31,7 @@ public class OreCleanser extends ContainerBlock{
 		String name = "ore_cleanser";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);

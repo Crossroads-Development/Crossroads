@@ -6,13 +6,9 @@ import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.entity.ModEntities;
 import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
-import com.Da_Technomancer.crossroads.gui.CrucibleScreen;
-import com.Da_Technomancer.crossroads.gui.FireboxScreen;
-import com.Da_Technomancer.crossroads.gui.FluidCoolerScreen;
-import com.Da_Technomancer.crossroads.gui.container.CrucibleContainer;
-import com.Da_Technomancer.crossroads.gui.container.FireboxContainer;
-import com.Da_Technomancer.crossroads.gui.container.FluidCoolerContainer;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.gui.*;
+import com.Da_Technomancer.crossroads.gui.container.*;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.items.crafting.CRRecipeGenerator;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.*;
@@ -66,18 +62,17 @@ public final class Crossroads{
 	public static final String MODNAME = "Crossroads";
 	public static final Logger logger = LogManager.getLogger(MODNAME);
 
-
 	public Crossroads(){
 		final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		bus.addListener(this::commonInit);
 		bus.addListener(this::clientInit);
 		bus.addListener(this::gatherData);
 
-		CrossroadsConfig.init();
+		CRConfig.init();
 
 		MinecraftForge.EVENT_BUS.register(this);
 
-		CrossroadsConfig.load();
+		CRConfig.load();
 	}
 
 
@@ -98,7 +93,7 @@ public final class Crossroads{
 //		NetworkRegistry.INSTANCE.registerGuiHandler(Crossroads.instance, new GuiHandler());
 		MinecraftForge.EVENT_BUS.register(new EventHandlerCommon());
 
-		if(CrossroadsConfig.retrogen.get().isEmpty()){
+		if(CRConfig.retrogen.get().isEmpty()){
 			//TODO
 //			GameRegistry.registerWorldGenerator(WORLD_GEN, 0);
 		}
@@ -116,7 +111,7 @@ public final class Crossroads{
 		ModelLoaderRegistry.registerLoader(new BakedModelLoader());
 		ModEntities.clientInit();
 		ItemSets.clientInit();
-		CrossroadsItems.clientInit();
+		CRItems.clientInit();
 		AAModTESR.registerBlockRenderer();
 		Keys.init();
 		ModParticles.clientInit();
@@ -148,11 +143,11 @@ public final class Crossroads{
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> e){
 		IForgeRegistry<Item> registry = e.getRegistry();
-		CrossroadsItems.init();
-		for(Item item : CrossroadsItems.toRegister){
+		CRItems.init();
+		for(Item item : CRItems.toRegister){
 			registry.register(item);
 		}
-		CrossroadsItems.toRegister.clear();
+		CRItems.toRegister.clear();
 	}
 
 	@SuppressWarnings("unused")
@@ -185,7 +180,7 @@ public final class Crossroads{
 	@SubscribeEvent
 	private static void registerModels(ModelRegistryEvent e){
 		CrossroadsBlocks.initModels();
-		CrossroadsItems.initModels();
+		CRItems.initModels();
 		//CrossroadsFluids.registerRenderers();
 		ItemSets.modelInit();
 	}
@@ -195,8 +190,14 @@ public final class Crossroads{
 	@OnlyIn(Dist.CLIENT)
 	public static void registerContainers(RegistryEvent.Register<ContainerType<?>> e){
 		registerCon(FireboxContainer::new, FireboxScreen::new, "firebox", e);
+		registerCon(IceboxContainer::new, IceboxScreen::new, "icebox", e);
 		registerCon(FluidCoolerContainer::new, FluidCoolerScreen::new, "fluid_cooler", e);
 		registerCon(CrucibleContainer::new, CrucibleScreen::new, "crucible", e);
+		registerCon(SaltReactorContainer::new, SaltReactorScreen::new, "salt_reactor", e);
+		registerCon(SmelterContainer::new, SmelterScreen::new, "smelter", e);
+		registerCon(BlastFurnaceContainer::new, BlastFurnaceScreen::new, "ind_blast_furnace", e);
+
+
 		//TODO register containers
 	}
 
@@ -205,8 +206,13 @@ public final class Crossroads{
 	@OnlyIn(Dist.DEDICATED_SERVER)
 	public static void registerContainerTypes(RegistryEvent.Register<ContainerType<?>> e){
 		registerConType(FireboxContainer::new, "firebox", e);
+		registerConType(IceboxContainer::new, "icebox", e);
 		registerConType(FluidCoolerContainer::new, "fluid_cooler", e);
 		registerConType(CrucibleContainer::new, "crucible", e);
+		registerConType(SaltReactorContainer::new, "salt_reactor", e);
+		registerConType(SmelterContainer::new, "smelter", e);
+		registerConType(BlastFurnaceContainer::new, "ind_blast_furnace", e);
+
 		//TODO register container types
 	}
 

@@ -31,7 +31,7 @@ public class IceboxRec implements IRecipe<IInventory>{
 		this.cooling = (float) cooling;
 	}
 
-	public double getCooling(){
+	public float getCooling(){
 		return cooling;
 	}
 

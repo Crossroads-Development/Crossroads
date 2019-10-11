@@ -3,11 +3,11 @@ package com.Da_Technomancer.crossroads.items.itemSets;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.BasicBlock;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.items.BasicItem;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.crafting.ItemRecipePredicate;
 import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
 import com.Da_Technomancer.crossroads.items.crafting.TagCraftingStack;
@@ -149,7 +149,7 @@ public final class OreSetup{
 		};
 
 
-		String[] rawInput = CrossroadsConfig.getConfigStringList(CrossroadsConfig.processableOres, true);
+		String[] rawInput = CRConfig.getConfigStringList(CRConfig.processableOres, true);
 
 		//It's a HashMap instead of an ArrayList just in case a user decides to (incorrectly) list a metal twice
 		HashMap<String, Color> metals = new HashMap<>(rawInput.length);
@@ -199,26 +199,26 @@ public final class OreSetup{
 				public String getItemStackDisplayName(ItemStack stack){
 					return String.format(super.getItemStackDisplayName(stack), getMatName(type.getKey()));
 				}
-			}.setRegistryName(Crossroads.MODID, "dust_" + lowercaseMetal).setCreativeTab(CrossroadsItems.TAB_CROSSROADS).setTranslationKey("dust_metal");
-			CrossroadsItems.toRegister.add(dust);
-			CrossroadsItems.toClientRegister.put(Pair.of(dust, 0), dustModel);
+			}.setRegistryName(Crossroads.MODID, "dust_" + lowercaseMetal).setCreativeTab(CRItems.TAB_CROSSROADS).setTranslationKey("dust_metal");
+			CRItems.toRegister.add(dust);
+			CRItems.toClientRegister.put(Pair.of(dust, 0), dustModel);
 			ModCrafting.toRegisterOreDict.add(Pair.of(dust, new String[] {"dust" + type.getKey()}));
 			Item gravel = new Item(){
 				@Override
 				public String getItemStackDisplayName(ItemStack stack){
 					return String.format(super.getItemStackDisplayName(stack), getMatName(type.getKey()));
 				}
-			}.setRegistryName(Crossroads.MODID, "gravel_" + lowercaseMetal).setCreativeTab(CrossroadsItems.TAB_CROSSROADS).setTranslationKey("gravel_metal");
-			CrossroadsItems.toRegister.add(gravel);
-			CrossroadsItems.toClientRegister.put(Pair.of(gravel, 0), gravelModel);
+			}.setRegistryName(Crossroads.MODID, "gravel_" + lowercaseMetal).setCreativeTab(CRItems.TAB_CROSSROADS).setTranslationKey("gravel_metal");
+			CRItems.toRegister.add(gravel);
+			CRItems.toClientRegister.put(Pair.of(gravel, 0), gravelModel);
 			Item clump = new Item(){
 				@Override
 				public String getItemStackDisplayName(ItemStack stack){
 					return String.format(super.getItemStackDisplayName(stack), getMatName(type.getKey()));
 				}
-			}.setRegistryName(Crossroads.MODID, "clump_" + lowercaseMetal).setCreativeTab(CrossroadsItems.TAB_CROSSROADS).setTranslationKey("clump_metal");
-			CrossroadsItems.toRegister.add(clump);
-			CrossroadsItems.toClientRegister.put(Pair.of(clump, 0), clumpModel);
+			}.setRegistryName(Crossroads.MODID, "clump_" + lowercaseMetal).setCreativeTab(CRItems.TAB_CROSSROADS).setTranslationKey("clump_metal");
+			CRItems.toRegister.add(clump);
+			CRItems.toClientRegister.put(Pair.of(clump, 0), clumpModel);
 
 			Fluid fluid = new Fluid(lowercaseMetal, new ResourceLocation(Crossroads.MODID, "blocks/molten_metal_still"), new ResourceLocation(Crossroads.MODID, "blocks/molten_metal_flow")){
 				@Override

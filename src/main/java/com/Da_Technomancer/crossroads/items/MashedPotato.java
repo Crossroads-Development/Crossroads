@@ -9,8 +9,8 @@ public class MashedPotato extends ItemFood{
 		String name = "mashed_potato";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.itemAddQue(this);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
+		CRItems.toRegister.add(this);
+		CRItems.itemAddQue(this);
 	}
 }

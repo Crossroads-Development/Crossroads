@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.gui.container;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.ComponentCraftingStack;
 import com.Da_Technomancer.crossroads.items.crafting.ItemRecipePredicate;
@@ -88,7 +88,7 @@ public class DetailedCrafterContainer extends Container{
 				outInv.setInventorySlotContents(0, out);
 				return;
 			}
-		}else if(passesTechnomancyCriteria(nbt.getCompound("elements"), inInv) && CrossroadsConfig.technomancy.get() && (nbt.getBoolean("multiplayer") ? CrossroadsConfig.allowAllServer.get() || !nbt.getCompound("path").getBoolean("alchemy") : CrossroadsConfig.allowAllSingle.get() || !nbt.getCompound("path").getBoolean("alchemy"))){
+		}else if(passesTechnomancyCriteria(nbt.getCompound("elements"), inInv) && CRConfig.technomancy.get() && (nbt.getBoolean("multiplayer") ? CRConfig.allowAllServer.get() || !nbt.getCompound("path").getBoolean("alchemy") : CRConfig.allowAllSingle.get() || !nbt.getCompound("path").getBoolean("alchemy"))){
 			nbt.getCompound("path").putBoolean("technomancy", true);
 			if(!world.isRemote){
 				StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) playerInv.player, false);
@@ -108,7 +108,7 @@ public class DetailedCrafterContainer extends Container{
 				outInv.setInventorySlotContents(0, out);
 				return;
 			}
-		}else if(passesAlchemyCriteria(nbt.getCompound("elements"), inInv) && CrossroadsConfig.alchemy.get() && (nbt.getBoolean("multiplayer") ? CrossroadsConfig.allowAllServer.get() || !nbt.getCompound("path").getBoolean("technomancy") : CrossroadsConfig.allowAllSingle.get() || !nbt.getCompound("path").getBoolean("technomancy"))){
+		}else if(passesAlchemyCriteria(nbt.getCompound("elements"), inInv) && CRConfig.alchemy.get() && (nbt.getBoolean("multiplayer") ? CRConfig.allowAllServer.get() || !nbt.getCompound("path").getBoolean("technomancy") : CRConfig.allowAllSingle.get() || !nbt.getCompound("path").getBoolean("technomancy"))){
 			nbt.getCompound("path").putBoolean("alchemy", true);
 			if(!world.isRemote){
 				StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) playerInv.player, false);

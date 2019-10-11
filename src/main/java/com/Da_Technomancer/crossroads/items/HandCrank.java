@@ -9,6 +9,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 
 public class HandCrank extends Item{
@@ -17,10 +18,10 @@ public class HandCrank extends Item{
 		String name = "hand_crank";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setMaxStackSize(1);
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.itemAddQue(this);
+		CRItems.toRegister.add(this);
+		CRItems.itemAddQue(this);
 	}
 
 	@Override

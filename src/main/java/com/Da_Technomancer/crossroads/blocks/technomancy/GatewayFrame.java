@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.FlexibleGameProfile;
 import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -32,7 +32,7 @@ public class GatewayFrame extends ContainerBlock{
 		String name = "gateway_frame";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);

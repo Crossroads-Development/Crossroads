@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.BeaconHarnessTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -60,7 +60,7 @@ public class BeaconHarnessRenderer extends TileEntityRenderer<BeaconHarnessTileE
 						break;
 				}
 
-				if(CrossroadsConfig.rotateBeam.getBoolean()){
+				if(CRConfig.rotateBeam.getBoolean()){
 					GlStateManager.rotate(beam.getWorld().getGameTime() * 2, 0, 1, 0);
 				}
 

@@ -129,7 +129,7 @@ public class AlembicTileEntity extends AlchemyReactorTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if((side == null || side == Direction.DOWN) && cap == Capabilities.HEAT_CAPABILITY){
 			return (T) heatHandler;
 		}

@@ -126,7 +126,7 @@ public class PrototypePortTileEntity extends TileEntity implements IIntReceiver,
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(!world.isRemote && index != -1 && active && type.getCapability() == cap && type.exposeInternal() && side == this.side){
 			PrototypeInfo info = PrototypeWorldSavedData.get(false).prototypes.get(index);
 			if(info != null && info.owner != null && info.owner.get() != null && info.owner.get().hasCap(cap, this.side)){

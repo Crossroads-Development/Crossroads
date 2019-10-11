@@ -141,7 +141,7 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		Direction facing = world.getBlockState(pos).get(EssentialsProperties.FACING);
 		if(cap == Capabilities.HEAT_CAPABILITY){
 			if(side == null || side == facing.getOpposite()){

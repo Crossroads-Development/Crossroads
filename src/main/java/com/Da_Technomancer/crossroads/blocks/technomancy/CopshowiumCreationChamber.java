@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.CopshowiumCreationChamberTileEntity;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.ContainerBlock;
@@ -31,7 +31,7 @@ public class CopshowiumCreationChamber extends ContainerBlock{
 		String name = "copshowium_creation_chamber";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setHardness(3);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);

@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks;
 
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -111,6 +112,6 @@ public class BlockSalt extends FallingBlock{
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.salt_block"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.salt_block.quip"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.salt_block.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

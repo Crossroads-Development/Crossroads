@@ -23,11 +23,11 @@ public class Vacuum extends Item{
 		String name = "vacuum";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		maxStackSize = 1;
 		setMaxDamage(1200);
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.itemAddQue(this);
+		CRItems.toRegister.add(this);
+		CRItems.itemAddQue(this);
 	}
 
 	@Override

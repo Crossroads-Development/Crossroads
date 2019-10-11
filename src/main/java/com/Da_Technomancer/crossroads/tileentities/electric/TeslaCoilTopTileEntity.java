@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.tileentities.electric;
 
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoilTop;
 import com.Da_Technomancer.crossroads.render.RenderUtil;
+import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.LightningBoltEntity;
@@ -15,6 +15,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nullable;
@@ -93,7 +94,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 		}else if(!world.isRemote){
 			//TRANSFER
 			for(BlockPos linkPos : linked){
-				if(linkPos != null && coilTE.getStored() >= joltQty && linkPos.distanceSq(BlockPos.ORIGIN) <= range * range){
+				if(linkPos != null && coilTE.getStored() >= joltQty && linkPos.distanceSq(BlockPos.ZERO) <= range * range){
 					BlockPos actualPos = linkPos.add(pos.getX(), pos.getY() - 1, pos.getZ());
 					TileEntity te = world.getTileEntity(actualPos);
 					if(te instanceof TeslaCoilTileEntity && world.getTileEntity(actualPos.up()) instanceof TeslaCoilTopTileEntity){

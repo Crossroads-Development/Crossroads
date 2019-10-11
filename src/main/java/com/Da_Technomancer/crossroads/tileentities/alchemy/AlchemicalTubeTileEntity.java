@@ -152,7 +152,7 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		init();
 		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || connectMode[side.getIndex()] != 0)){
 			return (T) handler;

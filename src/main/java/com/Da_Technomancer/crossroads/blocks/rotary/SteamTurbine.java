@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SteamTurbineTileEntity;
 
 import net.minecraft.block.BlockState;
@@ -31,7 +31,7 @@ public class SteamTurbine extends ContainerBlock{
 		String name = "steam_turbine";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);

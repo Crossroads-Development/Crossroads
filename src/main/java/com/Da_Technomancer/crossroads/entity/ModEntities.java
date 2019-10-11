@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.entity;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
@@ -29,8 +29,8 @@ public final class ModEntities{
 	public static void clientInit(){
 		RenderingRegistry.registerEntityRenderingHandler(EntityBullet.class, (EntityRendererManager manager) -> (new SpriteRenderer<EntityBullet>(manager, Items.IRON_NUGGET, Minecraft.getInstance().getRenderItem())));
 		RenderingRegistry.registerEntityRenderingHandler(EntityArmRidable.class, (EntityRendererManager manager) -> (new EntityRenderEmpty(manager)));
-		RenderingRegistry.registerEntityRenderingHandler(EntityShell.class, (EntityRendererManager manager) -> (new SpriteRenderer<EntityShell>(manager, CrossroadsItems.shellGlass, Minecraft.getInstance().getRenderItem())));
-		RenderingRegistry.registerEntityRenderingHandler(EntityNitro.class, (EntityRendererManager manager) -> (new SpriteRenderer<EntityNitro>(manager, CrossroadsItems.nitroglycerin, Minecraft.getInstance().getRenderItem())));
+		RenderingRegistry.registerEntityRenderingHandler(EntityShell.class, (EntityRendererManager manager) -> (new SpriteRenderer<EntityShell>(manager, CRItems.shellGlass, Minecraft.getInstance().getRenderItem())));
+		RenderingRegistry.registerEntityRenderingHandler(EntityNitro.class, (EntityRendererManager manager) -> (new SpriteRenderer<EntityNitro>(manager, CRItems.nitroglycerin, Minecraft.getInstance().getRenderItem())));
 		RenderingRegistry.registerEntityRenderingHandler(EntityFlyingMachine.class, (EntityRendererManager manager) -> (new RenderFlyingMachine(manager)));
 		RenderingRegistry.registerEntityRenderingHandler(EntityFlameCore.class, (EntityRendererManager manager) -> (new RenderFlameCoreEntity(manager)));
 		RenderingRegistry.registerEntityRenderingHandler(EntityGhostMarker.class, (EntityRendererManager manager) -> (new EntityRenderEmpty(manager)));

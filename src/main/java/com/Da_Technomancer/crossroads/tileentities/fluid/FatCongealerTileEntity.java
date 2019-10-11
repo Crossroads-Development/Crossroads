@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -57,7 +57,7 @@ public class FatCongealerTileEntity extends InventoryTE{
 			if((fluids[0].amount -= fluidUse) <= 0){
 				fluids[0] = null;
 			}
-			ItemStack stack = new ItemStack(CrossroadsItems.edibleBlob, 1, 0);
+			ItemStack stack = new ItemStack(CRItems.edibleBlob, 1, 0);
 			CompoundNBT nbt = new CompoundNBT();
 			nbt.putInt("food", hun);
 			nbt.putInt("sat", sat);
@@ -74,7 +74,7 @@ public class FatCongealerTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != Direction.DOWN && facing != Direction.UP){
 			return (T) mainHandler;
 		}

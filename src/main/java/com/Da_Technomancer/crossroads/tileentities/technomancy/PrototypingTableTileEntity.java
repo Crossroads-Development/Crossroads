@@ -10,7 +10,7 @@ import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldSavedData;
@@ -98,7 +98,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 			return;
 		}
 
-		if(CrossroadsConfig.allowPrototype.getInt() == -1){
+		if(CRConfig.allowPrototype.getInt() == -1){
 			CrossroadsPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Prototyping disabled in config.", Color.YELLOW, false), player);
 			return;
 		}
@@ -118,7 +118,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 				CrossroadsPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Invalid inventory[1] item.", Color.YELLOW, false), player);
 				return;
 			}
-			if(CrossroadsConfig.allowPrototype.getInt() == 1){
+			if(CRConfig.allowPrototype.getInt() == 1){
 				CrossroadsPackets.network.sendTo(new SendLogToClient("prototypeCreate", "Copying disabled in config.", Color.YELLOW, false), player);
 				return;
 			}
@@ -146,7 +146,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 
 
 
-			List<String> blackList = Arrays.asList(CrossroadsConfig.blockedPrototype.getStringList());
+			List<String> blackList = Arrays.asList(CRConfig.blockedPrototype.getStringList());
 			@SuppressWarnings("unchecked")
 			List<Pair<PrototypePortTypes, BlockPos>>[] ports = new List[] {new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()};
 			ArrayList<TemplateError> errors = new ArrayList<>();
@@ -216,7 +216,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 				CrossroadsPackets.network.sendTo(new SendLogToClient("prototypeCreate", "All " + ModDimensions.PROTOTYPE_LIMIT + " slots are used. Recycle for slots.", Color.YELLOW, false), player);
 			}
 		}else{
-			List<String> blackList = Arrays.asList(CrossroadsConfig.blockedPrototype.getStringList());
+			List<String> blackList = Arrays.asList(CRConfig.blockedPrototype.getStringList());
 			@SuppressWarnings("unchecked")
 			List<Pair<PrototypePortTypes, BlockPos>>[] ports = new List[] {new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()};
 			ArrayList<TemplateError> errors = new ArrayList<>();
@@ -300,7 +300,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 			int newChunk = ModDimensions.nextFreePrototypeChunk(portArray, posArray);
 			if(newChunk != -1){
 				ChunkPos chunkPos = infoList.get(newChunk).chunk;
-				if(setChunk(dimWorld.getChunk(chunkPos.x, chunkPos.z), world, new BlockPos(startX, startY, startZ), newChunk, CrossroadsConfig.allowPrototype.getInt() == 1)){
+				if(setChunk(dimWorld.getChunk(chunkPos.x, chunkPos.z), world, new BlockPos(startX, startY, startZ), newChunk, CRConfig.allowPrototype.getInt() == 1)){
 					infoList.set(newChunk, null);
 					data.markDirty();
 					CrossroadsPackets.network.sendTo(new SendLogToClient("prototypeCreate", "ERROR! View server logs for info.", Color.RED, false), player);
@@ -333,7 +333,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, Direction facing){
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing){
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return (T) itemHandler;
 		}

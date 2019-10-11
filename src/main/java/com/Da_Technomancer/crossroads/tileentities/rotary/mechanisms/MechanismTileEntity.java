@@ -12,14 +12,18 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
+import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ITickableTileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 import javax.annotation.Nullable;
@@ -227,7 +231,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 		//TODO see if it's possible to make this not a ticking tile entity
 
 		if(updateMembers && !world.isRemote){
-			CrossroadsPackets.network.sendToAllAround(new SendLongToClient((byte) 14, axleAxis == null ? -1 : axleAxis.ordinal(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			CrossroadsPackets.sendPacketAround(world, pos, new SendLongToClient(14, axleAxis == null ? -1 : axleAxis.ordinal(), pos));
 			for(int i = 0; i < 7; i++){
 				axleHandlers[i].updateStates(true);
 			}
@@ -245,52 +249,28 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 				}
 			}
 			redstoneIn = reds;
-			CrossroadsPackets.network.sendToAllAround(new SendLongToClient((byte) 15, Double.doubleToLongBits(redstoneIn), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			CrossroadsPackets.sendPacketAround(world, pos, new SendLongToClient(15, Double.doubleToLongBits(redstoneIn), pos));
 		}
 	}
 
-	public double getRedstone(){
-		return members[6] != null && axleAxis != null ? members[6].getRatiatorSignal(mats[6], axleAxis, motionData[6], this) : 0;
+	public float getRedstone(){
+		return members[6] != null && axleAxis != null ? (float) members[6].getCircuitSignal(mats[6], axleAxis, motionData[6], this) : 0;
 	}
 
 	protected final SidedAxleHandler[] axleHandlers = {new SidedAxleHandler(0), new SidedAxleHandler(1), new SidedAxleHandler(2), new SidedAxleHandler(3), new SidedAxleHandler(4), new SidedAxleHandler(5), new SidedAxleHandler(6)};
 	private final ICogHandler[] cogHandlers = {new SidedCogHandler(0), new SidedCogHandler(1), new SidedCogHandler(2), new SidedCogHandler(3), new SidedCogHandler(4), new SidedCogHandler(5)};
-	private final IAdvancedRedstoneHandler redsHandler = new AdvRedstoneHandler();
-
-	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable Direction facing){
-		if(capability == Capabilities.COG_CAPABILITY && facing != null){
-			return members[facing.getIndex()] != null && members[facing.getIndex()].hasCap(capability, facing, mats[facing.getIndex()], facing, axleAxis, this);
-		}
-		if(capability == Capabilities.AXLE_CAPABILITY && facing != null){
-			return members[facing.getIndex()] == null && axleAxis == facing.getAxis() ? members[6].hasCap(capability, facing, mats[6], null, axleAxis, this) : members[facing.getIndex()] != null && members[facing.getIndex()].hasCap(capability, facing, mats[facing.getIndex()], facing, axleAxis, this);
-		}
-
-		return capability == Capabilities.ADVANCED_REDSTONE_CAPABILITY || super.hasCapability(capability, facing);
-	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.COG_CAPABILITY && facing != null){
 			return members[facing.getIndex()] != null && members[facing.getIndex()].hasCap(capability, facing, mats[facing.getIndex()], facing, axleAxis, this) ? (T) cogHandlers[facing.getIndex()] : null;
 		}
 		if(capability == Capabilities.AXLE_CAPABILITY && facing != null){
 			return members[facing.getIndex()] == null && axleAxis == facing.getAxis() ? members[6].hasCap(capability, facing, mats[6], null, axleAxis, this) ? (T) axleHandlers[6] : null : members[facing.getIndex()] != null && members[facing.getIndex()].hasCap(capability, facing, mats[facing.getIndex()], facing, axleAxis, this) ? (T) axleHandlers[facing.getIndex()] : null;
 		}
-		if(capability == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
-			return (T) redsHandler;
-		}
 
 		return super.getCapability(capability, facing);
-	}
-
-	private class AdvRedstoneHandler implements IAdvancedRedstoneHandler{
-
-		@Override
-		public double getOutput(boolean measure){
-			return measure ? getRedstone() : 0;
-		}
 	}
 
 	private class SidedCogHandler implements ICogHandler{
@@ -372,7 +352,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 			}
 
 			if(sendPacket && !world.isRemote){
-				CrossroadsPackets.network.sendToAllAround(new SendLongToClient((byte) (side + 7), members[side] == null ? -1L : (MECHANISMS.indexOf(members[side]) & 0xFFFFFFFFL) | (long) (mats[side].getIndex()) << 32L, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				CrossroadsPackets.sendPacketAround(world, pos, new SendLongToClient(side + 7, members[side] == null ? -1L : (MECHANISMS.indexOf(members[side]) & 0xFFFFFFFFL) | (long) (mats[side].getIndex()) << 32L, pos));
 			}
 		}
 

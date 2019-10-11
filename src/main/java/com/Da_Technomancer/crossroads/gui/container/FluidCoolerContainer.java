@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
 import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.heat.FluidCoolingChamberTileEntity;
 import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
 import net.minecraft.entity.player.PlayerInventory;
@@ -10,6 +11,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.registries.ObjectHolder;
 import org.apache.commons.lang3.tuple.Pair;
 
+@ObjectHolder(Crossroads.MODID)
 public class FluidCoolerContainer extends MachineContainer<FluidCoolingChamberTileEntity>{
 
 	@ObjectHolder("fluid_cooler")

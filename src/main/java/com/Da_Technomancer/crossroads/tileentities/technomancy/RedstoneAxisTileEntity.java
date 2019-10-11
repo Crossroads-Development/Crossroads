@@ -63,7 +63,7 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 	}
 
 	@Override
-	protected AxisTypes getType(){
+	protected AxisTypes getAxisType(){
 		return AxisTypes.FIXED;
 	}
 }

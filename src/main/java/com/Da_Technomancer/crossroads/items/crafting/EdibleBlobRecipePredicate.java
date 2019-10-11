@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.items.crafting;
 
 import java.util.List;
 
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.item.ItemStack;
@@ -29,7 +29,7 @@ public class EdibleBlobRecipePredicate implements RecipePredicate<ItemStack>{
 			return false;
 		}
 
-		if(stack.getItem() == CrossroadsItems.edibleBlob && stack.hasTag() && stack.getTag().getInt("food") == hunger && stack.getTag().getInt("sat") == saturation){
+		if(stack.getItem() == CRItems.edibleBlob && stack.hasTag() && stack.getTag().getInt("food") == hunger && stack.getTag().getInt("sat") == saturation){
 			return true;
 		}
 
@@ -38,7 +38,7 @@ public class EdibleBlobRecipePredicate implements RecipePredicate<ItemStack>{
 
 	@Override
 	public List<ItemStack> getMatchingList(){
-		ItemStack out = new ItemStack(CrossroadsItems.edibleBlob, 1);
+		ItemStack out = new ItemStack(CRItems.edibleBlob, 1);
 		CompoundNBT nbt = new CompoundNBT();
 		nbt.putInt("food", hunger);
 		nbt.putInt("sat", saturation);

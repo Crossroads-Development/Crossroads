@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.packets.ServerPacket;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -37,7 +37,7 @@ public class SendGoggleConfigureToServer extends ServerPacket{
 	protected void run(@Nullable ServerPlayerEntity player){
 		if(player != null){
 			ItemStack stack = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
-			if(stack.getItem() == CrossroadsItems.moduleGoggles && stack.hasTag() && stack.getTag().contains(lensName)){
+			if(stack.getItem() == CRItems.moduleGoggles && stack.hasTag() && stack.getTag().contains(lensName)){
 				stack.getTag().putBoolean(lensName, newSetting);
 
 				if(EnumGoggleLenses.DIAMOND.name().equals(lensName)){

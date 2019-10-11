@@ -34,7 +34,7 @@ public class RedstoneFluidTubeTileEntity extends FluidTubeTileEntity{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction side){
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && connectMode != null && (side == null || connectMode[side.getIndex()] != 0)){
 			if(world.getBlockState(pos).get(EssentialsProperties.REDSTONE_BOOL)){
 				return side == null || connectMode[side.getIndex()] == 1 ? (T) mainHandler : connectMode[side.getIndex()] == 2 ? (T) outHandler : (T) inHandler;

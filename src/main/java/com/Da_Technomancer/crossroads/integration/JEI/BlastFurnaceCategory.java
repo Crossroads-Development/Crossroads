@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.common.collect.ImmutableList;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -96,6 +96,6 @@ public class BlastFurnaceCategory implements IRecipeCategory<BlastFurnaceRecipe>
 	public void setIngredients(BlastFurnaceRecipe recipe, IIngredients ingredients){
 		ingredients.setInputLists(VanillaTypes.ITEM, ImmutableList.of(recipe.input));
 		ingredients.setOutput(VanillaTypes.FLUID, recipe.output);
-		ingredients.setOutput(VanillaTypes.ITEM, new ItemStack(CrossroadsItems.slag, recipe.slag));
+		ingredients.setOutput(VanillaTypes.ITEM, new ItemStack(CRItems.slag, recipe.slag));
 	}
 }

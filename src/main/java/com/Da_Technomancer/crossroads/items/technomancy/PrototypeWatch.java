@@ -19,7 +19,7 @@ import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldProvider;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldSavedData;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
@@ -56,11 +56,11 @@ public class PrototypeWatch extends BeamUsingItem{
 		String name = "prototype_watch";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setMaxStackSize(1);
-		CrossroadsItems.toRegister.add(this);
+		CRItems.toRegister.add(this);
 		for(int i = 0; i < 8; i++){
-			CrossroadsItems.toClientRegister.put(Pair.of(this, i), new ModelResourceLocation(Crossroads.MODID + ":watch_" + i));
+			CRItems.toClientRegister.put(Pair.of(this, i), new ModelResourceLocation(Crossroads.MODID + ":watch_" + i));
 		}
 	}
 
@@ -118,7 +118,7 @@ public class PrototypeWatch extends BeamUsingItem{
 
 	@Nullable
 	public static double[] getValues(ItemStack watch){
-		if(watch.isEmpty() || watch.getItem() != CrossroadsItems.watch || !watch.hasTag()){
+		if(watch.isEmpty() || watch.getItem() != CRItems.watch || !watch.hasTag()){
 			return null;
 		}
 		CompoundNBT nbt = watch.getTag();
@@ -169,7 +169,7 @@ public class PrototypeWatch extends BeamUsingItem{
 
 			PrototypeWorldProvider.tickChunk(((index % 100) * 2) - 99, (index / 50) - 99);
 
-			if(entityIn instanceof PlayerEntity && BeamManager.beamStage == 0 && ((PlayerEntity) entityIn).getHeldItem(Hand.OFF_HAND).getItem() == CrossroadsItems.beamCage && ((PlayerEntity) entityIn).getHeldItem(Hand.OFF_HAND).hasTag()){
+			if(entityIn instanceof PlayerEntity && BeamManager.beamStage == 0 && ((PlayerEntity) entityIn).getHeldItem(Hand.OFF_HAND).getItem() == CRItems.beamCage && ((PlayerEntity) entityIn).getHeldItem(Hand.OFF_HAND).hasTag()){
 				CompoundNBT cageNbt = ((PlayerEntity) entityIn).getHeldItem(Hand.OFF_HAND).getTag();
 				CompoundNBT nbt = stack.getTag();
 				PrototypeInfo info = data.prototypes.get(index);
@@ -326,7 +326,7 @@ public class PrototypeWatch extends BeamUsingItem{
 				if(mag != null && user instanceof LivingEntity){
 					LivingEntity ent = (LivingEntity) user;
 					ItemStack offhand = ent.getHeldItem(Hand.OFF_HAND);
-					if(offhand.getItem() == CrossroadsItems.beamCage){
+					if(offhand.getItem() == CRItems.beamCage){
 						BeamUnit cageBeam = BeamCage.getStored(offhand);
 						if(cageBeam == null){
 							cageBeam = new BeamUnit(0, 0, 0, 0);

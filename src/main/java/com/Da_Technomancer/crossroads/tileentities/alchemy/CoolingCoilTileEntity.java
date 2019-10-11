@@ -75,7 +75,7 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).get(CrossroadsProperties.HORIZ_FACING).getAxis())){
 			return (T) handler;
 		}

@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,7 +14,6 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
@@ -30,14 +29,14 @@ import java.util.List;
 public class ModuleGoggles extends ArmorItem{
 
 	public ModuleGoggles(){
-		super(CrossroadsItems.TECHNOMANCY, 1, EquipmentSlotType.HEAD);
+		super(CRItems.TECHNOMANCY, 1, EquipmentSlotType.HEAD);
 		setMaxStackSize(1);
 		String name = "module_goggles";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.itemAddQue(this);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
+		CRItems.toRegister.add(this);
+		CRItems.itemAddQue(this);
 	}
 
 	/**

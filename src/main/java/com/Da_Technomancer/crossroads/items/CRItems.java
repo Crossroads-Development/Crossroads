@@ -9,10 +9,10 @@ import com.Da_Technomancer.crossroads.items.technomancy.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.SoundEvents;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelLoader;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-public final class CrossroadsItems{
+public final class CRItems{
 
 	public static final ItemGroup TAB_CROSSROADS = new ItemGroup(Crossroads.MODID){
 		@Override
@@ -46,11 +46,13 @@ public final class CrossroadsItems{
 	};
 
 	public static final ArmorMaterial BOBO = EnumHelper.addArmorMaterial("BOBO", Crossroads.MODID + ":bobo", 0, new int[4], 0, SoundEvents.ENTITY_HORSE_DEATH, 0F);
-	public static final ArmorMaterial TECHNOMANCY = EnumHelper.addArmorMaterial("TECHNOMANCY", "chain", 0, new int[4], 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0);
+	public static final ArmorMaterial TECHNOMANCY = EnumHelper.addArmorMaterial("TECHNOMANCY", 0, new int[4], 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0);
 
+	public static final Item.Properties itemProp = new Item.Properties().group(TAB_CROSSROADS);
+	
 	public static CheatWandRotary debugGearWriter;
 	public static CheatWandHeat debugHeatWriter;
-	public static BasicItem dustSalt;
+	public static Item dustSalt;
 	public static MashedPotato mashedPotato;
 	public static HandCrank handCrank;
 	public static OmniMeter omnimeter;
@@ -58,9 +60,9 @@ public final class CrossroadsItems{
 	public static MagentaBread magentaBread;
 	public static EdibleBlob edibleBlob;
 	public static RainIdol rainIdol;
-	public static BasicItem pureQuartz;
-	public static BasicItem luminescentQuartz;
-	public static BasicItem lensArray;
+	public static Item pureQuartz;
+	public static Item luminescentQuartz;
+	public static Item lensArray;
 	public static SquidHelmet squidHelmet;
 	public static PigZombieChestsplate pigZombieChestplate;
 	public static CowLeggings cowLeggings;
@@ -71,13 +73,13 @@ public final class CrossroadsItems{
 	public static BeamCage beamCage;
 	public static PrototypePistol pistol;
 	public static PrototypeWatch watch;
-	public static BasicItem adamant;
-	public static BasicItem sulfur;
-	public static BasicItem vanadiumOxide;
+	public static Item adamant;
+	public static Item sulfur;
+	public static Item vanadiumOxide;
 	public static PhilStone philosopherStone;
 	public static PhilStone practitionerStone;
-	public static BasicItem alchCrystal;
-	public static BasicItem wasteSalt;
+	public static Item alchCrystal;
+	public static Item wasteSalt;
 	public static Phial phialGlass;
 	public static FlorenceFlask florenceFlaskGlass;
 	public static Shell shellGlass;
@@ -89,22 +91,22 @@ public final class CrossroadsItems{
 	public static Nitroglycerin nitroglycerin;
 	public static PoisonVodka poisonVodka;
 	public static DoublePoisonVodka doublePoisonVodka;
-	public static BasicItem solidQuicksilver;
-	public static BasicItem solidFusas;
-	public static BasicItem solidEldrine;
-	public static BasicItem solidStasisol;
-	public static BasicItem solidDensus;
-	public static BasicItem solidAntiDensus;
-	public static BasicItem solidFortis;
-	public static BasicItem solidVitriol;
-	public static BasicItem solidMuriatic;
-	public static BasicItem solidRegia;
-	public static BasicItem solidCavorite;
-	public static BasicItem bedrockDust;
+	public static Item solidQuicksilver;
+	public static Item solidFusas;
+	public static Item solidEldrine;
+	public static Item solidStasisol;
+	public static Item solidDensus;
+	public static Item solidAntiDensus;
+	public static Item solidFortis;
+	public static Item solidVitriol;
+	public static Item solidMuriatic;
+	public static Item solidRegia;
+	public static Item solidCavorite;
+	public static Item bedrockDust;
 	public static FlyingMachine flyingMachine;
 	public static TeslaRay teslaRay;
 	public static Slag slag;
-	public static LinkingTool linkingTool;
+	//	public static LinkingTool linkingTool;
 	public static DampingPowder dampingPowder;
 
 	/**
@@ -127,16 +129,16 @@ public final class CrossroadsItems{
 		debugGearWriter = new CheatWandRotary();
 		handCrank = new HandCrank();
 		debugHeatWriter = new CheatWandHeat();
-		dustSalt = new BasicItem("dust_salt", "dustSalt");
+		toRegister.add(dustSalt = itemAddQue(new Item(itemProp).setRegistryName("dust_salt")));
 		mashedPotato = new MashedPotato();
 		omnimeter = new OmniMeter();
 		vacuum = new Vacuum();
 		magentaBread = new MagentaBread();
 		edibleBlob = new EdibleBlob();
 		rainIdol = new RainIdol();
-		pureQuartz = new BasicItem("pure_quartz", "gemQuartz");
-		luminescentQuartz = new BasicItem("luminescent_quartz");
-		lensArray = new BasicItem("lens_array");
+		toRegister.add(pureQuartz = itemAddQue(new Item(itemProp).setRegistryName("pure_quartz")));
+		toRegister.add(luminescentQuartz = itemAddQue(new Item(itemProp).setRegistryName("luminescent_quartz")));
+		toRegister.add(lensArray = itemAddQue(new Item(itemProp).setRegistryName("lens_array")));
 		squidHelmet = new SquidHelmet();
 		pigZombieChestplate = new PigZombieChestsplate();
 		cowLeggings = new CowLeggings();
@@ -147,13 +149,13 @@ public final class CrossroadsItems{
 		beamCage = new BeamCage();
 		pistol = new PrototypePistol();
 		watch = new PrototypeWatch();
-		adamant = new BasicItem("adamant");
-		sulfur = new BasicItem("sulfur", "dustSulfur");
-		vanadiumOxide = new BasicItem("vanadium_oxide");
+		toRegister.add(adamant = itemAddQue(new Item(itemProp).setRegistryName("adamant")));
+		toRegister.add(sulfur = itemAddQue(new Item(itemProp).setRegistryName("sulfur")));
+		toRegister.add(vanadiumOxide = itemAddQue(new Item(itemProp).setRegistryName("vanadium_oxide")));
 		philosopherStone = new PhilStone(false);
 		practitionerStone = new PhilStone(true);
-		alchCrystal = new BasicItem("alch_crystal", "gemAlcCryst");
-		wasteSalt = new BasicItem("waste_salt", "dustAlcSalt");
+		toRegister.add(alchCrystal = itemAddQue(new Item(itemProp).setRegistryName("alch_crystal")));
+		toRegister.add(wasteSalt = itemAddQue(new Item(itemProp).setRegistryName("waste_salt")));
 		phialGlass = new Phial(false);
 		florenceFlaskGlass = new FlorenceFlask(false);
 		shellGlass = new Shell(false);
@@ -165,22 +167,22 @@ public final class CrossroadsItems{
 		nitroglycerin = new Nitroglycerin();
 		poisonVodka = new PoisonVodka();
 		doublePoisonVodka = new DoublePoisonVodka();
-		solidQuicksilver = new BasicItem("solid_quicksilver");
-		solidFusas = new BasicItem("solid_fusas");
-		solidEldrine = new BasicItem("solid_eldrine");
-		solidStasisol = new BasicItem("solid_stasisol");
-		solidDensus = new BasicItem("solid_densus", "gemDensus");
-		solidAntiDensus = new BasicItem("solid_anti_densus", "gemAntiDensus");
-		solidFortis = new BasicItem("solid_fortis");
-		solidVitriol = new BasicItem("solid_vitriol");
-		solidMuriatic = new BasicItem("solid_muriatic");
-		solidRegia = new BasicItem("solid_regia");
-		solidCavorite = new BasicItem("solid_cavorite", "gemCavorite");
-		bedrockDust = new BasicItem("dust_bedrock", "dustBedrock");
+		toRegister.add(solidQuicksilver = itemAddQue(new Item(itemProp).setRegistryName("solid_quicksilver")));
+		toRegister.add(solidFusas = itemAddQue(new Item(itemProp).setRegistryName("solid_fusas")));
+		toRegister.add(solidEldrine = itemAddQue(new Item(itemProp).setRegistryName("solid_eldrine")));
+		toRegister.add(solidStasisol = itemAddQue(new Item(itemProp).setRegistryName("solid_stasisol")));
+		toRegister.add(solidDensus = itemAddQue(new Item(itemProp).setRegistryName("solid_densus")));
+		toRegister.add(solidAntiDensus = itemAddQue(new Item(itemProp).setRegistryName("solid_anti_densus")));
+		toRegister.add(solidFortis = itemAddQue(new Item(itemProp).setRegistryName("solid_fortis")));
+		toRegister.add(solidVitriol = itemAddQue(new Item(itemProp).setRegistryName("solid_vitriol")));
+		toRegister.add(solidMuriatic = itemAddQue(new Item(itemProp).setRegistryName("solid_muriatic")));
+		toRegister.add(solidRegia = itemAddQue(new Item(itemProp).setRegistryName("solid_regia")));
+		toRegister.add(solidCavorite = itemAddQue(new Item(itemProp).setRegistryName("solid_cavorite")));
+		toRegister.add(bedrockDust = itemAddQue(new Item(itemProp).setRegistryName("dust_bedrock")));
 		flyingMachine = new FlyingMachine();
 		teslaRay = new TeslaRay();
 		slag = new Slag();
-		linkingTool = new LinkingTool();
+//		linkingTool = new LinkingTool();
 		dampingPowder = new DampingPowder();
 	}
 

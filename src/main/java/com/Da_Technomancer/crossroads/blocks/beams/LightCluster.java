@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.beams;
 
 import com.Da_Technomancer.crossroads.API.beams.IBeamTransparent;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.block.*;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.block.material.Material;
@@ -33,7 +33,7 @@ public class LightCluster extends Block implements IBeamTransparent{
 		setRegistryName(name);
 		setTranslationKey(name);
 		setHardness(0);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setSoundType(SoundType.GLASS);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);

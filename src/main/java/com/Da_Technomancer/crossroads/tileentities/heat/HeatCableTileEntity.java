@@ -7,7 +7,7 @@ import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
@@ -132,7 +132,7 @@ public class HeatCableTileEntity extends ModuleTE{
 		}
 
 		if(temp > insulator.getLimit()){
-			if(CrossroadsConfig.heatEffects.getBoolean()){
+			if(CRConfig.heatEffects.getBoolean()){
 				insulator.getEffect().doEffect(world, pos, 1, null);
 			}else{
 				world.setBlockState(pos, Blocks.FIRE.getDefaultState(), 3);
@@ -168,7 +168,7 @@ public class HeatCableTileEntity extends ModuleTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || !locked[facing.getIndex()])){
 			return (T) heatHandler;
 		}

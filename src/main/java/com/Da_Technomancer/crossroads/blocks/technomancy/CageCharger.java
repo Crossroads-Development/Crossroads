@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.CageChargerTileEntity;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -34,7 +34,7 @@ public class CageCharger extends ContainerBlock{
 		String name = "cage_charger";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setHardness(3);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
@@ -80,7 +80,7 @@ public class CageCharger extends ContainerBlock{
 				playerIn.inventory.addItemStackToInventory(((CageChargerTileEntity) te).getCage());
 				((CageChargerTileEntity) te).setCage(ItemStack.EMPTY);
 				worldIn.setBlockState(pos, getDefaultState().with(Properties.ACTIVE, false));
-			}else if(!playerIn.getHeldItem(hand).isEmpty() && playerIn.getHeldItem(hand).getItem() == CrossroadsItems.beamCage){
+			}else if(!playerIn.getHeldItem(hand).isEmpty() && playerIn.getHeldItem(hand).getItem() == CRItems.beamCage){
 				((CageChargerTileEntity) te).setCage(playerIn.getHeldItem(hand));
 				playerIn.setHeldItem(hand, ItemStack.EMPTY);
 				worldIn.setBlockState(pos, getDefaultState().with(Properties.ACTIVE, true));

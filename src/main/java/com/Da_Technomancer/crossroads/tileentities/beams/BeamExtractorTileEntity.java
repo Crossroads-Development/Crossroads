@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.beams;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -42,7 +42,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != world.getBlockState(pos).get(EssentialsProperties.FACING)){
 			return (T) itemHandler;
 		}
@@ -115,7 +115,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory{
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && (RecipeHolder.beamExtractRecipes.containsKey(stack.getItem()) || stack.getItem() == CrossroadsItems.beamCage);
+		return index == 0 && (RecipeHolder.beamExtractRecipes.containsKey(stack.getItem()) || stack.getItem() == CRItems.beamCage);
 	}
 
 	@Override
@@ -216,7 +216,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory{
 			if(RecipeHolder.beamExtractRecipes.containsKey(inv.getItem())){
 				mag = RecipeHolder.beamExtractRecipes.get(inv.getItem());
 				inv.shrink(1);
-			}else if(inv.getItem() == CrossroadsItems.beamCage){
+			}else if(inv.getItem() == CRItems.beamCage){
 				mag = BeamCage.getStored(inv);
 				BeamCage.storeBeam(inv, null);
 			}

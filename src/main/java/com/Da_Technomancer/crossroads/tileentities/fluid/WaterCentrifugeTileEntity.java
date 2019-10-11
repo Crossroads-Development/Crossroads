@@ -100,7 +100,7 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction facing){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction facing){
 		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing == null){
 			return (T) masterHandler;
 		}

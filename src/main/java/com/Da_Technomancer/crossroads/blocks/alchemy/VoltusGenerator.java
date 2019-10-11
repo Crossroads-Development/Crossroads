@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.VoltusGeneratorTileEntity;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.SoundType;
@@ -27,7 +27,7 @@ public class VoltusGenerator extends ContainerBlock{
 		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(.5F);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
@@ -48,6 +48,6 @@ public class VoltusGenerator extends ContainerBlock{
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add("Converts Voltus into FE");
-		tooltip.add("Consumes: " + ((ForgeConfigSpec.DoubleValue) CrossroadsConfig.voltusUsage).get() + " Voltus per 1000FE");
+		tooltip.add("Consumes: " + ((ForgeConfigSpec.DoubleValue) CRConfig.voltusUsage).get() + " Voltus per 1000FE");
 	}
 }

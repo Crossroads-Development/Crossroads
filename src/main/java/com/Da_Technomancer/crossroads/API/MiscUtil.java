@@ -1,16 +1,17 @@
 package com.Da_Technomancer.crossroads.API;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tags.Tag;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.loading.LogMarkers;
 
@@ -20,6 +21,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public final class MiscUtil{
+
+	/**
+	 * A common style applied to "quip" lines in tooltips
+	 */
+	public static final Style TT_QUIP = new Style().setColor(TextFormatting.AQUA).setItalic(true);
 
 	public static double betterRound(double numIn, int decPlac){
 		return Math.round(numIn * Math.pow(10, decPlac)) / Math.pow(10D, decPlac);
@@ -93,7 +99,7 @@ public final class MiscUtil{
 	}
 
 	public static boolean canBreak(BlockState state, boolean client){
-		String[] bannedBlocks = CrossroadsConfig.getConfigStringList(CrossroadsConfig.destroyBlacklist, client);
+		String[] bannedBlocks = CRConfig.getConfigStringList(CRConfig.destroyBlacklist, client);
 		String id = state.getBlock().getRegistryName().toString();
 		for(String s : bannedBlocks){
 			if(s.equals(id)){

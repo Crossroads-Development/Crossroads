@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.entity;
 
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.NbtToEntityServer;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.GameSettings;
 import net.minecraft.entity.Entity;
@@ -119,7 +119,7 @@ public class EntityFlyingMachine extends Entity implements INbtReceiver{
 
 				if(flag || damage > 40){
 					if(!flag && world.getGameRules().getBoolean("doEntityDrops")){
-						dropItemWithOffset(CrossroadsItems.flyingMachine, 1, 0.0F);
+						dropItemWithOffset(CRItems.flyingMachine, 1, 0.0F);
 					}
 
 					setDead();

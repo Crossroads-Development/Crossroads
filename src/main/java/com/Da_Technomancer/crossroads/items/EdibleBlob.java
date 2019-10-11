@@ -26,8 +26,8 @@ public class EdibleBlob extends ItemFood{
 		String name = "edible_blob";
 		setTranslationKey(name);
 		setRegistryName(name);
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.itemAddQue(this);
+		CRItems.toRegister.add(this);
+		CRItems.itemAddQue(this);
 	}
 
 	/**

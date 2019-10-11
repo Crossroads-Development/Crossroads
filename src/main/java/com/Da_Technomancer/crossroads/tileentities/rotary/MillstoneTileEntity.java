@@ -129,7 +129,7 @@ public class MillstoneTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return (T) itemHandler;
 		}

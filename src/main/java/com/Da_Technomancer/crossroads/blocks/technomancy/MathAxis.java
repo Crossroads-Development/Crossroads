@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MathAxisTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.ContainerBlock;
@@ -30,7 +30,7 @@ public class MathAxis extends ContainerBlock{
 		String name = "math_axis";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);

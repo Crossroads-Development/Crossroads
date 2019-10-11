@@ -3,19 +3,34 @@ package com.Da_Technomancer.crossroads.tileentities.heat;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
+import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.registries.ObjectHolder;
 
+@ObjectHolder(Crossroads.MODID)
 public class SolarHeaterTileEntity extends ModuleTE{
+
+	@ObjectHolder("solar_heater")
+	private static TileEntityType<SolarHeaterTileEntity> type = null;
+
+	public static final double RATE = 5;
+	public static final double CAP = 250;
+
+	private boolean running = false;
+
+	public SolarHeaterTileEntity(){
+		super(type);
+	}
 
 	@Override
 	protected boolean useHeat(){
 		return true;
 	}
-
-	private boolean running = false;
 
 	@Override
 	public void tick(){
@@ -26,7 +41,7 @@ public class SolarHeaterTileEntity extends ModuleTE{
 
 		//Every 30 seconds, check if we still have sky view and cache the result
 		if(world.getGameTime() % 600 == 0){
-			running = world.canSeeSky(pos);
+			running = world.canBlockSeeSky(pos);
 		}
 
 		//This machine can share heat with other Solar Heaters in the same line, but only other Solar Heaters. Otherwise, a heat cable is needed like normal
@@ -40,8 +55,8 @@ public class SolarHeaterTileEntity extends ModuleTE{
 			otherTE.markDirty();
 		}
 
-		if(running && temp < 250D && world.isDaytime() && !world.isRaining()){
-			temp = Math.min(250D, temp + 5D);
+		if(running && temp < CAP && world.isDaytime() && !world.isRaining()){
+			temp = Math.min(CAP, temp + RATE);
 			markDirty();
 		}
 	}
@@ -61,9 +76,9 @@ public class SolarHeaterTileEntity extends ModuleTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, Direction facing){
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing){
 		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || facing.getAxis() == world.getBlockState(pos).get(CrossroadsProperties.HORIZ_AXIS))){
-			return (T) heatHandler;
+			return (LazyOptional<T>) heatOpt;
 		}
 		return super.getCapability(capability, facing);
 	}

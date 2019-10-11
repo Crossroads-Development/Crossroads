@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
@@ -34,10 +34,10 @@ public class BasicGear extends Item{
 		String name = "gear_" + typeIn.toString().toLowerCase();
 		setTranslationKey("gear_metal");
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_GEAR);
+		setCreativeTab(CRItems.TAB_GEAR);
 		type = typeIn;
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.toClientRegister.put(Pair.of(this, 0), LOCAT);
+		CRItems.toRegister.add(this);
+		CRItems.toClientRegister.put(Pair.of(this, 0), LOCAT);
 		ModCrafting.toRegisterOreDict.add(Pair.of(this, new String[] {"gear" + typeIn.toString()}));
 	}
 

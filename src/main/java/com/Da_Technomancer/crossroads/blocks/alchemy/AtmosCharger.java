@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.render.bakedModel.AtmosChargerBakedModel;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.AtmosChargerTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
@@ -37,7 +37,7 @@ public class AtmosCharger extends ContainerBlock{
 		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(.5F);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);

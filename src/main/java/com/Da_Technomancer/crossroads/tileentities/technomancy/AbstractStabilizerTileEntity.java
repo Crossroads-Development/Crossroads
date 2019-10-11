@@ -123,7 +123,7 @@ public abstract class AbstractStabilizerTileEntity extends ModuleTE{
 	@Nullable
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> cap, @Nullable Direction facing){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction facing){
 		if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
 			return (T) redsHandler;
 		}

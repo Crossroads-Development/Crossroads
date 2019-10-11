@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
@@ -35,11 +35,11 @@ public class ToggleGear extends Item{
 		String name = "gear_toggle_" + (inverted ? "inverted_" : "") + typeIn.toString().toLowerCase();
 		setTranslationKey(inverted ? "gear_toggle_inverted_metal" : "gear_toggle_metal");
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_GEAR);
+		setCreativeTab(CRItems.TAB_GEAR);
 		type = typeIn;
 		this.inverted = inverted;
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.toClientRegister.put(Pair.of(this, 0), inverted ? LOCAT_INV : LOCAT);
+		CRItems.toRegister.add(this);
+		CRItems.toClientRegister.put(Pair.of(this, 0), inverted ? LOCAT_INV : LOCAT);
 	}
 
 	@Override

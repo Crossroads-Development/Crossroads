@@ -23,10 +23,10 @@ public class ChaosRod extends Item{
 		String name = "chaos_rod";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setMaxStackSize(1);
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.itemAddQue(this);
+		CRItems.toRegister.add(this);
+		CRItems.itemAddQue(this);
 	}
 
 	@Override

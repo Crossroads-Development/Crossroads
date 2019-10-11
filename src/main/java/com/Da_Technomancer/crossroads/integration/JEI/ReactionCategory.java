@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.common.collect.ImmutableList;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -35,7 +35,7 @@ public class ReactionCategory implements IRecipeCategory<ReactionRecipe>{
 		back = guiHelper.createBlankDrawable(180, 100);
 		arrowStatic = guiHelper.createDrawable(ICONS, 32, 0, 24, 16);
 		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(ICONS, 32, 16, 24, 16), 40, IDrawableAnimated.StartDirection.LEFT, false);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(CrossroadsItems.florenceFlaskCrystal, 1));
+		icon = guiHelper.createDrawableIngredient(new ItemStack(CRItems.florenceFlaskCrystal, 1));
 		bolt = guiHelper.createDrawable(ReactionCategory.ICONS, 16, 0, 16, 16);
 		blast = guiHelper.createDrawable(ReactionCategory.ICONS, 64, 0, 16, 16);
 	}

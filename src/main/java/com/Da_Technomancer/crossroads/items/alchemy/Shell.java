@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.items.alchemy;
 
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.entity.EntityShell;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.dispenser.IDispenseItemBehavior;
@@ -24,7 +24,7 @@ public class Shell extends AbstractGlassware{
 		 */
 		@Override
 		public ItemStack dispenseStack(IBlockSource source, ItemStack stack){
-			ReagentMap contents = CrossroadsItems.shellGlass.getReagants(stack);
+			ReagentMap contents = CRItems.shellGlass.getReagants(stack);
 			if(contents.getTotalQty() != 0){
 				Direction dir = (Direction) source.getBlockState().get(DispenserBlock.FACING);
 				World world = source.getWorld();
@@ -55,9 +55,9 @@ public class Shell extends AbstractGlassware{
 		hasSubtypes = true;
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.itemAddQue(this);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
+		CRItems.toRegister.add(this);
+		CRItems.itemAddQue(this);
 		DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, SHELL_DISPENSER_BEHAVIOR);
 	}
 

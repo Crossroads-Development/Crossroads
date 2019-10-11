@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.LeydenJar;
 import com.Da_Technomancer.crossroads.render.RenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
@@ -33,10 +33,10 @@ public class TeslaRay extends Item{
 		String name = "tesla_ray";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setMaxStackSize(1);
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.itemAddQue(this);
+		CRItems.toRegister.add(this);
+		CRItems.itemAddQue(this);
 	}
 
 	@Override

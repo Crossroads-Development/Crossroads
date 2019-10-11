@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.render.bakedModel.PrototypeBakedModel;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
@@ -138,7 +138,7 @@ public class Prototype extends ContainerBlock{
 	}
 
 	@Override
-	public boolean removedByPlayer(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, boolean canHarvest){
+	public boolean removedByPlayer(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid){
 		TileEntity te = worldIn.getTileEntity(pos);
 		if(te instanceof PrototypeTileEntity){
 			if(worldIn.isRemote){
@@ -180,7 +180,7 @@ public class Prototype extends ContainerBlock{
 
 	@Override
 	public boolean canPlaceBlockAt(World worldIn, BlockPos pos){
-		return CrossroadsConfig.allowPrototype.getInt() != -1 && CrossroadsConfig.allowPrototype.getInt() != 2 && super.canPlaceBlockAt(worldIn, pos);
+		return CRConfig.allowPrototype.getInt() != -1 && CRConfig.allowPrototype.getInt() != 2 && super.canPlaceBlockAt(worldIn, pos);
 	}
 
 	@Override

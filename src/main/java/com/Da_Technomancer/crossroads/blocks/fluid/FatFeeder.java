@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.fluid;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FatFeederTileEntity;
 
 import net.minecraft.block.*;
@@ -29,7 +29,7 @@ public class FatFeeder extends ContainerBlock{
 		setTranslationKey(name);
 		setSoundType(SoundType.METAL);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setHardness(3);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);

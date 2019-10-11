@@ -5,7 +5,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
 
 import net.minecraft.block.*;
@@ -31,7 +31,7 @@ public class RotaryPump extends ContainerBlock{
 		String name = "rotary_pump";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);

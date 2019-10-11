@@ -13,14 +13,14 @@ import net.minecraft.world.World;
 public class PigZombieChestsplate extends ArmorItem{
 
 	public PigZombieChestsplate(){
-		super(CrossroadsItems.BOBO, 1, EquipmentSlotType.CHEST);
+		super(CRItems.BOBO, 1, EquipmentSlotType.CHEST);
 		setMaxStackSize(1);
 		String name = "pig_zombie_chestplate";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.itemAddQue(this);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
+		CRItems.toRegister.add(this);
+		CRItems.itemAddQue(this);
 	}
 
 	@Override

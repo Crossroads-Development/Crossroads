@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
 import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -44,11 +44,11 @@ public class SpawnReagentCommand extends CommandBase{
 			throw new CommandException("Invalid input!");
 		}
 
-		ItemStack toGive = new ItemStack(CrossroadsItems.phialCrystal, 1);
+		ItemStack toGive = new ItemStack(CRItems.phialCrystal, 1);
 		
 		ReagentMap reag = new ReagentMap();
-		reag.addReagent(type, CrossroadsItems.phialCrystal.getCapacity(), temp);
-		CrossroadsItems.phialCrystal.setReagents(toGive, reag);
+		reag.addReagent(type, CRItems.phialCrystal.getCapacity(), temp);
+		CRItems.phialCrystal.setReagents(toGive, reag);
 		((ServerPlayerEntity) sender).addItemStackToInventory(toGive);
 	}
 

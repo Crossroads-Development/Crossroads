@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemGroup;
@@ -26,9 +26,9 @@ public class BeamCage extends Item{
 		setTranslationKey(name);
 		setRegistryName(name);
 		maxStackSize = 1;
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.itemAddQue(this);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
+		CRItems.toRegister.add(this);
+		CRItems.itemAddQue(this);
 	}
 
 	public static BeamUnit getStored(ItemStack stack){

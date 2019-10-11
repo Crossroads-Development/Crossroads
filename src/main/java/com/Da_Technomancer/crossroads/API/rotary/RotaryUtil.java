@@ -2,12 +2,13 @@ package com.Da_Technomancer.crossroads.API.rotary;
 
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendMasterKeyToClient;
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import net.minecraft.block.state.BlockFaceShape;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class RotaryUtil{
 	 * or there is a different infinite loop that should have been prevented at an earlier point. The disableSlaves config can be used to rescue a world in either of these cases.
 	 */
 	public static boolean contains(ISlaveAxisHandler axis, ISlaveAxisHandler toAdd){
-		if(CrossroadsConfig.disableSlaves.getBoolean() || toAdd == axis){
+		if(CRConfig.disableSlaves.get() || toAdd == axis){
 			return true;
 		}
 		if(toAdd.getContainedAxes().isEmpty()){
@@ -73,11 +74,12 @@ public class RotaryUtil{
 			sumIW += axle.getMoInertia() * Math.abs(axle.getMotionData()[0]);
 		}
 
-		sumEnergy = Math.signum(sumEnergy) * Math.max(0, Math.abs(sumEnergy) - CrossroadsConfig.rotaryLoss.get() * Math.pow(sumIW / sumInertia, 2));
+		sumEnergy = Math.signum(sumEnergy) * Math.max(0, Math.abs(sumEnergy) - CRConfig.rotaryLoss.get() * Math.pow(sumIW / sumInertia, 2));
 		return sumEnergy;
 	}
 
-	/** I keep changing my mind about how to determine whether gears can connect diagonally through a block.
+	/**
+	 * I keep changing my mind about how to determine whether gears can connect diagonally through a block.
 	 * Implementers of IAxleHandler should use this to determine whether they can connect diagonally through a block.
 	 * @param world The World.
 	 * @param pos The BlockPos of the block space that is being connected through.
@@ -98,8 +100,12 @@ public class RotaryUtil{
 	 * @return Whether it should be solid to small gears
 	 */
 	public static boolean solidToGears(World world, BlockPos pos, Direction side){
-		BlockFaceShape shape = world.getBlockState(pos).getBlockFaceShape(world, pos, side);
-		return world.isSideSolid(pos, side, false) || shape == BlockFaceShape.SOLID || shape == BlockFaceShape.CENTER || shape == BlockFaceShape.CENTER_BIG || shape == BlockFaceShape.CENTER_SMALL;
+		VoxelShape shape = world.getBlockState(pos).getShape(world, pos);
+		//TODO THIS IS A PLACEHOLDER and does not work
+		//This currently works for solid surfaces, but not things like the ends of axles (probably- best to test this)
+		return Block.func_220055_a(world, pos, side);//This method is also used by torches
+//		BlockFaceShape shape = world.getBlockState(pos).getBlockFaceShape(world, pos, side);
+//		return world.isSideSolid(pos, side, false) || shape == BlockFaceShape.SOLID || shape == BlockFaceShape.CENTER || shape == BlockFaceShape.CENTER_BIG || shape == BlockFaceShape.CENTER_SMALL;
 	}
 
 	/**
@@ -109,7 +115,8 @@ public class RotaryUtil{
 	public static void increaseMasterKey(boolean sendPacket){
 		masterKey++;
 		if(sendPacket){
-			CrossroadsPackets.network.sendToAll(new SendMasterKeyToClient(masterKey));
+//			CrossroadsPackets.network.sendToAll(new SendMasterKeyToClient(masterKey));
+			CrossroadsPackets.sendPacketToAll(new SendMasterKeyToClient(masterKey));
 		}
 	}
 

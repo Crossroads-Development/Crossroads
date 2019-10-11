@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.common.collect.ImmutableList;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -27,7 +27,7 @@ public class ReagInfoCategory implements IRecipeCategory<ReagInfoRecipe>{
 
 	protected ReagInfoCategory(IGuiHelper guiHelper){
 		back = guiHelper.createBlankDrawable(180, 100);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(CrossroadsItems.phialGlass, 1));
+		icon = guiHelper.createDrawableIngredient(new ItemStack(CRItems.phialGlass, 1));
 	}
 
 	@Override

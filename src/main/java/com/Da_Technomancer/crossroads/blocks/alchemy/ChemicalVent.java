@@ -5,7 +5,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ChemicalVentTileEntity;
 
 import net.minecraft.block.BlockState;
@@ -28,7 +28,7 @@ public class ChemicalVent extends ContainerBlock{
 		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(2);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setSoundType(SoundType.GLASS);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);

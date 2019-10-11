@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -56,7 +56,7 @@ public class PlaceEffect implements IEffect{
 
 		@Override
 		public void doEffect(World worldIn, BlockPos pos, int mult, Direction dir){
-			if(!CrossroadsConfig.isProtected(worldIn, pos, worldIn.getBlockState(pos))){
+			if(!CRConfig.isProtected(worldIn, pos, worldIn.getBlockState(pos))){
 				worldIn.destroyBlock(pos, true);
 			}
 		}

@@ -1,28 +1,34 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.packets.ITaylorReceiver;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
+import com.Da_Technomancer.crossroads.API.packets.ITaylorReceiver;
 import com.Da_Technomancer.crossroads.API.packets.SendTaylorToClient;
 import com.Da_Technomancer.crossroads.API.rotary.*;
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ITickableTileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.registries.ObjectHolder;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 
+@ObjectHolder(Crossroads.MODID)
 public class MasterAxisTileEntity extends TileEntity implements ITickableTileEntity, ITaylorReceiver{
+
+	@ObjectHolder("master_axis")
+	private static TileEntityType<MasterAxisTileEntity> type = null;
+	protected static final Random RAND = new Random();
 
 	protected boolean locked = false;
 	protected double sumEnergy = 0;
@@ -32,8 +38,6 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 	protected boolean forceUpdate;
 	protected Direction facing;
 
-	protected static final Random RAND = new Random();
-
 	protected ArrayList<IAxleHandler> rotaryMembers = new ArrayList<>();
 	protected final HashSet<Pair<ISlaveAxisHandler, Direction>> slaves = new HashSet<>();
 
@@ -42,7 +46,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 	 * The Master Axis is responsible for keeping the rendering angles of all members synced centrally.
 	 * A Taylor Series (if you don't know what that is, I suggest you google "Taylor Series", "Power Series", "Derivatives calculus", and "Painless suicide methods" in that order)
 	 * is used to estimate and extrapolate future and intermediate gear angles to reduce the number of angle information packets that have to be sent.
-	 * The Taylor Series is only regenerated and resynced when its predication begins to significantly diverge from actual values, by more than ANGLE_MARGIN
+	 * The Taylor Series is only regenerated and resynced when its prediction begins to significantly diverge from actual values, by more than ANGLE_MARGIN
 	 */
 	private long seriesTimestamp;
 	private float[] taylorSeries = new float[4];
@@ -52,19 +56,22 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 	 */
 	private float[] prevAngles = new float[4];
 
-	private static final float ANGLE_MARGIN = (float) CrossroadsConfig.speedPrecision.getDouble();
-	protected static final int UPDATE_TIME = CrossroadsConfig.gearResetTime.getInt();
+	private static final float ANGLE_MARGIN = CRConfig.speedPrecision.get().floatValue();
+	protected static final int UPDATE_TIME = CRConfig.gearResetTime.get();
 
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState){
-		return newState.getBlock() != oldState.getBlock();
+	public MasterAxisTileEntity(){
+		this(type);
+	}
+
+	protected MasterAxisTileEntity(TileEntityType<? extends MasterAxisTileEntity> typeIn){
+		super(typeIn);
 	}
 
 	protected Direction getFacing(){
 		if(facing == null){
 			BlockState state = world.getBlockState(pos);
-			if(!state.getPropertyKeys().contains(EssentialsProperties.FACING)){
-				invalidate();
+			if(!state.has(EssentialsProperties.FACING)){
+				remove();
 				return Direction.DOWN;
 			}
 			facing = state.get(EssentialsProperties.FACING);
@@ -74,10 +81,12 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public void invalidate(){
-		super.invalidate();
+	public void remove(){
+		super.remove();
 		//It is important that disconnect is called when this TE is destroyed/removed/invalidated on both the server and client to both prevent memory leaks, and clear up minor rendering abnormalities
 		disconnect();
+		axisOpt.invalidate();
+		axisOpt = LazyOptional.of(() -> handler);
 	}
 
 	public void disconnect(){
@@ -169,7 +178,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 				taylorSeries[0] = prevAngles[3] - offset;
 
 				//Sync the series to the client
-				CrossroadsPackets.network.sendToAllAround(new SendTaylorToClient(seriesTimestamp, taylorSeries, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				CrossroadsPackets.sendPacketAround(world, pos, new SendTaylorToClient(seriesTimestamp, taylorSeries, pos));
 			}
 		}
 	}
@@ -254,28 +263,21 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
-		return writeToNBT(nbt);
+		return write(nbt);
 	}
 
-	@Override
-	public boolean hasCapability(Capability<?> cap, Direction side){
-		if(cap == Capabilities.AXIS_CAPABILITY && (side == null || side == getFacing())){
-			return true;
-		}
-		return super.hasCapability(cap, side);
-	}
-
-	protected AxisTypes getType(){
+	protected AxisTypes getAxisType(){
 		return AxisTypes.NORMAL;
 	}
 
 	protected final IAxisHandler handler = new AxisHandler();
+	protected LazyOptional<IAxisHandler> axisOpt = LazyOptional.of(() -> handler);
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.AXIS_CAPABILITY && (side == null || side == getFacing())){
-			return (T) handler;
+			return (LazyOptional<T>) axisOpt;
 		}
 		return super.getCapability(cap, side);
 	}
@@ -293,7 +295,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 
 		@Override
 		public void requestUpdate(){
-			if(CrossroadsConfig.disableSlaves.getBoolean()){
+			if(CRConfig.disableSlaves.get()){
 				return;
 			}
 			memberCopy = new ArrayList<>(rotaryMembers);
@@ -301,14 +303,14 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 			locked = false;
 			Direction dir = getFacing();
 			TileEntity te = world.getTileEntity(pos.offset(dir));
-			IAxleHandler axleHandler;
-			if(te != null && (axleHandler = te.getCapability(Capabilities.AXLE_CAPABILITY, dir.getOpposite())) != null){
+			LazyOptional<IAxleHandler> axleOpt;
+			if(te != null && (axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, dir.getOpposite())).isPresent()){
 				byte keyNew;
 				do {
 					keyNew = (byte) (RAND.nextInt(100) + 1);
 				}while(key == keyNew);
 				key = keyNew;
-				axleHandler.propogate(this, key, 1, 0, false);
+				axleOpt.orElseThrow(NullPointerException::new).propogate(this, key, 1, 0, false);
 			}
 
 			memberCopy.removeAll(rotaryMembers);
@@ -375,7 +377,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 
 		@Override
 		public AxisTypes getType(){
-			return MasterAxisTileEntity.this.getType();
+			return MasterAxisTileEntity.this.getAxisType();
 		}
 	}
 }

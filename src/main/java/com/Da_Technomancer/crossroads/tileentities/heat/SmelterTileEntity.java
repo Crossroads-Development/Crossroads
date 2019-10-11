@@ -3,25 +3,45 @@ package com.Da_Technomancer.crossroads.tileentities.heat;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.gui.container.SmelterContainer;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.item.crafting.FurnaceRecipe;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction;
+import net.minecraft.util.IntReferenceHolder;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.registries.ObjectHolder;
 
+import javax.annotation.Nullable;
+import java.util.Optional;
+
+@ObjectHolder(Crossroads.MODID)
 public class SmelterTileEntity extends InventoryTE{
 
-	public SmelterTileEntity(){
-		super(2);// 0 = Input, 1 = Output
-	}
+	@ObjectHolder("smelter")
+	private static TileEntityType<SmelterTileEntity> type = null;
 
 	public static final int REQUIRED = 500;
 	public static final int[] TEMP_TIERS = {200, 300};
 	public static final int USAGE = 5;
 
 	private int progress = 0;
+	public IntReferenceHolder cookProg = IntReferenceHolder.single();
+
+	public SmelterTileEntity(){
+		super(type, 2);// 0 = Input, 1 = Output
+	}
 
 	@Override
 	protected boolean useHeat(){
@@ -52,15 +72,18 @@ public class SmelterTileEntity extends InventoryTE{
 					}
 					inventory[0].shrink(1);
 				}
+				cookProg.set(progress);
 			}else{
 				progress = 0;
+				cookProg.set(progress);
 			}
 			markDirty();
 		}
 	}
 
 	private ItemStack getOutput(){
-		ItemStack stack = FurnaceRecipes.instance().getSmeltingResult(inventory[0]);
+		Optional<FurnaceRecipe> recOpt = world.getRecipeManager().getRecipe(IRecipeType.SMELTING, this, world);
+		ItemStack stack = recOpt.isPresent() ? recOpt.get().getRecipeOutput() : ItemStack.EMPTY;
 
 		if(stack.isEmpty()){
 			return ItemStack.EMPTY;
@@ -90,55 +113,44 @@ public class SmelterTileEntity extends InventoryTE{
 		return nbt;
 	}
 
-	private ItemHandler itemHandler = new ItemHandler(null);
+	@Override
+	public void remove(){
+		super.remove();
+		itemOpt.invalidate();
+	}
+
+	private LazyOptional<IItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.HEAT_CAPABILITY && (side == Direction.UP || side == null)){
-			return (T) heatHandler;
+			return (LazyOptional<T>) heatOpt;
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && side != Direction.UP){
-			return (T) itemHandler;
+			return (LazyOptional<T>) itemOpt;
 		}
 
 		return super.getCapability(cap, side);
 	}
 
 	@Override
-	public String getName(){
-		return "container.smelter";
-	}
-
-	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && !FurnaceRecipes.instance().getSmeltingResult(stack).isEmpty();
-	}
-
-	@Override
-	public int getField(int id){
-		if(id == getFieldCount() - 1){
-			return progress;
-		}else{
-			return super.getField(id);
-		}
-	}
-
-	@Override
-	public void setField(int id, int value){
-		super.setField(id, value);
-
-		if(id == getFieldCount() - 1){
-			progress = value;
-		}
-	}
-
-	@Override
-	public int getFieldCount(){
-		return super.getFieldCount() + 1;
+		return index == 0 && world.getRecipeManager().getRecipe(IRecipeType.SMELTING, this, world).isPresent();
 	}
 
 	@Override
 	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
 		return index == 1;
+	}
+
+	@Override
+	public ITextComponent getDisplayName(){
+		return new TranslationTextComponent("container.smelter");
+	}
+
+	@Nullable
+	@Override
+	public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity playerEntity){
+		return new SmelterContainer(id, playerInventory, createContainerBuf());
 	}
 }

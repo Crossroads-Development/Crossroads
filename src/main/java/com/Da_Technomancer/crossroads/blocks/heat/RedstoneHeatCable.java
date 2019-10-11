@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.render.bakedModel.ConduitBakedModel;
 import com.Da_Technomancer.crossroads.render.bakedModel.IConduitModel;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
@@ -71,7 +71,7 @@ public class RedstoneHeatCable extends ContainerBlock implements IConduitModel{
 		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(1);
-		setCreativeTab(CrossroadsItems.TAB_HEAT_CABLE);
+		setCreativeTab(CRItems.TAB_HEAT_CABLE);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this, false);
 	}

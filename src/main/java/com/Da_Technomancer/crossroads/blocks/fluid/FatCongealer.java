@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FatCongealerTileEntity;
 
 import net.minecraft.block.BlockState;
@@ -33,7 +33,7 @@ public class FatCongealer extends ContainerBlock{
 		setTranslationKey(name);
 		setSoundType(SoundType.METAL);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setHardness(3);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);

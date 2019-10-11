@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.API.technomancy;
 
 import com.Da_Technomancer.crossroads.API.effects.goggles.*;
 import com.Da_Technomancer.crossroads.Keys;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.crafting.ItemRecipePredicate;
 import com.Da_Technomancer.crossroads.items.crafting.TagCraftingStack;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
@@ -10,7 +10,6 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
@@ -24,7 +23,7 @@ public enum EnumGoggleLenses{
 	RUBY(new TagCraftingStack("gemRuby"), "_ruby", new RubyGoggleEffect(), Keys.controlEnergy, true),
 	EMERALD(new TagCraftingStack("gemEmerald"), "_emerald", new EmeraldGoggleEffect(), Keys.controlPotential, true),
 	DIAMOND(new TagCraftingStack("gemDiamond"), "_diamond", new DiamondGoggleEffect(), Keys.controlStability, false),
-	QUARTZ(new ItemRecipePredicate(CrossroadsItems.pureQuartz, 0), "_quartz", new QuartzGoggleEffect(), null, false),
+	QUARTZ(new ItemRecipePredicate(CRItems.pureQuartz, 0), "_quartz", new QuartzGoggleEffect(), null, false),
 	VOID(new ItemRecipePredicate(OreSetup.voidCrystal, 0), "", new VoidGoggleEffect(), Keys.controlVoid, true);
 	
 	private final Predicate<ItemStack> item;

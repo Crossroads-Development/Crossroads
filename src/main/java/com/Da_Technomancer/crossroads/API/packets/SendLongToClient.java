@@ -22,6 +22,10 @@ public class SendLongToClient extends ClientPacket{
 
 	}
 
+	public SendLongToClient(int identifier, long message, BlockPos pos){
+		this((byte) identifier, message, pos);
+	}
+
 	public SendLongToClient(byte identifier, long message, BlockPos pos){
 		this.identifier = identifier;
 		this.message = message;

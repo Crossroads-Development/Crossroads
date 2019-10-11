@@ -119,7 +119,7 @@ public class GuiHandler implements IGuiHandler{
 			case FIREBOX_GUI:
 				return new FireboxScreen(player.inventory, ((FireboxTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case SMELTER_GUI:
-				return new SmelterGuiContainer(player.inventory, ((SmelterTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
+				return new SmelterScreen(player.inventory, ((SmelterTileEntity) world.getTileEntity(new BlockPos(x, y, z))));
 			case STEAM_BOILER_GUI:
 				return new SteamBoilerGuiContainer(player.inventory, (SteamBoilerTileEntity) world.getTileEntity(new BlockPos(x, y, z)));
 			case COLOR_CHART_GUI:
@@ -145,13 +145,13 @@ public class GuiHandler implements IGuiHandler{
 			case FAT_COLLECTOR_GUI:
 				return new FatCollectorGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 			case SALT_REACTOR_GUI:
-				return new SaltReactorGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
+				return new SaltReactorScreen(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 			case RADIATOR_GUI:
 				return new RadiatorGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 			case CRUCIBLE_GUI:
 				return new CrucibleScreen(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 			case ICEBOX_GUI:
-				return new IceboxGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
+				return new IceboxScreen(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 			case FLUID_COOLER_GUI:
 				return new FluidCoolerScreen(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 			case COPSHOWIUM_CHAMBER_GUI:
@@ -159,7 +159,7 @@ public class GuiHandler implements IGuiHandler{
 			case ORE_CLEANSER_GUI:
 				return new OreCleanserGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 			case BLAST_FURNACE_GUI:
-				return new BlastFurnaceGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
+				return new BlastFurnaceScreen(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 			case FAT_FEEDER_GUI:
 				return new FatFeederGuiContainer(player.inventory, (InventoryTE) world.getTileEntity(new BlockPos(x, y, z)));
 			case BEAM_EXTRACTOR_GUI:

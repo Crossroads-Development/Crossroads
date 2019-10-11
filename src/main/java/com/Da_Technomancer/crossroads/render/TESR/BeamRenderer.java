@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.render.TESR;
 import java.awt.Color;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import org.apache.commons.lang3.tuple.Triple;
 import org.lwjgl.opengl.GL11;
@@ -71,7 +71,7 @@ public class BeamRenderer extends TileEntityRenderer<BeamRenderTEBase>{
 						break;
 				}
 
-				if(CrossroadsConfig.rotateBeam.getBoolean()){
+				if(CRConfig.rotateBeam.getBoolean()){
 					GlStateManager.rotate((partialTicks + (float) beam.getWorld().getGameTime()) * 2F, 0, 1, 0);
 				}
 				Tessellator tes = Tessellator.getInstance();

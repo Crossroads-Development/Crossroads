@@ -19,7 +19,7 @@ public class SingleRecipeSerializer<T extends SingleItemRecipe> extends ForgeReg
 
 	private final IRecipeFactory<T> factory;
 
-	protected SingleRecipeSerializer(IRecipeFactory<T> factory){
+	public SingleRecipeSerializer(IRecipeFactory<T> factory){
 		this.factory = factory;
 	}
 

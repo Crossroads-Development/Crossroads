@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.items.itemSets;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
@@ -38,11 +38,11 @@ public class Axle extends Item{
 		String name = "axle_" + typeIn.toString().toLowerCase();
 		setTranslationKey("axle_metal");
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_GEAR);
+		setCreativeTab(CRItems.TAB_GEAR);
 		type = typeIn;
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.itemAddQue(this);
-		CrossroadsItems.toClientRegister.put(Pair.of(this, 0), LOCAT);
+		CRItems.toRegister.add(this);
+		CRItems.itemAddQue(this);
+		CRItems.toClientRegister.put(Pair.of(this, 0), LOCAT);
 		ModCrafting.toRegisterOreDict.add(Pair.of(this, new String[] {"stick" + type.toString()}));
 	}
 

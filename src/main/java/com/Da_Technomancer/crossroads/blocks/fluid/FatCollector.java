@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.fluid;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FatCollectorTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.ContainerBlock;
@@ -33,7 +33,7 @@ public class FatCollector extends ContainerBlock{
 		setSoundType(SoundType.METAL);
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setHardness(3);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);

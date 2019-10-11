@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
@@ -26,7 +26,7 @@ public class GearFactory{
 	public static final HashMap<GearMaterial, GearProfile> gearTypes = new HashMap<>();
 
 	protected static void init(){
-		String[] rawInput = CrossroadsConfig.getConfigStringList(CrossroadsConfig.gearTypes, true);
+		String[] rawInput = CRConfig.getConfigStringList(CRConfig.gearTypes, true);
 
 		Pattern pattern = Pattern.compile("\\w++ \\p{XDigit}{6}+ [+]?[0-9]*.?[0-9]+");
 

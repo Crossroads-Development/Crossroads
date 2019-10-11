@@ -2,65 +2,72 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearSlaveTileEntity;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
+import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.world.storage.loot.LootContext;
 
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LargeGearSlave extends ContainerBlock{
 
-	private static final AxisAlignedBB[] BB = new AxisAlignedBB[] {new AxisAlignedBB(0D, 0D, 0D, 1D, .125D, 1D), new AxisAlignedBB(0D, 0.875D, 0D, 1D, 1D, 1D), new AxisAlignedBB(0D, 0D, 0D, 1D, 1D, .125D), new AxisAlignedBB(0D, 0D, 0.875D, 1D, 1D, 1D), new AxisAlignedBB(0D, 0D, 0D, .125D, 1D, 1D), new AxisAlignedBB(0.875D, 0D, 0D, 1D, 1D, 1D)};
+	private static final VoxelShape[] SHAPES = new VoxelShape[6];
+	private static final VoxelShape[] COL_SHAPES = new VoxelShape[6];
+
+	static{
+		//Create a shape for each facing. Solid base plate
+		SHAPES[0] = makeCuboidShape(0, 0, 0, 16, 2, 16);
+		SHAPES[1] = makeCuboidShape(0, 14, 0, 16, 16, 16);
+		SHAPES[2] = makeCuboidShape(0, 0, 0, 16, 16, 2);
+		SHAPES[3] = makeCuboidShape(0, 0, 14, 16, 16, 16);
+		SHAPES[4] = makeCuboidShape(0, 0, 0, 2, 16, 16);
+		SHAPES[5] = makeCuboidShape(14, 0, 0, 16, 16, 16);
+
+		//Create a collision shape for each facing. A small strip is missing to prevent it being considered "solid" for things like torches, while still blocking basically all entity movement
+		//Note: could be changed to have one pixel missing instead of a strip if needed
+		COL_SHAPES[0] = makeCuboidShape(0, 0, 0, 15, 2, 16);
+		COL_SHAPES[1] = makeCuboidShape(0, 14, 0, 15, 16, 16);
+		COL_SHAPES[2] = makeCuboidShape(0, 0, 0, 15, 16, 2);
+		COL_SHAPES[3] = makeCuboidShape(0, 0, 14, 15, 16, 16);
+		COL_SHAPES[4] = makeCuboidShape(0, 0, 0, 2, 15, 16);
+		COL_SHAPES[5] = makeCuboidShape(14, 0, 0, 15, 16, 16);
+	}
 
 	public LargeGearSlave(){
-		super(Material.IRON);
+		super(Block.Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(3));
 		String name = "large_gear_slave";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
-		setHardness(3);
-		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);
 	}
 
 	@Override
-	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, EssentialsProperties.FACING);
-	}
-	
-	@Override
-	public BlockState getStateFromMeta(int meta){
-		return getDefaultState().with(EssentialsProperties.FACING, Direction.byIndex(meta));
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+		builder.add(EssentialsProperties.FACING);
 	}
 
 	@Override
-	public int getMetaFromState(BlockState state){
-		return state.get(EssentialsProperties.FACING).getIndex();
+	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+		return COL_SHAPES[state.get(EssentialsProperties.FACING).getIndex()];
 	}
-	
+
 	@Override
-	public AxisAlignedBB getBoundingBox(BlockState state, IBlockAccess source, BlockPos pos){
-		return BB[state.get(EssentialsProperties.FACING).getIndex()];
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+		return SHAPES[state.get(EssentialsProperties.FACING).getIndex()];
 	}
 	
 	@Override
@@ -74,18 +81,13 @@ public class LargeGearSlave extends ContainerBlock{
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
+	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
 		RotaryUtil.increaseMasterKey(true);
+		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
 	}
 
 	@Override
-	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face){
-		return BlockFaceShape.UNDEFINED;
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public ItemStack getPickBlock(BlockState state, RayTraceResult target, World world, BlockPos pos, PlayerEntity player){
+	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player){
 		TileEntity te = world.getTileEntity(pos);
 		if(te instanceof LargeGearSlaveTileEntity && ((LargeGearSlaveTileEntity) te).masterPos != null){
 			te = world.getTileEntity(pos.add(((LargeGearSlaveTileEntity) te).masterPos));
@@ -93,43 +95,26 @@ public class LargeGearSlave extends ContainerBlock{
 				return new ItemStack(GearFactory.gearTypes.get(((LargeGearMasterTileEntity) (te)).getMember()).getLargeGear(), 1);
 			}
 		}
-		return ItemStack.EMPTY;
-	}
+		return ItemStack.EMPTY;	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public boolean shouldSideBeRendered(BlockState blockState, IBlockAccess blockAccess, BlockPos pos, Direction side){
-		return false;
-	}
-
-	@Override
-	public boolean isFullCube(BlockState state){
-		return false;
-	}
-
-	@Override
-	public boolean isOpaqueCube(BlockState state){
-		return false;
-	}
-
-	@Override
-	public boolean removedByPlayer(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, boolean canHarvest){
-		if(canHarvest && worldIn.getTileEntity(pos) instanceof LargeGearSlaveTileEntity){
+	public boolean removedByPlayer(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid){
+		if(willHarvest && worldIn.getTileEntity(pos) instanceof LargeGearSlaveTileEntity){
 			((LargeGearSlaveTileEntity) worldIn.getTileEntity(pos)).passBreak(state.get(EssentialsProperties.FACING), true);
 		}
-		return super.removedByPlayer(state, worldIn, pos, player, canHarvest);
+		return super.removedByPlayer(state, worldIn, pos, player, willHarvest, fluid);
 	}
-	
+
 	@Override
-	public void breakBlock(World worldIn, BlockPos pos, BlockState state){
+	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving){
 		if(worldIn.getTileEntity(pos) instanceof LargeGearSlaveTileEntity){
 			((LargeGearSlaveTileEntity) worldIn.getTileEntity(pos)).passBreak(state.get(EssentialsProperties.FACING), false);
 		}
-		super.breakBlock(worldIn, pos, state);
+		super.onReplaced(state, worldIn, pos, newState, isMoving);
 	}
 
 	@Override
-	public Item getItemDropped(BlockState state, Random rand, int fortune){
-		return null;
+	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder){
+		return new ArrayList<>(0);
 	}
 }

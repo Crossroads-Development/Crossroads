@@ -17,6 +17,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
@@ -51,7 +52,7 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 	}
 
 	@Override
-	protected AxisTypes getType(){
+	protected AxisTypes getAxisType(){
 		return AxisTypes.FIXED;
 	}
 
@@ -175,7 +176,7 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.AXIS_CAPABILITY && (side == null || side == getFacing())){
 			return (T) mathAxisHandler;
 		}

@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.BasicFluidSplitterTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.BlockRenderType;
@@ -22,7 +22,7 @@ public class BasicFluidSplitter extends ContainerBlock{
 		String name = "basic_fluid_splitter";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setHardness(3);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);

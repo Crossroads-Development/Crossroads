@@ -21,7 +21,7 @@ public class MillstoneGuiContainer extends MachineGUI{
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
 		GlStateManager.color(1, 1, 1);
 		mc.getTextureManager().bindTexture(BACKGROUND);
-		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		drawTexturedModalRect(guiLeft + 66, guiTop + 35, 176, 0, 44, (int) Math.ceil(te.getField(te.getFieldCount() - 1) * 17 / MillstoneTileEntity.REQUIRED));
+		blit(guiLeft, guiTop, 0, 0, xSize, ySize);
+		blit(guiLeft + 66, guiTop + 35, 176, 0, 44, (int) Math.ceil(te.getField(te.getFieldCount() - 1) * 17 / MillstoneTileEntity.REQUIRED));
 	}
 }

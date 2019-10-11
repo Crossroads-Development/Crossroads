@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.IGrowable;
@@ -33,7 +33,7 @@ public class GrowEffect implements IEffect{
 			
 			String stateName = state.getBlock().getRegistryName().toString();
 
-			for(String blockedID : CrossroadsConfig.getConfigStringList(CrossroadsConfig.growBlacklist, false)){
+			for(String blockedID : CRConfig.getConfigStringList(CRConfig.growBlacklist, false)){
 				if(blockedID.equals(stateName)){
 					return;
 				}

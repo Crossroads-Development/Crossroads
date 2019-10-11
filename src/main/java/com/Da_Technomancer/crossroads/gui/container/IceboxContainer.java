@@ -2,12 +2,24 @@ package com.Da_Technomancer.crossroads.gui.container;
 
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.heat.Icebox;
+import com.Da_Technomancer.crossroads.tileentities.heat.IceboxTileEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.registries.ObjectHolder;
 
-public class IceboxContainer extends MachineContainer{
+@ObjectHolder(Crossroads.MODID)
+public class IceboxContainer extends MachineContainer<IceboxTileEntity>{
 
-	public IceboxContainer(IInventory playerInv, InventoryTE te){
-		super(playerInv, te);
+	@ObjectHolder("icebox")
+	private static ContainerType<IceboxContainer> type = null;
+
+	public IceboxContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
+		super(type, id, playerInv, buf);
+		trackInt(te.coolProg);
 	}
 
 	@Override

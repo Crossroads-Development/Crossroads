@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 
 import com.Da_Technomancer.crossroads.API.effects.alchemy.IAlchEffect;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.entity.EntityFlameCore;
 import com.Da_Technomancer.crossroads.particles.ModParticles;
 import net.minecraft.block.BlockState;
@@ -56,7 +56,7 @@ public class AlchemyUtil{
 
 		//The flame effect takes priority over normal effects
 		if(hasFire){
-			if(CrossroadsConfig.phelEffect.get()){
+			if(CRConfig.phelEffect.get()){
 				EntityFlameCore coreFlame = new EntityFlameCore(world);
 				coreFlame.setPosition(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
 				coreFlame.setInitialValues(reags, flameRange);
@@ -64,7 +64,7 @@ public class AlchemyUtil{
 			}else{
 				//If flame effect is disabled in the config, just spawn a single small fire
 				BlockState prev = world.getBlockState(pos);
-				if(prev.getBlock() == Blocks.FIRE || CrossroadsConfig.isProtected(world, pos, prev)){
+				if(prev.getBlock() == Blocks.FIRE || CRConfig.isProtected(world, pos, prev)){
 					return;
 				}
 				world.setBlockState(pos, Blocks.FIRE.getDefaultState());

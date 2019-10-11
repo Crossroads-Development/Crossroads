@@ -136,7 +136,7 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == CapabilityEnergy.ENERGY && side != Direction.UP){
 			return (T) feHandler;
 		}

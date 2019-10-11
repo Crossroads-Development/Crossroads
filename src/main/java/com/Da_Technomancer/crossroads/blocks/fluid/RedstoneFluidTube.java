@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.render.bakedModel.AdvConduitBakedModel;
 import com.Da_Technomancer.crossroads.render.bakedModel.IAdvConduitModel;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RedstoneFluidTubeTileEntity;
@@ -61,7 +61,7 @@ public class RedstoneFluidTube extends ContainerBlock implements IAdvConduitMode
 		String name = "redstone_fluid_tube";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setHardness(2);
 		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);

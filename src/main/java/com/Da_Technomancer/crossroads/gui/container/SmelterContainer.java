@@ -1,13 +1,21 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
 import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.heat.SmelterTileEntity;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.registries.ObjectHolder;
 
-public class SmelterContainer extends MachineContainer{
+@ObjectHolder(Crossroads.MODID)
+public class SmelterContainer extends MachineContainer<SmelterTileEntity>{
 
-	public SmelterContainer(IInventory playerInv, SmelterTileEntity te){
-		super(playerInv, te);
+	@ObjectHolder("smelter")
+	private static ContainerType<SmelterContainer> type = null;
+
+	public SmelterContainer(int id, PlayerInventory playerInv, PacketBuffer data){
+		super(type, id, playerInv, data);
 	}
 
 	@Override

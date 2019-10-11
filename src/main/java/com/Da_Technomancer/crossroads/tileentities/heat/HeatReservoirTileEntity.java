@@ -1,17 +1,24 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
-import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
-import com.Da_Technomancer.essentials.items.CircuitWrench;
-import com.Da_Technomancer.essentials.tileentities.CircuitTileEntity;
+import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.registries.ObjectHolder;
 
+@ObjectHolder(Crossroads.MODID)
 public class HeatReservoirTileEntity extends ModuleTE{
+
+	@ObjectHolder("heat_reservoir")
+	private static TileEntityType<HeatReservoirTileEntity> type = null;
+
+	public HeatReservoirTileEntity(){
+		super(type);
+	}
 
 	@Override
 	protected boolean useHeat(){
@@ -30,17 +37,11 @@ public class HeatReservoirTileEntity extends ModuleTE{
 		return nbt;
 	}
 
-	private final RedstoneHandler redstoneHandler = new RedstoneHandler();
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing){
 		if(capability == Capabilities.HEAT_CAPABILITY){
 			return (LazyOptional<T>) heatOpt;
-		}
-
-		if(capability == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
-			return (T) redstoneHandler;
 		}
 		return super.getCapability(capability, facing);
 	}
@@ -52,15 +53,6 @@ public class HeatReservoirTileEntity extends ModuleTE{
 			init();
 			temp += heat * 0.005D;
 			markDirty();
-		}
-	}
-
-	private class RedstoneHandler implements IAdvancedRedstoneHandler{
-
-		@Override
-		public double getOutput(boolean read){
-			heatHandler.init();
-			return read ? HeatUtil.toKelvin(temp) : 0;
 		}
 	}
 }

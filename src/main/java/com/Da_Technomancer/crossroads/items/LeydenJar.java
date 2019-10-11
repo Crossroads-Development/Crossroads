@@ -23,14 +23,14 @@ public class LeydenJar extends Item{
 		hasSubtypes = true;
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.itemAddQue(this);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
+		CRItems.toRegister.add(this);
+		CRItems.itemAddQue(this);
 	}
 	
 	public static int getCharge(ItemStack stack){
 		CompoundNBT nbt = stack.getTag();
-		if(stack.getItem() == CrossroadsItems.leydenJar && nbt != null){
+		if(stack.getItem() == CRItems.leydenJar && nbt != null){
 			return nbt.getInt("charge");
 		}else{
 			return 0;

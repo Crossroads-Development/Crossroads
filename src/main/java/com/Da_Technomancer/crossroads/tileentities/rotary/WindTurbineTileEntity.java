@@ -147,7 +147,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing == world.getBlockState(pos).get(CrossroadsProperties.HORIZ_FACING).getOpposite())){
 			return (T) axleHandler;
 		}

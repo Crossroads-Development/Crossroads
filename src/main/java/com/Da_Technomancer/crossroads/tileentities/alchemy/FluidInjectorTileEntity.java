@@ -24,7 +24,7 @@ public class FluidInjectorTileEntity extends AlchemyCarrierTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side == Direction.DOWN)){
 			return (T) handler;
 		}

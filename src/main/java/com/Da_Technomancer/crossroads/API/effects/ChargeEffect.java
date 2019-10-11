@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
@@ -22,7 +22,7 @@ public class ChargeEffect implements IEffect{
 		TileEntity te = worldIn.getTileEntity(pos);
 		LazyOptional<IEnergyStorage> opt;
 		if(te != null && (opt = te.getCapability(CapabilityEnergy.ENERGY, dir)).isPresent()){
-			opt.orElseThrow(NullPointerException::new).receiveEnergy(CrossroadsConfig.fePerCharge.get(), false);
+			opt.orElseThrow(NullPointerException::new).receiveEnergy(CRConfig.fePerCharge.get(), false);
 			return;
 		}
 
@@ -43,7 +43,7 @@ public class ChargeEffect implements IEffect{
 			TileEntity te = worldIn.getTileEntity(pos);
 			LazyOptional<IEnergyStorage> energy;
 			if(te != null && (energy = te.getCapability(CapabilityEnergy.ENERGY, dir)).isPresent()){
-				energy.orElseThrow(NullPointerException::new).extractEnergy(CrossroadsConfig.fePerCharge.get(), false);
+				energy.orElseThrow(NullPointerException::new).extractEnergy(CRConfig.fePerCharge.get(), false);
 				return;
 			}
 

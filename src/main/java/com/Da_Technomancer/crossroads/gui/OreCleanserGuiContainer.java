@@ -31,8 +31,8 @@ public class OreCleanserGuiContainer extends MachineGUI{
 
 		int i = (width - xSize) / 2;
 		int j = (height - ySize) / 2;
-		drawTexturedModalRect(i, j, 0, 0, xSize, ySize);
-		drawTexturedModalRect(guiLeft + 25, guiTop + 21, 176, 0, 36 * te.getField(te.getFieldCount() - 1) / 50, 10);
+		blit(i, j, 0, 0, xSize, ySize);
+		blit(guiLeft + 25, guiTop + 21, 176, 0, 36 * te.getField(te.getFieldCount() - 1) / 50, 10);
 
 		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
 	}

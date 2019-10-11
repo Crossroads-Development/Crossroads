@@ -225,7 +225,7 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		//No capabilities are found on the render side because that would require the prototype dimension to be loaded on the render side, which it almost certainly won't be.
 		if(side != null && index != -1 && !world.isRemote){
 			WorldServer worldDim = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);

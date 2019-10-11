@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
@@ -84,7 +84,7 @@ public class StampMillTileEntity extends InventoryTE{
 						inventory[1] = produced;
 					}else{
 						inventory[1] = inventory[0].split(1);
-						progress -= REQUIRED * CrossroadsConfig.stampMillDamping.get() / 100;
+						progress -= REQUIRED * CRConfig.stampMillDamping.get() / 100;
 						if(progress < 0){
 							progress = 0;
 						}
@@ -114,7 +114,7 @@ public class StampMillTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return (T) itemHandler;
 		}

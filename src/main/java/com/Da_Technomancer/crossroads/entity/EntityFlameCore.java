@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.IAlchEffect;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.NbtToEntityClient;
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
@@ -177,7 +177,7 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 		if(reags.getQty(EnumReagents.ALCHEMICAL_SALT.id()) == 0){
 			BlockState state = world.getBlockState(pos);
 
-			if(!CrossroadsConfig.isProtected(world, pos, state) && state.getBlockHardness(world, pos) >= 0){
+			if(!CRConfig.isProtected(world, pos, state) && state.getBlockHardness(world, pos) >= 0){
 				world.setBlockState(pos, lastAction && Math.random() > 0.75D && Blocks.FIRE.canPlaceBlockAt(world, pos) ? Blocks.FIRE.getDefaultState() : Blocks.AIR.getDefaultState(), lastAction ? 3 : 18);
 			}
 		}

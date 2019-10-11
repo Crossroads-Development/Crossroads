@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.electric;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -33,7 +33,7 @@ public class DynamoTileEntity extends ModuleTE{
 		super.tick();
 
 		if(efficiency < 0){
-			efficiency = CrossroadsConfig.electPerJoule.get();
+			efficiency = CRConfig.electPerJoule.get();
 		}
 
 		int operations = (int) Math.abs(motData[1]);
@@ -75,7 +75,7 @@ public class DynamoTileEntity extends ModuleTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.AXLE_CAPABILITY && (side == null || side == world.getBlockState(pos).get(CrossroadsProperties.HORIZ_FACING))){
 			return (T) axleHandler;
 		}

@@ -24,6 +24,5 @@ public class CrossroadsProperties{
 	public static final BooleanProperty CRYSTAL = BooleanProperty.create("crystal");
 	public static final DirectionProperty HORIZ_FACING = DirectionProperty.create("horiz_facing", (Direction side) -> side != null && side.getAxis() != Direction.Axis.Y);
 	public static final BooleanProperty CONTAINER_TYPE = BooleanProperty.create("container_type");
-	public static final EnumProperty<DyeColor> COLOR = EnumProperty.create("color", DyeColor.class);
 	public static final EnumProperty<MathAxisTileEntity.Arrangement> ARRANGEMENT = EnumProperty.create("arrangement", MathAxisTileEntity.Arrangement.class);
 }

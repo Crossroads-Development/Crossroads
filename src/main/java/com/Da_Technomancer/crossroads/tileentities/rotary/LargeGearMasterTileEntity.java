@@ -3,44 +3,59 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.packets.ILongReceiver;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
+import com.Da_Technomancer.crossroads.API.packets.ILongReceiver;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
-import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
+import com.Da_Technomancer.crossroads.API.rotary.*;
+import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
-import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
-import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.ITickableTileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
+@ObjectHolder(Crossroads.MODID)
 public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiver, ITickableTileEntity, IInfoTE{
-	
+
+	@ObjectHolder("large_gear_master")
+	private static TileEntityType<LargeGearMasterTileEntity> teType = null;
+
 	private GearFactory.GearMaterial type;
 	private double[] motionData = new double[4];
 	private double inertia = 0;
-	private boolean borken = false;
+	private boolean borken = false;//Any PR which changes the spelling on this line will be rejected
+	private boolean renderOffset = false;
 	/**
 	 * 0: angle, 1: clientW
 	 */
 	private float[] angleW = new float[2];
 	private Direction facing = null;
 
+	public LargeGearMasterTileEntity(){
+		super(teType);
+	}
+	
 	public Direction getFacing(){
 		if(facing == null){
 			BlockState state = world.getBlockState(pos);
@@ -53,22 +68,22 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	}
 
 	public boolean isRenderedOffset(){
-		return handlerMain.renderOffset;
+		return renderOffset;
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
-		chat.add("Speed: " + MiscUtil.betterRound(motionData[0], 3));
-		chat.add("Energy: " + MiscUtil.betterRound(motionData[1], 3));
-		chat.add("Power: " + MiscUtil.betterRound(motionData[2], 3));
-		chat.add("I: " + inertia + ", Rotation Ratio: " + handlerMain.getRotationRatio());
+	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.speed", CRConfig.formatVal(motionData[0])));
+		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.energy", CRConfig.formatVal(motionData[1])));
+		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.power", CRConfig.formatVal(motionData[2])));
+		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.setup", CRConfig.formatVal(inertia), CRConfig.formatVal(mainOpt.orElseThrow(NullPointerException::new).getRotationRatio())));
 	}
 
 	public void initSetup(GearFactory.GearMaterial typ){
 		type = typ;
 
 		if(!world.isRemote){
-			CrossroadsPackets.network.sendToAllAround(new SendLongToClient((byte) 1, type == null ? -1 : type.getIndex(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			CrossroadsPackets.sendPacketAround(world, pos, new SendLongToClient((byte) 1, type == null ? -1 : type.getIndex(), pos));
 		}
 
 		inertia = type == null ? 0 : MiscUtil.betterRound(type.getDensity() * 1.125D * 9D / 8D, 2);//1.125 because r*r/2 so 1.5*1.5/2
@@ -93,7 +108,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 		borken = true;
 		for(int i = -1; i < 2; ++i){
 			for(int j = -1; j < 2; ++j){
-				world.setBlockToAir(pos.offset(side.getAxis() == Axis.X ? Direction.UP : Direction.EAST, i).offset(side.getAxis() == Axis.Z ? Direction.UP : Direction.NORTH, j));
+				world.setBlockState(pos.offset(side.getAxis() == Axis.X ? Direction.UP : Direction.EAST, i).offset(side.getAxis() == Axis.Z ? Direction.UP : Direction.NORTH, j), Blocks.AIR.getDefaultState());
 			}
 		}
 		if(drop){
@@ -167,25 +182,23 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 		}else if(identifier == 1){
 			type = message < 0 || message >= GearFactory.gearMats.size() ? GearFactory.gearMats.get(0) : GearFactory.gearMats.get((int) message);
 		}else if(identifier == 2){
-			handlerMain.renderOffset = message == 1;
+			renderOffset = message == 1;
 		}
 	}
-
-	private final AxleHandler handlerMain = new AxleHandler();
 
 	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable Direction facing){
-		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing.getAxis() == getFacing().getAxis())){
-			return type != null;
-		}
-		return super.hasCapability(capability, facing);
+	public void remove(){
+		super.remove();
+		mainOpt.invalidate();
 	}
+
+	private final LazyOptional<IAxleHandler> mainOpt = LazyOptional.of(AxleHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing.getAxis() == getFacing().getAxis())){
-			return (T) handlerMain;
+			return (LazyOptional<T>) mainOpt;
 		}
 		return super.getCapability(capability, facing);
 	}
@@ -194,7 +207,6 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 
 		private byte updateKey;
 		private double rotRatio;
-		private boolean renderOffset;
 		private IAxisHandler axis;
 
 		@Override
@@ -228,7 +240,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 			axis = masterIn;
 
 			rotRatio = rotRatioIn;
-			this.renderOffset = renderOffset;
+			LargeGearMasterTileEntity.this.renderOffset = renderOffset;
 
 			updateKey = key;
 
@@ -240,24 +252,26 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 					// Adjacent gears
 					TileEntity adjTE = world.getTileEntity(pos.offset(facing, 2));
 					if(adjTE != null){
-						if(adjTE.hasCapability(Capabilities.COG_CAPABILITY, side)){
-							adjTE.getCapability(Capabilities.COG_CAPABILITY, side).connect(masterIn, key, -rotRatio, 1.5D, facing.getOpposite(), renderOffset);
-						}else if(adjTE.hasCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())){
+						LazyOptional<ICogHandler> cogOpt;
+						if((cogOpt = adjTE.getCapability(Capabilities.COG_CAPABILITY, side)).isPresent()){
+							cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -rotRatio, 1.5D, facing.getOpposite(), renderOffset);
+						}else if((cogOpt = adjTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())).isPresent()){
 							//Check for large gears
-							adjTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite()).connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * rotRatio, 1.5D, side, renderOffset);
+							cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * rotRatio, 1.5D, side, renderOffset);
 						}
 					}
 
 					// Diagonal gears
 					TileEntity diagTE = world.getTileEntity(pos.offset(facing, 2).offset(side));
-					if(diagTE != null && diagTE.hasCapability(Capabilities.COG_CAPABILITY, facing.getOpposite()) && RotaryUtil.canConnectThrough(world, pos.offset(facing, 2), facing.getOpposite(), side)){
-						diagTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite()).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatio, 1.5D, side.getOpposite(), renderOffset);
+					LazyOptional<ICogHandler> cogOpt;
+					if(diagTE != null && (cogOpt = diagTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())).isPresent() && RotaryUtil.canConnectThrough(world, pos.offset(facing, 2), facing.getOpposite(), side)){
+						cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatio, 1.5D, side.getOpposite(), renderOffset);
 					}
 
 					//Underside gears
 					TileEntity undersideTE = world.getTileEntity(pos.offset(facing, 1).offset(side));
-					if(undersideTE != null && undersideTE.hasCapability(Capabilities.COG_CAPABILITY, facing)){
-						undersideTE.getCapability(Capabilities.COG_CAPABILITY, facing).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatioIn, 1.5D, side.getOpposite(), renderOffset);
+					if(undersideTE != null && (cogOpt = undersideTE.getCapability(Capabilities.COG_CAPABILITY, facing)).isPresent()){
+						cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatioIn, 1.5D, side.getOpposite(), renderOffset);
 					}
 				}
 			}
@@ -267,15 +281,17 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 				TileEntity connectTE = world.getTileEntity(pos.offset(axleDir));
 
 				if(connectTE != null){
-					if(connectTE.hasCapability(Capabilities.AXIS_CAPABILITY, axleDir.getOpposite())){
-						connectTE.getCapability(Capabilities.AXIS_CAPABILITY, axleDir.getOpposite()).trigger(masterIn, key);
+					LazyOptional<IAxisHandler> axisOpt;
+					if((axisOpt = connectTE.getCapability(Capabilities.AXIS_CAPABILITY, axleDir.getOpposite())).isPresent()){
+						axisOpt.orElseThrow(NullPointerException::new).trigger(masterIn, key);
 					}
-					if(connectTE.hasCapability(Capabilities.SLAVE_AXIS_CAPABILITY, axleDir.getOpposite())){
-						masterIn.addAxisToList(connectTE.getCapability(Capabilities.SLAVE_AXIS_CAPABILITY, axleDir.getOpposite()), axleDir.getOpposite());
+					LazyOptional<ISlaveAxisHandler> slaveOpt;
+					if((slaveOpt = connectTE.getCapability(Capabilities.SLAVE_AXIS_CAPABILITY, axleDir.getOpposite())).isPresent()){
+						masterIn.addAxisToList(slaveOpt.orElseThrow(NullPointerException::new), axleDir.getOpposite());
 					}
-
-					if(connectTE.hasCapability(Capabilities.AXLE_CAPABILITY, axleDir.getOpposite())){
-						connectTE.getCapability(Capabilities.AXLE_CAPABILITY, axleDir.getOpposite()).propogate(masterIn, key, rotRatio, 0, renderOffset);
+					LazyOptional<IAxleHandler> axleOpt;
+					if((axleOpt = connectTE.getCapability(Capabilities.AXLE_CAPABILITY, axleDir.getOpposite())).isPresent()){
+						axleOpt.orElseThrow(NullPointerException::new).propogate(masterIn, key, rotRatio, 0, renderOffset);
 					}
 				}
 			}

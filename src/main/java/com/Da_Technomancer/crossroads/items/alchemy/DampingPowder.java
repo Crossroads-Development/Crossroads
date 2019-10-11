@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
 import com.Da_Technomancer.crossroads.entity.EntityFlameCore;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.common.base.Predicate;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.client.util.ITooltipFlag;
@@ -61,9 +61,9 @@ public class DampingPowder extends Item{
 		String name = "damping_powder";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.itemAddQue(this);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
+		CRItems.toRegister.add(this);
+		CRItems.itemAddQue(this);
 		DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, DAMPING_DISPENSER_BEHAVIOR);
 	}
 

@@ -31,7 +31,7 @@ public class WaterCentrifugeGuiContainer extends MachineGUI{
 
 		int i = (width - xSize) / 2;
 		int j = (height - ySize) / 2;
-		drawTexturedModalRect(i, j, 0, 0, xSize, ySize);
+		blit(i, j, 0, 0, xSize, ySize);
 
 
 		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);

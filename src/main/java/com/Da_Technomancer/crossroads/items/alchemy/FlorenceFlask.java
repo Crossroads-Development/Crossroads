@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 
 public class FlorenceFlask extends AbstractGlassware{
 
@@ -13,9 +13,9 @@ public class FlorenceFlask extends AbstractGlassware{
 		hasSubtypes = true;
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.itemAddQue(this);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
+		CRItems.toRegister.add(this);
+		CRItems.itemAddQue(this);
 	}
 
 	@Override

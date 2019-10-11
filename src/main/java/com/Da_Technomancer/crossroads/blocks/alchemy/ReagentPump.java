@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.render.bakedModel.ReagentPumpBakedModel;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReagentPumpTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
@@ -50,7 +50,7 @@ public class ReagentPump extends ContainerBlock{
 		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(.5F);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setSoundType(SoundType.GLASS);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this, true);

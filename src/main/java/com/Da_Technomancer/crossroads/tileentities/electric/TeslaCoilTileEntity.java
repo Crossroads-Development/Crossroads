@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoilTop;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.LeydenJar;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -137,7 +137,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEnti
 
 	@Nonnull
 	public ItemStack removeJar(){
-		ItemStack out = new ItemStack(CrossroadsItems.leydenJar, 1);
+		ItemStack out = new ItemStack(CRItems.leydenJar, 1);
 		LeydenJar.setCharge(out, Math.min(stored, LeydenJar.MAX_CHARGE));
 		setStored(stored - Math.min(stored, LeydenJar.MAX_CHARGE));
 		hasJar = false;
@@ -156,7 +156,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == CapabilityEnergy.ENERGY){
 			return (T) (side == world.getBlockState(pos).get(CrossroadsProperties.HORIZ_FACING) ? handlerOut : handlerIn);
 		}

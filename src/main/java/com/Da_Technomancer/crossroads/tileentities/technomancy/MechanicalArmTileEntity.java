@@ -7,7 +7,7 @@ import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.entity.EntityArmRidable;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
@@ -47,7 +47,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickableTile
 	private UUID ridableID;
 
 	private static final double PHYS_DATA = 0;
-	private static final float CLIENT_SPEED_MARGIN = (float) CrossroadsConfig.speedPrecision.getDouble();
+	private static final float CLIENT_SPEED_MARGIN = (float) CRConfig.speedPrecision.getDouble();
 
 	private static double[] getAnglesFromSpeeds(double speedDown, double speedEast, double speedWest){
 		return new double[] {-speedDown, Math.max(Math.min(BASE_HEIGHT + speedEast, MAX_HEIGHT), 0), Math.max(Math.min(BASE_LENGTH + speedWest, MAX_LENGTH), 0)};
@@ -211,7 +211,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickableTile
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.AXLE_CAPABILITY){
 			if(side == Direction.DOWN){
 				return (T) axles[0];

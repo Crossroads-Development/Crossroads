@@ -77,7 +77,7 @@ public class RedsAlchemicalTubeTileEntity extends AlchemicalTubeTileEntity{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || connectMode[side.getIndex()] != 0)){
 			return !locked ? (T) handler : null;
 		}

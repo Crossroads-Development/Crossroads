@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
@@ -58,8 +58,8 @@ public class StirlingEngineTileEntity extends ModuleTE{
 		tempSide -= 5D * level;
 		tempBottom += 5D * level;
 
-		if(axleHandler.axis != null && Math.signum(level) * motData[0] < ((ForgeConfigSpec.DoubleValue) CrossroadsConfig.stirlingSpeedLimit).get()){
-			motData[1] += ((ForgeConfigSpec.DoubleValue) CrossroadsConfig.stirlingMultiplier).get() * 5D * level * Math.abs(level);//5*stirlingMult*level^2 with sign of level
+		if(axleHandler.axis != null && Math.signum(level) * motData[0] < ((ForgeConfigSpec.DoubleValue) CRConfig.stirlingSpeedLimit).get()){
+			motData[1] += ((ForgeConfigSpec.DoubleValue) CRConfig.stirlingMultiplier).get() * 5D * level * Math.abs(level);//5*stirlingMult*level^2 with sign of level
 		}
 
 		markDirty();
@@ -90,7 +90,7 @@ public class StirlingEngineTileEntity extends ModuleTE{
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing == Direction.UP)){
 			return (T) axleHandler;
 		}

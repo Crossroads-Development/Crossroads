@@ -10,7 +10,7 @@ import com.Da_Technomancer.crossroads.render.bakedModel.PrototypeBakedModel;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldSavedData;
 import com.Da_Technomancer.crossroads.gui.GuiHandler;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypePortTileEntity;
 
 import net.minecraft.block.*;
@@ -48,7 +48,7 @@ public class PrototypePort extends ContainerBlock{
 		String name = "prototype_port";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
 		setResistance(2000);

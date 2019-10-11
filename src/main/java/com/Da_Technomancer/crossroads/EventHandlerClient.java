@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
 import com.Da_Technomancer.crossroads.API.packets.SendGoggleConfigureToServer;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamUsingItem;
 import com.Da_Technomancer.crossroads.items.technomancy.PrototypeWatch;
@@ -51,7 +51,7 @@ public final class EventHandlerClient{
 
 		//Goggle entity glowing
 		if(game.world.getGameTime() % 5 == 0){
-			boolean glow = helmet.getItem() == CrossroadsItems.moduleGoggles && helmet.hasTag() && helmet.getTag().getBoolean(EnumGoggleLenses.VOID.name());
+			boolean glow = helmet.getItem() == CRItems.moduleGoggles && helmet.hasTag() && helmet.getTag().getBoolean(EnumGoggleLenses.VOID.name());
 			for(Entity ent : game.world.getAllEntities()){
 				CompoundNBT entNBT = ent.getEntityData();
 				if(entNBT == null){
@@ -123,7 +123,7 @@ public final class EventHandlerClient{
 		if(e.getType() == ElementType.HOTBAR){
 			PlayerEntity player = Minecraft.getInstance().player;
 			ItemStack offStack = player.getHeldItem(Hand.OFF_HAND);
-			if(offStack.getItem() == CrossroadsItems.beamCage){
+			if(offStack.getItem() == CRItems.beamCage){
 				BeamUnit stored = BeamCage.getStored(offStack);
 				GlStateManager.pushMatrix();
 				GlStateManager.pushAttrib();
@@ -202,7 +202,7 @@ public final class EventHandlerClient{
 				Minecraft.getInstance().fontRenderer.drawString(mainStack.getDisplayName(), 16, 5, Color.DARK_GRAY.getRGB());
 
 				//Special Watch overlay
-				if(mainStack.getItem() == CrossroadsItems.watch){
+				if(mainStack.getItem() == CRItems.watch){
 					GlStateManager.color(1, 1, 1);
 					Minecraft.getInstance().getTextureManager().bindTexture(WATCH_BACKGROUND);
 					buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -280,7 +280,7 @@ public final class EventHandlerClient{
 	public void toggleGoggles(InputEvent.KeyInputEvent e){
 		PlayerEntity play = Minecraft.getInstance().player;
 		ItemStack helmet = play.getItemStackFromSlot(EquipmentSlotType.HEAD);
-		if(play.getHeldItemMainhand().isEmpty() && helmet.getItem() == CrossroadsItems.moduleGoggles && helmet.hasTag()){
+		if(play.getHeldItemMainhand().isEmpty() && helmet.getItem() == CRItems.moduleGoggles && helmet.hasTag()){
 			CompoundNBT nbt = helmet.getTag();
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				KeyBinding key = lens.getKey();

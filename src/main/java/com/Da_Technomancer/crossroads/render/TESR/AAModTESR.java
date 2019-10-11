@@ -1,15 +1,15 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.tileentities.RedstoneTransmitterTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.beams.*;
 import com.Da_Technomancer.crossroads.tileentities.electric.DynamoTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.beams.*;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.*;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.*;
+import com.Da_Technomancer.essentials.render.LinkLineRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
@@ -50,7 +50,7 @@ public class AAModTESR{
 		ClientRegistry.bindTileEntitySpecialRenderer(FluxNodeTileEntity.class, new FluxNodeRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TeslaCoilTopTileEntity.class, new LinkLineRenderer<TeslaCoilTopTileEntity>());
 		ClientRegistry.bindTileEntitySpecialRenderer(TemporalAcceleratorTileEntity.class, new TemporalAcceleratorRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(RedstoneTransmitterTileEntity.class, new LinkLineRenderer<RedstoneTransmitterTileEntity>());
+//		ClientRegistry.bindTileEntitySpecialRenderer(RedstoneTransmitterTileEntity.class, new LinkLineRenderer<RedstoneTransmitterTileEntity>());
 		ClientRegistry.bindTileEntitySpecialRenderer(StabilizerBeamTileEntity.class, new FluxStabilizerRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(StabilizerElectricTileEntity.class, new FluxStabilizerRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(ChronoHarnessTileEntity.class, new ChronoHarnessRenderer());

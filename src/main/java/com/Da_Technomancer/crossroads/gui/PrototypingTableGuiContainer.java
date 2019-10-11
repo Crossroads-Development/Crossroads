@@ -45,7 +45,7 @@ public class PrototypingTableGuiContainer extends MachineGUI implements OutputLo
 
 		int i = (width - xSize) / 2;
 		int j = (height - ySize) / 2;
-		drawTexturedModalRect(i, j, 0, 0, xSize, ySize);
+		blit(i, j, 0, 0, xSize, ySize);
 
 		textBar.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
 		button.drawBack(partialTicks, mouseX, mouseY, fontRenderer);

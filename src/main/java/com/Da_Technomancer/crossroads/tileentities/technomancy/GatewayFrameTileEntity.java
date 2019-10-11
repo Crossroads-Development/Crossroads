@@ -219,7 +219,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.BEAM_CAPABILITY && world.getBlockState(pos).get(EssentialsProperties.FACING).getAxis() == Axis.Y){
 			return (T) magicHandler;
 		}

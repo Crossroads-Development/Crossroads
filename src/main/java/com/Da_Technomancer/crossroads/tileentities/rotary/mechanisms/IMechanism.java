@@ -1,13 +1,13 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
-import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
+import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,14 +29,14 @@ public interface IMechanism{
 	}
 
 	/**
-	 * Gets the ratiator (or comparator) read output signal for this mechanism. Will only be called if this mechanism is in the axle slot.
+	 * Gets the Circuit Reader (or comparator) read output signal for this mechanism. Will only be called if this mechanism is in the axle slot.
 	 * @param mat The material of this mechanism
 	 * @param axis The axle axis. Will not be null
 	 * @param motData The motionData of this mechanism
 	 * @param te The calling TE
-	 * @return The value a ratiator should read. If a comparator is reading this, it will be floored and bounded to [0, 15].
+	 * @return The value a Circuit Reader should read. If a comparator is reading this, it will be rounded and bounded to [0, 15].
 	 */
-	public default double getRatiatorSignal(GearFactory.GearMaterial mat, Direction.Axis axis, double[] motData, MechanismTileEntity te){
+	public default double getCircuitSignal(GearFactory.GearMaterial mat, @Nonnull Direction.Axis axis, double[] motData, MechanismTileEntity te){
 		return 0;
 	}
 

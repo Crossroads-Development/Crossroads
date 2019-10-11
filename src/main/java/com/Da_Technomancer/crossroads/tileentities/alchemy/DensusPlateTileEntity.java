@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.blocks.alchemy.DensusPlate;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -19,7 +19,7 @@ public class DensusPlateTileEntity extends TileEntity implements ITickableTileEn
 
 	private Direction facing = null;
 	private Boolean anti = null;
-	private static final int RANGE = CrossroadsConfig.gravRange.get();
+	private static final int RANGE = CRConfig.gravRange.get();
 
 	private Direction getFacing(){
 		if(facing == null){

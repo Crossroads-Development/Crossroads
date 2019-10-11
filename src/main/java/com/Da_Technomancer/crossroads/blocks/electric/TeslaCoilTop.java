@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.electric;
 
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
 import net.minecraft.block.BlockState;
@@ -34,7 +34,7 @@ public class TeslaCoilTop extends ContainerBlock{
 		String name = "tesla_coil_top_" + variant.toString();
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setHardness(2);
 		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);

@@ -107,10 +107,10 @@ public class CrossroadsTileEntity{
 		register(StampMillTileEntity::new, "stamp_mill", reg, stampMill);
 		register(IceboxTileEntity::new, "icebox", reg, icebox);
 		register(OreCleanserTileEntity::new, "ore_cleanser", reg, oreCleanser);
-		register(BlastFurnaceTileEntity::new, "blast_furnace", reg, blastFurnace);
+		register(BlastFurnaceTileEntity::new, "ind_blast_furnace", reg, blastFurnace);
 		register(BeamRedirectorTileEntity::new, "beam_redirector", reg, beamRedirector);
-		register(RedstoneTransmitterTileEntity::new, "redstone_transmitter", reg, redstoneTransmitter);
-		register(RedstoneReceiverTileEntity::new, "redstone_receiver", reg, redstoneReceiver);
+//		register(RedstoneTransmitterTileEntity::new, "redstone_transmitter", reg, redstoneTransmitter);
+//		register(RedstoneReceiverTileEntity::new, "redstone_receiver", reg, redstoneReceiver);
 		register(TeslaCoilTopTileEntity::new, "tesla_coil_top", reg, teslaCoilTopAttack, teslaCoilTopDecorative, teslaCoilTopDistance, teslaCoilTopEfficiency, teslaCoilTopIntensity, teslaCoilTopNormal);
 		register(FluxNodeTileEntity::new, "flux_node", reg, fluxNode);
 //		register(AbstractStabilizerTileEntity::new, "flux_void", reg, fluxStabilizerBeam, fluxStabilizerCrystalBeam, fluxStabilizerCrystalElectric, fluxStabilizerElectric);

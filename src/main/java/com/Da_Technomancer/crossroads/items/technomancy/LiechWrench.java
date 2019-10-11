@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.common.collect.Multimap;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
@@ -23,12 +23,12 @@ public class LiechWrench extends Item{
 		String name = "liech_wrench";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setHarvestLevel("pickaxe", 1);
 		setHarvestLevel("shovel", 1);
 		setHarvestLevel("axe", 1);
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.itemAddQue(this);
+		CRItems.toRegister.add(this);
+		CRItems.itemAddQue(this);
 	}
 
 	@Override

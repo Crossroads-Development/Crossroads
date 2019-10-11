@@ -40,9 +40,9 @@ public class Slag extends Item{
 		String name = "slag";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.itemAddQue(this);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
+		CRItems.toRegister.add(this);
+		CRItems.itemAddQue(this);
 		DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, SLAG_DISPENSER_BEHAVIOR);
 		ModCrafting.toRegisterOreDict.add(Pair.of(this, new String[] {"itemSlag"}));
 	}

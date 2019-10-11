@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.AbstractStabilizerTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.StabilizerElectricTileEntity;
 import net.minecraft.block.BlockState;
@@ -34,7 +34,7 @@ public class FluxStabilizerElectric extends ContainerBlock{
 		String name = crystal ? "flux_stabilizer_crystal_electric" : "flux_stabilizer_electric";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);

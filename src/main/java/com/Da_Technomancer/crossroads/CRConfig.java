@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
+import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import net.minecraft.block.BlockState;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-public class CrossroadsConfig{
+public class CRConfig{
 
 	public static ForgeConfigSpec.BooleanValue genCopperOre;
 	public static ForgeConfigSpec.BooleanValue genTinOre;
@@ -217,5 +218,13 @@ public class CrossroadsConfig{
 		CommentedFileConfig serverConfig = CommentedFileConfig.builder(FMLPaths.CONFIGDIR.get().resolve(Crossroads.MODID + "-server.toml")).sync().autosave().writingMode(WritingMode.REPLACE).build();
 		serverConfig.load();
 		serverSpec.setConfig(serverConfig);
+	}
+
+	public static String formatVal(double d){
+		return formatVal((float) d);
+	}
+
+	public static String formatVal(float f){
+		return EssentialsConfig.formatFloat(f, null);
 	}
 }

@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.StirlingEngineTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -25,7 +25,7 @@ public class StirlingEngine extends ContainerBlock{
 		String name = "stirling_engine";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);
@@ -47,7 +47,7 @@ public class StirlingEngine extends ContainerBlock{
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add("I: 200");
 		tooltip.add("Moves 5°C/t for every 100°C of temperature difference");
-		tooltip.add("Produces " + ((ForgeConfigSpec.DoubleValue) CrossroadsConfig.stirlingMultiplier).get() + "J for every °C moved per 100°C of temperature difference");
-		tooltip.add("Stops producing power once it reaches " + ((ForgeConfigSpec.DoubleValue) CrossroadsConfig.stirlingSpeedLimit).get() + "rad/s");
+		tooltip.add("Produces " + ((ForgeConfigSpec.DoubleValue) CRConfig.stirlingMultiplier).get() + "J for every °C moved per 100°C of temperature difference");
+		tooltip.add("Stops producing power once it reaches " + ((ForgeConfigSpec.DoubleValue) CRConfig.stirlingSpeedLimit).get() + "rad/s");
 	}
 }

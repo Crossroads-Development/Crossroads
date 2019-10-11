@@ -25,12 +25,12 @@ public class DetailedCrafterGuiContainer extends ContainerScreen{
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
 		GlStateManager.color(1, 1, 1);
 		mc.getTextureManager().bindTexture(BACKGROUND);
-		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+		blit(guiLeft, guiTop, 0, 0, xSize, ySize);
 		if(StoreNBTToClient.clientPlayerTag.getCompound("path").getBoolean("technomancy")){
-			drawTexturedModalRect(guiLeft + 124, guiTop + 60, 176, 0, 16, 16);
+			blit(guiLeft + 124, guiTop + 60, 176, 0, 16, 16);
 		}
 		if(StoreNBTToClient.clientPlayerTag.getCompound("path").getBoolean("alchemy")){
-			drawTexturedModalRect(guiLeft + 108, guiTop + 60, 176, 16, 16, 16);
+			blit(guiLeft + 108, guiTop + 60, 176, 16, 16, 16);
 		}
 	}
 	

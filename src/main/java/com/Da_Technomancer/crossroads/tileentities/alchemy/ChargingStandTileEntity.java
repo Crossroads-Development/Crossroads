@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.AlchemyReactorTE;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.items.alchemy.FlorenceFlask;
 import com.Da_Technomancer.crossroads.items.alchemy.Phial;
@@ -64,7 +64,7 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 
 	@Override
 	protected int transferCapacity(){
-		return occupied ? florence ? CrossroadsItems.florenceFlaskGlass.getCapacity() : CrossroadsItems.phialGlass.getCapacity() : 0;
+		return occupied ? florence ? CRItems.florenceFlaskGlass.getCapacity() : CRItems.phialGlass.getCapacity() : 0;
 	}
 
 	@Override
@@ -94,7 +94,7 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 	}
 
 	private ItemStack getStoredItem(){
-		AbstractGlassware glasswareType = florence ? glass ? CrossroadsItems.florenceFlaskGlass : CrossroadsItems.florenceFlaskCrystal : glass ? CrossroadsItems.phialGlass : CrossroadsItems.phialCrystal;
+		AbstractGlassware glasswareType = florence ? glass ? CRItems.florenceFlaskGlass : CRItems.florenceFlaskCrystal : glass ? CRItems.phialGlass : CRItems.phialCrystal;
 		ItemStack flask = new ItemStack(glasswareType, 1);
 		glasswareType.setReagents(flask, contents);
 		return flask;
@@ -173,7 +173,7 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == CapabilityEnergy.ENERGY){
 			return (T) elecHandler;
 		}

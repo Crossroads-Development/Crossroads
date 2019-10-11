@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.beams.CrystalMasterAxisTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -29,7 +29,7 @@ public class CrystalMasterAxis extends ContainerBlock{
 		String name = "master_axis_crystal";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setHardness(3);
 		setSoundType(SoundType.STONE);
 		CrossroadsBlocks.toRegister.add(this);

@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatReservoirTileEntity;
+import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -29,7 +30,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class HeatReservoir extends ContainerBlock{
+public class HeatReservoir extends ContainerBlock implements IReadable{
 
 	public HeatReservoir(){
 		super(Block.Properties.create(Material.IRON).hardnessAndResistance(3));
@@ -74,9 +75,13 @@ public class HeatReservoir extends ContainerBlock{
 
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
-		if(stack.hasTag()){
-			HeatReservoirTileEntity te = (HeatReservoirTileEntity) world.getTileEntity(pos);
-			te.getCapability(Capabilities.HEAT_CAPABILITY, null).setTemp(stack.getTag().getDouble("temp"));
+		TileEntity te;
+		CompoundNBT nbt;
+		if((nbt = stack.getTag()) != null && (te = world.getTileEntity(pos)) instanceof HeatReservoirTileEntity){
+			LazyOptional<IHeatHandler> heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, null);
+			if(heatOpt.isPresent()){
+				heatOpt.orElseThrow(NullPointerException::new).setTemp(nbt.getDouble("temp"));
+			}
 		}
 	}
 
@@ -94,4 +99,13 @@ public class HeatReservoir extends ContainerBlock{
 		}
 		return 0;
 	}
+
+	@Override
+	public float read(World world, BlockPos pos, BlockState state){
+		TileEntity te = world.getTileEntity(pos);
+		LazyOptional<IHeatHandler> heatOpt;
+		if(te != null && (heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, null)).isPresent()){
+			return Math.round(HeatUtil.toKelvin(heatOpt.orElseThrow(NullPointerException::new).getTemp()));
+		}
+		return 0;	}
 }

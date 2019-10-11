@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks.electric;
 
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.electric.DynamoTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.BlockRenderType;
@@ -37,7 +37,7 @@ public class Dynamo extends ContainerBlock{
 		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(2);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
@@ -95,7 +95,7 @@ public class Dynamo extends ContainerBlock{
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add("I: 200");
-		tooltip.add("Produces: " + CrossroadsConfig.electPerJoule.get() + "FE/J");
+		tooltip.add("Produces: " + CRConfig.electPerJoule.get() + "FE/J");
 		tooltip.add("Consumes: 100*(speed^2) J/t");
 	}
 

@@ -112,7 +112,7 @@ public class RotaryDrillTileEntity extends ModuleTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.AXLE_CAPABILITY && (side == null || side == world.getBlockState(pos).get(EssentialsProperties.FACING).getOpposite())){
 			return (T) axleHandler;
 		}

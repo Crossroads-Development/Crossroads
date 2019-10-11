@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
 import com.Da_Technomancer.crossroads.entity.EntityNitro;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.dispenser.DefaultDispenseItemBehavior;
@@ -51,9 +51,9 @@ public class Nitroglycerin extends Item{
 		String name = "nitroglycerin";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.itemAddQue(this);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
+		CRItems.toRegister.add(this);
+		CRItems.itemAddQue(this);
 		DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, NITRO_DISPENSER_BEHAVIOR);
 	}
 

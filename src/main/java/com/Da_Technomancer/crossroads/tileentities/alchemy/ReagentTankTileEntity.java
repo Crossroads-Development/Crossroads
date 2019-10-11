@@ -89,7 +89,7 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.CHEMICAL_CAPABILITY){
 			return (T) handler;
 		}

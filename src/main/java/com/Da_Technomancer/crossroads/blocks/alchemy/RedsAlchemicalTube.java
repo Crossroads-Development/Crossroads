@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.render.bakedModel.AdvConduitBakedModel;
 import com.Da_Technomancer.crossroads.render.bakedModel.IAdvConduitModel;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.RedsAlchemicalTubeTileEntity;
@@ -62,7 +62,7 @@ public class RedsAlchemicalTube extends ContainerBlock implements IAdvConduitMod
 		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(.5F);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setSoundType(SoundType.GLASS);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);

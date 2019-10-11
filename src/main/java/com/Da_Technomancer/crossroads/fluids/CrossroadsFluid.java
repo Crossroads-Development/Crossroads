@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.fluids;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.material.Material;
@@ -33,7 +33,7 @@ public class CrossroadsFluid{
 		CrossroadsFluids.toRegister.add(still = new Still(name));
 		CrossroadsFluids.toRegister.add(flowing = new Flowing(name));
 		CrossroadsBlocks.toRegister.add(block = (FlowingFluidBlock) new FlowingFluidBlock(() -> still, lavaLike ? BLOCK_PROP_HOT : BLOCK_PROP).setRegistryName(name + "_block"));
-		CrossroadsItems.toRegister.add(bucket = new BucketItem(() -> still, BUCKET_PROP).setRegistryName(name + "_bucket"));
+		CRItems.toRegister.add(bucket = new BucketItem(() -> still, BUCKET_PROP).setRegistryName(name + "_bucket"));
 	}
 
 	private abstract class GenericFluid extends ForgeFlowingFluid{

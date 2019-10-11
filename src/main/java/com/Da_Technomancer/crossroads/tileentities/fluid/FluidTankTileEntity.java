@@ -43,7 +43,7 @@ public class FluidTankTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			return (T) mainHandler;
 		}

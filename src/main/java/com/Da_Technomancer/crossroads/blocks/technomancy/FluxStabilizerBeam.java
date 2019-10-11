@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.AbstractStabilizerTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.StabilizerBeamTileEntity;
 import net.minecraft.block.*;
@@ -33,7 +33,7 @@ public class FluxStabilizerBeam extends ContainerBlock{
 		String name = crystal ? "flux_stabilizer_crystal_beam" : "flux_stabilizer_beam";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);

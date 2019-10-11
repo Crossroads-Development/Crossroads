@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ChronoHarnessTileEntity;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.*;
@@ -37,7 +37,7 @@ public class ChronoHarness extends ContainerBlock{
 		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(2);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);

@@ -2,13 +2,14 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
+import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
+import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockState;
@@ -16,25 +17,37 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
+@ObjectHolder(Crossroads.MODID)
 public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver, IInfoTE{
 
-	public BlockPos masterPos;//Defined relative to this block's position
+	@ObjectHolder("large_gear_slave")
+	private static TileEntityType<LargeGearSlaveTileEntity> type = null;
 
+	public LargeGearSlaveTileEntity(){
+		super(type);
+	}
+
+	public BlockPos masterPos;//Defined relative to this block's position
 	private Direction facing = null;
 
 	protected Direction getFacing(){
 		if(facing == null){
 			BlockState state = world.getBlockState(pos);
 			if(state.getBlock() != CrossroadsBlocks.largeGearSlave){
-				invalidate();
+				remove();
 				return Direction.NORTH;
 			}
 			facing = state.get(EssentialsProperties.FACING);
@@ -44,16 +57,16 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
+	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		IAxleHandler axle = handler.getAxle();
 		if(axle == null){
 			return;
 		}
-
-		chat.add("Speed: " + MiscUtil.betterRound(axle.getMotionData()[0], 3));
-		chat.add("Energy: " + MiscUtil.betterRound(axle.getMotionData()[1], 3));
-		chat.add("Power: " + MiscUtil.betterRound(axle.getMotionData()[2], 3));
-		chat.add("I: " + axle.getMoInertia() + ", Rotation Ratio: " + axle.getRotationRatio());
+		
+		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.speed", CRConfig.formatVal(axle.getMotionData()[0])));
+		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.energy", CRConfig.formatVal(axle.getMotionData()[1])));
+		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.power", CRConfig.formatVal(axle.getMotionData()[2])));
+		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.setup", CRConfig.formatVal(axle.getMoInertia()), CRConfig.formatVal(axle.getRotationRatio())));
 	}
 
 	public void setInitial(BlockPos masPos){
@@ -62,8 +75,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 		}
 		masterPos = masPos;
 		long longPos = masterPos.toLong();
-		SendIntToClient msg = new SendIntToClient((byte) (int) (longPos >> 32), (int) longPos, pos);
-		CrossroadsPackets.network.sendToAllAround(msg, new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		CrossroadsPackets.sendPacketAround(world, pos, new SendIntToClient((byte) (int) (longPos >> 32), (int) longPos, pos));
 	}
 
 	@Override
@@ -83,7 +95,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 	}
 
 	private boolean isEdge(){
-		return masterPos != null && masterPos.distanceSq(BlockPos.ORIGIN) == 1;
+		return masterPos != null && masterPos.distanceSq(BlockPos.ZERO) == 1;
 	}
 
 	@Override
@@ -110,22 +122,20 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 		return nbt;
 	}
 
-	private final ICogHandler handler = new CogHandler();
-
 	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable Direction facing){
-		if(capability == Capabilities.COG_CAPABILITY && isEdge() && getFacing() == facing){
-			return true;
-		}else{
-			return super.hasCapability(capability, facing);
-		}
+	public void remove(){
+		super.remove();
+		cogOpt.invalidate();
 	}
+
+	private final ICogHandler handler = new CogHandler();
+	private final LazyOptional<ICogHandler> cogOpt = LazyOptional.of(() -> handler);
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.COG_CAPABILITY && isEdge() && getFacing() == facing){
-			return (T) handler;
+			return (LazyOptional<T>) cogOpt;
 		}else{
 			return super.getCapability(capability, facing);
 		}
@@ -144,7 +154,8 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 		public IAxleHandler getAxle(){
 			TileEntity te = world.getTileEntity(pos.add(masterPos));
 			if(te instanceof LargeGearMasterTileEntity){
-				return te.getCapability(Capabilities.AXLE_CAPABILITY, getFacing());
+				LazyOptional<IAxleHandler> axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, getFacing());
+				return axleOpt.isPresent() ?axleOpt.orElseThrow(NullPointerException::new) : null;
 			}
 			return null;
 		}

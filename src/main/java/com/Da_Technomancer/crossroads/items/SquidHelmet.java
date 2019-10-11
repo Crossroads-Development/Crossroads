@@ -11,14 +11,14 @@ import net.minecraft.world.World;
 public class SquidHelmet extends ArmorItem{
 
 	public SquidHelmet(){
-		super(CrossroadsItems.BOBO, 1, EquipmentSlotType.HEAD);
+		super(CRItems.BOBO, 1, EquipmentSlotType.HEAD);
 		setMaxStackSize(1);
 		String name = "squid_helmet";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.itemAddQue(this);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
+		CRItems.toRegister.add(this);
+		CRItems.itemAddQue(this);
 	}
 
 	@Override

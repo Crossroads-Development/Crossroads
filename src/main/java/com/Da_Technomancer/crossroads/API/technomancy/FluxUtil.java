@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.API.technomancy;
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldProvider;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
@@ -23,11 +23,11 @@ public class FluxUtil{
 	private static final Random RAND = new Random();
 
 	public static int getFePerFlux(boolean client){
-		return CrossroadsConfig.fePerEntropy.get();
+		return CRConfig.fePerEntropy.get();
 	}
 
 	public static void overloadFlux(World worldIn, BlockPos pos){
-		worldIn.destroyBlock(pos, CrossroadsConfig.entropyDropBlock.get());
+		worldIn.destroyBlock(pos, CRConfig.entropyDropBlock.get());
 		fluxEvent(worldIn, pos, RAND.nextInt(64) + 1);
 	}
 
@@ -36,7 +36,7 @@ public class FluxUtil{
 			return;
 		}
 
-		if(intensity >= 50 && CrossroadsConfig.voidChunk.getBoolean()){
+		if(intensity >= 50 && CRConfig.voidChunk.getBoolean()){
 			ChunkPos chunkPos = new ChunkPos(pos);
 			for(int x = 0; x < 16; x++){
 				for(int z = 0; z < 16; z++){
@@ -45,7 +45,7 @@ public class FluxUtil{
 					}
 				}
 			}
-		}else if(intensity >= 30 && CrossroadsConfig.resetChunk.getBoolean()){
+		}else if(intensity >= 30 && CRConfig.resetChunk.getBoolean()){
 			try{
 				//The chunk at world gen
 				ChunkPos chunkPos = new ChunkPos(pos);
@@ -62,7 +62,7 @@ public class FluxUtil{
 			}catch(Exception e){
 				Crossroads.logger.log(Level.ERROR, "Something went wrong while resetting a chunk. Disable this in the config if necessary. Please report this as a bug.", e);
 			}
-		}else if(intensity >= 5 && CrossroadsConfig.magicChunk.getBoolean()){
+		}else if(intensity >= 5 && CRConfig.magicChunk.getBoolean()){
 			ChunkPos base = worldIn.getChunk(pos).getPos();
 			for(int i = 0; i < 64; i++){
 				BlockPos effectPos = base.getBlock(RAND.nextInt(16), RAND.nextInt(256), RAND.nextInt(16));
@@ -72,7 +72,7 @@ public class FluxUtil{
 				}while(element == EnumBeamAlignments.TIME || element.getEffect() == null);
 				element.getEffect().doEffect(worldIn, effectPos, intensity, null);
 			}
-		}else if(CrossroadsConfig.blastChunk.getBoolean()){
+		}else if(CRConfig.blastChunk.getBoolean()){
 			worldIn.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), intensity, true);
 		}else{
 			Crossroads.logger.info("There would have been a flux event at " + pos.toString() + " in dimension " + worldIn.provider.getDimension() + " of severity " + intensity + ", but the relevant flux event is disabled in the config. Lucky you.");

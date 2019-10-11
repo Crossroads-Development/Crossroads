@@ -95,7 +95,7 @@ public class FluxNodeTileEntity extends TileEntity implements IIntReceiver, ITic
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
 			return (T) redsHandler;
 		}

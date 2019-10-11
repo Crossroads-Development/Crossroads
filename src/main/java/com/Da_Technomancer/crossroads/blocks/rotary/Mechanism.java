@@ -5,45 +5,41 @@ import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
+import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
+import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.block.Blocks;
+import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.block.BlockRenderType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootParameters;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Mechanism extends ContainerBlock{
+public class Mechanism extends ContainerBlock implements IReadable{
 
 	private static final AxisAlignedBB BREAK_ALL_BB = new AxisAlignedBB(.3125D, .3125D, .3125D, .6875D, .6875D, .6875D);
 
 	public Mechanism(){
-		super(Material.IRON);
+		super(Block.Properties.create(Material.IRON).hardnessAndResistance(1).sound(SoundType.METAL));
 		String name = "mechanism";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setHardness(1);
-		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);
 	}
 
@@ -53,14 +49,13 @@ public class Mechanism extends ContainerBlock{
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public ItemStack getPickBlock(BlockState state, RayTraceResult target, World world, BlockPos pos, PlayerEntity player){
+	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player){
 		TileEntity te = world.getTileEntity(pos);
 		if(!(te instanceof MechanismTileEntity)){
 			return ItemStack.EMPTY;
 		}
 		MechanismTileEntity mte = (MechanismTileEntity) te;
-		Vec3d relVec = target.hitVec.subtract(pos.getX(), pos.getY(), pos.getZ());
+		Vec3d relVec = target.getHitVec().subtract(pos.getX(), pos.getY(), pos.getZ());
 
 		for(int i = 0; i < 7; i++){
 			if(mte.boundingBoxes[i] != null && mte.boundingBoxes[i].minX <= relVec.x && mte.boundingBoxes[i].maxX >= relVec.x && mte.boundingBoxes[i].minY <= relVec.y && mte.boundingBoxes[i].maxY >= relVec.y && mte.boundingBoxes[i].minZ <= relVec.z && mte.boundingBoxes[i].maxZ >= relVec.z){
@@ -70,7 +65,6 @@ public class Mechanism extends ContainerBlock{
 
 		return ItemStack.EMPTY;
 	}
-
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
@@ -122,7 +116,7 @@ public class Mechanism extends ContainerBlock{
 	}
 
 	@Override
-	public boolean removedByPlayer(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, boolean canHarvest){
+	public boolean removedByPlayer(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid){
 		RotaryUtil.increaseMasterKey(false);
 		if(worldIn.isRemote){
 			return false;
@@ -142,7 +136,7 @@ public class Mechanism extends ContainerBlock{
 			}
 
 			if(out == 7){
-				if(canHarvest){
+				if(willHarvest){
 					for(int i = 0; i < 7; i++){
 						if(gear.members[i] != null){
 							spawnAsEntity(worldIn, pos, gear.members[i].getDrop(gear.mats[i]));
@@ -152,7 +146,7 @@ public class Mechanism extends ContainerBlock{
 				worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
 				return true;
 			}else{
-				if(canHarvest){
+				if(willHarvest){
 					spawnAsEntity(worldIn, pos, gear.members[out].getDrop(gear.mats[out]));
 				}
 				gear.setMechanism(out, null, null, null, false);
@@ -169,15 +163,18 @@ public class Mechanism extends ContainerBlock{
 	}
 
 	@Override
-	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, BlockState state, int fortune){
-		MechanismTileEntity te = (MechanismTileEntity) world.getTileEntity(pos);
-		if(te != null){
+	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder){
+		ArrayList<ItemStack> drops = new ArrayList<>();
+		TileEntity te = builder.get(LootParameters.BLOCK_ENTITY);
+		if(te instanceof MechanismTileEntity){
+			MechanismTileEntity mte = (MechanismTileEntity) te;
 			for(int i = 0; i < 7; i++){
-				if(te.members[i] != null){
-					drops.add(te.members[i].getDrop(te.mats[i]));
+				if(mte.members[i] != null){
+					drops.add(mte.members[i].getDrop(mte.mats[i]));
 				}
 			}
 		}
+		return drops;
 	}
 
 	/**
@@ -228,22 +225,6 @@ public class Mechanism extends ContainerBlock{
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public boolean shouldSideBeRendered(BlockState blockState, IBlockAccess blockAccess, BlockPos pos, Direction side){
-		return false;
-	}
-
-	@Override
-	public boolean isFullCube(BlockState state){
-		return false;
-	}
-
-	@Override
-	public boolean isOpaqueCube(BlockState state){
-		return false;
-	}
-
-	@Override
 	public BlockRenderType getRenderType(BlockState state){
 		return BlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
@@ -259,13 +240,8 @@ public class Mechanism extends ContainerBlock{
 	}
 
 	@Override
-	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face){
-		return BlockFaceShape.UNDEFINED;
-	}
-
-	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
+		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand))){
 			TileEntity te = worldIn.getTileEntity(pos);
 			if(te instanceof MechanismTileEntity){
 				MechanismTileEntity mte = (MechanismTileEntity) te;
@@ -289,6 +265,12 @@ public class Mechanism extends ContainerBlock{
 	@Override
 	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos){
 		TileEntity te = worldIn.getTileEntity(pos);
-		return te instanceof MechanismTileEntity ? (int) Math.min(15, ((MechanismTileEntity) te).getRedstone()) : 0;
+		return te instanceof MechanismTileEntity ? RedstoneUtil.clampToVanilla(((MechanismTileEntity) te).getRedstone()) : 0;
+	}
+
+	@Override
+	public float read(World world, BlockPos pos, BlockState blockState){
+		TileEntity te = world.getTileEntity(pos);
+		return te instanceof MechanismTileEntity ? ((MechanismTileEntity) te).getRedstone() : 0;
 	}
 }

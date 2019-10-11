@@ -120,7 +120,7 @@ public class OreCleanserTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			return (T) (facing == null ? innerFluidHandler : facing == Direction.UP ? outFluidHandler : inFluidHandler);
 		}

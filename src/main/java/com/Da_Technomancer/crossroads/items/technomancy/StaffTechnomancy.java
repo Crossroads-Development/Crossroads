@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.effects.IEffect;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.render.RenderUtil;
 import com.google.common.collect.Multimap;
 import net.minecraft.block.BlockState;
@@ -35,10 +35,10 @@ public class StaffTechnomancy extends BeamUsingItem{
 		String name = "staff_technomancy";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setMaxStackSize(1);
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.itemAddQue(this);
+		CRItems.toRegister.add(this);
+		CRItems.itemAddQue(this);
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class StaffTechnomancy extends BeamUsingItem{
 				return;
 			}
 			ItemStack cage = player.getHeldItem(player.getActiveHand() == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND);
-			if(cage.getItem() != CrossroadsItems.beamCage || !cage.hasTag()){
+			if(cage.getItem() != CRItems.beamCage || !cage.hasTag()){
 				player.resetActiveHand();
 				return;
 			}

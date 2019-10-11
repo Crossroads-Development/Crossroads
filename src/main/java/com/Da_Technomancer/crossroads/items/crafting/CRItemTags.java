@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.items.crafting;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.DataGenerator;
@@ -58,24 +58,26 @@ public class CRItemTags extends ItemTagsProvider{
 
 	@Override
 	protected void registerTags(){
+		//TODO this doesn't seem to work. May have to be done as JSON files
+
 		//super.registerTags();
 		//You might notice all of these are ordered
 		//This is because ordered tags allow increased consistency, and I'm really not sure why they're unordered by default.
-		getBuilder(SALT).ordered(true).add(CrossroadsItems.dustSalt);
-		getBuilder(SULFUR).ordered(true).add(CrossroadsItems.sulfur);
-		getBuilder(ALC_SALT).ordered(true).add(CrossroadsItems.wasteSalt);
-		getBuilder(SLAG).ordered(true).add(CrossroadsItems.slag);
-		getBuilder(ALCH_CRYSTAL).ordered(true).add(CrossroadsItems.alchCrystal);
-		getBuilder(VANADIUM).ordered(true).add(CrossroadsItems.vanadiumOxide);
-		getBuilder(MERCURY).ordered(true).add(CrossroadsItems.solidQuicksilver);
+		getBuilder(SALT).ordered(true).add(CRItems.dustSalt);
+		getBuilder(SULFUR).ordered(true).add(CRItems.sulfur);
+		getBuilder(ALC_SALT).ordered(true).add(CRItems.wasteSalt);
+		getBuilder(SLAG).ordered(true).add(CRItems.slag);
+		getBuilder(ALCH_CRYSTAL).ordered(true).add(CRItems.alchCrystal);
+		getBuilder(VANADIUM).ordered(true).add(CRItems.vanadiumOxide);
+		getBuilder(MERCURY).ordered(true).add(CRItems.solidQuicksilver);
 		getBuilder(PURE_ICE).ordered(true).add(Blocks.PACKED_ICE.asItem(), Blocks.BLUE_ICE.asItem());
 		getBuilder(RAW_ICE).ordered(true).add(Blocks.ICE.asItem());
-		getBuilder(DUSTS_ADAMANT).ordered(true).add(CrossroadsItems.adamant);
-		getBuilder(DUSTS_BEDROCK).ordered(true).add(CrossroadsItems.bedrockDust);
-		getBuilder(DUSTS_SULFURIC).ordered(true).add(CrossroadsItems.solidVitriol);
-		getBuilder(DUSTS_NITRIC).ordered(true).add(CrossroadsItems.solidFortis);
-		getBuilder(DUSTS_HYDROCHLORIC).ordered(true).add(CrossroadsItems.solidMuriatic);
-		getBuilder(DUSTS_REGIA).ordered(true).add(CrossroadsItems.solidRegia);
+		getBuilder(DUSTS_ADAMANT).ordered(true).add(CRItems.adamant);
+		getBuilder(DUSTS_BEDROCK).ordered(true).add(CRItems.bedrockDust);
+		getBuilder(DUSTS_SULFURIC).ordered(true).add(CRItems.solidVitriol);
+		getBuilder(DUSTS_NITRIC).ordered(true).add(CRItems.solidFortis);
+		getBuilder(DUSTS_HYDROCHLORIC).ordered(true).add(CRItems.solidMuriatic);
+		getBuilder(DUSTS_REGIA).ordered(true).add(CRItems.solidRegia);
 
 		getBuilder(INGOTS_COPPER).ordered(true).add(OreSetup.ingotCopper);
 		getBuilder(INGOTS_TIN).ordered(true).add(OreSetup.ingotTin);

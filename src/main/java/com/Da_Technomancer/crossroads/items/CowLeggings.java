@@ -12,14 +12,14 @@ import net.minecraft.world.World;
 public class CowLeggings extends ArmorItem{
 
 	public CowLeggings(){
-		super(CrossroadsItems.BOBO, 2, EquipmentSlotType.LEGS);
+		super(CRItems.BOBO, 2, EquipmentSlotType.LEGS);
 		setMaxStackSize(1);
 		String name = "cow_leggings";
 		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.itemAddQue(this);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
+		CRItems.toRegister.add(this);
+		CRItems.itemAddQue(this);
 	}
 
 	@Override

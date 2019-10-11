@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearSlaveTileEntity;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -35,9 +35,9 @@ public class LargeGear extends Item{
 		setTranslationKey("gear_large_metal");
 		setRegistryName(name);
 		type = typeIn;
-		setCreativeTab(CrossroadsItems.TAB_GEAR);
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.toClientRegister.put(Pair.of(this, 0), LOCAT);
+		setCreativeTab(CRItems.TAB_GEAR);
+		CRItems.toRegister.add(this);
+		CRItems.toClientRegister.put(Pair.of(this, 0), LOCAT);
 	}
 
 	@Override
@@ -74,12 +74,12 @@ public class LargeGear extends Item{
 		}
 
 		for(BlockPos cPos : spaces){
-			if(cPos.distanceSq(BlockPos.ORIGIN) == 0){
+			if(cPos.distanceSq(BlockPos.ZERO) == 0){
 				worldIn.setBlockState(pos, CrossroadsBlocks.largeGearMaster.getDefaultState().with(EssentialsProperties.FACING, side.getOpposite()), 3);
 				((LargeGearMasterTileEntity) worldIn.getTileEntity(pos)).initSetup(type);
 			}else{
 				worldIn.setBlockState(pos.add(cPos), CrossroadsBlocks.largeGearSlave.getDefaultState().with(EssentialsProperties.FACING, side.getOpposite()), 3);
-				((LargeGearSlaveTileEntity) worldIn.getTileEntity(pos.add(cPos))).setInitial(BlockPos.ORIGIN.subtract(cPos));
+				((LargeGearSlaveTileEntity) worldIn.getTileEntity(pos.add(cPos))).setInitial(BlockPos.ZERO.subtract(cPos));
 			}
 		}
 		RotaryUtil.increaseMasterKey(false);

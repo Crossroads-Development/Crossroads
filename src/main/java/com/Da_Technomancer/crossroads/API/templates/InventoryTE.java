@@ -18,6 +18,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Arrays;
 
 public abstract class InventoryTE extends ModuleTE implements ISidedInventory, INamedContainerProvider, IFluidSlotTE{
 
@@ -148,9 +149,7 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 
 	@Override
 	public void clear(){
-		for(int i = 0; i < inventory.length; i++){
-			inventory[i] = ItemStack.EMPTY;
-		}
+		Arrays.fill(inventory, ItemStack.EMPTY);
 		if(inventory.length != 0){
 			markDirty();
 		}

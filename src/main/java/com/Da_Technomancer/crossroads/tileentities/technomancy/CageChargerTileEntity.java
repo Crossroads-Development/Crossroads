@@ -7,7 +7,7 @@ import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -69,7 +69,7 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.BEAM_CAPABILITY){
 			return (T) magicHandler;
 		}
@@ -154,7 +154,7 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 
 		@Override
 		public boolean isItemValid(int slot, @Nonnull ItemStack stack){
-			return slot == 0 && stack.getItem() == CrossroadsItems.beamCage;
+			return slot == 0 && stack.getItem() == CRItems.beamCage;
 		}
 	}
 

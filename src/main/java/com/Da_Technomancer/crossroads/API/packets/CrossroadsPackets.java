@@ -61,4 +61,8 @@ public class CrossroadsPackets{
 	public static void sendPacketToServer(ServerPacket packet){
 		channel.sendToServer(packet);
 	}
+
+	public static void sendPacketToAll(ClientPacket packet){
+		channel.send(PacketDistributor.ALL.noArg(), packet);
+	}
 }

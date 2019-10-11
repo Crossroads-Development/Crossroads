@@ -4,14 +4,16 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
-import com.Da_Technomancer.crossroads.CrossroadsConfig;
+import com.Da_Technomancer.crossroads.CRConfig;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
@@ -36,11 +38,11 @@ public class VoltusGeneratorTileEntity extends TileEntity implements ITickableTi
 			return;
 		}
 
-		int usedVoltus = Math.min(voltusAmount, (int) ((FE_CAPACITY - fe) * ((ForgeConfigSpec.DoubleValue) CrossroadsConfig.voltusUsage).get() / 1000D));
+		int usedVoltus = Math.min(voltusAmount, (int) ((FE_CAPACITY - fe) * ((ForgeConfigSpec.DoubleValue) CRConfig.voltusUsage).get() / 1000D));
 
 		if(usedVoltus > 0){
 			voltusAmount -= usedVoltus;
-			fe += usedVoltus * 1000D / ((ForgeConfigSpec.DoubleValue) CrossroadsConfig.voltusUsage).get();
+			fe += usedVoltus * 1000D / ((ForgeConfigSpec.DoubleValue) CRConfig.voltusUsage).get();
 			markDirty();
 		}
 
@@ -82,7 +84,7 @@ public class VoltusGeneratorTileEntity extends TileEntity implements ITickableTi
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.CHEMICAL_CAPABILITY){
 			return (T) handler;
 		}

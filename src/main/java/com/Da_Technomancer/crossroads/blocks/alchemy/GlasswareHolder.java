@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.GlasswareHolderTileEntity;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.*;
@@ -38,7 +38,7 @@ public class GlasswareHolder extends ContainerBlock{
 		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(2);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);

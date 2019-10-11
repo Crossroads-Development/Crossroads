@@ -45,7 +45,7 @@ public class StabilizerBeamTileEntity extends AbstractStabilizerTileEntity{
 	@Nullable
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.BEAM_CAPABILITY){
 			return (T) beamHandler;
 		}

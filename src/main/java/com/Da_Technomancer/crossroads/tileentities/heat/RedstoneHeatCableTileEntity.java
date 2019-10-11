@@ -36,7 +36,7 @@ public class RedstoneHeatCableTileEntity extends HeatCableTileEntity{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.HEAT_CAPABILITY){
 			if((facing == null || !locked[facing.getIndex()]) && world.getBlockState(pos).get(EssentialsProperties.REDSTONE_BOOL)){
 				return (T) heatHandler;

@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.API.effects.alchemy;
 
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -39,7 +39,7 @@ public class AcidAlchemyEffect implements IAlchEffect{
 
 		BlockState state = world.getBlockState(pos);
 		if(state.getBlock() == Blocks.BEDROCK && isRegia()){
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(CrossroadsItems.bedrockDust, 1));
+			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(CRItems.bedrockDust, 1));
 			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 			return;
 		}

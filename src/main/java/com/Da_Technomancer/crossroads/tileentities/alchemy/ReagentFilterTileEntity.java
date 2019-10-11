@@ -113,7 +113,7 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements IInvent
 	@Nullable
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(facing == getFacing() || facing != null && facing.getAxis() == Direction.Axis.Y){
 			return (T) handler;
 		}

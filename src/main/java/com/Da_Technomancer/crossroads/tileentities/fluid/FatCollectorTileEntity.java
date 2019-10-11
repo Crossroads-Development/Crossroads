@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
@@ -62,7 +62,7 @@ public class FatCollectorTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != Direction.DOWN && facing != Direction.UP){
 			return (T) mainHandler;
 		}
@@ -83,7 +83,7 @@ public class FatCollectorTileEntity extends InventoryTE{
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return stack.getItem() instanceof ItemFood && stack.getItem() != CrossroadsItems.edibleBlob;
+		return stack.getItem() instanceof ItemFood && stack.getItem() != CRItems.edibleBlob;
 	}
 
 	@Override

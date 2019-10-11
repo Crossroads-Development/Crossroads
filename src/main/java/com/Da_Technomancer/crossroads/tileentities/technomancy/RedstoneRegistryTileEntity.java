@@ -116,7 +116,7 @@ public class RedstoneRegistryTileEntity extends TileEntity implements IDoubleArr
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
 			return (T) redstoneHandler;
 		}

@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
 
 import net.minecraft.item.Item;
 
+@Deprecated
 public class BasicItem extends Item{
 
 	/*
@@ -23,13 +24,10 @@ public class BasicItem extends Item{
 	}
 
 	public BasicItem(String name, String oreDict, boolean tab){
-		setTranslationKey(name);
+		super(tab ? CRItems.itemProp : new Item.Properties());
 		setRegistryName(name);
-		if(tab){
-			setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
-		}
-		CrossroadsItems.toRegister.add(this);
-		CrossroadsItems.itemAddQue(this);
+		CRItems.toRegister.add(this);
+		CRItems.itemAddQue(this);
 		if(oreDict != null){
 			ModCrafting.toRegisterOreDict.add(Pair.of(this, new String[] {oreDict}));
 		}

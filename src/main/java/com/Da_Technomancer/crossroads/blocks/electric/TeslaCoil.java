@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.electric;
 
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CrossroadsItems;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.*;
@@ -34,7 +34,7 @@ public class TeslaCoil extends ContainerBlock{
 		setTranslationKey(name);
 		setRegistryName(name);
 		setHardness(2);
-		setCreativeTab(CrossroadsItems.TAB_CROSSROADS);
+		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
@@ -104,7 +104,7 @@ public class TeslaCoil extends ContainerBlock{
 			return true;
 		}
 
-		if(heldItem.getItem() == CrossroadsItems.leydenJar){
+		if(heldItem.getItem() == CRItems.leydenJar){
 			if(!state.get(Properties.ACTIVE)){
 				TileEntity te = worldIn.getTileEntity(pos);
 				if(te instanceof TeslaCoilTileEntity){

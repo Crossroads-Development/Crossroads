@@ -21,13 +21,13 @@ public class StampMillGuiContainer extends MachineGUI{
 
 		int i = (width - xSize) / 2;
 		int j = (height - ySize) / 2;
-		drawTexturedModalRect(i, j, 0, 0, xSize, ySize);
+		blit(i, j, 0, 0, xSize, ySize);
 
 
 		//Time meter
-		drawTexturedModalRect(i + 55, j + 34, 176, 0, Math.min(66, te.getField(te.getFieldCount() - 2) * 66 / StampMillTileEntity.TIME_LIMIT), 9);
+		blit(i + 55, j + 34, 176, 0, Math.min(66, te.getField(te.getFieldCount() - 2) * 66 / StampMillTileEntity.TIME_LIMIT), 9);
 		//Progress meter
-		drawTexturedModalRect(i + 55, j + 45, 176, 0, (int) Math.min(66, te.getField(te.getFieldCount() - 1) * 66 / StampMillTileEntity.REQUIRED), 9);
+		blit(i + 55, j + 45, 176, 0, (int) Math.min(66, te.getField(te.getFieldCount() - 1) * 66 / StampMillTileEntity.REQUIRED), 9);
 
 		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
 	}
