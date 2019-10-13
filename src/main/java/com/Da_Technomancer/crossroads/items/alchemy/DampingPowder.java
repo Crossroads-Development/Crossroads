@@ -63,7 +63,6 @@ public class DampingPowder extends Item{
 		setRegistryName(name);
 		setCreativeTab(CRItems.TAB_CROSSROADS);
 		CRItems.toRegister.add(this);
-		CRItems.itemAddQue(this);
 		DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, DAMPING_DISPENSER_BEHAVIOR);
 	}
 

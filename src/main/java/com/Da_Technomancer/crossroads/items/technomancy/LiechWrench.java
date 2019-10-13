@@ -28,7 +28,7 @@ public class LiechWrench extends Item{
 		setHarvestLevel("shovel", 1);
 		setHarvestLevel("axe", 1);
 		CRItems.toRegister.add(this);
-		CRItems.itemAddQue(this);
+		//This item is registered as a wrench in the wrench tag
 	}
 
 	@Override

@@ -28,7 +28,6 @@ public class BeamCage extends Item{
 		maxStackSize = 1;
 		setCreativeTab(CRItems.TAB_CROSSROADS);
 		CRItems.toRegister.add(this);
-		CRItems.itemAddQue(this);
 	}
 
 	public static BeamUnit getStored(ItemStack stack){

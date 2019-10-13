@@ -1,29 +1,25 @@
 package com.Da_Technomancer.crossroads.items;
 
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 
 public class CowLeggings extends ArmorItem{
 
-	public CowLeggings(){
-		super(CRItems.BOBO, 2, EquipmentSlotType.LEGS);
-		setMaxStackSize(1);
+	protected CowLeggings(){
+		super(ChickenBoots.BOBO_MATERIAL, EquipmentSlotType.LEGS, CRItems.itemProp.maxStackSize(1));
 		String name = "cow_leggings";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
 		CRItems.toRegister.add(this);
-		CRItems.itemAddQue(this);
 	}
 
 	@Override
-	public void onArmorTick(World world, PlayerEntity player, ItemStack stack){
+	public void onArmorTick(ItemStack stack, World world, PlayerEntity player){
 		if(player.getActivePotionEffect(Effects.POISON) != null || player.getActivePotionEffect(Effects.WITHER) != null || player.getActivePotionEffect(Effects.NAUSEA) != null || player.getActivePotionEffect(Effects.BLINDNESS) != null || player.getActivePotionEffect(Effects.SLOWNESS) != null || player.getActivePotionEffect(Effects.WEAKNESS) != null || player.getActivePotionEffect(Effects.HUNGER) != null){
 			player.removePotionEffect(Effects.POISON);
 			player.removePotionEffect(Effects.WITHER);

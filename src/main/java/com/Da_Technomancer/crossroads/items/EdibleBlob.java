@@ -27,7 +27,6 @@ public class EdibleBlob extends ItemFood{
 		setTranslationKey(name);
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
-		CRItems.itemAddQue(this);
 	}
 
 	/**

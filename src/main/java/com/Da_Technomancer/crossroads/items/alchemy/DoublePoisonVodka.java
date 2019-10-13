@@ -30,7 +30,6 @@ public class DoublePoisonVodka extends Item{
 		setRegistryName(name);
 		setCreativeTab(CRItems.TAB_CROSSROADS);
 		CRItems.toRegister.add(this);
-		CRItems.itemAddQue(this);
 	}
 
 	@Override

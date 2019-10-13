@@ -18,7 +18,6 @@ public class MagentaBread extends ItemFood{
 		setRegistryName(name);
 		setCreativeTab(CRItems.TAB_CROSSROADS);
 		CRItems.toRegister.add(this);
-		CRItems.itemAddQue(this);
 	}
 
 	@Override

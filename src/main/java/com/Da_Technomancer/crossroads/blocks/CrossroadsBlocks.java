@@ -15,7 +15,6 @@ import com.Da_Technomancer.essentials.blocks.redstone.RedstoneReceiver;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneTransmitter;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -25,7 +24,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -152,44 +150,17 @@ public class CrossroadsBlocks{
 	public static FluxStabilizerElectric fluxStabilizerElectric;
 	public static FluxStabilizerElectric fluxStabilizerCrystalElectric;
 
-	public static final Item.Properties itemBlockProp = new Item.Properties().group(CRItems.TAB_CROSSROADS);
+	private static final Item.Properties itemBlockProp = new Item.Properties().group(CRItems.TAB_CROSSROADS);
 	public static final ArrayList<Block> toRegister = new ArrayList<>();
-	
+
 	/**
-	 * Registers the item form of a block and the item model.
+	 * Registers the item form of a block
 	 * @param block The block to register
 	 * @return The passed block for convenience. 
 	 */
 	public static <T extends Block> T blockAddQue(T block){
-		return blockAddQue(block, true);
-	}
-	
-	/**
-	 * Registers the item form of a block and an if registerModel item model.
-	 * @param block The block to register
-	 * @param registerModel whether to register a model.
-	 * @return The passed block for convenience. 
-	 */
-	public static <T extends Block> T blockAddQue(T block, boolean registerModel){
 		Item item = new BlockItem(block, itemBlockProp).setRegistryName(block.getRegistryName());
 		CRItems.toRegister.add(item);
-		if(registerModel){
-			CRItems.itemAddQue(item);
-		}
-		return block;
-	}
-	
-	/**
-	 * Registers the item form of a block and the item model. 
-	 * @param block The block having an item model registered
-	 * @param meta The meta value of the item.
-	 * @param location The location of the model. 
-	 * @return The block for convenience. 
-	 */
-	public static <T extends Block> T blockAddQue(T block, int meta, ModelResourceLocation location){
-		Item item = new BlockItem(block, itemBlockProp).setRegistryName(block.getRegistryName());
-		CRItems.toRegister.add(item);
-		CRItems.toClientRegister.put(Pair.of(item, meta), location);
 		return block;
 	}
 
@@ -225,7 +196,7 @@ public class CrossroadsBlocks{
 		beamReflector = new BeamReflector();
 		lensFrame = new LensFrame();
 		blockPureQuartz = new BasicBlock("block_pure_quartz", Block.Properties.create(Material.ROCK).hardnessAndResistance(4));
-		blockLuminescentQuartz = (BasicBlock) new BasicBlock("block_luminescent_quartz", Block.Properties.create(Material.ROCK).hardnessAndResistance(4).lightValue(15));
+		blockLuminescentQuartz = new BasicBlock("block_luminescent_quartz", Block.Properties.create(Material.ROCK).hardnessAndResistance(4).lightValue(15));
 		beamSiphon = new BeamSiphon();
 		beamSplitter = new BeamSplitter();
 		colorChart = new ColorChart();

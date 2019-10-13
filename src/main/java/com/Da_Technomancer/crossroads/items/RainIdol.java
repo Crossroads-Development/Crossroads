@@ -27,7 +27,6 @@ public class RainIdol extends Item{
 		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setMaxStackSize(1);
 		CRItems.toRegister.add(this);
-		CRItems.itemAddQue(this);
 	}
 
 	@Override

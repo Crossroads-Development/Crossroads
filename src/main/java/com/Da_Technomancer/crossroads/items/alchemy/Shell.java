@@ -57,7 +57,6 @@ public class Shell extends AbstractGlassware{
 		setRegistryName(name);
 		setCreativeTab(CRItems.TAB_CROSSROADS);
 		CRItems.toRegister.add(this);
-		CRItems.itemAddQue(this);
 		DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, SHELL_DISPENSER_BEHAVIOR);
 	}
 

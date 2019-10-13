@@ -27,7 +27,6 @@ public class Vacuum extends Item{
 		maxStackSize = 1;
 		setMaxDamage(1200);
 		CRItems.toRegister.add(this);
-		CRItems.itemAddQue(this);
 	}
 
 	@Override

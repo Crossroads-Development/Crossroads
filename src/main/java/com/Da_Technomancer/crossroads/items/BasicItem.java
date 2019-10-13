@@ -6,6 +6,9 @@ import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
 
 import net.minecraft.item.Item;
 
+/**
+ * @deprecated That addition by vanilla of item properties and the removal of oredict in favor of tags makes this class redundant
+ */
 @Deprecated
 public class BasicItem extends Item{
 
@@ -27,7 +30,6 @@ public class BasicItem extends Item{
 		super(tab ? CRItems.itemProp : new Item.Properties());
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
-		CRItems.itemAddQue(this);
 		if(oreDict != null){
 			ModCrafting.toRegisterOreDict.add(Pair.of(this, new String[] {oreDict}));
 		}

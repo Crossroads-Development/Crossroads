@@ -41,7 +41,6 @@ public class Axle extends Item{
 		setCreativeTab(CRItems.TAB_GEAR);
 		type = typeIn;
 		CRItems.toRegister.add(this);
-		CRItems.itemAddQue(this);
 		CRItems.toClientRegister.put(Pair.of(this, 0), LOCAT);
 		ModCrafting.toRegisterOreDict.add(Pair.of(this, new String[] {"stick" + type.toString()}));
 	}

@@ -12,15 +12,18 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
+import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -28,15 +31,13 @@ import java.util.List;
 
 public class ModuleGoggles extends ArmorItem{
 
+	private static final IArmorMaterial TECHNOMANCY_MAT = new TechnoMat();
+
 	public ModuleGoggles(){
-		super(CRItems.TECHNOMANCY, 1, EquipmentSlotType.HEAD);
-		setMaxStackSize(1);
+		super(TECHNOMANCY_MAT, EquipmentSlotType.HEAD, CRItems.itemProp.maxStackSize(1));
 		String name = "module_goggles";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
 		CRItems.toRegister.add(this);
-		CRItems.itemAddQue(this);
 	}
 
 	/**
@@ -46,30 +47,23 @@ public class ModuleGoggles extends ArmorItem{
 
 	@Override
 	public void onArmorTick(ItemStack stack, World world, PlayerEntity player){
-		if(!world.isRemote && stack.hasTag()){
+		CompoundNBT nbt;
+		if(!world.isRemote && (nbt = stack.getTag()) != null){
 			ArrayList<ITextComponent> chat = new ArrayList<>();
 			BlockRayTraceResult ray = MiscUtil.rayTrace(player, 8);
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
-				if(stack.getTag().getBoolean(lens.name())){
+				if(nbt.getBoolean(lens.name())){
 					lens.doEffect(world, player, chat, ray);
 				}
 			}
 			if(!chat.isEmpty()){
-				StringBuilder out = new StringBuilder();
-				for(ITextComponent line : chat){
-					if(out.length() != 0){
-						out.append("\n");
-					}
-					out.append(line.getFormattedText());//TODO Serialize, send serialized text component to client, deserialize on client and only on client get formatted text
-				}
-				CrossroadsPackets.network.sendTo(new SendChatToClient(out.toString(), CHAT_ID), (ServerPlayerEntity) player);
+				CrossroadsPackets.sendPacketToPlayer((ServerPlayerEntity) player, new SendChatToClient(chat, CHAT_ID));
 			}
 		}
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add("Lenses:");
 		if(stack.hasTag()){
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
@@ -98,5 +92,43 @@ public class ModuleGoggles extends ArmorItem{
 		}
 		path.append(".png");
 		return path.toString();
+	}
+
+	private static class TechnoMat implements IArmorMaterial{
+
+		@Override
+		public int getDurability(EquipmentSlotType slotIn){
+			return 0;
+		}
+
+		@Override
+		public int getDamageReductionAmount(EquipmentSlotType slotIn){
+			return 0;
+		}
+
+		@Override
+		public int getEnchantability(){
+			return 0;
+		}
+
+		@Override
+		public SoundEvent getSoundEvent(){
+			return SoundEvents.ITEM_ARMOR_EQUIP_IRON;
+		}
+
+		@Override
+		public Ingredient getRepairMaterial(){
+			return Ingredient.EMPTY;
+		}
+
+		@Override
+		public String getName(){
+			return "technomancy";
+		}
+
+		@Override
+		public float getToughness(){
+			return 0;
+		}
 	}
 }

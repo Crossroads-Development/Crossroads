@@ -25,7 +25,6 @@ public class LeydenJar extends Item{
 		setRegistryName(name);
 		setCreativeTab(CRItems.TAB_CROSSROADS);
 		CRItems.toRegister.add(this);
-		CRItems.itemAddQue(this);
 	}
 	
 	public static int getCharge(ItemStack stack){

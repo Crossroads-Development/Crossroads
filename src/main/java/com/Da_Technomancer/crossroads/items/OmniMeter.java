@@ -40,7 +40,6 @@ public class OmniMeter extends Item{
 		String name = "omnimeter";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
-		CRItems.itemAddQue(this);
 	}
 
 	private static final int CHAT_ID = 279478;//Value chosen at random
