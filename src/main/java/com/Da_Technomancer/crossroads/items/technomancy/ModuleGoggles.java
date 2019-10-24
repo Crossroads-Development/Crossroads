@@ -20,10 +20,8 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -64,28 +62,29 @@ public class ModuleGoggles extends ArmorItem{
 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-		tooltip.add("Lenses:");
-		if(stack.hasTag()){
+		tooltip.add(new TranslationTextComponent("tt.crossroads.goggles.lenses"));
+		CompoundNBT nbt = stack.getTag();
+		if(nbt != null && !nbt.isEmpty()){
+			String enabled = MiscUtil.localize("tt.crossroads.goggles.enabled");
+			String disabled = MiscUtil.localize("tt.crossroads.goggles.disabled");
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
-				if(stack.getTag().contains(lens.name())){
-					if(lens.shouldShowState()){
-						tooltip.add('-' + lens.name() + "-" + (stack.getTag().getBoolean(lens.name()) ? "ENABLED" : "DISABLED"));
-					}else{
-						tooltip.add('-' + lens.name());
-					}
+				if(nbt.contains(lens.toString())){
+					//Displaying the enabled/disabled parameter is optional. By default, diamond and quartz lenses don't
+					tooltip.add(new TranslationTextComponent("tt.crossroads.goggles." + lens.toString(), nbt.getBoolean(lens.toString()) ? enabled : disabled));
 				}
 			}
 		}else{
-			tooltip.add("-NONE");
+			tooltip.add(new TranslationTextComponent("tt.crossroads.goggles.none"));
 		}
 	}
 
 	@Override
 	public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type){
 		StringBuilder path = new StringBuilder(Crossroads.MODID + ":textures/models/armor/goggles/goggle");
-		if(stack.hasTag()){
+		CompoundNBT nbt = stack.getTag();
+		if(nbt != null){
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
-				if(stack.getTag().contains(lens.name())){
+				if(nbt.contains(lens.name())){
 					path.append(lens.getTexturePath());
 				}
 			}

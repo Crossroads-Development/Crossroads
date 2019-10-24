@@ -88,7 +88,7 @@ public class PrototypeWatch extends BeamUsingItem{
 			CompoundNBT prototypeNBT = stack.getTag().getCompound("prot");
 			int index = prototypeNBT.getInt("index");
 
-			CompoundNBT playerNBT = player.getEntityData();
+			CompoundNBT playerNBT = player.getPersistentData();
 			if(getMaxItemUseDuration(stack) == count || playerNBT.getBoolean("wasSneak") != player.isSneaking()){
 				if(watchMap.containsKey(index)){
 					watchMap.get(index).mouseActive = true;

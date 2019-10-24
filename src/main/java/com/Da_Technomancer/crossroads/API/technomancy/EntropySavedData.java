@@ -3,8 +3,8 @@ package com.Da_Technomancer.crossroads.API.technomancy;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.World;
-import net.minecraft.world.storage.MapStorage;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.storage.DimensionSavedDataManager;
 import net.minecraft.world.storage.WorldSavedData;
 
 /**
@@ -19,7 +19,7 @@ public class EntropySavedData extends WorldSavedData{
 	//Temporal Entropy is able to slightly go above the "official" maximum value for playability. The ability of entropy to go over the "maximum" is never displayed
 	private static final int OVERFLOW_MAX = (int) (MAX_VALUE * 1.05D);
 
-	public EntropySavedData(){
+	private EntropySavedData(){
 		super(ID);
 	}
 
@@ -32,7 +32,7 @@ public class EntropySavedData extends WorldSavedData{
 	 * @param w A digital-server side world
 	 * @return The temporal entropy as a percentage
 	 */
-	public static double getEntropy(World w){
+	public static double getEntropy(ServerWorld w){
 		return MiscUtil.betterRound(100D * Math.min(get(w).temporalEntropy / (double) MAX_VALUE, 1D), 3);
 	}
 
@@ -41,7 +41,7 @@ public class EntropySavedData extends WorldSavedData{
 	 * @param w A digital-server side world
 	 * @return The severity level
 	 */
-	public static Severity getSeverity(World w){
+	public static Severity getSeverity(ServerWorld w){
 		return Severity.getSeverity(getEntropy(w));
 	}
 
@@ -70,7 +70,7 @@ public class EntropySavedData extends WorldSavedData{
 	 * @param w A digital-server side world
 	 * @param change The amount to adjust the temporal entropy level. Value interpreted as a number of points, not a %
 	 */
-	public static void addEntropy(World w, int change){
+	public static void addEntropy(ServerWorld w, int change){
 		EntropySavedData data = get(w);
 		int newEntropy = Math.min(OVERFLOW_MAX, data.temporalEntropy + change);
 		newEntropy = Math.max(0, newEntropy);
@@ -80,19 +80,14 @@ public class EntropySavedData extends WorldSavedData{
 		}
 	}
 
-	private static EntropySavedData get(World world){
-		MapStorage storage = world.getMapStorage();
+	private static EntropySavedData get(ServerWorld world){
+		DimensionSavedDataManager storage = world.getSavedData();
 		EntropySavedData data;
 		try{
-			 data = (EntropySavedData) storage.getOrLoadData(EntropySavedData.class, ID);
+			 data = storage.getOrCreate(EntropySavedData::new, ID);
 		}catch(NullPointerException e){
-			Crossroads.logger.error("Failed EntropicSavedData get due to null MapStorage", e);
+			Crossroads.logger.error("Failed EntropicSavedData get due to null DimensionSavedDataManager", e);
 			return new EntropySavedData();//Blank storage that prevents actual read/write, but avoids a crash
-		}
-
-		if (data == null) {
-			data = new EntropySavedData();
-			storage.setData(ID, data);
 		}
 		return data;
 	}

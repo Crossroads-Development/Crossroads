@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
 
+@Deprecated
 public class ItemRecipePredicate implements RecipePredicate<ItemStack>{
 
 	private final Item item;

@@ -3,41 +3,41 @@ package com.Da_Technomancer.crossroads.API.technomancy;
 import com.Da_Technomancer.crossroads.API.effects.goggles.*;
 import com.Da_Technomancer.crossroads.Keys;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.items.crafting.ItemRecipePredicate;
-import com.Da_Technomancer.crossroads.items.crafting.TagCraftingStack;
+import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.function.Predicate;
 
 public enum EnumGoggleLenses{
 	
 	//Don't reorder these unless you want to rename all the goggle texture files.
-	RUBY(new TagCraftingStack("gemRuby"), "_ruby", new RubyGoggleEffect(), Keys.controlEnergy, true),
-	EMERALD(new TagCraftingStack("gemEmerald"), "_emerald", new EmeraldGoggleEffect(), Keys.controlPotential, true),
-	DIAMOND(new TagCraftingStack("gemDiamond"), "_diamond", new DiamondGoggleEffect(), Keys.controlStability, false),
-	QUARTZ(new ItemRecipePredicate(CRItems.pureQuartz, 0), "_quartz", new QuartzGoggleEffect(), null, false),
-	VOID(new ItemRecipePredicate(OreSetup.voidCrystal, 0), "", new VoidGoggleEffect(), Keys.controlVoid, true);
+	RUBY((s) -> CRItemTags.GEMS_RUBY.contains(s.getItem()), "_ruby", new RubyGoggleEffect(), Keys.controlEnergy),
+	EMERALD((s) -> Tags.Items.GEMS_EMERALD.contains(s.getItem()), "_emerald", new EmeraldGoggleEffect(), Keys.controlPotential),
+	DIAMOND((s) -> Tags.Items.GEMS_DIAMOND.contains(s.getItem()), "_diamond", new DiamondGoggleEffect(), Keys.controlStability),
+	QUARTZ(Ingredient.fromItems(CRItems.pureQuartz), "_quartz", new QuartzGoggleEffect(), null),
+	VOID(Ingredient.fromItems(OreSetup.voidCrystal), "", new VoidGoggleEffect(), Keys.controlVoid);
 	
 	private final Predicate<ItemStack> item;
 	private final String texturePath;
 	private final IGoggleEffect effect;
 	private final KeyBinding key;
-	private final boolean showState;
 
-	EnumGoggleLenses(Predicate<ItemStack> item, String texturePath, IGoggleEffect effect, @Nullable KeyBinding toggleKey, boolean showState){
+	EnumGoggleLenses(Predicate<ItemStack> item, String texturePath, IGoggleEffect effect, @Nullable KeyBinding toggleKey){
 		this.item = item;
 		this.texturePath = texturePath;
 		this.effect = effect;
 		this.key = toggleKey;
-		this.showState = showState;
 	}
 
 	public boolean matchesRecipe(ItemStack stack){
@@ -51,10 +51,6 @@ public enum EnumGoggleLenses{
 	public KeyBinding getKey(){
 		return key;
 	}
-
-	public boolean shouldShowState(){
-		return showState;
-	}
 	
 	/**
 	 * Call on the server side ONLY.
@@ -62,17 +58,9 @@ public enum EnumGoggleLenses{
 	public void doEffect(World world, PlayerEntity player, ArrayList<ITextComponent> chat, BlockRayTraceResult ray){
 		effect.armorTick(world, player, chat, ray);
 	}
-	
-	/**This will return the name with all but the first char being lowercase,
-	 * so COPPER becomes Copper, which is good for oreDict and registry
-	 */
+
 	@Override
 	public String toString(){
-		String name = name();
-		char char1 = name.charAt(0);
-		name = name.substring(1);
-		name = name.toLowerCase();
-		name = char1 + name;
-		return name;
+		return name().toLowerCase(Locale.ENGLISH);
 	}
 }

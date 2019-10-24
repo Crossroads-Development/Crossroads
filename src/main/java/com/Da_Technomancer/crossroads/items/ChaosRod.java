@@ -1,30 +1,29 @@
 package com.Da_Technomancer.crossroads.items;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.*;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class ChaosRod extends Item{
 	
-	public ChaosRod(){
+	protected ChaosRod(){
+		super(CRItems.itemProp.maxStackSize(1));
 		String name = "chaos_rod";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setMaxStackSize(1);
 		CRItems.toRegister.add(this);
 	}
 
@@ -43,10 +42,10 @@ public class ChaosRod extends Item{
 		playerIn.addPotionEffect(new EffectInstance(playerIn.getGameProfile().getName().equals("Potus4mine") ? Effects.WEAKNESS : Effects.GLOWING, 100, 0));
 		return ActionResult.newResult(ActionResultType.SUCCESS, playerIn.getHeldItem(hand));
 	}
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add("It seems familiar...");
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+		tooltip.add(new TranslationTextComponent("tt.crossroads.chaos_rod.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

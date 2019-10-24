@@ -1,29 +1,30 @@
 package com.Da_Technomancer.crossroads.items;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class LeydenJar extends Item{
 
 	public static final int MAX_CHARGE = 100_000;
 	
-	public LeydenJar(){
+	protected LeydenJar(){
+		super(CRItems.itemProp.maxStackSize(1));
 		String name = "leyden_jar";
-		maxStackSize = 1;
-		hasSubtypes = true;
-		setTranslationKey(name);
+//		hasSubtypes = true;
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
 		CRItems.toRegister.add(this);
 	}
 	
@@ -37,29 +38,31 @@ public class LeydenJar extends Item{
 	}
 	
 	public static void setCharge(ItemStack stack, int chargeIn){
-		if(stack.hasTag()){
-			stack.getTag().putInt("charge", Math.min(chargeIn, MAX_CHARGE));
-		}else{
-			CompoundNBT nbt = new CompoundNBT();
+		CompoundNBT nbt = stack.getTag();
+		if(nbt != null){
 			nbt.putInt("charge", Math.min(chargeIn, MAX_CHARGE));
-			stack.put(nbt);
+		}else{
+			nbt = new CompoundNBT();
+			nbt.putInt("charge", Math.min(chargeIn, MAX_CHARGE));
+			stack.setTag(nbt);
 		}
 	}
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add("Charge: " + getCharge(stack) + "/" + MAX_CHARGE + " FE");
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+		tooltip.add(new TranslationTextComponent("tt.crossroads.leyden_jar.desc"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.leyden_jar.stats", getCharge(stack), MAX_CHARGE));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.leyden_jar.quip").setStyle(MiscUtil.TT_QUIP));
 	}
-	
+
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void getSubItems(ItemGroup tab, NonNullList<ItemStack> list){
-		if(isInCreativeTab(tab)){
-			list.add(new ItemStack(this, 1));
+	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items){
+		if(isInGroup(group)){
+			items.add(new ItemStack(this, 1));
 			ItemStack stack = new ItemStack(this, 1);
 			setCharge(stack, MAX_CHARGE);
-			list.add(stack);
+			items.add(stack);
 		}
 	}
 }

@@ -1,15 +1,14 @@
 package com.Da_Technomancer.crossroads.dimensions;
 
-import java.util.ArrayList;
-
-import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
-
+import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.ServerWorld;
-import net.minecraft.world.storage.MapStorage;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.storage.DimensionSavedDataManager;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.DimensionManager;
+
+import java.util.ArrayList;
 
 public class PrototypeWorldSavedData extends WorldSavedData{
 
@@ -17,15 +16,11 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 	//then if the folder for the prototype dimension is deleted, everything should work and all existing prototypes
 	//will cleanly self-destruct. 
 
-	public static final String PROTOTYPE_ID = Crossroads.MODID + "_prototype";
+	private static final String PROTOTYPE_ID = Crossroads.MODID + "_prototype";
 	private static PrototypeWorldSavedData instance;
 
 	public PrototypeWorldSavedData(){
 		super(PROTOTYPE_ID);
-	}
-
-	public PrototypeWorldSavedData(String name){
-		super(name);
 	}
 
 	/**
@@ -49,14 +44,8 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 			world = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 		}
 
-		MapStorage storage = world.getPerWorldStorage();
-		PrototypeWorldSavedData data = (PrototypeWorldSavedData) storage.getOrLoadData(PrototypeWorldSavedData.class, PROTOTYPE_ID);
-
-		if (data == null) {
-			data = new PrototypeWorldSavedData();
-			storage.setData(PROTOTYPE_ID, data);
-			data.setDirty(true);
-		}
+		DimensionSavedDataManager storage = world.getSavedData();
+		PrototypeWorldSavedData data = (PrototypeWorldSavedData) storage.getOrCreate(PrototypeWorldSavedData::new, PROTOTYPE_ID);
 		instance = data;
 		return data;
 	}
@@ -80,8 +69,8 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 			world = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
 		}
 
-		MapStorage storage = world.getPerWorldStorage();
-		storage.setData(PROTOTYPE_ID, this);
+		DimensionSavedDataManager storage = world.getSavedData();
+		storage.set(this);
 	}
 
 	@Override
@@ -98,7 +87,7 @@ public class PrototypeWorldSavedData extends WorldSavedData{
 		int i = 0;
 		for(PrototypeInfo entry : prototypes){
 			if(entry != null){
-				nbt.put("pro" + i, entry.writeToNBT(new CompoundNBT()));
+				nbt.put("pro" + i, entry.write(new CompoundNBT()));
 			}
 			i++;
 		}

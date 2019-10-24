@@ -7,8 +7,9 @@ import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 import com.Da_Technomancer.crossroads.items.technomancy.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.*;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -42,7 +43,7 @@ public final class CRItems{
 	public static CheatWandRotary debugGearWriter;
 	public static CheatWandHeat debugHeatWriter;
 	public static Item dustSalt;
-	public static MashedPotato mashedPotato;
+//	public static MashedPotato mashedPotato;
 	public static HandCrank handCrank;
 	public static OmniMeter omnimeter;
 	public static Vacuum vacuum;
@@ -105,7 +106,7 @@ public final class CRItems{
 		handCrank = new HandCrank();
 		debugHeatWriter = new CheatWandHeat();
 		toRegister.add(dustSalt = new Item(itemProp).setRegistryName("dust_salt"));
-		mashedPotato = new MashedPotato();
+//		mashedPotato = new MashedPotato();
 		omnimeter = new OmniMeter();
 		vacuum = new Vacuum();
 		magentaBread = new MagentaBread();

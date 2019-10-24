@@ -88,9 +88,7 @@ public final class Crossroads{
 		ModEntities.init();
 		//Main
 		MinecraftForge.EVENT_BUS.register(new EventHandlerCommon());
-
-		//TODO
-//		NetworkRegistry.INSTANCE.registerGuiHandler(Crossroads.instance, new GuiHandler());
+		//NetworkRegistry.INSTANCE.registerGuiHandler(Crossroads.instance, new GuiHandler());
 		MinecraftForge.EVENT_BUS.register(new EventHandlerCommon());
 
 		if(CRConfig.retrogen.get().isEmpty()){
@@ -180,7 +178,7 @@ public final class Crossroads{
 	@SubscribeEvent
 	private static void registerModels(ModelRegistryEvent e){
 		CrossroadsBlocks.initModels();
-		CRItems.initModels();
+//		CRItems.initModels();
 		//CrossroadsFluids.registerRenderers();
 		ItemSets.modelInit();
 	}

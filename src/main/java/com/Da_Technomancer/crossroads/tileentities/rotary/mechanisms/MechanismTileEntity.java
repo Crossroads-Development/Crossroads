@@ -2,15 +2,14 @@ package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.packets.ILongReceiver;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
+import com.Da_Technomancer.crossroads.API.packets.ILongReceiver;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
-import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
-import com.Da_Technomancer.crossroads.API.redstone.RedstoneUtil;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
+import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,18 +17,25 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ITickableTileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
+@ObjectHolder(Crossroads.MODID)
 public class MechanismTileEntity extends TileEntity implements ITickableTileEntity, ILongReceiver, IInfoTE{
+
+	@ObjectHolder("mechanism")
+	private static TileEntityType<MechanismTileEntity> type = null;
 
 	public static final ArrayList<IMechanism> MECHANISMS = new ArrayList<>(4);//This is a list instead of an array to allow expansion by addons
 
@@ -42,25 +48,28 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 		MECHANISMS.add(new MechanismToggleGear(true));//Index 5, inverted toggle gear
 	}
 
+	public MechanismTileEntity(){
+		super(type);
+	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
-		int hit = -1;
+	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+		int part = -1;
 		for(int i = 0; i < 7; i++){
-			if(boundingBoxes[i] != null && boundingBoxes[i].minX <= hitX && boundingBoxes[i].maxX >= hitX && boundingBoxes[i].minY <= hitY && boundingBoxes[i].maxY >= hitY && boundingBoxes[i].minZ <= hitZ && boundingBoxes[i].maxZ >= hitZ){
-				hit = i;
+			if(boundingBoxes[i] != null && boundingBoxes[i].minX <= hit.getHitVec().x && boundingBoxes[i].maxX >= hit.getHitVec().x && boundingBoxes[i].minY <= hit.getHitVec().y && boundingBoxes[i].maxY >= hit.getHitVec().y && boundingBoxes[i].minZ <= hit.getHitVec().z && boundingBoxes[i].maxZ >= hit.getHitVec().z){
+				part = i;
 				break;
 			}
 		}
 
-		if(hit == -1){
+		if(part == -1){
 			return;
 		}
 
-		chat.add("Speed: " + MiscUtil.betterRound(motionData[hit][0], 3));
-		chat.add("Energy: " + MiscUtil.betterRound(motionData[hit][1], 3));
-		chat.add("Power: " + MiscUtil.betterRound(motionData[hit][2], 3));
-		chat.add("I: " + inertia[hit] + ", Rotation Ratio: " + axleHandlers[hit].rotRatio);
+		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.speed", CRConfig.formatVal(motionData[part][0])));
+		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.energy", CRConfig.formatVal(motionData[part][1])));
+		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.power", CRConfig.formatVal(motionData[part][2])));
+		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.setup", CRConfig.formatVal(inertia[part]), CRConfig.formatVal(axleHandlers[part].rotRatio)));
 	}
 
 	// D-U-N-S-W-E-A
@@ -98,7 +107,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 		if(index == 6 && axleAxis != axis){
 			axleAxis = axis;
 			if(!newTE){
-				CrossroadsPackets.network.sendToAllAround(new SendLongToClient((byte) 14, axis == null ? -1 : axis.ordinal(), pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+				CrossroadsPackets.sendPacketAround(world, pos, new SendLongToClient(14, axis == null ? -1 : axis.ordinal(), pos));
 			}
 		}
 
@@ -221,6 +230,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 
 	@Override
 	public void tick(){
+		//functionality moved to master-axis
 //		if(world.isRemote){
 //			for(int i = 0; i < 7; i++){
 //				// it's 9 / PI instead of 180 / PI because 20 ticks/second

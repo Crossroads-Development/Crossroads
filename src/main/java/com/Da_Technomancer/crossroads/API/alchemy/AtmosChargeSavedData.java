@@ -1,34 +1,29 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
-import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.World;
-import net.minecraft.world.storage.MapStorage;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.storage.DimensionSavedDataManager;
 import net.minecraft.world.storage.WorldSavedData;
-import net.minecraftforge.common.ForgeConfigSpec;
 
 public class AtmosChargeSavedData extends WorldSavedData{
 
 	public static final String ID = Crossroads.MODID + "_atmos";
 
-	public static int getCapacity(){
-		return ((ForgeConfigSpec.IntValue) CRConfig.atmosCap).get();
+	public static long getCapacity(){
+		return CRConfig.atmosCap.get();
 	}
 
-	public AtmosChargeSavedData(){
+	private AtmosChargeSavedData(){
 		super(ID);
 	}
 
-	public AtmosChargeSavedData(String name){
-		super(name);
-	}
-
-	public static int getCharge(World w){
+	public static int getCharge(ServerWorld w){
 		return get(w).atmosCharge;
 	}
 
-	public static void setCharge(World w, int newCharge){
+	public static void setCharge(ServerWorld w, int newCharge){
 		AtmosChargeSavedData data = get(w);
 		if(newCharge != data.atmosCharge){
 			data.atmosCharge = newCharge;
@@ -36,18 +31,14 @@ public class AtmosChargeSavedData extends WorldSavedData{
 		}
 	}
 
-	private static AtmosChargeSavedData get(World world){
-		MapStorage storage = world.getMapStorage();
+	private static AtmosChargeSavedData get(ServerWorld world){
+		DimensionSavedDataManager storage = world.getSavedData();
 		AtmosChargeSavedData data;
 		try{
-			data = (AtmosChargeSavedData) storage.getOrLoadData(AtmosChargeSavedData.class, ID);
+			data = storage.getOrCreate(AtmosChargeSavedData::new, ID);
 		}catch(NullPointerException e){
-			Crossroads.logger.error("Failed AtmosChargeSavedData get due to null MapStorage", e);
+			Crossroads.logger.error("Failed AtmosChargeSavedData get due to null DimensionSavedDataManager", e);
 			return new AtmosChargeSavedData();//Blank storage that prevents actual read/write, but avoids a crash
-		}
-		if (data == null) {
-			data = new AtmosChargeSavedData();
-			storage.setData(ID, data);
 		}
 		return data;
 	}

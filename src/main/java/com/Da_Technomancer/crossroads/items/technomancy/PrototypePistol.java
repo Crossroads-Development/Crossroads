@@ -118,7 +118,7 @@ public class PrototypePistol extends BeamUsingItem{
 			CompoundNBT prototypeNBT = stack.getTag().getCompound("prot");
 			int index = prototypeNBT.getInt("index");
 
-			CompoundNBT playerNBT = player.getEntityData();
+			CompoundNBT playerNBT = player.getPersistentData();
 			if(getMaxItemUseDuration(stack) == count || playerNBT.getBoolean("wasSneak") != player.isSneaking()){
 				if(pistolMap.containsKey(index)){
 					pistolMap.get(index).mouseActive = true;

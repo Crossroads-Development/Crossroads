@@ -156,7 +156,7 @@ public final class EventHandlerCommon{
 			}
 
 			for(Entity ent : e.world.loadedEntityList){
-				CompoundNBT entNBT = ent.getEntityData();
+				CompoundNBT entNBT = ent.getPersistentData();
 				if(entNBT.getBoolean(MAIN_KEY)){
 					if(!entNBT.getBoolean(SUB_KEY)){
 						ent.updateBlocked = false;

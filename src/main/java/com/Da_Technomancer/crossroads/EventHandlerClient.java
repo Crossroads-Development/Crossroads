@@ -53,7 +53,7 @@ public final class EventHandlerClient{
 		if(game.world.getGameTime() % 5 == 0){
 			boolean glow = helmet.getItem() == CRItems.moduleGoggles && helmet.hasTag() && helmet.getTag().getBoolean(EnumGoggleLenses.VOID.name());
 			for(Entity ent : game.world.getAllEntities()){
-				CompoundNBT entNBT = ent.getEntityData();
+				CompoundNBT entNBT = ent.getPersistentData();
 				if(entNBT == null){
 					continue;//Should never be null, but some mods override the entNBT method to return null for some reason
 				}
@@ -239,7 +239,7 @@ public final class EventHandlerClient{
 			if(player == null){
 				return;
 			}
-			CompoundNBT entNBT = player.getEntityData();
+			CompoundNBT entNBT = player.getPersistentData();
 
 			if(entNBT.getBoolean(EventHandlerCommon.MAIN_KEY)){
 				if(!entNBT.getBoolean(EventHandlerCommon.SUB_KEY)){

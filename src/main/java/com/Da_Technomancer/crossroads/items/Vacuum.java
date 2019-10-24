@@ -4,9 +4,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
-import net.minecraft.util.EntityPredicates;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
@@ -17,15 +17,12 @@ import java.util.ArrayList;
 public class Vacuum extends Item{
 
 	private static final int RANGE = 5;
-	private static final double ANGLE = 1D / Math.sqrt(2D);//Math.cos(Math.PI / 4F);
+	private static final double ANGLE = Math.cos(Math.PI / 4F);//Pre-calc for speed
 
-	public Vacuum(){
+	protected Vacuum(){
+		super(CRItems.itemProp.maxStackSize(1).defaultMaxDamage(1200));
 		String name = "vacuum";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		maxStackSize = 1;
-		setMaxDamage(1200);
 		CRItems.toRegister.add(this);
 	}
 
@@ -43,7 +40,7 @@ public class Vacuum extends Item{
 			ent.addVelocity(motVec.x, motVec.y, motVec.z);
 		}
 
-		playerIn.getHeldItem(hand).damageItem(1, playerIn);
+		playerIn.getHeldItem(hand).damageItem(1, playerIn, p -> p.sendBreakAnimation(hand));
 
 		return ActionResult.newResult(ActionResultType.SUCCESS, playerIn.getHeldItem(hand));
 	}
