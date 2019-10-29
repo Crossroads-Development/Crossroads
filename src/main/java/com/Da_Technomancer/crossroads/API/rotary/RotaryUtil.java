@@ -52,7 +52,7 @@ public class RotaryUtil{
 	}
 
 	public static double posOrNeg(double in, double zeroCase){
-		return in == 0 ? zeroCase : Math.signum(in);
+		return in == 0D || in == -0D ? zeroCase : Math.signum(in);
 	}
 
 	/**
@@ -100,7 +100,10 @@ public class RotaryUtil{
 	 * @return Whether it should be solid to small gears
 	 */
 	public static boolean solidToGears(World world, BlockPos pos, Direction side){
-		VoxelShape shape = world.getBlockState(pos).getShape(world, pos);
+		VoxelShape shape = world.getBlockState(pos).getCollisionShape(world, pos);
+		shape = shape.project(side);//Eliminate all voxels that don't touch the side of interest, and extend remaining voxels
+
+
 		//TODO THIS IS A PLACEHOLDER and does not work
 		//This currently works for solid surfaces, but not things like the ends of axles (probably- best to test this)
 		return Block.func_220055_a(world, pos, side);//This method is also used by torches
@@ -115,7 +118,6 @@ public class RotaryUtil{
 	public static void increaseMasterKey(boolean sendPacket){
 		masterKey++;
 		if(sendPacket){
-//			CrossroadsPackets.network.sendToAll(new SendMasterKeyToClient(masterKey));
 			CrossroadsPackets.sendPacketToAll(new SendMasterKeyToClient(masterKey));
 		}
 	}

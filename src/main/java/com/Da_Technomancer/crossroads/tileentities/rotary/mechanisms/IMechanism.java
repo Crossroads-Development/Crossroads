@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -89,7 +89,7 @@ public interface IMechanism{
 	 * @param axis If side is null (axle slot), this is the orientation of this mechanism. If side is not null, this should be ignored, and may be null
 	 * @return The bounding box of this mechanism
 	 */
-	public AxisAlignedBB getBoundingBox(@Nullable Direction side, @Nullable Direction.Axis axis);
+	public VoxelShape getBoundingBox(@Nullable Direction side, @Nullable Direction.Axis axis);
 
 	@OnlyIn(Dist.CLIENT)
 	public void doRender(MechanismTileEntity te, float partialTicks, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis);

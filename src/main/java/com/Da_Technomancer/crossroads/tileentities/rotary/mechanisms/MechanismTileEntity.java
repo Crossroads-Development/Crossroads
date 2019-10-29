@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.rotary.Mechanism;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,13 +20,12 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
@@ -37,7 +37,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	@ObjectHolder("mechanism")
 	private static TileEntityType<MechanismTileEntity> type = null;
 
-	public static final ArrayList<IMechanism> MECHANISMS = new ArrayList<>(4);//This is a list instead of an array to allow expansion by addons
+	public static final ArrayList<IMechanism> MECHANISMS = new ArrayList<>(6);//This is a list instead of an array to allow expansion by addons
 
 	static{
 		MECHANISMS.add(new MechanismSmallGear());//Index 0, small gear
@@ -56,7 +56,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		int part = -1;
 		for(int i = 0; i < 7; i++){
-			if(boundingBoxes[i] != null && boundingBoxes[i].minX <= hit.getHitVec().x && boundingBoxes[i].maxX >= hit.getHitVec().x && boundingBoxes[i].minY <= hit.getHitVec().y && boundingBoxes[i].maxY >= hit.getHitVec().y && boundingBoxes[i].minZ <= hit.getHitVec().z && boundingBoxes[i].maxZ >= hit.getHitVec().z){
+			if(boundingBoxes[i] != null && Mechanism.voxelContains(boundingBoxes[i], hit.getHitVec())){
 				part = i;
 				break;
 			}
@@ -84,7 +84,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 //	private final float[] angle = new float[7];
 //	private final float[] clientW = new float[7];
 	//Public for read-only
-	public final AxisAlignedBB[] boundingBoxes = new AxisAlignedBB[7];
+	public final VoxelShape[] boundingBoxes = new VoxelShape[7];
 
 	private boolean updateMembers = false;
 	//Public for read-only, use setMechanism
@@ -250,7 +250,10 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	public void updateRedstone(){
-		double reds = RedstoneUtil.getPowerAtPos(world, pos);
+		double reds = 0;
+		for(Direction dir : Direction.values()){
+			reds = Math.max(RedstoneUtil.getRedstoneOnSide(world, pos, dir), reds);
+		}
 		if(reds != redstoneIn){
 			markDirty();
 			for(int i = 0; i < 7; i++){
@@ -267,17 +270,42 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 		return members[6] != null && axleAxis != null ? (float) members[6].getCircuitSignal(mats[6], axleAxis, motionData[6], this) : 0;
 	}
 
+	//Direct access to the axle handlers is needed
 	protected final SidedAxleHandler[] axleHandlers = {new SidedAxleHandler(0), new SidedAxleHandler(1), new SidedAxleHandler(2), new SidedAxleHandler(3), new SidedAxleHandler(4), new SidedAxleHandler(5), new SidedAxleHandler(6)};
-	private final ICogHandler[] cogHandlers = {new SidedCogHandler(0), new SidedCogHandler(1), new SidedCogHandler(2), new SidedCogHandler(3), new SidedCogHandler(4), new SidedCogHandler(5)};
+
+	@SuppressWarnings("unchecked")
+	private final LazyOptional<IAxleHandler>[] axleOpts = new LazyOptional[] {LazyOptional.of(() -> axleHandlers[0]), LazyOptional.of(() -> axleHandlers[1]), LazyOptional.of(() -> axleHandlers[2]), LazyOptional.of(() -> axleHandlers[3]), LazyOptional.of(() -> axleHandlers[4]), LazyOptional.of(() -> axleHandlers[5]), LazyOptional.of(() -> axleHandlers[6])};
+	@SuppressWarnings("unchecked")
+	private final LazyOptional<ICogHandler>[] cogOpts = new LazyOptional[] {LazyOptional.of(() -> new SidedCogHandler(0)), LazyOptional.of(() -> new SidedCogHandler(1)), LazyOptional.of(() -> new SidedCogHandler(2)), LazyOptional.of(() -> new SidedCogHandler(3)), LazyOptional.of(() -> new SidedCogHandler(4)), LazyOptional.of(() -> new SidedCogHandler(5))};
+
+	@Override
+	public void remove(){
+		super.remove();
+		for(int i = 0; i < 6; i++){
+			cogOpts[i].invalidate();
+			axleOpts[i].invalidate();
+		}
+		axleOpts[6].invalidate();//cogOpts is length 6, axleOpts is length 7
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.COG_CAPABILITY && facing != null){
-			return members[facing.getIndex()] != null && members[facing.getIndex()].hasCap(capability, facing, mats[facing.getIndex()], facing, axleAxis, this) ? (T) cogHandlers[facing.getIndex()] : null;
+			if(members[facing.getIndex()] != null && members[facing.getIndex()].hasCap(capability, facing, mats[facing.getIndex()], facing, axleAxis, this)){
+				return (LazyOptional<T>) cogOpts[facing.getIndex()];
+			}else{
+				return LazyOptional.empty();
+			}
 		}
 		if(capability == Capabilities.AXLE_CAPABILITY && facing != null){
-			return members[facing.getIndex()] == null && axleAxis == facing.getAxis() ? members[6].hasCap(capability, facing, mats[6], null, axleAxis, this) ? (T) axleHandlers[6] : null : members[facing.getIndex()] != null && members[facing.getIndex()].hasCap(capability, facing, mats[facing.getIndex()], facing, axleAxis, this) ? (T) axleHandlers[facing.getIndex()] : null;
+			if(members[facing.getIndex()] == null && axleAxis == facing.getAxis()){
+				//Connect to axle
+				return members[6].hasCap(capability, facing, mats[6], null, axleAxis, this) ? (LazyOptional<T>) axleOpts[6] : LazyOptional.empty();
+			}else{
+				//Connect to gear on that side
+				return members[facing.getIndex()] != null && members[facing.getIndex()].hasCap(capability, facing, mats[facing.getIndex()], facing, axleAxis, this) ? (LazyOptional<T>) axleOpts[facing.getIndex()] : LazyOptional.empty();
+			}
 		}
 
 		return super.getCapability(capability, facing);

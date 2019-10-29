@@ -4,13 +4,10 @@ import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
-import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.IFluidState;
@@ -18,23 +15,24 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.*;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.LootParameters;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Mechanism extends ContainerBlock implements IReadable{
 
-	private static final AxisAlignedBB BREAK_ALL_BB = new AxisAlignedBB(.3125D, .3125D, .3125D, .6875D, .6875D, .6875D);
+	private static final VoxelShape BREAK_ALL_BB = Block.makeCuboidShape(5, 5, 5, 11, 11, 11);
 
 	public Mechanism(){
 		super(Block.Properties.create(Material.IRON).hardnessAndResistance(1).sound(SoundType.METAL));
@@ -58,7 +56,7 @@ public class Mechanism extends ContainerBlock implements IReadable{
 		Vec3d relVec = target.getHitVec().subtract(pos.getX(), pos.getY(), pos.getZ());
 
 		for(int i = 0; i < 7; i++){
-			if(mte.boundingBoxes[i] != null && mte.boundingBoxes[i].minX <= relVec.x && mte.boundingBoxes[i].maxX >= relVec.x && mte.boundingBoxes[i].minY <= relVec.y && mte.boundingBoxes[i].maxY >= relVec.y && mte.boundingBoxes[i].minZ <= relVec.z && mte.boundingBoxes[i].maxZ >= relVec.z){
+			if(mte.boundingBoxes[i] != null && voxelContains(mte.boundingBoxes[i], relVec)){
 				return mte.members[i].getDrop(mte.mats[i]);
 			}
 		}
@@ -67,52 +65,34 @@ public class Mechanism extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public AxisAlignedBB getSelectedBoundingBox(BlockState state, World worldIn, BlockPos pos){
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+		//Used for selection. Adds break all cube if the axle slot is empty
 		TileEntity te = worldIn.getTileEntity(pos);
-		if(!(te instanceof MechanismTileEntity)){
-			return BREAK_ALL_BB.offset(pos);
-		}
-		MechanismTileEntity mte = (MechanismTileEntity) te;
-		PlayerEntity play = Minecraft.getInstance().player;
-		float reDist = Minecraft.getInstance().playerController.getBlockReachDistance();
-		Vec3d start = play.getEyePosition(0F).subtract((double) pos.getX(), (double) pos.getY(), (double) pos.getZ());
-		Vec3d end = start.add(play.getLook(0F).x * reDist, play.getLook(0F).y * reDist, play.getLook(0F).z * reDist);
-		int out = getAimedSide(mte, start, end, true);
-		return (out == -1 || out == 7 ? BREAK_ALL_BB : mte.boundingBoxes[out]).offset(pos);
-	}
-
-	@Override
-	@Nullable
-	public RayTraceResult collisionRayTrace(BlockState state, World worldIn, BlockPos pos, Vec3d start, Vec3d end){
-		TileEntity te = worldIn.getTileEntity(pos);
-		if(!(te instanceof MechanismTileEntity)){
-			return null;
-		}
-		MechanismTileEntity mte = (MechanismTileEntity) te;
-		start = start.subtract(pos.getX(), pos.getY(), pos.getZ());
-		end = end.subtract(pos.getX(), pos.getY(), pos.getZ());
-		int out = getAimedSide(mte, start, end, true);
-		if(out == -1){
-			return null;
-		}else{
-			RayTraceResult untransformed = (out == 7 ? BREAK_ALL_BB : mte.boundingBoxes[out]).calculateIntercept(start, end);
-			return new RayTraceResult(untransformed.hitVec.add((double) pos.getX(), (double) pos.getY(), (double) pos.getZ()), untransformed.sideHit, pos);
-		}
-	}
-
-	@Override
-	public void addCollisionBoxToList(BlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean nothingProbably){
-		TileEntity te = worldIn.getTileEntity(pos);
-		if(!(te instanceof MechanismTileEntity)){
-			return;
-		}
-		MechanismTileEntity mte = (MechanismTileEntity) te;
-		for(int i = 0; i < 7; i++){
-			if(mte.boundingBoxes[i] != null){
-				addCollisionBoxToList(pos, mask, list, mte.boundingBoxes[i]);
+		if(te instanceof MechanismTileEntity){
+			MechanismTileEntity mte = (MechanismTileEntity) te;
+			if(mte.members[6] != null){
+				return getCollisionShape(state, worldIn, pos, context);
+			}else{
+				return VoxelShapes.or(getCollisionShape(state, worldIn, pos, context), BREAK_ALL_BB);
 			}
 		}
+		return BREAK_ALL_BB;//Shouldn't happen unless network weirdness.
+	}
+
+	@Override
+	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(te instanceof MechanismTileEntity){
+			MechanismTileEntity mte = (MechanismTileEntity) te;
+			VoxelShape shape = VoxelShapes.empty();
+			for(VoxelShape s : mte.boundingBoxes){
+				if(s != null){
+					shape = VoxelShapes.or(s);
+				}
+			}
+			return shape;
+		}
+		return VoxelShapes.empty();//Shouldn't happen unless network weirdness.
 	}
 
 	@Override
@@ -129,7 +109,7 @@ public class Mechanism extends ContainerBlock implements IReadable{
 			Vec3d start = new Vec3d(player.prevPosX, player.prevPosY + (double) player.getEyeHeight(), player.prevPosZ).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
 			Vec3d end = start.add(player.getLook(0F).x * reDist, player.getLook(0F).y * reDist, player.getLook(0F).z * reDist);
 
-			int out = getAimedSide(gear, start, end, true);
+			int out = getAimedSide(gear, start, end);
 
 			if(out == -1){
 				return false;
@@ -158,7 +138,7 @@ public class Mechanism extends ContainerBlock implements IReadable{
 				return false;
 			}
 		}else{
-			return super.removedByPlayer(state, worldIn, pos, player, canHarvest);
+			return super.removedByPlayer(state, worldIn, pos, player, willHarvest, fluid);
 		}
 	}
 
@@ -182,36 +162,42 @@ public class Mechanism extends ContainerBlock implements IReadable{
 	 * @param te The TileEntity aimed at
 	 * @param start Start vector, subtract position first
 	 * @param end End vector, subtract position first
-	 * @param useCenter whether or not to include the breakall cube when raytracing
 	 * @return The index of the aimed component, 7 if the breakall cube, -1 if none
 	 */
-	private int getAimedSide(MechanismTileEntity te, Vec3d start, Vec3d end, boolean useCenter){
-		ArrayList<AxisAlignedBB> list = new ArrayList<>();
-		Collections.addAll(list, te.boundingBoxes);
-		if(useCenter && list.get(6) == null){
-			list.add(BREAK_ALL_BB);
+	private int getAimedSide(MechanismTileEntity te, Vec3d start, Vec3d end){
+		for(int i = 0; i < te.boundingBoxes.length; i++){
+			if(te.boundingBoxes[i] != null && te.boundingBoxes[i].rayTrace(start, end, BlockPos.ZERO) != null){
+				return i;
+			}
 		}
-		AxisAlignedBB aimed = BlockUtil.selectionRaytrace(list, start, end);
 
-		return aimed == null ? -1 : list.indexOf(aimed);
+		//Include break-all-cube if no axle
+		if(te.boundingBoxes[6] == null && BREAK_ALL_BB.rayTrace(start, end, BlockPos.ZERO) != null){
+			return 7;
+		}
+		return -1;
 	}
 
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
-		neighborChanged(state, world, pos, this, pos);
+		neighborChanged(state, world, pos, this, pos, false);
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
-		RotaryUtil.increaseMasterKey(true);
+	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
+		RotaryUtil.increaseMasterKey(true);//
 
 		if(worldIn.isRemote){
 			return;
 		}
 
-		MechanismTileEntity te = (MechanismTileEntity) worldIn.getTileEntity(pos);
+		TileEntity rawTE = worldIn.getTileEntity(pos);
+		if(!(rawTE instanceof MechanismTileEntity)){
+			return;
+		}
+		MechanismTileEntity te = (MechanismTileEntity) rawTE;
 
-		for(Direction side : Direction.VALUES){
+		for(Direction side : Direction.values()){
 			if(te.members[side.getIndex()] != null && !RotaryUtil.solidToGears(worldIn, pos.offset(side), side.getOpposite())){
 				spawnAsEntity(worldIn, pos, te.members[side.getIndex()].getDrop(te.mats[side.getIndex()]));
 				te.setMechanism(side.getIndex(), null, null, null, false);
@@ -227,16 +213,6 @@ public class Mechanism extends ContainerBlock implements IReadable{
 	@Override
 	public BlockRenderType getRenderType(BlockState state){
 		return BlockRenderType.ENTITYBLOCK_ANIMATED;
-	}
-
-	@Override
-	public boolean isSideSolid(BlockState state, IBlockAccess world, BlockPos pos, Direction side){
-		TileEntity te = world.getTileEntity(pos);
-		if(te instanceof MechanismTileEntity){
-			MechanismTileEntity mte = (MechanismTileEntity) te;
-			return mte.members[6] != null && mte.axleAxis == side.getAxis();
-		}
-		return false;
 	}
 
 	@Override
@@ -272,5 +248,22 @@ public class Mechanism extends ContainerBlock implements IReadable{
 	public float read(World world, BlockPos pos, BlockState blockState){
 		TileEntity te = world.getTileEntity(pos);
 		return te instanceof MechanismTileEntity ? ((MechanismTileEntity) te).getRedstone() : 0;
+	}
+
+	/**
+	 * You would think this would be built into the VoxelShape class, but noooooooo
+	 * "Contans" is defined as either inside the shape, or on the edge of the shape
+	 * @param shape The voxelshape to check if contains the passed point
+	 * @param point The 3 dimensional point to check if is contained by the passed shape
+	 * @return Whether the passed VoxelShape contains the passed point
+	 */
+	public static boolean voxelContains(VoxelShape shape, Vec3d point){
+		final boolean[] contained = new boolean[1];//We use a size 1 array because lambdas aren't supposed to use non-final fields
+		shape.forEachBox((double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) -> {
+			if(!contained[0]){
+				contained[0] = xMin <= point.x && xMax >= point.x && yMin <= point.y && yMax >= point.y && zMin <= point.z && zMax >= point.z;
+			}
+		});
+		return contained[0];
 	}
 }
