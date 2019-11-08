@@ -2,25 +2,39 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 
+@ObjectHolder(Crossroads.MODID)
 public class SteamTurbineTileEntity extends ModuleTE{
 
+	@ObjectHolder("steam_turbine")
+	private static TileEntityType<SteamTurbineTileEntity> type = null;
+
+	public static final double INERTIA = 80D;
+	private static final int CAPACITY = 10_000;
+	public static final int LIMIT = 5;
+
 	public SteamTurbineTileEntity(){
-		super();
-		fluidProps[0] = new TankProperty(0, CAPACITY, false, true);
-		fluidProps[1] = new TankProperty(1, CAPACITY, true, false, (Fluid f) -> f == BlockSteam.getSteam());
+		super(type);
+		fluidProps[0] = new TankProperty(CAPACITY, false, true);
+		fluidProps[1] = new TankProperty(CAPACITY, true, false, (Fluid f) -> f == CrossroadsFluids.steam.still);
 	}
 
 	@Override
@@ -35,11 +49,8 @@ public class SteamTurbineTileEntity extends ModuleTE{
 
 	@Override
 	protected double getMoInertia(){
-		return 80;
+		return INERTIA;
 	}
-
-	private static final int CAPACITY = 10_000;
-	public static final int LIMIT = 5;
 
 	@Override
 	public void tick(){
@@ -48,25 +59,27 @@ public class SteamTurbineTileEntity extends ModuleTE{
 		if(world.isRemote){
 			IAxleHandler gear = null;
 			TileEntity te = world.getTileEntity(pos.offset(Direction.UP));
-			if(te != null && te.hasCapability(Capabilities.AXLE_CAPABILITY, Direction.DOWN)){
-				gear = te.getCapability(Capabilities.AXLE_CAPABILITY, Direction.DOWN);
+			LazyOptional<IAxleHandler> axleOpt;
+			if(te != null && (axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, Direction.DOWN)).isPresent()){
+				gear = axleOpt.orElseThrow(NullPointerException::new);
 			}
-			completion = (float) (gear == null ? 0 : gear.getAngle(0));
+			completion = (gear == null ? 0 : gear.getAngle(0));
 			return;
 		}
 
-		if(fluids[1] != null){
-			int limit = fluids[1].amount / 100;
-			limit = Math.min(limit, (CAPACITY - (fluids[0] == null ? 0 : fluids[0].amount)) / 100);
+		if(!fluids[1].isEmpty()){
+			int limit = fluids[1].getAmount() / 100;
+			limit = Math.min(limit, (CAPACITY - fluids[0].getAmount()) / 100);
 			limit = Math.min(limit, LIMIT);
 			if(limit != 0){
-				fluids[1].amount -= limit * 100;
-				if(fluids[1].amount <= 0){
-					fluids[1] = null;
+				fluids[1].shrink(limit * 100);
+				if(fluids[0].isEmpty()){
+					fluids[0] = new FluidStack(CrossroadsFluids.distilledWater.still, 100 * limit);
+				}else{
+					fluids[0].grow(100 * limit);
 				}
-				fluids[0] = new FluidStack(BlockDistilledWater.getDistilledWater(), (fluids[0] == null ? 0 : fluids[0].amount) + (100 * limit));
 				if(axleHandler.axis != null){
-					axleHandler.addEnergy(((double) limit) * .1D * EnergyConverters.degPerSteamBucket(false) / EnergyConverters.degPerJoule(false), true, true);
+					axleHandler.addEnergy(((double) limit) * .1D * EnergyConverters.degPerSteamBucket() / EnergyConverters.degPerJoule(), true, true);
 				}
 			}
 		}
@@ -82,26 +95,32 @@ public class SteamTurbineTileEntity extends ModuleTE{
 		return completion;
 	}
 
-	private final FluidHandler waterHandler = new FluidHandler(0);
-	private final FluidHandler steamHandler = new FluidHandler(1);
-	private final FluidHandler innerHandler = new FluidHandler(-1);
+	@Override
+	public void remove(){
+		super.remove();
+		waterOpt.invalidate();
+		steamOpt.invalidate();
+	}
+
+	private final LazyOptional<IFluidHandler> waterOpt = LazyOptional.of(() -> new FluidHandler(0));
+	private final LazyOptional<IFluidHandler> steamOpt = LazyOptional.of(() -> new FluidHandler(1));
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			if(facing == null){
-				return (T) innerHandler;
+				return (LazyOptional<T>) globalFluidOpt;
 			}
 
 			if(facing == Direction.DOWN){
-				return (T) steamHandler;
+				return (LazyOptional<T>) steamOpt;
 			}else if(facing != Direction.UP){
-				return (T) waterHandler;
+				return (LazyOptional<T>) waterOpt;
 			}
 		}
 		if(capability == Capabilities.AXLE_CAPABILITY && facing == Direction.UP){
-			return (T) axleHandler;
+			return (LazyOptional<T>) axleOpt;
 		}
 
 		return super.getCapability(capability, facing);

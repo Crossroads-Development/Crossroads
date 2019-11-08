@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
@@ -107,8 +107,8 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 				return;
 			}
 
-			if(state.get(CrossroadsProperties.FULLNESS) != fullness){
-				world.setBlockState(pos, state.with(CrossroadsProperties.FULLNESS, fullness), 18);
+			if(state.get(CRProperties.FULLNESS) != fullness){
+				world.setBlockState(pos, state.with(CRProperties.FULLNESS, fullness), 18);
 			}
 
 			if(fullness != 0 && !fluids[0].isEmpty()){

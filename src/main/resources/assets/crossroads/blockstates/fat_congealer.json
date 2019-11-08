@@ -1,5 +1,8 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:fat_congealer" }
+		"horiz_facing=north": { "model": "crossroads:fat_congealer", "y": 90},
+		"horiz_facing=south": { "model": "crossroads:fat_congealer", "y": 270 },
+		"horiz_facing=east": { "model": "crossroads:fat_congealer", "y": 180 },
+		"horiz_facing=west": { "model": "crossroads:fat_congealer" }
 	}
 }

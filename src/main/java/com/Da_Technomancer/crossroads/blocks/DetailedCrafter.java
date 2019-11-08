@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.blocks;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
-import com.Da_Technomancer.crossroads.gui.GuiHandler;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

@@ -1,8 +1,12 @@
 {
-	"parent": "block/cube_bottom_top",
+	"parent": "block/cube_all",
 	"textures": {
-		"side": "crossroads:blocks/netherrack_pipe_framed_tin",
-		"top": "crossroads:blocks/tin_axle",
-		"bottom": "crossroads:blocks/tin_axle"
+		"north": "crossroads:blocks/netherrack_pipe_framed_tin",
+		"south": "crossroads:blocks/netherrack_pipe_framed_tin",
+		"east": "crossroads:blocks/netherrack_pipe_framed_tin",
+		"west": "crossroads:blocks/tin_chute",
+		"up": "crossroads:blocks/tin_axle",
+		"down": "crossroads:blocks/tin_axle",
+		"particle": "crossroads:blocks/netherrack_pipe_framed_tin"
 	}
 }

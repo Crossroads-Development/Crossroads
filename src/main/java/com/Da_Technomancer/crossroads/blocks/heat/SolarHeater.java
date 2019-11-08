@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
-import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.tileentities.heat.SolarHeaterTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
@@ -57,14 +57,14 @@ public class SolarHeater extends ContainerBlock{
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
-		return state.get(CrossroadsProperties.HORIZ_AXIS) == Direction.Axis.X ? X_SHAPE : Z_SHAPE;
+		return state.get(CRProperties.HORIZ_AXIS) == Direction.Axis.X ? X_SHAPE : Z_SHAPE;
 	}
 
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand))){
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.cycle(CrossroadsProperties.HORIZ_AXIS));
+				worldIn.setBlockState(pos, state.cycle(CRProperties.HORIZ_AXIS));
 			}
 			return true;
 		}
@@ -73,13 +73,13 @@ public class SolarHeater extends ContainerBlock{
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
-		builder.add(CrossroadsProperties.HORIZ_AXIS);
+		builder.add(CRProperties.HORIZ_AXIS);
 	}
 
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return getDefaultState().with(CrossroadsProperties.HORIZ_AXIS, context.getPlacementHorizontalFacing().rotateY().getAxis());
+		return getDefaultState().with(CRProperties.HORIZ_AXIS, context.getPlacementHorizontalFacing().rotateY().getAxis());
 	}
 
 	@Override

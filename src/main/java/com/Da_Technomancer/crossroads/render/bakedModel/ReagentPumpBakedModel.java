@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.render.bakedModel;
 
-import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import net.minecraft.block.BlockState;
@@ -66,9 +66,9 @@ public class ReagentPumpBakedModel implements IBakedModel{
 
 		List<BakedQuad> quads = new ArrayList<>();
 		IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
-		Boolean[] connectMode = extendedBlockState.get(CrossroadsProperties.CONNECT);
+		Boolean[] connectMode = extendedBlockState.get(CRProperties.CONNECT);
 		boolean crystal = state.getBlock() == CrossroadsBlocks.reagentPumpCrystal;
-		boolean up = state.get(CrossroadsProperties.ACTIVE);
+		boolean up = state.get(CRProperties.ACTIVE);
 
 		if(up){
 			quads.addAll(coreUp);

@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
@@ -67,7 +67,7 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 		}
 
 		double goalTemp = HeatUtil.toCelcius(getSetting());
-		boolean blueMode = world.getBlockState(pos).get(CrossroadsProperties.ACTIVE);
+		boolean blueMode = world.getBlockState(pos).get(CRProperties.ACTIVE);
 
 		if(blueMode){
 			heatIn = -heatIn;

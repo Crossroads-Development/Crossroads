@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class Vacuum extends Item{
 
 	private static final int RANGE = 5;
-	private static final double ANGLE = Math.cos(Math.PI / 4F);//Pre-calc for speed
+	private static final double ANGLE = Math.cos(Math.PI / 4F);//Pre-calc cosine for speed
 
 	protected Vacuum(){
 		super(CRItems.itemProp.maxStackSize(1).defaultMaxDamage(1200));

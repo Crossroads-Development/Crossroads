@@ -31,8 +31,8 @@ public class HeatLimiterBasicGuiContainer extends ContainerScreen{
 	}
 
 	@Override
-	public void initGui(){
-		super.initGui();
+	public void init(){
+		super.init();
 
 		textBar = new TextBarGuiObject((width - xSize) / 2, (height - ySize) / 2, 0, 0, 300, 25, null, (Character key) -> key == '.' || Character.isDigit(key));
 		textBar.setText(doubleToString(te.getSetting()));

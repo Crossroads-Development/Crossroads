@@ -1,22 +1,34 @@
 package com.Da_Technomancer.crossroads.tileentities.electric;
 
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.registries.ObjectHolder;
 
+@ObjectHolder(Crossroads.MODID)
 public class DynamoTileEntity extends ModuleTE{
 
-	private static final int CHARGE_CAPACITY = 8_000;
+	@ObjectHolder("dynamo")
+	private static TileEntityType<DynamoTileEntity> type = null;
 
-	private static int efficiency = -1;
+	private static final int CHARGE_CAPACITY = 8_000;
+	public static final int INERTIA = 200;
+
+	private int fe = 0;
+
+	public DynamoTileEntity(){
+		super(type);
+	}
 
 	@Override
 	protected boolean useRotary(){
@@ -25,30 +37,28 @@ public class DynamoTileEntity extends ModuleTE{
 
 	@Override
 	public double getMoInertia(){
-		return 200;
+		return INERTIA;
 	}
 
 	@Override
 	public void tick(){
 		super.tick();
 
-		if(efficiency < 0){
-			efficiency = CRConfig.electPerJoule.get();
-		}
-
 		int operations = (int) Math.abs(motData[1]);
 		if(operations > 0){
 			motData[1] -= operations * Math.signum(motData[1]);
-			energyHandler.setEnergy(energyHandler.getEnergyStored() + operations * efficiency);
+			fe += operations * CRConfig.electPerJoule.get();
+			fe = Math.min(fe, CHARGE_CAPACITY);
 			markDirty();
 		}
 
-		Direction facing = world.getBlockState(pos).get(CrossroadsProperties.HORIZ_FACING);
+		Direction facing = world.getBlockState(pos).get(CRProperties.HORIZ_FACING);
 		TileEntity neighbor = world.getTileEntity(pos.offset(facing.getOpposite()));
-		IEnergyStorage handler;
-		if(neighbor != null && (handler = neighbor.getCapability(CapabilityEnergy.ENERGY, facing)) != null){
+		LazyOptional<IEnergyStorage> energyOpt;
+		if(neighbor != null && (energyOpt = neighbor.getCapability(CapabilityEnergy.ENERGY, facing)).isPresent()){
+			IEnergyStorage handler = energyOpt.orElseThrow(NullPointerException::new);
 			if(handler.canReceive()){
-				energyHandler.setEnergy(energyHandler.getEnergyStored() - handler.receiveEnergy(energyHandler.getEnergyStored(), false));
+				fe -= handler.receiveEnergy(fe, false);
 				markDirty();
 			}
 		}
@@ -60,41 +70,84 @@ public class DynamoTileEntity extends ModuleTE{
 	}
 
 	@Override
+	public void rotate(){
+		super.rotate();
+		axleOpt.invalidate();
+		axleOpt = LazyOptional.of(this::createAxleHandler);
+		feOpt.invalidate();
+		feOpt = LazyOptional.of(DynamoEnergyHandler::new);
+	}
+
+	@Override
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
-		energyHandler.setEnergy(nbt.getInt("charge"));
+		fe = nbt.getInt("charge");
 	}
 
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
-		nbt.putInt("charge", energyHandler.getEnergyStored());
+		nbt.putInt("charge", fe);
 
 		return nbt;
 	}
 
+	@Override
+	public void remove(){
+		super.remove();
+		feOpt.invalidate();
+	}
+
+	private LazyOptional<IEnergyStorage> feOpt = LazyOptional.of(DynamoEnergyHandler::new);
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.AXLE_CAPABILITY && (side == null || side == world.getBlockState(pos).get(CrossroadsProperties.HORIZ_FACING))){
-			return (T) axleHandler;
+		if(cap == Capabilities.AXLE_CAPABILITY && (side == null || side == world.getBlockState(pos).get(CRProperties.HORIZ_FACING))){
+			return (LazyOptional<T>) axleOpt;
 		}
-		if(cap == CapabilityEnergy.ENERGY && (side == null || side == world.getBlockState(pos).get(CrossroadsProperties.HORIZ_FACING).getOpposite())){
-			return (T) energyHandler;
+		if(cap == CapabilityEnergy.ENERGY && (side == null || side == world.getBlockState(pos).get(CRProperties.HORIZ_FACING).getOpposite())){
+			return (LazyOptional<T>) feOpt;
 		}
 		return super.getCapability(cap, side);
 	}
 
-	private final DynamoEnergyStorage energyHandler = new DynamoEnergyStorage(CHARGE_CAPACITY, 0, CHARGE_CAPACITY, 0);
+	private class DynamoEnergyHandler implements IEnergyStorage{
 
-	private static class DynamoEnergyStorage extends EnergyStorage{
-
-		public DynamoEnergyStorage(int capacity, int maxReceive, int maxExtract, int energy){
-			super(capacity, maxReceive, maxExtract, energy);
+		@Override
+		public int receiveEnergy(int maxReceive, boolean simulate){
+			return 0;
 		}
 
-		public void setEnergy(int energyIn){
-			this.energy = Math.max(0, Math.min(energyIn, capacity));
+		@Override
+		public int extractEnergy(int maxExtract, boolean simulate){
+			if(simulate){
+				return Math.min(maxExtract, fe);
+			}
+			maxExtract = Math.min(maxExtract, fe);
+			fe -= maxExtract;
+			markDirty();
+			return maxExtract;
+		}
+
+		@Override
+		public int getEnergyStored(){
+			return fe;
+		}
+
+		@Override
+		public int getMaxEnergyStored(){
+			return CHARGE_CAPACITY;
+		}
+
+		@Override
+		public boolean canExtract(){
+			return fe > 0;
+		}
+
+		@Override
+		public boolean canReceive(){
+			return false;
 		}
 	}
 }

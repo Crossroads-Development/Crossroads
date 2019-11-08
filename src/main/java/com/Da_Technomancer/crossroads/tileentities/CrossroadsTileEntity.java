@@ -67,8 +67,6 @@ public class CrossroadsTileEntity{
 //		register(MathAxisTileEntity::new, "math_axis", reg, mathAxis);
 		register(CageChargerTileEntity::new, "cage_charger", reg, cageCharger);
 		register(HamsterWheelTileEntity::new, "hamster_wheel", reg, hamsterWheel);
-		register(FluidSplitterTileEntity::new, "fluid_splitter", reg, fluidSplitter);
-		register(BasicFluidSplitterTileEntity::new, "basic_fluid_splitter", reg, basicFluidSplitter);
 		register(CopshowiumCreationChamberTileEntity::new, "copshowium_creation_chamber", reg, copshowiumCreationChamber);
 		register(GatewayFrameTileEntity::new, "gateway_frame", reg, gatewayFrame);
 //		register(RedstoneKeyboardTileEntity::new, "redstone_keyboard", reg, redstoneKeyboard);

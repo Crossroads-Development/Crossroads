@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypingTableTileEntity;
 import net.minecraft.client.Minecraft;
@@ -34,7 +34,7 @@ public class PrototypingTableRenderer extends TileEntityRenderer<PrototypingTabl
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 
 		GlStateManager.translate(x + 0.5D, y + 0.5D, z + 0.5D);
-		GlStateManager.rotate(te.getWorld().getBlockState(te.getPos()).get(CrossroadsProperties.HORIZ_FACING).getHorizontalAngle(), 0, 1, 0);
+		GlStateManager.rotate(te.getWorld().getBlockState(te.getPos()).get(CRProperties.HORIZ_FACING).getHorizontalAngle(), 0, 1, 0);
 		GlStateManager.translate(0.5D, 0.5D, 0.5D);
 
 		Minecraft.getInstance().renderEngine.bindTexture(TEXTURE);

@@ -1,35 +1,59 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.gui.container.StampMillContainer;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
-import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
+import com.Da_Technomancer.crossroads.items.crafting.recipes.StampMillRec;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.IntReferenceHolder;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Optional;
 
+@ObjectHolder(Crossroads.MODID)
 public class StampMillTileEntity extends InventoryTE{
 
+	@ObjectHolder("stamp_mill")
+	private static TileEntityType<StampMillTileEntity> type = null;
+
 	public static final int TIME_LIMIT = 100;
+	public static final int INERTIA = 200;
 	public static final double REQUIRED = 800;
-	private static final double PROGRESS_PER_RADIAN = 20D;//Energy to consume per radian the internal gear turns
+	public static final double PROGRESS_PER_RADIAN = 20D;//Energy to consume per radian the internal gear turns
 	private double progress = 0;
 	private int timer = 0;
 
+	public IntReferenceHolder progRef = IntReferenceHolder.single();
+	public IntReferenceHolder timeRef = IntReferenceHolder.single();
+
 	public StampMillTileEntity(){
-		super(2);
+		super(type, 2);
 	}
 
 	@Override
@@ -49,9 +73,9 @@ public class StampMillTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
-		chat.add("Progress: " + (int) (progress) + "/" + (int) REQUIRED);
-		super.addInfo(chat, player, side, hitX, hitY, hitZ);
+	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.progress", (int) progress, (int) REQUIRED));
+		super.addInfo(chat, player, hit);
 	}
 
 	@Override
@@ -68,28 +92,34 @@ public class StampMillTileEntity extends InventoryTE{
 			motData[1] -= Math.signum(motData[1]) * progChange;
 			if(inventory[1].isEmpty() && !inventory[0].isEmpty()){
 				progress += progChange;
+				progRef.set((int) Math.round(progress));
 				if(++timer >= TIME_LIMIT || progress >= REQUIRED){
 					timer = 0;
 					if(progress >= REQUIRED){
 						progress = 0;
+						progRef.set((int) Math.round(progress));
 						//TODO possibly add a sound effect
-						ItemStack produced = RecipeHolder.stampMillRecipes.get(inventory[0]);
-						if(produced.isEmpty()){
+						Optional<StampMillRec> recOpt = world.getRecipeManager().getRecipe(RecipeHolder.STAMP_MILL_TYPE, this, world);
+						ItemStack produced;
+						if(recOpt.isPresent()){
+							produced = recOpt.get().getRecipeOutput();
+							produced = produced.copy();
+						}else{
 							produced = inventory[0].copy();
 							produced.setCount(1);
-						}else{
-							produced = produced.copy();
 						}
 						inventory[0].shrink(1);
 						inventory[1] = produced;
 					}else{
 						inventory[1] = inventory[0].split(1);
-						progress -= REQUIRED * CRConfig.stampMillDamping.get() / 100;
+						progress -= REQUIRED * CRConfig.stampMillDamping.get() / 100;//By default, stamp mill damping is zero
 						if(progress < 0){
 							progress = 0;
 						}
+						progRef.set((int) Math.round(progress));
 					}
 				}
+				timeRef.set(timer);
 				markDirty();
 			}
 		}
@@ -110,21 +140,40 @@ public class StampMillTileEntity extends InventoryTE{
 		timer = nbt.getInt("timer");
 	}
 
-	private final ItemHandler itemHandler = new ItemHandler(null);
+	@Override
+	public void remove(){
+		super.remove();
+		itemOpt.invalidate();
+	}
+
+	@Override
+	public void rotate(){
+		super.rotate();
+		axleOpt.invalidate();
+		axleOpt = LazyOptional.of(this::createAxleHandler);
+	}
+
+	private final LazyOptional<IItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-			return (T) itemHandler;
+			return (LazyOptional<T>) itemOpt;
 		}
 
 		BlockState state = world.getBlockState(pos);
-		if(state.getBlock() == CrossroadsBlocks.stampMill && cap == Capabilities.AXLE_CAPABILITY && (side == null || side.getAxis() == state.get(CrossroadsProperties.HORIZ_AXIS))){
-			return (T) axleHandler;
+		if(state.getBlock() == CrossroadsBlocks.stampMill && cap == Capabilities.AXLE_CAPABILITY && (side == null || side.getAxis() == state.get(CRProperties.HORIZ_AXIS))){
+			return (LazyOptional<T>) axleOpt;
 		}
 
 		return super.getCapability(cap, side);
+	}
+
+	@Nullable
+	@Override
+	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
+		return new StampMillContainer(id, playerInv, createContainerBuf());
 	}
 
 	private class ThroughAxleHandler extends AngleAxleHandler{
@@ -144,19 +193,22 @@ public class StampMillTileEntity extends InventoryTE{
 			if(state.getBlock() != CrossroadsBlocks.stampMill){
 				return;
 			}
-			Direction.Axis ax = state.get(CrossroadsProperties.HORIZ_AXIS);
+			Direction.Axis ax = state.get(CRProperties.HORIZ_AXIS);
 			for(Direction.AxisDirection dir : Direction.AxisDirection.values()){
 				Direction side = Direction.getFacingFromAxis(dir, ax);
 				TileEntity te = world.getTileEntity(pos.offset(side));
 				if(te != null){
-					if(te.hasCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite())){
-						te.getCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite()).trigger(masterIn, key);
+					LazyOptional<IAxisHandler> axisOpt = te.getCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite());
+					if(axisOpt.isPresent()){
+						axisOpt.orElseThrow(NullPointerException::new).trigger(masterIn, key);
 					}
-					if(te.hasCapability(Capabilities.SLAVE_AXIS_CAPABILITY, side.getOpposite())){
-						masterIn.addAxisToList(te.getCapability(Capabilities.SLAVE_AXIS_CAPABILITY, side.getOpposite()), side.getOpposite());
+					LazyOptional<ISlaveAxisHandler> slaveAxisOpt = te.getCapability(Capabilities.SLAVE_AXIS_CAPABILITY, side.getOpposite());
+					if(slaveAxisOpt.isPresent()){
+						masterIn.addAxisToList(slaveAxisOpt.orElseThrow(NullPointerException::new), side.getOpposite());
 					}
-					if(te.hasCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite())){
-						te.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite()).propogate(masterIn, key, rotRatioIn, lastRadius, renderOffset);
+					LazyOptional<IAxleHandler> oAxleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite());
+					if(oAxleOpt.isPresent()){
+						oAxleOpt.orElseThrow(NullPointerException::new).propogate(masterIn, key, rotRatioIn, lastRadius, renderOffset);
 					}
 				}
 			}
@@ -170,44 +222,17 @@ public class StampMillTileEntity extends InventoryTE{
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && !RecipeHolder.stampMillRecipes.get(stack).isEmpty();
+		return index == 0 && world.getRecipeManager().getRecipe(RecipeHolder.STAMP_MILL_TYPE, this, world).isPresent();
 	}
 
 	@Override
-	public int getField(int id){
-		if(id == getFieldCount() - 2){
-			return timer;
-		}else if(id == getFieldCount() - 1){
-			return (int) Math.round(progress);
-		}else{
-			return super.getField(id);
-		}
-	}
-
-	@Override
-	public void setField(int id, int value){
-		super.setField(id, value);
-
-		if(id == getFieldCount() - 2){
-			timer = value;
-		}else if(id == getFieldCount() - 1){
-			progress = value;
-		}
-	}
-
-	@Override
-	public int getFieldCount(){
-		return super.getFieldCount() + 2;
-	}
-
-	@Override
-	public String getName(){
-		return "container.stamp_mill";
+	public ITextComponent getDisplayName(){
+		return new TranslationTextComponent("container.stamp_mill");
 	}
 
 	@Override
 	public double getMoInertia(){
-		return 200;
+		return INERTIA;
 	}
 
 	private static final AxisAlignedBB RENDER_BOX = new AxisAlignedBB(0, 0, 0, 1, 2, 1);

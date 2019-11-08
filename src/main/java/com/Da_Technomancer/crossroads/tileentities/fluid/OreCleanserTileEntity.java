@@ -1,27 +1,44 @@
 package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.IntReferenceHolder;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 
+@ObjectHolder(Crossroads.MODID)
 public class OreCleanserTileEntity extends InventoryTE{
 
+	@ObjectHolder("ore_cleanser")
+	private static TileEntityType<OreCleanserTileEntity> type = null;
+
 	public static final int WATER_USE = 250;
+
+	public IntReferenceHolder progRef = IntReferenceHolder.single();//TODO
 	private int progress = 0;//Out of 50
 
 	public OreCleanserTileEntity(){
-		super(2);
-		fluidProps[0] = new TankProperty(0, 1_000, true, false, (Fluid f) -> f == BlockSteam.getSteam());//Steam
-		fluidProps[1] = new TankProperty(1, 1_000, false, true);//Water
+		super(type, 2);
+		fluidProps[0] = new TankProperty(1_000, true, false, (Fluid f) -> f == CrossroadsFluids.steam.still);//Steam
+		fluidProps[1] = new TankProperty(1_000, false, true);//Dirty Water
 	}
 
 	@Override
@@ -37,7 +54,7 @@ public class OreCleanserTileEntity extends InventoryTE{
 			return;
 		}
 
-		if(fluids[0] != null && fluids[0].amount >= WATER_USE && fluidProps[1].getCapacity() - (fluids[1] == null ? 0 : fluids[1].amount) >= WATER_USE && !inventory[0].isEmpty()){
+		if(fluids[0].getAmount() >= WATER_USE && fluidProps[1].capacity - fluids[1].getAmount() >= WATER_USE && !inventory[0].isEmpty()){
 			ItemStack created = RecipeHolder.oreCleanserRecipes.get(inventory[0]);
 			if(created.isEmpty()){
 				created = inventory[0].copy();
@@ -53,10 +70,12 @@ public class OreCleanserTileEntity extends InventoryTE{
 			progress++;
 			markDirty();
 			if(progress < 50){
+				progRef.set(progress);
 				return;
 			}
 
 			progress = 0;
+			progRef.set(progress);
 
 			if((fluids[0].amount -= WATER_USE) <= 0){
 				fluids[0] = null;
@@ -80,27 +99,6 @@ public class OreCleanserTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public int getFieldCount(){
-		return super.getFieldCount() + 1;
-	}
-
-	@Override
-	public int getField(int id){
-		if(id == getFieldCount() - 1){
-			return progress;
-		}
-		return super.getField(id);
-	}
-
-	@Override
-	public void setField(int id, int value){
-		if(id == getFieldCount() - 1){
-			progress = value;
-		}
-		super.setField(id, value);
-	}
-
-	@Override
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
 		progress = nbt.getInt("prog");
@@ -113,20 +111,27 @@ public class OreCleanserTileEntity extends InventoryTE{
 		return nbt;
 	}
 
-	private final ItemHandler itemHandler = new ItemHandler(null);
-	private final FluidHandler innerFluidHandler = new FluidHandler(-1);
-	private final FluidHandler inFluidHandler = new FluidHandler(0);
-	private final FluidHandler outFluidHandler = new FluidHandler(1);
+	@Override
+	public void remove(){
+		super.remove();
+		itemOpt.invalidate();
+		inOpt.invalidate();
+		outOpt.invalidate();
+	}
+
+	private final LazyOptional<IItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
+	private final LazyOptional<IFluidHandler> inOpt = LazyOptional.of(() -> new FluidHandler(0));
+	private final LazyOptional<IFluidHandler> outOpt = LazyOptional.of(() -> new FluidHandler(1));
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
-			return (T) (facing == null ? innerFluidHandler : facing == Direction.UP ? outFluidHandler : inFluidHandler);
+			return (LazyOptional<T>) (facing == null ? globalFluidOpt : facing == Direction.UP ? outOpt : inOpt);
 		}
 
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-			return (T) itemHandler;
+			return (LazyOptional<T>) itemOpt;
 		}
 
 		return super.getCapability(capability, facing);
@@ -143,7 +148,7 @@ public class OreCleanserTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public String getName(){
-		return "container.ore_cleanser";
+	public ITextComponent getDisplayName(){
+		return new TranslationTextComponent("container.ore_cleanser");
 	}
 }

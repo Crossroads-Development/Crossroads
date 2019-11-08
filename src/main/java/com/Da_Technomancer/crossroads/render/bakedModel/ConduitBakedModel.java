@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.render.bakedModel;
 
-import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
@@ -42,7 +42,7 @@ public class ConduitBakedModel implements IBakedModel{
 		TextureAtlasSprite sprite = bakedTextureGetter.apply(((IConduitModel) state.getBlock()).getTexture(state));
 		IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
 
-		if(extendedBlockState.get(CrossroadsProperties.CONNECT) == null){
+		if(extendedBlockState.get(CRProperties.CONNECT) == null){
 			return Collections.emptyList();
 		}
 
@@ -50,7 +50,7 @@ public class ConduitBakedModel implements IBakedModel{
 		double sizeEnd = 1 - size;
 		int tSize = (int) (16D * size / (1D - (2D * size)));
 		
-		if(extendedBlockState.get(CrossroadsProperties.CONNECT)[1]){
+		if(extendedBlockState.get(CRProperties.CONNECT)[1]){
 			quads.add(ModelUtil.createQuad(new Vec3d(sizeEnd, sizeEnd, size), new Vec3d(sizeEnd, 1, size), new Vec3d(sizeEnd, 1, sizeEnd), new Vec3d(sizeEnd, sizeEnd, sizeEnd), Direction.EAST, 16, 0, 0, tSize, sprite, format));
 			quads.add(ModelUtil.createQuad(new Vec3d(size, sizeEnd, sizeEnd), new Vec3d(size, 1, sizeEnd), new Vec3d(size, 1, size), new Vec3d(size, sizeEnd, size), Direction.WEST, 16, 0, 0, tSize, sprite, format));
 			quads.add(ModelUtil.createQuad(new Vec3d(sizeEnd, sizeEnd, size), new Vec3d(size, sizeEnd, size), new Vec3d(size, 1, size), new Vec3d(sizeEnd, 1, size), Direction.NORTH, 0, 16, tSize, 0, sprite, format));
@@ -59,7 +59,7 @@ public class ConduitBakedModel implements IBakedModel{
 			quads.add(ModelUtil.createQuad(new Vec3d(size, sizeEnd, sizeEnd), new Vec3d(sizeEnd, sizeEnd, sizeEnd), new Vec3d(sizeEnd, sizeEnd, size), new Vec3d(size, sizeEnd, size), Direction.UP, 0, 0, 16, 16, sprite, format));
 		}
 
-		if(extendedBlockState.get(CrossroadsProperties.CONNECT)[0]){
+		if(extendedBlockState.get(CRProperties.CONNECT)[0]){
 			quads.add(ModelUtil.createQuad(new Vec3d(sizeEnd, size, sizeEnd), new Vec3d(sizeEnd, 0, sizeEnd), new Vec3d(sizeEnd, 0, size), new Vec3d(sizeEnd, size, size), Direction.EAST, 0, 0, 16, tSize, sprite, format));
 			quads.add(ModelUtil.createQuad(new Vec3d(size, size, size), new Vec3d(size, 0, size), new Vec3d(size, 0, sizeEnd), new Vec3d(size, size, sizeEnd), Direction.WEST, 0, 0, 16, tSize, sprite, format));
 			quads.add(ModelUtil.createQuad(new Vec3d(size, size, size), new Vec3d(sizeEnd, size, size), new Vec3d(sizeEnd, 0, size), new Vec3d(size, 0, size), Direction.NORTH, 0, 0, tSize, 16, sprite, format));
@@ -68,7 +68,7 @@ public class ConduitBakedModel implements IBakedModel{
 			quads.add(ModelUtil.createQuad(new Vec3d(size, size, size), new Vec3d(sizeEnd, size, size), new Vec3d(sizeEnd, size, sizeEnd), new Vec3d(size, size, sizeEnd), Direction.DOWN, 0, 0, 16, 16, sprite, format));
 		}
 
-		if(extendedBlockState.get(CrossroadsProperties.CONNECT)[5]){
+		if(extendedBlockState.get(CRProperties.CONNECT)[5]){
 			quads.add(ModelUtil.createQuad(new Vec3d(sizeEnd, sizeEnd, sizeEnd), new Vec3d(1, sizeEnd, sizeEnd), new Vec3d(1, sizeEnd, size), new Vec3d(sizeEnd, sizeEnd, size), Direction.UP, 16, 0, 0, tSize, sprite, format));
 			quads.add(ModelUtil.createQuad(new Vec3d(sizeEnd, size, size), new Vec3d(1, size, size), new Vec3d(1, size, sizeEnd), new Vec3d(sizeEnd, size, sizeEnd), Direction.DOWN, 16, 0, 0, tSize, sprite, format));
 			quads.add(ModelUtil.createQuad(new Vec3d(sizeEnd, sizeEnd, size), new Vec3d(1, sizeEnd, size), new Vec3d(1, size, size), new Vec3d(sizeEnd, size, size), Direction.NORTH, 16, 0, 0, tSize, sprite, format));
@@ -77,7 +77,7 @@ public class ConduitBakedModel implements IBakedModel{
 			quads.add(ModelUtil.createQuad(new Vec3d(sizeEnd, size, size), new Vec3d(sizeEnd, sizeEnd, size), new Vec3d(sizeEnd, sizeEnd, sizeEnd), new Vec3d(sizeEnd, size, sizeEnd), Direction.EAST, 0, 0, 16, 16, sprite, format));
 		}
 
-		if(extendedBlockState.get(CrossroadsProperties.CONNECT)[4]){
+		if(extendedBlockState.get(CRProperties.CONNECT)[4]){
 			quads.add(ModelUtil.createQuad(new Vec3d(size, sizeEnd, size), new Vec3d(0, sizeEnd, size), new Vec3d(0, sizeEnd, sizeEnd), new Vec3d(size, sizeEnd, sizeEnd), Direction.UP, 0, 0, 16, tSize, sprite, format));
 			quads.add(ModelUtil.createQuad(new Vec3d(size, size, sizeEnd), new Vec3d(0, size, sizeEnd), new Vec3d(0, size, size), new Vec3d(size, size, size), Direction.DOWN, 0, 0, 16, tSize, sprite, format));
 			quads.add(ModelUtil.createQuad(new Vec3d(size, size, size), new Vec3d(0, size, size), new Vec3d(0, sizeEnd, size), new Vec3d(size, sizeEnd, size), Direction.NORTH, 0, 0, 16, tSize, sprite, format));
@@ -86,7 +86,7 @@ public class ConduitBakedModel implements IBakedModel{
 			quads.add(ModelUtil.createQuad(new Vec3d(size, size, sizeEnd), new Vec3d(size, sizeEnd, sizeEnd), new Vec3d(size, sizeEnd, size), new Vec3d(size, size, size), Direction.WEST, 0, 0, 16, 16, sprite, format));
 		}
 
-		if(extendedBlockState.get(CrossroadsProperties.CONNECT)[2]){
+		if(extendedBlockState.get(CRProperties.CONNECT)[2]){
 			quads.add(ModelUtil.createQuad(new Vec3d(size, sizeEnd, size), new Vec3d(sizeEnd, sizeEnd, size), new Vec3d(sizeEnd, sizeEnd, 0), new Vec3d(size, sizeEnd, 0), Direction.UP, 0, 16, tSize, 0, sprite, format));
 			quads.add(ModelUtil.createQuad(new Vec3d(sizeEnd, size, size), new Vec3d(size, size, size), new Vec3d(size, size, 0), new Vec3d(sizeEnd, size, 0), Direction.DOWN, 0, 16, tSize, 0, sprite, format));
 			quads.add(ModelUtil.createQuad(new Vec3d(sizeEnd, sizeEnd, size), new Vec3d(sizeEnd, size, size), new Vec3d(sizeEnd, size, 0), new Vec3d(sizeEnd, sizeEnd, 0), Direction.EAST, 0, 16, tSize, 0, sprite, format));
@@ -94,7 +94,7 @@ public class ConduitBakedModel implements IBakedModel{
 		}else{
 			quads.add(ModelUtil.createQuad(new Vec3d(size, sizeEnd, size), new Vec3d(sizeEnd, sizeEnd, size), new Vec3d(sizeEnd, size, size), new Vec3d(size, size, size), Direction.NORTH, 0, 0, 16, 16, sprite, format));
 		}
-		if(extendedBlockState.get(CrossroadsProperties.CONNECT)[3]){
+		if(extendedBlockState.get(CRProperties.CONNECT)[3]){
 			quads.add(ModelUtil.createQuad(new Vec3d(sizeEnd, sizeEnd, sizeEnd), new Vec3d(size, sizeEnd, sizeEnd), new Vec3d(size, sizeEnd, 1), new Vec3d(sizeEnd, sizeEnd, 1), Direction.UP, 0, 0, tSize, 16, sprite, format));
 			quads.add(ModelUtil.createQuad(new Vec3d(size, size, sizeEnd), new Vec3d(sizeEnd, size, sizeEnd), new Vec3d(sizeEnd, size, 1), new Vec3d(size, size, 1), Direction.DOWN, 0, 0, tSize, 16, sprite, format));
 			quads.add(ModelUtil.createQuad(new Vec3d(sizeEnd, size, sizeEnd), new Vec3d(sizeEnd, sizeEnd, sizeEnd), new Vec3d(sizeEnd, sizeEnd, 1), new Vec3d(sizeEnd, size, 1), Direction.EAST, 0, 0, tSize, 16, sprite, format));

@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
@@ -55,7 +55,7 @@ public class AlembicTileEntity extends AlchemyReactorTE{
 		}
 
 		ReagentMap toInsert = new ReagentMap();
-		Direction dir = world.getBlockState(pos).get(CrossroadsProperties.HORIZ_FACING);
+		Direction dir = world.getBlockState(pos).get(CRProperties.HORIZ_FACING);
 
 		double ambientTemp = HeatUtil.convertBiomeTemp(world, pos);
 		for(IReagent type : contents.keySet()){

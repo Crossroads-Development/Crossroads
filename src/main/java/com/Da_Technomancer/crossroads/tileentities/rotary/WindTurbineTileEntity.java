@@ -1,27 +1,44 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
+@ObjectHolder(Crossroads.MODID)
 public class WindTurbineTileEntity extends ModuleTE{
 
-	private Direction facing = null;
+	@ObjectHolder("wind_turbine")
+	private static TileEntityType<WindTurbineTileEntity> type = null;
+
 	public static final double MAX_SPEED = 2D;
+	public static final double INERTIA = 200;
+	public static final double POWER_PER_LEVEL = 10D;
+
+	private Direction facing = null;
+	private boolean newlyPlaced = false;
+	private int level = 1;
+	private boolean running = false;
 
 	public WindTurbineTileEntity(){
-		super();
+		super(type);
 	}
 
 	public WindTurbineTileEntity(boolean newlyPlaced){
@@ -33,23 +50,22 @@ public class WindTurbineTileEntity extends ModuleTE{
 		if(facing == null){
 			BlockState state = world.getBlockState(pos);
 			if(state.getBlock() != CrossroadsBlocks.windTurbine){
-				invalidate();
+				remove();
 				return Direction.NORTH;
 			}
-			facing = state.get(CrossroadsProperties.HORIZ_FACING);
+			facing = state.get(CRProperties.HORIZ_FACING);
 		}
 
 		return facing;
 	}
 
-	public void resetCache(){
+	@Override
+	public void rotate(){
+		super.rotate();
 		facing = null;
+		axleOpt.invalidate();
+		axleOpt = LazyOptional.of(this::createAxleHandler);
 	}
-
-	public static final double POWER_PER_LEVEL = 10D;
-	private boolean newlyPlaced = false;
-	private int level = 1;
-	private boolean running = false;
 
 	@Override
 	protected boolean useRotary(){
@@ -62,13 +78,13 @@ public class WindTurbineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
-		chat.add("Power Gen: " + POWER_PER_LEVEL * (double) level + "J/t");
-		super.addInfo(chat, player, side, hitX, hitY, hitZ);
+	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+		chat.add(new TranslationTextComponent("tt.crossroads.wind_turbine.weather", POWER_PER_LEVEL * (double) level));
+		super.addInfo(chat, player, hit);
 	}
 
-	public int getRedstoneOutput(){
-		return level < 0 ? 15 : 0;
+	public float getRedstoneOutput(){
+		return (float) (2 * POWER_PER_LEVEL + level * POWER_PER_LEVEL);
 	}
 
 	@Override
@@ -82,7 +98,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 				running = false;
 				Direction facing = getFacing();
 				BlockPos offsetPos = pos.offset(facing);
-				if(world.canSeeSky(offsetPos)){
+				if(world.canBlockSeeSky(offsetPos)){
 					running = true;
 					outer:
 					for(int i = -2; i <= 2; i++){
@@ -102,18 +118,14 @@ public class WindTurbineTileEntity extends ModuleTE{
 
 			if(running && axleHandler.axis != null){
 				if(world.getGameTime() % 10 == 0 && world.rand.nextInt(240) == 0){
-					int prevLevel = level;
+					//Randomize output
 					level = (world.rand.nextInt(2) + 1) * (world.rand.nextBoolean() ? -1 : 1);//Gen a random number from -2 to 2, other than 0
-
-					//If the redstone output has changed, update the neighbors
-					if(level < 0 != prevLevel < 0){
-						world.notifyNeighborsOfStateChange(pos, CrossroadsBlocks.windTurbine, true);
-					}
 				}
 
 				if(motData[0] * Math.signum(level) < MAX_SPEED){
 					motData[1] += (double) level * POWER_PER_LEVEL;
 				}
+				markDirty();
 			}
 		}
 	}
@@ -142,14 +154,14 @@ public class WindTurbineTileEntity extends ModuleTE{
 
 	@Override
 	public double getMoInertia(){
-		return 200;
+		return INERTIA;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing == world.getBlockState(pos).get(CrossroadsProperties.HORIZ_FACING).getOpposite())){
-			return (T) axleHandler;
+		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing == world.getBlockState(pos).get(CRProperties.HORIZ_FACING).getOpposite())){
+			return (LazyOptional<T>) axleOpt;
 		}
 		return super.getCapability(capability, facing);
 	}

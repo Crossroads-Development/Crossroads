@@ -1,42 +1,46 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
-import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.gui.GuiHandler;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FatCongealerTileEntity;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.SoundType;
+import com.Da_Technomancer.essentials.EssentialsConfig;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.block.BlockRenderType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.network.NetworkHooks;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class FatCongealer extends ContainerBlock{
 
 	public FatCongealer(){
-		super(Material.IRON);
+		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
 		String name = "fat_congealer";
-		setTranslationKey(name);
-		setSoundType(SoundType.METAL);
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setHardness(3);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
+		setDefaultState(getDefaultState().with(EssentialsProperties.HORIZ_FACING, Direction.NORTH));
 	}
 
 	@Override
@@ -50,9 +54,29 @@ public class FatCongealer extends ContainerBlock{
 	}
 
 	@Override
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+		builder.add(EssentialsProperties.HORIZ_FACING);
+	}
+
+	@Nullable
+	@Override
+	public BlockState getStateForPlacement(BlockItemUseContext context){
+		return getDefaultState().with(EssentialsProperties.HORIZ_FACING, context.getPlacementHorizontalFacing().getOpposite());
+	}
+
+	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(!worldIn.isRemote){
-			playerIn.openGui(Crossroads.instance, GuiHandler.FAT_FEEDER_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
+		TileEntity te;
+		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand))){
+			if(!worldIn.isRemote){
+				worldIn.setBlockState(pos, state.cycle(CRProperties.HORIZ_AXIS));
+				te = worldIn.getTileEntity(pos);
+				if(te instanceof ModuleTE){
+					((ModuleTE) te).rotate();
+				}
+			}
+		}else if(!worldIn.isRemote && (te = worldIn.getTileEntity(pos)) instanceof INamedContainerProvider){
+			NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);
 		}
 		return true;
 	}
@@ -60,9 +84,9 @@ public class FatCongealer extends ContainerBlock{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add("Creates food from liquid fat with custom stats determined by aattached gears");
-		tooltip.add("Food value is " + FatCongealerTileEntity.HUN_PER_SPD + " * top gear speed");
-		tooltip.add("Saturation value is " + FatCongealerTileEntity.SAT_PER_SPD + " * bottom gear speed");
-		tooltip.add("Welcome to McNotch's, can I take your order?");
+		tooltip.add(new TranslationTextComponent("tt.crossroads.fat_congealer.desc"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.fat_congealer.hun", FatCongealerTileEntity.HUN_PER_SPD));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.fat_congealer.sat", FatCongealerTileEntity.SAT_PER_SPD));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.fat_congealer.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

@@ -35,7 +35,7 @@ import java.util.ArrayList;
 
 public class OmniMeter extends Item{
 
-	public OmniMeter(){
+	protected OmniMeter(){
 		super(new Item.Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
 		String name = "omnimeter";
 		setRegistryName(name);

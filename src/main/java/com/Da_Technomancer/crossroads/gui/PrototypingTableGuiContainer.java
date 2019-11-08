@@ -29,8 +29,8 @@ public class PrototypingTableGuiContainer extends MachineGUI implements OutputLo
 	}
 	
 	@Override
-	public void initGui(){
-		super.initGui();
+	public void init(){
+		super.init();
 		textBar = new TextBarGuiObject((width - xSize) / 2, (height - ySize) / 2, 8, 98, 120, 18, "Name", (Character key) -> StringUtils.isAsciiPrintable(String.valueOf(key)));
 		button = new ButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 8, 76, 70, "Prototype");
 		log = new OutputLogGuiObject((width - xSize) / 2, (height - ySize) / 2, 8, 5, 160, 3, 60);

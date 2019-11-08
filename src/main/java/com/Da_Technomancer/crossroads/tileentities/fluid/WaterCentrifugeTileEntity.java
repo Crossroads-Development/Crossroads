@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import net.minecraft.item.ItemStack;
@@ -104,10 +104,10 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing == null){
 			return (T) masterHandler;
 		}
-		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing.getAxis() != world.getBlockState(pos).get(CrossroadsProperties.HORIZ_AXIS)){
+		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing.getAxis() != world.getBlockState(pos).get(CRProperties.HORIZ_AXIS)){
 			return (T) waterHandler;
 		}
-		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing.getAxis() == world.getBlockState(pos).get(CrossroadsProperties.HORIZ_AXIS)){
+		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing.getAxis() == world.getBlockState(pos).get(CRProperties.HORIZ_AXIS)){
 			return (T) dWaterHandler;
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){

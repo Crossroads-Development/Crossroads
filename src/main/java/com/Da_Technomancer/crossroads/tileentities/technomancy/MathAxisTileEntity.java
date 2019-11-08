@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.rotary.*;
 import com.Da_Technomancer.crossroads.Crossroads;
@@ -38,7 +38,7 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 				invalidate();
 				return Direction.NORTH;
 			}
-			facing = state.get(CrossroadsProperties.HORIZ_FACING);
+			facing = state.get(CRProperties.HORIZ_FACING);
 		}
 		return facing;
 	}
@@ -46,7 +46,7 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 	public void setMode(Mode mode){
 		this.mode = mode;
 		if(!world.isRemote){
-			world.setBlockState(pos, world.getBlockState(pos).with(CrossroadsProperties.ARRANGEMENT, mode.getFormat()), 2);
+			world.setBlockState(pos, world.getBlockState(pos).with(CRProperties.ARRANGEMENT, mode.getFormat()), 2);
 		}
 		markDirty();
 	}

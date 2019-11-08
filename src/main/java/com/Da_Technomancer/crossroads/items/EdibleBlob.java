@@ -1,97 +1,130 @@
 package com.Da_Technomancer.crossroads.items;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
+import com.Da_Technomancer.crossroads.API.MiscUtil;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.UseAction;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.item.ItemFood;
-import net.minecraft.util.FoodStats;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class EdibleBlob extends Item{
 
+	//TODO KNOWN BUGS: Most other mods won't recognize this as a food item; Can't be fed to wolves
+
 	public EdibleBlob(){
-		super(0, 0, true);
+		super(new Item.Properties());//Not in a creative tab due to creative giving a version that has no NBT
 		String name = "edible_blob";
-		setTranslationKey(name);
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
 	}
 
-	/**
-	 * This is not in a creative tab due to creative giving a version that has no NBT
-	 */
-	@Override
-	protected boolean isInCreativeTab(ItemGroup targetTab){
-		return false;
+	public static CompoundNBT createNBT(@Nullable CompoundNBT base, int hunger, int sat){
+		if(base == null){
+			base = new CompoundNBT();
+		}
+		base.putInt("food", hunger);
+		base.putInt("sat", sat);
+		return base;
 	}
 
-	@Override
-	public int getHealAmount(ItemStack stack){
+	public static int getHealAmount(ItemStack stack){
 		return stack.hasTag() ? stack.getTag().getInt("food") : 0;
-	}
-
-	/**
-	 * Returns (saturation restored / (2 * hunger restored)),
-	 * because vanilla is weird.
-	 */
-	@Override
-	public float getSaturationModifier(ItemStack stack){
-		int hun = getHealAmount(stack);
-		int sat = getTrueSat(stack);
-		return hun != 0 && sat != 0 ? 0.5F * sat / hun : 0;
 	}
 
 	/**
 	 * @param stack The edible blob stack
 	 * @return The actual saturation restored
 	 */
-	private int getTrueSat(ItemStack stack){
+	public static int getTrueSat(ItemStack stack){
 		return stack.hasTag() ? stack.getTag().getInt("sat") : 0;
 	}
 
 	@Override
-	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving){
-		if(entityLiving instanceof PlayerEntity){
-			PlayerEntity entityplayer = (PlayerEntity) entityLiving;
-			FoodStats food = entityplayer.getFoodStats();
-			// The way saturation is coded is weird, and the best way to do this is through nbt.
-			CompoundNBT nbt = new CompoundNBT();
-			food.writeNBT(nbt);
-			nbt.putInt("foodLevel", Math.min(getHealAmount(stack) + food.getFoodLevel(), 20));
-			nbt.putFloat("foodSaturationLevel", Math.min(20F, food.getSaturationLevel() + getTrueSat(stack)));
-			food.readNBT(nbt);
-			worldIn.playSound(null, entityplayer.posX, entityplayer.posY, entityplayer.posZ, SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
-			entityplayer.addStat(Stats.getObjectUseStats(this));
+	@OnlyIn(Dist.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+		if(stack.hasTag()){
+			tooltip.add(new TranslationTextComponent("tt.crossroads.edible_blob.food", getHealAmount(stack)));
+			tooltip.add(new TranslationTextComponent("tt.crossroads.edible_blob.sat", getTrueSat(stack)));
+			tooltip.add(new TranslationTextComponent("tt.crossroads.edible_blob.quip").setStyle(MiscUtil.TT_QUIP));
+		}else{
+			tooltip.add(new TranslationTextComponent("tt.crossroads.edible_blob.error"));
 		}
-
-		stack.shrink(1);
-		return stack;
 	}
 
+	/**
+	 * returns the action that specifies what animation to play when the items is being used
+	 */
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		if(stack.hasTag()){
-			tooltip.add("Food value: " + getHealAmount(stack));
-			tooltip.add("Saturation value: " + getTrueSat(stack));
+	public UseAction getUseAction(ItemStack stack){
+		return UseAction.EAT;
+	}
+
+	/**
+	 * How long it takes to use or consume an item
+	 */
+	@Override
+	public int getUseDuration(ItemStack stack){
+		return 32;
+	}
+
+	/**
+	 * Called to trigger the item's "innate" right click behavior. To handle when this item is used on a Block, see
+	 * {@link #onItemUse}.
+	 */
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn){
+		ItemStack itemstack = playerIn.getHeldItem(handIn);
+		if(playerIn.canEat(false)){
+			playerIn.setActiveHand(handIn);
+			return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
 		}else{
-			tooltip.add("Error");
+			return new ActionResult<>(ActionResultType.FAIL, itemstack);
 		}
-		tooltip.add("Just like mama used to make.");
+	}
+
+	/**
+	 * Called when the player finishes using this Item (E.g. finishes eating.). Not called when the player stops using
+	 * the Item before the action is complete.
+	 */
+	@Override
+	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving){
+//		return this.isFood() ? entityLiving.onFoodEaten(worldIn, stack) : stack;
+		if(stack.isFood()){
+			if(entityLiving instanceof PlayerEntity){
+				FoodStats stats = ((PlayerEntity) entityLiving).getFoodStats();
+
+				// The way saturation is coded is weird, and the best way to do this is through nbt.
+				CompoundNBT nbt = new CompoundNBT();
+				stats.write(nbt);
+				nbt.putInt("foodLevel", Math.min(stats.getFoodLevel() + getHealAmount(stack), 20));
+				nbt.putFloat("foodSaturationLevel", Math.min(20F, stats.getSaturationLevel() + getTrueSat(stack)));
+				stats.read(nbt);
+
+				((PlayerEntity) entityLiving).addStat(Stats.ITEM_USED.get(this));
+				worldIn.playSound(null, entityLiving.posX, entityLiving.posY, entityLiving.posZ, SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
+				if(entityLiving instanceof ServerPlayerEntity){
+					CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayerEntity) entityLiving, stack);
+				}
+			}
+
+			worldIn.playSound(null, entityLiving.posX, entityLiving.posY, entityLiving.posZ, entityLiving.getEatSound(stack), SoundCategory.NEUTRAL, 1.0F, 1.0F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.4F);
+			stack.shrink(1);
+		}
+
+		return stack;
 	}
 }

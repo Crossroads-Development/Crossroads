@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.blocks.alchemy.ReagentFilter;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
@@ -41,7 +41,7 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements IInvent
 			if(!(state.getBlock() instanceof ReagentFilter)){
 				return Direction.NORTH;
 			}
-			facing = state.get(CrossroadsProperties.HORIZ_FACING);
+			facing = state.get(CRProperties.HORIZ_FACING);
 		}
 		return facing;
 	}

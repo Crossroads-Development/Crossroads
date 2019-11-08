@@ -2,18 +2,20 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.StirlingEngineTileEntity;
-import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ContainerBlock;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.block.BlockRenderType;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -21,13 +23,9 @@ import java.util.List;
 public class StirlingEngine extends ContainerBlock{
 
 	public StirlingEngine(){
-		super(Material.IRON);
+		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
 		String name = "stirling_engine";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setHardness(3);
-		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
 	}
@@ -45,9 +43,10 @@ public class StirlingEngine extends ContainerBlock{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add("I: 200");
-		tooltip.add("Moves 5°C/t for every 100°C of temperature difference");
-		tooltip.add("Produces " + ((ForgeConfigSpec.DoubleValue) CRConfig.stirlingMultiplier).get() + "J for every °C moved per 100°C of temperature difference");
-		tooltip.add("Stops producing power once it reaches " + ((ForgeConfigSpec.DoubleValue) CRConfig.stirlingSpeedLimit).get() + "rad/s");
+		tooltip.add(new TranslationTextComponent("tt.crossroads.stirling_engine.desc"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.stirling_engine.rate", StirlingEngineTileEntity.RATE));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.stirling_engine.power", CRConfig.formatVal(CRConfig.stirlingMultiplier.get())));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.stirling_engine.limit", CRConfig.stirlingSpeedLimit.get()));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", StirlingEngineTileEntity.INERTIA));
 	}
 }

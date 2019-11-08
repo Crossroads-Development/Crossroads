@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
@@ -118,7 +118,7 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 				if(!simulate){
 					cage = stack;
 					markDirty();
-					world.setBlockState(pos, CrossroadsBlocks.cageCharger.getDefaultState().with(CrossroadsProperties.ACTIVE, true));
+					world.setBlockState(pos, CrossroadsBlocks.cageCharger.getDefaultState().with(CRProperties.ACTIVE, true));
 				}
 
 				return ItemStack.EMPTY;
@@ -137,7 +137,7 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 					ItemStack out = cage;
 					cage = ItemStack.EMPTY;
 					markDirty();
-					world.setBlockState(pos, CrossroadsBlocks.cageCharger.getDefaultState().with(CrossroadsProperties.ACTIVE, false));
+					world.setBlockState(pos, CrossroadsBlocks.cageCharger.getDefaultState().with(CRProperties.ACTIVE, false));
 					return out;
 				}
 

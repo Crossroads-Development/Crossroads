@@ -70,6 +70,6 @@ public class BlastFurnace extends ContainerBlock{
 		tooltip.add(new TranslationTextComponent("tt.crossroads.blast_furnace.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.blast_furnace.speed", BlastFurnaceTileEntity.REQUIRED_SPD));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.blast_furnace.power", BlastFurnaceTileEntity.POWER));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.blast_furnace.inertia", BlastFurnaceTileEntity.INERTIA));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", BlastFurnaceTileEntity.INERTIA));
 	}
 }

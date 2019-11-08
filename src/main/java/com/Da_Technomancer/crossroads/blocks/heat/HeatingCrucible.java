@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
-import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntity;
 import net.minecraft.block.Block;
@@ -39,12 +39,12 @@ public class HeatingCrucible extends ContainerBlock{
 		setRegistryName(name);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
-		setDefaultState(getDefaultState().with(CrossroadsProperties.FULLNESS, 0));
+		setDefaultState(getDefaultState().with(CRProperties.FULLNESS, 0));
 	}
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> container){
-		container.add(CrossroadsProperties.FULLNESS);
+		container.add(CRProperties.FULLNESS);
 	}
 
 	@Override

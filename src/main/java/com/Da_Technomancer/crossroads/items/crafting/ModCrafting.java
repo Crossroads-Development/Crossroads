@@ -229,8 +229,8 @@ public final class ModCrafting{
 		//Damping Powder
 		RecipeHolder.alchemyRecipes.add(new ShapelessOreRecipe(null, new ItemStack(CRItems.dampingPowder, 4), CRItems.wasteSalt, CRItems.wasteSalt, "dustSalt", "dustRedstone"));
 		//Reagent Filter
-		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.reagentFilterGlass, 1), "III", "|A|", "III", 'I', "ingotIron", '|', "blockGlass", 'A', CRItems.lensArray));
-		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.reagentFilterCrystal, 1), "III", "|A|", "III", 'I', "ingotIron", '|', CRItems.alchCrystal, 'A', CRItems.lensArray));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.reagentFilterGlass, 1), "IAI", "|A|", "IAI", 'I', "ingotIron", '|', "blockGlass", 'A', CRItems.lensArray));
+		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.reagentFilterCrystal, 1), "IAI", "|A|", "IAI", 'I', "ingotIron", '|', CRItems.alchCrystal, 'A', CRItems.lensArray));
 
 		//Flying Machine
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CRItems.flyingMachine, 1), "___", "@-@", "|+|", '_', "ingotBronze", '@', "gearCopshowium", '-', new ItemStack(CrossroadsBlocks.antiDensusPlate, 1), '+', new ItemStack(CrossroadsBlocks.densusPlate, 1), '|', "stickIron"));

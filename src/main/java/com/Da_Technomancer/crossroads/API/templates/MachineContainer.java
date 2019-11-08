@@ -37,7 +37,7 @@ public abstract class MachineContainer<U extends InventoryTE> extends Container{
 			}catch(ClassCastException e){
 				//Should never happen
 				Crossroads.logger.warn("UI opened without TE in world!");
-			};
+			}
 		}else{
 			//Should never happen
 			Crossroads.logger.warn("Null TileEntity passed to MachineContainer!");

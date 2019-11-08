@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumContainerType;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
@@ -143,7 +143,7 @@ public class ReagentPumpTileEntity extends AlchemyCarrierTE implements IIntRecei
 	@Override
 	protected EnumTransferMode[] getModes(){
 		EnumTransferMode[] output = {EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.INPUT, EnumTransferMode.INPUT, EnumTransferMode.INPUT, EnumTransferMode.INPUT};
-		boolean outUp = world.getBlockState(pos).get(CrossroadsProperties.ACTIVE);
+		boolean outUp = world.getBlockState(pos).get(CRProperties.ACTIVE);
 		if(outUp){
 			output[Direction.UP.getIndex()] = EnumTransferMode.OUTPUT;
 			output[Direction.DOWN.getIndex()] = EnumTransferMode.INPUT;

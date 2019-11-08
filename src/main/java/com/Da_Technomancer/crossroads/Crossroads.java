@@ -194,7 +194,12 @@ public final class Crossroads{
 		registerCon(SaltReactorContainer::new, SaltReactorScreen::new, "salt_reactor", e);
 		registerCon(SmelterContainer::new, SmelterScreen::new, "smelter", e);
 		registerCon(BlastFurnaceContainer::new, BlastFurnaceScreen::new, "ind_blast_furnace", e);
-
+		registerCon(MillstoneContainer::new, MillstoneScreen::new, "millstone", e);
+		registerCon(StampMillContainer::new, StampMillScreen::new, "stamp_mill", e);
+		registerCon(FatCollectorContainer::new, FatCollectorScreen::new, "fat_collector", e);
+		registerCon(FatCongealerContainer::new, FatCongealerScreen::new, "fat_congealer", e);
+		registerCon(FatFeederContainer::new, FatFeederScreen::new, "fat_feeder", e);
+		registerCon(FluidTankContainer::new, FluidTankScreen::new, "fluid_tank", e);
 
 		//TODO register containers
 	}
@@ -210,6 +215,12 @@ public final class Crossroads{
 		registerConType(SaltReactorContainer::new, "salt_reactor", e);
 		registerConType(SmelterContainer::new, "smelter", e);
 		registerConType(BlastFurnaceContainer::new, "ind_blast_furnace", e);
+		registerConType(MillstoneContainer::new, "millstone", e);
+		registerConType(StampMillContainer::new, "stamp_mill", e);
+		registerConType(FatCollectorContainer::new, "fat_collector", e);
+		registerConType(FatCongealerContainer::new, "fat_congealer", e);
+		registerConType(FatFeederContainer::new, "fat_feeder", e);
+		registerConType(FluidTankContainer::new, "fluid_tank", e);
 
 		//TODO register container types
 	}

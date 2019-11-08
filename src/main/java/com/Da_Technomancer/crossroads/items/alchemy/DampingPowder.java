@@ -1,34 +1,33 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.entity.EntityFlameCore;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.google.common.base.Predicate;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.dispenser.DefaultDispenseItemBehavior;
-import net.minecraft.dispenser.IDispenseItemBehavior;
 import net.minecraft.dispenser.IBlockSource;
+import net.minecraft.dispenser.IDispenseItemBehavior;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
+import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class DampingPowder extends Item{
 
 	private static final int RANGE = 16;
-	private static final Predicate<Entity> FLAME_PREDICATE = new Predicate<Entity>(){
-		@Override
-		public boolean apply(Entity entity){
-			return entity instanceof EntityFlameCore;
-		}
-	};
+	private static final Predicate<Entity> FLAME_PREDICATE = entity -> entity instanceof EntityFlameCore;
 
 	private static final IDispenseItemBehavior DAMPING_DISPENSER_BEHAVIOR = new DefaultDispenseItemBehavior(){
 
@@ -45,6 +44,11 @@ public class DampingPowder extends Item{
 			if(!ents.isEmpty()){
 				source.getWorld().playSound(null, source.getBlockPos(), SoundEvents.ITEM_TOTEM_USE, SoundCategory.BLOCKS, 1, 0);
 			}
+			Vec3d partPos = new Vec3d(source.getBlockPos()).add(0.5, 0.5, 0.5);
+			if(source.getBlockState().has(DispenserBlock.FACING)){
+				partPos = partPos.add(new Vec3d(source.getBlockState().get(DispenserBlock.FACING).getDirectionVec()));
+			}
+			source.getWorld().addParticle(ParticleTypes.END_ROD, partPos.x, partPos.y, partPos.z, 0, 0, 0);
 			return stack;
 		}
 
@@ -58,12 +62,11 @@ public class DampingPowder extends Item{
 	};
 
 	public DampingPowder(){
+		super(CRItems.itemProp);
 		String name = "damping_powder";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
 		CRItems.toRegister.add(this);
-		DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, DAMPING_DISPENSER_BEHAVIOR);
+		DispenserBlock.registerDispenseBehavior(this, DAMPING_DISPENSER_BEHAVIOR);
 	}
 
 	@Override
@@ -74,15 +77,17 @@ public class DampingPowder extends Item{
 		for(Entity ent : ents){
 			ent.remove();
 		}
+		Vec3d partPos = playerIn.getEyePosition(1).add(playerIn.getLookVec().scale(0.5));
+		worldIn.addParticle(ParticleTypes.END_ROD, partPos.x, partPos.y, partPos.z, 0, 0, 0);
 		if(!ents.isEmpty()){
 			worldIn.playSound(null, playerIn.posX, playerIn.posY + playerIn.getEyeHeight(), playerIn.posZ, SoundEvents.ITEM_TOTEM_USE, SoundCategory.PLAYERS, 1, 0);
 		}
-		return new ActionResult<ItemStack>(ActionResultType.SUCCESS, held);
+		return new ActionResult<>(ActionResultType.SUCCESS, held);
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
-		tooltip.add("Extinguishes any nearby flame clouds on use");
-		tooltip.add("An Alchemist's fire extinguisher");
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+		tooltip.add(new TranslationTextComponent("tt.crossroads.damp_powder.desc"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.damp_powder.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

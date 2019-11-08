@@ -4,7 +4,8 @@ import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendMasterKeyToClient;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import net.minecraft.block.Block;
+import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearMaster;
+import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearSlave;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -89,7 +90,7 @@ public class RotaryUtil{
 	 */
 	public static boolean canConnectThrough(World world, BlockPos pos, Direction fromDir, Direction toDir){
 		BlockState state = world.getBlockState(pos);
-		return !state.getBlock().isNormalCube(state, world, pos) && state.getBlock() != CrossroadsBlocks.largeGearSlave && state.getBlock() != CrossroadsBlocks.largeGearMaster;
+		return !state.isNormalCube(world, pos) && state.getBlock() != CrossroadsBlocks.largeGearSlave && state.getBlock() != CrossroadsBlocks.largeGearMaster;
 	}
 
 	/**
@@ -100,15 +101,30 @@ public class RotaryUtil{
 	 * @return Whether it should be solid to small gears
 	 */
 	public static boolean solidToGears(World world, BlockPos pos, Direction side){
-		VoxelShape shape = world.getBlockState(pos).getCollisionShape(world, pos);
+		//The current definition of "solid":
+		//Block collision shape contains the 2x2 of pixels in the center of the face in side
+		//And block is not a large gear
+		BlockState state = world.getBlockState(pos);
+		if(state.getBlock() instanceof LargeGearSlave || state.getBlock() instanceof LargeGearMaster){
+			return false;
+		}
+		VoxelShape shape = state.getCollisionShape(world, pos);
+		Direction.Axis axis = side.getAxis();
 		shape = shape.project(side);//Eliminate all voxels that don't touch the side of interest, and extend remaining voxels
-
-
-		//TODO THIS IS A PLACEHOLDER and does not work
-		//This currently works for solid surfaces, but not things like the ends of axles (probably- best to test this)
-		return Block.func_220055_a(world, pos, side);//This method is also used by torches
-//		BlockFaceShape shape = world.getBlockState(pos).getBlockFaceShape(world, pos, side);
-//		return world.isSideSolid(pos, side, false) || shape == BlockFaceShape.SOLID || shape == BlockFaceShape.CENTER || shape == BlockFaceShape.CENTER_BIG || shape == BlockFaceShape.CENTER_SMALL;
+		final boolean[] passed = new boolean[1];
+		final double rad = 1;
+		//Known issue: If all necessary components of the voxel exist, but are spread over multiple voxels, this will fail because we only check one voxelbox at a time
+		//However, that is a very rare edge case (if you find it in vanilla, let me know and I'll special case it), and checking for it increases complexity from O(n) to- I'm not actually sure, I'm not a CS major, but probably O(n^2) or something
+		shape.forEachBox((xSt, ySt, zSt, xEn, yEn, zEn) -> {
+			//Only continue checking if we haven't found a match
+			if(!passed[0]){
+				//Known: Each box will extend from 0 to 16 on the axis of interest (due to project call)- the axis check is therefore redundant, but lets us speed things up
+				if((axis == Direction.Axis.X || xSt <= 8D - rad && xEn >= 8D + rad) && (axis == Direction.Axis.Y || ySt <= 8D - rad && yEn >= 8D + rad) && (axis == Direction.Axis.Z || zSt <= 8D - rad && zEn >= 8D + rad)){
+					passed[0] = true;
+				}
+			}
+		});
+		return passed[0];
 	}
 
 	/**

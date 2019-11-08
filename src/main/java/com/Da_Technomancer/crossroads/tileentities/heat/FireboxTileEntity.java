@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
@@ -73,7 +73,7 @@ public class FireboxTileEntity extends InventoryTE{
 			if(inventory[0].isEmpty() && item.hasContainerItem(inventory[0])){
 				inventory[0] = item.getContainerItem(inventory[0]);
 			}
-			world.setBlockState(pos, CrossroadsBlocks.firebox.getDefaultState().with(CrossroadsProperties.ACTIVE, true), 18);
+			world.setBlockState(pos, CrossroadsBlocks.firebox.getDefaultState().with(CRProperties.ACTIVE, true), 18);
 			markDirty();
 		}
 	}

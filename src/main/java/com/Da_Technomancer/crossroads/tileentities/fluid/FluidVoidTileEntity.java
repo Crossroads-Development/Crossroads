@@ -1,63 +1,85 @@
 package com.Da_Technomancer.crossroads.tileentities.fluid;
 
+import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.registries.ObjectHolder;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@ObjectHolder(Crossroads.MODID)
 public class FluidVoidTileEntity extends TileEntity{
+
+	@ObjectHolder("fluid_void")
+	private static TileEntityType<FluidVoidTileEntity> type = null;
+
+	public FluidVoidTileEntity(){
+		super(type);
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
-			return (T) mainHandler;
+			return (LazyOptional<T>) mainOpt;
 		}
 
 		return super.getCapability(capability, facing);
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable Direction facing){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
-			return true;
-		}
-		return super.hasCapability(capability, facing);
+	public void remove(){
+		super.remove();
+		mainOpt.invalidate();
 	}
 
-	private static final VoidHandler mainHandler = new VoidHandler();
+	private static final LazyOptional<IFluidHandler> mainOpt = LazyOptional.of(VoidHandler::new);
 
 	private static class VoidHandler implements IFluidHandler{
 
-
 		@Override
-		public IFluidTankProperties[] getTankProperties(){
-			return new IFluidTankProperties[] {new FluidTankProperties(null, 10_000, true, false)};
+		public int getTanks(){
+			return 1;
+		}
+
+		@Nonnull
+		@Override
+		public FluidStack getFluidInTank(int tank){
+			return FluidStack.EMPTY;
 		}
 
 		@Override
-		public int fill(FluidStack resource, boolean doFill){
-			if(resource != null){
-				return resource.amount;
-			}else{
-				return 0;
-			}
+		public int getTankCapacity(int tank){
+			return 10_000;
 		}
 
 		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain){
-			return null;
+		public boolean isFluidValid(int tank, @Nonnull FluidStack stack){
+			return true;
 		}
 
 		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain){
-			return null;
+		public int fill(FluidStack resource, FluidAction action){
+			return resource.getAmount();
+		}
+
+		@Nonnull
+		@Override
+		public FluidStack drain(FluidStack resource, FluidAction action){
+			return FluidStack.EMPTY;
+		}
+
+		@Nonnull
+		@Override
+		public FluidStack drain(int maxDrain, FluidAction action){
+			return FluidStack.EMPTY;
 		}
 	}
 }

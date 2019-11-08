@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLogToClient;
@@ -225,7 +225,7 @@ public class PrototypingTableTileEntity extends InventoryTE implements IStringRe
 			int startY = pos.getY() + 1;
 			int startZ = pos.getZ();
 
-			switch(world.getBlockState(pos).get(CrossroadsProperties.HORIZ_FACING)){
+			switch(world.getBlockState(pos).get(CRProperties.HORIZ_FACING)){
 				case NORTH:
 					startX -= 16;
 					startZ -= 16;

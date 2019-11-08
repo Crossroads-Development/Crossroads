@@ -36,8 +36,8 @@ public class ColorChartGuiContainer extends ContainerScreen{
 	}
 
 	@Override
-	public void initGui(){
-		super.initGui();
+	public void init(){
+		super.init();
 
 		searchBar = new TextBarGuiObject((width - xSize) / 2, (height - ySize) / 2, 0, 300, 300, 25, "Filter", Character::isAlphabetic);
 	}

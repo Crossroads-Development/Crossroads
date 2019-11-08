@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
@@ -36,7 +36,7 @@ public class StampMillRenderer extends TileEntityRenderer<StampMillTileEntity>{
 		GlStateManager.pushMatrix();
 		GlStateManager.disableLighting();
 		GlStateManager.translate(x + .5D, y + 1.5F, z + .5D);
-		if(state.get(CrossroadsProperties.HORIZ_AXIS) == Direction.Axis.Z){
+		if(state.get(CRProperties.HORIZ_AXIS) == Direction.Axis.Z){
 			GlStateManager.rotate(90, 0, 1, 0);
 		}
 

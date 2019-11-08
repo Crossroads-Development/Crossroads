@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
@@ -67,7 +67,7 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, Direction side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).get(CrossroadsProperties.HORIZ_FACING).getAxis())){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).get(CRProperties.HORIZ_FACING).getAxis())){
 			return true;
 		}
 		return super.hasCapability(cap, side);
@@ -76,7 +76,7 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).get(CrossroadsProperties.HORIZ_FACING).getAxis())){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).get(CRProperties.HORIZ_FACING).getAxis())){
 			return (T) handler;
 		}
 		return super.getCapability(cap, side);
@@ -85,7 +85,7 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 	@Override
 	protected EnumTransferMode[] getModes(){
 		EnumTransferMode[] output = {EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE};
-		Direction outSide = world.getBlockState(pos).get(CrossroadsProperties.HORIZ_FACING);
+		Direction outSide = world.getBlockState(pos).get(CRProperties.HORIZ_FACING);
 		output[outSide.getIndex()] = EnumTransferMode.OUTPUT;
 		output[outSide.getOpposite().getIndex()] = EnumTransferMode.INPUT;
 		return output;

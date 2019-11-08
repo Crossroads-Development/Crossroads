@@ -44,8 +44,8 @@ public class PrototypePortGuiContainer extends ContainerScreen{
 	}
 
 	@Override
-	public void initGui(){
-		super.initGui();
+	public void init(){
+		super.init();
 		types = new RadioButtonGuiObject(new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 20, 10, 50, "Redst."), new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 90, 10, 50, "Rotary"), new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 20, 35, 50, "Beams"), new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 90, 35, 50, "Heat"));
 		in_out = new RadioButtonGuiObject(new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 10, 70, 30, "In"), new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 40, 70, 30, "Out"));
 		side = new RadioButtonGuiObject(new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 10, 105, 40, "Down"), new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 10, 130, 40, "Up"), new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 60, 105, 40, "North"), new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 60, 130, 40, "South"), new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 110, 105, 40, "West"), new ToggleButtonGuiObject((width - xSize) / 2, (height - ySize) / 2, 110, 130, 40, "East"));

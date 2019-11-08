@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
-import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.tileentities.heat.IceboxTileEntity;
 import net.minecraft.block.Block;
@@ -39,7 +39,7 @@ public class Icebox extends ContainerBlock{
 		setRegistryName(name);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
-		setDefaultState(getDefaultState().with(CrossroadsProperties.ACTIVE, false));
+		setDefaultState(getDefaultState().with(CRProperties.ACTIVE, false));
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class Icebox extends ContainerBlock{
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
-		builder.add(CrossroadsProperties.ACTIVE);
+		builder.add(CRProperties.ACTIVE);
 	}
 
 	@Override

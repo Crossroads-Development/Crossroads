@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.blocks.alchemy.AtmosCharger;
@@ -52,7 +52,7 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 			return;
 		}
 		renderTimer--;
-		extractMode = state.get(CrossroadsProperties.ACTIVE);
+		extractMode = state.get(CRProperties.ACTIVE);
 
 		double newReds = (double) AtmosChargeSavedData.getCharge(world) / (double) AtmosChargeSavedData.getCapacity();
 		if(Math.abs(lastRedstone - newReds) >= 0.05D){

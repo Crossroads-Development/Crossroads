@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.nbt.CompoundNBT;
@@ -45,7 +45,7 @@ public class SolarHeaterTileEntity extends ModuleTE{
 		}
 
 		//This machine can share heat with other Solar Heaters in the same line, but only other Solar Heaters. Otherwise, a heat cable is needed like normal
-		TileEntity adjTE = world.getTileEntity(pos.offset(Direction.getFacingFromAxis(Direction.AxisDirection.NEGATIVE, world.getBlockState(pos).get(CrossroadsProperties.HORIZ_AXIS))));
+		TileEntity adjTE = world.getTileEntity(pos.offset(Direction.getFacingFromAxis(Direction.AxisDirection.NEGATIVE, world.getBlockState(pos).get(CRProperties.HORIZ_AXIS))));
 		if(adjTE instanceof SolarHeaterTileEntity){
 			SolarHeaterTileEntity otherTE = (SolarHeaterTileEntity) adjTE;
 			temp += otherTE.temp;
@@ -77,7 +77,7 @@ public class SolarHeaterTileEntity extends ModuleTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing){
-		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || facing.getAxis() == world.getBlockState(pos).get(CrossroadsProperties.HORIZ_AXIS))){
+		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || facing.getAxis() == world.getBlockState(pos).get(CRProperties.HORIZ_AXIS))){
 			return (LazyOptional<T>) heatOpt;
 		}
 		return super.getCapability(capability, facing);

@@ -1,47 +1,43 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
-import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.gui.GuiHandler;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidTankTileEntity;
-import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
+import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ContainerBlock;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.block.BlockRenderType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class FluidTank extends ContainerBlock{
+public class FluidTank extends ContainerBlock implements IReadable{
 
 	public FluidTank(){
-		super(Material.IRON);
+		super(Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(3));
 		String name = "fluid_tank";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setSoundType(SoundType.METAL);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setHardness(3);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
 	}
@@ -54,19 +50,21 @@ public class FluidTank extends ContainerBlock{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		if(stack.hasTag() && stack.getTag().contains("FluidName")){
-			tooltip.add("Contains: " + FluidStack.loadFluidStackFromNBT(stack.getTag()).amount + "mB of " + FluidStack.loadFluidStackFromNBT(stack.getTag()).getLocalizedName());
+		CompoundNBT nbt = stack.getTag();
+		if(nbt != null && nbt.contains("FluidName")){
+			FluidStack fStack = FluidStack.loadFluidStackFromNBT(stack.getTag());
+			tooltip.add(new TranslationTextComponent("tt.fluid_tank", fStack.getAmount(), fStack.getDisplayName().getFormattedText()));
 		}
 	}
 
 	@Override
 	public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, TileEntity te, ItemStack stackIn){
-		if(!(te instanceof FluidTankTileEntity) || te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).getTankProperties()[0].getContents() == null){
+		if(!(te instanceof FluidTankTileEntity)|| ((FluidTankTileEntity) te).getContent().isEmpty()){
 			super.harvestBlock(worldIn, player, pos, state, te, stackIn);
 		}else{
 			player.addExhaustion(0.005F);
-			ItemStack stack = new ItemStack(Item.getItemFromBlock(this), 1);
-			stack.put(te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).getTankProperties()[0].getContents().writeToNBT(new CompoundNBT()));
+			ItemStack stack = new ItemStack(this.asItem(), 1);
+			stack.setTag(((FluidTankTileEntity) te).getContent().writeToNBT(new CompoundNBT()));
 			spawnAsEntity(worldIn, pos, stack);
 		}
 	}
@@ -82,10 +80,12 @@ public class FluidTank extends ContainerBlock{
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(!worldIn.isRemote){
+			TileEntity te;
 			if(FluidUtil.getFluidHandler(playerIn.getHeldItem(Hand.MAIN_HAND)) != null){
+				//Tanks be clicked on with buckets/equivalent
 				return FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, null);
-			}else{
-				playerIn.openGui(Crossroads.instance, GuiHandler.FLUID_TANK_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
+			}else if((te = worldIn.getTileEntity(pos)) instanceof INamedContainerProvider){
+				NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);
 			}
 		}
 		return true;
@@ -101,9 +101,18 @@ public class FluidTank extends ContainerBlock{
 		TileEntity te = worldIn.getTileEntity(pos);
 		return te instanceof FluidTankTileEntity ? ((FluidTankTileEntity) te).getRedstone() : 0;
 	}
-	
+
 	@Override
 	public BlockRenderType getRenderType(BlockState state){
 		return BlockRenderType.MODEL;
+	}
+
+	@Override
+	public float read(World world, BlockPos pos, BlockState blockState){
+		TileEntity te = world.getTileEntity(pos);
+		if(te instanceof FluidTankTileEntity){
+			return 15F * (float) ((FluidTankTileEntity) te).getContent().getAmount() / FluidTankTileEntity.CAPACITY;
+		}
+		return 0;
 	}
 }

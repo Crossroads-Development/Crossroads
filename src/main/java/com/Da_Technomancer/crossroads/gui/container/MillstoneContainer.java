@@ -1,13 +1,23 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
 import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MillstoneTileEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.registries.ObjectHolder;
 
-public class MillstoneContainer extends MachineContainer{
+@ObjectHolder(Crossroads.MODID)
+public class MillstoneContainer extends MachineContainer<MillstoneTileEntity>{
 
-	public MillstoneContainer(IInventory playerInv, MillstoneTileEntity te){
-		super(playerInv, te);
+	@ObjectHolder("millstone")
+	private static ContainerType<MillstoneContainer> type = null;
+
+	public MillstoneContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
+		super(type, id, playerInv, buf);
+		trackInt(te.progRef);
 	}
 
 	@Override

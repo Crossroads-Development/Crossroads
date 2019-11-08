@@ -1,14 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SteamTurbineTileEntity;
-
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.SoundType;
@@ -17,23 +12,27 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class SteamTurbine extends ContainerBlock{
 
+	private VoxelShape SHAPE = VoxelShapes.or(makeCuboidShape(2, 0, 2, 14, 16, 14), makeCuboidShape(0, 5, 5, 16, 11, 11), makeCuboidShape(5, 5, 0, 11, 11, 16));
+
 	public SteamTurbine(){
-		super(Material.IRON);
+		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
 		String name = "steam_turbine";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setHardness(3);
-		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
 	}
@@ -47,7 +46,12 @@ public class SteamTurbine extends ContainerBlock{
 	public BlockRenderType getRenderType(BlockState state){
 		return BlockRenderType.MODEL;
 	}
-	
+
+	@Override
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+		return SHAPE;
+	}
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public BlockRenderLayer getRenderLayer(){
@@ -55,25 +59,10 @@ public class SteamTurbine extends ContainerBlock{
 	}
 
 	@Override
-	public boolean isFullCube(BlockState state){
-		return false;
-	}
-
-	@Override
-	public boolean isOpaqueCube(BlockState state){
-		return false;
-	}
-
-	@Override
-	public boolean isSideSolid(BlockState state, IBlockAccess worldIn, BlockPos pos, Direction side){
-		return side == Direction.UP;
-	}
-	
-	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add("I: 80");
-		tooltip.add("Consumes: " + 100 * SteamTurbineTileEntity.LIMIT + "mB/t steam");
-		tooltip.add("Produces: " + ((double) SteamTurbineTileEntity.LIMIT) * 0.1D * EnergyConverters.degPerSteamBucket(true) / EnergyConverters.degPerJoule(true) + "J/t while running");
+		tooltip.add(new TranslationTextComponent("tt.crossroads.steam_turbine.input", 100 * SteamTurbineTileEntity.LIMIT));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.steam_turbine.output", ((double) SteamTurbineTileEntity.LIMIT) * 0.1D * EnergyConverters.degPerSteamBucket() / EnergyConverters.degPerJoule()));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", SteamTurbineTileEntity.INERTIA));
 	}
 }

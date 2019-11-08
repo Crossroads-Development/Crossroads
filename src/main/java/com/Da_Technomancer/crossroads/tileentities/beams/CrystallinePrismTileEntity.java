@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.beams;
 
-import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
@@ -17,7 +17,7 @@ public class CrystallinePrismTileEntity extends BeamRenderTE{
 			if(state.getBlock() != CrossroadsBlocks.crystallinePrism){
 				return Direction.NORTH;
 			}
-			dir = state.get(CrossroadsProperties.HORIZ_FACING);
+			dir = state.get(CRProperties.HORIZ_FACING);
 		}
 		return dir;
 	}

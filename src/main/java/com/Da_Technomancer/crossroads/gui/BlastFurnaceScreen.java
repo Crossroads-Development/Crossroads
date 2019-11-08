@@ -31,7 +31,7 @@ public class BlastFurnaceScreen extends MachineGUI<BlastFurnaceContainer, BlastF
 		int j = (height - ySize) / 2;
 		blit(i, j, 0, 0, xSize, ySize);
 		blit(guiLeft + 25, guiTop + 38, 176, 0, 38 * te.progRef.get() / BlastFurnaceTileEntity.REQUIRED_PRG, 14);
-		drawRect(guiLeft + 50, guiTop + 36 - te.carbRef.get() * 16 / BlastFurnaceTileEntity.CARBON_LIMIT, guiLeft + 52, guiTop + 36, 0xFF000000);
+		fill(guiLeft + 50, guiTop + 36 - te.carbRef.get() * 16 / BlastFurnaceTileEntity.CARBON_LIMIT, guiLeft + 52, guiTop + 36, 0xFF000000);
 
 		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
 	}

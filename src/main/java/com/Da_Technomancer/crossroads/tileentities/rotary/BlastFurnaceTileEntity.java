@@ -59,7 +59,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		chat.add(new TranslationTextComponent("tt.crossroads.blast_furncace.prog", progress, REQUIRED_PRG));
+		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.progress", progress, REQUIRED_PRG));
 		chat.add(new TranslationTextComponent("tt.crossroads.blast_furnace.carbon", carbon));
 		super.addInfo(chat, player, hit);
 	}

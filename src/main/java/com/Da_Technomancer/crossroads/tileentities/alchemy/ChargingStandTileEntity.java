@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
-import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyReactorTE;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
@@ -70,7 +70,7 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 	@Override
 	public void destroyChamber(float strength){
 		BlockState state = world.getBlockState(pos);
-		world.setBlockState(pos, state.with(CrossroadsProperties.ACTIVE, false).with(CrossroadsProperties.CRYSTAL, false).with(CrossroadsProperties.CONTAINER_TYPE, false));
+		world.setBlockState(pos, state.with(CRProperties.ACTIVE, false).with(CRProperties.CRYSTAL, false).with(CRProperties.CONTAINER_TYPE, false));
 		world.playSound(null, pos, SoundType.GLASS.getBreakSound(), SoundCategory.BLOCKS, SoundType.GLASS.getVolume(), SoundType.GLASS.getPitch());
 		occupied = false;
 		florence = false;
@@ -115,7 +115,7 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 		if(occupied){
 			if(stack.isEmpty() && sneaking){
 				ItemStack out = getStoredItem();
-				world.setBlockState(pos, state.with(CrossroadsProperties.ACTIVE, false).with(CrossroadsProperties.CRYSTAL, false).with(CrossroadsProperties.CONTAINER_TYPE, false));
+				world.setBlockState(pos, state.with(CRProperties.ACTIVE, false).with(CRProperties.CRYSTAL, false).with(CRProperties.CONTAINER_TYPE, false));
 				occupied = false;
 				this.contents.clear();
 				dirtyReag = true;
@@ -132,7 +132,7 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 			markDirty();
 			occupied = true;
 			florence = stack.getItem() instanceof FlorenceFlask;
-			world.setBlockState(pos, state.with(CrossroadsProperties.ACTIVE, true).with(CrossroadsProperties.CRYSTAL, !glass).with(CrossroadsProperties.CONTAINER_TYPE, florence));
+			world.setBlockState(pos, state.with(CRProperties.ACTIVE, true).with(CRProperties.CRYSTAL, !glass).with(CRProperties.CONTAINER_TYPE, florence));
 			return ItemStack.EMPTY;
 		}
 

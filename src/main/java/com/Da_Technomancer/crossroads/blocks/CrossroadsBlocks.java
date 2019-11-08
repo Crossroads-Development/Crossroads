@@ -74,8 +74,6 @@ public class CrossroadsBlocks{
 	public static RedstoneAxis redstoneAxis;
 	public static CageCharger cageCharger;
 	public static HamsterWheel hamsterWheel;
-	public static FluidSplitter fluidSplitter;
-	public static BasicFluidSplitter basicFluidSplitter;
 	public static CopshowiumCreationChamber copshowiumCreationChamber;
 	public static MathAxis mathAxis;
 	public static GatewayFrame gatewayFrame;
@@ -208,8 +206,6 @@ public class CrossroadsBlocks{
 		redstoneAxis = new RedstoneAxis();
 		cageCharger = new CageCharger();
 		hamsterWheel = new HamsterWheel();
-		fluidSplitter = new FluidSplitter();
-		basicFluidSplitter = new BasicFluidSplitter();
 		copshowiumCreationChamber = new CopshowiumCreationChamber();
 		mathAxis = new MathAxis();
 		gatewayFrame = new GatewayFrame();

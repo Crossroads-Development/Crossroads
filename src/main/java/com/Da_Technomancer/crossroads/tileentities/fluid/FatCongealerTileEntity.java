@@ -4,23 +4,48 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
+import com.Da_Technomancer.crossroads.gui.container.FatCongealerContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.entity.item.ItemEntity;
+import com.Da_Technomancer.crossroads.items.EdibleBlob;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.tileentities.AbstractShifterTileEntity;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.registries.ObjectHolder;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@ObjectHolder(Crossroads.MODID)
 public class FatCongealerTileEntity extends InventoryTE{
 
+	@ObjectHolder("fat_congealer")
+	private static TileEntityType<FatCongealerTileEntity> type = null;
+
+	public static final double HUN_PER_SPD = 4D;
+	public static final double SAT_PER_SPD = 4D;
+
+	private Direction facing;
+
 	public FatCongealerTileEntity(){
-		super(0);
-		fluidProps[0] = new TankProperty(0, 10_000, true, false, (Fluid f) -> BlockLiquidFat.getLiquidFat() == f);
+		super(type, 1);
+		fluidProps[0] = new TankProperty(10_000, true, false, (Fluid f) -> CrossroadsFluids.liquidFat.still == f);
 	}
 
 	@Override
@@ -28,8 +53,19 @@ public class FatCongealerTileEntity extends InventoryTE{
 		return 1;
 	}
 
-	public static final double HUN_PER_SPD = 4D;
-	public static final double SAT_PER_SPD = 4D;
+	@Nonnull
+	private Direction getFacing(){
+		if(facing == null){
+			BlockState state = world.getBlockState(pos);
+			if(state.has(EssentialsProperties.HORIZ_FACING)){
+				facing = state.get(EssentialsProperties.HORIZ_FACING);
+			}else{
+				remove();
+				return Direction.NORTH;
+			}
+		}
+		return facing;
+	}
 
 	@Override
 	public void tick(){
@@ -38,45 +74,85 @@ public class FatCongealerTileEntity extends InventoryTE{
 			return;
 		}
 
-		TileEntity adjTE;
-		IAxleHandler topHandler;
-		IAxleHandler bottomHandler;
-
-		if((adjTE = world.getTileEntity(pos.offset(Direction.UP))) != null && (topHandler = adjTE.getCapability(Capabilities.AXLE_CAPABILITY, Direction.DOWN)) != null && (adjTE = world.getTileEntity(pos.down())) != null && (bottomHandler = adjTE.getCapability(Capabilities.AXLE_CAPABILITY, Direction.UP)) != null){
-			int hun = (int) Math.min(Math.abs(topHandler.getMotionData()[0]) * HUN_PER_SPD, 20);
-			int sat = (int) Math.min(Math.abs(bottomHandler.getMotionData()[0]) * SAT_PER_SPD, 20);
-			if(hun == 0 && sat == 0 || fluids[0] == null){
-				return;
-			}
-			int fluidUse = EnergyConverters.FAT_PER_VALUE * (hun + sat);
-			if(fluidUse > fluids[0].amount){
-				return;
-			}
-			topHandler.addEnergy(-hun, false, false);
-			bottomHandler.addEnergy(-sat, false, false);
-			if((fluids[0].amount -= fluidUse) <= 0){
-				fluids[0] = null;
-			}
-			ItemStack stack = new ItemStack(CRItems.edibleBlob, 1, 0);
-			CompoundNBT nbt = new CompoundNBT();
-			nbt.putInt("food", hun);
-			nbt.putInt("sat", sat);
-			stack.put(nbt);
-			ItemEntity ent = new ItemEntity(world, pos.getX() + .5D, pos.getY() + .5D, pos.getZ() + .5D, stack);
-			ent.motionX = 2D * Math.random() - 1D;
-			ent.motionZ = 2D * Math.random() - 1D;
-			world.addEntity(ent);
+		//Eject inventory either into the world or into an inventory.
+		//Despite using the method from ItemShifters, this block can't go through transport chutes
+		int prevCount = inventory[0].getCount();
+		inventory[0] = AbstractShifterTileEntity.ejectItem(world, pos.offset(getFacing()), getFacing(), inventory[0]);
+		if(prevCount != inventory[0].getCount()){
 			markDirty();
+		}
+
+		//This machine can be disabled by a redstone signal
+		if(!world.isBlockPowered(pos)){
+			TileEntity adjTE;
+			LazyOptional<IAxleHandler> otherOpt;
+			IAxleHandler topHandler = null;
+			IAxleHandler bottomHandler = null;
+
+			int hun = 0;
+			int sat = 0;
+
+			if((adjTE = world.getTileEntity(pos.offset(Direction.UP))) != null && (otherOpt = adjTE.getCapability(Capabilities.AXLE_CAPABILITY, Direction.DOWN)).isPresent()){
+				topHandler = otherOpt.orElseThrow(NullPointerException::new);
+				hun = (int) Math.min(Math.abs(topHandler.getMotionData()[0]) * HUN_PER_SPD, 20);
+			}
+			if((adjTE = world.getTileEntity(pos.offset(Direction.DOWN))) != null && (otherOpt = adjTE.getCapability(Capabilities.AXLE_CAPABILITY, Direction.UP)).isPresent()){
+				bottomHandler = otherOpt.orElseThrow(NullPointerException::new);
+				sat = (int) Math.min(Math.abs(bottomHandler.getMotionData()[0]) * SAT_PER_SPD, 20);
+			}
+
+			if(hun != 0 || sat != 0){
+				int fluidUse = EnergyConverters.FAT_PER_VALUE * (hun + sat);
+				if(fluidUse > fluids[0].getAmount()){
+					return;
+				}
+
+				if(!inventory[0].isEmpty() && (inventory[0].getCount() == CRItems.edibleBlob.getItemStackLimit(inventory[0]) || EdibleBlob.getHealAmount(inventory[0]) != hun || EdibleBlob.getTrueSat(inventory[0]) != sat)){
+					return;//Output is full, or has different stats
+				}
+
+				if(topHandler != null){
+					topHandler.addEnergy(-hun, false, false);
+				}
+				if(bottomHandler != null){
+					bottomHandler.addEnergy(-sat, false, false);
+				}
+				fluids[0].shrink(fluidUse);
+
+				if(inventory[0].isEmpty()){
+					inventory[0] = new ItemStack(CRItems.edibleBlob, 1);
+					inventory[0].setTag(EdibleBlob.createNBT(null, hun, sat));
+				}else{
+					inventory[0].grow(1);
+				}
+				markDirty();
+			}
 		}
 	}
 
-	private final FluidHandler mainHandler = new FluidHandler(0);
+	@Override
+	public void remove(){
+		super.remove();
+		itemOpt.invalidate();
+	}
+
+	@Override
+	public void rotate(){
+		super.rotate();
+		itemOpt.invalidate();
+		itemOpt = LazyOptional.of(ItemHandler::new);
+	}
+
+	private LazyOptional<IItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != Direction.DOWN && facing != Direction.UP){
-			return (T) mainHandler;
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != Direction.DOWN && facing != Direction.UP && facing != getFacing()){
+			return (LazyOptional<T>) globalFluidOpt;
+		}
+		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing == null || facing == getFacing())){
+			return (LazyOptional<T>) itemOpt;
 		}
 
 		return super.getCapability(capability, facing);
@@ -84,7 +160,7 @@ public class FatCongealerTileEntity extends InventoryTE{
 
 	@Override
 	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
-		return false;
+		return true;
 	}
 
 	@Override
@@ -93,7 +169,13 @@ public class FatCongealerTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public String getName(){
-		return "Fat Congealer";
+	public ITextComponent getDisplayName(){
+		return new TranslationTextComponent("container.fat_congealer");
+	}
+
+	@Nullable
+	@Override
+	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
+		return new FatCongealerContainer(id, playerInv, createContainerBuf());
 	}
 }

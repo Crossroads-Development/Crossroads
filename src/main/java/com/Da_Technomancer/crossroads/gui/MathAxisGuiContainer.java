@@ -27,8 +27,8 @@ public class MathAxisGuiContainer extends ContainerScreen{
 	}
 
 	@Override
-	public void initGui(){
-		super.initGui();
+	public void init(){
+		super.init();
 
 		int buttonWidth = 20;
 		int buttonHeight = 20;

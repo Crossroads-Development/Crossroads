@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.CrossroadsProperties;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
@@ -21,7 +21,7 @@ public class DynamoRenderer extends TileEntityRenderer<DynamoTileEntity>{
 		}
 
 		IAxleHandler axle = dynamo.getCapability(Capabilities.AXLE_CAPABILITY, null);
-		Direction facing = dynamo.getWorld().getBlockState(dynamo.getPos()).get(CrossroadsProperties.HORIZ_FACING);
+		Direction facing = dynamo.getWorld().getBlockState(dynamo.getPos()).get(CRProperties.HORIZ_FACING);
 		GlStateManager.pushMatrix();
 		GlStateManager.disableLighting();
 		GlStateManager.translate(x + .5F, y + .5F, z + .5F);

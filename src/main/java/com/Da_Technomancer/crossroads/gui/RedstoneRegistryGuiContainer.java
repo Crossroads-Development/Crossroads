@@ -56,8 +56,8 @@ public class RedstoneRegistryGuiContainer extends ContainerScreen{
 	}
 
 	@Override
-	public void initGui(){
-		super.initGui();
+	public void init(){
+		super.init();
 		index = te.getIndex();
 		focus = index;
 		output = Arrays.copyOf(te.getOutput(), te.getOutput().length);
