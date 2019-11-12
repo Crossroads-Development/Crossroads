@@ -394,6 +394,13 @@
 	"tt.crossroads.ore_cleanser.desc": "Washes Ore Grit for more efficient processing",
 	"tt.crossroads.ore_cleanser.steam": "Uses: %1$dmB Steam per Ore Grit",
 	"tt.crossroads.ore_cleanser.water": "Produces: %1$dmB Dirty Water per Ore Grit",
+	"tt.crossroads.radiator.desc": "Produces heat from steam",
+	"tt.crossroads.radiator.heat": "Produces: %1$d°C/t while running",
+	"tt.crossroads.radiator.water":  "Produces: %1$dmB/t Distilled Water while running",
+	"tt.crossroads.radiator.steam": "Consumes: %1$dmB/t Steam while running",
+	"tt.crossroads.pump.desc": "Pumps the liquid source directly under it",
+	"tt.crossroads.pump.power": "Consumes: Up to %1$fJ/t while running",
+	"tt.crossroads.steam_boiler.tier": "Boils %2$dmB/t of water using %3$d°C/t when above %1$d°C",
 
 	"alignment.energy": "Energy",
 	"alignment.potential": "Potential",

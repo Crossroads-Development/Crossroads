@@ -4,27 +4,40 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
+import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.IBucketPickupHandler;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.IFluidState;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.BlockFluidClassic;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 
+@ObjectHolder(Crossroads.MODID)
 public class RotaryPumpTileEntity extends ModuleTE{
 
+	@ObjectHolder("rotary_pump")
+	private static TileEntityType<RotaryPumpTileEntity> type = null;
+
+	public static final int INERTIA = 80;
+	public static final double MAX_POWER = 5;
+	private static final double REQUIRED = 100;
+
+	private double progress = 0;
+	private int lastProgress = 0;
+
 	public RotaryPumpTileEntity(){
-		super();
-		fluidProps[0] = new TankProperty(0, CAPACITY, false, true);
+		super(type);
+		fluidProps[0] = new TankProperty(CAPACITY, false, true);
 	}
 
 	@Override
@@ -39,14 +52,8 @@ public class RotaryPumpTileEntity extends ModuleTE{
 
 	@Override
 	protected double getMoInertia(){
-		return 80;
+		return INERTIA;
 	}
-
-	private static final double REQUIRED = 100;
-	public static final double MAX_POWER = 5;
-	private double progress = 0;
-	private int lastProgress = 0;
-
 
 	@Override
 	public void tick(){
@@ -56,12 +63,9 @@ public class RotaryPumpTileEntity extends ModuleTE{
 			return;
 		}
 
-		BlockState fluidBlockstate = world.getBlockState(pos.offset(Direction.DOWN));
-		Block fluidBlock = fluidBlockstate.getBlock();
-		Fluid fl = FluidRegistry.lookupFluidForBlock(fluidBlock);
-		//If anyone knows a builtin way to simplify this if statement, be my guest. It's so long it scares me...
-		//2019-29-1: Looking back on this if statement 2 years later, this is a perfectly reasonable length and not at all scary. If anything, it's too short. If anyone can find a way to make it longer, that would be appreciated
-		if(fl != null && (fluidBlock instanceof BlockFluidClassic && ((BlockFluidClassic) fluidBlock).isSourceBlock(world, pos.offset(Direction.DOWN)) || fluidBlockstate.get(BlockLiquid.LEVEL) == 0) && (fluids[0] == null || (CAPACITY - fluids[0].amount >= 1000 && fluids[0].getFluid() == fl))){
+		IFluidState fstate = world.getFluidState(pos.down());
+		Fluid fl = fstate.getFluid();
+		if(fstate.isSource()){
 			double holder = motData[1] < 0 ? 0 : Math.min(Math.min(MAX_POWER, motData[1]), REQUIRED - progress);
 			motData[1] -= holder;
 			progress += holder;
@@ -69,14 +73,36 @@ public class RotaryPumpTileEntity extends ModuleTE{
 			progress = 0;
 		}
 
+		/*
+		BlockState fluidBlockstate = world.getBlockState(pos.offset(Direction.DOWN));
+		Block fluidBlock = fluidBlockstate.getBlock();
+		Fluid fl = FluidRegistry.lookupFluidForBlock(fluidBlock);
+		//2017: If anyone knows a builtin way to simplify this if statement, be my guest. It's so long it scares me...
+		//2019-01-29: Looking back on this if statement 2 years later, this is a perfectly reasonable length and not at all scary. If anything, it's too short. If anyone can find a way to make it longer, that would be appreciated
+		//2019-11-11: The new fluid system has made this if statement obsolete. Farewell, old friend
+		if(fl != null && (fluidBlock instanceof BlockFluidClassic && ((BlockFluidClassic) fluidBlock).isSourceBlock(world, pos.offset(Direction.DOWN)) || fluidBlockstate.get(BlockLiquid.LEVEL) == 0) && (fluids[0] == null || (CAPACITY - fluids[0].amount >= 1000 && fluids[0].getFluid() == fl))){
+			double holder = motData[1] < 0 ? 0 : Math.min(Math.min(MAX_POWER, motData[1]), REQUIRED - progress);
+			motData[1] -= holder;
+			progress += holder;
+		}else{
+			progress = 0;
+		}
+		*/
+
 		if(progress >= REQUIRED){
 			progress = 0;
-			fluids[0] = new FluidStack(fl, 1000 + (fluids[0] == null ? 0 : fluids[0].amount));
-			world.setBlockToAir(pos.offset(Direction.DOWN));
+			BlockState state = world.getBlockState(pos.down());
+			Block block = state.getBlock();
+			if(block instanceof IBucketPickupHandler){
+				fl = ((IBucketPickupHandler) block).pickupFluid(world, pos.down(), state);
+				fluids[0] = new FluidStack(fl, 1000 + fluids[0].getAmount());
+			}else{
+				Crossroads.logger.info("Pump attempted to drain a non-traditional fluid at pos: " + pos.down().toString());
+			}
 		}
 
 		if(lastProgress != (int) progress){
-			CrossroadsPackets.network.sendToAllAround(new SendLongToClient((byte) 1, (int) progress, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			CrossroadsPackets.sendPacketAround(world, pos, new SendLongToClient(1, (long) progress, pos));
 			lastProgress = (int) progress;
 		}
 	}
@@ -108,16 +134,14 @@ public class RotaryPumpTileEntity extends ModuleTE{
 		return nbt;
 	}
 
-	private final FluidHandler fluidHandler = new FluidHandler(0);
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
-			return (T) fluidHandler;
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != Direction.DOWN && facing != Direction.UP){
+			return (LazyOptional<T>) globalFluidOpt;
 		}
 		if(capability == Capabilities.AXLE_CAPABILITY && (facing == Direction.UP || facing == null)){
-			return (T) axleHandler;
+			return (LazyOptional<T>) axleOpt;
 		}
 
 		return super.getCapability(capability, facing);

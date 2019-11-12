@@ -200,6 +200,8 @@ public final class Crossroads{
 		registerCon(FatCongealerContainer::new, FatCongealerScreen::new, "fat_congealer", e);
 		registerCon(FatFeederContainer::new, FatFeederScreen::new, "fat_feeder", e);
 		registerCon(FluidTankContainer::new, FluidTankScreen::new, "fluid_tank", e);
+		registerCon(OreCleanserContainer::new, OreCleanserScreen::new, "ore_cleanser", e);
+		registerCon(RadiatorContainer::new, RadiatorScreen::new, "radiator", e);
 
 		//TODO register containers
 	}
@@ -221,6 +223,8 @@ public final class Crossroads{
 		registerConType(FatCongealerContainer::new, "fat_congealer", e);
 		registerConType(FatFeederContainer::new, "fat_feeder", e);
 		registerConType(FluidTankContainer::new, "fluid_tank", e);
+		registerConType(OreCleanserContainer::new, "ore_cleanser", e);
+		registerConType(RadiatorContainer::new, "radiator", e);
 
 		//TODO register container types
 	}

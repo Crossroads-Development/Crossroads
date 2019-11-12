@@ -1,39 +1,39 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
-import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RadiatorTileEntity;
-
 import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.network.NetworkHooks;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class Radiator extends ContainerBlock{
 
 	public Radiator(){
-		super(Material.IRON);
+		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
 		String name = "radiator";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setHardness(3);
-		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
 	}
@@ -50,8 +50,9 @@ public class Radiator extends ContainerBlock{
 
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(!worldIn.isRemote){
-			playerIn.openGui(Crossroads.instance, GuiHandler.RADIATOR_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
+		TileEntity te;
+		if(!worldIn.isRemote && (te = worldIn.getTileEntity(pos)) instanceof INamedContainerProvider){
+			NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);
 		}
 		return true;
 	}
@@ -59,8 +60,9 @@ public class Radiator extends ContainerBlock{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add("Produces: 5°C/t while running");
-		tooltip.add("Produces: 100mB/t distilled water while running");
-		tooltip.add("Consumes: 100mB/t steam while running");
+		tooltip.add(new TranslationTextComponent("tt.crossroads.radiator.desc"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.radiator.heat", RadiatorTileEntity.FLUID_USE * EnergyConverters.degPerSteamBucket() / 1000));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.radiator.water", RadiatorTileEntity.FLUID_USE));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.radiator.steam", RadiatorTileEntity.FLUID_USE));
 	}
 }

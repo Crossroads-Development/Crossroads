@@ -1,39 +1,40 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
-
-import net.minecraft.block.*;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockFaceShape;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ContainerBlock;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.math.shapes.IBooleanFunction;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class RotaryPump extends ContainerBlock{
-	
+
+	//TODO give the pump a UI
+
+	private static final VoxelShape SHAPE = VoxelShapes.or(VoxelShapes.combine(makeCuboidShape(2, 0, 2, 14, 15, 14), makeCuboidShape(3, 0, 3, 13, 7, 13), IBooleanFunction.ONLY_SECOND), makeCuboidShape(6, 15, 6, 10, 16, 10), makeCuboidShape(0, 5, 5, 16, 11, 11), makeCuboidShape(5, 5, 0, 11, 11, 16));
+
 	public RotaryPump(){
-		super(Material.IRON);
+		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
 		String name = "rotary_pump";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setHardness(3);
-		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
 	}
@@ -41,11 +42,6 @@ public class RotaryPump extends ContainerBlock{
 	@Override
 	public TileEntity createNewTileEntity(IBlockReader worldIn){
 		return new RotaryPumpTileEntity();
-	}
-
-	@Override
-	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face){
-		return face == Direction.UP ? BlockFaceShape.MIDDLE_POLE_THICK : BlockFaceShape.UNDEFINED;
 	}
 
 	@Override
@@ -58,26 +54,17 @@ public class RotaryPump extends ContainerBlock{
 	public BlockRenderLayer getRenderLayer(){
 		return BlockRenderLayer.CUTOUT;
 	}
-	
-	@Override
-	public boolean isFullCube(BlockState state){
-		return false;
-	}
 
 	@Override
-	public boolean isOpaqueCube(BlockState state){
-		return false;
-	}
-
-	@Override
-	public boolean isSideSolid(BlockState state, IBlockAccess worldIn, BlockPos pos, Direction side){
-		return side == Direction.UP;
+	public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_){
+		return SHAPE;
 	}
 	
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add("I: 80");
-		tooltip.add(String.format("Consumes: Up to %1$fJ/t while running", RotaryPumpTileEntity.MAX_POWER));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.pump.desc"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.pump.power", RotaryPumpTileEntity.MAX_POWER));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", RotaryPumpTileEntity.INERTIA));
 	}
 }

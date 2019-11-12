@@ -3,8 +3,14 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
+import com.Da_Technomancer.crossroads.gui.container.OreCleanserContainer;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.recipes.OreCleanserRec;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
@@ -14,7 +20,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -23,6 +28,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 @ObjectHolder(Crossroads.MODID)
 public class OreCleanserTileEntity extends InventoryTE{
@@ -32,7 +38,7 @@ public class OreCleanserTileEntity extends InventoryTE{
 
 	public static final int WATER_USE = 250;
 
-	public IntReferenceHolder progRef = IntReferenceHolder.single();//TODO
+	public IntReferenceHolder progRef = IntReferenceHolder.single();
 	private int progress = 0;//Out of 50
 
 	public OreCleanserTileEntity(){
@@ -55,12 +61,13 @@ public class OreCleanserTileEntity extends InventoryTE{
 		}
 
 		if(fluids[0].getAmount() >= WATER_USE && fluidProps[1].capacity - fluids[1].getAmount() >= WATER_USE && !inventory[0].isEmpty()){
-			ItemStack created = RecipeHolder.oreCleanserRecipes.get(inventory[0]);
-			if(created.isEmpty()){
+			Optional<OreCleanserRec> rec = world.getRecipeManager().getRecipe(RecipeHolder.ORE_CLEANSER_TYPE, this, world);
+			ItemStack created;
+			if(!rec.isPresent()){
 				created = inventory[0].copy();
 				created.setCount(1);
 			}else{
-				created = created.copy();
+				created = rec.get().getCraftingResult(this).copy();
 			}
 
 			if(!inventory[1].isEmpty() && (inventory[1].getMaxStackSize() - inventory[1].getCount() < created.getCount() || !ItemStack.areItemsEqual(created, inventory[1]) || !ItemStack.areItemStackTagsEqual(created, inventory[1]))){
@@ -77,14 +84,12 @@ public class OreCleanserTileEntity extends InventoryTE{
 			progress = 0;
 			progRef.set(progress);
 
-			if((fluids[0].amount -= WATER_USE) <= 0){
-				fluids[0] = null;
-			}
+			fluids[0].shrink(WATER_USE);
 
-			if(fluids[1] == null){
-				fluids[1] = new FluidStack(BlockDirtyWater.getDirtyWater(), WATER_USE);
+			if(fluids[1].isEmpty()){
+				fluids[1] = new FluidStack(CrossroadsFluids.dirtyWater.still, WATER_USE);
 			}else{
-				fluids[1].amount += WATER_USE;
+				fluids[1].grow(WATER_USE);
 			}
 
 			inventory[0].shrink(1);
@@ -95,6 +100,7 @@ public class OreCleanserTileEntity extends InventoryTE{
 			}
 		}else{
 			progress = 0;
+			progRef.set(progress);
 		}
 	}
 
@@ -102,6 +108,7 @@ public class OreCleanserTileEntity extends InventoryTE{
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
 		progress = nbt.getInt("prog");
+		progRef.set(progress);
 	}
 
 	@Override
@@ -144,11 +151,17 @@ public class OreCleanserTileEntity extends InventoryTE{
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && !RecipeHolder.oreCleanserRecipes.get(stack).isEmpty();
+		return index == 0 && world.getRecipeManager().getRecipe(RecipeHolder.ORE_CLEANSER_TYPE, new Inventory(stack), world).isPresent();
 	}
 
 	@Override
 	public ITextComponent getDisplayName(){
 		return new TranslationTextComponent("container.ore_cleanser");
+	}
+
+	@Nullable
+	@Override
+	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
+		return new OreCleanserContainer(id, playerInv, createContainerBuf());
 	}
 }
