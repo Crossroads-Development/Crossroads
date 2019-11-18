@@ -1,9 +1,10 @@
 package com.Da_Technomancer.crossroads.API.effects.alchemy;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.API.CrReflection;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.essentials.ReflectionUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.ZombieVillagerEntity;
 import net.minecraft.potion.Effects;
@@ -17,7 +18,7 @@ import java.lang.reflect.Method;
 
 public class DisinfectAlchemyEffect implements IAlchEffect{
 
-	private static final Method villConv = MiscUtil.reflectMethod(ZombieVillagerEntity.class, "startConverting", "func_191991_a");
+	private static final Method villConv = ReflectionUtil.reflectMethod(CrReflection.CURE_ZOMBIE);
 
 	@Override
 	public void doEffect(World world, BlockPos pos, int amount, EnumMatterPhase phase, ReagentMap reags){

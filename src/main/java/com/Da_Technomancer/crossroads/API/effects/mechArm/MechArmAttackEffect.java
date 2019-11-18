@@ -1,11 +1,12 @@
 package com.Da_Technomancer.crossroads.API.effects.mechArm;
 
+import com.Da_Technomancer.crossroads.API.CrReflection;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.entity.EntityArmRidable;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalArmTileEntity;
+import com.Da_Technomancer.essentials.ReflectionUtil;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.util.Direction;
@@ -14,6 +15,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ServerWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
@@ -27,24 +29,7 @@ public class MechArmAttackEffect implements IMechArmEffect{
 	private static final Random ID_GEN = new Random();
 	private static final int ATTACK_RANGE = 3;
 
-	private static final Field lastSwingField;
-
-	static{
-		Field holder = null;
-		try{
-			for(Field f : LivingEntity.class.getDeclaredFields()){
-				if("field_184617_aD".equals(f.getName()) || "ticksSinceLastSwing".equals(f.getName())){
-					holder = f;
-					holder.setAccessible(true);
-					break;
-				}
-			}
-		}catch(Exception e){
-			Crossroads.logger.error("Something went wrong getting the player cooldown field. Disabling relevant features (mechanical arm attacking)");
-			Crossroads.logger.catching(e);
-		}
-		lastSwingField = holder;
-	}
+	private static final Field lastSwingField = ReflectionUtil.reflectField(CrReflection.SWING_TIME);
 
 	@Override
 	public boolean onTriggered(World world, BlockPos pos, double posX, double posY, double posZ, Direction side, EntityArmRidable ent, MechanicalArmTileEntity te){

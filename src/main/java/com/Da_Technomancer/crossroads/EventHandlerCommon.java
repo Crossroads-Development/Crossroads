@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.API.CrReflection;
 import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
@@ -14,6 +14,7 @@ import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldSavedData;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.TemporalAcceleratorTileEntity;
+import com.Da_Technomancer.essentials.ReflectionUtil;
 import com.google.common.base.Predicate;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -309,8 +310,8 @@ public final class EventHandlerCommon{
 	}
 
 
-	private static final Field explosionPower = MiscUtil.reflectField(Explosion.class, "size", "field_77280_f");
-	private static final Field explosionSmoking = MiscUtil.reflectField(Explosion.class, "damagesTerrain", "field_82755_b");
+	private static final Field explosionPower = ReflectionUtil.reflectField(CrReflection.EXPLOSION_POWER);
+	private static final Field explosionSmoking = ReflectionUtil.reflectField(CrReflection.EXPLOSION_SMOKE);
 
 	@SubscribeEvent
 	public void modifyExplosion(ExplosionEvent.Start e){

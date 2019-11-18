@@ -11,6 +11,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -31,6 +32,7 @@ public class ModParticles{
 	private static final Field NAME_TO_PARTICLE;
 
 	static{
+		//TODO not only is this reflection outside CrReflection, but it involves a class and fields that no longer exist
 		Field holder1 = null;
 		Field holder2 = null;
 		try{

@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.API;
 
-import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,12 +13,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.fml.loading.LogMarkers;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 public final class MiscUtil{
 
@@ -107,39 +103,5 @@ public final class MiscUtil{
 			}
 		}
 		return true;
-	}
-
-	@Nullable
-	public static Method reflectMethod(Class clazz, String textName, String rawName){
-		//TODO Change the names used by basically everything that calls this
-		try{
-			for(Method m : clazz.getDeclaredMethods()){
-				if(textName.equals(m.getName()) || rawName.equals(m.getName())){
-					m.setAccessible(true);
-					return m;
-				}
-			}
-			//For no apparent reason ReflectionHelper consistently crashes in an obfus. environment for me with the Forge method, so the above for loop is used instead.
-		}catch(Exception e){
-			Crossroads.logger.catching(e);
-		}
-		return null;
-	}
-
-	@Nullable
-	public static Field reflectField(Class clazz, String textName, String rawName){
-		//TODO Change the names used by basically everything that calls this
-		try{
-			for(Field f : clazz.getDeclaredFields()){
-				if(textName.equals(f.getName()) || rawName.equals(f.getName())){
-					f.setAccessible(true);
-					return f;
-				}
-			}
-			//For no apparent reason ReflectionHelper consistently crashes in an obfus. environment for me with the Forge method, so the above for loop is used instead.
-		}catch(Exception e){
-			Crossroads.logger.error(LogMarkers.LOADING, "Failed to reflect method: " + textName + "; Disabling relevant feature(s). Report to mod author", e);
-		}
-		return null;
 	}
 }
