@@ -55,7 +55,7 @@ public class RotaryPumpRenderer extends TileEntityRenderer<RotaryPumpTileEntity>
 			if(state.getBlock() instanceof IFluidBlock){
 				lText = Minecraft.getInstance().getTextureMapBlocks().getTextureExtry(((IFluidBlock) state.getBlock()).getFluid().getStill().toString());
 			}else if(state.getBlock() instanceof BlockLiquid){
-				lText = Minecraft.getInstance().getTextureMapBlocks().getTextureExtry((state.getMaterial() == Material.LAVA ? FluidRegistry.LAVA.getStill() : FluidRegistry.WATER.getStill()).toString());
+				lText = Minecraft.getInstance().getTextureMapBlocks().getTextureExtry((state.getMaterial() == Material.LAVA ? FluidRegistry.LAVA.getStill() : Fluids.WATER.getStill()).toString());
 			}else{
 				return;
 			}

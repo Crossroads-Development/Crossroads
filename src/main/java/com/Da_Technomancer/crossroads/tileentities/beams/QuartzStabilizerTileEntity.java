@@ -4,24 +4,37 @@ import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnitStorage;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.registries.ObjectHolder;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 
+@ObjectHolder(Crossroads.MODID)
 public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 
-	private int setting = 0;
+	@ObjectHolder("quartz_stabilizer")
+	private static TileEntityType<QuartzStabilizerTileEntity> type = null;
+
 	private static final int CAPACITY = 1024;
 	private static final int[] RATES = new int[] {1, 2, 4, 8, 16, 32, 64};
-	private BeamUnitStorage storage = new BeamUnitStorage();
 
+	private int setting = 0;
+	private BeamUnitStorage storage = new BeamUnitStorage();
 	private Direction dir = null;
+
+	public QuartzStabilizerTileEntity(){
+		super(type);
+	}
 
 	private Direction getDir(){
 		if(dir == null){
@@ -136,8 +149,8 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
-		chat.add("Current maximum output: " + RATES[setting]);
-		chat.add("Stored: " + (storage.getPower() == 0 ? "Empty" : storage.getOutput().toString()));
+	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+		chat.add(new TranslationTextComponent("tt.crossroads.quartz_stabilizer.output", RATES[setting]));
+		chat.add(new TranslationTextComponent("tt.crossroads.quartz_stabilizer.storage", storage.getOutput().toString()));
 	}
 }

@@ -41,6 +41,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 	protected ArrayList<IAxleHandler> rotaryMembers = new ArrayList<>();
 	protected final HashSet<Pair<ISlaveAxisHandler, Direction>> slaves = new HashSet<>();
 
+	//TODO the taylor series approximation is acting kind of wonky when the gear system changes- it may need a bit of fuzzing
 	/**
 	 * Now I know what you're thinking: "What the heck is this for?". Well it's quite simple- no it isn't that's a lie
 	 * The Master Axis is responsible for keeping the rendering angles of all members synced centrally.

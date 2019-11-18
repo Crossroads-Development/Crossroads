@@ -24,7 +24,7 @@ public class DetailedCrafterGuiContainer extends ContainerScreen{
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
 		GlStateManager.color(1, 1, 1);
-		mc.getTextureManager().bindTexture(BACKGROUND);
+		Minecraft.getInstance().getTextureManager().bindTexture(BACKGROUND);
 		blit(guiLeft, guiTop, 0, 0, xSize, ySize);
 		if(StoreNBTToClient.clientPlayerTag.getCompound("path").getBoolean("technomancy")){
 			blit(guiLeft + 124, guiTop + 60, 176, 0, 16, 16);

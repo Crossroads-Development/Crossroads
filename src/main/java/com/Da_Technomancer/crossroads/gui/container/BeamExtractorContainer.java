@@ -1,20 +1,38 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
+import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Container;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Slot;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.registries.ObjectHolder;
 
+@ObjectHolder(Crossroads.MODID)
 public class BeamExtractorContainer extends Container{
+
+	@ObjectHolder("beam_extractor")
+	private static ContainerType<BeamExtractorContainer> type = null;
 
 	private final IInventory te;
 
-	public BeamExtractorContainer(IInventory playerInv, IInventory te){
-		super();
-		this.te = te;
+	public BeamExtractorContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
+		super(type, id);
+
+		BlockPos pos = buf.readBlockPos();
+		TileEntity wTe = playerInv.player.world.getTileEntity(pos);
+		if(wTe instanceof IInventory){
+			te = (IInventory) wTe;
+		}else{
+			te = new Inventory(1);
+			Crossroads.logger.info("Beam Extractor UI created without TE- pos: " + pos.toString());
+		}
 
 		// Fuel slot, ID 0
 		addSlot(new Slot(te, 0, 80, 53){
@@ -35,6 +53,10 @@ public class BeamExtractorContainer extends Container{
 				addSlot(new Slot(playerInv, x + y * 9 + 9, 8 + x * 18, 84 + y * 18));
 			}
 		}
+	}
+
+	public IInventory getTE(){
+		return te;
 	}
 
 	@Override
@@ -68,6 +90,6 @@ public class BeamExtractorContainer extends Container{
 
 	@Override
 	public boolean canInteractWith(PlayerEntity playerIn){
-		return te.isUsableByPlayer(playerIn);
+		return te != null && te.isUsableByPlayer(playerIn);
 	}
 }

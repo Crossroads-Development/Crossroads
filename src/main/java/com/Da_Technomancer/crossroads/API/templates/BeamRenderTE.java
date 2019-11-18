@@ -11,15 +11,16 @@ import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickableTileEntity, IIntReceiver{
+public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, ITickableTileEntity, IIntReceiver{
 
 	protected int[] beamPackets = new int[6];
 	protected BeamManager[] beamer;
@@ -45,6 +46,11 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 		return 64_000;
 	}
 
+	@Override
+	public AxisAlignedBB getRenderBoundingBox(){
+		return INFINITE_EXTENT_AABB;
+	}
+
 	/**
 	 * Sets the beamer variable to null, use whenever rotating the block. 
 	 */
@@ -53,7 +59,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 		beamer = null;
 		beamPackets = new int[6];
 		for(int i = 0; i < 6; i++){
-			prevMag[i] = null;
+			prevMag[i] = BeamUnit.EMPTY;
 			refreshBeam(i);
 		}
 		lazyOptional.invalidate();
@@ -114,7 +120,7 @@ public abstract class BeamRenderTE extends BeamRenderTEBase implements ITickable
 		return out;
 	}
 
-	protected abstract void doEmit(@Nullable BeamUnit toEmit);
+	protected abstract void doEmit(@Nonnull BeamUnit toEmit);
 
 	@Override
 	public void receiveInt(byte identifier, int message, ServerPlayerEntity player){

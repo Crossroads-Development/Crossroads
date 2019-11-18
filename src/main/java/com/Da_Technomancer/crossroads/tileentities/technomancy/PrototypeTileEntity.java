@@ -11,7 +11,7 @@ import com.Da_Technomancer.crossroads.API.technomancy.IPrototypeOwner;
 import com.Da_Technomancer.crossroads.API.technomancy.IPrototypePort;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypeInfo;
 import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
-import com.Da_Technomancer.crossroads.API.templates.BeamRenderTEBase;
+import com.Da_Technomancer.crossroads.API.templates.IBeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.EventHandlerCommon;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
@@ -21,15 +21,21 @@ import com.Da_Technomancer.crossroads.dimensions.PrototypeWorldSavedData;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ITickableTileEntity;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -38,7 +44,7 @@ import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeOwner, IIntReceiver, ITickableTileEntity{
+public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, IIntReceiver, IBeamRenderTE, ITickableTileEntity{
 
 	private int index = -1;
 	public String name = "";
@@ -52,6 +58,11 @@ public class PrototypeTileEntity extends BeamRenderTEBase implements IPrototypeO
 	public void setIndex(int index){
 		this.index = index;
 		markDirty();
+	}
+
+	@Override
+	public AxisAlignedBB getRenderBoundingBox(){
+		return INFINITE_EXTENT_AABB;
 	}
 
 	public int getIndex(){

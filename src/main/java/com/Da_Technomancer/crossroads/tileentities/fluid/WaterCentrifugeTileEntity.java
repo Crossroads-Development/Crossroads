@@ -1,32 +1,51 @@
 package com.Da_Technomancer.crossroads.tileentities.fluid;
 
-import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
+import com.Da_Technomancer.crossroads.gui.container.WaterCentrifugeContainer;
+import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.recipes.DirtyWaterRec;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import org.apache.commons.lang3.tuple.Pair;
+import net.minecraftforge.registries.ObjectHolder;
 
+import javax.annotation.Nullable;
+
+@ObjectHolder(Crossroads.MODID)
 public class WaterCentrifugeTileEntity extends InventoryTE{
 
-	private static final double TIP_POINT = .5D;
+	@ObjectHolder("water_centrifuge")
+	private static TileEntityType<WaterCentrifugeTileEntity> type = null;
+	
+	public static final double TIP_POINT = .5D;
+	public static final int INERTIA = 115;
+	private static final int BATCH_SIZE = 250;
 	private boolean neg;
 
 	public WaterCentrifugeTileEntity(){
-		super(1);
-		fluidProps[0] = new TankProperty(0, 10_000, true, false, (Fluid f) -> f == FluidRegistry.WATER || f == BlockDirtyWater.getDirtyWater());
-		fluidProps[1] = new TankProperty(1, 10_000, false, true, null);
+		super(type, 1);
+		fluidProps[0] = new TankProperty(10_000, true, false, (Fluid f) -> f == Fluids.WATER || f == CrossroadsFluids.dirtyWater.still);
+		fluidProps[1] = new TankProperty(10_000, false, true, (Fluid f) -> true);
 	}
 
 	public boolean isNeg(){
@@ -52,27 +71,26 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 
 		if(Math.abs(motData[0]) >= TIP_POINT && (Math.signum(motData[0]) == -1) == neg){
 			neg = !neg;
-			if(fluids[0] != null && fluids[0].amount >= 250){
-				boolean dirty = fluids[0].getFluid() != FluidRegistry.WATER;
+			if(fluids[0].getAmount() >= BATCH_SIZE){
+				boolean dirty = fluids[0].getFluid() != Fluids.WATER;
 				ItemStack product = ItemStack.EMPTY;
 				if(dirty){
-					int choice = world.rand.nextInt(RecipeHolder.dirtyWaterWeights) + 1;
-					for(Pair<Integer, ItemStack> entry : RecipeHolder.dirtyWaterRecipes){
-						choice -= entry.getLeft();
+					int choice = world.rand.nextInt(RecipeHolder.totalDirtyWaterWeight) + 1;
+
+					for(DirtyWaterRec entry : world.getRecipeManager().getRecipes(RecipeHolder.DIRTY_WATER_TYPE, this, world)){
+						choice -= entry.getWeight();
 						if(choice <= 0){
-							product = entry.getRight();
+							product = entry.getCraftingResult(this);
 							break;
 						}
 					}
 				}else{
-					product = MiscUtil.getOredictStack("dustSalt", 1);
+					product = new ItemStack(CRItemTags.getTagEntry(CRItemTags.SALT));
 				}
-				if((fluids[0].amount -= 250) == 0){
-					fluids[0] = null;
-				}
-				fluids[1] = new FluidStack(BlockDistilledWater.getDistilledWater(), Math.min(fluidProps[1].getCapacity(), 250 + (fluids[1] == null ? 0 : fluids[1].amount)));
+				fluids[0].shrink(BATCH_SIZE);
+				fluids[1] = new FluidStack(CrossroadsFluids.distilledWater.still, Math.min(fluidProps[1].capacity, BATCH_SIZE + fluids[1].getAmount()));
 				if(inventory[0].isEmpty() || inventory[0].isItemEqual(product)){
-					inventory[0] = new ItemStack(product.getItem(), Math.min(64, 1 + inventory[0].getCount()), product.getMetadata());
+					inventory[0] = new ItemStack(product.getItem(), Math.min(product.getMaxStackSize(), 1 + inventory[0].getCount()));
 				}
 				markDirty();
 			}
@@ -93,28 +111,41 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 		neg = nbt.getBoolean("neg");
 	}
 
-	private final IFluidHandler waterHandler = new FluidHandler(0);
-	private final IFluidHandler dWaterHandler = new FluidHandler(1);
-	private final IFluidHandler masterHandler = new FluidHandler(-1);
-	private final IItemHandler saltHandler = new ItemHandler(null);
+	@Override
+	public void remove(){
+		super.remove();
+		waterOpt.invalidate();
+		dWaterOpt.invalidate();
+		saltOpt.invalidate();
+	}
+
+	@Override
+	public void rotate(){
+		super.rotate();
+		waterOpt.invalidate();
+		dWaterOpt.invalidate();
+		waterOpt = LazyOptional.of(() -> new FluidHandler(0));
+		dWaterOpt = LazyOptional.of(() -> new FluidHandler(1));
+	}
+
+	private LazyOptional<IFluidHandler> waterOpt = LazyOptional.of(() -> new FluidHandler(0));
+	private LazyOptional<IFluidHandler> dWaterOpt = LazyOptional.of(() -> new FluidHandler(1));
+	private final LazyOptional<IItemHandler> saltOpt = LazyOptional.of(ItemHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction facing){
-		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing == null){
-			return (T) masterHandler;
-		}
 		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing.getAxis() != world.getBlockState(pos).get(CRProperties.HORIZ_AXIS)){
-			return (T) waterHandler;
+			return (LazyOptional<T>) waterOpt;
 		}
 		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing.getAxis() == world.getBlockState(pos).get(CRProperties.HORIZ_AXIS)){
-			return (T) dWaterHandler;
+			return (LazyOptional<T>) dWaterOpt;
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-			return (T) saltHandler;
+			return (LazyOptional<T>) saltOpt;
 		}
 		if(cap == Capabilities.AXLE_CAPABILITY && facing == Direction.UP){
-			return (T) axleHandler;
+			return (LazyOptional<T>) axleOpt;
 		}
 
 		return super.getCapability(cap, facing);
@@ -122,7 +153,7 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 
 	@Override
 	public double getMoInertia(){
-		return 115;
+		return INERTIA;
 	}
 
 	@Override
@@ -136,7 +167,13 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public String getName(){
-		return "container.water_centrifuge";
+	public ITextComponent getDisplayName(){
+		return new TranslationTextComponent("container.water_centrifuge");
+	}
+
+	@Nullable
+	@Override
+	public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity){
+		return new WaterCentrifugeContainer(i, playerInventory, createContainerBuf());
 	}
 }

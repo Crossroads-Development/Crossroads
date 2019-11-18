@@ -9,27 +9,24 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public abstract class BeamRenderTEBase extends TileEntity{
-
-
-	public BeamRenderTEBase(TileEntityType<?> type){
-		super(type);
-	}
+public interface IBeamRenderTE{
 
 	/**
 	 *
 	 * @return A size six array (with null elements) with integers that BeamManager.getTriple will convert into rendering instructions
 	 */
-	public abstract int[] getRenderedBeams();
+	public int[] getRenderedBeams();
 
 	/**
 	 * For informational displays.
-//	 * Must not contain null elements
+	 * Must not contain null elements
 	 */
-	public abstract BeamUnit[] getLastSent();
-	
+	public BeamUnit[] getLastSent();
+
+	/* Recommended override for subclasses
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){
 		return INFINITE_EXTENT_AABB;
 	}
+	 */
 }

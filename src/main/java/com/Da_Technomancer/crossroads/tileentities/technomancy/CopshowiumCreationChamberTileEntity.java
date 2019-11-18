@@ -33,8 +33,8 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE{
 
 	public CopshowiumCreationChamberTileEntity(){
 		super(0);
-		fluidProps[0] = new TankProperty(0, CAPACITY, true, true, (Fluid f) -> f != null && (f.getName().equals(CRConfig.cccExpenLiquid.get()) || f.getName().equals(CRConfig.cccEntropLiquid.get())));//Input
-		fluidProps[1] = new TankProperty(1, CAPACITY, false, true);//Copshowium
+		fluidProps[0] = new TankProperty(CAPACITY, true, true, (Fluid f) -> f != null && (f.getName().equals(CRConfig.cccExpenLiquid.get()) || f.getName().equals(CRConfig.cccEntropLiquid.get())));//Input
+		fluidProps[1] = new TankProperty(CAPACITY, false, true);//Copshowium
 	}
 
 	@Override

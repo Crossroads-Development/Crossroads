@@ -10,6 +10,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -28,17 +31,20 @@ public class BeamRedirector extends BeamBlock{
 
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
-		neighborChanged(state, world, pos, this, pos);
-	}
-	
-	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
-		boolean hasRedstone = worldIn.getRedstonePower(pos.east(), Direction.EAST) != 0 || worldIn.getRedstonePower(pos.west(), Direction.WEST) != 0 || worldIn.getRedstonePower(pos.north(), Direction.NORTH) != 0 || worldIn.getRedstonePower(pos.south(), Direction.SOUTH) != 0 || worldIn.getRedstonePower(pos.down(), Direction.DOWN) != 0 || worldIn.getRedstonePower(pos.up(), Direction.UP) != 0;
-		((BeamRedirectorTileEntity) worldIn.getTileEntity(pos)).setRedstone(hasRedstone);
+		neighborChanged(state, world, pos, this, pos, false);
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
-		tooltip.add("Toggles beam output between two directions based on a redstone signal");
+	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(te instanceof BeamRedirectorTileEntity){
+			boolean hasRedstone = worldIn.getRedstonePower(pos.east(), Direction.EAST) != 0 || worldIn.getRedstonePower(pos.west(), Direction.WEST) != 0 || worldIn.getRedstonePower(pos.north(), Direction.NORTH) != 0 || worldIn.getRedstonePower(pos.south(), Direction.SOUTH) != 0 || worldIn.getRedstonePower(pos.down(), Direction.DOWN) != 0 || worldIn.getRedstonePower(pos.up(), Direction.UP) != 0;
+			((BeamRedirectorTileEntity) te).setRedstone(hasRedstone);
+		}
+	}
+
+	@Override
+	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_redirector.desc"));
 	}
 }

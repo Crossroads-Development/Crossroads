@@ -2,9 +2,14 @@ package com.Da_Technomancer.crossroads.API.beams;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.effects.IEffect;
+import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.Tag;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
@@ -14,6 +19,8 @@ import javax.annotation.Nonnull;
 import java.awt.*;
 
 public class BeamManager{
+
+	private static final Tag<Block> PASSABLE = new BlockTags.Wrapper(new ResourceLocation(Crossroads.MODID, "beam_passable"));
 
 	public static int beamStage = 2;
 	public static long cycleNumber;
@@ -68,7 +75,7 @@ public class BeamManager{
 	}
 
 	public static boolean solidToBeams(BlockState state, World world, BlockPos pos){
-		return !state.getBlock().isAir(state, world, pos) && !(state.getBlock() instanceof IBeamTransparent);
+		return !state.getBlock().isAir(state, world, pos) && !PASSABLE.contains(state.getBlock());
 	}
 
 	public static int toPacket(BeamUnit mag, int dist){

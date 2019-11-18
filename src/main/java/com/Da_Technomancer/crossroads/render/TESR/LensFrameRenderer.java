@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import com.Da_Technomancer.crossroads.API.templates.BeamRenderTEBase;
+import com.Da_Technomancer.crossroads.API.templates.IBeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.tileentities.beams.LensFrameTileEntity;
@@ -29,7 +29,7 @@ public class LensFrameRenderer extends BeamRenderer{
 	}
 
 	@Override
-	public void render(BeamRenderTEBase beam, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
+	public void render(IBeamRenderTE beam, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
 		if(!beam.getWorld().isBlockLoaded(beam.getPos(), false)){
 			return;
 		}

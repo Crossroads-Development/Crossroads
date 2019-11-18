@@ -1,67 +1,62 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.beams.LensFrameTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
+import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.util.List;
+import javax.annotation.Nullable;
 
-public class LensFrame extends ContainerBlock{
+public class LensFrame extends ContainerBlock implements IReadable{
+
+	private static final VoxelShape[] SHAPE = new VoxelShape[3];
+
+	static{
+		SHAPE[0] = makeCuboidShape(6, 0, 0, 10, 16, 16);
+		SHAPE[1] = makeCuboidShape(0, 6, 0, 16, 10, 16);
+		SHAPE[2] = makeCuboidShape(0, 0, 6, 16, 16, 10);
+	}
 
 	public LensFrame(){
-		super(Material.ROCK);
+		super(Properties.create(Material.ROCK).hardnessAndResistance(3));
 		String name = "lens_frame";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setHardness(3);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
 	}
 
 	@Override
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+		return SHAPE[state.get(EssentialsProperties.AXIS).ordinal()];
+	}
+
+	@Override
 	public TileEntity createNewTileEntity(IBlockReader worldIn){
 		return new LensFrameTileEntity();
-	}
-
-	@Override
-	public boolean hasComparatorInputOverride(BlockState state){
-		return true;
-	}
-
-	@Override
-	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face){
-		return face.getAxis() != state.get(EssentialsProperties.AXIS) ? BlockFaceShape.CENTER_SMALL : BlockFaceShape.UNDEFINED;
-	}
-
-	@Override
-	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos){
-		return Math.min(15, (int) ((LensFrameTileEntity) worldIn.getTileEntity(pos)).getRedstone() / 3);
 	}
 
 	@Override
@@ -75,24 +70,15 @@ public class LensFrame extends ContainerBlock{
 		return BlockRenderLayer.CUTOUT;
 	}
 
+	@Nullable
 	@Override
-	public boolean isFullCube(BlockState state){
-		return false;
+	public BlockState getStateForPlacement(BlockItemUseContext context){
+		return getDefaultState().with(EssentialsProperties.AXIS, context.getNearestLookingDirection().getAxis());
 	}
 
 	@Override
-	public BlockState getStateForPlacement(World worldIn, BlockPos pos, Direction blockFaceClickedOn, BlockRayTraceResult hit, int meta, LivingEntity placer){
-		return getDefaultState().with(EssentialsProperties.AXIS, (placer == null) ? Axis.X : blockFaceClickedOn.getAxis());
-	}
-
-	@Override
-	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, EssentialsProperties.AXIS);
-	}
-
-	@Override
-	public BlockState getStateFromMeta(int meta){
-		return getDefaultState().with(EssentialsProperties.AXIS, Direction.Axis.values()[meta]);
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+		builder.add(EssentialsProperties.AXIS);
 	}
 
 	@Override
@@ -100,9 +86,12 @@ public class LensFrame extends ContainerBlock{
 		if(!worldIn.isRemote){
 			ItemStack stack = playerIn.getHeldItem(hand);
 
-			if(EssentialsConfig.isWrench(stack, false)){
+			if(EssentialsConfig.isWrench(stack)){
 				worldIn.setBlockState(pos, state.cycle(EssentialsProperties.AXIS));
-				((LensFrameTileEntity) worldIn.getTileEntity(pos)).refresh();
+				TileEntity te = worldIn.getTileEntity(pos);
+				if(te instanceof LensFrameTileEntity){
+					((LensFrameTileEntity) te).refresh();
+				}
 			}else{
 				TileEntity te = worldIn.getTileEntity(pos);
 				if(!(te instanceof LensFrameTileEntity)){
@@ -113,8 +102,10 @@ public class LensFrame extends ContainerBlock{
 				if(!held.isEmpty()){
 					if(!playerIn.inventory.addItemStackToInventory(held)){
 						ItemEntity dropped = playerIn.dropItem(held, false);
-						dropped.setNoPickupDelay();
-						dropped.setOwner(playerIn.getName());
+						if(dropped != null){
+							dropped.setNoPickupDelay();
+							dropped.setOwnerId(playerIn.getUniqueID());
+						}
 					}
 					lens.setContents(0);
 				}else if(!stack.isEmpty()){
@@ -135,28 +126,29 @@ public class LensFrame extends ContainerBlock{
 		if(te instanceof LensFrameTileEntity){
 			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ((LensFrameTileEntity) te).getItem());
 		}
-		super.breakBlock(world, pos, state);
+		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 
 	@Override
-	public int getMetaFromState(BlockState state){
-		return state.get(EssentialsProperties.AXIS).ordinal();
+	public boolean hasComparatorInputOverride(BlockState state){
+		return true;
 	}
 
 	@Override
-	public boolean isOpaqueCube(BlockState state){
-		return false;
-	}
-
-	private static final AxisAlignedBB[] BB = new AxisAlignedBB[] {new AxisAlignedBB(.375D, 0, 0, .625D, 1, 1), new AxisAlignedBB(0, .375D, 0, 1, .625D, 1), new AxisAlignedBB(0, 0, .375D, 1, 1, .625D)};
-
-	@Override
-	public AxisAlignedBB getBoundingBox(BlockState state, IBlockAccess source, BlockPos pos){
-		return BB[state.get(EssentialsProperties.AXIS).ordinal()];
+	public int getComparatorInputOverride(BlockState blockState, World world, BlockPos pos){
+		TileEntity te = world.getTileEntity(pos);
+		if(te instanceof LensFrameTileEntity){
+			return RedstoneUtil.clampToVanilla(((LensFrameTileEntity) te).getRedstone());
+		}
+		return 0;
 	}
 
 	@Override
-	public void addCollisionBoxToList(BlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean stuff){
-		addCollisionBoxToList(pos, mask, list, getBoundingBox(state, worldIn, pos));
+	public float read(World world, BlockPos pos, BlockState blockState){
+		TileEntity te = world.getTileEntity(pos);
+		if(te instanceof LensFrameTileEntity){
+			return ((LensFrameTileEntity) te).getRedstone();
+		}
+		return 0;
 	}
 }

@@ -4,16 +4,21 @@ import com.Da_Technomancer.crossroads.API.templates.BeamBlock;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.tileentities.beams.CrystallinePrismTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -31,10 +36,10 @@ public class CrystallinePrism extends BeamBlock{
 	}
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
+		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand))){
 			if(!worldIn.isRemote){
 				TileEntity te = worldIn.getTileEntity(pos);
-				worldIn.setBlockState(pos, state.cycle(Properties.HORIZ_FACING));
+				worldIn.setBlockState(pos, state.cycle(EssentialsProperties.HORIZ_FACING));
 				if(te instanceof BeamRenderTE){
 					((BeamRenderTE) te).resetBeamer();
 				}
@@ -45,28 +50,19 @@ public class CrystallinePrism extends BeamBlock{
 		return false;
 	}
 
+	@Nullable
 	@Override
-	public BlockState getStateForPlacement(World worldIn, BlockPos pos, Direction blockFaceClickedOn, BlockRayTraceResult hit, int meta, LivingEntity placer){
-		return getDefaultState().with(Properties.HORIZ_FACING, placer == null ? Direction.NORTH : placer.getHorizontalFacing());
+	public BlockState getStateForPlacement(BlockItemUseContext context){
+		return getDefaultState().with(EssentialsProperties.HORIZ_FACING, context.getPlacementHorizontalFacing());
 	}
 
 	@Override
-	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, Properties.HORIZ_FACING);
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+		builder.add(EssentialsProperties.HORIZ_FACING);
 	}
 
 	@Override
-	public BlockState getStateFromMeta(int meta){
-		return getDefaultState().with(Properties.HORIZ_FACING, Direction.byHorizontalIndex(meta));
-	}
-
-	@Override
-	public int getMetaFromState(BlockState state){
-		return state.get(Properties.HORIZ_FACING).getHorizontalIndex();
-	}
-
-	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
-		tooltip.add("Splits beams into their constituent elements");
+	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+		tooltip.add(new TranslationTextComponent("tt.crossroads.crystal_prism.desc"));
 	}
 }

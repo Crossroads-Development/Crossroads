@@ -202,7 +202,10 @@ public final class Crossroads{
 		registerCon(FluidTankContainer::new, FluidTankScreen::new, "fluid_tank", e);
 		registerCon(OreCleanserContainer::new, OreCleanserScreen::new, "ore_cleanser", e);
 		registerCon(RadiatorContainer::new, RadiatorScreen::new, "radiator", e);
-
+		registerCon(SteamBoilerContainer::new, SteamBoilerScreen::new, "steam_boiler", e);
+		registerCon(WaterCentrifugeContainer::new, WaterCentrifugeScreen::new, "water_centrifuge", e);
+		registerCon(ColorChartContainer::new, ColorChartScreen::new, "color_chart", e);
+		registerCon(BeamExtractorContainer::new, BeamExtractorScreen::new, "beam_extractor", e);
 		//TODO register containers
 	}
 
@@ -225,6 +228,11 @@ public final class Crossroads{
 		registerConType(FluidTankContainer::new, "fluid_tank", e);
 		registerConType(OreCleanserContainer::new, "ore_cleanser", e);
 		registerConType(RadiatorContainer::new, "radiator", e);
+		registerConType(SteamBoilerContainer::new, "steam_boiler", e);
+		registerConType(WaterCentrifugeContainer::new, "water_centrifuge", e);
+		registerConType(ColorChartContainer::new, "color_chart", e);
+		registerConType(BeamExtractorContainer::new, "beam_extractor", e);
+
 
 		//TODO register container types
 	}
@@ -233,7 +241,7 @@ public final class Crossroads{
 	 * Creates and registers a container type
 	 * @param cons Container factory
 	 * @param id The ID to use
-	 * @param reg Registery event
+	 * @param reg Registry event
 	 * @param <T> Container subclass
 	 * @return The newly created type
 	 */

@@ -9,7 +9,7 @@ import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
-import com.Da_Technomancer.crossroads.API.templates.BeamRenderTEBase;
+import com.Da_Technomancer.crossroads.API.templates.IBeamRenderTE;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
@@ -87,8 +87,8 @@ public class OmniMeter extends Item{
 			}
 		}
 
-		if(te instanceof BeamRenderTEBase){
-			BeamUnit[] mag = ((BeamRenderTEBase) te).getLastSent();
+		if(te instanceof IBeamRenderTE){
+			BeamUnit[] mag = ((IBeamRenderTE) te).getLastSent();
 			if(mag != null){
 				CompoundNBT nbt = MiscUtil.getPlayerTag(player);
 				if(!nbt.contains("elements")){

@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
-import com.Da_Technomancer.crossroads.API.beams.IBeamTransparent;
+import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -15,11 +15,11 @@ public class LightEffect implements IEffect{
 	public void doEffect(World worldIn, BlockPos pos, int mult, Direction dir){
 		BlockState state = worldIn.getBlockState(pos);
 		BlockPos offsetPos;
-		if(state.getBlock() == CrossroadsBlocks.blockPureQuartz && !(state.getBlock() instanceof IBeamTransparent)){
+		if(state.getBlock() == CrossroadsBlocks.blockPureQuartz){
 			worldIn.setBlockState(pos, CrossroadsBlocks.blockLuminescentQuartz.getDefaultState());
-		}else if(state.getMaterial() == Material.ROCK && state.getBlock() != CrossroadsBlocks.blockLuminescentQuartz && !(state.getBlock() instanceof IBeamTransparent)){
+		}else if(state.getMaterial() == Material.ROCK && state.getBlock() != CrossroadsBlocks.blockLuminescentQuartz && !BeamManager.solidToBeams(state, worldIn, pos)){
 			worldIn.setBlockState(pos, Blocks.GLOWSTONE.getDefaultState());
-		}else if(state.getMaterial() == Material.GLASS && state.getBlock() != Blocks.GLOWSTONE && state.getBlock() != CrossroadsBlocks.lightCluster && !(state.getBlock() instanceof IBeamTransparent)){
+		}else if(state.getMaterial() == Material.GLASS && state.getBlock() != Blocks.GLOWSTONE && state.getBlock() != CrossroadsBlocks.lightCluster && !BeamManager.solidToBeams(state, worldIn, pos)){
 			worldIn.setBlockState(pos, Blocks.SEA_LANTERN.getDefaultState());
 		}else if(state.getBlock().isAir(state, worldIn, pos)){
 			worldIn.setBlockState(pos, CrossroadsBlocks.lightCluster.getDefaultState());

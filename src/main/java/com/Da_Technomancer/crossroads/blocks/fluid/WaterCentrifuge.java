@@ -1,30 +1,33 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
-import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.WaterCentrifugeTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -32,13 +35,9 @@ import java.util.List;
 public class WaterCentrifuge extends ContainerBlock{
 	
 	public WaterCentrifuge(){
-		super(Material.IRON);
+		super(Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(3));
 		String name = "water_centrifuge";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setHardness(3);
-		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
 	}
@@ -47,15 +46,20 @@ public class WaterCentrifuge extends ContainerBlock{
 	public TileEntity createNewTileEntity(IBlockReader worldIn){
 		return new WaterCentrifugeTileEntity();
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(!worldIn.isRemote){
-			if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), false)){
-				worldIn.setBlockState(pos, state.cycle(Properties.HORIZ_AXIS));
-			}else{
-				playerIn.openGui(Crossroads.instance, GuiHandler.WATER_CENTRIFUGE_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
+		TileEntity te;
+		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand))){
+			if(!worldIn.isRemote){
+				worldIn.setBlockState(pos, state.cycle(CRProperties.HORIZ_AXIS));
+				te = worldIn.getTileEntity(pos);
+				if(te instanceof ModuleTE){
+					((ModuleTE) te).rotate();
+				}
 			}
+		}else if(!worldIn.isRemote && (te = worldIn.getTileEntity(pos)) instanceof INamedContainerProvider){
+			NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);
 		}
 		return true;
 	}
@@ -64,27 +68,18 @@ public class WaterCentrifuge extends ContainerBlock{
 	public BlockRenderType getRenderType(BlockState state){
 		return BlockRenderType.MODEL;
 	}
-	
+
 	@Override
-	public int getMetaFromState(BlockState state){
-		return state.get(Properties.HORIZ_AXIS) == Axis.X ? 1 : 0;
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+		builder.add(CRProperties.HORIZ_AXIS);
 	}
-	
+
+	@Nullable
 	@Override
-	public BlockState getStateFromMeta(int meta){
-		return getDefaultState().with(Properties.HORIZ_AXIS, meta == 1 ? Axis.X : Axis.Z);
+	public BlockState getStateForPlacement(BlockItemUseContext context){
+		return getDefaultState().with(CRProperties.HORIZ_AXIS, context.getPlacementHorizontalFacing().getAxis());
 	}
-	
-	@Override
-	public BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, Properties.HORIZ_AXIS);
-	}
-	
-	@Override
-	public BlockState getStateForPlacement(World worldIn, BlockPos pos, Direction blockFaceClickedOn, BlockRayTraceResult hit, int meta, LivingEntity placer){
-		return getDefaultState().with(Properties.HORIZ_AXIS, placer == null ? Axis.X : placer.getHorizontalFacing().getAxis());
-	}
-	
+
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
 		InventoryHelper.dropInventoryItems(world, pos, (IInventory) world.getTileEntity(pos));
@@ -108,9 +103,10 @@ public class WaterCentrifuge extends ContainerBlock{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add("Converts water into distilled water and salt or dirty water into distilled water and byproduct");
-		tooltip.add("The spin direction needs to keep changing to operate");
-		tooltip.add("I: 115");
-		tooltip.add("Produces LoL players");
+		tooltip.add(new TranslationTextComponent("tt.crossroads.water_centrifuge.desc"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.water_centrifuge.spin", WaterCentrifugeTileEntity.TIP_POINT));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.water_centrifuge.reds"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", WaterCentrifugeTileEntity.INERTIA));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.water_centrifuge.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

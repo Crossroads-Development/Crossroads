@@ -1,0 +1,8 @@
+{
+	"replace": false,
+	"values": [
+		"crossroads:light_cluster",
+		"crossroads:permeable_glass",
+		"crossroads:permeable_quartz"
+	]
+}

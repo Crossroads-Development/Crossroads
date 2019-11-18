@@ -1,15 +1,20 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
-import com.Da_Technomancer.crossroads.API.redstone.RedstoneUtil;
 import com.Da_Technomancer.crossroads.API.templates.BeamBlock;
 import com.Da_Technomancer.crossroads.tileentities.beams.BeamSiphonTileEntity;
+import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.RedstoneDiodeBlock;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -28,19 +33,25 @@ public class BeamSiphon extends BeamBlock{
 
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
-		neighborChanged(state, world, pos, this, pos);
+		neighborChanged(state, world, pos, this, pos, false);
 	}
-	
+
 	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
+	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
 		TileEntity te = worldIn.getTileEntity(pos);
+
 		if(te instanceof BeamSiphonTileEntity){
-			((BeamSiphonTileEntity) te).setRedstone((int) Math.round(RedstoneUtil.getPowerAtPos(worldIn, pos)));
+			//Simple optimization- if the block update is just signal strength changing, we don't need to rebuild connections
+			if(blockIn != Blocks.REDSTONE_WIRE && !(blockIn instanceof RedstoneDiodeBlock)){
+				((BeamSiphonTileEntity) te).buildConnections();
+			}
+			((BeamSiphonTileEntity) te).setRedstone(Math.round(RedstoneUtil.getRedstoneAtPos(worldIn, pos)));
 		}
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
-		tooltip.add("Siphons off a beam power equal to redstone signal to the front. Remaining beams come out the back");
+	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_siphon.desc"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.circuit"));
 	}
 }

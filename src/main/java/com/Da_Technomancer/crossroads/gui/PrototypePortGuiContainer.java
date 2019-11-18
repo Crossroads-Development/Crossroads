@@ -75,7 +75,7 @@ public class PrototypePortGuiContainer extends ContainerScreen{
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
 		GlStateManager.color(1, 1, 1);
-		mc.getTextureManager().bindTexture(GUI_TEXTURES);
+		Minecraft.getInstance().getTextureManager().bindTexture(GUI_TEXTURES);
 
 		int i = (width - xSize) / 2;
 		int j = (height - ySize) / 2;

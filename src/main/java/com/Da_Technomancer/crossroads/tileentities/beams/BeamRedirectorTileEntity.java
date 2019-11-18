@@ -2,16 +2,27 @@ package com.Da_Technomancer.crossroads.tileentities.beams;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraftforge.registries.ObjectHolder;
 
+@ObjectHolder(Crossroads.MODID)
 public class BeamRedirectorTileEntity extends BeamRenderTE{
+
+	@ObjectHolder("beam_redirector")
+	private static TileEntityType<BeamRedirectorTileEntity> type = null;
 
 	private boolean redstone;
 	private Direction dir = null;
+
+	public BeamRedirectorTileEntity(){
+		super(type);
+	}
 
 	private Direction getDir(){
 		if(dir == null){
@@ -53,10 +64,10 @@ public class BeamRedirectorTileEntity extends BeamRenderTE{
 	@Override
 	protected void doEmit(BeamUnit out){
 		Direction facing = getDir();
-		if(beamer[facing.getIndex()].emit(redstone ? out : null, world)){
+		if(beamer[facing.getIndex()].emit(redstone ? out : BeamUnit.EMPTY, world)){
 			refreshBeam(facing.getIndex());
 		}
-		if(beamer[facing.getOpposite().getIndex()].emit(redstone ? null : out, world)){
+		if(beamer[facing.getOpposite().getIndex()].emit(redstone ? BeamUnit.EMPTY : out, world)){
 			refreshBeam(facing.getOpposite().getIndex());
 		}
 	}

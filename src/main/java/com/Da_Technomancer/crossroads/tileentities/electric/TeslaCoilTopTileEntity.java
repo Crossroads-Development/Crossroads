@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.electric;
 
 import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoilTop;
 import com.Da_Technomancer.crossroads.render.RenderUtil;
 import com.Da_Technomancer.essentials.tileentities.ILinkTE;
@@ -11,18 +12,25 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+@ObjectHolder(Crossroads.MODID)
 public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILinkTE{
+
+	@ObjectHolder("tesla_coil_top")
+	private static TileEntityType<TeslaCoilTopTileEntity> type = null;
 
 	public static final int[] COLOR_CODES = {0xFFECCFFF, 0xFFFCDFFF, 0xFFFFFAFF};
 	private static final int[] ATTACK_COLOR_CODES = {0xFFFFCCCC, 0xFFFFFFCC, 0xFFFFFAFA};
@@ -32,13 +40,17 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 
 	private TeslaCoilTop.TeslaCoilVariants variant = null;
 
+	public TeslaCoilTopTileEntity(){
+		super(type);
+	}
+
 	private TeslaCoilTop.TeslaCoilVariants getVariant(){
 		if(variant == null){
 			BlockState state = world.getBlockState(pos);
 			if(state.getBlock() instanceof TeslaCoilTop){
 				variant = ((TeslaCoilTop) state.getBlock()).variant;
 			}else{
-				invalidate();
+				remove();
 				return TeslaCoilTop.TeslaCoilVariants.NORMAL;
 			}
 		}
@@ -72,7 +84,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 				coilTE.setStored(coilTE.getStored() - joltQty);
 				markDirty();
 
-				RenderUtil.addArc(world.provider.getDimension(), pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F, (float) ent.posX, (float) ent.posY, (float) ent.posZ, 5, 0.6F, ATTACK_COLOR_CODES[(int) (world.getGameTime() % 3)]);
+				RenderUtil.addArc(world, pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F, (float) ent.posX, (float) ent.posY, (float) ent.posZ, 5, 0.6F, ATTACK_COLOR_CODES[(int) (world.getGameTime() % 3)]);
 				ent.onStruckByLightning(new LightningBoltEntity(world, ent.posX, ent.posY, ent.posZ, true));
 			}
 		}else if(variant == TeslaCoilTop.TeslaCoilVariants.DECORATIVE){
@@ -85,7 +97,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 						float angle = world.rand.nextFloat() * 2F * (float) Math.PI;
 						float rad = world.rand.nextFloat() * 2F + 3F;
 						Vec3d end = start.add(new Vec3d(rad * Math.cos(angle), world.rand.nextFloat() * 2F - 1F, rad * Math.sin(angle)));
-						RenderUtil.addArc(world.provider.getDimension(), start, end, 4, 0.6F, COLOR_CODES[world.rand.nextInt(COLOR_CODES.length)]);
+						RenderUtil.addArc(world, start, end, 4, 0.6F, COLOR_CODES[world.rand.nextInt(COLOR_CODES.length)]);
 					}
 				}else{
 					coilTE.setStored(coilTE.getStored() - TeslaCoilTop.TeslaCoilVariants.DECORATIVE.joltAmt);
@@ -99,13 +111,13 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 					TileEntity te = world.getTileEntity(actualPos);
 					if(te instanceof TeslaCoilTileEntity && world.getTileEntity(actualPos.up()) instanceof TeslaCoilTopTileEntity){
 						TeslaCoilTileEntity tcTe = (TeslaCoilTileEntity) te;
-						if(tcTe.handlerIn.getMaxEnergyStored() - tcTe.getStored() > joltQty * (double) variant.efficiency / 100D){
+						if(tcTe.getCapacity() - tcTe.getStored() > joltQty * (double) variant.efficiency / 100D){
 							tcTe.setStored(tcTe.getStored() + (int) (joltQty * (double) variant.efficiency / 100D));
 							tcTe.markDirty();
 							coilTE.setStored(coilTE.getStored() - joltQty);
 							markDirty();
 
-							RenderUtil.addArc(world.provider.getDimension(), pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F, actualPos.getX() + 0.5F, actualPos.getY() + 1.75F, actualPos.getZ() + 0.5F, 3, 0.3F, COLOR_CODES[(int) (world.getGameTime() % 3)]);
+							RenderUtil.addArc(world, pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F, actualPos.getX() + 0.5F, actualPos.getY() + 1.75F, actualPos.getZ() + 0.5F, 3, 0.3F, COLOR_CODES[(int) (world.getGameTime() % 3)]);
 							break;
 						}
 					}
@@ -115,9 +127,9 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, PlayerEntity player, Direction side, BlockRayTraceResult hit){
+	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		for(BlockPos link : linked){
-			chat.add("Linked Position: X=" + (pos.getX() + link.getX()) + " Y=" + (pos.getY() + link.getY()) + " Z=" + (pos.getZ() + link.getZ()));
+			chat.add(new TranslationTextComponent("tt.crossroads.tesla_coil_top.link", pos.getX() + link.getX(), pos.getY() + link.getY(), pos.getZ() + link.getZ()));
 		}
 	}
 

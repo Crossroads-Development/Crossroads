@@ -1,24 +1,24 @@
 package com.Da_Technomancer.crossroads.blocks.electric;
 
-import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
+import com.Da_Technomancer.essentials.tileentities.ILinkTE;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -29,14 +29,10 @@ public class TeslaCoilTop extends ContainerBlock{
 	public final TeslaCoilVariants variant;
 
 	public TeslaCoilTop(TeslaCoilVariants variant){
-		super(Material.IRON);
+		super(Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(2));
 		this.variant = variant;
 		String name = "tesla_coil_top_" + variant.toString();
-		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setHardness(2);
-		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
 	}
@@ -60,33 +56,18 @@ public class TeslaCoilTop extends ContainerBlock{
 	}
 
 	@Override
-	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face){
-		return BlockFaceShape.UNDEFINED;
-	}
-
-	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
-		tooltip.add("Range: " + variant.range);
-		tooltip.add("FE per Jolt: " + variant.joltAmt);
-		tooltip.add("Loss: " + (100 - variant.efficiency) + "%");
+	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_coil_top.range", variant.range));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_coil_top.fe", variant.joltAmt));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_coil_top.eff", (100 - variant.efficiency)));
 		if(variant == TeslaCoilVariants.ATTACK){
-			tooltip.add("Cannot transfer power. Attacks nearby entities with electric shocks");
+			tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_coil_top.att"));
 		}else if(variant == TeslaCoilVariants.DECORATIVE){
-			tooltip.add("Cannot transfer power. Shoots decorative arcs");
+			tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_coil_top.decor"));
 		}
 		if(variant.joltAmt > TeslaCoilTileEntity.CAPACITY){
-			tooltip.add("Requires a Leyden Jar installed in the Tesla Coil");
+			tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_coil_top.leyden"));
 		}
-	}
-
-	@Override
-	public boolean isOpaqueCube(BlockState state){
-		return false;
-	}
-
-	@Override
-	public boolean isFullCube(BlockState state){
-		return false;
 	}
 
 	@Nullable
@@ -97,10 +78,11 @@ public class TeslaCoilTop extends ContainerBlock{
 
 	public enum TeslaCoilVariants{
 
-		NORMAL(1_000, 8, 95),
+		//Yep, it's an enum. Sorry addon makers- go bug me on discord if you need this changed
+		NORMAL(1_000, 8, 98),
 		ATTACK(1_000, 6, 0),
-		DISTANCE(1_000, 32, 95),
-		INTENSITY(10_000, 8, 95),
+		DISTANCE(1_000, 32, 98),
+		INTENSITY(10_000, 8, 98),
 		EFFICIENCY(1_000, 8, 100),
 		DECORATIVE(100, 0, 0);
 

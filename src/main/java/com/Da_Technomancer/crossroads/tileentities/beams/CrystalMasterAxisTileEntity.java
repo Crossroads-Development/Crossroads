@@ -2,31 +2,47 @@ package com.Da_Technomancer.crossroads.tileentities.beams;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
-import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.registries.ObjectHolder;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 
+@ObjectHolder(Crossroads.MODID)
 public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements IInfoTE{
 
+	@ObjectHolder("crystal_master_axis")
+	private static TileEntityType<CrystalMasterAxisTileEntity> type = null;
+
 	private double lastSumEnergy;
+	private EnumBeamAlignments currentElement;
+	private int time;
+
+	public CrystalMasterAxisTileEntity(){
+		super(type);
+	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
-		chat.add("Element: " + (currentElement == null ? "NONE" : currentElement.getLocalName(time < 0) + ", Time: " + time));
+	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+		//Known issue: the localization for alignment name happens on the server side
+		chat.add(new TranslationTextComponent("tt.crossroads.crystal_master_axis.info", currentElement == null ? MiscUtil.localize("alignment.none") : currentElement.getLocalName(time < 0), Math.abs(time)));
 	}
 
 	public EnumBeamAlignments getElement(){
@@ -59,9 +75,9 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 		}else{
 			sumEnergy = RotaryUtil.getTotalEnergy(rotaryMembers);
 			if(currentElement == EnumBeamAlignments.ENERGY){
-				sumEnergy += ((ForgeConfigSpec.DoubleValue) CRConfig.crystalAxisMult).get() * (Math.signum(sumEnergy) == 0 ? 1 : Math.signum(sumEnergy));
+				sumEnergy += CRConfig.crystalAxisMult.get() * (Math.signum(sumEnergy) == 0 ? 1 : Math.signum(sumEnergy));
 			}else if(currentElement == EnumBeamAlignments.CHARGE){
-				sumEnergy += ((ForgeConfigSpec.DoubleValue) CRConfig.crystalAxisMult).get();
+				sumEnergy += CRConfig.crystalAxisMult.get();
 			}else if(currentElement == EnumBeamAlignments.EQUALIBRIUM){
 				sumEnergy = (sumEnergy + 3D * lastSumEnergy) / 4D;
 			}
@@ -115,48 +131,29 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 		}
 	}
 
-	private final IBeamHandler magicHandler = new BeamHandler();
-	private final RedstoneHandler redsHandler = new RedstoneHandler();
-
 	@Override
-	public boolean hasCapability(Capability<?> cap, Direction side){
-		if(cap == Capabilities.BEAM_CAPABILITY && side != getFacing()){
-			return true;
-		}
-		if(cap == Capabilities.AXIS_CAPABILITY && (side == null || side == getFacing())){
-			return true;
-		}
-		if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
-			return true;
-		}
-
-		return super.hasCapability(cap, side);
+	public void remove(){
+		super.remove();
+		magicOpt.invalidate();
 	}
+
+	private final LazyOptional<IBeamHandler> magicOpt = LazyOptional.of(BeamHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.BEAM_CAPABILITY && side != getFacing()){
-			return (T) magicHandler;
-		}
-		if(cap == Capabilities.AXIS_CAPABILITY && (side == null || side == getFacing())){
-			return (T) handler;
-		}
-		if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
-			return (T) redsHandler;
+			return (LazyOptional<T>) magicOpt;
 		}
 
 		return super.getCapability(cap, side);
 	}
 
-	private EnumBeamAlignments currentElement;
-	private int time;
-
 	private class BeamHandler implements IBeamHandler{
 
 		@Override
 		public void setMagic(BeamUnit mag){
-			if(mag != null){
+			if(!mag.isEmpty()){
 				EnumBeamAlignments newElem = EnumBeamAlignments.getAlignment(mag);
 				if(newElem != currentElement){
 					currentElement = newElem;
@@ -171,14 +168,6 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 	}
 
 	public int getRedstone(){
-		return (int) Math.min(15, time);
-	}
-
-	private class RedstoneHandler implements IAdvancedRedstoneHandler{
-
-		@Override
-		public double getOutput(boolean read){
-			return read ? time : 0;
-		}
+		return time;
 	}
 }

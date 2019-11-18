@@ -1,25 +1,22 @@
 package com.Da_Technomancer.crossroads.gui;
 
-import com.Da_Technomancer.crossroads.API.templates.TextBarGuiObject;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
+import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
+import com.Da_Technomancer.crossroads.API.templates.TextBarGuiObject;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.ColorChartContainer;
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.block.Blocks;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.Item;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.util.text.ITextComponent;
 
 import java.awt.*;
-import java.io.IOException;
 
-public class ColorChartGuiContainer extends ContainerScreen{
+public class ColorChartScreen extends ContainerScreen<ColorChartContainer>{
 
 	private static final ResourceLocation BACKGROUND = new ResourceLocation(Crossroads.MODID, "textures/gui/container/color_chart_gui.png");
 	private static final ResourceLocation BACKGROUND_MONO = new ResourceLocation(Crossroads.MODID, "textures/gui/container/color_chart_mono_gui.png");
@@ -29,8 +26,8 @@ public class ColorChartGuiContainer extends ContainerScreen{
 
 	private TextBarGuiObject searchBar;
 
-	public ColorChartGuiContainer(PlayerEntity player, World world, BlockPos pos){
-		super(new ColorChartContainer(player, world, pos));
+	public ColorChartScreen(ColorChartContainer cont, PlayerInventory playerInv, ITextComponent name){
+		super(cont, playerInv, name);
 		xSize = 300;
 		ySize = 300;
 	}
@@ -54,27 +51,27 @@ public class ColorChartGuiContainer extends ContainerScreen{
 			Color col = getColor(mouseX - guiLeft, mouseY - guiTop);
 			EnumBeamAlignments elem = EnumBeamAlignments.getAlignment(col);
 			CompoundNBT elementTag = StoreNBTToClient.clientPlayerTag.getCompound("elements");
-			drawHoveringText(ImmutableList.of(elementTag.contains(elem.name()) ? elem.getLocalName(false) : "???", "R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue()), mouseX, mouseY, fontRenderer);
+			renderTooltip(ImmutableList.of(elementTag.contains(elem.name()) ? elem.getLocalName(false) : "???", "R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue()), mouseX, mouseY, font);
 		}
 	}
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
-		GlStateManager.color(1, 1, 1);
-		mc.getTextureManager().bindTexture(BACKGROUND_MONO);
+		GlStateManager.color3f(1, 1, 1);
+		Minecraft.getInstance().getTextureManager().bindTexture(BACKGROUND_MONO);
 		int i = (width - xSize) / 2;
 		int j = (height - ySize) / 2;
-		drawModalRectWithCustomSizedTexture(i, j, 0, 0, xSize, ySize, 300, 300);
+		blit(i, j, 0, 0, xSize, ySize, 300, 300);
 
-		searchBar.drawBack(partialTicks, mouseX, mouseY, fontRenderer);
+		searchBar.drawBack(partialTicks, mouseX, mouseY, font);
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
 		String search = searchBar.getText().toUpperCase();
-		searchBar.drawFore(mouseX, mouseY, fontRenderer);
+		searchBar.drawFore(mouseX, mouseY, font);
 
-		mc.getTextureManager().bindTexture(BACKGROUND);
+		Minecraft.getInstance().getTextureManager().bindTexture(BACKGROUND);
 		int spotLength = 2;
 
 		for(int i = 0; i < 2 * RADIUS / spotLength; i++){
@@ -85,32 +82,24 @@ public class ColorChartGuiContainer extends ContainerScreen{
 					EnumBeamAlignments elem = EnumBeamAlignments.getAlignment(getColor(xPos, yPos));
 					CompoundNBT elementTag = StoreNBTToClient.clientPlayerTag.getCompound("elements");
 					if(elementTag.contains(elem.name()) && (search.isEmpty() || elem.name().startsWith(search))){
-						drawModalRectWithCustomSizedTexture(xPos, yPos, xPos, yPos, spotLength, spotLength, 300, 300);
+						blit(xPos, yPos, xPos, yPos, spotLength, spotLength, 300, 300);
 					}
 				}
 			}
 		}
-
-
-
-		if(!search.isEmpty()){
-			for(Slot slot : inventorySlots.inventorySlots){
-				if(slot.getStack().getItem() != Item.getItemFromBlock(Blocks.BARRIER) && !slot.getStack().getDisplayName().startsWith(search)){
-					drawModalRectWithCustomSizedTexture(slot.xPos, slot.yPos, 0, 0, 16, 16, 16, 16);
-				}
-			}
-		}
-	}
-	@Override
-	protected void mouseClicked(int x, int y, int button) throws IOException {
-		super.mouseClicked(x, y, button);
-		searchBar.mouseClicked(x, y, button);
 	}
 
 	@Override
-	protected void keyTyped(char key, int keyCode) throws IOException{
+	public boolean mouseClicked(double x, double y, int button){
+		return super.mouseClicked(x, y, button) | searchBar.mouseClicked(x, y, button);
+	}
+
+	@Override
+	public boolean charTyped(char key, int keyCode){
 		if(!searchBar.charTyped(key, keyCode)){
-			super.keyTyped(key, keyCode);
+			return super.charTyped(key, keyCode);
+		}else{
+			return true;
 		}
 	}
 }

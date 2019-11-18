@@ -29,7 +29,7 @@ public class CopshowiumCreationChamberGuiContainer extends MachineGUI{
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
-		mc.getTextureManager().bindTexture(TEXTURE);
+		Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE);
 
 		int i = (width - xSize) / 2;
 		int j = (height - ySize) / 2;

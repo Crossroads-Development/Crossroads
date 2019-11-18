@@ -51,6 +51,8 @@ public final class RecipeHolder{
 	public static IRecipeType<IceboxRec> COOLING_TYPE = IRecipeType.register(Crossroads.MODID + ":cooling");
 	public static IRecipeType<DirtyWaterRec> DIRTY_WATER_TYPE = IRecipeType.register(Crossroads.MODID + ":dirty_water");
 
+	//TODO every time recipes are loaded/reloaded, this value needs to be (re-)calculated
+	public static int totalDirtyWaterWeight = 0;
 
 	//TODO all recipes below this line need to be replaced with JSON
 	/**

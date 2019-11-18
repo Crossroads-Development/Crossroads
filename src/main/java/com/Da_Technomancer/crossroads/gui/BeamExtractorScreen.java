@@ -2,21 +2,19 @@ package com.Da_Technomancer.crossroads.gui;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.BeamExtractorContainer;
+import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 
-public class BeamExtractorGuiContainer extends ContainerScreen{
+public class BeamExtractorScreen extends ContainerScreen<BeamExtractorContainer>{
 
 	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Crossroads.MODID + ":textures/gui/container/arcane_extractor_gui.png");
-	private final IInventory playerInv;
-	private final IInventory te;
 
-	public BeamExtractorGuiContainer(IInventory playerInv, IInventory te){
-		super(new BeamExtractorContainer(playerInv, te));
-		this.playerInv = playerInv;
-		this.te = te;
+	public BeamExtractorScreen(BeamExtractorContainer cont, PlayerInventory playerInv, ITextComponent name){
+		super(cont, playerInv, name);
 	}
 
 	@Override
@@ -28,8 +26,8 @@ public class BeamExtractorGuiContainer extends ContainerScreen{
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		mc.getTextureManager().bindTexture(GUI_TEXTURES);
+		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+		Minecraft.getInstance().getTextureManager().bindTexture(GUI_TEXTURES);
 
 		int i = (width - xSize) / 2;
 		int j = (height - ySize) / 2;
@@ -38,7 +36,7 @@ public class BeamExtractorGuiContainer extends ContainerScreen{
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
-		fontRenderer.drawString(te.getDisplayName().getUnformattedText(), 8, 6, 0x404040);
-		fontRenderer.drawString(playerInv.getDisplayName().getUnformattedText(), 8, 84 - 12, 0x404040);
+		font.drawString(title.getFormattedText(), 8, 6, 0x404040);
+		font.drawString(playerInventory.getDisplayName().getFormattedText(), 8, 84 - 12, 0x404040);
 	}
 }

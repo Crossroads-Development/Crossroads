@@ -1,45 +1,46 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.beams.CrystalMasterAxisTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
+import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.*;
-import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class CrystalMasterAxis extends ContainerBlock{
+public class CrystalMasterAxis extends ContainerBlock implements IReadable{
 	
 	public CrystalMasterAxis(){
-		super(Material.ROCK);
+		super(Properties.create(Material.ROCK).hardnessAndResistance(3).sound(SoundType.STONE));
 		String name = "master_axis_crystal";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setHardness(3);
-		setSoundType(SoundType.STONE);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
 	}
 
+	@Nullable
 	@Override
-	public BlockState getStateForPlacement(World worldIn, BlockPos pos, Direction blockFaceClickedOn, BlockRayTraceResult hit, int meta, LivingEntity placer){
-		Direction enumfacing = (placer == null) ? Direction.NORTH : Direction.getDirectionFromEntityLiving(pos, placer);
-		return getDefaultState().with(EssentialsProperties.FACING, enumfacing);
+	public BlockState getStateForPlacement(BlockItemUseContext context){
+		return getDefaultState().with(EssentialsProperties.FACING, context.getNearestLookingDirection().getOpposite());
 	}
 
 	@Override
@@ -53,7 +54,7 @@ public class CrystalMasterAxis extends ContainerBlock{
 	
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
+		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand))){
 			TileEntity te = worldIn.getTileEntity(pos);
 			if(te instanceof CrystalMasterAxisTileEntity){
 				((CrystalMasterAxisTileEntity) te).disconnect();
@@ -67,19 +68,8 @@ public class CrystalMasterAxis extends ContainerBlock{
 	}
 
 	@Override
-	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, EssentialsProperties.FACING);
-	}
-
-	@Override
-	public BlockState getStateFromMeta(int meta){
-		Direction facing = Direction.byIndex(meta);
-		return this.getDefaultState().with(EssentialsProperties.FACING, facing);
-	}
-
-	@Override
-	public int getMetaFromState(BlockState state){
-		return state.get(EssentialsProperties.FACING).getIndex();
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+		builder.add(EssentialsProperties.FACING);
 	}
 
 	@Override
@@ -106,7 +96,7 @@ public class CrystalMasterAxis extends ContainerBlock{
 	@Override
 	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos){
 		TileEntity te = worldIn.getTileEntity(pos);
-		return te instanceof CrystalMasterAxisTileEntity ? ((CrystalMasterAxisTileEntity) te).getRedstone() : 0;
+		return te instanceof CrystalMasterAxisTileEntity ? RedstoneUtil.clampToVanilla(((CrystalMasterAxisTileEntity) te).getRedstone()) : 0;
 	}
 
 	@Override
@@ -115,7 +105,15 @@ public class CrystalMasterAxis extends ContainerBlock{
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
-		tooltip.add("Beams give attached gear networks special properties based on alignment");
+	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+		tooltip.add(new TranslationTextComponent("tt.crossroads.crystal_master_axis.desc"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.crystal_master_axis.time"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.crystal_master_axis.reds"));
+	}
+
+	@Override
+	public float read(World world, BlockPos pos, BlockState blockState){
+		TileEntity te = world.getTileEntity(pos);
+		return te instanceof CrystalMasterAxisTileEntity ? ((CrystalMasterAxisTileEntity) te).getRedstone() : 0;
 	}
 }

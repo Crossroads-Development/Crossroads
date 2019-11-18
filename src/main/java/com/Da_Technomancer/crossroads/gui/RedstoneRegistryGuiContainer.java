@@ -103,7 +103,7 @@ public class RedstoneRegistryGuiContainer extends ContainerScreen{
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
 		GlStateManager.color(1, 1, 1);
-		mc.getTextureManager().bindTexture(BACKGROUND);
+		Minecraft.getInstance().getTextureManager().bindTexture(BACKGROUND);
 		int i = (width - xSize) / 2;
 		int j = (height - ySize) / 2;
 		drawModalRectWithCustomSizedTexture(i, j, 0, 0, xSize, ySize, 320, 120);

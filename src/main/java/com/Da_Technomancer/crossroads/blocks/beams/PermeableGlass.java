@@ -1,8 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
-import com.Da_Technomancer.crossroads.API.beams.IBeamTransparent;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -10,39 +8,40 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class PermeableGlass extends Block implements IBeamTransparent{
+public class PermeableGlass extends Block{
 
 	public PermeableGlass(){
-		super(Material.GLASS);
+		super(Properties.create(Material.GLASS).hardnessAndResistance(.5F).sound(SoundType.GLASS));
 		String name = "permeable_glass";
 		setRegistryName(name);
-		setTranslationKey(name);
-		setHardness(0.5F);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setSoundType(SoundType.GLASS);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
 	}
 
 	@Override
-	public boolean isOpaqueCube(BlockState state){
-		return false;
+	@OnlyIn(Dist.CLIENT)
+	public float getAmbientOcclusionLightValue(BlockState p_220080_1_, IBlockReader p_220080_2_, BlockPos p_220080_3_) {
+		return 1.0F;
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public boolean shouldSideBeRendered(BlockState state, IBlockAccess world, BlockPos pos, Direction side){
-		return world.getBlockState(pos.offset(side)).getBlock() != this && super.shouldSideBeRendered(state, world, pos, side);
+	public boolean propagatesSkylightDown(BlockState p_200123_1_, IBlockReader p_200123_2_, BlockPos p_200123_3_) {
+		return true;
+	}
+
+	@Override
+	public boolean causesSuffocation(BlockState p_220060_1_, IBlockReader p_220060_2_, BlockPos p_220060_3_) {
+		return false;
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -51,15 +50,10 @@ public class PermeableGlass extends Block implements IBeamTransparent{
 		return BlockRenderLayer.CUTOUT;
 	}
 
-	@Override
-	public boolean isFullCube(BlockState state){
-		return false;
-	}
-
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Permeable to beams");
-		tooltip.add("Safe for decoration");
+	public void addInformation(ItemStack stack, @Nullable IBlockReader player, List<ITextComponent> tooltip, ITooltipFlag advanced){
+		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.beam_permeable"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.decor"));
 	}
 }

@@ -2,32 +2,69 @@ package com.Da_Technomancer.crossroads.tileentities.beams;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.gui.container.BeamExtractorContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.recipes.BeamExtractRec;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import io.netty.buffer.Unpooled;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.registries.ObjectHolder;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
-public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory{
+@ObjectHolder(Crossroads.MODID)
+public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory, INamedContainerProvider{
+
+	@ObjectHolder("beam_extractor")
+	private static TileEntityType<BeamExtractorTileEntity> type = null;
 
 	private ItemStack inv = ItemStack.EMPTY;
+	private Direction facing = null;
+
+	public BeamExtractorTileEntity(){
+		super(type);
+	}
+
+	private Direction getFacing(){
+		if(facing == null){
+			BlockState s = world.getBlockState(pos);
+			if(s.has(EssentialsProperties.FACING)){
+				facing = s.get(EssentialsProperties.FACING);
+			}else{
+				return Direction.DOWN;
+			}
+		}
+
+		return facing;
+	}
 
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
 		if(!inv.isEmpty()){
-			nbt.put("inv", inv.writeToNBT(new CompoundNBT()));
+			nbt.put("inv", inv.write(new CompoundNBT()));
 		}
 		return nbt;
 	}
@@ -35,16 +72,30 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory{
 	@Override
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
-		inv = nbt.contains("inv") ? new ItemStack(nbt.getCompound("inv")) : ItemStack.EMPTY;
+		inv = nbt.contains("inv") ? ItemStack.read(nbt.getCompound("inv")) : ItemStack.EMPTY;
 	}
 
-	private final IItemHandler itemHandler = new ItemHandler();
+	@Override
+	public void remove(){
+		super.remove();
+		itemOpt.invalidate();
+	}
+
+	@Override
+	public void resetBeamer(){
+		super.resetBeamer();
+		facing = null;
+		itemOpt.invalidate();
+		itemOpt = LazyOptional.of(ItemHandler::new);
+	}
+
+	private LazyOptional<IItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != world.getBlockState(pos).get(EssentialsProperties.FACING)){
-			return (T) itemHandler;
+		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != getFacing()){
+			return (LazyOptional<T>) itemOpt;
 		}
 
 		return super.getCapability(capability, facing);
@@ -100,37 +151,12 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory{
 
 	@Override
 	public boolean isUsableByPlayer(PlayerEntity player){
-		return world.getTileEntity(pos) == this && player.getDistanceSq(pos.add(0.5, 0.5, 0.5)) <= 64;
-	}
-
-	@Override
-	public void openInventory(PlayerEntity player){
-
-	}
-
-	@Override
-	public void closeInventory(PlayerEntity player){
-
+		return world.getTileEntity(pos) == this && player.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64;
 	}
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && (RecipeHolder.beamExtractRecipes.containsKey(stack.getItem()) || stack.getItem() == CRItems.beamCage);
-	}
-
-	@Override
-	public int getField(int id){
-		return 0;
-	}
-
-	@Override
-	public void setField(int id, int value){
-
-	}
-
-	@Override
-	public int getFieldCount(){
-		return 0;
+		return index == 0 && (world.getRecipeManager().getRecipe(RecipeHolder.BEAM_EXTRACT_TYPE, new Inventory(stack), world).isPresent() || stack.getItem() == CRItems.beamCage);
 	}
 
 	@Override
@@ -140,18 +166,14 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory{
 	}
 
 	@Override
-	public String getName(){
-		return "container.beam_extractor";
-	}
-
-	@Override
 	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent(getName());
+		return new TranslationTextComponent("container.beam_extractor");
 	}
 
+	@Nullable
 	@Override
-	public boolean hasCustomName(){
-		return false;
+	public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity){
+		return new BeamExtractorContainer(i, playerInventory, new PacketBuffer(Unpooled.buffer()).writeBlockPos(pos));
 	}
 
 	private class ItemHandler implements IItemHandler{
@@ -184,7 +206,9 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory{
 				markDirty();
 			}
 
-			return stack.getCount() == moved ? ItemStack.EMPTY : new ItemStack(stack.getItem(), stack.getCount() - moved, stack.getMetadata());
+			ItemStack output = stack.copy();
+			output.shrink(moved);
+			return output;
 		}
 
 		@Override
@@ -206,19 +230,25 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory{
 		public int getSlotLimit(int slot){
 			return 64;
 		}
+
+		@Override
+		public boolean isItemValid(int slot, @Nonnull ItemStack stack){
+			return isItemValidForSlot(slot, stack);
+		}
 	}
 
 	@Override
 	protected void doEmit(BeamUnit toEmit){
-		Direction dir = world.getBlockState(pos).get(EssentialsProperties.FACING);
-		BeamUnit mag = null;
+		Direction dir = getFacing();
+		BeamUnit mag = BeamUnit.EMPTY;
 		if(!inv.isEmpty()){
-			if(RecipeHolder.beamExtractRecipes.containsKey(inv.getItem())){
-				mag = RecipeHolder.beamExtractRecipes.get(inv.getItem());
+			Optional<BeamExtractRec> recOpt = world.getRecipeManager().getRecipe(RecipeHolder.BEAM_EXTRACT_TYPE, this, world);
+			if(recOpt.isPresent()){
+				mag = recOpt.get().getOutput();
 				inv.shrink(1);
 			}else if(inv.getItem() == CRItems.beamCage){
 				mag = BeamCage.getStored(inv);
-				BeamCage.storeBeam(inv, null);
+				BeamCage.storeBeam(inv, BeamUnit.EMPTY);
 			}
 		}
 		if(beamer[dir.getIndex()].emit(mag, world)){
@@ -228,13 +258,13 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory{
 
 	@Override
 	protected boolean[] inputSides(){
-		return new boolean[6];
+		return new boolean[6];//All false
 	}
 
 	@Override
 	protected boolean[] outputSides(){
 		boolean[] out = new boolean[6];
-		out[world.getBlockState(pos).get(EssentialsProperties.FACING).getIndex()] = true;
+		out[getFacing().getIndex()] = true;
 		return out;
 	}
 }

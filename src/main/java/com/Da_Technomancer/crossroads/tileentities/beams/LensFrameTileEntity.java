@@ -1,41 +1,56 @@
 package com.Da_Technomancer.crossroads.tileentities.beams;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
-import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
+import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
-import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
-import com.Da_Technomancer.crossroads.API.templates.BeamRenderTEBase;
+import com.Da_Technomancer.crossroads.API.templates.IBeamRenderTE;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.AxisDirection;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.registries.ObjectHolder;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceiver{
+@ObjectHolder(Crossroads.MODID)
+public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, IIntReceiver{
+
+	@ObjectHolder("lens_frame")
+	private static TileEntityType<LensFrameTileEntity> type = null;
 
 	private int packetNeg;
 	private int packetPos;
 	private int contents = 0;
 	private Direction.Axis axis = null;
-	private BeamUnit prevMag = null;
+	private BeamUnit prevMag = BeamUnit.EMPTY;
+	private int lastRedstone;
+
+	public LensFrameTileEntity(){
+		super(type);
+	}
 
 	private Direction.Axis getAxis(){
 		if(axis == null){
@@ -47,6 +62,11 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 		}
 
 		return axis;
+	}
+
+	@Override
+	public AxisAlignedBB getRenderBoundingBox(){
+		return INFINITE_EXTENT_AABB;
 	}
 
 	public ItemStack getItem(){
@@ -69,13 +89,13 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 	}
 
 	public int getIDFromItem(ItemStack stack){
-		if(MiscUtil.hasOreDict(stack, "gemRuby")){
+		if(CRItemTags.GEMS_RUBY.contains(stack.getItem())){
 			return 1;
 		}
-		if(MiscUtil.hasOreDict(stack, "gemEmerald")){
+		if(Tags.Items.GEMS_EMERALD.contains(stack.getItem())){
 			return 2;
 		}
-		if(MiscUtil.hasOreDict(stack, "gemDiamond")){
+		if(Tags.Items.GEMS_DIAMOND.contains(stack.getItem())){
 			return 3;
 		}
 		if(stack.getItem() == CRItems.pureQuartz){
@@ -93,7 +113,7 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 	public void setContents(int id){
 		contents = id;
 		markDirty();
-		CrossroadsPackets.network.sendToAllAround(new SendIntToClient((byte) 2, contents, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		CrossroadsPackets.sendPacketAround(world, pos, new SendIntToClient((byte) 2, contents, pos));
 	}
 
 	public int getContents(){
@@ -102,15 +122,17 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 
 	public void refresh(){
 		if(beamer[1] != null){
-			beamer[1].emit(null, world);
+			beamer[1].emit(BeamUnit.EMPTY, world);
 			refreshBeam(true);
 		}
 		if(beamer[0] != null){
-			beamer[0].emit(null, world);
+			beamer[0].emit(BeamUnit.EMPTY, world);
 			refreshBeam(false);
 		}
 		axis = null;
-		CrossroadsPackets.network.sendToAllAround(new SendIntToClient((byte) 3, 0, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+		magicOpt.invalidate();
+		magicOptNeg.invalidate();
+		CrossroadsPackets.sendPacketAround(world, pos, new SendIntToClient((byte) 3, 0, pos));
 	}
 
 	private void refreshBeam(boolean positive){
@@ -121,8 +143,8 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 		}else{
 			packetNeg = packet;
 		}
-		CrossroadsPackets.network.sendToAllAround(new SendIntToClient((byte) index, packet, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-		if(beamer[index].getLastSent() != null){
+		CrossroadsPackets.sendPacketAround(world, pos, new SendIntToClient((byte) index, packet, pos));
+		if(!beamer[index].getLastSent().isEmpty()){
 			prevMag = beamer[index].getLastSent();
 		}
 	}
@@ -133,9 +155,7 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 		return new BeamUnit[] {prevMag};
 	}
 
-	private double lastRedstone;
-
-	public double getRedstone(){
+	public int getRedstone(){
 		return lastRedstone;
 	}
 
@@ -182,7 +202,7 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 		super.write(nbt);
 		nbt.putInt("beam_neg", packetNeg);
 		nbt.putInt("beam_pos", packetPos);
-		nbt.putDouble("reds", lastRedstone);
+		nbt.putInt("reds", lastRedstone);
 		nbt.putInt("contents", contents);
 		return nbt;
 	}
@@ -192,50 +212,33 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 		super.read(nbt);
 		packetPos = nbt.getInt("beam_pos");
 		packetNeg = nbt.getInt("beam_neg");
-		lastRedstone = nbt.getDouble("reds");
+		lastRedstone = nbt.getInt("reds");
 		contents = nbt.getInt("contents");
 	}
 
-	private final IBeamHandler magicHandler = new BeamHandler(AxisDirection.NEGATIVE);
-	private final IBeamHandler magicHandlerNeg = new BeamHandler(AxisDirection.POSITIVE);
-	private final IItemHandler lensHandler = new LensHandler();
-	private final RedstoneHandler redstoneHandler = new RedstoneHandler();
-
 	@Override
-	public boolean hasCapability(Capability<?> cap, Direction side){
-		if(cap == Capabilities.BEAM_CAPABILITY && (side == null || getAxis() == side.getAxis())){
-			return true;
-		}
-		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
-			return true;
-		}
-
-
-		return super.hasCapability(cap, side);
+	public void remove(){
+		super.remove();
+		magicOpt.invalidate();
+		magicOptNeg.invalidate();
+		lensOpt.invalidate();
 	}
+
+	private final LazyOptional<IBeamHandler> magicOpt = LazyOptional.of(() -> new BeamHandler(AxisDirection.NEGATIVE));
+	private final LazyOptional<IBeamHandler> magicOptNeg = LazyOptional.of(() -> new BeamHandler(AxisDirection.POSITIVE));
+	private final LazyOptional<IItemHandler> lensOpt = LazyOptional.of(LensHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.BEAM_CAPABILITY && (side == null || getAxis() == side.getAxis())){
-			return side == null || side.getAxisDirection() == AxisDirection.POSITIVE ? (T) magicHandler : (T) magicHandlerNeg;
+			return side == null || side.getAxisDirection() == AxisDirection.POSITIVE ? (LazyOptional<T>) magicOpt : (LazyOptional<T>) magicOptNeg;
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-			return (T) lensHandler;
-		}
-		if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
-			return (T) redstoneHandler;
+			return (LazyOptional<T>) lensOpt;
 		}
 
 		return super.getCapability(cap, side);
-	}
-
-	private class RedstoneHandler implements IAdvancedRedstoneHandler{
-
-		@Override
-		public double getOutput(boolean read){
-			return read ? lastRedstone : 0;
-		}
 	}
 
 	private class BeamHandler implements IBeamHandler{
@@ -247,18 +250,18 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 		}
 
 		@Override
-		public void setMagic(BeamUnit mag){
+		public void setMagic(@Nonnull BeamUnit mag){
 			if(beamer[0] == null || beamer[1] == null){
 				beamer[0] = new BeamManager(Direction.getFacingFromAxis(AxisDirection.NEGATIVE, getAxis()), pos);
 				beamer[1] = new BeamManager(Direction.getFacingFromAxis(AxisDirection.POSITIVE, getAxis()), pos);
 			}
 
-			if(mag != null && mag.getVoid() != 0 && contents != 0 && contents != 6){
+			if(mag.getVoid() != 0 && contents != 0 && contents != 6){
 				setContents(0);
 				if(beamer[dir == AxisDirection.POSITIVE ? 1 : 0].emit(mag, world)){
 					refreshBeam(dir == AxisDirection.POSITIVE);
 				}
-				lastRedstone = Math.max(beamer[0].getLastSent() == null ? 0 : ((double) beamer[0].getLastSent().getPower()), beamer[1].getLastSent() == null ? 0 : ((double) beamer[1].getLastSent().getPower()));
+				lastRedstone = Math.max(beamer[0].getLastSent().getPower(), beamer[1].getLastSent().getPower());
 				markDirty();
 				return;
 			}
@@ -270,17 +273,17 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 					}
 					break;
 				case 1:
-					if(beamer[dir == AxisDirection.POSITIVE ? 1 : 0].emit(mag == null || mag.getEnergy() == 0 ? null : new BeamUnit(mag.getEnergy(), 0, 0, 0), world)){
+					if(beamer[dir == AxisDirection.POSITIVE ? 1 : 0].emit(new BeamUnit(mag.getEnergy(), 0, 0, 0), world)){
 						refreshBeam(dir == AxisDirection.POSITIVE);
 					}
 					break;
 				case 2:
-					if(beamer[dir == AxisDirection.POSITIVE ? 1 : 0].emit(mag == null || mag.getPotential() == 0 ? null : new BeamUnit(0, mag.getPotential(), 0, 0), world)){
+					if(beamer[dir == AxisDirection.POSITIVE ? 1 : 0].emit(new BeamUnit(0, mag.getPotential(), 0, 0), world)){
 						refreshBeam(dir == AxisDirection.POSITIVE);
 					}
 					break;
 				case 3:
-					if(beamer[dir == AxisDirection.POSITIVE ? 1 : 0].emit(mag == null || mag.getStability() == 0 ? null : new BeamUnit(0, 0, mag.getStability(), 0), world)){
+					if(beamer[dir == AxisDirection.POSITIVE ? 1 : 0].emit(new BeamUnit(0, 0, mag.getStability(), 0), world)){
 						refreshBeam(dir == AxisDirection.POSITIVE);
 					}
 					break;
@@ -288,23 +291,20 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 					if(EnumBeamAlignments.getAlignment(mag) == EnumBeamAlignments.LIGHT){
 						setContents(5);
 					}
-					if(beamer[dir == AxisDirection.POSITIVE ? 1 : 0].emit(mag, world)){
-						refreshBeam(dir == AxisDirection.POSITIVE);
-					}
-					break;
+					//No break
 				case 5:
 					if(beamer[dir == AxisDirection.POSITIVE ? 1 : 0].emit(mag, world)){
 						refreshBeam(dir == AxisDirection.POSITIVE);
 					}
 					break;
 				case 6:
-					if(beamer[dir == AxisDirection.POSITIVE ? 1 : 0].emit(mag == null ? null : new BeamUnit(0, 0, 0, mag.getPower()), world)){
+					if(beamer[dir == AxisDirection.POSITIVE ? 1 : 0].emit(new BeamUnit(0, 0, 0, mag.getPower()), world)){
 						refreshBeam(dir == AxisDirection.POSITIVE);
 					}
 					break;
 			}
 
-			lastRedstone = Math.max(beamer[0].getLastSent() == null ? 0 : beamer[0].getLastSent().getPower(), beamer[1].getLastSent() == null ? 0 : beamer[1].getLastSent().getPower());
+			lastRedstone = Math.max(beamer[0].getLastSent().getPower(), beamer[1].getLastSent().getPower());
 			markDirty();
 		}
 	}
@@ -323,7 +323,7 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
-			if(slot != 0 || contents != 0 || getIDFromItem(stack) == 0){
+			if(slot != 0 || contents != 0 || !isItemValid(0, stack)){
 				return stack;
 			}
 
@@ -349,6 +349,11 @@ public class LensFrameTileEntity extends BeamRenderTEBase implements IIntReceive
 		@Override
 		public int getSlotLimit(int slot){
 			return slot == 0 ? 1 : 0;
+		}
+
+		@Override
+		public boolean isItemValid(int slot, @Nonnull ItemStack stack){
+			return getIDFromItem(stack) != 0;
 		}
 	}
 } 

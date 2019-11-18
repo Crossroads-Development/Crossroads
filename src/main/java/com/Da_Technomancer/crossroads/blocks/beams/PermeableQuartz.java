@@ -1,36 +1,33 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
-import com.Da_Technomancer.crossroads.API.beams.IBeamTransparent;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class PermeableQuartz extends Block implements IBeamTransparent{
+public class PermeableQuartz extends Block{
 
 	public PermeableQuartz(){
-		super(Material.ROCK);
+		super(Properties.create(Material.ROCK).hardnessAndResistance(4));
 		String name = "permeable_quartz";
 		setRegistryName(name);
-		setTranslationKey(name);
-		setHardness(4F);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, ITooltipFlag advanced){
-		tooltip.add("Permeable to beams");
-		tooltip.add("Safe for decoration");
+	public void addInformation(ItemStack stack, @Nullable IBlockReader player, List<ITextComponent> tooltip, ITooltipFlag advanced){
+		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.beam_permeable"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.decor"));
 	}
 }
