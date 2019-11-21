@@ -4,68 +4,48 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
-import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.CRConfig;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.heat.HeatCable;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
+@ObjectHolder(Crossroads.MODID)
 public class HeatCableTileEntity extends ModuleTE{
 
-	protected final boolean[] hasMatch = new boolean[6];
+	@ObjectHolder("heat_cable")
+	private static TileEntityType<HeatCableTileEntity> type = null;
+
 	protected final boolean[] locked = new boolean[6];
+	@SuppressWarnings("unchecked")//Darn Java, not being able to verify arrays of parameterized types. Bah Humbug!
+	protected final LazyOptional<IHeatHandler>[] neighCache = new LazyOptional[] {LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty()};
+	protected HeatInsulators insulator;
 
 	public HeatCableTileEntity(){
 		this(HeatInsulators.WOOL);
 	}
 
 	public HeatCableTileEntity(HeatInsulators insulator){
-		super();
+		super(type);
 		this.insulator = insulator;
 	}
 
-	protected HeatInsulators insulator;
-
-	public Boolean[] getMatches(){
-		return new Boolean[] {hasMatch[0], hasMatch[1], hasMatch[2], hasMatch[3], hasMatch[4], hasMatch[5]};
+	protected HeatCableTileEntity(TileEntityType<? extends HeatCableTileEntity> type){
+		super(type);
 	}
 
 	public void adjust(int side){
 		locked[side] = !locked[side];
-		if(hasMatch[side]){
-			hasMatch[side] = false;
-			markSideChanged();
-		}
-	}
-
-	protected void markSideChanged(){
-		int message = 0;
-		for(int i = 0; i < 6; i++){
-			if(hasMatch[i]){
-				message |= 1 << i;
-			}
-		}
-		CrossroadsPackets.network.sendToAllAround(new SendLongToClient((byte) 1, message, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-	}
-
-	@Override
-	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
-		super.receiveLong(identifier, message, sendingPlayer);
-		if(identifier == 1){
-			for(int i = 0; i < 6; i++){
-				hasMatch[i] = ((message >>> i) & 1) == 1;
-			}
-			world.markBlockRangeForRenderUpdate(pos, pos);
-		}
 	}
 
 	@Override
@@ -88,33 +68,27 @@ public class HeatCableTileEntity extends ModuleTE{
 
 		double prevTemp = temp;
 
-		boolean sidesChanged = false;
-
 		//Heat transfer
 		ArrayList<IHeatHandler> heatHandlers = new ArrayList<>(6);
 		for(Direction side : Direction.values()){
 			if(locked[side.getIndex()]){
 				continue;
 			}
+			LazyOptional<IHeatHandler> otherOpt = neighCache[side.getIndex()];
+			if(!neighCache[side.getIndex()].isPresent()){
+				TileEntity te = world.getTileEntity(pos.offset(side));
+				if(te != null){
+					otherOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, side.getOpposite());
+					neighCache[side.getIndex()] = otherOpt;
+				}
+			}
 
-			TileEntity te = world.getTileEntity(pos.offset(side));
-			if(te != null && te.hasCapability(Capabilities.HEAT_CAPABILITY, side.getOpposite())){
-				IHeatHandler handler = te.getCapability(Capabilities.HEAT_CAPABILITY, side.getOpposite());
+			if(otherOpt.isPresent()){
+				IHeatHandler handler = otherOpt.orElseThrow(NullPointerException::new);
 				temp += handler.getTemp();
 				handler.addHeat(-handler.getTemp());
 				heatHandlers.add(handler);
-				if(!hasMatch[side.getIndex()]){
-					hasMatch[side.getIndex()] = true;
-					sidesChanged = true;
-				}
-			}else if(hasMatch[side.getIndex()]){
-				hasMatch[side.getIndex()] = false;
-				sidesChanged = true;
 			}
-		}
-
-		if(sidesChanged){
-			markSideChanged();
 		}
 
 		temp /= heatHandlers.size() + 1;
@@ -132,7 +106,7 @@ public class HeatCableTileEntity extends ModuleTE{
 		}
 
 		if(temp > insulator.getLimit()){
-			if(CRConfig.heatEffects.getBoolean()){
+			if(CRConfig.heatEffects.get()){
 				insulator.getEffect().doEffect(world, pos, 1, null);
 			}else{
 				world.setBlockState(pos, Blocks.FIRE.getDefaultState(), 3);
@@ -146,7 +120,6 @@ public class HeatCableTileEntity extends ModuleTE{
 		insulator = nbt.contains("insul") ? HeatInsulators.valueOf(nbt.getString("insul")) : HeatInsulators.WOOL;
 		for(int i = 0; i < 6; i++){
 			locked[i] = nbt.getBoolean("lock_" + i);
-			hasMatch[i] = nbt.getBoolean("match_" + i);
 		}
 	}
 
@@ -156,21 +129,20 @@ public class HeatCableTileEntity extends ModuleTE{
 		nbt.putString("insul", insulator.name());
 		for(int i = 0; i < 6; i++){
 			nbt.putBoolean("lock_" + i, locked[i]);
-			nbt.putBoolean("match_" + i, hasMatch[i]);
 		}
 		return nbt;
 	}
 
 	@Override
 	public CompoundNBT getUpdateTag(){
-		return writeToNBT(super.getUpdateTag());
+		return write(super.getUpdateTag());
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || !locked[facing.getIndex()])){
-			return (T) heatHandler;
+			return (LazyOptional<T>) heatOpt;
 		}
 		return super.getCapability(capability, facing);
 	}

@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.function.Function;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.API.heat.CableThemes;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.google.common.collect.ImmutableSet;
 

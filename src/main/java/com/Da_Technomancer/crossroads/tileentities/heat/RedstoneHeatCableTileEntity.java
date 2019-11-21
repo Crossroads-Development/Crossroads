@@ -3,61 +3,59 @@ package com.Da_Technomancer.crossroads.tileentities.heat;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
-import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 
+@ObjectHolder(Crossroads.MODID)
 public class RedstoneHeatCableTileEntity extends HeatCableTileEntity{
+
+	@ObjectHolder("redstone_heat_cable")
+	private static TileEntityType<RedstoneHeatCableTileEntity> type = null;
 
 	public RedstoneHeatCableTileEntity(){
 		this(HeatInsulators.WOOL);
 	}
 
 	public RedstoneHeatCableTileEntity(HeatInsulators insulator){
-		super(insulator);
+		super(type);
+		this.insulator = insulator;
 	}
 
-	@Override
-	public Boolean[] getMatches(){
-		return world.getBlockState(pos).get(EssentialsProperties.REDSTONE_BOOL) ? super.getMatches() : new Boolean[] {false, false, false, false, false, false};
+	private boolean isUnlocked(){
+		return world.getBlockState(pos).get(EssentialsProperties.REDSTONE_BOOL);
 	}
 
 	@Override
 	public void tick(){
-		if(world.getBlockState(pos).get(EssentialsProperties.REDSTONE_BOOL)){
+		if(isUnlocked()){
 			super.tick();
 		}
 	}
-
-	private final RedstoneHandler redstoneHandler = new RedstoneHandler();
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.HEAT_CAPABILITY){
-			if((facing == null || !locked[facing.getIndex()]) && world.getBlockState(pos).get(EssentialsProperties.REDSTONE_BOOL)){
-				return (T) heatHandler;
+			if((facing == null || !locked[facing.getIndex()]) && isUnlocked()){
+				return (LazyOptional<T>) heatOpt;
 			}else{
-				return null;
+				return LazyOptional.empty();
 			}
-		}
-		if(capability == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
-			return (T) redstoneHandler;
 		}
 		return super.getCapability(capability, facing);
 	}
 
-	private class RedstoneHandler implements IAdvancedRedstoneHandler{
-
-		@Override
-		public double getOutput(boolean read){
-			if(!read || !world.getBlockState(pos).get(EssentialsProperties.REDSTONE_BOOL) || insulator == null){
-				return 0;
-			}
-			return 16D * HeatUtil.toKelvin(temp) / HeatUtil.toKelvin(insulator.getLimit());
+	public float getTemp(){
+		if(isUnlocked()){
+			return (float) HeatUtil.toKelvin(temp);
 		}
+		return 0;
 	}
 }

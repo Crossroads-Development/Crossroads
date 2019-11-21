@@ -10,7 +10,6 @@ import com.Da_Technomancer.crossroads.blocks.heat.*;
 import com.Da_Technomancer.crossroads.blocks.rotary.*;
 import com.Da_Technomancer.crossroads.blocks.technomancy.*;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneReceiver;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneTransmitter;
 import net.minecraft.block.Block;
@@ -157,7 +156,12 @@ public class CrossroadsBlocks{
 	 * @return The passed block for convenience. 
 	 */
 	public static <T extends Block> T blockAddQue(T block){
-		Item item = new BlockItem(block, itemBlockProp).setRegistryName(block.getRegistryName());
+		return blockAddQue(block, itemBlockProp);
+	}
+
+	public static <T extends Block> T blockAddQue(T block, Item.Properties itemProp){
+		assert block.getRegistryName() != null;
+		Item item = new BlockItem(block, itemProp).setRegistryName(block.getRegistryName());
 		CRItems.toRegister.add(item);
 		return block;
 	}
@@ -289,14 +293,6 @@ public class CrossroadsBlocks{
 
 	@OnlyIn(Dist.CLIENT)
 	public static void initModels(){
-		for(HeatCable cable : HeatCableFactory.HEAT_CABLES.values()){
-			cable.initModel();
-		}
-
-		for(RedstoneHeatCable cable : HeatCableFactory.REDSTONE_HEAT_CABLES.values()){
-			cable.initModel();
-		}
-
 		fluidTube.initModel();
 		redstoneFluidTube.initModel();
 		prototype.initModel();

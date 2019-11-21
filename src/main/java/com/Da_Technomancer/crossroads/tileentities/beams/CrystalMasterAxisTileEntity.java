@@ -78,7 +78,7 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 				sumEnergy += CRConfig.crystalAxisMult.get() * (Math.signum(sumEnergy) == 0 ? 1 : Math.signum(sumEnergy));
 			}else if(currentElement == EnumBeamAlignments.CHARGE){
 				sumEnergy += CRConfig.crystalAxisMult.get();
-			}else if(currentElement == EnumBeamAlignments.EQUALIBRIUM){
+			}else if(currentElement == EnumBeamAlignments.EQUILIBRIUM){
 				sumEnergy = (sumEnergy + 3D * lastSumEnergy) / 4D;
 			}
 		}
