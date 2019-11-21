@@ -59,7 +59,6 @@ for insulator in insulators:
 								for b3 in bools.keys():
 									for b4 in bools.keys():
 										for b5 in bools.keys():
-											# TODO
 											f.write("\t\t\"redstone_bool=true,skin=" + skin + ",down=" + bools[b1] + ",up=" + bools[b0] + ",north=" + bools[b4] + ",south=" + bools[b5] + ",west=" + bools[b3] + ",east=" + bools[b2] + "\": { \"submodel\": {")
 											models = ""
 

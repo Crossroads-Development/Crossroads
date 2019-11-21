@@ -210,13 +210,13 @@ public final class AlchemyCore{
 
 		ReagentStack[] mixElem = new ReagentStack[] {new ReagentStack(REAGENTS.get(PHELOSTOGEN.id()), 1), new ReagentStack(REAGENTS.get(AETHER.id()), 1), new ReagentStack(REAGENTS.get(ADAMANT.id()), 1)};
 		//Lumen production
-		ELEM_REACTIONS.add(new AlchemyRec(new ResourceLocation(Crossroads.MODID + ":voltus"), "", AlchemyRec.Type.ELEMENTAL, mixElem, new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_LIGHT.id()), 1)}, REAGENTS.get(PRACTITIONER.id()), -300, Short.MAX_VALUE, 0, true, 0));
+		ELEM_REACTIONS.add(new AlchemyRec(new ResourceLocation(Crossroads.MODID + ":lumen"), "", AlchemyRec.Type.ELEMENTAL, mixElem, new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_LIGHT.id()), 1)}, REAGENTS.get(PRACTITIONER.id()), -300, Short.MAX_VALUE, 0, true, 0));
 		//Eldrine production
-		ELEM_REACTIONS.add(new AlchemyRec(new ResourceLocation(Crossroads.MODID + ":voltus"), "", AlchemyRec.Type.ELEMENTAL, mixElem, new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_RIFT.id()), 1)}, REAGENTS.get(PRACTITIONER.id()), -300, Short.MAX_VALUE, 0, true, 0));
+		ELEM_REACTIONS.add(new AlchemyRec(new ResourceLocation(Crossroads.MODID + ":eldrine"), "", AlchemyRec.Type.ELEMENTAL, mixElem, new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_RIFT.id()), 1)}, REAGENTS.get(PRACTITIONER.id()), -300, Short.MAX_VALUE, 0, true, 0));
 		//Stasisol production
-		ELEM_REACTIONS.add(new AlchemyRec(new ResourceLocation(Crossroads.MODID + ":voltus"), "", AlchemyRec.Type.ELEMENTAL, mixElem, new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_EQUAL.id()), 1)}, REAGENTS.get(PRACTITIONER.id()), -300, Short.MAX_VALUE, 0, true, 0));
+		ELEM_REACTIONS.add(new AlchemyRec(new ResourceLocation(Crossroads.MODID + ":stasisol"), "", AlchemyRec.Type.ELEMENTAL, mixElem, new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_EQUAL.id()), 1)}, REAGENTS.get(PRACTITIONER.id()), -300, Short.MAX_VALUE, 0, true, 0));
 		//Fusas production
-		ELEM_REACTIONS.add(new AlchemyRec(new ResourceLocation(Crossroads.MODID + ":voltus"), "", AlchemyRec.Type.ELEMENTAL, mixElem, new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_FUSION.id()), 1)}, REAGENTS.get(PRACTITIONER.id()), -300, Short.MAX_VALUE, 0, true, 0));
+		ELEM_REACTIONS.add(new AlchemyRec(new ResourceLocation(Crossroads.MODID + ":fusas"), "", AlchemyRec.Type.ELEMENTAL, mixElem, new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_FUSION.id()), 1)}, REAGENTS.get(PRACTITIONER.id()), -300, Short.MAX_VALUE, 0, true, 0));
 		//Voltus production
 		ELEM_REACTIONS.add(new AlchemyRec(new ResourceLocation(Crossroads.MODID + ":voltus"), "", AlchemyRec.Type.ELEMENTAL, mixElem, new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_CHARGE.id()), 1)}, REAGENTS.get(PRACTITIONER.id()), -300, Short.MAX_VALUE, 0, true, 0));
 
