@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
 import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
-import com.Da_Technomancer.crossroads.API.alchemy.ITransparentReaction;
+import com.Da_Technomancer.crossroads.items.crafting.recipes.AlchemyRec;
 
 import java.util.ArrayList;
 
@@ -16,7 +16,7 @@ public class ReactionRecipe{
 	protected final double maxTemp;
 	protected final double deltaHeat;
 
-	public ReactionRecipe(ITransparentReaction reaction){
+	public ReactionRecipe(AlchemyRec reaction){
 		ingr = new ArrayList<ReagIngr>(reaction.getReagents().length);
 		for(int i = 0; i < reaction.getReagents().length; i++){
 			ingr.add(new ReagIngr(reaction.getReagents()[i].getType(), reaction.getReagents()[i].getAmount()));

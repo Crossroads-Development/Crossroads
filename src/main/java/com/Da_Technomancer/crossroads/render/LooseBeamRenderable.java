@@ -1,12 +1,12 @@
 package com.Da_Technomancer.crossroads.render;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.BeaconTileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 
@@ -25,6 +25,8 @@ public class LooseBeamRenderable implements IVisualEffect{
 	public final int color;
 	public byte lifeTime = 6;
 	public long lastTick = 0;
+
+	private static final ResourceLocation TEXTURE_BEACON_BEAM = new ResourceLocation("textures/entity/beacon_beam.png");
 	
 	private LooseBeamRenderable(double x, double y, double z, double length, float angleX, float angleY, byte width, int color){
 		this.x = x;
@@ -44,13 +46,13 @@ public class LooseBeamRenderable implements IVisualEffect{
 	@Override
 	public boolean render(Tessellator tess, BufferBuilder buf, long worldTime, double playerX, double playerY, double playerZ, Vec3d playerLook, Random rand, float partialTicks){
 		Color col = new Color(color);
-		GlStateManager.color(col.getRed() / 255F, col.getGreen() / 255F, col.getBlue() / 255F);
-		GlStateManager.translate(x - playerX, y - playerY, z - playerZ);
-		GlStateManager.rotate(-angleY, 0, 1, 0);
-		GlStateManager.rotate(angleX + 90F, 1, 0, 0);
+		GlStateManager.color3f(col.getRed() / 255F, col.getGreen() / 255F, col.getBlue() / 255F);
+		GlStateManager.translated(x - playerX, y - playerY, z - playerZ);
+		GlStateManager.rotatef(-angleY, 0, 1, 0);
+		GlStateManager.rotatef(angleX + 90F, 1, 0, 0);
 
 
-		Minecraft.getInstance().getTextureManager().bindTexture(BeaconTileEntityRenderer.TEXTURE_BEACON_BEAM);
+		Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE_BEACON_BEAM);
 
 		final double small = -(width / 16D);
 		final double big = (width / 16D);
@@ -76,7 +78,7 @@ public class LooseBeamRenderable implements IVisualEffect{
 		buf.pos(big, 0, small).tex(0, length).endVertex();
 		buf.pos(big, length, small).tex(0, 0).endVertex();
 		tess.draw();
-		GlStateManager.color(1, 1, 1);
+		GlStateManager.color3f(1, 1, 1);
 
 
 		if(lastTick != worldTime){

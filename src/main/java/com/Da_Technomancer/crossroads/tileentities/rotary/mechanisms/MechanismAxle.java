@@ -1,31 +1,33 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
-import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class MechanismAxle implements IMechanism{
 
-	private static final AxisAlignedBB[] BOUNDING_BOXES = new AxisAlignedBB[3];
+	protected static final VoxelShape[] SHAPES = new VoxelShape[3];
 	static{
-		BOUNDING_BOXES[0] = new AxisAlignedBB(0, .4375D, .4375D, 1, .5625D, .5625D);//X
-		BOUNDING_BOXES[1] = new AxisAlignedBB(.4375D, 0, .4375D, .5625D, 1, .5625D);//Y
-		BOUNDING_BOXES[2] = new AxisAlignedBB(.4375D, .4375D, 0, .5625D, .5625D, 1);//Z
+		SHAPES[0] = Block.makeCuboidShape(0, 7, 7, 16, 9, 9);//X
+		SHAPES[1] = Block.makeCuboidShape(7, 0, 7, 9, 16, 9);//Y
+		SHAPES[2] = Block.makeCuboidShape(7, 7, 0, 9, 9, 16);//Z
 	}
 
 	@Override
@@ -81,16 +83,18 @@ public class MechanismAxle implements IMechanism{
 				TileEntity endTE = te.getWorld().getTileEntity(te.getPos().offset(endDir));
 				Direction oEndDir = endDir.getOpposite();
 				if(endTE != null){
-					if(endTE.hasCapability(Capabilities.AXIS_CAPABILITY, oEndDir)){
-						endTE.getCapability(Capabilities.AXIS_CAPABILITY, oEndDir).trigger(masterIn, key);
+					LazyOptional<IAxisHandler> axisOpt = endTE.getCapability(Capabilities.AXIS_CAPABILITY, oEndDir);
+					if(axisOpt.isPresent()){
+						axisOpt.orElseThrow(NullPointerException::new).trigger(masterIn, key);
 					}
 
-					if(endTE.hasCapability(Capabilities.SLAVE_AXIS_CAPABILITY, oEndDir)){
-						masterIn.addAxisToList(endTE.getCapability(Capabilities.SLAVE_AXIS_CAPABILITY, oEndDir), oEndDir);
+					LazyOptional<ISlaveAxisHandler> saxisOpt = endTE.getCapability(Capabilities.SLAVE_AXIS_CAPABILITY, oEndDir);
+					if(saxisOpt.isPresent()){
+						masterIn.addAxisToList(saxisOpt.orElseThrow(NullPointerException::new), oEndDir);
 					}
-
-					if(endTE.hasCapability(Capabilities.AXLE_CAPABILITY, oEndDir)){
-						endTE.getCapability(Capabilities.AXLE_CAPABILITY, oEndDir).propogate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
+					LazyOptional<IAxleHandler> axleOpt = endTE.getCapability(Capabilities.AXLE_CAPABILITY, oEndDir);
+					if(axleOpt.isPresent()){
+						axleOpt.orElseThrow(NullPointerException::new).propogate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
 					}
 				}
 			}
@@ -104,8 +108,8 @@ public class MechanismAxle implements IMechanism{
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(@Nullable Direction side, @Nullable Direction.Axis axis){
-		return side != null || axis == null ? Block.NULL_AABB : BOUNDING_BOXES[axis.ordinal()];
+	public VoxelShape getBoundingBox(@Nullable Direction side, @Nullable Direction.Axis axis){
+		return side != null || axis == null ? VoxelShapes.empty() : SHAPES[axis.ordinal()];
 	}
 
 	@Override
@@ -118,9 +122,9 @@ public class MechanismAxle implements IMechanism{
 		MechanismTileEntity.SidedAxleHandler handler = te.axleHandlers[6];
 
 		GlStateManager.pushMatrix();
-		GlStateManager.rotate(axis == Direction.Axis.Y ? 0 : 90F, axis == Direction.Axis.Z ? 1 : 0, 0, axis == Direction.Axis.X ? -1 : 0);
+		GlStateManager.rotatef(axis == Direction.Axis.Y ? 0 : 90F, axis == Direction.Axis.Z ? 1 : 0, 0, axis == Direction.Axis.X ? -1 : 0);
 		float angle = handler.getAngle(partialTicks);
-		GlStateManager.rotate(angle, 0F, 1F, 0F);
+		GlStateManager.rotatef(angle, 0F, 1F, 0F);
 		ModelAxle.render(mat.getColor());
 		GlStateManager.popMatrix();
 	}

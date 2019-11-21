@@ -1,11 +1,10 @@
 package com.Da_Technomancer.crossroads.render;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
@@ -61,9 +60,9 @@ public class LooseArcRenderable implements IVisualEffect{
 		float mult = ((float) lifeSpan - lifeTime + partialTicks) / (float) lifeSpan;
 		Vec3d start = new Vec3d(mult * (xStFin - xSt) + xSt, mult * (yStFin - ySt) + ySt, mult * (zStFin - zSt) + zSt);
 
-		GlStateManager.disableTexture2D();
-		GlStateManager.color(col.getRed() / 255F, col.getGreen() / 255F, col.getBlue() / 255F, col.getAlpha() / 255F);
-		GlStateManager.translate(start.x - playerX, start.y - playerY, start.z - playerZ);
+		GlStateManager.disableTexture();
+		GlStateManager.color4f(col.getRed() / 255F, col.getGreen() / 255F, col.getBlue() / 255F, col.getAlpha() / 255F);
+		GlStateManager.translated(start.x - playerX, start.y - playerY, start.z - playerZ);
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 
 		//If the arc is newly created, generate its path
@@ -122,8 +121,8 @@ public class LooseArcRenderable implements IVisualEffect{
 		}
 
 		tess.draw();
-		GlStateManager.color(1, 1, 1);
-		GlStateManager.enableTexture2D();
+		GlStateManager.color3f(1, 1, 1);
+		GlStateManager.enableTexture();
 
 		if(lastTick != worldTime){
 			lastTick = worldTime;

@@ -1,7 +1,9 @@
 package com.Da_Technomancer.crossroads.render.bakedModel;
 
 import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.client.renderer.model.IUnbakedModel;
 import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
@@ -10,10 +12,9 @@ import java.util.HashMap;
 
 public class BakedModelLoader implements ICustomModelLoader{
 
-	public static final HashMap<ResourceLocation, IModel> MODEL_MAP = new HashMap<>();
+	public static final HashMap<ResourceLocation, IUnbakedModel> MODEL_MAP = new HashMap<>();
 
 	static{
-		MODEL_MAP.put(ConduitBakedModel.BAKED_MODEL, new ConduitModel());
 		MODEL_MAP.put(PrototypeBakedModel.BAKED_MODEL, new PrototypeModel());
 		MODEL_MAP.put(AdvConduitBakedModel.BAKED_MODEL, new AdvConduitModel());
 		MODEL_MAP.put(AtmosChargerBakedModel.BAKED_MODEL, new AtmosChargerModel());
@@ -22,7 +23,7 @@ public class BakedModelLoader implements ICustomModelLoader{
 
 	@Override
 	public void onResourceManagerReload(IResourceManager resourceManager){
-		
+
 	}
 
 	@Override
@@ -36,7 +37,7 @@ public class BakedModelLoader implements ICustomModelLoader{
 	}
 
 	@Override
-	public IModel loadModel(ResourceLocation modelLocation){
+	public IUnbakedModel loadModel(ResourceLocation modelLocation){
 		return MODEL_MAP.get(modelLocation);
 	}
 }

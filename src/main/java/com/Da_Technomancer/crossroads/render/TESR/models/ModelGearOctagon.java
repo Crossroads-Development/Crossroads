@@ -33,7 +33,7 @@ public class ModelGearOctagon{
 		float topP = 0.0575F;//-.380F;
 		float bottomP = -0.0575F;//-.495F;
 
-		Minecraft.getInstance().renderEngine.bindTexture(RESOURCE);
+		Minecraft.getInstance().textureManager.bindTexture(RESOURCE);
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
 		GlStateManager.color(c.getRed() / 255F, c.getGreen() / 255F, c.getBlue() / 255F);

@@ -277,6 +277,8 @@
 	"container.fat_congealer": "Fat Congealer",
 	"container.fat_feeder": "Fat Feeder",
 	"container.color_chart": "Color Chart",
+	"item.crossroads.solid_chlorine": "Frozen Chlorine",
+	"item.crossroads.solid_sulfur_dioxide": "Frozen SO₂",
 
 	"item.crossroads.dust_metal": "%1$s Dust",
 	"item.crossroads.gravel_metal": "Raw %1$s Grit",

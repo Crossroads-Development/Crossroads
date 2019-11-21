@@ -13,9 +13,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 
-/**
- * This is in the normal blocks package instead of the blocks.technomancy package as this will eventually be used for alchemy and witchcraft.  *
- */
 public class DetailedCrafter extends Block{
 
 	public DetailedCrafter(){

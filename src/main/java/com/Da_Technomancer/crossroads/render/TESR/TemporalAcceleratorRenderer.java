@@ -61,7 +61,7 @@ public class TemporalAcceleratorRenderer extends TileEntityRenderer<TemporalAcce
 			GlStateManager.translate(0, radius + 0.5 - 0.001F, 0);
 
 
-			Minecraft.getInstance().renderEngine.bindTexture(AREA);
+			Minecraft.getInstance().textureManager.bindTexture(AREA);
 
 			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			vb.pos(-radius, -radius, -radius).tex(0D, 0).endVertex();
@@ -127,7 +127,7 @@ public class TemporalAcceleratorRenderer extends TileEntityRenderer<TemporalAcce
 		float lHalfT = .5F;
 		float tHeight = 1F / 16F;
 
-		Minecraft.getInstance().renderEngine.bindTexture(ModelGearOctagon.RESOURCE);
+		Minecraft.getInstance().textureManager.bindTexture(ModelGearOctagon.RESOURCE);
 
 		for(int i = 0; i < 2; i++){
 			//i==0: Large gear; i==1: Small gear

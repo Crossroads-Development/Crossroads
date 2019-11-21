@@ -39,7 +39,7 @@ public class HeatingCrucibleRenderer extends TileEntityRenderer<HeatingCrucibleT
 		Color col = te.getCol();
 		GlStateManager.color(col.getRed() / 255F, col.getGreen() / 255F, col.getBlue() / 255F, 1);
 		GlStateManager.translate(x, y, z);
-		Minecraft.getInstance().renderEngine.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+		Minecraft.getInstance().textureManager.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
 		
 		float xzStart = 2F / 16F;

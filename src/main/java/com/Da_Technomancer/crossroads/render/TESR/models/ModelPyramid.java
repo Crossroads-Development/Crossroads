@@ -20,7 +20,7 @@ public class ModelPyramid {
 		float radius = 1F / 16F;
 		float height = 1.5F / 16F;
 		
-		Minecraft.getInstance().renderEngine.bindTexture(res);
+		Minecraft.getInstance().textureManager.bindTexture(res);
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
 		GlStateManager.color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);

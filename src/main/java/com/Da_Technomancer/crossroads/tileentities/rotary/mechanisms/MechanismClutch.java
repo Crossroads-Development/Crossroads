@@ -1,28 +1,31 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
-import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.common.util.LazyOptional;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
@@ -36,11 +39,12 @@ public class MechanismClutch extends MechanismAxle{
 		this.inverted = inverted;
 	}
 
-	private static final AxisAlignedBB[] BOUNDING_BOXES = new AxisAlignedBB[3];
+	private static final VoxelShape[] SHAPES_CLUTCH = new VoxelShape[3];
 	static{
-		BOUNDING_BOXES[0] = new AxisAlignedBB(0, 0.25D, 0.25D, 1, 0.75D, 0.75D);//X
-		BOUNDING_BOXES[1] = new AxisAlignedBB(0.25D, 0, 0.25D, 0.75D, 1, 0.75D);//Y
-		BOUNDING_BOXES[2] = new AxisAlignedBB(0.25D, 0.25D, 0, 0.75D, 0.75D, 1);//Z
+		VoxelShape core = Block.makeCuboidShape(4, 4, 4, 12, 12, 12);
+		SHAPES_CLUTCH[0] = VoxelShapes.or(SHAPES[0], core);
+		SHAPES_CLUTCH[1] = VoxelShapes.or(SHAPES[1], core);
+		SHAPES_CLUTCH[2] = VoxelShapes.or(SHAPES[2], core);
 	}
 
 	@Override
@@ -108,16 +112,18 @@ public class MechanismClutch extends MechanismAxle{
 				TileEntity endTE = te.getWorld().getTileEntity(te.getPos().offset(endDir));
 				Direction oEndDir = endDir.getOpposite();
 				if(endTE != null){
-					if(endTE.hasCapability(Capabilities.AXIS_CAPABILITY, oEndDir)){
-						endTE.getCapability(Capabilities.AXIS_CAPABILITY, oEndDir).trigger(masterIn, key);
+					LazyOptional<IAxisHandler> axisOpt = endTE.getCapability(Capabilities.AXIS_CAPABILITY, oEndDir);
+					if(axisOpt.isPresent()){
+						axisOpt.orElseThrow(NullPointerException::new).trigger(masterIn, key);
 					}
 
-					if(endTE.hasCapability(Capabilities.SLAVE_AXIS_CAPABILITY, oEndDir)){
-						masterIn.addAxisToList(endTE.getCapability(Capabilities.SLAVE_AXIS_CAPABILITY, oEndDir), oEndDir);
+					LazyOptional<ISlaveAxisHandler> saxisOpt = endTE.getCapability(Capabilities.SLAVE_AXIS_CAPABILITY, oEndDir);
+					if(saxisOpt.isPresent()){
+						masterIn.addAxisToList(saxisOpt.orElseThrow(NullPointerException::new), oEndDir);
 					}
-
-					if(endTE.hasCapability(Capabilities.AXLE_CAPABILITY, oEndDir)){
-						endTE.getCapability(Capabilities.AXLE_CAPABILITY, oEndDir).propogate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
+					LazyOptional<IAxleHandler> axleOpt = endTE.getCapability(Capabilities.AXLE_CAPABILITY, oEndDir);
+					if(axleOpt.isPresent()){
+						axleOpt.orElseThrow(NullPointerException::new).propogate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
 					}
 				}
 			}
@@ -131,8 +137,8 @@ public class MechanismClutch extends MechanismAxle{
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(@Nullable Direction side, @Nullable Direction.Axis axis){
-		return side != null || axis == null ? Block.NULL_AABB : BOUNDING_BOXES[axis.ordinal()];
+	public VoxelShape getBoundingBox(@Nullable Direction side, @Nullable Direction.Axis axis){
+		return side != null || axis == null ? VoxelShapes.empty() : SHAPES_CLUTCH[axis.ordinal()];
 	}
 
 	private static final ResourceLocation RESOURCE_ENDS = new ResourceLocation(Crossroads.MODID, "textures/model/axle_end.png");
@@ -149,12 +155,12 @@ public class MechanismClutch extends MechanismAxle{
 		MechanismTileEntity.SidedAxleHandler handler = te.axleHandlers[6];
 
 		GlStateManager.pushMatrix();
-		GlStateManager.rotate(axis == Direction.Axis.Y ? 0 : 90F, axis == Direction.Axis.Z ? 1 : 0, 0, axis == Direction.Axis.X ? -1 : 0);
+		GlStateManager.rotatef(axis == Direction.Axis.Y ? 0 : 90F, axis == Direction.Axis.Z ? 1 : 0, 0, axis == Direction.Axis.X ? -1 : 0);
 		
 		//Clutch mechanism
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
-		Minecraft.getInstance().renderEngine.bindTexture(RESOURCE_ENDS);
+		Minecraft.getInstance().textureManager.bindTexture(RESOURCE_ENDS);
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-0.25F, 0, -0.25F).tex(0, 0).endVertex();
 		vb.pos(0.25F, 0, -0.25F).tex(1, 0).endVertex();
@@ -167,7 +173,7 @@ public class MechanismClutch extends MechanismAxle{
 		vb.pos(-0.25F, 0.4998F, -0.25F).tex(0, 0).endVertex();
 		Tessellator.getInstance().draw();
 
-		Minecraft.getInstance().renderEngine.bindTexture(inverted ? RESOURCE_SIDE_INV : RESOURCE_SIDE);
+		Minecraft.getInstance().textureManager.bindTexture(inverted ? RESOURCE_SIDE_INV : RESOURCE_SIDE);
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-0.25F, 0.4998F, -0.25F).tex(0, 1).endVertex();
 		vb.pos(0.25F, 0.4998F, -0.25F).tex(1, 1).endVertex();
@@ -191,7 +197,7 @@ public class MechanismClutch extends MechanismAxle{
 		Tessellator.getInstance().draw();
 		
 		float angle = handler.getAngle(partialTicks);
-		GlStateManager.rotate(angle, 0F, 1F, 0F);
+		GlStateManager.rotatef(angle, 0F, 1F, 0F);
 		ModelAxle.render(mat.getColor());
 		GlStateManager.popMatrix();
 	}

@@ -158,6 +158,7 @@ public final class Crossroads{
 		reg.register(new BeamExtractRec.Serializer().setRegistryName("beam_extract"));
 		reg.register(new IceboxRec.Serializer().setRegistryName("cooling"));
 		reg.register(new DirtyWaterRec.Serializer().setRegistryName("dirty_water"));
+		reg.register(new AlchemyRec.Serializer().setRegistryName("alchemy"));
 	}
 
 	@SuppressWarnings("unused")

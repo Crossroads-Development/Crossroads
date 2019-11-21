@@ -1,23 +1,23 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
-import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
+import com.Da_Technomancer.crossroads.API.rotary.*;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelGearOctagon;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.common.util.LazyOptional;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
@@ -83,29 +83,30 @@ public class MechanismToggleGear extends MechanismSmallGear{
 				}
 			}
 
-
 			for(int i = 0; i < 6; i++){
 				if(i != side.getIndex() && i != side.getOpposite().getIndex()){
 					Direction facing = Direction.byIndex(i);
 					// Adjacent gears
 					TileEntity adjTE = te.getWorld().getTileEntity(te.getPos().offset(facing));
 					if(adjTE != null){
-						if(adjTE.hasCapability(Capabilities.COG_CAPABILITY, side)){
-							adjTE.getCapability(Capabilities.COG_CAPABILITY, side).connect(masterIn, key, -handler.rotRatio, .5D, facing.getOpposite(), handler.renderOffset);
-						}else if(adjTE.hasCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())){
+						LazyOptional<ICogHandler> cogOpt;
+						if((cogOpt = adjTE.getCapability(Capabilities.COG_CAPABILITY, side)).isPresent()){
+							cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -handler.rotRatio, .5D, facing.getOpposite(), handler.renderOffset);
+						}else if((cogOpt = adjTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())).isPresent()){
 							//Check for large gears
-							adjTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite()).connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * handler.rotRatio, .5D, side, handler.renderOffset);
+							cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * handler.rotRatio, .5D, side, handler.renderOffset);
 						}
 					}
 
 					// Diagonal gears
 					TileEntity diagTE = te.getWorld().getTileEntity(te.getPos().offset(facing).offset(side));
-					if(diagTE != null && diagTE.hasCapability(Capabilities.COG_CAPABILITY, facing.getOpposite()) && RotaryUtil.canConnectThrough(te.getWorld(), te.getPos().offset(facing), facing.getOpposite(), side)){
-						diagTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite()).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * handler.rotRatio, .5D, side.getOpposite(), handler.renderOffset);
+					LazyOptional<ICogHandler> cogOpt;
+					if(diagTE != null && (cogOpt = diagTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())).isPresent() && RotaryUtil.canConnectThrough(te.getWorld(), te.getPos().offset(facing), facing.getOpposite(), side)){
+						cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * handler.rotRatio, .5D, side.getOpposite(), handler.renderOffset);
 					}
 
-					if(sideTE != null && sideTE.hasCapability(Capabilities.COG_CAPABILITY, facing)){
-						sideTE.getCapability(Capabilities.COG_CAPABILITY, facing).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatioIn, .5D, side.getOpposite(), handler.renderOffset);
+					if(sideTE != null && (cogOpt = sideTE.getCapability(Capabilities.COG_CAPABILITY, facing)).isPresent()){
+						cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatioIn, .5D, side.getOpposite(), handler.renderOffset);
 					}
 				}
 			}
@@ -113,14 +114,17 @@ public class MechanismToggleGear extends MechanismSmallGear{
 
 		//Connected block
 		if(sideTE != null){
-			if(sideTE.hasCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite())){
-				sideTE.getCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite()).trigger(masterIn, key);
+			LazyOptional<IAxisHandler> axisOpt = sideTE.getCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite());
+			if(axisOpt.isPresent()){
+				axisOpt.orElseThrow(NullPointerException::new).trigger(masterIn, key);
 			}
-			if(sideTE.hasCapability(Capabilities.SLAVE_AXIS_CAPABILITY, side.getOpposite())){
-				masterIn.addAxisToList(sideTE.getCapability(Capabilities.SLAVE_AXIS_CAPABILITY, side.getOpposite()), side.getOpposite());
+			LazyOptional<ISlaveAxisHandler> saxisOpt = sideTE.getCapability(Capabilities.SLAVE_AXIS_CAPABILITY, side.getOpposite());
+			if(saxisOpt.isPresent()){
+				masterIn.addAxisToList(saxisOpt.orElseThrow(NullPointerException::new), side.getOpposite());
 			}
-			if(sideTE.hasCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite())){
-				sideTE.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite()).propogate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
+			LazyOptional<IAxleHandler> axleOpt = sideTE.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite());
+			if(axleOpt.isPresent()){
+				axleOpt.orElseThrow(NullPointerException::new).propogate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
 			}
 		}
 
@@ -149,17 +153,17 @@ public class MechanismToggleGear extends MechanismSmallGear{
 		MechanismTileEntity.SidedAxleHandler handler = te.axleHandlers[side.getIndex()];
 
 		GlStateManager.pushMatrix();
-		GlStateManager.rotate(side == Direction.DOWN ? 0 : side == Direction.UP ? 180F : side == Direction.NORTH || side == Direction.EAST ? 90F : -90F, side.getAxis() == Direction.Axis.Z ? 1 : 0, 0, side.getAxis() == Direction.Axis.Z ? 0 : 1);
+		GlStateManager.rotatef(side == Direction.DOWN ? 0 : side == Direction.UP ? 180F : side == Direction.NORTH || side == Direction.EAST ? 90F : -90F, side.getAxis() == Direction.Axis.Z ? 1 : 0, 0, side.getAxis() == Direction.Axis.Z ? 0 : 1);
 		float angle = handler.getAngle(partialTicks);
-		GlStateManager.translate(0, -0.4375F, 0);
-		GlStateManager.rotate((float) -side.getAxisDirection().getOffset() * angle, 0F, 1F, 0F);
+		GlStateManager.translatef(0, -0.4375F, 0);
+		GlStateManager.rotatef((float) -side.getAxisDirection().getOffset() * angle, 0F, 1F, 0F);
 
 		float top = 0.0625F;//-.375F;
 
 		if(inverted){
 			BufferBuilder vb = Tessellator.getInstance().getBuffer();
-			Minecraft.getInstance().renderEngine.bindTexture(ModelGearOctagon.RESOURCE);
-			GlStateManager.color(1, 0, 0);
+			Minecraft.getInstance().textureManager.bindTexture(ModelGearOctagon.RESOURCE);
+			GlStateManager.color3f(1, 0, 0);
 
 			float radius = 2F / 16F;
 
@@ -180,10 +184,10 @@ public class MechanismToggleGear extends MechanismSmallGear{
 			float lHalfT = .5F;
 			float tHeight = 1F / 16F;
 
-			Minecraft.getInstance().renderEngine.bindTexture(ModelGearOctagon.RESOURCE);
+			Minecraft.getInstance().textureManager.bindTexture(ModelGearOctagon.RESOURCE);
 			BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
-			GlStateManager.color(mat.getColor().getRed() / 255F, mat.getColor().getGreen() / 255F, mat.getColor().getBlue() / 255F);
+			GlStateManager.color3f(mat.getColor().getRed() / 255F, mat.getColor().getGreen() / 255F, mat.getColor().getBlue() / 255F);
 
 			vb.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION_TEX);
 			vb.pos(sHalf, top, -lHalf).tex(.5F + sHalfT, .5F - (-lHalfT)).endVertex();
@@ -207,7 +211,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 			vb.pos(sHalf, -top, -lHalf).tex(.5F + sHalfT, .5F - (-lHalfT)).endVertex();
 			Tessellator.getInstance().draw();
 
-			GlStateManager.color((mat.getColor().getRed() - 130F) / 255F, (mat.getColor().getGreen() - 130F) / 255F, (mat.getColor().getBlue() - 130F) / 255F);
+			GlStateManager.color3f((mat.getColor().getRed() - 130F) / 255F, (mat.getColor().getGreen() - 130F) / 255F, (mat.getColor().getBlue() - 130F) / 255F);
 
 			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			vb.pos(lHalf, -top, sHalf).tex(1F, .5F + -sHalfT).endVertex();

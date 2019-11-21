@@ -92,6 +92,8 @@ public final class CRItems{
 	public static Item solidMuriatic;
 	public static Item solidRegia;
 	public static Item solidCavorite;
+	public static Item solidChlorine;
+	public static Item solidSO2;
 	public static Item bedrockDust;
 	public static FlyingMachine flyingMachine;
 	public static TeslaRay teslaRay;
@@ -154,6 +156,8 @@ public final class CRItems{
 		toRegister.add(solidMuriatic = new Item(itemProp).setRegistryName("solid_muriatic"));
 		toRegister.add(solidRegia = new Item(itemProp).setRegistryName("solid_regia"));
 		toRegister.add(solidCavorite = new Item(itemProp).setRegistryName("solid_cavorite"));
+		toRegister.add(solidSO2 = new Item(itemProp).setRegistryName("solid_sulfur_dioxide"));
+		toRegister.add(solidChlorine = new Item(itemProp).setRegistryName("solid_chlorine"));
 		toRegister.add(bedrockDust = new Item(itemProp).setRegistryName("dust_bedrock"));
 		flyingMachine = new FlyingMachine();
 		teslaRay = new TeslaRay();

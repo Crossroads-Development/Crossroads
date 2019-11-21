@@ -30,7 +30,7 @@ public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(xPosition, yPosition, 0);
 		GlStateManager.enableAlpha();
-		minecraft.renderEngine.bindTexture(PHIAL_TEXTURE);
+		minecraft.textureManager.bindTexture(PHIAL_TEXTURE);
 		BufferBuilder buf = Tessellator.getInstance().getBuffer();
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		buf.pos(0, 16, 300).tex(0, 1).endVertex();
@@ -39,7 +39,7 @@ public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 		buf.pos(0, 0, 300).tex(0, 0).endVertex();
 		Tessellator.getInstance().draw();
 		
-		minecraft.renderEngine.bindTexture(INNER_TEXTURE);
+		minecraft.textureManager.bindTexture(INNER_TEXTURE);
 		Color col = ingredient.getReag().getColor(EnumMatterPhase.SOLID);
 		GlStateManager.color((float) col.getRed() / 255F, (float) col.getGreen() / 255F, (float) col.getBlue() / 255F, (float) col.getAlpha() / 255F);
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);

@@ -120,6 +120,11 @@ public class HeatCable extends ContainerBlock{
 					TileEntity te = worldIn.getTileEntity(pos);
 					if(te instanceof HeatCableTileEntity){
 						((HeatCableTileEntity) te).adjust(face);
+						Direction dir = Direction.byIndex(face);
+						BlockState newState = updatePostPlacement(state, dir, state, worldIn, pos, pos.offset(dir));
+						if(newState != state){
+							worldIn.setBlockState(pos, newState);
+						}
 					}
 				}
 				return true;
@@ -183,7 +188,8 @@ public class HeatCable extends ContainerBlock{
 	@Override
 	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos pos, BlockPos facingPos){
 		TileEntity te = worldIn.getTileEntity(facingPos);
-		boolean connect = te != null && te.getCapability(Capabilities.HEAT_CAPABILITY, facing.getOpposite()).isPresent();
+		TileEntity thisTE = worldIn.getTileEntity(pos);
+		boolean connect = thisTE instanceof HeatCableTileEntity && !((HeatCableTileEntity) thisTE).getLock(facing.getIndex()) && te != null && te.getCapability(Capabilities.HEAT_CAPABILITY, facing.getOpposite()).isPresent();
 		BooleanProperty prop;
 		switch(facing){
 			case DOWN:

@@ -25,7 +25,7 @@ public class SteamTurbineRenderer extends TileEntityRenderer<SteamTurbineTileEnt
 		GlStateManager.translate(x, y, z);
 		GlStateManager.translate(.5F, 0F, .5F);
 		GlStateManager.rotate(turbine.getCompletion(), 0F, 1F, 0F);
-		Minecraft.getInstance().renderEngine.bindTexture(TEXTURE);
+		Minecraft.getInstance().textureManager.bindTexture(TEXTURE);
 		MODEL.renderScrew();
 		GlStateManager.popMatrix();
 	}

@@ -34,6 +34,8 @@ public class CRItemTags extends ItemTagsProvider{
 	public static final Tag<Item> DUSTS_NITRIC = new ItemTags.Wrapper(new ResourceLocation(CR, "dusts/nitric_acid"));
 	public static final Tag<Item> DUSTS_HYDROCHLORIC = new ItemTags.Wrapper(new ResourceLocation(CR, "dusts/hydrochloric_acid"));
 	public static final Tag<Item> DUSTS_REGIA = new ItemTags.Wrapper(new ResourceLocation(CR, "dusts/aqua_regia"));
+	public static final Tag<Item> DUSTS_CHLORINE = new ItemTags.Wrapper(new ResourceLocation(CR, "dusts/chlorine"));
+	public static final Tag<Item> DUSTS_SULFUR_DIOXIDE = new ItemTags.Wrapper(new ResourceLocation(CR, "dusts/sulfur_dioxide"));
 
 	public static final Tag<Item> INGOTS_COPPER = new ItemTags.Wrapper(new ResourceLocation(FORGE, "ingots/copper"));
 	public static final Tag<Item> INGOTS_TIN = new ItemTags.Wrapper(new ResourceLocation(FORGE, "ingots/tin"));
@@ -78,6 +80,8 @@ public class CRItemTags extends ItemTagsProvider{
 		getBuilder(DUSTS_NITRIC).ordered(true).add(CRItems.solidFortis);
 		getBuilder(DUSTS_HYDROCHLORIC).ordered(true).add(CRItems.solidMuriatic);
 		getBuilder(DUSTS_REGIA).ordered(true).add(CRItems.solidRegia);
+		getBuilder(DUSTS_CHLORINE).ordered(true).add(CRItems.solidChlorine);
+		getBuilder(DUSTS_SULFUR_DIOXIDE).ordered(true).add(CRItems.solidSO2);
 
 		getBuilder(INGOTS_COPPER).ordered(true).add(OreSetup.ingotCopper);
 		getBuilder(INGOTS_TIN).ordered(true).add(OreSetup.ingotTin);

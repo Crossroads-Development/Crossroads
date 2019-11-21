@@ -54,7 +54,7 @@ public class ParticleFlameColor extends Particle{
 	public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ){
 		Tessellator.getInstance().draw();
 		buffer.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
-		Minecraft.getInstance().renderEngine.bindTexture(ModParticles.PARTICLE_1_TEXTURE);
+		Minecraft.getInstance().textureManager.bindTexture(ModParticles.PARTICLE_1_TEXTURE);
 		
 		float f = (float) this.particleTextureIndexX / 16.0F;
 		float f1 = f + 0.0624375F;
@@ -91,7 +91,7 @@ public class ParticleFlameColor extends Particle{
 		
 		Tessellator.getInstance().draw();
 		buffer.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
-		Minecraft.getInstance().renderEngine.bindTexture(ModParticles.BASE_PARTICLE_TEXTURE);
+		Minecraft.getInstance().textureManager.bindTexture(ModParticles.BASE_PARTICLE_TEXTURE);
 	}
 
 	@Override

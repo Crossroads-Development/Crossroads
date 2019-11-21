@@ -40,7 +40,7 @@ public class GatewayFrameRenderer extends TileEntityRenderer<GatewayFrameTileEnt
 		if(frame.getAlignment() == Axis.Z){
 			GlStateManager.rotate(90, 0, 1, 0);
 		}
-		Minecraft.getInstance().renderEngine.bindTexture(TEXTURE);
+		Minecraft.getInstance().textureManager.bindTexture(TEXTURE);
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);

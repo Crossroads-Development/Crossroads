@@ -152,7 +152,7 @@ public class CRConfig{
 		fePerEntropy = serverBuilder.comment("FE equal to 1 Temporal Entropy").defineInRange("fe_per_entropy", 50, 1, Integer.MAX_VALUE);
 		serverBuilder.pop();
 		serverBuilder.push(CAT_INTERNAL);
-		allowHellfire = serverBuilder.comment("Whether to allow crafting Ignis Infernum").define("ignis_infernum", true);
+		allowHellfire = serverBuilder.comment("Whether to allow Ignis Infernum", "If disabled, Ignis Infernum is still craftable, but it gets nerfed to Phelostogen level").define("ignis_infernum", true);
 		atmosEffect = serverBuilder.comment("Level of effects from overcharging the atmosphere", "0: No negative effects", "1: Allow lightning strikes", "2: Allow creeper charging", "3: Allow lightning strikes & creeper charging").defineInRange("atmos_effects", 3, 0, 3);
 		atmosCap = serverBuilder.comment("Maximum charge for the atmosphere").defineInRange("charge_limit", 1_000_000_000L, 0L, 2_000_000_000L);
 		voltusUsage = serverBuilder.comment("Voltus used to produce 1000FE of charge in the atmosphere").defineInRange("voltus_power", 0.1D, 0, Integer.MAX_VALUE);

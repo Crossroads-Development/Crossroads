@@ -37,7 +37,7 @@ public class PrototypingTableRenderer extends TileEntityRenderer<PrototypingTabl
 		GlStateManager.rotate(te.getWorld().getBlockState(te.getPos()).get(CRProperties.HORIZ_FACING).getHorizontalAngle(), 0, 1, 0);
 		GlStateManager.translate(0.5D, 0.5D, 0.5D);
 
-		Minecraft.getInstance().renderEngine.bindTexture(TEXTURE);
+		Minecraft.getInstance().textureManager.bindTexture(TEXTURE);
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);

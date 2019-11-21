@@ -43,7 +43,7 @@ public class ModelGearIcositetragon{
 		float bottomProng = -.495F;
 		float widthProng = 1F / 48F;
 
-		Minecraft.getInstance().renderEngine.bindTexture(res);
+		Minecraft.getInstance().textureManager.bindTexture(res);
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
 		GlStateManager.color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
@@ -104,7 +104,7 @@ public class ModelGearIcositetragon{
 		Tessellator.getInstance().draw();
 
 		//Sides
-		Minecraft.getInstance().renderEngine.bindTexture(rim);
+		Minecraft.getInstance().textureManager.bindTexture(rim);
 		GlStateManager.pushMatrix();
 		for(float i = 0; i < 6; i++){
 			GlStateManager.rotate(15, 0, 1, 0);

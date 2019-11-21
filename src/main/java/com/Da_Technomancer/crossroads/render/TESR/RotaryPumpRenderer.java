@@ -39,7 +39,7 @@ public class RotaryPumpRenderer extends TileEntityRenderer<RotaryPumpTileEntity>
 		GlStateManager.translate(0.5F, 0F, .5F);
 		GlStateManager.rotate(pump.getCompletion() * 360F, 0F, 1F, 0F);
 		
-		Minecraft.getInstance().renderEngine.bindTexture(TEXTURE);
+		Minecraft.getInstance().textureManager.bindTexture(TEXTURE);
 		MODEL.renderScrew();
 		
 		GlStateManager.popMatrix();
@@ -63,7 +63,7 @@ public class RotaryPumpRenderer extends TileEntityRenderer<RotaryPumpTileEntity>
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(x, y, z);
 
-			Minecraft.getInstance().renderEngine.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+			Minecraft.getInstance().textureManager.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 			BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
 			float xSt = 3F / 16F;

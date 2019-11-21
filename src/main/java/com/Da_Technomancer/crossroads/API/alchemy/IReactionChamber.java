@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
-import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.particles.IParticleData;
 
 import javax.annotation.Nonnull;
 
@@ -55,5 +55,5 @@ public interface IReactionChamber{
 	 * @param speedZ
 	 * @param particleArgs
 	 */
-	public void addVisualEffect(EnumParticleTypes particleType, double speedX, double speedY, double speedZ, int... particleArgs);
+	public <T extends IParticleData> void addVisualEffect(T particleType, double speedX, double speedY, double speedZ);
 }

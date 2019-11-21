@@ -1,9 +1,7 @@
 package com.Da_Technomancer.crossroads.items.crafting;
 
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
-import com.Da_Technomancer.crossroads.API.alchemy.IReaction;
 import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
-import com.Da_Technomancer.crossroads.API.alchemy.ITransparentReaction;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.integration.JEI.*;
@@ -42,6 +40,8 @@ public final class RecipeHolder{
 	public static IRecipeSerializer<IceboxRec> COOLING_SERIAL = null;
 	@ObjectHolder("dirty_water")
 	public static IRecipeSerializer<DirtyWaterRec> DIRTY_WATER_SERIAL = null;
+	@ObjectHolder("alchemy")
+	public static IRecipeSerializer<AlchemyRec> ALCHEMY_SERIAL = null;
 
 	//Forge hasn't replaced the IRecipeType registry (yet). We use the vanilla registry as a result.
 	public static IRecipeType<MillRec> MILL_TYPE = IRecipeType.register(Crossroads.MODID + ":mill");
@@ -50,6 +50,7 @@ public final class RecipeHolder{
 	public static IRecipeType<BeamExtractRec> BEAM_EXTRACT_TYPE = IRecipeType.register(Crossroads.MODID + ":beam_extract");
 	public static IRecipeType<IceboxRec> COOLING_TYPE = IRecipeType.register(Crossroads.MODID + ":cooling");
 	public static IRecipeType<DirtyWaterRec> DIRTY_WATER_TYPE = IRecipeType.register(Crossroads.MODID + ":dirty_water");
+	public static IRecipeType<AlchemyRec> ALCHEMY_TYPE = IRecipeType.register(Crossroads.MODID + ":alchemy");
 
 	//TODO every time recipes are loaded/reloaded, this value needs to be (re-)calculated
 	public static int totalDirtyWaterWeight = 0;
@@ -160,10 +161,8 @@ public final class RecipeHolder{
 		JEIWrappers.put(FusionBeamCategory.ID, currentRecipes);
 
 		currentRecipes = new ArrayList<>();
-		for(IReaction react : AlchemyCore.REACTIONS){
-			if(react instanceof ITransparentReaction){
-				currentRecipes.add(new ReactionRecipe((ITransparentReaction) react));
-			}
+		for(AlchemyRec react : AlchemyCore.REACTIONS){
+			currentRecipes.add(new ReactionRecipe(react));
 		}
 		JEIWrappers.put(ReactionCategory.ID, currentRecipes);
 

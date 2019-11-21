@@ -40,7 +40,7 @@ public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntit
 		GlStateManager.rotate(-facing.getHorizontalAngle(), 0, 1, 0);
 		GlStateManager.rotate(facing.getAxisDirection().getOffset() * axle.getAngle(partialTicks), 0, 0, 1);
 
-		Minecraft.getInstance().renderEngine.bindTexture(TEXTURE_BLADE);
+		Minecraft.getInstance().textureManager.bindTexture(TEXTURE_BLADE);
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
 		//Center piece

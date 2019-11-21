@@ -1,12 +1,14 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
+import com.Da_Technomancer.crossroads.items.crafting.recipes.AlchemyRec;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
-import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.particles.IParticleData;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.ServerWorld;
+import net.minecraft.world.Explosion;
+import net.minecraft.world.server.ServerWorld;
 
 import java.util.ArrayList;
 
@@ -34,10 +36,10 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 	}
 
 	@Override
-	public void addVisualEffect(EnumParticleTypes particleType, double speedX, double speedY, double speedZ, int... particleArgs){
+	public <T extends IParticleData> void addVisualEffect(T particleType, double speedX, double speedY, double speedZ){
 		if(!world.isRemote){
 			Vec3d particlePos = getParticlePos();
-			((ServerWorld) world).spawnParticle(particleType, false, particlePos.x, particlePos.y, particlePos.z, 0, speedX, speedY, speedZ, 1F, particleArgs);
+			((ServerWorld) world).spawnParticle(particleType, particlePos.x, particlePos.y, particlePos.z, 0, speedX, speedY, speedZ, 1F);
 		}
 	}
 
@@ -53,7 +55,7 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 			world.playSound(null, pos, sound.getBreakSound(), SoundCategory.BLOCKS, sound.getVolume(), sound.getPitch());
 			AlchemyUtil.releaseChemical(world, pos, contents);
 			if(strength > 0F){
-				world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), strength, true);
+				world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), strength, Explosion.Mode.BREAK);//We will drop items, because an explosion in your lab is devastating enough without having to re-craft everything
 			}
 		}
 	}
@@ -107,7 +109,7 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 	}
 
 	protected void performReaction(){
-		for(IReaction react : AlchemyCore.REACTIONS){
+		for(AlchemyRec react : AlchemyCore.getReactions(world)){
 			if(react.performReaction(this)){
 				correctReag();
 				break;

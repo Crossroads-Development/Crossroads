@@ -37,7 +37,7 @@ public class ModelAxle {
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
 		GlStateManager.color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
-		Minecraft.getInstance().renderEngine.bindTexture(ends);
+		Minecraft.getInstance().textureManager.bindTexture(ends);
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-radius, -.4999F, -radius).tex(0, 0).endVertex();
 		vb.pos(radius, -.4999F, -radius).tex(1, 0).endVertex();
@@ -50,7 +50,7 @@ public class ModelAxle {
 		vb.pos(-radius, .4999F, -radius).tex(0, 0).endVertex();
 		Tessellator.getInstance().draw();
 
-		Minecraft.getInstance().renderEngine.bindTexture(side);
+		Minecraft.getInstance().textureManager.bindTexture(side);
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-radius, .4999F, -radius).tex(0, 1).endVertex();
 		vb.pos(radius, .4999F, -radius).tex(0.125D, 1).endVertex();

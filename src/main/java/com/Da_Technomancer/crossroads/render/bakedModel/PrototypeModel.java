@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.API.technomancy.PrototypePortTypes;
 import com.google.common.collect.ImmutableSet;
 
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.IUnbakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.ResourceLocation;
@@ -17,7 +18,7 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 
-public class PrototypeModel implements IModel{
+public class PrototypeModel implements IUnbakedModel{
 
 	@Override
 	public Collection<ResourceLocation> getDependencies(){

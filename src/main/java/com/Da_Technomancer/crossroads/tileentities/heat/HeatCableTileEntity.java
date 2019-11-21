@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.heat.HeatCable;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -46,6 +47,10 @@ public class HeatCableTileEntity extends ModuleTE{
 
 	public void adjust(int side){
 		locked[side] = !locked[side];
+	}
+
+	public boolean getLock(int side){
+		return locked[side];
 	}
 
 	@Override
