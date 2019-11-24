@@ -1,0 +1,23 @@
+{
+	"type": "crossroads:alchemy",
+	"category": "normal",
+	"min_temp": -100,
+	"max_temp": 1000,
+	"catalyst": "practitioner",
+	"reagents": [
+		{
+			"type": "elem_fusion",
+			"qty": 2
+		},
+		{
+			"type": "copper",
+			"qty": 1
+		}
+	],
+	"products": [
+		{
+			"type": "ruby",
+			"qty": 2
+		}
+	]
+}

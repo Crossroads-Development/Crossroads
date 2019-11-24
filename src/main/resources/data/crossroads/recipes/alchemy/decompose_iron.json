@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:alchemy",
+	"category": "normal",
+	"min_temp": -40,
+	"max_temp": 560,
+	"heat": -10,
+	"catalyst": "philosopher",
+	"reagents": [
+		{
+			"type": "iron",
+			"qty": 5
+		}
+	],
+	"products": [
+		{
+			"type": "quicksilver",
+			"qty": 5
+		},
+		{
+			"type": "hydrochloric_acid",
+			"qty": 1
+		}
+	]
+}

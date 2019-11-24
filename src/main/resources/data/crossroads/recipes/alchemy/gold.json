@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:alchemy",
+	"category": "normal",
+	"min_temp": -40,
+	"max_temp": 560,
+	"heat": 10,
+	"catalyst": "practitioner",
+	"reagents": [
+		{
+			"type": "quicksilver",
+			"qty": 5
+		},
+		{
+			"type": "aqua_regia",
+			"qty": 1
+		}
+	],
+	"products": [
+		{
+			"type": "gold",
+			"qty": 5
+		}
+	]
+}

@@ -1,0 +1,16 @@
+{
+	"type": "crossroads:alchemy",
+	"category": "normal",
+	"max_temp": 100,
+	"catalyst": "water",
+	"reagents": {
+		"type": "slag",
+		"qty": 2
+	},
+	"products": [
+		{
+			"type": "sulfur",
+			"qty": 1
+		}
+	]
+}

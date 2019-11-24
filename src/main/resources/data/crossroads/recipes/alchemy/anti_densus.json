@@ -1,0 +1,22 @@
+{
+	"type": "crossroads:alchemy",
+	"category": "normal",
+	"min_temp": 200,
+	"max_temp": 300,
+	"heat": 20,
+	"charged": true,
+	"reagents": [
+		{
+			"type": "densus",
+			"qty": 1
+		},
+		{
+			"type": "phelostogen",
+			"qty": 1
+		}
+	],
+	"products": {
+		"type": "anti_densus",
+		"qty": 1
+	}
+}

@@ -244,7 +244,7 @@ public class AlchemyRec implements IRecipe<IInventory>{
 		 * {
 		 * 		"type": "crossroads:alchemy", //Tells Minecraft this is an alchemy recipe
 		 *		"group": <group>, //Optional, same purpose as vanilla
-		 * 		"type": <normal/precise/destructive>, //Optional, defaults to "normal". Destructive recipes explode (with strength controlled by data), and precise recipes break the chamber if the inputs weren't perfectly balanced
+		 * 		"category": <normal/precise/destructive>, //Optional, defaults to "normal". Destructive recipes explode (with strength controlled by data), and precise recipes break the chamber if the inputs weren't perfectly balanced
 		 *		"min_temp": <number>, //Optional, defaults to absolute zero. Sets a minimum temperature for this reaction (celsius)
 		 * 		"max_temp": <number>, //Optional, defaults to an unreachable high value. Sets a maximum temperature for this reaction (celsius)
 		 *		"heat": <number>, //Optional, defaults to zero. Controls how much heat this reaction releases/absorbs. Negative numbers are exothermic, positive endothermic
@@ -290,7 +290,7 @@ public class AlchemyRec implements IRecipe<IInventory>{
 		public AlchemyRec read(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and output
 			String group = JSONUtils.getString(json, "group", "");
-			Type type = Type.getType(JSONUtils.getString(json, "type", "normal"));
+			Type type = Type.getType(JSONUtils.getString(json, "category", "normal"));
 			double minTemp = JSONUtils.getFloat(json, "min_temp", -300F);
 			double maxTemp = JSONUtils.getFloat(json, "max_temp", Short.MAX_VALUE);
 			double heatChange = JSONUtils.getFloat(json, "heat", 0);
@@ -311,7 +311,9 @@ public class AlchemyRec implements IRecipe<IInventory>{
 				JsonElement elem = jsonR.get(i);
 				if(elem instanceof JsonObject){
 					JsonObject obj = (JsonObject) elem;
-					reags[i] = new ReagentStack(AlchemyCore.REAGENTS.get(JSONUtils.getString(obj, "type")), JSONUtils.getInt(json, "qty", 1));
+					IReagent reagent = AlchemyCore.REAGENTS.get(JSONUtils.getString(obj, "type"));
+					assert reagent != null;
+					reags[i] = new ReagentStack(reagent, JSONUtils.getInt(json, "qty", 1));
 				}
 			}
 			if(JSONUtils.isJsonArray(json, "products")){
@@ -325,7 +327,9 @@ public class AlchemyRec implements IRecipe<IInventory>{
 				JsonElement elem = jsonR.get(i);
 				if(elem instanceof JsonObject){
 					JsonObject obj = (JsonObject) elem;
-					prods[i] = new ReagentStack(AlchemyCore.REAGENTS.get(JSONUtils.getString(obj, "type")), JSONUtils.getInt(json, "qty", 1));
+					IReagent reagent = AlchemyCore.REAGENTS.get(JSONUtils.getString(obj, "type"));
+					assert reagent != null;
+					prods[i] = new ReagentStack(reagent, JSONUtils.getInt(json, "qty", 1));
 				}
 			}
 

@@ -1,0 +1,21 @@
+{
+	"type": "crossroads:alchemy",
+	"category": "normal",
+	"heat": 0,
+	"reagents": [
+		{
+			"type": "nitric_acid",
+			"qty": 1
+		},
+		{
+			"type": "hydrochloric_acid",
+			"qty": 3
+		}
+	],
+	"products": [
+		{
+			"type": "aqua_regia",
+			"qty": 4
+		}
+	]
+}

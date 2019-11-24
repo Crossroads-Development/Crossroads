@@ -23,6 +23,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
@@ -59,7 +60,7 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 
 	@Override
 	public boolean isCharged(){
-		return fe > 0;
+		return fe > 0 || super.isCharged();
 	}
 
 	@Override

@@ -1,0 +1,32 @@
+{
+	"type": "crossroads:alchemy",
+	"category": "precise",
+	"min_temp": 2250,
+	"heat": -200,
+	"catalyst": "practitioner",
+	"charged": true,
+	"reagents": [
+		{
+			"type": "phelostogen",
+			"qty": 5
+		},
+		{
+			"type": "sulfur_dioxide",
+			"qty": 1
+		},
+		{
+			"type": "chlorine",
+			"qty": 1
+		},
+		{
+			"type": "elem_charge",
+			"qty": 2
+		}
+	],
+	"products": [
+		{
+			"type": "hellfire",
+			"qty": 1
+		}
+	]
+}

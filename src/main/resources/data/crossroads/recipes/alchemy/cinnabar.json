@@ -1,0 +1,20 @@
+{
+	"type": "crossroads:alchemy",
+	"category": "normal",
+	"min_temp": 360,
+	"heat": 60,
+	"reagents": {
+		"type": "redstone",
+		"qty": 1
+	},
+	"products": [
+		{
+			"type": "quicksilver",
+			"qty": 1
+		},
+		{
+			"type": "sulfur_dioxide",
+			"qty": 1
+		}
+	]
+}

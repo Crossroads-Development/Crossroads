@@ -1,0 +1,23 @@
+{
+	"type": "crossroads:alchemy",
+	"category": "normal",
+	"catalyst": "philosopher",
+	"reagents": {
+		"type": "redstone",
+		"qty": 1
+	},
+	"products": [
+		{
+			"type": "aether",
+			"qty": 1
+		},
+		{
+			"type": "quicksilver",
+			"qty": 1
+		},
+		{
+			"type": "sulfur_dioxide",
+			"qty": 1
+		}
+	]
+}

@@ -1,0 +1,22 @@
+{
+	"type": "crossroads:alchemy",
+	"category": "normal",
+	"min_temp": 2000,
+	"max_temp": 2200,
+	"heat": -100,
+	"charged": true,
+	"reagents": [
+		{
+			"type": "densus",
+			"qty": 1
+		},
+		{
+			"type": "aether",
+			"qty": 1
+		}
+	],
+	"products": {
+		"type": "cavorite",
+		"qty": 1
+	}
+}

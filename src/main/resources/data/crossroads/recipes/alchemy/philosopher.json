@@ -1,0 +1,28 @@
+{
+	"type": "crossroads:alchemy",
+	"category": "precise",
+	"catalyst": "aqua_regia",
+	"max_temp": -15,
+	"heat": -500,
+	"charged": true,
+	"reagents": [
+		{
+			"type": "gold"
+		},
+		{
+			"type": "sulfur"
+		},
+		{
+			"type": "quicksilver"
+		},
+		{
+			"type": "alc_salt"
+		}
+	],
+	"products": [
+		{
+			"type": "philosopher",
+			"qty": 1
+		}
+	]
+}

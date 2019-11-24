@@ -130,83 +130,6 @@ public final class AlchemyCore{
 		FLUID_TO_LIQREAGENT.put(CrossroadsFluids.moltenTin.still, REAGENTS.get(TIN.id()));
 
 		// Reactions
-		//TODO JSON-ify
-		/*
-		// Sulfur combustion.
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(SULFUR.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(SULFUR_DIOXIDE.id()), 1)}, null, 190D, Double.MAX_VALUE, -300D, false){
-			@Override
-			public boolean performReaction(IReactionChamber chamb){
-				boolean performed = super.performReaction(chamb);
-				if(performed){
-					chamb.addVisualEffect(ModParticles.COLOR_FLAME, (Math.random() * 2D - 1D) * 0.015D, Math.random() * 0.015D, (Math.random() * 2D - 1D) * 0.015D, 128, 0, 255, 128);
-				}
-
-				return performed;
-			}
-		});
-		//Sulfur Dioxide oxidation
-		//REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(SULFUR_DIOXIDE.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(SULFUR_TRIOXIDE.id()), 1)}, REAGENTS.get(VANADIUM.id()), 400D, 620D, -100D, false));
-		//Sulfuric Acid production. 
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(SULFUR_DIOXIDE.id()), 1), new ReagentStack(REAGENTS.get(WATER.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(SULFURIC_ACID.id()), 1)}, REAGENTS.get(VANADIUM.id()), 400, 620D, -100D, false));
-		//Gunpowder combustion
-		REACTIONS.add(new DestroyReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(GUNPOWDER.id()), 1)}, null, 200D, Double.MAX_VALUE, false, 0.2F));
-		REACTIONS.add(new DestroyReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(GUNPOWDER.id()), 1)}, null, -300, Double.MAX_VALUE, true, 0.2F));
-
-		//Phelostogen production (from Gunpowder)
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(GUNPOWDER.id()), 2)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(SULFUR.id()), 1), new ReagentStack(REAGENTS.get(PHELOSTOGEN.id()), 1)}, REAGENTS.get(PHILOSOPHER.id()), -300D, 200D, 0D, false));
-		//Phelostogen production (from Slag)
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(SLAG.id()), 2)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(SULFUR.id()), 1), new ReagentStack(REAGENTS.get(PHELOSTOGEN.id()), 1)}, REAGENTS.get(PHILOSOPHER.id()), -300D, 200D, 0D, false));
-		//Aether production
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(REDSTONE.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(QUICKSILVER.id()), 1), new ReagentStack(REAGENTS.get(AETHER.id()), 1), new ReagentStack(REAGENTS.get(SULFUR_DIOXIDE.id()), 1)}, REAGENTS.get(PHILOSOPHER.id()), -360D, Double.MAX_VALUE, 0D, false));
-		//Adamant production
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(BEDROCK.id()), 5)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(ADAMANT.id()), 2), new ReagentStack(REAGENTS.get(ALCHEMICAL_SALT.id()), 3)}, REAGENTS.get(PHILOSOPHER.id()), 0D, 100D, 0D, false));
-
-		//Gunpowder washing
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(GUNPOWDER.id()), 2)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(SULFUR.id()), 1)}, REAGENTS.get(WATER.id()), -300D, 100D, 0D, false));
-		//Slag washing
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(SLAG.id()), 2)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(SULFUR.id()), 1)}, REAGENTS.get(WATER.id()), -300D, 100D, 0D, false));
-		//Cinnabar decomposition
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(REDSTONE.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(QUICKSILVER.id()), 1), new ReagentStack(REAGENTS.get(SULFUR_DIOXIDE.id()), 1)}, null, 360D, Double.MAX_VALUE, 60D, false));
-		//Hydrochloric Acid production
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(SALT.id()), 2), new ReagentStack(REAGENTS.get(SULFURIC_ACID.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(ALCHEMICAL_SALT.id()), 2), new ReagentStack(REAGENTS.get(HYDROCHLORIC_ACID.id()), 1)}, REAGENTS.get(WATER.id()), 90D, Double.MAX_VALUE, 30D, false));
-		//Nitric Acid production
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(WATER.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(NITRIC_ACID.id()), 1)}, null, 100D, Double.MAX_VALUE, 70D, true));
-		//Aqua Regia production
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(NITRIC_ACID.id()), 1), new ReagentStack(REAGENTS.get(HYDROCHLORIC_ACID.id()), 3)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(AQUA_REGIA.id()), 4)}, null, -300D, Double.MAX_VALUE, 0D, false));
-		//Chlorine gas production
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(WATER.id()), 2), new ReagentStack(REAGENTS.get(SALT.id()), 2)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(CHLORINE.id()), 1), new ReagentStack(REAGENTS.get(ALCHEMICAL_SALT.id()), 2)}, null, 20D, 100D, 20D, true));
-		//Bedrock decomposition
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(BEDROCK.id()), 5)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(ALCHEMICAL_SALT.id()), 4)}, REAGENTS.get(AQUA_REGIA.id()), 0D, 100D, 100D, false));
-		//Alchemical Crystal production
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(QUICKSILVER.id()), 2), new ReagentStack(REAGENTS.get(ALCHEMICAL_SALT.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(CRYSTAL.id()), 3)}, REAGENTS.get(VANADIUM.id()), -300D, -10D, -35D, false));
-		//Philosopher's Stone creation
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(GOLD.id()), 1), new ReagentStack(REAGENTS.get(SULFUR.id()), 1), new ReagentStack(REAGENTS.get(QUICKSILVER.id()), 1), new ReagentStack(REAGENTS.get(ALCHEMICAL_SALT.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(PHILOSOPHER.id()), 1)}, REAGENTS.get(AQUA_REGIA.id()), -300D, -15D, -500D, false));
-		//Practitioner's Stone creation
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(GOLD.id()), 1), new ReagentStack(REAGENTS.get(PHELOSTOGEN.id()), 1), new ReagentStack(REAGENTS.get(AETHER.id()), 1), new ReagentStack(REAGENTS.get(ADAMANT.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(PRACTITIONER.id()), 1)}, REAGENTS.get(AQUA_REGIA.id()), -300D, -25D, -5000D, false){
-			@Override
-			public boolean performReaction(IReactionChamber chamb){
-				boolean performed = super.performReaction(chamb);
-				if(performed){
-					ReagentMap reags = chamb.getReagants();
-					int phel = reags.getQty(PHELOSTOGEN.id());
-					int aeth = reags.getQty(AETHER.id());
-					int adam = reags.getQty(ADAMANT.id());
-					int gold = reags.getQty(GOLD.id());
-					if(phel + aeth + adam + gold != 0){
-						//reags.removeReagent(PRACTITIONER.id(), reags.getQty(PRACTITIONER.id()));
-						chamb.destroyChamber(0);
-					}
-				}
-				return performed;
-			}
-
-			@Override
-			public boolean isDestructive(){
-				return true;//Destructive if the proportions aren't exact
-			}
-		});
-
-		 */
 
 		ReagentStack[] mixElem = new ReagentStack[] {new ReagentStack(REAGENTS.get(PHELOSTOGEN.id()), 1), new ReagentStack(REAGENTS.get(AETHER.id()), 1), new ReagentStack(REAGENTS.get(ADAMANT.id()), 1)};
 		//Lumen production
@@ -219,49 +142,8 @@ public final class AlchemyCore{
 		ELEM_REACTIONS.add(new AlchemyRec(new ResourceLocation(Crossroads.MODID + ":fusas"), "", AlchemyRec.Type.ELEMENTAL, mixElem, new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_FUSION.id()), 1)}, REAGENTS.get(PRACTITIONER.id()), -300, Short.MAX_VALUE, 0, true, 0));
 		//Voltus production
 		ELEM_REACTIONS.add(new AlchemyRec(new ResourceLocation(Crossroads.MODID + ":voltus"), "", AlchemyRec.Type.ELEMENTAL, mixElem, new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_CHARGE.id()), 1)}, REAGENTS.get(PRACTITIONER.id()), -300, Short.MAX_VALUE, 0, true, 0));
-
-
 		//Copshowium production intentionally NOT added. Copshowium production is Technomancy only
-		//REACTIONS.add(new ElementalReaction((IElementReagent) REAGENTS.get(ELEM_TIME.id())));
-
-		/*
-		//Ruby production
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_FUSION.id()), 2), new ReagentStack(REAGENTS.get(COPPER.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(RUBY.id()), 2)}, REAGENTS.get(PRACTITIONER.id()), -100, 1000, 0,false));
-		//Emerald production
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_FUSION.id()), 2), new ReagentStack(REAGENTS.get(IRON.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(EMERALD.id()), 2)}, REAGENTS.get(PRACTITIONER.id()), -100, 1000, 0,false));
-		//Diamond production
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_FUSION.id()), 2), new ReagentStack(REAGENTS.get(TIN.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(DIAMOND.id()), 2)}, REAGENTS.get(PRACTITIONER.id()), -100, 1000, 0, false));
-		//Quartz production
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_FUSION.id()), 2), new ReagentStack(REAGENTS.get(GOLD.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(QUARTZ.id()), 2)}, REAGENTS.get(PRACTITIONER.id()), -100, 1000, 0, false));
-		//Gold production
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(AQUA_REGIA.id()), 1), new ReagentStack(REAGENTS.get(QUICKSILVER.id()), 5)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(GOLD.id()), 5)}, REAGENTS.get(PRACTITIONER.id()), -40D, 560D, 10D, false));
-		//Copper production
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(SULFURIC_ACID.id()), 1), new ReagentStack(REAGENTS.get(QUICKSILVER.id()), 5)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(COPPER.id()), 5)}, REAGENTS.get(PRACTITIONER.id()), -40D, 560D, 10D, false));
-		//Iron production
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(HYDROCHLORIC_ACID.id()), 1), new ReagentStack(REAGENTS.get(QUICKSILVER.id()), 5)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(IRON.id()), 5)}, REAGENTS.get(PRACTITIONER.id()), -40D, 560D, 10D, false));
-		//Tin production
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(NITRIC_ACID.id()), 1), new ReagentStack(REAGENTS.get(QUICKSILVER.id()), 5)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(TIN.id()), 5)}, REAGENTS.get(PRACTITIONER.id()), -40D, 560D, 10D, false));
-		//Gold decomposition
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(GOLD.id()), 5)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(AQUA_REGIA.id()), 1), new ReagentStack(REAGENTS.get(QUICKSILVER.id()), 5)}, REAGENTS.get(PHILOSOPHER.id()), -40D, 560D, -10D, false));
-		//Copper decomposition
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(COPPER.id()), 5)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(SULFURIC_ACID.id()), 1), new ReagentStack(REAGENTS.get(QUICKSILVER.id()), 5)}, REAGENTS.get(PHILOSOPHER.id()), -40D, 560D, -10D, false));
-		//Iron decomposition
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(IRON.id()), 5)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(HYDROCHLORIC_ACID.id()), 1), new ReagentStack(REAGENTS.get(QUICKSILVER.id()), 5)}, REAGENTS.get(PHILOSOPHER.id()), -40D, 560D, -10D, false));
-		//Tin decomposition
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(TIN.id()), 5)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(NITRIC_ACID.id()), 1), new ReagentStack(REAGENTS.get(QUICKSILVER.id()), 5)}, REAGENTS.get(PHILOSOPHER.id()), -40D, 560D, -10D, false));
-		//Ignus Infernum production
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(PHELOSTOGEN.id()), 5), new ReagentStack(REAGENTS.get(SULFUR_DIOXIDE.id()), 1), new ReagentStack(REAGENTS.get(CHLORINE.id()), 1), new ReagentStack(REAGENTS.get(ELEM_CHARGE.id()), 2)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(HELLFIRE.id()), 1)}, REAGENTS.get(PRACTITIONER.id()), 2250D, Short.MAX_VALUE, -200D, false));
-		//Densus production
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(ADAMANT.id()), 3), new ReagentStack(REAGENTS.get(EMERALD.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(DENSUS.id()), 4)}, null, -273D, 30D, -5D, true));
-		//Anti-Densus production
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(DENSUS.id()), 1), new ReagentStack(REAGENTS.get(PHELOSTOGEN.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(ANTI_DENSUS.id()), 1)}, null, 200D, 3000D, 20D, true));
-		//Cavorite production
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(DENSUS.id()), 1), new ReagentStack(REAGENTS.get(AETHER.id()), 1)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(CAVORITE.id()), 1)}, null, 2000D, 2200D, -100D, true));
-		//Bedrock production
-		REACTIONS.add(new SimpleTransparentReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(ADAMANT.id()), 1), new ReagentStack(REAGENTS.get(ALCHEMICAL_SALT.id()), 4)}, new ReagentStack[] {new ReagentStack(REAGENTS.get(BEDROCK.id()), 5)}, REAGENTS.get(PRACTITIONER.id()), 0D, 100D, 0D, false));
-		//Philosopher's + Practitioner's stone
-		REACTIONS.add(new DestroyReaction(new ReagentStack[] {new ReagentStack(REAGENTS.get(PHILOSOPHER.id()), 1), new ReagentStack(REAGENTS.get(PRACTITIONER.id()), 1)}, null, -300, Double.MAX_VALUE, false, 4F));
-		*/
+		//ELEM_REACTIONS.add(new AlchemyRec(new ResourceLocation(Crossroads.MODID + ":copshowium"), "", AlchemyRec.Type.ELEMENTAL, mixElem, new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_TIME.id()), 1)}, REAGENTS.get(PRACTITIONER.id()), -300, Short.MAX_VALUE, 0, true, 0));
 	}
 
 	public static List<AlchemyRec> getReactions(World world){

@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:alchemy",
+	"category": "destructive",
+	"min_temp": 200,
+	"data": 0.2,
+	"reagents": {
+		"type": "gunpowder"
+	},
+	"products": [
+
+	]
+}

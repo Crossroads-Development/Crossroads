@@ -1,0 +1,16 @@
+{
+	"type": "crossroads:alchemy",
+	"category": "destructive",
+	"data": 4,
+	"reagents": [
+		{
+			"type": "philosopher"
+		},
+		{
+			"type": "practitioner"
+		}
+	],
+	"products": [
+
+	]
+}

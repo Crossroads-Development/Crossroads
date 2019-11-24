@@ -1,0 +1,21 @@
+{
+	"type": "crossroads:alchemy",
+	"category": "normal",
+	"max_temp": 30,
+	"heat": -5,
+	"charged": true,
+	"reagents": [
+		{
+			"type": "adamant",
+			"qty": 3
+		},
+		{
+			"type": "emerald",
+			"qty": 1
+		}
+	],
+	"products": {
+		"type": "densus",
+		"qty": 4
+	}
+}

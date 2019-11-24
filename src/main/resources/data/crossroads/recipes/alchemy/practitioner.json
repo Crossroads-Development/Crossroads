@@ -1,0 +1,28 @@
+{
+	"type": "crossroads:alchemy",
+	"category": "precise",
+	"catalyst": "aqua_regia",
+	"max_temp": -25,
+	"heat": -5000,
+	"charged": true,
+	"reagents": [
+		{
+			"type": "gold"
+		},
+		{
+			"type": "phelostogen"
+		},
+		{
+			"type": "aether"
+		},
+		{
+			"type": "adamant"
+		}
+	],
+	"products": [
+		{
+			"type": "practitioner",
+			"qty": 1
+		}
+	]
+}

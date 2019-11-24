@@ -1,0 +1,17 @@
+{
+	"type": "crossroads:alchemy",
+	"category": "normal",
+	"min_temp": 100,
+	"heat": 70,
+	"charged": true,
+	"reagents": {
+		"type": "water",
+		"qty": 1
+	},
+	"products": [
+		{
+			"type": "nitric_acid",
+			"qty": 1
+		}
+	]
+}

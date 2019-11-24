@@ -1,0 +1,28 @@
+{
+	"type": "crossroads:alchemy",
+	"category": "normal",
+	"min_temp": 20,
+	"max_temp": 100,
+	"heat": 20,
+	"charged": true,
+	"reagents": [
+		{
+			"type": "water",
+			"qty": 2
+		},
+		{
+			"type": "salt",
+			"qty": 2
+		}
+	],
+	"products": [
+		{
+			"type": "chlorine",
+			"qty": 1
+		},
+		{
+			"type": "alc_salt",
+			"qty": 2
+		}
+	]
+}

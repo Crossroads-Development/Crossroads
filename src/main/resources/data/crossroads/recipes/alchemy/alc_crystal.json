@@ -1,0 +1,22 @@
+{
+	"type": "crossroads:alchemy",
+	"category": "normal",
+	"catalyst": "vanadium",
+	"max_temp": -10,
+	"heat": -35,
+	"reagents": [
+		{
+			"type": "quicksilver",
+			"qty": 2
+		},
+		{
+			"type": "alc_salt"
+		}
+	],
+	"products": [
+		{
+			"type": "crystal",
+			"qty": 3
+		}
+	]
+}

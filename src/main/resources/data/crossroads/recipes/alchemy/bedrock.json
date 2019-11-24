@@ -1,0 +1,21 @@
+{
+	"type": "crossroads:alchemy",
+	"category": "normal",
+	"catalyst": "practitioner",
+	"min_temp": 0,
+	"max_temp": 100,
+	"reagents": [
+		{
+			"type": "adamant",
+			"qty": 1
+		},
+		{
+			"type": "alc_salt",
+			"qty": 4
+		}
+	],
+	"products": {
+		"type": "bedrock",
+		"qty": 5
+	}
+}

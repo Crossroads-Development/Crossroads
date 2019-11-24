@@ -1,0 +1,26 @@
+{
+	"type": "crossroads:alchemy",
+	"category": "normal",
+	"min_temp": 90,
+	"heat": 30,
+	"catalyst": "water",
+	"reagents": [
+		{
+			"type": "salt",
+			"qty": 2
+		},
+		{
+			"type": "sulfuric_acid"
+		}
+	],
+	"products": [
+		{
+			"type": "alc_salt",
+			"qty": 2
+		},
+		{
+			"type": "hydrochloric_acid",
+			"qty": 1
+		}
+	]
+}

@@ -13,6 +13,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -72,7 +73,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 
 	@Override
 	public boolean isCharged(){
-		return energy >= 10;
+		return energy >= 10 || super.isCharged();
 	}
 
 	@Override

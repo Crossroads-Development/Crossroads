@@ -36,7 +36,7 @@ public interface IReactionChamber{
 	}
 	
 	public default boolean isCharged(){
-		return false;
+		return getReagants().getQty(EnumReagents.ELEM_CHARGE.id()) != 0;
 	}
 	
 	public int getReactionCapacity();
@@ -53,7 +53,6 @@ public interface IReactionChamber{
 	 * @param speedX
 	 * @param speedY
 	 * @param speedZ
-	 * @param particleArgs
 	 */
 	public <T extends IParticleData> void addVisualEffect(T particleType, double speedX, double speedY, double speedZ);
 }

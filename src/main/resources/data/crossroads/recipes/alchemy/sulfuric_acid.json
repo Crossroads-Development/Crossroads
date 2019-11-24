@@ -1,0 +1,18 @@
+{
+	"type": "crossroads:alchemy",
+	"min_temp": 400,
+	"max_temp": 620,
+	"heat": -100,
+	"catalyst": "vanadium",
+	"reagents": [
+		{
+			"type": "sulfur_dioxide"
+		},
+		{
+			"type": "water"
+		}
+	],
+	"products": {
+		"type": "sulfuric_acid"
+	}
+}

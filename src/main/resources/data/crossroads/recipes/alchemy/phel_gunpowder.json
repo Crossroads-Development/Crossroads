@@ -1,0 +1,20 @@
+{
+	"type": "crossroads:alchemy",
+	"category": "normal",
+	"max_temp": 200,
+	"catalyst": "philosopher",
+	"reagents": {
+		"type": "gunpowder",
+		"qty": 2
+	},
+	"products": [
+		{
+			"type": "phelostogen",
+			"qty": 1
+		},
+		{
+			"type": "sulfur",
+			"qty": 1
+		}
+	]
+}
