@@ -16,12 +16,18 @@ import java.util.List;
 
 public class GrowEffect implements IEffect{
 
+	private static final DamageSource POTENTIAL_VOID = new DamageSource("potentialvoid").setMagicDamage().setDamageBypassesArmor();
+
 	@Override
 	public void doEffect(World worldIn, BlockPos pos, int mult, Direction dir){
 		double range = Math.sqrt(mult);
 		List<LivingEntity> ents = worldIn.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range, pos.getY() + range, pos.getZ() + range), EntityPredicates.IS_ALIVE);
 		for(LivingEntity ent : ents){
-			ent.heal((float) (mult / 2D));
+			if(ent.isEntityUndead()){
+				ent.attackEntityFrom(POTENTIAL_VOID, mult / 2F);
+			}else{
+				ent.heal(mult / 2F);
+			}
 		}
 
 		for(int i = 0; i < mult; i++){
@@ -47,8 +53,6 @@ public class GrowEffect implements IEffect{
 
 	public static class KillEffect implements IEffect{
 
-		private static final DamageSource POTENTIAL_VOID = new DamageSource("potentialvoid").setMagicDamage().setDamageBypassesArmor();
-
 		@Override
 		public void doEffect(World worldIn, BlockPos pos, int mult, Direction dir){
 			BlockState state = worldIn.getBlockState(pos);
@@ -62,7 +66,11 @@ public class GrowEffect implements IEffect{
 			double range = Math.sqrt(mult);
 			List<LivingEntity> ents = worldIn.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range + 1, pos.getY() + range + 1, pos.getZ() + range + 1), EntityPredicates.IS_ALIVE);
 			for(LivingEntity ent : ents){
-				ent.attackEntityFrom(POTENTIAL_VOID, (float) mult * 3F / 4F);
+				if(ent.isEntityUndead()){
+					ent.heal(mult * 3F / 4F);
+				}else{
+					ent.attackEntityFrom(POTENTIAL_VOID, mult * 3F / 4F);
+				}
 			}
 		}
 	}
