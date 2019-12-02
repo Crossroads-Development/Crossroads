@@ -5,31 +5,42 @@ import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.registries.ObjectHolder;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 
+@ObjectHolder(Crossroads.MODID)
 public class VoltusGeneratorTileEntity extends TileEntity implements ITickableTileEntity, IInfoTE{
 
+	@ObjectHolder("voltus_generator")
+	private static TileEntityType<VoltusGeneratorTileEntity> type = null;
+
 	private static final int VOLTUS_CAPACITY = 100;
-	private static final int FE_CAPACITY = 20_000;
+	private static final int FE_CAPACITY = 100_000;
 	private int voltusAmount = 0;
 	private int fe = 0;
 
+	public VoltusGeneratorTileEntity(){
+		super(type);
+	}
+
 	@Override
-	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
-		chat.add(voltusAmount + "/" + VOLTUS_CAPACITY + " Voltus");
+	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+		chat.add(new TranslationTextComponent("tt.crossroads.voltus_generator.read", voltusAmount, VOLTUS_CAPACITY));
 	}
 
 	@Override
@@ -38,18 +49,17 @@ public class VoltusGeneratorTileEntity extends TileEntity implements ITickableTi
 			return;
 		}
 
-		int usedVoltus = Math.min(voltusAmount, (int) ((FE_CAPACITY - fe) * ((ForgeConfigSpec.DoubleValue) CRConfig.voltusUsage).get() / 1000D));
-
-		if(usedVoltus > 0){
-			voltusAmount -= usedVoltus;
-			fe += usedVoltus * 1000D / ((ForgeConfigSpec.DoubleValue) CRConfig.voltusUsage).get();
+		if(voltusAmount != 0 && FE_CAPACITY - fe <= CRConfig.voltusValue.get()){
+			voltusAmount -= 1;
+			fe += CRConfig.voltusValue.get();
 			markDirty();
 		}
 
-		for(Direction dir : Direction.VALUES){
+		for(Direction dir : Direction.values()){
 			TileEntity te = world.getTileEntity(pos.offset(dir));
-			if(te != null && te.hasCapability(CapabilityEnergy.ENERGY, dir.getOpposite())){
-				IEnergyStorage storage = te.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite());
+			LazyOptional<IEnergyStorage> energyOpt;
+			if(te != null && (energyOpt = te.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite())).isPresent()){
+				IEnergyStorage storage = energyOpt.orElseThrow(NullPointerException::new);
 				int moved = storage.receiveEnergy(fe, false);
 				if(moved > 0){
 					fe -= moved;
@@ -74,22 +84,24 @@ public class VoltusGeneratorTileEntity extends TileEntity implements ITickableTi
 		return nbt;
 	}
 
-	private IChemicalHandler handler = new AlchHandler();
-	private ElecHandler feHandler = new ElecHandler();
-
 	@Override
-	public boolean hasCapability(Capability<?> cap, Direction side){
-		return cap == Capabilities.CHEMICAL_CAPABILITY || cap == CapabilityEnergy.ENERGY || super.hasCapability(cap, side);
+	public void remove(){
+		super.remove();
+		chemOpt.invalidate();
+		feOpt.invalidate();
 	}
+
+	private LazyOptional<IChemicalHandler> chemOpt = LazyOptional.of(AlchHandler::new);
+	private LazyOptional<ElecHandler> feOpt = LazyOptional.of(ElecHandler::new);
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.CHEMICAL_CAPABILITY){
-			return (T) handler;
+			return (LazyOptional<T>) chemOpt;
 		}
 		if(cap == CapabilityEnergy.ENERGY){
-			return (T) feHandler;
+			return (LazyOptional<T>) feOpt;
 		}
 		return super.getCapability(cap, side);
 	}

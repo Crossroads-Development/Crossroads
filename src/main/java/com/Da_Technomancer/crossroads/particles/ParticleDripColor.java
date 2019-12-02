@@ -1,86 +1,36 @@
 package com.Da_Technomancer.crossroads.particles;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.IParticleFactory;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.particle.*;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nullable;
+import java.awt.*;
 
 @OnlyIn(Dist.CLIENT)
-public class ParticleDripColor extends Particle{
+public class ParticleDripColor extends SpriteTexturedParticle{
 
-	protected ParticleDripColor(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn){
-		super(worldIn, xCoordIn, yCoordIn, zCoordIn);
+	private final IAnimatedSprite sprite;
+
+	private ParticleDripColor(World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, Color c, IAnimatedSprite s){
+		super(worldIn, x, y, z);
 		setSize(0.02F, 0.02F);
-		setBoundingBox(new AxisAlignedBB(xCoordIn, yCoordIn, zCoordIn, xCoordIn + width, yCoordIn + height, zCoordIn + width));
 		canCollide = false;
-		particleRed = 1F;
-		particleGreen = 1F;
-		particleBlue = 1F;
-		setParticleTextureIndex(17);
-		particleScale *= rand.nextFloat() * 0.6F + 0.6F;
-		motionX = xSpeedIn;//Suggestion: (Math.random() * 2D - 1D) * 0.02D
-		motionY = ySpeedIn;//Suggestion: (Math.random() - 1D) * 0.02D
-		motionZ = zSpeedIn;//Suggestion: (Math.random() * 2D - 1D) * 0.02D
-		particleMaxAge = (int) (7.0D / (Math.random() * 0.8D + 0.2D));
+		sprite = s;
+//		setParticleTextureIndex(17);
+		multipleParticleScaleBy(rand.nextFloat() * 0.6F + 0.6F);
+		motionX = xSpeed;//Suggestion: (Math.random() * 2D - 1D) * 0.02D
+		motionY = ySpeed;//Suggestion: (Math.random() - 1D) * 0.02D
+		motionZ = zSpeed;//Suggestion: (Math.random() * 2D - 1D) * 0.02D
+		setMaxAge((int) (7.0D / (Math.random() * 0.8D + 0.2D)));
+		setColor(c.getRed() / 255F, c.getGreen() / 255F, c.getBlue() / 255F);
+		setAlphaF(c.getAlpha() / 255F);
+		selectSpriteWithAge(sprite);
 	}
 
 	@Override
-	public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ){
-		Tessellator.getInstance().draw();
-		buffer.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
-		Minecraft.getInstance().textureManager.bindTexture(ModParticles.PARTICLE_1_TEXTURE);
-		
-		float f = (float) this.particleTextureIndexX / 16.0F;
-		float f1 = f + 0.0624375F;
-		float f2 = (float) this.particleTextureIndexY / 16.0F;
-		float f3 = f2 + 0.0624375F;
-		float f4 = 0.1F * this.particleScale;
-
-		float f5 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);
-		float f6 = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - interpPosY);
-		float f7 = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks - interpPosZ);
-		int i = this.getBrightnessForRender(partialTicks);
-		int j = i >> 16 & 65535;
-		int k = i & 65535;
-		Vec3d[] avec3d = new Vec3d[] {new Vec3d((double) (-rotationX * f4 - rotationXY * f4), (double) (-rotationZ * f4), (double) (-rotationYZ * f4 - rotationXZ * f4)), new Vec3d((double) (-rotationX * f4 + rotationXY * f4), (double) (rotationZ * f4), (double) (-rotationYZ * f4 + rotationXZ * f4)), new Vec3d((double) (rotationX * f4 + rotationXY * f4), (double) (rotationZ * f4), (double) (rotationYZ * f4 + rotationXZ * f4)), new Vec3d((double) (rotationX * f4 - rotationXY * f4), (double) (-rotationZ * f4), (double) (rotationYZ * f4 - rotationXZ * f4))};
-
-		if(this.particleAngle != 0.0F){
-			float f8 = this.particleAngle + (this.particleAngle - this.prevParticleAngle) * partialTicks;
-			float f9 = MathHelper.cos(f8 * 0.5F);
-			float f10 = MathHelper.sin(f8 * 0.5F) * (float) cameraViewDir.x;
-			float f11 = MathHelper.sin(f8 * 0.5F) * (float) cameraViewDir.y;
-			float f12 = MathHelper.sin(f8 * 0.5F) * (float) cameraViewDir.z;
-			Vec3d vec3d = new Vec3d((double) f10, (double) f11, (double) f12);
-
-			for(int l = 0; l < 4; ++l){
-				avec3d[l] = vec3d.scale(2.0D * avec3d[l].dotProduct(vec3d)).add(avec3d[l].scale((double) (f9 * f9) - vec3d.dotProduct(vec3d))).add(vec3d.crossProduct(avec3d[l]).scale((double) (2.0F * f9)));
-			}
-		}
-
-		buffer.pos((double) f5 + avec3d[0].x, (double) f6 + avec3d[0].y, (double) f7 + avec3d[0].z).tex((double) f1, (double) f3).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-		buffer.pos((double) f5 + avec3d[1].x, (double) f6 + avec3d[1].y, (double) f7 + avec3d[1].z).tex((double) f1, (double) f2).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-		buffer.pos((double) f5 + avec3d[2].x, (double) f6 + avec3d[2].y, (double) f7 + avec3d[2].z).tex((double) f, (double) f2).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-		buffer.pos((double) f5 + avec3d[3].x, (double) f6 + avec3d[3].y, (double) f7 + avec3d[3].z).tex((double) f, (double) f3).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-	
-		
-		Tessellator.getInstance().draw();
-		buffer.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
-		Minecraft.getInstance().textureManager.bindTexture(ModParticles.BASE_PARTICLE_TEXTURE);
-	}
-	
-	@Override
-	public void onUpdate(){
-		setParticleTextureIndex(17 - (particleAge * 4 >= particleMaxAge ? 1 : 0));
-		
+	public void tick(){
 		prevPosX = posX;
 		prevPosY = posY;
 		prevPosZ = posZ;
@@ -88,16 +38,30 @@ public class ParticleDripColor extends Particle{
 		motionX *= 0.85D;
 		motionY *= 0.85D;
 		motionZ *= 0.85D;
-
-		if(particleAge++ >= particleMaxAge){
+		selectSpriteWithAge(sprite);
+		if(age++ >= maxAge){
 			setExpired();
 		}
 	}
 
+	@Override
+	public IParticleRenderType getRenderType(){
+		return IParticleRenderType.PARTICLE_SHEET_OPAQUE;
+	}
+
 	@OnlyIn(Dist.CLIENT)
-	public static class Factory implements IParticleFactory{
-		public Particle createParticle(int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... p_178902_15_){
-			return new ParticleDripColor(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn);
+	public static class Factory implements IParticleFactory<ColorParticleData>{
+
+		private IAnimatedSprite sprite;
+
+		protected Factory(IAnimatedSprite spriteIn){
+			sprite = spriteIn;
+		}
+
+		@Nullable
+		@Override
+		public Particle makeParticle(ColorParticleData typeIn, World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed){
+			return new ParticleDripColor(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, typeIn.getColor(), sprite);
 		}
 	}
 }

@@ -1,25 +1,36 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.blocks.alchemy.DensusPlate;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.ITickableTileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.List;
 
+@ObjectHolder(Crossroads.MODID)
 public class DensusPlateTileEntity extends TileEntity implements ITickableTileEntity{
+
+	@ObjectHolder("densus_plate")
+	private static TileEntityType<DensusPlateTileEntity> type = null;
 
 	private Direction facing = null;
 	private Boolean anti = null;
 	private static final int RANGE = CRConfig.gravRange.get();
+
+	public DensusPlateTileEntity(){
+		super(type);
+	}
 
 	private Direction getFacing(){
 		if(facing == null){

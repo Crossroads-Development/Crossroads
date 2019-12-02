@@ -2,27 +2,23 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactiveSpotTileEntity;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-
-import javax.annotation.Nullable;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.world.IBlockReader;
 
 public class ReactiveSpot extends ContainerBlock{
 
 	public ReactiveSpot(){
-		super(Material.SPONGE);
+		super(Properties.create(Material.SPONGE).hardnessAndResistance(0).doesNotBlockMovement().noDrops());
 		String name = "reactive_spot";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setHardness(0);
 		CrossroadsBlocks.toRegister.add(this);
+		//No item form
 	}
 
 	@Override
@@ -31,28 +27,7 @@ public class ReactiveSpot extends ContainerBlock{
 	}
 
 	@Override
-	@Nullable
-	public AxisAlignedBB getCollisionBoundingBox(BlockState blockState, IBlockAccess worldIn, BlockPos pos){
-		return NULL_AABB;
-	}
-
-	@Override
-	public boolean canCollideCheck(BlockState state, boolean hitIfLiquid){
-		return false;
-	}
-
-	@Override
-	public boolean isOpaqueCube(BlockState state){
-		return false;
-	}
-
-	@Override
-	public boolean isFullCube(BlockState state){
-		return false;
-	}
-
-	@Override
-	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face){
-		return BlockFaceShape.UNDEFINED;
+	public VoxelShape getRaytraceShape(BlockState state, IBlockReader worldIn, BlockPos pos){
+		return VoxelShapes.empty();
 	}
 }

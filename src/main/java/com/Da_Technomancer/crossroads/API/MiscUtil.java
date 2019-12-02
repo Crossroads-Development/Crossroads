@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.API;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,7 +22,7 @@ public final class MiscUtil{
 	/**
 	 * A common style applied to "quip" lines in tooltips
 	 */
-	public static final Style TT_QUIP = new Style().setColor(TextFormatting.AQUA).setItalic(true);
+	public static final Style TT_QUIP = EssentialsConfig.TT_QUIP;
 
 	public static double betterRound(double numIn, int decPlac){
 		return Math.round(numIn * Math.pow(10, decPlac)) / Math.pow(10D, decPlac);

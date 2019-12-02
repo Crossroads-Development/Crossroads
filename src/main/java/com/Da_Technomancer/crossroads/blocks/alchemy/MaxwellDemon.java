@@ -1,33 +1,31 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.MaxwellDemonTileEntity;
-
-import net.minecraft.block.*;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.block.BlockRenderType;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class MaxwellDemon extends ContainerBlock{
 
 	public MaxwellDemon(){
-		super(Material.IRON);
+		super(Properties.create(Material.IRON).sound(SoundType.STONE).hardnessAndResistance(3));
 		String name = "maxwell_demon";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setHardness(3);
-		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
 	}
@@ -45,8 +43,8 @@ public class MaxwellDemon extends ContainerBlock{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add("Heats top to 2500°C while running at 5°C/t");
-		tooltip.add("Cools bottom to -250°C while running at -5°C/t");
-		tooltip.add("More like Max's Demon.");
+		tooltip.add(new TranslationTextComponent("tt.crossroads.maxwell_demon.top", MaxwellDemonTileEntity.MAX_TEMP, MaxwellDemonTileEntity.RATE));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.maxwell_demon.bottom", MaxwellDemonTileEntity.MIN_TEMP, MaxwellDemonTileEntity.RATE));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.maxwell_demon.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

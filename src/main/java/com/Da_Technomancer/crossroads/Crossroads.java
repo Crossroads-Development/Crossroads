@@ -13,7 +13,8 @@ import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.items.crafting.CRRecipeGenerator;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.*;
 import com.Da_Technomancer.crossroads.items.itemSets.ItemSets;
-import com.Da_Technomancer.crossroads.particles.ModParticles;
+import com.Da_Technomancer.crossroads.particles.ColorParticleType;
+import com.Da_Technomancer.crossroads.particles.CRParticles;
 import com.Da_Technomancer.crossroads.render.TESR.AAModTESR;
 import com.Da_Technomancer.crossroads.render.bakedModel.BakedModelLoader;
 import com.Da_Technomancer.crossroads.tileentities.CrossroadsTileEntity;
@@ -28,6 +29,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.particles.ParticleType;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.feature.Feature;
@@ -112,7 +114,7 @@ public final class Crossroads{
 		CRItems.clientInit();
 		AAModTESR.registerBlockRenderer();
 		Keys.init();
-		ModParticles.clientInit();
+		CRParticles.clientInit();
 		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
 	}
 
@@ -166,6 +168,17 @@ public final class Crossroads{
 	public static void registerEnts(RegistryEvent.Register<EntityType<?>> e){
 		IForgeRegistry<EntityType<?>> registry = e.getRegistry();
 		//TODO register entities
+	}
+
+	@SuppressWarnings("unused")
+	@SubscribeEvent
+	public static void registerParticles(RegistryEvent.Register<ParticleType<?>> e){
+		IForgeRegistry<ParticleType<?>> registry = e.getRegistry();
+		registry.register(new ColorParticleType("color_flame", false));
+		registry.register(new ColorParticleType("color_gas", false));
+		registry.register(new ColorParticleType("color_liquid", false));
+		registry.register(new ColorParticleType("color_solid", false));
+		registry.register(new ColorParticleType("color_splash", false));
 	}
 
 	@SuppressWarnings("unused")
@@ -233,9 +246,6 @@ public final class Crossroads{
 		registerConType(WaterCentrifugeContainer::new, "water_centrifuge", e);
 		registerConType(ColorChartContainer::new, "color_chart", e);
 		registerConType(BeamExtractorContainer::new, "beam_extractor", e);
-
-
-		//TODO register container types
 	}
 
 	/**

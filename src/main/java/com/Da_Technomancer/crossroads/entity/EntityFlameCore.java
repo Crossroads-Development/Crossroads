@@ -5,23 +5,28 @@ import com.Da_Technomancer.crossroads.API.effects.alchemy.IAlchEffect;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.NbtToEntityClient;
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.essentials.packets.INBTReceiver;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 
 import static net.minecraft.tileentity.TileEntity.INFINITE_EXTENT_AABB;
 
-public class EntityFlameCore extends Entity implements INbtReceiver{
+public class EntityFlameCore extends Entity implements INBTReceiver{
 
 	private int maxRadius;
 	/**
@@ -197,7 +202,7 @@ public class EntityFlameCore extends Entity implements INbtReceiver{
 	}
 
 	@Override
-	public void receiveNBT(CompoundNBT nbt){
+	public void receiveNBT(CompoundNBT nbt, @Nullable ServerPlayerEntity sender){
 		int colorCode = nbt.getInt("col");
 		col = Color.decode(Integer.toString(colorCode & 0xFFFFFF));
 		col = new Color(col.getRed(), col.getGreen(), col.getBlue(), colorCode >>> 24);

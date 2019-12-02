@@ -2,30 +2,57 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
+import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.ITickableTileEntity;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 
+//We can't use ModuleTE because this has 2 internal temperatures
+@ObjectHolder(Crossroads.MODID)
 public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileEntity, IInfoTE{
+
+	@ObjectHolder("maxwell_demon")
+	private static TileEntityType<MaxwellDemonTileEntity> type = null;
+
+	public static final double MAX_TEMP = 2500;
+	public static final double MIN_TEMP = -250;
+	public static final double RATE = 5;
 
 	private double tempUp = 0;
 	private double tempDown = 0;
 	private boolean init = false;
 
+	public MaxwellDemonTileEntity(){
+		super(type);
+	}
+
 	@Override
-	public void addInfo(ArrayList<String> chat, PlayerEntity player, Direction side, BlockRayTraceResult hit){
-		chat.add("Upper Temp: " + MiscUtil.betterRound(tempUp, 3) + "°C");
-		chat.add("Lower Temp: " + MiscUtil.betterRound(tempDown, 3) + "°C");
-		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world, pos) + "°C");
+	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+		chat.add(new TranslationTextComponent("tt.crossroads.maxwell_demon.read_top", CRConfig.formatVal(tempUp)));
+		chat.add(new TranslationTextComponent("tt.crossroads.maxwell_demon.read_bottom", CRConfig.formatVal(tempDown)));
+		chat.add(new TranslationTextComponent("tt.crossroads.maxwell_demon.read_biome", CRConfig.formatVal(HeatUtil.convertBiomeTemp(world, pos))));
+	}
+
+	private void init(){
+		if(!init){
+			tempUp = HeatUtil.convertBiomeTemp(world, pos);
+			tempDown = tempUp;
+			init = true;
+		}
 	}
 
 	@Override
@@ -34,16 +61,14 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileE
 			return;
 		}
 
-		if(!init){
-			heatHandlerUp.init();
-		}
+		init();
 
-		if(tempUp < 2500D){
-			tempUp = Math.min(2500D, tempUp + 5D);
+		if(tempUp < MAX_TEMP){
+			tempUp = Math.min(MAX_TEMP, tempUp + RATE);
 			markDirty();
 		}
-		if(tempDown > -250D){
-			tempDown = Math.max(-250D, tempDown - 5D);
+		if(tempDown > MIN_TEMP){
+			tempDown = Math.max(MIN_TEMP, tempDown - RATE);
 			markDirty();
 		}
 
@@ -51,7 +76,8 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileE
 			Direction dir = Direction.byIndex(i);
 
 			TileEntity te = world.getTileEntity(pos.offset(dir));
-			if(te != null && te.hasCapability(Capabilities.HEAT_CAPABILITY, Direction.DOWN)){
+			LazyOptional<IHeatHandler> heatOpt;
+			if(te != null && (heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, dir.getOpposite())).isPresent()){
 				double reservePool = i == 0 ? tempDown : tempUp;
 				if(i == 0){
 					tempDown -= reservePool;
@@ -59,8 +85,7 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileE
 					tempUp -= reservePool;
 				}
 
-
-				IHeatHandler handler = te.getCapability(Capabilities.HEAT_CAPABILITY, Direction.DOWN);
+				IHeatHandler handler = heatOpt.orElseThrow(NullPointerException::new);
 				reservePool += handler.getTemp();
 				handler.addHeat(-handler.getTemp());
 				reservePool /= 2;
@@ -77,7 +102,7 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileE
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
-		nbt.putBoolean("initHeat", init);
+		nbt.putBoolean("init_heat", init);
 		nbt.putDouble("temp_u", tempUp);
 		nbt.putDouble("temp_d", tempDown);
 		return nbt;
@@ -86,30 +111,29 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileE
 	@Override
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
-		init = nbt.getBoolean("initHeat");
+		init = nbt.getBoolean("init_heat");
 		tempUp = nbt.getDouble("temp_u");
 		tempDown = nbt.getDouble("temp_d");
 	}
 
-	private final HeatHandler heatHandlerUp = new HeatHandler(true);
-	private final HeatHandler heatHandlerDown = new HeatHandler(false);
-
 	@Override
-	public boolean hasCapability(Capability<?> cap, Direction side){
-		if(cap == Capabilities.HEAT_CAPABILITY && (side == null || side.getAxis() == Axis.Y)){
-			return true;
-		}
-		return super.hasCapability(cap, side);
+	public void remove(){
+		super.remove();
+		heatOptUp.invalidate();
+		heatOptDown.invalidate();
 	}
+
+	private final LazyOptional<IHeatHandler> heatOptUp = LazyOptional.of(() -> new HeatHandler(true));
+	private final LazyOptional<IHeatHandler> heatOptDown = LazyOptional.of(() -> new HeatHandler(false));
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.HEAT_CAPABILITY){
 			if(side == null || side == Direction.UP){
-				return (T) heatHandlerUp;
+				return (LazyOptional<T>) heatOptUp;
 			}else if(side == Direction.DOWN){
-				return (T) heatHandlerDown;
+				return (LazyOptional<T>) heatOptDown;
 			}
 		}
 		return super.getCapability(cap, side);
@@ -121,14 +145,6 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileE
 
 		private HeatHandler(boolean up){
 			this.up = up;
-		}
-
-		private void init(){
-			if(!init){
-				tempUp = HeatUtil.convertBiomeTemp(world, pos);
-				tempDown = tempUp;
-				init = true;
-			}
 		}
 
 		@Override

@@ -1,52 +1,52 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.DensusPlateTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-import java.util.List;
+import javax.annotation.Nullable;
 
 public class DensusPlate extends ContainerBlock{
 
-	private static final AxisAlignedBB BBNORTH = new AxisAlignedBB(0, 0, 0.5D, 1, 1, 1);
-	private static final AxisAlignedBB BBSOUTH = new AxisAlignedBB(0, 0, 0, 1, 1, 0.5D);
-	private static final AxisAlignedBB BBWEST = new AxisAlignedBB(0.5D, 0, 0, 1, 1, 1);
-	private static final AxisAlignedBB BBEAST = new AxisAlignedBB(0, 0, 0, 0.5D, 1, 1);
-	private static final AxisAlignedBB BBUP = new AxisAlignedBB(0, 0, 0, 1, 0.5D, 1);
-	private static final AxisAlignedBB BBDOWN = new AxisAlignedBB(0, 0.5D, 0, 1, 1, 1);
+	private static final VoxelShape[] SHAPES = new VoxelShape[6];
+
+	static{
+		SHAPES[0] = makeCuboidShape(0, 14, 0, 16, 16, 16);
+		SHAPES[1] = makeCuboidShape(0, 0, 0, 16, 2, 16);
+		SHAPES[2] = makeCuboidShape(0, 0, 14, 16, 16, 16);
+		SHAPES[3] = makeCuboidShape(0, 0, 0, 16, 16, 2);
+		SHAPES[4] = makeCuboidShape(0, 0, 14, 16, 16, 16);
+		SHAPES[5] = makeCuboidShape(0, 0, 0, 2, 16, 16);
+	}
 
 	public DensusPlate(boolean anti){
-		super(Material.ROCK);
+		super(Properties.create(Material.ROCK).hardnessAndResistance(3));
 		String name = anti ? "anti_densus_plate" : "densus_plate";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setHardness(3);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
 	}
 
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
+		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand))){
 			if(!worldIn.isRemote){
 				worldIn.setBlockState(pos, state.cycle(EssentialsProperties.FACING));
 			}
@@ -55,59 +55,22 @@ public class DensusPlate extends ContainerBlock{
 		return false;
 	}
 
+	@Nullable
 	@Override
-	public BlockState getStateForPlacement(World worldIn, BlockPos pos, Direction blockFaceClickedOn, BlockRayTraceResult hit, int meta, LivingEntity placer){
-		return getDefaultState().with(EssentialsProperties.FACING, (placer == null) ? Direction.NORTH : Direction.getDirectionFromEntityLiving(pos, placer));
+	public BlockState getStateForPlacement(BlockItemUseContext context){
+		return getDefaultState().with(EssentialsProperties.FACING, context.getNearestLookingDirection().getOpposite());
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(BlockState state, IBlockAccess source, BlockPos pos){
-		switch(state.get(EssentialsProperties.FACING)){
-			case EAST:
-				return BBEAST;
-			case SOUTH:
-				return BBSOUTH;
-			case WEST:
-				return BBWEST;
-			case NORTH:
-				return BBNORTH;
-			case UP:
-				return BBUP;
-			default:
-				return BBDOWN;
-		}
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+		return SHAPES[state.get(EssentialsProperties.FACING).getIndex()];
 	}
 
 	@Override
-	public void addCollisionBoxToList(BlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean thingamijiger){
-		addCollisionBoxToList(pos, mask, list, getBoundingBox(state, worldIn, pos));
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+		builder.add(EssentialsProperties.FACING);
 	}
 
-	@Override
-	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, EssentialsProperties.FACING);
-	}
-
-	@Override
-	public BlockState getStateFromMeta(int meta){
-		return getDefaultState().with(EssentialsProperties.FACING, Direction.byIndex(meta));
-	}
-
-	@Override
-	public int getMetaFromState(BlockState state){
-		return state.get(EssentialsProperties.FACING).getIndex();
-	}
-
-	@Override
-	public boolean isOpaqueCube(BlockState state){
-		return false;
-	}
-
-	@Override
-	public boolean isFullCube(BlockState state){
-		return false;
-	}
-	
 	@Override
 	public BlockRenderType getRenderType(BlockState state){
 		return BlockRenderType.MODEL;
@@ -116,10 +79,5 @@ public class DensusPlate extends ContainerBlock{
 	@Override
 	public TileEntity createNewTileEntity(IBlockReader worldIn){
 		return new DensusPlateTileEntity();
-	}
-
-	@Override
-	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face){
-		return face == state.get(EssentialsProperties.FACING).getOpposite() ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
 	}
 }
