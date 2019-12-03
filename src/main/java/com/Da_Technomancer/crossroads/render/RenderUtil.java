@@ -3,12 +3,16 @@ package com.Da_Technomancer.crossroads.render;
 import com.Da_Technomancer.crossroads.API.packets.AddVisualToClient;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
+import com.mojang.blaze3d.platform.GLX;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.function.Function;
 
@@ -68,5 +72,28 @@ public class RenderUtil{
 		}else{
 			CrossroadsPackets.sendPacketAround(world, new BlockPos(xSt, ySt, zSt), new AddVisualToClient(nbt));
 		}
+	}
+
+	/**
+	 * Disables lighting in the current GlStateManager render operation, making things glow-in-the-dark
+	 * @return The previous lighting setting- needed to restore normal settings
+	 */
+	@OnlyIn(Dist.CLIENT)
+	public static Pair<Float, Float> disableLighting(){
+		int i = 61680;
+		int j = i % 65536;
+		int k = i / 65536;
+		Pair<Float, Float> prev = Pair.of(GLX.lastBrightnessX, GLX.lastBrightnessY);
+		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, j, k);
+		return prev;
+	}
+
+	/**
+	 * Re-enables lighting in the current GlStateManager render operation, for use after disableLighting
+	 * @param prevSetting The original lighting settings (returned by disable lighting)
+	 */
+	@OnlyIn(Dist.CLIENT)
+	public static void enableLighting(Pair<Float, Float> prevSetting){
+		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, prevSetting.getLeft(), prevSetting.getRight());
 	}
 }

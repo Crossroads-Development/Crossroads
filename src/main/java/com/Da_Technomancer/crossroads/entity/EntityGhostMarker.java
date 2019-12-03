@@ -2,50 +2,51 @@ package com.Da_Technomancer.crossroads.entity;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.IPacket;
+import net.minecraft.network.play.server.SSpawnObjectPacket;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
+@ObjectHolder(Crossroads.MODID)
 public class EntityGhostMarker extends Entity{
+
+	@ObjectHolder("ghost_marker")
+	private static EntityType<EntityGhostMarker> type = null;
 
 	private long time;
 	private int lifespan;
-	private EnumMarkerType type;
+	private EnumMarkerType markType;
 	public CompoundNBT data;
 
-	public EntityGhostMarker(World worldIn){
-		super(worldIn);
-		setSize(1F, 1F);
+	public EntityGhostMarker(EntityType<EntityGhostMarker> type, World worldIn){
+		super(type, worldIn);
 		setNoGravity(true);
 		noClip = true;
 	}
 
-	public EntityGhostMarker(World worldIn, @Nonnull EnumMarkerType type){
-		this(worldIn, type, type.defaultLifespan);
+	public EntityGhostMarker(World worldIn, @Nonnull EnumMarkerType markerType){
+		this(worldIn, markerType, markerType.defaultLifespan);
 	}
 
-	public EntityGhostMarker(World worldIn, @Nonnull EnumMarkerType type, int lifespan){
-		super(worldIn);
-		this.type = type;
+	public EntityGhostMarker(World worldIn, @Nonnull EnumMarkerType markerType, int lifespan){
+		super(type, worldIn);
+		this.markType = markerType;
 		this.lifespan = lifespan;
 		time = worldIn.getGameTime();
-
-		setSize(1F, 1F);
 		setNoGravity(true);
 		noClip = true;
 	}
 
 	@Override
-	protected void entityInit(){
-
-	}
-
-	@Override
-	protected void readEntityFromNBT(CompoundNBT nbt){
-		nbt.putString("type", type.name());
+	protected void readAdditional(CompoundNBT nbt){
+		nbt.putString("type", markType.name());
 		nbt.putInt("life", lifespan);
 		nbt.putLong("time", time);
 		if(data != null){
@@ -54,17 +55,17 @@ public class EntityGhostMarker extends Entity{
 	}
 
 	@Nullable
-	public EnumMarkerType getType(){
-		return type;
+	public EnumMarkerType getMarkerType(){
+		return markType;
 	}
 
 	@Override
-	protected void writeEntityToNBT(CompoundNBT nbt){
+	protected void writeAdditional(CompoundNBT nbt){
 		try{
-			type = EnumMarkerType.valueOf(nbt.getString("type"));
+			markType = EnumMarkerType.valueOf(nbt.getString("type"));
 		}catch(IllegalArgumentException | NullPointerException e){
-			Crossroads.logger.error("Failed to load EntityGhostMarker at " + getPosition().toString() + "; dim: " + world.provider.getDimension() + "; with type: " + nbt.getString("type") + ". Removing.");
-			setDead();
+			Crossroads.logger.error("Failed to load EntityGhostMarker at " + getPosition().toString() + "; dim: " + world.getDimension().getType().getId() + "; with type: " + nbt.getString("type") + ". Removing.");
+			remove();
 		}
 		lifespan = nbt.getInt("life");
 		time = nbt.getLong("time");
@@ -74,25 +75,35 @@ public class EntityGhostMarker extends Entity{
 	}
 
 	@Override
-	public void onUpdate(){
-		super.onUpdate();
+	public IPacket<?> createSpawnPacket(){
+		return new SSpawnObjectPacket(this);
+	}
+
+	@Override
+	protected void registerData(){
+		//
+	}
+
+	@Override
+	public void tick(){
+		super.tick();
 		if(!world.isRemote && lifespan >= 0 && time != world.getGameTime()){
-			time = world.getGameTime();
+			time = world.getGameTime();//World time check to avoid tick-acceleration
 			if(--lifespan == 0){
-				if(type != null && type.expireEffect != null){
-					type.expireEffect.accept(this);
+				if(markType != null && markType.expireEffect != null){
+					markType.expireEffect.accept(this);
 				}
-				setDead();
+				remove();
 			}
 		}
 	}
 
 	public enum EnumMarkerType{
 
-		EQUALIBRIUM(5, null),
-		VOID_EQUALIBRIUM(5, null),
-		DELAYED_EXPLOSION(5, (EntityGhostMarker marker) -> {if(marker.data != null && marker.data.contains("power")) marker.world.createExplosion(marker, marker.posX, marker.posY, marker.posZ, marker.data.getFloat("power"), marker.data.getBoolean("smoking"));}),
-		BLOCK_SPAWNING(5, null);
+		EQUILIBRIUM(6, null),
+		VOID_EQUILIBRIUM(6, null),
+		DELAYED_EXPLOSION(5, (EntityGhostMarker marker) -> {if(marker.data != null && marker.data.contains("power")) marker.world.createExplosion(marker, marker.posX, marker.posY, marker.posZ, marker.data.getFloat("power"), Explosion.Mode.valueOf(marker.data.getString("blast_type")));}),
+		BLOCK_SPAWNING(6, null);
 
 		private final int defaultLifespan;
 		private final Consumer<EntityGhostMarker> expireEffect;

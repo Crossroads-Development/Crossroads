@@ -26,9 +26,9 @@ public class Shell extends AbstractGlassware{
 		public ItemStack dispenseStack(IBlockSource source, ItemStack stack){
 			ReagentMap contents = CRItems.shellGlass.getReagants(stack);
 			if(contents.getTotalQty() != 0){
-				Direction dir = (Direction) source.getBlockState().get(DispenserBlock.FACING);
+				Direction dir = source.getBlockState().get(DispenserBlock.FACING);
 				World world = source.getWorld();
-				EntityShell entitysnowball = new EntityShell(world, contents, contents.getTempC());
+				EntityShell entitysnowball = new EntityShell(world, contents, stack.getItem() == CRItems.shellCrystal);
 				entitysnowball.setPosition(source.getX() + dir.getXOffset() + 0.5D, source.getY() + dir.getYOffset() + 0.5D, source.getZ() + dir.getZOffset() + 0.5D);
 				entitysnowball.shoot(dir.getXOffset(), dir.getYOffset(), dir.getZOffset(), 1.5F, 1.0F);
 				world.addEntity(entitysnowball);
@@ -49,15 +49,12 @@ public class Shell extends AbstractGlassware{
 	};
 
 	public Shell(boolean crystal){
+		super();
 		this.crystal = crystal;
 		String name = "shell_" + (crystal ? "cryst" : "glass");
-		maxStackSize = 1;
-		hasSubtypes = true;
-		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
 		CRItems.toRegister.add(this);
-		DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, SHELL_DISPENSER_BEHAVIOR);
+		DispenserBlock.registerDispenseBehavior(this, SHELL_DISPENSER_BEHAVIOR);
 	}
 
 	@Override
@@ -75,19 +72,19 @@ public class Shell extends AbstractGlassware{
 		ItemStack held = playerIn.getHeldItem(handIn);
 		ReagentMap contents = getReagants(held);
 		if(contents.getTotalQty() != 0){
-			if(!playerIn.capabilities.isCreativeMode){
+			if(!playerIn.isCreative()){
 				held = ItemStack.EMPTY;
 			}
 
-			worldIn.playSound((PlayerEntity) null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+			worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
 
 			if(!worldIn.isRemote){
-				EntityShell entitysnowball = new EntityShell(worldIn, playerIn, contents, contents.getTempC());
+				EntityShell entitysnowball = new EntityShell(worldIn, playerIn, contents, crystal);
 				entitysnowball.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
 				worldIn.addEntity(entitysnowball);
 			}
-			return new ActionResult<ItemStack>(ActionResultType.SUCCESS, held);
+			return new ActionResult<>(ActionResultType.SUCCESS, held);
 		}
-		return new ActionResult<ItemStack>(ActionResultType.PASS, held);
+		return new ActionResult<>(ActionResultType.PASS, held);
 	}
 }

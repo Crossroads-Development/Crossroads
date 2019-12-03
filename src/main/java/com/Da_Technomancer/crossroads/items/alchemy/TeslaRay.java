@@ -30,11 +30,9 @@ public class TeslaRay extends Item{
 	private static final float DAMAGE = 6;
 
 	public TeslaRay(){
+		super(CRItems.itemProp.maxStackSize(1));
 		String name = "tesla_ray";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setMaxStackSize(1);
 		CRItems.toRegister.add(this);
 	}
 
@@ -43,7 +41,7 @@ public class TeslaRay extends Item{
 		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
 
 		if (slot == EquipmentSlotType.MAINHAND){
-			multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -3D, 0));
+			multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -3D, AttributeModifier.Operation.ADDITION));
 		}
 
 		return multimap;
@@ -55,12 +53,12 @@ public class TeslaRay extends Item{
 
 		if(worldIn.isRemote){
 			playerIn.resetCooldown();
-			return new ActionResult<ItemStack>(ActionResultType.SUCCESS, playerIn.getHeldItem(hand));
+			return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(hand));
 		}
 
 		if(hand == Hand.MAIN_HAND && LeydenJar.getCharge(playerIn.getHeldItemOffhand()) >= FE_USE){
 			//Stores attack targets, in order
-			ArrayList<LivingEntity> targets = new ArrayList<LivingEntity>(4);
+			ArrayList<LivingEntity> targets = new ArrayList<>(4);
 
 			//Populate and damage targets
 			//The first target is found in a conical area with the vertex at the player
@@ -82,7 +80,7 @@ public class TeslaRay extends Item{
 			}
 
 			if(closest == null){
-				return new ActionResult<ItemStack>(ActionResultType.SUCCESS, playerIn.getHeldItem(hand));
+				return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(hand));
 			}
 
 			ItemStack leydenStack = playerIn.getHeldItemOffhand();
@@ -117,12 +115,12 @@ public class TeslaRay extends Item{
 				}
 				Vec3d end = targets.get(i + 1).getEyePosition(0);
 
-				RenderUtil.addArc(playerIn.world.provider.getDimension(), start, end, 1, 0, TeslaCoilTopTileEntity.COLOR_CODES[(int) (Math.random() * 3D)]);
+				RenderUtil.addArc(playerIn.world, start, end, 1, 0, TeslaCoilTopTileEntity.COLOR_CODES[(int) (Math.random() * 3D)]);
 			}
 
-			return new ActionResult<ItemStack>(ActionResultType.SUCCESS, playerIn.getHeldItem(hand));
+			return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(hand));
 		}else{
-			return new ActionResult<ItemStack>(ActionResultType.FAIL, playerIn.getHeldItem(hand));
+			return new ActionResult<>(ActionResultType.FAIL, playerIn.getHeldItem(hand));
 		}
 	}
 }

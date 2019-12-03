@@ -1,16 +1,19 @@
 package com.Da_Technomancer.crossroads.entity;
 
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.render.RenderUtil;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
+
+import java.awt.*;
 
 public class RenderFlameCoreEntity extends EntityRenderer<EntityFlameCore>{
 
@@ -27,24 +30,21 @@ public class RenderFlameCoreEntity extends EntityRenderer<EntityFlameCore>{
 
 	@Override
 	public void doRender(EntityFlameCore entity, double x, double y, double z, float entityYaw, float partialTicks){
-		if(entity.col == null){
-			return;
-		}
+		Color col = new Color(entity.getDataManager().get(EntityFlameCore.COLOR), true);
 
 		GlStateManager.pushMatrix();
-		GlStateManager.pushAttrib();
+		GlStateManager.pushLightingAttributes();
 		GlStateManager.enableBlend();
 		GlStateManager.disableLighting();
 		GlStateManager.disableCull();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		float brightX = OpenGlHelper.lastBrightnessX;
-		float brightY = OpenGlHelper.lastBrightnessY;
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-		GlStateManager.color((float) entity.col.getRed() / 255F, (float) entity.col.getGreen() / 255F, (float) entity.col.getBlue() / 255F, (float) entity.col.getAlpha() / 255F);
-		GlStateManager.translate(x, y, z);
+		Pair<Float, Float> lightSetting = RenderUtil.disableLighting();
 
-		double scale = EntityFlameCore.FLAME_VEL * (float) entity.ticksExisted;
-		GlStateManager.scale(scale, scale, scale);
+		GlStateManager.color4f((float) col.getRed() / 255F, (float) col.getGreen() / 255F, (float) col.getBlue() / 255F, (float) col.getAlpha() / 255F);
+		GlStateManager.translated(x, y, z);
+
+		double scale = EntityFlameCore.FLAME_VEL * (float) entity.getDataManager().get(EntityFlameCore.TIME_EXISTED);
+		GlStateManager.scaled(scale, scale, scale);
 
 		bindEntityTexture(entity);
 
@@ -83,13 +83,12 @@ public class RenderFlameCoreEntity extends EntityRenderer<EntityFlameCore>{
 		
 		Tessellator.getInstance().draw();
 		
-		
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
-		GlStateManager.color(1, 1, 1, 1);
+		RenderUtil.enableLighting(lightSetting);
+		GlStateManager.color4f(1, 1, 1, 1);
 		GlStateManager.enableCull();
 		GlStateManager.enableLighting();
 		GlStateManager.disableBlend();
-		GlStateManager.popAttrib();
+		GlStateManager.popAttributes();
 		GlStateManager.popMatrix();
 	}
 

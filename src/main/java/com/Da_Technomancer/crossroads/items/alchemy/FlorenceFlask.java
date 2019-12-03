@@ -9,11 +9,7 @@ public class FlorenceFlask extends AbstractGlassware{
 	public FlorenceFlask(boolean crystal){
 		String name = "florence_flask_" + (crystal ? "cryst" : "glass");
 		this.crystal = crystal;
-		maxStackSize = 1;
-		hasSubtypes = true;
-		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
 		CRItems.toRegister.add(this);
 	}
 

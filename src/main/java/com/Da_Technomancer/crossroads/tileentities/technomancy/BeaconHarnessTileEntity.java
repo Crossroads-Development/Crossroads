@@ -12,6 +12,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 import javax.annotation.Nullable;
@@ -94,7 +95,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IInfoTE{
 				CrossroadsPackets.network.sendToAllAround(new SendIntToClient((byte) 0, 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
 				cycles = -9;
 
-				if(beamer[1].emit(null, world)){
+				if(beamer[1].emit(BeamUnit.EMPTY, world)){
 					refreshBeam(1);
 				}
 				return;

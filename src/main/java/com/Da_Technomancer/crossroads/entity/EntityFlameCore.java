@@ -2,46 +2,55 @@ package com.Da_Technomancer.crossroads.entity;
 
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.IAlchEffect;
-import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
-import com.Da_Technomancer.crossroads.API.packets.NbtToEntityClient;
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.essentials.packets.INBTReceiver;
+import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.IPacket;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.network.play.server.SSpawnObjectPacket;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.ObjectHolder;
 
-import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 
 import static net.minecraft.tileentity.TileEntity.INFINITE_EXTENT_AABB;
 
-public class EntityFlameCore extends Entity implements INBTReceiver{
+@ObjectHolder(Crossroads.MODID)
+public class EntityFlameCore extends Entity{
 
-	private int maxRadius;
+	@ObjectHolder("flame_core")
+	public static EntityType<EntityFlameCore> type = null;
+
+	protected static final DataParameter<Integer> TIME_EXISTED = EntityDataManager.createKey(EntityFlameCore.class, DataSerializers.VARINT);
+	protected static final DataParameter<Integer> COLOR = EntityDataManager.createKey(EntityFlameCore.class, DataSerializers.VARINT);
+	protected static final float FLAME_VEL = 0.1F;//Flame interface speed, blocks per tick
+
 	/**
 	 * In order to avoid iterating over a large ReagentStack[] that is mostly empty several times a tick, this list is created to store all non-null reagent stacks
 	 */
 	private ArrayList<ReagentStack> reagList = new ArrayList<>();
-	protected Color col;
+	private Color col;
+	private int ticksExisted = -1;
+	private int maxRadius;
 
-	public EntityFlameCore(World worldIn){
-		super(worldIn);
-		setSize(1F, 1F);
+	public EntityFlameCore(EntityType<EntityFlameCore> type, World worldIn){
+		super(type, worldIn);
 		setNoGravity(true);
 		noClip = true;
 		ignoreFrustumCheck = true;
 	}
+
 
 	public void setInitialValues(ReagentMap reags, int radius){
 		this.reags = reags == null ? new ReagentMap() : reags;
@@ -56,8 +65,14 @@ public class EntityFlameCore extends Entity implements INBTReceiver{
 	}
 
 	@Override
-	protected void entityInit(){
+	public IPacket<?> createSpawnPacket(){
+		return new SSpawnObjectPacket(this);
+	}
 
+	@Override
+	protected void registerData(){
+		dataManager.register(TIME_EXISTED, 0);
+		dataManager.register(COLOR, Color.WHITE.getRGB());
 	}
 
 	@Override
@@ -67,35 +82,42 @@ public class EntityFlameCore extends Entity implements INBTReceiver{
 	}
 
 	@Override
-	public void readEntityFromNBT(CompoundNBT nbt){
+	public void readAdditional(CompoundNBT nbt){
 		reags = new ReagentMap();
 		maxRadius = nbt.getInt("rad");
 		reags = ReagentMap.readFromNBT(nbt);
-		ticksExisted = nbt.getInt("life");
 		setInitialValues(reags, maxRadius);
+		ticksExisted = nbt.getInt("life");
+		dataManager.set(TIME_EXISTED, ticksExisted);
+		if(nbt.contains("color")){
+			col = new Color(nbt.getInt("color"), true);
+			dataManager.set(COLOR, col.getRGB());
+		}
 	}
 
 	@Override
-	public void writeEntityToNBT(CompoundNBT nbt){
+	protected void writeAdditional(CompoundNBT nbt){
 		if(reags != null){
-			reags.writeToNBT(nbt);
+			reags.write(nbt);
+		}
+		if(col != null){
+			nbt.putInt("color", col.getRGB());
 		}
 
 		nbt.putInt("rad", maxRadius);
 		nbt.putInt("life", ticksExisted);
 	}
 
-	protected int ticksExisted = -1;
-	protected static final float FLAME_VEL = 0.1F;//Flame interface speed, blocks per tick
-
 	@Override
-	public void onUpdate(){
-		ticksExisted++;
-		super.onUpdate();
+	public void tick(){
+		super.tick();
 
 		if(world.isRemote || reags == null){
 			return;
 		}
+
+		ticksExisted++;
+		dataManager.set(TIME_EXISTED, ticksExisted);
 
 		if(col == null){
 			reagList.clear();
@@ -121,15 +143,12 @@ public class EntityFlameCore extends Entity implements INBTReceiver{
 				}
 			}
 			if(amount <= 0){
-				setDead();
+				remove();
 				return;
 			}
 
-			CompoundNBT nbt = new CompoundNBT();
 			col = new Color(r / amount, g / amount, b / amount, a / amount);
-			nbt.putInt("col", col.getRGB());
-			nbt.putInt("life", ticksExisted);
-			CrossroadsPackets.network.sendToAllAround(new NbtToEntityClient(getUniqueID(), nbt), new TargetPoint(world.provider.getDimension(), posX, posY, posZ, 512));
+			dataManager.set(COLOR, col.getRGB());
 		}
 
 		if(ticksExisted % 8 == 0){
@@ -172,7 +191,7 @@ public class EntityFlameCore extends Entity implements INBTReceiver{
 			}
 
 			if(lastAction){
-				setDead();
+				remove();
 			}
 		}
 	}
@@ -183,7 +202,7 @@ public class EntityFlameCore extends Entity implements INBTReceiver{
 			BlockState state = world.getBlockState(pos);
 
 			if(!CRConfig.isProtected(world, pos, state) && state.getBlockHardness(world, pos) >= 0){
-				world.setBlockState(pos, lastAction && Math.random() > 0.75D && Blocks.FIRE.canPlaceBlockAt(world, pos) ? Blocks.FIRE.getDefaultState() : Blocks.AIR.getDefaultState(), lastAction ? 3 : 18);
+				world.setBlockState(pos, lastAction && Math.random() > 0.75D && Blocks.FIRE.getDefaultState().isValidPosition(world, pos) ? Blocks.FIRE.getDefaultState() : Blocks.AIR.getDefaultState(), lastAction ? 3 : 18);
 			}
 		}
 
@@ -199,13 +218,5 @@ public class EntityFlameCore extends Entity implements INBTReceiver{
 	@Override
 	public boolean canTriggerWalking(){
 		return false;
-	}
-
-	@Override
-	public void receiveNBT(CompoundNBT nbt, @Nullable ServerPlayerEntity sender){
-		int colorCode = nbt.getInt("col");
-		col = Color.decode(Integer.toString(colorCode & 0xFFFFFF));
-		col = new Color(col.getRed(), col.getGreen(), col.getBlue(), colorCode >>> 24);
-		ticksExisted = nbt.getInt("life");
 	}
 }

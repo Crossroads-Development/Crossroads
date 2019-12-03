@@ -129,7 +129,7 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 			if(beamer[dir.getIndex()].emit(toDraw, world)){
 				refreshBeam(dir.getIndex());
 			}
-		}else if(beamer[dir.getIndex()].emit(null, world)){
+		}else if(beamer[dir.getIndex()].emit(BeamUnit.EMPTY, world)){
 			refreshBeam(dir.getIndex());
 		}
 	}

@@ -318,7 +318,7 @@ public class PrototypeTileEntity extends TileEntity implements IPrototypeOwner, 
 		for(int i = 0; i < 6; i++){
 			MagHandler h = getHandler(i, false);
 			if(h != null){
-				h.beam.emit(null, world);
+				h.beam.emit(BeamUnit.EMPTY, world);
 			}
 		}
 	}

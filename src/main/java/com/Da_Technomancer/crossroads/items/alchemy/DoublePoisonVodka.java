@@ -1,21 +1,22 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Items;
-import net.minecraft.item.UseAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.item.UseAction;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -25,25 +26,25 @@ public class DoublePoisonVodka extends Item{
 	private static final DamageSource ALC_DAMAGE = new DamageSource("vodka").setDamageBypassesArmor().setDamageAllowedInCreativeMode().setDamageIsAbsolute();
 
 	public DoublePoisonVodka(){
+		super(CRItems.itemProp);
 		String name = "double_poison_vodka";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
 		CRItems.toRegister.add(this);
 	}
 
 	@Override
-	public int getMaxItemUseDuration(ItemStack stack){
+	public int getUseDuration(ItemStack stack){
 		return 32;
 	}
 
-	public UseAction getItemUseAction(ItemStack stack){
+	@Override
+	public UseAction getUseAction(ItemStack stack){
 		return UseAction.DRINK;
 	}
 
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn){
 		playerIn.setActiveHand(handIn);
-		return new ActionResult<ItemStack>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
+		return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
 	}
 
 	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving){
@@ -59,9 +60,9 @@ public class DoublePoisonVodka extends Item{
 				return new ItemStack(Items.GLASS_BOTTLE);
 			}
 		}else{
-			player.addStat(Stats.getObjectUseStats(this));
+			player.addStat(Stats.ITEM_USED.get(this));
 
-			if(!player.capabilities.isCreativeMode){
+			if(!player.isCreative()){
 				stack.shrink(1);
 				if(stack.isEmpty()){
 					return new ItemStack(Items.GLASS_BOTTLE);
@@ -74,16 +75,16 @@ public class DoublePoisonVodka extends Item{
 	}
 
 	@Override
-	public int getItemBurnTime(ItemStack itemStack){
+	public int getBurnTime(ItemStack itemStack){
 		return 144000;
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add("666% Alcohol Content");
-		tooltip.add("TEMP UNTIL DOCS ARE DONE:");
-		tooltip.add("Burns as fuel for an extremely long time");
-		tooltip.add("Made with poisonous potato, salt of vitriol, Poisonous Potato Vodka");
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+		tooltip.add(new TranslationTextComponent("tt.crossroads.poison_vodka_double.quip").setStyle(MiscUtil.TT_QUIP));
+		//TODO
+//		tooltip.add("TEMP UNTIL DOCS ARE DONE:");
+//		tooltip.add("Burns as fuel for an extremely long time");
+//		tooltip.add("Made with poisonous potato, salt of vitriol, Poisonous Potato Vodka");
 	}
 }

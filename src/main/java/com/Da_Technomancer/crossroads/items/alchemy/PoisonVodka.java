@@ -1,22 +1,25 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Items;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.item.UseAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.item.UseAction;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -24,27 +27,27 @@ import java.util.List;
 public class PoisonVodka extends Item{
 
 	private static final int DURATION = 3600;
-	
+
 	public PoisonVodka(){
+		super(CRItems.itemProp);
 		String name = "poison_vodka";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
 		CRItems.toRegister.add(this);
 	}
 
 	@Override
-	public int getMaxItemUseDuration(ItemStack stack){
+	public int getUseDuration(ItemStack stack){
 		return 32;
 	}
 
-	public UseAction getItemUseAction(ItemStack stack){
+	@Override
+	public UseAction getUseAction(ItemStack stack){
 		return UseAction.DRINK;
 	}
 
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn){
 		playerIn.setActiveHand(handIn);
-		return new ActionResult<ItemStack>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
+		return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
 	}
 
 	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving){
@@ -68,9 +71,9 @@ public class PoisonVodka extends Item{
 				return new ItemStack(Items.GLASS_BOTTLE);
 			}
 		}else{
-			player.addStat(Stats.getObjectUseStats(this));
+			player.addStat(Stats.ITEM_USED.get(this));
 
-			if(!player.capabilities.isCreativeMode){
+			if(!player.isCreative()){
 				stack.shrink(1);
 				if(stack.isEmpty()){
 					return new ItemStack(Items.GLASS_BOTTLE);
@@ -83,17 +86,18 @@ public class PoisonVodka extends Item{
 	}
 
 	@Override
-	public int getItemBurnTime(ItemStack itemStack){
+	public int getBurnTime(ItemStack itemStack){
 		return 72000;
 	}
 
-	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add("Not the desert!");
-		tooltip.add("TEMP UNTIL DOCS ARE DONE:");
-		tooltip.add("Adds a ton of buffs and debuffs when drunk, turning you into a tank");
-		tooltip.add("Burns as fuel for an extremely long time");
-		tooltip.add("Made with poisonous potato, salt of vitriol, glass bottle");
+	@Override
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+		tooltip.add(new TranslationTextComponent("tt.crossroads.poison_vodka.quip").setStyle(MiscUtil.TT_QUIP));
+		//TODO
+//		tooltip.add("TEMP UNTIL DOCS ARE DONE:");
+//		tooltip.add("Adds a ton of buffs and debuffs when drunk, turning you into a tank");
+//		tooltip.add("Burns as fuel for an extremely long time");
+//		tooltip.add("Made with poisonous potato, salt of vitriol, glass bottle");
 	}
 }

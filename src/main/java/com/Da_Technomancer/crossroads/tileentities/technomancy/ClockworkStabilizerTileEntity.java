@@ -11,6 +11,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 
 public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 
@@ -64,10 +65,10 @@ public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 		if(!storage.isEmpty()){
 			BeamUnit mag = storage.getOutput().mult(RATE, true);
 			storage.subtractBeam(mag);
-			if(beamer[dir.getIndex()].emit(mag.getPower() == 0 ? null : mag, world)){
+			if(beamer[dir.getIndex()].emit(mag, world)){
 				refreshBeam(dir.getIndex());
 			}
-		}else if(beamer[dir.getIndex()].emit(null, world)){
+		}else if(beamer[dir.getIndex()].emit(BeamUnit.EMPTY, world)){
 			refreshBeam(dir.getIndex());
 		}
 	}

@@ -41,8 +41,9 @@ public class AlchemyRec implements IRecipe<IInventory>{
 	private final ReagentStack[] products;
 	private final int amountChange;
 	private final float data;//What "data" means varies with reaction type. Currently, destructive measures it as blast strength per reaction
+	private final boolean real;//If false, disable this recipe. For datapacks
 
-	public AlchemyRec(ResourceLocation location, String name, Type type, ReagentStack[] reagents, ReagentStack[] products, @Nullable IReagent cat, double minTemp, double maxTemp, double heatChange, boolean charged, float data){
+	public AlchemyRec(ResourceLocation location, String name, Type type, ReagentStack[] reagents, ReagentStack[] products, @Nullable IReagent cat, double minTemp, double maxTemp, double heatChange, boolean charged, float data, boolean real){
 		id = location;
 		group = name;
 
@@ -55,6 +56,7 @@ public class AlchemyRec implements IRecipe<IInventory>{
 		this.heatChange = heatChange;
 		this.charged = charged;
 		this.data = data;
+		this.real = real;
 		int change = 0;
 
 		for(ReagentStack reag : reagents){
@@ -100,12 +102,20 @@ public class AlchemyRec implements IRecipe<IInventory>{
 		return type == Type.DESTRUCTIVE || type == Type.PRECISE;
 	}
 
+	public boolean isReal(){
+		return real;
+	}
+
 	/**
 	 * Machines performing reactions should call this method ONLY. The other methods are for JEI integration
 	 * @param chamb The reaction chamber performing the reaction
 	 * @return Whether this reaction was performed
 	 */
 	public boolean performReaction(IReactionChamber chamb){
+		if(!real){
+			return false;//If this is not a real reaction, do nothing
+		}
+
 		if(type == Type.ELEMENTAL){
 			//Elemental type requires that product be length 1 and contain an elemental reagent
 
@@ -251,6 +261,7 @@ public class AlchemyRec implements IRecipe<IInventory>{
 		 * 		"catalyst": <string reagent ID or "NONE">, //Optional, defaults to "NONE". Sets a required catalyst to reagent ID if set to something other than NONE.
 		 * 		"charged": <true or false>, //Optional, defaults to false. If true, the reaction chamber needs to be charged
 		 * 		"data": <number>, //Optional, defaults to 0. Only used by destructive type for controlling blast strength (see gunpowder for reference)
+		 *		"real": <true of false>, //Optional, defaults to true. If false, this recipe will not be added! This is for making it easier to remove reactions through datapacks (to remove a reaction, override it with a version with real=false)
 		 *
 		 * 		//FOR ONE REAGENT
 		 * 		"reagents": {
@@ -290,50 +301,57 @@ public class AlchemyRec implements IRecipe<IInventory>{
 		public AlchemyRec read(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and output
 			String group = JSONUtils.getString(json, "group", "");
-			Type type = Type.getType(JSONUtils.getString(json, "category", "normal"));
-			double minTemp = JSONUtils.getFloat(json, "min_temp", -300F);
-			double maxTemp = JSONUtils.getFloat(json, "max_temp", Short.MAX_VALUE);
-			double heatChange = JSONUtils.getFloat(json, "heat", 0);
-			String s = JSONUtils.getString(json, "catalyst", VOID_STR);
-			IReagent cat = s.equals(VOID_STR) ? null : AlchemyCore.REAGENTS.get(s);
-			boolean charge = JSONUtils.getBoolean(json, "charged", false);
-			float data = JSONUtils.getFloat(json, "data", 0);
 
-			JsonArray jsonR;
-			if(JSONUtils.isJsonArray(json, "reagents")){
-				jsonR = JSONUtils.getJsonArray(json, "reagents");
-			}else{
-				jsonR = new JsonArray();
-				jsonR.add(JSONUtils.getJsonObject(json, "reagents"));
-			}
-			ReagentStack[] reags = new ReagentStack[jsonR.size()];
-			for(int i = 0; i < reags.length; i++){
-				JsonElement elem = jsonR.get(i);
-				if(elem instanceof JsonObject){
-					JsonObject obj = (JsonObject) elem;
-					IReagent reagent = AlchemyCore.REAGENTS.get(JSONUtils.getString(obj, "type"));
-					assert reagent != null;
-					reags[i] = new ReagentStack(reagent, JSONUtils.getInt(json, "qty", 1));
-				}
-			}
-			if(JSONUtils.isJsonArray(json, "products")){
-				jsonR = JSONUtils.getJsonArray(json, "products");
-			}else{
-				jsonR = new JsonArray();
-				jsonR.add(JSONUtils.getJsonObject(json, "products"));
-			}
-			ReagentStack[] prods = new ReagentStack[jsonR.size()];
-			for(int i = 0; i < prods.length; i++){
-				JsonElement elem = jsonR.get(i);
-				if(elem instanceof JsonObject){
-					JsonObject obj = (JsonObject) elem;
-					IReagent reagent = AlchemyCore.REAGENTS.get(JSONUtils.getString(obj, "type"));
-					assert reagent != null;
-					prods[i] = new ReagentStack(reagent, JSONUtils.getInt(json, "qty", 1));
-				}
-			}
+			boolean real = JSONUtils.getBoolean(json, "real", true);
+			if(real){
+				//Only bother reading the whole file if this is a real recipe
+				Type type = Type.getType(JSONUtils.getString(json, "category", "normal"));
+				double minTemp = JSONUtils.getFloat(json, "min_temp", -300F);
+				double maxTemp = JSONUtils.getFloat(json, "max_temp", Short.MAX_VALUE);
+				double heatChange = JSONUtils.getFloat(json, "heat", 0);
+				String s = JSONUtils.getString(json, "catalyst", VOID_STR);
+				IReagent cat = s.equals(VOID_STR) ? null : AlchemyCore.REAGENTS.get(s);
+				boolean charge = JSONUtils.getBoolean(json, "charged", false);
+				float data = JSONUtils.getFloat(json, "data", 0);
 
-			return new AlchemyRec(recipeId, group, type, reags, prods, cat, minTemp, maxTemp, heatChange, charge, data);
+				JsonArray jsonR;
+				if(JSONUtils.isJsonArray(json, "reagents")){
+					jsonR = JSONUtils.getJsonArray(json, "reagents");
+				}else{
+					jsonR = new JsonArray();
+					jsonR.add(JSONUtils.getJsonObject(json, "reagents"));
+				}
+				ReagentStack[] reags = new ReagentStack[jsonR.size()];
+				for(int i = 0; i < reags.length; i++){
+					JsonElement elem = jsonR.get(i);
+					if(elem instanceof JsonObject){
+						JsonObject obj = (JsonObject) elem;
+						IReagent reagent = AlchemyCore.REAGENTS.get(JSONUtils.getString(obj, "type"));
+						assert reagent != null;
+						reags[i] = new ReagentStack(reagent, JSONUtils.getInt(json, "qty", 1));
+					}
+				}
+				if(JSONUtils.isJsonArray(json, "products")){
+					jsonR = JSONUtils.getJsonArray(json, "products");
+				}else{
+					jsonR = new JsonArray();
+					jsonR.add(JSONUtils.getJsonObject(json, "products"));
+				}
+				ReagentStack[] prods = new ReagentStack[jsonR.size()];
+				for(int i = 0; i < prods.length; i++){
+					JsonElement elem = jsonR.get(i);
+					if(elem instanceof JsonObject){
+						JsonObject obj = (JsonObject) elem;
+						IReagent reagent = AlchemyCore.REAGENTS.get(JSONUtils.getString(obj, "type"));
+						assert reagent != null;
+						prods[i] = new ReagentStack(reagent, JSONUtils.getInt(json, "qty", 1));
+					}
+				}
+
+				return new AlchemyRec(recipeId, group, type, reags, prods, cat, minTemp, maxTemp, heatChange, charge, data, true);
+			}else{
+				return new AlchemyRec(recipeId, group, Type.NORMAL, new ReagentStack[0], new ReagentStack[0], null, HeatUtil.ABSOLUTE_ZERO, HeatUtil.ABSOLUTE_ZERO, 0, false, 0, false);
+			}
 		}
 
 		private static final String VOID_STR = "NONE";
@@ -341,49 +359,58 @@ public class AlchemyRec implements IRecipe<IInventory>{
 		@Nullable
 		@Override
 		public AlchemyRec read(ResourceLocation recipeId, PacketBuffer buffer){
+			boolean real = buffer.readBoolean();
 			String group = buffer.readString(Short.MAX_VALUE);
-			Type type = Type.values()[buffer.readByte()];
-			float heatChange = buffer.readFloat();
-			float minTemp = buffer.readFloat();
-			float maxTemp = buffer.readFloat();
-			String s = buffer.readString(Short.MAX_VALUE);
-			IReagent catalyst = s.equals(VOID_STR) ? null : AlchemyCore.REAGENTS.get(s);
-			boolean charged = buffer.readBoolean();
-			ReagentStack[] reags = new ReagentStack[buffer.readByte()];
-			for(int i = 0; i < reags.length; i++){
-				reags[i] = new ReagentStack(AlchemyCore.REAGENTS.get(buffer.readString()), buffer.readByte());
-			}
-			ReagentStack[] prod = new ReagentStack[buffer.readByte()];
-			for(int i = 0; i < prod.length; i++){
-				prod[i] = new ReagentStack(AlchemyCore.REAGENTS.get(buffer.readString()), buffer.readByte());
-			}
-			float data = buffer.readFloat();
 
-			return new AlchemyRec(recipeId, group, type, reags, prod, catalyst, minTemp, maxTemp, heatChange, charged, data);
+			if(real){
+				Type type = Type.values()[buffer.readByte()];
+				float heatChange = buffer.readFloat();
+				float minTemp = buffer.readFloat();
+				float maxTemp = buffer.readFloat();
+				String s = buffer.readString(Short.MAX_VALUE);
+				IReagent catalyst = s.equals(VOID_STR) ? null : AlchemyCore.REAGENTS.get(s);
+				boolean charged = buffer.readBoolean();
+				ReagentStack[] reags = new ReagentStack[buffer.readByte()];
+				for(int i = 0; i < reags.length; i++){
+					reags[i] = new ReagentStack(AlchemyCore.REAGENTS.get(buffer.readString()), buffer.readByte());
+				}
+				ReagentStack[] prod = new ReagentStack[buffer.readByte()];
+				for(int i = 0; i < prod.length; i++){
+					prod[i] = new ReagentStack(AlchemyCore.REAGENTS.get(buffer.readString()), buffer.readByte());
+				}
+				float data = buffer.readFloat();
+
+				return new AlchemyRec(recipeId, group, type, reags, prod, catalyst, minTemp, maxTemp, heatChange, charged, data, true);
+			}else{
+				return new AlchemyRec(recipeId, group, Type.NORMAL, new ReagentStack[0], new ReagentStack[0], null, HeatUtil.ABSOLUTE_ZERO, HeatUtil.ABSOLUTE_ZERO, 0, false, 0, false);
+			}
 		}
 
 		@Override
 		public void write(PacketBuffer buffer, AlchemyRec recipe){
+			buffer.writeBoolean(recipe.real);
 			buffer.writeString(recipe.getGroup());//group
-			buffer.writeByte(recipe.type.ordinal());//type
-			buffer.writeFloat((float) recipe.heatChange);//heat
-			buffer.writeFloat((float) recipe.minTemp);//min temp
-			buffer.writeFloat((float) recipe.maxTemp);//max temp
-			buffer.writeString(recipe.cat == null ? VOID_STR : recipe.cat.getId());//catalyst
-			buffer.writeBoolean(recipe.charged);//charged
-			int total = recipe.reagents.length;
-			buffer.writeByte(total);//Number of reagents
-			for(ReagentStack reag : recipe.reagents){
-				buffer.writeString(reag.getType().getId());//reag type
-				buffer.writeByte(reag.getAmount());//reag qty
+			if(recipe.real){
+				buffer.writeByte(recipe.type.ordinal());//type
+				buffer.writeFloat((float) recipe.heatChange);//heat
+				buffer.writeFloat((float) recipe.minTemp);//min temp
+				buffer.writeFloat((float) recipe.maxTemp);//max temp
+				buffer.writeString(recipe.cat == null ? VOID_STR : recipe.cat.getId());//catalyst
+				buffer.writeBoolean(recipe.charged);//charged
+				int total = recipe.reagents.length;
+				buffer.writeByte(total);//Number of reagents
+				for(ReagentStack reag : recipe.reagents){
+					buffer.writeString(reag.getType().getId());//reag type
+					buffer.writeByte(reag.getAmount());//reag qty
+				}
+				total = recipe.products.length;
+				buffer.writeByte(total);//Number of products
+				for(ReagentStack reag : recipe.products){
+					buffer.writeString(reag.getType().getId());//prod type
+					buffer.writeByte(reag.getAmount());//prod qty
+				}
+				buffer.writeFloat(recipe.data);//data
 			}
-			total = recipe.products.length;
-			buffer.writeByte(total);//Number of products
-			for(ReagentStack reag : recipe.products){
-				buffer.writeString(reag.getType().getId());//prod type
-				buffer.writeByte(reag.getAmount());//prod qty
-			}
-			buffer.writeFloat(recipe.data);//data
 		}
 	}
 	

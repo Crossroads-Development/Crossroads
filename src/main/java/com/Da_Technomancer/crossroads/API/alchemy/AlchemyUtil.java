@@ -101,7 +101,7 @@ public class AlchemyUtil{
 		//The flame effect takes priority over normal effects
 		if(flameRange > 0){
 			if(CRConfig.phelEffect.get()){
-				EntityFlameCore coreFlame = new EntityFlameCore(world);
+				EntityFlameCore coreFlame = EntityFlameCore.type.create(world);
 				coreFlame.setPosition(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
 				coreFlame.setInitialValues(reags, flameRange);
 				world.addEntity(coreFlame);

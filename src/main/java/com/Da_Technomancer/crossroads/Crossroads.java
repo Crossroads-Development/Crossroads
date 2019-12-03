@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
-import com.Da_Technomancer.crossroads.entity.ModEntities;
+import com.Da_Technomancer.crossroads.entity.*;
 import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
 import com.Da_Technomancer.crossroads.gui.*;
 import com.Da_Technomancer.crossroads.gui.container.*;
@@ -23,6 +23,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.Container;
@@ -87,7 +88,6 @@ public final class Crossroads{
 //		CrossroadsTileEntity.init();
 		CrossroadsPackets.preInit();
 		ModDimensions.init();
-		ModEntities.init();
 		//Main
 		MinecraftForge.EVENT_BUS.register(new EventHandlerCommon());
 		//NetworkRegistry.INSTANCE.registerGuiHandler(Crossroads.instance, new GuiHandler());
@@ -167,7 +167,20 @@ public final class Crossroads{
 	@SubscribeEvent
 	public static void registerEnts(RegistryEvent.Register<EntityType<?>> e){
 		IForgeRegistry<EntityType<?>> registry = e.getRegistry();
-		//TODO register entities
+
+		registry.register(EntityType.Builder.create(EntityFlameCore::new, EntityClassification.MISC).immuneToFire().disableSummoning().setShouldReceiveVelocityUpdates(false).size(1, 1).build("flame_core"));
+		registry.register(EntityType.Builder.<EntityBullet>create(EntityBullet::new, EntityClassification.MISC).immuneToFire().setTrackingRange(64).setUpdateInterval(5).size(0.25F, 0.25F).build("bullet"));
+		registry.register(EntityType.Builder.<EntityShell>create(EntityShell::new, EntityClassification.MISC).immuneToFire().setTrackingRange(64).setUpdateInterval(5).size(.25F, .25F).build("shell"));
+		registry.register(EntityType.Builder.<EntityNitro>create(EntityNitro::new, EntityClassification.MISC).setTrackingRange(64).setUpdateInterval(5).build("nitro"));
+		registry.register(EntityType.Builder.<EntityGhostMarker>create(EntityGhostMarker::new, EntityClassification.MISC).setTrackingRange(64).setUpdateInterval(20).immuneToFire().setShouldReceiveVelocityUpdates(false).build("ghost_marker"));
+
+//		EntityRegistry.registerModEntity(new ResourceLocation(Crossroads.MODID, "bullet"), EntityBullet.class, "bullet", id++, Crossroads.instance, 64, 5, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Crossroads.MODID, "arm_ridable"), EntityArmRidable.class, "arm_ridable", id++, Crossroads.instance, 64, 1, false);
+//		EntityRegistry.registerModEntity(new ResourceLocation(Crossroads.MODID, "shell"), EntityShell.class, "shell", id++, Crossroads.instance, 64, 5, true);
+//		EntityRegistry.registerModEntity(new ResourceLocation(Crossroads.MODID, "nitro"), EntityNitro.class, "nitro", id++, Crossroads.instance, 64, 5, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Crossroads.MODID, "flying_machine"), EntityFlyingMachine.class, "flying_machine", id++, Crossroads.instance, 64, 1, true);
+//		EntityRegistry.registerModEntity(new ResourceLocation(Crossroads.MODID, "flame_core"), EntityFlameCore.class, "flame_core", id++, Crossroads.instance, 64, 20, true);
+//		EntityRegistry.registerModEntity(new ResourceLocation(Crossroads.MODID, "ghost_marker"), EntityGhostMarker.class, "ghost_marker", id++, Crossroads.instance, 64, 20, true);
 	}
 
 	@SuppressWarnings("unused")

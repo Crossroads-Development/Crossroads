@@ -21,6 +21,8 @@ import java.awt.*;
 public class BeamManager{
 
 	private static final Tag<Block> PASSABLE = new BlockTags.Wrapper(new ResourceLocation(Crossroads.MODID, "beam_passable"));
+	public static final int MAX_DISTANCE = 16;
+	public static final int BEAM_TIME = 5;
 
 	public static int beamStage = 2;
 	public static long cycleNumber;
@@ -31,8 +33,6 @@ public class BeamManager{
 	private int dist;
 	@Nonnull
 	private BeamUnit lastSent = BeamUnit.EMPTY;
-	public static final int MAX_DISTANCE = 16;
-	public static final int BEAM_TIME = 5;
 
 	public BeamManager(@Nonnull Direction dir, @Nonnull BlockPos pos){
 		this.dir = dir;

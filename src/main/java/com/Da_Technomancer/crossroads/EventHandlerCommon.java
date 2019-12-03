@@ -319,10 +319,10 @@ public final class EventHandlerCommon{
 		for(Entity ent : e.getWorld().loadedEntityList){
 			if(ent instanceof EntityGhostMarker){
 				EntityGhostMarker mark = (EntityGhostMarker) ent;
-				if(mark.getType() == EntityGhostMarker.EnumMarkerType.EQUALIBRIUM && mark.data != null && mark.getPositionVector().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInt("range")){
+				if(mark.getType() == EntityGhostMarker.EnumMarkerType.EQUILIBRIUM && mark.data != null && mark.getPositionVector().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInt("range")){
 					e.setCanceled(true);
 					return;
-				}else if(mark.getType() == EntityGhostMarker.EnumMarkerType.VOID_EQUALIBRIUM && mark.data != null && mark.getPositionVector().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInt("range")){
+				}else if(mark.getType() == EntityGhostMarker.EnumMarkerType.VOID_EQUILIBRIUM && mark.data != null && mark.getPositionVector().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInt("range")){
 					perpetuate = true;
 				}
 			}
@@ -334,7 +334,7 @@ public final class EventHandlerCommon{
 			CompoundNBT data = new CompoundNBT();
 			try{
 				data.putFloat("power", explosionPower.getFloat(e.getExplosion()));
-				data.putBoolean("smoking", explosionSmoking.getBoolean(e.getExplosion()));
+				data.putString("blast_type", explosionSmoking.getBoolean(e.getExplosion()));//TODO Should have string enum name for blast mode
 			}catch(IllegalAccessException ex){
 				Crossroads.logger.error("Failed to perpetuate explosion. Dim: " + e.getWorld().provider.getDimension() + "; Pos: " + e.getExplosion().getPosition());
 			}
