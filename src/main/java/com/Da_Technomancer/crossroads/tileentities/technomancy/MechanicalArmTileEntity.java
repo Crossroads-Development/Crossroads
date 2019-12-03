@@ -18,6 +18,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 import java.util.UUID;
@@ -78,7 +79,7 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickableTile
 						}
 					}
 					if(ridable == null || ridable.isDead || !pos.equals(ridable.getOwnerPos())){//The position not matching could occur due to things like this block being copied with prototyping.
-						ridable = new EntityArmRidable(world);
+						ridable = EntityArmRidable.type.create(world);
 						ridableID = ridable.getUniqueID();
 						ridable.setOwnerPos(pos);
 						ridable.setPosition(.5D + (double) pos.getX(), 1D + (double) pos.getY(), .5D + (double) pos.getZ());

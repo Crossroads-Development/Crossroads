@@ -1,37 +1,45 @@
 package com.Da_Technomancer.crossroads.entity;
 
-import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
-import com.Da_Technomancer.crossroads.API.packets.NbtToEntityServer;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.GameSettings;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.BoatEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.network.play.server.SSpawnObjectPacket;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.IndirectEntityDamageSource;
 import net.minecraft.util.Hand;
+import net.minecraft.util.IndirectEntityDamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
+import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class EntityFlyingMachine extends Entity implements INbtReceiver{
+@ObjectHolder(Crossroads.MODID)
+public class EntityFlyingMachine extends Entity{
+
+	@ObjectHolder("flying_machine")
+	public static EntityType<EntityFlyingMachine> type = null;
 
 	private static final DataParameter<Float> GRAV_PLATE_ANGLE = EntityDataManager.createKey(EntityFlyingMachine.class, DataSerializers.FLOAT);//0 is down, radians, pi/2 is forward
 	private static final float ACCEL = 0.12F;
 	private int damage = 0;
 
-	public EntityFlyingMachine(World worldIn){
-		super(worldIn);
-		preventEntitySpawning = true;
-		setSize(1F, 1.3F);
+	public EntityFlyingMachine(EntityType<EntityFlyingMachine> type, World worldIn){
+		super(type, worldIn);
+		preventEntitySpawning = true; 
 	}
 
 	protected float getAngle(){
@@ -39,21 +47,21 @@ public class EntityFlyingMachine extends Entity implements INbtReceiver{
 	}
 
 	@Override
-	public void onUpdate(){
+	protected void registerData(){
+		dataManager.register(GRAV_PLATE_ANGLE, 0F);
+	}
+
+	@Override
+	public void tick(){
 		Entity controller = getControllingPassenger();
 
 		if(world.isRemote){
+			GameSettings settings = Minecraft.getInstance().gameSettings;
 			if(controller != null && controller == Minecraft.getInstance().player){
-				if(GameSettings.isKeyDown(Minecraft.getInstance().gameSettings.keyBindForward)){
+				if(settings.keyBindForward.isKeyDown()){
 					dataManager.set(GRAV_PLATE_ANGLE, dataManager.get(GRAV_PLATE_ANGLE) - (float) Math.PI / 20F);
-					CompoundNBT nbt = new CompoundNBT();
-					nbt.putFloat("ang", dataManager.get(GRAV_PLATE_ANGLE));
-					CrossroadsPackets.network.sendToServer(new NbtToEntityServer(getUniqueID(), world.provider.getDimension(), nbt));
-				}else if(GameSettings.isKeyDown(Minecraft.getInstance().gameSettings.keyBindBack)){
+				}else if(settings.keyBindBack.isKeyDown()){
 					dataManager.set(GRAV_PLATE_ANGLE, dataManager.get(GRAV_PLATE_ANGLE) + (float) Math.PI / 20F);
-					CompoundNBT nbt = new CompoundNBT();
-					nbt.putFloat("ang", dataManager.get(GRAV_PLATE_ANGLE));
-					CrossroadsPackets.network.sendToServer(new NbtToEntityServer(getUniqueID(), world.provider.getDimension(), nbt));
 				}
 			}
 		}
@@ -65,64 +73,52 @@ public class EntityFlyingMachine extends Entity implements INbtReceiver{
 		prevPosX = this.posX;
 		prevPosY = this.posY;
 		prevPosZ = this.posZ;
-		motionY -= 0.08D;
-
+		setMotion(getMotion().add(0, -0.08, 0));
+		
 		if(controller == null){
 			dataManager.set(GRAV_PLATE_ANGLE, 0F);
 		}else{
 			float angle = -dataManager.get(GRAV_PLATE_ANGLE);
 			rotationYaw = controller.getRotationYawHead();
 			//Fun fact that isn't documented: The server and client have different definitions of angle in the x-z plane. This is weird and annoying, and a pain to work out. Vanilla server definition: Counter clockwise is positive, 0 degrees at -x axis. Vanilla client definition: Clockwise is positive, 0 degrees at +z axis. Someone stab the people at Mojang, please
-			motionY -= Math.cos(angle) * ACCEL;
-			motionX += Math.sin(angle) * Math.sin(-Math.toRadians(rotationYaw) - Math.PI) * ACCEL;
-			motionZ += Math.sin(angle) * Math.cos(-Math.toRadians(rotationYaw) - Math.PI) * ACCEL;
+			//TODO NOTE: Test this- this might be fixed in MC1.14, in which case these formulas need to be changed
+			setMotion(getMotion().add(Math.sin(angle) * Math.sin(-Math.toRadians(rotationYaw) - Math.PI) * ACCEL, -Math.cos(angle) * ACCEL, Math.sin(angle) * Math.cos(-Math.toRadians(rotationYaw) - Math.PI) * ACCEL));
 			controller.velocityChanged = true;
 		}
 		markVelocityChanged();
-		move(MoverType.SELF, motionX, motionY, motionZ);
+		move(MoverType.SELF, getMotion());
 
-		motionX *= 0.8D;
-		motionY *= 0.8D;
-		motionZ *= 0.8D;
-
-
-		if(Math.abs(motionX) < 0.003D){
-			motionX = 0.0D;
-		}
-
-		if(Math.abs(motionY) < 0.003D){
-			motionY = 0.0D;
-		}
-
-		if(Math.abs(motionZ) < 0.003D){
-			motionZ = 0.0D;
-		}
-		super.onUpdate();
+		Vec3d mot = getMotion();
+		mot = mot.scale(0.8D);
+		final double min = 0.003D;
+		mot = new Vec3d(Math.abs(mot.x) < min ? 0 : mot.x, Math.abs(mot.y) < min ? 0 : mot.y, Math.abs(mot.z) < min ? 0 : mot.z);
+		setMotion(mot);
+		super.tick();
 	}
 
 	@Override
 	@Nullable
 	public AxisAlignedBB getCollisionBox(Entity entityIn){
-		return entityIn.canBePushed() ? entityIn.getEntityBoundingBox() : null;
+		return entityIn.canBePushed() ? entityIn.getBoundingBox() : null;
 	}
 
 	public boolean attackEntityFrom(DamageSource source, float amount){
-		if(isEntityInvulnerable(source)){
+		if(isInvulnerableTo(source)){
 			return false;
-		}else if(!world.isRemote && !isDead){
+		}else if(!world.isRemote && isAlive()){
 			if(source instanceof IndirectEntityDamageSource && source.getTrueSource() != null && this.isPassenger(source.getTrueSource())){
 				return false;
 			}else{
 				damage += amount * 10F;
 				markVelocityChanged();
-				boolean flag = source.getTrueSource() instanceof PlayerEntity && ((PlayerEntity) source.getTrueSource()).capabilities.isCreativeMode;
+				boolean flag = source.getTrueSource() instanceof PlayerEntity && ((PlayerEntity) source.getTrueSource()).isCreative();
 
 				if(flag || damage > 40){
-					if(!flag && world.getGameRules().getBoolean("doEntityDrops")){
-						dropItemWithOffset(CRItems.flyingMachine, 1, 0.0F);
+					if(!flag && world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)){
+						entityDropItem(CRItems.flyingMachine, 0);
 					}
 
-					setDead();
+					remove();
 				}
 			}
 		}
@@ -152,8 +148,8 @@ public class EntityFlyingMachine extends Entity implements INbtReceiver{
 	}
 
 	@Override
-	protected void entityInit(){
-		dataManager.register(GRAV_PLATE_ANGLE, 0F);
+	public IPacket<?> createSpawnPacket(){
+		return new SSpawnObjectPacket(this);
 	}
 
 	@Override
@@ -164,10 +160,10 @@ public class EntityFlyingMachine extends Entity implements INbtReceiver{
 	@Override
 	public void applyEntityCollision(Entity entityIn){
 		if(entityIn instanceof BoatEntity){
-			if(entityIn.getEntityBoundingBox().minY < getEntityBoundingBox().maxY){
+			if(entityIn.getBoundingBox().minY < getBoundingBox().maxY){
 				super.applyEntityCollision(entityIn);
 			}
-		}else if(entityIn.getEntityBoundingBox().minY <= getEntityBoundingBox().minY){
+		}else if(entityIn.getBoundingBox().minY <= getBoundingBox().minY){
 			super.applyEntityCollision(entityIn);
 		}
 	}
@@ -175,7 +171,7 @@ public class EntityFlyingMachine extends Entity implements INbtReceiver{
 	@Override
 	@Nullable
 	public AxisAlignedBB getCollisionBoundingBox(){
-		return getEntityBoundingBox();
+		return getBoundingBox();
 	}
 
 	@Override
@@ -185,23 +181,16 @@ public class EntityFlyingMachine extends Entity implements INbtReceiver{
 
 	@Override
 	public boolean canBeCollidedWith(){
-		return !isDead;
+		return isAlive();
 	}
 
 	@Override
-	protected void readEntityFromNBT(CompoundNBT nbt){
+	public void readAdditional(CompoundNBT nbt){
 		damage = nbt.getInt("dam");
 	}
 
 	@Override
-	protected void writeEntityToNBT(CompoundNBT nbt){
+	public void writeAdditional(CompoundNBT nbt){
 		nbt.putInt("dam", damage);
-	}
-
-	@Override
-	public void receiveNBT(CompoundNBT nbt){
-		if(!world.isRemote){
-			dataManager.set(GRAV_PLATE_ANGLE, nbt.getFloat("ang"));
-		}
 	}
 }

@@ -7,9 +7,9 @@ import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 
-public class EntityRenderEmpty extends EntityRenderer<Entity>{
+public class RenderEmpty extends EntityRenderer<Entity>{
 
-	protected EntityRenderEmpty(EntityRendererManager renderManager){
+	protected RenderEmpty(EntityRendererManager renderManager){
 		super(renderManager);
 	}
 

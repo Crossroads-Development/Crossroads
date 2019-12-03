@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.entity;
 
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -29,18 +29,18 @@ public class RenderFlyingMachine extends EntityRenderer<EntityFlyingMachine>{
 	@Override
 	public void doRender(EntityFlyingMachine entity, double x, double y, double z, float entityYaw, float partialTicks){
 		GlStateManager.pushMatrix();
-		GlStateManager.pushAttrib();
+		GlStateManager.pushLightingAttributes();
 		GlStateManager.disableLighting();
-		GlStateManager.translate(x, y, z);
-		GlStateManager.rotate(-entityYaw, 0, 1, 0);
+		GlStateManager.translated(x, y, z);
+		GlStateManager.rotatef(-entityYaw, 0, 1, 0);
 
 		bindEntityTexture(entity);
 
 		BufferBuilder buf = Tessellator.getInstance().getBuffer();
 
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(0, 0.5D, 0);
-		GlStateManager.rotate((float) -Math.toDegrees(entity.getAngle()), 1, 0, 0);
+		GlStateManager.translated(0, 0.5D, 0);
+		GlStateManager.rotatef((float) -Math.toDegrees(entity.getAngle()), 1, 0, 0);
 
 
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -389,7 +389,7 @@ public class RenderFlyingMachine extends EntityRenderer<EntityFlyingMachine>{
 
 
 		GlStateManager.enableLighting();
-		GlStateManager.popAttrib();
+		GlStateManager.popAttributes();
 		GlStateManager.popMatrix();
 	}
 }

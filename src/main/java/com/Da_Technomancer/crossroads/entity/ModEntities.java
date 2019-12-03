@@ -12,11 +12,11 @@ public final class ModEntities{
 	@OnlyIn(Dist.CLIENT)
 	public static void clientInit(){
 		RenderingRegistry.registerEntityRenderingHandler(EntityBullet.class, (EntityRendererManager manager) -> (new SpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer(), 1)));
-		RenderingRegistry.registerEntityRenderingHandler(EntityArmRidable.class, EntityRenderEmpty::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityArmRidable.class, RenderEmpty::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityShell.class, (EntityRendererManager manager) -> (new SpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer(), 1)));
 		RenderingRegistry.registerEntityRenderingHandler(EntityNitro.class, (EntityRendererManager manager) -> (new SpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer(), 1)));
 		RenderingRegistry.registerEntityRenderingHandler(EntityFlyingMachine.class, RenderFlyingMachine::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityFlameCore.class, RenderFlameCoreEntity::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityGhostMarker.class, EntityRenderEmpty::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityGhostMarker.class, RenderEmpty::new);
 	}
 }
