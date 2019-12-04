@@ -291,7 +291,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 					if(!simulate){
 						int reagIndex = AlchemyCore.ITEM_TO_REAGENT.get(fakeInventory[slot]).getIndex();
 						double endTemp = handler.getTemp();
-						double reagAmount = AlchemyCore.REAGENTS[reagIndex].getReagentFromStack(outStack).getAmount();
+						double reagAmount = canExtract * AlchemyCore.REAGENTS[reagIndex].getReagentFromStack(outStack).getAmount();
 						if(contents[reagIndex].increaseAmount(-reagAmount) <= 0){
 							contents[reagIndex] = null;
 						}

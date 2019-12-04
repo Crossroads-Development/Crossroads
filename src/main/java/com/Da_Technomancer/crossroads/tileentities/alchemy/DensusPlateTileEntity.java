@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.Properties;
 import com.Da_Technomancer.crossroads.blocks.ModBlocks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumFacing;
@@ -33,7 +34,7 @@ public class DensusPlateTileEntity extends TileEntity implements ITickable{
 		}
 		List<Entity> ents = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.getX() + facing.getFrontOffsetX() * 0.5D, pos.getY() + facing.getFrontOffsetY() * 0.5D, pos.getZ() + facing.getFrontOffsetZ() * 0.5D, pos.getX() + 64 * facing.getFrontOffsetX() + (facing.getFrontOffsetX() == 0 ? 1 : 0), pos.getY() + 64 * facing.getFrontOffsetY() + (facing.getFrontOffsetY() == 0 ? 1 : 0), pos.getZ() + 64 * facing.getFrontOffsetZ() + (facing.getFrontOffsetZ() == 0 ? 1 : 0)), EntitySelectors.IS_ALIVE);
 		for(Entity ent : ents){
-			if(ent.isSneaking()){
+			if(ent.isSneaking() || (ent instanceof EntityPlayer) && ((EntityPlayer) ent).isSpectator()){
 				continue;
 			}
 			switch(facing.getAxis()){
