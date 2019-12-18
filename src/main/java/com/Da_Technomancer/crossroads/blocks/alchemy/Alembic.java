@@ -1,41 +1,41 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.AlembicTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
+import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 public class Alembic extends ContainerBlock{
 
-	private static final AxisAlignedBB[] BB = {new AxisAlignedBB(0.125D, 0, 0.25D, 0.875D, 1, 1), new AxisAlignedBB(0, 0, 0.125D, 0.75D, 1, 0.875D), new AxisAlignedBB(0.125D, 0, 0, 0.875D, 1, 0.75D), new AxisAlignedBB(0.25D, 0, 0.125D, 1, 1, 0.875D)};
+	private static final VoxelShape[] SHAPES = new VoxelShape[4];
+
+	static{
+		//TODO this shape can be made tighter
+		SHAPES[0] = makeCuboidShape(2, 0, 4, 14, 16, 16);
+		SHAPES[1] = makeCuboidShape(0, 0, 2, 12, 16, 14);
+		SHAPES[2] = makeCuboidShape(2, 0, 0, 14, 16, 12);
+		SHAPES[3] = makeCuboidShape(4, 0, 2, 16, 16, 14);
+	}
 
 	public Alembic(){
-		super(Material.IRON);
+		super(Properties.create(Material.IRON).hardnessAndResistance(0.5F).sound(SoundType.METAL));
 		String name = "alembic";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setHardness(.5F);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
 	}
@@ -45,16 +45,17 @@ public class Alembic extends ContainerBlock{
 		return new AlembicTileEntity();
 	}
 
+	@Nullable
 	@Override
-	public BlockState getStateForPlacement(World worldIn, BlockPos pos, Direction blockFaceClickedOn, BlockRayTraceResult hit, int meta, LivingEntity placer){
-		return getDefaultState().with(Properties.HORIZ_FACING, (placer == null) ? Direction.NORTH : placer.getHorizontalFacing().getOpposite());
+	public BlockState getStateForPlacement(BlockItemUseContext context){
+		return getDefaultState().with(EssentialsProperties.HORIZ_FACING, context.getPlacementHorizontalFacing().getOpposite());
 	}
 
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
+		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand))){
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.with(Properties.HORIZ_FACING, state.get(Properties.HORIZ_FACING).rotateY()));
+				worldIn.setBlockState(pos, state.with(EssentialsProperties.HORIZ_FACING, state.get(EssentialsProperties.HORIZ_FACING).rotateY()));
 			}
 			return true;
 		}
@@ -69,13 +70,8 @@ public class Alembic extends ContainerBlock{
 	}
 
 	@Override
-	public void addCollisionBoxToList(BlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> list, @Nullable Entity entityIn, boolean p_185477_7_){
-		addCollisionBoxToList(pos, entityBox, list, BB[state.get(Properties.HORIZ_FACING).getHorizontalIndex()]);
-	}
-
-	@Override
-	public AxisAlignedBB getBoundingBox(BlockState state, IBlockAccess source, BlockPos pos){
-		return BB[state.get(Properties.HORIZ_FACING).getHorizontalIndex()];
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+		return SHAPES[state.get(EssentialsProperties.HORIZ_FACING).getHorizontalIndex()];
 	}
 
 	@Override
@@ -84,32 +80,7 @@ public class Alembic extends ContainerBlock{
 	}
 
 	@Override
-	public int getMetaFromState(BlockState state){
-		return state.get(Properties.HORIZ_FACING).getHorizontalIndex();
-	}
-
-	@Override
-	public BlockState getStateFromMeta(int meta){
-		return getDefaultState().with(Properties.HORIZ_FACING, Direction.byHorizontalIndex(meta));
-	}
-
-	@Override
-	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, Properties.HORIZ_FACING);
-	}
-
-	@Override
-	public boolean isOpaqueCube(BlockState state){
-		return false;
-	}
-
-	@Override
-	public boolean isFullCube(BlockState state){
-		return false;
-	}
-
-	@Override
-	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face){
-		return BlockFaceShape.UNDEFINED;
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+		builder.add(EssentialsProperties.HORIZ_FACING);
 	}
 }

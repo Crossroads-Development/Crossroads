@@ -9,8 +9,6 @@ import javax.annotation.Nonnull;
  */
 public interface IChemicalHandler{
 	
-//	public int getContent();
-	
 	/**
 	 * @param type The reagent to check
 	 * @return The contained amount of the passed reagent type.
@@ -24,17 +22,9 @@ public interface IChemicalHandler{
 	 */
 	public double getTemp();
 	
-//	public double getHeat();
-//
-//	public void setHeat(double heat);
-//
-//	public default void addHeat(double change){
-//		setHeat(getHeat() + change);
-//	}
-	
 	/**
 	 * @param reag A standard reagent storage map. Moved reagents will be taken from it directly, so it should be mutable and write back to the caller.
-	 * @param side The side this is calling (for programming convenience). 
+	 * @param side The side this is calling (for programming convenience- allows returning the same handler to multiple sides).
 	 * @param caller An IChemicalHandler calling this for transferring heat.
 	 * @return Whether anything in reag was changed. 
 	 */
@@ -44,7 +34,7 @@ public interface IChemicalHandler{
 	
 	/**
 	 * @param reag A standard reagent storage map. Moved reagents will be taken from it directly, so it should be mutable and write back to the caller.
-	 * @param side The side this is calling (for programming convenience). 
+	 * @param side The side this is calling (for programming convenience- allows returning the same handler to multiple sides).
 	 * @param caller An IChemicalHandler calling this for transferring heat.
 	 * @param ignorePhase If true, ignore phase movement rules. 
 	 * @return Whether anything in reag was changed. 
@@ -53,7 +43,13 @@ public interface IChemicalHandler{
 	
 	@Nonnull
 	public EnumTransferMode getMode(Direction side);
-	
+
+	/**
+	 * GLASS and CRYSTAL will refuse to directly connect, but NONE will connect to everything
+	 * Do not return the NONE channel unless this block either a) cannot output reagents or b) will prevent "destructive" materials from going into something on the glass channel
+	 * @param side The calling side
+	 * @return What channel this is, for connections
+	 */
 	@Nonnull
 	public EnumContainerType getChannel(Direction side);
 

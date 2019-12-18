@@ -6,11 +6,14 @@ import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.particles.CRParticles;
+import net.minecraft.particles.IParticleData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.ServerWorld;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -35,15 +38,15 @@ public class AlembicTileEntity extends AlchemyReactorTE{
 		return 200;
 	}
 
+	@Override
+	public <T extends IParticleData> void addVisualEffect(T particleType, double speedX, double speedY, double speedZ){
+		//No-op; opaque
+	}
+
 	@Nonnull
 	@Override
 	protected EnumTransferMode[] getModes(){
 		return new EnumTransferMode[] {EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE};
-	}
-
-	@Override
-	public void addVisualEffect(EnumParticleTypes particleType, double speedX, double speedY, double speedZ, int... particleArgs){
-
 	}
 
 	@Override

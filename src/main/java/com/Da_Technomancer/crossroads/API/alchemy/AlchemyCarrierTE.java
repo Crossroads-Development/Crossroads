@@ -6,19 +6,27 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.particles.CRParticles;
+import com.Da_Technomancer.crossroads.particles.ColorParticleData;
+import com.Da_Technomancer.crossroads.particles.ColorParticleType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ITickableTileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.ServerWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
@@ -34,7 +42,7 @@ import java.util.HashSet;
 import java.util.Map;
 
 /**
- * Implementations must implement hasCapability and getCapability directly. 
+ * Implementations must implement getCapability directly.
  */
 public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTileEntity, IInfoTE{
 
@@ -44,13 +52,12 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 	protected ReagentMap contents = new ReagentMap();
 	protected boolean dirtyReag = false;
 
+	/**
+	 * Position to spawn particles for contents
+	 * @return Position
+	 */
 	protected Vec3d getParticlePos(){
 		return new Vec3d(pos).add(0.5D, 0.5D, 0.5D);
-	}
-
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState){
-		return oldState.getBlock() != newState.getBlock();
 	}
 
 	protected boolean useCableHeat(){
@@ -61,13 +68,8 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 
 	}
 
-	/**
-	 * @param chat Add info to this list, 1 line per entry.
-	 * @param player The player using the info device.
-	 * @param side The viewed EnumFacing (only used by goggles).
-	 */
 	@Override
-	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
+	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		double temp = correctTemp();
 		if(contents.getTotalQty() != 0 || temp != HeatUtil.ABSOLUTE_ZERO){
 			chat.add("Temp: " + MiscUtil.betterRound(temp, 3) + "°C (" + MiscUtil.betterRound(HeatUtil.toKelvin(temp), 3) + "K)");
@@ -82,12 +84,12 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 		}
 	}
 
-	public AlchemyCarrierTE(){
-		super();
+	protected AlchemyCarrierTE(TileEntityType<? extends AlchemyCarrierTE> type){
+		super(type);
 	}
 
-	public AlchemyCarrierTE(boolean glass){
-		super();
+	protected AlchemyCarrierTE(TileEntityType<? extends AlchemyCarrierTE> type, boolean glass){
+		this(type);
 		this.glass = glass;
 	}
 
@@ -136,6 +138,9 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 		}
 	}
 
+	/**
+	 * Spawns cosmetic particles representing contents
+	 */
 	protected void spawnParticles(){
 		double temp = handler.getTemp();
 		ServerWorld server = (ServerWorld) world;
@@ -189,16 +194,16 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 		Vec3d particlePos = getParticlePos();
 
 		if(liqAmount > 0){
-			server.spawnParticle(CRParticles.COLOR_LIQUID, false, particlePos.x, particlePos.y, particlePos.z, 0, (Math.random() * 2D - 1D) * 0.02D, (Math.random() - 1D) * 0.02D, (Math.random() * 2D - 1D) * 0.02D, 1F, (int) (liqCol[0] / liqAmount), (int) (liqCol[1] / liqAmount), (int) (liqCol[2] / liqAmount), (int) (liqCol[3] / liqAmount));
+			server.spawnParticle(new ColorParticleData(CRParticles.COLOR_LIQUID, new Color((int) (liqCol[0] / liqAmount), (int) (liqCol[1] / liqAmount), (int) (liqCol[2] / liqAmount), (int) (liqCol[3] / liqAmount))), particlePos.x, particlePos.y, particlePos.z, 0, (Math.random() * 2D - 1D) * 0.02D, (Math.random() - 1D) * 0.02D, (Math.random() * 2D - 1D) * 0.02D, 1F);
 		}
 		if(gasAmount > 0){
-			server.spawnParticle(CRParticles.COLOR_GAS, false, particlePos.x, particlePos.y, particlePos.z, 0, (Math.random() * 2D - 1D) * 0.015D, Math.random() * 0.015D, (Math.random() * 2D - 1D) * 0.015D, 1F, (int) (gasCol[0] / gasAmount), (int) (gasCol[1] / gasAmount), (int) (gasCol[2] / gasAmount), (int) (gasCol[3] / gasAmount));
+			server.spawnParticle(new ColorParticleData(CRParticles.COLOR_GAS, new Color((int) (gasCol[0] / gasAmount), (int) (gasCol[1] / gasAmount), (int) (gasCol[2] / gasAmount), (int) (gasCol[3] / gasAmount))), particlePos.x, particlePos.y, particlePos.z, 0, (Math.random() * 2D - 1D) * 0.015D, Math.random() * 0.015D, (Math.random() * 2D - 1D) * 0.015D, 1F);
 		}
 		if(flameAmount > 0){
-			server.spawnParticle(CRParticles.COLOR_FLAME, false, particlePos.x, particlePos.y, particlePos.z, 0, (Math.random() * 2D - 1D) * 0.015D, Math.random() * 0.015D, (Math.random() * 2D - 1D) * 0.015D, 1F, (int) (flameCol[0] / flameAmount), (int) (flameCol[1] / flameAmount), (int) (flameCol[2] / flameAmount), (int) (flameCol[3] / flameAmount));
+			server.spawnParticle(new ColorParticleData(CRParticles.COLOR_FLAME, new Color((int) (flameCol[0] / flameAmount), (int) (flameCol[1] / flameAmount), (int) (flameCol[2] / flameAmount), (int) (flameCol[3] / flameAmount))), particlePos.x, particlePos.y, particlePos.z, 0, (Math.random() * 2D - 1D) * 0.015D, Math.random() * 0.015D, (Math.random() * 2D - 1D) * 0.015D, 1F);
 		}
 		if(solAmount > 0){
-			server.spawnParticle(CRParticles.COLOR_SOLID, false, particlePos.x - 0.25D + world.rand.nextFloat() / 2F, particlePos.y - 0.1F, particlePos.z - 0.25D + world.rand.nextFloat() / 2F, 0, 0, 0, 0, 1F, (int) (solCol[0] / solAmount), (int) (solCol[1] / solAmount), (int) (solCol[2] / solAmount), (int) (solCol[3] / solAmount));
+			server.spawnParticle(new ColorParticleData(CRParticles.COLOR_SOLID, new Color((int) (solCol[0] / solAmount), (int) (solCol[1] / solAmount), (int) (solCol[2] / solAmount), (int) (solCol[3] / solAmount))), particlePos.x - 0.25D + world.rand.nextFloat() / 2F, particlePos.y - 0.1F, particlePos.z - 0.25D + world.rand.nextFloat() / 2F, 0, 0, 0, 0, 1F);
 		}
 	}
 
@@ -265,7 +270,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 			out = player.getHeldItem(hand);
 		}else{
 			//Move solids from hand into carrier
-			IReagent typeProduced = AlchemyCore.ITEM_TO_REAGENT.get(stack);
+			IReagent typeProduced = AlchemyCore.ITEM_TO_REAGENT.get(stack.getItem());
 			if(typeProduced != null && contents.getTotalQty() < transferCapacity()){
 				double itemTemp;
 				double biomeTemp = HeatUtil.convertBiomeTemp(world, pos);
@@ -295,6 +300,10 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 	@Nonnull
 	protected abstract EnumTransferMode[] getModes();
 
+	/**
+	 * Controls maximum amount of reagent this block can hold before it stops accepting more
+	 * @return Maximum capacity
+	 */
 	protected int transferCapacity(){
 		return 10;
 	}
@@ -305,10 +314,11 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 			if(modes[i].isOutput()){
 				Direction side = Direction.byIndex(i);
 				TileEntity te = world.getTileEntity(pos.offset(side));
-				IChemicalHandler otherHandler;
-				if(contents.getTotalQty() <= 0 || te == null || (otherHandler = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())) == null){
+				LazyOptional<IChemicalHandler> otherOpt;
+				if(contents.getTotalQty() <= 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
 					continue;
 				}
+				IChemicalHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
 
 				EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
 				if(cont != EnumContainerType.NONE && ((cont == EnumContainerType.GLASS) != glass) || otherHandler.getMode(side.getOpposite()) == EnumTransferMode.BOTH && modes[i] == EnumTransferMode.BOTH){
@@ -338,17 +348,11 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
 		nbt.putBoolean("glass", glass);
-		contents.writeToNBT(nbt);
+		contents.write(nbt);
 		nbt.putDouble("temp", cableTemp);
 		nbt.putBoolean("initHeat", init);
 
 		return nbt;
-	}
-
-
-	@Override
-	public boolean hasCapability(Capability<?> cap, Direction side){
-		return getCapability(cap, side) != null;
 	}
 
 	protected EnumContainerType getChannel(){
@@ -356,6 +360,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 	}
 
 	protected IChemicalHandler handler = new AlchHandler();
+	protected LazyOptional<IChemicalHandler>
 
 	protected class AlchHandler implements IChemicalHandler{
 
