@@ -1,6 +1,12 @@
 {
 	"parent": "block/cube_all",
 	"textures": {
-		"all": "crossroads:blocks/block_cast_iron"
+		"north": "#mode",
+		"south": "#mode",
+		"east": "#mode",
+		"west": "#mode",
+		"up": "crossroads:blocks/atmos_charger_top",
+		"down": "crossroads:blocks/block_cast_iron",
+		"particle": "crossroads:blocks/atmos_charger_top"
 	}
 }

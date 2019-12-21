@@ -1,48 +1,93 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
-import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
-import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.blocks.alchemy.AtmosCharger;
 import com.Da_Technomancer.crossroads.render.RenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.Tag;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickableTileEntity;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.registries.ObjectHolder;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 
+@ObjectHolder(Crossroads.MODID)
 public class AtmosChargerTileEntity extends TileEntity implements ITickableTileEntity, IInfoTE{
 
-	private static final int FE_CAPACITY = 20_000;
-	private int fe = 0;
-	private boolean extractMode;
-	private int renderTimer;
-	private double lastRedstone = 0;
+	@ObjectHolder("atmos_charger")
+	private static TileEntityType<AtmosChargerTileEntity> type = null;
 
-	@Override
-	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
-		int charge = AtmosChargeSavedData.getCharge(world);
-		chat.add(charge + "/" + AtmosChargeSavedData.getCapacity() + "FE in atmosphere (" + MiscUtil.betterRound(100D * charge / AtmosChargeSavedData.getCapacity(), 1) + "%)");
+	private static final Tag<Block> ANTENNA_TAG = new BlockTags.Wrapper(new ResourceLocation(Crossroads.MODID, "atmos_antenna"));
+
+	private static final int FE_CAPACITY = 20_000;
+
+	private int fe = 0;
+	private int renderTimer = 0;
+	private Boolean mode = null;
+
+	public AtmosChargerTileEntity(){
+		super(type);
+	}
+
+	public void resetCache(){
+		mode = null;
+	}
+
+	private boolean isExtractMode(){
+		if(mode != null){
+			return mode;
+		}
+		BlockState state = world.getBlockState(pos);
+		if(state.getBlock() != CrossroadsBlocks.atmosCharger){
+			return false;
+		}
+		mode = state.get(CRProperties.ACTIVE);
+		return mode;
 	}
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState){
-		return oldState.getBlock() != newState.getBlock();
+	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+		if(player.world instanceof ServerWorld){
+			int charge = AtmosChargeSavedData.getCharge((ServerWorld) player.world);
+			chat.add(new TranslationTextComponent("tt.crossroads.atmos_charger.reading", charge, AtmosChargeSavedData.getCapacity(), MiscUtil.betterRound(100D * charge / AtmosChargeSavedData.getCapacity(), 1)));
+		}
+	}
+
+	private boolean isValidStructure(){
+		//Requires 3 iron bars (block type controlled via tag) placed in a pillar on top
+		BlockPos checkPos = pos;
+		for(int i = 0; i < 3; i++){
+			checkPos = checkPos.up();
+			if(!world.getBlockState(checkPos).isIn(ANTENNA_TAG)){
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
@@ -52,21 +97,41 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 			return;
 		}
 		renderTimer--;
-		extractMode = state.get(CRProperties.ACTIVE);
 
-		double newReds = (double) AtmosChargeSavedData.getCharge(world) / (double) AtmosChargeSavedData.getCapacity();
-		if(Math.abs(lastRedstone - newReds) >= 0.05D){
-			lastRedstone = newReds;
-			markDirty();
-		}
+		int atmosCharge = AtmosChargeSavedData.getCharge((ServerWorld) world);
 
-		if(extractMode){
+		if(isExtractMode()){
+			int op = Math.min((FE_CAPACITY - fe) / 1000, atmosCharge / 1000);
+			if(op != 0 && isValidStructure()){
+				fe += op * 1000;
+				atmosCharge -= op * 1000;
+				AtmosChargeSavedData.setCharge((ServerWorld) world, atmosCharge);
+				markDirty();
+				if(renderTimer <= 0){
+					world.playSound(null, pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 0.1F, 0F);
+					renderTimer = 10;
+
+					int arcs = world.rand.nextInt(4) + 2;
+					float angle = (float) Math.PI * 2F / arcs;
+					float[] start = new float[] {pos.getX() + 0.5F, pos.getY() + 4F, pos.getZ() + 0.5F};
+					float[] startEn = new float[] {start[0], pos.getY() + 1.1F, start[2]};
+					Vec3d arcVec = new Vec3d(1, 0, 0);
+					int color = TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)];
+					for(int i = 0; i < arcs; i++){
+						arcVec = arcVec.rotateYaw(angle);
+						RenderUtil.addArc(world, start[0], start[1], start[2], start[0] + (float) arcVec.x, start[1] + (float) arcVec.y, start[2] + (float) arcVec.z, startEn[0], startEn[1], startEn[2], 1, 0F, (byte) 10, color);
+					}
+				}
+			}
+
+			//Transfer fe out
 			if(fe > 0){
-				for(Direction side : Direction.HORIZONTALS){
+				for(int i = 0; i < 4; i++){
+					Direction side = Direction.byHorizontalIndex(i);
 					TileEntity te = world.getTileEntity(pos.offset(side));
-					if(te != null && te.hasCapability(CapabilityEnergy.ENERGY, side.getOpposite())){
-						IEnergyStorage storage = te.getCapability(CapabilityEnergy.ENERGY, side.getOpposite());
-						int moved = storage.receiveEnergy(fe, false);
+					LazyOptional<IEnergyStorage> otherCap;
+					if(te != null && (otherCap = te.getCapability(CapabilityEnergy.ENERGY, side.getOpposite())).isPresent()){
+						int moved = otherCap.orElseThrow(NullPointerException::new).receiveEnergy(fe, false);
 						if(moved > 0){
 							fe -= moved;
 							markDirty();
@@ -74,39 +139,28 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 					}
 				}
 			}
-
-			int oldCharge = AtmosChargeSavedData.getCharge(world);
-			int op = Math.min((FE_CAPACITY - fe) / 1000, oldCharge / 1000);
-			if(op <= 0){
-				return;
-			}
-			fe += op * 1000;
-			AtmosChargeSavedData.setCharge(world, oldCharge - op * 1000);
-			markDirty();
-			if(renderTimer <= 0){
-				renderTimer = 10;
-				RenderUtil.addArc(world.provider.getDimension(), pos.getX() - 0.8F, pos.getY() + 5.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 5.5F, pos.getZ() - 0.8F, pos.getX() - 0.8F, pos.getY() + 4.5F, pos.getZ() + 0.5F, 1, 0F, (byte) 10, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)]);
-				RenderUtil.addArc(world.provider.getDimension(), pos.getX() - 0.8F, pos.getY() + 5.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 5.5F, pos.getZ() + 1.8F, pos.getX() - 0.8F, pos.getY() + 4.5F, pos.getZ() + 0.5F, 1, 0F, (byte) 10, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)]);
-				RenderUtil.addArc(world.provider.getDimension(), pos.getX() + 1.8F, pos.getY() + 5.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 5.5F, pos.getZ() - 0.8F, pos.getX() + 1.8F, pos.getY() + 4.5F, pos.getZ() + 0.5F, 1, 0F, (byte) 10, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)]);
-				RenderUtil.addArc(world.provider.getDimension(), pos.getX() + 1.8F, pos.getY() + 5.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 5.5F, pos.getZ() + 1.8F, pos.getX() + 1.8F, pos.getY() + 4.5F, pos.getZ() + 0.5F, 1, 0F, (byte) 10, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)]);
-			}
 		}else{
-			int oldCharge = AtmosChargeSavedData.getCharge(world);
-			int op = Math.min(fe / 1000, (AtmosChargeSavedData.getCapacity() - oldCharge) / 1000);
-			if(op <= 0){
-				return;
-			}
-			fe -= op * 1000;
-			AtmosChargeSavedData.setCharge(world, oldCharge + op * 1000);
-			markDirty();
-			if(renderTimer <= 0){
-				renderTimer = 10;
-				world.playSound(null, pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 0.1F, 0F);
+			int op = Math.min(fe / 1000, (AtmosChargeSavedData.getCapacity() - atmosCharge) / 1000);
+			if(op != 0 && isValidStructure()){
+				fe -= op * 1000;
+				atmosCharge += op * 1000;
+				AtmosChargeSavedData.setCharge((ServerWorld) world, atmosCharge);
+				markDirty();
+				if(renderTimer <= 0){
+					renderTimer = 10;
+					world.playSound(null, pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 0.1F, 0F);
 
-				RenderUtil.addArc(world.provider.getDimension(), pos.getX() - 0.8F, pos.getY() + 4.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 4.5F, pos.getZ() - 0.8F, pos.getX() - 0.8F, pos.getY() + 5.5F, pos.getZ() + 0.5F, 1, 0F, (byte) 10, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)]);
-				RenderUtil.addArc(world.provider.getDimension(), pos.getX() - 0.8F, pos.getY() + 4.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 4.5F, pos.getZ() + 1.8F, pos.getX() - 0.8F, pos.getY() + 5.5F, pos.getZ() + 0.5F, 1, 0F, (byte) 10, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)]);
-				RenderUtil.addArc(world.provider.getDimension(), pos.getX() + 1.8F, pos.getY() + 4.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 4.5F, pos.getZ() - 0.8F, pos.getX() + 1.8F, pos.getY() + 5.5F, pos.getZ() + 0.5F, 1, 0F, (byte) 10, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)]);
-				RenderUtil.addArc(world.provider.getDimension(), pos.getX() + 1.8F, pos.getY() + 4.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F, pos.getY() + 4.5F, pos.getZ() + 1.8F, pos.getX() + 1.8F, pos.getY() + 5.5F, pos.getZ() + 0.5F, 1, 0F, (byte) 10, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)]);
+					int arcs = world.rand.nextInt(4) + 2;
+					float angle = (float) Math.PI * 2F / arcs;
+					float[] start = new float[] {pos.getX() + 0.5F, pos.getY() + 1.1F, pos.getZ() + 0.5F};
+					float[] startEn = new float[] {start[0], pos.getY() + 4F, start[2]};
+					Vec3d arcVec = new Vec3d(1, 0, 0);
+					int color = TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)];
+					for(int i = 0; i < arcs; i++){
+						arcVec = arcVec.rotateYaw(angle);
+						RenderUtil.addArc(world, start[0], start[1], start[2], start[0] + (float) arcVec.x, start[1] + (float) arcVec.y, start[2] + (float) arcVec.z, startEn[0], startEn[1], startEn[2], 1, 0F, (byte) 10, color);
+					}
+				}
 			}
 		}
 	}
@@ -115,43 +169,37 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
 		fe = nbt.getInt("fe");
-		lastRedstone = nbt.getDouble("reds");
 	}
 
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
 		nbt.putInt("fe", fe);
-		nbt.putDouble("reds", lastRedstone);
 		return nbt;
 	}
 
-	private ElecHandler feHandler = new ElecHandler();
-	private final IAdvancedRedstoneHandler redsHandler = (boolean measure) -> measure ? 15D * lastRedstone : 0;
-
 	@Override
-	public boolean hasCapability(Capability<?> cap, Direction side){
-		return (cap == CapabilityEnergy.ENERGY && side != Direction.UP) || (cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY && (side == null || side.getAxis() != Direction.Axis.Y)) || super.hasCapability(cap, side);
+	public void remove(){
+		super.remove();
+		feOpt.invalidate();
 	}
+
+	private LazyOptional<IEnergyStorage> feOpt = LazyOptional.of(ElecHandler::new);
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == CapabilityEnergy.ENERGY && side != Direction.UP){
-			return (T) feHandler;
-		}
-		if((cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY && (side == null || side.getAxis() != Direction.Axis.Y))){
-			return (T) redsHandler;
+			return (LazyOptional<T>) feOpt;
 		}
 		return super.getCapability(cap, side);
 	}
 
 	private class ElecHandler implements IEnergyStorage{
 
-
 		@Override
 		public int receiveEnergy(int maxReceive, boolean simulate){
-			if(extractMode){
+			if(isExtractMode()){
 				return 0;
 			}
 			int toMove = Math.min(FE_CAPACITY - fe, maxReceive);
@@ -166,7 +214,7 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 
 		@Override
 		public int extractEnergy(int maxExtract, boolean simulate){
-			if(!extractMode){
+			if(!isExtractMode()){
 				return 0;
 			}
 
@@ -190,12 +238,12 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 
 		@Override
 		public boolean canExtract(){
-			return extractMode;
+			return isExtractMode();
 		}
 
 		@Override
 		public boolean canReceive(){
-			return !extractMode;
+			return !isExtractMode();
 		}
 	}
 }

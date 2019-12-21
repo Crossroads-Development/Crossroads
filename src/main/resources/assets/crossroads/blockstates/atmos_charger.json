@@ -7,10 +7,14 @@
 	"variants": {
 		"active": {
 			"true": {
-
+				"textures": {
+					"mode": "crossroads:blocks/tesla_in"
+				}
 			},
 			"false": {
-
+				"textures": {
+					"mode": "crossroads:blocks/tesla_out"
+				}
 			}
 		}
 	}

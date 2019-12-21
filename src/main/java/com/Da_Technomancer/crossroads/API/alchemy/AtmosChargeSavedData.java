@@ -11,7 +11,7 @@ public class AtmosChargeSavedData extends WorldSavedData{
 
 	public static final String ID = Crossroads.MODID + "_atmos";
 
-	public static long getCapacity(){
+	public static int getCapacity(){
 		return CRConfig.atmosCap.get();
 	}
 
