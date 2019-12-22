@@ -1,13 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ChemicalVentTileEntity;
-
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.SoundType;
@@ -15,21 +11,21 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.block.BlockRenderType;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class ChemicalVent extends ContainerBlock{
 
-
 	public ChemicalVent(){
-		super(Material.IRON);
+		super(Properties.create(Material.IRON).hardnessAndResistance(2).sound(SoundType.GLASS));
 		String name = "chemical_vent";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setHardness(2);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setSoundType(SoundType.GLASS);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
 	}
@@ -43,15 +39,11 @@ public class ChemicalVent extends ContainerBlock{
 	public BlockRenderType getRenderType(BlockState state){
 		return BlockRenderType.MODEL;
 	}
-	
-	@Override
-	public boolean isOpaqueCube(BlockState state){
-		return false;
-	}
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add("Don't use this to do a Hitl- and you already did it.");
+		tooltip.add(new TranslationTextComponent("tt.crossroads.chemical_vent.desc"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.chemical_vent.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

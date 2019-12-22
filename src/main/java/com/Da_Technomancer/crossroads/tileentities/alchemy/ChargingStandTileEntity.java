@@ -7,8 +7,6 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
-import com.Da_Technomancer.crossroads.items.alchemy.FlorenceFlask;
-import com.Da_Technomancer.crossroads.items.alchemy.Phial;
 import com.Da_Technomancer.crossroads.render.RenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
 import net.minecraft.block.BlockState;
@@ -20,8 +18,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.Explosion;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -31,17 +28,23 @@ import javax.annotation.Nonnull;
 
 public class ChargingStandTileEntity extends AlchemyReactorTE{
 
-	private boolean occupied = false;
-	/**
-	 * Meaningless if !occupied. If true, florence flask, else phial.
-	 */
-	private boolean florence = false;
-	private int fe = 0;
 	private static final int ENERGY_CAPACITY = 100;
+	public static final int DRAIN = 10;
 
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState){
-		return oldState.getBlock() != newState.getBlock();
+	private AbstractGlassware.GlasswareTypes type = null;
+	private int fe = 0;
+
+	private AbstractGlassware.GlasswareTypes heldType(){
+		if(type == null){
+			BlockState state = world.getBlockState(pos);
+			if(state.has(CRProperties.CONTAINER_TYPE)){
+				type = state.get(CRProperties.CONTAINER_TYPE);
+				return type;
+			}
+
+			return AbstractGlassware.GlasswareTypes.NONE;
+		}
+		return type;
 	}
 
 	@Override
@@ -50,9 +53,9 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 			return;
 		}
 		if(fe > 0){
-			fe = Math.max(0, fe - 10);
+			fe = Math.max(0, fe - DRAIN);
 			if(world.getGameTime() % 10 == 0){
-				RenderUtil.addArc(world.provider.getDimension(), pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, pos.getX() + world.rand.nextFloat(), pos.getY() + world.rand.nextFloat(), pos.getZ() + world.rand.nextFloat(), 1, 0F, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)]);
+				RenderUtil.addArc(world, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, pos.getX() + world.rand.nextFloat(), pos.getY() + world.rand.nextFloat(), pos.getZ() + world.rand.nextFloat(), 1, 0F, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)]);
 			}
 		}
 		super.tick();
@@ -65,40 +68,57 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 
 	@Override
 	protected int transferCapacity(){
-		return occupied ? florence ? CRItems.florenceFlaskGlass.getCapacity() : CRItems.phialGlass.getCapacity() : 0;
+		return heldType().capacity;
 	}
 
 	@Override
 	public void destroyChamber(float strength){
 		BlockState state = world.getBlockState(pos);
-		world.setBlockState(pos, state.with(CRProperties.ACTIVE, false).with(CRProperties.CRYSTAL, false).with(CRProperties.CONTAINER_TYPE, false));
+		world.setBlockState(pos, state.with(CRProperties.CRYSTAL, false).with(CRProperties.CONTAINER_TYPE, AbstractGlassware.GlasswareTypes.NONE));
 		world.playSound(null, pos, SoundType.GLASS.getBreakSound(), SoundCategory.BLOCKS, SoundType.GLASS.getVolume(), SoundType.GLASS.getPitch());
-		occupied = false;
-		florence = false;
+		type = null;
 		dirtyReag = true;
 		AlchemyUtil.releaseChemical(world, pos, contents);
 		contents = new ReagentMap();
 		if(strength > 0){
-			world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), strength, true);
+			world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), strength, Explosion.Mode.BREAK);
 		}
 	}
 
 	public void onBlockDestroyed(BlockState state){
-		if(occupied){
+		if(heldType() != AbstractGlassware.GlasswareTypes.NONE){
 			ItemStack out = getStoredItem();
 			this.contents = new ReagentMap();
 			dirtyReag = true;
-			occupied = false;
+			type = AbstractGlassware.GlasswareTypes.NONE;
 			markDirty();
 			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), out);
 		}
 	}
 
 	private ItemStack getStoredItem(){
-		AbstractGlassware glasswareType = florence ? glass ? CRItems.florenceFlaskGlass : CRItems.florenceFlaskCrystal : glass ? CRItems.phialGlass : CRItems.phialCrystal;
-		ItemStack flask = new ItemStack(glasswareType, 1);
-		glasswareType.setReagents(flask, contents);
-		return flask;
+		if(heldType() == AbstractGlassware.GlasswareTypes.NONE){
+			return ItemStack.EMPTY;
+		}
+		boolean crystal = world.getBlockState(pos).get(CRProperties.CRYSTAL);
+		ItemStack out;
+		//This feels like a really bad way of doing this
+		switch(heldType()){
+			case PHIAL:
+				out = crystal ? new ItemStack(CRItems.phialCrystal, 1) : new ItemStack(CRItems.phialGlass, 1);
+				break;
+			case FLORENCE:
+				out =  crystal ? new ItemStack(CRItems.florenceFlaskCrystal, 1) : new ItemStack(CRItems.florenceFlaskGlass, 1);
+				break;
+			case SHELL:
+				out =  crystal ? new ItemStack(CRItems.shellCrystal, 1) : new ItemStack(CRItems.shellGlass, 1);
+				break;
+			default:
+				return ItemStack.EMPTY;
+		}
+
+		((AbstractGlassware) (out.getItem())).setReagents(out, contents);
+		return out;
 	}
 
 	/**
@@ -113,27 +133,25 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 	public ItemStack rightClickWithItem(ItemStack stack, boolean sneaking, PlayerEntity player, Hand hand){
 		BlockState state = world.getBlockState(pos);
 
-		if(occupied){
+		if(heldType() != AbstractGlassware.GlasswareTypes.NONE){
 			if(stack.isEmpty() && sneaking){
 				ItemStack out = getStoredItem();
-				world.setBlockState(pos, state.with(CRProperties.ACTIVE, false).with(CRProperties.CRYSTAL, false).with(CRProperties.CONTAINER_TYPE, false));
-				occupied = false;
+				world.setBlockState(pos, state.with(CRProperties.CRYSTAL, false).with(CRProperties.CONTAINER_TYPE, AbstractGlassware.GlasswareTypes.NONE));
+				type = null;
 				this.contents.clear();
 				dirtyReag = true;
 				markDirty();
 				return out;
 			}
-
 			super.rightClickWithItem(stack, sneaking, player, hand);
-		}else if(stack.getItem() instanceof Phial || stack.getItem() instanceof FlorenceFlask){
+		}else if(stack.getItem() instanceof AbstractGlassware){
 			//Add item into TE
 			this.contents = ((AbstractGlassware) stack.getItem()).getReagants(stack);
 			glass = !((AbstractGlassware) stack.getItem()).isCrystal();
 			dirtyReag = true;
 			markDirty();
-			occupied = true;
-			florence = stack.getItem() instanceof FlorenceFlask;
-			world.setBlockState(pos, state.with(CRProperties.ACTIVE, true).with(CRProperties.CRYSTAL, !glass).with(CRProperties.CONTAINER_TYPE, florence));
+			world.setBlockState(pos, state.with(CRProperties.CRYSTAL, !glass).with(CRProperties.CONTAINER_TYPE, ((AbstractGlassware) stack.getItem()).containerType()));
+			type = null;
 			return ItemStack.EMPTY;
 		}
 
@@ -143,16 +161,12 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 	@Override
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
-		occupied = nbt.getBoolean("occupied");
-		florence = occupied && nbt.getBoolean("florence");
 		fe = nbt.getInt("fe");
 	}
 
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
-		nbt.putBoolean("occupied", occupied);
-		nbt.putBoolean("florence", florence);
 		nbt.putInt("fe", fe);
 		return nbt;
 	}
@@ -162,21 +176,19 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 		return new EnumTransferMode[] {EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE};
 	}
 
-	private final ElecHandler elecHandler = new ElecHandler();
-
 	@Override
-	public boolean hasCapability(Capability<?> cap, Direction side){
-		if(cap == CapabilityEnergy.ENERGY){
-			return true;
-		}
-		return super.hasCapability(cap, side);
+	public void remove(){
+		super.remove();
+		elecOpt.invalidate();
 	}
+
+	private final LazyOptional<IEnergyStorage> elecOpt = LazyOptional.of(ElecHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == CapabilityEnergy.ENERGY){
-			return (T) elecHandler;
+			return (LazyOptional<T>) elecOpt;
 		}
 		return super.getCapability(cap, side);
 	}

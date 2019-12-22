@@ -3,32 +3,42 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.HashSet;
 
+@ObjectHolder(Crossroads.MODID)
 public class ChemicalVentTileEntity extends TileEntity{
 
-	@Override
-	public boolean hasCapability(Capability<?> cap, Direction side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY){
-			return true;
-		}
-		return super.hasCapability(cap, side);
+	@ObjectHolder("chemical_vent")
+	private static TileEntityType<ChemicalVentTileEntity> type = null;
+
+	public ChemicalVentTileEntity(){
+		super(type);
 	}
+
+	@Override
+	public void remove(){
+		super.remove();
+		alcOpt.invalidate();
+	}
+
+	private final LazyOptional<IChemicalHandler> alcOpt = LazyOptional.of(AlchHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.CHEMICAL_CAPABILITY){
-			return (T) handler;
+			return (LazyOptional<T>) alcOpt;
 		}
 		return super.getCapability(cap, side);
 	}
-
-	private final AlchHandler handler = new AlchHandler();
 
 	private class AlchHandler implements IChemicalHandler{
 

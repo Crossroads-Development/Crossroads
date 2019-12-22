@@ -15,8 +15,6 @@ import net.minecraft.world.World;
 
 public class Shell extends AbstractGlassware{
 
-	private final boolean crystal;
-
 	private static final IDispenseItemBehavior SHELL_DISPENSER_BEHAVIOR = new DefaultDispenseItemBehavior(){
 
 		/**
@@ -49,22 +47,11 @@ public class Shell extends AbstractGlassware{
 	};
 
 	public Shell(boolean crystal){
-		super();
-		this.crystal = crystal;
+		super(GlasswareTypes.SHELL, crystal);
 		String name = "shell_" + (crystal ? "cryst" : "glass");
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
 		DispenserBlock.registerDispenseBehavior(this, SHELL_DISPENSER_BEHAVIOR);
-	}
-
-	@Override
-	public int getCapacity(){
-		return 25;
-	}
-
-	@Override
-	public boolean isCrystal(){
-		return crystal;
 	}
 
 	@Override
@@ -79,7 +66,7 @@ public class Shell extends AbstractGlassware{
 			worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
 
 			if(!worldIn.isRemote){
-				EntityShell entitysnowball = new EntityShell(worldIn, playerIn, contents, crystal);
+				EntityShell entitysnowball = new EntityShell(worldIn, playerIn, contents, isCrystal);
 				entitysnowball.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
 				worldIn.addEntity(entitysnowball);
 			}

@@ -19,7 +19,6 @@ import java.util.Map;
 
 public class AlchemyUtil{
 
-	public static final int MB_PER_REAG = 100;
 	/**
 	 * Conversion factor between degrees kelvin * amount alchemy system, and degrees kelvin normal heat. Based on game balance.
 	 */

@@ -9,12 +9,27 @@
 		"uvlock": true
 	},
 	"variants": {
-		"active": {
-			"true": {
-				"submodel": "crossroads:florence_holder_phial"
+		"container_type": {
+			"none": {
+
 			},
-			"false": {
-				
+			"phial": {
+				"submodel": {
+					"base": {"model": "crossroads:phial_holder_base"},
+					"bottle": {"model": "crossroads:phial_holder_phial"}
+				}
+			},
+			"florence": {
+				"submodel": {
+					"base": {"model": "crossroads:florence_holder_base"},
+					"bottle": {"model": "crossroads:florence_holder_phial"}
+				}
+			},
+			"shell": {
+				"submodel": {
+					"base": {"model": "crossroads:shell_holder_base"},
+					"bottle": {"model": "crossroads:shell_holder_phial"}
+				}
 			}
 		},
 		"crystal": {
@@ -29,14 +44,6 @@
 					"glass": "crossroads:blocks/glass_thin",
 					"stem": "crossroads:blocks/glass_thin"
 				}
-			}
-		},
-		"container_type": {
-			"true": {
-				"submodel": "crossroads:florence_holder_base"
-			},
-			"false": {
-				"submodel": "crossroads:phial_holder_base"
 			}
 		}
 	}

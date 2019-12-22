@@ -8,23 +8,11 @@ import net.minecraft.util.ActionResultType;
 
 public class Phial extends AbstractGlassware{
 
-	private final boolean crystal;
-
 	public Phial(boolean crystal){
-		this.crystal = crystal;
+		super(GlasswareTypes.PHIAL, crystal);
 		String name = "phial_" + (crystal ? "cryst" : "glass");
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
-	}
-
-	@Override
-	public int getCapacity(){
-		return 20;
-	}
-
-	@Override
-	public boolean isCrystal(){
-		return crystal;
 	}
 
 	@Override

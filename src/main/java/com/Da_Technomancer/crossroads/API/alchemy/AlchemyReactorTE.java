@@ -5,6 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
 import net.minecraft.particles.IParticleData;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Explosion;
@@ -17,12 +18,12 @@ import java.util.ArrayList;
  */
 public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReactionChamber{
 
-	public AlchemyReactorTE(){
-		super();
+	public AlchemyReactorTE(TileEntityType<? extends AlchemyReactorTE> type){
+		super(type);
 	}
 
-	public AlchemyReactorTE(boolean glass){
-		super(glass);
+	public AlchemyReactorTE(TileEntityType<? extends AlchemyReactorTE> type, boolean glass){
+		super(type, glass);
 	}
 
 	@Override

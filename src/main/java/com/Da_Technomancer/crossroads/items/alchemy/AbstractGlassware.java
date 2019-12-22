@@ -9,6 +9,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -19,18 +20,28 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
+import java.util.Locale;
 
 public abstract class AbstractGlassware extends Item{
 
 	private static final String TAG_NAME = "reagents";
 
-	protected AbstractGlassware(){
+	protected final GlasswareTypes type;
+	protected final boolean isCrystal;
+
+	protected AbstractGlassware(GlasswareTypes type, boolean isCrystal){
 		super(new Properties().maxStackSize(1).group(CRItems.TAB_CROSSROADS));
+		this.type = type;
+		this.isCrystal = isCrystal;
 	}
 
-	public abstract int getCapacity();
+	public int getCapacity(){
+		return type.capacity;
+	}
 
-	public abstract boolean isCrystal();
+	public boolean isCrystal(){
+		return isCrystal;
+	}
 
 	public static int getColorRGB(ItemStack stack){
 		if(!(stack.getItem() instanceof AbstractGlassware)){
@@ -101,24 +112,47 @@ public abstract class AbstractGlassware extends Item{
 		double temp = stored.getTempC();
 
 		if(stored.getTotalQty() == 0){
-			tooltip.add(new TranslationTextComponent("tt.crossroads.glassware.empty"));
+			tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.alchemy_empty"));
 		}else{
-			tooltip.add(new TranslationTextComponent("tt.crossroads.glassware.temp", CRConfig.formatVal(temp), CRConfig.formatVal(HeatUtil.toKelvin(temp))));
+			tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.temp_k", CRConfig.formatVal(temp), CRConfig.formatVal(HeatUtil.toKelvin(temp))));
 			int total = 0;
 			for(IReagent type : stored.keySet()){
 				int qty = stored.getQty(type);
 				if(qty > 0){
 					total++;
 					if(total <= 4 || flagIn != ITooltipFlag.TooltipFlags.NORMAL){
-						tooltip.add(new TranslationTextComponent("tt.crossroads.glassware.content", type.getName(), qty));
+						tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.alchemy_content", type.getName(), qty));
 					}else{
 						break;
 					}
 				}
 			}
 			if(total > 4 && flagIn == ITooltipFlag.TooltipFlags.NORMAL){
-				tooltip.add(new TranslationTextComponent("tt.crossroads.glassware.excess", total - 4));
+				tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.alchemy_excess", total - 4));
 			}
+		}
+	}
+
+	public GlasswareTypes containerType(){
+		return type;
+	}
+
+	public enum GlasswareTypes implements IStringSerializable{
+
+		NONE(0),
+		PHIAL(20),
+		FLORENCE(100),
+		SHELL(25);
+
+		public final int capacity;
+
+		private GlasswareTypes(int capacity){
+			this.capacity = capacity;
+		}
+
+		@Override
+		public String getName(){
+			return name().toLowerCase(Locale.US);
 		}
 	}
 }

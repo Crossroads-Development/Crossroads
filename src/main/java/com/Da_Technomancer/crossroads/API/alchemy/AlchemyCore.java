@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
+import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.*;
 import com.Da_Technomancer.crossroads.CRConfig;
@@ -11,14 +12,13 @@ import com.Da_Technomancer.crossroads.items.crafting.PredicateMap;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.AlchemyRec;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.fluids.FluidStack;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -38,7 +38,14 @@ public final class AlchemyCore{
 	private static final ArrayList<AlchemyRec> ELEM_REACTIONS = new ArrayList<>();
 
 	public static final PredicateMap<Item, IReagent> ITEM_TO_REAGENT = new PredicateMap<>();
-	public static final BiMap<Fluid, IReagent> FLUID_TO_LIQREAGENT = HashBiMap.create(5); // For liquid phase.
+	/**
+	 * For the liquid phase of select reagents
+	 * Do not add any reagent more than once, or any fluid more than once
+	 * Do not modify the stored fluidstacks- they are unfortunately mutable
+	 *
+	 * A list was used to maintain ordering
+	 */
+	public static final List<Pair<FluidStack, IReagent>> FLUID_TO_LIQREAGENT = new ArrayList<>(5);
 
 	public static final HashMap<String, IReagent> REAGENTS = new HashMap<>(REAGENT_COUNT);
 
@@ -123,11 +130,11 @@ public final class AlchemyCore{
 		});
 		FLAME_RANGES.put(hellfire, (Integer amount) -> CRConfig.allowHellfire.get() ? (int) Math.min(64, amount * 2D) : (int) Math.min(8, Math.round(amount / 2D)));
 
-		FLUID_TO_LIQREAGENT.put(CrossroadsFluids.distilledWater.still, REAGENTS.get(WATER.id()));
-		FLUID_TO_LIQREAGENT.put(CrossroadsFluids.moltenIron.still, REAGENTS.get(IRON.id()));
-		FLUID_TO_LIQREAGENT.put(CrossroadsFluids.moltenGold.still, REAGENTS.get(GOLD.id()));
-		FLUID_TO_LIQREAGENT.put(CrossroadsFluids.moltenCopper.still, REAGENTS.get(COPPER.id()));
-		FLUID_TO_LIQREAGENT.put(CrossroadsFluids.moltenTin.still, REAGENTS.get(TIN.id()));
+		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CrossroadsFluids.distilledWater.still, 100), REAGENTS.get(WATER.id())));
+		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CrossroadsFluids.moltenIron.still, EnergyConverters.INGOT_MB), REAGENTS.get(IRON.id())));
+		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CrossroadsFluids.moltenGold.still, EnergyConverters.INGOT_MB), REAGENTS.get(GOLD.id())));
+		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CrossroadsFluids.moltenCopper.still, EnergyConverters.INGOT_MB), REAGENTS.get(COPPER.id())));
+		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CrossroadsFluids.moltenTin.still, EnergyConverters.INGOT_MB), REAGENTS.get(TIN.id())));
 
 		// Reactions
 

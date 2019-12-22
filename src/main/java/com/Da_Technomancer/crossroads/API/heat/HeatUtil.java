@@ -35,6 +35,12 @@ public class HeatUtil{
 		return -1;
 	}
 
+	/**
+	 * Calculates the biome temperature at a location
+	 * @param world The world (client or server)
+	 * @param pos The position to find the temperature at
+	 * @return The biome temperature, in degrees C
+	 */
 	public static double convertBiomeTemp(World world, BlockPos pos){
 		double rawTemp = world.getBiome(pos).getTemperature(pos);
 		//This formula was derived with the power of wikipedia and excel spreadsheets to compare biome temperatures to actual real world temperatures.

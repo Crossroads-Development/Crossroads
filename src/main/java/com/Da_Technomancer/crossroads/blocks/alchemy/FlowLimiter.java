@@ -1,50 +1,46 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.FlowLimiterTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nullable;
 
 public class FlowLimiter extends ContainerBlock{
 
+	private static final VoxelShape[] SHAPES = new VoxelShape[3];
 
-	private static final AxisAlignedBB BB_X = new AxisAlignedBB(0, .25D, .25D, 1, .75D, .75D);
-	private static final AxisAlignedBB BB_Y = new AxisAlignedBB(.25D, 0, .25D, .75D, 1, .75D);
-	private static final AxisAlignedBB BB_Z = new AxisAlignedBB(.25D, .25D, 0, .75D, .75D, 1);
+	static{
+		SHAPES[0] = makeCuboidShape(0, 4, 4, 16, 12, 12);
+		SHAPES[1] = makeCuboidShape(4, 0, 4, 12, 16, 12);
+		SHAPES[2] = makeCuboidShape(4, 4, 0, 12, 12, 16);
+	}
 
 	private final boolean crystal;
 
 	public FlowLimiter(boolean crystal){
-		super(Material.GLASS);
+		super(Properties.create(Material.GLASS).sound(SoundType.GLASS).hardnessAndResistance(0.5F));
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "flow_limiter";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setHardness(.5F);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setSoundType(SoundType.GLASS);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
 	}
@@ -64,29 +60,22 @@ public class FlowLimiter extends ContainerBlock{
 	public BlockRenderLayer getRenderLayer(){
 		return BlockRenderLayer.TRANSLUCENT;
 	}
-
-	@Override
-	public int getMetaFromState(BlockState state){
-		return state.get(EssentialsProperties.FACING).getIndex();
-	}
-
-	@Override
-	public BlockState getStateFromMeta(int meta){
-		return getDefaultState().with(EssentialsProperties.FACING, Direction.byIndex(meta));
-	}
 	
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
+		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand))){
 			if(!worldIn.isRemote){
 				if(playerIn.isSneaking()){
 					TileEntity te = worldIn.getTileEntity(pos);
-					
 					if(te instanceof FlowLimiterTileEntity){
 						((FlowLimiterTileEntity) te).cycleLimit((ServerPlayerEntity) playerIn);
 					}
 				}else{
 					worldIn.setBlockState(pos, state.cycle(EssentialsProperties.FACING));
+					TileEntity te = worldIn.getTileEntity(pos);
+					if(te instanceof FlowLimiterTileEntity){
+						((FlowLimiterTileEntity) te).wrench();
+					}
 				}
 			}
 			return true;
@@ -95,33 +84,18 @@ public class FlowLimiter extends ContainerBlock{
 	}
 
 	@Override
-	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, EssentialsProperties.FACING);
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+		builder.add(EssentialsProperties.FACING);
 	}
 
 	@Override
-	public boolean isOpaqueCube(BlockState state){
-		return false;
-	}
-	
-	@Override
-	public AxisAlignedBB getBoundingBox(BlockState state, IBlockAccess source, BlockPos pos){
-		Axis axis = state.get(EssentialsProperties.FACING).getAxis();
-		return axis == Axis.X ? BB_X : axis == Axis.Y ? BB_Y : BB_Z;
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+		return SHAPES[state.get(EssentialsProperties.FACING).getAxis().ordinal()];
 	}
 
+	@Nullable
 	@Override
-	public BlockState getStateForPlacement(World worldIn, BlockPos pos, Direction blockFaceClickedOn, BlockRayTraceResult hit, int meta, LivingEntity placer){
-		return getStateFromMeta(meta).with(EssentialsProperties.FACING, (placer == null) ? Direction.NORTH : Direction.getDirectionFromEntityLiving(pos, placer));
-	}
-	
-	@Override
-	public boolean isFullCube(BlockState state){
-		return false;
-	}
-
-	@Override
-	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face){
-		return BlockFaceShape.UNDEFINED;
+	public BlockState getStateForPlacement(BlockItemUseContext context){
+		return getDefaultState().with(EssentialsProperties.FACING, context.getNearestLookingDirection());
 	}
 }

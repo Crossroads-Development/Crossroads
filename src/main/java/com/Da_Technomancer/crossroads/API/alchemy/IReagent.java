@@ -20,12 +20,12 @@ public interface IReagent{
 	}
 	
 	/**
-	 * @return The melting temperature. Must be less than boiling temperature. Setting below absolute-zero will disable freezing. 
+	 * @return The melting temperature in C. Must be less than boiling temperature. Setting below absolute-zero will disable freezing.
 	 */
 	public double getMeltingPoint();
 	
 	/**
-	 * @return The boiling temperature. Must be greater than melting temperature. Setting below absolute-zero will disable condensing. 
+	 * @return The boiling temperature in C. Must be greater than melting temperature. Setting below absolute-zero will disable condensing.
 	 */
 	public double getBoilingPoint();
 	
@@ -66,7 +66,7 @@ public interface IReagent{
 	public List<ItemStack> getJEISolids();
 
 	/**
-	 * @param temp Current temperature. Optional, only used if phase hasn't been set yet to update the phase. If phase should already have been set, this can be left as 0.
+	 * @param temp Current temperature in C. Optional, only used if phase hasn't been set yet to update the phase. If phase should already have been set, this can be left as 0.
 	 * @return The phase
 	 */
 	@Nonnull

@@ -4,51 +4,71 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.sun.tools.javac.util.List;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.registries.ObjectHolder;
 
+@ObjectHolder(Crossroads.MODID)
 public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState){
-		return oldState.getBlock() != newState.getBlock();
-	}
-
+	@ObjectHolder("flow_limiter")
+	private static TileEntityType<FlowLimiterTileEntity> type = null;
 	private static final int[] LIMITS = new int[] {1, 2, 4, 8, 16, 32, 64};
 
 	private int limitIndex = 0;
+	private Direction facing = null;
 
 	public FlowLimiterTileEntity(){
-		super();
+		super(type);
 	}
 
 	public FlowLimiterTileEntity(boolean glass){
-		super(glass);
+		super(type, glass);
+	}
+
+	public Direction getFacing(){
+		if(facing == null){
+			BlockState state = world.getBlockState(pos);
+			if(state.has(EssentialsProperties.FACING)){
+				facing = state.get(EssentialsProperties.FACING);
+				return facing;
+			}
+			return Direction.DOWN;
+		}
+		return facing;
+	}
+
+	public void wrench(){
+		facing = null;
 	}
 
 	public void cycleLimit(ServerPlayerEntity player){
 		limitIndex += 1;
 		limitIndex %= LIMITS.length;
 		markDirty();
-		CrossroadsPackets.network.sendTo(new SendChatToClient("Reagent movement limit configured to: " + LIMITS[limitIndex], 25856), player);//CHAT_ID chosen at random
+		CrossroadsPackets.sendPacketToPlayer(player, new SendChatToClient(List.of(new TranslationTextComponent("tt.crossroads.flow_limiter.mode", LIMITS[limitIndex])), 25856));//CHAT_ID chosen at random
 	}
 
 	@Override
 	protected void performTransfer(){
 		Direction side = world.getBlockState(pos).get(EssentialsProperties.FACING);
 		TileEntity te = world.getTileEntity(pos.offset(side));
-		if(contents.getTotalQty() == 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())){
+		LazyOptional<IChemicalHandler> otherOpt;
+		if(contents.getTotalQty() == 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
 			return;
 		}
 
-		IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite());
+		IChemicalHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
 		EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
 		if(cont != EnumContainerType.NONE && ((cont == EnumContainerType.GLASS) != glass)){
 			return;
@@ -75,8 +95,6 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 		}
 	}
 
-
-
 	@Override
 	protected EnumTransferMode[] getModes(){
 		EnumTransferMode[] output = {EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE};
@@ -99,19 +117,11 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 		return nbt;
 	}
 
-	@Override
-	public boolean hasCapability(Capability<?> cap, Direction side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).get(EssentialsProperties.FACING).getAxis())){
-			return true;
-		}
-		return super.hasCapability(cap, side);
-	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).get(EssentialsProperties.FACING).getAxis())){
-			return (T) handler;
+			return (LazyOptional<T>) chemOpt;
 		}
 		return super.getCapability(cap, side);
 	}

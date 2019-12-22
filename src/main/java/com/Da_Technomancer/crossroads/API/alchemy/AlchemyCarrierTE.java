@@ -2,14 +2,14 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.particles.CRParticles;
 import com.Da_Technomancer.crossroads.particles.ColorParticleData;
-import com.Da_Technomancer.crossroads.particles.ColorParticleType;
-import net.minecraft.block.BlockState;
+import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -17,29 +17,22 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.util.ITickableTileEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.ServerWorld;
-import net.minecraft.world.World;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * Implementations must implement getCapability directly.
@@ -72,15 +65,25 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		double temp = correctTemp();
 		if(contents.getTotalQty() != 0 || temp != HeatUtil.ABSOLUTE_ZERO){
-			chat.add("Temp: " + MiscUtil.betterRound(temp, 3) + "°C (" + MiscUtil.betterRound(HeatUtil.toKelvin(temp), 3) + "K)");
+			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.temp_k", CRConfig.formatVal(temp), CRConfig.formatVal(HeatUtil.toKelvin(temp))));
 		}else{
-			chat.add("No reagents");
+			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.alchemy_empty"));
 		}
-		for(IReagent reag : contents.keySet()){
-			ReagentStack stack = contents.getStack(reag);
-			if(stack != null && !stack.isEmpty()){
-				chat.add(stack.toString());
+
+		int total = 0;
+		for(IReagent type : contents.keySet()){
+			int qty = contents.getQty(type);
+			if(qty > 0){
+				total++;
+				if(total <= 4){
+					chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.alchemy_content", type.getName(), qty));
+				}else{
+					break;
+				}
 			}
+		}
+		if(total > 4){
+			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.alchemy_excess", total - 4));
 		}
 	}
 
@@ -359,8 +362,14 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 		return glass ? EnumContainerType.GLASS : EnumContainerType.CRYSTAL;
 	}
 
+	@Override
+	public void remove(){
+		super.remove();
+		chemOpt.invalidate();
+	}
+
 	protected IChemicalHandler handler = new AlchHandler();
-	protected LazyOptional<IChemicalHandler>
+	protected LazyOptional<IChemicalHandler> chemOpt = LazyOptional.of(() -> handler);
 
 	protected class AlchHandler implements IChemicalHandler{
 
@@ -443,88 +452,138 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 
 	private class FalseFluidHandler implements IFluidHandler{
 
-		@Override
-		public IFluidTankProperties[] getTankProperties(){
-			return new FluidTankProperties[] {new FluidTankProperties(null, 100, true, true)};
+		private FluidStack simulateFluid(int tank){
+			if(tank >= 0 && tank < getTanks()){
+				IReagent r = AlchemyCore.FLUID_TO_LIQREAGENT.get(tank).getRight();
+				FluidStack refStack = AlchemyCore.FLUID_TO_LIQREAGENT.get(tank).getLeft();
+				int qty = contents.getQty(r);
+				if(qty >= refStack.getAmount() && r.getPhase(contents.getTempC()) == EnumMatterPhase.LIQUID){
+					FluidStack out = refStack.copy();
+					out.setAmount(qty / refStack.getAmount());
+					return out;
+				}
+			}
+			return FluidStack.EMPTY;
 		}
 
 		@Override
-		public int fill(FluidStack resource, boolean doFill){
-			IReagent typ;
-			if(resource != null && (typ = AlchemyCore.FLUID_TO_LIQREAGENT.get(resource.getFluid())) != null){
-				int canAccept = Math.min((int) ((handler.getTransferCapacity() - contents.getTotalQty()) * AlchemyUtil.MB_PER_REAG), resource.amount);
-				canAccept -= canAccept % AlchemyUtil.MB_PER_REAG;
-				if(canAccept > 0){
-					if(doFill){
-						int reagToFill = canAccept / AlchemyUtil.MB_PER_REAG;
-						double fluidTemp;
-						double biomeTemp = HeatUtil.convertBiomeTemp(world, pos);
-						if(biomeTemp < typ.getBoilingPoint() && biomeTemp >= typ.getMeltingPoint()){
-							fluidTemp = biomeTemp;
-						}else if(resource.getFluid().getTemperature(resource) < typ.getBoilingPoint() && resource.getFluid().getTemperature(resource) >= typ.getMeltingPoint()){
-							fluidTemp = resource.getFluid().getTemperature(resource);
-						}else if(typ.getMeltingPoint() + 100D < typ.getBoilingPoint()){
-							fluidTemp = typ.getMeltingPoint() + 100D;
-						}else{
-							fluidTemp = (typ.getMeltingPoint() + typ.getBoilingPoint()) / 2D;
-						}
+		public int getTanks(){
+			return AlchemyCore.FLUID_TO_LIQREAGENT.size();
+		}
 
-						contents.addReagent(typ, reagToFill, fluidTemp);
-						dirtyReag = true;
+		@Nonnull
+		@Override
+		public FluidStack getFluidInTank(int tank){
+			return simulateFluid(tank);
+		}
+
+		@Override
+		public int getTankCapacity(int tank){
+			if(tank >= 0 && tank < AlchemyCore.FLUID_TO_LIQREAGENT.size()){
+				return AlchemyCore.FLUID_TO_LIQREAGENT.get(tank).getLeft().getAmount() * transferCapacity();
+			}else{
+				return 0;
+			}
+		}
+
+		@Override
+		public boolean isFluidValid(int tank, @Nonnull FluidStack stack){
+			return tank >= 0 && tank < AlchemyCore.FLUID_TO_LIQREAGENT.size() && BlockUtil.sameFluid(AlchemyCore.FLUID_TO_LIQREAGENT.get(tank).getLeft(), stack);
+		}
+
+		@Override
+		public int fill(FluidStack resource, FluidAction action){
+			//The list is unsorted, so we need a sequential search to find the matching fluid type
+			for(int i = 0; i < AlchemyCore.FLUID_TO_LIQREAGENT.size(); i++){
+				Pair<FluidStack, IReagent> mapping = AlchemyCore.FLUID_TO_LIQREAGENT.get(i);
+				if(BlockUtil.sameFluid(mapping.getLeft(), resource)){
+					int toFillReag = Math.min(resource.getAmount() / mapping.getLeft().getAmount(), transferCapacity() - contents.getTotalQty());
+					//Note: toFillReag could be negative
+					if(toFillReag <= 0){
+						return 0;
+					}
+					if(action.execute()){
+						contents.addReagent(mapping.getRight(), toFillReag, calcInputTemp(mapping.getRight(), mapping.getLeft().getFluid()));
 						markDirty();
 					}
-					return canAccept;
+					return toFillReag * mapping.getLeft().getAmount();
 				}
 			}
 			return 0;
 		}
 
-		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain){
-			if(resource == null || resource.amount <= 0 || !AlchemyCore.FLUID_TO_LIQREAGENT.containsKey(resource.getFluid())){
-				return null;
-			}
+		private double calcInputTemp(IReagent reag, Fluid fluid){
+			//Calculates the effective input temperature (in C) for the reagents derived from a fluid piped in
+			//Returns a value which is reagent and location dependent but state independent
 
-			IReagent type = AlchemyCore.FLUID_TO_LIQREAGENT.get(resource.getFluid());
-			if(contents.getQty(type) > 0 && type.getPhase(handler.getTemp()) == EnumMatterPhase.LIQUID){
-				int toDrain = Math.min(resource.amount, contents.getQty(type) * AlchemyUtil.MB_PER_REAG);
-				int reagToDrain = toDrain / AlchemyUtil.MB_PER_REAG;
-				toDrain = reagToDrain * AlchemyUtil.MB_PER_REAG;
-				if(doDrain){
-					contents.removeReagent(type, reagToDrain);
-					dirtyReag = true;
-					markDirty();
-				}
-				return new FluidStack(resource.getFluid(), toDrain);
+			Predicate<Double> legal = (temp) -> temp >= reag.getMeltingPoint() && temp < reag.getBoilingPoint();
+			//Try the fluid's modder-defined temperature
+			double temp = fluid.getAttributes().getTemperature();
+			if(legal.test(temp)){
+				return temp;
 			}
-
-			return null;
+			//Check biome temperature
+			temp = HeatUtil.convertBiomeTemp(world, pos);
+			if(legal.test(temp)){
+				return temp;
+			}
+			//100*C above the melting point
+			temp = Math.min(HeatUtil.ABSOLUTE_ZERO, reag.getMeltingPoint()) + 100;
+			if(legal.test(temp)){
+				return temp;
+			}
+			//The exact melting point
+			return Math.min(HeatUtil.ABSOLUTE_ZERO, reag.getMeltingPoint());
 		}
 
+		@Nonnull
 		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain){
-			if(maxDrain <= 0){
-				return null;
-			}
+		public FluidStack drain(FluidStack resource, FluidAction action){
+			//The list is unsorted, so we need a sequential search to find the matching fluid type
+			for(int i = 0; i < AlchemyCore.FLUID_TO_LIQREAGENT.size(); i++){
+				Pair<FluidStack, IReagent> mapping = AlchemyCore.FLUID_TO_LIQREAGENT.get(i);
+				if(BlockUtil.sameFluid(mapping.getLeft(), resource)){
 
-			//The Fluid-IReagentType BiMap is guaranteed to be equal in length to or shorter than REAGENT_COUNT (and in practice is substantially shorter),
-			//so it's more efficient to iterate over the BiMap and check each IReagentType's index than to iterate over the reagent array and check each reagent in the BiMap.
-			for(Map.Entry<Fluid, IReagent> entry : AlchemyCore.FLUID_TO_LIQREAGENT.entrySet()){
-				IReagent type = entry.get();
-				if(contents.getQty(type) > 0 && type.getPhase(handler.getTemp()) == EnumMatterPhase.LIQUID){
-					int toDrain = Math.min(maxDrain, contents.getQty(type) * AlchemyUtil.MB_PER_REAG);
-					int reagToDrain = toDrain / AlchemyUtil.MB_PER_REAG;
-					toDrain = reagToDrain * AlchemyUtil.MB_PER_REAG;
-					if(doDrain){
-						contents.removeReagent(type, reagToDrain);
-						dirtyReag = true;
-						markDirty();
+					FluidStack tank = simulateFluid(i);
+					if(!tank.isEmpty()){
+						int drained = Math.min(tank.getAmount(), resource.getAmount());
+
+						//It isn't necessary to modify tank as we normally would, as it's only a conversion
+						tank.setAmount(drained);
+						if(action.execute()){
+							contents.removeReagent(mapping.getRight(), drained / mapping.getLeft().getAmount());
+							markDirty();
+						}
+						return tank;
+					}else{
+						return FluidStack.EMPTY;
 					}
-					return new FluidStack(entry.getKey(), toDrain);
 				}
 			}
 
-			return null;
+			return FluidStack.EMPTY;
+		}
+
+		@Nonnull
+		@Override
+		public FluidStack drain(int maxDrain, FluidAction action){
+			for(int i = 0; i < AlchemyCore.FLUID_TO_LIQREAGENT.size(); i++){
+				FluidStack tank = simulateFluid(i);
+				if(!tank.isEmpty()){
+					int drained = Math.min(tank.getAmount(), maxDrain);
+
+					//It isn't necessary to modify tank as we normally would, as it's only a conversion
+					tank.setAmount(drained);
+					if(action.execute()){
+						Pair<FluidStack, IReagent> mapping = AlchemyCore.FLUID_TO_LIQREAGENT.get(i);
+						contents.removeReagent(mapping.getRight(), drained / mapping.getLeft().getAmount());
+						markDirty();
+					}
+					return tank;
+				}
+			}
+
+			return FluidStack.EMPTY;
 		}
 	}
 }

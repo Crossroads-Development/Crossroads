@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.API;
 
 import com.Da_Technomancer.crossroads.blocks.heat.HeatCable;
+import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MathAxisTileEntity;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
@@ -20,7 +21,7 @@ public class CRProperties{
 	public static final EnumProperty<HeatCable.Conductors> CONDUCTOR = EnumProperty.create("skin", HeatCable.Conductors.class);
 	public static final BooleanProperty CRYSTAL = BooleanProperty.create("crystal");
 	public static final DirectionProperty HORIZ_FACING = DirectionProperty.create("horiz_facing", (Direction side) -> side != null && side.getAxis() != Direction.Axis.Y);
-	public static final BooleanProperty CONTAINER_TYPE = BooleanProperty.create("container_type");
+	public static final EnumProperty<AbstractGlassware.GlasswareTypes> CONTAINER_TYPE = EnumProperty.create("container_type", AbstractGlassware.GlasswareTypes.class);
 	public static final EnumProperty<MathAxisTileEntity.Arrangement> ARRANGEMENT = EnumProperty.create("arrangement", MathAxisTileEntity.Arrangement.class);
 
 	public static final BooleanProperty DOWN = BooleanProperty.create("down");
