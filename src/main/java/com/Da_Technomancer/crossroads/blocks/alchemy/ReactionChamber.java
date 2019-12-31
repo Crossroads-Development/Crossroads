@@ -1,50 +1,49 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
-import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
+import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
+import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
-import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactionChamberTileEntity;
-import net.minecraft.block.*;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.material.Material;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
+import net.minecraft.block.ContainerBlock;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.block.BlockRenderType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class ReactionChamber extends ContainerBlock{
 
+	private static final String TAG_NAME = "reagents";
 	private final boolean crystal;
 
 	public ReactionChamber(boolean crystal){
-		super(Material.GLASS);
+		super(Properties.create(Material.GLASS).hardnessAndResistance(0.5F).sound(SoundType.GLASS));
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "reaction_chamber";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setHardness(.5F);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setSoundType(SoundType.GLASS);
 		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this, 0, new ModelResourceLocation(Crossroads.MODID + ':' + name, "inventory"));
+		CrossroadsBlocks.blockAddQue(this);
 	}
 
 	@Override
@@ -58,8 +57,8 @@ public class ReactionChamber extends ContainerBlock{
 			super.harvestBlock(worldIn, player, pos, state, te, stackIn);
 		}else{
 			player.addExhaustion(0.005F);
-			ItemStack stack = new ItemStack(Item.getItemFromBlock(this), 1);
-			stack.put(((ReactionChamberTileEntity) te).getContentNBT());
+			ItemStack stack = new ItemStack(this, 1);
+			setReagents(stack, ((ReactionChamberTileEntity) te).getMap());
 			spawnAsEntity(worldIn, pos, stack);
 		}
 	}
@@ -68,7 +67,7 @@ public class ReactionChamber extends ContainerBlock{
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		if(stack.hasTag()){
 			ReactionChamberTileEntity te = (ReactionChamberTileEntity) world.getTileEntity(pos);
-			te.writeContentNBT(stack.getTag());
+			te.writeContentNBT(stack);
 		}
 	}
 
@@ -84,11 +83,6 @@ public class ReactionChamber extends ContainerBlock{
 	}
 
 	@Override
-	public boolean isOpaqueCube(BlockState state){
-		return false;
-	}
-
-	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(!worldIn.isRemote){
 			TileEntity te = worldIn.getTileEntity(pos);
@@ -99,23 +93,60 @@ public class ReactionChamber extends ContainerBlock{
 		return true;
 	}
 
+	/**
+	 * Cache the result to minimize calls to this method.
+	 * @param stack The glassware itemstack
+	 * @return The contained reagents. Modifying the returned array does NOT write through to the ItemStack, use the setReagents method.
+	 */
+	@Nonnull
+	public static ReagentMap getReagants(ItemStack stack){
+		return stack.hasTag() ? ReagentMap.readFromNBT(stack.getTag().getCompound(TAG_NAME)) : new ReagentMap();
+	}
+
+	/**
+	 * Call this as little as possible.
+	 * @param stack The stack to store the reagents to
+	 * @param reagents The reagents to store
+	 */
+	public void setReagents(ItemStack stack, ReagentMap reagents){
+		if(!stack.hasTag()){
+			stack.setTag(new CompoundNBT());
+		}
+
+		CompoundNBT nbt = new CompoundNBT();
+		stack.getTag().put(TAG_NAME, nbt);
+
+		reagents.write(nbt);
+	}
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		if(stack.hasTag()){
-			double am = 0;
+	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+		ReagentMap stored = getReagants(stack);
 
-			for(String key : stack.getTag().getKeySet()){
-				if(!key.startsWith("qty_")){
-					continue;
+		double temp = stored.getTempC();
+
+		if(stored.getTotalQty() == 0){
+			tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.alchemy_empty"));
+		}else{
+			tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.temp_k", CRConfig.formatVal(temp), CRConfig.formatVal(HeatUtil.toKelvin(temp))));
+			int total = 0;
+			for(IReagent type : stored.keySet()){
+				int qty = stored.getQty(type);
+				if(qty > 0){
+					total++;
+					if(total <= 4 || flagIn != ITooltipFlag.TooltipFlags.NORMAL){
+						tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.alchemy_content", type.getName(), qty));
+					}else{
+						break;
+					}
 				}
-				int qty = stack.getTag().getInt(key);
-				am += qty;
-				tooltip.add(new ReagentStack(AlchemyCore.REAGENTS.get(key.substring(4)), qty).toString());
 			}
-
-			tooltip.add("Temp: " + MiscUtil.betterRound(HeatUtil.toCelcius(stack.getTag().getDouble("heat") / am), 3));
+			if(total > 4 && flagIn == ITooltipFlag.TooltipFlags.NORMAL){
+				tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.alchemy_excess", total - 4));
+			}
 		}
-		tooltip.add("Consumes: -10FE/t (Optional)");
+
+		tooltip.add(new TranslationTextComponent("tt.crossroads.reaction_chamber.power", ReactionChamberTileEntity.DRAIN));
 	}
 }

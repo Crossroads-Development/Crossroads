@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.render.bakedModel.ReagentPumpBakedModel;
@@ -17,17 +18,18 @@ import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
@@ -44,16 +46,12 @@ public class ReagentPump extends ContainerBlock{
 	private final boolean crystal;
 
 	public ReagentPump(boolean crystal){
-		super(Material.GLASS);
+		super(Properties.create(Material.GLASS).sound(SoundType.GLASS).hardnessAndResistance(0.5F));
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "reagent_pump";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setHardness(.5F);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setSoundType(SoundType.GLASS);
 		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this, true);
+		CrossroadsBlocks.blockAddQue(this);
 	}
 
 	@Override
@@ -63,9 +61,9 @@ public class ReagentPump extends ContainerBlock{
 
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
+		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand))){
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.cycle(Properties.ACTIVE));
+				worldIn.setBlockState(pos, state.cycle(CRProperties.ACTIVE));
 			}
 			return true;
 		}
@@ -84,36 +82,8 @@ public class ReagentPump extends ContainerBlock{
 	}
 
 	@Override
-	public int getMetaFromState(BlockState state){
-		return state.get(Properties.ACTIVE) ? 1 : 0;
-	}
-
-	@Override
-	public BlockState getStateFromMeta(int meta){
-		return getDefaultState().with(Properties.ACTIVE, (meta & 1) == 1);
-	}
-
-	@Override
 	protected BlockStateContainer createBlockState(){
 		return new ExtendedBlockState(this, new IProperty[] {Properties.ACTIVE}, new IUnlistedProperty[] {Properties.CONNECT});
-	}
-
-	@Override
-	public boolean isOpaqueCube(BlockState state){
-		return false;
-	}
-
-	@Override
-	public boolean isFullCube(BlockState state){
-		return false;
-	}
-
-	@Override
-	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face){
-		if(state instanceof IExtendedBlockState){
-			return (state.get(Properties.ACTIVE) ? face == Direction.UP : face == Direction.DOWN) || ((IExtendedBlockState) state).get(Properties.CONNECT)[face.getIndex()] ? BlockFaceShape.CENTER_SMALL : BlockFaceShape.UNDEFINED;
-		}
-		return BlockFaceShape.CENTER_SMALL;
 	}
 
 	@OnlyIn(Dist.CLIENT)

@@ -1,29 +1,28 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
-import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatLimiterBasicTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.*;
-import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -31,16 +30,12 @@ import java.util.List;
 public class HeatLimiterBasic extends ContainerBlock{
 
 	public HeatLimiterBasic(){
-		super(Material.IRON);
+		super(Properties.create(Material.IRON).hardnessAndResistance(0.5F).sound(SoundType.STONE));
 		String name = "heat_limiter_basic";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setHardness(.5F);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
-		setDefaultState(getDefaultState().with(Properties.ACTIVE, false));
+		setDefaultState(getDefaultState().with(CRProperties.ACTIVE, false));
 	}
 
 	@Override
@@ -54,47 +49,38 @@ public class HeatLimiterBasic extends ContainerBlock{
 	}
 
 	@Override
-	public int getMetaFromState(BlockState state){
-		return state.get(EssentialsProperties.FACING).getIndex() | (state.get(Properties.ACTIVE) ? 8 : 0);
-	}
-
-	@Override
-	public BlockState getStateFromMeta(int meta){
-		return getDefaultState().with(EssentialsProperties.FACING, Direction.byIndex(meta & 7)).with(Properties.ACTIVE, (meta & 8) != 0);
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+		builder.add(CRProperties.ACTIVE, EssentialsProperties.FACING);
 	}
 
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(!worldIn.isRemote){
-			if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), false)){
+			TileEntity te;
+			if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand))){
 				if(playerIn.isSneaking()){
-					worldIn.setBlockState(pos, state.cycle(Properties.ACTIVE));
+					worldIn.setBlockState(pos, state.cycle(CRProperties.ACTIVE));
 				}else{
 					worldIn.setBlockState(pos, state.cycle(EssentialsProperties.FACING));
 				}
-			}else{
-				CrossroadsPackets.network.sendTo(new SendDoubleToClient("new_setting", ((HeatLimiterBasicTileEntity) worldIn.getTileEntity(pos)).getSetting(), pos), (ServerPlayerEntity) playerIn);
-				playerIn.openGui(Crossroads.instance, GuiHandler.HEAT_LIMITER_BASIC_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
+			}else if((te = worldIn.getTileEntity(pos)) instanceof HeatLimiterBasicTileEntity){
+				NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, buf -> {buf.writeFloat(((HeatLimiterBasicTileEntity) te).setting); buf.writeString(((HeatLimiterBasicTileEntity) te).expression); buf.writeBlockPos(pos);});
 			}
 		}
 		return true;
 	}
 
+	@Nullable
 	@Override
-	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, EssentialsProperties.FACING, Properties.ACTIVE);
+	public BlockState getStateForPlacement(BlockItemUseContext context){
+		return getDefaultState().with(EssentialsProperties.FACING, context.getNearestLookingDirection());
 	}
 
 	@Override
-	public BlockState getStateForPlacement(World worldIn, BlockPos pos, Direction blockFaceClickedOn, BlockRayTraceResult hit, int meta, LivingEntity placer){
-		return getDefaultState().with(EssentialsProperties.FACING, (placer == null) ? Direction.NORTH : Direction.getDirectionFromEntityLiving(pos, placer));
-	}
-
-	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
-		tooltip.add("Connects two heat cables");
-		tooltip.add("Only allows heat to flow until the front reaches the target temperature");
-		tooltip.add("In red mode, stops when hotter than target; In blue mode, stops when colder than target");
-		tooltip.add("Target temperature in Kelvin set in UI");
+	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+		tooltip.add(new TranslationTextComponent("tt.crossroads.heat_limiter.desc_cable"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.heat_limiter.desc_purpose"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.heat_limiter.desc_mode"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.heat_limiter.desc_ui"));
 	}
 }

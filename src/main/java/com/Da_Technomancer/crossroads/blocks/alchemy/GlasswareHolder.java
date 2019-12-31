@@ -1,45 +1,35 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.GlasswareHolderTileEntity;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.*;
-import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
-import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class GlasswareHolder extends ContainerBlock{
 
-	private static final AxisAlignedBB BB = new AxisAlignedBB(0.3125D, 0, 0.3125D, 0.6875D, 1, 0.6875D);
+	private static final VoxelShape SHAPE = makeCuboidShape(5, 0, 5, 11, 16, 11);
 
 	public GlasswareHolder(){
-		super(Material.IRON);
+		super(Properties.create(Material.IRON).hardnessAndResistance(2).sound(SoundType.METAL));
 		String name = "glassware_holder";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setHardness(2);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
 	}
@@ -50,8 +40,8 @@ public class GlasswareHolder extends ContainerBlock{
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(BlockState state, IBlockAccess source, BlockPos pos){
-		return BB;
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+		return SHAPE;
 	}
 
 	@Override
@@ -66,56 +56,21 @@ public class GlasswareHolder extends ContainerBlock{
 	}
 
 	@Override
-	public boolean isOpaqueCube(BlockState state){
-		return false;
-	}
-
-	@Override
-	public boolean isFullCube(BlockState state){
-		return false;
-	}
-
-	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
 		TileEntity te = world.getTileEntity(pos);
 		if(te instanceof GlasswareHolderTileEntity){
-			((GlasswareHolderTileEntity) te).onBlockDestroyed(blockstate);
+			((GlasswareHolderTileEntity) te).onBlockDestroyed(state);
 		}
 		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 
 	@Override
-	public int getMetaFromState(BlockState state){
-		return (state.get(Properties.CRYSTAL) ? 1 : 0) + (state.get(Properties.ACTIVE) ? 2 : 0) + (state.get(EssentialsProperties.REDSTONE_BOOL) ? 4 : 0) + (state.get(Properties.CONTAINER_TYPE) ? 8 : 0);
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public void initModel(){
-		StateMapperBase glasswareMapper = new StateMapperBase(){			
-			@Override
-			protected ModelResourceLocation getModelResourceLocation(BlockState state){
-				if(state.get(Properties.CONTAINER_TYPE)){
-					return new ModelResourceLocation(Crossroads.MODID + ":glassware_holder_florence", getPropertyString(state.getProperties()));
-				}else{
-					return new ModelResourceLocation(Crossroads.MODID + ":glassware_holder_phial", getPropertyString(state.getProperties()));
-				}
-			}
-		};
-		ModelLoader.setCustomStateMapper(this, glasswareMapper);
-	}
-
-	@Override
-	public BlockState getStateFromMeta(int meta){
-		return getDefaultState().with(Properties.CRYSTAL, (meta & 1) == 1).with(Properties.ACTIVE, (meta & 2) == 2).with(EssentialsProperties.REDSTONE_BOOL, (meta & 4) == 4).with(Properties.CONTAINER_TYPE, (meta & 8) == 8);
-	}
-
-	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
-		neighborChanged(state, world, pos, this, pos);
+		neighborChanged(state, world, pos, this, pos, false);
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
+	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
 		if(worldIn.isBlockPowered(pos)){
 			if(!state.get(EssentialsProperties.REDSTONE_BOOL)){
 				worldIn.setBlockState(pos, state.with(EssentialsProperties.REDSTONE_BOOL, true));
@@ -128,8 +83,8 @@ public class GlasswareHolder extends ContainerBlock{
 	}
 
 	@Override
-	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, Properties.CRYSTAL, Properties.ACTIVE, EssentialsProperties.REDSTONE_BOOL, Properties.CONTAINER_TYPE);
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+		builder.add(CRProperties.CRYSTAL, CRProperties.CONTAINER_TYPE, EssentialsProperties.REDSTONE_BOOL);
 	}
 
 	@Override
@@ -141,10 +96,5 @@ public class GlasswareHolder extends ContainerBlock{
 			}
 		}
 		return true;
-	}
-
-	@Override
-	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face){
-		return BlockFaceShape.UNDEFINED;
 	}
 }

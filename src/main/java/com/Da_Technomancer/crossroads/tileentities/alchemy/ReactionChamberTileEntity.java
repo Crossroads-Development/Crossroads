@@ -5,11 +5,13 @@ import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.alchemy.ReactionChamber;
 import com.Da_Technomancer.crossroads.render.RenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraftforge.common.capabilities.Capability;
@@ -18,19 +20,27 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.registries.ObjectHolder;
 import org.apache.logging.log4j.Level;
 
+import javax.annotation.Nonnull;
+
+@ObjectHolder(Crossroads.MODID)
 public class ReactionChamberTileEntity extends AlchemyReactorTE{
+
+	@ObjectHolder("reaction_chamber")
+	private static TileEntityType<ReactionChamberTileEntity> type = null;
 
 	private int energy = 0;
 	private static final int ENERGY_CAPACITY = 100;
+	public static final int DRAIN = 10;
 
 	public ReactionChamberTileEntity(){
-		super();
+		super(type);
 	}
 
 	public ReactionChamberTileEntity(boolean glass){
-		super(glass);
+		super(type, glass);
 	}
 
 	@Override
@@ -41,17 +51,12 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 		}
 	}
 
-	public CompoundNBT getContentNBT(){
-		if(contents.getTotalQty() == 0){
-			return null;
-		}
-		CompoundNBT nbt = new CompoundNBT();
-		writeToNBT(nbt);
-		return nbt;
+	public ReagentMap getMap(){
+		return contents;
 	}
 
-	public void writeContentNBT(CompoundNBT nbt){
-		contents = ReagentMap.readFromNBT(nbt);
+	public void writeContentNBT(ItemStack stack){
+		contents = ReactionChamber.getReagants(stack);
 		dirtyReag = true;
 	}
 
@@ -61,10 +66,10 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 			return;
 		}
 
-		if(energy >= 10){
-			energy -= 10;
+		if(energy >= DRAIN){
+			energy -= DRAIN;
 			if(world.getGameTime() % 10 == 0){
-				RenderUtil.addArc(world.provider.getDimension(), pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, pos.getX() + world.rand.nextFloat(), pos.getY() + world.rand.nextFloat(), pos.getZ() + world.rand.nextFloat(), 1, 0F, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)]);
+				RenderUtil.addArc(world, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, pos.getX() + world.rand.nextFloat(), pos.getY() + world.rand.nextFloat(), pos.getZ() + world.rand.nextFloat(), 1, 0F, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)]);
 			}
 		}
 
@@ -98,11 +103,12 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 			if(modes[i].isOutput()){
 				Direction side = Direction.byIndex(i);
 				TileEntity te = world.getTileEntity(pos.offset(side));
-				if(contents.getTotalQty() <= 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())){
+				LazyOptional<IChemicalHandler> otherOpt;
+				if(contents.getTotalQty() <= 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
 					continue;
 				}
 
-				IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite());
+				IChemicalHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
 				EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
 				if(otherHandler.getMode(side.getOpposite()) == EnumTransferMode.BOTH && modes[i] == EnumTransferMode.BOTH){
 					continue;
@@ -131,27 +137,35 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 		return nbt;
 	}
 
+	@Override
+	public void remove(){
+		super.remove();
+		heatOpt.invalidate();
+		itemOpt.invalidate();
+		energyOpt.invalidate();
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.CHEMICAL_CAPABILITY){
-			return (T) handler;
+			return (LazyOptional<T>) chemOpt;
 		}
 		if(cap == Capabilities.HEAT_CAPABILITY){
-			return (T) heatHandler;
+			return (LazyOptional<T>) heatOpt;
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-			return (T) itemHandler;
+			return (LazyOptional<T>) itemOpt;
 		}
 		if(cap == CapabilityEnergy.ENERGY && (side == null || side.getAxis() != Axis.Y)){
-			return (T) energyHandler;
+			return (LazyOptional<T>) energyOpt;
 		}
 		return super.getCapability(cap, side);
 	}
 
-	private final HeatHandler heatHandler = new HeatHandler();
-	private final ItemHandler itemHandler = new ItemHandler();
-	private final EnergyHandler energyHandler  = new EnergyHandler();
+	private final LazyOptional<IHeatHandler> heatOpt = LazyOptional.of(HeatHandler::new);
+	private final LazyOptional<IItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
+	private final LazyOptional<IEnergyStorage> energyOpt  = LazyOptional.of(EnergyHandler::new);
 
 	private class EnergyHandler implements IEnergyStorage{
 
@@ -223,7 +237,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
 			if(!stack.isEmpty()){
-				IReagent reag = AlchemyCore.ITEM_TO_REAGENT.get(stack);
+				IReagent reag = AlchemyCore.ITEM_TO_REAGENT.get(stack.getItem());
 				if(reag != null){
 					if(dirtyReag){
 						correctReag();
@@ -256,7 +270,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 					ItemStack outStack = fakeInventory[slot].copy();
 					outStack.setCount(canExtract);
 					if(!simulate){
-						IReagent reag = AlchemyCore.ITEM_TO_REAGENT.get(fakeInventory[slot]);
+						IReagent reag = AlchemyCore.ITEM_TO_REAGENT.get(fakeInventory[slot].getItem());
 						contents.removeReagent(reag, canExtract);
 						dirtyReag = true;
 						markDirty();
@@ -273,6 +287,11 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 		@Override
 		public int getSlotLimit(int slot){
 			return 10;
+		}
+
+		@Override
+		public boolean isItemValid(int slot, @Nonnull ItemStack stack){
+			return AlchemyCore.ITEM_TO_REAGENT.get(stack.getItem()) != null;
 		}
 	}
 

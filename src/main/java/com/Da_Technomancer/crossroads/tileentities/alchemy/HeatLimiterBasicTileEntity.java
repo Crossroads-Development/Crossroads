@@ -1,59 +1,66 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
-import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
+import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.gui.container.HeatLimiterContainer;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
-import net.minecraft.block.BlockState;
+import com.Da_Technomancer.essentials.packets.INBTReceiver;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ITickableTileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.registries.ObjectHolder;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableTileEntity, IInfoTE, IDoubleReceiver{
+@ObjectHolder(Crossroads.MODID)
+public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableTileEntity, IInfoTE, INamedContainerProvider, INBTReceiver{
 
-	@Override
-	public void addInfo(ArrayList<String> chat, PlayerEntity player, Direction side, BlockRayTraceResult hit){
-		chat.add("In-Temp: " + MiscUtil.betterRound(heatHandlerIn.getTemp(), 3) + "°C");
-		chat.add("Out-Temp: " + MiscUtil.betterRound(heatHandlerOut.getTemp(), 3) + "°C");
-		chat.add("Biome Temp: " + HeatUtil.convertBiomeTemp(world, pos) + "°C");
-	}
-
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState){
-		return oldState.getBlock() != newState.getBlock();
-	}
+	@ObjectHolder("heat_limiter_basic")
+	private static TileEntityType<HeatLimiterBasicTileEntity> type = null;
 
 	private double heatIn = 0;
 	private double heatOut = 0;
 	private boolean init = false;
-	private double setting = 0;
 
-	public void set(double newSetting){
-		setting = newSetting;
-		markDirty();
+	public float setting = 0;
+	public String expression = "0";
+
+	public HeatLimiterBasicTileEntity(){
+		super(type);
 	}
 
-	public double getSetting(){
-		return setting;
+	protected HeatLimiterBasicTileEntity(TileEntityType<? extends HeatLimiterBasicTileEntity> type){
+		super(type);
 	}
 
 	@Override
-	public void receiveDouble(String context, double message){
-		if(context.equals("new_setting")){
-			setting = message;
-			markDirty();
-		}
+	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+		init();
+		chat.add(new TranslationTextComponent("tt.crossroads.heat_limiter.temp_in", CRConfig.formatVal(heatIn)));
+		chat.add(new TranslationTextComponent("tt.crossroads.heat_limiter.temp_out", CRConfig.formatVal(heatOut)));
+		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.temp.biome", CRConfig.formatVal(HeatUtil.convertBiomeTemp(world, pos))));
+	}
+
+	protected double getSetting(){
+		return setting;
 	}
 
 	@Override
@@ -63,7 +70,7 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 		}
 
 		if(!init){
-			heatHandlerIn.init();
+			init();
 		}
 
 		double goalTemp = HeatUtil.toCelcius(getSetting());
@@ -111,13 +118,23 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 		}
 	}
 
+	private void init(){
+		if(!init){
+			init = true;
+			heatIn = HeatUtil.convertBiomeTemp(world, pos);
+			heatOut = HeatUtil.convertBiomeTemp(world, pos);
+			markDirty();
+		}
+	}
+
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
 		nbt.putBoolean("init_heat", init);
 		nbt.putDouble("heat_in", heatIn);
 		nbt.putDouble("heat_out", heatOut);
-		nbt.putDouble("setting", setting);
+		nbt.putFloat("setting", setting);
+		nbt.putString("expression", expression);
 		return nbt;
 	}
 
@@ -127,16 +144,15 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 		init = nbt.getBoolean("init_heat");
 		heatIn = nbt.getDouble("heat_in");
 		heatOut = nbt.getDouble("heat_out");
-		setting = nbt.getDouble("setting");
+		setting = nbt.getFloat("setting");
+		expression = nbt.getString("expression");
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> cap, Direction side){
-		Direction facing = world.getBlockState(pos).get(EssentialsProperties.FACING);
-		if(cap == Capabilities.HEAT_CAPABILITY && (side == null || side.getAxis() == facing.getAxis())){
-			return true;
-		}
-		return super.hasCapability(cap, side);
+	public void remove(){
+		super.remove();
+		heatInOpt.invalidate();
+		heatOutOpt.invalidate();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -145,16 +161,36 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 		Direction facing = world.getBlockState(pos).get(EssentialsProperties.FACING);
 		if(cap == Capabilities.HEAT_CAPABILITY){
 			if(side == null || side == facing.getOpposite()){
-				return (T) heatHandlerIn;
+				return (LazyOptional<T>) heatInOpt;
 			}else if(side == facing){
-				return (T) heatHandlerOut;
+				return (LazyOptional<T>) heatOutOpt;
 			}
 		}
 		return super.getCapability(cap, side);
 	}
 
-	private final HeatHandler heatHandlerIn = new HeatHandler(true);
-	private final HeatHandler heatHandlerOut = new HeatHandler(false);
+	private final LazyOptional<IHeatHandler> heatInOpt = LazyOptional.of(() -> new HeatHandler(true));
+	private final LazyOptional<IHeatHandler> heatOutOpt = LazyOptional.of(() -> new HeatHandler(false));
+
+	@Override
+	public ITextComponent getDisplayName(){
+		return new TranslationTextComponent("container.heat_limiter");
+	}
+
+	@Nullable
+	@Override
+	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
+		return new HeatLimiterContainer(id, playerInv, setting, expression, pos);
+	}
+
+	@Override
+	public void receiveNBT(CompoundNBT nbt, @Nullable ServerPlayerEntity player){
+		if(nbt.contains("value")){
+			setting = nbt.getFloat("value");
+			expression = nbt.getString("config");
+			markDirty();
+		}
+	}
 
 	private class HeatHandler implements IHeatHandler{
 
@@ -162,15 +198,6 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 
 		private HeatHandler(boolean in){
 			this.in = in;
-		}
-
-		private void init(){
-			if(!init){
-				init = true;
-				heatIn = HeatUtil.convertBiomeTemp(world, pos);
-				heatOut = HeatUtil.convertBiomeTemp(world, pos);
-				markDirty();
-			}
 		}
 
 		@Override

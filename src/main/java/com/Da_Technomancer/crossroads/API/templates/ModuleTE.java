@@ -130,7 +130,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		if(useHeat()){
 			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.temp", CRConfig.formatVal(temp)));
-			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.temp.biome", CRConfig.formatVal(temp)));
+			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.temp.biome", CRConfig.formatVal(HeatUtil.convertBiomeTemp(world, pos))));
 		}
 		if(useRotary()){
 			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.speed", CRConfig.formatVal(motData[0])));

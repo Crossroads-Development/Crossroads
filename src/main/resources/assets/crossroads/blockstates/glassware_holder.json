@@ -1,0 +1,53 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"uvlock": true
+	},
+	"variants": {
+		"container_type": {
+			"none": {
+
+			},
+			"phial": {
+				"submodel": {
+					"base": {"model": "crossroads:phial_holder_base"},
+					"bottle": {"model": "crossroads:phial_holder_phial"}
+				}
+			},
+			"florence": {
+				"submodel": {
+					"base": {"model": "crossroads:florence_holder_base"},
+					"bottle": {"model": "crossroads:florence_holder_phial"}
+				}
+			},
+			"shell": {
+				"submodel": {
+					"base": {"model": "crossroads:shell_holder_base"},
+					"bottle": {"model": "crossroads:shell_holder_phial"}
+				}
+			}
+		},
+		"redstone_bool": {
+			"true": {
+
+			},
+			"false": {
+
+			}
+		},
+		"crystal": {
+			"true": {
+				"textures": {
+					"glass": "crossroads:blocks/crystal_thin",
+					"stem": "crossroads:blocks/crystal_thin"
+				}
+			},
+			"false": {
+				"textures": {
+					"glass": "crossroads:blocks/glass_thin",
+					"stem": "crossroads:blocks/glass_thin"
+				}
+			}
+		}
+	}
+}

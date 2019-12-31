@@ -1,8 +1,5 @@
 package com.Da_Technomancer.crossroads.items.crafting;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.HashMap;
@@ -45,10 +42,16 @@ public class PredicateMap<T, V>{
 		return entries.containsKey(key);
 	}
 
+	/**
+	 * Returns the value associated with the first predicate to pass on target, or nullcase if nothing matched
+	 * Runs in linear time, unlike a traditional hashmap where this runs in constant time
+	 * @param target The object to be matched by a predicate key
+	 * @return The value associated with the first predicate to pass
+	 */
 	public V get(T target){
 		for(Map.Entry<Predicate<T>, V> ent : entries.entrySet()){
 			if(ent.getKey().test(target)){
-				return ent.get();
+				return ent.getValue();
 			}
 		}
 

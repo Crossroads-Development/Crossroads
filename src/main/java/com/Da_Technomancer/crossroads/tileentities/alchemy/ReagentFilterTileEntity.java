@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.alchemy.ReagentFilter;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import net.minecraft.block.BlockState;
@@ -11,25 +12,32 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@ObjectHolder(Crossroads.MODID)
 public class ReagentFilterTileEntity extends AlchemyCarrierTE implements IInventory{
+
+	@ObjectHolder("reagent_filter")
+	private static TileEntityType<ReagentFilterTileEntity> type = null;
 
 	private Direction facing = null;
 	private ItemStack inventory = ItemStack.EMPTY;
 
 	public ReagentFilterTileEntity(){
-		super();
+		super(type);
 	}
 
 	public ReagentFilterTileEntity(boolean crystal){
-		super(!crystal);
+		super(type, !crystal);
 	}
 
 	private Direction getFacing(){
@@ -53,14 +61,14 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements IInvent
 	@Override
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
-		inventory = nbt.contains("inv") ? new ItemStack(nbt.getCompound("inv")) : ItemStack.EMPTY;
+		inventory = nbt.contains("inv") ? ItemStack.read(nbt.getCompound("inv")) : ItemStack.EMPTY;
 	}
 
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
 		if(!inventory.isEmpty()){
-			nbt.put("inv", inventory.writeToNBT(new CompoundNBT()));
+			nbt.put("inv", inventory.write(new CompoundNBT()));
 		}
 		return nbt;
 	}
@@ -183,33 +191,8 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements IInvent
 	}
 
 	@Override
-	public void openInventory(PlayerEntity player){
-
-	}
-
-	@Override
-	public void closeInventory(PlayerEntity player){
-
-	}
-
-	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
 		return index == 0 && stack.getItem() instanceof AbstractGlassware;
-	}
-
-	@Override
-	public int getField(int id){
-		return 0;
-	}
-
-	@Override
-	public void setField(int id, int value){
-
-	}
-
-	@Override
-	public int getFieldCount(){
-		return 0;
 	}
 
 	@Override
@@ -226,10 +209,5 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements IInvent
 	@Override
 	public ITextComponent getDisplayName(){
 		return new TranslationTextComponent(getName());
-	}
-
-	@Override
-	public boolean hasCustomName(){
-		return false;
 	}
 }

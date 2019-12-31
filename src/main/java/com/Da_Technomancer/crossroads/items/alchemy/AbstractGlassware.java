@@ -139,15 +139,17 @@ public abstract class AbstractGlassware extends Item{
 
 	public enum GlasswareTypes implements IStringSerializable{
 
-		NONE(0),
-		PHIAL(20),
-		FLORENCE(100),
-		SHELL(25);
+		NONE(0, false),
+		PHIAL(20, false),
+		FLORENCE(100, true),
+		SHELL(25, false);
 
 		public final int capacity;
+		public final boolean connectToCable;
 
-		private GlasswareTypes(int capacity){
+		private GlasswareTypes(int capacity, boolean cableHeat){
 			this.capacity = capacity;
+			this.connectToCable = cableHeat;
 		}
 
 		@Override

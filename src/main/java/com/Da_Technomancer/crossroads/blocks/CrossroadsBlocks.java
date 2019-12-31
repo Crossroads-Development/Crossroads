@@ -301,9 +301,6 @@ public class CrossroadsBlocks{
 		redsAlchemicalTubeGlass.initModel();
 		alchemicalTubeCrystal.initModel();
 		redsAlchemicalTubeCrystal.initModel();
-		glasswareHolder.initModel();
-		chargingStand.initModel();
-		atmosCharger.initModel();
 		reagentPumpGlass.initModel();
 		reagentPumpCrystal.initModel();
 	}

@@ -235,6 +235,8 @@ public final class Crossroads{
 		registerCon(WaterCentrifugeContainer::new, WaterCentrifugeScreen::new, "water_centrifuge", e);
 		registerCon(ColorChartContainer::new, ColorChartScreen::new, "color_chart", e);
 		registerCon(BeamExtractorContainer::new, BeamExtractorScreen::new, "beam_extractor", e);
+		registerCon(HeatLimiterContainer::new, HeatLimiterScreen::new, "heat_limiter", e);
+
 		//TODO register containers
 	}
 
@@ -261,6 +263,7 @@ public final class Crossroads{
 		registerConType(WaterCentrifugeContainer::new, "water_centrifuge", e);
 		registerConType(ColorChartContainer::new, "color_chart", e);
 		registerConType(BeamExtractorContainer::new, "beam_extractor", e);
+		registerConType(HeatLimiterContainer::new, "heat_limiter", e);
 	}
 
 	/**
