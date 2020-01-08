@@ -1,0 +1,77 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "crossroads:conduit/alch_tube_glass_core",
+		"uvlock": false
+	},
+	"variants": {
+		"redstone_bool": {
+			"true": {
+
+			},
+			"false": {
+
+			}
+		},
+		"up": {
+			"input": {
+				"submodel": { "end_0": {"model": "crossroads:conduit/alch_tube_glass_in", "x": 0, "y": 0 }}
+			},
+			"output": {
+				"submodel": { "end_0": {"model": "crossroads:conduit/alch_tube_glass_out", "x": 0, "y": 0 }}
+			},
+			"both": {},
+			"none": {}
+		},
+		"down": {
+			"input": {
+				"submodel": { "end_1": {"model": "crossroads:conduit/alch_tube_glass_in", "x": 180, "y": 0 }}
+			},
+			"output": {
+				"submodel": { "end_1": {"model": "crossroads:conduit/alch_tube_glass_out", "x": 180, "y": 0 }}
+			},
+			"both": {},
+			"none": {}
+		},
+		"east": {
+			"input": {
+				"submodel": { "end_2": {"model": "crossroads:conduit/alch_tube_glass_in", "x": 90, "y": 90 }}
+			},
+			"output": {
+				"submodel": { "end_2": {"model": "crossroads:conduit/alch_tube_glass_out", "x": 90, "y": 90 }}
+			},
+			"both": {},
+			"none": {}
+		},
+		"west": {
+			"input": {
+				"submodel": { "end_3": {"model": "crossroads:conduit/alch_tube_glass_in", "x": 90, "y": 270 }}
+			},
+			"output": {
+				"submodel": { "end_3": {"model": "crossroads:conduit/alch_tube_glass_out", "x": 90, "y": 270 }}
+			},
+			"both": {},
+			"none": {}
+		},
+		"north": {
+			"input": {
+				"submodel": { "end_4": {"model": "crossroads:conduit/alch_tube_glass_in", "x": 90, "y": 0 }}
+			},
+			"output": {
+				"submodel": { "end_4": {"model": "crossroads:conduit/alch_tube_glass_out", "x": 90, "y": 0 }}
+			},
+			"both": {},
+			"none": {}
+		},
+		"south": {
+			"input": {
+				"submodel": { "end_5": {"model": "crossroads:conduit/alch_tube_glass_in", "x": 90, "y": 180 }}
+			},
+			"output": {
+				"submodel": { "end_5": {"model": "crossroads:conduit/alch_tube_glass_out", "x": 90, "y": 180 }}
+			},
+			"both": {},
+			"none": {}
+		}
+	}
+}

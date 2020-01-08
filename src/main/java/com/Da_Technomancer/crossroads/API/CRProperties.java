@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.API;
 
+import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.blocks.heat.HeatCable;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MathAxisTileEntity;
@@ -30,5 +31,8 @@ public class CRProperties{
 	public static final BooleanProperty SOUTH = BooleanProperty.create("south");
 	public static final BooleanProperty WEST = BooleanProperty.create("west");
 	public static final BooleanProperty EAST = BooleanProperty.create("east");
+
+	@SuppressWarnings("unchecked")
+	public static final EnumProperty<EnumTransferMode>[] CONDUIT_SIDES = new EnumProperty[] {EnumProperty.create("down", EnumTransferMode.class), EnumProperty.create("up", EnumTransferMode.class), EnumProperty.create("north", EnumTransferMode.class), EnumProperty.create("south", EnumTransferMode.class), EnumProperty.create("west", EnumTransferMode.class), EnumProperty.create("east", EnumTransferMode.class)};
 
 }

@@ -1,260 +1,268 @@
 package com.Da_Technomancer.crossroads.tileentities.fluid;
 
-import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
-import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.fluid.FluidTube;
+import com.Da_Technomancer.essentials.blocks.BlockUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ITickableTileEntity;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.registries.ObjectHolder;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class FluidTubeTileEntity extends TileEntity implements ITickableTileEntity, IIntReceiver{
+@ObjectHolder(Crossroads.MODID)
+public class FluidTubeTileEntity extends TileEntity implements ITickableTileEntity{
+
+	@ObjectHolder("fluid_tube")
+	private static TileEntityType<FluidTubeTileEntity> type = null;
 
 	protected static final int CAPACITY = 2000;
 
-	/**
-	 * 0: Locked
-	 * 1: Normal
-	 * 2: Out
-	 * 3: In
-	 */
-	protected Integer[] connectMode = null;
-	private final Boolean[] hasMatch = new Boolean[6];
+	//Whether there exists a block to connect to on each side
+	protected final boolean[] hasMatch = new boolean[6];
+	//The setting of this block on each side. None means locked
+	protected final EnumTransferMode[] configure = new EnumTransferMode[] {EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH};
+
+	private final IFluidHandler mainHandler = new MainFluidHandler();
+	private final IFluidHandler inHandler = new InFluidHandler();
+	private final IFluidHandler outHandler = new OutFluidHandler();
+
+	@SuppressWarnings("unchecked")
+	private LazyOptional<IFluidHandler>[] otherOpts = new LazyOptional[] {LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty()};
+	@SuppressWarnings("unchecked")
+	private LazyOptional<IFluidHandler>[] internalOpts = new LazyOptional[] {LazyOptional.of(() -> mainHandler), LazyOptional.of(() -> mainHandler), LazyOptional.of(() -> mainHandler), LazyOptional.of(() -> mainHandler), LazyOptional.of(() -> mainHandler), LazyOptional.of(() -> mainHandler)};
+	private final LazyOptional<IFluidHandler> centerOpt = LazyOptional.of(() -> mainHandler);
+
 	private FluidStack content = null;
-	private IFluidHandler[] outHandlers = null;
+	private boolean init = false;
 
-	public void markSideChanged(int index){
-		init();
-		markDirty();
-		CrossroadsPackets.network.sendToAllAround(new SendIntToClient((byte) index, hasMatch[index] != null && hasMatch[index] ? connectMode[index] : 0, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+	public FluidTubeTileEntity(){
+		super(type);
 	}
 
-	public Integer[] getConnectMode(boolean forRender){
-		init();
-		if(forRender && !world.isRemote){
-			Integer[] out = new Integer[6];
-			for(int i = 0; i < 6; i++){
-				out[i] = hasMatch[i] != null && hasMatch[i] ? connectMode[i] : 0;
+	public void toggleConfigure(int side){
+		switch(configure[side]){
+			case INPUT:
+				configure[side] = EnumTransferMode.NONE;
+				internalOpts[side].invalidate();
+				internalOpts[side] = LazyOptional.empty();
+				break;
+			case OUTPUT:
+				configure[side] = EnumTransferMode.INPUT;
+				internalOpts[side].invalidate();
+				internalOpts[side] = LazyOptional.of(() -> inHandler);
+				break;
+			case NONE:
+				configure[side] = EnumTransferMode.BOTH;
+				internalOpts[side].invalidate();
+				internalOpts[side] = LazyOptional.of(() -> mainHandler);
+				break;
+			case BOTH:
+				configure[side] = EnumTransferMode.OUTPUT;
+				internalOpts[side].invalidate();
+				internalOpts[side] = LazyOptional.of(() -> outHandler);
+				break;
+		}
+		//If another CR pipe is connected, force the other one to update it's state
+		Direction dir = Direction.byIndex(side);
+		TileEntity otherTE = world.getTileEntity(pos.offset(dir));
+		if(otherTE instanceof FluidTubeTileEntity){
+			((FluidTubeTileEntity) otherTE).recheckMode(dir);
+			updateState();
+		}
+		updateState();
+	}
+
+	/**
+	 * Forces this tube to calculate what transfer mode there should be on a side based on neighbor and adjust the configure. DOES NOT UPDATE STATE
+	 * @param side The side to recheck
+	 */
+	protected void recheckMode(Direction side){
+		int sideInd = side.getIndex();
+		TileEntity neighbor = world.getTileEntity(pos.offset(side));
+		LazyOptional<IFluidHandler> otherOpt;
+		if(neighbor != null & (otherOpt = neighbor.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite())).isPresent()){
+			IFluidHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
+			if(otherHandler instanceof MainFluidHandler){
+				//Other pipe with bi-directional mode. Go to both
+				if(configure[sideInd] != EnumTransferMode.BOTH){
+					configure[sideInd] = EnumTransferMode.BOTH;
+					internalOpts[sideInd].invalidate();
+					internalOpts[sideInd] = LazyOptional.of(() -> mainHandler);
+				}
+			}else if(otherHandler instanceof OutFluidHandler){
+				//Other pipe in output mode. Go to input
+				if(configure[sideInd] != EnumTransferMode.INPUT){
+					configure[sideInd] = EnumTransferMode.INPUT;
+					internalOpts[sideInd].invalidate();
+					internalOpts[sideInd] = LazyOptional.of(() -> inHandler);
+				}
+			}else if(otherHandler instanceof InFluidHandler){
+				//Other pipe in input mode. Go to output
+				if(configure[sideInd] != EnumTransferMode.OUTPUT){
+					configure[sideInd] = EnumTransferMode.OUTPUT;
+					internalOpts[sideInd].invalidate();
+					internalOpts[sideInd] = LazyOptional.of(() -> outHandler);
+				}
+			}else if(!(otherHandler instanceof IFluidTank)){//Tanks keep the current mode
+				//Generic fluid handler. Keep the current mode, unless it's both, in which case go to output
+				if(configure[sideInd] == EnumTransferMode.BOTH){
+					configure[sideInd] = EnumTransferMode.OUTPUT;
+					internalOpts[sideInd].invalidate();
+					internalOpts[sideInd] = LazyOptional.of(() -> outHandler);
+				}
 			}
-			return out;
-		}
-		return connectMode;
+		}//else no connection- leave current mode
 	}
 
-	@Override
-	public void receiveInt(byte identifier, int message, @Nullable ServerPlayerEntity sender){
-		if(identifier < 6){
-			init();
-			connectMode[identifier] = message;
-			world.markBlockRangeForRenderUpdate(pos, pos);
+	protected void updateState(){
+		BlockState state = world.getBlockState(pos);
+		BlockState newState = state;
+		if(state.getBlock() instanceof FluidTube){
+			for(int i = 0; i < 6; i++){
+				newState = newState.with(CRProperties.CONDUIT_SIDES[i], hasMatch[i] ? configure[i] : EnumTransferMode.NONE);
+			}
+		}
+		if(state != newState){
+			world.setBlockState(pos, newState, 2);
 		}
 	}
 
-	protected void init(){
-		if(connectMode == null){
-			connectMode = world.isRemote ? new Integer[] {0, 0, 0, 0, 0, 0} : new Integer[] {1, 1, 1, 1, 1, 1};
+	private void init(){
+		if(!init){
+			init = true;
+			for(Direction dir : Direction.values()){
+				recheckMode(dir);
+			}
+			updateState();
 		}
 	}
 
 	@Override
 	public void tick(){
-		init();
-
 		if(world.isRemote){
 			return;
 		}
+		init();
 
+		//Available handlers are interacted with in two stages: first all 1-way connections are handled, then all 2-way connections
+		//First, we collect all available fluid handlers (and perform the 1-way connections in this stage)
+		FluidStack origStack = content.copy();
 		IFluidHandler[] handlers = new IFluidHandler[6];
-		outHandlers = new IFluidHandler[6];
+		IFluidHandler[] biHandlers = new IFluidHandler[6];
+		int biHandlerCount = 0;
+		int totalCapacity = 0;
+		int totalFluid = 0;
+		FluidStack fluidRef = content.copy();//Defines the fluid type to be balanced for 2-way connections
 
-		for(Direction dir : Direction.values()){
-			int ind = dir.getIndex();
-
-			if(connectMode[ind] != 0){
-				TileEntity te = world.getTileEntity(pos.offset(dir));
-				IFluidHandler handler;
-				if(te != null && (handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite())) != null){
-					if(hasMatch[ind] == null){
-						boolean canFill = handler.getTankProperties().length != 0 && handler.getTankProperties()[0].canFill();
-						boolean canDrain = handler.getTankProperties().length != 0 && handler.getTankProperties()[0].canDrain();
-						connectMode[ind] = canDrain ? canFill ? 1 : 3 : canFill ? 2 : 1;
-						hasMatch[ind] = true;
-						markSideChanged(ind);
-					}
-					if(!hasMatch[ind]){
-						hasMatch[ind] = true;
-						markSideChanged(ind);
-					}
-
-					handlers[ind] = handler;
-
-					if(connectMode[ind] == 2){
-						outHandlers[ind] = handler;
-					}
-				}else if(hasMatch[ind] != null && hasMatch[ind]){
-					hasMatch[ind] = false;
-					markSideChanged(ind);
-				}
-			}
-		}
-
-
-		//Before we can proceed, we need to know which fluid we're moving
-		Fluid fluid = content == null ? null : content.getFluid();
-
-		//We iterate over all input and bi connections until we find a fluid
-		if(fluid == null){
-			for(int i = 0; i < 6; i++){
-				if(handlers[i] != null && connectMode[i] != 2){
-					FluidStack drainSample = handlers[i].drain(1, false);
-					if(drainSample != null){
-						fluid = drainSample.getFluid();
-						break;
-					}
-				}
-			}
-		}
-
-		//If fluid is still null at this point, there must not be any fluid to move
-		if(fluid == null){
-			return;
-		}
-
-		long sumInput = 0;
-		long sumOutput = 0;
-		long sumBi = 0;
-		long sumBiCap = 0;
-		int[] biConts = new int[6];
-		int[] biCaps = new int[6];
-
-		final FluidStack fillTestStack = new FluidStack(fluid, Integer.MAX_VALUE);//We re-use the same fluidstack for capacity fill tests to save initializing the same stack each loop
-
-		//In order to do all movements in one synchronized, order independent action, we need to build up information about all connections
 		for(int i = 0; i < 6; i++){
-			if(handlers[i] != null){
-				switch(connectMode[i]){
-					case 1://bi
-						FluidStack drainSample = handlers[i].drain(Integer.MAX_VALUE, false);
-						if(drainSample == null || drainSample.getFluid() == fluid){
-							int fillSample = handlers[i].fill(fillTestStack, false);
-							if(fillSample == 0 && drainSample == null){//It's blocking all interaction. The fluid doesn't match, or it just doesn't allow fluid movement
-								handlers[i] = null;
-							}else{
-								biConts[i] = drainSample == null ? 0 : drainSample.amount;
-								biCaps[i] = biConts[i] + fillSample;
-								sumBi += biConts[i];
-								sumBiCap += biCaps[i];
-							}
+			//Skip disabled directions
+			if(!configure[i].isConnection()){
+				continue;
+			}
 
+			//Use the cache if possible
+			if(otherOpts[i].isPresent()){
+				handlers[i] = otherOpts[i].orElseThrow(NullPointerException::new);
+			}else{
+				Direction dir = Direction.byIndex(i);
+				TileEntity otherTe = world.getTileEntity(pos.offset(dir));
+				if(otherTe != null && (otherOpts[i] = otherTe.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite())).isPresent()){
+					handlers[i] = otherOpts[i].orElseThrow(NullPointerException::new);
+				}
+			}
+
+			hasMatch[i] = handlers[i] != null;
+
+			//Perform 1-way transfers
+			if(hasMatch[i]){
+				switch(configure[i]){
+					case BOTH:
+						//Several 2-way connections will be with handlers that only input OR output; they need to be handled as a 1-way connection of fluid flow will act strangely
+						if(handlers[i] instanceof IFluidTank){
+							if(fluidRef.isEmpty()){
+								fluidRef = ((IFluidTank) handlers[i]).getFluid().copy();
+							}
+							if(((IFluidTank) handlers[i]).getFluid().isEmpty() || BlockUtil.sameFluid(fluidRef, ((IFluidTank) handlers[i]).getFluid())){
+								biHandlers[biHandlerCount] = handlers[i];
+								biHandlerCount++;
+								totalCapacity += ((IFluidTank) handlers[i]).getCapacity();
+								totalFluid += ((IFluidTank) handlers[i]).getFluidAmount();
+							}
+						}else if(handlers[i] instanceof MainFluidHandler){
+							if(fluidRef.isEmpty()){
+								fluidRef = handlers[i].getFluidInTank(0).copy();
+							}
+							if(handlers[i].getFluidInTank(0).isEmpty() || BlockUtil.sameFluid(fluidRef, handlers[i].getFluidInTank(0))){
+								biHandlers[biHandlerCount] = handlers[i];
+								biHandlerCount++;
+								totalCapacity += CAPACITY;
+								totalFluid += handlers[i].getFluidInTank(0).getAmount();
+							}
 						}else{
-							handlers[i] = null;//Not the same fluid type
+							//Actually should be a 1-way connection.
+							recheckMode(Direction.byIndex(i));
+							updateState();
 						}
 						break;
-					case 2://output
-						int fillSample = handlers[i].fill(fillTestStack, false);
-						if(fillSample == 0){
-							handlers[i] = null;
+					case INPUT:
+						if(content.isEmpty()){
+							mainHandler.fill(handlers[i].drain(CAPACITY, IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE);
 						}else{
-							sumOutput += fillSample;
+							FluidStack toDrain = content.copy();
+							toDrain.setAmount(CAPACITY - content.getAmount());
+							mainHandler.drain(handlers[i].drain(toDrain, IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE);
 						}
 						break;
-					case 3://input
-						FluidStack testDrain = handlers[i].drain(Integer.MAX_VALUE, false);
-						if(testDrain == null || testDrain.getFluid() != fluid){
-							handlers[i] = null;
-						}else{
-							sumInput += testDrain.amount;
+					case OUTPUT:
+						if(!content.isEmpty()){
+							content.shrink(handlers[i].fill(content, IFluidHandler.FluidAction.EXECUTE));
 						}
 						break;
 				}
 			}
 		}
 
-		if(sumOutput < sumInput){
-			long biFill = Math.min(sumInput - sumOutput, CAPACITY + sumBiCap - sumBi - (content == null ? 0 : content.amount));
-			long toDrain = biFill + sumOutput;
-			biFill += sumBi + (content == null ? 0 : content.amount);
-			double tarPressure = biFill;
-			tarPressure /= CAPACITY + sumBiCap;
-			for(int i = 0; i < 6; i++){
-				if(handlers[i] != null){
-					switch(connectMode[i]){
-						case 1://bi
-							biFill -= biConts[i];
-							if((double) biConts[i] / biCaps[i] < tarPressure){
-								biFill -= handlers[i].fill(new FluidStack(fluid, (int) (tarPressure * biCaps[i] - biConts[i])), true);
-							}else{
-								FluidStack drained = handlers[i].drain((int) (biConts[i] - tarPressure * biCaps[i]), true);
-								biFill += drained == null ? 0 : drained.amount;
-							}
-							break;
-						case 2://output
-							handlers[i].fill(fillTestStack, true);//Completely fill
-							break;
-						case 3://input
-							if(toDrain > 0){
-								FluidStack drained = handlers[i].drain((int) toDrain, true);
-								toDrain -= drained == null ? 0 : drained.amount;
-							}
-							break;
-					}
+		//A separate loop is needed for the second stage, as all handlers need to have been queried to do correct balancing
+
+		//Everything in biHandlers is either a IFluidTank or another pipe MainFluidHandler, and can therefore be expected to have 1 tank and be well behaved
+		totalCapacity += CAPACITY;
+		totalFluid += content.getAmount();
+		float pressure = (float) totalFluid / totalCapacity;
+		totalFluid = content.getAmount();//From this point on, total fluid tracks the amount of fluid in this pipe to prevent rounding error based dupe bugs
+		if(totalFluid != 0 && (content.isEmpty() || BlockUtil.sameFluid(content, fluidRef))){
+			for(int i = 0; i < biHandlerCount; i++){
+				IFluidHandler otherHand = biHandlers[i];
+				int target = (int) (otherHand.getTankCapacity(0) * pressure);
+				int otherCont = otherHand.getFluidInTank(0).getAmount();
+				if(otherCont > target){
+					totalFluid += otherHand.drain(otherCont - target, IFluidHandler.FluidAction.EXECUTE).getAmount();
+				}else if(otherCont < target){
+					FluidStack toFill = fluidRef.copy();
+					toFill.setAmount(target - otherCont);
+					totalFluid -= otherHand.fill(toFill, IFluidHandler.FluidAction.EXECUTE);
 				}
 			}
+			//Set this pipe's contents to the remainder
+			//If one of the IFluidTank handlers isn't acting like a true tank, and didn't accept fluid, the end content could be above CAPACITY
+			content = fluidRef;
+			content.setAmount(totalFluid);
+		}
 
-			if(biFill <= 0){
-				content = null;
-				markDirty();
-			}else{
-				content = new FluidStack(fluid, (int) biFill);
-			}
-		}else{
-			long fromBi = Math.min(sumOutput - sumInput, sumBi + (content == null ? 0 : content.amount));//The qty being drained from bi to fill out.
-			long biFill = sumBi - fromBi + (content == null ? 0 : content.amount);
-			double tarPressure = biFill;
-			tarPressure /= CAPACITY + sumBiCap;
-			long toFill = sumInput + fromBi;
-
-			for(int i = 0; i < 6; i++){
-				if(handlers[i] != null){
-					switch(connectMode[i]){
-						case 1://bi
-							biFill -= biConts[i];
-							if((double) biConts[i] / biCaps[i] < tarPressure){
-								biFill -= handlers[i].fill(new FluidStack(fluid, (int) (tarPressure * biCaps[i] - biConts[i])), true);
-							}else{
-								FluidStack drained = handlers[i].drain((int) (biConts[i] - tarPressure * biCaps[i]), true);
-								biFill += drained == null ? 0 : drained.amount;
-							}
-							break;
-						case 2://output
-							if(toFill > 0){
-								toFill -= handlers[i].fill(new FluidStack(fluid, (int) toFill), true);
-							}
-							break;
-						case 3://input
-							handlers[i].drain(Integer.MAX_VALUE, true);
-							break;
-					}
-				}
-			}
-
-			if(biFill <= 0){
-				content = null;
-				markDirty();
-			}else{
-				content = new FluidStack(fluid, (int) biFill);
-			}
+		if(origStack.getAmount() != content.getAmount() || !BlockUtil.sameFluid(origStack, content)){
+			markDirty();
 		}
 	}
 
@@ -262,11 +270,27 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
 		content = FluidStack.loadFluidStackFromNBT(nbt);
-		connectMode = new Integer[] {0, 0, 0, 0, 0, 0};
+		init = nbt.getBoolean("init");
 		for(int i = 0; i < 6; i++){
-			connectMode[i] = Math.max(0, nbt.contains("mode_" + i) ? nbt.getInt("mode_" + i) : 1);
-			byte match = nbt.getByte("match_" + i);
-			hasMatch[i] = match == 0 ? null : match != 1;
+			hasMatch[i] = nbt.getBoolean("match_" + i);
+			configure[i] = EnumTransferMode.fromString(nbt.getString("config_" + i));
+			switch(configure[i]){
+				case INPUT:
+					internalOpts[i].invalidate();
+					internalOpts[i] = LazyOptional.of(() -> inHandler);
+					break;
+				case OUTPUT:
+					internalOpts[i].invalidate();
+					internalOpts[i] = LazyOptional.of(() -> outHandler);
+					break;
+				case BOTH:
+					//Default value- no change needed
+					break;
+				case NONE:
+					internalOpts[i].invalidate();
+					internalOpts[i] = LazyOptional.empty();
+					break;
+			}
 		}
 	}
 
@@ -276,209 +300,193 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 		if(content != null){
 			content.writeToNBT(nbt);
 		}
-		if(connectMode != null){
-			for(int i = 0; i < 6; i++){
-				nbt.putInt("mode_" + i, connectMode[i]);
-				nbt.putByte("match_" + i, hasMatch[i] == null ? 0 : hasMatch[i] ? (byte) 2 : (byte) 1);
-			}
+		nbt.putBoolean("init", init);
+		for(int i = 0; i < 6; i++){
+			nbt.putBoolean("match_" + i, hasMatch[i]);
+			nbt.putString("config_" + i, configure[i].getName());
 		}
 
 		return nbt;
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag(){
-		CompoundNBT out = super.getUpdateTag();
-		for(int i = 0; i < 6; i++){
-			out.putInt("mode_" + i, hasMatch[i] != null && hasMatch[i] ? connectMode[i] : 0);
+	public void remove(){
+		super.remove();
+		for(LazyOptional<?> opt : internalOpts){
+			opt.invalidate();
 		}
-		return out;
+		centerOpt.invalidate();
 	}
 
-	protected final IFluidHandler mainHandler = new MainFluidHandler();
-	protected final IFluidHandler inHandler = new InFluidHandler();
-	protected final IFluidHandler outHandler = new OutFluidHandler();
+	protected boolean canConnect(Direction side){
+		//Clooge so redstone tubes work
+		return side == null || configure[side.getIndex()].isConnection();
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction side){
 		init();
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && connectMode != null && (side == null || connectMode[side.getIndex()] != 0)){
-			return side == null || connectMode[side.getIndex()] == 1 ? (T) mainHandler : connectMode[side.getIndex()] == 2 ? (T) outHandler : (T) inHandler;
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && canConnect(side)){
+			if(side == null){
+				return (LazyOptional<T>) centerOpt;
+			}else{
+				return (LazyOptional<T>) internalOpts[side.getIndex()];
+			}
 		}
 
 		return super.getCapability(capability, side);
 	}
 
-	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable Direction side){
-		init();
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && connectMode != null && (side == null || connectMode[side.getIndex()] != 0)){
-			return true;
-		}
-		return super.hasCapability(capability, side);
-	}
-
 	private class OutFluidHandler implements IFluidHandler{
 
 		@Override
-		public IFluidTankProperties[] getTankProperties(){
-			return new IFluidTankProperties[] {new FluidTankProperties(content, CAPACITY, false, true)};
+		public int getTanks(){
+			return 1;
+		}
+
+		@Nonnull
+		@Override
+		public FluidStack getFluidInTank(int tank){
+			return tank == 0 ? content : FluidStack.EMPTY;
 		}
 
 		@Override
-		public int fill(FluidStack resource, boolean doFill){
+		public int getTankCapacity(int tank){
+			return CAPACITY;
+		}
+
+		@Override
+		public boolean isFluidValid(int tank, @Nonnull FluidStack stack){
+			return true;
+		}
+
+		@Override
+		public int fill(FluidStack resource, FluidAction action){
 			return 0;
 		}
 
+		@Nonnull
 		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain){
-
-			if(resource != null && resource.isFluidEqual(content)){
-				int change = Math.min(content.amount, resource.amount);
-				Fluid fluid = content.getFluid();
-
-				if(doDrain && change != 0){
-					content.amount -= change;
-					if(content.amount == 0){
-						content = null;
-					}
-					markDirty();
-				}
-
-				return new FluidStack(fluid, change);
-			}else{
-				return null;
-			}
+		public FluidStack drain(FluidStack resource, FluidAction action){
+			return mainHandler.drain(resource, action);
 		}
 
+		@Nonnull
 		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain){
-			if(content == null || maxDrain == 0){
-				return null;
-			}
-
-			int change = Math.min(content.amount, maxDrain);
-			Fluid fluid = content.getFluid();
-
-			if(doDrain && change != 0){
-				content.amount -= change;
-				if(content.amount == 0){
-					content = null;
-				}
-				markDirty();
-			}
-
-			return new FluidStack(fluid, change);
+		public FluidStack drain(int maxDrain, FluidAction action){
+			return mainHandler.drain(maxDrain, action);
 		}
 	}
 
 	private class InFluidHandler implements IFluidHandler{
 
 		@Override
-		public IFluidTankProperties[] getTankProperties(){
-			return new IFluidTankProperties[] {new FluidTankProperties(content, CAPACITY, true, false)};
+		public int getTanks(){
+			return 1;
+		}
+
+		@Nonnull
+		@Override
+		public FluidStack getFluidInTank(int tank){
+			return tank == 0 ? content : FluidStack.EMPTY;
 		}
 
 		@Override
-		public int fill(FluidStack resource, boolean doFill){
-			if(resource != null && (content == null || resource.isFluidEqual(content))){
-				int change = Math.min(CAPACITY - (content == null ? 0 : content.amount), resource.amount);
-
-				if(doFill && change != 0){
-					content = new FluidStack(resource.getFluid(), (content == null ? 0 : content.amount) + change);
-					markDirty();
-				}
-
-				return change;
-			}else{
-				return 0;
-			}
+		public int getTankCapacity(int tank){
+			return CAPACITY;
 		}
 
 		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain){
-			return null;
+		public boolean isFluidValid(int tank, @Nonnull FluidStack stack){
+			return true;
 		}
 
 		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain){
-			return null;
+		public int fill(FluidStack resource, FluidAction action){
+			return mainHandler.fill(resource, action);
+		}
+
+		@Nonnull
+		@Override
+		public FluidStack drain(FluidStack resource, FluidAction action){
+			return FluidStack.EMPTY;
+		}
+
+		@Nonnull
+		@Override
+		public FluidStack drain(int maxDrain, FluidAction action){
+			return FluidStack.EMPTY;
 		}
 	}
 
 	private class MainFluidHandler implements IFluidHandler{
 
 		@Override
-		public IFluidTankProperties[] getTankProperties(){
-			return new IFluidTankProperties[] {new FluidTankProperties(content, CAPACITY)};
+		public int getTanks(){
+			return 1;
+		}
+
+		@Nonnull
+		@Override
+		public FluidStack getFluidInTank(int tank){
+			return tank == 0 ? content : FluidStack.EMPTY;
 		}
 
 		@Override
-		public int fill(FluidStack resource, boolean doFill){
-			if(resource != null && (content == null || resource.isFluidEqual(content))){
-				int change = Math.min(CAPACITY - (content == null ? 0 : content.amount), resource.amount);
+		public int getTankCapacity(int tank){
+			return CAPACITY;
+		}
 
-				if(doFill && change != 0){
-					content = new FluidStack(resource.getFluid(), (content == null ? 0 : content.amount) + change);
-					markDirty();
-				}
+		@Override
+		public boolean isFluidValid(int tank, @Nonnull FluidStack stack){
+			return true;
+		}
 
-				return change;
-			}else{
+		@Override
+		public int fill(FluidStack resource, FluidAction action){
+			if(!content.isEmpty() && !BlockUtil.sameFluid(content, resource)){
 				return 0;
 			}
-		}
-
-		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain){
-			if(resource != null && resource.isFluidEqual(content) && outHandlers != null){
-				for(IFluidHandler outHandler : outHandlers){
-					if(outHandler != null && outHandler.fill(resource, false) != 0){
-						return null;//We refuse to allow extracting liquid out dual connections while this pipe could still push out output-only connections. We therefore prioritize output-only connections over dual connections (similarly to the sorting hopper)
-					}
-				}
-
-				int change = Math.min(content.amount, resource.amount);
-				Fluid fluid = content.getFluid();
-
-				if(doDrain && change != 0){
-					content.amount -= change;
-					if(content.amount == 0){
-						content = null;
-					}
-					markDirty();
-				}
-
-				return new FluidStack(fluid, change);
-			}else{
-				return null;
-			}
-		}
-
-		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain){
-			if(content == null || maxDrain == 0 || outHandlers == null){
-				return null;
-			}
-
-			for(IFluidHandler outHandler : outHandlers){
-				if(outHandler != null && outHandler.fill(content, false) != 0){
-					return null;//We refuse to allow extracting liquid out dual connections while this pipe could still push out output-only connections. We therefore prioritize output-only connections over dual connections (similarly to the sorting hopper)
-				}
-			}
-
-			Fluid fluid = content.getFluid();
-			int change = Math.min(content.amount, maxDrain);
-			if(doDrain && change != 0){
-				content.amount -= change;
-				if(content.amount == 0){
-					content = null;
-				}
+			//The zero lower bound is because due to the fluid handling logic in tick(), there is a possibility of content.getAmount() being greater than CAPACITY
+			int filled = Math.max(Math.min(resource.getAmount(), CAPACITY - content.getAmount()), 0);
+			if(action.execute()){
+				content.shrink(filled);
 				markDirty();
 			}
+			return filled;
+		}
 
-			return new FluidStack(fluid, change);
+		@Nonnull
+		@Override
+		public FluidStack drain(FluidStack resource, FluidAction action){
+			if(content.isEmpty() || !BlockUtil.sameFluid(content, resource)){
+				return FluidStack.EMPTY;
+			}
+			int drained = Math.min(resource.getAmount(), content.getAmount());
+			FluidStack removed = content.copy();
+			removed.setAmount(drained);
+			if(action.execute()){
+				content.shrink(drained);
+				markDirty();
+			}
+			return removed;
+		}
+
+		@Nonnull
+		@Override
+		public FluidStack drain(int maxDrain, FluidAction action){
+			if(content.isEmpty() || maxDrain <= 0){
+				return FluidStack.EMPTY;
+			}
+			int drained = Math.min(maxDrain, content.getAmount());
+			FluidStack removed = content.copy();
+			removed.setAmount(drained);
+			if(action.execute()){
+				content.shrink(drained);
+				markDirty();
+			}
+			return removed;
 		}
 	}
 }

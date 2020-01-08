@@ -28,6 +28,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.function.Predicate;
 
 /**
@@ -108,9 +109,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 			globalFluidHandler = null;
 		}
 
-		for(int i = 0; i < fluids.length; i++){
-			fluids[i] = FluidStack.EMPTY;
-		}
+		Arrays.fill(fluids, FluidStack.EMPTY);
 	}
 
 	@Override

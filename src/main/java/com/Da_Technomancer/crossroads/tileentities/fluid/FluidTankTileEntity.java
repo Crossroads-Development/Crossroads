@@ -15,9 +15,11 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.registries.ObjectHolder;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @ObjectHolder(Crossroads.MODID)
@@ -36,6 +38,11 @@ public class FluidTankTileEntity extends InventoryTE{
 	@Override
 	protected int fluidTanks(){
 		return 1;
+	}
+
+	@Override
+	protected FluidHandler createGlobalFluidHandler(){
+		return new TankFluidHandler();
 	}
 
 	public int getRedstone(){
@@ -87,5 +94,33 @@ public class FluidTankTileEntity extends InventoryTE{
 	@Override
 	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
 		return new FluidTankContainer(id, playerInv, createContainerBuf());
+	}
+
+	private class TankFluidHandler extends FluidHandler implements IFluidTank{
+
+		private TankFluidHandler(){
+			super(0);
+		}
+
+		@Nonnull
+		@Override
+		public FluidStack getFluid(){
+			return fluids[0];
+		}
+
+		@Override
+		public int getFluidAmount(){
+			return fluids[0].getAmount();
+		}
+
+		@Override
+		public int getCapacity(){
+			return CAPACITY;
+		}
+
+		@Override
+		public boolean isFluidValid(FluidStack stack){
+			return true;
+		}
 	}
 }

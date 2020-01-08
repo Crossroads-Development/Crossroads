@@ -1,0 +1,18 @@
+{
+	"ambientocclusion": false,
+	"textures": {
+		"wall": "crossroads:blocks/alch_tube/glass_tube_in"
+	},
+	"elements": [
+		{
+			"from": [ 5.0, 11.0, 5.0 ],
+			"to": [ 11.0, 16.0, 11.0 ],
+			"faces": {
+				"north": { "uv": [ 0, 0, 16, 16 ], "texture": "#wall"},
+				"south": { "uv": [ 0, 0, 16, 16 ], "texture": "#wall"},
+				"west":  { "uv": [ 0, 0, 16, 16 ], "texture": "#wall"},
+				"east":  { "uv": [ 0, 0, 16, 16 ], "texture": "#wall"}
+			}
+		}
+	]
+}

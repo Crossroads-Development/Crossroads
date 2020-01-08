@@ -1,100 +1,102 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumContainerType;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
-import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
-import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.alchemy.AlchemicalTube;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.registries.ObjectHolder;
 
-import javax.annotation.Nullable;
+@ObjectHolder(Crossroads.MODID)
+public class AlchemicalTubeTileEntity extends AlchemyCarrierTE{
 
-public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntReceiver{
+	@ObjectHolder("alchemical_tube")
+	private static TileEntityType<AlchemicalTubeTileEntity> type = null;
 
-	/**
-	 * 0: Locked
-	 * 1: Out
-	 * 2: In
-	 */
-	protected Integer[] connectMode = null;
+	//Whether there exists a block to connect to on each side
 	protected final boolean[] hasMatch = new boolean[6];
+	//The setting of this block on each side. None means locked, both is unused
+	protected final EnumTransferMode[] configure = new EnumTransferMode[] {EnumTransferMode.OUTPUT, EnumTransferMode.OUTPUT, EnumTransferMode.OUTPUT, EnumTransferMode.OUTPUT, EnumTransferMode.OUTPUT, EnumTransferMode.OUTPUT};
 
 	public AlchemicalTubeTileEntity(){
-		super();
+		this(type);
+	}
+
+	protected AlchemicalTubeTileEntity(TileEntityType<? extends AlchemicalTubeTileEntity> type){
+		super(type);
 	}
 
 	public AlchemicalTubeTileEntity(boolean glass){
-		super(glass);
+		this(type, glass);
 	}
 
-	public Integer[] getConnectMode(boolean forRender){
-		init();
-		if(forRender && !world.isRemote){
-			Integer[] out = new Integer[6];
+	protected AlchemicalTubeTileEntity(TileEntityType<? extends AlchemicalTubeTileEntity> type, boolean glass){
+		super(type, glass);
+	}
+
+	@Override
+	protected EnumTransferMode[] getModes(){
+		return configure;
+	}
+
+	public void toggleConfigure(int side){
+		switch(configure[side]){
+			case INPUT:
+				configure[side] = EnumTransferMode.NONE;
+				break;
+			case OUTPUT:
+				configure[side] = EnumTransferMode.INPUT;
+				break;
+			case NONE:
+				configure[side] = EnumTransferMode.OUTPUT;
+				break;
+			case BOTH:
+				//Unsupported
+				break;
+		}
+		updateState();
+	}
+
+	protected void updateState(){
+		BlockState state = world.getBlockState(pos);
+		BlockState newState = state;
+		if(state.getBlock() instanceof AlchemicalTube){
 			for(int i = 0; i < 6; i++){
-				out[i] = hasMatch[i] ? connectMode[i] : 0;
+				newState = newState.with(CRProperties.CONDUIT_SIDES[i], hasMatch[i] ? configure[i] : EnumTransferMode.NONE);
 			}
-			return out;
 		}
-		return connectMode;
-	}
-
-	protected void init(){
-		if(connectMode == null){
-			connectMode = world.isRemote ? new Integer[] {0, 0, 0, 0, 0, 0} : new Integer[] {1, 1, 1, 1, 1, 1};
+		if(state != newState){
+			world.setBlockState(pos, newState, 2);
 		}
-	}
-
-	public void markSideChanged(int index){
-		init();
-		markDirty();
-		CrossroadsPackets.network.sendToAllAround(new SendIntToClient((byte) index, hasMatch[index] ? connectMode[index] : 0, pos), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-	}
-
-	@Override
-	public void receiveInt(byte identifier, int message, @Nullable ServerPlayerEntity sender){
-		if(identifier < 6){
-			init();
-			connectMode[identifier] = message;
-			world.markBlockRangeForRenderUpdate(pos, pos);
-		}
-	}
-
-	@Override
-	public void tick(){
-		init();
-		super.tick();
-	}
-
-	protected boolean isCompatible(EnumContainerType otherType){
-		return otherType == EnumContainerType.NONE || (otherType == EnumContainerType.GLASS) == glass;
 	}
 
 	@Override
 	protected void performTransfer(){
-		init();
+		boolean changed = false;
 		for(int i = 0; i < 6; i++){
 			Direction side = Direction.byIndex(i);
 			TileEntity te;
-			
-			if(connectMode[i] != 0){
+			if(configure[i].isConnection()){
 				te = world.getTileEntity(pos.offset(side));
+				LazyOptional<IChemicalHandler> otherOpt;
 				IChemicalHandler otherHandler;
-				if(te != null && (otherHandler = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())) != null && isCompatible(otherHandler.getChannel(side.getOpposite()))){
+				if(te != null && (otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent() && (otherHandler = otherOpt.orElseThrow(NullPointerException::new)).getChannel(side.getOpposite()).connectsWith(glass ? EnumContainerType.GLASS : EnumContainerType.CRYSTAL)){
 					if(!hasMatch[i]){
 						hasMatch[i] = true;
-						markSideChanged(i);
+						changed = true;
 					}
 
-					if(contents.getTotalQty() != 0 && connectMode[i] == 1){
+					if(contents.getTotalQty() != 0 && configure[i] == EnumTransferMode.OUTPUT){
 						if(otherHandler.insertReagents(contents, side.getOpposite(), handler)){
 							correctReag();
 							markDirty();
@@ -103,70 +105,46 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements IIntRe
 				}else{
 					if(hasMatch[i]){
 						hasMatch[i] = false;
-						markSideChanged(i);
+						changed = true;
 					}
 				}
 			}
+		}
+		if(changed){
+			updateState();
 		}
 	}
 
 	@Override
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
-		connectMode = new Integer[] {0, 0, 0, 0, 0, 0};
 		for(int i = 0; i < 6; i++){
-			connectMode[i] = Math.max(0, nbt.getInt("mode_" + i));
 			hasMatch[i] = nbt.getBoolean("match_" + i);
+			configure[i] = EnumTransferMode.fromString(nbt.getString("config_" + i));
 		}
 	}
 
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
-		if(connectMode != null){
-			for(int i = 0; i < 6; i++){
-				nbt.putInt("mode_" + i, connectMode[i]);
-				nbt.putBoolean("match_" + i, hasMatch[i]);
-			}
+		for(int i = 0; i < 6; i++){
+			nbt.putBoolean("match_" + i, hasMatch[i]);
+			nbt.putString("config_" + i, configure[i].getName());
 		}
 		return nbt;
 	}
 
-	@Override
-	public CompoundNBT getUpdateTag(){
-		CompoundNBT out = super.getUpdateTag();
-		for(int i = 0; i < 6; i++){
-			out.putInt("mode_" + i, hasMatch[i] ? connectMode[i] : 0);
-		}
-		return out;
-	}
-
-	@Override
-	public boolean hasCapability(Capability<?> cap, Direction side){
-		init();
-		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || connectMode[side.getIndex()] != 0)){
-			return true;
-		}
-		return super.hasCapability(cap, side);
+	protected boolean allowConnect(Direction side){
+		//Lazy clooge to let redstone tubes work
+		return side == null || configure[side.getIndex()].isConnection();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
-		init();
-		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || connectMode[side.getIndex()] != 0)){
-			return (T) handler;
+		if(cap == Capabilities.CHEMICAL_CAPABILITY && allowConnect(side)){
+			return (LazyOptional<T>) chemOpt;
 		}
 		return super.getCapability(cap, side);
-	}
-
-	@Override
-	protected EnumTransferMode[] getModes(){
-		EnumTransferMode[] output = new EnumTransferMode[6];
-		init();
-		for(int i = 0; i < 6; i++){
-			output[i] = connectMode[i] == 0 ? EnumTransferMode.NONE : connectMode[i] == 1 ? EnumTransferMode.OUTPUT : EnumTransferMode.INPUT;
-		}
-		return output;
 	}
 }

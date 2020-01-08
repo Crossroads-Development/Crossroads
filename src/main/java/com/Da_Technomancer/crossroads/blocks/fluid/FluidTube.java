@@ -1,72 +1,79 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
-import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.render.bakedModel.AdvConduitBakedModel;
-import com.Da_Technomancer.crossroads.render.bakedModel.IAdvConduitModel;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidTubeTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
-import com.Da_Technomancer.essentials.blocks.BlockUtil;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.statemap.StateMapperBase;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.*;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.common.property.ExtendedBlockState;
-import net.minecraftforge.common.property.IExtendedBlockState;
-import net.minecraftforge.common.property.IUnlistedProperty;
 
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
+public class FluidTube extends ContainerBlock{
 
-public class FluidTube extends ContainerBlock implements IAdvConduitModel{
+	private static final double SIZE = 5D / 16D;
+	protected static final VoxelShape[] SHAPES = new VoxelShape[64];
 
-	private static final double SIZE = .3125D;
-	private static final AxisAlignedBB BB = new AxisAlignedBB(SIZE, SIZE, SIZE, 1 - SIZE, 1 - SIZE, 1 - SIZE);
-	private static final AxisAlignedBB DOWN = new AxisAlignedBB(SIZE, 0, SIZE, 1 - SIZE, SIZE, 1 - SIZE);
-	private static final AxisAlignedBB UP = new AxisAlignedBB(SIZE, 1, SIZE, 1 - SIZE, 1 - SIZE, 1 - SIZE);
-	private static final AxisAlignedBB NORTH = new AxisAlignedBB(SIZE, SIZE, 0, 1 - SIZE, 1 - SIZE, SIZE);
-	private static final AxisAlignedBB SOUTH = new AxisAlignedBB(SIZE, SIZE, 1, 1 - SIZE, 1 - SIZE, 1 - SIZE);
-	private static final AxisAlignedBB WEST = new AxisAlignedBB(0, SIZE, SIZE, SIZE, 1 - SIZE, 1 - SIZE);
-	private static final AxisAlignedBB EAST = new AxisAlignedBB(1, SIZE, SIZE, 1 - SIZE, 1 - SIZE, 1 - SIZE);
-	
+	static{
+		final double size = SIZE * 16D;
+		final double sizeN = 16D - size;
+		//There are 64 (2^6) possible states for this block, and each one has a different shape
+		//This... is gonna take a while
+		VoxelShape core = makeCuboidShape(size, size, size, sizeN, sizeN, sizeN);
+		VoxelShape[] pieces = new VoxelShape[6];
+		pieces[0] = makeCuboidShape(size, 0, size, sizeN, size, sizeN);
+		pieces[1] = makeCuboidShape(size, 16, size, sizeN, sizeN, sizeN);
+		pieces[2] = makeCuboidShape(size, size, 0, sizeN, sizeN, size);
+		pieces[3] = makeCuboidShape(size, size, 16, sizeN, sizeN, sizeN);
+		pieces[4] = makeCuboidShape(0, size, size, size, sizeN, sizeN);
+		pieces[5] = makeCuboidShape(16, size, size, sizeN, sizeN, sizeN);
+		for(int i = 0; i < 64; i++){
+			VoxelShape comp = core;
+			for(int j = 0; j < 6; j++){
+				if((i & (1 << j)) != 0){
+					comp = VoxelShapes.or(comp, pieces[j]);
+				}
+			}
+			SHAPES[i] = comp;
+		}
+	}
+
 	public FluidTube(){
-		super(Material.IRON);
-		String name = "fluid_tube";
-		setTranslationKey(name);
+		this("fluid_tube");
+	}
+
+	protected FluidTube(String name){
+		super(Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(2));
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setHardness(2);
-		setSoundType(SoundType.METAL);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
+		setDefaultState(getDefaultState().with(CRProperties.CONDUIT_SIDES[0], EnumTransferMode.NONE).with(CRProperties.CONDUIT_SIDES[1], EnumTransferMode.NONE).with(CRProperties.CONDUIT_SIDES[2], EnumTransferMode.NONE).with(CRProperties.CONDUIT_SIDES[3], EnumTransferMode.NONE).with(CRProperties.CONDUIT_SIDES[4], EnumTransferMode.NONE).with(CRProperties.CONDUIT_SIDES[5], EnumTransferMode.NONE));
 	}
 
 	@Override
-	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face){
-		return BlockFaceShape.UNDEFINED;
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+		builder.add(CRProperties.CONDUIT_SIDES);
+	}
+
+	@Override
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+		int index = 0;
+		for(int i = 0; i < 6; i++){
+			if(state.get(CRProperties.CONDUIT_SIDES[i]).isConnection()){
+				index |= 1 << i;
+			}
+		}
+		return SHAPES[index];
 	}
 
 	@Override
@@ -81,182 +88,31 @@ public class FluidTube extends ContainerBlock implements IAdvConduitModel{
 
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
+		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand))){
 			if(!worldIn.isRemote){
 				int face;
-				if(hitY < SIZE){
+				if(hit.getHitVec().y < SIZE){
 					face = 0;//Down
-				}else if(hitY > 1F - (float) SIZE){
+				}else if(hit.getHitVec().y > 1F - (float) SIZE){
 					face = 1;//Up
-				}else if(hitX < (float) SIZE){
+				}else if(hit.getHitVec().x < (float) SIZE){
 					face = 4;//West
-				}else if(hitX > 1F - (float) SIZE){
+				}else if(hit.getHitVec().x > 1F - (float) SIZE){
 					face = 5;//East
-				}else if(hitZ < (float) SIZE){
+				}else if(hit.getHitVec().z < (float) SIZE){
 					face = 2;//North
-				}else if(hitZ > 1F - (float) SIZE){
+				}else if(hit.getHitVec().z > 1F - (float) SIZE){
 					face = 3;//South
 				}else{
-					face = side.getIndex();
+					face = hit.getFace().getIndex();
 				}
 				TileEntity te = worldIn.getTileEntity(pos);
 				if(te instanceof FluidTubeTileEntity){
-					Integer[] conMode = ((FluidTubeTileEntity) te).getConnectMode(false);
-
-					conMode[face] = (conMode[face] + 1) % 4;
-					((FluidTubeTileEntity) te).markSideChanged(face);
+					((FluidTubeTileEntity) te).toggleConfigure(face);
 				}
 			}
 			return true;
 		}
 		return false;
-	}
-	
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public AxisAlignedBB getSelectedBoundingBox(BlockState state, World source, BlockPos pos){
-		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, source, pos);
-		ArrayList<AxisAlignedBB> list = new ArrayList<AxisAlignedBB>();
-		Integer[] connectMode = exState.get(Properties.CONNECT_MODE);
-		if(connectMode[0] != 0){
-			list.add(DOWN);
-		}
-		if(connectMode[1] != 0){
-			list.add(UP);
-		}
-		if(connectMode[2] != 0){
-			list.add(NORTH);
-		}
-		if(connectMode[3] != 0){
-			list.add(SOUTH);
-		}
-		if(connectMode[4] != 0){
-			list.add(WEST);
-		}
-		if(connectMode[5] != 0){
-			list.add(EAST);
-		}
-		PlayerEntity play = Minecraft.getInstance().player;
-		float reDist = Minecraft.getInstance().playerController.getBlockReachDistance();
-		Vec3d start = play.getEyePosition(0F).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
-		Vec3d end = start.add(play.getLook(0F).x * reDist, play.getLook(0F).y * reDist, play.getLook(0F).z * reDist);
-		AxisAlignedBB out = BlockUtil.selectionRaytrace(list, start, end);
-		return (out == null ? BB : out).offset(pos);
-	}
-
-	@Override
-	@Nullable
-	public RayTraceResult collisionRayTrace(BlockState state, World worldIn, BlockPos pos, Vec3d start, Vec3d end){
-		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, worldIn, pos);
-		ArrayList<AxisAlignedBB> list = new ArrayList<>();
-		Integer[] connectMode = exState.get(Properties.CONNECT_MODE);
-		list.add(BB);
-		if(connectMode[0]  != 0){
-			list.add(DOWN);
-		}
-		if(connectMode[1]  != 0){
-			list.add(UP);
-		}
-		if(connectMode[2]  != 0){
-			list.add(NORTH);
-		}
-		if(connectMode[3]  != 0){
-			list.add(SOUTH);
-		}
-		if(connectMode[4]  != 0){
-			list.add(WEST);
-		}
-		if(connectMode[5]  != 0){
-			list.add(EAST);
-		}
-		
-		start = start.subtract(pos.getX(), pos.getY(), pos.getZ());
-		end = end.subtract(pos.getX(), pos.getY(), pos.getZ());
-		AxisAlignedBB out = BlockUtil.selectionRaytrace(list, start, end);
-		if(out == null){
-			return null;
-		}else{
-			RayTraceResult untransformed = out.calculateIntercept(start, end);
-			return new RayTraceResult(untransformed.hitVec.add((double)pos.getX(), (double)pos.getY(), (double)pos.getZ()), untransformed.sideHit, pos);
-		}
-	}
-
-	@Override
-	public void addCollisionBoxToList(BlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean nobodyKnows){
-		addCollisionBoxToList(pos, mask, list, BB);
-		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, worldIn, pos);
-		Integer[] connectMode = exState.get(Properties.CONNECT_MODE);
-
-		if(connectMode[0] != 0){
-			addCollisionBoxToList(pos, mask, list, DOWN);
-		}
-		if(connectMode[1] != 0){
-			addCollisionBoxToList(pos, mask, list, UP);
-		}
-		if(connectMode[2] != 0){
-			addCollisionBoxToList(pos, mask, list, NORTH);
-		}
-		if(connectMode[3] != 0){
-			addCollisionBoxToList(pos, mask, list, SOUTH);
-		}
-		if(connectMode[4] != 0){
-			addCollisionBoxToList(pos, mask, list, WEST);
-		}
-		if(connectMode[5] != 0){
-			addCollisionBoxToList(pos, mask, list, EAST);
-		}
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public void initModel(){
-		StateMapperBase ignoreState = new StateMapperBase(){
-			@Override
-			protected ModelResourceLocation getModelResourceLocation(BlockState IBlockState){
-				return AdvConduitBakedModel.BAKED_MODEL;
-			}
-		};
-		ModelLoader.setCustomStateMapper(this, ignoreState);
-	}
-
-	private static final ResourceLocation CAP = new ResourceLocation(Crossroads.MODID, "blocks/block_bronze");
-	private static final ResourceLocation OUT = new ResourceLocation(Crossroads.MODID, "blocks/fluid_tube_out");
-	private static final ResourceLocation IN = new ResourceLocation(Crossroads.MODID, "blocks/fluid_tube_in");
-
-	@Override
-	public ResourceLocation getTexture(BlockState state, int mode){
-		return mode == 0 || mode == 1 ? CAP : mode == 2 ? OUT : IN;
-	}
-
-	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
-		world.markBlockRangeForRenderUpdate(pos.add(-1, -1, -1), pos.add(1, 1, 1));
-	}
-	
-	@Override
-	public boolean isFullCube(BlockState state){
-		return false;
-	}
-
-	@Override
-	protected BlockStateContainer createBlockState(){
-		return new ExtendedBlockState(this, new IProperty[0], new IUnlistedProperty[] {Properties.CONNECT_MODE});
-	}
-
-	@Override
-	public BlockState getExtendedState(BlockState state, IBlockAccess world, BlockPos pos){
-		IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
-		TileEntity te = world.getTileEntity(pos);
-		return extendedBlockState.with(Properties.CONNECT_MODE, te instanceof FluidTubeTileEntity ? ((FluidTubeTileEntity) te).getConnectMode(true) : new Integer[] {0, 0, 0, 0, 0, 0});
-
-	}
-
-	@Override
-	public boolean isOpaqueCube(BlockState state){
-		return false;
-	}
-
-	@Override
-	public double getSize(){
-		return SIZE;
 	}
 }

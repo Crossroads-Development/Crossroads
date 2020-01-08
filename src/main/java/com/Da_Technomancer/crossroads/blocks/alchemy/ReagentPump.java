@@ -1,47 +1,59 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.alchemy.EnumContainerType;
+import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.render.bakedModel.ReagentPumpBakedModel;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReagentPumpTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
-import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
-import net.minecraft.client.renderer.block.statemap.StateMapperBase;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.block.BlockRenderType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.*;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.common.property.ExtendedBlockState;
-import net.minecraftforge.common.property.IExtendedBlockState;
-import net.minecraftforge.common.property.IUnlistedProperty;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
+import net.minecraftforge.common.util.LazyOptional;
 
 public class ReagentPump extends ContainerBlock{
+
+	private static final double SIZE = 5D;
+	private static final double CORE_SIZE = 4D;
+	
+	protected static final VoxelShape[] SHAPES = new VoxelShape[16];
+	static{
+		final double sizeN = 16D - SIZE;
+		//There are 16 (2^4) possible shapes for this block
+		VoxelShape core = makeCuboidShape(CORE_SIZE, 0, CORE_SIZE, 16 - CORE_SIZE, 16, 16 - CORE_SIZE);
+		VoxelShape[] pieces = new VoxelShape[4];
+		pieces[0] = makeCuboidShape(SIZE, SIZE, 0, sizeN, sizeN, SIZE);
+		pieces[1] = makeCuboidShape(SIZE, SIZE, 16, sizeN, sizeN, sizeN);
+		pieces[2] = makeCuboidShape(0, SIZE, SIZE, SIZE, sizeN, sizeN);
+		pieces[3] = makeCuboidShape(16, SIZE, SIZE, sizeN, sizeN, sizeN);
+		for(int i = 0; i < 16; i++){
+			VoxelShape comp = core;
+			for(int j = 0; j < 4; j++){
+				if((i & (1 << j)) != 0){
+					comp = VoxelShapes.or(comp, pieces[j]);
+				}
+			}
+			SHAPES[i] = comp;
+		}
+	}
 
 	private final boolean crystal;
 
@@ -82,130 +94,66 @@ public class ReagentPump extends ContainerBlock{
 	}
 
 	@Override
-	protected BlockStateContainer createBlockState(){
-		return new ExtendedBlockState(this, new IProperty[] {Properties.ACTIVE}, new IUnlistedProperty[] {Properties.CONNECT});
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+		builder.add(CRProperties.ACTIVE, CRProperties.UP, CRProperties.DOWN, CRProperties.EAST, CRProperties.WEST, CRProperties.NORTH, CRProperties.SOUTH);
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	public void initModel(){
-		StateMapperBase ignoreState = new StateMapperBase(){
-			@Override
-			protected ModelResourceLocation getModelResourceLocation(BlockState IBlockState){
-				return ReagentPumpBakedModel.BAKED_MODEL;
+	@Override
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+		int index = 0;
+		if(state.get(CRProperties.NORTH)){
+			index |= 1;
+		}
+		if(state.get(CRProperties.SOUTH)){
+			index |= 1 << 1;
+		}
+		if(state.get(CRProperties.WEST)){
+			index |= 1 << 2;
+		}
+		if(state.get(CRProperties.EAST)){
+			index |= 1 << 3;
+		}
+		return SHAPES[index];
+	}
+
+
+	@Override
+	public BlockState getStateForPlacement(BlockItemUseContext context){
+		boolean[] connect = new boolean[6];
+		EnumContainerType contType = crystal ? EnumContainerType.CRYSTAL : EnumContainerType.GLASS;
+		for(int i = 2; i < 6; i++){
+			TileEntity te = context.getWorld().getTileEntity(context.getPos().offset(Direction.byIndex(i)));
+			LazyOptional<IChemicalHandler> otherOpt;
+			if(te != null && (otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, Direction.byIndex(i).getOpposite())).isPresent() && otherOpt.orElseThrow(NullPointerException::new).getChannel(Direction.byIndex(i)).connectsWith(contType)){
+				connect[i] = true;
 			}
-		};
-		ModelLoader.setCustomStateMapper(this, ignoreState);
+		}
+		return getDefaultState().with(CRProperties.NORTH, connect[2]).with(CRProperties.SOUTH, connect[3]).with(CRProperties.WEST, connect[4]).with(CRProperties.EAST, connect[5]);
 	}
 
 	@Override
-	public BlockState getExtendedState(BlockState state, IBlockAccess world, BlockPos pos){
-		IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
-		TileEntity te = world.getTileEntity(pos);
-
-		extendedBlockState = extendedBlockState.with(Properties.CONNECT, te instanceof ReagentPumpTileEntity ? ((ReagentPumpTileEntity) te).getMatches() : new Boolean[] {false, false, false, false, false, false});
-
-		return extendedBlockState;
-	}
-
-	private static final double SIZE = 5D / 16D;
-	private static final double CORE_SIZE = 4D / 16D;
-	private static final AxisAlignedBB BB = new AxisAlignedBB(CORE_SIZE, CORE_SIZE, CORE_SIZE, 1 - CORE_SIZE, 1 - CORE_SIZE, 1 - CORE_SIZE);
-	private static final AxisAlignedBB DOWN = new AxisAlignedBB(SIZE, 0, SIZE, 1 - SIZE, CORE_SIZE, 1 - SIZE);
-	private static final AxisAlignedBB UP = new AxisAlignedBB(SIZE, 1, SIZE, 1 - SIZE, 1 - CORE_SIZE, 1 - SIZE);
-	private static final AxisAlignedBB NORTH = new AxisAlignedBB(SIZE, SIZE, 0, 1 - SIZE, 1 - SIZE, CORE_SIZE);
-	private static final AxisAlignedBB SOUTH = new AxisAlignedBB(SIZE, SIZE, 1, 1 - SIZE, 1 - SIZE, 1 - CORE_SIZE);
-	private static final AxisAlignedBB WEST = new AxisAlignedBB(0, SIZE, SIZE, CORE_SIZE, 1 - SIZE, 1 - SIZE);
-	private static final AxisAlignedBB EAST = new AxisAlignedBB(1, SIZE, SIZE, 1 - CORE_SIZE, 1 - SIZE, 1 - SIZE);
-
-	@Override
-	public void addCollisionBoxToList(BlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean pleaseDontBeRelevantToAnythingOrIWillBeSad){
-		addCollisionBoxToList(pos, mask, list, BB);
-		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, worldIn, pos);
-
-		if(exState.get(Properties.CONNECT)[0]){
-			addCollisionBoxToList(pos, mask, list, DOWN);
+	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos pos, BlockPos facingPos){
+		TileEntity te = worldIn.getTileEntity(facingPos);
+		TileEntity thisTE = worldIn.getTileEntity(pos);
+		LazyOptional<IChemicalHandler> otherOpt;
+		boolean connect = thisTE instanceof ReagentPumpTileEntity && te != null && (otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, facing.getOpposite())).isPresent() && otherOpt.orElseThrow(NullPointerException::new).getChannel(facing).connectsWith(crystal ? EnumContainerType.CRYSTAL : EnumContainerType.GLASS);
+		BooleanProperty prop;
+		switch(facing){
+			case NORTH:
+				prop = CRProperties.NORTH;
+				break;
+			case SOUTH:
+				prop = CRProperties.SOUTH;
+				break;
+			case WEST:
+				prop = CRProperties.WEST;
+				break;
+			case EAST:
+				prop = CRProperties.EAST;
+				break;
+			default:
+				return stateIn;
 		}
-		if(exState.get(Properties.CONNECT)[1]){
-			addCollisionBoxToList(pos, mask, list, UP);
-		}
-		if(exState.get(Properties.CONNECT)[2]){
-			addCollisionBoxToList(pos, mask, list, NORTH);
-		}
-		if(exState.get(Properties.CONNECT)[3]){
-			addCollisionBoxToList(pos, mask, list, SOUTH);
-		}
-		if(exState.get(Properties.CONNECT)[4]){
-			addCollisionBoxToList(pos, mask, list, WEST);
-		}
-		if(exState.get(Properties.CONNECT)[5]){
-			addCollisionBoxToList(pos, mask, list, EAST);
-		}
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public AxisAlignedBB getSelectedBoundingBox(BlockState state, World source, BlockPos pos){
-		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, source, pos);
-		ArrayList<AxisAlignedBB> list = new ArrayList<>();
-		if(exState.get(Properties.CONNECT)[0]){
-			list.add(DOWN);
-		}
-		if(exState.get(Properties.CONNECT)[1]){
-			list.add(UP);
-		}
-		if(exState.get(Properties.CONNECT)[2]){
-			list.add(NORTH);
-		}
-		if(exState.get(Properties.CONNECT)[3]){
-			list.add(SOUTH);
-		}
-		if(exState.get(Properties.CONNECT)[4]){
-			list.add(WEST);
-		}
-		if(exState.get(Properties.CONNECT)[5]){
-			list.add(EAST);
-		}
-		PlayerEntity play = Minecraft.getInstance().player;
-		float reDist = Minecraft.getInstance().playerController.getBlockReachDistance();
-		Vec3d start = play.getEyePosition(0F).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
-		Vec3d end = start.add(play.getLook(0F).x * reDist, play.getLook(0F).y * reDist, play.getLook(0F).z * reDist);
-		AxisAlignedBB out = BlockUtil.selectionRaytrace(list, start, end);
-		return (out == null ? BB : out).offset(pos);
-	}
-
-	@Override
-	@Nullable
-	public RayTraceResult collisionRayTrace(BlockState state, World worldIn, BlockPos pos, Vec3d start, Vec3d end){
-		IExtendedBlockState exState = (IExtendedBlockState) getExtendedState(state, worldIn, pos);
-		ArrayList<AxisAlignedBB> list = new ArrayList<AxisAlignedBB>();
-		list.add(BB);
-		if(exState.get(Properties.CONNECT)[0]){
-			list.add(DOWN);
-		}
-		if(exState.get(Properties.CONNECT)[1]){
-			list.add(UP);
-		}
-		if(exState.get(Properties.CONNECT)[2]){
-			list.add(NORTH);
-		}
-		if(exState.get(Properties.CONNECT)[3]){
-			list.add(SOUTH);
-		}
-		if(exState.get(Properties.CONNECT)[4]){
-			list.add(WEST);
-		}
-		if(exState.get(Properties.CONNECT)[5]){
-			list.add(EAST);
-		}
-
-		start = start.subtract(pos.getX(), pos.getY(), pos.getZ());
-		end = end.subtract(pos.getX(), pos.getY(), pos.getZ());
-		AxisAlignedBB out = BlockUtil.selectionRaytrace(list, start, end);
-		if(out == null){
-			return null;
-		}else{
-			RayTraceResult untransformed = out.calculateIntercept(start, end);
-			return new RayTraceResult(untransformed.hitVec.add((double)pos.getX(), (double)pos.getY(), (double)pos.getZ()), untransformed.sideHit, pos);
-		}
+		return stateIn.with(prop, connect);
 	}
 }

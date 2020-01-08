@@ -76,7 +76,6 @@ public class HeatCable extends ContainerBlock{
 
 	public HeatCable(HeatInsulators insulator){
 		this(insulator, "heat_cable_" + insulator.toString().toLowerCase());
-		setDefaultState(getDefaultState().with(CRProperties.CONDUCTOR, Conductors.COPPER));
 	}
 
 	protected HeatCable(HeatInsulators insulator, String name){
@@ -85,6 +84,7 @@ public class HeatCable extends ContainerBlock{
 		setRegistryName(name);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this, itemProp);
+		setDefaultState(getDefaultState().with(CRProperties.CONDUCTOR, Conductors.COPPER).with(CRProperties.DOWN, false).with(CRProperties.UP, false).with(CRProperties.WEST, false).with(CRProperties.EAST, false).with(CRProperties.SOUTH, false).with(CRProperties.NORTH, false));
 	}
 
 	@Override

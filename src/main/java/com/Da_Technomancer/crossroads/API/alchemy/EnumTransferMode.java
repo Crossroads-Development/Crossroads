@@ -1,6 +1,11 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
-public enum EnumTransferMode{
+import net.minecraft.util.IStringSerializable;
+
+import javax.annotation.Nonnull;
+import java.util.Locale;
+
+public enum EnumTransferMode implements IStringSerializable{
 	
 	INPUT(true, false),
 	OUTPUT(false, true),
@@ -21,5 +26,23 @@ public enum EnumTransferMode{
 	
 	public boolean isOutput(){
 		return canOutput;
+	}
+
+	public boolean isConnection(){
+		return this != NONE;
+	}
+
+	@Override
+	public String getName(){
+		return name().toLowerCase();
+	}
+
+	@Nonnull
+	public static EnumTransferMode fromString(String s){
+		try{
+			return valueOf(s.toUpperCase(Locale.US));
+		}catch(IllegalArgumentException e){
+			return NONE;
+		}
 	}
 }
