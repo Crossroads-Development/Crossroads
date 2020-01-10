@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"tag": "storage_blocks/coal"
+	},
+	"output": {
+		"item": "gunpowder",
+		"count": 1
+	}
+}

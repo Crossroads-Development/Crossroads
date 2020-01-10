@@ -1,0 +1,8 @@
+{
+	"type": "crossroads:beam_extract",
+	"input": {
+		"tag": "dusts/salt"
+	},
+	"potential" : 18,
+	"stability": 24
+}

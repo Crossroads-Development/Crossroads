@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
@@ -18,7 +17,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -60,7 +58,6 @@ public class BlockSalt extends FallingBlock{
 		setRegistryName(name);
 		CrossroadsBlocks.toRegister.add(this);
 		CrossroadsBlocks.blockAddQue(this);
-		ModCrafting.toRegisterOreDict.add(Pair.of(this, new String[] {"blockSalt"}));
 	}
 
 	@Override

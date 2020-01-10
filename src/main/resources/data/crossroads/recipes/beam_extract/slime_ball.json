@@ -1,0 +1,7 @@
+{
+	"type": "crossroads:beam_extract",
+	"input": {
+		"tag": "slimeballs"
+	},
+	"potential": 24
+}

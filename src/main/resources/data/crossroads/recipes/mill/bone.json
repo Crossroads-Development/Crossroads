@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"tag": "bones"
+	},
+	"output": {
+		"item": "bone_meal",
+		"count": 5
+	}
+}

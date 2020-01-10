@@ -4,6 +4,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Rarity;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
@@ -16,6 +17,11 @@ public class CowLeggings extends ArmorItem{
 		String name = "cow_leggings";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
+	}
+
+	@Override
+	public Rarity getRarity(ItemStack stack){
+		return CRItems.BOBO_RARITY;
 	}
 
 	@Override

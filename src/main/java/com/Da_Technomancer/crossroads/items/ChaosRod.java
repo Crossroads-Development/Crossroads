@@ -5,6 +5,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Rarity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.*;
@@ -47,5 +48,10 @@ public class ChaosRod extends Item{
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.chaos_rod.quip").setStyle(MiscUtil.TT_QUIP));
+	}
+
+	@Override
+	public Rarity getRarity(ItemStack stack){
+		return CRItems.BOBO_RARITY;
 	}
 }

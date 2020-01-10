@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"item": "melon_slice"
+	},
+	"output": {
+		"item": "melon_seeds",
+		"count": 3
+	}
+}

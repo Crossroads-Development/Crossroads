@@ -15,6 +15,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.registries.ObjectHolder;
 import org.apache.commons.lang3.tuple.Pair;
@@ -44,6 +45,10 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 	@Override
 	protected boolean useHeat(){
 		return true;
+	}
+
+	public FluidStack getFluid(){
+		return fluids[0];
 	}
 
 	@Override

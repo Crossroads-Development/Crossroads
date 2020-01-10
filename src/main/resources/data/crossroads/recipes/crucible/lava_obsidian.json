@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:crucible",
+	"input": {
+		"tag": "obsidian"
+	},
+	"output": {
+		"fluid": "lava",
+		"amount": "1000"
+	}
+}

@@ -3,6 +3,8 @@ package com.Da_Technomancer.crossroads.items;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.IArmorMaterial;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Rarity;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
@@ -16,6 +18,11 @@ public class ChickenBoots extends ArmorItem{
 		String name = "chicken_boots";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
+	}
+
+	@Override
+	public Rarity getRarity(ItemStack stack){
+		return CRItems.BOBO_RARITY;
 	}
 
 	private static class BoboMat implements IArmorMaterial{

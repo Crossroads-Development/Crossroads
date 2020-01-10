@@ -5,6 +5,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Rarity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.text.ITextComponent;
@@ -23,6 +24,11 @@ public class MagentaBread extends Item{
 		String name = "magenta_bread";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
+	}
+
+	@Override
+	public Rarity getRarity(ItemStack stack){
+		return CRItems.BOBO_RARITY;
 	}
 
 	@Override

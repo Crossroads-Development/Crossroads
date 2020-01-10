@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Rarity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
@@ -26,6 +27,11 @@ public class RainIdol extends Item{
 		String name = "rain_idol";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
+	}
+
+	@Override
+	public Rarity getRarity(ItemStack stack){
+		return CRItems.BOBO_RARITY;
 	}
 
 	@Override

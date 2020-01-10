@@ -10,7 +10,6 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.crafting.ItemRecipePredicate;
 import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
-import com.Da_Technomancer.crossroads.items.crafting.TagCraftingStack;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;

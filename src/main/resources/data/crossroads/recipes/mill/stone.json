@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"tag": "stone"
+	},
+	"output": [
+		{
+			"item": "gravel",
+			"count": 1
+		}
+	]
+}

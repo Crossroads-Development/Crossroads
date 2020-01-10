@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"item": "nether_wart_block"
+	},
+	"output": {
+		"item": "nether_wart",
+		"count": 9
+	}
+}

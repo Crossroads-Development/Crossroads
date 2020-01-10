@@ -1,0 +1,5 @@
+{
+	"type": "crossroads:cooling",
+	"item": "blue_ice",
+	"cooling": 1600
+}

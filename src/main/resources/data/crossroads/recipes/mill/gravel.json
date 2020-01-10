@@ -1,0 +1,16 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"tag": "gravel"
+	},
+	"output": [
+		{
+			"item": "sand",
+			"count": 1
+		},
+		{
+			"item": "flint",
+			"count": 1
+		}
+	]
+}

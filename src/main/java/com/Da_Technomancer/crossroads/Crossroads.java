@@ -138,6 +138,10 @@ public final class Crossroads{
 		reg.register(new IceboxRec.Serializer().setRegistryName("cooling"));
 		reg.register(new DirtyWaterRec.Serializer().setRegistryName("dirty_water"));
 		reg.register(new AlchemyRec.Serializer().setRegistryName("alchemy"));
+		reg.register(new BlastFurnaceRec.Serializer().setRegistryName("cr_blast_furnace"));
+		reg.register(new FluidCoolingRec.Serializer().setRegistryName("fluid_cooling"));
+		reg.register(new CrucibleRec.Serializer().setRegistryName("crucible"));
+		reg.register(new DetailedCrafterRec.Serializer().setRegistryName("detailed_crafter"));
 	}
 
 	@SuppressWarnings("unused")

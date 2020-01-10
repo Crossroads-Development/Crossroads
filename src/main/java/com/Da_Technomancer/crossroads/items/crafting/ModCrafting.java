@@ -8,6 +8,8 @@ import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.fluids.CrossroadsFluid;
+import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.alchemy.Phial;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
@@ -20,6 +22,8 @@ import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.BlockPrismarine;
 import net.minecraft.block.BlockStone;
 import net.minecraft.block.Blocks;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Items;
@@ -44,56 +48,8 @@ import java.util.function.Predicate;
 public final class ModCrafting{
 
 	public static final ArrayList<IRecipe> toRegister = new ArrayList<>();
-	/**
-	 * The Object should either be a Block, Item, or ItemStack. The String[] contains keys to register it under. 
-	 */
-	@Deprecated
-	public static final ArrayList<Pair<Object, String[]>> toRegisterOreDict = new ArrayList<>();
 
 	public static void init(){
-
-		RecipeHolder.millRecipes.put(new ItemRecipePredicate(Items.WHEAT, 0), new ItemStack[] {new ItemStack(Items.WHEAT_SEEDS, 3)});
-		RecipeHolder.millRecipes.put(new ItemRecipePredicate(Blocks.PUMPKIN, 0), new ItemStack[] {new ItemStack(Items.PUMPKIN_SEEDS, 8)});
-		RecipeHolder.millRecipes.put(new ItemRecipePredicate(Items.MELON, 0), new ItemStack[] {new ItemStack(Items.MELON_SEEDS, 3)});
-		RecipeHolder.millRecipes.put(new ItemRecipePredicate(Items.BONE, 0), new ItemStack[] {new ItemStack(Items.DYE, 5, DyeColor.WHITE.getDyeDamage())});
-		RecipeHolder.millRecipes.put(new TagCraftingStack("blockCoal"), new ItemStack[] {new ItemStack(Items.GUNPOWDER, 1)});
-		RecipeHolder.millRecipes.put(new ItemRecipePredicate(Blocks.NETHER_WART_BLOCK, 0), new ItemStack[] {new ItemStack(Items.NETHER_WART, 9)});
-		RecipeHolder.millRecipes.put(new TagCraftingStack("cropPotato"), new ItemStack[] {new ItemStack(CRItems.mashedPotato, 1)});
-		RecipeHolder.millRecipes.put(new TagCraftingStack("gravel"), new ItemStack[] {new ItemStack(Items.FLINT)});
-		RecipeHolder.millRecipes.put(new TagCraftingStack("blockRedstone"), new ItemStack[] {new ItemStack(Items.REDSTONE, 9)});
-		RecipeHolder.millRecipes.put(new TagCraftingStack("cobblestone"), new ItemStack[] {new ItemStack(Blocks.SAND, 1)});
-		RecipeHolder.millRecipes.put(new TagCraftingStack("stone"),  new ItemStack[] {new ItemStack(Blocks.GRAVEL, 1)});
-		RecipeHolder.millRecipes.put(new TagCraftingStack("oreQuartz"),  new ItemStack[] {new ItemStack(Items.QUARTZ, 2)});
-		RecipeHolder.millRecipes.put(new TagCraftingStack("oreDiamond"),  new ItemStack[] {new ItemStack(Items.DIAMOND, 2)});
-		RecipeHolder.millRecipes.put(new TagCraftingStack("oreCoal"),  new ItemStack[] {new ItemStack(Items.COAL, 2)});
-		RecipeHolder.millRecipes.put(new TagCraftingStack("oreRedstone"),  new ItemStack[] {new ItemStack(Items.REDSTONE, 10)});
-		RecipeHolder.millRecipes.put(new TagCraftingStack("oreLapis"),  new ItemStack[] {new ItemStack(Items.DYE, 10, DyeColor.BLUE.getDyeDamage())});
-		RecipeHolder.millRecipes.put(new TagCraftingStack("blockQuartz"),  new ItemStack[] {new ItemStack(Items.QUARTZ, 4)});
-
-		RecipeHolder.dirtyWaterRecipes.add(Pair.of(5, new ItemStack(Items.GUNPOWDER)));
-		RecipeHolder.dirtyWaterRecipes.add(Pair.of(5, new ItemStack(Items.DYE, 1, DyeColor.WHITE.getDyeDamage())));
-		RecipeHolder.dirtyWaterRecipes.add(Pair.of(25, MiscUtil.getOredictStack("dustSalt", 1)));
-		RecipeHolder.dirtyWaterRecipes.add(Pair.of(10, new ItemStack(Blocks.SAND)));
-		RecipeHolder.dirtyWaterRecipes.add(Pair.of(5, new ItemStack(Blocks.DIRT)));
-		RecipeHolder.dirtyWaterRecipes.add(Pair.of(1, new ItemStack(Items.REDSTONE)));
-
-		for(Pair<Integer, ItemStack> ent : RecipeHolder.dirtyWaterRecipes){
-			RecipeHolder.dirtyWaterWeights += ent.getLeft();
-		}
-
-		RecipeHolder.crucibleRecipes.put(new TagCraftingStack("cobblestone"), new FluidStack(FluidRegistry.LAVA, 200));
-		RecipeHolder.crucibleRecipes.put(new TagCraftingStack("obsidian"), new FluidStack(FluidRegistry.LAVA, 1_000));
-
-		RecipeHolder.coolingRecipes.put(new ItemRecipePredicate(Items.SNOWBALL, 0), 100);
-		RecipeHolder.coolingRecipes.put(new ItemRecipePredicate(Blocks.SNOW, 0), 400);
-		RecipeHolder.coolingRecipes.put(new ItemRecipePredicate(Blocks.ICE, 0), 1600);
-		RecipeHolder.coolingRecipes.put(new ItemRecipePredicate(Blocks.PACKED_ICE, 0), 1600);
-
-		RecipeHolder.fluidCoolingRecipes.put(FluidRegistry.LAVA, Pair.of(1000, Triple.of(new ItemStack(Blocks.OBSIDIAN, 1), 2500D, 1500D)));
-		RecipeHolder.fluidCoolingRecipes.put(BlockSteam.getSteam(), Pair.of(1000, Triple.of(new ItemStack(Blocks.PACKED_ICE, 1), 0D, 15D + EnergyConverters.degPerSteamBucket(false))));
-		RecipeHolder.fluidCoolingRecipes.put(BlockDistilledWater.getDistilledWater(), Pair.of(1000, Triple.of(new ItemStack(Blocks.PACKED_ICE, 1), 0D, 15D)));
-		RecipeHolder.fluidCoolingRecipes.put(Fluids.WATER, Pair.of(1000, Triple.of(new ItemStack(Blocks.ICE, 1), 0D, 15D)));
-		RecipeHolder.fluidCoolingRecipes.put(BlockMoltenCopshowium.getMoltenCopshowium(), Pair.of(EnergyConverters.INGOT_MB, Triple.of(new ItemStack(OreSetup.ingotCopshowium, 1), 1500D, 100D)));
 
 		if(CRConfig.addBoboRecipes.getBoolean()){
 			registerBoboItem(getFilledHopper(), "Vacuum Hopper", new ItemRecipePredicate(Blocks.HOPPER, 0), new TagCraftingStack("wool"), new ItemRecipePredicate(CrossroadsBlocks.fluidTube, 0));
@@ -115,25 +71,7 @@ public final class ModCrafting{
 				return false;
 			});
 			registerBoboItem(new ItemStack(CRItems.poisonVodka, 1), "Poison Vodka", new ItemRecipePredicate(CRItems.solidVitriol, 0), new ItemRecipePredicate(Items.POISONOUS_POTATO, 0), (Predicate<ItemStack>) (ItemStack stack) -> stack.getItem() instanceof Phial || stack.getItem() == Items.GLASS_BOTTLE && stack.getCount() == 1);
-			registerBoboItem(new ItemStack(CRItems.doublePoisonVodka, 1), "Double Poison Vodka", new ItemRecipePredicate(CRItems.solidVitriol, 0), new ItemRecipePredicate(Items.POISONOUS_POTATO, 0), new ItemRecipePredicate(CRItems.poisonVodka, 0));
 		}
-
-
-
-		RecipeHolder.beamExtractRecipes.put(Items.REDSTONE, new BeamUnit(18, 24, 0, 0));
-		RecipeHolder.beamExtractRecipes.put(CRItems.dustSalt, new BeamUnit(0, 18, 24, 0));
-		RecipeHolder.beamExtractRecipes.put(Items.COAL, new BeamUnit(24, 18, 0, 0));
-		RecipeHolder.beamExtractRecipes.put(Items.GLOWSTONE_DUST, new BeamUnit(4, 4, 4, 0));
-		RecipeHolder.beamExtractRecipes.put(CRItems.sulfur, new BeamUnit(32, 0, 0, 0));
-		RecipeHolder.beamExtractRecipes.put(CRItems.solidQuicksilver, new BeamUnit(0, 32, 0, 0));
-		RecipeHolder.beamExtractRecipes.put(CRItems.alchemySalt, new BeamUnit(0, 0, 32, 0));
-		RecipeHolder.beamExtractRecipes.put(Items.ENDER_PEARL, new BeamUnit(32, 0, 32, 0));
-		RecipeHolder.beamExtractRecipes.put(Items.DRAGON_BREATH, new BeamUnit(64, 0, 64, 0));
-		RecipeHolder.beamExtractRecipes.put(Items.BLAZE_POWDER, new BeamUnit(32, 16, 0, 0));
-		RecipeHolder.beamExtractRecipes.put(Items.GUNPOWDER, new BeamUnit(24, 0, 0, 0));
-		RecipeHolder.beamExtractRecipes.put(Items.SLIME_BALL, new BeamUnit(0, 24, 0, 0));
-		RecipeHolder.beamExtractRecipes.put(Items.SNOWBALL, new BeamUnit(0, 0, 24, 0));
-		RecipeHolder.beamExtractRecipes.put(Items.SUGAR, new BeamUnit(8, 12, 0, 0));
 
 		//Fusion beam
 		RecipeHolder.fusionBeamRecipes.put(new BlockRecipePredicate(Blocks.SNOW.getDefaultState(), false), new BeamTransmute(Blocks.ICE.getDefaultState(), 0));
@@ -513,42 +451,11 @@ public final class ModCrafting{
 		registerBoboItem(new ItemStack(item, 1), configName, ingr1, ingr2, ingr3);
 	}
 
-	@SuppressWarnings("unchecked")
 	private static void registerBoboItem(ItemStack item, String configName, Predicate<ItemStack> ingr1, Predicate<ItemStack> ingr2, Predicate<ItemStack> ingr3){
 		Property prop = CRConfig.config.get(CRConfig.CAT_BOBO, configName + " bobo-item recipe", true, "Default: true");
 		CRConfig.boboItemProperties.add(prop);
 		if(((ForgeConfigSpec.BooleanValue) prop).get()){
 			EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {ingr1, ingr2, ingr3}, item));
 		}
-	}
-
-	public static void initOreDict(){
-		toRegisterOreDict.add(Pair.of(new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE), new String[] {"wool"}));
-		toRegisterOreDict.add(Pair.of(Items.CHICKEN, new String[] {"meatRaw"}));
-		toRegisterOreDict.add(Pair.of(Items.PORKCHOP, new String[] {"meatRaw"}));
-		toRegisterOreDict.add(Pair.of(Items.BEEF, new String[] {"meatRaw"}));
-		toRegisterOreDict.add(Pair.of(Items.RABBIT, new String[] {"meatRaw"}));
-		toRegisterOreDict.add(Pair.of(Items.MUTTON, new String[] {"meatRaw"}));
-
-		for(Pair<Object, String[]> oreDictMapping : toRegisterOreDict){
-			Object left = oreDictMapping.getLeft();
-			if(left instanceof Block){
-				for(String key : oreDictMapping.getRight()){
-					OreDictionary.registerOre(key, (Block) oreDictMapping.getLeft());
-				}
-			}else if(left instanceof Item){
-				for(String key : oreDictMapping.getRight()){
-					OreDictionary.registerOre(key, (Item) oreDictMapping.getLeft());
-				}
-			}else if(left instanceof ItemStack){
-				for(String key : oreDictMapping.getRight()){
-					OreDictionary.registerOre(key, (ItemStack) oreDictMapping.getLeft());
-				}
-			}else{
-				throw Crossroads.logger.throwing(new ClassCastException("INVALID object in toRegisterOreDict: " + left + "; Must be Block, Item, or ItemStack."));
-			}
-
-		}
-		toRegisterOreDict.clear();
 	}
 }

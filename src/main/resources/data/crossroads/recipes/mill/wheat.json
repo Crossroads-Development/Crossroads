@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"tag": "crops/wheat"
+	},
+	"output": {
+		"item": "wheat_seeds",
+		"count": 3
+	}
+}

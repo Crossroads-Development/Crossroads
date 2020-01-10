@@ -5,10 +5,7 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.UseAction;
+import net.minecraft.item.*;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
@@ -54,15 +51,11 @@ public class PoisonVodka extends Item{
 		PlayerEntity player = entityLiving instanceof PlayerEntity ? (PlayerEntity) entityLiving : null;
 
 		if(!worldIn.isRemote){
-			entityLiving.addPotionEffect(new EffectInstance(Effects.NAUSEA, DURATION, 3));
+			entityLiving.addPotionEffect(new EffectInstance(Effects.WITHER, DURATION, 0));
+			entityLiving.addPotionEffect(new EffectInstance(Effects.NAUSEA, DURATION, 0));
 			entityLiving.addPotionEffect(new EffectInstance(Effects.SLOWNESS, DURATION, 3));
-			entityLiving.addPotionEffect(new EffectInstance(Effects.MINING_FATIGUE, DURATION, 3));
-			entityLiving.addPotionEffect(new EffectInstance(Effects.UNLUCK, DURATION, 3));
-			entityLiving.addPotionEffect(new EffectInstance(Effects.HUNGER, DURATION, 1));
-			entityLiving.addPotionEffect(new EffectInstance(Effects.POISON, DURATION, 3));
 			entityLiving.addPotionEffect(new EffectInstance(Effects.STRENGTH, DURATION, 2));
 			entityLiving.addPotionEffect(new EffectInstance(Effects.RESISTANCE, DURATION, 2));
-			entityLiving.addPotionEffect(new EffectInstance(Effects.FIRE_RESISTANCE, DURATION, 0));
 		}
 
 		if(player == null){
@@ -88,6 +81,11 @@ public class PoisonVodka extends Item{
 	@Override
 	public int getBurnTime(ItemStack itemStack){
 		return 72000;
+	}
+
+	@Override
+	public Rarity getRarity(ItemStack stack){
+		return CRItems.BOBO_RARITY;
 	}
 
 	@OnlyIn(Dist.CLIENT)

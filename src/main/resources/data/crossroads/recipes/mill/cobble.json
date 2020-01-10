@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"tag": "cobblestone"
+	},
+	"output": [
+		{
+			"item": "sand",
+			"count": 1
+		}
+	]
+}

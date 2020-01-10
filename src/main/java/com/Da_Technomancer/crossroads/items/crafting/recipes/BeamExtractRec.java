@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.items.crafting.recipes;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.google.gson.JsonObject;
 import net.minecraft.inventory.IInventory;
@@ -87,12 +88,7 @@ public class BeamExtractRec implements IRecipe<IInventory>{
 		public BeamExtractRec read(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and ingredient
 			String s = JSONUtils.getString(json, "group", "");
-			Ingredient ingredient;
-			if(JSONUtils.isJsonArray(json, "ingredient")){
-				ingredient = Ingredient.deserialize(JSONUtils.getJsonArray(json, "ingredient"));
-			}else{
-				ingredient = Ingredient.deserialize(JSONUtils.getJsonObject(json, "ingredient"));
-			}
+			Ingredient ingredient = CraftingUtil.getIngredient(json, "input", true);
 
 			//Output specified as 4 integer tags, all of which are optional and default to zero
 			int[] units = new int[4];

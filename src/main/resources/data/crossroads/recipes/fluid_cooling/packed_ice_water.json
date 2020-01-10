@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:fluid_cooling",
+	"input": {
+		"fluid": "distilled_water",
+		"amount": "1000"
+	},
+	"item": "packed_ice",
+	"max_temp": 0,
+	"temp_change": 15
+}

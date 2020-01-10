@@ -1,0 +1,8 @@
+{
+	"type": "crossroads:beam_extract",
+	"input": {
+		"item": "coal"
+	},
+	"energy" : 24,
+	"potential": 18
+}

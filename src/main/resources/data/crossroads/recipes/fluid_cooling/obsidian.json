@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:fluid_cooling",
+	"input": {
+		"fluid": "lava",
+		"amount": "1000"
+	},
+	"item": "obsidian",
+	"max_temp": 2500,
+	"temp_change": 1500
+}

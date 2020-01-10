@@ -1,0 +1,16 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"tag": "ores/lapis"
+	},
+	"output": [
+		{
+			"item": "lapis_lazuli",
+			"count": 10
+		},
+		{
+			"item": "sand",
+			"count": 1
+		}
+	]
+}

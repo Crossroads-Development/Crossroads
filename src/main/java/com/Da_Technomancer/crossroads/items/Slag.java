@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.items;
 
-import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.dispenser.IDispenseItemBehavior;
@@ -12,7 +11,6 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.tuple.Pair;
 
 public class Slag extends Item{
 
@@ -40,9 +38,7 @@ public class Slag extends Item{
 		String name = "slag";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
-
 		DispenserBlock.registerDispenseBehavior(this, SLAG_DISPENSER_BEHAVIOR);
-		ModCrafting.toRegisterOreDict.add(Pair.of(this, new String[] {"itemSlag"}));
 	}
 
 	@Override

@@ -1,0 +1,9 @@
+{
+	"type": "crossroads:beam_extract",
+	"input": {
+		"tag": "dusts/glowstone"
+	},
+	"energy" : 4,
+	"potential": 4,
+	"stability": 4
+}

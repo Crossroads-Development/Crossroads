@@ -1,0 +1,5 @@
+{
+	"type": "crossroads:cooling",
+	"item": "snowball",
+	"cooling": 100
+}

@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.items.crafting.recipes;
 
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -15,7 +15,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
@@ -100,39 +99,23 @@ public class MillRec implements IRecipe<IInventory>{
 		public MillRec read(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and ingredient
 			String s = JSONUtils.getString(json, "group", "");
-			Ingredient ingredient;
-			if(JSONUtils.isJsonArray(json, "ingredient")){
-				ingredient = Ingredient.deserialize(JSONUtils.getJsonArray(json, "ingredient"));
-			}else{
-				ingredient = Ingredient.deserialize(JSONUtils.getJsonObject(json, "ingredient"));
-			}
+			Ingredient ingredient = CraftingUtil.getIngredient(json, "input", true);
 
-			//Output(s) can be specified in one of 3 ways:
-			//Directly with normal result and count tag for one output,
+			//Output(s) can be specified in one of 2 ways:
 			//As an array ("output") of objects, where each object contains a result and count,
 			//As a single object ("output") containing result and count for one output
 
 			ItemStack[] outputs;
-			if(JSONUtils.hasField(json, "result")){
-				String s1 = JSONUtils.getString(json, "result");
-				int i = JSONUtils.getInt(json, "count");
-				outputs = new ItemStack[1];
-				outputs[0] = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(s1)), i);
-			}else if(JSONUtils.isJsonArray(json, "output")){
+			if(JSONUtils.isJsonArray(json, "output")){
 				JsonArray array = JSONUtils.getJsonArray(json, "output");
 				outputs = new ItemStack[Math.min(3, array.size())];
 				for(int i = 0; i < outputs.length; i++){
-					JsonElement outputObj = array.get(i);
-					String s1 = JSONUtils.getString(outputObj, "result");
-					int count = JSONUtils.getInt(outputObj, "count");
-					outputs[i] = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(s1)), count);
+					JsonObject outputObj = array.get(i).getAsJsonObject();
+					outputs[i] = CraftingUtil.getItemStack(outputObj, "", true, false);
 				}
 			}else{
-				JsonObject outputObj = JSONUtils.getJsonObject(json, "output");
-				String s1 = JSONUtils.getString(outputObj, "result");
-				int i = JSONUtils.getInt(outputObj, "count");
 				outputs = new ItemStack[1];
-				outputs[i] = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(s1)), i);
+				outputs[0] = CraftingUtil.getItemStack(json, "output", false, false);
 			}
 
 			return new MillRec(recipeId, s, ingredient, outputs);

@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
-import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
@@ -11,9 +10,6 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.registration.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-
-import java.util.ArrayList;
-import java.util.Map.Entry;
 
 @JeiPlugin
 @SuppressWarnings("unused")
@@ -50,9 +46,7 @@ public class JEICrossroadsPlugin implements IModPlugin{
 
 	@Override
 	public void registerRecipes(IRecipeRegistration registration){
-		for(Entry<ResourceLocation, ArrayList<Object>> recipeGroup : RecipeHolder.JEIWrappers.entrySet()){
-			registration.addRecipes(recipeGroup.getValue(), recipeGroup.getKey());
-		}
+		//TODO load the JSON recipes into JEI
 	}
 
 	@Override

@@ -1,9 +1,11 @@
 package com.Da_Technomancer.crossroads.items.crafting.recipes;
 
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.google.gson.JsonObject;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -86,10 +88,8 @@ public class DirtyWaterRec implements IRecipe<IInventory>{
 		public DirtyWaterRec read(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and output
 			String s = JSONUtils.getString(json, "group", "");
-			String s1 = JSONUtils.getString(json, "result");
-			int i = JSONUtils.getInt(json, "count");
-			ItemStack output = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(s1)), i);
-			int weight = JSONUtils.getInt(json, "weight");
+			ItemStack output = CraftingUtil.getItemStack(json, "output", true, true);
+			int weight = JSONUtils.getInt(json, "weight", 0);
 			return new DirtyWaterRec(recipeId, s, output, weight);
 		}
 

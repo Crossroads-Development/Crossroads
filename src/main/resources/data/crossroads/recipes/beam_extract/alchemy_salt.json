@@ -1,0 +1,7 @@
+{
+	"type": "crossroads:beam_extract",
+	"input": {
+		"tag": "crossroads:dusts/alchemy_salt"
+	},
+	"stability" : 32
+}

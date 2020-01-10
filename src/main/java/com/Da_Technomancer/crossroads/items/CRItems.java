@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Rarity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -39,6 +40,8 @@ public final class CRItems{
 	};
 
 	public static final Item.Properties itemProp = new Item.Properties().group(TAB_CROSSROADS);
+
+	public static final Rarity BOBO_RARITY = Rarity.EPIC;
 	
 	public static CheatWandRotary debugGearWriter;
 	public static CheatWandHeat debugHeatWriter;
@@ -80,7 +83,6 @@ public final class CRItems{
 	public static LeydenJar leydenJar;
 	public static Nitroglycerin nitroglycerin;
 	public static PoisonVodka poisonVodka;
-	public static DoublePoisonVodka doublePoisonVodka;
 	public static Item solidQuicksilver;
 	public static Item solidFusas;
 	public static Item solidEldrine;
@@ -144,7 +146,6 @@ public final class CRItems{
 		leydenJar = new LeydenJar();
 		nitroglycerin = new Nitroglycerin();
 		poisonVodka = new PoisonVodka();
-		doublePoisonVodka = new DoublePoisonVodka();
 		toRegister.add(solidQuicksilver = new Item(itemProp).setRegistryName("solid_quicksilver"));
 		toRegister.add(solidFusas = new Item(itemProp).setRegistryName("solid_fusas"));
 		toRegister.add(solidEldrine = new Item(itemProp).setRegistryName("solid_eldrine"));
