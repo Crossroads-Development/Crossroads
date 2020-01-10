@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:fat_congealer"
+					"name": "crossroads:fat_congealer"
 				}
 			],
 			"conditions": [

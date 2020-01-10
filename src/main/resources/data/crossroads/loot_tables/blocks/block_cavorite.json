@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:block_cavorite"
+					"name": "crossroads:block_cavorite"
 				}
 			],
 			"conditions": [

@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:tesla_coil"
+					"name": "crossroads:tesla_coil"
 				}
 			],
 			"conditions": [

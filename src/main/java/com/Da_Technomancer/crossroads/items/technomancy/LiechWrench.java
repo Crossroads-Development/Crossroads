@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.common.collect.Multimap;
 import net.minecraft.block.BlockState;
@@ -12,7 +13,11 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -20,41 +25,32 @@ import java.util.List;
 public class LiechWrench extends Item{
 
 	public LiechWrench(){
+		super(CRItems.itemProp.addToolType(ToolType.PICKAXE, 1).addToolType(ToolType.SHOVEL, 1).addToolType(ToolType.AXE, 1).maxStackSize(1));
 		String name = "liech_wrench";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setHarvestLevel("pickaxe", 1);
-		setHarvestLevel("shovel", 1);
-		setHarvestLevel("axe", 1);
 		CRItems.toRegister.add(this);
 		//This item is registered as a wrench in the wrench tag
 	}
 
 	@Override
-	public boolean doesSneakBypassUse(ItemStack stack, net.minecraft.world.IBlockAccess world, BlockPos pos, PlayerEntity player){
+	public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, PlayerEntity player){
 		return true;
 	}
 
 	@Override
-	public int getHarvestLevel(ItemStack stack, String toolClass, @Nullable PlayerEntity player, @Nullable BlockState blockState){
-		return 1;
-	}
-
-	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
-		tooltip.add("The poor man's multitool");
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+		tooltip.add(new TranslationTextComponent("tt.crossroads.liech_wrench.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override
 	public float getDestroySpeed(ItemStack stack, BlockState state){
 		Material mat = state.getMaterial();
-		if(mat == Material.WOOD || mat == Material.PLANTS || mat == Material.VINE){
+		if(mat == Material.WOOD || mat == Material.PLANTS || mat == Material.TALL_PLANTS){
 			return 4F;
 		}
 
-		for(String type : getToolClasses(stack)){
-			if(state.getBlock().isToolEffective(type, state)){
+		for(ToolType type : getToolTypes(stack)){
+			if(state.getBlock().isToolEffective(state, type)){
 				return 4F;
 			}
 		}
@@ -66,8 +62,8 @@ public class LiechWrench extends Item{
 		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
 
 		if (slot == EquipmentSlotType.MAINHAND){
-			multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 4, 0));
-			multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -2.4D, 0));
+			multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 4, AttributeModifier.Operation.ADDITION));
+			multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -2.4D, AttributeModifier.Operation.ADDITION));
 		}
 
 		return multimap;

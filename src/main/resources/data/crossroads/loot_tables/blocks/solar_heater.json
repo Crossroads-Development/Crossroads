@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:solar_heater"
+					"name": "crossroads:solar_heater"
 				}
 			],
 			"conditions": [

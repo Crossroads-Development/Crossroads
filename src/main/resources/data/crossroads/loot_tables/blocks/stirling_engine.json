@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:stirling_engine"
+					"name": "crossroads:stirling_engine"
 				}
 			],
 			"conditions": [

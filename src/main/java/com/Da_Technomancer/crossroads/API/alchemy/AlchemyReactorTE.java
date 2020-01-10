@@ -14,7 +14,7 @@ import net.minecraft.world.server.ServerWorld;
 import java.util.ArrayList;
 
 /**
- * Implementations must implement hasCapability and getCapability directly. 
+ * Implementations must implement getCapability directly.
  */
 public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReactionChamber{
 

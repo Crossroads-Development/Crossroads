@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:math_axis"
+					"name": "crossroads:math_axis"
 				}
 			],
 			"conditions": [

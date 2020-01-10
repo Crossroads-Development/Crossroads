@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:detailed_crafter"
+					"name": "crossroads:detailed_crafter"
 				}
 			],
 			"conditions": [

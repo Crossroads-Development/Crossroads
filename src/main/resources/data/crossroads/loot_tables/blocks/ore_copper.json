@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:ore_copper"
+					"name": "crossroads:ore_copper"
 				}
 			],
 			"conditions": [

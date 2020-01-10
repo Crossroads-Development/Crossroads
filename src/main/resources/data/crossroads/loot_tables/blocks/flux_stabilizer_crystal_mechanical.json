@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:flux_stabilizer_crystal_mechanical"
+					"name": "crossroads:flux_stabilizer_crystal_mechanical"
 				}
 			],
 			"conditions": [

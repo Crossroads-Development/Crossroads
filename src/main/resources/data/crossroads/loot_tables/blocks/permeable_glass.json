@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:permeable_glass"
+					"name": "crossroads:permeable_glass"
 				}
 			],
 			"conditions": [

@@ -27,7 +27,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.ConfigValue<List<? extends String>> processableOres;
 	public static ForgeConfigSpec.ConfigValue<List<? extends String>> gearTypes;
 	public static ForgeConfigSpec.DoubleValue speedPrecision;
-	public static ForgeConfigSpec.ConfigValue<String> retrogen;
+//	public static ForgeConfigSpec.ConfigValue<String> retrogen;
 	public static ForgeConfigSpec.BooleanValue heatEffects;
 	public static ForgeConfigSpec.BooleanValue allowAllSingle;
 	public static ForgeConfigSpec.BooleanValue allowAllServer;
@@ -111,7 +111,7 @@ public class CRConfig{
 		genTinOre = serverBuilder.comment("Generate Tin Ore?").define("tin", true);
 		genRubyOre = serverBuilder.comment("Generate Ruby Ore?").define("ruby", true);
 		genVoidOre = serverBuilder.comment("Generate Void Crystal Ore?").define("void", true);
-		retrogen = serverBuilder.comment("Retrogen Key", "Changing this value will cause retrogen. Leaving it blank disables retrogen", "Turn this off when you are done!").define("retrogen", "");
+//		retrogen = serverBuilder.comment("Retrogen Key", "Changing this value will cause retrogen. Leaving it blank disables retrogen", "Turn this off when you are done!").define("retrogen", "");
 		processableOres = serverBuilder.comment("Metal ore types that Crossroads machines should be able to process", "Specify the metal then a space then a hexadecimal color, ex. \"copper FF4800\"").define("process_ores", initList("copper FF7800", "tin C8C8C8", "iron A0A0A0", "gold FFFF00"), compileRegex("\\w++ \\p{XDigit}{6}+"));
 		gearTypes = serverBuilder.comment("Metal types that Crossroads should add gears for", "Specify the metal then a space then a hexadecimal color then a space then a density in kg/m3, ex. \"copper FF783C 9000\"").define("gear_types", initList("copper FF783C 9000", "tin F0F0F0 7300", "iron A0A0A0 8000", "gold FFFF00 20000", "bronze FFA03C 8800", "copshowium FF8200 0", "lead 74699E 11000", "silver BDF3EE 10000", "nickel F1F2C4 9000", "invar DFEDD8 8000", "platinum 74F5FF 21000", "electrum FEFF8A 15000"), compileRegex("\\w++ \\p{XDigit}{6}+ [+]?[0-9]*\\.?[0-9]+"));
 		serverBuilder.pop();

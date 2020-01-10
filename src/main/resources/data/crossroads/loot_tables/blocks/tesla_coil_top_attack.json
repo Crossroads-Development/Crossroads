@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:tesla_coil_top_attack"
+					"name": "crossroads:tesla_coil_top_attack"
 				}
 			],
 			"conditions": [

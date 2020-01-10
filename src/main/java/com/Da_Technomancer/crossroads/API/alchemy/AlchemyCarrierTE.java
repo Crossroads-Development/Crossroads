@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.particles.CRParticles;
 import com.Da_Technomancer.crossroads.particles.ColorParticleData;
@@ -26,7 +27,9 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.IItemHandler;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -584,6 +587,94 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 			}
 
 			return FluidStack.EMPTY;
+		}
+	}
+
+	protected class ItemHandler implements IItemHandler{
+
+		private ItemStack[] fakeInventory = new ItemStack[AlchemyCore.ITEM_TO_REAGENT.size()];
+
+		private void updateFakeInv(){
+			fakeInventory = new ItemStack[AlchemyCore.ITEM_TO_REAGENT.size()];
+			int index = 0;
+			double endTemp = handler.getTemp();
+			for(IReagent reag : AlchemyCore.ITEM_TO_REAGENT.values()){
+				int qty = contents.getQty(reag);
+				ReagentStack rStack = contents.getStack(reag);
+				fakeInventory[index] = qty != 0 && reag.getPhase(endTemp) == EnumMatterPhase.SOLID ? reag.getStackFromReagent(rStack) : ItemStack.EMPTY;
+				index++;
+			}
+		}
+
+		@Override
+		public int getSlots(){
+			return AlchemyCore.ITEM_TO_REAGENT.size();
+		}
+
+		@Override
+		public ItemStack getStackInSlot(int slot){
+			updateFakeInv();
+			return fakeInventory[slot];
+		}
+
+		@Override
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
+			if(!stack.isEmpty()){
+				IReagent reag = AlchemyCore.ITEM_TO_REAGENT.get(stack.getItem());
+				if(reag != null){
+					if(dirtyReag){
+						correctReag();
+					}
+					ItemStack testStack = stack.copy();
+					testStack.setCount(1);
+					int trans = Math.min(stack.getCount(), transferCapacity() - contents.getTotalQty());
+					if(!simulate){
+						double itemTemp = HeatUtil.convertBiomeTemp(world, pos);
+						if(itemTemp >= reag.getMeltingPoint()){
+							itemTemp = Math.min(HeatUtil.ABSOLUTE_ZERO, reag.getMeltingPoint() - 100D);
+						}
+						contents.addReagent(reag, trans, itemTemp);
+						dirtyReag = true;
+						markDirty();
+					}
+					testStack.setCount(stack.getCount() - trans);
+					return testStack;
+				}
+			}
+			return stack;
+		}
+
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate){
+			updateFakeInv();
+			int canExtract = Math.min(fakeInventory[slot].getCount(), amount);
+			if(canExtract > 0){
+				try{
+					ItemStack outStack = fakeInventory[slot].copy();
+					outStack.setCount(canExtract);
+					if(!simulate){
+						IReagent reag = AlchemyCore.ITEM_TO_REAGENT.get(fakeInventory[slot].getItem());
+						contents.removeReagent(reag, canExtract);
+						dirtyReag = true;
+						markDirty();
+					}
+					return outStack;
+				}catch(NullPointerException e){
+					Crossroads.logger.log(Level.FATAL, "Alchemy Item/Reagent map error. Slot: " + slot + ", Stack: " + fakeInventory[slot], e);
+				}
+			}
+
+			return ItemStack.EMPTY;
+		}
+
+		@Override
+		public int getSlotLimit(int slot){
+			return 10;
+		}
+
+		@Override
+		public boolean isItemValid(int slot, @Nonnull ItemStack stack){
+			return AlchemyCore.ITEM_TO_REAGENT.get(stack.getItem()) != null;
 		}
 	}
 }

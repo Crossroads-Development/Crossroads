@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:water_centrifuge"
+					"name": "crossroads:water_centrifuge"
 				}
 			],
 			"conditions": [

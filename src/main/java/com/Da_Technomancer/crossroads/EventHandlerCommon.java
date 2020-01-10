@@ -35,7 +35,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.ServerWorld;
+import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.server.ServerChunkProvider;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
@@ -52,69 +55,41 @@ import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 public final class EventHandlerCommon{
 
+	private static final Field entityList = ReflectionUtil.reflectField(CrReflection.ENTITY_LIST);
+
 	@SubscribeEvent
+	@SuppressWarnings("unused")
 	public void onEntitySpawn(LivingSpawnEvent e){
-		for(Entity ent : e.getWorld().loadedEntityList){
-			if(ent instanceof EntityGhostMarker){
-				EntityGhostMarker mark = (EntityGhostMarker) ent;
-				if(mark.getType() == EntityGhostMarker.EnumMarkerType.BLOCK_SPAWNING && mark.data != null && mark.getPositionVector().subtract(e.getEntity().getPositionVector()).length() <= mark.data.getInt("range")){
-					e.setCanceled(true);
-					return;
+		if(entityList != null && e.getWorld() instanceof ServerWorld){
+			ServerWorld world = (ServerWorld) e.getWorld();
+			List<Entity> entities;
+			try{
+				entities = (List<Entity>) entityList.get(world);
+			}catch(IllegalAccessException | ClassCastException ex){
+				Crossroads.logger.error(ex);
+				return;
+			}
+			for(Entity ent : entities){
+				if(ent instanceof EntityGhostMarker){
+					EntityGhostMarker mark = (EntityGhostMarker) ent;
+					if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.BLOCK_SPAWNING && mark.data != null && mark.getPositionVector().subtract(e.getEntity().getPositionVector()).length() <= mark.data.getInt("range")){
+						e.setCanceled(true);
+						return;
+					}
 				}
 			}
 		}
 
-
-		if(e.getEntity() instanceof CreeperEntity && (float) AtmosChargeSavedData.getCharge(e.getWorld()) / (float) AtmosChargeSavedData.getCapacity() >= 0.9F && (CRConfig.atmosEffect.get() & 2) == 2){
+		if(e.getWorld() instanceof ServerWorld && e.getEntity() instanceof CreeperEntity && (float) AtmosChargeSavedData.getCharge((ServerWorld) e.getWorld()) / (float) AtmosChargeSavedData.getCapacity() >= 0.9F && (CRConfig.atmosEffect.get() & 2) == 2){
 			CompoundNBT nbt = new CompoundNBT();
-			e.getEntityLiving().writeEntityToNBT(nbt);
+			e.getEntityLiving().writeAdditional(nbt);
 			nbt.putBoolean("powered", true);
-			e.getEntityLiving().readEntityFromNBT(nbt);
-		}
-	}
-
-	private static final Random RAND = new Random();
-	private static final ArrayList<Chunk> TO_RETROGEN = new ArrayList<>();
-	protected static Ticket loadingTicket;
-
-	/**
-	 * Only should be called on the virtual server side.
-	 */
-	public static void updateLoadedPrototypeChunks(){
-		PrototypeWorldSavedData data = PrototypeWorldSavedData.get(false);
-
-		ArrayList<ChunkPos> toLoad = new ArrayList<>();
-		for(PrototypeInfo info : data.prototypes){
-			if(info != null && info.owner != null && info.owner.get() != null){
-				info.owner.get().loadTick();
-				if(info.owner.get().shouldRun()){
-					toLoad.add(info.chunk);
-				}
-			}
-		}
-
-		boolean emptyTicket = loadingTicket == null || loadingTicket.getChunkList().isEmpty();
-
-		if(emptyTicket ? !toLoad.isEmpty() : !toLoad.containsAll(loadingTicket.getChunkList()) || !loadingTicket.getChunkList().containsAll(toLoad)){
-			ForgeChunkManager.releaseTicket(loadingTicket);
-			if(toLoad.isEmpty()){
-				loadingTicket = null;
-			}else{
-				ServerWorld protWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
-				if(protWorld == null){
-					DimensionManager.initDimension(ModDimensions.PROTOTYPE_DIM_ID);
-					protWorld = DimensionManager.getWorld(ModDimensions.PROTOTYPE_DIM_ID);
-				}
-				loadingTicket = ForgeChunkManager.requestTicket(Crossroads.instance, protWorld, ForgeChunkManager.Type.NORMAL);
-			}
-
-			for(ChunkPos chunk : toLoad){
-				ForgeChunkManager.forceChunk(loadingTicket, chunk);
-			}
+			e.getEntityLiving().readAdditional(nbt);
 		}
 	}
 
@@ -123,29 +98,8 @@ public final class EventHandlerCommon{
 	protected static final String SUB_KEY = "cr_pause_prior";
 
 	@SubscribeEvent
+	@SuppressWarnings("unused")
 	public void worldTick(TickEvent.WorldTickEvent e){
-		//Retrogen
-		if(TO_RETROGEN.size() != 0){
-			Chunk chunk = TO_RETROGEN.get(0);
-			CommonProxy.WORLD_GEN.generate(RAND, chunk.x, chunk.z, chunk.getWorld(), null, null);
-			TO_RETROGEN.remove(0);
-		}
-
-		//Prototype chunk loading
-		//Only should be called on the server side.
-		if(!e.world.isRemote && e.phase == TickEvent.Phase.START && e.world.provider.getDimension() == 0){
-			e.world.getProfiler().startSection(Crossroads.MODNAME + "-Prototype Loading Control");
-			if(e.world.getGameTime() % 20 == 0){
-				updateLoadedPrototypeChunks();
-			}
-			e.world.getProfiler().endSection();
-
-			BeamManager.beamStage = (int) (e.world.getGameTime() % BeamManager.BEAM_TIME);
-			//BeamManager.resetVisual = e.world.getGameTime() % (20 * BeamManager.BEAM_TIME) < BeamManager.BEAM_TIME;
-			BeamManager.cycleNumber = e.world.getGameTime() / BeamManager.BEAM_TIME;
-		}
-
-
 		//Time Dilation
 		if(!e.world.isRemote && e.phase == TickEvent.Phase.START){
 			e.world.getProfiler().startSection(Crossroads.MODNAME + ": Entity Time Dilation");
@@ -184,26 +138,27 @@ public final class EventHandlerCommon{
 			e.world.getProfiler().endSection();
 		}
 
+
 		//Temporal Entropy decay
 		if(!e.world.isRemote && e.phase == TickEvent.Phase.START){
-			EntropySavedData.addEntropy(e.world, -CRConfig.entropyDecayRate.get());
+			EntropySavedData.addEntropy((ServerWorld) e.world, -CRConfig.entropyDecayRate.get());
 		}
 
 
 		//Atmospheric overcharge effect
 		if(!e.world.isRemote && (CRConfig.atmosEffect.get() & 1) == 1){
 			e.world.getProfiler().startSection(Crossroads.MODNAME + ": Overcharge lightning effects");
-			float chargeLevel = (float) AtmosChargeSavedData.getCharge(e.world) / (float) AtmosChargeSavedData.getCapacity();
+			float chargeLevel = (float) AtmosChargeSavedData.getCharge((ServerWorld) e.world) / (float) AtmosChargeSavedData.getCapacity();
 			if(chargeLevel > 0.5F){
-				Iterator<Chunk> iterator = e.world.getPersistentChunkIterable(((ServerWorld) (e.world)).getPlayerChunkMap().getChunkIterator());
+				Iterator<Chunk> iterator = ((ServerChunkProvider) e.world.getChunkProvider()).chunkManager.getPersistentChunkIterable(((ServerWorld) (e.world)).getPlayerChunkMap().getChunkIterator());
 				while(iterator.hasNext()){
 					Chunk chunk = iterator.next();
-					int j = chunk.x * 16;
-					int k = chunk.z * 16;
+					int j = chunk.getPos().x * 16;
+					int k = chunk.getPos().z * 16;
 					chunk.enqueueRelightChecks();
 					chunk.onTick(false);
 
-					if (e.world.provider.canDoLightning(chunk) && e.world.rand.nextInt(350_000 - (int) (300_000 * chargeLevel)) == 0){
+					if(e.world.provider.canDoLightning(chunk) && e.world.rand.nextInt(350_000 - (int) (300_000 * chargeLevel)) == 0){
 						//Determine the position of the lightning strike
 						int tarX = j + e.world.rand.nextInt(16);
 						int tarZ = k + e.world.rand.nextInt(16);
@@ -219,7 +174,6 @@ public final class EventHandlerCommon{
 							}
 						});
 
-
 						if(ents.isEmpty()){
 							if(tarY == -1){
 								tarY += 2;
@@ -228,17 +182,15 @@ public final class EventHandlerCommon{
 						}else{
 							tarPos = ents.get(e.world.rand.nextInt(ents.size())).getPosition();
 						}
-
-
 						if(e.world.getGameRules().getBoolean("doMobSpawning") && e.world.rand.nextDouble() < e.world.getDifficultyForLocation(tarPos).getAdditionalDifficulty() * 0.01D){
 							SkeletonHorseEntity entityskeletonhorse = new SkeletonHorseEntity(e.world);
 							entityskeletonhorse.setTrap(true);
 							entityskeletonhorse.setGrowingAge(0);
 							entityskeletonhorse.setPosition(tarX, tarY, tarZ);
 							e.world.addEntity(entityskeletonhorse);
-							e.world.addLightningBolt(new LightningBoltEntity(e.world, tarX, tarY, tarZ, true));
+							((ServerWorld) e.world).addLightningBolt(new LightningBoltEntity(e.world, tarX, tarY, tarZ, true));
 						}else{
-							e.world.addLightningBolt(new LightningBoltEntity(e.world, tarX, tarY, tarZ, false));
+							((ServerWorld) e.world).addLightningBolt(new LightningBoltEntity(e.world, tarX, tarY, tarZ, false));
 						}
 					}
 				}
@@ -248,28 +200,23 @@ public final class EventHandlerCommon{
 	}
 
 	@SubscribeEvent
-	public void buildRetrogenList(ChunkDataEvent.Load e) {
-		if (!CRConfig.retrogen.getString().isEmpty()) {
-			CompoundNBT tag = e.getData().getCompound(Crossroads.MODID);
-			e.getData().put(Crossroads.MODID, tag);
-
-			if (!tag.contains(CRConfig.retrogen.getString())) {
-				tag.putBoolean(CRConfig.retrogen.getString(), true);
-				TO_RETROGEN.add(e.getChunk());
-			}
-		}
-	}
-
-	@SubscribeEvent
+	@SuppressWarnings("unused")
 	public void craftGoggles(AnvilUpdateEvent e){
 		if(e.getLeft().getItem() == CRItems.moduleGoggles){
+			if(!e.getLeft().hasTag()){
+				e.getLeft().setTag(new CompoundNBT());
+			}
+			CompoundNBT nbt = e.getLeft().getTag();
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
-				if(lens.matchesRecipe(e.getRight()) && (!e.getLeft().hasTag() || !e.getLeft().getTag().contains(lens.name()))){
+				if(lens.matchesRecipe(e.getRight()) && !nbt.contains(lens.name())){
 					ItemStack out = e.getLeft().copy();
-					if(!out.hasTag()){
-						out.put(new CompoundNBT());
+					int cost = 1;
+					for(EnumGoggleLenses otherLens : EnumGoggleLenses.values()){
+						if(nbt.contains(otherLens.name())){
+							cost *= 2;
+						}
 					}
-					e.setCost((int) Math.pow(2, out.getTag().getSize()));
+					e.setCost(cost);
 					out.getTag().putBoolean(lens.name(), true);
 					e.setOutput(out);
 					e.setMaterialCost(1);
@@ -280,6 +227,7 @@ public final class EventHandlerCommon{
 	}
 
 	@SubscribeEvent
+	@SuppressWarnings("unused")
 	public void syncPlayerTagToClient(EntityJoinWorldEvent e){
 		//The down-side of using this event is that every time the player switches dimension, the update data has to be resent.
 
@@ -289,6 +237,7 @@ public final class EventHandlerCommon{
 	}
 
 	@SubscribeEvent
+	@SuppressWarnings("unused")
 	public void damageTaken(LivingHurtEvent e){
 		if(e.getSource() == DamageSource.FALL){
 			LivingEntity ent = e.getEntityLiving();
@@ -312,31 +261,45 @@ public final class EventHandlerCommon{
 
 	private static final Field explosionPower = ReflectionUtil.reflectField(CrReflection.EXPLOSION_POWER);
 	private static final Field explosionSmoking = ReflectionUtil.reflectField(CrReflection.EXPLOSION_SMOKE);
+	private static final Field explosionMode = ReflectionUtil.reflectField(CrReflection.EXPLOSION_MODE);
 
 	@SubscribeEvent
+	@SuppressWarnings("unused")
 	public void modifyExplosion(ExplosionEvent.Start e){
+		if(entityList == null || !(e.getWorld() instanceof ServerWorld)){
+			return;
+		}
+
+		List<Entity> entities;
+		try{
+			entities = (List<Entity>) entityList.get(e.getWorld());
+		}catch(IllegalAccessException ex){
+			Crossroads.logger.error(ex);
+			return;
+		}
 		boolean perpetuate = false;
-		for(Entity ent : e.getWorld().loadedEntityList){
+		for(Entity ent : entities){
 			if(ent instanceof EntityGhostMarker){
 				EntityGhostMarker mark = (EntityGhostMarker) ent;
-				if(mark.getType() == EntityGhostMarker.EnumMarkerType.EQUILIBRIUM && mark.data != null && mark.getPositionVector().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInt("range")){
+				if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.EQUILIBRIUM && mark.data != null && mark.getPositionVector().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInt("range")){
 					e.setCanceled(true);
 					return;
-				}else if(mark.getType() == EntityGhostMarker.EnumMarkerType.VOID_EQUILIBRIUM && mark.data != null && mark.getPositionVector().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInt("range")){
+				}else if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.VOID_EQUILIBRIUM && mark.data != null && mark.getPositionVector().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInt("range")){
 					perpetuate = true;
 				}
 			}
 		}
 
-		if(perpetuate && explosionPower != null && explosionSmoking != null){
+		if(perpetuate && explosionPower != null && explosionSmoking != null && explosionMode != null){
 			EntityGhostMarker marker = new EntityGhostMarker(e.getWorld(), EntityGhostMarker.EnumMarkerType.DELAYED_EXPLOSION, 5);
 			marker.setPosition(e.getExplosion().getPosition().x, e.getExplosion().getPosition().y, e.getExplosion().getPosition().z);
 			CompoundNBT data = new CompoundNBT();
 			try{
 				data.putFloat("power", explosionPower.getFloat(e.getExplosion()));
-				data.putString("blast_type", explosionSmoking.getBoolean(e.getExplosion()));//TODO Should have string enum name for blast mode
+				data.putBoolean("flaming", explosionSmoking.getBoolean(e.getExplosion()));
+				data.putString("blast_type", ((Explosion.Mode) explosionMode.get(e.getExplosion())).name());
 			}catch(IllegalAccessException ex){
-				Crossroads.logger.error("Failed to perpetuate explosion. Dim: " + e.getWorld().provider.getDimension() + "; Pos: " + e.getExplosion().getPosition());
+				Crossroads.logger.error("Failed to perpetuate explosion. Dim: " + e.getWorld().dimension + "; Pos: " + e.getExplosion().getPosition());
 			}
 			marker.data = data;
 			e.getWorld().addEntity(marker);

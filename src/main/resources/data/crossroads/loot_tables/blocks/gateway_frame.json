@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:gateway_frame"
+					"name": "crossroads:gateway_frame"
 				}
 			],
 			"conditions": [

@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:master_axis_crystal"
+					"name": "crossroads:master_axis_crystal"
 				}
 			],
 			"conditions": [

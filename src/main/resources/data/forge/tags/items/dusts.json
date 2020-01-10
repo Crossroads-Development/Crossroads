@@ -1,0 +1,18 @@
+{
+	"replace": false,
+	"values": [
+		"#forge:dusts/salt",
+		"#forge:dusts/slag",
+		"#forge:dusts/sulfur",
+		"#crossroads:dusts/adamant",
+		"#crossroads:dusts/alchemy_salt",
+		"#crossroads:dusts/aqua_regia",
+		"#crossroads:dusts/bedrock",
+		"#crossroads:dusts/chlorine",
+		"#crossroads:dusts/hydrochloric_acid",
+		"#crossroads:dusts/nitric_acid",
+		"#crossroads:dusts/sulfur_dioxide",
+		"#crossroads:dusts/sulfuric_acid",
+		"#crossroads:dusts/vanadium"
+	]
+}

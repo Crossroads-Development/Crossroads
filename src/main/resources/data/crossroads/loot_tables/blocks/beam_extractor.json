@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:beam_extractor"
+					"name": "crossroads:beam_extractor"
 				}
 			],
 			"conditions": [

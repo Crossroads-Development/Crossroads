@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:block_ruby"
+					"name": "crossroads:block_ruby"
 				}
 			],
 			"conditions": [

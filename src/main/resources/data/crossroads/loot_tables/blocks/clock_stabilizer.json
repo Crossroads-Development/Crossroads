@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:clock_stabilizer"
+					"name": "crossroads:clock_stabilizer"
 				}
 			],
 			"conditions": [

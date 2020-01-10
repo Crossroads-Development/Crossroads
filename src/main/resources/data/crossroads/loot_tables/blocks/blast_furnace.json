@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:blast_furnace"
+					"name": "crossroads:blast_furnace"
 				}
 			],
 			"conditions": [

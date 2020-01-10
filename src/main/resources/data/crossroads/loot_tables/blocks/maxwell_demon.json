@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:maxwell_demon"
+					"name": "crossroads:maxwell_demon"
 				}
 			],
 			"conditions": [

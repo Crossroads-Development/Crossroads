@@ -5,6 +5,7 @@ import net.minecraft.client.gui.NewChatGui;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.ZombieVillagerEntity;
 import net.minecraft.world.Explosion;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 
@@ -14,7 +15,9 @@ public enum CrReflection implements ReflectionUtil.IReflectionKey{
 	CURE_ZOMBIE(ZombieVillagerEntity.class, "startConverting", "func_191991_a", "Cure zombie villagers with SO2"),
 	EXPLOSION_POWER(Explosion.class, "size", "field_77280_f", "Perpetuate explosions with Collapse beams (1)"),
 	EXPLOSION_SMOKE(Explosion.class, "causesFire", "field_77286_a", "Perpetuate explosions with Collapse beams (2)"),
-	SWING_TIME(LivingEntity.class, "ticksSinceLastSwing", "field_184617_aD", "Mechanical Arm attacking");
+	EXPLOSION_MODE(Explosion.class, "mode", "field_222260_b", "Perpetuate explosions with Collapse beams (3)"),
+	SWING_TIME(LivingEntity.class, "ticksSinceLastSwing", "field_184617_aD", "Mechanical Arm attacking"),
+	ENTITY_LIST(ServerWorld.class, "globalEntities", "field_217497_w", "Prevent mob spawning with Closure beams, modify explosions with Collapse/Equilibrium beams");
 
 	private final Class<?> clazz;
 	public final String obf;//Obfuscated name

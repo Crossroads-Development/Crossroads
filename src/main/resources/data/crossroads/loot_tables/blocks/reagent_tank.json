@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:reagent_tank"
+					"name": "crossroads:reagent_tank"
 				}
 			],
 			"conditions": [

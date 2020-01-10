@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:heating_chamber"
+					"name": "crossroads:heating_chamber"
 				}
 			],
 			"conditions": [

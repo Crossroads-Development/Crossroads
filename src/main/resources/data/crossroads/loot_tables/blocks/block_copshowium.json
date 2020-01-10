@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:block_copshowium"
+					"name": "crossroads:block_copshowium"
 				}
 			],
 			"conditions": [

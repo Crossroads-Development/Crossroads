@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:fat_feeder"
+					"name": "crossroads:fat_feeder"
 				}
 			],
 			"conditions": [

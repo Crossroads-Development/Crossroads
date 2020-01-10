@@ -17,137 +17,135 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.HandSide;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.List;
+import java.util.Optional;
 
 public class StaffTechnomancy extends BeamUsingItem{
 
 	public StaffTechnomancy(){
+		super(CRItems.itemProp.maxStackSize(1));
 		String name = "staff_technomancy";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setMaxStackSize(1);
 		CRItems.toRegister.add(this);
 	}
 
 	@Override
-	public void onUsingTick(ItemStack stack, LivingEntity player, int count){
-		super.onUsingTick(stack, player, count);
-		if(!player.world.isRemote && !player.isDead && (getMaxItemUseDuration(stack) - count) % 5 == 0){
-			if(!stack.hasTag()){
-				return;
-			}
-			ItemStack cage = player.getHeldItem(player.getActiveHand() == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND);
-			if(cage.getItem() != CRItems.beamCage || !cage.hasTag()){
-				player.resetActiveHand();
-				return;
-			}
-
-			CompoundNBT nbt = stack.getTag();
-			int energy = nbt.getInt(EnumBeamAlignments.ENERGY.name());
-			int potential = nbt.getInt(EnumBeamAlignments.POTENTIAL.name());
-			int stability = nbt.getInt(EnumBeamAlignments.STABILITY.name());
-			int voi = nbt.getInt(EnumBeamAlignments.VOID.name());
-
-			BeamUnit cageBeam = BeamCage.getStored(cage);
-			int beamEn = cageBeam == null ? 0 : cageBeam.getEnergy();
-			int beamPo = cageBeam == null ? 0 : cageBeam.getPotential();
-			int beamSt = cageBeam == null ? 0 : cageBeam.getStability();
-			int beamVo = cageBeam == null ? 0 : cageBeam.getVoid();
-
-			if(energy <= beamEn && potential <= beamPo && stability <= beamSt && voi <= beamVo){
-				if(energy + potential + stability + voi > 0){
-					BeamCage.storeBeam(cage, new BeamUnit(beamEn - energy, beamPo - potential, beamSt - stability, beamVo - voi));
-
-
-					BeamUnit mag = new BeamUnit(energy, potential, stability, voi);
-
-					double heldOffset = .22D * (player.getActiveHand() == Hand.MAIN_HAND ^ player.getPrimaryHand() == HandSide.LEFT ? 1D : -1D);
-					Vec3d start = new Vec3d(player.posX - (heldOffset * Math.cos(Math.toRadians(player.rotationYaw))), player.posY + 2.1D, player.posZ - (heldOffset * Math.sin(Math.toRadians(player.rotationYaw))));
-					double[] end = new double[] {player.posX, player.getEyeHeight() + player.posY, player.posZ};
-					BlockPos endPos = null;
-					Vec3d look = player.getLookVec().scale(0.2D);
-					Direction effectDir = null;
-
-					for(double d = 0; d < 32; d += 0.2D){
-						end[0] += look.x;
-						end[1] += look.y;
-						end[2] += look.z;
-
-						List<Entity> ents = player.world.getEntitiesInAABBexcluding(player, new AxisAlignedBB(end[0] - 0.1D, end[1] - 0.1D, end[2] - 0.1D, end[0] + 0.1D, end[1] + 0.1D, end[2] + 0.1D), EntityPredicates.IS_ALIVE);
-						if(!ents.isEmpty()){
-							RayTraceResult res = ents.get(0).getEntityBoundingBox().calculateIntercept(start, new Vec3d(end[0], end[1], end[2]));
-							if(res != null && res.hitVec != null){
-								end[0] = res.hitVec.x;
-								end[1] = res.hitVec.y;
-								end[2] = res.hitVec.z;
-							}
-							break;
-						}
-
-						BlockPos newEndPos = new BlockPos(end[0], end[1], end[2]);
-						//Speed things up a bit by not rechecking blocks
-						if(newEndPos.equals(endPos) || player.world.isOutsideBuildHeight(newEndPos)){
-							continue;
-						}
-						endPos = newEndPos;
-						BlockState state = player.world.getBlockState(endPos);
-						AxisAlignedBB bb = state.getBoundingBox(player.world, endPos).offset(endPos);
-						if(state.getBlock().canCollideCheck(state, true) && state.getBlock().isCollidable() && BeamManager.solidToBeams(state, player.world, endPos)){
-							RayTraceResult res = bb.calculateIntercept(start, new Vec3d(end[0] + look.x * 5D, end[1] + look.y * 5D, end[2] + look.z * 5D));
-							if(res != null && res.hitVec != null){
-								end[0] = res.hitVec.x;
-								end[1] = res.hitVec.y;
-								end[2] = res.hitVec.z;
-								effectDir = res.sideHit;
-								break;
-							}
-						}
-					}
-
-					if(endPos != null){//Should always be true
-						TileEntity te = player.world.getTileEntity(endPos);
-						IBeamHandler handler;
-						if(te != null && (handler = te.getCapability(Capabilities.BEAM_CAPABILITY, effectDir)) != null){
-							handler.setMagic(mag);
-						}else{
-							IEffect effect = EnumBeamAlignments.getAlignment(mag).getMixEffect(mag.getRGB());
-							if(effect != null && !player.world.isOutsideBuildHeight(endPos)){
-								effect.doEffect(player.world, endPos, Math.min(64, mag.getPower()), effectDir);
-							}
-						}
-					}
-
-					Vec3d beamVec = new Vec3d(end[0] - start.x, end[1] - start.y, end[2] - start.z);
-					RenderUtil.addBeam(player.world.provider.getDimension(), start.x, start.y, start.z, beamVec.length(), (float) Math.toDegrees(Math.atan2(-beamVec.y, Math.sqrt(beamVec.x * beamVec.x + beamVec.z * beamVec.z))), (float) Math.toDegrees(Math.atan2(-beamVec.x, beamVec.z)), (byte) Math.round(Math.sqrt(mag.getPower())), mag.getRGB().getRGB());
-				}
-			}
-		}
+	public int getUseDuration(ItemStack stack){
+		//Any large number works. 72000 is used in vanilla code, so it's used here for consistency.
+		return 72000;
 	}
 
 	@Override
-	public void preChanged(ItemStack stack, PlayerEntity player){
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand){
+		playerIn.setActiveHand(hand);
+		return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(hand));
+	}
 
+	@Override
+	public void onUsingTick(ItemStack stack, LivingEntity player, int count){
+		if(!player.world.isRemote && player.isAlive() && (getUseDuration(stack) - count) % BeamManager.BEAM_TIME == 0){
+			ItemStack cage = player.getHeldItem(player.getActiveHand() == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND);
+			if(cage.getItem() != CRItems.beamCage || cage.hasTag()){
+				player.resetActiveHand();
+				return;
+			}
+			byte[] setting = getSetting(stack);
+			BeamUnit cageBeam = BeamCage.getStored(cage);
+			if(setting[0] <= cageBeam.getEnergy() && setting[1] <= cageBeam.getPotential() && setting[2] <= cageBeam.getStability() && setting[3] <= cageBeam.getVoid() && setting[0] + setting[1] + setting[2] + setting[3] != 0){
+				//Handle beam consumption
+				BeamCage.storeBeam(cage, new BeamUnit(cageBeam.getEnergy() - setting[0], cageBeam.getPotential() - setting[1], cageBeam.getStability() - setting[2], cageBeam.getVoid() - setting[3]));
+				BeamUnit mag = new BeamUnit(setting[0], setting[1], setting[2], setting[3]);
+
+				//Calculate the start and end point of the fired beam
+				double heldOffset = .22D * (player.getActiveHand() == Hand.MAIN_HAND ^ player.getPrimaryHand() == HandSide.LEFT ? 1D : -1D);
+				Vec3d start = new Vec3d(player.posX - (heldOffset * Math.cos(Math.toRadians(player.rotationYaw))), player.posY + 2.1D, player.posZ - (heldOffset * Math.sin(Math.toRadians(player.rotationYaw))));
+				double[] end = new double[] {player.posX, player.getEyeHeight() + player.posY, player.posZ};
+				BlockPos endPos = null;
+				Vec3d look = player.getLookVec().scale(0.2D);
+				Direction effectDir = null;
+				//Raytrace manually along the look direction
+				for(double d = 0; d < 32; d += 0.2D){
+					end[0] += look.x;
+					end[1] += look.y;
+					end[2] += look.z;
+					//Look for entities along the firing path to collide with
+					List<Entity> ents = player.world.getEntitiesInAABBexcluding(player, new AxisAlignedBB(end[0] - 0.1D, end[1] - 0.1D, end[2] - 0.1D, end[0] + 0.1D, end[1] + 0.1D, end[2] + 0.1D), EntityPredicates.IS_ALIVE);
+					if(!ents.isEmpty()){
+						Optional<Vec3d> res = ents.get(0).getBoundingBox().rayTrace(start, new Vec3d(end[0], end[1], end[2]));
+						if(res.isPresent()){
+							Vec3d hitVec = res.get();
+							end[0] = hitVec.x;
+							end[1] = hitVec.y;
+							end[2] = hitVec.z;
+						}
+						break;
+					}
+
+					BlockPos newEndPos = new BlockPos(end[0], end[1], end[2]);
+					//Speed things up a bit by not rechecking blocks
+					if(newEndPos.equals(endPos) || World.isOutsideBuildHeight(newEndPos)){
+						continue;
+					}
+					endPos = newEndPos;
+					BlockState state = player.world.getBlockState(endPos);
+					if(BeamManager.solidToBeams(state, player.world, endPos)){
+						//Note: this VoxelShape has no offset
+						VoxelShape shape = state.getRaytraceShape(player.world, endPos);//.getBoundingBox(player.world, endPos).offset(endPos);
+						BlockRayTraceResult res = shape.rayTrace(start, new Vec3d(end[0] + look.x * 5D, end[1] + look.y * 5D, end[2] + look.z * 5D), endPos);//bb.calculateIntercept(start, new Vec3d(end[0] + look.x * 5D, end[1] + look.y * 5D, end[2] + look.z * 5D));
+						if(res != null){
+							Vec3d hitVec = res.getHitVec();
+							end[0] = hitVec.x;
+							end[1] = hitVec.y;
+							end[2] = hitVec.z;
+							effectDir = res.getFace();
+							break;
+						}
+					}
+				}
+
+				if(endPos != null){//Should always be true
+					TileEntity te = player.world.getTileEntity(endPos);
+					LazyOptional<IBeamHandler> opt;
+					if(te != null && (opt = te.getCapability(Capabilities.BEAM_CAPABILITY, effectDir)).isPresent()){
+						opt.orElseThrow(NullPointerException::new).setMagic(mag);
+					}else{
+						IEffect effect = EnumBeamAlignments.getAlignment(mag).getMixEffect(mag.getRGB());
+						if(effect != null && !World.isOutsideBuildHeight(endPos)){
+							effect.doEffect(player.world, endPos, Math.min(64, mag.getPower()), effectDir);
+						}
+					}
+				}
+
+				Vec3d beamVec = new Vec3d(end[0] - start.x, end[1] - start.y, end[2] - start.z);
+				RenderUtil.addBeam(player.world, start.x, start.y, start.z, beamVec.length(), (float) Math.toDegrees(Math.atan2(-beamVec.y, Math.sqrt(beamVec.x * beamVec.x + beamVec.z * beamVec.z))), (float) Math.toDegrees(Math.atan2(-beamVec.x, beamVec.z)), (byte) Math.round(Math.sqrt(mag.getPower())), mag.getRGB().getRGB());
+			}
+		}
 	}
 
 	@Override
 	public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack){
+		//Acts as a melee weapon; absolutely a DiscWorld reference
 		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
 		if (slot == EquipmentSlotType.MAINHAND){
-			multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 9, 0));
-			multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -3.1D, 0));
+			multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 9, AttributeModifier.Operation.ADDITION));
+			multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -3.1D, AttributeModifier.Operation.ADDITION));
 		}
 
 		return multimap;
+	}
+
+	@Override
+	protected byte maxSetting(){
+		return 8;
 	}
 }

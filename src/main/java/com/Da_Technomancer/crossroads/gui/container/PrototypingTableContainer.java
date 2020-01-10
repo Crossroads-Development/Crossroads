@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
 import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypingTableTileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.IInventory;

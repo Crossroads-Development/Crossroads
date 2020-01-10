@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:ore_tin"
+					"name": "crossroads:ore_tin"
 				}
 			],
 			"conditions": [

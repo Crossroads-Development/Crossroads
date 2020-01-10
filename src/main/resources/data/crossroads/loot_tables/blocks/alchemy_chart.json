@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:alchemy_chart"
+					"name": "crossroads:alchemy_chart"
 				}
 			],
 			"conditions": [

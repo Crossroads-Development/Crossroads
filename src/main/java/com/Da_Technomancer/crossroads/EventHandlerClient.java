@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
@@ -9,12 +8,11 @@ import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamUsingItem;
-import com.Da_Technomancer.crossroads.items.technomancy.PrototypeWatch;
 import com.Da_Technomancer.crossroads.render.IVisualEffect;
+import com.Da_Technomancer.crossroads.render.RenderUtil;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.settings.KeyBinding;
@@ -31,9 +29,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -45,6 +41,7 @@ public final class EventHandlerClient{
 	private static final Random RAND = new Random();
 
 	@SubscribeEvent
+	@SuppressWarnings("unused")
 	public void drawFieldsAndBeams(RenderWorldLastEvent e){
 		Minecraft game = Minecraft.getInstance();
 		ItemStack helmet = Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD);
@@ -81,9 +78,7 @@ public final class EventHandlerClient{
 			GlStateManager.disableCull();
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-			float brightX = OpenGlHelper.lastBrightnessX;
-			float brightY = OpenGlHelper.lastBrightnessY;
-			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+			Pair<Float, Float> lighting = RenderUtil.disableLighting();
 
 			ArrayList<IVisualEffect> toRemove = new ArrayList<>();
 			Tessellator tes = Tessellator.getInstance();
@@ -92,19 +87,19 @@ public final class EventHandlerClient{
 
 			for(IVisualEffect effect : SafeCallable.effectsToRender){
 				GlStateManager.pushMatrix();
-				GlStateManager.pushAttrib();
+				GlStateManager.pushLightingAttributes();
 
 				if(effect.render(tes, buf, worldTime, game.player.posX, game.player.posY, game.player.posZ, game.player.getLook(e.getPartialTicks()), RAND, e.getPartialTicks())){
 					toRemove.add(effect);
 				}
 
-				GlStateManager.popAttrib();
+				GlStateManager.popAttributes();
 				GlStateManager.popMatrix();
 			}
 
 			SafeCallable.effectsToRender.removeAll(toRemove);
 
-			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
+			RenderUtil.enableLighting(lighting);
 			GlStateManager.enableCull();
 			GlStateManager.disableBlend();
 			GlStateManager.enableLighting();
@@ -115,10 +110,10 @@ public final class EventHandlerClient{
 
 	private static final ResourceLocation MAGIC_BAR_BACKGROUND = new ResourceLocation(Crossroads.MODID, "textures/gui/magic_info_back.png");
 	private static final ResourceLocation MAGIC_BAR_FOREGROUND = new ResourceLocation(Crossroads.MODID, "textures/gui/magic_info_front.png");
-	private static final ResourceLocation WATCH_BACKGROUND = new ResourceLocation(Crossroads.MODID, "textures/gui/watch_info_back.png");
 	private static final ResourceLocation COLOR_SHEET = new ResourceLocation(Crossroads.MODID, "textures/blocks/color_sheet.png");
 
 	@SubscribeEvent
+	@SuppressWarnings("unused")
 	public void magicUsingItemOverlay(RenderGameOverlayEvent e){
 		if(e.getType() == ElementType.HOTBAR){
 			PlayerEntity player = Minecraft.getInstance().player;
@@ -126,7 +121,7 @@ public final class EventHandlerClient{
 			if(offStack.getItem() == CRItems.beamCage){
 				BeamUnit stored = BeamCage.getStored(offStack);
 				GlStateManager.pushMatrix();
-				GlStateManager.pushAttrib();
+				GlStateManager.pushLightingAttributes();
 				GlStateManager.enableBlend();
 				Minecraft.getInstance().getTextureManager().bindTexture(MAGIC_BAR_BACKGROUND);
 				Tessellator tes = Tessellator.getInstance();
@@ -141,7 +136,7 @@ public final class EventHandlerClient{
 				Minecraft.getInstance().getTextureManager().bindTexture(COLOR_SHEET);
 				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
 				for(int i = 0; i < 4; i++){
-					int extension = 9 * (stored == null ? 0 : stored.getValues()[i]) / 128;
+					int extension = 9 * stored.getValues()[i] / 128;
 					buf.pos(24, 84 + (9 * i), -2).tex(.25F + (((float) i) * .0625F), .0625F).color(i == 0 ? 255 : 0, i == 1 ? 255 : 0, i == 2 ? 255 : 0, 255).endVertex();
 					buf.pos(24 + extension, 84 + (9 * i), -2).tex(.3125F + (((float) i) * .0625F), .0625F).color(i == 0 ? 255 : 0, i == 1 ? 255 : 0, i == 2 ? 255 : 0, 255).endVertex();
 					buf.pos(24 + extension, 78 + (9 * i), -2).tex(.3125F + (((float) i) * .0625F), 0).color(i == 0 ? 255 : 0, i == 1 ? 255 : 0, i == 2 ? 255 : 0, 255).endVertex();
@@ -157,18 +152,18 @@ public final class EventHandlerClient{
 				buf.pos(0, 60, -1).tex(0, 0).endVertex();
 				tes.draw();
 
-				Minecraft.getInstance().fontRenderer.drawString(offStack.getDisplayName(), 16, 65, Color.DARK_GRAY.getRGB());
-				GlStateManager.disableAlpha();
+				Minecraft.getInstance().fontRenderer.drawString(offStack.getDisplayName().getFormattedText(), 16, 65, Color.DARK_GRAY.getRGB());
+				GlStateManager.disableBlend();
 				GlStateManager.color3f(1, 1, 1);
 				GlStateManager.disableBlend();
-				GlStateManager.popAttrib();
+				GlStateManager.popAttributes();
 				GlStateManager.popMatrix();
 			}
 			ItemStack mainStack = player.getHeldItem(Hand.MAIN_HAND);
 			if(mainStack.getItem() instanceof BeamUsingItem){
 				CompoundNBT nbt = mainStack.hasTag() ? mainStack.getTag() : new CompoundNBT();
 				GlStateManager.pushMatrix();
-				GlStateManager.pushAttrib();
+				GlStateManager.pushLightingAttributes();
 				GlStateManager.enableBlend();
 				Minecraft.getInstance().getTextureManager().bindTexture(MAGIC_BAR_BACKGROUND);
 				Tessellator tes = Tessellator.getInstance();
@@ -199,40 +194,19 @@ public final class EventHandlerClient{
 				buf.pos(0, 0, -1).tex(0, 0).endVertex();
 				tes.draw();
 
-				Minecraft.getInstance().fontRenderer.drawString(mainStack.getDisplayName(), 16, 5, Color.DARK_GRAY.getRGB());
+				Minecraft.getInstance().fontRenderer.drawString(mainStack.getDisplayName().getFormattedText(), 16, 5, Color.DARK_GRAY.getRGB());
 
-				//Special Watch overlay
-				if(mainStack.getItem() == CRItems.watch){
-					GlStateManager.color(1, 1, 1);
-					Minecraft.getInstance().getTextureManager().bindTexture(WATCH_BACKGROUND);
-					buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-					buf.pos(117, 60, -1).tex(0, 1).endVertex();
-					buf.pos(234, 60, -1).tex(1, 1).endVertex();
-					buf.pos(234, 0, -1).tex(1, 0).endVertex();
-					buf.pos(117, 0, -1).tex(0, 0).endVertex();
-					tes.draw();
-
-					double[] values = PrototypeWatch.getValues(mainStack);
-
-					if(values != null){
-						for(int i = 0; i < 3; i++){
-							values[i] = MiscUtil.betterRound(values[i], 3);
-							Minecraft.getInstance().fontRenderer.drawString("" + values[i], 146 - Minecraft.getInstance().fontRenderer.getStringWidth("" + values[i]) / 2, 16 + 10 * i, Color.DARK_GRAY.getRGB());
-						}
-					}
-				}
-
-
-				GlStateManager.disableAlpha();
-				GlStateManager.color(1, 1, 1);
 				GlStateManager.disableBlend();
-				GlStateManager.popAttrib();
+				GlStateManager.color3f(1, 1, 1);
+				GlStateManager.disableBlend();
+				GlStateManager.popAttributes();
 				GlStateManager.popMatrix();
 			}
 		}
 	}
 
 	@SubscribeEvent
+	@SuppressWarnings("unused")
 	public void dilatePlayerTime(TickEvent.ClientTickEvent e){
 		if(e.phase == TickEvent.Phase.END){
 			PlayerEntity player = Minecraft.getInstance().player;
@@ -268,7 +242,7 @@ public final class EventHandlerClient{
 			}else if(!player.updateBlocked){
 				int extraTicks = SafeCallable.playerTickCount - 1;
 				for(int i = 0; i < extraTicks; i++){
-					player.onUpdate();
+					player.tick();
 				}
 			}
 
@@ -277,10 +251,21 @@ public final class EventHandlerClient{
 	}
 
 	@SubscribeEvent
-	public void toggleGoggles(InputEvent.KeyInputEvent e){
+	@SuppressWarnings("unused")
+	public void elementKeys(InputEvent.KeyInputEvent e){
 		PlayerEntity play = Minecraft.getInstance().player;
+		if(Minecraft.getInstance().currentScreen != null){
+			return;//Only accept key hits if the player isn't in a UI
+		}
+
 		ItemStack helmet = play.getItemStackFromSlot(EquipmentSlotType.HEAD);
-		if(play.getHeldItemMainhand().isEmpty() && helmet.getItem() == CRItems.moduleGoggles && helmet.hasTag()){
+		if(!play.getHeldItemMainhand().isEmpty()){
+			int key = Keys.controlEnergy.matchesKey(e.getKey(), e.getScanCode()) ? 0 : Keys.controlPotential.matchesKey(e.getKey(), e.getScanCode()) ? 1 : Keys.controlStability.matchesKey(e.getKey(), e.getScanCode()) ? 2 : Keys.controlVoid.matchesKey(e.getKey(), e.getScanCode()) ? 3 : -1;
+			ItemStack stack = play.getHeldItemMainhand();
+			if(key != -1 && stack.getItem() instanceof BeamUsingItem){
+				((BeamUsingItem) stack.getItem()).adjustSetting(Minecraft.getInstance().player, stack, key, play.isSneaking());
+			}
+		}else if(helmet.getItem() == CRItems.moduleGoggles && helmet.hasTag()){
 			CompoundNBT nbt = helmet.getTag();
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				KeyBinding key = lens.getKey();

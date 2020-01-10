@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:temporal_accelerator"
+					"name": "crossroads:temporal_accelerator"
 				}
 			],
 			"conditions": [

@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:steam_boiler"
+					"name": "crossroads:steam_boiler"
 				}
 			],
 			"conditions": [

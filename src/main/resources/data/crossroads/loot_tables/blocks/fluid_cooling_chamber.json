@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:fluid_cooling_chamber"
+					"name": "crossroads:fluid_cooling_chamber"
 				}
 			],
 			"conditions": [

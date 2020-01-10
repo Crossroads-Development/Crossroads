@@ -102,7 +102,7 @@ public class EntityGhostMarker extends Entity{
 
 		EQUILIBRIUM(6, null),
 		VOID_EQUILIBRIUM(6, null),
-		DELAYED_EXPLOSION(5, (EntityGhostMarker marker) -> {if(marker.data != null && marker.data.contains("power")) marker.world.createExplosion(marker, marker.posX, marker.posY, marker.posZ, marker.data.getFloat("power"), Explosion.Mode.valueOf(marker.data.getString("blast_type")));}),
+		DELAYED_EXPLOSION(5, (EntityGhostMarker marker) -> {if(marker.data != null && marker.data.contains("power")) marker.world.createExplosion(marker, marker.posX, marker.posY, marker.posZ, marker.data.getFloat("power"), marker.data.getBoolean("flaming"), Explosion.Mode.valueOf(marker.data.getString("blast_type")));}),
 		BLOCK_SPAWNING(6, null);
 
 		private final int defaultLifespan;

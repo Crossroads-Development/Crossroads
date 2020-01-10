@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:crystalline_prism"
+					"name": "crossroads:crystalline_prism"
 				}
 			],
 			"conditions": [

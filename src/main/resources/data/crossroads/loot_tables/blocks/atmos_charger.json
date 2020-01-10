@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:atmos_charger"
+					"name": "crossroads:atmos_charger"
 				}
 			],
 			"conditions": [

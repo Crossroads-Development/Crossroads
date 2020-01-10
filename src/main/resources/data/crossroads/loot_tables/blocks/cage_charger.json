@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:cage_charger"
+					"name": "crossroads:cage_charger"
 				}
 			],
 			"conditions": [

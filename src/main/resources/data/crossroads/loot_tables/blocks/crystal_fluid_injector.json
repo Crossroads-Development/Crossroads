@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:crystal_fluid_injector"
+					"name": "crossroads:crystal_fluid_injector"
 				}
 			],
 			"conditions": [

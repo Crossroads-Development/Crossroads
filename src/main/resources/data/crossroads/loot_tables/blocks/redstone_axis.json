@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:redstone_axis"
+					"name": "crossroads:redstone_axis"
 				}
 			],
 			"conditions": [

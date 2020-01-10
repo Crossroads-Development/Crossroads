@@ -2,28 +2,27 @@ package com.Da_Technomancer.crossroads.items.itemSets;
 
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.BasicBlock;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.items.BasicItem;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.crafting.ItemRecipePredicate;
 import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
-import com.Da_Technomancer.crossroads.items.crafting.TagCraftingStack;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.TagCraftingStack;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.item.Items;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -31,122 +30,69 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.regex.Pattern;
 
 public final class OreSetup{
 
-	public static BasicItem ingotTin;
-	public static BasicItem nuggetTin;
+	public static Item ingotTin;
+	public static Item nuggetTin;
 	public static BasicBlock blockTin;
 	public static BasicBlock oreTin;
 
-	public static BasicItem ingotCopper;
-	public static BasicItem nuggetCopper;
+	public static Item ingotCopper;
+	public static Item nuggetCopper;
 	public static BasicBlock blockCopper;
 	public static BasicBlock oreCopper;
 
-	public static BasicItem ingotBronze;
-	public static BasicItem nuggetBronze;
+	public static Item ingotBronze;
+	public static Item nuggetBronze;
 	public static BasicBlock blockBronze;
 
-	public static BasicItem gemRuby;
+	public static Item gemRuby;
 	public static BasicBlock blockRuby;
 	public static BasicBlock oreRuby;
 
-	public static BasicItem ingotCopshowium;
-	public static BasicItem nuggetCopshowium;
+	public static Item ingotCopshowium;
+	public static Item nuggetCopshowium;
 	public static BasicBlock blockCopshowium;
 
-	public static BasicItem voidCrystal;
+	public static Item voidCrystal;
 	public static BasicBlock oreVoid;
 
 	public static final HashMap<String, OreProfile> metalStages = new HashMap<>();
 
 	protected static void init(){
 		//Register CR metal ores, blocks, ingots, nuggets manually
-		ingotTin = new BasicItem("ingot_tin", "ingotTin");
-		blockTin = new BasicBlock("block_tin", Material.IRON, 5, "blockTin"){
-			@Override
-			public boolean isBeaconBase(IBlockAccess worldObj, BlockPos pos, BlockPos beacon){
-				return true;
-			}
-		};
-		nuggetTin = new BasicItem("nugget_tin", "nuggetTin");
-		oreTin = new BasicBlock("ore_tin", Material.ROCK, 3, "oreTin");
+		ingotTin = new Item(CRItems.itemProp).setRegistryName("ingot_tin");
+		blockTin = new BasicBlock("block_tin", Block.Properties.create(Material.IRON).hardnessAndResistance(5));
+		nuggetTin = new Item(CRItems.itemProp).setRegistryName("nugget_tin", "nuggetTin");
+		oreTin = new BasicBlock("ore_tin", Block.Properties.create(Material.ROCK).hardnessAndResistance(3));
 
-		ingotCopper = new BasicItem("ingot_copper", "ingotCopper");
-		blockCopper = new BasicBlock("block_copper", Material.IRON, 5, "blockCopper"){
-			@Override
-			public boolean isBeaconBase(IBlockAccess worldObj, BlockPos pos, BlockPos beacon){
-				return true;
-			}
-		};
-		nuggetCopper = new BasicItem("nugget_copper", "nuggetCopper");
-		oreCopper = new BasicBlock("ore_copper", Material.ROCK, 3, "oreCopper");
+		ingotCopper = new Item(CRItems.itemProp).setRegistryName("ingot_copper", "ingotCopper");
+		blockCopper = new BasicBlock("block_copper", Block.Properties.create(Material.IRON).hardnessAndResistance(5));
+		nuggetCopper = new Item(CRItems.itemProp).setRegistryName("nugget_copper", "nuggetCopper");
+		oreCopper = new BasicBlock("ore_copper", Block.Properties.create(Material.ROCK).hardnessAndResistance(3));
 
-		ingotBronze = new BasicItem("ingot_bronze", "ingotBronze");
-		blockBronze = new BasicBlock("block_bronze", Material.IRON, 5, "blockBronze"){
-			@Override
-			public boolean isBeaconBase(IBlockAccess worldObj, BlockPos pos, BlockPos beacon){
-				return true;
-			}
-		};
-		nuggetBronze = new BasicItem("nugget_bronze", "nuggetBronze");
+		ingotBronze = new Item(CRItems.itemProp).setRegistryName("ingot_bronze", "ingotBronze");
+		blockBronze = new BasicBlock("block_bronze", Block.Properties.create(Material.IRON).hardnessAndResistance(5));
+		nuggetBronze = new Item(CRItems.itemProp).setRegistryName("nugget_bronze", "nuggetBronze");
 
-		gemRuby = new BasicItem("gem_ruby", "gemRuby");
-		blockRuby = new BasicBlock("block_ruby", Material.ROCK, 5, "blockRuby"){
-			@Override
-			public boolean isBeaconBase(IBlockAccess worldObj, BlockPos pos, BlockPos beacon){
-				return true;
-			}
-		};
-		oreRuby = new BasicBlock("ore_ruby", Material.ROCK, 3, "oreRuby"){
-			@Override
-			public int quantityDroppedWithBonus(int fortune, Random random){
-				if(fortune > 0){
-					return Math.max(random.nextInt(fortune + 2) - 1, 0) + 1;
-				}
-				return 1;
-			}
+		gemRuby = new Item(CRItems.itemProp).setRegistryName("gem_ruby", "gemRuby");
+		blockRuby = new BasicBlock("block_ruby", Block.Properties.create(Material.ROCK).hardnessAndResistance(5));
+		oreRuby = new BasicBlock("ore_ruby", Block.Properties.create(Material.ROCK).hardnessAndResistance(3).harvestLevel(3));
 
-			@Override
-			public Item getItemDropped(BlockState state, Random rand, int fortune){
-				return gemRuby;
-			}
-		};
+		ingotCopshowium = new Item(CRItems.itemProp).setRegistryName("ingot_copshowium", "ingotCopshowium");
+		blockCopshowium = new BasicBlock("block_copshowium", Block.Properties.create(Material.IRON).harvestLevel(5));
+		nuggetCopshowium = new Item(CRItems.itemProp).setRegistryName("nugget_copshowium", "nuggetCopshowium");
 
-		ingotCopshowium = new BasicItem("ingot_copshowium", "ingotCopshowium");
-		blockCopshowium = new BasicBlock("block_copshowium", Material.IRON, 5, "blockCopshowium"){
-			@Override
-			public boolean isBeaconBase(IBlockAccess worldObj, BlockPos pos, BlockPos beacon){
-				return true;
-			}
-		};
-		nuggetCopshowium = new BasicItem("nugget_copshowium", "nuggetCopshowium");
-
-		voidCrystal = new BasicItem("void_crystal");
-		oreVoid = new BasicBlock("ore_void", Material.ROCK, 3){
-			@Override
-			public int quantityDroppedWithBonus(int fortune, Random random){
-				if(fortune > 0){
-					return Math.max(random.nextInt(fortune + 2) - 1, 0) + 1;
-				}
-				return 1;
-			}
-
-			@Override
-			public Item getItemDropped(BlockState state, Random rand, int fortune){
-				return voidCrystal;
-			}
-		};
+		voidCrystal = new Item(CRItems.itemProp).setRegistryName("void_crystal");
+		oreVoid = new BasicBlock("ore_void", Block.Properties.create(Material.ROCK).harvestLevel(3));
 
 
 		String[] rawInput = CRConfig.getConfigStringList(CRConfig.processableOres, true);

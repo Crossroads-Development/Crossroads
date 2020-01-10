@@ -1,49 +1,55 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
-import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 
+@ObjectHolder(Crossroads.MODID)
 public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 
-	@Override
-	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
-		if(!cage.isEmpty()){
-			BeamUnit cageBeam = BeamCage.getStored(cage);
-			if(cageBeam == null){
-				cageBeam = new BeamUnit(0, 0, 0, 0);
-			}
-			chat.add("Stored: [Energy: " + cageBeam.getEnergy() + ", Potential: " + cageBeam.getPotential() + ", Stability: " + cageBeam.getStability() + ", Void: " + cageBeam.getVoid() + "]");
-		}
-	}
+	@ObjectHolder("cage_charger")
+	private static TileEntityType<CageChargerTileEntity> type = null;
 	
-	private final IBeamHandler magicHandler = new BeamHandler();
 	private ItemStack cage = ItemStack.EMPTY;
 
+	public CageChargerTileEntity(){
+		super(type);
+	}
+	
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState){
-		return oldState.getBlock() != newState.getBlock();
+	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+		if(!cage.isEmpty()){
+			BeamUnit stored = BeamCage.getStored(cage);
+			chat.add(new TranslationTextComponent("tt.crossroads.beam_cage.energy", stored.getEnergy(), BeamCage.CAPACITY));
+			chat.add(new TranslationTextComponent("tt.crossroads.beam_cage.potential", stored.getPotential(), BeamCage.CAPACITY));
+			chat.add(new TranslationTextComponent("tt.crossroads.beam_cage.stability", stored.getStability(), BeamCage.CAPACITY));
+			chat.add(new TranslationTextComponent("tt.crossroads.beam_cage.void", stored.getVoid(), BeamCage.CAPACITY));
+		}else{
+			chat.add(new TranslationTextComponent("tt.crossroads.cage_charger.empty"));
+		}
 	}
 	
 	public void setCage(ItemStack cage){
@@ -54,30 +60,33 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 	public ItemStack getCage(){
 		return cage;
 	}
-
-	private final RedsHandler redsHandler = new RedsHandler();
-	private final ItemHandler itemHandler = new ItemHandler();
+	
+	public float getRedstone(){
+		if(cage.isEmpty()){
+			return 0;
+		}else{
+			return BeamCage.getStored(cage).getPower();
+		}
+	}
 
 	@Override
-	public boolean hasCapability(Capability<?> cap, Direction side){
-		if(cap == Capabilities.BEAM_CAPABILITY || cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY || cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-			return true;
-		}
-
-		return super.hasCapability(cap, side);
+	public void remove(){
+		super.remove();
+		beamOpt.invalidate();
+		itemOpt.invalidate();
 	}
+
+	private final LazyOptional<IBeamHandler> beamOpt = LazyOptional.of(BeamHandler::new);
+	private final LazyOptional<IItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.BEAM_CAPABILITY){
-			return (T) magicHandler;
-		}
-		if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
-			return (T) redsHandler;
+			return (LazyOptional<T>) beamOpt;
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-			return (T) itemHandler;
+			return (LazyOptional<T>) itemOpt;
 		}
 
 		return super.getCapability(cap, side);
@@ -87,7 +96,7 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
 		if(!cage.isEmpty()){
-			nbt.put("inv", cage.writeToNBT(new CompoundNBT()));
+			nbt.put("inv", cage.write(new CompoundNBT()));
 		}
 		return nbt;
 	}
@@ -95,7 +104,7 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 	@Override
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
-		cage = new ItemStack(nbt.getCompound("inv"));
+		cage = ItemStack.read(nbt.getCompound("inv"));
 	}
 
 	private class ItemHandler implements IItemHandler{
@@ -118,9 +127,8 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 				if(!simulate){
 					cage = stack;
 					markDirty();
-					world.setBlockState(pos, CrossroadsBlocks.cageCharger.getDefaultState().with(CRProperties.ACTIVE, true));
+					world.setBlockState(pos, CrossroadsBlocks.cageCharger.getDefaultState().with(CRProperties.ACTIVE, true), 2);
 				}
-
 				return ItemStack.EMPTY;
 			}
 
@@ -131,13 +139,11 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate){
 			if(slot == 0 && !cage.isEmpty() && amount > 0){
-				ItemStack stored = cage;
-
 				if(!simulate){
 					ItemStack out = cage;
 					cage = ItemStack.EMPTY;
 					markDirty();
-					world.setBlockState(pos, CrossroadsBlocks.cageCharger.getDefaultState().with(CRProperties.ACTIVE, false));
+					world.setBlockState(pos, CrossroadsBlocks.cageCharger.getDefaultState().with(CRProperties.ACTIVE, false), 2);
 					return out;
 				}
 
@@ -157,56 +163,25 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 			return slot == 0 && stack.getItem() == CRItems.beamCage;
 		}
 	}
-
-	private class RedsHandler implements IAdvancedRedstoneHandler{
-
-		@Override
-		public double getOutput(boolean measure){
-			if(measure){
-				if(!cage.isEmpty()){
-					BeamUnit cageBeam = BeamCage.getStored(cage);
-					return cageBeam == null ? 0 : cageBeam.getPower();
-				}
-			}
-			return 0;
-		}
-	}
 	
 	private class BeamHandler implements IBeamHandler{
 		
 		@Override
 		public void setMagic(BeamUnit mag){
-			if(mag != null && cage != null){
+			if(!mag.isEmpty() && !cage.isEmpty()){
 				BeamUnit cageBeam = BeamCage.getStored(cage);
-				if(cageBeam == null){
-					cageBeam = new BeamUnit(0, 0, 0, 0);
-				}
-
-
 				int energy = cageBeam.getEnergy();
 				int potential = cageBeam.getPotential();
 				int stability = cageBeam.getStability();
 				int voi = cageBeam.getVoid();
 
 				energy += mag.getEnergy();
-				energy = Math.min(BeamCage.CAPACITY, energy);
-
 				potential += mag.getPotential();
-				potential = Math.min(BeamCage.CAPACITY, potential);
-
 				stability += mag.getStability();
-				stability = Math.min(BeamCage.CAPACITY, stability);
-
 				voi += mag.getVoid();
-				voi = Math.min(BeamCage.CAPACITY, voi);
-
 				cageBeam = new BeamUnit(energy, potential, stability, voi);
-
-				if(cageBeam.getPower() != 0){
-					markDirty();
-				}
-
-				BeamCage.storeBeam(cage, cageBeam.getPower() == 0 ? null : cageBeam);
+				BeamCage.storeBeam(cage, cageBeam);
+				markDirty();
 			}
 		}
 	}

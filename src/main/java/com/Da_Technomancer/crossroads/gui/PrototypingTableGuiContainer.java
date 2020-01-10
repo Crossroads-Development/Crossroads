@@ -5,7 +5,6 @@ import com.Da_Technomancer.crossroads.API.packets.SendStringToServer;
 import com.Da_Technomancer.crossroads.API.templates.*;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.PrototypingTableContainer;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.PrototypingTableTileEntity;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;

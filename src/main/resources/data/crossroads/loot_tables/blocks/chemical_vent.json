@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:chemical_vent"
+					"name": "crossroads:chemical_vent"
 				}
 			],
 			"conditions": [

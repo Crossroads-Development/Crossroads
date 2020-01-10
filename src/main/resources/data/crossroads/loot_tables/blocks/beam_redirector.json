@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:beam_redirector"
+					"name": "crossroads:beam_redirector"
 				}
 			],
 			"conditions": [

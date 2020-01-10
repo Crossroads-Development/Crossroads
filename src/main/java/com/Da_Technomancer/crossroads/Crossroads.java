@@ -9,8 +9,6 @@ import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
 import com.Da_Technomancer.crossroads.gui.*;
 import com.Da_Technomancer.crossroads.gui.container.*;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
-import com.Da_Technomancer.crossroads.items.crafting.CRRecipeGenerator;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.*;
 import com.Da_Technomancer.crossroads.items.itemSets.ItemSets;
 import com.Da_Technomancer.crossroads.particles.CRParticles;
@@ -22,7 +20,6 @@ import com.Da_Technomancer.crossroads.world.ModWorldGen;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.fluid.Fluid;
@@ -45,7 +42,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
@@ -69,7 +65,6 @@ public final class Crossroads{
 		final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		bus.addListener(this::commonInit);
 		bus.addListener(this::clientInit);
-		bus.addListener(this::gatherData);
 
 		CRConfig.init();
 
@@ -77,9 +72,6 @@ public final class Crossroads{
 
 		CRConfig.load();
 	}
-
-
-	protected static final ModWorldGen WORLD_GEN = new ModWorldGen();
 
 	private void commonInit(@SuppressWarnings("unused") FMLCommonSetupEvent e){
 		//Pre
@@ -91,12 +83,6 @@ public final class Crossroads{
 		//Main
 		MinecraftForge.EVENT_BUS.register(new EventHandlerCommon());
 		//NetworkRegistry.INSTANCE.registerGuiHandler(Crossroads.instance, new GuiHandler());
-		MinecraftForge.EVENT_BUS.register(new EventHandlerCommon());
-
-		if(CRConfig.retrogen.get().isEmpty()){
-			//TODO
-//			GameRegistry.registerWorldGenerator(WORLD_GEN, 0);
-		}
 //		ModIntegration.init();
 
 //		CrossroadsConfig.config.save();
@@ -107,7 +93,6 @@ public final class Crossroads{
 	private void clientInit(@SuppressWarnings("unused") FMLClientSetupEvent e){
 //		TESRRegistry.init();
 		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
-		//TODO entity renderer registration
 		ModelLoaderRegistry.registerLoader(new BakedModelLoader());
 		ModEntities.clientInit();
 		ItemSets.clientInit();
@@ -116,14 +101,6 @@ public final class Crossroads{
 		Keys.init();
 		CRParticles.clientInit();
 		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
-	}
-
-	private void gatherData(GatherDataEvent e){
-		if(e.includeServer()){
-			DataGenerator gen = e.getGenerator();
-			gen.addProvider(new CRItemTags(gen));
-			gen.addProvider(new CRRecipeGenerator(gen));
-		}
 	}
 
 	@SuppressWarnings("unused")

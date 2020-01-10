@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:crystal_reagent_tank"
+					"name": "crossroads:crystal_reagent_tank"
 				}
 			],
 			"conditions": [

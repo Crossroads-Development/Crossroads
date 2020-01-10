@@ -85,19 +85,6 @@ public class BeamUnitStorage{
 		return Arrays.hashCode(stored);
 	}
 
-	public static void writeToNBT(@Nonnull String key, CompoundNBT nbt, BeamUnit mag){
-		if(mag != null){
-			nbt.putIntArray(key, new int[] {mag.getEnergy(), mag.getPotential(), mag.getStability(), mag.getVoid()});
-		}
-	}
-
-	public static BeamUnit readUnitFromNBT(@Nonnull String key, CompoundNBT nbt){
-		if(nbt.contains(key)){
-			return new BeamUnit(nbt.getIntArray(key));
-		}
-		return BeamUnit.EMPTY;
-	}
-
 	public static BeamUnitStorage readFromNBT(@Nonnull String key, CompoundNBT nbt){
 		BeamUnitStorage out = new BeamUnitStorage();
 		if(nbt.contains(key)){

@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:heat_limiter"
+					"name": "crossroads:heat_limiter"
 				}
 			],
 			"conditions": [

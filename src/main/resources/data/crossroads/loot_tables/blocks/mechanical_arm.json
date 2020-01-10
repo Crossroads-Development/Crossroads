@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:mechanical_arm"
+					"name": "crossroads:mechanical_arm"
 				}
 			],
 			"conditions": [

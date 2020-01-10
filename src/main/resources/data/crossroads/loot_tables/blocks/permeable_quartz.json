@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:permeable_quartz"
+					"name": "crossroads:permeable_quartz"
 				}
 			],
 			"conditions": [

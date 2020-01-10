@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:stamp_mill"
+					"name": "crossroads:stamp_mill"
 				}
 			],
 			"conditions": [

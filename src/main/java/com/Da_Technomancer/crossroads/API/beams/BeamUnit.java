@@ -1,7 +1,9 @@
 package com.Da_Technomancer.crossroads.API.beams;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
+import net.minecraft.nbt.CompoundNBT;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.Arrays;
 
@@ -70,7 +72,7 @@ public class BeamUnit{
 	/** Returns RGB with void.*/
 	public Color getRGB(){
 		if(getTrueRGB() == null){
-			return new Color(0, 0, 0);
+			return Color.BLACK;
 		}
 
 		double mult = ((double) (contents[0] + contents[1] + contents[2])) / (double) getPower();
@@ -108,5 +110,16 @@ public class BeamUnit{
 	@Override
 	public int hashCode(){
 		return ((contents[0] & 0xFF) << 24) + ((contents[1] & 0xFF) << 16) + ((contents[2] & 0xFF) << 8) + (contents[3] & 0xFF);
+	}
+
+	public void writeToNBT(@Nonnull String key, CompoundNBT nbt){
+		nbt.putIntArray(key, contents);
+	}
+
+	public static BeamUnit readFromNBT(@Nonnull String key, CompoundNBT nbt){
+		if(nbt.contains(key)){
+			return new BeamUnit(nbt.getIntArray(key));
+		}
+		return BeamUnit.EMPTY;
 	}
 }

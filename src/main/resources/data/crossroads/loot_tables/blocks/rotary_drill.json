@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:rotary_drill"
+					"name": "crossroads:rotary_drill"
 				}
 			],
 			"conditions": [

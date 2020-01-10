@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:heated_tube"
+					"name": "crossroads:heated_tube"
 				}
 			],
 			"conditions": [

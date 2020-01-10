@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:crystal_reaction_chamber"
+					"name": "crossroads:crystal_reaction_chamber"
 				}
 			],
 			"conditions": [

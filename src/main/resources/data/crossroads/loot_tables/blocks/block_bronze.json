@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:block_bronze"
+					"name": "crossroads:block_bronze"
 				}
 			],
 			"conditions": [

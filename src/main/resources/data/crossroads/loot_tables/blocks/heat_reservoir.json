@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:heat_reservoir"
+					"name": "crossroads:heat_reservoir"
 				}
 			],
 			"conditions": [

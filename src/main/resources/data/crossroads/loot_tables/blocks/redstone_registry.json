@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:redstone_registry"
+					"name": "crossroads:redstone_registry"
 				}
 			],
 			"conditions": [

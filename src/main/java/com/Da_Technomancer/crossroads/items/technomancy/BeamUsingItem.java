@@ -1,77 +1,66 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
-import com.Da_Technomancer.crossroads.Keys;
-import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendBeamItemToServer;
-
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Hand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public abstract class BeamUsingItem extends Item{
-	
-	@Override
-	public void onUsingTick(ItemStack stack, LivingEntity player, int count){
-		if(player.world.isRemote && player == Minecraft.getInstance().player && getMaxItemUseDuration(stack) == count){
-			EnumBeamAlignments elemChanged = null;
-			if(Keys.controlEnergy.isKeyDown()){
-				elemChanged = EnumBeamAlignments.ENERGY;
-			}else if(Keys.controlPotential.isKeyDown()){
-				elemChanged = EnumBeamAlignments.POTENTIAL;
-			}else if(Keys.controlStability.isKeyDown()){
-				elemChanged = EnumBeamAlignments.STABILITY;
-			}else if(Keys.controlVoid.isKeyDown()){
-				elemChanged = EnumBeamAlignments.VOID;
-			}
-			if(elemChanged != null && player instanceof PlayerEntity){
-				player.world.playSound((PlayerEntity) player, player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 5, (float) Math.random());
-				CrossroadsPackets.network.sendToServer(new SendBeamItemToServer(elemChanged.name(), player.isSneaking()));
-			}
+
+	private static final String NBT_KEY = "setting";
+
+	protected BeamUsingItem(Properties properties){
+		super(properties);
+	}
+
+	protected abstract byte maxSetting();
+
+	public static byte[] getSetting(ItemStack stack){
+		CompoundNBT nbt = stack.getTag();
+		if(nbt == null){
+			return new byte[4];
 		}
+		return nbt.getByteArray(NBT_KEY);
+	}
+
+	public static void setSetting(ItemStack stack, byte[] settings){
+		if(stack.getTag() == null){
+			stack.setTag(new CompoundNBT());
+		}
+		stack.getTag().putByteArray(NBT_KEY, settings);
+	}
+
+	public void adjustSetting(ClientPlayerEntity player, ItemStack stack, int elemIndex, boolean increase){
+		byte[] settings = getSetting(stack);
+		if(increase){
+			settings[elemIndex] = (byte) Math.min(settings[elemIndex] + 1, maxSetting());
+		}else{
+			settings[elemIndex] = (byte) Math.max(settings[elemIndex] - 1, 0);
+		}
+		player.world.playSound(player, player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 5, (float) Math.random());
+		CrossroadsPackets.sendPacketToServer(new SendBeamItemToServer(settings));
 	}
 
 	@Override
-	public int getMaxItemUseDuration(ItemStack stack){
-		//In this case, any number much greater than 5 works. 72000 is used in vanilla code, so it's used here for consistency.
-		return 72000;
-	}
-	
-	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		CompoundNBT nbt = stack.getTag();
-		if(nbt == null){
-			nbt = new CompoundNBT();
-		}
-		tooltip.add("Energy usage: " + nbt.getInt(EnumBeamAlignments.ENERGY.name()));
-		tooltip.add("Potential usage: " + nbt.getInt(EnumBeamAlignments.POTENTIAL.name()));
-		tooltip.add("Stability usage: " + nbt.getInt(EnumBeamAlignments.STABILITY.name()));
-		tooltip.add("Void usage: " + nbt.getInt(EnumBeamAlignments.VOID.name()));
+	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+		byte[] settings = getSetting(stack);
+		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_item.energy", settings[0], maxSetting()));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_item.potential", settings[1], maxSetting()));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_item.stability", settings[2], maxSetting()));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_item.void", settings[3], maxSetting()));
 	}
-	
-	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand){
-		playerIn.setActiveHand(hand);
-		return new ActionResult<ItemStack>(ActionResultType.SUCCESS, playerIn.getHeldItem(hand));
-	}
-	
-	/**
-	 * Called BEFORE this item's nbt is changed via packet for the beams use settings.
-	 */
-	public abstract void preChanged(ItemStack stack, PlayerEntity player);
 }

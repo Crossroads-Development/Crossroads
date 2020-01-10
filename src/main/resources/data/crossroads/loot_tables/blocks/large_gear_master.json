@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:large_gear_master"
+					"name": "crossroads:large_gear_master"
 				}
 			],
 			"conditions": [

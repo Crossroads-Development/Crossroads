@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:densus_plate"
+					"name": "crossroads:densus_plate"
 				}
 			],
 			"conditions": [

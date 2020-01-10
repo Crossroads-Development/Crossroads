@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:fluid_void"
+					"name": "crossroads:fluid_void"
 				}
 			],
 			"conditions": [

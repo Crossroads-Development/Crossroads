@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:heat_sink"
+					"name": "crossroads:heat_sink"
 				}
 			],
 			"conditions": [

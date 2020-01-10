@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:beacon_harness"
+					"name": "crossroads:beacon_harness"
 				}
 			],
 			"conditions": [

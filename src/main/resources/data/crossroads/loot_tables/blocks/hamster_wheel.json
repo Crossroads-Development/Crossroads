@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:hamster_wheel"
+					"name": "crossroads:hamster_wheel"
 				}
 			],
 			"conditions": [

@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:redstone_fluid_tube"
+					"name": "crossroads:redstone_fluid_tube"
 				}
 			],
 			"conditions": [

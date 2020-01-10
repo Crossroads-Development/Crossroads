@@ -2,46 +2,50 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
-import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
-import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import org.apache.logging.log4j.Level;
+import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 
+@ObjectHolder(Crossroads.MODID)
 public class ReagentTankTileEntity extends AlchemyCarrierTE{
 
+	@ObjectHolder("reagent_tank")
+	private static TileEntityType<ReagentTankTileEntity> type = null;
+
+	public static final int CAPACITY = 1_000;
+
 	public ReagentTankTileEntity(){
-		super();
+		super(type);
 	}
 
 	public ReagentTankTileEntity(boolean glass){
-		super(glass);
+		super(type, glass);
+	}
+
+	public float getReds(){
+		return 100F * contents.getTotalQty() / transferCapacity();
 	}
 
 	@Override
 	public int transferCapacity(){
-		return 1_000;
+		return CAPACITY;
 	}
 
-	public CompoundNBT getContentNBT(){
-		if(contents.getTotalQty() == 0){
-			return null;
-		}
-		CompoundNBT nbt = new CompoundNBT();
-		writeToNBT(nbt);
-		return nbt;
+	public ReagentMap getMap(){
+		return contents;
 	}
 
 	public void writeContentNBT(CompoundNBT nbt){
@@ -66,11 +70,12 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 			if(modes[i].isOutput()){
 				Direction side = Direction.byIndex(i);
 				TileEntity te = world.getTileEntity(pos.offset(side));
-				if(contents.getTotalQty() <= 0 || te == null || !te.hasCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())){
+				LazyOptional<IChemicalHandler> otherOpt;
+				if(contents.getTotalQty() <= 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
 					continue;
 				}
 
-				IChemicalHandler otherHandler = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite());
+				IChemicalHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
 				if(otherHandler.getMode(side.getOpposite()) == EnumTransferMode.BOTH && modes[i] == EnumTransferMode.BOTH){
 					continue;
 				}
@@ -85,24 +90,25 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 		}
 	}
 
-	private final RedstoneHandler redsHandler = new RedstoneHandler();
+	@Override
+	public void remove(){
+		super.remove();
+		itemOpt.invalidate();
+	}
+
+	private final LazyOptional<IItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.CHEMICAL_CAPABILITY){
-			return (T) handler;
+			return (LazyOptional<T>) chemOpt;
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-			return (T) itemHandler;
-		}
-		if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
-			return (T) redsHandler;
+			return (LazyOptional<T>) itemOpt;
 		}
 		return super.getCapability(cap, side);
 	}
-
-	private final ItemHandler itemHandler = new ItemHandler();
 
 	@Override
 	public void correctReag(){
@@ -130,101 +136,6 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 			for(IReagent type : toRemove){
 				contents.removeReagent(type, contents.get(type));
 			}
-		}
-	}
-
-	public int getRedstone(){
-		return (int) Math.ceil(Math.min(15, 15D * contents.getTotalQty() / (double) transferCapacity()));
-	}
-
-	private class RedstoneHandler implements IAdvancedRedstoneHandler{
-
-		@Override
-		public double getOutput(boolean read){
-			return read ? 15D * Math.min(1D, contents.getTotalQty() / (double) transferCapacity()) : 0;
-		}
-	}
-
-	private class ItemHandler implements IItemHandler{
-
-		private ItemStack[] fakeInventory = new ItemStack[AlchemyCore.ITEM_TO_REAGENT.size()];
-
-		private void updateFakeInv(){
-			fakeInventory = new ItemStack[AlchemyCore.ITEM_TO_REAGENT.size()];
-			int index = 0;
-			double endTemp = handler.getTemp();
-			for(IReagent reag : AlchemyCore.ITEM_TO_REAGENT.values()){
-				int qty = contents.getQty(reag);
-				ReagentStack rStack = contents.getStack(reag);
-				fakeInventory[index] = qty != 0 && reag.getPhase(endTemp) == EnumMatterPhase.SOLID ? reag.getStackFromReagent(rStack) : ItemStack.EMPTY;
-				index++;
-			}
-		}
-
-		@Override
-		public int getSlots(){
-			return AlchemyCore.ITEM_TO_REAGENT.size();
-		}
-
-		@Override
-		public ItemStack getStackInSlot(int slot){
-			updateFakeInv();
-			return fakeInventory[slot];
-		}
-
-		@Override
-		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
-			if(!stack.isEmpty()){
-				IReagent reag = AlchemyCore.ITEM_TO_REAGENT.get(stack);
-				if(reag != null){
-					if(dirtyReag){
-						correctReag();
-					}
-					ItemStack testStack = stack.copy();
-					testStack.setCount(1);
-					int trans = Math.min(stack.getCount(), transferCapacity() - contents.getTotalQty());
-					if(!simulate){
-						double itemTemp = HeatUtil.convertBiomeTemp(world, pos);
-						if(itemTemp >= reag.getMeltingPoint()){
-							itemTemp = Math.min(HeatUtil.ABSOLUTE_ZERO, reag.getMeltingPoint() - 100D);
-						}
-						contents.addReagent(reag, trans, itemTemp);
-						dirtyReag = true;
-						markDirty();
-					}
-					testStack.setCount(stack.getCount() - trans);
-					return testStack;
-				}
-			}
-			return stack;
-		}
-
-		@Override
-		public ItemStack extractItem(int slot, int amount, boolean simulate){
-			updateFakeInv();
-			int canExtract = Math.min(fakeInventory[slot].getCount(), amount);
-			if(canExtract > 0){
-				try{
-					ItemStack outStack = fakeInventory[slot].copy();
-					outStack.setCount(canExtract);
-					if(!simulate){
-						IReagent reag = AlchemyCore.ITEM_TO_REAGENT.get(fakeInventory[slot]);
-						contents.removeReagent(reag, canExtract);
-						dirtyReag = true;
-						markDirty();
-					}
-					return outStack;
-				}catch(NullPointerException e){
-					Crossroads.logger.log(Level.FATAL, "Alchemy Item/Reagent map error. Slot: " + slot + ", Stack: " + fakeInventory[slot], e);
-				}
-			}
-
-			return ItemStack.EMPTY;
-		}
-
-		@Override
-		public int getSlotLimit(int slot){
-			return 10;
 		}
 	}
 

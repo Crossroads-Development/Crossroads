@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:quartz_stabilizer"
+					"name": "crossroads:quartz_stabilizer"
 				}
 			],
 			"conditions": [

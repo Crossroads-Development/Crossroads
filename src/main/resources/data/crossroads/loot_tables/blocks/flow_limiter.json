@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:flow_limiter"
+					"name": "crossroads:flow_limiter"
 				}
 			],
 			"conditions": [

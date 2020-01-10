@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:ore_cleanser"
+					"name": "crossroads:ore_cleanser"
 				}
 			],
 			"conditions": [

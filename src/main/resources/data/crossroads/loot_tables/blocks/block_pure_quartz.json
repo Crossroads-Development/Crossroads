@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:block_pure_quartz"
+					"name": "crossroads:block_pure_quartz"
 				}
 			],
 			"conditions": [

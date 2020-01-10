@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:steam_turbine"
+					"name": "crossroads:steam_turbine"
 				}
 			],
 			"conditions": [

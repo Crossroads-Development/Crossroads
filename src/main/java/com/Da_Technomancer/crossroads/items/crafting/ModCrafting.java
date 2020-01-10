@@ -126,7 +126,7 @@ public final class ModCrafting{
 		RecipeHolder.beamExtractRecipes.put(Items.GLOWSTONE_DUST, new BeamUnit(4, 4, 4, 0));
 		RecipeHolder.beamExtractRecipes.put(CRItems.sulfur, new BeamUnit(32, 0, 0, 0));
 		RecipeHolder.beamExtractRecipes.put(CRItems.solidQuicksilver, new BeamUnit(0, 32, 0, 0));
-		RecipeHolder.beamExtractRecipes.put(CRItems.wasteSalt, new BeamUnit(0, 0, 32, 0));
+		RecipeHolder.beamExtractRecipes.put(CRItems.alchemySalt, new BeamUnit(0, 0, 32, 0));
 		RecipeHolder.beamExtractRecipes.put(Items.ENDER_PEARL, new BeamUnit(32, 0, 32, 0));
 		RecipeHolder.beamExtractRecipes.put(Items.DRAGON_BREATH, new BeamUnit(64, 0, 64, 0));
 		RecipeHolder.beamExtractRecipes.put(Items.BLAZE_POWDER, new BeamUnit(32, 16, 0, 0));
@@ -227,7 +227,7 @@ public final class ModCrafting{
 		//Tesla Ray
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CRItems.teslaRay, 1), "C C", "VII", "C C", 'C', "ingotCopshowium", 'I', "ingotIron", 'V', CRItems.leydenJar));
 		//Damping Powder
-		RecipeHolder.alchemyRecipes.add(new ShapelessOreRecipe(null, new ItemStack(CRItems.dampingPowder, 4), CRItems.wasteSalt, CRItems.wasteSalt, "dustSalt", "dustRedstone"));
+		RecipeHolder.alchemyRecipes.add(new ShapelessOreRecipe(null, new ItemStack(CRItems.dampingPowder, 4), CRItems.alchemySalt, CRItems.alchemySalt, "dustSalt", "dustRedstone"));
 		//Reagent Filter
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.reagentFilterGlass, 1), "IAI", "|A|", "IAI", 'I', "ingotIron", '|', "blockGlass", 'A', CRItems.lensArray));
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.reagentFilterCrystal, 1), "IAI", "|A|", "IAI", 'I', "ingotIron", '|', CRItems.alchCrystal, 'A', CRItems.lensArray));

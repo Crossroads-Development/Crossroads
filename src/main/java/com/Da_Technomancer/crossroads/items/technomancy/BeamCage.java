@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
-import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
@@ -10,7 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -35,7 +35,7 @@ public class BeamCage extends Item{
 		if(nbt == null){
 			return BeamUnit.EMPTY;
 		}
-		BeamUnit stored = new BeamUnit(nbt.getInt("stored_" + EnumBeamAlignments.ENERGY.name().toLowerCase()), nbt.getInt("stored_" + EnumBeamAlignments.POTENTIAL.name().toLowerCase()), nbt.getInt("stored_" + EnumBeamAlignments.STABILITY.name().toLowerCase()), nbt.getInt("stored_" + EnumBeamAlignments.VOID.name().toLowerCase()));
+		BeamUnit stored = BeamUnit.readFromNBT("beam", nbt);
 		return stored.getPower() == 0 ? BeamUnit.EMPTY : stored;
 	}
 
@@ -45,30 +45,29 @@ public class BeamCage extends Item{
 			stack.write(new CompoundNBT());
 			nbt = stack.getTag();
 		}
-		nbt.putInt("stored_" + EnumBeamAlignments.ENERGY.name().toLowerCase(), toStore.getEnergy());
-		nbt.putInt("stored_" + EnumBeamAlignments.POTENTIAL.name().toLowerCase(), toStore.getPotential());
-		nbt.putInt("stored_" + EnumBeamAlignments.STABILITY.name().toLowerCase(), toStore.getStability());
-		nbt.putInt("stored_" + EnumBeamAlignments.VOID.name().toLowerCase(), toStore.getVoid());
+		if(toStore.getEnergy() > CAPACITY || toStore.getPotential() > CAPACITY || toStore.getStability() > CAPACITY || toStore.getVoid() > CAPACITY){
+			toStore = new BeamUnit(Math.min(CAPACITY, toStore.getEnergy()), Math.min(CAPACITY, toStore.getPotential()), Math.min(CAPACITY, toStore.getStability()), Math.min(CAPACITY, toStore.getVoid()));
+		}
+		toStore.writeToNBT("beam", nbt);
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void getSubItems(ItemGroup tab, NonNullList<ItemStack> list){
-		if(isInCreativeTab(tab)){
-			list.add(new ItemStack(this, 1));
+	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items){
+		if(isInGroup(group)){
+			items.add(new ItemStack(this, 1));
 			ItemStack stack = new ItemStack(this, 1);
 			storeBeam(stack, new BeamUnit(CAPACITY, CAPACITY, CAPACITY, CAPACITY));
-			list.add(stack);
+			items.add(stack);
 		}
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		BeamUnit stored = getStored(stack);
-		tooltip.add("Energy stored: " + (stored == null ? 0 : stored.getEnergy()));
-		tooltip.add("Potential stored: " + (stored == null ? 0 : stored.getPotential()));
-		tooltip.add("Stability stored: " + (stored == null ? 0 : stored.getStability()));
-		tooltip.add("Void stored: " + (stored == null ? 0 : stored.getVoid()));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_cage.energy", stored.getEnergy(), CAPACITY));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_cage.potential", stored.getPotential(), CAPACITY));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_cage.stability", stored.getStability(), CAPACITY));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_cage.void", stored.getVoid(), CAPACITY));
 	}
 }

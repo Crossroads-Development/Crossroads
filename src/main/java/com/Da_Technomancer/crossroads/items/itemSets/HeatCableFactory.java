@@ -12,8 +12,8 @@ import net.minecraftforge.client.model.ModelLoader;
 
 public final class HeatCableFactory{
 
-	public static final HashMap<HeatInsulators, HeatCable> HEAT_CABLES = new HashMap<HeatInsulators, HeatCable>();
-	public static final HashMap<HeatInsulators, RedstoneHeatCable> REDSTONE_HEAT_CABLES = new HashMap<HeatInsulators, RedstoneHeatCable>();
+	public static final HashMap<HeatInsulators, HeatCable> HEAT_CABLES = new HashMap<>();
+	public static final HashMap<HeatInsulators, RedstoneHeatCable> REDSTONE_HEAT_CABLES = new HashMap<>();
 
 	protected static void init(){
 		HEAT_CABLES.clear();

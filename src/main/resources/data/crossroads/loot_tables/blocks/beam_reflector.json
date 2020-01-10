@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:beam_reflector"
+					"name": "crossroads:beam_reflector"
 				}
 			],
 			"conditions": [

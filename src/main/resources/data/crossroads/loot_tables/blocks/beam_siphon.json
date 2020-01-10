@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:beam_siphon"
+					"name": "crossroads:beam_siphon"
 				}
 			],
 			"conditions": [

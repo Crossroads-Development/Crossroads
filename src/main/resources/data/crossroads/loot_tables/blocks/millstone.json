@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "essentials:millstone"
+					"name": "crossroads:millstone"
 				}
 			],
 			"conditions": [
