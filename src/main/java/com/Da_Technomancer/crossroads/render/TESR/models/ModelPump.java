@@ -1,58 +1,88 @@
 package com.Da_Technomancer.crossroads.render.TESR.models;
 
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import org.lwjgl.opengl.GL11;
 
-public class ModelPump extends ModelBase{
+public class ModelPump{
 
-	private ModelRenderer core;
-	private ModelRenderer screwA;
-	private ModelRenderer screwB;
-	private ModelRenderer screwC;
+	public static void renderScrew(){
+		//TODO check texture mapping and scaling
 
-	public ModelPump(){
-		textureWidth = 64;
-		textureHeight = 32;
+		BufferBuilder vb = Tessellator.getInstance().getBuffer();
+		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
-		core = new ModelRenderer(this, 56, 0);
-		core.addBox(-1F, 0F, -1F, 2, 17, 2);
-		core.setRotationPoint(0F, 0F, 0F);
-		core.setTextureSize(64, 32);
-		core.mirror = true;
-		setRotation(core, 0F, 0F, 0F);
-		screwA = new ModelRenderer(this, 5, 12);
-		screwA.addBox(-3F, .5F, -.25F, 6, 1, 3);
-		screwA.setRotationPoint(0F, 1F, 1.25F);
-		screwA.setTextureSize(64, 32);
-		screwA.mirror = true;
-		setRotation(screwA, 0F, 0F, -0.3926991F);
-		
-		screwB = new ModelRenderer(this, 39, 0);
-		screwB.addBox(-2.75F, 1.5F, -3.5F, 3, 1, 5);
-		screwB.setRotationPoint(-1.25F, 2F, -1F);
-		screwB.setTextureSize(64, 32);
-		screwB.mirror = true;
-		setRotation(screwB, 0.3926991F, 0, 0);
-		
-		screwC = new ModelRenderer(this, 5, 7);
-		screwC.addBox(-1.5F, 2F, -2.75F, 5, 1, 3);
-		screwC.setRotationPoint(1F, 3.5F, -1.25F);
-		screwC.setTextureSize(64, 32);
-		screwC.mirror = true;
-		setRotation(screwC, 0F, 0F, 0.3926991F);
-	}
+		//Central axis
+		final float coreRad = 1F / 16F;
+		final float rodHeight = 16.5F / 16F;
+		final float bladeWid = 3F / 16F;
+		final float bladeRad = coreRad + bladeWid;
+		final float incline = 5F / 3F / 16F;
 
-	public void renderScrew(){
-		float f = 1F / 16F;
-		core.render(f);
-		screwA.render(f);
-		screwB.render(f);
-		screwC.render(f);
-	}
+		vb.pos(-coreRad, 0, -coreRad).tex(0, 0).endVertex();
+		vb.pos(-coreRad, rodHeight, -coreRad).tex(0, 16).endVertex();
+		vb.pos(coreRad, rodHeight, -coreRad).tex(2, 16).endVertex();
+		vb.pos(coreRad, 0, -coreRad).tex(2, 0).endVertex();
 
-	private void setRotation(ModelRenderer model, float x, float y, float z){
-		model.rotateAngleX = x;
-		model.rotateAngleY = y;
-		model.rotateAngleZ = z;
+		vb.pos(-coreRad, 0, coreRad).tex(0, 0).endVertex();
+		vb.pos(-coreRad, rodHeight, coreRad).tex(0, 16).endVertex();
+		vb.pos(coreRad, rodHeight, coreRad).tex(2, 16).endVertex();
+		vb.pos(coreRad, 0, coreRad).tex(2, 0).endVertex();
+
+		vb.pos(-coreRad, 0, -coreRad).tex(0, 0).endVertex();
+		vb.pos(-coreRad, rodHeight, -coreRad).tex(0, 16).endVertex();
+		vb.pos(-coreRad, rodHeight, coreRad).tex(2, 16).endVertex();
+		vb.pos(-coreRad, 0, coreRad).tex(2, 0).endVertex();
+
+		vb.pos(coreRad, 0, -coreRad).tex(0, 0).endVertex();
+		vb.pos(coreRad, rodHeight, -coreRad).tex(0, 16).endVertex();
+		vb.pos(coreRad, rodHeight, coreRad).tex(2, 16).endVertex();
+		vb.pos(coreRad, 0, coreRad).tex(2, 0).endVertex();
+
+		vb.pos(-coreRad, 0, -coreRad).tex(0, 0).endVertex();
+		vb.pos(-coreRad, 0, coreRad).tex(0, 2).endVertex();
+		vb.pos(coreRad, 0, coreRad).tex(2, 2).endVertex();
+		vb.pos(coreRad, 0, -coreRad).tex(2, 0).endVertex();
+
+		vb.pos(-coreRad, rodHeight, -coreRad).tex(0, 0).endVertex();
+		vb.pos(-coreRad, rodHeight, coreRad).tex(0, 2).endVertex();
+		vb.pos(coreRad, rodHeight, coreRad).tex(2, 2).endVertex();
+		vb.pos(coreRad, rodHeight, -coreRad).tex(2, 0).endVertex();
+
+		//Blade 1
+		vb.pos(coreRad, 0, -bladeRad).tex(0, 0).endVertex();
+		vb.pos(bladeRad, 0, -bladeRad).tex(3, 0).endVertex();
+		vb.pos(bladeRad, incline, bladeRad).tex(3, 8).endVertex();
+		vb.pos(coreRad, incline, bladeRad).tex(0, 8).endVertex();
+
+		vb.pos(coreRad, 0, -bladeRad).tex(0, 0).endVertex();
+		vb.pos(coreRad, incline, bladeRad).tex(0, 8).endVertex();
+		vb.pos(bladeRad, incline, bladeRad).tex(3, 8).endVertex();
+		vb.pos(bladeRad, 0, -bladeRad).tex(3, 0).endVertex();
+
+		//Blade 2
+		vb.pos(-bladeRad, 2 * incline, coreRad).tex(0, 0).endVertex();
+		vb.pos(bladeRad, incline, coreRad).tex(8, 0).endVertex();
+		vb.pos(bladeRad, incline, coreRad + bladeWid).tex(8, 3).endVertex();
+		vb.pos(-bladeRad, 2 * incline, coreRad + bladeWid).tex(0, 3).endVertex();
+
+		vb.pos(-bladeRad, 2 * incline, coreRad).tex(0, 0).endVertex();
+		vb.pos(-bladeRad, 2 * incline, coreRad + bladeWid).tex(0, 3).endVertex();
+		vb.pos(bladeRad, incline, coreRad + bladeWid).tex(8, 3).endVertex();
+		vb.pos(bladeRad, incline, coreRad).tex(8, 0).endVertex();
+
+		//Blade 3
+		vb.pos(-bladeRad, 2 * incline, bladeRad).tex(0, 8).endVertex();
+		vb.pos(-coreRad, 2 * incline, bladeRad).tex(3, 8).endVertex();
+		vb.pos(-coreRad, 3 * incline, -bladeRad).tex(3, 0).endVertex();
+		vb.pos(-bladeRad, 3 * incline, -bladeRad).tex(0, 0).endVertex();
+
+		vb.pos(-bladeRad, 2 * incline, bladeRad).tex(0, 8).endVertex();
+		vb.pos(-bladeRad, 3 * incline, -bladeRad).tex(0, 0).endVertex();
+		vb.pos(-coreRad, 3 * incline, -bladeRad).tex(3, 0).endVertex();
+		vb.pos(-coreRad, 2 * incline, bladeRad).tex(3, 8).endVertex();
+
+		Tessellator.getInstance().draw();
 	}
 }

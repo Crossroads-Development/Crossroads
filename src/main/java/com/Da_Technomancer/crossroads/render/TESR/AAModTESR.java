@@ -13,7 +13,6 @@ import com.Da_Technomancer.essentials.render.LinkLineRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
-import net.minecraft.item.Item;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 /** Before anyone asks, the AA at the beginning of the name is so I can easily find it in the list of classes.*/
@@ -28,23 +27,21 @@ public class AAModTESR{
 		ClientRegistry.bindTileEntitySpecialRenderer(SteamTurbineTileEntity.class, new SteamTurbineRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(LargeGearMasterTileEntity.class, new LargeGearRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(RotaryDrillTileEntity.class, new RotaryDrillRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(BeamExtractorTileEntity.class, new BeamRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(QuartzStabilizerTileEntity.class, new BeamRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(CrystallinePrismTileEntity.class, new BeamRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(BeamReflectorTileEntity.class, new BeamRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(BeamExtractorTileEntity.class, new BeamRenderer<>());
+		ClientRegistry.bindTileEntitySpecialRenderer(QuartzStabilizerTileEntity.class, new BeamRenderer<>());
+		ClientRegistry.bindTileEntitySpecialRenderer(CrystallinePrismTileEntity.class, new BeamRenderer<>());
+		ClientRegistry.bindTileEntitySpecialRenderer(BeamReflectorTileEntity.class, new BeamRenderer<>());
 		ClientRegistry.bindTileEntitySpecialRenderer(LensFrameTileEntity.class, new LensFrameRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(BeamSiphonTileEntity.class, new BeamRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(BeamRedirectorTileEntity.class, new BeamRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(BeamSplitterTileEntity.class, new BeamRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(BeamSiphonTileEntity.class, new BeamRenderer<>());
+		ClientRegistry.bindTileEntitySpecialRenderer(BeamRedirectorTileEntity.class, new BeamRenderer<>());
+		ClientRegistry.bindTileEntitySpecialRenderer(BeamSplitterTileEntity.class, new BeamRenderer<>());
 		ClientRegistry.bindTileEntitySpecialRenderer(BeaconHarnessTileEntity.class, new BeaconHarnessRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(HamsterWheelTileEntity.class, new HamsterWheelRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(GatewayFrameTileEntity.class, new GatewayFrameRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(MechanicalArmTileEntity.class, new MechanicalArmRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(HeatingCrucibleTileEntity.class, new HeatingCrucibleRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(DynamoTileEntity.class, new DynamoRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(PrototypingTableTileEntity.class, new PrototypingTableRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(ClockworkStabilizerTileEntity.class, new BeamRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(PrototypeTileEntity.class, new BeamRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(ClockworkStabilizerTileEntity.class, new BeamRenderer<>());
 		ClientRegistry.bindTileEntitySpecialRenderer(WindTurbineTileEntity.class, new WindTurbineRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(StampMillTileEntity.class, new StampMillRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(FluxNodeTileEntity.class, new FluxNodeRenderer());
@@ -57,6 +54,6 @@ public class AAModTESR{
 	}
 
 	private static void reg(Block block){
-		Minecraft.getInstance().getItemRenderer().getItemModelMesher().register(Item.getItemFromBlock(block), new ModelResourceLocation(block.getRegistryName().toString(), "inventory"));
+		Minecraft.getInstance().getItemRenderer().getItemModelMesher().register(block.asItem(), new ModelResourceLocation(block.getRegistryName().toString(), "inventory"));
 	}
 }

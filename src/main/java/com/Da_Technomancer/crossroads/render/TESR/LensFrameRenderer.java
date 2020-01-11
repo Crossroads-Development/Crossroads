@@ -1,21 +1,20 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import com.Da_Technomancer.crossroads.API.templates.IBeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.tileentities.beams.LensFrameTileEntity;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class LensFrameRenderer extends BeamRenderer{
+public class LensFrameRenderer extends BeamRenderer<LensFrameTileEntity>{
 
 	private static final ResourceLocation[] textures = new ResourceLocation[6];
 
@@ -29,23 +28,23 @@ public class LensFrameRenderer extends BeamRenderer{
 	}
 
 	@Override
-	public void render(IBeamRenderTE beam, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
-		if(!beam.getWorld().isBlockLoaded(beam.getPos(), false)){
+	public void render(LensFrameTileEntity beam, double x, double y, double z, float partialTicks, int destroyStage){
+		if(!beam.getWorld().isBlockLoaded(beam.getPos())){
 			return;
 		}
 		BlockState state = beam.getWorld().getBlockState(beam.getPos());
-		super.render(beam, x, y, z, partialTicks, destroyStage, alpha);
+		super.render(beam, x, y, z, partialTicks, destroyStage);
 		int content = ((LensFrameTileEntity) beam).getContents();
 		if(content != 0 && state.getBlock() == CrossroadsBlocks.lensFrame){
 			Direction.Axis axis = state.get(EssentialsProperties.AXIS);
 			GlStateManager.pushMatrix();
 			GlStateManager.disableLighting();
-			GlStateManager.translate(x + 0.5F, y + 0.5F, z + 0.5F);
+			GlStateManager.translated(x + 0.5F, y + 0.5F, z + 0.5F);
 			if(axis == Direction.Axis.X){
-				GlStateManager.rotate(90, 0, 1, 0);
+				GlStateManager.rotated(90, 0, 1, 0);
 			}
 			if(axis != Direction.Axis.Y){
-				GlStateManager.rotate(90, 1, 0, 0);
+				GlStateManager.rotated(90, 1, 0, 0);
 			}
 
 			Minecraft.getInstance().getTextureManager().bindTexture(textures[content - 1]);

@@ -1,16 +1,15 @@
 package com.Da_Technomancer.crossroads.render.TESR.models;
 
-import java.awt.Color;
-
 import com.Da_Technomancer.crossroads.Crossroads;
-import org.lwjgl.opengl.GL11;
-
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
+
+import java.awt.*;
 
 public class ModelGearOctagon{
 
@@ -36,7 +35,7 @@ public class ModelGearOctagon{
 		Minecraft.getInstance().textureManager.bindTexture(RESOURCE);
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
-		GlStateManager.color(c.getRed() / 255F, c.getGreen() / 255F, c.getBlue() / 255F);
+		GlStateManager.color3f(c.getRed() / 255F, c.getGreen() / 255F, c.getBlue() / 255F);
 
 		vb.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(sHalf, top, -lHalf).tex(.5F + sHalfT, .5F - (-lHalfT)).endVertex();
@@ -60,7 +59,7 @@ public class ModelGearOctagon{
 		vb.pos(sHalf, -top, -lHalf).tex(.5F + sHalfT, .5F - (-lHalfT)).endVertex();
 		Tessellator.getInstance().draw();
 
-		GlStateManager.color((c.getRed() - 130F) / 255F, (c.getGreen() - 130F) / 255F, (c.getBlue() - 130F) / 255F);
+		GlStateManager.color3f((c.getRed() - 130F) / 255F, (c.getGreen() - 130F) / 255F, (c.getBlue() - 130F) / 255F);
 
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(lHalf, -top, sHalf).tex(1F, .5F + -sHalfT).endVertex();
@@ -121,7 +120,7 @@ public class ModelGearOctagon{
 
 		//Prongs
 
-		GlStateManager.color(c.getRed() / 255F, c.getGreen() / 255F, c.getBlue() / 255F);
+		GlStateManager.color3f(c.getRed() / 255F, c.getGreen() / 255F, c.getBlue() / 255F);
 
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(extend, bottomP, tHeight).tex(1F, .5F + -tHeight).endVertex();
@@ -277,7 +276,7 @@ public class ModelGearOctagon{
 
 
 		GlStateManager.pushMatrix();
-		GlStateManager.rotate(45, 0, 1, 0);
+		GlStateManager.rotated(45, 0, 1, 0);
 
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(extend, bottomP, tHeight).tex(1F, .5F + -tHeight).endVertex();
@@ -431,7 +430,7 @@ public class ModelGearOctagon{
 		vb.pos(-tHeight, topP, extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
 		Tessellator.getInstance().draw();
 
-		GlStateManager.color(1F, 1F, 1F);
+		GlStateManager.color3f(1F, 1F, 1F);
 
 		GlStateManager.popMatrix();
 	}

@@ -1,22 +1,22 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
-import net.minecraft.client.renderer.GlStateManager;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.util.Direction;
 
 public class MechanismRenderer extends TileEntityRenderer<MechanismTileEntity>{
 
 	@Override
-	public void render(MechanismTileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
-		if(!te.getWorld().isBlockLoaded(te.getPos(), false)){
+	public void render(MechanismTileEntity te, double x, double y, double z, float partialTicks, int destroyStage){
+		if(!te.getWorld().isBlockLoaded(te.getPos())){
 			return;
 		}
 
 		GlStateManager.pushMatrix();
-		GlStateManager.pushAttrib();
+		GlStateManager.pushLightingAttributes();
 		GlStateManager.disableLighting();
-		GlStateManager.translate(x + .5D, y + .5D, z + .5D);
+		GlStateManager.translated(x + .5D, y + .5D, z + .5D);
 
 		for(int i = 0; i < 7; i++){
 			if(te.members[i] != null){
@@ -25,7 +25,7 @@ public class MechanismRenderer extends TileEntityRenderer<MechanismTileEntity>{
 		}
 
 		GlStateManager.enableLighting();
-		GlStateManager.popAttrib();
+		GlStateManager.popAttributes();
 		GlStateManager.popMatrix();
 
 
@@ -36,17 +36,17 @@ public class MechanismRenderer extends TileEntityRenderer<MechanismTileEntity>{
 //				IAxleHandler handler = te.getCapability(Capabilities.AXLE_CAPABILITY, side);
 //				color = te.getMembers()[side.getIndex()].getColor();
 //				GlStateManager.pushMatrix();
-//				GlStateManager.pushAttrib();
+//				GlStateManager.pushLightingAttributes();
 //				GlStateManager.disableLighting();
-//				GlStateManager.translate(x + .5D, y + .5D, z + .5D);
-//				GlStateManager.rotate(side == EnumFacing.DOWN ? 0 : side == EnumFacing.UP ? 180F : side == EnumFacing.NORTH || side == EnumFacing.EAST ? 90F : -90F, side.getAxis() == EnumFacing.Axis.Z ? 1 : 0, 0, side.getAxis() == EnumFacing.Axis.Z ? 0 : 1);
+//				GlStateManager.translated(x + .5D, y + .5D, z + .5D);
+//				GlStateManager.rotated(side == EnumFacing.DOWN ? 0 : side == EnumFacing.UP ? 180F : side == EnumFacing.NORTH || side == EnumFacing.EAST ? 90F : -90F, side.getAxis() == EnumFacing.Axis.Z ? 1 : 0, 0, side.getAxis() == EnumFacing.Axis.Z ? 0 : 1);
 //				float angle = (float) (handler.getNextAngle() - handler.getAngle());
 //				angle *= partialTicks;
 //				angle += handler.getAngle();
-//				GlStateManager.rotate(angle, 0F, 1F, 0F);
+//				GlStateManager.rotated(angle, 0F, 1F, 0F);
 //				modelOct.draw(res, color);
 //				GlStateManager.enableLighting();
-//				GlStateManager.popAttrib();
+//				GlStateManager.popAttributes();
 //				GlStateManager.popMatrix();
 //			}
 //		}

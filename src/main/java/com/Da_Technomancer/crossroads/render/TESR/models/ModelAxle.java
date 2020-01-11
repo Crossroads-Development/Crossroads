@@ -1,16 +1,15 @@
 package com.Da_Technomancer.crossroads.render.TESR.models;
 
-import java.awt.Color;
-
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import java.awt.*;
 
 public class ModelAxle {
 
@@ -36,7 +35,7 @@ public class ModelAxle {
 		
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
-		GlStateManager.color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
+		GlStateManager.color3f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
 		Minecraft.getInstance().textureManager.bindTexture(ends);
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-radius, -.4999F, -radius).tex(0, 0).endVertex();

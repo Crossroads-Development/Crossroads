@@ -1,15 +1,14 @@
 package com.Da_Technomancer.crossroads.render.TESR.models;
 
-import java.awt.Color;
-
-import org.lwjgl.opengl.GL11;
-
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
+
+import java.awt.*;
 
 /**
  * An Icositetragon is a 24 sided shape. This is used for the large gear.
@@ -46,7 +45,7 @@ public class ModelGearIcositetragon{
 		Minecraft.getInstance().textureManager.bindTexture(res);
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
-		GlStateManager.color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
+		GlStateManager.color3f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
 
 		//Top and bottom
 		vb.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION_TEX);
@@ -107,7 +106,7 @@ public class ModelGearIcositetragon{
 		Minecraft.getInstance().textureManager.bindTexture(rim);
 		GlStateManager.pushMatrix();
 		for(float i = 0; i < 6; i++){
-			GlStateManager.rotate(15, 0, 1, 0);
+			GlStateManager.rotated(15, 0, 1, 0);
 
 			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			vb.pos(radius, bottom, sinFirst).tex((i + 1F) / 16F, 0).endVertex();
@@ -140,9 +139,9 @@ public class ModelGearIcositetragon{
 		GlStateManager.popMatrix();
 
 		//Prongs
-		GlStateManager.color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
+		GlStateManager.color3f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
 		for(int i = 0; i < 24; i++){
-			GlStateManager.rotate(15, 0, 1, 0);
+			GlStateManager.rotated(15, 0, 1, 0);
 
 			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			vb.pos(extend, bottomProng, widthProng).tex(4F / 16F, 0).endVertex();

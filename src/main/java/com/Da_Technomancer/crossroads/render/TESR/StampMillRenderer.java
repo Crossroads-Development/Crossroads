@@ -6,10 +6,10 @@ import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.tileentities.rotary.StampMillTileEntity;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -24,9 +24,9 @@ public class StampMillRenderer extends TileEntityRenderer<StampMillTileEntity>{
 	private static final ResourceLocation METAL_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/blocks/block_cast_iron.png");
 
 	@Override
-	public void render(StampMillTileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
+	public void render(StampMillTileEntity te, double x, double y, double z, float partialTicks, int destroyStage){
 		BlockState state = te.getWorld().getBlockState(te.getPos());
-		if(!te.getWorld().isBlockLoaded(te.getPos(), false) || state.getBlock() != CrossroadsBlocks.stampMill){
+		if(!te.getWorld().isBlockLoaded(te.getPos()) || state.getBlock() != CrossroadsBlocks.stampMill){
 			return;
 		}
 		
@@ -35,30 +35,30 @@ public class StampMillRenderer extends TileEntityRenderer<StampMillTileEntity>{
 		float prog = te.renderAngle(partialTicks);
 		GlStateManager.pushMatrix();
 		GlStateManager.disableLighting();
-		GlStateManager.translate(x + .5D, y + 1.5F, z + .5D);
+		GlStateManager.translated(x + .5D, y + 1.5F, z + .5D);
 		if(state.get(CRProperties.HORIZ_AXIS) == Direction.Axis.Z){
-			GlStateManager.rotate(90, 0, 1, 0);
+			GlStateManager.rotated(90, 0, 1, 0);
 		}
 
 		//Axle
 		GlStateManager.pushMatrix();
-		GlStateManager.rotate(90, 0, 0, 1);
-		GlStateManager.rotate(-prog, 0, 1, 0);
+		GlStateManager.rotated(90, 0, 0, 1);
+		GlStateManager.rotated(-prog, 0, 1, 0);
 		ModelAxle.render(ironColor);
 
 		//Teeth
 		for(int i = 0; i < 3; i++){
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(0, -13F / 32F + 5F * i / 16F, 0);
-			GlStateManager.rotate(i * 90 + 90, 0, 1, 0);
-			GlStateManager.rotate(90, 0, 0, 1);
-			GlStateManager.scale(0.4F, 0.5F, 0.4F);
+			GlStateManager.translated(0, -13F / 32F + 5F * i / 16F, 0);
+			GlStateManager.rotated(i * 90 + 90, 0, 1, 0);
+			GlStateManager.rotated(90, 0, 0, 1);
+			GlStateManager.scalef(0.4F, 0.5F, 0.4F);
 
 			ModelAxle.render(ironColor);
 			GlStateManager.popMatrix();
 		}
 
-		GlStateManager.color(1, 1, 1);
+		GlStateManager.color3f(1, 1, 1);
 		GlStateManager.popMatrix();
 
 		Minecraft.getInstance().getTextureManager().bindTexture(METAL_TEXTURE);
@@ -68,10 +68,10 @@ public class StampMillRenderer extends TileEntityRenderer<StampMillTileEntity>{
 		double offset1 = (Math.sin(2D * Math.toRadians(prog - 90D)) + 1D) / 2D * 9D / 32D;
 
 
-		GlStateManager.translate(-5F/ 16F, offset1, -2F / 8F);
+		GlStateManager.translated(-5F/ 16F, offset1, -2F / 8F);
 		//Stamps
 		for(int i = 0; i < 3; i++){
-			GlStateManager.translate(0, i % 2 == 0 ? offset0 - offset1 : offset1 - offset0, 0);
+			GlStateManager.translated(0, i % 2 == 0 ? offset0 - offset1 : offset1 - offset0, 0);
 			buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
 			//Rod
@@ -162,7 +162,7 @@ public class StampMillRenderer extends TileEntityRenderer<StampMillTileEntity>{
 			buf.pos(-rodRad, -bottom, rodRad).tex(rodRad, 3D * rodRad).endVertex();
 			tes.draw();
 
-			GlStateManager.translate(5F / 16F, 0, 0);
+			GlStateManager.translated(5F / 16F, 0, 0);
 		}
 
 

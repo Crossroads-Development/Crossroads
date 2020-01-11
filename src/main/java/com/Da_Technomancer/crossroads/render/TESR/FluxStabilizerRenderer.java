@@ -16,8 +16,8 @@ public class FluxStabilizerRenderer extends TileEntityRenderer<AbstractStabilize
 	private static final ResourceLocation TEXTURE = BeaconTileEntityRenderer.TEXTURE_BEACON_BEAM;
 
 	@Override
-	public void render(AbstractStabilizerTileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
-		if(te == null || !te.getWorld().isBlockLoaded(te.getPos(), false)){
+	public void render(AbstractStabilizerTileEntity te, double x, double y, double z, float partialTicks, int destroyStage){
+		if(te == null || !te.getWorld().isBlockLoaded(te.getPos())){
 			return;
 		}
 		super.render(te, x, y, z, partialTicks, destroyStage, alpha);
@@ -27,9 +27,9 @@ public class FluxStabilizerRenderer extends TileEntityRenderer<AbstractStabilize
 		}
 
 		GlStateManager.pushMatrix();
-		GlStateManager.pushAttrib();
+		GlStateManager.pushLightingAttributes();
 		GlStateManager.disableLighting();
-		GlStateManager.translate(x + .5D, y + .5D, z + .5D);
+		GlStateManager.translated(x + .5D, y + .5D, z + .5D);
 		GlStateManager.disableCull();
 		GlStateManager.color(1, 0.15F, 0, 1);
 
@@ -70,12 +70,12 @@ public class FluxStabilizerRenderer extends TileEntityRenderer<AbstractStabilize
 			buf.pos(hLen, prog - rad, hLen).tex(1, 0).endVertex();
 			tess.draw();
 
-			GlStateManager.rotate(90, i == 0 ? 1 : 0, 0, i == 1 ? 1 : 0);
+			GlStateManager.rotated(90, i == 0 ? 1 : 0, 0, i == 1 ? 1 : 0);
 		}
 
 
 		GlStateManager.enableCull();
-		GlStateManager.popAttrib();
+		GlStateManager.popAttributes();
 		GlStateManager.popMatrix();
 	}
 }

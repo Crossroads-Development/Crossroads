@@ -217,6 +217,7 @@ public final class Crossroads{
 		registerCon(ColorChartContainer::new, ColorChartScreen::new, "color_chart", e);
 		registerCon(BeamExtractorContainer::new, BeamExtractorScreen::new, "beam_extractor", e);
 		registerCon(HeatLimiterContainer::new, HeatLimiterScreen::new, "heat_limiter", e);
+		registerCon(RotaryPumpContainer::new, RotaryPumpScreen::new, "rotary_pump", e);
 
 		//TODO register containers
 	}
@@ -245,6 +246,8 @@ public final class Crossroads{
 		registerConType(ColorChartContainer::new, "color_chart", e);
 		registerConType(BeamExtractorContainer::new, "beam_extractor", e);
 		registerConType(HeatLimiterContainer::new, "heat_limiter", e);
+		registerConType(RotaryPumpContainer::new, "rotary_pump", e);
+
 	}
 
 	/**

@@ -20,13 +20,13 @@ public class GatewayFrameRenderer extends TileEntityRenderer<GatewayFrameTileEnt
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/model/gateway.png");
 
 	@Override
-	public void render(GatewayFrameTileEntity frame, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
+	public void render(GatewayFrameTileEntity frame, double x, double y, double z, float partialTicks, int destroyStage){
 		if(frame == null || !frame.getWorld().isBlockLoaded(frame.getPos(), false) || frame.getWorld().getBlockState(frame.getPos()).get(EssentialsProperties.FACING) != Direction.UP){
 			return;
 		}
 		super.render(frame, x, y, z, partialTicks, destroyStage, alpha);
 		GlStateManager.pushMatrix();
-		GlStateManager.pushAttrib();
+		GlStateManager.pushLightingAttributes();
 		GlStateManager.enableBlend();
 		GlStateManager.disableLighting();
 		GlStateManager.disableCull();
@@ -36,9 +36,9 @@ public class GatewayFrameRenderer extends TileEntityRenderer<GatewayFrameTileEnt
 		float brightY = OpenGlHelper.lastBrightnessY;
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 		
-		GlStateManager.translate(x + .5D, y, z + .5D);
+		GlStateManager.translated(x + .5D, y, z + .5D);
 		if(frame.getAlignment() == Axis.Z){
-			GlStateManager.rotate(90, 0, 1, 0);
+			GlStateManager.rotated(90, 0, 1, 0);
 		}
 		Minecraft.getInstance().textureManager.bindTexture(TEXTURE);
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
@@ -55,7 +55,7 @@ public class GatewayFrameRenderer extends TileEntityRenderer<GatewayFrameTileEnt
 		GlStateManager.enableCull();
 		GlStateManager.enableLighting();
 		GlStateManager.disableBlend();
-		GlStateManager.popAttrib();
+		GlStateManager.popAttributes();
 		GlStateManager.popMatrix();
 	}
 }

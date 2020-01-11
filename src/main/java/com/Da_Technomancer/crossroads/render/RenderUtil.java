@@ -88,6 +88,13 @@ public class RenderUtil{
 		return prev;
 	}
 
+	@OnlyIn(Dist.CLIENT)
+	public static Pair<Float, Float> setMediumLighting(){
+		Pair<Float, Float> prev = Pair.of(GLX.lastBrightnessX, GLX.lastBrightnessY);
+		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, 160, 160);
+		return prev;
+	}
+
 	/**
 	 * Re-enables lighting in the current GlStateManager render operation, for use after disableLighting
 	 * @param prevSetting The original lighting settings (returned by disable lighting)

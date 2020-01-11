@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.HamsterWheelTileEntity;
-import net.minecraft.client.renderer.GlStateManager;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -20,20 +20,20 @@ public class HamsterWheelRenderer extends TileEntityRenderer<HamsterWheelTileEnt
 	private static final ResourceLocation textureHam = new ResourceLocation(Crossroads.MODID, "textures/model/hamster.png");
 
 	@Override
-	public void render(HamsterWheelTileEntity wheel, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
+	public void render(HamsterWheelTileEntity wheel, double x, double y, double z, float partialTicks, int destroyStage){
 		World world = wheel.getWorld();
 		BlockPos pos = wheel.getPos();
-		if(!world.isBlockLoaded(pos, false) || world.getBlockState(pos).getBlock() != CrossroadsBlocks.hamsterWheel){
+		if(!world.isBlockLoaded(pos) || world.getBlockState(pos).getBlock() != CrossroadsBlocks.hamsterWheel){
 			return;
 		}
 		Direction facing = world.getBlockState(pos).get(CRProperties.HORIZ_FACING);
 
 		GlStateManager.pushMatrix();
-		GlStateManager.pushAttrib();
+		GlStateManager.pushLightingAttributes();
 		GlStateManager.disableLighting();
-		GlStateManager.translate(x + .5D, y + .5D, z + .5D);
-		GlStateManager.rotate(-facing.getHorizontalAngle() + 180, 0, 1, 0);
-		GlStateManager.rotate(90, 1, 0, 0);
+		GlStateManager.translated(x + .5D, y + .5D, z + .5D);
+		GlStateManager.rotated(-facing.getHorizontalAngle() + 180, 0, 1, 0);
+		GlStateManager.rotated(90, 1, 0, 0);
 
 		float angle = wheel.nextAngle - wheel.angle;
 		angle *= partialTicks;
@@ -42,16 +42,16 @@ public class HamsterWheelRenderer extends TileEntityRenderer<HamsterWheelTileEnt
 
 		//Feet
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(-.2D, -.25D, .30D);
+		GlStateManager.translated(-.2D, -.25D, .30D);
 		float peakAngle = 60;
 		float degreesPerCycle = 50;
 		float feetAngle = Math.abs((4 * peakAngle * Math.abs(angle) / degreesPerCycle) % (4 * peakAngle) - (2 * peakAngle)) - peakAngle;
 		for(int i = 0; i < 2; i++){
 			for(int j = 0; j < 2; j++){
 				GlStateManager.pushMatrix();
-				GlStateManager.translate(j == 0 ? 0 : .4D, i == 0 ? -.065D : .065D, 0);
-				GlStateManager.scale(.4D, .07D, .49D);
-				GlStateManager.rotate(i + j % 2 == 0 ? feetAngle : -feetAngle, 0, 1, 0);
+				GlStateManager.translated(j == 0 ? 0 : .4D, i == 0 ? -.065D : .065D, 0);
+				GlStateManager.scaled(.4D, .07D, .49D);
+				GlStateManager.rotated(i + j % 2 == 0 ? feetAngle : -feetAngle, 0, 1, 0);
 				ModelAxle.render(textureHam, textureHam, Color.LIGHT_GRAY);
 				GlStateManager.popMatrix();
 			}
@@ -61,13 +61,13 @@ public class HamsterWheelRenderer extends TileEntityRenderer<HamsterWheelTileEnt
 
 		//Wheel
 		GlStateManager.pushMatrix();
-		GlStateManager.rotate(angle, 0F, 1F, 0F);
+		GlStateManager.rotated(angle, 0F, 1F, 0F);
 
 		//Axle Support
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(0, -.4375D, 0);
-		GlStateManager.scale(1, .8D, 1);
-		GlStateManager.rotate(90, 1, 0, 0);
+		GlStateManager.translated(0, -.4375D, 0);
+		GlStateManager.scaled(1, .8D, 1);
+		GlStateManager.rotated(90, 1, 0, 0);
 		ModelAxle.render(GearFactory.findMaterial("Iron").getColor());
 		GlStateManager.popMatrix();
 
@@ -75,19 +75,19 @@ public class HamsterWheelRenderer extends TileEntityRenderer<HamsterWheelTileEnt
 
 		for(int i = 0; i < 8; i++){
 			GlStateManager.pushMatrix();
-			GlStateManager.rotate(45F * (float) i, 0, 1, 0);
-			GlStateManager.translate(lHalf, -.25F, 0);
-			GlStateManager.scale(.41D, i % 2 == 0 ? .5D : .45D, 7.5D * lHalf);
+			GlStateManager.rotated(45F * (float) i, 0, 1, 0);
+			GlStateManager.translated(lHalf, -.25F, 0);
+			GlStateManager.scaled(.41D, i % 2 == 0 ? .5D : .45D, 7.5D * lHalf);
 
 			ModelAxle.render(Color.GRAY);
 			GlStateManager.popMatrix();
 		}
 
-		GlStateManager.color(1, 1, 1);
+		GlStateManager.color3f(1, 1, 1);
 		GlStateManager.popMatrix();
 
 		GlStateManager.enableLighting();
-		GlStateManager.popAttrib();
+		GlStateManager.popAttributes();
 		GlStateManager.popMatrix();
 	}
 }

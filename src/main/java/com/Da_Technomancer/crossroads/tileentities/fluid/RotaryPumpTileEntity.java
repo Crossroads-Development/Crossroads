@@ -3,17 +3,24 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
+import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.gui.container.RotaryPumpContainer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IBucketPickupHandler;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.IFluidState;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -23,7 +30,7 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nullable;
 
 @ObjectHolder(Crossroads.MODID)
-public class RotaryPumpTileEntity extends ModuleTE{
+public class RotaryPumpTileEntity extends InventoryTE{
 
 	@ObjectHolder("rotary_pump")
 	private static TileEntityType<RotaryPumpTileEntity> type = null;
@@ -36,7 +43,7 @@ public class RotaryPumpTileEntity extends ModuleTE{
 	private int lastProgress = 0;
 
 	public RotaryPumpTileEntity(){
-		super(type);
+		super(type, 0);
 		fluidProps[0] = new TankProperty(CAPACITY, false, true);
 	}
 
@@ -145,5 +152,21 @@ public class RotaryPumpTileEntity extends ModuleTE{
 		}
 
 		return super.getCapability(capability, facing);
+	}
+
+	@Override
+	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
+		return false;
+	}
+
+	@Override
+	public ITextComponent getDisplayName(){
+		return new TranslationTextComponent("container.rotary_pump");
+	}
+
+	@Nullable
+	@Override
+	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
+		return new RotaryPumpContainer(id, playerInv, createContainerBuf());
 	}
 }

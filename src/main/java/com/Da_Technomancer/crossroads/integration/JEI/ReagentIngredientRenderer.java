@@ -28,7 +28,7 @@ public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 	@Override
 	public void render(Minecraft minecraft, int xPosition, int yPosition, ReagIngr ingredient){
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(xPosition, yPosition, 0);
+		GlStateManager.translated(xPosition, yPosition, 0);
 		GlStateManager.enableAlpha();
 		minecraft.textureManager.bindTexture(PHIAL_TEXTURE);
 		BufferBuilder buf = Tessellator.getInstance().getBuffer();

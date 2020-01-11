@@ -30,6 +30,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 @ObjectHolder(Crossroads.MODID)
 public class WaterCentrifugeTileEntity extends InventoryTE{
@@ -74,8 +75,13 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 			if(fluids[0].getAmount() >= BATCH_SIZE){
 				boolean dirty = fluids[0].getFluid() != Fluids.WATER;
 				ItemStack product = ItemStack.EMPTY;
-				if(dirty){
-					int choice = world.rand.nextInt(RecipeHolder.totalDirtyWaterWeight) + 1;
+
+				if(dirty){//Dirty water crafting
+					List<DirtyWaterRec> recipes = world.getRecipeManager().getRecipes(RecipeHolder.DIRTY_WATER_TYPE, this, world);
+					//Ideally this value would be precalculated and cached- however, due to the possibility of data pack reloading, this becomes more trouble than it's worth
+					//If forge ever implements Forge issue #6260, this would be worth caching
+					int totalWeight = recipes.parallelStream().mapToInt(DirtyWaterRec::getWeight).sum();
+					int choice = world.rand.nextInt(totalWeight) + 1;
 
 					for(DirtyWaterRec entry : world.getRecipeManager().getRecipes(RecipeHolder.DIRTY_WATER_TYPE, this, world)){
 						choice -= entry.getWeight();
@@ -84,7 +90,7 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 							break;
 						}
 					}
-				}else{
+				}else{//Normal de-salination
 					product = new ItemStack(CRItemTags.getTagEntry(CRItemTags.SALT));
 				}
 				fluids[0].shrink(BATCH_SIZE);

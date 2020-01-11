@@ -2,9 +2,9 @@ package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxNodeTileEntity;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -17,39 +17,39 @@ public class FluxNodeRenderer extends TileEntityRenderer<FluxNodeTileEntity>{
 	private static final ResourceLocation TEXTURE_COP = new ResourceLocation(Crossroads.MODID, "textures/blocks/block_copshowium.png");
 
 	@Override
-	public void render(FluxNodeTileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
-		if(te == null || !te.getWorld().isBlockLoaded(te.getPos(), false)){
+	public void render(FluxNodeTileEntity te, double x, double y, double z, float partialTicks, int destroyStage){
+		if(te == null || !te.getWorld().isBlockLoaded(te.getPos())){
 			return;
 		}
-		super.render(te, x, y, z, partialTicks, destroyStage, alpha);
+		super.render(te, x, y, z, partialTicks, destroyStage);
 
 		GlStateManager.pushMatrix();
-		GlStateManager.pushAttrib();
+		GlStateManager.pushLightingAttributes();
 		GlStateManager.disableLighting();
 
-		GlStateManager.translate(x + .5D, y + .5D, z + .5D);
+		GlStateManager.translated(x + .5D, y + .5D, z + .5D);
 
 
 		float angle = te.getRenderAngle(partialTicks);
 		Tessellator tess = Tessellator.getInstance();
 		BufferBuilder buf = tess.getBuffer();
 
-		GlStateManager.rotate(angle, 0, 1, 0);
+		GlStateManager.rotated(angle, 0, 1, 0);
 
-		GlStateManager.color(1, 1, 1, 1);
+		GlStateManager.color4f(1, 1, 1, 1);
 		Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE);
 		drawGimbal(tess, buf);
-		GlStateManager.rotate(90, 0, 0, 1);
-		GlStateManager.rotate(angle + 90, 0, 1, 0);
-		GlStateManager.scale(5F / 7F, 5F / 7F, 5F / 7F);
+		GlStateManager.rotated(90, 0, 0, 1);
+		GlStateManager.rotated(angle + 90, 0, 1, 0);
+		GlStateManager.scalef(5F / 7F, 5F / 7F, 5F / 7F);
 		drawGimbal(tess, buf);
-		GlStateManager.rotate(90, 0, 0, 1);
-		GlStateManager.rotate(angle + 90, 0, 1, 0);
-		GlStateManager.scale(5F / 7F, 5F / 7F, 5F / 7F);
+		GlStateManager.rotated(90, 0, 0, 1);
+		GlStateManager.rotated(angle + 90, 0, 1, 0);
+		GlStateManager.scalef(5F / 7F, 5F / 7F, 5F / 7F);
 		drawGimbal(tess, buf);
 
 		Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE_COP);
-		GlStateManager.scale(7F / 8F * 5F / 7F, 7F / 8F * 5F / 7F, 7F / 8F * 5F / 7F);
+		GlStateManager.scalef(7F / 8F * 5F / 7F, 7F / 8F * 5F / 7F, 7F / 8F * 5F / 7F);
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		buf.pos(-0.5D, -0.5D, -0.5D).tex(0, 0).endVertex();
 		buf.pos(-0.5D, 0.5D, -0.5D).tex(0, 1).endVertex();
@@ -82,7 +82,7 @@ public class FluxNodeRenderer extends TileEntityRenderer<FluxNodeTileEntity>{
 		buf.pos(0.5D, 0.5D, -0.5D).tex(1, 0).endVertex();
 		tess.draw();
 
-		GlStateManager.popAttrib();
+		GlStateManager.popAttributes();
 		GlStateManager.popMatrix();
 	}
 

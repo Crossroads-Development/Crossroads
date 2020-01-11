@@ -31,11 +31,12 @@ public class ModelDrill extends ModelBase{
 	}
 
 	public void render(){
-		float f = 1F / 16F;
+		/*float f = 1F / 16F;
 		this.lowerTip.render(f);
 		this.midTip.render(f);
 		this.topTip.render(f);
 		this.base.render(f);
 		this.upperBase.render(f);
+		*/
 	}
 }

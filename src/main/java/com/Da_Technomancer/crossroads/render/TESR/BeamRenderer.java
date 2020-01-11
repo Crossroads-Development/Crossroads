@@ -1,78 +1,78 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import java.awt.Color;
-
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
+import com.Da_Technomancer.crossroads.API.templates.IBeamRenderTE;
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.render.RenderUtil;
+import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.lwjgl.opengl.GL11;
 
-import com.Da_Technomancer.crossroads.API.templates.IBeamRenderTE;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.BeaconTileEntityRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import java.awt.*;
 
 /** 
  * All blocks using BeamRenderer MUST return false to isOpaqueCube 
  */
-public class BeamRenderer extends TileEntityRenderer<IBeamRenderTE>{
+public class BeamRenderer<T extends TileEntity & IBeamRenderTE> extends TileEntityRenderer<T>{
+
+	protected static final ResourceLocation TEXTURE_BEACON_BEAM = new ResourceLocation("textures/entity/beacon_beam.png");
 
 	@Override
-	public void render(IBeamRenderTE beam, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
-		if(!beam.getWorld().isBlockLoaded(beam.getPos(), false)){
+	public void render(T beam, double x, double y, double z, float partialTicks, int destroyStage){
+		if(!beam.getWorld().isBlockLoaded(beam.getPos())){
 			return;
 		}
 
 		int[] packets = beam.getRenderedBeams();
-		float brightX = OpenGlHelper.lastBrightnessX;
-		float brightY = OpenGlHelper.lastBrightnessY;
-		
+
 		for(int dir = 0; dir < 6; ++dir){
 			if(packets[dir] != 0){
 				Triple<Color, Integer, Integer> trip = BeamManager.getTriple(packets[dir]);
 				
 				GlStateManager.pushMatrix();
-				GlStateManager.pushAttrib();
-				GlStateManager.translate(x, y, z);
-				GlStateManager.color(trip.getLeft().getRed() / 255F, trip.getLeft().getGreen() / 255F, trip.getLeft().getBlue() / 255F);
-				Minecraft.getInstance().getTextureManager().bindTexture(BeaconTileEntityRenderer.TEXTURE_BEACON_BEAM);
+				GlStateManager.pushLightingAttributes();
+				GlStateManager.translated(x, y, z);
+				GlStateManager.color3f(trip.getLeft().getRed() / 255F, trip.getLeft().getGreen() / 255F, trip.getLeft().getBlue() / 255F);
+				Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE_BEACON_BEAM);
 				GlStateManager.disableLighting();
-				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-				
+				Pair<Float, Float> lighting = RenderUtil.disableLighting();
+
 				switch(dir){
 					case 0:
-						GlStateManager.rotate(180, 1, 0, 0);
-						GlStateManager.translate(.5D, -.5D, -.5D);
+						GlStateManager.rotated(180, 1, 0, 0);
+						GlStateManager.translated(.5D, -.5D, -.5D);
 						break;
 					case 1:
-						GlStateManager.translate(.5D, .5D, .5D);
+						GlStateManager.translated(.5D, .5D, .5D);
 						break;
 					case 5:
-						GlStateManager.rotate(-90, 0, 0, 1);
-						GlStateManager.translate(-.5D, .5D, .5D);
+						GlStateManager.rotated(-90, 0, 0, 1);
+						GlStateManager.translated(-.5D, .5D, .5D);
 						break;
 					case 4:
-						GlStateManager.rotate(90, 0, 0, 1);
-						GlStateManager.translate(.5D, -.5D, .5D);
+						GlStateManager.rotated(90, 0, 0, 1);
+						GlStateManager.translated(.5D, -.5D, .5D);
 						break;
 					case 2:
-						GlStateManager.rotate(-90, 1, 0, 0);
-						GlStateManager.translate(.5D, -.5D, .5D);
+						GlStateManager.rotated(-90, 1, 0, 0);
+						GlStateManager.translated(.5D, -.5D, .5D);
 						break;
 					case 3:
-						GlStateManager.rotate(90, 1, 0, 0);
-						GlStateManager.translate(.5D, .5D, -.5D);
+						GlStateManager.rotated(90, 1, 0, 0);
+						GlStateManager.translated(.5D, .5D, -.5D);
 						break;
 				}
 
-				if(CRConfig.rotateBeam.getBoolean()){
-					GlStateManager.rotate((partialTicks + (float) beam.getWorld().getGameTime()) * 2F, 0, 1, 0);
+				if(CRConfig.rotateBeam.get()){
+					GlStateManager.rotated((partialTicks + (float) beam.getWorld().getGameTime()) * 2F, 0, 1, 0);
 				}
 				Tessellator tes = Tessellator.getInstance();
 				BufferBuilder buf = tes.getBuffer();
@@ -103,16 +103,16 @@ public class BeamRenderer extends TileEntityRenderer<IBeamRenderTE>{
 				buf.pos(halfWidth, length, -halfWidth).tex(0, 0).endVertex();
 				tes.draw();
 				
-				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
+				RenderUtil.enableLighting(lighting);
 				GlStateManager.enableLighting();
-				GlStateManager.popAttrib();
+				GlStateManager.popAttributes();
 				GlStateManager.popMatrix();
 			}
 		}
 	}
 
 	@Override
-	public boolean isGlobalRenderer(IBeamRenderTE te){
+	public boolean isGlobalRenderer(T te){
 		return true;
 	}
 }

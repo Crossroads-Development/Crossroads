@@ -1,29 +1,11 @@
 package com.Da_Technomancer.crossroads.items.crafting;
 
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
-import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
-import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.integration.JEI.*;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.*;
 import net.minecraft.block.BlockState;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ObjectHolder;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.function.Predicate;
 
 @ObjectHolder(Crossroads.MODID)
 public final class RecipeHolder{
@@ -63,9 +45,6 @@ public final class RecipeHolder{
 	public static IRecipeType<FluidCoolingRec> FLUID_COOLING_TYPE = IRecipeType.register(Crossroads.MODID + ":fluid_cooling");
 	public static IRecipeType<CrucibleRec> CRUCIBLE_TYPE = IRecipeType.register(Crossroads.MODID + ":crucible");
 	public static IRecipeType<DetailedCrafterRec> DETAILED_TYPE = IRecipeType.register(Crossroads.MODID + ":detailed_crafter");
-
-	//TODO every time recipes are loaded/reloaded, this value needs to be (re-)calculated
-	public static int totalDirtyWaterWeight = 0;
 
 	//TODO all recipes below this line need to be replaced with JSON
 
