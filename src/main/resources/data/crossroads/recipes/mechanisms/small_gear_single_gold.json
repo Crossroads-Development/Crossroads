@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:gear_base",
+		"count": 1,
+		"nbt": {
+			"material": "gold"
+		}
+	},
+	"pattern": [
+		" * ",
+		"*#*",
+		" * "
+	],
+	"key": {
+		"#": {
+			"tag": "#forge:ingots/gold"
+		},
+		"*": {
+			"tag": "#forge:nuggets/gold"
+		}
+	}
+}

@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:nugget_bronze",
+		"count": 9
+	},
+	"pattern": [
+		"*"
+	],
+	"key": {
+		"*": {
+			"tag": "#forge:ingots/bronze"
+		}
+	}
+}

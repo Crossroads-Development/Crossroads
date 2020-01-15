@@ -3,6 +3,8 @@
 	"values": [
 		"#forge:gems/ruby",
 		"#forge:gems/mercury",
-		"#crossroads:gems/void"
+		"#crossroads:gems/void",
+		"#crossroads:gems/pure_quartz",
+		"#crossroads:gems/bright_quartz"
 	]
 }

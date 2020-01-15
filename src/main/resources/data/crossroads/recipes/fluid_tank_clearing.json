@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:fluid_tank",
+		"count": 1
+	},
+	"pattern": [
+		"*"
+	],
+	"key": {
+		"*": {
+			"item": "crossroads:fluid_tank"
+		}
+	}
+}

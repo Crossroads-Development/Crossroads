@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:firebox",
+		"count": 1
+	},
+	"pattern": [
+		"*C*",
+		"*#*",
+		"***"
+	],
+	"key": {
+		"*": {
+			"tag": "#forge:cobblestone"
+		},
+		"C": {
+			"tag": "#forge:ingots/copper"
+		},
+		"#": {
+			"item": "minecraft:furnace"
+		}
+	}
+}

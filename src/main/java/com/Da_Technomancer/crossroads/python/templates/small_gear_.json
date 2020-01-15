@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:gear_base",
+		"count": 9,
+		"nbt": {
+			"material": "MAT"
+		}
+	},
+	"pattern": [
+		" * ",
+		"*#*",
+		" * "
+	],
+	"key": {
+		"#": {
+			"tag": "BLOCK"
+		},
+		"*": {
+			"tag": "INGOT"
+		}
+	}
+}

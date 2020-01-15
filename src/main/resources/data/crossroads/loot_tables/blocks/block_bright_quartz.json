@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "crossroads:block_luminescent_quartz"
+					"name": "crossroads:block_bright_quartz"
 				}
 			],
 			"conditions": [

@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.API.rotary.*;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockState;
@@ -17,7 +18,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -83,7 +83,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 		type = typ;
 
 		if(!world.isRemote){
-			CrossroadsPackets.sendPacketAround(world, pos, new SendLongToClient((byte) 1, type == null ? -1 : type.getIndex(), pos));
+			CrossroadsPackets.sendPacketAround(world, pos, new SendLongToClient((byte) 1, type == null ? -1 : type.serialize(), pos));
 		}
 
 		inertia = type == null ? 0 : MiscUtil.betterRound(type.getDensity() * 1.125D * 9D / 8D, 2);//1.125 because r*r/2 so 1.5*1.5/2
@@ -91,7 +91,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 
 	public GearFactory.GearMaterial getMember(){
 		//The first material is returned instead of null to prevent edge case crashes.
-		return type == null ? GearFactory.gearMats.get(0) : type;
+		return type == null ? GearFactory.getDefaultMaterial() : type;
 	}
 
 	private static final AxisAlignedBB RENDER_BOX = new AxisAlignedBB(-1, -1, -1, 2, 2, 2);
@@ -112,7 +112,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 			}
 		}
 		if(drop){
-			world.addEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(GearFactory.gearTypes.get(type).getLargeGear(), 1)));
+			world.addEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), CRItems.largeGear.withMaterial(type, 1)));
 		}
 	}
 
@@ -132,7 +132,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 			motionData[j] = nbt.getDouble("[" + j + "]mot");
 		}
 		// member
-		type = nbt.getInt("type") < GearFactory.gearMats.size() ? GearFactory.gearMats.get(nbt.getInt("type")) : GearFactory.gearMats.get(0);
+		type = GearFactory.findMaterial(nbt.getString("type"));
 		inertia = type == null ? 0 : MiscUtil.betterRound(type.getDensity() * 1.125D * 9D / 8D, 2);
 		//1.125 because r*r/2 so 1.5*1.5/2
 
@@ -152,7 +152,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 
 		// member
 		if(type != null){
-			nbt.putInt("type", type.getIndex());
+			nbt.putString("type", type.getId());
 		}
 
 		nbt.putBoolean("new", true);
@@ -165,7 +165,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
 		if(type != null){
-			nbt.putInt("type", type.getIndex());
+			nbt.putString("type", type.getId());
 		}
 		nbt.putBoolean("new", true);
 		nbt.putFloat("angle", angleW[0]);
@@ -180,7 +180,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 			angleW[0] = Math.abs(angle - angleW[0]) > 5F ? angle : angleW[0];
 			angleW[1] = Float.intBitsToFloat((int) (message >>> 32L));
 		}else if(identifier == 1){
-			type = message < 0 || message >= GearFactory.gearMats.size() ? GearFactory.gearMats.get(0) : GearFactory.gearMats.get((int) message);
+			type = GearFactory.GearMaterial.deserialize((int) message);
 		}else if(identifier == 2){
 			renderOffset = message == 1;
 		}

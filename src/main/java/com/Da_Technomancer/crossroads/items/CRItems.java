@@ -3,10 +3,11 @@ package com.Da_Technomancer.crossroads.items;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.alchemy.*;
-import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
-import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
+import com.Da_Technomancer.crossroads.items.itemSets.*;
 import com.Da_Technomancer.crossroads.items.technomancy.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -35,7 +36,7 @@ public final class CRItems{
 	public static final ItemGroup TAB_GEAR = new ItemGroup("gear"){
 		@Override
 		public ItemStack createIcon(){
-			return new ItemStack(GearFactory.gearTypes.get(GearFactory.findMaterial("Copper")).getSmallGear(), 1);
+			return smallGear.withMaterial(GearFactory.findMaterial("copper"), 1);
 		}
 	};
 
@@ -54,7 +55,7 @@ public final class CRItems{
 	public static EdibleBlob edibleBlob;
 	public static RainIdol rainIdol;
 	public static Item pureQuartz;
-	public static Item luminescentQuartz;
+	public static Item brightQuartz;
 	public static Item lensArray;
 	public static SquidHelmet squidHelmet;
 	public static PigZombieChestsplate pigZombieChestplate;
@@ -103,6 +104,14 @@ public final class CRItems{
 	//	public static LinkingTool linkingTool;
 	public static DampingPowder dampingPowder;
 
+	public static Axle axle;
+	public static Clutch clutch;
+	public static Clutch invClutch;
+	public static BasicGear smallGear;
+	public static ToggleGear toggleGear;
+	public static ToggleGear invToggleGear;
+	public static LargeGear largeGear;
+
 	public static final ArrayList<Item> toRegister = new ArrayList<>();
 
 	public static void init(){
@@ -117,7 +126,7 @@ public final class CRItems{
 		edibleBlob = new EdibleBlob();
 		rainIdol = new RainIdol();
 		toRegister.add(pureQuartz = new Item(itemProp).setRegistryName("pure_quartz"));
-		toRegister.add(luminescentQuartz = new Item(itemProp).setRegistryName("luminescent_quartz"));
+		toRegister.add(brightQuartz = new Item(itemProp).setRegistryName("bright_quartz"));
 		toRegister.add(lensArray = new Item(itemProp).setRegistryName("lens_array"));
 		squidHelmet = new SquidHelmet();
 		pigZombieChestplate = new PigZombieChestsplate();
@@ -165,10 +174,30 @@ public final class CRItems{
 		slag = new Slag();
 //		linkingTool = new LinkingTool();
 		dampingPowder = new DampingPowder();
+
+		axle = new Axle();
+		clutch = new Clutch(false);
+		invClutch = new Clutch(true);
+		smallGear = new BasicGear();
+		toggleGear = new ToggleGear(false);
+		invToggleGear = new ToggleGear(true);
+		largeGear = new LargeGear();
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static void clientInit(){
-		Minecraft.getInstance().getItemColors().register((ItemStack stack, int layer) -> layer == 0 ? AbstractGlassware.getColorRGB(stack) : -1, phialGlass, florenceFlaskGlass, shellGlass, phialCrystal, florenceFlaskCrystal, shellCrystal);
+		ItemColors itemColor = Minecraft.getInstance().getItemColors();
+		//Alchemy containers
+		itemColor.register((ItemStack stack, int layer) -> layer == 0 ? AbstractGlassware.getColorRGB(stack) : -1, phialGlass, florenceFlaskGlass, shellGlass, phialCrystal, florenceFlaskCrystal, shellCrystal);
+
+		//Gears
+		IItemColor itemColoring = (ItemStack stack, int tintIndex) -> {
+			if(tintIndex == 0){
+				return -1;
+			}
+			GearFactory.GearMaterial mat = GearMatItem.getMaterial(stack);
+			return mat == null ? -1 : mat.getColor().getRGB();
+		};
+		itemColor.register(itemColoring, CRItems.smallGear, CRItems.largeGear, CRItems.clutch, CRItems.invClutch, CRItems.toggleGear, CRItems.invToggleGear);
 	}
 }

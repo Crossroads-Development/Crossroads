@@ -14,7 +14,6 @@ import com.Da_Technomancer.crossroads.items.itemSets.ItemSets;
 import com.Da_Technomancer.crossroads.particles.CRParticles;
 import com.Da_Technomancer.crossroads.particles.ColorParticleType;
 import com.Da_Technomancer.crossroads.render.TESR.AAModTESR;
-import com.Da_Technomancer.crossroads.render.bakedModel.BakedModelLoader;
 import com.Da_Technomancer.crossroads.tileentities.CrossroadsTileEntity;
 import com.Da_Technomancer.crossroads.world.ModWorldGen;
 import net.minecraft.block.Block;
@@ -34,7 +33,6 @@ import net.minecraft.world.gen.feature.Feature;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -93,9 +91,8 @@ public final class Crossroads{
 	private void clientInit(@SuppressWarnings("unused") FMLClientSetupEvent e){
 //		TESRRegistry.init();
 		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
-		ModelLoaderRegistry.registerLoader(new BakedModelLoader());
+//		ModelLoaderRegistry.registerLoader(new BakedModelLoader());
 		ModEntities.clientInit();
-		ItemSets.clientInit();
 		CRItems.clientInit();
 		AAModTESR.registerBlockRenderer();
 		Keys.init();
@@ -187,7 +184,7 @@ public final class Crossroads{
 	@SuppressWarnings("unused")
 	@SubscribeEvent
 	private static void registerModels(ModelRegistryEvent e){
-		CrossroadsBlocks.initModels();
+//		CrossroadsBlocks.initModels();
 //		CRItems.initModels();
 		//CrossroadsFluids.registerRenderers();
 		ItemSets.modelInit();

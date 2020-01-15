@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"item": "crossroads:ingot_bronze",
+		"count": 4
+	},
+	"ingredients": [
+		{
+			"tag": "forge:ingots/tin"
+		},
+		{
+			"tag": "forge:ingots/copper"
+		},
+		{
+			"tag": "forge:ingots/copper"
+		},
+		{
+			"tag": "forge:ingots/copper"
+		}
+	]
+}

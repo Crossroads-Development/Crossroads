@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:radiator",
+		"count": 1
+	},
+	"pattern": [
+		"I|I",
+		"C|C",
+		"I|I"
+	],
+	"key": {
+		"I": {
+			"tag": "#forge:ingots/iron"
+		},
+		"C": {
+			"tag": "#forge:ingots/copper"
+		},
+		"|": {
+			"item": "crossroads:fluid_tube"
+		}
+	}
+}

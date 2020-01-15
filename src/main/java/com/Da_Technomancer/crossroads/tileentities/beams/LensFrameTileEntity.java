@@ -80,7 +80,7 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 			case 4:
 				return new ItemStack(CRItems.pureQuartz, 1);
 			case 5:
-				return new ItemStack(CRItems.luminescentQuartz, 1);
+				return new ItemStack(CRItems.brightQuartz, 1);
 			case 6:
 				return new ItemStack(OreSetup.voidCrystal, 1);
 			default:
@@ -101,7 +101,7 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 		if(stack.getItem() == CRItems.pureQuartz){
 			return 4;
 		}
-		if(stack.getItem() == CRItems.luminescentQuartz){
+		if(stack.getItem() == CRItems.brightQuartz){
 			return 5;
 		}
 		if(stack.getItem() == OreSetup.voidCrystal){

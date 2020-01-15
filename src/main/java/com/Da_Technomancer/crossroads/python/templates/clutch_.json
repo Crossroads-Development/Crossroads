@@ -1,0 +1,27 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:clutch",
+		"count": 1,
+		"nbt": {
+			"material": "MAT"
+		}
+	},
+	"pattern": [
+		"*",
+		"|",
+		"|"
+	],
+	"key": {
+		"*": {
+			"tag": "#forge:ingots/tin"
+		},
+		"|": {
+			"type": "minecraft:item_nbt",
+			"item": "crossroads:axle",
+			"nbt": {
+				"material": "MAT"
+			}
+		}
+	}
+}

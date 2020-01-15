@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:block_copshowium",
+		"count": 1
+	},
+	"pattern": [
+		"***",
+		"***",
+		"***"
+	],
+	"key": {
+		"*": {
+			"tag": "#crossroads:ingots/copshowium"
+		}
+	}
+}

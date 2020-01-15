@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:gear_base_large",
+		"count": 1,
+		"nbt": {
+			"material": "MAT"
+		}
+	},
+	"pattern": [
+		"*#*",
+		"###",
+		"*#*"
+	],
+	"key": {
+		"#": {
+			"tag": "INGOT"
+		},
+		"*": {
+			"tag": "NUGGET"
+		}
+	}
+}

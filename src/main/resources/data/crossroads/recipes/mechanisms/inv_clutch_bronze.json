@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"item": "crossroads:clutch_inv",
+		"count": 1,
+		"nbt": {
+			"material": "bronze"
+		}
+	},
+	"ingredients": [
+		{
+			"item": "minecraft:redstone_torch"
+		},
+		{
+			"type": "minecraft:item_nbt",
+			"item": "crossroads:clutch",
+			"nbt": {
+				"material": "bronze"
+			}
+		}
+	]
+}

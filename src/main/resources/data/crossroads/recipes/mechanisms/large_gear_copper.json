@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:gear_base_large",
+		"count": 9,
+		"nbt": {
+			"material": "copper"
+		}
+	},
+	"pattern": [
+		"*#*",
+		"###",
+		"*#*"
+	],
+	"key": {
+		"#": {
+			"tag": "#forge:storage_blocks/copper"
+		},
+		"*": {
+			"tag": "#forge:ingots/copper"
+		}
+	}
+}

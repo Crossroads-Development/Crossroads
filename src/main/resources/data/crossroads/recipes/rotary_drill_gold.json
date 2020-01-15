@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:rotary_drill_gold",
+		"count": 1
+	},
+	"pattern": [
+		" G ",
+		"GDG"
+	],
+	"key": {
+		"G": {
+			"tag": "#forge:ingots/gold"
+		},
+		"D": {
+			"item": "crossroads:rotary_drill"
+		}
+	}
+}

@@ -8,16 +8,11 @@ public class ItemSets{
 		OreSetup.init();
 	}
 
-	public static void clientInit(){
-		GearFactory.clientInit();
-	}
-
 	public static void modelInit(){
 		HeatCableFactory.clientInit();
 	}
 
 	public static void craftingInit(){
 		OreSetup.initCrafting();
-		GearFactory.craftingInit();
 	}
 }

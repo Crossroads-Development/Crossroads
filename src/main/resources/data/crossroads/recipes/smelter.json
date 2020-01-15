@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:smelter",
+		"count": 1
+	},
+	"pattern": [
+		"*C*",
+		"*F*",
+		"***"
+	],
+	"key": {
+		"*": {
+			"tag": "#forge:ingots/iron"
+		},
+		"C": {
+			"tag": "#forge:ingots/copper"
+		},
+		"F": {
+			"item": "minecraft:furnace"
+		}
+	}
+}

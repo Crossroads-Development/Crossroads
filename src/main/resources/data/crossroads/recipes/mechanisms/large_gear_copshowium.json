@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:gear_base_large",
+		"count": 9,
+		"nbt": {
+			"material": "copshowium"
+		}
+	},
+	"pattern": [
+		"*#*",
+		"###",
+		"*#*"
+	],
+	"key": {
+		"#": {
+			"tag": "#crossroads:storage_blocks/copshowium"
+		},
+		"*": {
+			"tag": "#crossroads:ingots/copshowium"
+		}
+	}
+}

@@ -1,51 +1,72 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.client.renderer.color.ItemColors;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
+import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.regex.Pattern;
+import java.util.List;
 
 public class GearFactory{
 
-	public static final ArrayList<GearMaterial> gearMats = new ArrayList<>();
-	public static final HashMap<GearMaterial, GearProfile> gearTypes = new HashMap<>();
+	/*
+	 * Instructions for adding a new GearMaterial (for addons):
+	 * Initialize a GearMaterial instance with a unique name, and with shouldReload = false. If shouldReload is default (true), your material will get wiped every time the CR config reloads
+	 * Call registerGearMaterial with the new instance
+	 * Add localization for material.<name>
+	 * Add recipes via JSON as desired
+	 */
 
-	protected static void init(){
-		String[] rawInput = CRConfig.getConfigStringList(CRConfig.gearTypes, true);
+	private static final HashMap<String, GearMaterial> gearMats = new HashMap<>();
+	//Do not use this list for saving/loading from disk! Order is not guaranteed between loads. It exists for server-client packets only
+	private static final ArrayList<GearMaterial> gearMatList = new ArrayList<>();
 
-		Pattern pattern = Pattern.compile("\\w++ \\p{XDigit}{6}+ [+]?[0-9]*.?[0-9]+");
+	public static GearMaterial findMaterial(String id){
+		return gearMats.getOrDefault(id, getDefaultMaterial());
+	}
+
+	public static Collection<GearMaterial> getMaterials(){
+		return gearMats.values();
+	}
+
+	public static void registerGearMaterial(GearMaterial mat){
+		gearMats.put(mat.getId(), mat);
+		mat.pos = gearMatList.size();
+		gearMatList.add(mat);
+	}
+
+	/**
+	 * Fallback material if a material fails to load
+	 * @return The Iron GearMaterial
+	 */
+	public static GearMaterial getDefaultMaterial(){
+		return DEFAULT;
+	}
+
+	private static GearMaterial DEFAULT;
+
+	/**
+	 * Resets and rebuilds the registered gear materials from config
+	 * Called on startup and when ModConfig.ConfigReloading fires with the Crossroads server config
+	 */
+	public static void init(){
+		//Clear any previously registered GearMaterials if shouldReload is true. Otherwise, leave them registered
+		//The old GearMaterials are wiped to allow them being defined by the server config, which could differ between the client and server
+		gearMatList.removeIf(mat -> mat.shouldReload);
+		gearMats.clear();
+		gearMatList.forEach(mat -> gearMats.put(mat.getId(), mat));
+
+		List<? extends String> rawInput = CRConfig.gearTypes.get();
 
 		for(String raw : rawInput){
-			//An enormous amount of input sanitization is involved here because the average config tweaker is slightly better at following instructions than the average walrus. And not one of those clever performing walruses (walri?) in aquariums, but a stupid walrus
-			//Unless of course you're reading this because you're having trouble editing the config option, in which was you are way smarter than a clever walrus, thoroughly above average, and a genius, and the insults above definitely don't apply to you
-
-			//Check for stupid whitespace
-			raw = raw.trim();
-			//Check the basic structure
-			if(!pattern.matcher(raw).matches()){
-				continue;
-			}
 			int spaceIndex = raw.indexOf(' ');
-			String metal = "" + Character.toUpperCase(raw.charAt(0));
+			String metal = raw.substring(0, spaceIndex);
 			Color col;
-			//Make sure they aren't trying to register a one character metal
-			//First character is capitalized for OreDict
-			metal += raw.substring(1, spaceIndex);
 
 			String colorString = '#' + raw.substring(spaceIndex + 1, spaceIndex + 7);
 			try{
@@ -56,109 +77,22 @@ public class GearFactory{
 			}
 
 			double density = Double.parseDouble(raw.substring(spaceIndex + 8));
-
-			//We survived user-input sanitization hell! Hazah!
-			//This for-loop could have been like four lines if we could trust users to not ram flaming knives up their own bums and then blame the devs when they get mocked in the ER
-			GearMaterial typ = new GearMaterial(metal, density, col, gearMats.size());
-			if(!gearMats.contains(typ)){
-				gearMats.add(typ);
-				gearTypes.put(typ, new GearProfile(new BasicGear(typ), new LargeGear(typ), new ToggleGear(typ, false), new ToggleGear(typ, true), new Axle(typ), new Clutch(false, typ), new Clutch(true, typ)));
-			}
-		}
-	}
-
-	public static void craftingInit(){
-		for(Map.Entry<GearMaterial, GearProfile> entry : gearTypes.entrySet()){
-			GearProfile prof = entry.get();
-			String metal = entry.getKey().getName();
-			ModCrafting.toRegister.add(new ShapedOreRecipe(null, new ItemStack(prof.getSmallGear(), 9), " ? ", "?#?", " ? ", '#', "block" + metal, '?', "ingot" + metal));
-			ModCrafting.toRegister.add(new ShapedOreRecipe(null, new ItemStack(prof.getSmallGear(), 1), " ? ", "?#?", " ? ", '#', "ingot" + metal, '?', "nugget" + metal));
-			ModCrafting.toRegister.add(new ShapelessOreRecipe(null, new ItemStack(prof.getToggleGear(), 1), Blocks.LEVER, "gear" + metal));
-			ModCrafting.toRegister.add(new ShapelessOreRecipe(null, new ItemStack(prof.getInvToggleGear(), 1), Blocks.REDSTONE_TORCH, prof.getToggleGear()));
-			ModCrafting.toRegister.add(new ShapelessOreRecipe(null, new ItemStack(prof.getToggleGear(), 1), prof.getInvToggleGear()));
-			ModCrafting.toRegister.add(new ShapedOreRecipe(null, new ItemStack(prof.getLargeGear(), 1), "###", "#$#", "###", '#', "ingot" + metal, '$', "stick" + metal));
-			ModCrafting.toRegister.add(new ShapedOreRecipe(null, new ItemStack(prof.getAxle(), 2), "#", "?", "#", '#', "ingot" + metal, '?', "stickWood"));
-			ModCrafting.toRegister.add(new ShapedOreRecipe(null, new ItemStack(prof.getClutch(), 1), " *", "| ", '|', "stick" + metal, '*', "ingotTin"));
-			ModCrafting.toRegister.add(new ShapelessOreRecipe(null, new ItemStack(prof.getInvClutch(), 1), Blocks.REDSTONE_TORCH, prof.getClutch()));
-			ModCrafting.toRegister.add(new ShapelessOreRecipe(null, new ItemStack(prof.getClutch(), 1), prof.getInvClutch()));
-		}
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	protected static void clientInit(){
-		ItemColors itemColor = Minecraft.getInstance().getItemColors();
-		for(GearMaterial typ : gearMats){
-			IItemColor itemColoring = (ItemStack stack, int tintIndex) -> tintIndex == 0 ? typ.getColor().getRGB() : -1;
-			GearProfile prof = gearTypes.get(typ);
-			itemColor.registerItemColorHandler(itemColoring, prof.getSmallGear(), prof.getLargeGear(), prof.getToggleGear(), prof.getInvToggleGear());
-			itemColor.registerItemColorHandler(itemColoring, prof.getAxle(), prof.getClutch(), prof.getInvClutch());
-		}
-	}
-
-	@Nonnull
-	public static GearMaterial findMaterial(String metalName){
-		for(GearMaterial mat : gearMats){
-			if(mat.getName().toLowerCase().equals(metalName.toLowerCase())){
-				return mat;
-			}
-		}
-		return gearMats.get(0);
-	}
-
-	public static class GearProfile{
-
-		private final BasicGear smallGear;
-		private final LargeGear largeGear;
-		private final ToggleGear toggleGear;
-		private final ToggleGear invToggleGear;
-		private final Axle axle;
-		private final Clutch clutch;
-		private final Clutch invClutch;
-
-		public GearProfile(BasicGear smallGear, LargeGear largeGear, ToggleGear toggleGear, ToggleGear invToggleGear, Axle axle, Clutch clutch, Clutch invClutch){
-			this.smallGear = smallGear;
-			this.largeGear = largeGear;
-			this.toggleGear = toggleGear;
-			this.invToggleGear = invToggleGear;
-			this.axle = axle;
-			this.clutch = clutch;
-			this.invClutch = invClutch;
+			GearMaterial typ = new GearMaterial(metal, density, col);
+			registerGearMaterial(typ);
 		}
 
-		public BasicGear getSmallGear(){
-			return smallGear;
-		}
-
-		public LargeGear getLargeGear(){
-			return largeGear;
-		}
-
-		public ToggleGear getToggleGear(){
-			return toggleGear;
-		}
-
-		public ToggleGear getInvToggleGear(){
-			return invToggleGear;
-		}
-
-		public Axle getAxle(){
-			return axle;
-		}
-
-		public Clutch getClutch(){
-			return clutch;
-		}
-
-		public Clutch getInvClutch(){
-			return invClutch;
+		DEFAULT = gearMats.get("iron");
+		//If the config was modified to prevent iron being registered, crash
+		if(DEFAULT == null){
+			IllegalArgumentException e = new IllegalArgumentException("Default Gear Material not registered!");
+			Crossroads.logger.error("Config Modified to prevent registering default gear material (iron)", e);
+			throw e;
 		}
 	}
 
 	public static class GearMaterial{
 
-		// The densities for the materials used here are kg/cubic meter of
-		// the substance, for gears multiply by the number of cubic meters
-		// it occupies.
+		// The densities for the materials used here are kg/cubic meter of the substance
 
 //		IRON(8000D, new Color(160, 160, 160)),
 //		GOLD(20000D, Color.YELLOW),
@@ -173,20 +107,31 @@ public class GearFactory{
 //		PLATINUM(21000D, new Color(116, 245, 255)),
 //		ELECTRUM(15000D, new Color(254, 255, 138));
 
-		private final String name;
+		private final String id;
 		private final double density;
 		private final Color color;
-		private final int index;
+		private final boolean shouldReload;
 
-		private GearMaterial(String nameIn, double matDensity, Color matColor, int index){
-			name = nameIn;
-			density = matDensity;
-			color = matColor;
-			this.index = index;
+		private int pos;
+
+		public GearMaterial(String nameIn, double matDensity, Color matColor){
+			this(nameIn, matDensity, matColor, true);
 		}
 
+		public GearMaterial(String nameIn, double matDensity, Color matColor, boolean shouldReload){
+			id = nameIn;
+			density = matDensity;
+			color = matColor;
+			this.shouldReload = shouldReload;
+		}
+
+		public String getId(){
+			return id;
+		}
+
+		@OnlyIn(Dist.CLIENT)
 		public String getName(){
-			return name;
+			return MiscUtil.localize("material." + id);
 		}
 
 		public double getDensity(){
@@ -197,39 +142,19 @@ public class GearFactory{
 			return color;
 		}
 
-		public int getIndex(){
-			return index;
-		}
-
-		/**This will return the name with all but the first char being lowercase,
-		 * so COPPER becomes Copper, which is good for oreDict and registry
+		/**
+		 * For networking only! Not for saving/loading to disk
+		 * @return An int that identifies this material
 		 */
-		@Override
-		public String toString(){
-//			String name = name();
-//			char char1 = name.charAt(0);
-//			name = name.substring(1);
-//			name = name.toLowerCase();
-//			name = char1 + name;
-//			return name;
-			return getName();
+		public int serialize(){
+			return pos;
 		}
 
-		@Override
-		public boolean equals(Object o){
-			if(this == o){
-				return true;
+		public static GearMaterial deserialize(int serial){
+			if(serial < 0 || serial >= gearMatList.size()){
+				return getDefaultMaterial();
 			}
-			if(o == null || getClass() != o.getClass()){
-				return false;
-			}
-			GearMaterial that = (GearMaterial) o;
-			return Objects.equals(name, that.name);
-		}
-
-		@Override
-		public int hashCode(){
-			return Objects.hash(name);
+			return gearMatList.get(serial);
 		}
 	}
 }

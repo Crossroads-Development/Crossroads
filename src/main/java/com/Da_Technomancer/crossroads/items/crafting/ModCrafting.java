@@ -1,29 +1,19 @@
 package com.Da_Technomancer.crossroads.items.crafting;
 
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumReagents;
-import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
-import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
-import com.Da_Technomancer.crossroads.fluids.CrossroadsFluid;
-import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.alchemy.Phial;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.essentials.EssentialsConfig;
-import com.Da_Technomancer.essentials.blocks.EssentialsBlocks;
 import com.Da_Technomancer.essentials.items.crafting.EssentialsCrafting;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.BlockPrismarine;
 import net.minecraft.block.BlockStone;
 import net.minecraft.block.Blocks;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Items;
@@ -34,13 +24,10 @@ import net.minecraft.nbt.StringNBT;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.ArrayList;
 import java.util.function.Predicate;
@@ -173,13 +160,13 @@ public final class ModCrafting{
 		//Flying Machine
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CRItems.flyingMachine, 1), "___", "@-@", "|+|", '_', "ingotBronze", '@', "gearCopshowium", '-', new ItemStack(CrossroadsBlocks.antiDensusPlate, 1), '+', new ItemStack(CrossroadsBlocks.densusPlate, 1), '|', "stickIron"));
 		//Copshowium Creation Chamber
-		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.copshowiumCreationChamber, 1), "*^*", "^&^", "*^*", '*', CRItems.pureQuartz, '^', CRItems.luminescentQuartz, '&', CrossroadsBlocks.fluidCoolingChamber));
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.copshowiumCreationChamber, 1), "*^*", "^&^", "*^*", '*', CRItems.pureQuartz, '^', CRItems.brightQuartz, '&', CrossroadsBlocks.fluidCoolingChamber));
 		//Gateway Frame
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.gatewayFrame, 3), "***", "^^^", "%^%", '*', Blocks.STONE, '^', "ingotCopshowium", '%', "obsidian"));
 		//Beam Cage
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CRItems.beamCage, 1), " L ", "*&*", " L ", '*', CrossroadsBlocks.quartzStabilizer, '&', "ingotCopshowium", 'L', CRItems.lensArray));
 		//Cage Charger
-		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.cageCharger, 1), " B ", "QLQ", 'B', "ingotBronze", 'Q', CRItems.pureQuartz, 'L', CRItems.luminescentQuartz));
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.cageCharger, 1), " B ", "QLQ", 'B', "ingotBronze", 'Q', CRItems.pureQuartz, 'L', CRItems.brightQuartz));
 		//Beam Staff
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CRItems.staffTechnomancy, 1), "*C*", " | ", " | ", '*', CRItems.lensArray, 'C', CRItems.beamCage, '|', "stickIron"));
 		//Modular Goggles
@@ -211,13 +198,13 @@ public final class ModCrafting{
 		//Clockwork Stabilizer
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.clockworkStabilizer, 1), " # ", "#*#", " # ", '*', CrossroadsBlocks.quartzStabilizer, '#', "gearCopshowium"));
 		//Beacon Harness
-		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.beaconHarness, 1), "^&^", "&*&", "^&^", '*', "ingotCopshowium", '&', CRItems.lensArray, '^', CRItems.luminescentQuartz));
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.beaconHarness, 1), "^&^", "&*&", "^&^", '*', "ingotCopshowium", '&', CRItems.lensArray, '^', CRItems.brightQuartz));
 		//Chrono Harness
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.chronoHarness, 1), "^&^", "&*&", "^&^", '*', "ingotCopshowium", '&', "ingotIron", '^', "blockRedstone"));
 		//Flux node
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.fluxNode, 1), " | ", "|C|", "I|I", 'I', "ingotIron", '|', "stickIron", 'C', "ingotCopshowium"));
 		//Temporal Accelerator
-		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.temporalAccelerator, 1), "CCC", "Q|Q", " | ", 'C', "ingotCopshowium", '|', "stickIron", 'Q', CRItems.luminescentQuartz));
+		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.temporalAccelerator, 1), "CCC", "Q|Q", " | ", 'C', "ingotCopshowium", '|', "stickIron", 'Q', CRItems.brightQuartz));
 		//Electric Flux Stabilizer
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.fluxStabilizerElectric, 1), "RCR", "CGC", "RCR", 'C', "ingotCopshowium", 'G', "blockGlass", 'R', "dustRedstone"));
 		//Beam Flux Stabilizer
@@ -227,50 +214,8 @@ public final class ModCrafting{
 		//Beam Flux Crystal Stabilizer
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.fluxStabilizerCrystalBeam, 1), "RCR", "CGC", "RCR", 'C', "ingotCopshowium", 'G', CRItems.alchCrystal, 'R', CRItems.pureQuartz));
 
-		//Ores
-		//Tin
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(OreSetup.nuggetTin, 9), "ingotTin"));
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(OreSetup.ingotTin, 9), "blockTin"));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(OreSetup.ingotTin, 1), "***", "***", "***", '*', "nuggetTin"));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(OreSetup.blockTin, 1), "***", "***", "***", '*', "ingotTin"));
-		GameRegistry.addSmelting(new ItemStack(OreSetup.oreTin, 1), new ItemStack(OreSetup.ingotTin, 1), .7F);
-
-		//Copper
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(OreSetup.nuggetCopper, 9), "ingotCopper"));
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(OreSetup.ingotCopper, 9), "blockCopper"));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(OreSetup.ingotCopper, 1), "***", "***", "***", '*', "nuggetCopper"));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(OreSetup.blockCopper, 1), "***", "***", "***", '*', "ingotCopper"));
-		GameRegistry.addSmelting(new ItemStack(OreSetup.oreCopper, 1), new ItemStack(OreSetup.ingotCopper, 1), .7F);
-
-		//Bronze
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(OreSetup.nuggetBronze, 9), "ingotBronze"));
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(OreSetup.ingotBronze, 9), "blockBronze"));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(OreSetup.ingotBronze, 1), "***", "***", "***", '*', "nuggetBronze"));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(OreSetup.blockBronze, 1), "***", "***", "***", '*', "ingotBronze"));
-
-		//Ruby
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(OreSetup.gemRuby, 4), "blockRuby"));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(OreSetup.blockRuby, 1), "**", "**", '*', "gemRuby"));
-		GameRegistry.addSmelting(new ItemStack(OreSetup.oreRuby, 1), new ItemStack(OreSetup.gemRuby, 1), 1F);
-
-		//Copshowium
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(OreSetup.nuggetCopshowium, 9), "ingotCopshowium"));
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(OreSetup.ingotCopshowium, 9), "blockCopshowium"));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(OreSetup.ingotCopshowium, 1), "***", "***", "***", '*', "nuggetCopshowium"));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(OreSetup.blockCopshowium, 1), "***", "***", "***", '*', "ingotCopshowium"));
-
-		// Bronze
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(OreSetup.nuggetBronze, 4), "nuggetCopper", "nuggetCopper", "nuggetCopper", "nuggetTin"));
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(OreSetup.ingotBronze, 4), "ingotCopper", "ingotCopper", "ingotCopper", "ingotTin"));
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(OreSetup.blockBronze, 4), "blockCopper", "blockCopper", "blockCopper", "blockTin"));
-		// Pipe
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.fluidTube, 8), "###", "   ", "###", '#', "ingotBronze"));
-		// Hand Crank
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CRItems.handCrank, 1), " ?", "##", "$ ", '?', Blocks.LEVER, '#', "stickWood", '$', "cobblestone"));
 		// Master Axis
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.masterAxis, 1), "###", "# #", "#$#", '#', "ingotIron", '$', "stickIron"));
-		// Heating Crucible
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.heatingCrucible, 1), "# #", "#?#", "###", '#', Blocks.HARDENED_CLAY, '?', Items.CAULDRON));
 		// Millstone
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.millstone, 1), "#$#", "#?#", "#$#", '#', "cobblestone", '?', "stickIron", '$', Blocks.PISTON));
 		// Heat Cable
@@ -278,38 +223,11 @@ public final class ModCrafting{
 			toRegister.add(new ShapedOreRecipe(null, new ItemStack(HeatCableFactory.HEAT_CABLES.get(insul), 4), "###", "???", "###", '#', insul.getItem(), '?', "ingotCopper"));
 			toRegister.add(new ShapelessOreRecipe(null, new ItemStack(HeatCableFactory.REDSTONE_HEAT_CABLES.get(insul), 1), "dustRedstone", "dustRedstone", "dustRedstone", HeatCableFactory.HEAT_CABLES.get(insul)));
 		}
-		// Steam Boiler
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.steamBoiler, 1), "###", "# #", "&&&", '#', "ingotBronze", '&', "ingotCopper"));
-		// Salt Block
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.blockSalt, 1), "##", "##", '#', "dustSalt"));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CRItems.dustSalt, 4), "#", '#', "blockSalt"));
 		// Rotary Pump
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.rotaryPump, 1), "#$#", "#$#", "&$&", '#', "ingotBronze", '&', "blockGlass", '$', "stickIron"));
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(CrossroadsBlocks.rotaryPump, 1), CrossroadsBlocks.steamTurbine));
 		// Steam Turbine
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(CrossroadsBlocks.steamTurbine, 1), CrossroadsBlocks.rotaryPump));
-		// OmniMeter
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CRItems.omnimeter, 1), " * ", "*#*", " * ", '*', "ingotBronze", '#', Items.COMPASS));
-		// Fluid Tank (second recipe is for clearing contents)
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.fluidTank, 1), " $ ", "$#$", " $ ", '#', "ingotGold", '$', "ingotBronze"));
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(CrossroadsBlocks.fluidTank, 1), CrossroadsBlocks.fluidTank));
-		// Heat Exchanger
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.heatSink, 1), "###", "#$#", "###", '#', Blocks.IRON_BARS, '$', "ingotCopper"));
-		// Firebox
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.firebox, 1), "#*#", "#@#", "###", '#', "cobblestone", '*', "ingotCopper", '@', Blocks.FURNACE));
-		// Icebox
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.icebox, 1), "#*#", "#@#", "###", '#', "cobblestone", '*', "ingotCopper", '@', "gemLapis"));
-		// Smelter
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.smelter, 1), "#*#", "# #", "###", '#', "ingotIron", '*', "ingotCopper"));
-		// Salt Reactor
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.saltReactor, 1), "#$#", "$%$", "#@#", '#', "ingotIron", '$', CrossroadsBlocks.fluidTube, '%', "blockSalt", '@', "ingotCopper"));
-		// Fluid Cooling Chamber
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.fluidCoolingChamber, 1), "###", "# #", "#%#", '#', "ingotIron", '%', "ingotCopper"));
-		// Radiator
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.radiator, 1), "#$#", "#$#", "#$#", '#', CrossroadsBlocks.fluidTube, '$', "ingotIron"));
-		// Rotary Drill
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.rotaryDrill, 2), " * ", "*#*", '*', "ingotIron", '#', "blockIron"));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.rotaryDrillGold, 1), " * ", "*#*", " * ", '*', "ingotGold", '#', CrossroadsBlocks.rotaryDrill));
 		// Fat Collector
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.fatCollector, 1), "***", "# #", "*&*", '*', "ingotTin", '#', "netherrack", '&', "ingotCopper"));
 		// Fat Congealer
@@ -318,42 +236,30 @@ public final class ModCrafting{
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(CrossroadsBlocks.redstoneFluidTube, 1), "dustRedstone", "dustRedstone", "dustRedstone", CrossroadsBlocks.fluidTube));
 		//Water Centrifuge
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.waterCentrifuge, 1), "*&*", "^%^", "* *", '*', "ingotBronze", '&', "stickIron", '^', CrossroadsBlocks.fluidTube, '%', "ingotTin"));
-		//Pure Quartz
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(CRItems.pureQuartz, 1), "dustSalt", "dustSalt", "gemQuartz"));
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(CRItems.pureQuartz, 4), CrossroadsBlocks.blockPureQuartz));
-		//Pure Quartz Block
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.blockPureQuartz, 1), "**", "**", '*', CRItems.pureQuartz));
-		//Luminescent Quartz
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(CRItems.luminescentQuartz, 1), CRItems.pureQuartz, "dustGlowstone"));
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(CRItems.luminescentQuartz, 4), CrossroadsBlocks.blockLuminescentQuartz));
-		//Luminescent Quartz Block
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.blockLuminescentQuartz, 1), "**", "**", '*', CRItems.luminescentQuartz));
-		//Lens array
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CRItems.lensArray, 2), "*&*", "@ $", "***", '*', CRItems.pureQuartz, '&', "gemEmerald", '@', "gemRuby", '$', "gemDiamond"));
 		//Arcane Extractor
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.beamExtractor, 1), "***", "*# ", "***", '*', "obsidian", '#', CRItems.lensArray));
 		//Quartz Stabilizer
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.quartzStabilizer, 1), " & ", "*&*", "***", '&', CRItems.luminescentQuartz, '*', CRItems.pureQuartz));
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.quartzStabilizer, 1), " & ", "*&*", "***", '&', CRItems.brightQuartz, '*', CRItems.pureQuartz));
 		//Crystalline Prism
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.crystallinePrism, 1), "*^*", "^&^", "*&*", '*', CRItems.pureQuartz, '^', CRItems.luminescentQuartz, '&', CRItems.lensArray));
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.crystallinePrism, 1), "*^*", "^&^", "*&*", '*', CRItems.pureQuartz, '^', CRItems.brightQuartz, '&', CRItems.lensArray));
 		//Arcane Reflector
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.beamReflector, 1), "*^*", '*', "stone", '^', CRItems.pureQuartz));
 		//Lens Frame
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.lensFrame, 1), "***", "*&*", "***", '*', "stone", '&', CRItems.pureQuartz));
 		//Beam Redirector
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.beamRedirector, 1), "LRL", "***", "LRL", '*', CRItems.pureQuartz, 'L', CRItems.luminescentQuartz, 'R', "dustRedstone"));
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.beamRedirector, 1), "LRL", "***", "LRL", '*', CRItems.pureQuartz, 'L', CRItems.brightQuartz, 'R', "dustRedstone"));
 		//Beam Siphon
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.beamSiphon, 1), "L L", "*A*", "L L", '*', CRItems.pureQuartz, 'L', CRItems.luminescentQuartz, 'A', CRItems.lensArray));
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.beamSiphon, 1), "L L", "*A*", "L L", '*', CRItems.pureQuartz, 'L', CRItems.brightQuartz, 'A', CRItems.lensArray));
 		//Beam Splitter
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.beamSplitter, 1), "LRL", "*A*", "LRL", '*', CRItems.pureQuartz, 'L', CRItems.luminescentQuartz, 'A', CRItems.lensArray, 'R', "dustRedstone"));
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.beamSplitter, 1), "LRL", "*A*", "LRL", '*', CRItems.pureQuartz, 'L', CRItems.brightQuartz, 'A', CRItems.lensArray, 'R', "dustRedstone"));
 		//Color Chart
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.colorChart, 1), "RGB", "^^^", "___", '_', "slabWood", '^', "paper", 'R', "dyeRed", 'G', "dyeLime", 'B', "dyeBlue"));
 		//Light Cluster
-		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(CrossroadsBlocks.lightCluster, 8), CRItems.luminescentQuartz));
+		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(CrossroadsBlocks.lightCluster, 8), CRItems.brightQuartz));
 		//Crystalline Master Axis
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.crystalMasterAxis, 1), "*&*", "*#*", "***", '*', CRItems.pureQuartz, '#', CrossroadsBlocks.masterAxis, '&', CRItems.lensArray));
 		//Ratiator
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.ratiator, 1), " * ", "*#*", "^^^", '*', CRItems.luminescentQuartz, '#', CRItems.pureQuartz, '^', "stone"));
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.ratiator, 1), " * ", "*#*", "^^^", '*', CRItems.brightQuartz, '#', CRItems.pureQuartz, '^', "stone"));
 		//Fat Feeder
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.fatFeeder, 1), "***", "#A#", "***", '*', "ingotTin", '#', "netherrack", 'A', Items.GOLDEN_APPLE));
 		//Detailed Crafter
@@ -362,8 +268,6 @@ public final class ModCrafting{
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.basicFluidSplitter, 1), "*^*", "&&&", "*^*", '*', "nuggetTin", '^', CrossroadsBlocks.fluidTube, '&', "ingotBronze"));
 		//Redstone Fluid Splitter
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(CrossroadsBlocks.fluidSplitter, 1), CrossroadsBlocks.basicFluidSplitter, "dustRedstone", "dustRedstone", "dustRedstone"));
-		//Redstone Keyboard
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.redstoneKeyboard, 1), "&&&", "&*&", "&&&", '*', "ingotBronze", '&', "dustRedstone"));
 		//Reagent Tank and Reaction Chamber emptying
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(CrossroadsBlocks.reagentTankGlass, 1), new ItemStack(CrossroadsBlocks.reagentTankGlass, 1)));
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(CrossroadsBlocks.reactionChamberGlass, 1), new ItemStack(CrossroadsBlocks.reactionChamberGlass, 1)));
@@ -376,18 +280,6 @@ public final class ModCrafting{
 		//Heat Reservoir
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.heatReservoir, 1), "#*#", "***", "#*#", '#', "ingotCopper", '*', "dustSalt"));
 		toRegister.add(new ShapelessOreRecipe(null, new ItemStack(CrossroadsBlocks.heatReservoir, 1), CrossroadsBlocks.heatReservoir));
-		//Fertile Soil using Slag
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(EssentialsBlocks.fertileSoilWheat, 3), "#$#", "***", "^^^", '#', "itemSlag", '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', "cropWheat"));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(EssentialsBlocks.fertileSoilCarrot, 3), "#$#", "***", "^^^", '#', "itemSlag", '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', "cropCarrot"));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(EssentialsBlocks.fertileSoilPotato, 3), "#$#", "***", "^^^", '#', "itemSlag", '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', "cropPotato"));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(EssentialsBlocks.fertileSoilBeetroot, 3), "#$#", "***", "^^^", '#', "itemSlag", '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', Items.BEETROOT));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(EssentialsBlocks.fertileSoilNetherWart, 3), "#$#", "***", "^^^", '#', "itemSlag", '$', Items.FERMENTED_SPIDER_EYE, '^', Blocks.SOUL_SAND, '*', Items.NETHER_WART));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(EssentialsBlocks.fertileSoilOak, 3), "#$#", "***", "^^^", '#', "itemSlag", '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', new ItemStack(Blocks.SAPLING, 1, BlockPlanks.EnumType.OAK.getMetadata())));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(EssentialsBlocks.fertileSoilBirch, 3), "#$#", "***", "^^^", '#', "itemSlag", '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', new ItemStack(Blocks.SAPLING, 1, BlockPlanks.EnumType.BIRCH.getMetadata())));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(EssentialsBlocks.fertileSoilSpruce, 3), "#$#", "***", "^^^", '#', "itemSlag", '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', new ItemStack(Blocks.SAPLING, 1, BlockPlanks.EnumType.SPRUCE.getMetadata())));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(EssentialsBlocks.fertileSoilJungle, 3), "#$#", "***", "^^^", '#', "itemSlag", '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', new ItemStack(Blocks.SAPLING, 1, BlockPlanks.EnumType.JUNGLE.getMetadata())));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(EssentialsBlocks.fertileSoilDarkOak, 3), "#$#", "***", "^^^", '#', "itemSlag", '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', new ItemStack(Blocks.SAPLING, 1, BlockPlanks.EnumType.DARK_OAK.getMetadata())));
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(EssentialsBlocks.fertileSoilAcacia, 3), "#$#", "***", "^^^", '#', "itemSlag", '$', Items.FERMENTED_SPIDER_EYE, '^', "dirt", '*', new ItemStack(Blocks.SAPLING, 1, BlockPlanks.EnumType.ACACIA.getMetadata())));
 		//Concrete Powder using slag
 		for(DyeColor color : DyeColor.values()){
 			toRegister.add(new ShapelessOreRecipe(null, new ItemStack(Blocks.CONCRETE_POWDER, 16, color.getMetadata()), "sand", "sand", "sand", "sand", "itemSlag", "itemSlag", "itemSlag", "itemSlag", "dye" + Character.toUpperCase(color.getName().charAt(0)) + color.getName().substring(1)));
@@ -405,9 +297,9 @@ public final class ModCrafting{
 		//Permeable Quartz
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.permeableQuartz, 4), " G ", "G*G", " G ", 'G', CrossroadsBlocks.blockPureQuartz, '*', "blockGlass"));
 		//Redstone Transmitter
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.redstoneTransmitter, 1), "QRQ", "RTR", "QRQ", 'Q', CRItems.luminescentQuartz, 'R', "dustRedstone", 'T', Blocks.REDSTONE_TORCH));
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.redstoneTransmitter, 1), "QRQ", "RTR", "QRQ", 'Q', CRItems.brightQuartz, 'R', "dustRedstone", 'T', Blocks.REDSTONE_TORCH));
 		//Redstone Receiver
-		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.redstoneReceiver, 1), "QRQ", "RTR", "QRQ", 'Q', CRItems.luminescentQuartz, 'R', "dustRedstone", 'T', "blockRedstone"));
+		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.redstoneReceiver, 1), "QRQ", "RTR", "QRQ", 'Q', CRItems.brightQuartz, 'R', "dustRedstone", 'T', "blockRedstone"));
 		//Dynamo
 		toRegister.add(new ShapedOreRecipe(null, new ItemStack(CrossroadsBlocks.dynamo, 1), "-@-", "===", '@', "gearCopper", '-', "stickIron", '=', "ingotIron"));
 		//Cavorite Block

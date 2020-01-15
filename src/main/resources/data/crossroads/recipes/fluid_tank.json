@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:fluid_tank",
+		"count": 1
+	},
+	"pattern": [
+		" * ",
+		"*B*",
+		" * "
+	],
+	"key": {
+		"*": {
+			"tag": "#forge:ingots/gold"
+		},
+		"B": {
+			"tag": "#forge:ingots/bronze"
+		}
+	}
+}

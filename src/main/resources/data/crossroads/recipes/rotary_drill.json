@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:rotary_drill",
+		"count": 2
+	},
+	"pattern": [
+		" I ",
+		"IBI"
+	],
+	"key": {
+		"I": {
+			"tag": "#forge:ingots/iron"
+		},
+		"B": {
+			"tag": "#forge:storage_blocks/iron"
+		}
+	}
+}

@@ -240,8 +240,7 @@ public class Mechanism extends ContainerBlock implements IReadable{
 
 	@Override
 	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos){
-		TileEntity te = worldIn.getTileEntity(pos);
-		return te instanceof MechanismTileEntity ? RedstoneUtil.clampToVanilla(((MechanismTileEntity) te).getRedstone()) : 0;
+		return RedstoneUtil.clampToVanilla(read(worldIn, pos, blockState));
 	}
 
 	@Override

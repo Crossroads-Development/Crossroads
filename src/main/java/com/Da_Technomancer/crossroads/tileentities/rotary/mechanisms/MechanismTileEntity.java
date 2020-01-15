@@ -139,7 +139,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 		for(int i = 0; i < 7; i++){
 			if(members[i] != null && mats[i] != null){//Sanity check. mats[i] should never be null if members[i] isn't
 				nbt.putInt("[" + i + "]memb", MECHANISMS.indexOf(members[i]));
-				nbt.putInt("[" + i + "]mat", mats[i].getIndex());
+				nbt.putString("[" + i + "]mat", mats[i].getId());
 			}
 		}
 
@@ -158,7 +158,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 		for(int i = 0; i < 7; i++){
 			if(members[i] != null && mats[i] != null){//Sanity check. mats[i] should never be null if members[i] isn't
 				nbt.putInt("[" + i + "]memb", MECHANISMS.indexOf(members[i]));
-				nbt.putInt("[" + i + "]mat", mats[i].getIndex());
+				nbt.putString("[" + i + "]mat", mats[i].getId());
 
 //				nbt.putFloat("[" + i + "]cl_w", clientW[i]);
 //				nbt.putFloat("[" + i + "]ang", angle[i]);
@@ -179,6 +179,8 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 
 		if(nbt.contains("[6]memb") && nbt.contains("[6]mat")){
 			axleAxis = Direction.Axis.values()[nbt.getInt("axis")];
+		}else{
+			axleAxis = null;
 		}
 
 		for(int i = 0; i < 7; i++){
@@ -189,7 +191,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 					continue;//Sanity check in case a mechanism type gets removed in the future
 				}
 
-				mats[i] = GearFactory.gearMats.get(nbt.getInt("[" + i + "]mat"));
+				mats[i] = GearFactory.findMaterial(nbt.getString("[" + i + "]mat"));
 
 				// motionData
 //				clientW[i] = nbt.getFloat("[" + i + "]cl_w");
@@ -217,7 +219,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 				mats[identifier - 7] = null;
 			}else{
 				members[identifier - 7] = MECHANISMS.get((int) (message & 0xFFFFFFFFL));
-				mats[identifier - 7] = GearFactory.gearMats.get((int) (message >>> 32L));
+				mats[identifier - 7] = GearFactory.GearMaterial.deserialize((int) (message >>> 32L));
 			}
 			axleHandlers[identifier - 7].updateStates(false);
 		}else if(identifier == 14){
@@ -390,7 +392,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 			}
 
 			if(sendPacket && !world.isRemote){
-				CrossroadsPackets.sendPacketAround(world, pos, new SendLongToClient(side + 7, members[side] == null ? -1L : (MECHANISMS.indexOf(members[side]) & 0xFFFFFFFFL) | (long) (mats[side].getIndex()) << 32L, pos));
+				CrossroadsPackets.sendPacketAround(world, pos, new SendLongToClient(side + 7, members[side] == null ? -1L : (MECHANISMS.indexOf(members[side]) & 0xFFFFFFFFL) | (long) (mats[side].serialize()) << 32L, pos));
 			}
 		}
 

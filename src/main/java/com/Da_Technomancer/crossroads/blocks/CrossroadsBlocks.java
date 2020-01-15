@@ -21,8 +21,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -61,7 +59,7 @@ public class CrossroadsBlocks{
 	public static BeamReflector beamReflector;
 	public static LensFrame lensFrame;
 	public static BasicBlock blockPureQuartz;
-	public static BasicBlock blockLuminescentQuartz;
+	public static BasicBlock blockBrightQuartz;
 	public static BeamSiphon beamSiphon;
 	public static BeamSplitter beamSplitter;
 	public static ColorChart colorChart;
@@ -78,9 +76,9 @@ public class CrossroadsBlocks{
 	public static GatewayFrame gatewayFrame;
 //	public static RedstoneKeyboard redstoneKeyboard;
 	public static DetailedCrafter detailedCrafter;
-	public static PrototypingTable prototypingTable;
-	public static Prototype prototype;
-	public static PrototypePort prototypePort;
+//	public static PrototypingTable prototypingTable;
+//	public static Prototype prototype;
+//	public static PrototypePort prototypePort;
 	public static MechanicalArm mechanicalArm;
 	public static RedstoneRegistry redstoneRegistry;
 	public static AlchemicalTube alchemicalTubeGlass;
@@ -198,7 +196,7 @@ public class CrossroadsBlocks{
 		beamReflector = new BeamReflector();
 		lensFrame = new LensFrame();
 		blockPureQuartz = new BasicBlock("block_pure_quartz", Block.Properties.create(Material.ROCK).hardnessAndResistance(4));
-		blockLuminescentQuartz = new BasicBlock("block_luminescent_quartz", Block.Properties.create(Material.ROCK).hardnessAndResistance(4).lightValue(15));
+		blockBrightQuartz = new BasicBlock("block_luminescent_quartz", Block.Properties.create(Material.ROCK).hardnessAndResistance(4).lightValue(15));
 		beamSiphon = new BeamSiphon();
 		beamSplitter = new BeamSplitter();
 		colorChart = new ColorChart();
@@ -215,9 +213,9 @@ public class CrossroadsBlocks{
 		gatewayFrame = new GatewayFrame();
 //		redstoneKeyboard = new RedstoneKeyboard();
 		detailedCrafter = new DetailedCrafter();
-		prototypingTable = new PrototypingTable();
-		prototype = new Prototype();
-		prototypePort = new PrototypePort();
+//		prototypingTable = new PrototypingTable();
+//		prototype = new Prototype();
+//		prototypePort = new PrototypePort();
 		mechanicalArm = new MechanicalArm();
 		redstoneRegistry = new RedstoneRegistry();
 		alchemicalTubeGlass = new AlchemicalTube(false);
@@ -289,19 +287,5 @@ public class CrossroadsBlocks{
 		fluxStabilizerCrystalBeam = new FluxStabilizerBeam(true);
 		fluxStabilizerElectric = new FluxStabilizerElectric(false);
 		fluxStabilizerCrystalElectric = new FluxStabilizerElectric(true);
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public static void initModels(){
-		fluidTube.initModel();
-		redstoneFluidTube.initModel();
-		prototype.initModel();
-		prototypePort.initModel();
-		alchemicalTubeGlass.initModel();
-		redsAlchemicalTubeGlass.initModel();
-		alchemicalTubeCrystal.initModel();
-		redsAlchemicalTubeCrystal.initModel();
-		reagentPumpGlass.initModel();
-		reagentPumpCrystal.initModel();
 	}
 }

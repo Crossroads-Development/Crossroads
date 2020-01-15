@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"item": "crossroads:nugget_bronze",
+		"count": 4
+	},
+	"ingredients": [
+		{
+			"tag": "forge:nuggets/tin"
+		},
+		{
+			"tag": "forge:nuggets/copper"
+		},
+		{
+			"tag": "forge:nuggets/copper"
+		},
+		{
+			"tag": "forge:nuggets/copper"
+		}
+	]
+}

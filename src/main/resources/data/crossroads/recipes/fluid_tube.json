@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:fluid_tube",
+		"count": 8
+	},
+	"pattern": [
+		"***",
+		"   ",
+		"***"
+	],
+	"key": {
+		"*": {
+			"tag": "#forge:ingots/bronze"
+		}
+	}
+}

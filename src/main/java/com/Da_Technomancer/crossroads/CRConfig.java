@@ -54,7 +54,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.BooleanValue addBoboRecipes;
 	public static ForgeConfigSpec.ConfigValue<String> cccExpenLiquid;
 	public static ForgeConfigSpec.ConfigValue<String> cccEntropLiquid;
-	public static ForgeConfigSpec.ConfigValue<List<? extends String>> destroyBlacklist;
+	public static ForgeConfigSpec.ConfigValue<List<? extends String>> destroyBlacklist;//TODO switch to tag
 	public static ForgeConfigSpec.DoubleValue rotaryLoss;
 	public static ForgeConfigSpec.DoubleValue crystalAxisMult;
 	public static ForgeConfigSpec.IntValue steamWorth;
@@ -113,7 +113,7 @@ public class CRConfig{
 		genVoidOre = serverBuilder.comment("Generate Void Crystal Ore?").define("void", true);
 //		retrogen = serverBuilder.comment("Retrogen Key", "Changing this value will cause retrogen. Leaving it blank disables retrogen", "Turn this off when you are done!").define("retrogen", "");
 		processableOres = serverBuilder.comment("Metal ore types that Crossroads machines should be able to process", "Specify the metal then a space then a hexadecimal color, ex. \"copper FF4800\"").define("process_ores", initList("copper FF7800", "tin C8C8C8", "iron A0A0A0", "gold FFFF00"), compileRegex("\\w++ \\p{XDigit}{6}+"));
-		gearTypes = serverBuilder.comment("Metal types that Crossroads should add gears for", "Specify the metal then a space then a hexadecimal color then a space then a density in kg/m3, ex. \"copper FF783C 9000\"").define("gear_types", initList("copper FF783C 9000", "tin F0F0F0 7300", "iron A0A0A0 8000", "gold FFFF00 20000", "bronze FFA03C 8800", "copshowium FF8200 0", "lead 74699E 11000", "silver BDF3EE 10000", "nickel F1F2C4 9000", "invar DFEDD8 8000", "platinum 74F5FF 21000", "electrum FEFF8A 15000"), compileRegex("\\w++ \\p{XDigit}{6}+ [+]?[0-9]*\\.?[0-9]+"));
+		gearTypes = serverBuilder.comment("Metal types that Crossroads should add gears for", "Specify the metal then a space then a hexadecimal color then a space then a density in kg/m3", "Adding a new gear material requires adding localization and recipes via datapack", "Removing a default gear material is not recommended").define("gear_types", initList("copper FF783C 9000", "tin F0F0F0 7300", "iron A0A0A0 8000", "gold FFFF00 20000", "bronze FFA03C 8800", "copshowium FF8200 0"), compileRegex("\\w++ [0-9A-Fa-f]{6}+ [+]?\\d*\\.?[0-9]+"));
 		serverBuilder.pop();
 		serverBuilder.push(CAT_BALANCE);
 		steamWorth = serverBuilder.comment("The number of degrees one bucket of steam is worth", "If this is changed, it is recommended to rebalance JSON recipes with steam").defineInRange("steam_value", 50, 0, Integer.MAX_VALUE);
@@ -205,6 +205,7 @@ public class CRConfig{
 	 * @param client Whether this is on the virtual render. Pass this param. true if unknown.
 	 * @return The config value.
 	 */
+	@Deprecated
 	public static String[] getConfigStringList(ForgeConfigSpec.ConfigValue<List<? extends String>> prop, boolean client){
 		return (String[]) prop.get().toArray();
 	}

@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:axle",
+		"count": 2,
+		"nbt": {
+			"material": "iron"
+		}
+	},
+	"pattern": [
+		" * ",
+		" S ",
+		" * "
+	],
+	"key": {
+		"S": {
+			"tag": "forge:rods/wooden"
+		},
+		"*": {
+			"tag": "#forge:ingots/iron"
+		}
+	}
+}

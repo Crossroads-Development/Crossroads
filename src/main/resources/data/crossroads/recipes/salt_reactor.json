@@ -1,0 +1,26 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:salt_reactor",
+		"count": 1
+	},
+	"pattern": [
+		"I|I",
+		"|S|",
+		"ICI"
+	],
+	"key": {
+		"I": {
+			"tag": "#forge:ingots/iron"
+		},
+		"C": {
+			"tag": "#forge:ingots/copper"
+		},
+		"S": {
+			"tag": "#forge:storage_blocks/salt"
+		},
+		"|": {
+			"item": "fluid_tube"
+		}
+	}
+}

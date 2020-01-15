@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.TemporalAcceleratorTileEntity;
 import com.Da_Technomancer.essentials.ReflectionUtil;
 import com.google.common.base.Predicate;
@@ -39,6 +40,7 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.config.ModConfig;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
@@ -291,6 +293,13 @@ public final class EventHandlerCommon{
 			}
 			marker.data = data;
 			e.getWorld().addEntity(marker);
+		}
+	}
+
+	@SubscribeEvent
+	public void rebuildConfigData(ModConfig.ConfigReloading e){
+		if(e.getConfig().getModId().equals(Crossroads.MODID) && e.getConfig().getType() == ModConfig.Type.SERVER){
+			GearFactory.init();
 		}
 	}
 }
