@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -133,7 +134,7 @@ public class MechanismClutch extends MechanismAxle{
 	@Nonnull
 	@Override
 	public ItemStack getDrop(GearFactory.GearMaterial mat){
-		return new ItemStack(inverted ? GearFactory.gearTypes.get(mat).getInvClutch() : GearFactory.gearTypes.get(mat).getClutch(), 1);
+		return inverted ? CRItems.invClutch.withMaterial(mat, 1) : CRItems.clutch.withMaterial(mat, 1);
 	}
 
 	@Override

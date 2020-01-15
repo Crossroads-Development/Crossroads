@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.rotary.*;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelGearOctagon;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -132,7 +133,7 @@ public class MechanismSmallGear implements IMechanism{
 	@Nonnull
 	@Override
 	public ItemStack getDrop(GearFactory.GearMaterial mat){
-		return new ItemStack(GearFactory.gearTypes.get(mat).getSmallGear(), 1);
+		return CRItems.smallGear.withMaterial(mat, 1);
 	}
 
 	@Override

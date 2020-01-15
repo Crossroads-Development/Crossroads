@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.*;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelGearOctagon;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -137,7 +138,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 	@Nonnull
 	@Override
 	public ItemStack getDrop(GearFactory.GearMaterial mat){
-		return new ItemStack(inverted ? GearFactory.gearTypes.get(mat).getInvToggleGear() : GearFactory.gearTypes.get(mat).getToggleGear(), 1);
+		return inverted ? CRItems.invToggleGear.withMaterial(mat, 1) : CRItems.toggleGear.withMaterial(mat, 1);
 	}
 
 	private final float sHalf = 7F / (16F * (1F + (float) Math.sqrt(2F)));

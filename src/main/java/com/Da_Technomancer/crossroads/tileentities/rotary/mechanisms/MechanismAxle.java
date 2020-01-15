@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -104,7 +105,7 @@ public class MechanismAxle implements IMechanism{
 	@Nonnull
 	@Override
 	public ItemStack getDrop(GearFactory.GearMaterial mat){
-		return new ItemStack(GearFactory.gearTypes.get(mat).getAxle(), 1);
+		return CRItems.axle.withMaterial(mat, 1);
 	}
 
 	@Override
