@@ -7,8 +7,6 @@ import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.heat.HeatCable;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -112,7 +110,7 @@ public class HeatCableTileEntity extends ModuleTE{
 
 		if(temp > insulator.getLimit()){
 			if(CRConfig.heatEffects.get()){
-				insulator.getEffect().doEffect(world, pos, 1, null);
+				insulator.getEffect().doEffect(world, pos);
 			}else{
 				world.setBlockState(pos, Blocks.FIRE.getDefaultState(), 3);
 			}

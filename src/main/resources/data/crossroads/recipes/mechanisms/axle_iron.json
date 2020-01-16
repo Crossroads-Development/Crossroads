@@ -17,7 +17,7 @@
 			"tag": "forge:rods/wooden"
 		},
 		"*": {
-			"tag": "#forge:ingots/iron"
+			"tag": "forge:ingots/iron"
 		}
 	}
 }

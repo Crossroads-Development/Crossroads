@@ -14,10 +14,10 @@
 	],
 	"key": {
 		"#": {
-			"tag": "#forge:ingots/tin"
+			"tag": "forge:ingots/tin"
 		},
 		"*": {
-			"tag": "#forge:nuggets/tin"
+			"tag": "forge:nuggets/tin"
 		}
 	}
 }

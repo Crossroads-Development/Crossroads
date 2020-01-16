@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:rotary_pump",
+		"count": 1
+	},
+	"pattern": [
+		"BAB",
+		"BAB",
+		"GAG"
+	],
+	"key": {
+		"B": {
+			"tag": "forge:ingots/bronze"
+		},
+		"A": {
+			"item": "crossroads:axle"
+		},
+		"G": {
+			"tag": "forge:glass/colorless"
+		}
+	}
+}

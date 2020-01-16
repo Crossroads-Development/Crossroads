@@ -17,7 +17,7 @@
 			"tag": "forge:rods/wooden"
 		},
 		"*": {
-			"tag": "#crossroads:ingots/copshowium"
+			"tag": "crossroads:ingots/copshowium"
 		}
 	}
 }

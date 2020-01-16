@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:beam_transmute",
+	"alignment": "rift",
+	"void": "true",
+	"power": 1,
+	"input": [
+		{
+			"block": "minecraft:infested_stone"
+		}
+	],
+	"output": "minecraft:stone"
+}

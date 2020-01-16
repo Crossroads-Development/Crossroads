@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:beam_transmute",
+	"alignment": "fusion",
+	"void": "false",
+	"power": 16,
+	"input": [
+		{
+			"block": "minecraft:prismarine"
+		}
+	],
+	"output": "minecraft:prismarine_bricks"
+}

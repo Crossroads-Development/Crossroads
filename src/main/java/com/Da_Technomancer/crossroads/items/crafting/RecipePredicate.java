@@ -8,6 +8,7 @@ import java.util.function.Predicate;
  * 
  * Implementers of this interface should override {@link Object#equals(Object)} & {@link Object#hashCode()} for aiding with CraftTweaker integration
  */
+@Deprecated
 public interface RecipePredicate<T> extends Predicate<T>{
 	
 	/**

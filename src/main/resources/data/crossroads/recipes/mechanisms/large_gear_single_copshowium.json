@@ -14,10 +14,10 @@
 	],
 	"key": {
 		"#": {
-			"tag": "#crossroads:ingots/copshowium"
+			"tag": "crossroads:ingots/copshowium"
 		},
 		"*": {
-			"tag": "#crossroads:nuggets/copshowium"
+			"tag": "crossroads:nuggets/copshowium"
 		}
 	}
 }

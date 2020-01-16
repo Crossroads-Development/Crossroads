@@ -13,7 +13,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
@@ -45,7 +44,7 @@ public class HeatSink extends ContainerBlock{
 				TileEntity te = worldIn.getTileEntity(pos);
 				if(te instanceof HeatSinkTileEntity){
 					int mode = ((HeatSinkTileEntity) te).cycleMode();
-					playerIn.sendMessage(new StringTextComponent("Heat loss is now -" + HeatSinkTileEntity.MODES[mode] + "°C/t"));
+					playerIn.sendMessage(new TranslationTextComponent("tt.crossroads.heat_sink.loss", HeatSinkTileEntity.MODES[mode]));
 				}
 			}
 			return true;

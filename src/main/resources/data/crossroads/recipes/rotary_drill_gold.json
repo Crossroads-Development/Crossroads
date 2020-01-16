@@ -10,7 +10,7 @@
 	],
 	"key": {
 		"G": {
-			"tag": "#forge:ingots/gold"
+			"tag": "forge:ingots/gold"
 		},
 		"D": {
 			"item": "crossroads:rotary_drill"

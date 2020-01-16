@@ -1,5 +1,7 @@
 package com.Da_Technomancer.crossroads.items.crafting;
 
+import com.Da_Technomancer.crossroads.items.crafting.recipes.BlockIngredient;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
@@ -89,10 +91,29 @@ public class CraftingUtil{
 		return out;
 	}
 
-	public static Ingredient getIngredient(JsonObject json, String memberName, boolean allowDirect){
-		if(!json.has(memberName) && allowDirect){
+	public static Ingredient getIngredient(JsonElement json, String memberName, boolean allowDirect){
+		if(json.isJsonObject()){
+			JsonObject jsonO = (JsonObject) json;
+			if(jsonO.has(memberName)){
+				return Ingredient.deserialize(((JsonObject) json).get(memberName));
+			}
+		}
+		if(allowDirect){
 			return Ingredient.deserialize(json);
 		}
-		return Ingredient.deserialize(json.get(memberName));
+		throw new JsonParseException("Non-Ingredient passed as JSON ingredient");
+	}
+
+	public static BlockIngredient getBlockIngredient(JsonElement json, String memberName, boolean allowDirect){
+		if(json.isJsonObject()){
+			JsonObject jsonO = (JsonObject) json;
+			if(jsonO.has(memberName)){
+				return BlockIngredient.readFromJSON(((JsonObject) json).get(memberName));
+			}
+		}
+		if(allowDirect){
+			return BlockIngredient.readFromJSON(json);
+		}
+		throw new JsonParseException("Non-BlockIngredient passed as JSON ingredient");
 	}
 }

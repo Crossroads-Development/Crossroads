@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:beam_transmute",
+	"alignment": "fusion",
+	"void": "false",
+	"power": 16,
+	"input": [
+		{
+			"tag": "minecraft:sand"
+		}
+	],
+	"output": "crossroads:block_pure_quartz"
+}

@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockState;
 
+@Deprecated//Everything using this should switch to tags
 public class BlockRecipePredicate implements RecipePredicate<BlockState>{
 
 	private final BlockState state;

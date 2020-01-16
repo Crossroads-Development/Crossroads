@@ -10,10 +10,10 @@
 	],
 	"key": {
 		"I": {
-			"tag": "#forge:ingots/iron"
+			"tag": "forge:ingots/iron"
 		},
 		"B": {
-			"tag": "#forge:storage_blocks/iron"
+			"tag": "forge:storage_blocks/iron"
 		}
 	}
 }

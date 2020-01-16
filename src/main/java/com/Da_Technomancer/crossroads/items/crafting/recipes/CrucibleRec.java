@@ -12,6 +12,7 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
@@ -61,6 +62,13 @@ public class CrucibleRec implements IRecipe<IInventory>{
 	@Override
 	public ItemStack getIcon(){
 		return new ItemStack(CrossroadsBlocks.heatingCrucible);
+	}
+
+	@Override
+	public NonNullList<Ingredient> getIngredients(){
+		NonNullList<Ingredient> nonnulllist = NonNullList.create();
+		nonnulllist.add(input);
+		return nonnulllist;
 	}
 
 	@Override

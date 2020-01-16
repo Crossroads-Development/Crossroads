@@ -1,0 +1,26 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:water_centrifuge",
+		"count": 1
+	},
+	"pattern": [
+		"BAB",
+		"P P",
+		"TTT"
+	],
+	"key": {
+		"B": {
+			"tag": "forge:ingots/bronze"
+		},
+		"T": {
+			"tag": "forge:ingots/tin"
+		},
+		"A": {
+			"item": "crossroads:axle"
+		},
+		"P": {
+			"item": "crossroads:fluid_tube"
+		}
+	}
+}

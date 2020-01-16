@@ -11,7 +11,7 @@
 	],
 	"key": {
 		"*": {
-			"tag": "#forge:ingots/bronze"
+			"tag": "forge:ingots/bronze"
 		},
 		"C": {
 			"item": "minecraft:compass"

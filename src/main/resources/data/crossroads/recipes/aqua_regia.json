@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"item": "crossroads:aqua_regia",
+		"count": 4
+	},
+	"ingredients": [
+		{
+			"tag": "crossroads:dusts/nitric_acid"
+		},
+		{
+			"tag": "crossroads:dusts/hydrochloric_acid"
+		},
+		{
+			"tag": "crossroads:dusts/hydrochloric_acid"
+		},
+		{
+			"tag": "crossroads:dusts/hydrochloric_acid"
+		}
+	]
+}

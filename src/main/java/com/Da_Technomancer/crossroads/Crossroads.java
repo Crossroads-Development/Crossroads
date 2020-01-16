@@ -139,6 +139,7 @@ public final class Crossroads{
 		reg.register(new FluidCoolingRec.Serializer().setRegistryName("fluid_cooling"));
 		reg.register(new CrucibleRec.Serializer().setRegistryName("crucible"));
 		reg.register(new DetailedCrafterRec.Serializer().setRegistryName("detailed_crafter"));
+		reg.register(new BeamTransmuteRec.Serializer().setRegistryName("beam_transmute"));
 	}
 
 	@SuppressWarnings("unused")

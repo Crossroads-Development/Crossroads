@@ -14,10 +14,10 @@
 	],
 	"key": {
 		"#": {
-			"tag": "#forge:storage_blocks/tin"
+			"tag": "forge:storage_blocks/tin"
 		},
 		"*": {
-			"tag": "#forge:ingots/tin"
+			"tag": "forge:ingots/tin"
 		}
 	}
 }

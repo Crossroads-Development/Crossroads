@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"item": "crossroads:steam_turbine",
+		"count": 1
+	},
+	"ingredients": [
+		{
+			"item": "crossroads:rotary_pump"
+		}
+	]
+}

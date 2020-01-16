@@ -11,10 +11,10 @@
 	],
 	"key": {
 		"*": {
-			"tag": "#forge:cobblestone"
+			"tag": "forge:cobblestone"
 		},
 		"|": {
-			"tag": "#forge:rods/wooden"
+			"tag": "forge:rods/wooden"
 		}
 	}
 }

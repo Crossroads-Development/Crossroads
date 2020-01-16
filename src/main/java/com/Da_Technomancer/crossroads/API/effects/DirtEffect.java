@@ -8,7 +8,6 @@ import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.passive.SquidEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.Explosion;
@@ -22,7 +21,7 @@ public class DirtEffect implements IEffect{
 	private final Random rand = new Random();
 
 	@Override
-	public void doEffect(World worldIn, BlockPos pos, int mult, Direction dir){
+	public void doEffect(World worldIn, BlockPos pos){
 
 		if(worldIn.isRemote){
 			return;

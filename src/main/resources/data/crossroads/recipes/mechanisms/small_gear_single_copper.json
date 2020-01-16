@@ -14,10 +14,10 @@
 	],
 	"key": {
 		"#": {
-			"tag": "#forge:ingots/copper"
+			"tag": "forge:ingots/copper"
 		},
 		"*": {
-			"tag": "#forge:nuggets/copper"
+			"tag": "forge:nuggets/copper"
 		}
 	}
 }

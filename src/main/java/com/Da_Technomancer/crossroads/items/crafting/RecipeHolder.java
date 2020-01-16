@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.items.crafting;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.*;
-import net.minecraft.block.BlockState;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraftforge.registries.ObjectHolder;
@@ -32,6 +31,8 @@ public final class RecipeHolder{
 	public static IRecipeSerializer<FluidCoolingRec> CRUCIBLE_SERIAL = null;
 	@ObjectHolder("detailed_crafter")
 	public static IRecipeSerializer<DetailedCrafterRec> DETAILED_SERIAL = null;
+	@ObjectHolder("beam_transmute")
+	public static IRecipeSerializer<BeamTransmuteRec> BEAM_TRANSMUTE_SERIAL = null;
 
 	//Forge hasn't replaced the IRecipeType registry (yet). We use the vanilla registry as a result.
 	public static IRecipeType<MillRec> MILL_TYPE = IRecipeType.register(Crossroads.MODID + ":mill");
@@ -45,17 +46,6 @@ public final class RecipeHolder{
 	public static IRecipeType<FluidCoolingRec> FLUID_COOLING_TYPE = IRecipeType.register(Crossroads.MODID + ":fluid_cooling");
 	public static IRecipeType<CrucibleRec> CRUCIBLE_TYPE = IRecipeType.register(Crossroads.MODID + ":crucible");
 	public static IRecipeType<DetailedCrafterRec> DETAILED_TYPE = IRecipeType.register(Crossroads.MODID + ":detailed_crafter");
-
-	//TODO all recipes below this line need to be replaced with JSON
-
-	/**
-	 * Stores the fusion beam conversion recipes. 
-	 */
-	public static final PredicateMap<BlockState, BeamTransmute> fusionBeamRecipes = new PredicateMap<>();
-
-	/**
-	 * Stores the void-fusion beam conversion recipes. 
-	 */
-	public static final PredicateMap<BlockState, BeamTransmute> vFusionBeamRecipes = new PredicateMap<>();
+	public static IRecipeType<BeamTransmuteRec> BEAM_TRANSMUTE_TYPE = IRecipeType.register(Crossroads.MODID + ":beam_transmute");
 
 }

@@ -13,6 +13,7 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
@@ -48,6 +49,13 @@ public class BlastFurnaceRec implements IRecipe<IInventory>{
 	@Override
 	public boolean matches(IInventory inv, World worldIn){
 		return ingr.test(inv.getStackInSlot(0));
+	}
+
+	@Override
+	public NonNullList<Ingredient> getIngredients(){
+		NonNullList<Ingredient> nonnulllist = NonNullList.create();
+		nonnulllist.add(ingr);
+		return nonnulllist;
 	}
 
 	@Override
@@ -123,7 +131,7 @@ public class BlastFurnaceRec implements IRecipe<IInventory>{
 		@Override
 		public void write(PacketBuffer buffer, BlastFurnaceRec recipe){
 			buffer.writeString(recipe.getGroup());
-			recipe.getIngredients().get(0).write(buffer);
+			recipe.ingr.write(buffer);
 			recipe.output.writeToPacket(buffer);
 			buffer.writeVarInt(recipe.slag);
 		}

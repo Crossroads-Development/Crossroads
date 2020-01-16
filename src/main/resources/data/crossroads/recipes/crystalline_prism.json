@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:crystalline_prism",
+		"count": 1
+	},
+	"pattern": [
+		"QBQ",
+		"BAB",
+		"QBQ"
+	],
+	"key": {
+		"Q": {
+			"tag": "crossroads:gems/pure_quartz"
+		},
+		"B": {
+			"tag": "crossroads:gems/bright_quartz"
+		},
+		"A": {
+			"item": "crossroads:lens_array"
+		}
+	}
+}

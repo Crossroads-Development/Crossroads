@@ -11,13 +11,13 @@
 	],
 	"key": {
 		"*": {
-			"tag": "#forge:cobblestone"
+			"tag": "forge:cobblestone"
 		},
 		"C": {
-			"tag": "#forge:ingots/copper"
+			"tag": "forge:ingots/copper"
 		},
 		"#": {
-			"tag": "#forge:gems/lapis"
+			"tag": "forge:gems/lapis"
 		}
 	}
 }

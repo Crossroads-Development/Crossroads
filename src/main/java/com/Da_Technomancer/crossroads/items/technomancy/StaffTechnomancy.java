@@ -5,7 +5,6 @@ import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
-import com.Da_Technomancer.crossroads.API.effects.IEffect;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.render.RenderUtil;
 import com.google.common.collect.Multimap;
@@ -119,9 +118,9 @@ public class StaffTechnomancy extends BeamUsingItem{
 					if(te != null && (opt = te.getCapability(Capabilities.BEAM_CAPABILITY, effectDir)).isPresent()){
 						opt.orElseThrow(NullPointerException::new).setMagic(mag);
 					}else{
-						IEffect effect = EnumBeamAlignments.getAlignment(mag).getMixEffect(mag.getRGB());
-						if(effect != null && !World.isOutsideBuildHeight(endPos)){
-							effect.doEffect(player.world, endPos, Math.min(64, mag.getPower()), effectDir);
+						EnumBeamAlignments align = EnumBeamAlignments.getAlignment(mag);
+						if(!World.isOutsideBuildHeight(endPos)){
+							align.getEffect().doBeamEffect(align, mag.getVoid() != 0, Math.min(64, mag.getPower()), player.world, endPos, effectDir);
 						}
 					}
 				}

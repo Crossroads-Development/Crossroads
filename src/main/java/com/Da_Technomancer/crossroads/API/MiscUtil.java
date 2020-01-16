@@ -1,9 +1,7 @@
 package com.Da_Technomancer.crossroads.API;
 
-import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.EssentialsConfig;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -12,7 +10,6 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nonnull;
@@ -93,16 +90,5 @@ public final class MiscUtil{
 	 */
 	public static String localize(String input){
 		return new TranslationTextComponent(input).getUnformattedComponentText();
-	}
-
-	public static boolean canBreak(BlockState state, boolean client){
-		String[] bannedBlocks = CRConfig.getConfigStringList(CRConfig.destroyBlacklist, client);
-		String id = state.getBlock().getRegistryName().toString();
-		for(String s : bannedBlocks){
-			if(s.equals(id)){
-				return false;
-			}
-		}
-		return true;
 	}
 }

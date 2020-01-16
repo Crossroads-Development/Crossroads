@@ -14,10 +14,10 @@
 	],
 	"key": {
 		"#": {
-			"tag": "#forge:storage_blocks/iron"
+			"tag": "forge:storage_blocks/iron"
 		},
 		"*": {
-			"tag": "#forge:ingots/iron"
+			"tag": "forge:ingots/iron"
 		}
 	}
 }

@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:fat_congealer",
+		"count": 1
+	},
+	"pattern": [
+		"TAT",
+		"N N",
+		"T T"
+	],
+	"key": {
+		"A": {
+			"item": "crossroads:axle"
+		},
+		"T": {
+			"tag": "forge:ingots/tin"
+		},
+		"N": {
+			"tag": "forge:netherrack"
+		}
+	}
+}

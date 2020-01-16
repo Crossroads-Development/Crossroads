@@ -14,7 +14,7 @@
 	],
 	"key": {
 		"*": {
-			"tag": "#forge:ingots/tin"
+			"tag": "forge:ingots/tin"
 		},
 		"|": {
 			"type": "minecraft:item_nbt",

@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.API.beams;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.effects.IEffect;
+import com.Da_Technomancer.crossroads.API.effects.BeamEffect;
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -57,10 +57,9 @@ public class BeamManager{
 			BlockState checkState = world.getBlockState(pos.offset(dir, i));
 			if(i == BeamManager.MAX_DISTANCE || solidToBeams(checkState, world, pos.offset(dir, i))){
 				if(!mag.isEmpty()){
-					IEffect e = EnumBeamAlignments.getAlignment(mag).getMixEffect(mag.getRGB());
-					if(e != null){
-						e.doEffect(world, pos.offset(dir, i), Math.min(64, mag.getPower()), dir.getOpposite());
-					}
+					EnumBeamAlignments align = EnumBeamAlignments.getAlignment(mag);
+					BeamEffect e = align.getEffect();
+					e.doBeamEffect(align, mag.getVoid() != 0, Math.min(64, mag.getPower()), world, pos.offset(dir, i), dir.getOpposite());
 				}
 				if(dist != i || !mag.equals(lastSent)){
 					dist = i;

@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:beam_transmute",
+	"alignment": "fusion",
+	"void": "false",
+	"power": 8,
+	"input": [
+		{
+			"tag": "forge:gravel"
+		}
+	],
+	"output": "minecraft:prismarine"
+}

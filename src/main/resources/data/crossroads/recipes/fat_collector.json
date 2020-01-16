@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:fat_collector",
+		"count": 1
+	},
+	"pattern": [
+		"TTT",
+		"N N",
+		"TCT"
+	],
+	"key": {
+		"C": {
+			"tag": "forge:ingots/copper"
+		},
+		"T": {
+			"tag": "forge:ingots/tin"
+		},
+		"N": {
+			"tag": "forge:netherrack"
+		}
+	}
+}

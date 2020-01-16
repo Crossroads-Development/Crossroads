@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:beam_transmute",
+	"alignment": "light",
+	"void": "false",
+	"power": 1,
+	"input": [
+		{
+			"tag": "crossroads:storage_blocks/pure_quartz"
+		}
+	],
+	"output": "crossroads:block_bright_quartz"
+}

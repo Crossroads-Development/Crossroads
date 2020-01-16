@@ -12,6 +12,7 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistryEntry;
@@ -34,6 +35,13 @@ public class IceboxRec implements IRecipe<IInventory>{
 
 	public float getCooling(){
 		return cooling;
+	}
+
+	@Override
+	public NonNullList<Ingredient> getIngredients(){
+		NonNullList<Ingredient> nonnulllist = NonNullList.create();
+		nonnulllist.add(ingr);
+		return nonnulllist;
 	}
 
 	@Override
@@ -106,7 +114,7 @@ public class IceboxRec implements IRecipe<IInventory>{
 		@Override
 		public void write(PacketBuffer buffer, IceboxRec recipe){
 			buffer.writeString(recipe.getGroup());
-			recipe.getIngredients().get(0).write(buffer);
+			recipe.ingr.write(buffer);
 			buffer.writeFloat(recipe.cooling);
 		}
 	}

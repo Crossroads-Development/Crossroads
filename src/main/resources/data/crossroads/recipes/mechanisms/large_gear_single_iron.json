@@ -14,10 +14,10 @@
 	],
 	"key": {
 		"#": {
-			"tag": "#forge:ingots/iron"
+			"tag": "forge:ingots/iron"
 		},
 		"*": {
-			"tag": "#forge:nuggets/iron"
+			"tag": "forge:nuggets/iron"
 		}
 	}
 }

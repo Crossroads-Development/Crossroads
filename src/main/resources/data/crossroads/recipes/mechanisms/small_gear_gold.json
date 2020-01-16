@@ -14,10 +14,10 @@
 	],
 	"key": {
 		"#": {
-			"tag": "#forge:storage_blocks/gold"
+			"tag": "forge:storage_blocks/gold"
 		},
 		"*": {
-			"tag": "#forge:ingots/gold"
+			"tag": "forge:ingots/gold"
 		}
 	}
 }

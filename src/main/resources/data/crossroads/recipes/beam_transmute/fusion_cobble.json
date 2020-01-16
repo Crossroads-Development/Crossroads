@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:beam_transmute",
+	"alignment": "fusion",
+	"void": "false",
+	"power": 1,
+	"input": [
+		{
+			"tag": "forge:cobblestone"
+		}
+	],
+	"output": "minecraft:stone"
+}

@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"item": "crossroads:redstone_fluid_tube",
+		"count": 1
+	},
+	"ingredients": [
+		{
+			"item": "crossroads:fluid_tube"
+		},
+		{
+			"tag": "forge:dusts/redstone"
+		},
+		{
+			"tag": "forge:dusts/redstone"
+		},
+		{
+			"tag": "forge:dusts/redstone"
+		}
+	]
+}

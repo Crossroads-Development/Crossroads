@@ -14,7 +14,7 @@
 			"item": "minecraft:iron_bars"
 		},
 		"C": {
-			"tag": "#forge:ingots/copper"
+			"tag": "forge:ingots/copper"
 		}
 	}
 }

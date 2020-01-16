@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:beam_transmute",
+	"alignment": "light",
+	"void": "true",
+	"power": 1,
+	"input": [
+		{
+			"block": "minecraft:sea_lantern"
+		}
+	],
+	"output": "minecraft:glass"
+}

@@ -11,13 +11,13 @@
 	],
 	"key": {
 		"I": {
-			"tag": "#forge:ingots/iron"
+			"tag": "forge:ingots/iron"
 		},
 		"C": {
-			"tag": "#forge:ingots/copper"
+			"tag": "forge:ingots/copper"
 		},
 		"S": {
-			"tag": "#forge:storage_blocks/salt"
+			"tag": "forge:storage_blocks/salt"
 		},
 		"|": {
 			"item": "fluid_tube"

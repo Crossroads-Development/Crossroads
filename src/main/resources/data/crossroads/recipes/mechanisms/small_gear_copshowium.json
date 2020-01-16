@@ -14,10 +14,10 @@
 	],
 	"key": {
 		"#": {
-			"tag": "#crossroads:storage_blocks/copshowium"
+			"tag": "crossroads:storage_blocks/copshowium"
 		},
 		"*": {
-			"tag": "#crossroads:ingots/copshowium"
+			"tag": "crossroads:ingots/copshowium"
 		}
 	}
 }

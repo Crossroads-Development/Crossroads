@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -9,36 +10,35 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class TimeEffect implements IEffect{
+import javax.annotation.Nullable;
+
+public class TimeEffect extends BeamEffect{
 
 	@Override
-	public void doEffect(World worldIn, BlockPos pos, int mult, Direction dir){
-		TileEntity te = worldIn.getTileEntity(pos);
-		if(worldIn.rand.nextInt(64) < mult){
-			if(te instanceof ITickableTileEntity){
+	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, World worldIn, BlockPos pos, @Nullable Direction dir){
+		if(!performTransmute(align, voi, power, worldIn, pos)){
+			if(voi){
+				FluxUtil.fluxEvent(worldIn, pos, worldIn.rand.nextInt(power) + 1);
+			}else{
+				TileEntity te = worldIn.getTileEntity(pos);
+				if(worldIn.rand.nextInt(64) < power){
+					if(te instanceof ITickableTileEntity){
 
-				//Don't do extra ticks to beam blocks
-				for(Direction side : Direction.values()){
-					if(te.getCapability(Capabilities.BEAM_CAPABILITY, side).isPresent()){
-						return;
+						//Don't do extra ticks to beam blocks
+						for(Direction side : Direction.values()){
+							if(te.getCapability(Capabilities.BEAM_CAPABILITY, side).isPresent()){
+								return;
+							}
+						}
+						((ITickableTileEntity) te).tick();
+					}
+
+					BlockState state = worldIn.getBlockState(pos);
+					if(state.ticksRandomly()){
+						state.randomTick(worldIn, pos, worldIn.rand);
 					}
 				}
-				((ITickableTileEntity) te).tick();
 			}
-
-			BlockState state = worldIn.getBlockState(pos);
-
-			if(state.getBlock().ticksRandomly(state)){
-				state.getBlock().randomTick(state, worldIn, pos, worldIn.rand);
-			}
-		}
-	}
-
-	public static class VoidTimeEffect implements IEffect{
-
-		@Override
-		public void doEffect(World worldIn, BlockPos pos, int mult, Direction dir){
-			FluxUtil.fluxEvent(worldIn, pos, worldIn.rand.nextInt(mult) + 1);
 		}
 	}
 }

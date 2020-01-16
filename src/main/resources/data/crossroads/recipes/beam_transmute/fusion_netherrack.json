@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:beam_transmute",
+	"alignment": "fusion",
+	"void": "false",
+	"power": 8,
+	"input": [
+		{
+			"tag": "forge:netherrack"
+		}
+	],
+	"output": "minecraft:nether_bricks"
+}
