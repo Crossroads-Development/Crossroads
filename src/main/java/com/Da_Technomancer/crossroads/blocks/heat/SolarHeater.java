@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.heat.SolarHeaterTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.Block;
@@ -41,8 +41,8 @@ public class SolarHeater extends ContainerBlock{
 		super(Block.Properties.create(Material.IRON).hardnessAndResistance(3));
 		String name = "solar_heater";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 
 	@Override

@@ -45,6 +45,6 @@ public class HeatUtil{
 		double rawTemp = world.getBiome(pos).getTemperature(pos);
 		//This formula was derived with the power of wikipedia and excel spreadsheets to compare biome temperatures to actual real world temperatures.
 		//Most people probably wouldn't care if I'd just pulled it out of my *rse, but I made an effort and I want someone to know this. Appreciate it. Please?
-		return MiscUtil.betterRound(rawTemp * 17.5D - 2.5D, 3);
+		return MiscUtil.preciseRound(rawTemp * 17.5D - 2.5D, 3);
 	}
 }

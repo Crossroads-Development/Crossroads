@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.RotaryDrillTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -52,8 +52,8 @@ public class RotaryDrill extends ContainerBlock{
 		this.golden = golden;
 		String name = "rotary_drill" + (golden ? "_gold" : "");
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 
 	@Override

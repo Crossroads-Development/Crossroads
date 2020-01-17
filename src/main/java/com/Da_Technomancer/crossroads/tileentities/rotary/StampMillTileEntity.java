@@ -8,7 +8,7 @@ import com.Da_Technomancer.crossroads.API.rotary.ISlaveAxisHandler;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.gui.container.StampMillContainer;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.StampMillRec;
@@ -84,7 +84,7 @@ public class StampMillTileEntity extends InventoryTE{
 		if(!world.isRemote){
 			BlockState state = world.getBlockState(pos);
 
-			if(state.getBlock() != CrossroadsBlocks.stampMill){
+			if(state.getBlock() != CRBlocks.stampMill){
 				return;
 			}
 
@@ -163,7 +163,7 @@ public class StampMillTileEntity extends InventoryTE{
 		}
 
 		BlockState state = world.getBlockState(pos);
-		if(state.getBlock() == CrossroadsBlocks.stampMill && cap == Capabilities.AXLE_CAPABILITY && (side == null || side.getAxis() == state.get(CRProperties.HORIZ_AXIS))){
+		if(state.getBlock() == CRBlocks.stampMill && cap == Capabilities.AXLE_CAPABILITY && (side == null || side.getAxis() == state.get(CRProperties.HORIZ_AXIS))){
 			return (LazyOptional<T>) axleOpt;
 		}
 
@@ -190,7 +190,7 @@ public class StampMillTileEntity extends InventoryTE{
 			axis = masterIn;
 
 			BlockState state = world.getBlockState(pos);
-			if(state.getBlock() != CrossroadsBlocks.stampMill){
+			if(state.getBlock() != CRBlocks.stampMill){
 				return;
 			}
 			Direction.Axis ax = state.get(CRProperties.HORIZ_AXIS);

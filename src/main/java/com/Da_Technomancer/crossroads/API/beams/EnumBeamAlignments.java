@@ -2,11 +2,16 @@ package com.Da_Technomancer.crossroads.API.beams;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.effects.*;
-import net.minecraft.block.Blocks;
+import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.awt.*;
+import java.util.Locale;
 
 public enum EnumBeamAlignments{
 	
@@ -51,8 +56,8 @@ public enum EnumBeamAlignments{
 	}
 
 	@Nonnull
-	public static EnumBeamAlignments getAlignment(@Nullable BeamUnit magic){
-		return magic == null ? EnumBeamAlignments.NO_MATCH : getAlignment(magic.getTrueRGB());
+	public static EnumBeamAlignments getAlignment(@Nonnull BeamUnit magic){
+		return magic.isEmpty() ? NO_MATCH : getAlignment(magic.getTrueRGB());
 	}
 
 	@Nonnull
@@ -66,11 +71,50 @@ public enum EnumBeamAlignments{
 		return VOID;
 	}
 
+	/**
+	 * Gets the localized name of this alignment
+	 * @param voi Whether this is the void version
+	 * @return The localized name of this alignment
+	 */
 	public String getLocalName(boolean voi){
 		if(voi){
 			return MiscUtil.localize("alignment." + toString().toLowerCase() + ".void");
 		}else{
 			return MiscUtil.localize("alignment." + toString().toLowerCase());
+		}
+	}
+
+	@Override
+	public String toString(){
+		return name().toLowerCase(Locale.US);
+	}
+
+	/**
+	 * Gets whether a player has discovered this alignment.
+	 * If this is the client side, make sure the nbt cache is up to date (via StoreNBTToClient)
+	 * @param player The player to check
+	 * @return Whether the given player has unlocked this alignment
+	 */
+	public boolean isDiscovered(PlayerEntity player){
+		return StoreNBTToClient.getPlayerTag(player).getCompound("alignments").getBoolean(toString());
+	}
+
+	/**
+	 * Sets whether the player has discovered this alignment
+	 * Only meaningful if called on the server side
+	 * @param player The player to discover this element
+	 * @param discover If true, discover the element. If false, "undiscover" the element
+	 */
+	public void discover(PlayerEntity player, boolean discover){
+		CompoundNBT nbt = StoreNBTToClient.getPlayerTag(player);
+		if(!nbt.contains("alignments")){
+			nbt.put("alignments", new CompoundNBT());
+		}
+		if(!isDiscovered(player)){
+			nbt.getCompound("alignments").putBoolean(toString(), discover);
+			StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) player);
+			//Doesn't use deletion-chat as the element discovery notification shouldn't be wiped away in 1 tick.
+			player.sendMessage(new TranslationTextComponent("tt.crossroads.element_discover", getLocalName(false)).applyTextStyle(TextFormatting.BOLD));
 		}
 	}
 }

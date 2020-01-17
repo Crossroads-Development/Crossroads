@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -25,7 +25,7 @@ public class CrystallinePrismTileEntity extends BeamRenderTE{
 	private Direction getDir(){
 		if(dir == null){
 			BlockState state = world.getBlockState(pos);
-			if(state.getBlock() != CrossroadsBlocks.crystallinePrism){
+			if(state.getBlock() != CRBlocks.crystallinePrism){
 				return Direction.NORTH;
 			}
 			dir = state.get(CRProperties.HORIZ_FACING);

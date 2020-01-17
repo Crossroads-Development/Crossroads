@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.google.common.collect.ImmutableList;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -32,7 +32,7 @@ public class HeatingCrucibleCategory implements IRecipeCategory<HeatingCrucibleR
 
 		arrowStatic = guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 79, 35, 24, 17);
 		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 176, 14, 24, 17), 40, IDrawableAnimated.StartDirection.LEFT, false);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(CrossroadsBlocks.heatingCrucible, 1));
+		icon = guiHelper.createDrawableIngredient(new ItemStack(CRBlocks.heatingCrucible, 1));
 		fluidOverlay = guiHelper.createDrawable(new ResourceLocation(Crossroads.MODID, "textures/gui/square_fluid_overlay.png"), 0, 0, 32, 32);
 	}
 
@@ -48,7 +48,7 @@ public class HeatingCrucibleCategory implements IRecipeCategory<HeatingCrucibleR
 
 	@Override
 	public String getTitle(){
-		return CrossroadsBlocks.heatingCrucible.getNameTextComponent().getFormattedText();
+		return CRBlocks.heatingCrucible.getNameTextComponent().getFormattedText();
 	}
 
 	@Override

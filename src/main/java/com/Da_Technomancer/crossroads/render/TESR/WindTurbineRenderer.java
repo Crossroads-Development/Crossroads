@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.WindTurbineTileEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.block.BlockState;
@@ -30,7 +30,7 @@ public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntit
 		BlockState state = te.getWorld().getBlockState(te.getPos());
 		LazyOptional<IAxleHandler> axle = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
 
-		if(state.getBlock() != CrossroadsBlocks.windTurbine || !axle.isPresent()){
+		if(state.getBlock() != CRBlocks.windTurbine || !axle.isPresent()){
 			return;
 		}
 

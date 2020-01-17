@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ChronoHarnessTileEntity;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -39,8 +39,8 @@ public class ChronoHarness extends ContainerBlock{
 		setHardness(2);
 		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setSoundType(SoundType.METAL);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 		setDefaultState(getDefaultState().with(EssentialsProperties.REDSTONE_BOOL, false));
 	}
 

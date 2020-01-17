@@ -1,15 +1,12 @@
 package com.Da_Technomancer.crossroads.render.TESR.models;
 
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelRenderer;
+public class ModelDrill{
 
-public class ModelDrill extends ModelBase{
-	private ModelRenderer base;
-	private ModelRenderer upperBase;
-	private ModelRenderer lowerTip;
-	private ModelRenderer midTip;
-	private ModelRenderer topTip;
+	public static void renderDrill(){
+		//TODO the old techne model broke- needs to manually converted to tessellator commands
+	}
 
+	@Deprecated
 	public ModelDrill(){
 		this.textureWidth = 64;
 		this.textureHeight = 32;
@@ -28,15 +25,5 @@ public class ModelDrill extends ModelBase{
 		this.upperBase = new ModelRenderer(this, 0, 13);
 		this.upperBase.setRotationPoint(-4.0F, 18.0F, -4.0F);
 		this.upperBase.addBox(0.0F, 0.0F, 0.0F, 8, 3, 8, 0.0F);
-	}
-
-	public void render(){
-		/*float f = 1F / 16F;
-		this.lowerTip.render(f);
-		this.midTip.render(f);
-		this.topTip.render(f);
-		this.base.render(f);
-		this.upperBase.render(f);
-		*/
 	}
 }

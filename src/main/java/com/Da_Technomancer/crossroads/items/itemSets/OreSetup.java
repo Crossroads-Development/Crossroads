@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.BasicBlock;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.crafting.ItemRecipePredicate;
 import com.Da_Technomancer.crossroads.items.crafting.ModCrafting;
@@ -180,7 +180,7 @@ public final class OreSetup{
 			}.setTranslationKey("molten_metal").setRegistryName(Crossroads.MODID + ":molten_metal_" + lowercaseMetal);
 			fluid.setBlock(fluidBlock);
 			FluidRegistry.addBucketForFluid(fluid);
-			CrossroadsBlocks.toRegister.add(fluidBlock);
+			CRBlocks.toRegister.add(fluidBlock);
 
 
 			RecipeHolder.millRecipes.put(new TagCraftingStack("ore" + type.getKey()), new ItemStack[] {new ItemStack(dust, 2), new ItemStack(Blocks.SAND, 1)});

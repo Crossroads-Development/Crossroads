@@ -8,6 +8,7 @@
 		"#forge:storage_blocks/salt",
 		"#crossroads:storage_blocks/copshowium",
 		"#crossroads:storage_blocks/pure_quartz",
-		"#crossroads:storage_blocks/bright_quartz"
+		"#crossroads:storage_blocks/bright_quartz",
+		"#crossroads:storage_blocks/cavorite"
 	]
 }

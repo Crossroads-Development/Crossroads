@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:lens_frame",
+		"count": 1
+	},
+	"pattern": [
+		"SSS",
+		"SQS",
+		"SSS"
+	],
+	"key": {
+		"S": {
+			"tag": "forge:stone"
+		},
+		"Q": {
+			"tag": "crossroads:gems/pure_quartz"
+		}
+	}
+}

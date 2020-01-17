@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoilTop;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.LeydenJar;
@@ -79,7 +79,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEnti
 	private boolean hasJar(){
 		if(hasJar == null){
 			BlockState state = world.getBlockState(pos);
-			if(state.getBlock() != CrossroadsBlocks.teslaCoil){
+			if(state.getBlock() != CRBlocks.teslaCoil){
 				remove();
 				return false;
 			}

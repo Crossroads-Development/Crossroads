@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.FluidInjectorTileEntity;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -27,8 +27,8 @@ public class FluidInjector extends ContainerBlock{
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "fluid_injector";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 
 	@Override

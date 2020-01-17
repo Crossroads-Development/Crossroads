@@ -22,13 +22,13 @@ import net.minecraftforge.registries.IForgeRegistry;
 import java.util.Collection;
 import java.util.function.Supplier;
 
-import static com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks.*;
+import static com.Da_Technomancer.crossroads.blocks.CRBlocks.*;
 
 public class CrossroadsTileEntity{
 
 	public static void init(IForgeRegistry<TileEntityType<?>> reg){
 		register(HeatCableTileEntity::new, "heat_cable", reg, HeatCableFactory.HEAT_CABLES.values());
-		register(MechanismTileEntity::new, "mechanism", reg, sextupleGear);
+		register(MechanismTileEntity::new, "mechanism", reg, mechanism);
 		register(MasterAxisTileEntity::new, "master_axis", reg, masterAxis);
 		register(MillstoneTileEntity::new, "millstone", reg, millstone);
 		register(HeatingCrucibleTileEntity::new, "crucible", reg, heatingCrucible);

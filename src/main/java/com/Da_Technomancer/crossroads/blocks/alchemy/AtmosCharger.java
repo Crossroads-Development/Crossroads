@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.AtmosChargerTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
@@ -35,8 +35,8 @@ public class AtmosCharger extends ContainerBlock implements IReadable{
 		super(Properties.create(Material.IRON).hardnessAndResistance(0.5F).sound(SoundType.METAL));
 		String name = "atmos_charger";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 
 	@Nullable

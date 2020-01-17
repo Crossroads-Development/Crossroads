@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -24,18 +24,18 @@ public class JEICrossroadsPlugin implements IModPlugin{
 
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registry){
-		registry.addRecipeCatalyst(new ItemStack(CrossroadsBlocks.millstone, 1), MillstoneCategory.ID);
-		registry.addRecipeCatalyst(new ItemStack(CrossroadsBlocks.fluidCoolingChamber, 1), FluidCoolingCategory.ID);
-		registry.addRecipeCatalyst(new ItemStack(CrossroadsBlocks.heatingCrucible, 1), HeatingCrucibleCategory.ID);
-		registry.addRecipeCatalyst(new ItemStack(CrossroadsBlocks.detailedCrafter, 1), DetailedCrafterCategory.ID);
-		registry.addRecipeCatalyst(new ItemStack(CrossroadsBlocks.beamExtractor, 1), BeamExtractorCategory.ID);
+		registry.addRecipeCatalyst(new ItemStack(CRBlocks.millstone, 1), MillstoneCategory.ID);
+		registry.addRecipeCatalyst(new ItemStack(CRBlocks.fluidCoolingChamber, 1), FluidCoolingCategory.ID);
+		registry.addRecipeCatalyst(new ItemStack(CRBlocks.heatingCrucible, 1), HeatingCrucibleCategory.ID);
+		registry.addRecipeCatalyst(new ItemStack(CRBlocks.detailedCrafter, 1), DetailedCrafterCategory.ID);
+		registry.addRecipeCatalyst(new ItemStack(CRBlocks.beamExtractor, 1), BeamExtractorCategory.ID);
 //TODO		registry.addRecipeCatalyst(new ItemStack(CrossroadsBlocks.beamReflector, 1), FusionBeamCategory.ID);
-		registry.addRecipeCatalyst(new ItemStack(CrossroadsBlocks.reactionChamberGlass, 1), ReactionCategory.ID);
-		registry.addRecipeCatalyst(new ItemStack(CrossroadsBlocks.reactionChamberCrystal, 1), ReactionCategory.ID);
-		registry.addRecipeCatalyst(new ItemStack(CrossroadsBlocks.glasswareHolder, 1), ReactionCategory.ID);
-		registry.addRecipeCatalyst(new ItemStack(CrossroadsBlocks.stampMill, 1), StampMillCategory.ID);
-		registry.addRecipeCatalyst(new ItemStack(CrossroadsBlocks.oreCleanser, 1), OreCleanserCategory.ID);
-		registry.addRecipeCatalyst(new ItemStack(CrossroadsBlocks.blastFurnace, 1), BlastFurnaceCategory.ID);
+		registry.addRecipeCatalyst(new ItemStack(CRBlocks.reactionChamberGlass, 1), ReactionCategory.ID);
+		registry.addRecipeCatalyst(new ItemStack(CRBlocks.reactionChamberCrystal, 1), ReactionCategory.ID);
+		registry.addRecipeCatalyst(new ItemStack(CRBlocks.glasswareHolder, 1), ReactionCategory.ID);
+		registry.addRecipeCatalyst(new ItemStack(CRBlocks.stampMill, 1), StampMillCategory.ID);
+		registry.addRecipeCatalyst(new ItemStack(CRBlocks.oreCleanser, 1), OreCleanserCategory.ID);
+		registry.addRecipeCatalyst(new ItemStack(CRBlocks.blastFurnace, 1), BlastFurnaceCategory.ID);
 	}
 
 	@Override

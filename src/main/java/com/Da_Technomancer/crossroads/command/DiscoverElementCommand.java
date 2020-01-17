@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.command;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
+import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -32,7 +32,7 @@ public class DiscoverElementCommand extends CommandBase{
 		}
 
 		if(args[0].toUpperCase().equals("ALL")){
-			CompoundNBT nbt = MiscUtil.getPlayerTag((PlayerEntity) sender);
+			CompoundNBT nbt = StoreNBTToClient.getPlayerTag((PlayerEntity) sender);
 			if(!nbt.contains("elements")){
 				nbt.put("elements", new CompoundNBT());
 			}
@@ -57,7 +57,7 @@ public class DiscoverElementCommand extends CommandBase{
 			return;
 		}
 
-		CompoundNBT nbt = MiscUtil.getPlayerTag((PlayerEntity) sender);
+		CompoundNBT nbt = StoreNBTToClient.getPlayerTag((PlayerEntity) sender);
 		if(!nbt.contains("elements")){
 			nbt.put("elements", new CompoundNBT());
 		}

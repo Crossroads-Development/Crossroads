@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -49,7 +49,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 	protected Direction getFacing(){
 		if(facing == null){
 			BlockState state = world.getBlockState(pos);
-			if(state.getBlock() != CrossroadsBlocks.windTurbine){
+			if(state.getBlock() != CRBlocks.windTurbine){
 				remove();
 				return Direction.NORTH;
 			}

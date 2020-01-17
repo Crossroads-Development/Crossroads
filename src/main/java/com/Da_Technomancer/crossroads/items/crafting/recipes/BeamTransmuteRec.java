@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.items.crafting.recipes;
 
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.google.gson.JsonObject;
@@ -97,7 +97,7 @@ public class BeamTransmuteRec implements IRecipe<IInventory>{
 
 	@Override
 	public ItemStack getIcon(){
-		return new ItemStack(CrossroadsBlocks.beamReflector);
+		return new ItemStack(CRBlocks.beamReflector);
 	}
 
 	@Override

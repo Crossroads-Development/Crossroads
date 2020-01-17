@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneAxisTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
@@ -28,8 +28,8 @@ public class RedstoneAxis extends ContainerBlock{
 		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setHardness(3);
 		setSoundType(SoundType.METAL);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 
 	@Override

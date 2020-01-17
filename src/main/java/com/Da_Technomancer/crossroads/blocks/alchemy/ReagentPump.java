@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumContainerType;
 import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReagentPumpTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.*;
@@ -62,8 +62,8 @@ public class ReagentPump extends ContainerBlock{
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "reagent_pump";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 
 	@Override

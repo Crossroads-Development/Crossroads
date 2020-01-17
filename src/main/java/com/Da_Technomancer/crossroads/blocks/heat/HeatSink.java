@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatSinkTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.*;
@@ -28,8 +28,8 @@ public class HeatSink extends ContainerBlock{
 		super(Block.Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
 		String name = "heat_sink";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 
 	@Override

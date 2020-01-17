@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.items.crafting.recipes;
 
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.google.gson.JsonObject;
@@ -66,7 +66,7 @@ public class IceboxRec implements IRecipe<IInventory>{
 
 	@Override
 	public ItemStack getIcon(){
-		return new ItemStack(CrossroadsBlocks.icebox);
+		return new ItemStack(CRBlocks.icebox);
 	}
 
 	@Override

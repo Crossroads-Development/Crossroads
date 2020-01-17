@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -25,7 +25,7 @@ public class BeamExtractorCategory implements IRecipeCategory<BeamExtractorRecip
 	protected BeamExtractorCategory(IGuiHelper guiHelper){
 		back = guiHelper.createBlankDrawable(180, 100);
 		slot = guiHelper.getSlotDrawable();
-		icon = guiHelper.createDrawableIngredient(new ItemStack(CrossroadsBlocks.beamExtractor, 1));
+		icon = guiHelper.createDrawableIngredient(new ItemStack(CRBlocks.beamExtractor, 1));
 		arrowStatic = guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 79, 35, 24, 17);
 	}
 
@@ -41,7 +41,7 @@ public class BeamExtractorCategory implements IRecipeCategory<BeamExtractorRecip
 
 	@Override
 	public String getTitle(){
-		return CrossroadsBlocks.beamExtractor.getNameTextComponent().getFormattedText();
+		return CRBlocks.beamExtractor.getNameTextComponent().getFormattedText();
 	}
 
 	@Override

@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -39,7 +39,7 @@ public class ChronoHarnessTileEntity extends ModuleTE{
 
 	private boolean hasRedstone(){
 		BlockState state = world.getBlockState(pos);
-		if(state.getBlock() == CrossroadsBlocks.chronoHarness){
+		if(state.getBlock() == CRBlocks.chronoHarness){
 			return state.get(EssentialsProperties.REDSTONE_BOOL);
 		}
 		invalidate();

@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -26,8 +26,8 @@ public class MasterAxis extends ContainerBlock{
 		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
 		String name = "master_axis";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 
 	@Nullable

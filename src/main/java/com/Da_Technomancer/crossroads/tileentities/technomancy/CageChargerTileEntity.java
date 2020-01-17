@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import net.minecraft.entity.player.PlayerEntity;
@@ -127,7 +127,7 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 				if(!simulate){
 					cage = stack;
 					markDirty();
-					world.setBlockState(pos, CrossroadsBlocks.cageCharger.getDefaultState().with(CRProperties.ACTIVE, true), 2);
+					world.setBlockState(pos, CRBlocks.cageCharger.getDefaultState().with(CRProperties.ACTIVE, true), 2);
 				}
 				return ItemStack.EMPTY;
 			}
@@ -143,7 +143,7 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 					ItemStack out = cage;
 					cage = ItemStack.EMPTY;
 					markDirty();
-					world.setBlockState(pos, CrossroadsBlocks.cageCharger.getDefaultState().with(CRProperties.ACTIVE, false), 2);
+					world.setBlockState(pos, CRBlocks.cageCharger.getDefaultState().with(CRProperties.ACTIVE, false), 2);
 					return out;
 				}
 

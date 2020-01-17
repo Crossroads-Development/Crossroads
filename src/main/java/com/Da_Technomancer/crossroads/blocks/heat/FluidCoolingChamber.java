@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.heat.FluidCoolingChamberTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -32,8 +32,8 @@ public class FluidCoolingChamber extends ContainerBlock{
 		super(Block.Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(3));
 		String name = "fluid_cooling_chamber";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 
 	@Override

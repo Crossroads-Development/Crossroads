@@ -7,7 +7,7 @@ import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.packets.IDoubleArrayReceiver;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -52,7 +52,7 @@ public class RedstoneRegistryTileEntity extends TileEntity implements IDoubleArr
 	public void setIndex(int index){
 		this.index = Math.min(index, output.length - 1);
 		if(world != null && !world.isRemote){
-			world.notifyNeighborsOfStateChange(pos, CrossroadsBlocks.redstoneRegistry, false);
+			world.notifyNeighborsOfStateChange(pos, CRBlocks.redstoneRegistry, false);
 		}
 	}
 	
@@ -66,7 +66,7 @@ public class RedstoneRegistryTileEntity extends TileEntity implements IDoubleArr
 //			index += floor;
 //			index %= output.length;
 //		}
-		world.notifyNeighborsOfStateChange(pos, CrossroadsBlocks.redstoneRegistry, false);
+		world.notifyNeighborsOfStateChange(pos, CRBlocks.redstoneRegistry, false);
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public class RedstoneRegistryTileEntity extends TileEntity implements IDoubleArr
 		if(context.equals("output") || context.equals("newOutput")){
 			output = message == null ? new double[1] : message;
 			if(!world.isRemote){
-				world.notifyNeighborsOfStateChange(pos, CrossroadsBlocks.redstoneRegistry, false);
+				world.notifyNeighborsOfStateChange(pos, CRBlocks.redstoneRegistry, false);
 			}
 		}
 	}

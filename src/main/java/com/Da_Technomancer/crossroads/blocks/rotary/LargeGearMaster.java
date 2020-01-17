@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -42,7 +42,7 @@ public class LargeGearMaster extends ContainerBlock{
 		super(Block.Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
 		String name = "large_gear_master";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
+		CRBlocks.toRegister.add(this);
 	}
 
 	@Override

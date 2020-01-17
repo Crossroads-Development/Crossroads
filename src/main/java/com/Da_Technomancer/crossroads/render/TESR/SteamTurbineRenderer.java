@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelPump;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SteamTurbineTileEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -15,7 +15,7 @@ public class SteamTurbineRenderer extends TileEntityRenderer<SteamTurbineTileEnt
 
 	@Override
 	public void render(SteamTurbineTileEntity turbine, double x, double y, double z, float partialTicks, int destroyStage){
-		if(turbine == null || turbine.getWorld().getBlockState(turbine.getPos()).getBlock() != CrossroadsBlocks.steamTurbine){
+		if(turbine == null || turbine.getWorld().getBlockState(turbine.getPos()).getBlock() != CRBlocks.steamTurbine){
 			return;
 		}
 

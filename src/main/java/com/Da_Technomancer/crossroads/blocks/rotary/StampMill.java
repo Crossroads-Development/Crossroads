@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.StampMillTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.*;
@@ -26,7 +26,6 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -41,8 +40,8 @@ public class StampMill extends ContainerBlock{
 		super(Properties.create(Material.WOOD).hardnessAndResistance(1).sound(SoundType.METAL));
 		String name = "stamp_mill";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 
 	@Override
@@ -117,6 +116,6 @@ public class StampMill extends ContainerBlock{
 
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
-		world.setBlockState(pos.offset(Direction.UP), CrossroadsBlocks.stampMillTop.getDefaultState().with(CRProperties.HORIZ_AXIS, state.get(CRProperties.HORIZ_AXIS)));
+		world.setBlockState(pos.offset(Direction.UP), CRBlocks.stampMillTop.getDefaultState().with(CRProperties.HORIZ_AXIS, state.get(CRProperties.HORIZ_AXIS)));
 	}
 }

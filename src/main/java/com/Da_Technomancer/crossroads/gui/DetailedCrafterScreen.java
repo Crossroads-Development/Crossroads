@@ -1,36 +1,39 @@
 package com.Da_Technomancer.crossroads.gui;
 
+import com.Da_Technomancer.crossroads.API.EnumPath;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
-
+import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 
-public class DetailedCrafterGuiContainer extends ContainerScreen{
+public class DetailedCrafterScreen extends ContainerScreen<DetailedCrafterContainer>{
 
 	private static final ResourceLocation BACKGROUND = new ResourceLocation(Crossroads.MODID, "textures/gui/container/detailed_crafter.png");
 
-	public DetailedCrafterGuiContainer(PlayerInventory playerInv, BlockPos pos, boolean fake){
-		super(new DetailedCrafterContainer(playerInv, pos, fake));
-
+	public DetailedCrafterScreen(DetailedCrafterContainer cont, PlayerInventory playerInv, ITextComponent name){
+		super(cont, playerInv, name);
 		xSize = 176;
 		ySize = 166;
 	}
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
-		GlStateManager.color(1, 1, 1);
+		GlStateManager.color3f(1, 1, 1);
 		Minecraft.getInstance().getTextureManager().bindTexture(BACKGROUND);
 		blit(guiLeft, guiTop, 0, 0, xSize, ySize);
-		if(StoreNBTToClient.clientPlayerTag.getCompound("path").getBoolean("technomancy")){
+		if(EnumPath.TECHNOMANCY.isUnlocked(playerInventory.player)){
 			blit(guiLeft + 124, guiTop + 60, 176, 0, 16, 16);
 		}
-		if(StoreNBTToClient.clientPlayerTag.getCompound("path").getBoolean("alchemy")){
+		if(EnumPath.ALCHEMY.isUnlocked(playerInventory.player)){
 			blit(guiLeft + 108, guiTop + 60, 176, 16, 16, 16);
+		}
+		if(EnumPath.WITCHCRAFT.isUnlocked(playerInventory.player)){
+			blit(guiLeft + 140, guiTop + 60, 176, 32, 16, 16);
 		}
 	}
 	
@@ -43,8 +46,8 @@ public class DetailedCrafterGuiContainer extends ContainerScreen{
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
-		fontRenderer.drawString(I18n.format("container.detailed_crafting"), 28, 6, 4210752);
-        fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
-        
+		font.drawString(I18n.format("container.detailed_crafting"), 28, 6, 0x404040);
+        font.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 0x404040);
+
 	}
 }

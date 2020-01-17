@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:solar_heater",
+		"count": 1
+	},
+	"pattern": [
+		"T T",
+		"TCT",
+		"TTT"
+	],
+	"key": {
+		"C": {
+			"tag": "forge:ingots/copper"
+		},
+		"T": {
+			"tag": "forge:ingots/tin"
+		}
+	}
+}

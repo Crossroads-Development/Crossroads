@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.AlchemicalTubeTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.*;
@@ -64,8 +64,8 @@ public class AlchemicalTube extends ContainerBlock{
 		super(Properties.create(Material.GLASS).hardnessAndResistance(0.5F).sound(SoundType.GLASS));
 		this.crystal = crystal;
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 		setDefaultState(getDefaultState().with(CRProperties.CONDUIT_SIDES[0], EnumTransferMode.NONE).with(CRProperties.CONDUIT_SIDES[1], EnumTransferMode.NONE).with(CRProperties.CONDUIT_SIDES[2], EnumTransferMode.NONE).with(CRProperties.CONDUIT_SIDES[3], EnumTransferMode.NONE).with(CRProperties.CONDUIT_SIDES[4], EnumTransferMode.NONE).with(CRProperties.CONDUIT_SIDES[5], EnumTransferMode.NONE));
 	}
 

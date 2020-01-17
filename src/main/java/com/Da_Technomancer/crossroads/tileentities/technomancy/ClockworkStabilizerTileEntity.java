@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnitStorage;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -22,7 +22,7 @@ public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 	private Direction getDir(){
 		if(dir == null){
 			BlockState state = world.getBlockState(pos);
-			if(state.getBlock() != CrossroadsBlocks.clockworkStabilizer){
+			if(state.getBlock() != CRBlocks.clockworkStabilizer){
 				return Direction.NORTH;
 			}
 			dir = state.get(EssentialsProperties.FACING);

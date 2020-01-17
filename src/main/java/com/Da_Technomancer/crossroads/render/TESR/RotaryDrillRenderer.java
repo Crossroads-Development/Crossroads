@@ -17,7 +17,6 @@ import net.minecraftforge.common.util.LazyOptional;
 
 public class RotaryDrillRenderer extends TileEntityRenderer<RotaryDrillTileEntity>{
 
-	private static final ModelDrill model = new ModelDrill();
 	private static final ResourceLocation texture = new ResourceLocation(Crossroads.MODID, "textures/model/drill.png");
 
 	@Override
@@ -76,7 +75,7 @@ public class RotaryDrillRenderer extends TileEntityRenderer<RotaryDrillTileEntit
 		if(drill.isGolden()){
 			GlStateManager.color3f(1F, 1F, 0.15F);
 		}
-		model.render();
+		ModelDrill.renderDrill();
 		if(drill.isGolden()){
 			GlStateManager.color3f(1, 1, 1);
 		}

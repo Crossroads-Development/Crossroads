@@ -1,9 +1,12 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.packets.ClientPacket;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import javax.annotation.Nonnull;
@@ -16,13 +19,41 @@ import java.lang.reflect.Field;
 public class StoreNBTToClient extends ClientPacket{
 
 	/**
-	 * Syncs the NBTTagCompound from MiscUtil.getPlayerTag(player), as well as the synced configs if config is true.
+	 * The CR persistant player data for this player. Client side only
 	 */
-	public static void syncNBTToClient(ServerPlayerEntity player){
-		CrossroadsPackets.channel.send(PacketDistributor.PLAYER.with(() -> player), new StoreNBTToClient(MiscUtil.getPlayerTag(player)));
+	@OnlyIn(Dist.CLIENT)
+	private static CompoundNBT clientPlayerTag = new CompoundNBT();
+
+	/**
+	 * @param playerIn The player whose tag is being retrieved.
+	 * @return The player's persistent NBT tag
+	 */
+	@Nonnull
+	public static CompoundNBT getPlayerTag(PlayerEntity playerIn){
+		if(playerIn.world.isRemote){
+			//If this is client side, use the synced nbt compound
+			return clientPlayerTag;
+		}
+
+		CompoundNBT tag = playerIn.getPersistentData();
+		//Use the Forge persistant data tag that is kept between dimensions/respawns
+		if(!tag.contains(PlayerEntity.PERSISTED_NBT_TAG)){
+			tag.put(PlayerEntity.PERSISTED_NBT_TAG, new CompoundNBT());
+		}
+		tag = tag.getCompound(PlayerEntity.PERSISTED_NBT_TAG);
+
+		if(!tag.contains(Crossroads.MODID)){
+			tag.put(Crossroads.MODID, new CompoundNBT());
+		}
+		return tag.getCompound(Crossroads.MODID);
 	}
 
-	public static CompoundNBT clientPlayerTag = new CompoundNBT();
+	/**
+	 * Syncs the NBTTagCompound from MiscUtil.getPlayerTag(player)
+	 */
+	public static void syncNBTToClient(ServerPlayerEntity player){
+		CrossroadsPackets.channel.send(PacketDistributor.PLAYER.with(() -> player), new StoreNBTToClient(getPlayerTag(player)));
+	}
 
 	public CompoundNBT nbt;
 

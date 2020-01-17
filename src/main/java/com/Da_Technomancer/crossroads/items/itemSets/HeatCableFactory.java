@@ -1,14 +1,10 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
-import java.util.HashMap;
-
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.blocks.heat.HeatCable;
 import com.Da_Technomancer.crossroads.blocks.heat.RedstoneHeatCable;
 
-import net.minecraft.client.renderer.model.ModelResourceLocation;
-import net.minecraft.item.Item;
-import net.minecraftforge.client.model.ModelLoader;
+import java.util.HashMap;
 
 public final class HeatCableFactory{
 
@@ -21,16 +17,6 @@ public final class HeatCableFactory{
 		for(HeatInsulators insul : HeatInsulators.values()){
 			HEAT_CABLES.put(insul, new HeatCable(insul));
 			REDSTONE_HEAT_CABLES.put(insul, new RedstoneHeatCable(insul));
-		}
-	}
-
-	protected static void clientInit(){
-		for(HeatCable cable : HeatCableFactory.HEAT_CABLES.values()){
-			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(cable), 0, new ModelResourceLocation(cable.getTexture().toString().replaceFirst("blocks/", "").replaceFirst("-copper", "")));
-		}
-
-		for(RedstoneHeatCable cable : HeatCableFactory.REDSTONE_HEAT_CABLES.values()){
-			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(cable), 0, new ModelResourceLocation(cable.getTexture().toString().replaceFirst("blocks/", "").replaceFirst("-copper", "")));
 		}
 	}
 }

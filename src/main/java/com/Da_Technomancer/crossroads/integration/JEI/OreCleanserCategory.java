@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
 import com.Da_Technomancer.crossroads.tileentities.fluid.OreCleanserTileEntity;
 import com.google.common.collect.ImmutableList;
@@ -35,7 +35,7 @@ public class OreCleanserCategory implements IRecipeCategory<OreCleanserRecipe>{
 		arrowStatic = guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 79, 35, 24, 17);
 		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 176, 14, 24, 17), 40, IDrawableAnimated.StartDirection.LEFT, false);
 		fluidOverlay = guiHelper.createDrawable(new ResourceLocation(Crossroads.MODID, "textures/gui/rectangle_fluid_overlay.png"), 0, 0, 16, 64);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(CrossroadsBlocks.oreCleanser, 1));
+		icon = guiHelper.createDrawableIngredient(new ItemStack(CRBlocks.oreCleanser, 1));
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class OreCleanserCategory implements IRecipeCategory<OreCleanserRecipe>{
 
 	@Override
 	public String getTitle(){
-		return CrossroadsBlocks.oreCleanser.getNameTextComponent().getFormattedText();
+		return CRBlocks.oreCleanser.getNameTextComponent().getFormattedText();
 	}
 
 	@Override

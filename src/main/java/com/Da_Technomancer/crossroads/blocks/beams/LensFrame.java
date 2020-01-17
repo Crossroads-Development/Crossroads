@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.beams.LensFrameTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -45,8 +45,8 @@ public class LensFrame extends ContainerBlock implements IReadable{
 		super(Properties.create(Material.ROCK).hardnessAndResistance(3));
 		String name = "lens_frame";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 
 	@Override

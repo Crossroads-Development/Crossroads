@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.DensusPlateTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -40,8 +40,8 @@ public class DensusPlate extends ContainerBlock{
 		super(Properties.create(Material.ROCK).hardnessAndResistance(3));
 		String name = anti ? "anti_densus_plate" : "densus_plate";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 
 	@Override

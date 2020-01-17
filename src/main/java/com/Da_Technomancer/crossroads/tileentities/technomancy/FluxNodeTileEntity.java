@@ -8,7 +8,7 @@ import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -36,7 +36,7 @@ public class FluxNodeTileEntity extends TileEntity implements IIntReceiver, ITic
 		if(clientEntropy == 0 ^ entropy == 0 || Math.abs(clientEntropy - entropy) >= .005F){
 			clientEntropy = entropy;
 			CrossroadsPackets.network.sendToAllAround(new SendIntToClient((byte) 0, Float.floatToIntBits(clientEntropy), pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-			world.updateComparatorOutputLevel(pos, CrossroadsBlocks.fluxNode);
+			world.updateComparatorOutputLevel(pos, CRBlocks.fluxNode);
 		}
 	}
 

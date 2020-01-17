@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"item": "crossroads:heat_reservoir",
+		"count": 1
+	},
+	"ingredients": [
+		{
+			"item": "crossroads:heat_reservoir"
+		}
+	]
+}

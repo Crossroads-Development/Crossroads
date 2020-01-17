@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:permeable_glass",
+		"count": 4
+	},
+	"pattern": [
+		" G ",
+		"GQG",
+		" G "
+	],
+	"key": {
+		"G": {
+			"tag": "forge:glass/colorless"
+		},
+		"Q": {
+			"tag": "crossroads:gems/pure_quartz"
+		}
+	}
+}

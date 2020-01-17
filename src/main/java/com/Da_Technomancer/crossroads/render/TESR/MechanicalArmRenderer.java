@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.MechanicalArmTileEntity;
@@ -13,7 +13,7 @@ public class MechanicalArmRenderer extends TileEntityRenderer<MechanicalArmTileE
 
 	@Override
 	public void render(MechanicalArmTileEntity te, double x, double y, double z, float partialTicks, int destroyStage){
-		if(!te.getWorld().isBlockLoaded(te.getPos()) || te.getWorld().getBlockState(te.getPos()).getBlock() != CrossroadsBlocks.mechanicalArm){
+		if(!te.getWorld().isBlockLoaded(te.getPos()) || te.getWorld().getBlockState(te.getPos()).getBlock() != CRBlocks.mechanicalArm){
 			return;
 		}
 

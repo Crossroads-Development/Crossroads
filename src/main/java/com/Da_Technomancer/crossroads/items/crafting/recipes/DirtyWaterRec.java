@@ -1,11 +1,10 @@
 package com.Da_Technomancer.crossroads.items.crafting.recipes;
 
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.google.gson.JsonObject;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -14,7 +13,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
@@ -59,7 +57,7 @@ public class DirtyWaterRec implements IRecipe<IInventory>{
 
 	@Override
 	public ItemStack getIcon(){
-		return new ItemStack(CrossroadsBlocks.waterCentrifuge);
+		return new ItemStack(CRBlocks.waterCentrifuge);
 	}
 
 	@Override

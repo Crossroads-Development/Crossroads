@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.packets.SendDoubleArrayToClient;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.redstone.RedstoneUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneRegistryTileEntity;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -37,8 +37,8 @@ public class RedstoneRegistry extends ContainerBlock{
 		setRegistryName(name);
 		setCreativeTab(CRItems.TAB_CROSSROADS);
 		setHardness(3);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 	
 	@Override

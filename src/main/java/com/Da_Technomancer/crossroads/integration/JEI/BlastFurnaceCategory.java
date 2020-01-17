@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.common.collect.ImmutableList;
 import mezz.jei.api.constants.VanillaTypes;
@@ -34,7 +34,7 @@ public class BlastFurnaceCategory implements IRecipeCategory<BlastFurnaceRecipe>
 		arrowStatic = guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 79, 35, 24, 17);
 		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 176, 14, 24, 17), 40, IDrawableAnimated.StartDirection.LEFT, false);
 		fluidOverlay = guiHelper.createDrawable(new ResourceLocation(Crossroads.MODID, "textures/gui/rectangle_fluid_overlay.png"), 0, 0, 16, 64);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(CrossroadsBlocks.blastFurnace, 1));
+		icon = guiHelper.createDrawableIngredient(new ItemStack(CRBlocks.blastFurnace, 1));
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class BlastFurnaceCategory implements IRecipeCategory<BlastFurnaceRecipe>
 
 	@Override
 	public String getTitle(){
-		return CrossroadsBlocks.blastFurnace.getNameTextComponent().getFormattedText();
+		return CRBlocks.blastFurnace.getNameTextComponent().getFormattedText();
 	}
 
 	@Override

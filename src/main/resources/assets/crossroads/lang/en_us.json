@@ -456,6 +456,8 @@
 	"tt.crossroads.beam_item.stability": "%1$d/%2$d Stability Drain",
 	"tt.crossroads.beam_item.void": "%1$d/%2$d Void Drain",
 	"tt.crossroads.clutch.redstone": "Circuits read speed",
+	"tt.crossroads.element_discover": "New Element Discovered: %1$s",
+	"tt.crossroads.detailed_crafter.desc": "Allows unlocking and crafting Technomancy and Alchemy recipes",
 
 	"container.smelter": "Smelter",
 	"container.firebox": "Firebox",
@@ -478,7 +480,8 @@
 	"container.ore_cleanser": "Ore Cleanser",
 	"container.blast_furnace": "Industrial Blast Furnace",
 	"container.beam_extractor": "Resonance Extractor",
-	"container.detailed_crafting": "Detailed Crafting",
+	"container.detailed_crafter": "Detailed Crafting",
+	"container.goggle_crafting": "Goggle Crafting",
 	"container.heat_limiter": "Temperature Regulator",
 	"container.rotary_pump": "Rotary Pump",
 

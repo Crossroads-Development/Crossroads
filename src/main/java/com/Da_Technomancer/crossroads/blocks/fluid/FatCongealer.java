@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.fluid;
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FatCongealerTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -40,8 +40,8 @@ public class FatCongealer extends ContainerBlock{
 		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
 		String name = "fat_congealer";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 		setDefaultState(getDefaultState().with(EssentialsProperties.HORIZ_FACING, Direction.NORTH));
 	}
 

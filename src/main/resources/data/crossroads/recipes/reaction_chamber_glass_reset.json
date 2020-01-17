@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"item": "crossroads:reaction_chamber",
+		"count": 1
+	},
+	"ingredients": [
+		{
+			"item": "crossroads:reaction_chamber"
+		}
+	]
+}

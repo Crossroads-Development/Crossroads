@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -34,7 +34,7 @@ public class StampMillTop extends Block{
 		super(Properties.create(Material.WOOD).hardnessAndResistance(1).sound(SoundType.METAL));
 		String name = "stamp_mill_top";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
+		CRBlocks.toRegister.add(this);
 		//Not added to queue to prevent registering item form
 	}
 
@@ -50,7 +50,7 @@ public class StampMillTop extends Block{
 			if(!worldIn.isRemote){
 				worldIn.setBlockState(pos, state.cycle(CRProperties.HORIZ_AXIS));
 				BlockState lowerState = worldIn.getBlockState(pos.down());
-				if(lowerState.getBlock() == CrossroadsBlocks.stampMill){
+				if(lowerState.getBlock() == CRBlocks.stampMill){
 					worldIn.setBlockState(pos, state.with(CRProperties.HORIZ_AXIS, worldIn.getBlockState(pos).get(CRProperties.HORIZ_AXIS)));
 				}
 			}
@@ -67,7 +67,7 @@ public class StampMillTop extends Block{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player){
-		return new ItemStack(CrossroadsBlocks.stampMill, 1);
+		return new ItemStack(CRBlocks.stampMill, 1);
 	}
 
 	@Override

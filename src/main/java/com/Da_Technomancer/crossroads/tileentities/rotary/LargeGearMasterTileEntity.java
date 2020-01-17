@@ -9,7 +9,7 @@ import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.rotary.*;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -59,7 +59,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	public Direction getFacing(){
 		if(facing == null){
 			BlockState state = world.getBlockState(pos);
-			if(state.getBlock() != CrossroadsBlocks.largeGearMaster){
+			if(state.getBlock() != CRBlocks.largeGearMaster){
 				return Direction.NORTH;
 			}
 			facing = state.get(EssentialsProperties.FACING);
@@ -86,7 +86,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 			CrossroadsPackets.sendPacketAround(world, pos, new SendLongToClient((byte) 1, type == null ? -1 : type.serialize(), pos));
 		}
 
-		inertia = type == null ? 0 : MiscUtil.betterRound(type.getDensity() * 1.125D * 9D / 8D, 2);//1.125 because r*r/2 so 1.5*1.5/2
+		inertia = type == null ? 0 : MiscUtil.preciseRound(type.getDensity() * 1.125D * 9D / 8D, 2);//1.125 because r*r/2 so 1.5*1.5/2
 	}
 
 	public GearFactory.GearMaterial getMember(){
@@ -133,7 +133,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 		}
 		// member
 		type = GearFactory.findMaterial(nbt.getString("type"));
-		inertia = type == null ? 0 : MiscUtil.betterRound(type.getDensity() * 1.125D * 9D / 8D, 2);
+		inertia = type == null ? 0 : MiscUtil.preciseRound(type.getDensity() * 1.125D * 9D / 8D, 2);
 		//1.125 because r*r/2 so 1.5*1.5/2
 
 		angleW[0] = nbt.getFloat("angle");

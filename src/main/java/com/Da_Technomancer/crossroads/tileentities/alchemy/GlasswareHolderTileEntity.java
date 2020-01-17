@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -176,7 +176,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	@Override
 	protected void performTransfer(){
 		BlockState state = world.getBlockState(pos);
-		if(state.getBlock() == CrossroadsBlocks.glasswareHolder && heldType() != AbstractGlassware.GlasswareTypes.NONE){
+		if(state.getBlock() == CRBlocks.glasswareHolder && heldType() != AbstractGlassware.GlasswareTypes.NONE){
 			Direction side = Direction.UP;
 			TileEntity te = world.getTileEntity(pos.offset(side));
 			LazyOptional<IChemicalHandler> otherOpt;

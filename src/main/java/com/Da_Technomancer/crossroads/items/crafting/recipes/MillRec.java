@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.items.crafting.recipes;
 
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.google.gson.JsonArray;
@@ -78,7 +78,7 @@ public class MillRec implements IRecipe<IInventory>{
 
 	@Override
 	public ItemStack getIcon(){
-		return new ItemStack(CrossroadsBlocks.millstone);
+		return new ItemStack(CRBlocks.millstone);
 	}
 
 	@Override

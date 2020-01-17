@@ -56,8 +56,8 @@ public class BlockSalt extends FallingBlock{
 		super(Properties.create(Material.SAND).harvestTool(ToolType.SHOVEL).harvestLevel(0).hardnessAndResistance(.5F).sound(SoundType.SAND).tickRandomly());
 		String name = "block_salt";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 
 	@Override

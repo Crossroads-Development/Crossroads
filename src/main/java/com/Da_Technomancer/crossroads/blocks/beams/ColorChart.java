@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
-import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.gui.container.ColorChartContainer;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.Block;
@@ -14,7 +13,6 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -45,8 +43,8 @@ public class ColorChart extends Block{
 		super(Properties.create(Material.WOOD).hardnessAndResistance(3));
 		String name = "color_chart";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -58,7 +58,7 @@ public class BasicGear extends GearMatItem{
 				context.getItem().shrink(1);
 			}
 
-			world.setBlockState(pos.offset(side), CrossroadsBlocks.sextupleGear.getDefaultState(), 3);
+			world.setBlockState(pos.offset(side), CRBlocks.mechanism.getDefaultState(), 3);
 			te = world.getTileEntity(pos.offset(side));
 			if(te instanceof MechanismTileEntity){
 				RotaryUtil.increaseMasterKey(true);

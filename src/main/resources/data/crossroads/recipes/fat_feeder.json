@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:fat_feeder",
+		"count": 1
+	},
+	"pattern": [
+		"TTT",
+		"NAN",
+		"TTT"
+	],
+	"key": {
+		"A": {
+			"tag": "crossroads:golden_apple"
+		},
+		"T": {
+			"tag": "forge:ingots/tin"
+		},
+		"N": {
+			"tag": "forge:netherrack"
+		}
+	}
+}

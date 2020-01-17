@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:leyden_jar",
+		"count": 1
+	},
+	"pattern": [
+		" G ",
+		"IRI",
+		"III"
+	],
+	"key": {
+		"I": {
+			"tag": "forge:nuggets/iron"
+		},
+		"R": {
+			"tag": "forge:dusts/redstone"
+		},
+		"G": {
+			"tag": "forge:glass/colorless"
+		}
+	}
+}

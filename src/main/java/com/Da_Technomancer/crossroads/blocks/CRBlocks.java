@@ -10,8 +10,6 @@ import com.Da_Technomancer.crossroads.blocks.heat.*;
 import com.Da_Technomancer.crossroads.blocks.rotary.*;
 import com.Da_Technomancer.crossroads.blocks.technomancy.*;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneReceiver;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneTransmitter;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
@@ -26,9 +24,9 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CrossroadsBlocks{
+public class CRBlocks{
 
-	public static Mechanism sextupleGear;
+	public static Mechanism mechanism;
 	public static MasterAxis masterAxis;
 	public static FluidTube fluidTube;
 	public static HeatingCrucible heatingCrucible;
@@ -65,16 +63,13 @@ public class CrossroadsBlocks{
 	public static ColorChart colorChart;
 	public static LightCluster lightCluster;
 	public static CrystalMasterAxis crystalMasterAxis;
-//	public static Ratiator ratiator;
 	public static BeaconHarness beaconHarness;
 	public static FatFeeder fatFeeder;
 	public static RedstoneAxis redstoneAxis;
 	public static CageCharger cageCharger;
 	public static HamsterWheel hamsterWheel;
 	public static CopshowiumCreationChamber copshowiumCreationChamber;
-	public static MathAxis mathAxis;
 	public static GatewayFrame gatewayFrame;
-//	public static RedstoneKeyboard redstoneKeyboard;
 	public static DetailedCrafter detailedCrafter;
 //	public static PrototypingTable prototypingTable;
 //	public static Prototype prototype;
@@ -135,8 +130,6 @@ public class CrossroadsBlocks{
 	public static BeamRedirector beamRedirector;
 	public static PermeableGlass permeableGlass;
 	public static PermeableQuartz permeableQuartz;
-	public static RedstoneTransmitter redstoneTransmitter;
-	public static RedstoneReceiver redstoneReceiver;
 	public static FluxNode fluxNode;
 	public static TemporalAccelerator temporalAccelerator;
 	public static ChronoHarness chronoHarness;
@@ -167,7 +160,7 @@ public class CrossroadsBlocks{
 	public static void init(){
 		masterAxis = new MasterAxis();
 		millstone = new Millstone();
-		sextupleGear = new Mechanism();
+		mechanism = new Mechanism();
 		largeGearMaster = new LargeGearMaster();
 		largeGearSlave = new LargeGearSlave();
 		heatingCrucible = new HeatingCrucible();
@@ -209,7 +202,7 @@ public class CrossroadsBlocks{
 		cageCharger = new CageCharger();
 		hamsterWheel = new HamsterWheel();
 		copshowiumCreationChamber = new CopshowiumCreationChamber();
-		mathAxis = new MathAxis();
+//		mathAxis = new MathAxis();
 		gatewayFrame = new GatewayFrame();
 //		redstoneKeyboard = new RedstoneKeyboard();
 		detailedCrafter = new DetailedCrafter();
@@ -278,8 +271,6 @@ public class CrossroadsBlocks{
 		beamRedirector = new BeamRedirector();
 		permeableGlass = new PermeableGlass();
 		permeableQuartz = new PermeableQuartz();
-		redstoneTransmitter = new RedstoneTransmitter();
-		redstoneReceiver = new RedstoneReceiver();
 		fluxNode = new FluxNode();
 		temporalAccelerator = new TemporalAccelerator();
 		chronoHarness = new ChronoHarness();

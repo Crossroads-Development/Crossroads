@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"item": "crossroads:reagent_tank",
+		"count": 1
+	},
+	"ingredients": [
+		{
+			"item": "crossroads:reagent_tank"
+		}
+	]
+}

@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.beams.*;
 import com.Da_Technomancer.crossroads.tileentities.electric.DynamoTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
@@ -21,9 +21,9 @@ public class AAModTESR{
 	public static void registerBlockRenderer(){
 
 		ClientRegistry.bindTileEntitySpecialRenderer(MechanismTileEntity.class, new MechanismRenderer());
-		reg(CrossroadsBlocks.rotaryPump);
+		reg(CRBlocks.rotaryPump);
 		ClientRegistry.bindTileEntitySpecialRenderer(RotaryPumpTileEntity.class, new RotaryPumpRenderer());
-		reg(CrossroadsBlocks.steamTurbine);
+		reg(CRBlocks.steamTurbine);
 		ClientRegistry.bindTileEntitySpecialRenderer(SteamTurbineTileEntity.class, new SteamTurbineRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(LargeGearMasterTileEntity.class, new LargeGearRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(RotaryDrillTileEntity.class, new RotaryDrillRenderer());

@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FatFeederTileEntity;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -31,8 +31,8 @@ public class FatFeeder extends ContainerBlock{
 		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
 		String name = "fat_feeder";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 
 	@Override

@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.gui.container.IceboxContainer;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.IceboxRec;
@@ -60,7 +60,7 @@ public class IceboxTileEntity extends InventoryTE{
 		if(burnTime != 0 && temp > MIN_TEMP){
 			temp = Math.max(MIN_TEMP, temp - RATE);
 			if(--burnTime == 0){
-				world.setBlockState(pos, CrossroadsBlocks.icebox.getDefaultState().with(CRProperties.ACTIVE, false), 18);
+				world.setBlockState(pos, CRBlocks.icebox.getDefaultState().with(CRProperties.ACTIVE, false), 18);
 			}
 			coolProg.set(maxBurnTime == 0 ? 0 : 100 * burnTime / maxBurnTime);
 			markDirty();
@@ -76,7 +76,7 @@ public class IceboxTileEntity extends InventoryTE{
 			if(inventory[0].isEmpty() && item.hasContainerItem(inventory[0])){
 				inventory[0] = item.getContainerItem(inventory[0]);
 			}
-			world.setBlockState(pos, CrossroadsBlocks.icebox.getDefaultState().with(CRProperties.ACTIVE, true), 18);
+			world.setBlockState(pos, CRBlocks.icebox.getDefaultState().with(CRProperties.ACTIVE, true), 18);
 			markDirty();
 		}
 	}

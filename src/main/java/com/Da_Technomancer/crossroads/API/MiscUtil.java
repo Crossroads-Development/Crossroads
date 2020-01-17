@@ -1,10 +1,7 @@
 package com.Da_Technomancer.crossroads.API;
 
-import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceContext;
@@ -21,7 +18,13 @@ public final class MiscUtil{
 	 */
 	public static final Style TT_QUIP = EssentialsConfig.TT_QUIP;
 
-	public static double betterRound(double numIn, int decPlac){
+	/**
+	 * Rounds to a set number of decimal places
+	 * @param numIn The value to round
+	 * @param decPlac The number of decimal places to round to
+	 * @return The rounded value
+	 */
+	public static double preciseRound(double numIn, int decPlac){
 		return Math.round(numIn * Math.pow(10, decPlac)) / Math.pow(10D, decPlac);
 	}
 
@@ -32,6 +35,8 @@ public final class MiscUtil{
 	 * This is for systems that require rounding and
 	 * NEED the distribution of output to not be higher than
 	 * the input to prevent dupe bugs.
+	 * @param in The value to round
+	 * @return The rounded value
 	 */
 	public static int safeRound(double in){
 		if(in % 1 <= .5D){
@@ -39,27 +44,6 @@ public final class MiscUtil{
 		}else{
 			return (int) Math.ceil(in);
 		}
-	}
-
-	/**
-	 * Call on server side only.
-	 * @param playerIn The player whose tag is being retrieved.
-	 * @return The player's persistent NBT tag. Also sets a boolean for if this is multiplayer.
-	 */
-	public static CompoundNBT getPlayerTag(PlayerEntity playerIn){
-		CompoundNBT tag = playerIn.getPersistentData();
-		if(!tag.contains(PlayerEntity.PERSISTED_NBT_TAG)){
-			tag.put(PlayerEntity.PERSISTED_NBT_TAG, new CompoundNBT());
-		}
-		tag = tag.getCompound(PlayerEntity.PERSISTED_NBT_TAG);
-
-		if(!tag.contains(Crossroads.MODID)){
-			tag.put(Crossroads.MODID, new CompoundNBT());
-		}
-		CompoundNBT out = tag.getCompound(Crossroads.MODID);
-		//TODO encode multiplayer
-		// out.putBoolean("multiplayer", FMLCommonHandler.instance().getSide() == Side.SERVER);//The only way I could think of to check if it's multiplayer on the render side is to get it on server side and send it via packet. Feel free to replace this with a better way.
-		return out;
 	}
 
 	/**

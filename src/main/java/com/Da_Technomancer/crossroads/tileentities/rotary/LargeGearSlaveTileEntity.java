@@ -10,7 +10,7 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -46,7 +46,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 	protected Direction getFacing(){
 		if(facing == null){
 			BlockState state = world.getBlockState(pos);
-			if(state.getBlock() != CrossroadsBlocks.largeGearSlave){
+			if(state.getBlock() != CRBlocks.largeGearSlave){
 				remove();
 				return Direction.NORTH;
 			}

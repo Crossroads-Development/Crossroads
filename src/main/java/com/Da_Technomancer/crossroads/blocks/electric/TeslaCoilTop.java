@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.electric;
 
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
 import com.Da_Technomancer.essentials.tileentities.ILinkTE;
@@ -33,8 +33,8 @@ public class TeslaCoilTop extends ContainerBlock{
 		this.variant = variant;
 		String name = "tesla_coil_top_" + variant.toString();
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 
 	@Override

@@ -5,7 +5,7 @@
 	"power": 8,
 	"input": [
 		{
-			"block": "minecraft:stone_bricks"
+			"tag": "minecraft:stone_bricks"
 		}
 	],
 	"output": "minecraft:stone"

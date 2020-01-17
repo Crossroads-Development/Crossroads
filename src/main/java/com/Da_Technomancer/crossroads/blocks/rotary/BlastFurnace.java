@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.BlastFurnaceTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -35,8 +35,8 @@ public class BlastFurnace extends ContainerBlock{
 		super(Block.Properties.create(Material.ROCK).hardnessAndResistance(3));
 		String name = "blast_furnace";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 
 	@Override

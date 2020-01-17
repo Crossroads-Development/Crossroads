@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.beams;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -27,7 +27,7 @@ public class BeamRedirectorTileEntity extends BeamRenderTE{
 	private Direction getDir(){
 		if(dir == null){
 			BlockState state = world.getBlockState(pos);
-			if(state.getBlock() != CrossroadsBlocks.beamRedirector){
+			if(state.getBlock() != CRBlocks.beamRedirector){
 				return Direction.NORTH;
 			}
 			dir = state.get(EssentialsProperties.FACING);

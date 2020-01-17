@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
 import net.minecraft.client.util.ITooltipFlag;
@@ -89,7 +89,7 @@ public class Clutch extends GearMatItem{
 				playerIn.getHeldItem(context.getHand()).shrink(1);
 			}
 
-			world.setBlockState(pos.offset(context.getFace()), CrossroadsBlocks.sextupleGear.getDefaultState(), 3);
+			world.setBlockState(pos.offset(context.getFace()), CRBlocks.mechanism.getDefaultState(), 3);
 			te = world.getTileEntity(pos.offset(context.getFace()));
 			if(te instanceof MechanismTileEntity){
 				RotaryUtil.increaseMasterKey(true);

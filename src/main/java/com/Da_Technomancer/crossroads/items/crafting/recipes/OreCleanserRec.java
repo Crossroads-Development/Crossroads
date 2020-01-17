@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.items.crafting.recipes;
 
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -22,6 +22,6 @@ public class OreCleanserRec extends SingleItemRecipe{
 
 	@Override
 	public ItemStack getIcon(){
-		return new ItemStack(CrossroadsBlocks.oreCleanser);
+		return new ItemStack(CRBlocks.oreCleanser);
 	}
 }

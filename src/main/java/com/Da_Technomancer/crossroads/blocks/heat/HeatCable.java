@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.heat;
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
@@ -82,8 +82,8 @@ public class HeatCable extends ContainerBlock{
 		super(Block.Properties.create(Material.IRON).hardnessAndResistance(1));
 		this.insulator = insulator;
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this, itemProp);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this, itemProp);
 		setDefaultState(getDefaultState().with(CRProperties.CONDUCTOR, Conductors.COPPER).with(CRProperties.DOWN, false).with(CRProperties.UP, false).with(CRProperties.WEST, false).with(CRProperties.EAST, false).with(CRProperties.SOUTH, false).with(CRProperties.NORTH, false));
 	}
 

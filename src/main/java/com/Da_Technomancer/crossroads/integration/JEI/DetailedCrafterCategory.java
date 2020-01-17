@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.google.common.collect.ImmutableList;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -34,7 +34,7 @@ public class DetailedCrafterCategory implements IRecipeCategory<DetailedCrafterR
 	protected DetailedCrafterCategory(IGuiHelper guiHelper){
 		ResourceLocation location = new ResourceLocation(Crossroads.MODID, "textures/gui/container/detailed_crafter.png");
 		back = guiHelper.createDrawable(location, 29, 16, 125, 60);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(CrossroadsBlocks.detailedCrafter, 1));
+		icon = guiHelper.createDrawableIngredient(new ItemStack(CRBlocks.detailedCrafter, 1));
 		gear = guiHelper.createDrawable(location, 176, 0, 16, 16);
 		flask = guiHelper.createDrawable(location, 176, 16, 16, 16);
 //		leaf = guiHelper.createDrawable(location, 176, 32, 16, 16);
@@ -52,7 +52,7 @@ public class DetailedCrafterCategory implements IRecipeCategory<DetailedCrafterR
 
 	@Override
 	public String getTitle(){
-		return CrossroadsBlocks.detailedCrafter.getNameTextComponent().getFormattedText();
+		return CRBlocks.detailedCrafter.getNameTextComponent().getFormattedText();
 	}
 
 	@Override

@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.API.rotary;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendMasterKeyToClient;
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearMaster;
 import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearSlave;
 import net.minecraft.block.BlockState;
@@ -90,7 +90,7 @@ public class RotaryUtil{
 	 */
 	public static boolean canConnectThrough(World world, BlockPos pos, Direction fromDir, Direction toDir){
 		BlockState state = world.getBlockState(pos);
-		return !state.isNormalCube(world, pos) && state.getBlock() != CrossroadsBlocks.largeGearSlave && state.getBlock() != CrossroadsBlocks.largeGearMaster;
+		return !state.isNormalCube(world, pos) && state.getBlock() != CRBlocks.largeGearSlave && state.getBlock() != CRBlocks.largeGearMaster;
 	}
 
 	/**

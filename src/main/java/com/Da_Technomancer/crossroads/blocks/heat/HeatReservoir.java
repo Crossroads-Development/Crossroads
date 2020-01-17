@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatReservoirTileEntity;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import net.minecraft.block.Block;
@@ -36,8 +36,8 @@ public class HeatReservoir extends ContainerBlock implements IReadable{
 		super(Block.Properties.create(Material.IRON).hardnessAndResistance(3));
 		String name = "heat_reservoir";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class HeatReservoir extends ContainerBlock implements IReadable{
 	public BlockRenderType getRenderType(BlockState state){
 		return BlockRenderType.MODEL;
 	}
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
@@ -57,7 +57,7 @@ public class HeatReservoir extends ContainerBlock implements IReadable{
 		tooltip.add(new TranslationTextComponent("tt.crossroads.heat_battery.reds"));
 		CompoundNBT nbt = stack.getTag();
 		if(nbt != null && nbt.contains("temp")){
-			tooltip.add(new TranslationTextComponent("tt.crossroads.heat_battery.temp", MiscUtil.betterRound(nbt.getDouble("temp"), 3)));
+			tooltip.add(new TranslationTextComponent("tt.crossroads.heat_battery.temp", MiscUtil.preciseRound(nbt.getDouble("temp"), 3)));
 		}
 	}
 
@@ -107,5 +107,6 @@ public class HeatReservoir extends ContainerBlock implements IReadable{
 		if(te != null && (heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, null)).isPresent()){
 			return Math.round(HeatUtil.toKelvin(heatOpt.orElseThrow(NullPointerException::new).getTemp()));
 		}
-		return 0;	}
+		return 0;
+	}
 }

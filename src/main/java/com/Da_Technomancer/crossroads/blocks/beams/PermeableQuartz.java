@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
@@ -20,8 +20,8 @@ public class PermeableQuartz extends Block{
 		super(Properties.create(Material.ROCK).hardnessAndResistance(4));
 		String name = "permeable_quartz";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 
 	@OnlyIn(Dist.CLIENT)

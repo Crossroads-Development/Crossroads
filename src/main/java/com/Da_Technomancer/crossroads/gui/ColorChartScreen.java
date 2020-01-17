@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.gui;
 
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.templates.TextBarGuiObject;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.ColorChartContainer;
@@ -10,7 +9,6 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
@@ -50,8 +48,7 @@ public class ColorChartScreen extends ContainerScreen<ColorChartContainer>{
 		if(Math.pow(xCENTER - mouseX + guiLeft, 2) + Math.pow(yCENTER - mouseY + guiTop, 2) <= RADIUS * RADIUS){
 			Color col = getColor(mouseX - guiLeft, mouseY - guiTop);
 			EnumBeamAlignments elem = EnumBeamAlignments.getAlignment(col);
-			CompoundNBT elementTag = StoreNBTToClient.clientPlayerTag.getCompound("elements");
-			renderTooltip(ImmutableList.of(elementTag.contains(elem.name()) ? elem.getLocalName(false) : "???", "R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue()), mouseX, mouseY, font);
+			renderTooltip(ImmutableList.of(elem.isDiscovered(playerInventory.player) ? elem.getLocalName(false) : "???", "R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue()), mouseX, mouseY, font);
 		}
 	}
 	
@@ -80,8 +77,7 @@ public class ColorChartScreen extends ContainerScreen<ColorChartContainer>{
 				int yPos = spotLength * j + yCENTER - RADIUS;
 				if(Math.pow(RADIUS - (spotLength * i), 2) + Math.pow(RADIUS - (spotLength * j), 2) <= RADIUS * RADIUS){
 					EnumBeamAlignments elem = EnumBeamAlignments.getAlignment(getColor(xPos, yPos));
-					CompoundNBT elementTag = StoreNBTToClient.clientPlayerTag.getCompound("elements");
-					if(elementTag.contains(elem.name()) && (search.isEmpty() || elem.name().startsWith(search))){
+					if(elem.isDiscovered(playerInventory.player) && (search.isEmpty() || elem.name().startsWith(search))){
 						blit(xPos, yPos, xPos, yPos, spotLength, spotLength, 300, 300);
 					}
 				}

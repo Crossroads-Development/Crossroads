@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.electric;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.LeydenJar;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTileEntity;
@@ -41,8 +41,8 @@ public class TeslaCoil extends ContainerBlock{
 		super(Properties.create(Material.IRON).hardnessAndResistance(2).sound(SoundType.METAL));
 		String name = "tesla_coil";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 		setDefaultState(getDefaultState().with(CRProperties.ACTIVE, false));
 	}
 

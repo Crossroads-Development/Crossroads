@@ -33,7 +33,7 @@ public class EntropySavedData extends WorldSavedData{
 	 * @return The temporal entropy as a percentage
 	 */
 	public static double getEntropy(ServerWorld w){
-		return MiscUtil.betterRound(100D * Math.min(get(w).temporalEntropy / (double) MAX_VALUE, 1D), 3);
+		return MiscUtil.preciseRound(100D * Math.min(get(w).temporalEntropy / (double) MAX_VALUE, 1D), 3);
 	}
 
 	/**

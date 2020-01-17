@@ -1,0 +1,26 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:blast_furnace",
+		"count": 1
+	},
+	"pattern": [
+		"IAI",
+		"B B",
+		"BTB"
+	],
+	"key": {
+		"A": {
+			"item": "crossroads:axle"
+		},
+		"T": {
+			"item": "crossroads:fluid_tube"
+		},
+		"I": {
+			"tag": "forge:ingots/iron"
+		},
+		"B": {
+			"item": "minecraft:bricks"
+		}
+	}
+}

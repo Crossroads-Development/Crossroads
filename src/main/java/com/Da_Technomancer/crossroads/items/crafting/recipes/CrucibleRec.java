@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.items.crafting.recipes;
 
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.google.gson.JsonObject;
@@ -61,7 +61,7 @@ public class CrucibleRec implements IRecipe<IInventory>{
 
 	@Override
 	public ItemStack getIcon(){
-		return new ItemStack(CrossroadsBlocks.heatingCrucible);
+		return new ItemStack(CRBlocks.heatingCrucible);
 	}
 
 	@Override

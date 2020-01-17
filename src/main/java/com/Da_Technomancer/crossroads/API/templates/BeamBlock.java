@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.templates;
 
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.Block;
@@ -24,8 +24,8 @@ public abstract class BeamBlock extends ContainerBlock{
 	public BeamBlock(String name, Block.Properties prop){
 		super(prop);
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 
 	public BeamBlock(String name){

@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.API.packets.SendDimLoadToClient;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ServerConnectionFromClientEvent;
 

@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.render.TESR;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelGearIcositetragon;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
@@ -21,7 +21,7 @@ public class LargeGearRenderer extends TileEntityRenderer<LargeGearMasterTileEnt
 
 	@Override
 	public void render(LargeGearMasterTileEntity gear, double x, double y, double z, float partialTicks, int destroyStage){
-		if(gear.getWorld().getBlockState(gear.getPos()).getBlock() != CrossroadsBlocks.largeGearMaster || !gear.getWorld().isBlockLoaded(gear.getPos())){
+		if(gear.getWorld().getBlockState(gear.getPos()).getBlock() != CRBlocks.largeGearMaster || !gear.getWorld().isBlockLoaded(gear.getPos())){
 			return;
 		}
 

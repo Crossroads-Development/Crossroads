@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -24,8 +24,8 @@ public class PermeableGlass extends Block{
 		super(Properties.create(Material.GLASS).hardnessAndResistance(.5F).sound(SoundType.GLASS));
 		String name = "permeable_glass";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 
 	@Override

@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:detailed_crafter",
+		"count": 1
+	},
+	"pattern": [
+		"ITI",
+		"TCT",
+		"ITI"
+	],
+	"key": {
+		"I": {
+			"tag": "forge:ingots/iron"
+		},
+		"T": {
+			"tag": "forge:ingots/tin"
+		},
+		"C": {
+			"item": "minecraft:crafting_table"
+		}
+	}
+}

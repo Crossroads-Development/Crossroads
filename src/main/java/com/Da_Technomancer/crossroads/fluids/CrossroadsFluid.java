@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.fluids;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.FlowingFluidBlock;
@@ -32,7 +32,7 @@ public class CrossroadsFluid{
 	public CrossroadsFluid(String name, boolean lavaLike){
 		CrossroadsFluids.toRegister.add(still = new Still(name));
 		CrossroadsFluids.toRegister.add(flowing = new Flowing(name));
-		CrossroadsBlocks.toRegister.add(block = (FlowingFluidBlock) new FlowingFluidBlock(() -> still, lavaLike ? BLOCK_PROP_HOT : BLOCK_PROP).setRegistryName(name + "_block"));
+		CRBlocks.toRegister.add(block = (FlowingFluidBlock) new FlowingFluidBlock(() -> still, lavaLike ? BLOCK_PROP_HOT : BLOCK_PROP).setRegistryName(name + "_block"));
 		CRItems.toRegister.add(bucket = new BucketItem(() -> still, BUCKET_PROP).setRegistryName(name + "_bucket"));
 	}
 

@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"item": "crossroads:redstone_heat_cable_wool",
+		"count": 1
+	},
+	"ingredients": [
+		{
+			"item": "crossroads:heat_cable_wool"
+		},
+		{
+			"tag": "forge:dusts/redstone"
+		},
+		{
+			"tag": "forge:dusts/redstone"
+		},
+		{
+			"tag": "forge:dusts/redstone"
+		}
+	]
+}

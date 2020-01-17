@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.entity.*;
 import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
@@ -32,7 +32,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -104,13 +103,13 @@ public final class Crossroads{
 	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> e){
 		IForgeRegistry<Block> registry = e.getRegistry();
-		CrossroadsBlocks.init();
+		CRBlocks.init();
 		CrossroadsFluids.init();
 		ItemSets.init();
-		for(Block block : CrossroadsBlocks.toRegister){
+		for(Block block : CRBlocks.toRegister){
 			registry.register(block);
 		}
-		CrossroadsBlocks.toRegister.clear();
+		CRBlocks.toRegister.clear();
 	}
 
 	@SuppressWarnings("unused")
@@ -182,15 +181,6 @@ public final class Crossroads{
 		CrossroadsTileEntity.init(reg);
 	}
 
-	@SuppressWarnings("unused")
-	@SubscribeEvent
-	private static void registerModels(ModelRegistryEvent e){
-//		CrossroadsBlocks.initModels();
-//		CRItems.initModels();
-		//CrossroadsFluids.registerRenderers();
-		ItemSets.modelInit();
-	}
-
 	@SubscribeEvent
 	@SuppressWarnings("unused")
 	@OnlyIn(Dist.CLIENT)
@@ -216,7 +206,7 @@ public final class Crossroads{
 		registerCon(BeamExtractorContainer::new, BeamExtractorScreen::new, "beam_extractor", e);
 		registerCon(HeatLimiterContainer::new, HeatLimiterScreen::new, "heat_limiter", e);
 		registerCon(RotaryPumpContainer::new, RotaryPumpScreen::new, "rotary_pump", e);
-
+		registerCon(DetailedCrafterContainer::new, DetailedCrafterScreen::new, "detailed_crafter", e);
 		//TODO register containers
 	}
 
@@ -245,7 +235,7 @@ public final class Crossroads{
 		registerConType(BeamExtractorContainer::new, "beam_extractor", e);
 		registerConType(HeatLimiterContainer::new, "heat_limiter", e);
 		registerConType(RotaryPumpContainer::new, "rotary_pump", e);
-
+		registerConType(DetailedCrafterContainer::new, "detailed_crafter", e);
 	}
 
 	/**

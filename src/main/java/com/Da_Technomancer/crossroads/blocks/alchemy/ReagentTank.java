@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReagentTankTileEntity;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
@@ -44,8 +44,8 @@ public class ReagentTank extends ContainerBlock implements IReadable{
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "reagent_tank";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 
 	@Override

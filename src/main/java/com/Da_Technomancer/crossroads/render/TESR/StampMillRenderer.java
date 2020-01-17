@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.tileentities.rotary.StampMillTileEntity;
@@ -26,7 +26,7 @@ public class StampMillRenderer extends TileEntityRenderer<StampMillTileEntity>{
 	@Override
 	public void render(StampMillTileEntity te, double x, double y, double z, float partialTicks, int destroyStage){
 		BlockState state = te.getWorld().getBlockState(te.getPos());
-		if(!te.getWorld().isBlockLoaded(te.getPos()) || state.getBlock() != CrossroadsBlocks.stampMill){
+		if(!te.getWorld().isBlockLoaded(te.getPos()) || state.getBlock() != CRBlocks.stampMill){
 			return;
 		}
 		

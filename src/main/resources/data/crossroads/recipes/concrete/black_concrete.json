@@ -1,0 +1,36 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"item": "minecraft:black_concrete_powder",
+		"count": 16
+	},
+	"ingredients": [
+		{
+			"tag": "forge:dyes/black"
+		},
+		{
+			"tag": "forge:dusts/slag"
+		},
+		{
+			"tag": "forge:dusts/slag"
+		},
+		{
+			"tag": "forge:dusts/slag"
+		},
+		{
+			"tag": "forge:dusts/slag"
+		},
+		{
+			"tag": "forge:sand"
+		},
+		{
+			"tag": "forge:sand"
+		},
+		{
+			"tag": "forge:sand"
+		},
+		{
+			"tag": "forge:sand"
+		}
+	]
+}

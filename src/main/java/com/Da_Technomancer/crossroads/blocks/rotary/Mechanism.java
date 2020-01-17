@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
@@ -38,7 +38,7 @@ public class Mechanism extends ContainerBlock implements IReadable{
 		super(Block.Properties.create(Material.IRON).hardnessAndResistance(1).sound(SoundType.METAL));
 		String name = "mechanism";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
+		CRBlocks.toRegister.add(this);
 	}
 
 	@Override

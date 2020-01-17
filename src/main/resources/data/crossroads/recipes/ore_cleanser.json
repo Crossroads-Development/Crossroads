@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:ore_cleanser",
+		"count": 1
+	},
+	"pattern": [
+		"TWT",
+		"T T",
+		"TCT"
+	],
+	"key": {
+		"W": {
+			"item": "crossroads:water_centrifuge"
+		},
+		"C": {
+			"item": "crossroads:fluid_cooling_chamber"
+		},
+		"T": {
+			"tag": "forge:ingots/tin"
+		}
+	}
+}

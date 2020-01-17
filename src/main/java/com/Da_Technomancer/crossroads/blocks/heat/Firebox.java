@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.heat.FireboxTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -37,8 +37,8 @@ public class Firebox extends ContainerBlock{
 		super(Block.Properties.create(Material.ROCK).hardnessAndResistance(3));
 		String name = "firebox";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 		setDefaultState(getDefaultState().with(CRProperties.ACTIVE, false));
 	}
 

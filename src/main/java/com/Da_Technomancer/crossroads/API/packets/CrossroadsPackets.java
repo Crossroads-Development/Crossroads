@@ -35,7 +35,7 @@ public class CrossroadsPackets{
 		registerPacket(SendPlayerTickCountToClient.class);
 		registerPacket(SendDoubleArrayToServer.class);
 		registerPacket(SendDoubleArrayToClient.class);
-		registerPacket(SendSpinToClient.class);
+//		registerPacket(SendSpinToClient.class);
 		registerPacket(AddVisualToClient.class);
 		registerPacket(NbtToEntityClient.class);
 		registerPacket(NbtToEntityServer.class);

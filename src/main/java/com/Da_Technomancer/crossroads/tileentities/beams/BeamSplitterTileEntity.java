@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.beams;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.Da_Technomancer.essentials.blocks.EssentialsBlocks;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -39,7 +39,7 @@ public class BeamSplitterTileEntity extends BeamRenderTE{
 	private Direction getDir(){
 		if(dir == null){
 			BlockState state = world.getBlockState(pos);
-			if(state.getBlock() != CrossroadsBlocks.beamSplitter){
+			if(state.getBlock() != CRBlocks.beamSplitter){
 				return Direction.NORTH;
 			}
 			dir = state.get(EssentialsProperties.FACING);

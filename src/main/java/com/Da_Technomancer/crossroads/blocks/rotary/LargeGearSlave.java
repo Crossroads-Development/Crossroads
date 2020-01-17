@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearSlaveTileEntity;
@@ -52,7 +52,7 @@ public class LargeGearSlave extends ContainerBlock{
 		super(Block.Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(3));
 		String name = "large_gear_slave";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
+		CRBlocks.toRegister.add(this);
 	}
 
 	@Override

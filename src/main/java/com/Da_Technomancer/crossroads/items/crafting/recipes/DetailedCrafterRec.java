@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.items.crafting.recipes;
 
 import com.Da_Technomancer.crossroads.API.EnumPath;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -31,7 +31,7 @@ public class DetailedCrafterRec extends ShapedRecipe{
 
 	@Override
 	public ItemStack getIcon(){
-		return new ItemStack(CrossroadsBlocks.detailedCrafter);
+		return new ItemStack(CRBlocks.detailedCrafter);
 	}
 
 	@Override

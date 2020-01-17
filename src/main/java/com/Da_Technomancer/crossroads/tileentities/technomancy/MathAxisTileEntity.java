@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.rotary.*;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -34,7 +34,7 @@ public class MathAxisTileEntity extends MasterAxisTileEntity implements IIntRece
 	protected Direction getFacing(){
 		if(facing == null){
 			BlockState state = world.getBlockState(pos);
-			if(state.getBlock() != CrossroadsBlocks.mathAxis){
+			if(state.getBlock() != CRBlocks.mathAxis){
 				invalidate();
 				return Direction.NORTH;
 			}

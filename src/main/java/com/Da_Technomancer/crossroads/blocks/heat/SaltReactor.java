@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.heat;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.heat.SaltReactorTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -33,8 +33,8 @@ public class SaltReactor extends ContainerBlock{
 		super(Block.Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
 		String name = "salt_reactor";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 
 	@Override

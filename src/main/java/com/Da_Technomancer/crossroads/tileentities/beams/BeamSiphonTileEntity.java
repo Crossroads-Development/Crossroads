@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.beams;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.Da_Technomancer.essentials.blocks.EssentialsBlocks;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -40,7 +40,7 @@ public class BeamSiphonTileEntity extends BeamRenderTE{
 	private Direction getDir(){
 		if(dir == null){
 			BlockState state = world.getBlockState(pos);
-			if(state.getBlock() != CrossroadsBlocks.beamSiphon){
+			if(state.getBlock() != CRBlocks.beamSiphon){
 				return Direction.NORTH;
 			}
 			dir = state.get(EssentialsProperties.FACING);

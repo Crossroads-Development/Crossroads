@@ -7,22 +7,18 @@ import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
-import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.templates.IBeamRenderTE;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
@@ -77,7 +73,7 @@ public class OmniMeter extends Item{
 
 			LazyOptional<IAxisHandler> axisOpt;
 			if((axisOpt = te.getCapability(Capabilities.AXIS_CAPABILITY, null)).isPresent()){
-				chat.add(new TranslationTextComponent("tt.crossroads.meter.axis", MiscUtil.betterRound(axisOpt.orElseThrow(NullPointerException::new).getTotalEnergy(), 3)));
+				chat.add(new TranslationTextComponent("tt.crossroads.meter.axis", MiscUtil.preciseRound(axisOpt.orElseThrow(NullPointerException::new).getTotalEnergy(), 3)));
 			}
 
 			LazyOptional<IEnergyStorage> engOpt;
@@ -90,20 +86,10 @@ public class OmniMeter extends Item{
 		if(te instanceof IBeamRenderTE){
 			BeamUnit[] mag = ((IBeamRenderTE) te).getLastSent();
 			if(mag != null){
-				CompoundNBT nbt = MiscUtil.getPlayerTag(player);
-				if(!nbt.contains("elements")){
-					nbt.put("elements", new CompoundNBT());
-				}
-				nbt = nbt.getCompound("elements");
 				for(int i = 0; i < mag.length; i++){
 					BeamUnit check = mag[i];
-					if(check != null){
-						if(!nbt.contains(EnumBeamAlignments.getAlignment(check).name())){
-							nbt.putBoolean(EnumBeamAlignments.getAlignment(check).name(), true);
-							//Doesn't use deletion-chat as the element discovery notification shouldn't be wiped away in 1 tick.
-							player.sendMessage(new StringTextComponent(TextFormatting.BOLD.toString() + "New Element Discovered: " + EnumBeamAlignments.getAlignment(check).getLocalName(false) + TextFormatting.RESET.toString()));
-							StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) player);
-						}
+					if(!check.isEmpty()){
+						EnumBeamAlignments.getAlignment(check).discover(player, true);
 						String dir = Direction.byIndex(i).toString();
 						dir = Character.toUpperCase(dir.charAt(0)) + dir.substring(1);
 						chat.add(new TranslationTextComponent("tt.crossroads.meter.beam", dir, check.toString()));

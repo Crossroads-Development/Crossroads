@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidVoidTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -23,8 +23,8 @@ public class FluidVoid extends ContainerBlock{
 		super(Block.Properties.create(Material.IRON).hardnessAndResistance(0.6F).sound(SoundType.METAL));
 		String name = "fluid_void";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 
 	@Override

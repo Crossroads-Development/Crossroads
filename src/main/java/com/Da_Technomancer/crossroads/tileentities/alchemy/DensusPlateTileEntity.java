@@ -2,17 +2,21 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.alchemy.DensusPlate;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.Tag;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.EntityPredicates;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -23,6 +27,8 @@ public class DensusPlateTileEntity extends TileEntity implements ITickableTileEn
 
 	@ObjectHolder("densus_plate")
 	private static TileEntityType<DensusPlateTileEntity> type = null;
+
+	private static final Tag<Block> gravityBlocking = new BlockTags.Wrapper(new ResourceLocation(Crossroads.MODID, "gravity_blocking"));
 
 	private Direction facing = null;
 	private Boolean anti = null;
@@ -39,7 +45,7 @@ public class DensusPlateTileEntity extends TileEntity implements ITickableTileEn
 				return Direction.DOWN;
 			}
 			facing = state.get(EssentialsProperties.FACING);
-			anti = state.getBlock() == CrossroadsBlocks.antiDensusPlate;
+			anti = state.getBlock() == CRBlocks.antiDensusPlate;
 		}
 		return facing;
 	}
@@ -51,7 +57,7 @@ public class DensusPlateTileEntity extends TileEntity implements ITickableTileEn
 				return false;
 			}
 			facing = state.get(EssentialsProperties.FACING);
-			anti = state.getBlock() == CrossroadsBlocks.antiDensusPlate;
+			anti = state.getBlock() == CRBlocks.antiDensusPlate;
 		}
 		return anti;
 	}
@@ -68,7 +74,7 @@ public class DensusPlateTileEntity extends TileEntity implements ITickableTileEn
 
 		for(int i = 1; i <= RANGE; i++){
 			BlockState state = world.getBlockState(pos.offset(dir, i));
-			if(state.getBlock() == CrossroadsBlocks.cavorite){
+			if(gravityBlocking.contains(state.getBlock())){
 				effectiveRange = i;
 				break;
 			}

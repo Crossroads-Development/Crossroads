@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumReagents;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendBiomeUpdateToClient;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.BlockRecipePredicate;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactiveSpotTileEntity;
 import net.minecraft.block.BlockState;
@@ -43,7 +43,7 @@ public class AetherEffect implements IAlchEffect{
 		FLUD_GROUP.add(new MaterialPredicate(Material.ICE));
 		FLUD_GROUP.add(new MaterialPredicate(Material.LAVA));
 		CRYS_GROUP.add(new MaterialPredicate(Material.GLASS));
-		CRYS_GROUP.add(new BlockRecipePredicate(CrossroadsBlocks.blockPureQuartz.getDefaultState(), false));
+		CRYS_GROUP.add(new BlockRecipePredicate(CRBlocks.blockPureQuartz.getDefaultState(), false));
 	}
 
 	private static void doTransmute(BlockState oldState, World world, BlockPos pos){
@@ -67,8 +67,8 @@ public class AetherEffect implements IAlchEffect{
 		}
 		for(Predicate<BlockState> pred : FLUD_GROUP){
 			if(pred.test(oldState)){
-				if(oldState != Blocks.WATER.getDefaultState() && oldState.getBlock() != CrossroadsBlocks.reactiveSpot){
-					world.setBlockState(pos, CrossroadsBlocks.reactiveSpot.getDefaultState());
+				if(oldState != Blocks.WATER.getDefaultState() && oldState.getBlock() != CRBlocks.reactiveSpot){
+					world.setBlockState(pos, CRBlocks.reactiveSpot.getDefaultState());
 					TileEntity te = world.getTileEntity(pos);
 					if(te instanceof ReactiveSpotTileEntity){
 						((ReactiveSpotTileEntity) te).setTarget(Blocks.WATER.getDefaultState());

@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ChargingStandTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -35,8 +35,8 @@ public class ChargingStand extends ContainerBlock{
 		super(Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(2));
 		String name = "charging_stand";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 
 	@Override

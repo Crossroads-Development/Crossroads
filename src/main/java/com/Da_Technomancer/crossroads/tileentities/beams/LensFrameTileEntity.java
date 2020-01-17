@@ -10,7 +10,7 @@ import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.templates.IBeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
@@ -55,7 +55,7 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 	private Direction.Axis getAxis(){
 		if(axis == null){
 			BlockState state = world.getBlockState(pos);
-			if(state.getBlock() != CrossroadsBlocks.lensFrame){
+			if(state.getBlock() != CRBlocks.lensFrame){
 				return Direction.Axis.X;
 			}
 			axis = state.get(EssentialsProperties.AXIS);

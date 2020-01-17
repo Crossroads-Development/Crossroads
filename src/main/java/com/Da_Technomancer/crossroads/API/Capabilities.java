@@ -7,7 +7,6 @@ import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.heat.DefaultHeatHandler;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.rotary.*;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
@@ -50,23 +49,25 @@ public class Capabilities{
 
 	/**
 	 * All credit for this class goes to aidancbrady.
-	 * This code originally came from his mod Mekanism.
+	 * This code originally came from his mod Mekanism, though has been modified over time.
 	 * Copying it is allowed under Mekanism's license at the time of writing this.
+	 *
+	 * It checks if the instance is an instance of INBTSerializable and uses that to (de-)serialize. Otherwise, it does nothing.
 	 */
 	private static class DefaultStorage<T> implements Capability.IStorage<T>{
 
 		@Override
 		public INBT writeNBT(Capability<T> capability, T instance, Direction side){
-			if(instance instanceof INBTSerializable)
-				return ((INBTSerializable) instance).serializeNBT();
-			return new CompoundNBT();
+			if(instance instanceof INBTSerializable){
+				return ((INBTSerializable<? extends INBT>) instance).serializeNBT();
+			}
+			return null;
 		}
 
-		@SuppressWarnings({"unchecked"})
 		@Override
 		public void readNBT(Capability<T> capability, T instance, Direction side, INBT nbt){
-			if(instance instanceof INBTSerializable){
-				Class<? extends INBT> nbtClass = ((INBTSerializable) instance).serializeNBT().getClass();
+			if(nbt != null && instance instanceof INBTSerializable){
+				Class<? extends INBT> nbtClass = ((INBTSerializable<? extends INBT>) instance).serializeNBT().getClass();
 
 				if(nbtClass.isInstance(nbt)){
 					((INBTSerializable) instance).deserializeNBT(nbtClass.cast(nbt));

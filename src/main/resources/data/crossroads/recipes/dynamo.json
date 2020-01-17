@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:dynamo",
+		"count": 1
+	},
+	"pattern": [
+		"AGA",
+		"III"
+	],
+	"key": {
+		"A": {
+			"item": "crossroads:axle"
+		},
+		"G": {
+			"item": "crossroads:gear_base"
+		},
+		"I": {
+			"tag": "forge:ingots/iron"
+		}
+	}
+}

@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:beam_siphon",
+		"count": 1
+	},
+	"pattern": [
+		"B B",
+		"QAQ",
+		"B B"
+	],
+	"key": {
+		"B": {
+			"tag": "crossroads:gems/bright_quartz"
+		},
+		"Q": {
+			"tag": "crossroads:gems/pure_quartz"
+		},
+		"A":{
+			"item": "crossroads:lens_array"
+		}
+	}
+}

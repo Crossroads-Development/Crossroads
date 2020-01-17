@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidTubeTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.*;
@@ -55,8 +55,8 @@ public class FluidTube extends ContainerBlock{
 	protected FluidTube(String name){
 		super(Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(2));
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 		setDefaultState(getDefaultState().with(CRProperties.CONDUIT_SIDES[0], EnumTransferMode.NONE).with(CRProperties.CONDUIT_SIDES[1], EnumTransferMode.NONE).with(CRProperties.CONDUIT_SIDES[2], EnumTransferMode.NONE).with(CRProperties.CONDUIT_SIDES[3], EnumTransferMode.NONE).with(CRProperties.CONDUIT_SIDES[4], EnumTransferMode.NONE).with(CRProperties.CONDUIT_SIDES[5], EnumTransferMode.NONE));
 	}
 

@@ -8,7 +8,7 @@ import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
 import com.Da_Technomancer.crossroads.API.packets.SendStringToClient;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.gui.container.CrucibleContainer;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
@@ -102,7 +102,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 		if(world.getGameTime() % 2 == 0){
 			int fullness = Math.min(3, (int) Math.ceil((float) fluids[0].getAmount() * 3F / (float) fluidProps[0].capacity));
 			BlockState state = world.getBlockState(pos);
-			if(state.getBlock() != CrossroadsBlocks.heatingCrucible){
+			if(state.getBlock() != CRBlocks.heatingCrucible){
 				remove();
 				return;
 			}

@@ -8,24 +8,22 @@ import net.minecraft.block.Blocks;
 
 public enum HeatInsulators{
 
-	WOOL(.25D, 300D, new BlockEffect(Blocks.FIRE.getDefaultState()), "wool"),
-	SLIME(.2D, 500D, new SlimeEffect(), "slimeball"),
-	DIRT(.5D, 42D, new DirtEffect(), "dirt"),
-	ICE(.001D, 0D, new BlockEffect(Blocks.WATER.getDefaultState()), Blocks.PACKED_ICE),
-	OBSIDIAN(.015D, 2_000D, new BlockEffect(Blocks.LAVA.getDefaultState()), "obsidian"),
-	CERAMIC(.05D, 3_000D, new BlockEffect(Blocks.LAVA.getDefaultState()), Blocks.TERRACOTTA),
-	DENSUS(0, 10_000D, new BlockEffect(Blocks.LAVA.getDefaultState()), "gemDensus");
+	WOOL(.25D, 300D, new BlockEffect(Blocks.FIRE.getDefaultState())),
+	SLIME(.2D, 500D, new SlimeEffect()),
+	DIRT(.5D, 42D, new DirtEffect()),
+	ICE(.001D, 0D, new BlockEffect(Blocks.WATER.getDefaultState())),
+	OBSIDIAN(.015D, 2_000D, new BlockEffect(Blocks.LAVA.getDefaultState())),
+	CERAMIC(.05D, 3_000D, new BlockEffect(Blocks.LAVA.getDefaultState())),
+	DENSUS(0, 10_000D, new BlockEffect(Blocks.LAVA.getDefaultState()));
 
 	private final double rate;
 	private final double limit;
 	private final IEffect effect;
-	private final Object item;
 
-	HeatInsulators(double rate, double limit, IEffect effect, Object item){
+	HeatInsulators(double rate, double limit, IEffect effect){
 		this.rate = rate;
 		this.limit = limit;
 		this.effect = effect;
-		this.item = item;
 	}
 
 	public double getRate(){
@@ -38,10 +36,6 @@ public enum HeatInsulators{
 
 	public IEffect getEffect(){
 		return effect;
-	}
-
-	public Object getItem(){
-		return item;
 	}
 
 	/**This will return the name with all but the first char being lowercase,

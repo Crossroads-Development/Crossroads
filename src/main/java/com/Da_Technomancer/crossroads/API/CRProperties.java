@@ -12,9 +12,6 @@ import net.minecraft.util.Direction;
 
 public class CRProperties{
 
-//	public static final UnlistedPropertyBooleanSixArray CONNECT = new UnlistedPropertyBooleanSixArray("connect");
-//	public static final UnlistedPropertyIntegerSixArray CONNECT_MODE = new UnlistedPropertyIntegerSixArray("connect_mode");
-//	public static final UnlistedPropertyIntegerSixArray PORT_TYPE = new UnlistedPropertyIntegerSixArray("port_type");
 	public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 	public static final IntegerProperty FULLNESS = IntegerProperty.create("fullness", 0, 3);
 	public static final EnumProperty<Direction.Axis> HORIZ_AXIS = EnumProperty.create("horiz_axis", Direction.Axis.class, (Direction.Axis axis) -> axis != null && axis.isHorizontal());

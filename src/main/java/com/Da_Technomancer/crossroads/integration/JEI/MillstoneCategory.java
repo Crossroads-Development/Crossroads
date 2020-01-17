@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.google.common.collect.ImmutableList;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -29,7 +29,7 @@ public class MillstoneCategory implements IRecipeCategory<MillstoneRecipe>{
 		slot = guiHelper.getSlotDrawable();
 		arrowStatic = guiHelper.createDrawable(new ResourceLocation(Crossroads.MODID, "textures/gui/container/millstone_gui.png"), 66, 35, 44, 17);
 		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation(Crossroads.MODID, "textures/gui/container/millstone_gui.png"), 176, 0, 44, 17), 40, IDrawableAnimated.StartDirection.TOP, false);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(CrossroadsBlocks.millstone, 1));
+		icon = guiHelper.createDrawableIngredient(new ItemStack(CRBlocks.millstone, 1));
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class MillstoneCategory implements IRecipeCategory<MillstoneRecipe>{
 
 	@Override
 	public String getTitle(){
-		return CrossroadsBlocks.millstone.getNameTextComponent().getFormattedText();
+		return CRBlocks.millstone.getNameTextComponent().getFormattedText();
 	}
 
 	@Override

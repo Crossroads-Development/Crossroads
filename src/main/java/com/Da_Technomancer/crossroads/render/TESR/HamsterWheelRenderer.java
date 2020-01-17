@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.HamsterWheelTileEntity;
@@ -23,7 +23,7 @@ public class HamsterWheelRenderer extends TileEntityRenderer<HamsterWheelTileEnt
 	public void render(HamsterWheelTileEntity wheel, double x, double y, double z, float partialTicks, int destroyStage){
 		World world = wheel.getWorld();
 		BlockPos pos = wheel.getPos();
-		if(!world.isBlockLoaded(pos) || world.getBlockState(pos).getBlock() != CrossroadsBlocks.hamsterWheel){
+		if(!world.isBlockLoaded(pos) || world.getBlockState(pos).getBlock() != CRBlocks.hamsterWheel){
 			return;
 		}
 		Direction facing = world.getBlockState(pos).get(CRProperties.HORIZ_FACING);

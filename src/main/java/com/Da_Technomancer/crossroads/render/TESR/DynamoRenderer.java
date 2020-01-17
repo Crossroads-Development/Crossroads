@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.render.TESR;
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelGearOctagon;
@@ -17,7 +17,7 @@ public class DynamoRenderer extends TileEntityRenderer<DynamoTileEntity>{
 
 	@Override
 	public void render(DynamoTileEntity dynamo, double x, double y, double z, float partialTicks, int destroyStage){
-		if(!dynamo.getWorld().isBlockLoaded(dynamo.getPos()) || dynamo.getWorld().getBlockState(dynamo.getPos()).getBlock() != CrossroadsBlocks.dynamo){
+		if(!dynamo.getWorld().isBlockLoaded(dynamo.getPos()) || dynamo.getWorld().getBlockState(dynamo.getPos()).getBlock() != CRBlocks.dynamo){
 			return;
 		}
 

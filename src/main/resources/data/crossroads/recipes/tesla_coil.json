@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:tesla_coil",
+		"count": 1
+	},
+	"pattern": [
+		"III",
+		"RCR",
+		"III"
+	],
+	"key": {
+		"I": {
+			"tag": "forge:ingots/iron"
+		},
+		"R": {
+			"tag": "forge:dusts/redstone"
+		},
+		"C": {
+			"tag": "forge:ingots/copper"
+		}
+	}
+}

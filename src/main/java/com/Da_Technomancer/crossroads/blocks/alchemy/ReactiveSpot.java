@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactiveSpotTileEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
@@ -17,7 +17,7 @@ public class ReactiveSpot extends ContainerBlock{
 		super(Properties.create(Material.SPONGE).hardnessAndResistance(0).doesNotBlockMovement().noDrops());
 		String name = "reactive_spot";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
+		CRBlocks.toRegister.add(this);
 		//No item form
 	}
 

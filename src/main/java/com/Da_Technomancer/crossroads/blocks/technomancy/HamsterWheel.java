@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.HamsterWheelTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
@@ -38,8 +38,8 @@ public class HamsterWheel extends ContainerBlock{
 		setHardness(2);
 		setRegistryName(name);
 		setCreativeTab(CRItems.TAB_CROSSROADS);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 	}
 
 	@Override

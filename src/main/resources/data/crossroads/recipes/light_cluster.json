@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"item": "crossroads:light_cluster",
+		"count": 8
+	},
+	"ingredients": [
+		{
+			"tag": "crossroads:gems/bright_quartz"
+		}
+	]
+}

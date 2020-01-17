@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:master_axis_crystal",
+		"count": 1
+	},
+	"pattern": [
+		"QAQ",
+		"QaQ",
+		"QQQ"
+	],
+	"key": {
+		"Q": {
+			"tag": "crossroads:gems/pure_quartz"
+		},
+		"A":{
+			"item": "crossroads:lens_array"
+		},
+		"a": {
+			"item": "crossroads:master_axis"
+		}
+	}
+}

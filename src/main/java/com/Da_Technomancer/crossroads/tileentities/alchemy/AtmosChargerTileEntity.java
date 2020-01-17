@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.alchemy.AtmosCharger;
 import com.Da_Technomancer.crossroads.render.RenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
@@ -63,7 +63,7 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 			return mode;
 		}
 		BlockState state = world.getBlockState(pos);
-		if(state.getBlock() != CrossroadsBlocks.atmosCharger){
+		if(state.getBlock() != CRBlocks.atmosCharger){
 			return false;
 		}
 		mode = state.get(CRProperties.ACTIVE);
@@ -74,7 +74,7 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		if(player.world instanceof ServerWorld){
 			int charge = AtmosChargeSavedData.getCharge((ServerWorld) player.world);
-			chat.add(new TranslationTextComponent("tt.crossroads.atmos_charger.reading", charge, AtmosChargeSavedData.getCapacity(), MiscUtil.betterRound(100D * charge / AtmosChargeSavedData.getCapacity(), 1)));
+			chat.add(new TranslationTextComponent("tt.crossroads.atmos_charger.reading", charge, AtmosChargeSavedData.getCapacity(), MiscUtil.preciseRound(100D * charge / AtmosChargeSavedData.getCapacity(), 1)));
 		}
 	}
 

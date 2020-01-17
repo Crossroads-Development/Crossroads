@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
-import com.Da_Technomancer.crossroads.blocks.CrossroadsBlocks;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -35,8 +35,8 @@ public class LightCluster extends Block{
 		super(Properties.create(Material.MISCELLANEOUS).hardnessAndResistance(0).sound(SoundType.GLASS).doesNotBlockMovement().noDrops().lightValue(15));
 		String name = "light_cluster";
 		setRegistryName(name);
-		CrossroadsBlocks.toRegister.add(this);
-		CrossroadsBlocks.blockAddQue(this);
+		CRBlocks.toRegister.add(this);
+		CRBlocks.blockAddQue(this);
 		setDefaultState(getDefaultState().with(EssentialsProperties.COLOR, DyeColor.WHITE));
 	}
 

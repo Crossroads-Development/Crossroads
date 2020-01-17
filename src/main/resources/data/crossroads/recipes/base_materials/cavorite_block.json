@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:block_cavorite",
+		"count": 1
+	},
+	"pattern": [
+		"***",
+		"***",
+		"***"
+	],
+	"key": {
+		"*": {
+			"tag": "crossroads:gems/cavorite"
+		}
+	}
+}
