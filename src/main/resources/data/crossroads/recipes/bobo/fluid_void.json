@@ -1,0 +1,22 @@
+{
+	"type": "crossroads:bobo",
+	"output": {
+		"item": "crossroads:fluid_void",
+		"count": "1"
+	},
+	"input_a": [
+		{
+			"tag": "crossroads:gems/void"
+		}
+	],
+	"input_b": [
+		{
+			"item": "minecraft:sponge"
+		}
+	],
+	"input_c": [
+		{
+			"item": "crossroads:fluid_tube"
+		}
+	]
+}

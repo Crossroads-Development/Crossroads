@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:mill",
 	"input": {
-		"tag": "storage_blocks/coal"
+		"tag": "forge:storage_blocks/coal"
 	},
 	"output": {
 		"item": "gunpowder",

@@ -33,6 +33,8 @@ public final class RecipeHolder{
 	public static IRecipeSerializer<DetailedCrafterRec> DETAILED_SERIAL = null;
 	@ObjectHolder("beam_transmute")
 	public static IRecipeSerializer<BeamTransmuteRec> BEAM_TRANSMUTE_SERIAL = null;
+	@ObjectHolder("bobo")
+	public static IRecipeSerializer<BoboRec> BOBO_SERIAL = null;
 
 	//Forge hasn't replaced the IRecipeType registry (yet). We use the vanilla registry as a result.
 	public static IRecipeType<MillRec> MILL_TYPE = IRecipeType.register(Crossroads.MODID + ":mill");
@@ -47,5 +49,7 @@ public final class RecipeHolder{
 	public static IRecipeType<CrucibleRec> CRUCIBLE_TYPE = IRecipeType.register(Crossroads.MODID + ":crucible");
 	public static IRecipeType<DetailedCrafterRec> DETAILED_TYPE = IRecipeType.register(Crossroads.MODID + ":detailed_crafter");
 	public static IRecipeType<BeamTransmuteRec> BEAM_TRANSMUTE_TYPE = IRecipeType.register(Crossroads.MODID + ":beam_transmute");
+	public static IRecipeType<BoboRec> BOBO_TYPE = IRecipeType.register(Crossroads.MODID + ":bobo");
+
 
 }

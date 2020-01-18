@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:blasting",
+	"result": "crossroads:nugget_tin",
+	"count": 6,
+	"experience": 0.7,
+	"ingredient": [
+		{
+			"type": "minecraft:item_nbt",
+			"item": "crossroads:ore_clump",
+			"nbt": {
+				"material": "tin"
+			}
+		}
+	]
+}

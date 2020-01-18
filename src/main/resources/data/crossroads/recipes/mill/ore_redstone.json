@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:mill",
 	"input": {
-		"tag": "ores/redstone"
+		"tag": "forge:ores/redstone"
 	},
 	"output": [
 		{

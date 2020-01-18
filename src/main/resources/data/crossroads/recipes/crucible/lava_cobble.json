@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:crucible",
 	"input": {
-		"tag": "cobblestone"
+		"tag": "forge:cobblestone"
 	},
 	"output": {
 		"fluid": "lava",

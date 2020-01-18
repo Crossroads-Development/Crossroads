@@ -65,4 +65,8 @@ public class CrossroadsPackets{
 	public static void sendPacketToAll(ClientPacket packet){
 		channel.send(PacketDistributor.ALL.noArg(), packet);
 	}
+
+	public static void sendPacketToDimension(World world, ClientPacket packet){
+		channel.send(PacketDistributor.DIMENSION.with(() -> world.getDimension().getType()), packet);
+	}
 }

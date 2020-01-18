@@ -16,22 +16,12 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public abstract class GearMatItem extends Item{
+public abstract class GearMatItem extends OreProfileItem{
 
-	protected static final String KEY = "material";
 	protected static final Properties itemProp = new Properties().group(CRItems.TAB_GEAR);
 
 	protected GearMatItem(){
 		super(itemProp);
-	}
-
-	public ItemStack withMaterial(GearFactory.GearMaterial mat, int count){
-		if(mat == null){
-			mat = GearFactory.getDefaultMaterial();
-		}
-		ItemStack out = new ItemStack(this, count, new CompoundNBT());
-		out.getTag().putString(KEY, mat.getId());
-		return out;
 	}
 
 	/**
@@ -47,12 +37,6 @@ public abstract class GearMatItem extends Item{
 			matKey = stack.getTag().getString(KEY);
 		}
 		return GearFactory.findMaterial(matKey);
-	}
-
-	@Override
-	public ITextComponent getDisplayName(ItemStack stack){
-		GearFactory.GearMaterial mat = getMaterial(stack);
-		return new TranslationTextComponent(getTranslationKey(stack), mat == null ? "INVALID" : mat.getName());
 	}
 
 	@Override

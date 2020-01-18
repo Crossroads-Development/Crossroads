@@ -243,6 +243,8 @@
 	"blocks.crossroads.crystal_reagent_filter": "Crystal Resonating Filter",
 	"item.crossroads.solid_chlorine": "Frozen Chlorine",
 	"item.crossroads.solid_sulfur_dioxide": "Frozen SO₂",
+	"item.crossroads.bobo_rod": "Rod of Madness",
+	"item.crossroads.vacuum.hopper_quip": "Vacuum Hopper",
 
 	"item.crossroads.dust_metal": "%1$s Dust",
 	"item.crossroads.gravel_metal": "Raw %1$s Grit",
@@ -458,6 +460,11 @@
 	"tt.crossroads.clutch.redstone": "Circuits read speed",
 	"tt.crossroads.element_discover": "New Element Discovered: %1$s",
 	"tt.crossroads.detailed_crafter.desc": "Allows unlocking and crafting Technomancy and Alchemy recipes",
+	"tt.crossroads.bobo_rod.desc": "Creates bizarre and powerful Bobo Items",
+	"tt.crossroads.bobo_rod.use": "Use on 3 dropped ingredients and an offering to craft",
+	"tt.crossroads.bobo_rod.quip": "A gift of the Derpy One",
+	"tt.crossroads.hamster_wheel.desc": "Produces %1$sJ/t",
+	"tt.crossroads.hamster_wheel.quip": "Does it need batteries?",
 
 	"container.smelter": "Smelter",
 	"container.firebox": "Firebox",

@@ -1,0 +1,22 @@
+{
+	"type": "crossroads:bobo",
+	"input_a": [
+		{
+			"tag": "forge:cobblestone"
+		}
+	],
+	"input_b": [
+		{
+			"tag": "forge:dusts/lapis"
+		}
+	],
+	"input_c": [
+		{
+			"tag": "forge:nuggets/gold"
+		}
+	],
+	"output": {
+		"item": "crossroads:rain_idol",
+		"count": "1"
+	}
+}

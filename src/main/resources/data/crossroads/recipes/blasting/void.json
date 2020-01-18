@@ -1,0 +1,11 @@
+{
+	"type": "minecraft:blasting",
+	"result": "crossroads:gem_void",
+	"count": 1,
+	"experience": 1.0,
+	"ingredient": [
+		{
+			"tag": "crossroads:ores/void"
+		}
+	]
+}

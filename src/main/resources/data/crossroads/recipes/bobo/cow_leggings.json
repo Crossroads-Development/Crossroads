@@ -1,0 +1,22 @@
+{
+	"type": "crossroads:bobo",
+	"output": {
+		"item": "crossroads:cow_leggings",
+		"count": "1"
+	},
+	"input_a": [
+		{
+			"tag": "forge:leather"
+		}
+	],
+	"input_b": [
+		{
+			"item": "minecraft:milk_bucket"
+		}
+	],
+	"input_c": [
+		{
+			"item": "minecraft:beef"
+		}
+	]
+}

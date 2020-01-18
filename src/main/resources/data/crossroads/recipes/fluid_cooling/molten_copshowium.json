@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:fluid_cooling",
 	"input": {
-		"fluid": "molten_copshowium",
+		"fluid": "crossroads:molten_coppermolten_copshowium",
 		"amount": "144"
 	},
 	"item": "crossroads:ingot_copshowium",

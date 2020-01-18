@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:mill",
 	"input": {
-		"tag": "gravel"
+		"tag": "forge:gravel"
 	},
 	"output": [
 		{

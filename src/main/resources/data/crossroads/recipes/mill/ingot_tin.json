@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"tag": "forge:ingots/tin"
+	},
+	"output": [
+		{
+			"item": "crossroads:dust_tin",
+			"count": 1
+		}
+	]
+}

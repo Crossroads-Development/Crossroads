@@ -1,0 +1,22 @@
+{
+	"type": "crossroads:bobo",
+	"output": {
+		"item": "crossroads:poison_vodka",
+		"count": "1"
+	},
+	"input_a": [
+		{
+			"tag": "crossroads:dusts/sulfuric_acid"
+		}
+	],
+	"input_b": [
+		{
+			"tag": "forge:crops/potato"
+		}
+	],
+	"input_c": [
+		{
+			"item": "minecraft:glass_bottle"
+		}
+	]
+}

@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:crucible",
 	"input": {
-		"tag": "obsidian"
+		"tag": "forge:obsidian"
 	},
 	"output": {
 		"fluid": "lava",

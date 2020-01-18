@@ -1,0 +1,22 @@
+{
+	"type": "crossroads:bobo",
+	"input_a": [
+		{
+			"tag": "forge:dyes/magenta"
+		}
+	],
+	"input_b": [
+		{
+			"tag": "forge:dusts/glowstone"
+		}
+	],
+	"input_c": [
+		{
+			"item": "minecraft:bread"
+		}
+	],
+	"output": {
+		"item": "crossroads:magenta_bread",
+		"count": "1"
+	}
+}

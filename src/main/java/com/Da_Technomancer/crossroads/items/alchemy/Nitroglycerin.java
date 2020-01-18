@@ -31,7 +31,7 @@ public class Nitroglycerin extends Item{
 		 */
 		@Override
 		public ItemStack dispenseStack(IBlockSource source, ItemStack stack){
-			Direction dir = (Direction) source.getBlockState().get(DispenserBlock.FACING);
+			Direction dir = source.getBlockState().get(DispenserBlock.FACING);
 			World world = source.getWorld();
 			EntityNitro nitro = EntityNitro.type.create(world);
 			nitro.setPosition(source.getX() + dir.getXOffset() + 0.5D, source.getY() + dir.getYOffset() + 0.5D, source.getZ() + dir.getZOffset() + 0.5D);

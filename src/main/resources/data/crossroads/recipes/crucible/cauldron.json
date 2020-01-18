@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:crucible",
+	"input": {
+		"item": "minecraft:cauldron"
+	},
+	"output": {
+		"fluid": "crossroads:molten_iron",
+		"amount": "1008"
+	}
+}

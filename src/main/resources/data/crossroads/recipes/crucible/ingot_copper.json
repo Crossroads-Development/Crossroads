@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:crucible",
+	"input": {
+		"tag": "forge:ingots/copper"
+	},
+	"output": {
+		"fluid": "crossroads:molten_copper",
+		"amount": "144"
+	}
+}

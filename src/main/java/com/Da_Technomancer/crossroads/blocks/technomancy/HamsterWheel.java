@@ -1,43 +1,48 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
+import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.HamsterWheelTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
-import net.minecraft.block.ContainerBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class HamsterWheel extends ContainerBlock{
 
-	private static final AxisAlignedBB[] BB = new AxisAlignedBB[]{new AxisAlignedBB(0, 0, .5D, 1, 1, 1), new AxisAlignedBB(0, 0, 0, .5D, 1, 1), new AxisAlignedBB(0, 0, 0, 1, 1, .5D), new AxisAlignedBB(.5D, 0, 0, 1, 1, 1)};
+	private static final VoxelShape[] SHAPES = new VoxelShape[4];
+
+	static{
+		SHAPES[0] = makeCuboidShape(0, 0, 8, 16, 16, 16);
+		SHAPES[1] = makeCuboidShape(0, 0, 0, 8, 16, 16);
+		SHAPES[0] = makeCuboidShape(0, 0, 0, 16, 16, 8);
+		SHAPES[0] = makeCuboidShape(8, 0, 0, 16, 16, 16);
+	}
 
 	public HamsterWheel(){
-		super(Material.IRON);
+		super(Properties.create(Material.IRON).hardnessAndResistance(2).sound(SoundType.NETHER_WART));//Tried to find a fleshy sound
 		String name = "hamster_wheel";
-		setTranslationKey(name);
-		setHardness(2);
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
 	}
@@ -48,10 +53,21 @@ public class HamsterWheel extends ContainerBlock{
 	}
 
 	@Override
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+		builder.add(CRProperties.HORIZ_FACING);
+	}
+
+	@Nullable
+	@Override
+	public BlockState getStateForPlacement(BlockItemUseContext context){
+		return getDefaultState().with(CRProperties.HORIZ_FACING, context.getPlacementHorizontalFacing());
+	}
+
+	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
+		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand))){
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.with(Properties.HORIZ_FACING, state.get(Properties.HORIZ_FACING).rotateY()));
+				worldIn.setBlockState(pos, state.with(CRProperties.HORIZ_FACING, state.get(CRProperties.HORIZ_FACING).rotateY()));
 			}
 			return true;
 		}
@@ -59,8 +75,8 @@ public class HamsterWheel extends ContainerBlock{
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(BlockState state, IBlockAccess source, BlockPos pos){
-		return BB[Math.max(state.get(Properties.HORIZ_FACING).getHorizontalIndex(), 0)];
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+		return SHAPES[state.get(CRProperties.HORIZ_FACING).getHorizontalIndex()];
 	}
 
 	@Override
@@ -69,49 +85,9 @@ public class HamsterWheel extends ContainerBlock{
 	}
 
 	@Override
-	public BlockState getStateForPlacement(World world, BlockPos pos, Direction facing, BlockRayTraceResult hit, int meta, LivingEntity placer, Hand hand){
-		return getDefaultState().with(Properties.HORIZ_FACING, placer.getHorizontalFacing());
-	}
-
-	@Override
-	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, Properties.HORIZ_FACING);
-	}
-
-	@Override
-	public BlockState getStateFromMeta(int meta){
-		return getDefaultState().with(Properties.HORIZ_FACING, Direction.byIndex(meta));
-	}
-
-	@Override
-	public int getMetaFromState(BlockState state){
-		return state.get(Properties.HORIZ_FACING).getIndex();
-	}
-
-	@Override
-	public void addCollisionBoxToList(BlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> list, @Nullable Entity entityIn, boolean p_185477_7_){
-		addCollisionBoxToList(pos, entityBox, list, BB[Math.max(state.get(Properties.HORIZ_FACING).getHorizontalIndex(), 0)]);
-	}
-
-	@Override
-	public boolean isFullCube(BlockState state){
-		return false;
-	}
-
-	@Override
-	public boolean isOpaqueCube(BlockState state){
-		return false;
-	}
-
-	@Override
-	public boolean isSideSolid(BlockState base_state, IBlockAccess world, BlockPos pos, Direction side){
-		return side == world.getBlockState(pos).get(Properties.HORIZ_FACING);
-	}
-	
-	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add("Produces: 2J/t");
-		tooltip.add("Does it need batteries?");
+		tooltip.add(new TranslationTextComponent("tt.crossroads.hamster_wheel.desc", HamsterWheelTileEntity.POWER));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.hamster_wheel.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

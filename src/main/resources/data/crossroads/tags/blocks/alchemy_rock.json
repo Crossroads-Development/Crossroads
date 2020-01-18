@@ -1,0 +1,14 @@
+{
+	"replace": false,
+	"values": [
+		"#forge:cobblestone",
+		"#forge:stone",
+		"#forge:gravel",
+		"#forge:obsidian",
+		"#forge:netherrack",
+		"#forge:ores",
+		"#forge:sandstone",
+		"minecraft:packed_ice",
+		"minecraft:blue_ice"
+	]
+}

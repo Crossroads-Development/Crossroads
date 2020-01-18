@@ -1,60 +1,17 @@
 package com.Da_Technomancer.crossroads.items.crafting;
 
-import com.Da_Technomancer.crossroads.API.alchemy.EnumReagents;
-import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.items.alchemy.Phial;
-import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
-import com.Da_Technomancer.essentials.EssentialsConfig;
-import com.Da_Technomancer.essentials.items.crafting.EssentialsCrafting;
 import net.minecraft.block.Blocks;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.StringNBT;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.config.Property;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
-import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
-import java.util.function.Predicate;
-
+@Deprecated//Everything in this class should be moved to JSON
 public final class ModCrafting{
 
-	@Deprecated
-	public static final ArrayList<IRecipe> toRegister = new ArrayList<>();
-
 	public static void init(){
-
-		if(CRConfig.addBoboRecipes.getBoolean()){
-			registerBoboItem(getFilledHopper(), "Vacuum Hopper", new ItemRecipePredicate(Blocks.HOPPER, 0), new TagCraftingStack("wool"), new ItemRecipePredicate(CRBlocks.fluidTube, 0));
-			registerBoboItem(CRItems.magentaBread, "Magenta Bread", new ItemRecipePredicate(Items.BREAD, 0), new TagCraftingStack("dyeMagenta"), new TagCraftingStack("dustGlowstone"));
-			registerBoboItem(CRItems.rainIdol, "Rain Idol", new TagCraftingStack("gemLapis"), new TagCraftingStack("cobblestone"), new TagCraftingStack("nuggetGold"));
-			registerBoboItem(CRItems.squidHelmet, "Squid Helmet", new ItemRecipePredicate(Items.DYE, DyeColor.BLACK.getDyeDamage()), new ItemRecipePredicate(Items.FISH, 3), new TagCraftingStack("leather"));
-			registerBoboItem(CRItems.pigZombieChestplate, "Zombie Pigman Chestplate", new ItemRecipePredicate(Items.BLAZE_POWDER, 0), new TagCraftingStack("leather"), new ItemRecipePredicate(Items.PORKCHOP, 0));
-			registerBoboItem(CRItems.cowLeggings, "Cow Leggings", new ItemRecipePredicate(Items.MILK_BUCKET, 0), new TagCraftingStack("leather"), new ItemRecipePredicate(Items.BEEF, 0));
-			registerBoboItem(CRItems.chickenBoots, "Chicken Boots", new TagCraftingStack("feather"), new TagCraftingStack("leather"), new ItemRecipePredicate(Blocks.WATERLILY, 0));
-			registerBoboItem(CRItems.chaosRod, "Rod of Discord", new ItemRecipePredicate(Items.BLAZE_ROD, 0), new ItemRecipePredicate(Items.DRAGON_BREATH, 0), new ItemRecipePredicate(Items.GOLDEN_APPLE, -1));
-			registerBoboItem(new ItemStack(CRBlocks.fluidVoid, 1), "Fluid Void", new ItemRecipePredicate(Blocks.SPONGE, 0), new ItemRecipePredicate(CRBlocks.fluidTube, 0), new ItemRecipePredicate(OreSetup.voidCrystal, 0));
-			registerBoboItem(new ItemStack(CRBlocks.hamsterWheel, 1), "Hamster Wheel", new EdibleBlobRecipePredicate(4, 2), new ComponentCraftingStack("stick"), new TagCraftingStack("nuggetCopshowium"));
-			registerBoboItem(CRItems.liechWrench, "Liechtensteinian Navy Wrench", (ItemStack s) -> EssentialsConfig.isWrench(s, false), new ItemRecipePredicate(CRItems.handCrank, 0), new ItemRecipePredicate(CRItems.staffTechnomancy, 0));
-			registerBoboItem(new ItemStack(CRBlocks.maxwellDemon, 1), "Maxwell's Demon", new ItemRecipePredicate(Blocks.BEDROCK, 0), new EdibleBlobRecipePredicate(6, 4), new TagCraftingStack("ingotCopper"));
-			registerBoboItem(new ItemStack(CRItems.nitroglycerin, 8), "Nitroglycerin", new TagCraftingStack("meatRaw"), new TagCraftingStack("gunpowder"), (Predicate<ItemStack>) (ItemStack stack) -> {
-				if(stack.getItem() instanceof Phial){
-					return CRItems.phialGlass.getReagants(stack).getQty(EnumReagents.NITRIC_ACID.id()) != 0;
-				}
-				return false;
-			});
-			registerBoboItem(new ItemStack(CRItems.poisonVodka, 1), "Poison Vodka", new ItemRecipePredicate(CRItems.solidVitriol, 0), new ItemRecipePredicate(Items.POISONOUS_POTATO, 0), (Predicate<ItemStack>) (ItemStack stack) -> stack.getItem() instanceof Phial || stack.getItem() == Items.GLASS_BOTTLE && stack.getCount() == 1);
-		}
-
 		//Phial
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CRItems.phialGlass, 1), "*", "*", '*', "blockGlass"));
 		RecipeHolder.alchemyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CRItems.phialCrystal, 1), "*", "*", '*', "gemAlcCryst"));
@@ -172,38 +129,5 @@ public final class ModCrafting{
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CRBlocks.fluxStabilizerCrystalElectric, 1), "RCR", "CGC", "RCR", 'C', "ingotCopshowium", 'G', CRItems.alchCrystal, 'R', "dustRedstone"));
 		//Beam Flux Crystal Stabilizer
 		RecipeHolder.technomancyRecipes.add(new ShapedOreRecipe(null, new ItemStack(CRBlocks.fluxStabilizerCrystalBeam, 1), "RCR", "CGC", "RCR", 'C', "ingotCopshowium", 'G', CRItems.alchCrystal, 'R', CRItems.pureQuartz));
-	}
-
-	private static ItemStack getFilledHopper(){
-		ItemStack stack = new ItemStack(Blocks.HOPPER);
-
-		CompoundNBT nbt = new CompoundNBT();
-		ListNBT nbttag = new ListNBT();
-		CompoundNBT nbttagcompound = new CompoundNBT();
-		nbttagcompound.putByte("Slot", (byte) 0);
-		new ItemStack(CRItems.vacuum).writeToNBT(nbttagcompound);
-		nbttag.appendTag(nbttagcompound);
-		nbt.put("Items", nbttag);
-		stack.setTagInfo("BlockEntityTag", nbt);
-
-		CompoundNBT nbttagcompound1 = new CompoundNBT();
-		ListNBT nbttaglist = new ListNBT();
-		nbttaglist.appendTag(new StringNBT("(+NBT)"));
-		nbttagcompound1.put("Lore", nbttaglist);
-		stack.setTagInfo("display", nbttagcompound1);
-		stack.setStackDisplayName("Vacuum Hopper");
-		return stack;
-	}
-
-	private static void registerBoboItem(Item item, String configName, Predicate<ItemStack> ingr1, Predicate<ItemStack> ingr2, Predicate<ItemStack> ingr3){
-		registerBoboItem(new ItemStack(item, 1), configName, ingr1, ingr2, ingr3);
-	}
-
-	private static void registerBoboItem(ItemStack item, String configName, Predicate<ItemStack> ingr1, Predicate<ItemStack> ingr2, Predicate<ItemStack> ingr3){
-		Property prop = CRConfig.config.get(CRConfig.CAT_BOBO, configName + " bobo-item recipe", true, "Default: true");
-		CRConfig.boboItemProperties.add(prop);
-		if(((ForgeConfigSpec.BooleanValue) prop).get()){
-			EssentialsCrafting.brazierBoboRecipes.add(Pair.of(new Predicate[] {ingr1, ingr2, ingr3}, item));
-		}
 	}
 }

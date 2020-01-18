@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:smelting",
+	"result": "minecraft:gold_nugget",
+	"count": 6,
+	"experience": 0.7,
+	"ingredient": [
+		{
+			"type": "minecraft:item_nbt",
+			"item": "crossroads:ore_gravel",
+			"nbt": {
+				"material": "gold"
+			}
+		}
+	]
+}

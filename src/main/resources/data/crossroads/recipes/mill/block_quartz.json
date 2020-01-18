@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:mill",
 	"input": {
-		"tag": "storage_blocks/quartz"
+		"tag": "forge:storage_blocks/quartz"
 	},
 	"output": {
 		"item": "quartz",

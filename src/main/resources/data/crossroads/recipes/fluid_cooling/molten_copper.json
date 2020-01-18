@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:fluid_cooling",
+	"input": {
+		"fluid": "crossroads:molten_copper",
+		"amount": "144"
+	},
+	"item": "crossroads:ingot_copper",
+	"max_temp": 1500,
+	"temp_change": 100
+}

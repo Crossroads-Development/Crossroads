@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
+import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.TemporalAcceleratorTileEntity;
 import com.Da_Technomancer.essentials.ReflectionUtil;
 import com.google.common.base.Predicate;
@@ -300,6 +301,7 @@ public final class EventHandlerCommon{
 	public void rebuildConfigData(ModConfig.ConfigReloading e){
 		if(e.getConfig().getModId().equals(Crossroads.MODID) && e.getConfig().getType() == ModConfig.Type.SERVER){
 			GearFactory.init();
+			OreSetup.loadConfig();
 		}
 	}
 }

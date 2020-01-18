@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:crucible",
+	"input": {
+		"tag": "forge:ores/iron"
+	},
+	"output": {
+		"fluid": "crossroads:molten_iron",
+		"amount": "288"
+	}
+}

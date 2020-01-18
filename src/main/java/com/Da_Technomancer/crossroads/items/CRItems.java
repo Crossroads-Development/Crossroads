@@ -103,6 +103,15 @@ public final class CRItems{
 	public static Slag slag;
 	//	public static LinkingTool linkingTool;
 	public static DampingPowder dampingPowder;
+	public static BoboRod boboRod;
+
+	public static OreProfileItem oreGravel;
+	public static OreProfileItem oreClump;
+
+	public static Item ironDust;
+	public static Item goldDust;
+	public static Item copperDust;
+	public static Item tinDust;
 
 	public static Axle axle;
 	public static Clutch clutch;
@@ -174,6 +183,15 @@ public final class CRItems{
 		slag = new Slag();
 //		linkingTool = new LinkingTool();
 		dampingPowder = new DampingPowder();
+		boboRod = new BoboRod();
+
+		oreGravel = (OreProfileItem) new OreProfileItem(itemProp).setRegistryName("ore_gravel");
+		oreClump = (OreProfileItem) new OreProfileItem(itemProp).setRegistryName("ore_clump");
+
+		ironDust = new Item(itemProp).setRegistryName("dust_iron");
+		goldDust = new Item(itemProp).setRegistryName("dust_gold");
+		copperDust = new Item(itemProp).setRegistryName("dust_copper");
+		tinDust = new Item(itemProp).setRegistryName("dust_tin");
 
 		axle = new Axle();
 		clutch = new Clutch(false);
@@ -190,14 +208,14 @@ public final class CRItems{
 		//Alchemy containers
 		itemColor.register((ItemStack stack, int layer) -> layer == 0 ? AbstractGlassware.getColorRGB(stack) : -1, phialGlass, florenceFlaskGlass, shellGlass, phialCrystal, florenceFlaskCrystal, shellCrystal);
 
-		//Gears
+		//Gears and ore processing dusts
 		IItemColor itemColoring = (ItemStack stack, int tintIndex) -> {
 			if(tintIndex == 0){
 				return -1;
 			}
-			GearFactory.GearMaterial mat = GearMatItem.getMaterial(stack);
+			OreSetup.OreProfile mat = OreProfileItem.getProfile(stack);
 			return mat == null ? -1 : mat.getColor().getRGB();
 		};
-		itemColor.register(itemColoring, CRItems.smallGear, CRItems.largeGear, CRItems.clutch, CRItems.invClutch, CRItems.toggleGear, CRItems.invToggleGear);
+		itemColor.register(itemColoring, oreGravel, oreClump, smallGear, largeGear, clutch, invClutch, toggleGear, invToggleGear);
 	}
 }

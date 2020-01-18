@@ -1,0 +1,17 @@
+{
+	"type": "crossroads:cr_blast_furnace",
+	"output": {
+		"fluid": "crossroads:molten_gold",
+		"amount": 144
+	},
+	"slag": 1,
+	"ingredient": [
+		{
+			"type": "minecraft:item_nbt",
+			"item": "crossroads:ore_clump",
+			"nbt": {
+				"material": "gold"
+			}
+		}
+	]
+}

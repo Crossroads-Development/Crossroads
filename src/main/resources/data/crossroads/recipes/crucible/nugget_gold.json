@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:crucible",
+	"input": {
+		"tag": "forge:nuggets/gold"
+	},
+	"output": {
+		"fluid": "crossroads:molten_gold",
+		"amount": "16"
+	}
+}

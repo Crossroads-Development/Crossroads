@@ -1,0 +1,31 @@
+{
+	"type": "crossroads:bobo",
+	"input_a": [
+		{
+			"tag": "forge:leather"
+		}
+	],
+	"input_b": [
+		{
+			"item": "minecraft:ink_sac"
+		}
+	],
+	"input_c": [
+		{
+			"item": "minecraft:tropical_fish"
+		},
+		{
+			"item": "minecraft:pufferfish"
+		},
+		{
+			"item": "minecraft:salmon"
+		},
+		{
+			"item": "minecraft:cod"
+		}
+	],
+	"output": {
+		"item": "crossroads:squid_helmet",
+		"count": "1"
+	}
+}

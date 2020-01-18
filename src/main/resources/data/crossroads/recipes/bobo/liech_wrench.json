@@ -1,0 +1,22 @@
+{
+	"type": "crossroads:bobo",
+	"output": {
+		"item": "crossroads:liech_wrench",
+		"count": "1"
+	},
+	"input_a": [
+		{
+			"tag": "forge:wrench"
+		}
+	],
+	"input_b": [
+		{
+			"item": "crossroads:hand_crank"
+		}
+	],
+	"input_c": [
+		{
+			"item": "crossroads:staff_technomancy"
+		}
+	]
+}

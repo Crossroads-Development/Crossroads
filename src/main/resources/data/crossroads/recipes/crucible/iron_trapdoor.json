@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:crucible",
+	"input": {
+		"item": "minecraft:iron_trapdoor"
+	},
+	"output": {
+		"fluid": "crossroads:molten_iron",
+		"amount": "576"
+	}
+}

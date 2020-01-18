@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"tag": "forge:ingots/gold"
+	},
+	"output": [
+		{
+			"item": "crossroads:dust_gold",
+			"count": 1
+		}
+	]
+}

@@ -1,0 +1,43 @@
+{
+	"type": "crossroads:bobo",
+	"output": {
+		"item": "minecraft:hopper",
+		"count": "1",
+		"nbt": {
+			"Items": [
+				{
+					"Slot": 0,
+					"id": "crossroads:vacuum",
+					"Count": 1
+				}
+			],
+			"display": {
+				"Name": "{\"translate\": \"item.crossroads.vacuum.hopper_quip\"}",
+				"Lore": [
+					"{\"text\": \"+NBT\"}"
+				]
+			}
+		}
+	},
+	"input_a": [
+		{
+			"item": "crossroads:fluid_tube"
+		}
+	],
+	"input_b": [
+		{
+			"item": "minecraft:wool"
+		}
+	],
+	"input_c": [
+		{
+			"item": "minecraft:hopper"
+		},
+		{
+			"item": "essentials:sorting_hopper"
+		},
+		{
+			"item": "essentials:speed_hopper"
+		}
+	]
+}

@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:mill",
 	"input": {
-		"tag": "crops/wheat"
+		"tag": "forge:crops/wheat"
 	},
 	"output": {
 		"item": "wheat_seeds",

@@ -127,9 +127,9 @@ public final class Crossroads{
 	@SubscribeEvent
 	public static void registerRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> e){
 		IForgeRegistry<IRecipeSerializer<?>> reg = e.getRegistry();
-		reg.register(new SingleRecipeSerializer<>(StampMillRec::new).setRegistryName("stamp_mill"));
+		reg.register(new SingleIngrRecipe.SingleRecipeSerializer<>(StampMillRec::new).setRegistryName("stamp_mill"));
 		reg.register(new MillRec.Serializer().setRegistryName("mill"));
-		reg.register(new SingleRecipeSerializer<>(OreCleanserRec::new).setRegistryName("ore_cleanser"));
+		reg.register(new SingleIngrRecipe.SingleRecipeSerializer<>(OreCleanserRec::new).setRegistryName("ore_cleanser"));
 		reg.register(new BeamExtractRec.Serializer().setRegistryName("beam_extract"));
 		reg.register(new IceboxRec.Serializer().setRegistryName("cooling"));
 		reg.register(new DirtyWaterRec.Serializer().setRegistryName("dirty_water"));
@@ -139,6 +139,7 @@ public final class Crossroads{
 		reg.register(new CrucibleRec.Serializer().setRegistryName("crucible"));
 		reg.register(new DetailedCrafterRec.Serializer().setRegistryName("detailed_crafter"));
 		reg.register(new BeamTransmuteRec.Serializer().setRegistryName("beam_transmute"));
+		reg.register(new BoboRec.Serializer().setRegistryName("bobo"));
 	}
 
 	@SuppressWarnings("unused")

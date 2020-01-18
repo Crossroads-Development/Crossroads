@@ -1,0 +1,16 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"tag": "forge:ores/gold"
+	},
+	"output": [
+		{
+			"item": "crossroads:dust_gold",
+			"count": 2
+		},
+		{
+			"item": "sand",
+			"count": 1
+		}
+	]
+}

@@ -1,0 +1,22 @@
+{
+	"type": "crossroads:bobo",
+	"output": {
+		"item": "crossroads:nitroglycerin",
+		"count": "4"
+	},
+	"input_a": [
+		{
+			"tag": "crossroads:dusts/nitric_acid"
+		}
+	],
+	"input_b": [
+		{
+			"item": "minecraft:glass_bottle"
+		}
+	],
+	"input_c": [
+		{
+			"item": "minecraft:porkchop"
+		}
+	]
+}

@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:fluid_cooling",
 	"input": {
-		"fluid": "distilled_water",
+		"fluid": "crossroads:molten_copperdistilled_water",
 		"amount": "1000"
 	},
 	"item": "packed_ice",

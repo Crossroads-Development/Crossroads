@@ -1,0 +1,22 @@
+{
+	"type": "crossroads:bobo",
+	"output": {
+		"item": "crossroads:chaos_rod",
+		"count": "1"
+	},
+	"input_a": [
+		{
+			"tag": "crossroads:golden_apple"
+		}
+	],
+	"input_b": [
+		{
+			"item": "minecraft:blaze_rod"
+		}
+	],
+	"input_c": [
+		{
+			"item": "minecraft:dragon_breath"
+		}
+	]
+}

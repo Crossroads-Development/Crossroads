@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:crucible",
+	"input": {
+		"item": "minecraft:heavy_weighted_pressure_plate"
+	},
+	"output": {
+		"fluid": "crossroads:molten_gold",
+		"amount": "288"
+	}
+}

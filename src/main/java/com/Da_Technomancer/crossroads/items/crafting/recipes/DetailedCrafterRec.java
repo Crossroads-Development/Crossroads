@@ -52,6 +52,12 @@ public class DetailedCrafterRec extends ShapedRecipe{
 			if(path == null){
 				throw new JsonParseException("Invalid path/no path set");
 			}
+
+			//Currently, the method of specifying a Detailed Crafter recipe is the same as for a vanilla recipe,
+			//Except type is crossroads:detailed_crafter
+			//Path is specified as the name of the path with the key "path"
+			//And only shaped recipes are supported. No shapeless recipes currently <- this could change
+
 			ShapedRecipe templateRec = IRecipeSerializer.CRAFTING_SHAPED.read(recipeId, json);
 			return new DetailedCrafterRec(recipeId, templateRec.getGroup(), path, templateRec.getRecipeWidth(), templateRec.getRecipeHeight(), templateRec.getIngredients(), templateRec.getRecipeOutput());
 		}

@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:mill",
 	"input": {
-		"tag": "bones"
+		"tag": "forge:bones"
 	},
 	"output": {
 		"item": "bone_meal",

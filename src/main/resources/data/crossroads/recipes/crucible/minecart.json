@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:crucible",
+	"input": {
+		"item": "minecraft:minecart"
+	},
+	"output": {
+		"fluid": "crossroads:molten_iron",
+		"amount": "720"
+	}
+}

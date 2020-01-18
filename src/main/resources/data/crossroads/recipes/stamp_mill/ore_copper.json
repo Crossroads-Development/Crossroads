@@ -1,0 +1,13 @@
+{
+	"type": "crossroads:stamp_mill",
+	"output": {
+		"item": "crossroads:ore_gravel",
+		"count": 3,
+		"nbt": {
+			"material": "copper"
+		}
+	},
+	"ingredient": {
+		"tag": "forge:ores/copper"
+	}
+}

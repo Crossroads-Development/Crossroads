@@ -104,13 +104,7 @@ public class BlastFurnaceRec implements IRecipe<IInventory>{
 		public BlastFurnaceRec read(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and ingredient
 			String s = JSONUtils.getString(json, "group", "");
-			Ingredient ingredient;
-			if(JSONUtils.isJsonArray(json, "ingredient")){
-				ingredient = Ingredient.deserialize(JSONUtils.getJsonArray(json, "ingredient"));
-			}else{
-				ingredient = Ingredient.deserialize(JSONUtils.getJsonObject(json, "ingredient"));
-			}
-
+			Ingredient ingredient = CraftingUtil.getIngredient(json, "ingredient", false);
 			//Output specified as fluid- see CraftingUtil
 			FluidStack fluid = CraftingUtil.getFluidStack(json, "output");
 			//Slag specified as 1 int tag (default 0)

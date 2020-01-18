@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:crucible",
+	"input": {
+		"tag": "forge:ingots/tin"
+	},
+	"output": {
+		"fluid": "crossroads:molten_tin",
+		"amount": "144"
+	}
+}
