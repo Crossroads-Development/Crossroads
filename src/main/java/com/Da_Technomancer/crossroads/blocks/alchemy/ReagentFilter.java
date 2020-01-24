@@ -1,53 +1,59 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReagentFilterTileEntity;
 import com.Da_Technomancer.essentials.EssentialsConfig;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class ReagentFilter extends ContainerBlock{
 
+	private static final VoxelShape SHAPE = makeCuboidShape(2, 2, 2, 14, 14, 14);
 	private final boolean crystal;
 
 	public ReagentFilter(boolean crystal){
-		super(Material.GLASS);
+		super(Properties.create(Material.GLASS).hardnessAndResistance(0.5F).sound(SoundType.GLASS));
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "reagent_filter";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setHardness(.5F);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setSoundType(SoundType.GLASS);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
 	}
 
 	@Override
-	public BlockState getStateForPlacement(World worldIn, BlockPos pos, Direction blockFaceClickedOn, BlockRayTraceResult hit, int meta, LivingEntity placer){
-		return getDefaultState().with(Properties.HORIZ_FACING, (placer == null) ? Direction.NORTH : placer.getHorizontalFacing().getOpposite());
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+		builder.add(CRProperties.HORIZ_FACING);
+	}
+
+	@Nullable
+	@Override
+	public BlockState getStateForPlacement(BlockItemUseContext context){
+		return getDefaultState().with(CRProperties.HORIZ_FACING, context.getPlacementHorizontalFacing().getOpposite());
 	}
 
 	@Override
@@ -56,9 +62,15 @@ public class ReagentFilter extends ContainerBlock{
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
-		tooltip.add("Filters out selected reagents to the side output");
-		tooltip.add("Filter is set by inserting a bottle with the target reagents");
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+		return SHAPE;
+	}
+
+	@Override
+	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+		tooltip.add(new TranslationTextComponent("tt.crossroads.reagent_filter.desc"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.reagent_filter.filter"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.reagent_filter.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override
@@ -68,68 +80,33 @@ public class ReagentFilter extends ContainerBlock{
 
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand), worldIn.isRemote)){
-			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.cycle(Properties.HORIZ_FACING));
-				TileEntity te = worldIn.getTileEntity(pos);
+		if(!worldIn.isRemote){
+			TileEntity te = worldIn.getTileEntity(pos);
+			if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand))){
+				worldIn.setBlockState(pos, state.cycle(CRProperties.HORIZ_FACING));
 				if(te instanceof ReagentFilterTileEntity){
 					((ReagentFilterTileEntity) te).clearCache();
 				}
+			}else{
+				if(te instanceof INamedContainerProvider){
+					NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);
+				}
 			}
-		}else{
-			playerIn.openGui(Crossroads.instance, GuiHandler.REAGENT_FILTER_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return true;
 	}
 
 	@Override
-	public void breakBlock(World worldIn, BlockPos pos, BlockState state){
+	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving){
 		TileEntity te = worldIn.getTileEntity(pos);
 		if(te instanceof ReagentFilterTileEntity){
 			InventoryHelper.dropInventoryItems(worldIn, pos, (ReagentFilterTileEntity) te);
 		}
-		super.breakBlock(worldIn, pos, state);
+		super.onReplaced(state, worldIn, pos, newState, isMoving);
 	}
 
 	@Override
 	public BlockRenderType getRenderType(BlockState state){
 		return BlockRenderType.MODEL;
-	}
-
-	@Override
-	public int getMetaFromState(BlockState state){
-		return state.get(Properties.HORIZ_FACING).getHorizontalIndex();
-	}
-
-	@Override
-	public BlockState getStateFromMeta(int meta){
-		return getDefaultState().with(Properties.HORIZ_FACING, Direction.byHorizontalIndex(meta));
-	}
-
-	@Override
-	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, Properties.HORIZ_FACING);
-	}
-
-	@Override
-	public boolean isOpaqueCube(BlockState state){
-		return false;
-	}
-
-	@Override
-	public boolean isFullCube(BlockState state){
-		return false;
-	}
-
-	@Override
-	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face){
-		return face.getAxis() == Direction.Axis.Y ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
-	}
-
-	private static final AxisAlignedBB BB = new AxisAlignedBB(1D / 8D, 1D / 8D, 1D / 8D, 7D / 8D, 7D / 8D, 7D / 8D);//TODO
-
-	@Override
-	public AxisAlignedBB getBoundingBox(BlockState state, IBlockAccess source, BlockPos pos){
-		return BB;
 	}
 }

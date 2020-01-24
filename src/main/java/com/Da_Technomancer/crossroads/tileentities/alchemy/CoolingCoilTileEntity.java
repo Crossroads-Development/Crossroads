@@ -1,83 +1,62 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
-import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
+import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.registries.ObjectHolder;
 
+@ObjectHolder(Crossroads.MODID)
 public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState){
-		return oldState.getBlock() != newState.getBlock();
-	}
+	@ObjectHolder("cooling_coil")
+	private static TileEntityType<CoolingCoilTileEntity> type = null;
 
-	private double ambientTemp = 0;
+	//Cached biome temperature
 	private boolean init = false;
+	private double ambientTemp = 0;
 
 	public CoolingCoilTileEntity(){
-		super();
+		super(type);
 	}
 
 	public CoolingCoilTileEntity(boolean glass){
-		super(glass);
+		super(type, glass);
+	}
+
+	private double calcAmbTemp(){
+		if(!init){
+			init = true;
+			ambientTemp = HeatUtil.convertBiomeTemp(world, pos);
+		}
+		return ambientTemp;
 	}
 
 	@Override
 	public double correctTemp(){
 		//Shares heat between internal cable & contents
-		contents.setTemp(ambientTemp);
-		return ambientTemp;
+		double temp = calcAmbTemp();
+		contents.setTemp(temp);
+		return temp;
 	}
 
-	@Override
-	public void tick(){
-		if(world.isRemote){
-			return;
-		}
-		if(!init){
-			ambientTemp = HeatUtil.convertBiomeTemp(world, pos);
-			init = true;
-		}
-		super.tick();
-	}
-
-	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
-		ambientTemp = nbt.getDouble("temp");
-		init = nbt.getBoolean("initHeat");
-	}
-
-	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
-		nbt.putDouble("temp", ambientTemp);
-		nbt.putBoolean("initHeat", init);
-		return nbt;
-	}
-
-	@Override
-	public boolean hasCapability(Capability<?> cap, Direction side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).get(CRProperties.HORIZ_FACING).getAxis())){
-			return true;
-		}
-		return super.hasCapability(cap, side);
+	public void rotate(){
+		chemOpt.invalidate();
+		chemOpt = LazyOptional.of(() -> handler);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).get(CRProperties.HORIZ_FACING).getAxis())){
-			return (T) handler;
+			return (LazyOptional<T>) chemOpt;
 		}
 		return super.getCapability(cap, side);
 	}

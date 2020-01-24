@@ -1,0 +1,19 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "alchemy",
+	"result": {
+		"item": "crossroads:flow_limiter",
+		"count": 2
+	},
+	"pattern": [
+		"CGC"
+	],
+	"key": {
+		"C": {
+			"tag": "forge:glass/colorless"
+		},
+		"G": {
+			"tag": "forge:ingots/gold"
+		}
+	}
+}

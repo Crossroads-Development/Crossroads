@@ -114,8 +114,6 @@ public class CrossroadsTileEntity{
 //		register(AbstractStabilizerTileEntity::new, "flux_void", reg, fluxStabilizerBeam, fluxStabilizerCrystalBeam, fluxStabilizerCrystalElectric, fluxStabilizerElectric);
 		register(TemporalAcceleratorTileEntity::new, "temporal_accelerator", reg, temporalAccelerator);
 		register(ChronoHarnessTileEntity::new, "chrono_harness", reg, chronoHarness);
-		register(StabilizerBeamTileEntity::new, "flux_stabilizer_beam", reg, fluxStabilizerBeam, fluxStabilizerCrystalBeam);
-		register(StabilizerElectricTileEntity::new, "flux_stabilizer_electric", reg, fluxStabilizerCrystalElectric, fluxStabilizerElectric);
 		register(ReagentFilterTileEntity::new, "reagent_filter", reg, reagentFilterCrystal, reagentFilterGlass);
 	}
 
@@ -125,7 +123,7 @@ public class CrossroadsTileEntity{
 	}
 	
 	private static void register(Supplier<? extends TileEntity> cons, String id, IForgeRegistry<TileEntityType<?>> reg, Block... blocks){
-		TileEntityType teType = TileEntityType.Builder.create(cons, blocks).build(DSL.nilType());
+		TileEntityType<? extends TileEntity> teType = TileEntityType.Builder.create(cons, blocks).build(DSL.nilType());
 		teType.setRegistryName(new ResourceLocation(Crossroads.MODID, id));
 		reg.register(teType);
 	}

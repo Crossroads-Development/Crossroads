@@ -18,7 +18,7 @@ public class TimeEffect extends BeamEffect{
 	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, World worldIn, BlockPos pos, @Nullable Direction dir){
 		if(!performTransmute(align, voi, power, worldIn, pos)){
 			if(voi){
-				FluxUtil.fluxEvent(worldIn, pos, worldIn.rand.nextInt(power) + 1);
+				FluxUtil.fluxEvent(worldIn, pos);
 			}else{
 				TileEntity te = worldIn.getTileEntity(pos);
 				if(worldIn.rand.nextInt(64) < power){

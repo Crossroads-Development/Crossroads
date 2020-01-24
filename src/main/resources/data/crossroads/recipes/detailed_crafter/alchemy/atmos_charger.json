@@ -1,0 +1,27 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "alchemy",
+	"result": {
+		"item": "crossroads:atmos_charger",
+		"count": 1
+	},
+	"pattern": [
+		" b ",
+		"RbR",
+		"ILI"
+	],
+	"key": {
+		"R": {
+			"tag": "forge:dusts/redstone"
+		},
+		"I": {
+			"tag": "forge:ingots/iron"
+		},
+		"b": {
+			"item": "minecraft:iron_bars"
+		},
+		"L": {
+			"item": "crossroads:leyden_jar"
+		}
+	}
+}

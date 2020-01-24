@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
-import com.Da_Technomancer.crossroads.items.crafting.RecipePredicate;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 

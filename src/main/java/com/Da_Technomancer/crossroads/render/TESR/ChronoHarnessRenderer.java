@@ -3,17 +3,17 @@ package com.Da_Technomancer.crossroads.render.TESR;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.render.RenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ChronoHarnessTileEntity;
+import com.Da_Technomancer.essentials.render.LinkLineRenderer;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
-public class ChronoHarnessRenderer extends TileEntityRenderer<ChronoHarnessTileEntity>{
+public class ChronoHarnessRenderer extends LinkLineRenderer<ChronoHarnessTileEntity>{
 
 	private static final ResourceLocation INNER_TEXT = new ResourceLocation(Crossroads.MODID, "textures/blocks/block_copshowium.png");
 	private static final ResourceLocation OUTER_TEXT = new ResourceLocation(Crossroads.MODID, "textures/blocks/block_cast_iron.png");
@@ -23,12 +23,10 @@ public class ChronoHarnessRenderer extends TileEntityRenderer<ChronoHarnessTileE
 		if(!te.getWorld().isBlockLoaded(te.getPos())){
 			return;
 		}
-
+//		super.func_199341_a(te, x, y, z, partialTicks, destroyStage);
 		super.render(te, x, y, z, partialTicks, destroyStage);
 
-		if(te.running){
-			te.angle += 9F * partialTicks;
-		}
+		float angle = te.getRenderAngle(partialTicks);
 
 		Tessellator tes = Tessellator.getInstance();
 		BufferBuilder buf = tes.getBuffer();
@@ -43,7 +41,7 @@ public class ChronoHarnessRenderer extends TileEntityRenderer<ChronoHarnessTileE
 		float smallOffset = 0.0928F;
 		float largeOffset = 5F / 16F;
 
-		GlStateManager.rotated(te.angle, 0, 1, 0);
+		GlStateManager.rotated(angle, 0, 1, 0);
 
 		Minecraft.getInstance().getTextureManager().bindTexture(INNER_TEXT);
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -53,7 +51,7 @@ public class ChronoHarnessRenderer extends TileEntityRenderer<ChronoHarnessTileE
 		addRod(buf, -smallOffset, smallOffset);
 		tes.draw();
 
-		GlStateManager.rotated(-2F * te.angle, 0, 1, 0);
+		GlStateManager.rotated(-2F * angle, 0, 1, 0);
 
 		Minecraft.getInstance().getTextureManager().bindTexture(OUTER_TEXT);
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);

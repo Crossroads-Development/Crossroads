@@ -1,0 +1,27 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "alchemy",
+	"result": {
+		"item": "crossroads:reagent_filter",
+		"count": 1
+	},
+	"pattern": [
+		"GlG",
+		"GsG",
+		"GpG"
+	],
+	"key": {
+		"G": {
+			"tag": "forge:glass/colorless"
+		},
+		"l": {
+			"item": "crossroads:lens_array"
+		},
+		"s": {
+			"item": "crossroads:solid_stasisol"
+		},
+		"p": {
+			"tag": "crossroads:alkahest"
+		}
+	}
+}

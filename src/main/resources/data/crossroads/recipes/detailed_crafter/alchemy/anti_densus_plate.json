@@ -1,0 +1,16 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "alchemy",
+	"result": {
+		"item": "crossroads:anti_densus_plate",
+		"count": 6
+	},
+	"pattern": [
+		"DDD"
+	],
+	"key": {
+		"D": {
+			"item": "crossroads:solid_anti_densus"
+		}
+	}
+}

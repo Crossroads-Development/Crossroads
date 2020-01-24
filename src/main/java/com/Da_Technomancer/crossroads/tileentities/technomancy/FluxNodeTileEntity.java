@@ -1,54 +1,82 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
-import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
-import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
-import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
+import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
-import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
+import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ITickableTileEntity;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
-public class FluxNodeTileEntity extends TileEntity implements IIntReceiver, ITickableTileEntity, IInfoTE{
+@ObjectHolder(Crossroads.MODID)
+public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntity, IFluxLink{
 
-	private float clientEntropy;
-	private float angle;
+	@ObjectHolder("flux_node")
+	private static TileEntityType<FluxNodeTileEntity> type = null;
 
-	@Override
-	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
-		chat.add("Temporal Entropy: " + EntropySavedData.getEntropy(world) + "%");
+	private static final float SPIN_RATE = 3.6F;//For rendering
+
+	private HashSet<BlockPos> links = new HashSet<>(16);
+	private int entropy;//On the client side, this is only occasionally updated
+	private int entropyClient;//records what was last send to the client. 0 on the client side
+	private float angle;//for rendering
+	private int fluxToTrans = 0;
+
+	public FluxNodeTileEntity(){
+		super(type);
 	}
 
 	private void syncFlux(){
-		float entropy = (float) EntropySavedData.getEntropy(world);
-		if(clientEntropy == 0 ^ entropy == 0 || Math.abs(clientEntropy - entropy) >= .005F){
-			clientEntropy = entropy;
-			CrossroadsPackets.network.sendToAllAround(new SendIntToClient((byte) 0, Float.floatToIntBits(clientEntropy), pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
-			world.updateComparatorOutputLevel(pos, CRBlocks.fluxNode);
+		if(entropyClient == 0 ^ entropy == 0 || Math.abs(entropyClient - entropy) >= 5){
+			entropyClient = entropy;
+			CrossroadsPackets.sendPacketAround(world, pos, new SendLongToClient((byte) 0, entropy, pos));
 		}
 	}
 
+	/**
+	 * For rendering
+	 * @param partialTicks Partial ticks (for intermediate frames)
+	 * @return The angle to render
+	 */
 	public float getRenderAngle(float partialTicks){
-		return angle + partialTicks * clientEntropy * 3.6F / 20F;
+		return angle + partialTicks * entropy * SPIN_RATE / 20F;
+	}
+
+	/**
+	 * For rendering
+	 * @return Whether this node should render effects for being near the failure point
+	 */
+	public boolean overSafeLimit(){
+		return entropy * 1.5F >= getMaxFlux();//TODO implement use for rendering
 	}
 
 	@Override
 	public void tick(){
 		if(world.isRemote){
-			angle += clientEntropy * 3.6D / 20F;
+			angle += entropy * SPIN_RATE / 20F;
 		}else if(world.getGameTime() % FluxUtil.FLUX_TIME == 0){
+			fluxToTrans = entropy;//Save flux to a separate variable so tick order doesn't interfere with the amount transferred next tick
+			entropy = 0;
+		}else if(world.getGameTime() % FluxUtil.FLUX_TIME == 1){
+			//Perform transfer
+			fluxToTrans -= FluxUtil.performTransfer(this, links, fluxToTrans);
+			entropy += fluxToTrans;
+			FluxUtil.checkFluxOverload(this);
 			syncFlux();
 		}
 	}
@@ -57,15 +85,24 @@ public class FluxNodeTileEntity extends TileEntity implements IIntReceiver, ITic
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
 		nbt.putFloat("angle", angle);
-		nbt.putFloat("entropy", clientEntropy);
+		nbt.putInt("entropy", entropy);
+		nbt.putInt("flux_trans", fluxToTrans);
+		int count = 0;
+		for(BlockPos relPos : links){
+			nbt.putLong("link_" + count++, relPos.toLong());
+		}
 		return nbt;
 	}
 
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
-		nbt.putFloat("entropy", clientEntropy);
+		nbt.putInt("entropy", entropy);
 		nbt.putFloat("angle", angle);
+		int count = 0;
+		for(BlockPos relPos : links){
+			nbt.putLong("link_" + count++, relPos.toLong());
+		}
 		return nbt;
 	}
 
@@ -73,40 +110,64 @@ public class FluxNodeTileEntity extends TileEntity implements IIntReceiver, ITic
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
 		angle = nbt.getFloat("angle");
-		clientEntropy = nbt.getFloat("entropy");
+		entropy = nbt.getInt("entropy");
+		entropyClient = entropy;
+		fluxToTrans = nbt.getInt("flux_trans");
+		int count = 0;
+		while(nbt.contains("link_" + count)){
+			links.add(BlockPos.fromLong(nbt.getLong("link_" + count)));
+			count++;
+		}
 	}
 
 	@Override
-	public void receiveInt(byte identifier, int message, @Nullable ServerPlayerEntity sendingPlayer){
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity serverPlayerEntity){
 		if(identifier == 0){
-			clientEntropy = Float.intBitsToFloat(message);
+			entropy = (int) message;
+		}
+		if(identifier == LINK_PACKET_ID){
+			links.add(BlockPos.fromLong(message));
+			markDirty();
+		}else if(identifier == CLEAR_PACKET_ID){
+			links.clear();
+			markDirty();
 		}
 	}
 
-	private final RedsHandler redsHandler = new RedsHandler();
+	public int getReadout(){
+		return Math.max(entropy, fluxToTrans);
+	}
 
 	@Override
-	public boolean hasCapability(Capability<?> cap, Direction side){
-		if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
-			return true;
-		}
-		return super.hasCapability(cap, side);
+	public int getFlux(){
+		return entropy;
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
-			return (T) redsHandler;
-		}
-		return super.getCapability(cap, side);
+	public void addFlux(int deltaFlux){
+		entropy += deltaFlux;
+		markDirty();
 	}
 
-	private class RedsHandler implements IAdvancedRedstoneHandler{
+	@Override
+	public void setFlux(int newFlux){
+		entropy = newFlux;
+		markDirty();
+	}
 
-		@Override
-		public double getOutput(boolean measure){
-			return measure ? EntropySavedData.getEntropy(world) : 0;
-		}
+	@Override
+	public Set<BlockPos> getLinks(){
+		return links;
+	}
+
+	@Override
+	public Behaviour getBehaviour(){
+		return Behaviour.NODE;
+	}
+
+	@Override
+	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.flux", entropy, getMaxFlux(), CRConfig.formatVal(100F * entropy / getMaxFlux())));
+		FluxUtil.addLinkInfo(chat, this);
 	}
 }

@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.CageChargerTileEntity;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
@@ -102,7 +103,14 @@ public class CageCharger extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public float read(World world, BlockPos blockPos, BlockState blockState){
-		return 0;//TODO
+	public float read(World world, BlockPos pos, BlockState state){
+		if(state.get(CRProperties.ACTIVE)){
+			TileEntity te = world.getTileEntity(pos);
+			if(te instanceof CageChargerTileEntity){
+				ItemStack cage = ((CageChargerTileEntity) te).getCage();
+				return BeamCage.getStored(cage).getPower();
+			}
+		}
+		return 0;
 	}
 }

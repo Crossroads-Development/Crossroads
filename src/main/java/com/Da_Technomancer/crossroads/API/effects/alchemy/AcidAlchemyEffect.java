@@ -11,17 +11,23 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.Tag;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityPredicates;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class AcidAlchemyEffect implements IAlchEffect{
 
 	public static final DamageSource ACID_DAMAGE = new DamageSource("chemical");
+
+	private static final Tag<Block> copperBlock = new BlockTags.Wrapper(new ResourceLocation("forge", "storage_blocks/copper"));
+	private static final Tag<Block> tinBlock = new BlockTags.Wrapper(new ResourceLocation("forge", "storage_blocks/tin"));
+	private static final Tag<Block> bronzeBlock = new BlockTags.Wrapper(new ResourceLocation("forge", "storage_blocks/bronze"));
 
 	protected int getDamage(){
 		return 8;
@@ -62,27 +68,19 @@ public class AcidAlchemyEffect implements IAlchEffect{
 			}
 			return;
 		}
-		//TODO cases for tin, copper, bronze
-
-		int[] oreDict = OreDictionary.getOreIDs(new ItemStack(state.getBlock()));
-		for(int id : oreDict){
-			String name = OreDictionary.getOreName(id);
-			switch(name){
-				case "blockCopper":
-					InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(OreSetup.ingotCopper, world.rand.nextInt(9) + 1));
-					world.setBlockState(pos, Blocks.AIR.getDefaultState());
-					return;
-				case "blockTin":
-					InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(OreSetup.ingotTin, world.rand.nextInt(9) + 1));
-					world.setBlockState(pos, Blocks.AIR.getDefaultState());
-					return;
-				case "blockBronze":
-					InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(OreSetup.ingotBronze, world.rand.nextInt(9) + 1));
-					world.setBlockState(pos, Blocks.AIR.getDefaultState());
-					return;
-				default:
-					break;
-			}
+		if(copperBlock.contains(block)){
+			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(OreSetup.ingotCopper, world.rand.nextInt(9) + 1));
+			world.setBlockState(pos, Blocks.AIR.getDefaultState());
+			return;
+		}
+		if(tinBlock.contains(block)){
+			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(OreSetup.ingotTin, world.rand.nextInt(9) + 1));
+			world.setBlockState(pos, Blocks.AIR.getDefaultState());
+			return;
+		}
+		if(bronzeBlock.contains(block)){
+			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(OreSetup.ingotBronze, world.rand.nextInt(9) + 1));
+			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 		}
 	}
 }

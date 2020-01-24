@@ -1,0 +1,27 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "alchemy",
+	"result": {
+		"item": "crossroads:voltus_generator",
+		"count": 1
+	},
+	"pattern": [
+		"ILI",
+		"IVI",
+		"IGI"
+	],
+	"key": {
+		"V": {
+			"item": "crossroads:solid_voltus"
+		},
+		"I": {
+			"tag": "forge:ingots/iron"
+		},
+		"G": {
+			"tag": "crossroads:gems/alch_cryst"
+		},
+		"L": {
+			"item": "crossroads:leyden_jar"
+		}
+	}
+}

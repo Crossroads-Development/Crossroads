@@ -1,0 +1,21 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "alchemy",
+	"result": {
+		"item": "crossroads:crystal_reagent_pump",
+		"count": 1
+	},
+	"pattern": [
+		"GGG",
+		"GBG",
+		"GGG"
+	],
+	"key": {
+		"G": {
+			"tag": "crossroads:gems/alch_cryst"
+		},
+		"B": {
+			"tag": "forge:ingots/bronze"
+		}
+	}
+}

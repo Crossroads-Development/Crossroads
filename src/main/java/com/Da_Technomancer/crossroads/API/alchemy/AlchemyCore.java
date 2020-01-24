@@ -97,8 +97,8 @@ public final class AlchemyCore{
 		REAGENTS.put(VANADIUM.id(), new StaticReagent(VANADIUM.id(), 690D, 1750D, (EnumMatterPhase phase) -> Color.YELLOW, CRItemTags.VANADIUM, 0, null));// Vanadium (V) oxide. This should decompose at the specified boiling point, but there isn't any real point to adding that.
 		REAGENTS.put(REDSTONE.id(), new StaticReagent(REDSTONE.id(), 580D, Short.MAX_VALUE, (EnumMatterPhase phase) -> Color.RED, Tags.Items.DUSTS_REDSTONE, 0, null));// Mercury (II) sulfide.
 		REAGENTS.put(SLAG.id(), new StaticReagent(SLAG.id(), 2000D, 3000D, (EnumMatterPhase phase) -> Color.DARK_GRAY, CRItemTags.SLAG, 0, null));
-		REAGENTS.put(PHILOSOPHER.id(), new StaticReagent(PHILOSOPHER.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> FAINT_BLUE_COLOR, (item) -> item == CRItems.philosopherStone, () -> CRItems.philosopherStone, 2, new SpawnItemAlchemyEffect(CRItems.philosopherStone)));
-		REAGENTS.put(PRACTITIONER.id(), new StaticReagent(PRACTITIONER.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> FAINT_RED_COLOR, (item) -> item == CRItems.practitionerStone, () -> CRItems.practitionerStone, 2, new SpawnItemAlchemyEffect(CRItems.practitionerStone)));
+		REAGENTS.put(PHILOSOPHER.id(), new StaticReagent(PHILOSOPHER.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> FAINT_BLUE_COLOR, CRItemTags.ALKAHEST, 2, new SpawnItemAlchemyEffect(CRItems.philosopherStone)));
+		REAGENTS.put(PRACTITIONER.id(), new StaticReagent(PRACTITIONER.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> FAINT_RED_COLOR, CRItemTags.ANTI_ALKAHEST, 2, new SpawnItemAlchemyEffect(CRItems.practitionerStone)));
 		REAGENTS.put(CHLORINE.id(), new StaticReagent(CHLORINE.id(), -100D, -35D, (EnumMatterPhase phase) -> TRANSLUCENT_LIME_COLOR, CRItemTags.DUSTS_CHLORINE, 0, new ChlorineAlchemyEffect()));
 		REAGENTS.put(CRYSTAL.id(), new StaticReagent(CRYSTAL.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> FAINT_BLUE_COLOR, CRItemTags.ALCH_CRYSTAL, 0, null));
 		REAGENTS.put(IRON.id(), new StaticReagent(IRON.id(), 1500D, 2560D, (EnumMatterPhase phase) -> phase == EnumMatterPhase.SOLID ? Color.GRAY : Color.RED, Tags.Items.NUGGETS_IRON, 0, null));
@@ -114,13 +114,13 @@ public final class AlchemyCore{
 		REAGENTS.put(ANTI_DENSUS.id(), new StaticReagent(ANTI_DENSUS.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, (EnumMatterPhase phase) -> Color.ORANGE, CRItemTags.ANTI_DENSUS, 0, null));
 		REAGENTS.put(CAVORITE.id(), new StaticReagent(CAVORITE.id(), 1000D, 1001D, (EnumMatterPhase phase) -> Color.YELLOW, CRItemTags.CAVORITE, 0, null));
 
-		//Dynamic reagents
-		REAGENTS.put(ELEM_LIGHT.id(), new ElementalReagent(ELEM_LIGHT.id(), -275, -274, new LumenEffect(), false, EnumBeamAlignments.LIGHT, new Color(200, 255, 255), null));
+		//Elemental reagents
+		REAGENTS.put(ELEM_LIGHT.id(), new ElementalReagent(ELEM_LIGHT.id(), -275, -100, new LumenEffect(), false, EnumBeamAlignments.LIGHT, new Color(200, 255, 255), null));
 		REAGENTS.put(ELEM_RIFT.id(), new ElementalReagent(ELEM_RIFT.id(), -100, 350, new EldrineEffect(), true, EnumBeamAlignments.RIFT, Color.MAGENTA, CRItems.solidEldrine));
 		REAGENTS.put(ELEM_EQUAL.id(), new ElementalReagent(ELEM_EQUAL.id(), 800, 1800, new StasisolEffect(), false, EnumBeamAlignments.EQUILIBRIUM, new Color(255, 128, 255), CRItems.solidStasisol));
-		REAGENTS.put(ELEM_FUSION.id(), new ElementalReagent(ELEM_FUSION.id(), Short.MAX_VALUE - 1, Short.MAX_VALUE, null, false, EnumBeamAlignments.FUSION, new Color(128, 255, 255), CRItems.solidFusas));
-		REAGENTS.put(ELEM_CHARGE.id(), new ElementalReagent(ELEM_CHARGE.id(), -275, -274, new VoltusEffect(), true, EnumBeamAlignments.CHARGE, new Color(255, 255, 64, 255), null));
-		REAGENTS.put(ELEM_TIME.id(), new ElementalReagent(ELEM_TIME.id(), 2000, Short.MAX_VALUE, null, false, EnumBeamAlignments.TIME, new Color(255, 130, 0, 255), OreSetup.nuggetCopshowium));
+		REAGENTS.put(ELEM_FUSION.id(), new ElementalReagent(ELEM_FUSION.id(), 1000, 2500, null, false, EnumBeamAlignments.FUSION, new Color(128, 255, 255), CRItems.solidFusas));
+		REAGENTS.put(ELEM_CHARGE.id(), new ElementalReagent(ELEM_CHARGE.id(), -250, -100, new VoltusEffect(), true, EnumBeamAlignments.CHARGE, new Color(255, 255, 64, 255), CRItems.solidVoltus));
+		REAGENTS.put(ELEM_TIME.id(), new ElementalReagent(ELEM_TIME.id(), 1500, 2500, null, false, EnumBeamAlignments.TIME, new Color(255, 130, 0, 255), OreSetup.nuggetCopshowium));//Don't register an elemental reaction for time- making copshowium needs to be technomancy specific for balance reasons
 		IReagent hellfire;
 		REAGENTS.put(HELLFIRE.id(), hellfire = new StaticReagent(HELLFIRE.id(), -275D, -274D, (EnumMatterPhase phase) -> Color.RED, null, 2, null){
 			@Override

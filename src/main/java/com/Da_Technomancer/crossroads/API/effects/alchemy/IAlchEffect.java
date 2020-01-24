@@ -10,7 +10,7 @@ public interface IAlchEffect{
 	/**
 	 * @param world The world. Virtual server side only
 	 * @param pos The blockpos to do this effect at
-	 * @param amount The total quantity of this reagent. It is recommended that gas phase effects ignore this value.
+	 * @param amount The total quantity of this reagent.
 	 * @param phase The current phase of this reagent
 	 * @param contents The full contents of the caller.
 	 */

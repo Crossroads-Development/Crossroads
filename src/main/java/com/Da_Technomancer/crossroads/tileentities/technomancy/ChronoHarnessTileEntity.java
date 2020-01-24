@@ -1,40 +1,64 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
+import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
-import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
+import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
+import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.texture.ITickable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Set;
 
-public class ChronoHarnessTileEntity extends ModuleTE{
+@ObjectHolder(Crossroads.MODID)
+public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, ITickable{
+
+	@ObjectHolder("chrono_harness")
+	private static TileEntityType<ChronoHarnessTileEntity> type = null;
 
 	public static final int POWER = 100;
-	private static final int CAPACITY = 10_000;
-	public boolean running = false;//Used for rendering.
+	private static final int FE_CAPACITY = 2_000;//Be careful about raising this- otherwise placing down this machine will instantly cause a flux event from filling the buffer
 
-	private int fe = 0;
-	private float partialFlux = 0;
-	public float angle = 0;//Used for rendering. Client side only
+	private int flux = 0;//Stored flux
+	private int fe = 0;//Stored FE
+	private int curPower = 0;//Current power generation (fe/t); used for readouts
+	private int clientCurPower = 0;//Current power gen on the client; used for rendering. On the server side, tracks last sent value
+	private float angle = 0;//Used for rendering. Client side only
+	private BlockPos link = null;
+
+	public ChronoHarnessTileEntity(){
+		super(type);
+	}
 
 	@Override
-	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
-		chat.add("Temporal Entropy: " + EntropySavedData.getEntropy(world) + "%");
-		super.addInfo(chat, player, side, hitX, hitY, hitZ);
+	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+		chat.add(new TranslationTextComponent("tt.crossroads.chrono_harness.fe", fe, FE_CAPACITY, curPower));
+		chat.add(new TranslationTextComponent("tt.crossroads.chrono_harness.flux", flux, getMaxFlux(), curPower / EnergyConverters.getFePerFlux()));
+		FluxUtil.addLinkInfo(chat, this);
+	}
+
+	public float getRenderAngle(float partialTicks){
+		return (float) (angle + partialTicks * Math.PI / 20F * clientCurPower / POWER);
 	}
 
 	private boolean hasRedstone(){
@@ -42,73 +66,85 @@ public class ChronoHarnessTileEntity extends ModuleTE{
 		if(state.getBlock() == CRBlocks.chronoHarness){
 			return state.get(EssentialsProperties.REDSTONE_BOOL);
 		}
-		invalidate();
+		remove();
 		return true;
 	}
 
 	@Override
 	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
-		super.receiveLong(identifier, message, sendingPlayer);
 		if(identifier == 4){
-			running = message != 0L;
+			curPower = (int) message;//Just used as a way of sending power gen
+		}
+		if(identifier == LINK_PACKET_ID){
+			link = BlockPos.fromLong(message);
+			markDirty();
+		}else if(identifier == CLEAR_PACKET_ID){
+			link = null;
+			markDirty();
 		}
 	}
 
 	@Override
 	public void tick(){
-		super.tick();
+		if(world.isRemote){
+			angle += Math.PI / 20F * clientCurPower / POWER;//Maximum of 0.5RPS
+		}else{
+			boolean shouldRun = fe < FE_CAPACITY && !hasRedstone();
 
-		if(!world.isRemote){
-			if(EntropySavedData.getSeverity(world).getRank() >= EntropySavedData.Severity.DESTRUCTIVE.getRank()){
-				FluxUtil.overloadFlux(world, pos);
-				return;
+			if(link != null && world.getGameTime() % FluxUtil.FLUX_TIME == 1){
+				FluxUtil.performTransfer(this, link);
 			}
-
-			boolean shouldRun = fe + POWER <= CAPACITY && !hasRedstone();
 
 			if(shouldRun){
-				fe += POWER;
+				curPower = Math.min(POWER, FE_CAPACITY - fe);
+				fe += curPower;
+				flux += Math.round((float) curPower / EnergyConverters.getFePerFlux());
 				markDirty();
-				partialFlux += (float) POWER / (float) FluxUtil.getFePerFlux(false);
-				if(partialFlux >= 1F){
-					int entropy = (int) Math.floor(partialFlux);
-					partialFlux -= entropy;
-					EntropySavedData.addEntropy(world, entropy);
-				}
+				FluxUtil.checkFluxOverload(this);
 			}
 
-			if(shouldRun ^ running){
-				running = shouldRun;
-				CrossroadsPackets.network.sendToAllAround(new SendLongToClient((byte) 4, running ? 1 : 0, pos), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 512));
+			if((curPower == 0 ^ clientCurPower == 0) || Math.abs(curPower - clientCurPower) >= 10){
+				clientCurPower = curPower;
+				CrossroadsPackets.sendPacketAround(world, pos, new SendIntToClient((byte) 4, clientCurPower, pos));
 			}
-		}
 
-		if(!world.isRemote && fe != 0){
-			//Transer FE to a machine above
-			TileEntity neighbor = world.getTileEntity(pos.offset(Direction.UP));
-			IEnergyStorage storage;
-			if(neighbor != null && (storage = neighbor.getCapability(CapabilityEnergy.ENERGY, Direction.DOWN)) != null){
-				if(storage.canReceive()){
-					fe -= storage.receiveEnergy(energyHandler.getEnergyStored(), false);
-					markDirty();
+			if(fe != 0){
+				//Transfer FE to a machine above
+				TileEntity neighbor = world.getTileEntity(pos.offset(Direction.UP));
+				LazyOptional<IEnergyStorage>  otherOpt;
+				if(neighbor != null && (otherOpt = neighbor.getCapability(CapabilityEnergy.ENERGY, Direction.DOWN)).isPresent()){
+					IEnergyStorage storage = otherOpt.orElseThrow(NullPointerException::new);
+					if(storage.canReceive()){
+						fe -= storage.receiveEnergy(fe, false);
+						markDirty();
+					}
 				}
-			}
-			//Transfer FE to a machine below
-			neighbor = world.getTileEntity(pos.offset(Direction.DOWN));
-			if(neighbor != null && (storage = neighbor.getCapability(CapabilityEnergy.ENERGY, Direction.UP)) != null){
-				if(storage.canReceive()){
-					fe -= storage.receiveEnergy(energyHandler.getEnergyStored(), false);
-					markDirty();
+				//Transfer FE to a machine below
+				neighbor = world.getTileEntity(pos.offset(Direction.DOWN));
+				if(neighbor != null && (otherOpt = neighbor.getCapability(CapabilityEnergy.ENERGY, Direction.UP)).isPresent()){
+					IEnergyStorage storage = otherOpt.orElseThrow(NullPointerException::new);
+					if(storage.canReceive()){
+						fe -= storage.receiveEnergy(fe, false);
+						markDirty();
+					}
 				}
 			}
 		}
 	}
 
+	@Override
+	public void remove(){
+		super.remove();
+		energyOpt.invalidate();
+	}
+
+	private final LazyOptional<IEnergyStorage> energyOpt = LazyOptional.of(EnergyHandler::new);
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == CapabilityEnergy.ENERGY){
-			return (T) energyHandler;
+			return (LazyOptional<T>) energyOpt;
 		}
 
 		return super.getCapability(cap, side);
@@ -118,8 +154,11 @@ public class ChronoHarnessTileEntity extends ModuleTE{
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
 		nbt.putInt("fe", fe);
-		nbt.putFloat("partial_flux", partialFlux);
-		nbt.putBoolean("running", running);
+		nbt.putInt("flux", flux);
+		nbt.putInt("pow", curPower);
+		if(link != null){
+			nbt.putLong("link", link.toLong());
+		}
 
 		return nbt;
 	}
@@ -128,18 +167,38 @@ public class ChronoHarnessTileEntity extends ModuleTE{
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
 		fe = nbt.getInt("fe");
-		partialFlux = nbt.getFloat("partial_flux");
-		running = nbt.getBoolean("running");
+		flux = nbt.getInt("flux");
+		curPower = nbt.getInt("pow");
+		clientCurPower = curPower;
+		if(nbt.contains("link")){
+			link = BlockPos.fromLong(nbt.getLong("link"));
+		}else{
+			link = null;
+		}
 	}
 
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
-		nbt.putBoolean("running", running);
+		nbt.putInt("pow", curPower);
 		return nbt;
 	}
 
-	private final EnergyHandler energyHandler = new EnergyHandler();
+	@Override
+	public int getFlux(){
+		return flux;
+	}
+
+	@Override
+	public void setFlux(int newFlux){
+		flux = newFlux;
+		markDirty();
+	}
+
+	@Override
+	public Set<BlockPos> getLinks(){
+		return FluxUtil.makeLinkSet(link);
+	}
 
 	private class EnergyHandler implements IEnergyStorage{
 
@@ -165,7 +224,7 @@ public class ChronoHarnessTileEntity extends ModuleTE{
 
 		@Override
 		public int getMaxEnergyStored(){
-			return CAPACITY;
+			return FE_CAPACITY;
 		}
 
 		@Override

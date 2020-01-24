@@ -1,0 +1,18 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "alchemy",
+	"result": {
+		"item": "crossroads:phial_glass",
+		"count": 1
+	},
+	"pattern": [
+		"G",
+		"G",
+		"G"
+	],
+	"key": {
+		"G": {
+			"tag": "forge:glass/colorless"
+		}
+	}
+}

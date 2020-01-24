@@ -133,10 +133,6 @@ public class CRBlocks{
 	public static FluxNode fluxNode;
 	public static TemporalAccelerator temporalAccelerator;
 	public static ChronoHarness chronoHarness;
-	public static FluxStabilizerBeam fluxStabilizerBeam;
-	public static FluxStabilizerBeam fluxStabilizerCrystalBeam;
-	public static FluxStabilizerElectric fluxStabilizerElectric;
-	public static FluxStabilizerElectric fluxStabilizerCrystalElectric;
 
 	private static final Item.Properties itemBlockProp = new Item.Properties().group(CRItems.TAB_CROSSROADS);
 	public static final ArrayList<Block> toRegister = new ArrayList<>();
@@ -274,9 +270,5 @@ public class CRBlocks{
 		fluxNode = new FluxNode();
 		temporalAccelerator = new TemporalAccelerator();
 		chronoHarness = new ChronoHarness();
-		fluxStabilizerBeam = new FluxStabilizerBeam(false);
-		fluxStabilizerCrystalBeam = new FluxStabilizerBeam(true);
-		fluxStabilizerElectric = new FluxStabilizerElectric(false);
-		fluxStabilizerCrystalElectric = new FluxStabilizerElectric(true);
 	}
 }

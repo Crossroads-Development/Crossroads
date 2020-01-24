@@ -16,6 +16,7 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -24,13 +25,9 @@ import java.util.List;
 public class MechanicalArm extends ContainerBlock{
 	
 	public MechanicalArm(){
-		super(Material.IRON);
+		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
 		String name = "mechanical_arm";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setHardness(3);
-		setSoundType(SoundType.METAL);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
 	}
@@ -76,11 +73,6 @@ public class MechanicalArm extends ContainerBlock{
 		return side == Direction.NORTH || side == Direction.SOUTH;
 	}
 
-	@Override
-	public boolean isOpaqueCube(BlockState state){
-		return false;
-	}
-	
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, BlockState state){
 		TileEntity te = worldIn.getTileEntity(pos);

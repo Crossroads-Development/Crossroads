@@ -13,7 +13,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayer;
@@ -33,9 +32,9 @@ public class MechArmAttackEffect implements IMechArmEffect{
 
 	@Override
 	public boolean onTriggered(World world, BlockPos pos, double posX, double posY, double posZ, Direction side, EntityArmRidable ent, MechanicalArmTileEntity te){
-		FakePlayer user = FakePlayerFactory.get((ServerWorld) world, new GameProfile(new UUID(ID_GEN.nextLong(), ID_GEN.nextLong()), Crossroads.MODID + "-arm_attack_effect-" + world.provider.getDimension()));
+		FakePlayer user = FakePlayerFactory.get((ServerWorld) world, new GameProfile(new UUID(ID_GEN.nextLong(), ID_GEN.nextLong()), Crossroads.MODID + "-arm_attack_effect-" + world.getDimension().getType().getId()));
 		user.setPositionAndRotation(posX, posY, posZ, side.getHorizontalAngle(), 0);
-		user.eyeHeight = 0;
+
 
 		ItemEntity itemEnt = null;
 		if(!ent.getPassengers().isEmpty() && ent.getPassengers().get(0) instanceof ItemEntity){
@@ -58,7 +57,7 @@ public class MechArmAttackEffect implements IMechArmEffect{
 
 		if(!targets.isEmpty()){
 			if(itemEnt != null){
-				user.getAttributeMap().applyAttributeModifiers(itemEnt.getItem().getAttributeModifiers(EquipmentSlotType.MAINHAND));
+				user.getAttributes().applyAttributeModifiers(itemEnt.getItem().getAttributeModifiers(EquipmentSlotType.MAINHAND));
 				try{
 					if(lastSwingField != null){
 						lastSwingField.setInt(user, Integer.MAX_VALUE);//We need the attack cooldown to be full, as otherwise we deal 0 damage, and even when using FakePlayers there's no way to get at the field without reflection

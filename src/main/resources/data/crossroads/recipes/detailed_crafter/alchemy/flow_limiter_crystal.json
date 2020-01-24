@@ -1,0 +1,19 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "alchemy",
+	"result": {
+		"item": "crossroads:crystal_flow_limiter",
+		"count": 2
+	},
+	"pattern": [
+		"CGC"
+	],
+	"key": {
+		"C": {
+			"tag": "crossroads:gems/alch_cryst"
+		},
+		"G": {
+			"tag": "forge:ingots/gold"
+		}
+	}
+}

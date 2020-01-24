@@ -1,0 +1,18 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "alchemy",
+	"result": {
+		"item": "crossroads:florence_flask_glass",
+		"count": 1
+	},
+	"pattern": [
+		" G ",
+		"G G",
+		"GGG"
+	],
+	"key": {
+		"G": {
+			"tag": "forge:glass/colorless"
+		}
+	}
+}

@@ -24,6 +24,7 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @ObjectHolder(Crossroads.MODID)
@@ -36,7 +37,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 	private static final int[] ATTACK_COLOR_CODES = {0xFFFFCCCC, 0xFFFFFFCC, 0xFFFFFAFA};
 
 	//Relative to this TileEntity's position
-	private ArrayList<BlockPos> linked = new ArrayList<>(3);
+	private HashSet<BlockPos> linked = new HashSet<>(3);
 
 	private TeslaCoilTop.TeslaCoilVariants variant = null;
 
@@ -129,15 +130,16 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		for(BlockPos link : linked){
-			chat.add(new TranslationTextComponent("tt.crossroads.tesla_coil_top.link", pos.getX() + link.getX(), pos.getY() + link.getY(), pos.getZ() + link.getZ()));
+			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.link", pos.getX() + link.getX(), pos.getY() + link.getY(), pos.getZ() + link.getZ()));
 		}
 	}
 
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
-		for(int i = 0; i < linked.size(); i++){
-			nbt.putLong("link" + i, linked.get(i).toLong());
+		int count = 0;
+		for(BlockPos relPos : linked){
+			nbt.putLong("link" + count++, relPos.toLong());
 		}
 		return nbt;
 	}
@@ -145,18 +147,19 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 	@Override
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
-		for(int i = 0; i < 3; i++){
-			if(nbt.contains("link" + i)){
-				linked.add(BlockPos.fromLong(nbt.getLong("link" + i)));
-			}
+		int count = 0;
+		while(nbt.contains("link" + count)){
+			linked.add(BlockPos.fromLong(nbt.getLong("link" + count)));
+			count++;
 		}
 	}
 
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
-		for(int i = 0; i < linked.size(); i++){
-			nbt.putLong("link" + i, linked.get(i).toLong());
+		int count = 0;
+		for(BlockPos relPos : linked){
+			nbt.putLong("link" + count++, relPos.toLong());
 		}
 		return nbt;
 	}
@@ -168,7 +171,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 
 	@Override
 	public boolean canBeginLinking(){
-		return getVariant() != TeslaCoilTop.TeslaCoilVariants.ATTACK;
+		return getVariant() != TeslaCoilTop.TeslaCoilVariants.ATTACK && getVariant() != TeslaCoilTop.TeslaCoilVariants.DECORATIVE;
 	}
 
 	@Override
@@ -177,7 +180,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 	}
 
 	@Override
-	public ArrayList<BlockPos> getLinks(){
+	public HashSet<BlockPos> getLinks(){
 		return linked;
 	}
 

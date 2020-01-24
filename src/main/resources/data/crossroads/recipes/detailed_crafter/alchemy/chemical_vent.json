@@ -1,0 +1,21 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "alchemy",
+	"result": {
+		"item": "crossroads:chemical_vent",
+		"count": 1
+	},
+	"pattern": [
+		"TBT",
+		"BBB",
+		"TBT"
+	],
+	"key": {
+		"T": {
+			"tag": "forge:ingots/tin"
+		},
+		"B": {
+			"item": "minecraft:iron_bars"
+		}
+	}
+}

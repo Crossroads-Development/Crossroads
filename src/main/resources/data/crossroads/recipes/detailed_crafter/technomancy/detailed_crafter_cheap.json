@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"item": "crossroads:detailed_crafter",
+		"count": 1
+	},
+	"pattern": [
+		"iti",
+		"tCt",
+		"iti"
+	],
+	"key": {
+		"C": {
+			"item": "minecraft:crafting_table"
+		},
+		"i": {
+			"tag": "forge:nuggets/iron"
+		},
+		"t": {
+			"tag": "forge:nuggets/tin"
+		}
+	}
+}

@@ -1,10 +1,16 @@
 package com.Da_Technomancer.crossroads.items.crafting;
 
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.essentials.Essentials;
 import net.minecraft.item.Item;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.IForgeRegistryEntry;
+
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Optional;
 
 public class CRItemTags{
 
@@ -29,6 +35,8 @@ public class CRItemTags{
 	public static final Tag<Item> DUSTS_REGIA = new ItemTags.Wrapper(new ResourceLocation(CR, "dusts/aqua_regia"));
 	public static final Tag<Item> DUSTS_CHLORINE = new ItemTags.Wrapper(new ResourceLocation(CR, "dusts/chlorine"));
 	public static final Tag<Item> DUSTS_SULFUR_DIOXIDE = new ItemTags.Wrapper(new ResourceLocation(CR, "dusts/sulfur_dioxide"));
+	public static final Tag<Item> ALKAHEST = new ItemTags.Wrapper(new ResourceLocation(CR, "alkahest"));
+	public static final Tag<Item> ANTI_ALKAHEST = new ItemTags.Wrapper(new ResourceLocation(CR, "anti_alkahest"));
 
 	public static final Tag<Item> PURE_ICE = new ItemTags.Wrapper(new ResourceLocation(CR, "pure_ice"));
 	public static final Tag<Item> RAW_ICE = new ItemTags.Wrapper(new ResourceLocation(CR, "raw_ice"));
@@ -42,11 +50,32 @@ public class CRItemTags{
 
 	/**
 	 * Returns an entry from the Tag
+	 * If the Tag is set to preserve order, it will reliably return the first entry.
+	 * Otherwise, any entry could be returned- but which entry will remain consistent between calls.
+	 * If the tag in unordered, this method will prioritize CR items, then essentials items, then vanilla items, then all other items
 	 * @param tag The Tag to return an entry from
 	 * @param <T> The type of the tag. Normally Block or Item
-	 * @return An entry in the tag. If the Tag is set to preserve order, it will reliably return the first entry. Otherwise, any entry could be returned- but which entry will remain consistent between calls.
+	 * @return An entry in the tag.
 	 */
-	public static <T> T getTagEntry(Tag<T> tag){
-		return tag.getAllElements().iterator().next();
+	public static <T extends IForgeRegistryEntry<T>> T getTagEntry(Tag<T> tag){
+		Collection<T> elems = tag.getAllElements();
+		T randEntry = elems.iterator().next();
+		if(elems instanceof LinkedHashSet){
+			return randEntry;//This is an ordered tag. Return the first entry
+		}
+		//We can use the registry name to prioritize the result. Applies to items and blocks (among others)
+		Optional<T> opt = elems.stream().filter((t) -> t.getRegistryName().getNamespace().equals(CR)).findFirst();
+		if(opt.isPresent()){
+			return opt.get();
+		}
+		opt = elems.stream().filter((t) -> t.getRegistryName().getNamespace().equals(Essentials.MODID)).findFirst();
+		if(opt.isPresent()){
+			return opt.get();
+		}
+		opt = elems.stream().filter((t) -> t.getRegistryName().getNamespace().equals("minecraft")).findFirst();
+		if(opt.isPresent()){
+			return opt.get();
+		}
+		return randEntry;
 	}
 }

@@ -1,0 +1,21 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "alchemy",
+	"result": {
+		"item": "crossroads:reagent_tank",
+		"count": 1
+	},
+	"pattern": [
+		"BGB",
+		"G G",
+		"BGB"
+	],
+	"key": {
+		"B": {
+			"tag": "forge:ingots/bronze"
+		},
+		"G": {
+			"tag": "forge:glass/colorless"
+		}
+	}
+}

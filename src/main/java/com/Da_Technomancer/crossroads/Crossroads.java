@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
 import com.Da_Technomancer.crossroads.entity.*;
 import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
 import com.Da_Technomancer.crossroads.gui.*;
@@ -41,7 +40,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
-import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.IContainerFactory;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -76,7 +74,7 @@ public final class Crossroads{
 		Capabilities.register();
 //		CrossroadsTileEntity.init();
 		CrossroadsPackets.preInit();
-		ModDimensions.init();
+//		ModDimensions.init();
 		//Main
 		MinecraftForge.EVENT_BUS.register(new EventHandlerCommon());
 		//NetworkRegistry.INSTANCE.registerGuiHandler(Crossroads.instance, new GuiHandler());
@@ -208,6 +206,7 @@ public final class Crossroads{
 		registerCon(HeatLimiterContainer::new, HeatLimiterScreen::new, "heat_limiter", e);
 		registerCon(RotaryPumpContainer::new, RotaryPumpScreen::new, "rotary_pump", e);
 		registerCon(DetailedCrafterContainer::new, DetailedCrafterScreen::new, "detailed_crafter", e);
+		registerCon(ReagentFilterContainer::new, ReagentFilterScreen::new, "reagent_filter", e);
 		//TODO register containers
 	}
 
@@ -237,6 +236,7 @@ public final class Crossroads{
 		registerConType(HeatLimiterContainer::new, "heat_limiter", e);
 		registerConType(RotaryPumpContainer::new, "rotary_pump", e);
 		registerConType(DetailedCrafterContainer::new, "detailed_crafter", e);
+		registerConType(ReagentFilterContainer::new, "reagent_filter", e);
 	}
 
 	/**
@@ -286,28 +286,13 @@ public final class Crossroads{
 
 	@SubscribeEvent
 	public void serverLoading(FMLServerStartingEvent e){
-		//TODO
-//		e.registerServerCommand(new WorkspaceDimTeleport());
+		//TODO command registration has changed
 //		e.registerServerCommand(new ResetPathCommand());
 //		e.registerServerCommand(new DiscoverElementCommand());
-//		e.registerServerCommand(new SpawnReagentCommand());
-//		e.registerServerCommand(new FluxCommand());
 	}
 
 	@SubscribeEvent
 	public void serverStarted(FMLServerStartedEvent e){
-		//TODO
-//		ModDimensions.loadDims();
 		MinecraftForge.EVENT_BUS.register(new EventHandlerServer());
-	}
-
-	@SubscribeEvent
-	public void serverEnded(FMLServerStoppingEvent e){
-		//TODO
-//		ForgeChunkManager.releaseTicket(EventHandlerCommon.loadingTicket);
-//		EventHandlerCommon.loadingTicket = null;
-//		for(int i : DimensionManager.getDimensions(ModDimensions.workspaceDimType)){
-//			DimensionManager.unregisterDimension(i);
-//		}
 	}
 }

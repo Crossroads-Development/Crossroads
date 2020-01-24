@@ -1,0 +1,27 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"item": "crossroads:tesla_ray",
+		"count": 1
+	},
+	"pattern": [
+		"VCC",
+		"LII",
+		"I  "
+	],
+	"key": {
+		"C": {
+			"tag": "crossroads:ingots/copshowium"
+		},
+		"I": {
+			"tag": "forge:ingots/iron"
+		},
+		"L": {
+			"item": "crossroads:leyden_jar"
+		},
+		"V": {
+			"item": "crossroads:solid_voltus"
+		}
+	}
+}

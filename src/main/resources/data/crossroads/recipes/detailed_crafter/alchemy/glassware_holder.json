@@ -1,0 +1,17 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "alchemy",
+	"result": {
+		"item": "crossroads:glassware_holder",
+		"count": 1
+	},
+	"pattern": [
+		"III",
+		"I I"
+	],
+	"key": {
+		"I": {
+			"tag": "forge:nuggets/iron"
+		}
+	}
+}

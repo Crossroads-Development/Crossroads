@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"item": "crossroads:heat_limiter",
+		"count": 1
+	},
+	"ingredients": [
+		{
+			"item": "crossroads:heat_limiter_basic"
+		},
+		{
+			"tag": "forge:dusts/redstone"
+		},
+		{
+			"tag": "forge:dusts/redstone"
+		},
+		{
+			"tag": "forge:dusts/redstone"
+		}
+	]
+}

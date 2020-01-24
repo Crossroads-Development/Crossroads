@@ -73,6 +73,8 @@ public class BeamRenderer<T extends TileEntity & IBeamRenderTE> extends TileEnti
 
 				if(CRConfig.rotateBeam.get()){
 					GlStateManager.rotated((partialTicks + (float) beam.getWorld().getGameTime()) * 2F, 0, 1, 0);
+				}else{
+					GlStateManager.rotated(45, 0, 1, 0);//Constant 45* angle
 				}
 				Tessellator tes = Tessellator.getInstance();
 				BufferBuilder buf = tes.getBuffer();

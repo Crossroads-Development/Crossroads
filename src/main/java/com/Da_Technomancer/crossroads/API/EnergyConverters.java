@@ -28,4 +28,8 @@ public final class EnergyConverters{
 	 * The number of mB of molten metal in one ingot
 	 */
 	public static final int INGOT_MB = 144;
+
+	public static int getFePerFlux(){
+		return CRConfig.fePerEntropy.get();
+	}
 }

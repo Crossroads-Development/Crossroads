@@ -1,0 +1,23 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "alchemy",
+	"result": {
+		"item": "crossroads:charging_stand",
+		"count": 1
+	},
+	"pattern": [
+		"RIR",
+		"ISI"
+	],
+	"key": {
+		"R": {
+			"tag": "forge:dusts/redstone"
+		},
+		"I": {
+			"tag": "forge:ingots/iron"
+		},
+		"S": {
+			"item": "crossroads:glassware_stand"
+		}
+	}
+}

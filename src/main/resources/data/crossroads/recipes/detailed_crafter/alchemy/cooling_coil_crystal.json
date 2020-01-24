@@ -1,0 +1,21 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "alchemy",
+	"result": {
+		"item": "crossroads:crystal_cooling_coil",
+		"count": 1
+	},
+	"pattern": [
+		" C ",
+		"GCG",
+		" C "
+	],
+	"key": {
+		"G": {
+			"tag": "crossroads:gems/alch_cryst"
+		},
+		"C": {
+			"item": "crossroads:crystal_alch_tube"
+		}
+	}
+}

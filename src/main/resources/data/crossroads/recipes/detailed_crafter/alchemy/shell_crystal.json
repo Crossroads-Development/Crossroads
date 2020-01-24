@@ -1,0 +1,18 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "alchemy",
+	"result": {
+		"item": "crossroads:shell_cryst",
+		"count": 1
+	},
+	"pattern": [
+		" G ",
+		"G G",
+		" G "
+	],
+	"key": {
+		"G": {
+			"tag": "crossroads:gems/alch_cryst"
+		}
+	}
+}

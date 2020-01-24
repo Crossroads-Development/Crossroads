@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "alchemy",
+	"result": {
+		"item": "crossroads:heat_limiter_basic",
+		"count": 1
+	},
+	"pattern": [
+		"OCO",
+		"OCO",
+		"ORO"
+	],
+	"key": {
+		"C": {
+			"tag": "forge:ingots/copper"
+		},
+		"O": {
+			"tag": "forge:obsidian"
+		},
+		"R": {
+			"tag": "forge:dusts/redstone"
+		}
+	}
+}

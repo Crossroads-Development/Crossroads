@@ -1,0 +1,34 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"item": "crossroads:flying_machine",
+		"count": 1
+	},
+	"pattern": [
+		"BBB",
+		"GAG",
+		"CDC"
+	],
+	"key": {
+		"B": {
+			"tag": "forge:ingots/bronze"
+		},
+		"C": {
+			"tag": "crossroads:ingots/copshowium"
+		},
+		"A": {
+			"item": "crossroads:anti_density_plate"
+		},
+		"D": {
+			"item": "crossroads:density_plate"
+		},
+		"G": {
+			"type": "minecraft:item_nbt",
+			"item": "crossroads:gear_base",
+			"nbt": {
+				"material": "copshowium"
+			}
+		}
+	}
+}

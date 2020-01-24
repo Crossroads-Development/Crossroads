@@ -1,0 +1,21 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "alchemy",
+	"result": {
+		"item": "crossroads:vanadium_oxide",
+		"count": 4
+	},
+	"pattern": [
+		" C ",
+		"CBC",
+		" C "
+	],
+	"key": {
+		"B": {
+			"tag": "forge:storage_blocks/coal"
+		},
+		"C": {
+			"tag": "minecraft:coals"
+		}
+	}
+}

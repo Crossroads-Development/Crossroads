@@ -1,16 +1,22 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
-import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.alchemy.ReagentFilter;
+import com.Da_Technomancer.crossroads.gui.container.ReagentFilterContainer;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
+import io.netty.buffer.Unpooled;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -24,7 +30,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @ObjectHolder(Crossroads.MODID)
-public class ReagentFilterTileEntity extends AlchemyCarrierTE implements IInventory{
+public class ReagentFilterTileEntity extends AlchemyCarrierTE implements INamedContainerProvider, IInventory{
 
 	@ObjectHolder("reagent_filter")
 	private static TileEntityType<ReagentFilterTileEntity> type = null;
@@ -56,6 +62,8 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements IInvent
 
 	public void clearCache(){
 		facing = null;
+		chemOpt.invalidate();
+		chemOpt = LazyOptional.of(() -> handler);
 	}
 
 	@Override
@@ -107,10 +115,11 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements IInvent
 
 	private boolean transfer(ReagentMap toTrans, Direction side){
 		TileEntity te = world.getTileEntity(pos.offset(side));
-		IChemicalHandler otherHandler;
-		if(toTrans.getTotalQty() <= 0 || te == null || (otherHandler = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())) == null){
+		LazyOptional<IChemicalHandler> chemOpt;
+		if(toTrans.getTotalQty() <= 0 || te == null || !(chemOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
 			return false;
 		}
+		IChemicalHandler otherHandler = chemOpt.orElseThrow(NullPointerException::new);
 		EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
 		if((cont == EnumContainerType.GLASS) != glass){
 			return false;
@@ -118,12 +127,11 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements IInvent
 		return otherHandler.insertReagents(toTrans, side.getOpposite(), handler, true);
 	}
 
-	@Nullable
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(facing == getFacing() || facing != null && facing.getAxis() == Direction.Axis.Y){
-			return (T) handler;
+			return (LazyOptional<T>) chemOpt;
 		}
 		return super.getCapability(capability, facing);
 	}
@@ -187,7 +195,7 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements IInvent
 
 	@Override
 	public boolean isUsableByPlayer(PlayerEntity player){
-		return world.getTileEntity(pos) == this && player.getDistanceSq(pos.add(0.5, 0.5, 0.5)) <= 64;
+		return world.getTileEntity(pos) == this && player.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5F) <= 64;
 	}
 
 	@Override
@@ -202,12 +210,13 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements IInvent
 	}
 
 	@Override
-	public String getName(){
-		return "container.reagent_filter";
+	public ITextComponent getDisplayName(){
+		return new TranslationTextComponent("container.reagent_filter");
 	}
 
+	@Nullable
 	@Override
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent(getName());
+	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
+		return new ReagentFilterContainer(id, playerInv, new PacketBuffer(Unpooled.buffer()).writeBlockPos(pos));
 	}
 }

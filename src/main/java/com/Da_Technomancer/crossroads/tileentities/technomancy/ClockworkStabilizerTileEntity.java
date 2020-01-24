@@ -1,23 +1,35 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
-import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnitStorage;
-import com.Da_Technomancer.crossroads.API.redstone.IAdvancedRedstoneHandler;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.registries.ObjectHolder;
 
+@ObjectHolder(Crossroads.MODID)
 public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 
-	private static final double RATE = 0.25D;
+	@ObjectHolder("clock_stab")
+	private static TileEntityType<ClockworkStabilizerTileEntity> type = null;
+
+	public static final double RATE = 0.25D;
 	private BeamUnitStorage storage = new BeamUnitStorage();
 	private Direction dir = null;
+
+	public ClockworkStabilizerTileEntity(){
+		super(type);
+	}
+
+	@Override
+	protected int getLimit(){
+		return (int) (super.getLimit() / RATE);//This block can store 4 times as much so it emits a full power beam at capacity
+	}
 
 	private Direction getDir(){
 		if(dir == null){
@@ -87,26 +99,7 @@ public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 		return out;
 	}
 
-	private final RedstoneHandler redsHandler = new RedstoneHandler();
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction dir){
-		if(cap == Capabilities.ADVANCED_REDSTONE_CAPABILITY){
-			return (T) redsHandler;
-		}
-		return super.getCapability(cap, dir);
-	}
-
 	public int getRedstone(){
-		return (int) Math.min(15, storage.getPower());
-	}
-
-	private class RedstoneHandler implements IAdvancedRedstoneHandler{
-
-		@Override
-		public double getOutput(boolean read){
-			return read ? storage.getPower() : 0;
-		}
+		return storage.getPower();
 	}
 } 

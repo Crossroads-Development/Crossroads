@@ -5,32 +5,30 @@ import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
-import com.Da_Technomancer.crossroads.API.technomancy.EntropySavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
+import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class BeaconHarnessTileEntity extends BeamRenderTE implements IInfoTE{
+public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink{
 
 	public static final int FLUX = 4;
 	public float angle = 0;//Used for rendering. Client side only
 
 	private boolean running;
 	private int cycles;
-
-	@Override
-	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
-		chat.add("Temporal Entropy: " + EntropySavedData.getEntropy(world) + "%");
-	}
 
 	@Override
 	public void tick(){
@@ -52,6 +50,12 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IInfoTE{
 			}
 		}
 
+		BlockPos checkPos = pos;
+		for(int y = pos.getY() - 1; y > 0; y--){
+			checkPos = checkPos.down(1);
+			BlockState state = world.getBlockState(checkPos);
+			if(state.getBlock() == Blocks.BEACON && )
+		}
 		return world.getBlockState(pos.offset(Direction.DOWN, 2)).getBlock() != Blocks.BEACON || !world.isAirBlock(pos.offset(Direction.DOWN, 1));
 	}
 
