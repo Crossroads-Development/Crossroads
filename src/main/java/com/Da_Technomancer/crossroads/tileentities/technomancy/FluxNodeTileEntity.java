@@ -70,13 +70,16 @@ public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntit
 		if(world.isRemote){
 			angle += entropy * SPIN_RATE / 20F;
 		}else if(world.getGameTime() % FluxUtil.FLUX_TIME == 0){
-			fluxToTrans = entropy;//Save flux to a separate variable so tick order doesn't interfere with the amount transferred next tick
+			fluxToTrans += entropy;//Save flux to a separate variable so tick order doesn't interfere with the amount transferred next tick
 			entropy = 0;
+			markDirty();
 		}else if(world.getGameTime() % FluxUtil.FLUX_TIME == 1){
 			//Perform transfer
 			fluxToTrans -= FluxUtil.performTransfer(this, links, fluxToTrans);
 			entropy += fluxToTrans;
+			fluxToTrans = 0;
 			FluxUtil.checkFluxOverload(this);
+			markDirty();
 			syncFlux();
 		}
 	}
@@ -167,7 +170,7 @@ public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntit
 
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.flux", entropy, getMaxFlux(), CRConfig.formatVal(100F * entropy / getMaxFlux())));
+		chat.add(new TranslationTextComponent("tt.crossroads.flux_node.flux", entropy, getMaxFlux(), CRConfig.formatVal(100F * entropy / getMaxFlux())));
 		FluxUtil.addLinkInfo(chat, this);
 	}
 }

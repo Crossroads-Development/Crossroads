@@ -17,5 +17,5 @@ public class SafeCallable{
 	
 	protected static final Method printChatNoLog = ReflectionUtil.reflectMethod(CrReflection.SET_CHAT);
 	
-	public static int playerTickCount = 1;
+	public static int playerTickCount = 0;
 }

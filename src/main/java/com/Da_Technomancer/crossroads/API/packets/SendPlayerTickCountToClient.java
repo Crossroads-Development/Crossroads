@@ -28,10 +28,6 @@ public class SendPlayerTickCountToClient extends ClientPacket{
 
 	@Override
 	protected void run(){
-		if(tickCount > 0){
-			SafeCallable.playerTickCount += tickCount - 1;
-		}else{
-			SafeCallable.playerTickCount = 0;
-		}
+		SafeCallable.playerTickCount += tickCount;
 	}
 }

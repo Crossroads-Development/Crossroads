@@ -213,40 +213,12 @@ public final class EventHandlerClient{
 			if(player == null){
 				return;
 			}
-			CompoundNBT entNBT = player.getPersistentData();
-
-			if(entNBT.getBoolean(EventHandlerCommon.MAIN_KEY)){
-				if(!entNBT.getBoolean(EventHandlerCommon.SUB_KEY)){
-					player.updateBlocked = false;
-				}
-				entNBT.putBoolean(EventHandlerCommon.MAIN_KEY, false);
-				entNBT.putBoolean(EventHandlerCommon.SUB_KEY, false);
-			}
-
-
-			if(SafeCallable.playerTickCount == 0){
-				entNBT.putBoolean(EventHandlerCommon.MAIN_KEY, true);
-				if(player.updateBlocked){
-					entNBT.putBoolean(EventHandlerCommon.SUB_KEY, true);
-				}else{
- 					player.updateBlocked = true;
-				}
-			}
-
-			if(SafeCallable.playerTickCount == 0){
-				if(player.updateBlocked){
-					entNBT.putBoolean("fStop", true);
-				}else{
-					player.updateBlocked = true;
-				}
-			}else if(!player.updateBlocked){
-				int extraTicks = SafeCallable.playerTickCount - 1;
-				for(int i = 0; i < extraTicks; i++){
+			if(SafeCallable.playerTickCount > 0){
+				for(int i = 0; i < SafeCallable.playerTickCount; i++){
 					player.tick();
 				}
+				SafeCallable.playerTickCount = 0;
 			}
-
-			SafeCallable.playerTickCount = 1;
 		}
 	}
 

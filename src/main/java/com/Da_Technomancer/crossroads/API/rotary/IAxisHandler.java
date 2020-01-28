@@ -2,8 +2,6 @@ package com.Da_Technomancer.crossroads.API.rotary;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.util.Direction;
-
 public interface IAxisHandler{
 
 	/**
@@ -23,14 +21,6 @@ public interface IAxisHandler{
 	 * @return true if master is locked
 	 */
 	public boolean addToList(@Nonnull IAxleHandler handler);
-	
-	/**
-	 * During propagation, gears should call this in the propagating axis for any {@link ISlaveAxisHandler} found. 
-	 * The side is the side the gear found, and it should be used for calling {@link ISlaveAxisHandler#trigger(Direction)} <p>
-	 * If the one given that belongs to either this axis, or any axis that controls this axis' ISlaveAxisHandler through any amount of nesting, this axis should self-destruct somehow. 
-	 * It is recommended to use RotaryUtil#contains(ISlaveAxisHandler, ISlaveAxisHandler) (in Crossroads) to find a loop.
-	 */
-	public void addAxisToList(@Nonnull ISlaveAxisHandler handler, Direction side);
 
 	public double getTotalEnergy();
 

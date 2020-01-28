@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.API;
 
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.blocks.heat.HeatCable;
+import com.Da_Technomancer.crossroads.blocks.technomancy.TemporalAccelerator;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
@@ -20,7 +21,9 @@ public class CRProperties{
 	public static final DirectionProperty HORIZ_FACING = DirectionProperty.create("horiz_facing", (Direction side) -> side != null && side.getAxis() != Direction.Axis.Y);
 	public static final EnumProperty<AbstractGlassware.GlasswareTypes> CONTAINER_TYPE = EnumProperty.create("container_type", AbstractGlassware.GlasswareTypes.class);
 //	public static final EnumProperty<MathAxisTileEntity.Arrangement> ARRANGEMENT = EnumProperty.create("arrangement", MathAxisTileEntity.Arrangement.class);
+	public static final EnumProperty<TemporalAccelerator.Mode> ACCELERATOR_TARGET = EnumProperty.create("accel_target", TemporalAccelerator.Mode.class);
 
+	//Individual properties for each direction- for blocks with a conduit-like shape
 	public static final BooleanProperty DOWN = BooleanProperty.create("down");
 	public static final BooleanProperty UP = BooleanProperty.create("up");
 	public static final BooleanProperty NORTH = BooleanProperty.create("north");

@@ -83,56 +83,53 @@ public final class EventHandlerCommon{
 		}
 	}
 
-	//The main and sub keys allow differentiating between entities with updateBlocked due to crossroads, and updateBlocked due to other mods. In effect, it is a preemptive compatibility bugfix
-	protected static final String MAIN_KEY = "cr_pause";
-	protected static final String SUB_KEY = "cr_pause_prior";
+//	//The main and sub keys allow differentiating between entities with updateBlocked due to crossroads, and updateBlocked due to other mods. In effect, it is a preemptive compatibility bugfix
+//	protected static final String MAIN_KEY = "cr_pause";
+//	protected static final String SUB_KEY = "cr_pause_prior";
 
 	@SubscribeEvent
 	@SuppressWarnings("unused")
 	public void worldTick(TickEvent.WorldTickEvent e){
-		//Time Dilation
-		if(!e.world.isRemote && e.phase == TickEvent.Phase.START){
-			e.world.getProfiler().startSection(Crossroads.MODNAME + ": Entity Time Dilation");
-			ArrayList<TemporalAcceleratorTileEntity.Region> timeStoppers = new ArrayList<>();
-			for(TileEntity te : e.world.tickableTileEntities){
-				if(te instanceof TemporalAcceleratorTileEntity && ((TemporalAcceleratorTileEntity) te).stoppingTime()){
-					timeStoppers.add(((TemporalAcceleratorTileEntity) te).getRegion());
-				}
-			}
 
-			for(Entity ent : e.world.loadedEntityList){
-				CompoundNBT entNBT = ent.getPersistentData();
-				if(entNBT.getBoolean(MAIN_KEY)){
-					if(!entNBT.getBoolean(SUB_KEY)){
-						ent.updateBlocked = false;
-					}
-					entNBT.putBoolean(MAIN_KEY, false);
-					entNBT.putBoolean(SUB_KEY, false);
-				}
-
-				for(TemporalAcceleratorTileEntity.Region region : timeStoppers){
-					if(region.inRegion(ent.getPosition())){
-						entNBT.putBoolean(MAIN_KEY, true);
-						if(ent.updateBlocked){
-							entNBT.putBoolean(SUB_KEY, true);
-						}else{
-							ent.updateBlocked = true;
-						}
-						if(ent instanceof ServerPlayerEntity){
-							CrossroadsPackets.network.sendTo(new SendPlayerTickCountToClient(0), (ServerPlayerEntity) ent);
-						}
-						break;
-					}
-				}
-			}
-			e.world.getProfiler().endSection();
-		}
-
-
-		//Temporal Entropy decay
-		if(!e.world.isRemote && e.phase == TickEvent.Phase.START){
-			EntropySavedData.addEntropy((ServerWorld) e.world, -CRConfig.entropyDecayRate.get());
-		}
+//		//Time Dilation
+//		//Forge for MC1.14 killed the entity hook that made time slowing/stopping work (Entity::updateBlock field was removed)
+//		//Press F to pay your respects to the signature feature of Technomancy
+//		if(!e.world.isRemote && e.phase == TickEvent.Phase.START){
+//			e.world.getProfiler().startSection(Crossroads.MODNAME + ": Entity Time Dilation");
+//			ArrayList<TemporalAcceleratorTileEntity.Region> timeStoppers = new ArrayList<>();
+//			for(TileEntity te : e.world.tickableTileEntities){
+//				if(te instanceof TemporalAcceleratorTileEntity && ((TemporalAcceleratorTileEntity) te).stoppingTime()){
+//					timeStoppers.add(((TemporalAcceleratorTileEntity) te).getRegion());
+//				}
+//			}
+//
+//			for(Entity ent : e.world.loadedEntityList){
+//				CompoundNBT entNBT = ent.getPersistentData();
+//				if(entNBT.getBoolean(MAIN_KEY)){
+//					if(!entNBT.getBoolean(SUB_KEY)){
+//						ent.updateBlocked = false;
+//					}
+//					entNBT.putBoolean(MAIN_KEY, false);
+//					entNBT.putBoolean(SUB_KEY, false);
+//				}
+//
+//				for(TemporalAcceleratorTileEntity.Region region : timeStoppers){
+//					if(region.inRegion(ent.getPosition())){
+//						entNBT.putBoolean(MAIN_KEY, true);
+//						if(ent.updateBlocked){
+//							entNBT.putBoolean(SUB_KEY, true);
+//						}else{
+//							ent.updateBlocked = true;
+//						}
+//						if(ent instanceof ServerPlayerEntity){
+//							CrossroadsPackets.network.sendTo(new SendPlayerTickCountToClient(0), (ServerPlayerEntity) ent);
+//						}
+//						break;
+//					}
+//				}
+//			}
+//			e.world.getProfiler().endSection();
+//		}
 
 
 		//Atmospheric overcharge effect

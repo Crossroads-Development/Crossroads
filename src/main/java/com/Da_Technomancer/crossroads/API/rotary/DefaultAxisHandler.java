@@ -1,7 +1,5 @@
 package com.Da_Technomancer.crossroads.API.rotary;
 
-import net.minecraft.util.Direction;
-
 public class DefaultAxisHandler implements IAxisHandler{
 
 	@Override
@@ -27,11 +25,6 @@ public class DefaultAxisHandler implements IAxisHandler{
 	@Override
 	public boolean addToList(IAxleHandler handler){
 		return false;
-	}
-
-	@Override
-	public void addAxisToList(ISlaveAxisHandler handler, Direction side){
-		
 	}
 
 	@Override

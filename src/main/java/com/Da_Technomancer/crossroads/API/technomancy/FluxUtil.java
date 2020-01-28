@@ -82,6 +82,10 @@ public class FluxUtil{
 		return out;
 	}
 
+	public static void addFluxInfo(List<ITextComponent> tooltip, IFluxLink te, int fluxPerCycle){
+		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.flux", te.getFlux(), te.getMaxFlux(), CRConfig.formatVal(100F * te.getFlux() / te.getMaxFlux()), CRConfig.formatVal((float) fluxPerCycle / FLUX_TIME)));
+	}
+
 	public static void addLinkInfo(List<ITextComponent> tooltip, ILinkTE te){
 		Set<BlockPos> links = te.getLinks();
 		if(links.size() == 0){

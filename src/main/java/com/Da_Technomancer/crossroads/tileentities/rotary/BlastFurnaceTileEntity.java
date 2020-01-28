@@ -6,8 +6,11 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.BlastFurnaceContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.recipes.BlastFurnaceRec;
+import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -20,15 +23,14 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ObjectHolder;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Optional;
 
 @ObjectHolder(Crossroads.MODID)
 public class BlastFurnaceTileEntity extends InventoryTE{
@@ -95,10 +97,14 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 			return;
 		}
 
-		//TODO switch to JSON recipes
-		Pair<FluidStack, Integer> recipe = RecipeHolder.blastFurnaceRecipes.get(inventory[0]);
-
-		if(recipe == null || carbon < recipe.getRight() || inventory[2].getCount() + recipe.getRight() > CRItems.slag.getItemStackLimit(inventory[2]) || (fluids[0] != null && (recipe.getLeft().getFluid() != fluids[0].getFluid() || fluidProps[0].capacity < fluids[0].getAmount() + recipe.getLeft().getAmount()))){
+		Optional<BlastFurnaceRec> recOpt = world.getRecipeManager().getRecipe(RecipeHolder.BLAST_FURNACE_TYPE, this, world);
+		if(!recOpt.isPresent()){
+			progress = 0;
+			return;
+		}
+		BlastFurnaceRec recipe = recOpt.get();
+		if(carbon < recipe.getSlag() || inventory[2].getCount() + recipe.getSlag() > CRItems.slag.getItemStackLimit(inventory[2]) || (!fluids[0].isEmpty() && (!BlockUtil.sameFluid(recipe.getOutput(), fluids[0]) || fluidProps[0].capacity < fluids[0].getAmount() + recipe.getOutput().getAmount()))){
+			//The fluid and slag outputs need to fit, and we need enough carbon
 			progress = 0;
 			return;
 		}
@@ -111,17 +117,17 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 			progress = 0;
 
 			inventory[0].shrink(1);
-			carbon -= recipe.getRight();
+			carbon -= recipe.getSlag();
 			carbRef.set(carbon);
 			if(inventory[2].isEmpty()){
-				inventory[2] = new ItemStack(CRItems.slag, recipe.getRight());
+				inventory[2] = new ItemStack(CRItems.slag, recipe.getSlag());
 			}else{
-				inventory[2].grow(recipe.getRight());
+				inventory[2].grow(recipe.getSlag());
 			}
 			if(fluids[0].isEmpty()){
-				fluids[0] = recipe.getLeft().copy();
+				fluids[0] = recipe.getOutput().copy();
 			}else{
-				fluids[0].grow(recipe.getLeft().getAmount());
+				fluids[0].grow(recipe.getOutput().getAmount());
 			}
 		}
 		progRef.set(progress);
@@ -142,7 +148,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return (index == 0 && RecipeHolder.blastFurnaceRecipes.get(stack) != null) || (index == 1 && getCarbonValue(stack) != 0);
+		return (index == 0 && world.getRecipeManager().getRecipe(RecipeHolder.ALCHEMY_TYPE, new Inventory(stack), world).isPresent()) || (index == 1 && getCarbonValue(stack) != 0);
 	}
 
 	@Override

@@ -31,9 +31,6 @@ public class Capabilities{
 	@CapabilityInject(IAxisHandler.class)
 	public static Capability<IAxisHandler> AXIS_CAPABILITY = null;
 	
-	@CapabilityInject(ISlaveAxisHandler.class)
-	public static Capability<ISlaveAxisHandler> SLAVE_AXIS_CAPABILITY = null;
-	
 	@CapabilityInject(IChemicalHandler.class)
 	public static Capability<IChemicalHandler> CHEMICAL_CAPABILITY = null;
 
@@ -43,7 +40,7 @@ public class Capabilities{
 		CapabilityManager.INSTANCE.register(ICogHandler.class, new DefaultStorage<>(), DefaultCogHandler::new);
 		CapabilityManager.INSTANCE.register(IBeamHandler.class, new DefaultStorage<>(), DefaultBeamHandler::new);
 		CapabilityManager.INSTANCE.register(IAxisHandler.class, new DefaultStorage<>(), DefaultAxisHandler::new);
-		CapabilityManager.INSTANCE.register(ISlaveAxisHandler.class, new DefaultStorage<>(), DefaultSlaveAxisHandler::new);
+//		CapabilityManager.INSTANCE.register(ISlaveAxisHandler.class, new DefaultStorage<>(), DefaultSlaveAxisHandler::new);
 		CapabilityManager.INSTANCE.register(IChemicalHandler.class, new DefaultStorage<>(), DefaultChemicalHandler::new);
 	}
 

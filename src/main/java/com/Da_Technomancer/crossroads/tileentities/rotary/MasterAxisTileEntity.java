@@ -4,7 +4,10 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.ITaylorReceiver;
 import com.Da_Technomancer.crossroads.API.packets.SendTaylorToClient;
-import com.Da_Technomancer.crossroads.API.rotary.*;
+import com.Da_Technomancer.crossroads.API.rotary.AxisTypes;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
@@ -17,10 +20,8 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Random;
 
 @ObjectHolder(Crossroads.MODID)
@@ -39,7 +40,6 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 	protected Direction facing;
 
 	protected ArrayList<IAxleHandler> rotaryMembers = new ArrayList<>();
-	protected final HashSet<Pair<ISlaveAxisHandler, Direction>> slaves = new HashSet<>();
 
 	//TODO the taylor series approximation is acting kind of wonky when the gear system changes- it may need a bit of fuzzing
 	/**
@@ -222,20 +222,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 				runCalc();
 			}
 			runAngleCalc();
-			triggerSlaves();
 		}
-	}
-
-	protected void triggerSlaves(){
-		HashSet<Pair<ISlaveAxisHandler, Direction>> toRemove = new HashSet<>();
-		for(Pair<ISlaveAxisHandler, Direction> slave : slaves){
-			if(slave.getLeft().isInvalid()){
-				toRemove.add(slave);
-				continue;
-			}
-			slave.getLeft().trigger(slave.getRight());
-		}
-		slaves.removeAll(toRemove);
 	}
 
 	@Override
@@ -353,11 +340,6 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 			}else{
 				return true;
 			}
-		}
-
-		@Override
-		public void addAxisToList(ISlaveAxisHandler handler, Direction side){
-			slaves.add(Pair.of(handler, side));
 		}
 
 		@Override

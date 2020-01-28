@@ -1,7 +1,10 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.rotary.*;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
+import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelGearOctagon;
@@ -118,10 +121,6 @@ public class MechanismToggleGear extends MechanismSmallGear{
 			LazyOptional<IAxisHandler> axisOpt = sideTE.getCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite());
 			if(axisOpt.isPresent()){
 				axisOpt.orElseThrow(NullPointerException::new).trigger(masterIn, key);
-			}
-			LazyOptional<ISlaveAxisHandler> saxisOpt = sideTE.getCapability(Capabilities.SLAVE_AXIS_CAPABILITY, side.getOpposite());
-			if(saxisOpt.isPresent()){
-				masterIn.addAxisToList(saxisOpt.orElseThrow(NullPointerException::new), side.getOpposite());
 			}
 			LazyOptional<IAxleHandler> axleOpt = sideTE.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite());
 			if(axleOpt.isPresent()){

@@ -71,6 +71,7 @@ public class CRConfig{
 //	public static ForgeConfigSpec.IntValue entropyDecayRate;
 	public static ForgeConfigSpec.BooleanValue entropyDropBlock;
 	public static ForgeConfigSpec.BooleanValue rotateBeam;
+	public static ForgeConfigSpec.BooleanValue teTimeAccel;
 
 	private static final Tag<Block> destroyBlacklist = new BlockTags.Wrapper(new ResourceLocation(Crossroads.MODID, "destroy_blacklist"));
 
@@ -149,6 +150,7 @@ public class CRConfig{
 //		cccExpenLiquid = serverBuilder.comment("Liquid type for the Copshowium Creation Chamber without Temporal Entropy", "An invalid liquid will disable the crafting").define("ccc_expen", "copper");
 //		cccEntropLiquid = serverBuilder.comment("Liquid type for the Copshowium Creation Chamber with Temporal Entropy", "An invalid liquid will disable the crafting").define("ccc_cheap", "distilled_water");
 		fePerEntropy = serverBuilder.comment("FE equal to 1 Temporal Entropy").defineInRange("fe_per_entropy", 50, 1, Integer.MAX_VALUE);
+		teTimeAccel = serverBuilder.comment("Allow time acceleration of Tile Entities?", "Disabling this does not affect acceleration of normal entities or block ticks").define("te_accel", true);
 		serverBuilder.pop();
 		serverBuilder.push(CAT_ALCHEMY);
 		phelEffect = serverBuilder.comment("Allow the full effect of Phelostogen?", "If disabled Phelostogen lights a single small fire instead").define("phel_effect", true);

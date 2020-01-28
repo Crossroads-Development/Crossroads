@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.API.FlexibleGameProfile;
+import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
@@ -18,6 +19,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 
@@ -27,13 +30,9 @@ import java.util.List;
 public class GatewayFrame extends ContainerBlock{
 
 	public GatewayFrame(){
-		super(Material.IRON);
+		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
 		String name = "gateway_frame";
-		setTranslationKey(name);
 		setRegistryName(name);
-		setCreativeTab(CRItems.TAB_CROSSROADS);
-		setHardness(3);
-		setSoundType(SoundType.METAL);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
 	}
@@ -50,14 +49,10 @@ public class GatewayFrame extends ContainerBlock{
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		ItemStack heldItem = playerIn.getHeldItem(hand);
-		if(ILinkTE.isLinkTool(heldItem)){
-			TileEntity te = worldIn.getTileEntity(pos);
-			if(!worldIn.isRemote && te instanceof ILinkTE){
-				((ILinkTE) te).wrench(heldItem, playerIn);
-			}
+		if(FluxUtil.handleFluxLinking(worldIn, pos, heldItem, playerIn)){
 			return true;
-		}else if(EssentialsConfig.isWrench(heldItem, worldIn.isRemote)){
-			worldIn.setBlockState(pos, state.cycle(EssentialsProperties.FACING));
+		}else if(EssentialsConfig.isWrench(heldItem)){
+			worldIn.setBlockState(pos, state.cycle(EssentialsProperties.FACING));//TODO check
 			TileEntity te = worldIn.getTileEntity(pos);
 			if(!worldIn.isRemote && te instanceof GatewayFrameTileEntity){
 				((GatewayFrameTileEntity) te).resetCache();
@@ -83,17 +78,6 @@ public class GatewayFrame extends ContainerBlock{
 	}
 
 	@Override
-	public BlockState getStateFromMeta(int meta){
-		Direction facing = Direction.byIndex(meta);
-		return getDefaultState().with(EssentialsProperties.FACING, facing);
-	}
-
-	@Override
-	public int getMetaFromState(BlockState state){
-		return state.get(EssentialsProperties.FACING).getIndex();
-	}
-
-	@Override
 	public TileEntity createNewTileEntity(IBlockReader worldIn){
 		return new GatewayFrameTileEntity();
 
@@ -103,27 +87,12 @@ public class GatewayFrame extends ContainerBlock{
 	public BlockRenderType getRenderType(BlockState state){
 		return BlockRenderType.MODEL;
 	}
-
-	@Override
-	public BlockState rotate(BlockState state, Rotation rot){
-		return state.with(EssentialsProperties.FACING, rot.rotate(state.get(EssentialsProperties.FACING)));
-	}
-
-	@Override
-	public BlockState mirror(BlockState state, Mirror mirrorIn){
-		return state.rotate(mirrorIn.toRotation(state.get(EssentialsProperties.FACING)));
-	}
 	
 	@Override
-	public boolean isOpaqueCube(BlockState state){
-		return false;
-	}
-
-	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
-		tooltip.add("Opens a portal through space, including to a personal workspace dimension");
+		tooltip.add("Opens a portal through space and between dimensions");
 		tooltip.add("Uses a beam to maintain the portal");
-		tooltip.add("Potential: Overworld; Energy: Nether; Void: The End; Rift: The Workspace Dimension");
+		tooltip.add("Potential: Overworld; Energy: Nether; Void: The End");
 		tooltip.add(String.format("Produces %1$.3f%% entropy/tick while running, and %2$.3f%% entropy for every entity teleported", EntropySavedData.getPercentage(GatewayFrameTileEntity.FLUX_MAINTAIN), EntropySavedData.getPercentage(GatewayFrameTileEntity.FLUX_TRANSPORT)));
 	}
 }

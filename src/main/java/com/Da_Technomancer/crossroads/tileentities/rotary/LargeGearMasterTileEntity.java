@@ -6,7 +6,10 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.ILongReceiver;
 import com.Da_Technomancer.crossroads.API.packets.SendLongToClient;
-import com.Da_Technomancer.crossroads.API.rotary.*;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
+import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -284,10 +287,6 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 					LazyOptional<IAxisHandler> axisOpt;
 					if((axisOpt = connectTE.getCapability(Capabilities.AXIS_CAPABILITY, axleDir.getOpposite())).isPresent()){
 						axisOpt.orElseThrow(NullPointerException::new).trigger(masterIn, key);
-					}
-					LazyOptional<ISlaveAxisHandler> slaveOpt;
-					if((slaveOpt = connectTE.getCapability(Capabilities.SLAVE_AXIS_CAPABILITY, axleDir.getOpposite())).isPresent()){
-						masterIn.addAxisToList(slaveOpt.orElseThrow(NullPointerException::new), axleDir.getOpposite());
 					}
 					LazyOptional<IAxleHandler> axleOpt;
 					if((axleOpt = connectTE.getCapability(Capabilities.AXLE_CAPABILITY, axleDir.getOpposite())).isPresent()){
