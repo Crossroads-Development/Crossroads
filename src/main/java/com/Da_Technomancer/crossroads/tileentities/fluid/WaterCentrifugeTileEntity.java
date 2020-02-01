@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
+import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.WaterCentrifugeContainer;
 import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
@@ -45,7 +45,7 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 
 	public WaterCentrifugeTileEntity(){
 		super(type, 1);
-		fluidProps[0] = new TankProperty(10_000, true, false, (Fluid f) -> f == Fluids.WATER || f == CrossroadsFluids.dirtyWater.still);
+		fluidProps[0] = new TankProperty(10_000, true, false, (Fluid f) -> f == Fluids.WATER || f == CRFluids.dirtyWater.still);
 		fluidProps[1] = new TankProperty(10_000, false, true, (Fluid f) -> true);
 	}
 
@@ -94,7 +94,7 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 					product = new ItemStack(CRItemTags.getTagEntry(CRItemTags.SALT));
 				}
 				fluids[0].shrink(BATCH_SIZE);
-				fluids[1] = new FluidStack(CrossroadsFluids.distilledWater.still, Math.min(fluidProps[1].capacity, BATCH_SIZE + fluids[1].getAmount()));
+				fluids[1] = new FluidStack(CRFluids.distilledWater.still, Math.min(fluidProps[1].capacity, BATCH_SIZE + fluids[1].getAmount()));
 				if(inventory[0].isEmpty() || inventory[0].isItemEqual(product)){
 					inventory[0] = new ItemStack(product.getItem(), Math.min(product.getMaxStackSize(), 1 + inventory[0].getCount()));
 				}

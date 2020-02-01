@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ChronoHarnessTileEntity;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
@@ -33,7 +33,7 @@ public class ChronoHarness extends ContainerBlock{
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
-		setDefaultState(getDefaultState().with(EssentialsProperties.REDSTONE_BOOL, false));
+		setDefaultState(getDefaultState().with(ESProperties.REDSTONE_BOOL, false));
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class ChronoHarness extends ContainerBlock{
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
-		builder.add(EssentialsProperties.REDSTONE_BOOL);
+		builder.add(ESProperties.REDSTONE_BOOL);
 	}
 
 	@Override
@@ -54,11 +54,11 @@ public class ChronoHarness extends ContainerBlock{
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
 		if(worldIn.isBlockPowered(pos)){
-			if(!state.get(EssentialsProperties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.with(EssentialsProperties.REDSTONE_BOOL, true), 2);
+			if(!state.get(ESProperties.REDSTONE_BOOL)){
+				worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, true), 2);
 			}
-		}else if(state.get(EssentialsProperties.REDSTONE_BOOL)){
-			worldIn.setBlockState(pos, state.with(EssentialsProperties.REDSTONE_BOOL, false), 2);
+		}else if(state.get(ESProperties.REDSTONE_BOOL)){
+			worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, false), 2);
 		}
 	}
 

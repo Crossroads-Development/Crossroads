@@ -10,7 +10,7 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -71,11 +71,11 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 	protected Direction getFacing(){
 		if(facing == null){
 			BlockState state = world.getBlockState(pos);
-			if(!state.has(EssentialsProperties.FACING)){
+			if(!state.has(ESProperties.FACING)){
 				remove();
 				return Direction.DOWN;
 			}
-			facing = state.get(EssentialsProperties.FACING);
+			facing = state.get(ESProperties.FACING);
 		}
 
 		return facing;

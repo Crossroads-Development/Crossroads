@@ -8,5 +8,5 @@ public interface IBeamHandler{
 	/**
 	 * Handlers should assume that they receive the last beams unit sent with this method continuously for the next BEAM_TIME ticks.
 	 */
-	public void setMagic(@Nonnull BeamUnit mag);
+	void setBeam(@Nonnull BeamUnit mag);
 }

@@ -152,7 +152,7 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 	private class BeamHandler implements IBeamHandler{
 
 		@Override
-		public void setMagic(BeamUnit mag){
+		public void setBeam(BeamUnit mag){
 			if(!mag.isEmpty()){
 				EnumBeamAlignments newElem = EnumBeamAlignments.getAlignment(mag);
 				if(newElem != currentElement){

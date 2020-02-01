@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.crossroads.render.RenderUtil;
+import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.essentials.packets.ClientPacket;
 import net.minecraft.nbt.CompoundNBT;
 
@@ -31,6 +31,6 @@ public class AddVisualToClient extends ClientPacket{
 
 	@Override
 	protected void run(){
-		SafeCallable.effectsToRender.add(RenderUtil.visualFactories[nbt.getInt("id")].apply(nbt));
+		SafeCallable.effectsToRender.add(CRRenderUtil.visualFactories[nbt.getInt("id")].apply(nbt));
 	}
 }

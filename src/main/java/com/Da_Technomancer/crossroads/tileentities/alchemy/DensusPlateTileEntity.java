@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.alchemy.DensusPlate;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -44,7 +44,7 @@ public class DensusPlateTileEntity extends TileEntity implements ITickableTileEn
 			if(!(state.getBlock() instanceof DensusPlate)){
 				return Direction.DOWN;
 			}
-			facing = state.get(EssentialsProperties.FACING);
+			facing = state.get(ESProperties.FACING);
 			anti = state.getBlock() == CRBlocks.antiDensusPlate;
 		}
 		return facing;
@@ -56,7 +56,7 @@ public class DensusPlateTileEntity extends TileEntity implements ITickableTileEn
 			if(!(state.getBlock() instanceof DensusPlate)){
 				return false;
 			}
-			facing = state.get(EssentialsProperties.FACING);
+			facing = state.get(ESProperties.FACING);
 			anti = state.getBlock() == CRBlocks.antiDensusPlate;
 		}
 		return anti;

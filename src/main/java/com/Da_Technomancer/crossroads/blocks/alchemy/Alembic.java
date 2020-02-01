@@ -2,8 +2,8 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.AlembicTileEntity;
-import com.Da_Technomancer.essentials.EssentialsConfig;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.ESConfig;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
@@ -48,14 +48,14 @@ public class Alembic extends ContainerBlock{
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return getDefaultState().with(EssentialsProperties.HORIZ_FACING, context.getPlacementHorizontalFacing().getOpposite());
+		return getDefaultState().with(ESProperties.HORIZ_FACING, context.getPlacementHorizontalFacing().getOpposite());
 	}
 
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand))){
+		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.with(EssentialsProperties.HORIZ_FACING, state.get(EssentialsProperties.HORIZ_FACING).rotateY()));
+				worldIn.setBlockState(pos, state.with(ESProperties.HORIZ_FACING, state.get(ESProperties.HORIZ_FACING).rotateY()));
 			}
 			return true;
 		}
@@ -71,7 +71,7 @@ public class Alembic extends ContainerBlock{
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
-		return SHAPES[state.get(EssentialsProperties.HORIZ_FACING).getHorizontalIndex()];
+		return SHAPES[state.get(ESProperties.HORIZ_FACING).getHorizontalIndex()];
 	}
 
 	@Override
@@ -81,6 +81,6 @@ public class Alembic extends ContainerBlock{
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
-		builder.add(EssentialsProperties.HORIZ_FACING);
+		builder.add(ESProperties.HORIZ_FACING);
 	}
 }

@@ -8,7 +8,7 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.BeamExtractRec;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -50,8 +50,8 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 	private Direction getFacing(){
 		if(facing == null){
 			BlockState s = world.getBlockState(pos);
-			if(s.has(EssentialsProperties.FACING)){
-				facing = s.get(EssentialsProperties.FACING);
+			if(s.has(ESProperties.FACING)){
+				facing = s.get(ESProperties.FACING);
 			}else{
 				return Direction.DOWN;
 			}

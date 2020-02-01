@@ -7,7 +7,7 @@ import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.texture.ITickable;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,6 +28,7 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 @ObjectHolder(Crossroads.MODID)
@@ -44,7 +45,7 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 	private int curPower = 0;//Current power generation (fe/t); used for readouts
 	private int clientCurPower = 0;//Current power gen on the client; used for rendering. On the server side, tracks last sent value
 	private float angle = 0;//Used for rendering. Client side only
-	private BlockPos link = null;
+	private final HashSet<BlockPos> link = new HashSet<>(1);
 
 	public ChronoHarnessTileEntity(){
 		super(type);
@@ -64,7 +65,7 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 	private boolean hasRedstone(){
 		BlockState state = world.getBlockState(pos);
 		if(state.getBlock() == CRBlocks.chronoHarness){
-			return state.get(EssentialsProperties.REDSTONE_BOOL);
+			return state.get(ESProperties.REDSTONE_BOOL);
 		}
 		remove();
 		return true;
@@ -76,10 +77,10 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 			curPower = (int) message;//Just used as a way of sending power gen
 		}
 		if(identifier == LINK_PACKET_ID){
-			link = BlockPos.fromLong(message);
+			link.add(BlockPos.fromLong(message));
 			markDirty();
 		}else if(identifier == CLEAR_PACKET_ID){
-			link = null;
+			link.clear();
 			markDirty();
 		}
 	}
@@ -91,8 +92,10 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 		}else{
 			boolean shouldRun = fe < FE_CAPACITY && !hasRedstone();
 
-			if(link != null && world.getGameTime() % FluxUtil.FLUX_TIME == 1){
-				FluxUtil.performTransfer(this, link);
+			if(world.getGameTime() % FluxUtil.FLUX_TIME == 1){
+				for(BlockPos linked : link){
+					FluxUtil.performTransfer(this, linked);
+				}
 			}
 
 			if(shouldRun){
@@ -156,8 +159,8 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 		nbt.putInt("fe", fe);
 		nbt.putInt("flux", flux);
 		nbt.putInt("pow", curPower);
-		if(link != null){
-			nbt.putLong("link", link.toLong());
+		for(BlockPos linked : link){//Size 0 or 1
+			nbt.putLong("link", linked.toLong());
 		}
 
 		return nbt;
@@ -171,9 +174,9 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 		curPower = nbt.getInt("pow");
 		clientCurPower = curPower;
 		if(nbt.contains("link")){
-			link = BlockPos.fromLong(nbt.getLong("link"));
+			link.add(BlockPos.fromLong(nbt.getLong("link")));
 		}else{
-			link = null;
+			link.clear();
 		}
 	}
 
@@ -181,6 +184,9 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
 		nbt.putInt("pow", curPower);
+		for(BlockPos linked : link){//Size 0 or 1
+			nbt.putLong("link", linked.toLong());
+		}
 		return nbt;
 	}
 
@@ -197,7 +203,7 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 
 	@Override
 	public Set<BlockPos> getLinks(){
-		return FluxUtil.makeLinkSet(link);
+		return link;
 	}
 
 	private class EnergyHandler implements IEnergyStorage{

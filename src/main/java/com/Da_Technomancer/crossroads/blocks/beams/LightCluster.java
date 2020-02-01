@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -37,7 +37,7 @@ public class LightCluster extends Block{
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
-		setDefaultState(getDefaultState().with(EssentialsProperties.COLOR, DyeColor.WHITE));
+		setDefaultState(getDefaultState().with(ESProperties.COLOR, DyeColor.WHITE));
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class LightCluster extends Block{
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
-		builder.add(EssentialsProperties.COLOR);
+		builder.add(ESProperties.COLOR);
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class LightCluster extends Block{
 		ItemStack heldItem = playerIn.getHeldItem(hand);
 		DyeColor col = DyeColor.getColor(heldItem);
 		if(col != null){
-			worldIn.setBlockState(pos, state.with(EssentialsProperties.COLOR, col),  2);
+			worldIn.setBlockState(pos, state.with(ESProperties.COLOR, col),  2);
 			return true;
 		}
 		return false;

@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.render.RenderUtil;
+import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -17,7 +17,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -32,7 +31,7 @@ public class FluxUtil{
 	 * This allows flux transfer to tick-order independent
 	 */
 	public static final int FLUX_TIME = BeamManager.BEAM_TIME;
-	private static final int[] COLOR_CODES = new int[] {0xFFF000, 0xFFFA00, 0xFFA000};//color codes for flux rendering
+	public static final int[] COLOR_CODES = new int[] {0xFFF000, 0xFFFA00, 0xFFA000};//color codes for flux rendering
 
 	public static void performTransfer(IFluxLink src, BlockPos linkPos){
 		World world = src.getTE().getWorld();
@@ -71,19 +70,21 @@ public class FluxUtil{
 
 	public static void renderFlux(World world, BlockPos src, BlockPos dest, int qty){
 		//This is basically a carbon copy of the tesla coil render code- this should probably be tweaked to make it more thematic
-		RenderUtil.addArc(world, src.getX() + 0.5F, src.getY() + 0.5F, src.getZ() + 0.5F, dest.getX() + 0.5F, dest.getY() + 0.5F, dest.getZ() + 0.5F, 3, 0.3F, COLOR_CODES[(int) (world.getGameTime() % 3)]);
+		CRRenderUtil.addArc(world, src.getX() + 0.5F, src.getY() + 0.5F, src.getZ() + 0.5F, dest.getX() + 0.5F, dest.getY() + 0.5F, dest.getZ() + 0.5F, 3, 0.3F, COLOR_CODES[(int) (world.getGameTime() % 3)]);
 	}
 
-	public static Set<BlockPos> makeLinkSet(BlockPos link){
-		HashSet<BlockPos> out = new HashSet<>(1);
-		if(link != null){
-			out.add(link);
-		}
-		return out;
-	}
-
+	/**
+	 * Adds information about the flux of this TE
+	 * @param tooltip The output list (will be modified)
+	 * @param te The TE to provide info about
+	 * @param fluxPerCycle Flux production. -1 to not display info about flux production
+	 */
 	public static void addFluxInfo(List<ITextComponent> tooltip, IFluxLink te, int fluxPerCycle){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.flux", te.getFlux(), te.getMaxFlux(), CRConfig.formatVal(100F * te.getFlux() / te.getMaxFlux()), CRConfig.formatVal((float) fluxPerCycle / FLUX_TIME)));
+		if(fluxPerCycle < 0){
+			tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.flux_simple", te.getFlux(), te.getMaxFlux(), CRConfig.formatVal(100F * te.getFlux() / te.getMaxFlux())));
+		}else{
+			tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.flux", te.getFlux(), te.getMaxFlux(), CRConfig.formatVal(100F * te.getFlux() / te.getMaxFlux()), CRConfig.formatVal((float) fluxPerCycle / FLUX_TIME)));
+		}
 	}
 
 	public static void addLinkInfo(List<ITextComponent> tooltip, ILinkTE te){

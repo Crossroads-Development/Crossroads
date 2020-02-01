@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
+import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.SaltReactorContainer;
 import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
 import net.minecraft.entity.player.PlayerEntity;
@@ -39,7 +39,7 @@ public class SaltReactorTileEntity extends InventoryTE{
 
 	public SaltReactorTileEntity(){
 		super(type, 1);
-		fluidProps[0] = new TankProperty(16 * WATER_USE, true, false, (Fluid f) -> f == CrossroadsFluids.distilledWater.still);//Distilled water
+		fluidProps[0] = new TankProperty(16 * WATER_USE, true, false, (Fluid f) -> f == CRFluids.distilledWater.still);//Distilled water
 		fluidProps[1] = new TankProperty(16 * WATER_USE, false, true);//Water
 	}
 

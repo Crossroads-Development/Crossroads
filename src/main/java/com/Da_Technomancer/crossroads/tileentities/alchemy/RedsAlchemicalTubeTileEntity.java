@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.alchemy.AlchemicalTube;
 import com.Da_Technomancer.crossroads.blocks.alchemy.RedsAlchemicalTube;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -31,7 +31,7 @@ public class RedsAlchemicalTubeTileEntity extends AlchemicalTubeTileEntity{
 		if(lockCache == null){
 			BlockState state = world.getBlockState(pos);
 			if(state.getBlock() instanceof RedsAlchemicalTube){
-				lockCache = state.get(EssentialsProperties.REDSTONE_BOOL);
+				lockCache = state.get(ESProperties.REDSTONE_BOOL);
 			}else{
 				return true;
 			}

@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileEntity;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -21,7 +21,7 @@ public class GatewayFrameRenderer extends TileEntityRenderer<GatewayFrameTileEnt
 
 	@Override
 	public void render(GatewayFrameTileEntity frame, double x, double y, double z, float partialTicks, int destroyStage){
-		if(frame == null || !frame.getWorld().isBlockLoaded(frame.getPos(), false) || frame.getWorld().getBlockState(frame.getPos()).get(EssentialsProperties.FACING) != Direction.UP){
+		if(frame == null || !frame.getWorld().isBlockLoaded(frame.getPos(), false) || frame.getWorld().getBlockState(frame.getPos()).get(ESProperties.FACING) != Direction.UP){
 			return;
 		}
 		super.render(frame, x, y, z, partialTicks, destroyStage, alpha);

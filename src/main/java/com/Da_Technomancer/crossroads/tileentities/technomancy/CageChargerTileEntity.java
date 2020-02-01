@@ -167,7 +167,7 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 	private class BeamHandler implements IBeamHandler{
 		
 		@Override
-		public void setMagic(BeamUnit mag){
+		public void setBeam(BeamUnit mag){
 			if(!mag.isEmpty() && !cage.isEmpty()){
 				BeamUnit cageBeam = BeamCage.getStored(cage);
 				int energy = cageBeam.getEnergy();

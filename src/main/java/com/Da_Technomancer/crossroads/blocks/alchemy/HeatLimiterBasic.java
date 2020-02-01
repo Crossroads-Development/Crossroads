@@ -3,8 +3,8 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatLimiterBasicTileEntity;
-import com.Da_Technomancer.essentials.EssentialsConfig;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.ESConfig;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
@@ -50,18 +50,18 @@ public class HeatLimiterBasic extends ContainerBlock{
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
-		builder.add(CRProperties.ACTIVE, EssentialsProperties.FACING);
+		builder.add(CRProperties.ACTIVE, ESProperties.FACING);
 	}
 
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(!worldIn.isRemote){
 			TileEntity te;
-			if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand))){
+			if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
 				if(playerIn.isSneaking()){
 					worldIn.setBlockState(pos, state.cycle(CRProperties.ACTIVE));
 				}else{
-					worldIn.setBlockState(pos, state.cycle(EssentialsProperties.FACING));
+					worldIn.setBlockState(pos, state.cycle(ESProperties.FACING));
 				}
 			}else if((te = worldIn.getTileEntity(pos)) instanceof HeatLimiterBasicTileEntity){
 				NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, buf -> {buf.writeFloat(((HeatLimiterBasicTileEntity) te).setting); buf.writeString(((HeatLimiterBasicTileEntity) te).expression); buf.writeBlockPos(pos);});
@@ -73,7 +73,7 @@ public class HeatLimiterBasic extends ContainerBlock{
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return getDefaultState().with(EssentialsProperties.FACING, context.getNearestLookingDirection());
+		return getDefaultState().with(ESProperties.FACING, context.getNearestLookingDirection());
 	}
 
 	@Override

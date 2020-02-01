@@ -5,7 +5,7 @@ import javax.annotation.Nonnull;
 public class DefaultBeamHandler implements IBeamHandler{
 
 	@Override
-	public void setMagic(@Nonnull BeamUnit mag){
+	public void setBeam(@Nonnull BeamUnit mag){
 		
 	}
 }

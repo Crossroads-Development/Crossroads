@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
+import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.OreCleanserContainer;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.OreCleanserRec;
@@ -44,7 +44,7 @@ public class OreCleanserTileEntity extends InventoryTE{
 
 	public OreCleanserTileEntity(){
 		super(type, 2);
-		fluidProps[0] = new TankProperty(1_000, true, false, (Fluid f) -> f == CrossroadsFluids.steam.still);//Steam
+		fluidProps[0] = new TankProperty(1_000, true, false, (Fluid f) -> f == CRFluids.steam.still);//Steam
 		fluidProps[1] = new TankProperty(1_000, false, true);//Dirty Water
 	}
 
@@ -89,7 +89,7 @@ public class OreCleanserTileEntity extends InventoryTE{
 			fluids[0].shrink(WATER_USE);
 
 			if(fluids[1].isEmpty()){
-				fluids[1] = new FluidStack(CrossroadsFluids.dirtyWater.still, WATER_USE);
+				fluids[1] = new FluidStack(CRFluids.dirtyWater.still, WATER_USE);
 			}else{
 				fluids[1].grow(WATER_USE);
 			}

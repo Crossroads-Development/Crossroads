@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.GlasswareHolderTileEntity;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
@@ -72,19 +72,19 @@ public class GlasswareHolder extends ContainerBlock{
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
 		if(worldIn.isBlockPowered(pos)){
-			if(!state.get(EssentialsProperties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.with(EssentialsProperties.REDSTONE_BOOL, true));
+			if(!state.get(ESProperties.REDSTONE_BOOL)){
+				worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, true));
 				worldIn.updateComparatorOutputLevel(pos, this);
 			}
-		}else if(state.get(EssentialsProperties.REDSTONE_BOOL)){
-			worldIn.setBlockState(pos, state.with(EssentialsProperties.REDSTONE_BOOL, false));
+		}else if(state.get(ESProperties.REDSTONE_BOOL)){
+			worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, false));
 			worldIn.updateComparatorOutputLevel(pos, this);
 		}
 	}
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
-		builder.add(CRProperties.CRYSTAL, CRProperties.CONTAINER_TYPE, EssentialsProperties.REDSTONE_BOOL);
+		builder.add(CRProperties.CRYSTAL, CRProperties.CONTAINER_TYPE, ESProperties.REDSTONE_BOOL);
 	}
 
 	@Override

@@ -12,7 +12,7 @@ import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.technomancy.TemporalAccelerator;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -34,6 +34,7 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 @ObjectHolder(Crossroads.MODID)
@@ -46,7 +47,7 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 	public static final int SIZE = 5;
 
 	private int flux = 0;
-	private BlockPos linkPos = null;
+	private final HashSet<BlockPos> linkPos = new HashSet<>(1);
 	private int intensity = 0;//Power of the incoming beam
 	private long lastRunTick;//Used to prevent accelerators affecting each other
 	//BlockState cache
@@ -90,10 +91,10 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 	@Override
 	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
 		if(identifier == LINK_PACKET_ID){
-			linkPos = BlockPos.fromLong(message);
+			linkPos.add(BlockPos.fromLong(message));
 			markDirty();
 		}else if(identifier == CLEAR_PACKET_ID){
-			linkPos = null;
+			linkPos.clear();
 			markDirty();
 		}
 	}
@@ -105,7 +106,7 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 				remove();
 				return Direction.DOWN;
 			}
-			facing = state.get(EssentialsProperties.FACING);
+			facing = state.get(ESProperties.FACING);
 			mode = state.get(CRProperties.ACCELERATOR_TARGET);
 		}
 
@@ -119,7 +120,7 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 				remove();
 				return TemporalAccelerator.Mode.ENTITIES;
 			}
-			facing = state.get(EssentialsProperties.FACING);
+			facing = state.get(ESProperties.FACING);
 			mode = state.get(CRProperties.ACCELERATOR_TARGET);
 		}
 
@@ -133,7 +134,9 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 			int extraTicks = extraTicks();
 
 			if(world.getGameTime() % FluxUtil.FLUX_TIME == 1){
-				FluxUtil.performTransfer(this, linkPos);
+				for(BlockPos linked : linkPos){
+					FluxUtil.performTransfer(this, linked);
+				}
 			}else if(world.getGameTime() % FluxUtil.FLUX_TIME == 0){
 				//Sped up time
 				addFlux(producedFlux());
@@ -251,8 +254,8 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 		nbt.putInt("intensity", intensity);
 		nbt.putLong("last_run", lastRunTick);
 		nbt.putInt("flux", flux);
-		if(linkPos != null){
-			nbt.putLong("link", linkPos.toLong());
+		for(BlockPos linked : linkPos){//Size 0 or 1
+			nbt.putLong("link", linked.toLong());
 		}
 		return nbt;
 	}
@@ -264,17 +267,17 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 		lastRunTick = nbt.getLong("last_run");
 		flux = nbt.getInt("flux");
 		if(nbt.contains("link")){
-			linkPos = BlockPos.fromLong(nbt.getLong("link"));
+			linkPos.add(BlockPos.fromLong(nbt.getLong("link")));
 		}else{
-			linkPos = null;
+			linkPos.clear();
 		}
 	}
 
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
-		if(linkPos != null){
-			nbt.putLong("link", linkPos.toLong());
+		for(BlockPos linked : linkPos){//Size 0 or 1
+			nbt.putLong("link", linked.toLong());
 		}
 		return nbt;
 	}
@@ -292,13 +295,13 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 
 	@Override
 	public Set<BlockPos> getLinks(){
-		return FluxUtil.makeLinkSet(linkPos);
+		return linkPos;
 	}
 
 	private class BeamHandler implements IBeamHandler{
 
 		@Override
-		public void setMagic(BeamUnit mag){
+		public void setBeam(BeamUnit mag){
 			if(mag != null && EnumBeamAlignments.getAlignment(mag) == EnumBeamAlignments.TIME){
 				if(mag.getVoid() == 0){
 					intensity += mag.getPower();//Speed up time

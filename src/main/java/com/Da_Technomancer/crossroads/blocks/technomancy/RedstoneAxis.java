@@ -2,8 +2,8 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneAxisTileEntity;
-import com.Da_Technomancer.essentials.EssentialsConfig;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.ESConfig;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -53,13 +53,13 @@ public class RedstoneAxis extends ContainerBlock{
 	
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand))){
+		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
 			TileEntity te = worldIn.getTileEntity(pos);
 			if(te instanceof RedstoneAxisTileEntity){
 				((RedstoneAxisTileEntity) te).disconnect();
 			}
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.cycle(EssentialsProperties.FACING));
+				worldIn.setBlockState(pos, state.cycle(ESProperties.FACING));
 			}
 			return true;
 		}
@@ -68,13 +68,13 @@ public class RedstoneAxis extends ContainerBlock{
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
-		builder.add(EssentialsProperties.FACING);
+		builder.add(ESProperties.FACING);
 	}
 
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return getDefaultState().with(EssentialsProperties.FACING, context.getNearestLookingDirection());
+		return getDefaultState().with(ESProperties.FACING, context.getNearestLookingDirection());
 	}
 
 	@Override

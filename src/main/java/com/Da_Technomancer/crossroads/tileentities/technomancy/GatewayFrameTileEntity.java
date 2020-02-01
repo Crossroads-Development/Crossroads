@@ -10,7 +10,7 @@ import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.dimensions.ModDimensions;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -64,7 +64,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	public void addInfo(ArrayList<String> chat, PlayerEntity player, @Nullable Direction side, BlockRayTraceResult hit){
 		chat.add("Temporal Entropy: " + EntropySavedData.getEntropy(world) + "%");
 		BlockState state = world.getBlockState(pos);
-		if(state.getBlock() == CRBlocks.gatewayFrame && state.get(EssentialsProperties.FACING).getAxis() == Direction.Axis.Y){
+		if(state.getBlock() == CRBlocks.gatewayFrame && state.get(ESProperties.FACING).getAxis() == Direction.Axis.Y){
 			BlockPos target = dialedCoord();
 			if(target != null){
 				chat.add("Dialed: " + target.getX() + ", " + target.getY() + ", " + target.getZ());
@@ -82,7 +82,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 				}
 
 				cacheValid = false;
-				if(world.getBlockState(pos).get(EssentialsProperties.FACING).getAxis() == Axis.Y){
+				if(world.getBlockState(pos).get(ESProperties.FACING).getAxis() == Axis.Y){
 					if(owner != null && element != null && getAlignment() != null){
 						Integer dim = null;
 						switch(element){
@@ -103,7 +103,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 						}
 
 						if(dim != null){
-							world.setBlockState(pos, CRBlocks.gatewayFrame.getDefaultState().with(EssentialsProperties.FACING, Direction.UP), 2);
+							world.setBlockState(pos, CRBlocks.gatewayFrame.getDefaultState().with(ESProperties.FACING, Direction.UP), 2);
 
 							EntropySavedData.addEntropy(world, BeamManager.BEAM_TIME * FLUX_MAINTAIN);
 
@@ -142,10 +142,10 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 								}
 							}
 						}else{
-							world.setBlockState(pos, CRBlocks.gatewayFrame.getDefaultState().with(EssentialsProperties.FACING, Direction.DOWN), 2);
+							world.setBlockState(pos, CRBlocks.gatewayFrame.getDefaultState().with(ESProperties.FACING, Direction.DOWN), 2);
 						}
 					}else{
-						world.setBlockState(pos, CRBlocks.gatewayFrame.getDefaultState().with(EssentialsProperties.FACING, Direction.DOWN), 2);
+						world.setBlockState(pos, CRBlocks.gatewayFrame.getDefaultState().with(ESProperties.FACING, Direction.DOWN), 2);
 					}
 				}
 				element = null;
@@ -171,11 +171,11 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 		cacheValid = true;
 		BlockPos midPos = pos.offset(Direction.DOWN, 2);
 		BlockState baseState = CRBlocks.gatewayFrame.getDefaultState();
-		if(world.getBlockState(midPos.offset(Direction.EAST, 2)) == baseState.with(EssentialsProperties.FACING, Direction.WEST) && world.getBlockState(midPos.offset(Direction.WEST, 2)) == baseState.with(EssentialsProperties.FACING, Direction.EAST)){
+		if(world.getBlockState(midPos.offset(Direction.EAST, 2)) == baseState.with(ESProperties.FACING, Direction.WEST) && world.getBlockState(midPos.offset(Direction.WEST, 2)) == baseState.with(ESProperties.FACING, Direction.EAST)){
 			cached = Axis.X;
 			return Axis.X;
 		}
-		if(world.getBlockState(midPos.offset(Direction.NORTH, 2)) == baseState.with(EssentialsProperties.FACING, Direction.SOUTH) && world.getBlockState(midPos.offset(Direction.SOUTH, 2)) == baseState.with(EssentialsProperties.FACING, Direction.NORTH)){
+		if(world.getBlockState(midPos.offset(Direction.NORTH, 2)) == baseState.with(ESProperties.FACING, Direction.SOUTH) && world.getBlockState(midPos.offset(Direction.SOUTH, 2)) == baseState.with(ESProperties.FACING, Direction.NORTH)){
 			cached = Axis.Z;
 			return Axis.Z;
 		}
@@ -209,7 +209,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, Direction side){
-		if(cap == Capabilities.BEAM_CAPABILITY && world.getBlockState(pos).get(EssentialsProperties.FACING).getAxis() == Axis.Y){
+		if(cap == Capabilities.BEAM_CAPABILITY && world.getBlockState(pos).get(ESProperties.FACING).getAxis() == Axis.Y){
 			return true;
 		}
 
@@ -219,7 +219,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.BEAM_CAPABILITY && world.getBlockState(pos).get(EssentialsProperties.FACING).getAxis() == Axis.Y){
+		if(cap == Capabilities.BEAM_CAPABILITY && world.getBlockState(pos).get(ESProperties.FACING).getAxis() == Axis.Y){
 			return (T) magicHandler;
 		}
 
@@ -278,7 +278,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	private class BeamHandler implements IBeamHandler{
 
 		@Override
-		public void setMagic(BeamUnit mag){
+		public void setBeam(BeamUnit mag){
 			if(mag != null){
 				element = EnumBeamAlignments.getAlignment(mag);
 				markDirty();

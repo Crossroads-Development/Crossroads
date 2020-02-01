@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.render.RenderUtil;
+import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ChronoHarnessTileEntity;
 import com.Da_Technomancer.essentials.render.LinkLineRenderer;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -36,7 +36,7 @@ public class ChronoHarnessRenderer extends LinkLineRenderer<ChronoHarnessTileEnt
 		GlStateManager.pushLightingAttributes();
 		GlStateManager.disableLighting();
 		GlStateManager.translated(x + 0.5D, y, z + 0.5D);
-		Pair<Float, Float> lighting = RenderUtil.setMediumLighting();
+		Pair<Float, Float> lighting = CRRenderUtil.setMediumLighting();
 
 		float smallOffset = 0.0928F;
 		float largeOffset = 5F / 16F;
@@ -65,7 +65,7 @@ public class ChronoHarnessRenderer extends LinkLineRenderer<ChronoHarnessTileEnt
 		addRod(buf, -largeOffset, -smallOffset);
 		tes.draw();
 
-		RenderUtil.enableLighting(lighting);
+		CRRenderUtil.enableLighting(lighting);
 		GlStateManager.enableLighting();
 		GlStateManager.popAttributes();
 		GlStateManager.popMatrix();

@@ -75,7 +75,7 @@ public class CRBlocks{
 //	public static Prototype prototype;
 //	public static PrototypePort prototypePort;
 	public static MechanicalArm mechanicalArm;
-	public static RedstoneRegistry redstoneRegistry;
+//	public static RedstoneRegistry redstoneRegistry;
 	public static AlchemicalTube alchemicalTubeGlass;
 	public static RedsAlchemicalTube redsAlchemicalTubeGlass;
 	public static FluidInjector fluidInjectorGlass;
@@ -206,7 +206,7 @@ public class CRBlocks{
 //		prototype = new Prototype();
 //		prototypePort = new PrototypePort();
 		mechanicalArm = new MechanicalArm();
-		redstoneRegistry = new RedstoneRegistry();
+//		redstoneRegistry = new RedstoneRegistry();
 		alchemicalTubeGlass = new AlchemicalTube(false);
 		redsAlchemicalTubeGlass = new RedsAlchemicalTube(false);
 		fluidInjectorGlass = new FluidInjector(false);

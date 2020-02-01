@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
+import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.RadiatorContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -34,7 +34,7 @@ public class RadiatorTileEntity extends InventoryTE{
 
 	public RadiatorTileEntity(){
 		super(type, 0);
-		fluidProps[0] = new TankProperty(10_000, true, false, (Fluid f) -> f == CrossroadsFluids.steam.still);
+		fluidProps[0] = new TankProperty(10_000, true, false, (Fluid f) -> f == CRFluids.steam.still);
 		fluidProps[1] = new TankProperty(10_000, false, true);
 	}
 
@@ -55,7 +55,7 @@ public class RadiatorTileEntity extends InventoryTE{
 		if(!world.isRemote && fluids[0].getAmount() >= FLUID_USE && fluidProps[1].capacity - fluids[1].getAmount() >= FLUID_USE){
 			temp += FLUID_USE * EnergyConverters.degPerSteamBucket() / 1000;
 			if(fluids[1].isEmpty()){
-				fluids[1] = new FluidStack(CrossroadsFluids.distilledWater.still, FLUID_USE);
+				fluids[1] = new FluidStack(CRFluids.distilledWater.still, FLUID_USE);
 			}else{
 				fluids[1].grow(FLUID_USE);
 			}

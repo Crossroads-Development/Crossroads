@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.effects.alchemy;
 
-import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
+import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.world.biome.Biome;
@@ -25,7 +25,7 @@ public class LumenEffect extends AetherEffect{
 
 	@Override
 	protected Block fluidBlock(){
-		return CrossroadsFluids.distilledWater.block;
+		return CRFluids.distilledWater.block;
 	}
 
 	@Override

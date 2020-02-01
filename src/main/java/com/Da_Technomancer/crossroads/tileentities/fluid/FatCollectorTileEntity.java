@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
+import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.FatCollectorContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.entity.player.PlayerEntity;
@@ -69,7 +69,7 @@ public class FatCollectorTileEntity extends InventoryTE{
 				temp -= heatUse;
 				inventory[0].shrink(1);
 				if(fluids[0].isEmpty()){
-					fluids[0] = new FluidStack(CrossroadsFluids.liquidFat.still, liqAm);
+					fluids[0] = new FluidStack(CRFluids.liquidFat.still, liqAm);
 				}else{
 					fluids[0].grow(liqAm);
 				}

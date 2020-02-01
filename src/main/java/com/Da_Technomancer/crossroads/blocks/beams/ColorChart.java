@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.beams;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.gui.container.ColorChartContainer;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
@@ -66,16 +66,16 @@ public class ColorChart extends Block{
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return getDefaultState().with(EssentialsProperties.FACING, context.getNearestLookingDirection().getOpposite());
+		return getDefaultState().with(ESProperties.FACING, context.getNearestLookingDirection().getOpposite());
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context){
-		return SHAPES[state.get(EssentialsProperties.FACING).getIndex()];
+		return SHAPES[state.get(ESProperties.FACING).getIndex()];
 	}
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
-		builder.add(EssentialsProperties.FACING);
+		builder.add(ESProperties.FACING);
 	}
 }

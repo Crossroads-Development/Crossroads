@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.entity;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.render.RenderUtil;
+import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -38,7 +38,7 @@ public class RenderFlameCoreEntity extends EntityRenderer<EntityFlameCore>{
 		GlStateManager.disableLighting();
 		GlStateManager.disableCull();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		Pair<Float, Float> lightSetting = RenderUtil.disableLighting();
+		Pair<Float, Float> lightSetting = CRRenderUtil.disableLighting();
 
 		GlStateManager.color4f((float) col.getRed() / 255F, (float) col.getGreen() / 255F, (float) col.getBlue() / 255F, (float) col.getAlpha() / 255F);
 		GlStateManager.translated(x, y, z);
@@ -83,7 +83,7 @@ public class RenderFlameCoreEntity extends EntityRenderer<EntityFlameCore>{
 		
 		Tessellator.getInstance().draw();
 		
-		RenderUtil.enableLighting(lightSetting);
+		CRRenderUtil.enableLighting(lightSetting);
 		GlStateManager.color4f(1, 1, 1, 1);
 		GlStateManager.enableCull();
 		GlStateManager.enableLighting();

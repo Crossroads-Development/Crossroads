@@ -16,7 +16,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.function.Function;
 
-public class RenderUtil{
+public class CRRenderUtil{
 
 	@SuppressWarnings("unchecked")
 	public static final Function<CompoundNBT, IVisualEffect>[] visualFactories = (Function<CompoundNBT, IVisualEffect>[]) new Function[2];

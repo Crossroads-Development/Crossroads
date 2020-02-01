@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
+import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.tileentities.fluid.OreCleanserTileEntity;
 import com.google.common.collect.ImmutableList;
 import mezz.jei.api.constants.VanillaTypes;
@@ -87,10 +87,10 @@ public class OreCleanserCategory implements IRecipeCategory<OreCleanserRecipe>{
 		itemGroup.set(1, recipe.output);
 
 		fluidGroup.init(0, true, 34, 30, 16, 64, 1_000, true, fluidOverlay);
-		fluidGroup.set(0, new FluidStack(CrossroadsFluids.steam.still, OreCleanserTileEntity.WATER_USE));
+		fluidGroup.set(0, new FluidStack(CRFluids.steam.still, OreCleanserTileEntity.WATER_USE));
 
 		fluidGroup.init(1, false, 130, 30, 16, 64, 1_000, true, fluidOverlay);
-		fluidGroup.set(1, new FluidStack(CrossroadsFluids.dirtyWater.still, OreCleanserTileEntity.WATER_USE));
+		fluidGroup.set(1, new FluidStack(CRFluids.dirtyWater.still, OreCleanserTileEntity.WATER_USE));
 
 		itemGroup.set(ingredients);
 		fluidGroup.set(ingredients);
@@ -100,7 +100,7 @@ public class OreCleanserCategory implements IRecipeCategory<OreCleanserRecipe>{
 	public void setIngredients(OreCleanserRecipe recipe, IIngredients ingredients){
 		ingredients.setInputLists(VanillaTypes.ITEM, ImmutableList.of(recipe.inputs));
 		ingredients.setOutput(VanillaTypes.ITEM, recipe.output);
-		ingredients.setInput(VanillaTypes.FLUID, new FluidStack(CrossroadsFluids.steam.still, OreCleanserTileEntity.WATER_USE));
-		ingredients.setOutput(VanillaTypes.FLUID, new FluidStack(CrossroadsFluids.dirtyWater.still, OreCleanserTileEntity.WATER_USE));
+		ingredients.setInput(VanillaTypes.FLUID, new FluidStack(CRFluids.steam.still, OreCleanserTileEntity.WATER_USE));
+		ingredients.setOutput(VanillaTypes.FLUID, new FluidStack(CRFluids.dirtyWater.still, OreCleanserTileEntity.WATER_USE));
 	}
 }

@@ -29,7 +29,6 @@ public class FluxNodeRenderer extends TileEntityRenderer<FluxNodeTileEntity>{
 
 		GlStateManager.translated(x + .5D, y + .5D, z + .5D);
 
-
 		float angle = te.getRenderAngle(partialTicks);
 		Tessellator tess = Tessellator.getInstance();
 		BufferBuilder buf = tess.getBuffer();

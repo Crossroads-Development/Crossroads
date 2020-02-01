@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.API.beams.BeamUnitStorage;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -42,7 +42,7 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 			if(state.getBlock() != CRBlocks.quartzStabilizer){
 				return Direction.NORTH;
 			}
-			dir = state.get(EssentialsProperties.FACING);
+			dir = state.get(ESProperties.FACING);
 		}
 		return dir;
 	}

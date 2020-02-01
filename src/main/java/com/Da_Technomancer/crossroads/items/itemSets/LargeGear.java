@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearSlaveTileEntity;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemUseContext;
@@ -62,10 +62,10 @@ public class LargeGear extends GearMatItem{
 
 		for(BlockPos cPos : spaces){
 			if(cPos.distanceSq(BlockPos.ZERO) == 0){
-				world.setBlockState(pos, CRBlocks.largeGearMaster.getDefaultState().with(EssentialsProperties.FACING, side.getOpposite()), 3);
+				world.setBlockState(pos, CRBlocks.largeGearMaster.getDefaultState().with(ESProperties.FACING, side.getOpposite()), 3);
 				((LargeGearMasterTileEntity) world.getTileEntity(pos)).initSetup(type);
 			}else{
-				world.setBlockState(pos.add(cPos), CRBlocks.largeGearSlave.getDefaultState().with(EssentialsProperties.FACING, side.getOpposite()), 3);
+				world.setBlockState(pos.add(cPos), CRBlocks.largeGearSlave.getDefaultState().with(ESProperties.FACING, side.getOpposite()), 3);
 				((LargeGearSlaveTileEntity) world.getTileEntity(pos.add(cPos))).setInitial(BlockPos.ZERO.subtract(cPos));
 			}
 		}

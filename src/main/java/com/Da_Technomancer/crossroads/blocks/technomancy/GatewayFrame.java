@@ -6,8 +6,8 @@ import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileEntity;
-import com.Da_Technomancer.essentials.EssentialsConfig;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.ESConfig;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
@@ -43,7 +43,7 @@ public class GatewayFrame extends ContainerBlock{
 		if(facing == Direction.UP){
 			facing = Direction.DOWN;
 		}
-		return getDefaultState().with(EssentialsProperties.FACING, placer instanceof FakePlayer ? Direction.NORTH : facing);
+		return getDefaultState().with(ESProperties.FACING, placer instanceof FakePlayer ? Direction.NORTH : facing);
 	}
 
 	@Override
@@ -51,8 +51,8 @@ public class GatewayFrame extends ContainerBlock{
 		ItemStack heldItem = playerIn.getHeldItem(hand);
 		if(FluxUtil.handleFluxLinking(worldIn, pos, heldItem, playerIn)){
 			return true;
-		}else if(EssentialsConfig.isWrench(heldItem)){
-			worldIn.setBlockState(pos, state.cycle(EssentialsProperties.FACING));//TODO check
+		}else if(ESConfig.isWrench(heldItem)){
+			worldIn.setBlockState(pos, state.cycle(ESProperties.FACING));//TODO check
 			TileEntity te = worldIn.getTileEntity(pos);
 			if(!worldIn.isRemote && te instanceof GatewayFrameTileEntity){
 				((GatewayFrameTileEntity) te).resetCache();
@@ -74,7 +74,7 @@ public class GatewayFrame extends ContainerBlock{
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, EssentialsProperties.FACING);
+		return new BlockStateContainer(this, ESProperties.FACING);
 	}
 
 	@Override

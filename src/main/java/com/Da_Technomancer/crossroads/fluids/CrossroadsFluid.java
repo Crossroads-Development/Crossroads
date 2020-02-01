@@ -30,8 +30,8 @@ public class CrossroadsFluid{
 	public Item bucket;
 
 	public CrossroadsFluid(String name, boolean lavaLike){
-		CrossroadsFluids.toRegister.add(still = new Still(name));
-		CrossroadsFluids.toRegister.add(flowing = new Flowing("flowing_" + name));
+		CRFluids.toRegister.add(still = new Still(name));
+		CRFluids.toRegister.add(flowing = new Flowing("flowing_" + name));
 		CRBlocks.toRegister.add(block = (FlowingFluidBlock) new FlowingFluidBlock(() -> still, lavaLike ? BLOCK_PROP_HOT : BLOCK_PROP).setRegistryName(name + "_block"));
 		CRItems.toRegister.add(bucket = new BucketItem(() -> still, BUCKET_PROP).setRegistryName(name + "_bucket"));
 	}

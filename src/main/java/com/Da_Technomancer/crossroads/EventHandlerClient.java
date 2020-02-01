@@ -9,7 +9,7 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamUsingItem;
 import com.Da_Technomancer.crossroads.render.IVisualEffect;
-import com.Da_Technomancer.crossroads.render.RenderUtil;
+import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -78,7 +78,7 @@ public final class EventHandlerClient{
 			GlStateManager.disableCull();
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-			Pair<Float, Float> lighting = RenderUtil.disableLighting();
+			Pair<Float, Float> lighting = CRRenderUtil.disableLighting();
 
 			ArrayList<IVisualEffect> toRemove = new ArrayList<>();
 			Tessellator tes = Tessellator.getInstance();
@@ -99,7 +99,7 @@ public final class EventHandlerClient{
 
 			SafeCallable.effectsToRender.removeAll(toRemove);
 
-			RenderUtil.enableLighting(lighting);
+			CRRenderUtil.enableLighting(lighting);
 			GlStateManager.enableCull();
 			GlStateManager.disableBlend();
 			GlStateManager.enableLighting();

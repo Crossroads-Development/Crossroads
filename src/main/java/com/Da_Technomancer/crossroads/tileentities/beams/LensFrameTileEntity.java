@@ -14,7 +14,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -58,7 +58,7 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 			if(state.getBlock() != CRBlocks.lensFrame){
 				return Direction.Axis.X;
 			}
-			axis = state.get(EssentialsProperties.AXIS);
+			axis = state.get(ESProperties.AXIS);
 		}
 
 		return axis;
@@ -250,7 +250,7 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 		}
 
 		@Override
-		public void setMagic(@Nonnull BeamUnit mag){
+		public void setBeam(@Nonnull BeamUnit mag){
 			if(beamer[0] == null || beamer[1] == null){
 				beamer[0] = new BeamManager(Direction.getFacingFromAxis(AxisDirection.NEGATIVE, getAxis()), pos);
 				beamer[1] = new BeamManager(Direction.getFacingFromAxis(AxisDirection.POSITIVE, getAxis()), pos);

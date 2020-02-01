@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.blocks.fluid.RedstoneFluidTube;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 
@@ -14,7 +14,7 @@ public class RedstoneFluidTubeTileEntity extends FluidTubeTileEntity{
 		BlockState state = world.getBlockState(pos);
 		BlockState newState = state;
 		if(state.getBlock() instanceof RedstoneFluidTube){
-			boolean reds = state.get(EssentialsProperties.REDSTONE_BOOL);
+			boolean reds = state.get(ESProperties.REDSTONE_BOOL);
 			for(int i = 0; i < 6; i++){
 				newState = newState.with(CRProperties.CONDUIT_SIDES[i], reds && hasMatch[i] ? configure[i] : EnumTransferMode.NONE);
 			}
@@ -26,13 +26,13 @@ public class RedstoneFluidTubeTileEntity extends FluidTubeTileEntity{
 
 	@Override
 	public void tick(){
-		if(!world.isRemote && world.getBlockState(pos).get(EssentialsProperties.REDSTONE_BOOL)){
+		if(!world.isRemote && world.getBlockState(pos).get(ESProperties.REDSTONE_BOOL)){
 			super.tick();
 		}
 	}
 
 	@Override
 	protected boolean canConnect(Direction side){
-		return super.canConnect(side) && world.getBlockState(pos).get(EssentialsProperties.REDSTONE_BOOL);
+		return super.canConnect(side) && world.getBlockState(pos).get(ESProperties.REDSTONE_BOOL);
 	}
 }

@@ -2,8 +2,8 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
-import com.Da_Technomancer.essentials.EssentialsConfig;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.ESConfig;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
@@ -33,18 +33,18 @@ public class MasterAxis extends ContainerBlock{
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return getDefaultState().with(EssentialsProperties.FACING, context.getNearestLookingDirection().getOpposite());
+		return getDefaultState().with(ESProperties.FACING, context.getNearestLookingDirection().getOpposite());
 	}
 
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(EssentialsConfig.isWrench(playerIn.getHeldItem(hand))){
+		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
 			TileEntity te = worldIn.getTileEntity(pos);
 			if(te instanceof MasterAxisTileEntity){
 				((MasterAxisTileEntity) te).disconnect();
 			}
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.cycle(EssentialsProperties.FACING));
+				worldIn.setBlockState(pos, state.cycle(ESProperties.FACING));
 			}
 			return true;
 		}
@@ -53,7 +53,7 @@ public class MasterAxis extends ContainerBlock{
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
-		builder.add(EssentialsProperties.FACING);
+		builder.add(ESProperties.FACING);
 	}
 
 	@Override
@@ -78,11 +78,11 @@ public class MasterAxis extends ContainerBlock{
 
 	@Override
 	public BlockState rotate(BlockState state, Rotation rot){
-		return state.with(EssentialsProperties.FACING, rot.rotate(state.get(EssentialsProperties.FACING)));
+		return state.with(ESProperties.FACING, rot.rotate(state.get(ESProperties.FACING)));
 	}
 
 	@Override
 	public BlockState mirror(BlockState state, Mirror mirrorIn){
-		return state.rotate(mirrorIn.toRotation(state.get(EssentialsProperties.FACING)));
+		return state.rotate(mirrorIn.toRotation(state.get(ESProperties.FACING)));
 	}
 }

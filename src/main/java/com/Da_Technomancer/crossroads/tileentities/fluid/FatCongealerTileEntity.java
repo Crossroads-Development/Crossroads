@@ -5,11 +5,11 @@ import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
+import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.FatCongealerContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.EdibleBlob;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.tileentities.AbstractShifterTileEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -45,7 +45,7 @@ public class FatCongealerTileEntity extends InventoryTE{
 
 	public FatCongealerTileEntity(){
 		super(type, 1);
-		fluidProps[0] = new TankProperty(10_000, true, false, (Fluid f) -> CrossroadsFluids.liquidFat.still == f);
+		fluidProps[0] = new TankProperty(10_000, true, false, (Fluid f) -> CRFluids.liquidFat.still == f);
 	}
 
 	@Override
@@ -57,8 +57,8 @@ public class FatCongealerTileEntity extends InventoryTE{
 	private Direction getFacing(){
 		if(facing == null){
 			BlockState state = world.getBlockState(pos);
-			if(state.has(EssentialsProperties.HORIZ_FACING)){
-				facing = state.get(EssentialsProperties.HORIZ_FACING);
+			if(state.has(ESProperties.HORIZ_FACING)){
+				facing = state.get(ESProperties.HORIZ_FACING);
 			}else{
 				remove();
 				return Direction.NORTH;

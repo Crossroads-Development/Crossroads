@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.*;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
+import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.items.crafting.PredicateMap;
@@ -130,11 +130,11 @@ public final class AlchemyCore{
 		});
 		FLAME_RANGES.put(hellfire, (Integer amount) -> CRConfig.allowHellfire.get() ? (int) Math.min(64, amount * 2D) : (int) Math.min(8, Math.round(amount / 2D)));
 
-		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CrossroadsFluids.distilledWater.still, 100), REAGENTS.get(WATER.id())));
-		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CrossroadsFluids.moltenIron.still, EnergyConverters.INGOT_MB), REAGENTS.get(IRON.id())));
-		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CrossroadsFluids.moltenGold.still, EnergyConverters.INGOT_MB), REAGENTS.get(GOLD.id())));
-		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CrossroadsFluids.moltenCopper.still, EnergyConverters.INGOT_MB), REAGENTS.get(COPPER.id())));
-		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CrossroadsFluids.moltenTin.still, EnergyConverters.INGOT_MB), REAGENTS.get(TIN.id())));
+		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CRFluids.distilledWater.still, 100), REAGENTS.get(WATER.id())));
+		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CRFluids.moltenIron.still, EnergyConverters.INGOT_MB), REAGENTS.get(IRON.id())));
+		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CRFluids.moltenGold.still, EnergyConverters.INGOT_MB), REAGENTS.get(GOLD.id())));
+		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CRFluids.moltenCopper.still, EnergyConverters.INGOT_MB), REAGENTS.get(COPPER.id())));
+		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CRFluids.moltenTin.still, EnergyConverters.INGOT_MB), REAGENTS.get(TIN.id())));
 
 		// Reactions
 

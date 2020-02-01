@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.render.TESR;
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.render.RenderUtil;
+import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.BeaconHarnessTileEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
@@ -47,7 +47,7 @@ public class BeaconHarnessRenderer extends TileEntityRenderer<BeaconHarnessTileE
 				GlStateManager.color3f(trip.getLeft().getRed() / 255F, trip.getLeft().getGreen() / 255F, trip.getLeft().getBlue() / 255F);
 				Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE_BEACON_BEAM);
 				GlStateManager.disableLighting();
-				Pair<Float, Float> lighting = RenderUtil.disableLighting();
+				Pair<Float, Float> lighting = CRRenderUtil.disableLighting();
 				
 				switch(dir){
 					case 0:
@@ -90,7 +90,7 @@ public class BeaconHarnessRenderer extends TileEntityRenderer<BeaconHarnessTileE
 				tes.draw();
 
 				GlStateManager.color3f(1, 1, 1);
-				RenderUtil.enableLighting(lighting);
+				CRRenderUtil.enableLighting(lighting);
 				GlStateManager.enableLighting();
 				GlStateManager.popAttributes();
 				GlStateManager.popMatrix();
@@ -106,7 +106,7 @@ public class BeaconHarnessRenderer extends TileEntityRenderer<BeaconHarnessTileE
 		GlStateManager.pushLightingAttributes();
 		GlStateManager.disableLighting();
 		GlStateManager.translated(x + 0.5D, y, z + 0.5D);
-		Pair<Float, Float> prev = RenderUtil.setMediumLighting();
+		Pair<Float, Float> prev = CRRenderUtil.setMediumLighting();
 
 		float smallOffset = 0.0928F;
 		float largeOffset = 5F / 16F;
@@ -135,7 +135,7 @@ public class BeaconHarnessRenderer extends TileEntityRenderer<BeaconHarnessTileE
 		addRod(buf, -largeOffset, -smallOffset);
 		tes.draw();
 
-		RenderUtil.enableLighting(prev);
+		CRRenderUtil.enableLighting(prev);
 		GlStateManager.enableLighting();
 		GlStateManager.popAttributes();
 		GlStateManager.popMatrix();

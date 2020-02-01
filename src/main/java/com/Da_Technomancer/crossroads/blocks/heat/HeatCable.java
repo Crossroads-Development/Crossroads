@@ -7,7 +7,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
-import com.Da_Technomancer.essentials.EssentialsConfig;
+import com.Da_Technomancer.essentials.ESConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -99,7 +99,7 @@ public class HeatCable extends ContainerBlock{
 			if(held.isEmpty()){
 				return false;
 			}
-			if(EssentialsConfig.isWrench(held)){
+			if(ESConfig.isWrench(held)){
 				if(!worldIn.isRemote){
 					int face;
 					if(hit.getHitVec().y < SIZE){

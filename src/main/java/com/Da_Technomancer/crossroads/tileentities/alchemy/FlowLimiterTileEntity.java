@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.sun.tools.javac.util.List;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -39,8 +39,8 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 	public Direction getFacing(){
 		if(facing == null){
 			BlockState state = world.getBlockState(pos);
-			if(state.has(EssentialsProperties.FACING)){
-				facing = state.get(EssentialsProperties.FACING);
+			if(state.has(ESProperties.FACING)){
+				facing = state.get(ESProperties.FACING);
 				return facing;
 			}
 			return Direction.DOWN;
@@ -61,7 +61,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 
 	@Override
 	protected void performTransfer(){
-		Direction side = world.getBlockState(pos).get(EssentialsProperties.FACING);
+		Direction side = world.getBlockState(pos).get(ESProperties.FACING);
 		TileEntity te = world.getTileEntity(pos.offset(side));
 		LazyOptional<IChemicalHandler> otherOpt;
 		if(contents.getTotalQty() == 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
@@ -98,7 +98,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 	@Override
 	protected EnumTransferMode[] getModes(){
 		EnumTransferMode[] output = {EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE};
-		Direction outSide = world.getBlockState(pos).get(EssentialsProperties.FACING);
+		Direction outSide = world.getBlockState(pos).get(ESProperties.FACING);
 		output[outSide.getIndex()] = EnumTransferMode.OUTPUT;
 		output[outSide.getOpposite().getIndex()] = EnumTransferMode.INPUT;
 		return output;
@@ -120,7 +120,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).get(EssentialsProperties.FACING).getAxis())){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).get(ESProperties.FACING).getAxis())){
 			return (LazyOptional<T>) chemOpt;
 		}
 		return super.getCapability(cap, side);

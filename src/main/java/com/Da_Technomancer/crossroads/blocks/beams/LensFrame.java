@@ -2,8 +2,8 @@ package com.Da_Technomancer.crossroads.blocks.beams;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.beams.LensFrameTileEntity;
-import com.Da_Technomancer.essentials.EssentialsConfig;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.ESConfig;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.Block;
@@ -51,7 +51,7 @@ public class LensFrame extends ContainerBlock implements IReadable{
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
-		return SHAPE[state.get(EssentialsProperties.AXIS).ordinal()];
+		return SHAPE[state.get(ESProperties.AXIS).ordinal()];
 	}
 
 	@Override
@@ -73,12 +73,12 @@ public class LensFrame extends ContainerBlock implements IReadable{
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return getDefaultState().with(EssentialsProperties.AXIS, context.getNearestLookingDirection().getAxis());
+		return getDefaultState().with(ESProperties.AXIS, context.getNearestLookingDirection().getAxis());
 	}
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
-		builder.add(EssentialsProperties.AXIS);
+		builder.add(ESProperties.AXIS);
 	}
 
 	@Override
@@ -86,8 +86,8 @@ public class LensFrame extends ContainerBlock implements IReadable{
 		if(!worldIn.isRemote){
 			ItemStack stack = playerIn.getHeldItem(hand);
 
-			if(EssentialsConfig.isWrench(stack)){
-				worldIn.setBlockState(pos, state.cycle(EssentialsProperties.AXIS));
+			if(ESConfig.isWrench(stack)){
+				worldIn.setBlockState(pos, state.cycle(ESProperties.AXIS));
 				TileEntity te = worldIn.getTileEntity(pos);
 				if(te instanceof LensFrameTileEntity){
 					((LensFrameTileEntity) te).refresh();

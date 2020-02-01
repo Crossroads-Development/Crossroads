@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
+import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.SteamBoilerContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.entity.player.PlayerEntity;
@@ -40,7 +40,7 @@ public class SteamBoilerTileEntity extends InventoryTE{
 
 	public SteamBoilerTileEntity(){
 		super(type, 1);//Salt
-		fluidProps[0] = new TankProperty(8_000, true, false, (Fluid f) -> f == Fluids.WATER || f == CrossroadsFluids.distilledWater.still);
+		fluidProps[0] = new TankProperty(8_000, true, false, (Fluid f) -> f == Fluids.WATER || f == CRFluids.distilledWater.still);
 		fluidProps[1] = new TankProperty(8_000, false, true, fluid -> true);
 	}
 	
@@ -84,7 +84,7 @@ public class SteamBoilerTileEntity extends InventoryTE{
 				}
 				fluids[0].shrink(batches * BATCH_SIZE);
 				if(fluids[1].isEmpty()){
-					fluids[1] = new FluidStack(CrossroadsFluids.steam.still, BATCH_SIZE * batches);
+					fluids[1] = new FluidStack(CRFluids.steam.still, BATCH_SIZE * batches);
 				}else{
 					fluids[1].grow(BATCH_SIZE * batches);
 				}

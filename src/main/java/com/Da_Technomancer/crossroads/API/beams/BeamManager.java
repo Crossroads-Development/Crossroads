@@ -44,7 +44,7 @@ public class BeamManager{
 			TileEntity checkTE = world.getTileEntity(pos.offset(dir, i));
 			LazyOptional<IBeamHandler> opt;
 			if(checkTE != null && (opt = checkTE.getCapability(Capabilities.BEAM_CAPABILITY, dir.getOpposite())).isPresent()){
-				opt.orElseThrow(NullPointerException::new).setMagic(mag);
+				opt.orElseThrow(NullPointerException::new).setBeam(mag);
 				if(dist != i * i || !mag.equals(lastSent)){
 					dist = i;
 					lastSent = mag;

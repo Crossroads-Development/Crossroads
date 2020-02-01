@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads;
 
-import com.Da_Technomancer.essentials.EssentialsConfig;
+import com.Da_Technomancer.essentials.ESConfig;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import net.minecraft.block.Block;
@@ -53,8 +53,10 @@ public class CRConfig{
 	public static ForgeConfigSpec.IntValue voltusValue;
 	public static ForgeConfigSpec.IntValue atmosEffect;
 	public static ForgeConfigSpec.IntValue atmosCap;
+	public static ForgeConfigSpec.DoubleValue copsPerLiq;
+	public static ForgeConfigSpec.BooleanValue allowOverflow;
 //	public static ForgeConfigSpec.BooleanValue addBoboRecipes;
-//	public static ForgeConfigSpec.ConfigValue<String> cccExpenLiquid; TODO move to tag
+//	public static ForgeConfigSpec.ConfigValue<String> cccExpenLiquid;
 //	public static ForgeConfigSpec.ConfigValue<String> cccEntropLiquid;
 	public static ForgeConfigSpec.DoubleValue rotaryLoss;
 	public static ForgeConfigSpec.DoubleValue crystalAxisMult;
@@ -151,6 +153,8 @@ public class CRConfig{
 //		cccEntropLiquid = serverBuilder.comment("Liquid type for the Copshowium Creation Chamber with Temporal Entropy", "An invalid liquid will disable the crafting").define("ccc_cheap", "distilled_water");
 		fePerEntropy = serverBuilder.comment("FE equal to 1 Temporal Entropy").defineInRange("fe_per_entropy", 50, 1, Integer.MAX_VALUE);
 		teTimeAccel = serverBuilder.comment("Allow time acceleration of Tile Entities?", "Disabling this does not affect acceleration of normal entities or block ticks").define("te_accel", true);
+		copsPerLiq = serverBuilder.comment("mB of Molten Copshowium produced per mB of input liquid in the CCC").defineInRange("cops_per_liq", 2D, 0, 9);
+		allowOverflow = serverBuilder.comment("Destroy the CCC if Copshowium overfills the tank?", "Disabling this will make the CCC much easier to use").define("allow_overflow", true);
 		serverBuilder.pop();
 		serverBuilder.push(CAT_ALCHEMY);
 		phelEffect = serverBuilder.comment("Allow the full effect of Phelostogen?", "If disabled Phelostogen lights a single small fire instead").define("phel_effect", true);
@@ -205,6 +209,6 @@ public class CRConfig{
 	}
 
 	public static String formatVal(float f){
-		return EssentialsConfig.formatFloat(f, null);
+		return ESConfig.formatFloat(f, null);
 	}
 }

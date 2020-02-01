@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.entity.*;
-import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
+import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.*;
 import com.Da_Technomancer.crossroads.gui.container.*;
 import com.Da_Technomancer.crossroads.items.CRItems;
@@ -102,7 +102,7 @@ public final class Crossroads{
 	public static void registerBlocks(RegistryEvent.Register<Block> e){
 		IForgeRegistry<Block> registry = e.getRegistry();
 		CRBlocks.init();
-		CrossroadsFluids.init();
+		CRFluids.init();
 		ItemSets.init();
 		for(Block block : CRBlocks.toRegister){
 			registry.register(block);
@@ -207,7 +207,7 @@ public final class Crossroads{
 		registerCon(RotaryPumpContainer::new, RotaryPumpScreen::new, "rotary_pump", e);
 		registerCon(DetailedCrafterContainer::new, DetailedCrafterScreen::new, "detailed_crafter", e);
 		registerCon(ReagentFilterContainer::new, ReagentFilterScreen::new, "reagent_filter", e);
-		//TODO register containers
+		registerCon(CopshowiumMakerContainer::new, CopshowiumMakerScreen::new, "copshowium_maker", e);
 	}
 
 	@SubscribeEvent
@@ -237,6 +237,7 @@ public final class Crossroads{
 		registerConType(RotaryPumpContainer::new, "rotary_pump", e);
 		registerConType(DetailedCrafterContainer::new, "detailed_crafter", e);
 		registerConType(ReagentFilterContainer::new, "reagent_filter", e);
+		registerConType(CopshowiumMakerContainer::new, "copshowium_maker", e);
 	}
 
 	/**
@@ -272,10 +273,10 @@ public final class Crossroads{
 	@SuppressWarnings("unused")
 	public void registerFluids(RegistryEvent.Register<Fluid> e){
 		IForgeRegistry<Fluid> registry = e.getRegistry();
-		for(Fluid f : CrossroadsFluids.toRegister){
+		for(Fluid f : CRFluids.toRegister){
 			registry.register(f);
 		}
-		CrossroadsFluids.toRegister.clear();
+		CRFluids.toRegister.clear();
 	}
 
 	@SubscribeEvent

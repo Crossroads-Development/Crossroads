@@ -2,16 +2,16 @@ package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
-import com.Da_Technomancer.crossroads.render.RenderUtil;
+import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.render.TESR.models.ModelGearOctagon;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.TemporalAcceleratorTileEntity;
-import com.Da_Technomancer.essentials.EssentialsConfig;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.ESConfig;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
+import com.Da_Technomancer.essentials.render.LinkLineRenderer;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -22,7 +22,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
-public class TemporalAcceleratorRenderer extends TileEntityRenderer<TemporalAcceleratorTileEntity>{
+public class TemporalAcceleratorRenderer extends LinkLineRenderer<TemporalAcceleratorTileEntity>{
 
 	private static final float sHalf = 7F / (16F * (1F + (float) Math.sqrt(2F)));
 	private static final float sHalfT = .5F / (1F + (float) Math.sqrt(2F));
@@ -35,11 +35,11 @@ public class TemporalAcceleratorRenderer extends TileEntityRenderer<TemporalAcce
 		}
 		super.render(te, x, y, z, partialTicks, destroyStage);
 
-		Direction dir = te.getWorld().getBlockState(te.getPos()).get(EssentialsProperties.FACING);
+		Direction dir = te.getWorld().getBlockState(te.getPos()).get(ESProperties.FACING);
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
 		//Area of effect overlay when holding wrench
-		if(EssentialsConfig.isWrench(Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND)) || EssentialsConfig.isWrench(Minecraft.getInstance().player.getHeldItem(Hand.OFF_HAND))){
+		if(ESConfig.isWrench(Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND)) || ESConfig.isWrench(Minecraft.getInstance().player.getHeldItem(Hand.OFF_HAND))){
 			GlStateManager.pushMatrix();
 			GlStateManager.pushLightingAttributes();
 			GlStateManager.enableBlend();
@@ -47,7 +47,7 @@ public class TemporalAcceleratorRenderer extends TileEntityRenderer<TemporalAcce
 			GlStateManager.disableCull();
 			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 			GlStateManager.color4f(1, 100F / 255F, 0, 0.25F);
-			Pair<Float, Float> lighting = RenderUtil.disableLighting();
+			Pair<Float, Float> lighting = CRRenderUtil.disableLighting();
 
 			GlStateManager.translated(x + 0.5F, y + 0.5F, z + 0.5F);
 			if(dir == Direction.DOWN){
@@ -56,7 +56,7 @@ public class TemporalAcceleratorRenderer extends TileEntityRenderer<TemporalAcce
 				GlStateManager.rotated(dir.getAxisDirection() == Direction.AxisDirection.POSITIVE ? 90 : -90, dir.getAxis() == Axis.Z ? 1 : 0, 0, dir.getAxis() == Axis.X ? -1 : 0);
 			}
 
-			float radius = te.getSize() / 2F + 0.01F;
+			float radius = TemporalAcceleratorTileEntity.SIZE / 2F + 0.01F;
 			GlStateManager.translated(0, radius + 0.5 - 0.001F, 0);
 
 
@@ -95,7 +95,7 @@ public class TemporalAcceleratorRenderer extends TileEntityRenderer<TemporalAcce
 
 			Tessellator.getInstance().draw();
 
-			RenderUtil.enableLighting(lighting);
+			CRRenderUtil.enableLighting(lighting);
 			GlStateManager.color4f(1, 1, 1, 1);
 			GlStateManager.enableCull();
 			GlStateManager.enableLighting();

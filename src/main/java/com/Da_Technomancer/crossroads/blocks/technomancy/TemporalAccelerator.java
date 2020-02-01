@@ -6,8 +6,8 @@ import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.TemporalAcceleratorTileEntity;
-import com.Da_Technomancer.essentials.EssentialsConfig;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.ESConfig;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
@@ -44,13 +44,13 @@ public class TemporalAccelerator extends ContainerBlock{
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
-		builder.add(EssentialsProperties.FACING, CRProperties.ACCELERATOR_TARGET);
+		builder.add(ESProperties.FACING, CRProperties.ACCELERATOR_TARGET);
 	}
 
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return getDefaultState().with(EssentialsProperties.FACING, context.getNearestLookingDirection().getOpposite());
+		return getDefaultState().with(ESProperties.FACING, context.getNearestLookingDirection().getOpposite());
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class TemporalAccelerator extends ContainerBlock{
 		//Linking with a linking tool
 		if(FluxUtil.handleFluxLinking(worldIn, pos, held, playerIn)){
 			return true;
-		}else if(EssentialsConfig.isWrench(held)){
+		}else if(ESConfig.isWrench(held)){
 			if(playerIn.isSneaking()){
 				//Sneak clicking- change mode
 				TileEntity te = worldIn.getTileEntity(pos);
@@ -78,7 +78,7 @@ public class TemporalAccelerator extends ContainerBlock{
 			}else{
 				//Rotate this machine
 				TileEntity te = worldIn.getTileEntity(pos);
-				worldIn.setBlockState(pos, state.cycle(EssentialsProperties.FACING));
+				worldIn.setBlockState(pos, state.cycle(ESProperties.FACING));
 				if(te instanceof TemporalAcceleratorTileEntity){
 					((TemporalAcceleratorTileEntity) te).resetCache();
 				}

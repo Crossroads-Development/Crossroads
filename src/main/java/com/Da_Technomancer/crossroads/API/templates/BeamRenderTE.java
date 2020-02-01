@@ -198,7 +198,7 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 	protected class BeamHandler implements IBeamHandler{
 
 		@Override
-		public void setMagic(@Nonnull BeamUnit mag){
+		public void setBeam(@Nonnull BeamUnit mag){
 			if(!mag.isEmpty()){
 				queued[BeamManager.cycleNumber == activeCycle ? 0 : 1].addBeam(mag);
 				markDirty();

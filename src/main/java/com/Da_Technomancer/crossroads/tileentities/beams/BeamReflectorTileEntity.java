@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.beams;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.registries.ObjectHolder;
@@ -27,8 +27,8 @@ public class BeamReflectorTileEntity extends BeamRenderTE{
 	private int getFacing(){
 		if(facing == -1){
 			BlockState s = world.getBlockState(pos);
-			if(s.has(EssentialsProperties.FACING)){
-				facing = s.get(EssentialsProperties.FACING).getIndex();
+			if(s.has(ESProperties.FACING)){
+				facing = s.get(ESProperties.FACING).getIndex();
 			}else{
 				return 0;
 			}

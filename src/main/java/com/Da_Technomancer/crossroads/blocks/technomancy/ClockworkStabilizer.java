@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.API.templates.BeamBlock;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ClockworkStabilizerTileEntity;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.BlockState;
@@ -40,7 +40,7 @@ public class ClockworkStabilizer extends BeamBlock implements IReadable{
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context){
-		return SHAPE[state.get(EssentialsProperties.FACING).getIndex()];
+		return SHAPE[state.get(ESProperties.FACING).getIndex()];
 	}
 
 	@Override

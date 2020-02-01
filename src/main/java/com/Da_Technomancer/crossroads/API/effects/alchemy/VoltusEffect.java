@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.API.effects.alchemy;
 
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
-import com.Da_Technomancer.crossroads.render.RenderUtil;
+import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -23,7 +23,7 @@ public class VoltusEffect implements IAlchEffect{
 			List<LivingEntity> ents = world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos.getX() - 5, pos.getY() - 5, pos.getZ() - 5, pos.getX() + 5, pos.getY() + 5, pos.getZ() + 5), EntityPredicates.IS_ALIVE);
 			for(LivingEntity ent : ents){
 				ent.onStruckByLightning(null);
-				RenderUtil.addArc(world.provider.getDimension(), (float) pos.getX() + 0.5F, (float) pos.getY() + 0.5F, (float) pos.getZ() + 0.5F, (float) ent.posX, (float) ent.posY, (float) ent.posZ, 1, 0F, BOLT_COLORS[(int) (world.getGameTime() % 3)].getRGB());
+				CRRenderUtil.addArc(world.provider.getDimension(), (float) pos.getX() + 0.5F, (float) pos.getY() + 0.5F, (float) pos.getZ() + 0.5F, (float) ent.posX, (float) ent.posY, (float) ent.posZ, 1, 0F, BOLT_COLORS[(int) (world.getGameTime() % 3)].getRGB());
 			}
 		}
 	}

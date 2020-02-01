@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
+import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -34,7 +34,7 @@ public class SteamTurbineTileEntity extends ModuleTE{
 	public SteamTurbineTileEntity(){
 		super(type);
 		fluidProps[0] = new TankProperty(CAPACITY, false, true);
-		fluidProps[1] = new TankProperty(CAPACITY, true, false, (Fluid f) -> f == CrossroadsFluids.steam.still);
+		fluidProps[1] = new TankProperty(CAPACITY, true, false, (Fluid f) -> f == CRFluids.steam.still);
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class SteamTurbineTileEntity extends ModuleTE{
 			if(limit != 0){
 				fluids[1].shrink(limit * 100);
 				if(fluids[0].isEmpty()){
-					fluids[0] = new FluidStack(CrossroadsFluids.distilledWater.still, 100 * limit);
+					fluids[0] = new FluidStack(CRFluids.distilledWater.still, 100 * limit);
 				}else{
 					fluids[0].grow(100 * limit);
 				}

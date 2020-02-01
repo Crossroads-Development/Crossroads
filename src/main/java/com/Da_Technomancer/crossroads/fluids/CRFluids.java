@@ -4,7 +4,7 @@ import net.minecraft.fluid.Fluid;
 
 import java.util.ArrayList;
 
-public final class CrossroadsFluids{
+public final class CRFluids{
 
 	public static CrossroadsFluid distilledWater;
 	public static CrossroadsFluid dirtyWater;

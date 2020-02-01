@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.tileentities.fluid.RedstoneFluidTubeTileEntity;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
@@ -31,18 +31,18 @@ public class RedstoneFluidTube extends FluidTube{
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
 		super.fillStateContainer(builder);
-		builder.add(EssentialsProperties.REDSTONE_BOOL);
+		builder.add(ESProperties.REDSTONE_BOOL);
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
 		if(worldIn.isBlockPowered(pos)){
-			if(!state.get(EssentialsProperties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.with(EssentialsProperties.REDSTONE_BOOL, true));
+			if(!state.get(ESProperties.REDSTONE_BOOL)){
+				worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, true));
 			}
 		}else{
-			if(state.get(EssentialsProperties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.with(EssentialsProperties.REDSTONE_BOOL, false));
+			if(state.get(ESProperties.REDSTONE_BOOL)){
+				worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, false));
 			}
 		}
 	}

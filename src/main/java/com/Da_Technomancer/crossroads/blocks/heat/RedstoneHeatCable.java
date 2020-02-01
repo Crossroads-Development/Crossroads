@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.heat;
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.tileentities.heat.RedstoneHeatCableTileEntity;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.Block;
@@ -31,12 +31,12 @@ public class RedstoneHeatCable extends HeatCable implements IReadable{
 
 	public RedstoneHeatCable(HeatInsulators insulator){
 		super(insulator, "redstone_heat_cable_" + insulator.toString().toLowerCase());
-		setDefaultState(getDefaultState().with(CRProperties.CONDUCTOR, Conductors.COPPER).with(EssentialsProperties.REDSTONE_BOOL, false));
+		setDefaultState(getDefaultState().with(CRProperties.CONDUCTOR, Conductors.COPPER).with(ESProperties.REDSTONE_BOOL, false));
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
-		if(state.get(EssentialsProperties.REDSTONE_BOOL)){
+		if(state.get(ESProperties.REDSTONE_BOOL)){
 			return super.getShape(state, worldIn, pos, context);
 		}else{
 			return SHAPES[0];//Core only
@@ -45,7 +45,7 @@ public class RedstoneHeatCable extends HeatCable implements IReadable{
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return super.getStateForPlacement(context).with(EssentialsProperties.REDSTONE_BOOL, context.getWorld().isBlockPowered(context.getPos()));
+		return super.getStateForPlacement(context).with(ESProperties.REDSTONE_BOOL, context.getWorld().isBlockPowered(context.getPos()));
 	}
 
 	@Override
@@ -56,18 +56,18 @@ public class RedstoneHeatCable extends HeatCable implements IReadable{
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
 		super.fillStateContainer(builder);
-		builder.add(EssentialsProperties.REDSTONE_BOOL);
+		builder.add(ESProperties.REDSTONE_BOOL);
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
 		if(worldIn.isBlockPowered(pos)){
-			if(!state.get(EssentialsProperties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.with(EssentialsProperties.REDSTONE_BOOL, true));
+			if(!state.get(ESProperties.REDSTONE_BOOL)){
+				worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, true));
 				worldIn.updateComparatorOutputLevel(pos, this);
 			}
-		}else if(state.get(EssentialsProperties.REDSTONE_BOOL)){
-			worldIn.setBlockState(pos, state.with(EssentialsProperties.REDSTONE_BOOL, false));
+		}else if(state.get(ESProperties.REDSTONE_BOOL)){
+			worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, false));
 			worldIn.updateComparatorOutputLevel(pos, this);
 		}
 	}

@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.render.TESR;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.beams.LensFrameTileEntity;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -36,7 +36,7 @@ public class LensFrameRenderer extends BeamRenderer<LensFrameTileEntity>{
 		super.render(beam, x, y, z, partialTicks, destroyStage);
 		int content = ((LensFrameTileEntity) beam).getContents();
 		if(content != 0 && state.getBlock() == CRBlocks.lensFrame){
-			Direction.Axis axis = state.get(EssentialsProperties.AXIS);
+			Direction.Axis axis = state.get(ESProperties.AXIS);
 			GlStateManager.pushMatrix();
 			GlStateManager.disableLighting();
 			GlStateManager.translated(x + 0.5F, y + 0.5F, z + 0.5F);

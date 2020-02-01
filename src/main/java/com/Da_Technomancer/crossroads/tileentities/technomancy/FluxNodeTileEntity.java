@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -61,14 +62,18 @@ public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntit
 	 * For rendering
 	 * @return Whether this node should render effects for being near the failure point
 	 */
-	public boolean overSafeLimit(){
-		return entropy * 1.5F >= getMaxFlux();//TODO implement use for rendering
+	private boolean overSafeLimit(){
+		return entropy * 1.5F >= getMaxFlux();
 	}
 
 	@Override
 	public void tick(){
 		if(world.isRemote){
 			angle += entropy * SPIN_RATE / 20F;
+			//This 5 is distinct from FluxUtil.FLUX_TIME (despite being the same value) in that this is the lifetime of the render
+			if(world.getGameTime() % 5 == 0 && overSafeLimit()){
+				CRRenderUtil.addArc(world, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, pos.getX() + 1.5F, pos.getY() + 1.5F, pos.getZ() + 1.5F, 3, 1F, FluxUtil.COLOR_CODES[(int) (world.getGameTime() % 3)]);
+			}
 		}else if(world.getGameTime() % FluxUtil.FLUX_TIME == 0){
 			fluxToTrans += entropy;//Save flux to a separate variable so tick order doesn't interfere with the amount transferred next tick
 			entropy = 0;
@@ -170,7 +175,7 @@ public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntit
 
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		chat.add(new TranslationTextComponent("tt.crossroads.flux_node.flux", entropy, getMaxFlux(), CRConfig.formatVal(100F * entropy / getMaxFlux())));
+		FluxUtil.addFluxInfo(chat, this, -1);
 		FluxUtil.addLinkInfo(chat, this);
 	}
 }

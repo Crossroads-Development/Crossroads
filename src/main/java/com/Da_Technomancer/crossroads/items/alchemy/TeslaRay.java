@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.items.alchemy;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.LeydenJar;
-import com.Da_Technomancer.crossroads.render.RenderUtil;
+import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.util.ITooltipFlag;
@@ -127,7 +127,7 @@ public class TeslaRay extends Item{
 				}
 				Vec3d end = targets.get(i + 1).getEyePosition(0);
 
-				RenderUtil.addArc(playerIn.world, start, end, 1, 0, TeslaCoilTopTileEntity.COLOR_CODES[(int) (Math.random() * 3D)]);
+				CRRenderUtil.addArc(playerIn.world, start, end, 1, 0, TeslaCoilTopTileEntity.COLOR_CODES[(int) (Math.random() * 3D)]);
 			}
 
 			return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(hand));

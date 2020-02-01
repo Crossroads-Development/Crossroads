@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.effects.goggles;
 
-import com.Da_Technomancer.crossroads.render.RenderUtil;
+import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
@@ -47,7 +47,7 @@ public class RubyGoggleEffect implements IGoggleEffect{
 				world.setBlockState(new BlockPos(end), Blocks.FIRE.getDefaultState());
 			}
 
-			RenderUtil.addBeam(world, start.x, start.y, start.z, (int) Math.sqrt(end.squareDistanceTo(start)), player.rotationPitch, player.rotationYawHead, (byte) 1, Color.RED.getRGB());
+			CRRenderUtil.addBeam(world, start.x, start.y, start.z, (int) Math.sqrt(end.squareDistanceTo(start)), player.rotationPitch, player.rotationYawHead, (byte) 1, Color.RED.getRGB());
 		}
 	}
 }

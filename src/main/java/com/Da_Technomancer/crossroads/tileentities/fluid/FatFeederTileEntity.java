@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.fluids.CrossroadsFluids;
+import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.FatFeederContainer;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.AgeableEntity;
@@ -43,7 +43,7 @@ public class FatFeederTileEntity extends InventoryTE{
 
 	public FatFeederTileEntity(){
 		super(type, 0);
-		fluidProps[0] = new TankProperty(10_000, true, true, (Fluid f) -> f == CrossroadsFluids.liquidFat.still);
+		fluidProps[0] = new TankProperty(10_000, true, true, (Fluid f) -> f == CRFluids.liquidFat.still);
 	}
 
 	@Override

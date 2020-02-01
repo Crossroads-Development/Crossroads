@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearSlaveTileEntity;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
@@ -57,17 +57,17 @@ public class LargeGearSlave extends ContainerBlock{
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
-		builder.add(EssentialsProperties.FACING);
+		builder.add(ESProperties.FACING);
 	}
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
-		return COL_SHAPES[state.get(EssentialsProperties.FACING).getIndex()];
+		return COL_SHAPES[state.get(ESProperties.FACING).getIndex()];
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
-		return SHAPES[state.get(EssentialsProperties.FACING).getIndex()];
+		return SHAPES[state.get(ESProperties.FACING).getIndex()];
 	}
 	
 	@Override
@@ -100,7 +100,7 @@ public class LargeGearSlave extends ContainerBlock{
 	@Override
 	public boolean removedByPlayer(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid){
 		if(willHarvest && worldIn.getTileEntity(pos) instanceof LargeGearSlaveTileEntity){
-			((LargeGearSlaveTileEntity) worldIn.getTileEntity(pos)).passBreak(state.get(EssentialsProperties.FACING), true);
+			((LargeGearSlaveTileEntity) worldIn.getTileEntity(pos)).passBreak(state.get(ESProperties.FACING), true);
 		}
 		return super.removedByPlayer(state, worldIn, pos, player, willHarvest, fluid);
 	}
@@ -108,7 +108,7 @@ public class LargeGearSlave extends ContainerBlock{
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving){
 		if(worldIn.getTileEntity(pos) instanceof LargeGearSlaveTileEntity){
-			((LargeGearSlaveTileEntity) worldIn.getTileEntity(pos)).passBreak(state.get(EssentialsProperties.FACING), false);
+			((LargeGearSlaveTileEntity) worldIn.getTileEntity(pos)).passBreak(state.get(ESProperties.FACING), false);
 		}
 		super.onReplaced(state, worldIn, pos, newState, isMoving);
 	}

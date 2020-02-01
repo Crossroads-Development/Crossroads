@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.render.TESR;
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.templates.IBeamRenderTE;
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.render.RenderUtil;
+import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -43,7 +43,7 @@ public class BeamRenderer<T extends TileEntity & IBeamRenderTE> extends TileEnti
 				GlStateManager.color3f(trip.getLeft().getRed() / 255F, trip.getLeft().getGreen() / 255F, trip.getLeft().getBlue() / 255F);
 				Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE_BEACON_BEAM);
 				GlStateManager.disableLighting();
-				Pair<Float, Float> lighting = RenderUtil.disableLighting();
+				Pair<Float, Float> lighting = CRRenderUtil.disableLighting();
 
 				switch(dir){
 					case 0:
@@ -105,7 +105,7 @@ public class BeamRenderer<T extends TileEntity & IBeamRenderTE> extends TileEnti
 				buf.pos(halfWidth, length, -halfWidth).tex(0, 0).endVertex();
 				tes.draw();
 				
-				RenderUtil.enableLighting(lighting);
+				CRRenderUtil.enableLighting(lighting);
 				GlStateManager.enableLighting();
 				GlStateManager.popAttributes();
 				GlStateManager.popMatrix();

@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
@@ -29,7 +29,7 @@ public class RedstoneHeatCableTileEntity extends HeatCableTileEntity{
 	}
 
 	private boolean isUnlocked(){
-		return world.getBlockState(pos).get(EssentialsProperties.REDSTONE_BOOL);
+		return world.getBlockState(pos).get(ESProperties.REDSTONE_BOOL);
 	}
 
 	@Override

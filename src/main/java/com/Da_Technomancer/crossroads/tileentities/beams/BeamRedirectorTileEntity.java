@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
@@ -30,7 +30,7 @@ public class BeamRedirectorTileEntity extends BeamRenderTE{
 			if(state.getBlock() != CRBlocks.beamRedirector){
 				return Direction.NORTH;
 			}
-			dir = state.get(EssentialsProperties.FACING);
+			dir = state.get(ESProperties.FACING);
 		}
 		return dir;
 	}

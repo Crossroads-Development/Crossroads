@@ -6,8 +6,8 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.LeydenJar;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTileEntity;
-import com.Da_Technomancer.essentials.EssentialsConfig;
-import com.Da_Technomancer.essentials.blocks.EssentialsProperties;
+import com.Da_Technomancer.essentials.ESConfig;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
@@ -64,7 +64,7 @@ public class TeslaCoil extends ContainerBlock{
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return getDefaultState().with(EssentialsProperties.HORIZ_FACING, context.getPlacementHorizontalFacing().getOpposite());
+		return getDefaultState().with(ESProperties.HORIZ_FACING, context.getPlacementHorizontalFacing().getOpposite());
 	}
 
 	@Override
@@ -98,9 +98,9 @@ public class TeslaCoil extends ContainerBlock{
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		ItemStack heldItem = playerIn.getHeldItem(hand);
 
-		if(EssentialsConfig.isWrench(heldItem)){
+		if(ESConfig.isWrench(heldItem)){
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.cycle(EssentialsProperties.HORIZ_FACING));
+				worldIn.setBlockState(pos, state.cycle(ESProperties.HORIZ_FACING));
 				TileEntity te = worldIn.getTileEntity(pos);
 				if(te instanceof TeslaCoilTileEntity){
 					((TeslaCoilTileEntity) te).rotate();
@@ -149,7 +149,7 @@ public class TeslaCoil extends ContainerBlock{
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
-		builder.add(CRProperties.ACTIVE, EssentialsProperties.HORIZ_FACING);
+		builder.add(CRProperties.ACTIVE, ESProperties.HORIZ_FACING);
 	}
 
 	@Override

@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
-import com.Da_Technomancer.essentials.blocks.EssentialsBlocks;
+import com.Da_Technomancer.essentials.blocks.ESBlocks;
 import com.Da_Technomancer.essentials.blocks.redstone.IRedstoneHandler;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.nbt.CompoundNBT;
@@ -152,7 +152,7 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 
 			//if sources changed, schedule an update
 			if(sources.size() != preSrc.size() || !sources.containsAll(preSrc)){
-				world.getPendingBlockTicks().scheduleTick(pos, EssentialsBlocks.redstoneTransmitter, RedstoneUtil.DELAY, TickPriority.NORMAL);
+				world.getPendingBlockTicks().scheduleTick(pos, ESBlocks.redstoneTransmitter, RedstoneUtil.DELAY, TickPriority.NORMAL);
 			}
 		}
 	}

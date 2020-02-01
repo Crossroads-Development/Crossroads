@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API;
 
-import com.Da_Technomancer.essentials.EssentialsConfig;
+import com.Da_Technomancer.essentials.ESConfig;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.ChunkPos;
@@ -16,7 +16,7 @@ public final class MiscUtil{
 	/**
 	 * A common style applied to "quip" lines in tooltips
 	 */
-	public static final Style TT_QUIP = EssentialsConfig.TT_QUIP;
+	public static final Style TT_QUIP = ESConfig.TT_QUIP;
 
 	/**
 	 * Rounds to a set number of decimal places
