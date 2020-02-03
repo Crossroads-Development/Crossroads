@@ -79,7 +79,7 @@ public class RedstoneAxis extends ContainerBlock{
 
 	@Override
 	public boolean canConnectRedstone(BlockState state, IBlockReader world, BlockPos pos, @Nullable Direction side){
-		return side != null && side.getAxis() != Direction.Axis.Y;
+		return side != null;
 	}
 
 	@Override

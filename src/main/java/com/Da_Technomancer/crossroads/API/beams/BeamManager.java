@@ -24,9 +24,6 @@ public class BeamManager{
 	public static final int MAX_DISTANCE = 16;
 	public static final int BEAM_TIME = 5;
 
-	public static int beamStage = 2;
-	public static long cycleNumber;
-
 	private final Direction dir;
 	private final BlockPos pos;
 
@@ -73,10 +70,23 @@ public class BeamManager{
 		return false;
 	}
 
+	/**
+	 * Determines whether beams should collide with a given block
+	 * @param state The state to check
+	 * @param world The world this state exists in (Use any non-null world if this is unavailable)
+	 * @param pos The position of the passed state in the world (use the origin if this is unavailable)
+	 * @return Whether beams should collide with this block
+	 */
 	public static boolean solidToBeams(BlockState state, World world, BlockPos pos){
-		return !state.getBlock().isAir(state, world, pos) && !PASSABLE.contains(state.getBlock());
+		return !state.isAir(world, pos) && !PASSABLE.contains(state.getBlock());
 	}
 
+	/**
+	 * Serializes information needed by this class on the client side into an integer
+	 * @param mag The beam unit to render
+	 * @param dist The length of the last beam send
+	 * @return A serialized form of the arguments
+	 */
 	public static int toPacket(BeamUnit mag, int dist){
 		if(mag == null){
 			return 0;
@@ -88,6 +98,11 @@ public class BeamManager{
 		return toPacket(lastSent, dist);
 	}
 
+	/**
+	 * Deserializes an integer packet from the server into information needed for rendering
+	 * @param packet The packet
+	 * @return A triple with the color to render, the length of the beam to render, and the size (adjusted for rendering, not the original power of the beam) of the beam to render
+	 */
 	public static Triple<Color, Integer, Integer> getTriple(int packet){
 		return packet == 0 ? Triple.of(Color.BLACK, 0, 0) : Triple.of(Color.decode(Integer.toString(packet & 0xFFFFFF)), ((packet >> 24) & 15) + 1, (packet >> 28) + 1);
 	}

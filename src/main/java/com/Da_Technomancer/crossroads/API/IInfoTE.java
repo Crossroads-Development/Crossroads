@@ -16,6 +16,6 @@ public interface IInfoTE{
 	 * @param player The player using the info device.
 	 * @param hit Portion of the block clicked/viewed
 	 */
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit);
+	void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit);
 
 }

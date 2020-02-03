@@ -25,11 +25,13 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.ITickableTileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.ITeleporter;
+import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -75,7 +77,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	@Override
 	public void tick(){
 		if(!world.isRemote){
-			if(BeamManager.beamStage == 1){
+			if(world.getGameTime() % BeamManager.BEAM_TIME == 1){
 				if(EntropySavedData.getSeverity(world).getRank() >= EntropySavedData.Severity.DESTRUCTIVE.getRank()){
 					FluxUtil.overloadFlux(world, pos);
 					return;

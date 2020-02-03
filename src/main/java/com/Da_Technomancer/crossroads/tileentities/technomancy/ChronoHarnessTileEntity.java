@@ -93,9 +93,7 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 			boolean shouldRun = fe < FE_CAPACITY && !hasRedstone();
 
 			if(world.getGameTime() % FluxUtil.FLUX_TIME == 1){
-				for(BlockPos linked : link){
-					FluxUtil.performTransfer(this, linked);
-				}
+				FluxUtil.performTransfer(this, link);
 			}
 
 			if(shouldRun){

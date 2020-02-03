@@ -15,13 +15,13 @@ public interface IBeamRenderTE{
 	 *
 	 * @return A size six array (with null elements) with integers that BeamManager.getTriple will convert into rendering instructions
 	 */
-	public int[] getRenderedBeams();
+	int[] getRenderedBeams();
 
 	/**
 	 * For informational displays.
 	 * Must not contain null elements
 	 */
-	public BeamUnit[] getLastSent();
+	BeamUnit[] getLastSent();
 
 	/* Recommended override for subclasses
 	@Override

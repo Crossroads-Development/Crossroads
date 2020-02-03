@@ -25,7 +25,7 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 	protected int[] beamPackets = new int[6];
 	protected BeamManager[] beamer;
 	protected BeamUnitStorage[] queued = {new BeamUnitStorage(), new BeamUnitStorage()};
-	protected long activeCycle;
+	protected long activeCycle;//To prevent tick acceleration and deal with some chunk loading weirdness
 	protected BeamUnit[] prevMag = new BeamUnit[] {BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY};//Stores the last non-null beams sent for information readouts
 
 	public BeamRenderTE(TileEntityType<?> type){
@@ -48,7 +48,8 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){
-		return INFINITE_EXTENT_AABB;
+		//Expand the render box to include all possible beams from this block
+		return new AxisAlignedBB(pos.add(-BeamManager.MAX_DISTANCE, -BeamManager.MAX_DISTANCE, -BeamManager.MAX_DISTANCE), pos.add(1 + BeamManager.MAX_DISTANCE, 1 + BeamManager.MAX_DISTANCE, 1 + BeamManager.MAX_DISTANCE));
 	}
 
 	/**
@@ -86,7 +87,7 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 			return;
 		}
 		
-		if(BeamManager.beamStage == 0){
+		if(world.getGameTime() % BeamManager.BEAM_TIME == 0){
 			if(beamer == null){
 				beamer = new BeamManager[6];
 				boolean[] outputs = outputSides();
@@ -98,7 +99,7 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 			}
 
 			BeamUnit out = shiftStorage();
-			activeCycle = BeamManager.cycleNumber;
+			activeCycle = world.getGameTime();
 			if(out.getPower() > getLimit()){
 				out = out.mult((float) getLimit() / (float) out.getPower(), true);
 			}
@@ -188,6 +189,7 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 //	protected final BeamHandler handler = new BeamHandler();
 
 	@SuppressWarnings("unchecked")
+	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction dir){
 		if(cap == Capabilities.BEAM_CAPABILITY && (dir == null || inputSides()[dir.getIndex()])){
 			return (LazyOptional<T>) lazyOptional;
@@ -200,7 +202,7 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 		@Override
 		public void setBeam(@Nonnull BeamUnit mag){
 			if(!mag.isEmpty()){
-				queued[BeamManager.cycleNumber == activeCycle ? 0 : 1].addBeam(mag);
+				queued[world.getGameTime() == activeCycle ? 0 : 1].addBeam(mag);
 				markDirty();
 			}
 		}

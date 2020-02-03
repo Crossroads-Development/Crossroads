@@ -134,9 +134,7 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 			int extraTicks = extraTicks();
 
 			if(world.getGameTime() % FluxUtil.FLUX_TIME == 1){
-				for(BlockPos linked : linkPos){
-					FluxUtil.performTransfer(this, linked);
-				}
+				FluxUtil.performTransfer(this, linkPos);
 			}else if(world.getGameTime() % FluxUtil.FLUX_TIME == 0){
 				//Sped up time
 				addFlux(producedFlux());

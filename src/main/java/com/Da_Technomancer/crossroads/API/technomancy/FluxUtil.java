@@ -33,20 +33,30 @@ public class FluxUtil{
 	public static final int FLUX_TIME = BeamManager.BEAM_TIME;
 	public static final int[] COLOR_CODES = new int[] {0xFFF000, 0xFFFA00, 0xFFA000};//color codes for flux rendering
 
-	public static void performTransfer(IFluxLink src, BlockPos linkPos){
-		World world = src.getTE().getWorld();
-		BlockPos endPos = src.getTE().getPos().add(linkPos);
-		TileEntity te = world.getTileEntity(endPos);
-		if(te instanceof IFluxLink){
-			int srcFlux = src.getFlux();
-			((IFluxLink) te).addFlux(srcFlux);
-			src.setFlux(0);
-			renderFlux(world, src.getTE().getPos(), endPos, srcFlux);
+	/**
+	 * Does the simplest flux transfer from a src to linked machines
+	 * Using this method is not recommended unless linkPos is size 0 or 1, as it does not distribute flux between multiple outputs well
+	 * Use the other method if there are multiple outputs
+	 * @param src The source to transfer from
+	 * @param links The linked relative position(s) to transfer to (will be checked), ideally size [0-1]
+	 */
+	public static void performTransfer(IFluxLink src, Set<BlockPos> links){
+		for(BlockPos linkPos : links){
+			World world = src.getTE().getWorld();
+			BlockPos endPos = src.getTE().getPos().add(linkPos);
+			TileEntity te = world.getTileEntity(endPos);
+			if(te instanceof IFluxLink){
+				int srcFlux = src.getFlux();
+				((IFluxLink) te).addFlux(srcFlux);
+				src.setFlux(0);
+				renderFlux(world, src.getTE().getPos(), endPos, srcFlux);
+			}
 		}
 	}
 
 	/**
 	 * Transfer a given amount of flux from the src, and return any remainder
+	 * Used for Flux Nodes
 	 * @param src The source to transfer from
 	 * @param links The linked relative positions to transfer to (will be checked)
 	 * @param toTransfer The qty of flux to attempt to transfer

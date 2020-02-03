@@ -97,7 +97,7 @@ public class BeaconHarnessRenderer extends TileEntityRenderer<BeaconHarnessTileE
 			}
 		}
 		
-		if(packet[1] != 0){
+		if(packet[0] != 0){
 			beam.angle += 9F * partialTicks;
 		}
 
@@ -195,8 +195,8 @@ public class BeaconHarnessRenderer extends TileEntityRenderer<BeaconHarnessTileE
 
 	private void addRod(BufferBuilder buf, double x, double z){
 		float rad = 1F / 16F;
-		float minY = 2F / 16F;
-		float maxY = 14F / 16F;
+		float minY = 1F / 16F;
+		float maxY = 15F / 16F;
 		buf.pos(x - rad, minY, z - rad).tex(0, 0).endVertex();
 		buf.pos(x - rad, maxY, z - rad).tex(0, 1).endVertex();
 		buf.pos(x + rad, maxY, z - rad).tex(2F * rad, 1).endVertex();

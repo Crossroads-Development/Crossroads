@@ -494,6 +494,11 @@
 	"tt.crossroads.ccc.flux": "Produces %1$dTEn per ingot produced if using cheaper liquids",
 	"tt.crossroads.ccc.limit": "Destroyed if overflowed with Molten Copshowium",
 	"tt.crossroads.ccc.io": "Copshowium is piped out the bottom. Ingredient liquids can be input AND output the top",
+	"tt.crossroads.beacon_harness.desc": "Produces massive color-changing beams when supplied with the alignment of the missing color",
+	"tt.crossroads.beacon_harness.buffer": "Ignores the input beam for 2 seconds after changing needed color",
+	"tt.crossroads.beacon_harness.flux": "Produces %1$dTEn/cycle while running",
+	"tt.crossroads.beacon_harness.quip": "It's balanced because it requires nether stars",
+
 
 	"container.smelter": "Smelter",
 	"container.firebox": "Firebox",

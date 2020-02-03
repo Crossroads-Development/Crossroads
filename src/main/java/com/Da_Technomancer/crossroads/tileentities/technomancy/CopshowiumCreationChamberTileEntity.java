@@ -82,9 +82,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 
 		if(world.getGameTime() % FluxUtil.FLUX_TIME == 1){
 			FluxUtil.checkFluxOverload(this);
-			for(BlockPos linked : link){
-				FluxUtil.performTransfer(this, linked);
-			}
+			FluxUtil.performTransfer(this, link);
 		}
 	}
 
