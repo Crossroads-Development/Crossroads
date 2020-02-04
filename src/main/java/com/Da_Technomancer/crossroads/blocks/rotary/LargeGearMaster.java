@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.*;
@@ -54,7 +54,7 @@ public class LargeGearMaster extends ContainerBlock{
 	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player){
 		TileEntity te = world.getTileEntity(pos);
 		if(te instanceof LargeGearMasterTileEntity){
-			return new ItemStack(GearFactory.gearTypes.get(((LargeGearMasterTileEntity) te).getMember()).getLargeGear(), 1);
+			return CRItems.largeGear.withMaterial(((LargeGearMasterTileEntity) te).getMember(), 1);
 		}
 		return ItemStack.EMPTY;
 	}
@@ -78,9 +78,8 @@ public class LargeGearMaster extends ContainerBlock{
 	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder){
 		List<ItemStack> drops = new ArrayList<>();
 		TileEntity te = builder.get(LootParameters.BLOCK_ENTITY);
-		GearFactory.GearMaterial member;
-		if(te instanceof LargeGearMasterTileEntity && (member = ((LargeGearMasterTileEntity) te).getMember()) != null){
-			drops.add(new ItemStack(GearFactory.gearTypes.get(member).getLargeGear(), 1));
+		if(te instanceof LargeGearMasterTileEntity){
+			drops.add(CRItems.largeGear.withMaterial(((LargeGearMasterTileEntity) te).getMember(), 1));
 		}
 		return drops;
 	}

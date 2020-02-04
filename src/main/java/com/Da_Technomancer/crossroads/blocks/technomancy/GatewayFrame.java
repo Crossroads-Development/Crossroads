@@ -1,28 +1,23 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.FlexibleGameProfile;
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
-import com.Da_Technomancer.crossroads.API.templates.ILinkTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
-import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.FakePlayer;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -35,64 +30,49 @@ public class GatewayFrame extends ContainerBlock{
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
+		setDefaultState(getDefaultState().with(CRProperties.ACTIVE, false).with(CRProperties.UP, false));
+	}
+
+	@Nullable
+	@Override
+	public TileEntity createNewTileEntity(IBlockReader worldIn){
+		return new GatewayFrameTileEntity();
 	}
 
 	@Override
-	public BlockState getStateForPlacement(World worldIn, BlockPos pos, Direction blockFaceClickedOn, BlockRayTraceResult hit, int meta, LivingEntity placer){
-		Direction facing = (placer == null) ? Direction.NORTH : Direction.getDirectionFromEntityLiving(pos, placer);
-		if(facing == Direction.UP){
-			facing = Direction.DOWN;
-		}
-		return getDefaultState().with(ESProperties.FACING, placer instanceof FakePlayer ? Direction.NORTH : facing);
+	public BlockRenderType getRenderType(BlockState state){
+		//If this is formed into a multiblock, we let the TESR on the top handle all rendering
+		return state.get(CRProperties.ACTIVE) ? BlockRenderType.ENTITYBLOCK_ANIMATED : BlockRenderType.MODEL;
 	}
 
 	@Override
-	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		ItemStack heldItem = playerIn.getHeldItem(hand);
-		if(FluxUtil.handleFluxLinking(worldIn, pos, heldItem, playerIn)){
-			return true;
-		}else if(ESConfig.isWrench(heldItem)){
-			worldIn.setBlockState(pos, state.cycle(ESProperties.FACING));//TODO check
-			TileEntity te = worldIn.getTileEntity(pos);
-			if(!worldIn.isRemote && te instanceof GatewayFrameTileEntity){
-				((GatewayFrameTileEntity) te).resetCache();
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+		builder.add(CRProperties.ACTIVE, CRProperties.UP);//ACTIVE is whether this is formed into a multiblock, UP is whether this is the top block in the multiblock
+	}
+
+	@Override
+	public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult ray){
+		ItemStack held = player.getHeldItem(hand);
+		if(state.get(CRProperties.ACTIVE)){
+			//Handle linking if this is the top block
+			if(state.get(CRProperties.UP)){
+				return FluxUtil.handleFluxLinking(world, pos, held, player);
 			}
-			return true;
+		}else if(ESConfig.isWrench(held)){
+			//Try to form the multiblock
+			//TODO
 		}
 		return false;
 	}
 
 	@Override
-	public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
-		if(!worldIn.isRemote){
-			TileEntity te = worldIn.getTileEntity(pos);
-			if(te instanceof GatewayFrameTileEntity){
-				((GatewayFrameTileEntity) te).setOwner(!(placer instanceof PlayerEntity) ? null : new FlexibleGameProfile(((PlayerEntity) placer).getGameProfile()));
-			}
-		}
+	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
+		//TODO handle multiblock destruction
+		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 
 	@Override
-	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, ESProperties.FACING);
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
-		return new GatewayFrameTileEntity();
-
-	}
-
-	@Override
-	public BlockRenderType getRenderType(BlockState state){
-		return BlockRenderType.MODEL;
-	}
-	
-	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
-		tooltip.add("Opens a portal through space and between dimensions");
-		tooltip.add("Uses a beam to maintain the portal");
-		tooltip.add("Potential: Overworld; Energy: Nether; Void: The End");
-		tooltip.add(String.format("Produces %1$.3f%% entropy/tick while running, and %2$.3f%% entropy for every entity teleported", EntropySavedData.getPercentage(GatewayFrameTileEntity.FLUX_MAINTAIN), EntropySavedData.getPercentage(GatewayFrameTileEntity.FLUX_TRANSPORT)));
+	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flag){
+		//TODO
 	}
 }

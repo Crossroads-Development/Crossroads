@@ -1,0 +1,133 @@
+package com.Da_Technomancer.crossroads.API.technomancy;
+
+import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraftforge.common.DimensionManager;
+
+import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.Objects;
+
+public class GatewayAddress{
+
+	protected static final EnumBeamAlignments[] LEGAL_VALS = new EnumBeamAlignments[8];
+
+	static{
+		LEGAL_VALS[0] = EnumBeamAlignments.LIGHT;
+		LEGAL_VALS[1] = EnumBeamAlignments.ENCHANTMENT;
+		LEGAL_VALS[2] = EnumBeamAlignments.CHARGE;
+		LEGAL_VALS[3] = EnumBeamAlignments.TIME;
+		LEGAL_VALS[4] = EnumBeamAlignments.RIFT;
+		LEGAL_VALS[5] = EnumBeamAlignments.EQUILIBRIUM;
+		LEGAL_VALS[6] = EnumBeamAlignments.EXPANSION;
+		LEGAL_VALS[7] = EnumBeamAlignments.FUSION;
+	}
+
+	private final EnumBeamAlignments[] address = new EnumBeamAlignments[4];
+
+	/**
+	 * Instantiates a new instance with a set address
+	 * @param addressIn A size 4 non-null array with the address, will be copied to prevent mutability
+	 */
+	public GatewayAddress(EnumBeamAlignments[] addressIn){
+		System.arraycopy(addressIn, 0, address, 0, 4);
+	}
+
+	private GatewayAddress(EnumBeamAlignments align0, EnumBeamAlignments align1, EnumBeamAlignments align2, EnumBeamAlignments align3){
+		address[0] = align0;
+		address[1] = align1;
+		address[2] = align2;
+		address[3] = align3;
+	}
+
+	/**
+	 * Returns one configured alignment
+	 * @param index The index to return, [0-3]
+	 * @return The specified configured alignment
+	 */
+	public EnumBeamAlignments getEntry(int index){
+		return address[index];
+	}
+
+	public int serialize(){
+		return address[0].ordinal() | address[1].ordinal() << 4 | address[2].ordinal() << 8 | address[3].ordinal() << 12;
+	}
+
+	public static GatewayAddress deserialize(int serial){
+		EnumBeamAlignments[] vals = EnumBeamAlignments.values();
+		final int mask = 0xF;
+		return new GatewayAddress(vals[serial & mask], vals[serial >> 4 & mask], vals[serial >> 8 & mask], vals[serial >> 12 & mask]);
+	}
+
+	@Override
+	public boolean equals(Object o){
+		if(this == o){
+			return true;
+		}
+		if(o == null || getClass() != o.getClass()){
+			return false;
+		}
+		GatewayAddress that = (GatewayAddress) o;
+		return Arrays.equals(address, that.address);
+	}
+
+	@Override
+	public int hashCode(){
+		return serialize();
+	}
+
+	public static EnumBeamAlignments getLegalEntry(int index){
+		return LEGAL_VALS[index % LEGAL_VALS.length];
+	}
+
+	public static class Location{
+
+		public final BlockPos pos;
+		public final ResourceLocation dim;
+
+		public Location(BlockPos pos, World world){
+			this.pos = pos.toImmutable();
+			this.dim = world.dimension.getType().getRegistryName();
+		}
+
+		public Location(long posSerial, String dimSerial){
+			this.pos = BlockPos.fromLong(posSerial);
+			this.dim = new ResourceLocation(dimSerial);
+		}
+
+		@Nullable
+		public World evalDim(MinecraftServer server){
+			try{
+				DimensionType dimType = DimensionType.byName(dim);
+				if(dimType == null){
+					return null;//Only happens if a dimension is unregistered
+				}
+				return DimensionManager.getWorld(server, dimType, true, true);
+			}catch(Exception e){
+				return null;
+			}
+		}
+
+		@Override
+		public boolean equals(Object o){
+			if(this == o){
+				return true;
+			}
+			if(o == null || getClass() != o.getClass()){
+				return false;
+			}
+			Location location = (Location) o;
+			return dim == location.dim &&
+					pos.equals(location.pos);
+		}
+
+		@Override
+		public int hashCode(){
+			return Objects.hash(pos, dim);
+		}
+	}
+}

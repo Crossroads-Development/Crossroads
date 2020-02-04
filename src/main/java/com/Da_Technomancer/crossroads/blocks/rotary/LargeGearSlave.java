@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearSlaveTileEntity;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
@@ -92,7 +92,7 @@ public class LargeGearSlave extends ContainerBlock{
 		if(te instanceof LargeGearSlaveTileEntity && ((LargeGearSlaveTileEntity) te).masterPos != null){
 			te = world.getTileEntity(pos.add(((LargeGearSlaveTileEntity) te).masterPos));
 			if(te instanceof LargeGearMasterTileEntity){
-				return new ItemStack(GearFactory.gearTypes.get(((LargeGearMasterTileEntity) (te)).getMember()).getLargeGear(), 1);
+				return CRItems.largeGear.withMaterial(((LargeGearMasterTileEntity) (te)).getMember(), 1);
 			}
 		}
 		return ItemStack.EMPTY;	}
