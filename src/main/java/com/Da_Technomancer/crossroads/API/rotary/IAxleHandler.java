@@ -15,7 +15,7 @@ public interface IAxleHandler{
 	 * [0]=w, [1]=E, [2]=P, [3]=lastE.
 	 * Must be mutable and allow modification of the original values through it.
 	 */
-	public double[] getMotionData();
+	double[] getMotionData();
 
 	/**
 	 * If lastRadius equals 0, then the AxleHandler should not convert the rotationRationIn, as this is an axial connection.
@@ -26,33 +26,25 @@ public interface IAxleHandler{
 	 * @param lastRadius The radius of the previous connected device. 0 when connecting axially
 	 * @param renderOffset Whether to render this block at an offset angle. This value should ONLY be used for rendering.
 	 */
-	public void propogate(@Nonnull IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, boolean renderOffset);
+	void propogate(@Nonnull IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, boolean renderOffset);
 
-	public double getMoInertia();
+	double getMoInertia();
 	
-	public double getRotationRatio();
+	double getRotationRatio();
 
 	/**
-	 * negative value decreases energy. For non-gears (or axes) affecting the
-	 * network
-	 * absolute controls whether the change is relative or absolute (to spin direction)
+	 * Adds energy to this axle
+	 * @param energy The amount of energy to add
+	 * @param absolute Whether the change is relative (positive energy increases speed, negative decreases), or absolute (positive energy could increase or decrease speed depending on spin direction)
 	 */
-	public default void addEnergy(double energy, boolean allowInvert, boolean absolute){
+	default void addEnergy(double energy, boolean absolute){
 		double[] motionData = getMotionData();
-		if(allowInvert && absolute){
+		if(absolute){
 			motionData[1] += energy;
-		}else if(allowInvert){
-			motionData[1] += energy * Math.signum(motionData[1]);
-		}else if(absolute){
-			int sign = (int) Math.signum(motionData[1]);
-			motionData[1] += energy;
-			if(sign != 0 && Math.signum(motionData[1]) != sign){
-				motionData[1] = 0;
-			}
 		}else{
 			int sign = (int) Math.signum(motionData[1]);
 			motionData[1] += energy * ((double) sign);
-			if(Math.signum(motionData[1]) != sign){
+			if(Math.signum(motionData[1]) != sign){//Don't allow decreasing energy to flip spin direction- stop at zero
 				motionData[1] = 0;
 			}
 		}
@@ -63,22 +55,26 @@ public interface IAxleHandler{
 	 * Should be called whenever a value in the AxleHandler is changed by something outside the AxleHandler. 
 	 * Used to markDirty() in tile entities. 
 	 */
-	public void markChanged();
+	void markChanged();
 	
 	/**
 	 * @return The angle of this axle for rendering. In degrees
 	 */
-	public float getAngle(float partialTicks);
+	float getAngle(float partialTicks);
 	
 	/**
+	 * @deprecated Due to improvements in how angles are synchronized and calculated, this method is no longer used
 	 * @return Whether the Master Axis should keep the angle and clientW synchronized to client. If true, this must implement syncAngle, getAngle, setAngle, resetAngle, and getClientW.
 	 */
-	public boolean shouldManageAngle();
+	@Deprecated
+	default boolean shouldManageAngle(){
+		return true;
+	}
 
 	/**
 	 * Called by the controlling master axis when relinquishing control of this axle. Can be used along with propogate to determine if this axle is actively controlled by an axis
 	 */
-	public default void disconnect(){
+	default void disconnect(){
 
 	}
 }

@@ -2,19 +2,19 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.effects.mechArm.*;
-import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
+import com.Da_Technomancer.crossroads.API.packets.IDoubleReceiver;
 import com.Da_Technomancer.crossroads.API.packets.SendDoubleToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.entity.EntityArmRidable;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ITickableTileEntity;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
@@ -268,17 +268,9 @@ public class MechanicalArmTileEntity extends TileEntity implements ITickableTile
 		}
 
 		@Override
-		public void addEnergy(double energy, boolean allowInvert, boolean absolute){
-			if(allowInvert && absolute){
+		public void addEnergy(double energy, boolean absolute){
+			if(absolute){
 				motionData[index][1] += energy;
-			}else if(allowInvert){
-				motionData[index][1] += energy * Math.signum(motionData[index][1]);
-			}else if(absolute){
-				int sign = (int) Math.signum(motionData[index][1]);
-				motionData[index][1] += energy;
-				if(sign != 0 && Math.signum(motionData[index][1]) != sign){
-					motionData[index][1] = 0;
-				}
 			}else{
 				int sign = (int) Math.signum(motionData[index][1]);
 				motionData[index][1] += energy * ((double) sign);

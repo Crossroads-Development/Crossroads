@@ -79,7 +79,7 @@ public class RotaryDrillTileEntity extends ModuleTE{
 		}
 
 		if(Math.abs(motData[1]) >= ENERGY_USE){
-			axleHandler.addEnergy(-ENERGY_USE, false, false);
+			axleHandler.addEnergy(-ENERGY_USE, false);
 			if(++ticksExisted % 8 == 0){
 				Direction facing = world.getBlockState(pos).get(ESProperties.FACING);
 				if(world.getBlockState(pos.offset(facing)).isAir(world, pos.offset(facing))){

@@ -59,7 +59,7 @@ public class MillstoneTileEntity extends InventoryTE{
 		double used = POWER * RotaryUtil.findEfficiency(motData[0], 0.2D, PEAK_SPEED);
 		progress = Math.min(progress + used, REQUIRED);
 		progRef.set((int) progress);
-		axleHandler.addEnergy(-used, false, false);
+		axleHandler.addEnergy(-used, false);
 	}
 
 	private void createOutput(ItemStack[] outputs){

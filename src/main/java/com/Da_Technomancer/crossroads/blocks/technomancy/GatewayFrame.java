@@ -5,6 +5,8 @@ import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
+import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
+import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
@@ -22,7 +24,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class GatewayFrame extends ContainerBlock{
+public class GatewayFrame extends ContainerBlock implements IReadable{
 
 	public GatewayFrame(){
 		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
@@ -59,20 +61,42 @@ public class GatewayFrame extends ContainerBlock{
 				return FluxUtil.handleFluxLinking(world, pos, held, player);
 			}
 		}else if(ESConfig.isWrench(held)){
-			//Try to form the multiblock
-			//TODO
+			//Attempt to form the multiblock
+			TileEntity te = world.getTileEntity(pos);
+			if(te instanceof GatewayFrameTileEntity){
+				return ((GatewayFrameTileEntity) te).assemble();
+			}
 		}
 		return false;
 	}
 
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
-		//TODO handle multiblock destruction
+		TileEntity te = world.getTileEntity(pos);
+		if(newState.getBlock() != state.getBlock() && te instanceof GatewayFrameTileEntity){
+			((GatewayFrameTileEntity) te).dismantle();//Shutdown the multiblock
+		}
 		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flag){
 		//TODO
+	}
+
+	@Override
+	public boolean hasComparatorInputOverride(BlockState state){
+		return state.get(CRProperties.ACTIVE) && state.get(CRProperties.UP);
+	}
+
+	@Override
+	public int getComparatorInputOverride(BlockState state, World world, BlockPos pos){
+		return RedstoneUtil.clampToVanilla(read(world, pos, state));
+	}
+
+	@Override
+	public float read(World world, BlockPos pos, BlockState state){
+		//Read the number of entries in the dialed address [0-4]
+		return 0;//TODO
 	}
 }

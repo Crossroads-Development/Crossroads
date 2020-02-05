@@ -112,10 +112,10 @@ public class FatCongealerTileEntity extends InventoryTE{
 				}
 
 				if(topHandler != null){
-					topHandler.addEnergy(-hun, false, false);
+					topHandler.addEnergy(-hun, false);
 				}
 				if(bottomHandler != null){
-					bottomHandler.addEnergy(-sat, false, false);
+					bottomHandler.addEnergy(-sat, false);
 				}
 				fluids[0].shrink(fluidUse);
 

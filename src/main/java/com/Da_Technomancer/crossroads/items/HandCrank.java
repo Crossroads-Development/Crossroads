@@ -33,9 +33,9 @@ public class HandCrank extends Item{
 		LazyOptional<IAxleHandler> axleOpt;
 		if(te != null && (axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, context.getFace().getOpposite())).isPresent()){
 			if(context.isPlacerSneaking()){
-				axleOpt.orElseThrow(NullPointerException::new).addEnergy(-RATE, true, true);
+				axleOpt.orElseThrow(NullPointerException::new).addEnergy(-RATE, true);
 			}else{
-				axleOpt.orElseThrow(NullPointerException::new).addEnergy(RATE, true, true);
+				axleOpt.orElseThrow(NullPointerException::new).addEnergy(RATE, true);
 			}
 			return ActionResultType.SUCCESS;
 		}

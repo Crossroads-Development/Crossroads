@@ -505,11 +505,6 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 		}
 
 		@Override
-		public boolean shouldManageAngle(){
-			return false;
-		}
-
-		@Override
 		public void disconnect(){
 			axis = null;
 		}
@@ -519,11 +514,6 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 
 		public AngleAxleHandler(){
 			angleW = new float[2];
-		}
-
-		@Override
-		public boolean shouldManageAngle(){
-			return true;
 		}
 
 		@Override

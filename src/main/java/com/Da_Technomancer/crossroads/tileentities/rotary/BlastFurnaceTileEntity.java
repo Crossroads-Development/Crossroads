@@ -110,7 +110,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 		}
 
 		progress++;
-		axleHandler.addEnergy(-POWER, false, false);
+		axleHandler.addEnergy(-POWER, false);
 		markDirty();
 
 		if(progress >= REQUIRED_PRG){

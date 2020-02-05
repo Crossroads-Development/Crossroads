@@ -34,9 +34,9 @@ public class CheatWandRotary extends Item{
 		if(te != null && (axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, null)).isPresent()){
 			IAxleHandler axle = axleOpt.orElseThrow(NullPointerException::new);
 			if(context.isPlacerSneaking()){
-				axle.addEnergy(-RATE, true, true);
+				axle.addEnergy(-RATE, true);
 			}else{
-				axle.addEnergy(RATE, true, true);
+				axle.addEnergy(RATE, true);
 			}
 			return ActionResultType.SUCCESS;
 		}

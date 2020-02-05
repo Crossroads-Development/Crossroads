@@ -38,13 +38,26 @@ public class GatewaySavedData extends WorldSavedData{
 				address[i] = GatewayAddress.getLegalEntry(w.rand.nextInt(GatewayAddress.LEGAL_VALS.length));
 			}
 			gateAdd = new GatewayAddress(address);
-		}while(data.addressBook.containsKey(gateAdd));
+		}while(data.addressBook.containsKey(gateAdd));//Generate a new address every time the generated address is already in use
 
 		//Register this new address in the addressBook
 		data.addressBook.put(gateAdd, new GatewayAddress.Location(pos, w));
 		data.markDirty();
 
 		return gateAdd;
+	}
+
+	/**
+	 * Unregisters an address
+	 * @param w Any server world
+	 * @param address The address to unregister
+	 */
+	public static void releaseAddress(@Nonnull ServerWorld w, @Nullable GatewayAddress address){
+		if(address != null){
+			GatewaySavedData data = get(w);
+			data.addressBook.remove(address);
+			data.markDirty();
+		}
 	}
 
 	/**

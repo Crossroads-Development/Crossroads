@@ -79,7 +79,7 @@ public class SteamTurbineTileEntity extends ModuleTE{
 					fluids[0].grow(100 * limit);
 				}
 				if(axleHandler.axis != null){
-					axleHandler.addEnergy(((double) limit) * .1D * EnergyConverters.degPerSteamBucket() / EnergyConverters.degPerJoule(), true, true);
+					axleHandler.addEnergy(((double) limit) * .1D * EnergyConverters.degPerSteamBucket() / EnergyConverters.degPerJoule(), true);
 				}
 			}
 		}
