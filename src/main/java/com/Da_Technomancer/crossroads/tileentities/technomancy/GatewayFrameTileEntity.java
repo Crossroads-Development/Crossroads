@@ -6,14 +6,20 @@ import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
+import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.GatewayAddress;
 import com.Da_Technomancer.crossroads.API.technomancy.GatewaySavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.essentials.packets.SendLongToClient;
 import net.minecraft.block.BlockState;
+import net.minecraft.command.impl.TeleportCommand;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -21,6 +27,8 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.EntityPredicates;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -33,6 +41,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @ObjectHolder(Crossroads.MODID)
@@ -41,6 +50,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	@ObjectHolder("gateway_frame")
 	private static TileEntityType<GatewayFrameTileEntity> type = null;
 	private static final int INERTIA = 100;//Moment of inertia
+	private static final int FLUX_PER_CYCLE = 4;
 
 	//These fields are only correct for the top center block of the multiblock (isActive() returns true)
 	//They will not necessarily be null/empty/0 if this inactive- always check isActive()
@@ -49,6 +59,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	private GatewayAddress address = null;//The address of THIS gateway
 	private double[] rotary = new double[4];//Rotary spin data (0: speed, 1: energy, 2: power, 3: last energy)
 	private float angle = 0;//Used for rendering and dialing chevrons. Because it's used for logic, we don't use the master axis angle syncing, which is render-based
+	private float clientAngle = 0;//Angle on the client. On the server, acts as a record of value sent to client
 	private float clientW = 0;//Speed on the client. On the server, acts as a record of value sent to client
 	private EnumBeamAlignments[] chevrons = new EnumBeamAlignments[4];//Current values locked into chevrons. Null for unset chevrons
 	private boolean origin = false;//Whether this gateway started the connection in dialed (determines which side has flux)
@@ -77,12 +88,86 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 		//TODO
 	}
 
+	//Gateway connection management
+
+	/**
+	 * Cancel any connection. Also tells any connected gateway to disconnect
+	 * Safe to use even when not dialed/connected
+	 * Virtual-server side only
+	 */
+	private void undial(){
+		GatewayAddress dialed = new GatewayAddress(chevrons);
+		//Wipe the chevrons before undialing the connected gateway to prevent an infinite recursion loop
+		for(int i = 0; i < 4; i++){
+			chevrons[i] = null;
+		}
+		origin = false;
+		if(dialed.fullAddress()){
+			playEffects(false);
+
+			GatewayAddress.Location loc = GatewaySavedData.lookupAddress((ServerWorld) world, dialed);
+			TileEntity te = loc == null ? null : loc.evalTE(world.getServer());
+			if(te instanceof GatewayFrameTileEntity){
+				((GatewayFrameTileEntity) te).undial();//Undial the connected gateway
+			}
+		}
+		markDirty();
+	}
+
+	/**
+	 * Dials this gateway to another gateway
+	 * Disconnects from any previous connection
+	 * Virtual server side only
+	 * @param toLinkTo The address to link to
+	 * @param source Whether this gateway is the source of the connection
+	 * @return Whether this dialing succeeded
+	 */
+	private boolean dial(GatewayAddress toLinkTo, boolean source){
+		undial();
+		GatewayAddress.Location loc = GatewaySavedData.lookupAddress((ServerWorld) world, toLinkTo);
+		TileEntity te = loc == null ? null : loc.evalTE(world.getServer());
+		if(te instanceof GatewayFrameTileEntity){
+			if(source){
+				//Dial the other gateway to this
+				if(!((GatewayFrameTileEntity) te).dial(address, false)){
+					//For some reason the other gateway has refused to dial. This should never happen, but we handle it just in case
+					playEffects(false);
+					return false;
+				}
+			}
+			//Successful linking after confirming the partner exists
+			for(int i = 0; i < 4; i++){
+				chevrons[i] = toLinkTo.getEntry(i);
+			}
+			origin = false;
+			playEffects(true);
+			return true;
+		}else{
+			//This has failed
+			playEffects(false);
+			return false;
+		}
+	}
+
+	/**
+	 * Creates purely aesthetic sounds/particles
+	 * Virtual-server side only
+	 * @param success Whether this is for a successful action (like connecting) or an unsucessful action (like dialing a fake address)
+	 */
+	private void playEffects(boolean success){
+		//TODO
+	}
+
+	//Multiblock management
+
 	/**
 	 * Called when this block is broken. Disassembles the rest of the multiblock if formed
 	 */
 	public void dismantle(){
 		if(!world.isRemote && isActive()){
 			//The head dismantles the entire multiblock, restoring inactive states
+
+			undial();//Cancel our connection
 
 			//Release our address back into the pool
 			GatewaySavedData.releaseAddress((ServerWorld) world, address);
@@ -154,7 +239,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			return false;//Even sizes are not allowed! Also catches newSize == 0
 		}
 
-		Direction.Axis axis = null;
+		Direction.Axis axis;
 		if(legalForGateway(world.getBlockState(pos.east())) && legalForGateway(world.getBlockState(pos.west()))){
 			axis = Direction.Axis.X;
 		}else if(legalForGateway(world.getBlockState(pos.south())) && legalForGateway(world.getBlockState(pos.north()))){
@@ -231,7 +316,49 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	public void tick(){
 		if(isActive()){
 			//This TE only ticks if it is active
-			//TODO
+			clientAngle += clientW / 20F;
+			if(!world.isRemote){
+				angle += rotary[0] / 20F;
+				if(Math.abs(clientAngle - angle) >= Math.PI / 8D || Math.abs(clientW - rotary[0]) >= Math.PI / 16D){
+					//Resync the speed and angle to the client
+					clientAngle = angle;
+					clientW = (float) rotary[0];
+					long packet = (long) Float.floatToIntBits(clientAngle) << 32L | (long) Float.floatToIntBits(clientW);
+					CrossroadsPackets.sendPacketAround(world, pos, new SendLongToClient(4, packet, pos));
+					markDirty();
+				}
+
+				//Teleportation
+				if(chevrons[3] != null && plane != null){
+					Direction horiz = Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, plane);
+					AxisAlignedBB area = new AxisAlignedBB(pos.down(size).offset(horiz, -size / 2), pos.offset(horiz, size / 2 + 1));
+					List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, area, EntityPredicates.IS_ALIVE);
+					if(!entities.isEmpty()){
+						GatewayAddress.Location loc = GatewaySavedData.lookupAddress((ServerWorld) world, new GatewayAddress(chevrons));
+						if(loc != null){
+							if(loc.dim.equals(world.dimension.getType().getRegistryName())){
+								//Same dimension TP
+								for(Entity e : entities){
+									e.setPosition();
+									TeleportCommand
+								}
+								//TODO
+							}else{
+								//Different dimension TP
+								//TODO
+							}
+						}
+					}
+				}
+
+				//Flux
+				if(origin && world.getGameTime() % FluxUtil.FLUX_TIME == 1){
+					flux += FLUX_PER_CYCLE;
+					FluxUtil.performTransfer(this, links);
+					FluxUtil.checkFluxOverload(this);
+					markDirty();
+				}
+			}
 		}
 	}
 
@@ -252,6 +379,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 		}
 		clientW = (float) rotary[0];
 		angle = nbt.getFloat("angle");
+		clientAngle = angle;
 		origin = nbt.getBoolean("origin");
 
 		//Generic
@@ -369,12 +497,19 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 
 	@Override
 	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity player){
-		if(identifier == LINK_PACKET_ID){
-			links.add(BlockPos.fromLong(message));
-			markDirty();
-		}else if(identifier == CLEAR_PACKET_ID){
-			links.clear();
-			markDirty();
+		switch(identifier){
+			case LINK_PACKET_ID:
+				links.add(BlockPos.fromLong(message));
+				markDirty();
+				break;
+			case CLEAR_PACKET_ID:
+				links.clear();
+				markDirty();
+				break;
+			case 4:
+				clientAngle = Float.intBitsToFloat((int) (message >>> 32L));
+				clientW = Float.intBitsToFloat((int) (message & 0xFFFFFFFFL));
+				break;
 		}
 
 		//TODO client-server value synchronization
@@ -412,7 +547,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 
 		@Override
 		public float getAngle(float partialTicks){
-			return angle + partialTicks * clientW / 20F;
+			return clientAngle + partialTicks * clientW / 20F;
 		}
 
 		@Override
@@ -435,7 +570,38 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 
 		@Override
 		public void setBeam(@Nonnull BeamUnit mag){
-			//TODO implementation that handles locking in chevrons
+			if(mag.isEmpty()){
+				return;
+			}
+
+			if(chevrons[3] != null){
+				//We're dialed into something. Reset
+				undial();
+			}
+
+			int index = 0;//Find the first undialed chevron
+			for(int i = 0; i < 4; i++){
+				if(chevrons[i] == null){
+					index = i;
+					break;
+				}
+			}
+
+			EnumBeamAlignments alignment = GatewayAddress.getLegalEntry(Math.round(angle * 8F / 2F / (float) Math.PI));
+
+			if(CRConfig.hardGateway.get() && alignment != EnumBeamAlignments.getAlignment(mag)){
+				//Optional hardmode (off by default)
+				undial();
+				return;
+			}
+
+			chevrons[index] = alignment;//Dial in a new chevron
+			if(index == 3){
+				//If this is the final chevron, make the connection
+				boolean success = dial(new GatewayAddress(chevrons), true);
+				playEffects(success);
+			}
+			markDirty();
 		}
 	}
 }

@@ -41,7 +41,7 @@ public class CrossroadsPackets{
 		registerPacket(NbtToEntityServer.class);
 		registerPacket(SendBiomeUpdateToClient.class);
 		registerPacket(SendGoggleConfigureToServer.class);
-		registerPacket(SendLongToClient.class);
+//		registerPacket(SendLongToClient.class); moved to Essentials
 		registerPacket(SendTaylorToClient.class);
 		registerPacket(SendMasterKeyToClient.class);
 	}

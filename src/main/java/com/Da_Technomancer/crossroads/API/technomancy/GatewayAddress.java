@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.API.technomancy;
 
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -37,11 +38,13 @@ public class GatewayAddress{
 		System.arraycopy(addressIn, 0, address, 0, 4);
 	}
 
-	private GatewayAddress(EnumBeamAlignments align0, EnumBeamAlignments align1, EnumBeamAlignments align2, EnumBeamAlignments align3){
-		address[0] = align0;
-		address[1] = align1;
-		address[2] = align2;
-		address[3] = align3;
+	public boolean fullAddress(){
+		for(EnumBeamAlignments entry : address){
+			if(entry == null){
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -54,13 +57,22 @@ public class GatewayAddress{
 	}
 
 	public int serialize(){
-		return address[0].ordinal() | address[1].ordinal() << 4 | address[2].ordinal() << 8 | address[3].ordinal() << 12;
+		int serial = 0;
+		for(int i = 0; i < 4; i++){
+			serial |= address[i] == null ? 0 : (address[i].ordinal() + 1) << 4*i;
+		}
+		return serial;
 	}
 
 	public static GatewayAddress deserialize(int serial){
 		EnumBeamAlignments[] vals = EnumBeamAlignments.values();
 		final int mask = 0xF;
-		return new GatewayAddress(vals[serial & mask], vals[serial >> 4 & mask], vals[serial >> 8 & mask], vals[serial >> 12 & mask]);
+		EnumBeamAlignments[] entries = new EnumBeamAlignments[4];
+		for(int i = 0; i < 4; i++){
+			int subSerial = (serial >>> i*4) & mask;
+			entries[i] = subSerial == 0 ? null : vals[subSerial - 1];
+		}
+		return new GatewayAddress(entries);
 	}
 
 	@Override
@@ -110,6 +122,15 @@ public class GatewayAddress{
 			}catch(Exception e){
 				return null;
 			}
+		}
+
+		@Nullable
+		public TileEntity evalTE(MinecraftServer server){
+			World w = evalDim(server);
+			if(w == null){
+				return null;
+			}
+			return w.getTileEntity(pos);
 		}
 
 		@Override
