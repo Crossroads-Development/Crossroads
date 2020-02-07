@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileEntity;
@@ -18,6 +19,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
@@ -81,7 +83,10 @@ public class GatewayFrame extends ContainerBlock implements IReadable{
 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flag){
-		//TODO
+		tooltip.add(new TranslationTextComponent("tt.crossroads.gateway.desc"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.gateway.dial"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.gateway.proc"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.gateway.flux", GatewayFrameTileEntity.FLUX_PER_CYCLE));
 	}
 
 	@Override
@@ -97,6 +102,16 @@ public class GatewayFrame extends ContainerBlock implements IReadable{
 	@Override
 	public float read(World world, BlockPos pos, BlockState state){
 		//Read the number of entries in the dialed address [0-4]
-		return 0;//TODO
+		TileEntity te = world.getTileEntity(pos);
+		if(te instanceof GatewayFrameTileEntity){
+			EnumBeamAlignments[] chev = ((GatewayFrameTileEntity) te).chevrons;
+			for(int i = 0; i < chev.length; i++){
+				if(chev[i] == null){
+					return i;
+				}
+			}
+			return chev.length;
+		}
+		return 0;
 	}
 }

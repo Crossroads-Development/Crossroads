@@ -1,8 +1,13 @@
 package com.Da_Technomancer.crossroads.API.heat;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.CRConfig;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class HeatUtil{
 
@@ -17,6 +22,17 @@ public class HeatUtil{
 
 	public static double toCelcius(double kelvin){
 		return kelvin + ABSOLUTE_ZERO;
+	}
+
+	/**
+	 * Adds heat information to a tooltip/readout
+	 * @param chat The chat list. One line per entry, will be modified
+	 * @param temp The temperature, in degrees C
+	 * @param biomeTemp The biome temperature, in degrees C
+	 */
+	public static void addHeatInfo(List<ITextComponent> chat, double temp, double biomeTemp){
+		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.temp_k", CRConfig.formatVal(temp), CRConfig.formatVal(toKelvin(temp))));
+		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.temp.biome", CRConfig.formatVal(biomeTemp)));
 	}
 
 	/**
@@ -42,6 +58,9 @@ public class HeatUtil{
 	 * @return The biome temperature, in degrees C
 	 */
 	public static double convertBiomeTemp(World world, BlockPos pos){
+		if(world == null || pos == null){
+			return ABSOLUTE_ZERO;
+		}
 		double rawTemp = world.getBiome(pos).getTemperature(pos);
 		//This formula was derived with the power of wikipedia and excel spreadsheets to compare biome temperatures to actual real world temperatures.
 		//Most people probably wouldn't care if I'd just pulled it out of my *rse, but I made an effort and I want someone to know this. Appreciate it. Please?

@@ -4,10 +4,10 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
-import com.Da_Technomancer.essentials.packets.ILongReceiver;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
+import com.Da_Technomancer.essentials.packets.ILongReceiver;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluid;
@@ -18,7 +18,6 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -128,14 +127,10 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		if(useHeat()){
-			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.temp", CRConfig.formatVal(temp)));
-			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.temp.biome", CRConfig.formatVal(HeatUtil.convertBiomeTemp(world, pos))));
+			HeatUtil.addHeatInfo(chat, temp, HeatUtil.convertBiomeTemp(world, pos));
 		}
 		if(useRotary()){
-			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.speed", CRConfig.formatVal(motData[0])));
-			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.energy", CRConfig.formatVal(motData[1])));
-			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.power", CRConfig.formatVal(motData[2])));
-			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.setup", CRConfig.formatVal(axleHandler.getMoInertia()), CRConfig.formatVal(axleHandler.getRotationRatio())));
+			RotaryUtil.addRotaryInfo(chat, motData, axleHandler.getMoInertia(), axleHandler.getRotationRatio(), false);
 		}
 	}
 

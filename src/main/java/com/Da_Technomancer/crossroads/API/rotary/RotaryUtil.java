@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.API.rotary;
 
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendMasterKeyToClient;
 import com.Da_Technomancer.crossroads.CRConfig;
@@ -10,37 +11,28 @@ import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RotaryUtil{
 
 	private static int masterKey = 1;
 
-	/**
-	 * This method should be called BEFORE adding an ISlaveAxisHandler to the stored list.
-	 *
-	 * @param axis An ISlaveAxisHandler of the IAxisHandler calling this method.
-	 * @param toAdd The ISlaveAxisHandler found during propagation
-	 * @return true if toAdd contains axis, even if nested. If true, the calling IAxisHandler should self-destruct (or otherwise suspend operation).
-	 * <p>
-	 * It is possible for this method to throw a StackOverflow error. There are two possible causes of this: either there is an unreasonable amount of nesting going on,
-	 * or there is a different infinite loop that should have been prevented at an earlier point. The disableSlaves config can be used to rescue a world in either of these cases.
-	 */
-	public static boolean contains(ISlaveAxisHandler axis, ISlaveAxisHandler toAdd){
-		if(CRConfig.disableSlaves.get() || toAdd == axis){
-			return true;
+	public static void addRotaryInfo(List<ITextComponent> chat, double[] motData, double inertia, double rotRatio, boolean compact){
+		if(compact){
+			//Print speed, energy, inertia, and rot ratio in one line (skips power)
+			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.compact", CRConfig.formatVal(motData[0]), CRConfig.formatVal(motData[1]), CRConfig.formatVal(inertia), CRConfig.formatVal(rotRatio)));
+		}else{
+			//Prints full data
+			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.speed", CRConfig.formatVal(motData[0])));
+			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.energy", CRConfig.formatVal(motData[1])));
+			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.power", CRConfig.formatVal(motData[2])));
+			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.setup", CRConfig.formatVal(inertia), CRConfig.formatVal(rotRatio)));
 		}
-		if(toAdd.getContainedAxes().isEmpty()){
-			return false;
-		}
-		for(ISlaveAxisHandler inner : toAdd.getContainedAxes()){
-			if(contains(axis, inner)){
-				return true;
-			}
-		}
-		return false;
 	}
 
 	public static double getDirSign(Direction oldGearFacing, Direction newGearFacing){

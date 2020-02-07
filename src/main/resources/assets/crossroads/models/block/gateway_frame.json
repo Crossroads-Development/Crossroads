@@ -5,8 +5,8 @@
 		"south": "crossroads:blocks/gateway_frame_side",
 		"east": "crossroads:blocks/gateway_frame_side",
 		"west": "crossroads:blocks/gateway_frame_side",
-		"up": "crossroads:blocks/gateway_frame_back",
-		"down": "crossroads:blocks/gateway_frame_front",
+		"up": "crossroads:blocks/gateway_frame_end",
+		"down": "crossroads:blocks/gateway_frame_end",
 		"particle": "crossroads:blocks/gateway_frame_side"
 	}
 }

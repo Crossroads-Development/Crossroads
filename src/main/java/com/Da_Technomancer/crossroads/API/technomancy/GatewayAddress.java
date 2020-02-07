@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.API.technomancy;
 
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -125,12 +126,16 @@ public class GatewayAddress{
 		}
 
 		@Nullable
-		public TileEntity evalTE(MinecraftServer server){
+		public GatewayFrameTileEntity evalTE(MinecraftServer server){
 			World w = evalDim(server);
 			if(w == null){
 				return null;
 			}
-			return w.getTileEntity(pos);
+			TileEntity te = w.getTileEntity(pos);
+			if(te instanceof GatewayFrameTileEntity){
+				return (GatewayFrameTileEntity) te;
+			}
+			return null;
 		}
 
 		@Override
