@@ -51,5 +51,4 @@ public final class CRRecipes{
 	public static IRecipeType<BeamTransmuteRec> BEAM_TRANSMUTE_TYPE = IRecipeType.register(Crossroads.MODID + ":beam_transmute");
 	public static IRecipeType<BoboRec> BOBO_TYPE = IRecipeType.register(Crossroads.MODID + ":bobo");
 
-
 }

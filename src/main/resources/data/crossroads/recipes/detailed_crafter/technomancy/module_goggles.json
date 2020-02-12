@@ -1,0 +1,23 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"item": "crossroads:module_goggles",
+		"count": 1
+	},
+	"pattern": [
+		"BBB",
+		"GCG"
+	],
+	"key": {
+		"B": {
+			"tag": "forge:ingots/bronze"
+		},
+		"G": {
+			"tag": "forge:glass/colorless"
+		},
+		"C": {
+			"item": "crossroads:ingots/copshowium"
+		}
+	}
+}

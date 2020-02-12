@@ -1,0 +1,27 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"item": "crossroads:temporal_accelerator",
+		"count": 1
+	},
+	"pattern": [
+		"CCC",
+		"IAI",
+		" Q "
+	],
+	"key": {
+		"I": {
+			"tag": "forge:ingots/iron"
+		},
+		"Q": {
+			"tag": "crossroads:gems/bright_quartz"
+		},
+		"C": {
+			"tag": "crossroads:ingots/copshowium"
+		},
+		"A": {
+			"item": "crossroads:lens_array"
+		}
+	}
+}

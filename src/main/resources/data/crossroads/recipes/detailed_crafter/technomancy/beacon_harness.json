@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"item": "crossroads:beacon_harness",
+		"count": 1
+	},
+	"pattern": [
+		"IAI",
+		"Q Q",
+		"IAI"
+	],
+	"key": {
+		"I": {
+			"tag": "crossroads:ingots/copshowium"
+		},
+		"Q": {
+			"tag": "crossroads:gems/bright_quartz"
+		},
+		"A": {
+			"item": "crossroads:lens_array"
+		}
+	}
+}

@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"item": "crossroads:clock_stabilizer",
+		"count": 1
+	},
+	"pattern": [
+		" Q ",
+		"QSQ",
+		"BBB"
+	],
+	"key": {
+		"B": {
+			"tag": "forge:ingots/bronze"
+		},
+		"Q": {
+			"tag": "crossroads:gems/pure_quartz"
+		},
+		"S": {
+			"item": "crossroads:quartz_stabilizer"
+		}
+	}
+}

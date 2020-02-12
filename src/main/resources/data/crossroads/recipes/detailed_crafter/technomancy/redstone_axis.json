@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"item": "crossroads:redstone_axis",
+		"count": 1
+	},
+	"pattern": [
+		"RBR",
+		"RAR",
+		"RBR"
+	],
+	"key": {
+		"B": {
+			"tag": "forge:ingots/bronze"
+		},
+		"R": {
+			"tag": "forge:dusts/redstone"
+		},
+		"A": {
+			"item": "crossroads:master_axis"
+		}
+	}
+}

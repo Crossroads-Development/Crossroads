@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"item": "crossroads:flux_sink",
+		"count": 1
+	},
+	"pattern": [
+		"CAC",
+		"CNC",
+		"CAC"
+	],
+	"key": {
+		"A": {
+			"item": "crossroads:lens_array"
+		},
+		"C": {
+			"tag": "crossroads:ingots/copshowium"
+		},
+		"N": {
+			"item": "crossroads:flux_node"
+		}
+	}
+}

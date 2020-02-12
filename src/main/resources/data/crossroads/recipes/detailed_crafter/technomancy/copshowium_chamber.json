@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"item": "crossroads:copshowium_creation_chamber",
+		"count": 1
+	},
+	"pattern": [
+		"QTQ",
+		"QFQ",
+		"QTQ"
+	],
+	"key": {
+		"T": {
+			"item": "crossroads:fluid_tube"
+		},
+		"F": {
+			"item": "crossroads:fluid_cooling_chamber"
+		},
+		"Q": {
+			"tag": "crossroads:gems/pure_quartz"
+		}
+	}
+}

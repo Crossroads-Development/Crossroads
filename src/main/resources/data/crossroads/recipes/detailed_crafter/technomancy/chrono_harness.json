@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"item": "crossroads:chrono_harness",
+		"count": 1
+	},
+	"pattern": [
+		"III",
+		"CRC",
+		"III"
+	],
+	"key": {
+		"I": {
+			"tag": "forge:ingots/iron"
+		},
+		"C": {
+			"tag": "crossroads:ingots/copshowium"
+		},
+		"R": {
+			"tag": "forge:storage_blocks/redstone"
+		}
+	}
+}

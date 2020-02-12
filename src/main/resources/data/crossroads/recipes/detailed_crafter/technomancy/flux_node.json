@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"item": "crossroads:flux_node",
+		"count": 1
+	},
+	"pattern": [
+		"iIi",
+		"ICI",
+		"iIi"
+	],
+	"key": {
+		"C": {
+			"tag": "crossroads:ingots/copshowium"
+		},
+		"I": {
+			"tag": "forge:ingots/iron"
+		},
+		"i": {
+			"tag": "forge:nuggets/iron"
+		}
+	}
+}

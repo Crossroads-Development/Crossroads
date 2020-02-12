@@ -1,0 +1,21 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"item": "crossroads:beam_cage",
+		"count": 1
+	},
+	"pattern": [
+		"S",
+		"C",
+		"S"
+	],
+	"key": {
+		"C": {
+			"tag": "crossroads:ingots/copshowium"
+		},
+		"S": {
+			"item": "crossroads:quartz_stabilizer"
+		}
+	}
+}

@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"item": "crossroads:staff_technomancy",
+		"count": 1
+	},
+	"pattern": [
+		"ACA",
+		" I ",
+		" I "
+	],
+	"key": {
+		"I": {
+			"tag": "forge:ingots/iron"
+		},
+		"C": {
+			"item": "crossroads:beam_cage"
+		},
+		"A": {
+			"item": "crossroads:lens_array"
+		}
+	}
+}

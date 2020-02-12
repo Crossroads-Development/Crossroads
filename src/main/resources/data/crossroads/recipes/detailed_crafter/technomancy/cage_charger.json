@@ -1,0 +1,20 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"item": "crossroads:cage_charger",
+		"count": 1
+	},
+	"pattern": [
+		"BQB",
+		"BQB"
+	],
+	"key": {
+		"B": {
+			"tag": "forge:ingots/bronze"
+		},
+		"Q": {
+			"tag": "crossroads:gems/pure_quartz"
+		}
+	}
+}

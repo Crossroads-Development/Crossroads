@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"item": "crossroads:gateway_frame",
+		"count": 4
+	},
+	"pattern": [
+		"OOO",
+		"CCC",
+		"III"
+	],
+	"key": {
+		"O": {
+			"item": "forge:obsidian"
+		},
+		"C": {
+			"item": "forge:ingots/copper"
+		},
+		"I": {
+			"tag": "forge:ingots/iron"
+		}
+	}
+}
