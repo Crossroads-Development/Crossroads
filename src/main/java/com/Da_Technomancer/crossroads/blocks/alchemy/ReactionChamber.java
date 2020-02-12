@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
-import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactionChamberTileEntity;
 import net.minecraft.block.BlockRenderType;
@@ -129,7 +128,7 @@ public class ReactionChamber extends ContainerBlock{
 		if(stored.getTotalQty() == 0){
 			tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.alchemy_empty"));
 		}else{
-			tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.temp_k", CRConfig.formatVal(temp), CRConfig.formatVal(HeatUtil.toKelvin(temp))));
+			HeatUtil.addHeatInfo(tooltip, temp, Short.MIN_VALUE);
 			int total = 0;
 			for(IReagent type : stored.keySet()){
 				int qty = stored.getQty(type);

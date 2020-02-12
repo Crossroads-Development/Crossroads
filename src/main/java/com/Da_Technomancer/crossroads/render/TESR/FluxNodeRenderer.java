@@ -2,16 +2,16 @@ package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxNodeTileEntity;
+import com.Da_Technomancer.essentials.render.LinkLineRenderer;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class FluxNodeRenderer extends TileEntityRenderer<FluxNodeTileEntity>{
+public class FluxNodeRenderer extends LinkLineRenderer<FluxNodeTileEntity>{
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/model/gimbal.png");
 	private static final ResourceLocation TEXTURE_COP = new ResourceLocation(Crossroads.MODID, "textures/blocks/block_copshowium.png");

@@ -52,6 +52,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.BooleanValue allowHellfire;
 	public static ForgeConfigSpec.IntValue voltusValue;
 	public static ForgeConfigSpec.IntValue atmosEffect;
+	public static ForgeConfigSpec.BooleanValue atmosLightningHorsemen;
 	public static ForgeConfigSpec.IntValue atmosCap;
 	public static ForgeConfigSpec.DoubleValue copsPerLiq;
 	public static ForgeConfigSpec.BooleanValue allowOverflow;
@@ -162,6 +163,7 @@ public class CRConfig{
 		phelEffect = serverBuilder.comment("Allow the full effect of Phelostogen?", "If disabled Phelostogen lights a single small fire instead").define("phel_effect", true);
 		allowHellfire = serverBuilder.comment("Whether to allow Ignis Infernum", "If disabled, Ignis Infernum is still craftable, but it gets nerfed to Phelostogen level").define("ignis_infernum", true);
 		atmosEffect = serverBuilder.comment("Level of effects from overcharging the atmosphere", "0: No negative effects", "1: Allow lightning strikes", "2: Allow creeper charging", "3: Allow lightning strikes & creeper charging").defineInRange("atmos_effects", 3, 0, 3);
+		atmosLightningHorsemen = serverBuilder.comment("Whether lightning bolts from atmospheric overcharging can spawn the 4 horsemen", "Overriden by gamerules").define("atmos_horses", true);
 		atmosCap = serverBuilder.comment("Maximum charge for the atmosphere").defineInRange("charge_limit", 1_000_000_000, 0, 2_000_000_000);
 		voltusValue = serverBuilder.comment("FE produced by one Voltus").defineInRange("voltus_power", 10_000, 0, 100_000);
 		stampMillDamping = serverBuilder.comment("Percentage of Stamp Mill progress to be lost on failure", "Effectively nerfs ore-tripling").defineInRange("mill_damping", 0, 0, 100);

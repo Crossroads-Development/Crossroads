@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.API.rotary;
 
-import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendMasterKeyToClient;
 import com.Da_Technomancer.crossroads.CRConfig;
@@ -15,17 +14,28 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RotaryUtil{
 
+	/**
+	 * The masterKey is a way of tracking when Master Axes should regenerate/recheck their networks
+	 * Master axes are allowed to ignore this, but it allows for significant optimizations by reducing unnecessary checks, as it will be incremented every time a gear/component is broken/updated
+	 */
 	private static int masterKey = 1;
 
+	/**
+	 * Adds information about an axle handler to chat/tooltip
+	 * @param chat The text list. One entry per line, will be modified
+	 * @param motData The motion data of the axle (speed, energy, power- any further args ignored)
+	 * @param inertia The moment of inertia
+	 * @param rotRatio The rotation ratio
+	 * @param compact Whether to compact the output into one line of chat
+	 */
 	public static void addRotaryInfo(List<ITextComponent> chat, double[] motData, double inertia, double rotRatio, boolean compact){
 		if(compact){
-			//Print speed, energy, inertia, and rot ratio in one line (skips power)
-			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.compact", CRConfig.formatVal(motData[0]), CRConfig.formatVal(motData[1]), CRConfig.formatVal(inertia), CRConfig.formatVal(rotRatio)));
+			//Print speed, energy, power, inertia, and rot ratio
+			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.compact", CRConfig.formatVal(motData[0]), CRConfig.formatVal(motData[1]), CRConfig.formatVal(motData[2]), CRConfig.formatVal(inertia), CRConfig.formatVal(rotRatio)));
 		}else{
 			//Prints full data
 			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.speed", CRConfig.formatVal(motData[0])));
@@ -96,6 +106,7 @@ public class RotaryUtil{
 		//The current definition of "solid":
 		//Block collision shape contains the 2x2 of pixels in the center of the face in side
 		//And block is not a large gear
+		//There's a new method in MC1.15 I want to use for this (used for torches) TODO
 		BlockState state = world.getBlockState(pos);
 		if(state.getBlock() instanceof LargeGearSlave || state.getBlock() instanceof LargeGearMaster){
 			return false;

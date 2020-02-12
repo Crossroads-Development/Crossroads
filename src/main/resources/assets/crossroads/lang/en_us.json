@@ -239,6 +239,7 @@
 	"item.crossroads.solid_sulfur_dioxide": "Frozen SO₂",
 	"item.crossroads.bobo_rod": "Rod of Madness",
 	"item.crossroads.vacuum.hopper_quip": "Vacuum Hopper",
+	"blocks.crossroads.flux_sink": "Temporal Entropy Sink",
 
 	"item.crossroads.dust_metal": "%1$s Dust",
 	"item.crossroads.gravel_metal": "Raw %1$s Grit",
@@ -273,7 +274,7 @@
 	"tt.crossroads.boilerplate.rotary.energy": "Energy: %1$sJ",
 	"tt.crossroads.boilerplate.rotary.power": "Power: %1$sJ/s",
 	"tt.crossroads.boilerplate.rotary.setup": "I: %1$skg*m²; Rotation Ratio: %2$s",
-	"tt.crossroads.boilerplate.rotary.compact": "ω: %1$srad/s; E: %2$sJ; I: %3$skg*m²; RR: %4$s",
+	"tt.crossroads.boilerplate.rotary.compact": "ω: %1$srad/s; E: %2$sJ; PWR: %3$sJ/s; I: %4$skg*m²; RR: %5$s",
 	"tt.crossroads.boilerplate.creative": "Creative Mode only",
 	"tt.crossroads.boilerplate.inertia": "I: %1$skg*m²",
 	"tt.crossroads.boilerplate.progress": "Progress: %1$d/%2$d",
@@ -471,7 +472,6 @@
 	"tt.crossroads.boilerplate.flux": "%1$d/%2$dTEn (%3$f%%) +%4$sTEn/t",
 	"tt.crossroads.boilerplate.flux_simple": "%1$d/%2$dTEn (%3$f%%)",
 	"tt.crossroads.chrono_harness.fe": "%1$d/%2$dFE (%3$dFE/t)",
-	"tt.crossroads.chrono_harness.flux": "%1$d/%2$dTEn (%3$dTEn/t)",
 	"tt.crossroads.flux_node.desc": "Transfers Temporal Entropy (capacity %1$d)",
 	"tt.crossroads.flux_node.link": "Link to outputs with a Linking Tool",
 	"tt.crossroads.flux_node.circuit": "Circuits measure total Temporal Entropy",
@@ -506,6 +506,13 @@
 	"tt.crossroads.gateway.dial": "Dial the address of another portal to link to it",
 	"tt.crossroads.gateway.proc": "Connect an axle to the top, and rotate to dial. Pulse with a beam to lock in a chevron",
 	"tt.crossroads.gateway.flux": "The source portal produces %1$dTEn while running",
+	"tt.crossroads.flux_sink.desc": "Accepts and destroys unlimited Temporal Entropy",
+	"tt.crossroads.flux_sink.beacon": "Must be placed over a beacon to function",
+	"tt.crossroads.flux_sink.quip": "Dumps unstable waste into an unsuspecting parallel universe",
+	"tt.crossroads.chrono_harness.desc": "Produces FE for free, but creates Temporal Entropy as a byproduct",
+	"tt.crossroads.chrono_harness.power": "Maximum power of %1$dFE/t; Produces %2$dFE/TEn",
+	"tt.crossroads.chrono_harness.reds": "Disabled by a redstone signal",
+
 
 	"container.smelter": "Smelter",
 	"container.firebox": "Firebox",

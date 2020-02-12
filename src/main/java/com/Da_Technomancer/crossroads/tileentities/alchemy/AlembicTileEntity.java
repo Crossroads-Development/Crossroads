@@ -1,24 +1,34 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
-import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.particles.CRParticles;
+import com.Da_Technomancer.crossroads.particles.ColorParticleData;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.world.ServerWorld;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
 
+@ObjectHolder(Crossroads.MODID)
 public class AlembicTileEntity extends AlchemyReactorTE{
+
+	@ObjectHolder("alembic")
+	private static TileEntityType<AlembicTileEntity> type = null;
+
+	public AlembicTileEntity(){
+		super(type, true);
+	}
 
 	@Override
 	protected boolean useCableHeat(){
@@ -69,9 +79,9 @@ public class AlembicTileEntity extends AlchemyReactorTE{
 
 				Color c = type.getColor(type.getPhase(ambientTemp));
 				if(type.getPhase(ambientTemp).flowsDown()){
-					((ServerWorld) world).spawnParticle(CRParticles.COLOR_LIQUID, false, pos.getX() + 0.5D + dir.getXOffset(), pos.getY() + 1.1D, pos.getZ() + 0.5D + dir.getZOffset(), 0, 0, (Math.random() * 0.05D) - 0.1D, 0, 1F, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
+					((ServerWorld) world).spawnParticle(new ColorParticleData(CRParticles.COLOR_LIQUID, c), pos.getX() + 0.5D + dir.getXOffset(), pos.getY() + 1.1D, pos.getZ() + 0.5D + dir.getZOffset(), 0, 0, (Math.random() * 0.05D) - 0.1D, 0, 1F);
 				}else{
-					((ServerWorld) world).spawnParticle(CRParticles.COLOR_GAS, false, pos.getX() + 0.5D + dir.getXOffset(), pos.getY() + 1.1D, pos.getZ() + 0.5D + dir.getZOffset(), 0, 0, (Math.random() * -0.05D) + 0.1D, 0, 1F, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
+					((ServerWorld) world).spawnParticle(new ColorParticleData(CRParticles.COLOR_GAS, c), pos.getX() + 0.5D + dir.getXOffset(), pos.getY() + 1.1D, pos.getZ() + 0.5D + dir.getZOffset(), 0, 0, (Math.random() * -0.05D) + 0.1D, 0, 1F);
 				}
 			}
 		}
@@ -80,9 +90,9 @@ public class AlembicTileEntity extends AlchemyReactorTE{
 
 		TileEntity te = world.getTileEntity(pos.offset(dir));
 		if(te != null){
-			IChemicalHandler handler = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, Direction.UP);
-			if(handler != null){
-				handler.insertReagents(toInsert, Direction.UP, new PsuedoChemHandler(toInsert));
+			LazyOptional<IChemicalHandler> otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, Direction.UP);
+			if(otherOpt.isPresent()){
+				otherOpt.orElseThrow(NullPointerException::new).insertReagents(toInsert, Direction.UP, new PsuedoChemHandler(toInsert));
 			}
 		}
 	}
@@ -128,13 +138,19 @@ public class AlembicTileEntity extends AlchemyReactorTE{
 		}
 	}
 
-	private final HeatHandler heatHandler = new HeatHandler();
+	@Override
+	public void remove(){
+		super.remove();
+		heatOpt.invalidate();
+	}
+
+	private LazyOptional<IHeatHandler> heatOpt = LazyOptional.of(HeatHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if((side == null || side == Direction.DOWN) && cap == Capabilities.HEAT_CAPABILITY){
-			return (T) heatHandler;
+			return (LazyOptional<T>) heatOpt;
 		}
 		return super.getCapability(cap, side);
 	}

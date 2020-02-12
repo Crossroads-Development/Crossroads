@@ -42,7 +42,7 @@ public class DirtyWaterRec implements IRecipe<IInventory>{
 
 	@Override
 	public ItemStack getCraftingResult(IInventory inv){
-		return getRecipeOutput();
+		return getRecipeOutput().copy();
 	}
 
 	@Override

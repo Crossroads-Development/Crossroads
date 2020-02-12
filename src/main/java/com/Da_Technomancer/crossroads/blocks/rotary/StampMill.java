@@ -23,9 +23,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -35,6 +37,14 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class StampMill extends ContainerBlock{
+
+	private static final VoxelShape[] SHAPES = new VoxelShape[2];
+
+	static{
+		VoxelShape base = makeCuboidShape(0, 0, 0, 16, 4, 16);
+		SHAPES[0] = VoxelShapes.or(base, makeCuboidShape(0, 4, 3, 1, 16, 11), makeCuboidShape(15, 4, 3, 16, 16, 11));
+		SHAPES[1] = VoxelShapes.or(base, makeCuboidShape(3, 4, 0, 11, 16, 1), makeCuboidShape(3, 4, 15, 11, 16, 16));
+	}
 
 	public StampMill(){
 		super(Properties.create(Material.WOOD).hardnessAndResistance(1).sound(SoundType.METAL));
@@ -46,8 +56,7 @@ public class StampMill extends ContainerBlock{
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
-		//TODO
-		return super.getShape(state, worldIn, pos, context);
+		return SHAPES[state.get(CRProperties.HORIZ_AXIS) == Direction.Axis.X ? 0 : 1];
 	}
 
 	@Override
@@ -103,8 +112,8 @@ public class StampMill extends ContainerBlock{
 	}
 
 	@Override
-	public boolean canPlaceBlockAt(World worldIn, BlockPos pos){
-		return super.canPlaceBlockAt(worldIn, pos) && super.canPlaceBlockAt(worldIn, pos.offset(Direction.UP));
+	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos){
+		return super.isValidPosition(state, worldIn, pos) && worldIn.getBlockState(pos.up()).isAir(worldIn, pos.up());
 	}
 
 	@Override

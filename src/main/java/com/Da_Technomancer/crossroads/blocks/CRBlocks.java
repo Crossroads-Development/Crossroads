@@ -74,7 +74,7 @@ public class CRBlocks{
 //	public static PrototypingTable prototypingTable;
 //	public static Prototype prototype;
 //	public static PrototypePort prototypePort;
-	public static MechanicalArm mechanicalArm;
+//	public static MechanicalArm mechanicalArm;
 //	public static RedstoneRegistry redstoneRegistry;
 	public static AlchemicalTube alchemicalTubeGlass;
 	public static RedsAlchemicalTube redsAlchemicalTubeGlass;
@@ -133,6 +133,7 @@ public class CRBlocks{
 	public static FluxNode fluxNode;
 	public static TemporalAccelerator temporalAccelerator;
 	public static ChronoHarness chronoHarness;
+	public static FluxSink fluxSink;
 
 	private static final Item.Properties itemBlockProp = new Item.Properties().group(CRItems.TAB_CROSSROADS);
 	public static final ArrayList<Block> toRegister = new ArrayList<>();
@@ -205,7 +206,7 @@ public class CRBlocks{
 //		prototypingTable = new PrototypingTable();
 //		prototype = new Prototype();
 //		prototypePort = new PrototypePort();
-		mechanicalArm = new MechanicalArm();
+//		mechanicalArm = new MechanicalArm();
 //		redstoneRegistry = new RedstoneRegistry();
 		alchemicalTubeGlass = new AlchemicalTube(false);
 		redsAlchemicalTubeGlass = new RedsAlchemicalTube(false);
@@ -270,5 +271,6 @@ public class CRBlocks{
 		fluxNode = new FluxNode();
 		temporalAccelerator = new TemporalAccelerator();
 		chronoHarness = new ChronoHarness();
+		fluxSink = new FluxSink();
 	}
 }

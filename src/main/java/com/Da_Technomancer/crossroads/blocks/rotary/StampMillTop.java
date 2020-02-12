@@ -22,6 +22,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -29,6 +30,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class StampMillTop extends Block{
+
+	private static final VoxelShape[] SHAPES = new VoxelShape[2];
+
+	static{
+		SHAPES[0] = VoxelShapes.or(makeCuboidShape(0, 15, 3, 16, 16, 11), makeCuboidShape(0, 0, 3, 1, 15, 11), makeCuboidShape(15, 0, 3, 16, 15, 11));
+		SHAPES[1] = VoxelShapes.or(makeCuboidShape(3, 15, 0, 11, 16, 16), makeCuboidShape(3, 0, 0, 11, 15, 1), makeCuboidShape(3, 0, 15, 11, 15, 16));
+	}
 
 	public StampMillTop(){
 		super(Properties.create(Material.WOOD).hardnessAndResistance(1).sound(SoundType.METAL));
@@ -40,8 +48,7 @@ public class StampMillTop extends Block{
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
-		//TODO
-		return super.getShape(state, worldIn, pos, context);
+		return SHAPES[state.get(CRProperties.HORIZ_AXIS) == Direction.Axis.X ? 0 : 1];
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
-import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
 import com.Da_Technomancer.crossroads.API.packets.IStringReceiver;
@@ -11,11 +11,13 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.gui.container.CrucibleContainer;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.recipes.CrucibleRec;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -34,6 +36,7 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.awt.*;
+import java.util.Optional;
 
 @ObjectHolder(Crossroads.MODID)
 public class HeatingCrucibleTileEntity extends InventoryTE implements IStringReceiver{
@@ -131,26 +134,28 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 			temp -= USAGE * (tier + 1);
 			if(inventory[0].isEmpty()){
 				progress = 0;
-				progressRef.set(progress);
 			}else{
 				progress = Math.min(REQUIRED, progress + USAGE * (tier + 1));
 				if(progress >= REQUIRED){
-					FluidStack created = RecipeHolder.crucibleRecipes.get(inventory[0]);
-
-					if(created.isEmpty()){
-						inventory[0] = ItemStack.EMPTY;
-					}else if(fluidProps[0].capacity - fluids[0].getAmount() >= created.getAmount() && (fluids[0].isEmpty() || BlockUtil.sameFluid(fluids[0], created))){
-						progress = 0;
-						if(fluids[0].isEmpty()){
-							fluids[0] = created.copy();
-						}else{
-							fluids[0].grow(created.getAmount());
+					Optional<CrucibleRec> recOpt = world.getRecipeManager().getRecipe(RecipeHolder.CRUCIBLE_TYPE, this, world);
+					if(recOpt.isPresent()){
+						FluidStack created = recOpt.get().getOutput();
+						if(fluidProps[0].capacity - fluids[0].getAmount() >= created.getAmount() && (fluids[0].isEmpty() || BlockUtil.sameFluid(fluids[0], created))){
+							progress = 0;
+							if(fluids[0].isEmpty()){
+								fluids[0] = created.copy();
+							}else{
+								fluids[0].grow(created.getAmount());
+							}
+							inventory[0].shrink(1);
+							markDirty();
 						}
-						inventory[0].shrink(1);
+					}else{
+						inventory[0] = ItemStack.EMPTY;
 					}
 				}
-				progressRef.set(progress);
 			}
+			progressRef.set(progress);
 
 			markDirty();
 		}
@@ -224,7 +229,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && RecipeHolder.crucibleRecipes.get(stack) != null;
+		return index == 0 && world.getRecipeManager().getRecipe(RecipeHolder.CRUCIBLE_TYPE, new Inventory(stack), world).isPresent();
 	}
 
 	@Override

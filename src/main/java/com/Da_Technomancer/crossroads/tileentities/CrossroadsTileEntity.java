@@ -74,7 +74,7 @@ public class CrossroadsTileEntity{
 //		register(PrototypeTileEntity::new, "prototype", reg, prototype);
 //		register(PrototypePortTileEntity::new, "prototype_port", reg, prototypePort);
 		register(MechanicalArmTileEntity::new, "mechanical_arm", reg, mechanicalArm);
-		register(RedstoneRegistryTileEntity::new, "redstone_registry", reg, redstoneRegistry);
+//		register(RedstoneRegistryTileEntity::new, "redstone_registry", reg, redstoneRegistry);
 		register(AlchemicalTubeTileEntity::new, "alchemical_tube", reg, alchemicalTubeCrystal, alchemicalTubeGlass);
 		register(FluidInjectorTileEntity::new, "fluid_injector", reg, fluidInjectorGlass, fluidInjectorCrystal);
 		register(FlowLimiterTileEntity::new, "flow_limiter", reg, flowLimiterCrystal, flowLimiterGlass);
@@ -115,6 +115,7 @@ public class CrossroadsTileEntity{
 		register(TemporalAcceleratorTileEntity::new, "temporal_accelerator", reg, temporalAccelerator);
 		register(ChronoHarnessTileEntity::new, "chrono_harness", reg, chronoHarness);
 		register(ReagentFilterTileEntity::new, "reagent_filter", reg, reagentFilterCrystal, reagentFilterGlass);
+		register(FluxSinkTileEntity::new, "flux_sink", reg, fluxSink);
 	}
 
 	@SuppressWarnings("unchecked")

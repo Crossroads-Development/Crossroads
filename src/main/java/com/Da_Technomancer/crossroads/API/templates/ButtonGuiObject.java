@@ -60,7 +60,7 @@ public class ButtonGuiObject implements IGuiObject{
 	@Override
 	public boolean mouseClicked(double x, double y, int button){
 		if(isMouseOver(x, y)){
-			Minecraft.getInstance().getSoundHandler().playSound(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+			Minecraft.getInstance().getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 			return true;
 		}
 		return false;

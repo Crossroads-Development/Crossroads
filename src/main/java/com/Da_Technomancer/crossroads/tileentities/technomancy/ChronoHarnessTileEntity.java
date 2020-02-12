@@ -54,7 +54,7 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		chat.add(new TranslationTextComponent("tt.crossroads.chrono_harness.fe", fe, FE_CAPACITY, curPower));
-		chat.add(new TranslationTextComponent("tt.crossroads.chrono_harness.flux", flux, getMaxFlux(), curPower / EnergyConverters.getFePerFlux()));
+		FluxUtil.addFluxInfo(chat, this, curPower / EnergyConverters.getFePerFlux());
 		FluxUtil.addLinkInfo(chat, this);
 	}
 

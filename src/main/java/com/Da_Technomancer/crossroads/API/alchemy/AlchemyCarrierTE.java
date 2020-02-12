@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
-import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.particles.CRParticles;
@@ -68,7 +67,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		double temp = correctTemp();
 		if(contents.getTotalQty() != 0 || temp != HeatUtil.ABSOLUTE_ZERO){
-			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.temp_k", CRConfig.formatVal(temp), CRConfig.formatVal(HeatUtil.toKelvin(temp))));
+			HeatUtil.addHeatInfo(chat, temp, Short.MIN_VALUE);
 		}else{
 			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.alchemy_empty"));
 		}

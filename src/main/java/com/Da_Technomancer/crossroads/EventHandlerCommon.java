@@ -2,18 +2,15 @@ package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.API.CrReflection;
 import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
-import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendPlayerTickCountToClient;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.TemporalAcceleratorTileEntity;
 import com.Da_Technomancer.essentials.ReflectionUtil;
-import com.google.common.base.Predicate;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.monster.CreeperEntity;
@@ -23,14 +20,16 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.Explosion;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.server.ChunkHolder;
 import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.AnvilUpdateEvent;
@@ -42,11 +41,10 @@ import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.config.ModConfig;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Optional;
 
 public final class EventHandlerCommon{
 
@@ -83,9 +81,12 @@ public final class EventHandlerCommon{
 		}
 	}
 
-//	//The main and sub keys allow differentiating between entities with updateBlocked due to crossroads, and updateBlocked due to other mods. In effect, it is a preemptive compatibility bugfix
+	//	//The main and sub keys allow differentiating between entities with updateBlocked due to crossroads, and updateBlocked due to other mods. In effect, it is a preemptive compatibility bugfix
 //	protected static final String MAIN_KEY = "cr_pause";
 //	protected static final String SUB_KEY = "cr_pause_prior";
+	private static final Method getLoadedChunks = ReflectionUtil.reflectMethod(CrReflection.LOADED_CHUNKS);
+	private static final Method spawnRadius = ReflectionUtil.reflectMethod(CrReflection.SPAWN_RADIUS);
+	private static final Method adjustPosForLightning = ReflectionUtil.reflectMethod(CrReflection.LIGHTNING_POS);
 
 	@SubscribeEvent
 	@SuppressWarnings("unused")
@@ -136,51 +137,91 @@ public final class EventHandlerCommon{
 		if(!e.world.isRemote && (CRConfig.atmosEffect.get() & 1) == 1){
 			e.world.getProfiler().startSection(Crossroads.MODNAME + ": Overcharge lightning effects");
 			float chargeLevel = (float) AtmosChargeSavedData.getCharge((ServerWorld) e.world) / (float) AtmosChargeSavedData.getCapacity();
-			if(chargeLevel > 0.5F){
-				Iterator<Chunk> iterator = ((ServerChunkProvider) e.world.getChunkProvider()).chunkManager.getPersistentChunkIterable(((ServerWorld) (e.world)).getPlayerChunkMap().getChunkIterator());
-				while(iterator.hasNext()){
-					Chunk chunk = iterator.next();
-					int j = chunk.getPos().x * 16;
-					int k = chunk.getPos().z * 16;
-					chunk.enqueueRelightChecks();
-					chunk.onTick(false);
+			if(chargeLevel > 0.5F && getLoadedChunks != null && spawnRadius != null){
+				//1.14
+				//Very similar to vanilla logic in ServerWorld::tickEnvironment as called by ServerChunkProvider::tickChunks
+				//Re-implemented due to the vanilla methods doing far more than just lightning
+				try{
+					Iterable<ChunkHolder> iterable = (Iterable<ChunkHolder>) getLoadedChunks.invoke(((ServerChunkProvider) e.world.getChunkProvider()).chunkManager);
+					for(ChunkHolder holder : iterable){
+						Optional<Chunk> opt = holder.func_219297_b().getNow(ChunkHolder.UNLOADED_CHUNK).left();//The obfusucated method is some sort of getter. Returns CompletableFuture<Either<Chunk, ChunkHolder.IChunkLoadingError>>- but there are 3 methods that do that. Be careful to get the right one when mcp updates
+						if(opt.isPresent()){
+							ChunkPos chunkPos = opt.get().getPos();
+							if(!(boolean) spawnRadius.invoke(((ServerChunkProvider) e.world.getChunkProvider()).chunkManager, chunkPos)){
+								int i = chunkPos.getXStart();
+								int j = chunkPos.getZStart();
+								if(e.world.rand.nextInt(350_000 - (int) (300_000F * chargeLevel)) == 0){//The vanilla default is 1/100_000; atmos charging ranges from 1/200_000 to 1/50_000
+									BlockPos strikePos = e.world.getBlockRandomPos(i, 0, j, 15);
+									if(adjustPosForLightning != null){
+										//This is a minor detail of the implementation- we only do it if the reflection worked
+										strikePos = (BlockPos) adjustPosForLightning.invoke(e.world, strikePos);//Vanilla lightning logic is evil- if there's a nearby entity (including players), hit them instead of the random block
+									}
+									DifficultyInstance difficulty = e.world.getDifficultyForLocation(strikePos);
+									//There's a config for this because at high atmos levels, it can quickly get annoying to have a world flooded with skeleton horses
+									boolean spawnHorsemen = CRConfig.atmosLightningHorsemen.get() && e.world.getGameRules().getBoolean(GameRules.DO_MOB_SPAWNING) && e.world.rand.nextDouble() < difficulty.getAdditionalDifficulty() * 0.01D;
+									if(spawnHorsemen){
+										SkeletonHorseEntity skeletonHorse = EntityType.SKELETON_HORSE.create(e.world);
+										skeletonHorse.setTrap(true);//It's a trap!
+										skeletonHorse.setGrowingAge(0);
+										skeletonHorse.setPosition(strikePos.getX(), strikePos.getY(), strikePos.getZ());
+										e.world.addEntity(skeletonHorse);
+									}
 
-					if(e.world.provider.canDoLightning(chunk) && e.world.rand.nextInt(350_000 - (int) (300_000 * chargeLevel)) == 0){
-						//Determine the position of the lightning strike
-						int tarX = j + e.world.rand.nextInt(16);
-						int tarZ = k + e.world.rand.nextInt(16);
-						int tarY = e.world.getPrecipitationHeight(new BlockPos(tarX, 0, tarZ)).getY();
-						BlockPos tarPos;
-
-						//Lightning bolts are attracted by nearby entities
-						//Uses a slightly different formula from vanilla for reasons of efficiency
-						ArrayList<LivingEntity> ents = new ArrayList<>();
-						chunk.getEntitiesOfTypeWithinAABB(LivingEntity.class, new AxisAlignedBB(tarX - 3, tarY - 3, tarZ - 3, tarX + 3, e.world.getHeight() + 3, tarZ + 3), ents, new Predicate<LivingEntity>(){
-							public boolean apply(@Nullable LivingEntity ent){
-								return ent != null && ent.isEntityAlive() && e.world.canSeeSky(ent.getPosition());
+									((ServerWorld) e.world).addLightningBolt(new LightningBoltEntity(e.world, (double) strikePos.getX() + 0.5D, strikePos.getY(), (double) strikePos.getZ() + 0.5D, spawnHorsemen));
+								}
 							}
-						});
-
-						if(ents.isEmpty()){
-							if(tarY == -1){
-								tarY += 2;
-							}
-							tarPos = new BlockPos(tarX, tarY, tarZ);
-						}else{
-							tarPos = ents.get(e.world.rand.nextInt(ents.size())).getPosition();
-						}
-						if(e.world.getGameRules().getBoolean("doMobSpawning") && e.world.rand.nextDouble() < e.world.getDifficultyForLocation(tarPos).getAdditionalDifficulty() * 0.01D){
-							SkeletonHorseEntity entityskeletonhorse = new SkeletonHorseEntity(e.world);
-							entityskeletonhorse.setTrap(true);
-							entityskeletonhorse.setGrowingAge(0);
-							entityskeletonhorse.setPosition(tarX, tarY, tarZ);
-							e.world.addEntity(entityskeletonhorse);
-							((ServerWorld) e.world).addLightningBolt(new LightningBoltEntity(e.world, tarX, tarY, tarZ, true));
-						}else{
-							((ServerWorld) e.world).addLightningBolt(new LightningBoltEntity(e.world, tarX, tarY, tarZ, false));
 						}
 					}
+				}catch(Exception ex){//I was going to itemize the exceptions, but there's three different reflection calls and a bunch of chunk level logic, so it got ridiculous
+					Crossroads.logger.catching(ex);
 				}
+
+
+				//1.12 implementation
+//				Iterator<Chunk> iterator = ((ServerChunkProvider) e.world.getChunkProvider()).chunkManager.getPersistentChunkIterable(((ServerWorld) (e.world)).getPlayerChunkMap().getChunkIterator());
+//				while(iterator.hasNext()){
+//					Chunk chunk = iterator.next();
+//					int j = chunk.getPos().x * 16;
+//					int k = chunk.getPos().z * 16;
+//					chunk.enqueueRelightChecks();
+//					chunk.onTick(false);
+//
+//					if(e.world.provider.canDoLightning(chunk) && e.world.rand.nextInt(350_000 - (int) (300_000 * chargeLevel)) == 0){
+//						//Determine the position of the lightning strike
+//						int tarX = j + e.world.rand.nextInt(16);
+//						int tarZ = k + e.world.rand.nextInt(16);
+//						int tarY = e.world.getPrecipitationHeight(new BlockPos(tarX, 0, tarZ)).getY();
+//						BlockPos tarPos;
+//
+//						//Lightning bolts are attracted by nearby entities
+//						//Uses a slightly different formula from vanilla for reasons of efficiency
+//						ArrayList<LivingEntity> ents = new ArrayList<>();
+//						chunk.getEntitiesOfTypeWithinAABB(LivingEntity.class, new AxisAlignedBB(tarX - 3, tarY - 3, tarZ - 3, tarX + 3, e.world.getHeight() + 3, tarZ + 3), ents, new Predicate<LivingEntity>(){
+//							public boolean apply(@Nullable LivingEntity ent){
+//								return ent != null && ent.isEntityAlive() && e.world.canSeeSky(ent.getPosition());
+//							}
+//						});
+//
+//						if(ents.isEmpty()){
+//							if(tarY == -1){
+//								tarY += 2;
+//							}
+//							tarPos = new BlockPos(tarX, tarY, tarZ);
+//						}else{
+//							tarPos = ents.get(e.world.rand.nextInt(ents.size())).getPosition();
+//						}
+//						if(e.world.getGameRules().getBoolean("doMobSpawning") && e.world.rand.nextDouble() < e.world.getDifficultyForLocation(tarPos).getAdditionalDifficulty() * 0.01D){
+//							SkeletonHorseEntity entityskeletonhorse = new SkeletonHorseEntity(e.world);
+//							entityskeletonhorse.setTrap(true);
+//							entityskeletonhorse.setGrowingAge(0);
+//							entityskeletonhorse.setPosition(tarX, tarY, tarZ);
+//							e.world.addEntity(entityskeletonhorse);
+//							((ServerWorld) e.world).addLightningBolt(new LightningBoltEntity(e.world, tarX, tarY, tarZ, true));
+//						}else{
+//							((ServerWorld) e.world).addLightningBolt(new LightningBoltEntity(e.world, tarX, tarY, tarZ, false));
+//						}
+//					}
+//				}
 			}
 			e.world.getProfiler().endSection();
 		}

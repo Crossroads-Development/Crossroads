@@ -38,7 +38,7 @@ public class AAModTESR{
 		ClientRegistry.bindTileEntitySpecialRenderer(BeaconHarnessTileEntity.class, new BeaconHarnessRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(HamsterWheelTileEntity.class, new HamsterWheelRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(GatewayFrameTileEntity.class, new GatewayFrameRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(MechanicalArmTileEntity.class, new MechanicalArmRenderer());
+//		ClientRegistry.bindTileEntitySpecialRenderer(MechanicalArmTileEntity.class, new MechanicalArmRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(HeatingCrucibleTileEntity.class, new HeatingCrucibleRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(DynamoTileEntity.class, new DynamoRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(ClockworkStabilizerTileEntity.class, new BeamRenderer<>());
@@ -51,6 +51,7 @@ public class AAModTESR{
 		ClientRegistry.bindTileEntitySpecialRenderer(ChronoHarnessTileEntity.class, new ChronoHarnessRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TemporalAcceleratorTileEntity.class, new TemporalAcceleratorRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(CopshowiumCreationChamberTileEntity.class, new LinkLineRenderer<>());
+		ClientRegistry.bindTileEntitySpecialRenderer(FluxSinkTileEntity.class, new FluxSinkRenderer());
 	}
 
 	private static void reg(Block block){

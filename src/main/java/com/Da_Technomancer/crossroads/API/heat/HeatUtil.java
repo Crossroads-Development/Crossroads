@@ -28,11 +28,13 @@ public class HeatUtil{
 	 * Adds heat information to a tooltip/readout
 	 * @param chat The chat list. One line per entry, will be modified
 	 * @param temp The temperature, in degrees C
-	 * @param biomeTemp The biome temperature, in degrees C
+	 * @param biomeTemp The biome temperature, in degrees C. Specify a value below absolute zero to not print this
 	 */
 	public static void addHeatInfo(List<ITextComponent> chat, double temp, double biomeTemp){
 		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.temp_k", CRConfig.formatVal(temp), CRConfig.formatVal(toKelvin(temp))));
-		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.temp.biome", CRConfig.formatVal(biomeTemp)));
+		if(biomeTemp >= ABSOLUTE_ZERO){
+			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.temp.biome", CRConfig.formatVal(biomeTemp)));
+		}
 	}
 
 	/**

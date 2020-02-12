@@ -62,7 +62,7 @@ public class FluidCoolingRec implements IRecipe<IInventory>{
 
 	@Override
 	public ItemStack getCraftingResult(IInventory inv){
-		return getRecipeOutput();
+		return getRecipeOutput().copy();
 	}
 
 	@Override

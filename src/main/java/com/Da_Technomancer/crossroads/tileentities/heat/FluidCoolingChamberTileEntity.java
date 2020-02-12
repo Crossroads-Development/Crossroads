@@ -4,6 +4,8 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.gui.container.FluidCoolerContainer;
 import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.recipes.FluidCoolingRec;
+import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -16,13 +18,14 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.registries.ObjectHolder;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Optional;
 
 public class FluidCoolingChamberTileEntity extends InventoryTE{
 
@@ -30,11 +33,11 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 	private static TileEntityType<FluidCoolingChamberTileEntity> type = null;
 
 	public static final int HEATING_RATE = 40;
-	private double storedHeat = 0;
+	private double storedHeat = 0;//The buffered heat that will be added to the temperature over time at a constant rate
 
 	public FluidCoolingChamberTileEntity(){
 		super(type, 1);
-		fluidProps[0] = new TankProperty(4_000, true, false, RecipeHolder.fluidCoolingRecipes::containsKey);
+		fluidProps[0] = new TankProperty(4_000, true, false, o -> true);
 	}
 
 	@Override
@@ -66,21 +69,22 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 			markDirty();
 		}
 
-		//TODO Migrate to non-null fluidstacks and JSON recipes
-		Pair<Integer, Triple<ItemStack, Double, Double>> craft = fluids[0] == null ? null : RecipeHolder.fluidCoolingRecipes.get(fluids[0].getFluid());
-
-		if(craft != null && fluids[0].amount >= craft.getLeft()){
-			if(temp + storedHeat < craft.getRight().getMiddle() && (inventory[0].isEmpty() || ItemStack.areItemsEqual(craft.getRight().getLeft(), inventory[0]) && inventory[0].getMaxStackSize() - inventory[0].getCount() >= craft.getRight().getLeft().getCount())){
-				storedHeat += craft.getRight().getRight();
-				if((fluids[0].amount -= craft.getLeft()) <= 0){
-					fluids[0] = null;
+		//We can not use the recipe manager to filter recipes due to the fluid input
+		List<FluidCoolingRec> recipes = world.getRecipeManager().getRecipes(RecipeHolder.FLUID_COOLING_TYPE, this, world);
+		//Filter the recipes by fluid type, fluid qty, temperature, and item type of output, and take the first recipe that matches the laundry list of specifications
+		Optional<FluidCoolingRec> recOpt = recipes.parallelStream().filter(rec -> rec.getMaxTemp() > temp + storedHeat && BlockUtil.sameFluid(rec.getInput(), fluids[0]) && rec.getInput().getAmount() >= fluids[0].getAmount() && (inventory[0].isEmpty() || BlockUtil.sameItem(inventory[0], rec.getRecipeOutput()))).findFirst();
+		if(recOpt.isPresent()){
+			FluidCoolingRec rec = recOpt.get();
+			//Check the output will fit
+			if(inventory[0].getMaxStackSize() - inventory[0].getCount() >= rec.getRecipeOutput().getCount()){
+				storedHeat += rec.getAddedHeat();
+				fluids[0].shrink(rec.getInput().getAmount());
+				if(inventory[0].isEmpty()){
+					inventory[0] = rec.getCraftingResult(this);
+				}else{
+					inventory[0].grow(rec.getRecipeOutput().getCount());
 				}
 				markDirty();
-				if(inventory[0].isEmpty()){
-					inventory[0] = craft.getRight().getLeft().copy();
-				}else{
-					inventory[0].grow(craft.getRight().getLeft().getCount());
-				}
 			}
 		}
 	}
@@ -115,6 +119,9 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return (LazyOptional<T>) itemOpt;
+		}
+		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+			return (LazyOptional<T>) globalFluidOpt;
 		}
 
 		return super.getCapability(cap, dir);

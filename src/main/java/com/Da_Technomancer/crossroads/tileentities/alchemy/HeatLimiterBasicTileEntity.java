@@ -5,7 +5,6 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
-import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.HeatLimiterContainer;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
@@ -54,9 +53,8 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		init();
-		chat.add(new TranslationTextComponent("tt.crossroads.heat_limiter.temp_in", CRConfig.formatVal(heatIn)));
-		chat.add(new TranslationTextComponent("tt.crossroads.heat_limiter.temp_out", CRConfig.formatVal(heatOut)));
-		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.temp.biome", CRConfig.formatVal(HeatUtil.convertBiomeTemp(world, pos))));
+		HeatUtil.addHeatInfo(chat, heatIn, Short.MIN_VALUE);//Add the first temp without biome temp to prevent double printing
+		HeatUtil.addHeatInfo(chat, heatOut, HeatUtil.convertBiomeTemp(world, pos));
 	}
 
 	protected double getSetting(){

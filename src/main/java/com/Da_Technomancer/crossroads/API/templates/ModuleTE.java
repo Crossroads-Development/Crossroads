@@ -130,7 +130,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 			HeatUtil.addHeatInfo(chat, temp, HeatUtil.convertBiomeTemp(world, pos));
 		}
 		if(useRotary()){
-			RotaryUtil.addRotaryInfo(chat, motData, axleHandler.getMoInertia(), axleHandler.getRotationRatio(), false);
+			RotaryUtil.addRotaryInfo(chat, motData, axleHandler.getMoInertia(), axleHandler.getRotationRatio(), true);
 		}
 	}
 

@@ -201,10 +201,6 @@ public class StampMillTileEntity extends InventoryTE{
 					if(axisOpt.isPresent()){
 						axisOpt.orElseThrow(NullPointerException::new).trigger(masterIn, key);
 					}
-					LazyOptional<ISlaveAxisHandler> slaveAxisOpt = te.getCapability(Capabilities.SLAVE_AXIS_CAPABILITY, side.getOpposite());
-					if(slaveAxisOpt.isPresent()){
-						masterIn.addAxisToList(slaveAxisOpt.orElseThrow(NullPointerException::new), side.getOpposite());
-					}
 					LazyOptional<IAxleHandler> oAxleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite());
 					if(oAxleOpt.isPresent()){
 						oAxleOpt.orElseThrow(NullPointerException::new).propogate(masterIn, key, rotRatioIn, lastRadius, renderOffset);
