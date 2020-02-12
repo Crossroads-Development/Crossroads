@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
+import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.ITaylorReceiver;
 import com.Da_Technomancer.crossroads.API.packets.SendTaylorToClient;
 import com.Da_Technomancer.crossroads.API.rotary.AxisTypes;
@@ -179,7 +179,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 				taylorSeries[0] = prevAngles[3] - offset;
 
 				//Sync the series to the client
-				CrossroadsPackets.sendPacketAround(world, pos, new SendTaylorToClient(seriesTimestamp, taylorSeries, pos));
+				CRPackets.sendPacketAround(world, pos, new SendTaylorToClient(seriesTimestamp, taylorSeries, pos));
 			}
 		}
 	}

@@ -7,7 +7,7 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder(Crossroads.MODID)
-public final class RecipeHolder{
+public final class CRRecipes{
 
 	@ObjectHolder("stamp_mill")
 	public static IRecipeSerializer<StampMillRec> STAMP_MILL_SERIAL = null;

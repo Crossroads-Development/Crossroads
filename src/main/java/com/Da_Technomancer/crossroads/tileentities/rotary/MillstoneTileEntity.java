@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.MillstoneContainer;
-import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.MillRec;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.entity.player.PlayerEntity;
@@ -137,7 +137,7 @@ public class MillstoneTileEntity extends InventoryTE{
 		super.tick();
 		if(!world.isRemote){
 			if(!inventory[0].isEmpty()){
-				Optional<MillRec> recOpt = world.getRecipeManager().getRecipe(RecipeHolder.MILL_TYPE, this, world);
+				Optional<MillRec> recOpt = world.getRecipeManager().getRecipe(CRRecipes.MILL_TYPE, this, world);
 				if(!recOpt.isPresent()){
 					progress = 0;
 					progRef.set((int) progress);
@@ -182,7 +182,7 @@ public class MillstoneTileEntity extends InventoryTE{
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && world.getRecipeManager().getRecipe(RecipeHolder.MILL_TYPE, this, world).isPresent();
+		return index == 0 && world.getRecipeManager().getRecipe(CRRecipes.MILL_TYPE, this, world).isPresent();
 	}
 
 	@Override

@@ -9,7 +9,7 @@ import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.items.crafting.PredicateMap;
-import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.AlchemyRec;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import net.minecraft.inventory.Inventory;
@@ -154,7 +154,7 @@ public final class AlchemyCore{
 	}
 
 	public static List<AlchemyRec> getReactions(World world){
-		List<AlchemyRec> rec = world.getRecipeManager().getRecipes(RecipeHolder.ALCHEMY_TYPE, new Inventory(0), world);
+		List<AlchemyRec> rec = world.getRecipeManager().getRecipes(CRRecipes.ALCHEMY_TYPE, new Inventory(0), world);
 		rec.addAll(ELEM_REACTIONS);//Add in the hardcoded elemental reactions, which are not defined via JSON
 		return rec;
 	}

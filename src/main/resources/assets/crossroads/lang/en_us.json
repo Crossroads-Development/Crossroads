@@ -457,6 +457,7 @@
 	"tt.crossroads.beam_item.void": "%1$d/%2$d Void Drain",
 	"tt.crossroads.clutch.redstone": "Circuits read speed",
 	"tt.crossroads.element_discover": "New Element Discovered: %1$s",
+	"tt.crossroads.element_discover.undo": "Element Forgotten: %1$s",
 	"tt.crossroads.detailed_crafter.desc": "Allows unlocking and crafting Technomancy and Alchemy recipes",
 	"tt.crossroads.bobo_rod.desc": "Creates bizarre and powerful Bobo Items",
 	"tt.crossroads.bobo_rod.use": "Use on 3 dropped ingredients and an offering to craft",
@@ -630,6 +631,10 @@
 	"death.attack.salt.player": "%1$s was seasoned to death by %2$s",
 	"death.attack.chemical": "%1$s died from a chemical spill",
 	"death.attack.chemical.player": "%2$s spilled chemicals on %1$s",
+
+
+	"crossroads.command.discover.no_elem": "That alignment does not exist",
+	"crossroads.command.paths.no_path": "That path does not exist",
 
 
 	"lore.first_read": "§r§rThere are TWO versions of this guide book. They both contain the same information, and either one should be sufficient. The two versions are the Mysterious Journal and the Technician's Manual. The Mysterious Journal contains lore, and multiple characters. The Technician's Manual is lore free, and only contains information. The two versions can be crafted into one another in the crafting grid. The Technician's Manual is recommended for people who simply want information, the Mysterious Journal is a more interesting (and often humorous) read that still provides information. It should be noted that there is some key information NOT MENTIONED in the Technician's Manual. Specifically, there are several secret features that are hinted at in the Mysterious Journal through one of the characters in the book. There is NO MENTION of these features in the Technician's Manual. The Technician's Manual will often give real life scientific context to concepts used in Crossroads (and note where Crossroads diverges from real life).",

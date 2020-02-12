@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.items.crafting.recipes;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
-import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.google.gson.JsonObject;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -77,7 +77,7 @@ public class BeamExtractRec implements IRecipe<IInventory>{
 
 	@Override
 	public IRecipeSerializer<?> getSerializer(){
-		return RecipeHolder.BEAM_EXTRACT_SERIAL;
+		return CRRecipes.BEAM_EXTRACT_SERIAL;
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class BeamExtractRec implements IRecipe<IInventory>{
 
 	@Override
 	public IRecipeType<?> getType(){
-		return RecipeHolder.BEAM_EXTRACT_TYPE;
+		return CRRecipes.BEAM_EXTRACT_TYPE;
 	}
 
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<BeamExtractRec>{

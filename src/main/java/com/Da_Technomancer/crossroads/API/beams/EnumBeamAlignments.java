@@ -110,11 +110,15 @@ public enum EnumBeamAlignments{
 		if(!nbt.contains("alignments")){
 			nbt.put("alignments", new CompoundNBT());
 		}
-		if(!isDiscovered(player)){
+		if(isDiscovered(player) ^ discover){
 			nbt.getCompound("alignments").putBoolean(toString(), discover);
 			StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) player);
 			//Doesn't use deletion-chat as the element discovery notification shouldn't be wiped away in 1 tick.
-			player.sendMessage(new TranslationTextComponent("tt.crossroads.element_discover", getLocalName(false)).applyTextStyle(TextFormatting.BOLD));
+			if(discover){
+				player.sendMessage(new TranslationTextComponent("tt.crossroads.element_discover", getLocalName(false)).applyTextStyle(TextFormatting.BOLD));
+			}else{
+				player.sendMessage(new TranslationTextComponent("tt.crossroads.element_discover.undo", getLocalName(false)).applyTextStyle(TextFormatting.BOLD));
+			}
 		}
 	}
 }

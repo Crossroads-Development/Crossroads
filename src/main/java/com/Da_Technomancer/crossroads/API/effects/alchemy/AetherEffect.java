@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.API.effects.alchemy;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumReagents;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
-import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
+import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendBiomeUpdateToClient;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -61,7 +61,7 @@ public class AetherEffect implements IAlchEffect{
 		IChunk c = world.getChunk(pos);
 		if(world.getBiome(pos) != biome()){
 			c.getBiomes()[(pos.getZ() & 15) << 4 | (pos.getX() & 15)] = biome();
-			CrossroadsPackets.sendPacketToDimension(world, new SendBiomeUpdateToClient(pos, biome().getRegistryName()));
+			CRPackets.sendPacketToDimension(world, new SendBiomeUpdateToClient(pos, biome().getRegistryName()));
 		}
 
 		if(oldState.getBlock().isAir(oldState, world, pos) || oldState.getBlockHardness(world, pos) < 0){

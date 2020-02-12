@@ -10,7 +10,7 @@ import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 
-public enum CrReflection implements ReflectionUtil.IReflectionKey{
+public enum CRReflection implements ReflectionUtil.IReflectionKey{
 
 	SET_CHAT(NewChatGui.class, "setChatLine", "func_146237_a", "Update the chat log without spamming it"),
 	CURE_ZOMBIE(ZombieVillagerEntity.class, "startConverting", "func_191991_a", "Cure zombie villagers with SO2"),
@@ -28,7 +28,7 @@ public enum CrReflection implements ReflectionUtil.IReflectionKey{
 	public final String mcp;//Human readable MCP name
 	private final String purpose;
 
-	CrReflection(@Nullable Class<?> clazz, String obf, String mcp, String purpose){
+	CRReflection(@Nullable Class<?> clazz, String obf, String mcp, String purpose){
 		this.clazz = clazz;
 		this.obf = obf;
 		this.mcp = mcp;

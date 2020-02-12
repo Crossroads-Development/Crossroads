@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.heat;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.gui.container.FluidCoolerContainer;
-import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.FluidCoolingRec;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.entity.player.PlayerEntity;
@@ -70,7 +70,7 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 		}
 
 		//We can not use the recipe manager to filter recipes due to the fluid input
-		List<FluidCoolingRec> recipes = world.getRecipeManager().getRecipes(RecipeHolder.FLUID_COOLING_TYPE, this, world);
+		List<FluidCoolingRec> recipes = world.getRecipeManager().getRecipes(CRRecipes.FLUID_COOLING_TYPE, this, world);
 		//Filter the recipes by fluid type, fluid qty, temperature, and item type of output, and take the first recipe that matches the laundry list of specifications
 		Optional<FluidCoolingRec> recOpt = recipes.parallelStream().filter(rec -> rec.getMaxTemp() > temp + storedHeat && BlockUtil.sameFluid(rec.getInput(), fluids[0]) && rec.getInput().getAmount() >= fluids[0].getAmount() && (inventory[0].isEmpty() || BlockUtil.sameItem(inventory[0], rec.getRecipeOutput()))).findFirst();
 		if(recOpt.isPresent()){

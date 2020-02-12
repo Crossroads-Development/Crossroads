@@ -52,7 +52,7 @@ public class StoreNBTToClient extends ClientPacket{
 	 * Syncs the NBTTagCompound from MiscUtil.getPlayerTag(player)
 	 */
 	public static void syncNBTToClient(ServerPlayerEntity player){
-		CrossroadsPackets.channel.send(PacketDistributor.PLAYER.with(() -> player), new StoreNBTToClient(getPlayerTag(player)));
+		CRPackets.channel.send(PacketDistributor.PLAYER.with(() -> player), new StoreNBTToClient(getPlayerTag(player)));
 	}
 
 	public CompoundNBT nbt;

@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
+import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
@@ -71,7 +71,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 		}
 		masterPos = masPos;
 		long longPos = masterPos.toLong();
-		CrossroadsPackets.sendPacketAround(world, pos, new SendIntToClient((byte) (int) (longPos >> 32), (int) longPos, pos));
+		CRPackets.sendPacketAround(world, pos, new SendIntToClient((byte) (int) (longPos >> 32), (int) longPos, pos));
 	}
 
 	@Override

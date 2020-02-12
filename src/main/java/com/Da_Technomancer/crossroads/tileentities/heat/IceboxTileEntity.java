@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.gui.container.IceboxContainer;
-import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.IceboxRec;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -67,7 +67,7 @@ public class IceboxTileEntity extends InventoryTE{
 		}
 
 		Optional<IceboxRec> rec;
-		if(burnTime == 0 && (rec = world.getRecipeManager().getRecipe(RecipeHolder.COOLING_TYPE, this, world)).isPresent()){
+		if(burnTime == 0 && (rec = world.getRecipeManager().getRecipe(CRRecipes.COOLING_TYPE, this, world)).isPresent()){
 			burnTime = Math.round(rec.get().getCooling());
 			maxBurnTime = burnTime;
 			coolProg.set(100 * burnTime / maxBurnTime);
@@ -119,7 +119,7 @@ public class IceboxTileEntity extends InventoryTE{
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && world.getRecipeManager().getRecipe(RecipeHolder.COOLING_TYPE, this, world).isPresent();
+		return index == 0 && world.getRecipeManager().getRecipe(CRRecipes.COOLING_TYPE, this, world).isPresent();
 	}
 
 	@Override

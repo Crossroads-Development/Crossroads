@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.items.crafting.recipes;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
-import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.minecraft.block.Block;
@@ -107,7 +107,7 @@ public class BeamTransmuteRec implements IRecipe<IInventory>{
 
 	@Override
 	public IRecipeSerializer<?> getSerializer(){
-		return RecipeHolder.BEAM_TRANSMUTE_SERIAL;
+		return CRRecipes.BEAM_TRANSMUTE_SERIAL;
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public class BeamTransmuteRec implements IRecipe<IInventory>{
 
 	@Override
 	public IRecipeType<?> getType(){
-		return RecipeHolder.BEAM_TRANSMUTE_TYPE;
+		return CRRecipes.BEAM_TRANSMUTE_TYPE;
 	}
 
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<BeamTransmuteRec>{

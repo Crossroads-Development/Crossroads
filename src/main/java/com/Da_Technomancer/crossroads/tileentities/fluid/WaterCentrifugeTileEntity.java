@@ -7,7 +7,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.WaterCentrifugeContainer;
 import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
-import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.DirtyWaterRec;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -77,13 +77,13 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 				ItemStack product = ItemStack.EMPTY;
 
 				if(dirty){//Dirty water crafting
-					List<DirtyWaterRec> recipes = world.getRecipeManager().getRecipes(RecipeHolder.DIRTY_WATER_TYPE, this, world);
+					List<DirtyWaterRec> recipes = world.getRecipeManager().getRecipes(CRRecipes.DIRTY_WATER_TYPE, this, world);
 					//Ideally this value would be precalculated and cached- however, due to the possibility of data pack reloading, this becomes more trouble than it's worth
 					//If forge ever implements Forge issue #6260, this would be worth caching
 					int totalWeight = recipes.parallelStream().mapToInt(DirtyWaterRec::getWeight).sum();
 					int choice = world.rand.nextInt(totalWeight) + 1;
 
-					for(DirtyWaterRec entry : world.getRecipeManager().getRecipes(RecipeHolder.DIRTY_WATER_TYPE, this, world)){
+					for(DirtyWaterRec entry : world.getRecipeManager().getRecipes(CRRecipes.DIRTY_WATER_TYPE, this, world)){
 						choice -= entry.getWeight();
 						if(choice <= 0){
 							product = entry.getCraftingResult(this);

@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.items.crafting.recipes;
 
 import com.Da_Technomancer.crossroads.API.EnumPath;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.minecraft.item.ItemStack;
@@ -36,12 +36,12 @@ public class DetailedCrafterRec extends ShapedRecipe{
 
 	@Override
 	public IRecipeSerializer<?> getSerializer(){
-		return RecipeHolder.DETAILED_SERIAL;
+		return CRRecipes.DETAILED_SERIAL;
 	}
 
 	@Override
 	public IRecipeType<?> getType(){
-		return RecipeHolder.DETAILED_TYPE;
+		return CRRecipes.DETAILED_TYPE;
 	}
 
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>>  implements IRecipeSerializer<DetailedCrafterRec> {

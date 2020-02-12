@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.gui.container;
 import com.Da_Technomancer.crossroads.API.EnumPath;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.DetailedCrafterRec;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.entity.player.PlayerEntity;
@@ -236,7 +236,7 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 		if(!world.isRemote){
 			ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) player;
 			ItemStack itemstack = ItemStack.EMPTY;
-			List<DetailedCrafterRec> recipes = world.getServer().getRecipeManager().getRecipes(RecipeHolder.DETAILED_TYPE, inInv, world);
+			List<DetailedCrafterRec> recipes = world.getServer().getRecipeManager().getRecipes(CRRecipes.DETAILED_TYPE, inInv, world);
 			//Find a detailed crafter specific recipe first
 			Optional<? extends ICraftingRecipe> recipeOpt = recipes.stream().filter(rec -> rec.getPath().isUnlocked(player)).findFirst();
 			//If there is no valid detailed crafter recipe, try vanilla crafting
@@ -287,7 +287,7 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 		public ItemStack onTake(PlayerEntity thePlayer, ItemStack stack){
 			onCrafting(stack);
 			setCraftingPlayer(thePlayer);
-			List<DetailedCrafterRec> recipes = thePlayer.world.getServer().getRecipeManager().getRecipes(RecipeHolder.DETAILED_TYPE, craftMatrix, thePlayer.world);
+			List<DetailedCrafterRec> recipes = thePlayer.world.getServer().getRecipeManager().getRecipes(CRRecipes.DETAILED_TYPE, craftMatrix, thePlayer.world);
 			Optional<? extends ICraftingRecipe> recipeOpt = recipes.stream().filter(rec -> rec.getPath().isUnlocked(thePlayer)).findFirst();
 			if(!recipeOpt.isPresent()){
 				recipeOpt = thePlayer.world.getServer().getRecipeManager().getRecipe(IRecipeType.CRAFTING, craftMatrix, thePlayer.world);

@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.BeamTransmuteRec;
 import net.minecraft.block.BlockState;
 import net.minecraft.inventory.Inventory;
@@ -23,7 +23,7 @@ public class BeamEffect{
 
 	protected boolean performTransmute(EnumBeamAlignments align, boolean voi, int power, World worldIn, BlockPos pos){
 		BlockState state = worldIn.getBlockState(pos);
-		List<BeamTransmuteRec> recipes = worldIn.getRecipeManager().getRecipes(RecipeHolder.BEAM_TRANSMUTE_TYPE, new Inventory(0), worldIn);
+		List<BeamTransmuteRec> recipes = worldIn.getRecipeManager().getRecipes(CRRecipes.BEAM_TRANSMUTE_TYPE, new Inventory(0), worldIn);
 		Optional<BeamTransmuteRec> recipe = recipes.parallelStream().filter(rec -> rec.canApply(align, voi, power, state)).findFirst();
 		if(recipe.isPresent()){
 			worldIn.setBlockState(pos, recipe.get().getOutput().getDefaultState());

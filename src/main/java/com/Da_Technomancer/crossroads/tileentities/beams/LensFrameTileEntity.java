@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
-import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
+import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.templates.IBeamRenderTE;
@@ -113,7 +113,7 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 	public void setContents(int id){
 		contents = id;
 		markDirty();
-		CrossroadsPackets.sendPacketAround(world, pos, new SendIntToClient((byte) 2, contents, pos));
+		CRPackets.sendPacketAround(world, pos, new SendIntToClient((byte) 2, contents, pos));
 	}
 
 	public int getContents(){
@@ -132,7 +132,7 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 		axis = null;
 		magicOpt.invalidate();
 		magicOptNeg.invalidate();
-		CrossroadsPackets.sendPacketAround(world, pos, new SendIntToClient((byte) 3, 0, pos));
+		CRPackets.sendPacketAround(world, pos, new SendIntToClient((byte) 3, 0, pos));
 	}
 
 	private void refreshBeam(boolean positive){
@@ -143,7 +143,7 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 		}else{
 			packetNeg = packet;
 		}
-		CrossroadsPackets.sendPacketAround(world, pos, new SendIntToClient((byte) index, packet, pos));
+		CRPackets.sendPacketAround(world, pos, new SendIntToClient((byte) index, packet, pos));
 		if(!beamer[index].getLastSent().isEmpty()){
 			prevMag = beamer[index].getLastSent();
 		}

@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 
 import static com.Da_Technomancer.crossroads.blocks.CRBlocks.*;
 
-public class CrossroadsTileEntity{
+public class CRTileEntity{
 
 	public static void init(IForgeRegistry<TileEntityType<?>> reg){
 		register(HeatCableTileEntity::new, "heat_cable", reg, HeatCableFactory.HEAT_CABLES.values());
@@ -73,7 +73,7 @@ public class CrossroadsTileEntity{
 //		register(PrototypingTableTileEntity::new, "prototyping_table", reg, prototypingTable);
 //		register(PrototypeTileEntity::new, "prototype", reg, prototype);
 //		register(PrototypePortTileEntity::new, "prototype_port", reg, prototypePort);
-		register(MechanicalArmTileEntity::new, "mechanical_arm", reg, mechanicalArm);
+//		register(MechanicalArmTileEntity::new, "mechanical_arm", reg, mechanicalArm);
 //		register(RedstoneRegistryTileEntity::new, "redstone_registry", reg, redstoneRegistry);
 		register(AlchemicalTubeTileEntity::new, "alchemical_tube", reg, alchemicalTubeCrystal, alchemicalTubeGlass);
 		register(FluidInjectorTileEntity::new, "fluid_injector", reg, fluidInjectorGlass, fluidInjectorCrystal);

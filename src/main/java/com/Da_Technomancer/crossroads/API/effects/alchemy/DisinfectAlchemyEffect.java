@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.effects.alchemy;
 
-import com.Da_Technomancer.crossroads.API.CrReflection;
+import com.Da_Technomancer.crossroads.API.CRReflection;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.Crossroads;
@@ -18,7 +18,7 @@ import java.lang.reflect.Method;
 
 public class DisinfectAlchemyEffect implements IAlchEffect{
 
-	private static final Method villConv = ReflectionUtil.reflectMethod(CrReflection.CURE_ZOMBIE);
+	private static final Method villConv = ReflectionUtil.reflectMethod(CRReflection.CURE_ZOMBIE);
 
 	@Override
 	public void doEffect(World world, BlockPos pos, int amount, EnumMatterPhase phase, ReagentMap reags){

@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.items.crafting.recipes;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
-import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.google.gson.JsonObject;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -78,7 +78,7 @@ public class CrucibleRec implements IRecipe<IInventory>{
 
 	@Override
 	public IRecipeSerializer<?> getSerializer(){
-		return RecipeHolder.CRUCIBLE_SERIAL;
+		return CRRecipes.CRUCIBLE_SERIAL;
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class CrucibleRec implements IRecipe<IInventory>{
 
 	@Override
 	public IRecipeType<?> getType(){
-		return RecipeHolder.CRUCIBLE_TYPE;
+		return CRRecipes.CRUCIBLE_TYPE;
 	}
 
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CrucibleRec>{

@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
+import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.templates.IBeamRenderTE;
@@ -112,7 +112,7 @@ public class OmniMeter extends Item{
 			measure(chat, context.getPlayer(), context.getWorld(), context.getPos(), context.getFace(), result);
 
 			if(!chat.isEmpty()){
-				CrossroadsPackets.sendPacketToPlayer((ServerPlayerEntity) context.getPlayer(), new SendChatToClient(chat, CHAT_ID));
+				CRPackets.sendPacketToPlayer((ServerPlayerEntity) context.getPlayer(), new SendChatToClient(chat, CHAT_ID));
 			}
 		}
 

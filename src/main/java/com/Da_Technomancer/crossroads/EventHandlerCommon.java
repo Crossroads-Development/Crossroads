@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads;
 
-import com.Da_Technomancer.crossroads.API.CrReflection;
+import com.Da_Technomancer.crossroads.API.CRReflection;
 import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
@@ -48,7 +48,7 @@ import java.util.Optional;
 
 public final class EventHandlerCommon{
 
-	private static final Field entityList = ReflectionUtil.reflectField(CrReflection.ENTITY_LIST);
+	private static final Field entityList = ReflectionUtil.reflectField(CRReflection.ENTITY_LIST);
 
 	@SubscribeEvent
 	@SuppressWarnings("unused")
@@ -84,9 +84,9 @@ public final class EventHandlerCommon{
 	//	//The main and sub keys allow differentiating between entities with updateBlocked due to crossroads, and updateBlocked due to other mods. In effect, it is a preemptive compatibility bugfix
 //	protected static final String MAIN_KEY = "cr_pause";
 //	protected static final String SUB_KEY = "cr_pause_prior";
-	private static final Method getLoadedChunks = ReflectionUtil.reflectMethod(CrReflection.LOADED_CHUNKS);
-	private static final Method spawnRadius = ReflectionUtil.reflectMethod(CrReflection.SPAWN_RADIUS);
-	private static final Method adjustPosForLightning = ReflectionUtil.reflectMethod(CrReflection.LIGHTNING_POS);
+	private static final Method getLoadedChunks = ReflectionUtil.reflectMethod(CRReflection.LOADED_CHUNKS);
+	private static final Method spawnRadius = ReflectionUtil.reflectMethod(CRReflection.SPAWN_RADIUS);
+	private static final Method adjustPosForLightning = ReflectionUtil.reflectMethod(CRReflection.LIGHTNING_POS);
 
 	@SubscribeEvent
 	@SuppressWarnings("unused")
@@ -287,9 +287,9 @@ public final class EventHandlerCommon{
 	}
 
 
-	private static final Field explosionPower = ReflectionUtil.reflectField(CrReflection.EXPLOSION_POWER);
-	private static final Field explosionSmoking = ReflectionUtil.reflectField(CrReflection.EXPLOSION_SMOKE);
-	private static final Field explosionMode = ReflectionUtil.reflectField(CrReflection.EXPLOSION_MODE);
+	private static final Field explosionPower = ReflectionUtil.reflectField(CRReflection.EXPLOSION_POWER);
+	private static final Field explosionSmoking = ReflectionUtil.reflectField(CRReflection.EXPLOSION_SMOKE);
+	private static final Field explosionMode = ReflectionUtil.reflectField(CRReflection.EXPLOSION_MODE);
 
 	@SubscribeEvent
 	@SuppressWarnings("unused")

@@ -18,7 +18,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 
-public class CrossroadsFluid{
+public class GenericFluid{
 
 	private static final Block.Properties BLOCK_PROP = Block.Properties.create(Material.WATER).doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops();
 	private static final Block.Properties BLOCK_PROP_HOT = Block.Properties.create(Material.LAVA).doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops().lightValue(15);
@@ -29,22 +29,22 @@ public class CrossroadsFluid{
 	public FlowingFluidBlock block;
 	public Item bucket;
 
-	public CrossroadsFluid(String name, boolean lavaLike){
+	public GenericFluid(String name, boolean lavaLike){
 		CRFluids.toRegister.add(still = new Still(name));
 		CRFluids.toRegister.add(flowing = new Flowing("flowing_" + name));
 		CRBlocks.toRegister.add(block = (FlowingFluidBlock) new FlowingFluidBlock(() -> still, lavaLike ? BLOCK_PROP_HOT : BLOCK_PROP).setRegistryName(name + "_block"));
 		CRItems.toRegister.add(bucket = new BucketItem(() -> still, BUCKET_PROP).setRegistryName(name + "_bucket"));
 	}
 
-	private abstract class GenericFluid extends ForgeFlowingFluid{
+	private abstract class FluidBase extends ForgeFlowingFluid{
 
-		private GenericFluid(String name){
+		private FluidBase(String name){
 			super(new Properties(() -> still, () -> flowing, FluidAttributes.builder(new ResourceLocation(Crossroads.MODID, "blocks/" + name + "_still.png"), new ResourceLocation(Crossroads.MODID, "blocks/" + name + "_flow.png"))).block(() -> block).bucket(() -> bucket));
 			setRegistryName(name);
 		}
 	}
 
-	private class Flowing extends GenericFluid{
+	private class Flowing extends FluidBase{
 
 		private Flowing(String name){
 			super(name);
@@ -67,7 +67,7 @@ public class CrossroadsFluid{
 		}
 	}
 
-	private class Still extends GenericFluid{
+	private class Still extends FluidBase{
 
 		private Still(String name){
 			super(name);

@@ -1,8 +1,9 @@
 package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
+import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.command.CRCommands;
 import com.Da_Technomancer.crossroads.entity.*;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.*;
@@ -13,7 +14,7 @@ import com.Da_Technomancer.crossroads.items.itemSets.ItemSets;
 import com.Da_Technomancer.crossroads.particles.CRParticles;
 import com.Da_Technomancer.crossroads.particles.ColorParticleType;
 import com.Da_Technomancer.crossroads.render.TESR.AAModTESR;
-import com.Da_Technomancer.crossroads.tileentities.CrossroadsTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.CRTileEntity;
 import com.Da_Technomancer.crossroads.world.ModWorldGen;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
@@ -70,10 +71,10 @@ public final class Crossroads{
 
 	private void commonInit(@SuppressWarnings("unused") FMLCommonSetupEvent e){
 		//Pre
-		CrossroadsPackets.preInit();
+		CRPackets.preInit();
 		Capabilities.register();
 //		CrossroadsTileEntity.init();
-		CrossroadsPackets.preInit();
+		CRPackets.preInit();
 //		ModDimensions.init();
 		//Main
 		MinecraftForge.EVENT_BUS.register(new EventHandlerCommon());
@@ -177,7 +178,7 @@ public final class Crossroads{
 	@SubscribeEvent
 	public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> e){
 		IForgeRegistry<TileEntityType<?>> reg = e.getRegistry();
-		CrossroadsTileEntity.init(reg);
+		CRTileEntity.init(reg);
 	}
 
 	@SubscribeEvent
@@ -286,13 +287,13 @@ public final class Crossroads{
 	}
 
 	@SubscribeEvent
+	@SuppressWarnings("unused")
 	public void serverLoading(FMLServerStartingEvent e){
-		//TODO command registration has changed
-//		e.registerServerCommand(new ResetPathCommand());
-//		e.registerServerCommand(new DiscoverElementCommand());
+		CRCommands.init(e.getCommandDispatcher());
 	}
 
 	@SubscribeEvent
+	@SuppressWarnings("unused")
 	public void serverStarted(FMLServerStartedEvent e){
 		MinecraftForge.EVENT_BUS.register(new EventHandlerServer());
 	}

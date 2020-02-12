@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
-import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
+import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
@@ -85,7 +85,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink{
 	public void trigger(){
 		if(!running && !positionInvalid()){
 			running = true;
-			CrossroadsPackets.sendPacketAround(world, pos, new SendIntToClient((byte) 1, BeamManager.toPacket(new BeamUnit(3, 3, 3, 0), 2), pos));//Add a beacon beam
+			CRPackets.sendPacketAround(world, pos, new SendIntToClient((byte) 1, BeamManager.toPacket(new BeamUnit(3, 3, 3, 0), 2), pos));//Add a beacon beam
 		}
 	}
 
@@ -132,7 +132,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink{
 			Color col = Color.getHSBColor(((float) cycles) / 120F, 1, 1);
 			if(!(cycles < 0 || cycles % 40 < 8) && invalid(col, toEmit)){//Don't check color during a safety period
 				running = false;
-				CrossroadsPackets.sendPacketAround(world, pos, new SendIntToClient((byte) 1, 0, pos));//Wipe the beacon beam
+				CRPackets.sendPacketAround(world, pos, new SendIntToClient((byte) 1, 0, pos));//Wipe the beacon beam
 				cycles = -9;//Easy way of adding a startup cooldown
 
 				if(beamer[0].emit(BeamUnit.EMPTY, world)){

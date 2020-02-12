@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.items.crafting.recipes;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
-import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.google.gson.JsonObject;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -85,7 +85,7 @@ public class BlastFurnaceRec implements IRecipe<IInventory>{
 
 	@Override
 	public IRecipeSerializer<?> getSerializer(){
-		return RecipeHolder.BLAST_FURNACE_SERIAL;
+		return CRRecipes.BLAST_FURNACE_SERIAL;
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public class BlastFurnaceRec implements IRecipe<IInventory>{
 
 	@Override
 	public IRecipeType<?> getType(){
-		return RecipeHolder.BLAST_FURNACE_TYPE;
+		return CRRecipes.BLAST_FURNACE_TYPE;
 	}
 
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<BlastFurnaceRec>{

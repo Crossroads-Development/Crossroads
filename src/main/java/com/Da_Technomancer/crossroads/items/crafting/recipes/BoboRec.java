@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.items.crafting.recipes;
 
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
-import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.google.gson.JsonObject;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -96,12 +96,12 @@ public class BoboRec implements IRecipe<IInventory>{
 
 	@Override
 	public IRecipeSerializer<?> getSerializer(){
-		return RecipeHolder.BOBO_SERIAL;
+		return CRRecipes.BOBO_SERIAL;
 	}
 
 	@Override
 	public IRecipeType<?> getType(){
-		return RecipeHolder.BOBO_TYPE;
+		return CRRecipes.BOBO_TYPE;
 	}
 
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<BoboRec>{

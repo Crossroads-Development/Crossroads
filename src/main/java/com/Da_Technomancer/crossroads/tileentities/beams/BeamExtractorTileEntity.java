@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.BeamExtractorContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.BeamExtractRec;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
@@ -156,7 +156,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && (world.getRecipeManager().getRecipe(RecipeHolder.BEAM_EXTRACT_TYPE, new Inventory(stack), world).isPresent() || stack.getItem() == CRItems.beamCage);
+		return index == 0 && (world.getRecipeManager().getRecipe(CRRecipes.BEAM_EXTRACT_TYPE, new Inventory(stack), world).isPresent() || stack.getItem() == CRItems.beamCage);
 	}
 
 	@Override
@@ -242,7 +242,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 		Direction dir = getFacing();
 		BeamUnit mag = BeamUnit.EMPTY;
 		if(!inv.isEmpty()){
-			Optional<BeamExtractRec> recOpt = world.getRecipeManager().getRecipe(RecipeHolder.BEAM_EXTRACT_TYPE, this, world);
+			Optional<BeamExtractRec> recOpt = world.getRecipeManager().getRecipe(CRRecipes.BEAM_EXTRACT_TYPE, this, world);
 			if(recOpt.isPresent()){
 				mag = recOpt.get().getOutput();
 				inv.shrink(1);

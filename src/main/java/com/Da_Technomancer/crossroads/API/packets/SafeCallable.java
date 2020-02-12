@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
-import com.Da_Technomancer.crossroads.API.CrReflection;
+import com.Da_Technomancer.crossroads.API.CRReflection;
 import com.Da_Technomancer.crossroads.render.IVisualEffect;
 import com.Da_Technomancer.essentials.ReflectionUtil;
 
@@ -15,7 +15,7 @@ public class SafeCallable{
 
 	public static final ArrayList<IVisualEffect> effectsToRender = new ArrayList<>();
 	
-	protected static final Method printChatNoLog = ReflectionUtil.reflectMethod(CrReflection.SET_CHAT);
+	protected static final Method printChatNoLog = ReflectionUtil.reflectMethod(CRReflection.SET_CHAT);
 	
 	public static int playerTickCount = 0;
 }

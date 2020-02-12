@@ -7,7 +7,7 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
-import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
+import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
@@ -159,7 +159,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			}
 		}
 		markDirty();
-		CrossroadsPackets.sendPacketAround(world, pos, new SendLongToClient(3, 0L, pos));
+		CRPackets.sendPacketAround(world, pos, new SendLongToClient(3, 0L, pos));
 	}
 
 	/**
@@ -354,7 +354,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 		}
 
 		//Send a packet to the client with the size and orientation info
-		CrossroadsPackets.sendPacketAround(world, pos, new SendLongToClient(5, plane.ordinal() | (size << 2), pos));
+		CRPackets.sendPacketAround(world, pos, new SendLongToClient(5, plane.ordinal() | (size << 2), pos));
 
 		return true;
 	}
@@ -375,7 +375,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 					clientAngle = angle;
 					clientW = (float) rotary[0];
 					long packet = (long) Float.floatToIntBits(clientAngle) << 32L | (long) Float.floatToIntBits(clientW);
-					CrossroadsPackets.sendPacketAround(world, pos, new SendLongToClient(4, packet, pos));
+					CRPackets.sendPacketAround(world, pos, new SendLongToClient(4, packet, pos));
 					markDirty();
 				}
 
@@ -678,7 +678,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 				boolean success = dial(new GatewayAddress(chevrons), true);
 				playEffects(success);
 			}
-			CrossroadsPackets.sendPacketAround(world, pos, new SendLongToClient(3, new GatewayAddress(chevrons).serialize(), pos));
+			CRPackets.sendPacketAround(world, pos, new SendLongToClient(3, new GatewayAddress(chevrons).serialize(), pos));
 			markDirty();
 		}
 	}

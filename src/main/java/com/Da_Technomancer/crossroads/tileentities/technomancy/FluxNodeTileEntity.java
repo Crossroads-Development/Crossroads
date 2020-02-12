@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
-import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
+import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.Crossroads;
@@ -43,7 +43,7 @@ public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntit
 	private void syncFlux(){
 		if(entropyClient == 0 ^ entropy == 0 || Math.abs(entropyClient - entropy) >= 5){
 			entropyClient = entropy;
-			CrossroadsPackets.sendPacketAround(world, pos, new SendLongToClient((byte) 0, entropy, pos));
+			CRPackets.sendPacketAround(world, pos, new SendLongToClient((byte) 0, entropy, pos));
 		}
 	}
 

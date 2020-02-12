@@ -13,7 +13,7 @@ import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
-public class CrossroadsPackets{
+public class CRPackets{
 
 	public static SimpleChannel channel;
 	private static int index = 0;

@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.electric;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
+import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.Crossroads;
@@ -48,7 +48,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEnti
 			message |= 1;
 		}
 		message |= stored << 1;
-		CrossroadsPackets.sendPacketAround(world, pos, new SendIntToClient((byte) 0, message, pos));
+		CRPackets.sendPacketAround(world, pos, new SendIntToClient((byte) 0, message, pos));
 	}
 
 	public void setStored(int storedIn){

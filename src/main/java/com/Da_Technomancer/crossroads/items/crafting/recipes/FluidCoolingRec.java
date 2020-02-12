@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.items.crafting.recipes;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
-import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.tileentities.heat.FluidCoolingChamberTileEntity;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.google.gson.JsonObject;
@@ -87,7 +87,7 @@ public class FluidCoolingRec implements IRecipe<IInventory>{
 
 	@Override
 	public IRecipeSerializer<?> getSerializer(){
-		return RecipeHolder.FLUID_COOLING_SERIAL;
+		return CRRecipes.FLUID_COOLING_SERIAL;
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class FluidCoolingRec implements IRecipe<IInventory>{
 
 	@Override
 	public IRecipeType<?> getType(){
-		return RecipeHolder.FLUID_COOLING_TYPE;
+		return CRRecipes.FLUID_COOLING_TYPE;
 	}
 
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<FluidCoolingRec>{

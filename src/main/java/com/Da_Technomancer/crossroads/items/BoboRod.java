@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.BoboRec;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -62,7 +62,7 @@ public class BoboRod extends Item{
 				}
 			}
 			if(hasOffering){
-				Optional<BoboRec> rec = context.getWorld().getRecipeManager().getRecipe(RecipeHolder.BOBO_TYPE, inv, context.getWorld());
+				Optional<BoboRec> rec = context.getWorld().getRecipeManager().getRecipe(CRRecipes.BOBO_TYPE, inv, context.getWorld());
 				if(rec.isPresent()){
 					items.forEach(Entity::remove);
 					InventoryHelper.spawnItemStack(context.getWorld(), hitVec.x, hitVec.y, hitVec.z, rec.get().getRecipeOutput());

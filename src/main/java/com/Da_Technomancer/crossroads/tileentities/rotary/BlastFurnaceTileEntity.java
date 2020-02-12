@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.BlastFurnaceContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.BlastFurnaceRec;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.entity.player.PlayerEntity;
@@ -97,7 +97,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 			return;
 		}
 
-		Optional<BlastFurnaceRec> recOpt = world.getRecipeManager().getRecipe(RecipeHolder.BLAST_FURNACE_TYPE, this, world);
+		Optional<BlastFurnaceRec> recOpt = world.getRecipeManager().getRecipe(CRRecipes.BLAST_FURNACE_TYPE, this, world);
 		if(!recOpt.isPresent()){
 			progress = 0;
 			return;
@@ -148,7 +148,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return (index == 0 && world.getRecipeManager().getRecipe(RecipeHolder.ALCHEMY_TYPE, new Inventory(stack), world).isPresent()) || (index == 1 && getCarbonValue(stack) != 0);
+		return (index == 0 && world.getRecipeManager().getRecipe(CRRecipes.ALCHEMY_TYPE, new Inventory(stack), world).isPresent()) || (index == 1 && getCarbonValue(stack) != 0);
 	}
 
 	@Override

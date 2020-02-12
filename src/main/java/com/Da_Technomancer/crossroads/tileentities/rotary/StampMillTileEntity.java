@@ -9,7 +9,7 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.gui.container.StampMillContainer;
-import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.StampMillRec;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -98,7 +98,7 @@ public class StampMillTileEntity extends InventoryTE{
 						progress = 0;
 						progRef.set((int) Math.round(progress));
 						//TODO possibly add a sound effect
-						Optional<StampMillRec> recOpt = world.getRecipeManager().getRecipe(RecipeHolder.STAMP_MILL_TYPE, this, world);
+						Optional<StampMillRec> recOpt = world.getRecipeManager().getRecipe(CRRecipes.STAMP_MILL_TYPE, this, world);
 						ItemStack produced;
 						if(recOpt.isPresent()){
 							produced = recOpt.get().getRecipeOutput();
@@ -217,7 +217,7 @@ public class StampMillTileEntity extends InventoryTE{
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && world.getRecipeManager().getRecipe(RecipeHolder.STAMP_MILL_TYPE, this, world).isPresent();
+		return index == 0 && world.getRecipeManager().getRecipe(CRRecipes.STAMP_MILL_TYPE, this, world).isPresent();
 	}
 
 	@Override

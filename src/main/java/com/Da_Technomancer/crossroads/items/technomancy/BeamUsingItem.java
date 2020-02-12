@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
-import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
+import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendBeamItemToServer;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.util.ITooltipFlag;
@@ -51,7 +51,7 @@ public abstract class BeamUsingItem extends Item{
 			settings[elemIndex] = (byte) Math.max(settings[elemIndex] - 1, 0);
 		}
 		player.world.playSound(player, player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 5, (float) Math.random());
-		CrossroadsPackets.sendPacketToServer(new SendBeamItemToServer(settings));
+		CRPackets.sendPacketToServer(new SendBeamItemToServer(settings));
 	}
 
 	@Override

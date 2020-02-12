@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
-import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
+import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
@@ -56,7 +56,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 		limitIndex += 1;
 		limitIndex %= LIMITS.length;
 		markDirty();
-		CrossroadsPackets.sendPacketToPlayer(player, new SendChatToClient(List.of(new TranslationTextComponent("tt.crossroads.flow_limiter.mode", LIMITS[limitIndex])), 25856));//CHAT_ID chosen at random
+		CRPackets.sendPacketToPlayer(player, new SendChatToClient(List.of(new TranslationTextComponent("tt.crossroads.flow_limiter.mode", LIMITS[limitIndex])), 25856));//CHAT_ID chosen at random
 	}
 
 	@Override

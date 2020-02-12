@@ -66,9 +66,11 @@ public enum EnumPath{
 	 * @param unlocked Whether this player should have this path unlocked. If false, relocks this path
 	 */
 	public void setUnlocked(PlayerEntity player, boolean unlocked){
-		StoreNBTToClient.getPlayerTag(player).putBoolean(toString(), unlocked);
-		if(player instanceof ServerPlayerEntity){
-			StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) player);
+		if(isUnlocked(player) ^ unlocked){
+			StoreNBTToClient.getPlayerTag(player).putBoolean(toString(), unlocked);
+			if(player instanceof ServerPlayerEntity){
+				StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) player);
+			}
 		}
 	}
 

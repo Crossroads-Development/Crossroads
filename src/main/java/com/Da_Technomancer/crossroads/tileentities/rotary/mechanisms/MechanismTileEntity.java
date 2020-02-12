@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
+import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
@@ -103,7 +103,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 		if(index == 6 && axleAxis != axis){
 			axleAxis = axis;
 			if(!newTE){
-				CrossroadsPackets.sendPacketAround(world, pos, new SendLongToClient(14, axis == null ? -1 : axis.ordinal(), pos));
+				CRPackets.sendPacketAround(world, pos, new SendLongToClient(14, axis == null ? -1 : axis.ordinal(), pos));
 			}
 		}
 
@@ -239,7 +239,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 		//TODO see if it's possible to make this not a ticking tile entity
 
 		if(updateMembers && !world.isRemote){
-			CrossroadsPackets.sendPacketAround(world, pos, new SendLongToClient(14, axleAxis == null ? -1 : axleAxis.ordinal(), pos));
+			CRPackets.sendPacketAround(world, pos, new SendLongToClient(14, axleAxis == null ? -1 : axleAxis.ordinal(), pos));
 			for(int i = 0; i < 7; i++){
 				axleHandlers[i].updateStates(true);
 			}
@@ -260,7 +260,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 				}
 			}
 			redstoneIn = reds;
-			CrossroadsPackets.sendPacketAround(world, pos, new SendLongToClient(15, Double.doubleToLongBits(redstoneIn), pos));
+			CRPackets.sendPacketAround(world, pos, new SendLongToClient(15, Double.doubleToLongBits(redstoneIn), pos));
 		}
 	}
 
@@ -388,7 +388,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 			}
 
 			if(sendPacket && !world.isRemote){
-				CrossroadsPackets.sendPacketAround(world, pos, new SendLongToClient(side + 7, members[side] == null ? -1L : (MECHANISMS.indexOf(members[side]) & 0xFFFFFFFFL) | (long) (mats[side].serialize()) << 32L, pos));
+				CRPackets.sendPacketAround(world, pos, new SendLongToClient(side + 7, members[side] == null ? -1L : (MECHANISMS.indexOf(members[side]) & 0xFFFFFFFFL) | (long) (mats[side].serialize()) << 32L, pos));
 			}
 		}
 

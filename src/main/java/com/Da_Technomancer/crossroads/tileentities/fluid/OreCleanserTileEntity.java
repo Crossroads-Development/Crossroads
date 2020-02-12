@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.OreCleanserContainer;
-import com.Da_Technomancer.crossroads.items.crafting.RecipeHolder;
+import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.OreCleanserRec;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.entity.player.PlayerEntity;
@@ -62,7 +62,7 @@ public class OreCleanserTileEntity extends InventoryTE{
 		}
 
 		if(fluids[0].getAmount() >= WATER_USE && fluidProps[1].capacity - fluids[1].getAmount() >= WATER_USE && !inventory[0].isEmpty()){
-			Optional<OreCleanserRec> rec = world.getRecipeManager().getRecipe(RecipeHolder.ORE_CLEANSER_TYPE, this, world);
+			Optional<OreCleanserRec> rec = world.getRecipeManager().getRecipe(CRRecipes.ORE_CLEANSER_TYPE, this, world);
 
 			ItemStack created;
 			if(!rec.isPresent()){
@@ -153,7 +153,7 @@ public class OreCleanserTileEntity extends InventoryTE{
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && world.getRecipeManager().getRecipe(RecipeHolder.ORE_CLEANSER_TYPE, new Inventory(stack), world).isPresent();
+		return index == 0 && world.getRecipeManager().getRecipe(CRRecipes.ORE_CLEANSER_TYPE, new Inventory(stack), world).isPresent();
 	}
 
 	@Override

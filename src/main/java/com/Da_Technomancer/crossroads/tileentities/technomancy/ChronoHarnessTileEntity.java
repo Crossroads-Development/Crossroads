@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
+import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
@@ -106,7 +106,7 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 
 			if((curPower == 0 ^ clientCurPower == 0) || Math.abs(curPower - clientCurPower) >= 10){
 				clientCurPower = curPower;
-				CrossroadsPackets.sendPacketAround(world, pos, new SendIntToClient((byte) 4, clientCurPower, pos));
+				CRPackets.sendPacketAround(world, pos, new SendIntToClient((byte) 4, clientCurPower, pos));
 			}
 
 			if(fe != 0){

@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.render;
 
 import com.Da_Technomancer.crossroads.API.packets.AddVisualToClient;
-import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
+import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
 import com.mojang.blaze3d.platform.GLX;
 import net.minecraft.nbt.CompoundNBT;
@@ -37,7 +37,7 @@ public class CRRenderUtil{
 		nbt.putFloat("angle_y", angleY);
 		nbt.putByte("width", width);
 		nbt.putInt("color", color);
-		CrossroadsPackets.sendPacketAround(world, new BlockPos(x, y, z), new AddVisualToClient(nbt));
+		CRPackets.sendPacketAround(world, new BlockPos(x, y, z), new AddVisualToClient(nbt));
 	}
 
 	public static void addArc(World world, Vec3d start, Vec3d end, int count, float diffusionRate, int color){
@@ -70,7 +70,7 @@ public class CRRenderUtil{
 		if(world.isRemote){
 			SafeCallable.effectsToRender.add(visualFactories[1].apply(nbt));
 		}else{
-			CrossroadsPackets.sendPacketAround(world, new BlockPos(xSt, ySt, zSt), new AddVisualToClient(nbt));
+			CRPackets.sendPacketAround(world, new BlockPos(xSt, ySt, zSt), new AddVisualToClient(nbt));
 		}
 	}
 

@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.packets.CrossroadsPackets;
+import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
@@ -109,7 +109,7 @@ public class RotaryPumpTileEntity extends InventoryTE{
 		}
 
 		if(lastProgress != (int) progress){
-			CrossroadsPackets.sendPacketAround(world, pos, new SendLongToClient(1, (long) progress, pos));
+			CRPackets.sendPacketAround(world, pos, new SendLongToClient(1, (long) progress, pos));
 			lastProgress = (int) progress;
 		}
 	}
