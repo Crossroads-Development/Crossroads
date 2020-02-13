@@ -104,7 +104,7 @@ public class FatFeederTileEntity extends InventoryTE{
 			}else if(ent instanceof VillagerEntity && canBreedVillagers){
 				VillagerEntity vill = (VillagerEntity) ent;
 
-				//TODO villager breeding changed
+				//TODO villager breeding changed.
 				/*
 				if(fluids[0].getAmount() >= BREED_AMOUNT && vill.getGrowingAge() == 0 && !vill.getIsWillingToMate(false)){
 					vill.setIsWillingToMate(true);

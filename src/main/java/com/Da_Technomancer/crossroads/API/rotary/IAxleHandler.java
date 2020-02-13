@@ -64,7 +64,7 @@ public interface IAxleHandler{
 	
 	/**
 	 * @deprecated Due to improvements in how angles are synchronized and calculated, this method is no longer used
-	 * @return Whether the Master Axis should keep the angle and clientW synchronized to client. If true, this must implement syncAngle, getAngle, setAngle, resetAngle, and getClientW.
+	 * @return Whether the Master Axis should keep the angle and clientW synchronized to client.
 	 */
 	@Deprecated
 	default boolean shouldManageAngle(){

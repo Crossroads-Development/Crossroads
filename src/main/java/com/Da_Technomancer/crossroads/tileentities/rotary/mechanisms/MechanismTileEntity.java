@@ -401,10 +401,5 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 		public void markChanged(){
 			markDirty();
 		}
-
-		@Override
-		public boolean shouldManageAngle(){
-			return true;
-		}
 	}
 }

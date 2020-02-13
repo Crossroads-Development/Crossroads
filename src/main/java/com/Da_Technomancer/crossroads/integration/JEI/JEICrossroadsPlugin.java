@@ -29,13 +29,15 @@ public class JEICrossroadsPlugin implements IModPlugin{
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.heatingCrucible, 1), HeatingCrucibleCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.detailedCrafter, 1), DetailedCrafterCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.beamExtractor, 1), BeamExtractorCategory.ID);
-//TODO		registry.addRecipeCatalyst(new ItemStack(CrossroadsBlocks.beamReflector, 1), FusionBeamCategory.ID);
+		registry.addRecipeCatalyst(new ItemStack(CRBlocks.beamReflector, 1), FusionBeamCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.reactionChamberGlass, 1), ReactionCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.reactionChamberCrystal, 1), ReactionCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.glasswareHolder, 1), ReactionCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.stampMill, 1), StampMillCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.oreCleanser, 1), OreCleanserCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.blastFurnace, 1), BlastFurnaceCategory.ID);
+		//TODO water centrifuge
+		//TODO CCC
 	}
 
 	@Override

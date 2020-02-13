@@ -33,8 +33,6 @@ import java.util.List;
 
 public class CopshowiumCreationChamber extends ContainerBlock implements IReadable{
 
-	//TODO add JEI support for this machine
-
 	public CopshowiumCreationChamber(){
 		super(Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(3));
 		String name = "copshowium_creation_chamber";

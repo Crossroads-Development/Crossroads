@@ -21,6 +21,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IntReferenceHolder;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -97,7 +99,7 @@ public class StampMillTileEntity extends InventoryTE{
 					if(progress >= REQUIRED){
 						progress = 0;
 						progRef.set((int) Math.round(progress));
-						//TODO possibly add a sound effect
+						world.playSound(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.BLOCKS, 1, world.rand.nextFloat(), true);
 						Optional<StampMillRec> recOpt = world.getRecipeManager().getRecipe(CRRecipes.STAMP_MILL_TYPE, this, world);
 						ItemStack produced;
 						if(recOpt.isPresent()){

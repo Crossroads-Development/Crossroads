@@ -23,8 +23,6 @@ import java.util.List;
 
 public class EdibleBlob extends Item{
 
-	//TODO KNOWN BUGS: Most other mods won't recognize this as a food item; Can't be fed to wolves
-
 	public EdibleBlob(){
 		super(new Item.Properties());//Not in a creative tab due to creative giving a version that has no NBT
 		String name = "edible_blob";

@@ -92,10 +92,5 @@ public class PoisonVodka extends Item{
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.poison_vodka.quip").setStyle(MiscUtil.TT_QUIP));
-		//TODO
-//		tooltip.add("TEMP UNTIL DOCS ARE DONE:");
-//		tooltip.add("Adds a ton of buffs and debuffs when drunk, turning you into a tank");
-//		tooltip.add("Burns as fuel for an extremely long time");
-//		tooltip.add("Made with poisonous potato, salt of vitriol, glass bottle");
 	}
 }

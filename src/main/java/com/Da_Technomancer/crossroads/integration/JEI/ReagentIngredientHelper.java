@@ -7,9 +7,7 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import mezz.jei.api.ingredients.IIngredientHelper;
 import net.minecraft.item.ItemStack;
 
-import java.awt.*;
 import java.util.HashSet;
-import java.util.List;
 
 public class ReagentIngredientHelper implements IIngredientHelper<ReagIngr>{
 
@@ -25,11 +23,6 @@ public class ReagentIngredientHelper implements IIngredientHelper<ReagIngr>{
 	@Override
 	public boolean isValidIngredient(ReagIngr ingredient){
 		return ingredient != null && ingredient.getReag() != null && ingredient.getParts() >= 0;
-	}
-
-	@Override
-	public List<ReagIngr> expandSubtypes(List<ReagIngr> ingredients){
-		return ingredients;
 	}
 
 	@Override
@@ -63,10 +56,10 @@ public class ReagentIngredientHelper implements IIngredientHelper<ReagIngr>{
 	}
 
 	@Override
-	public Iterable<Color> getColors(ReagIngr ingredient){
-		HashSet<Color> out = new HashSet<>();
+	public Iterable<Integer> getColors(ReagIngr ingredient){
+		HashSet<Integer> out = new HashSet<>();
 		for(EnumMatterPhase p : EnumMatterPhase.values()){
-			out.add(ingredient.getReag().getColor(p));
+			out.add(ingredient.getReag().getColor(p).getRGB());
 		}
 		return out;
 	}
@@ -79,6 +72,11 @@ public class ReagentIngredientHelper implements IIngredientHelper<ReagIngr>{
 	@Override
 	public ReagIngr copyIngredient(ReagIngr ingredient){
 		return ingredient;//ReagentIngredient is immutable
+	}
+
+	@Override
+	public ReagIngr normalizeIngredient(ReagIngr ingredient){
+		return ingredient.getParts() <= 1 ? ingredient : new ReagIngr(ingredient.getReag(), 1);
 	}
 
 	@Override

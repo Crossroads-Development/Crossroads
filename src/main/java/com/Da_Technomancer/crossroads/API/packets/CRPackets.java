@@ -26,7 +26,7 @@ public class CRPackets{
 		registerPacket(StoreNBTToClient.class);
 		registerPacket(SendChatToClient.class);
 		registerPacket(SendBeamItemToServer.class);
-		registerPacket(SendDimLoadToClient.class);
+//		registerPacket(SendDimLoadToClient.class);
 		registerPacket(SendDoubleToServer.class);
 		registerPacket(SendIntToServer.class);
 		registerPacket(SendLogToClient.class);
