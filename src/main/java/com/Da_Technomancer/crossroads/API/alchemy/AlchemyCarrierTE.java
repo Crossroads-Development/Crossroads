@@ -593,6 +593,10 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 
 		private ItemStack[] fakeInventory = new ItemStack[AlchemyCore.ITEM_TO_REAGENT.size()];
 
+		public ItemHandler(){
+
+		}
+
 		private void updateFakeInv(){
 			fakeInventory = new ItemStack[AlchemyCore.ITEM_TO_REAGENT.size()];
 			int index = 0;

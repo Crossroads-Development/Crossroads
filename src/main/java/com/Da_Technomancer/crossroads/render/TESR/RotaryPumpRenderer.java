@@ -1,7 +1,5 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.render.TESR.models.ModelPump;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
@@ -18,8 +16,6 @@ import org.lwjgl.opengl.GL11;
 
 public class RotaryPumpRenderer extends TileEntityRenderer<RotaryPumpTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/model/pump.png");
-
 	@Override
 	public void render(RotaryPumpTileEntity pump, double x, double y, double z, float partialTicks, int destroyStage){
 		if(pump == null || !pump.getWorld().isBlockLoaded(pump.getPos())){
@@ -31,8 +27,7 @@ public class RotaryPumpRenderer extends TileEntityRenderer<RotaryPumpTileEntity>
 		GlStateManager.translated(0.5F, 0F, .5F);
 		GlStateManager.rotated(pump.getCompletion() * 360F, 0F, 1F, 0F);
 		
-		Minecraft.getInstance().textureManager.bindTexture(TEXTURE);
-		ModelPump.renderScrew();
+		CRModels.renderScrew();
 		
 		GlStateManager.popMatrix();
 		

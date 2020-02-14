@@ -4,7 +4,6 @@ import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
-import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.HamsterWheelTileEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
@@ -52,7 +51,7 @@ public class HamsterWheelRenderer extends TileEntityRenderer<HamsterWheelTileEnt
 				GlStateManager.translated(j == 0 ? 0 : .4D, i == 0 ? -.065D : .065D, 0);
 				GlStateManager.scaled(.4D, .07D, .49D);
 				GlStateManager.rotated(i + j % 2 == 0 ? feetAngle : -feetAngle, 0, 1, 0);
-				ModelAxle.render(textureHam, textureHam, Color.LIGHT_GRAY);
+				CRModels.drawAxle(textureHam, textureHam, Color.LIGHT_GRAY);
 				GlStateManager.popMatrix();
 			}
 		}
@@ -68,7 +67,7 @@ public class HamsterWheelRenderer extends TileEntityRenderer<HamsterWheelTileEnt
 		GlStateManager.translated(0, -.4375D, 0);
 		GlStateManager.scaled(1, .8D, 1);
 		GlStateManager.rotated(90, 1, 0, 0);
-		ModelAxle.render(GearFactory.findMaterial("Iron").getColor());
+		CRModels.drawAxle(GearFactory.findMaterial("Iron").getColor());
 		GlStateManager.popMatrix();
 
 		float lHalf = .375F;
@@ -79,7 +78,7 @@ public class HamsterWheelRenderer extends TileEntityRenderer<HamsterWheelTileEnt
 			GlStateManager.translated(lHalf, -.25F, 0);
 			GlStateManager.scaled(.41D, i % 2 == 0 ? .5D : .45D, 7.5D * lHalf);
 
-			ModelAxle.render(Color.GRAY);
+			CRModels.drawAxle(Color.GRAY);
 			GlStateManager.popMatrix();
 		}
 

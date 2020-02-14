@@ -4,7 +4,6 @@ import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
-import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
 import com.Da_Technomancer.crossroads.tileentities.rotary.StampMillTileEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.block.BlockState;
@@ -44,7 +43,7 @@ public class StampMillRenderer extends TileEntityRenderer<StampMillTileEntity>{
 		GlStateManager.pushMatrix();
 		GlStateManager.rotated(90, 0, 0, 1);
 		GlStateManager.rotated(-prog, 0, 1, 0);
-		ModelAxle.render(ironColor);
+		CRModels.drawAxle(ironColor);
 
 		//Teeth
 		for(int i = 0; i < 3; i++){
@@ -54,7 +53,7 @@ public class StampMillRenderer extends TileEntityRenderer<StampMillTileEntity>{
 			GlStateManager.rotated(90, 0, 0, 1);
 			GlStateManager.scalef(0.4F, 0.5F, 0.4F);
 
-			ModelAxle.render(ironColor);
+			CRModels.drawAxle(ironColor);
 			GlStateManager.popMatrix();
 		}
 

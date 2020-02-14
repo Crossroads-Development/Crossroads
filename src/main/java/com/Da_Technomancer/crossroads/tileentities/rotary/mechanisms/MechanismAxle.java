@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
-import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
+import com.Da_Technomancer.crossroads.render.TESR.CRModels;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
@@ -121,7 +121,7 @@ public class MechanismAxle implements IMechanism{
 		GlStateManager.rotatef(axis == Direction.Axis.Y ? 0 : 90F, axis == Direction.Axis.Z ? 1 : 0, 0, axis == Direction.Axis.X ? -1 : 0);
 		float angle = handler.getAngle(partialTicks);
 		GlStateManager.rotatef(angle, 0F, 1F, 0F);
-		ModelAxle.render(mat.getColor());
+		CRModels.drawAxle(mat.getColor());
 		GlStateManager.popMatrix();
 	}
 }

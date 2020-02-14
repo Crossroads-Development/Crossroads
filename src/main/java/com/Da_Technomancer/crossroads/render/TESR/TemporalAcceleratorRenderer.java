@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.render.TESR;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
-import com.Da_Technomancer.crossroads.render.TESR.models.ModelGearOctagon;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.TemporalAcceleratorTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
@@ -126,7 +125,7 @@ public class TemporalAcceleratorRenderer extends LinkLineRenderer<TemporalAccele
 		float lHalfT = .5F;
 		float tHeight = 1F / 16F;
 
-		Minecraft.getInstance().textureManager.bindTexture(ModelGearOctagon.RESOURCE);
+		Minecraft.getInstance().textureManager.bindTexture(CRModels.TEXTURE_8);
 
 		for(int i = 0; i < 2; i++){
 			//i==0: Large gear; i==1: Small gear

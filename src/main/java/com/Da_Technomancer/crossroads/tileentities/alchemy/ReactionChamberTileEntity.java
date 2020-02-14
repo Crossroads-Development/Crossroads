@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
+
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
@@ -13,7 +14,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -154,7 +154,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return (LazyOptional<T>) itemOpt;
 		}
-		if(cap == CapabilityEnergy.ENERGY && (side == null || side.getAxis() != Axis.Y)){
+		if(cap == CapabilityEnergy.ENERGY && (side == null || side.getAxis() != Direction.Axis.Y)){
 			return (LazyOptional<T>) energyOpt;
 		}
 		return super.getCapability(cap, side);

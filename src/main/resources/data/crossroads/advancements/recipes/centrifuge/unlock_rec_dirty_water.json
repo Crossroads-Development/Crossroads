@@ -2,14 +2,14 @@
 	"parent": "minecraft:recipes/root",
 	"rewards": {
 		"recipes": [
-			"crossroads:dirty_water/salt"
+			"crossroads:centrifuge/dirty_water"
 		]
 	},
 	"criteria": {
 		"has_recipe": {
 			"trigger": "minecraft:recipe_unlocked",
 			"conditions": {
-				"recipe": "crossroads:dirty_water/salt"
+				"recipe": "crossroads:centrifuge/dirty_water"
 			}
 		}
 	},

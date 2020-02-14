@@ -2,14 +2,14 @@
 	"parent": "minecraft:recipes/root",
 	"rewards": {
 		"recipes": [
-			"crossroads:dirty_water/bonemeal"
+			"crossroads:copshowium/molten_copper"
 		]
 	},
 	"criteria": {
 		"has_recipe": {
 			"trigger": "minecraft:recipe_unlocked",
 			"conditions": {
-				"recipe": "crossroads:dirty_water/bonemeal"
+				"recipe": "crossroads:copshowium/molten_copper"
 			}
 		}
 	},

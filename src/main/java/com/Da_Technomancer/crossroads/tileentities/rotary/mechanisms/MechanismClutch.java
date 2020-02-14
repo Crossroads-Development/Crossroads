@@ -7,7 +7,7 @@ import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
-import com.Da_Technomancer.crossroads.render.TESR.models.ModelAxle;
+import com.Da_Technomancer.crossroads.render.TESR.CRModels;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -194,7 +194,7 @@ public class MechanismClutch extends MechanismAxle{
 		
 		float angle = handler.getAngle(partialTicks);
 		GlStateManager.rotatef(angle, 0F, 1F, 0F);
-		ModelAxle.render(mat.getColor());
+		CRModels.drawAxle(mat.getColor());
 		GlStateManager.popMatrix();
 	}
 }

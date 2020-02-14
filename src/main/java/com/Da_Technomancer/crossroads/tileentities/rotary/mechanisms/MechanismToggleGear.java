@@ -7,7 +7,7 @@ import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
-import com.Da_Technomancer.crossroads.render.TESR.models.ModelGearOctagon;
+import com.Da_Technomancer.crossroads.render.TESR.CRModels;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -162,7 +162,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 
 		if(inverted){
 			BufferBuilder vb = Tessellator.getInstance().getBuffer();
-			Minecraft.getInstance().textureManager.bindTexture(ModelGearOctagon.RESOURCE);
+			Minecraft.getInstance().textureManager.bindTexture(CRModels.TEXTURE_8);
 			GlStateManager.color3f(1, 0, 0);
 
 			float radius = 2F / 16F;
@@ -176,7 +176,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 		}
 
 		if(te.redstoneIn != 0 ^ inverted){
-			ModelGearOctagon.render(mat.getColor());
+			CRModels.draw8Gear(mat.getColor());
 		}else{
 			//Render without prongs
 			float lHalf = .4375F;
@@ -184,7 +184,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 			float lHalfT = .5F;
 			float tHeight = 1F / 16F;
 
-			Minecraft.getInstance().textureManager.bindTexture(ModelGearOctagon.RESOURCE);
+			Minecraft.getInstance().textureManager.bindTexture(CRModels.TEXTURE_8);
 			BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
 			GlStateManager.color3f(mat.getColor().getRed() / 255F, mat.getColor().getGreen() / 255F, mat.getColor().getBlue() / 255F);

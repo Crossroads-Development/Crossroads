@@ -8,7 +8,7 @@ import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
-import com.Da_Technomancer.crossroads.render.TESR.models.ModelGearOctagon;
+import com.Da_Technomancer.crossroads.render.TESR.CRModels;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
@@ -154,7 +154,7 @@ public class MechanismSmallGear implements IMechanism{
 		float angle = handler.getAngle(partialTicks);
 		GlStateManager.translatef(0, -0.4375F, 0);
 		GlStateManager.rotatef((float) -side.getAxisDirection().getOffset() * angle, 0F, 1F, 0F);
-		ModelGearOctagon.render(mat.getColor());
+		CRModels.draw8Gear(mat.getColor());
 		GlStateManager.popMatrix();
 	}
 }
