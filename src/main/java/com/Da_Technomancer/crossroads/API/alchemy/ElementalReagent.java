@@ -51,8 +51,8 @@ public class ElementalReagent implements IElementReagent{
 	}
 	
 	@Override
-	public boolean canGlassContain(){
-		return false;
+	public boolean requiresCrystal(){
+		return true;
 	}
 	
 	@Override

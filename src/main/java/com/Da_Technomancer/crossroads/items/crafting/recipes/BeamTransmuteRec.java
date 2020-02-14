@@ -2,15 +2,15 @@ package com.Da_Technomancer.crossroads.items.crafting.recipes;
 
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
+import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.network.PacketBuffer;
@@ -23,7 +23,7 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 import javax.annotation.Nullable;
 import java.util.Locale;
 
-public class BeamTransmuteRec implements IRecipe<IInventory>{
+public class BeamTransmuteRec implements IOptionalRecipe<IInventory>{
 
 	private final ResourceLocation id;
 	private final String group;
@@ -32,8 +32,9 @@ public class BeamTransmuteRec implements IRecipe<IInventory>{
 	private final BlockIngredient ingr;
 	private final Block output;
 	private final int power;
+	private final boolean active;
 
-	public BeamTransmuteRec(ResourceLocation location, String name, EnumBeamAlignments align, boolean voi, BlockIngredient input, Block output, int power){
+	public BeamTransmuteRec(ResourceLocation location, String name, EnumBeamAlignments align, boolean voi, BlockIngredient input, Block output, int power, boolean active){
 		id = location;
 		group = name;
 		ingr = input;
@@ -41,6 +42,7 @@ public class BeamTransmuteRec implements IRecipe<IInventory>{
 		this.voi = voi;
 		this.output = output;
 		this.power = power;
+		this.active = active;
 	}
 
 	public EnumBeamAlignments getAlign(){
@@ -52,7 +54,7 @@ public class BeamTransmuteRec implements IRecipe<IInventory>{
 	}
 
 	public BlockIngredient getIngr(){
-		return ingr;
+		return isEnabled() ? ingr : BlockIngredient.EMPTY;
 	}
 
 	public Block getOutput(){
@@ -60,7 +62,11 @@ public class BeamTransmuteRec implements IRecipe<IInventory>{
 	}
 
 	public int getPower(){
-		return power;
+		return Math.max(power, 0);
+	}
+
+	public boolean isActive(){
+		return active;
 	}
 
 	@Override
@@ -87,7 +93,7 @@ public class BeamTransmuteRec implements IRecipe<IInventory>{
 
 	@Override
 	public ItemStack getRecipeOutput(){
-		return ItemStack.EMPTY;
+		return new ItemStack(getOutput());
 	}
 
 	@Override
@@ -116,6 +122,11 @@ public class BeamTransmuteRec implements IRecipe<IInventory>{
 	}
 
 	@Override
+	public boolean isEnabled(){
+		return active;
+	}
+
+	@Override
 	public IRecipeType<?> getType(){
 		return CRRecipes.BEAM_TRANSMUTE_TYPE;
 	}
@@ -126,6 +137,10 @@ public class BeamTransmuteRec implements IRecipe<IInventory>{
 		public BeamTransmuteRec read(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and ingredient
 			String s = JSONUtils.getString(json, "group", "");
+
+			if(!CraftingUtil.isActiveJSON(json)){
+				return new BeamTransmuteRec(recipeId, s, EnumBeamAlignments.NO_MATCH, false, BlockIngredient.EMPTY, Blocks.AIR, 0, false);
+			}
 
 			//Beam alignment as string name (names in com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments), case ignored
 			String alignName = JSONUtils.getString(json, "alignment");
@@ -148,24 +163,30 @@ public class BeamTransmuteRec implements IRecipe<IInventory>{
 			if(created == null){
 				throw new JsonParseException("Non-existent output specified");
 			}
-			return new BeamTransmuteRec(recipeId, s, align, voidBeam, in, created, power);
+			return new BeamTransmuteRec(recipeId, s, align, voidBeam, in, created, power, true);
 		}
 
 		@Nullable
 		@Override
 		public BeamTransmuteRec read(ResourceLocation recipeId, PacketBuffer buffer){
 			String s = buffer.readString(Short.MAX_VALUE);
-			EnumBeamAlignments align = EnumBeamAlignments.values()[buffer.readVarInt()];
-			boolean voi = buffer.readBoolean();
-			int power = buffer.readVarInt();
-			Block out = ForgeRegistries.BLOCKS.getValue(buffer.readResourceLocation());
-			BlockIngredient input = BlockIngredient.readFromBuffer(buffer);
-			return new BeamTransmuteRec(recipeId, s, align, voi, input, out, power);
+			boolean active = buffer.readBoolean();
+			if(active){
+				EnumBeamAlignments align = EnumBeamAlignments.values()[buffer.readVarInt()];
+				boolean voi = buffer.readBoolean();
+				int power = buffer.readVarInt();
+				Block out = ForgeRegistries.BLOCKS.getValue(buffer.readResourceLocation());
+				BlockIngredient input = BlockIngredient.readFromBuffer(buffer);
+				return new BeamTransmuteRec(recipeId, s, align, voi, input, out, power, true);
+			}else{
+				return new BeamTransmuteRec(recipeId, s, EnumBeamAlignments.NO_MATCH, false, BlockIngredient.EMPTY, Blocks.AIR, 0, false);
+			}
 		}
 
 		@Override
 		public void write(PacketBuffer buffer, BeamTransmuteRec recipe){
 			buffer.writeString(recipe.getGroup());
+			buffer.writeBoolean(recipe.active);
 			buffer.writeVarInt(recipe.align.ordinal());
 			buffer.writeBoolean(recipe.voi);
 			buffer.writeVarInt(recipe.power);

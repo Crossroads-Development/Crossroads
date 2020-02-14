@@ -24,7 +24,7 @@ public class BeamEffect{
 	protected boolean performTransmute(EnumBeamAlignments align, boolean voi, int power, World worldIn, BlockPos pos){
 		BlockState state = worldIn.getBlockState(pos);
 		List<BeamTransmuteRec> recipes = worldIn.getRecipeManager().getRecipes(CRRecipes.BEAM_TRANSMUTE_TYPE, new Inventory(0), worldIn);
-		Optional<BeamTransmuteRec> recipe = recipes.parallelStream().filter(rec -> rec.canApply(align, voi, power, state)).findFirst();
+		Optional<BeamTransmuteRec> recipe = recipes.parallelStream().filter(rec -> rec.canApply(align, voi, power, state) && rec.getIngr().test(state)).findFirst();
 		if(recipe.isPresent()){
 			worldIn.setBlockState(pos, recipe.get().getOutput().getDefaultState());
 			return true;

@@ -6,12 +6,12 @@ import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
+import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.network.PacketBuffer;
@@ -24,7 +24,7 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 import javax.annotation.Nullable;
 import java.util.Locale;
 
-public class AlchemyRec implements IRecipe<IInventory>{
+public class AlchemyRec implements IOptionalRecipe<IInventory>{
 
 	private static final float MAX_BLAST = 8;
 
@@ -102,7 +102,8 @@ public class AlchemyRec implements IRecipe<IInventory>{
 		return type == Type.DESTRUCTIVE || type == Type.PRECISE;
 	}
 
-	public boolean isReal(){
+	@Override
+	public boolean isEnabled(){
 		return real;
 	}
 
@@ -142,7 +143,7 @@ public class AlchemyRec implements IRecipe<IInventory>{
 
 
 		//Check charged, catalyst, temperature, and solvent requirements
-		if(charged && !chamb.isCharged()){
+		if(charged() && !chamb.isCharged()){
 			return false;
 		}
 
@@ -151,7 +152,7 @@ public class AlchemyRec implements IRecipe<IInventory>{
 			return false;
 		}
 		double chambTemp = chamb.getTemp();
-		if(chambTemp > maxTemp || chambTemp < minTemp){
+		if(chambTemp > maxTemp() || chambTemp < minTemp()){
 			return false;
 		}
 
@@ -166,25 +167,26 @@ public class AlchemyRec implements IRecipe<IInventory>{
 			maxReactions = Math.min(maxReactions, reags.getQty(reag.getType()) / reag.getAmount());
 		}
 
-		if(heatChange != 0){
+		double deltaHeat = deltaHeatPer();
+		if(deltaHeat != 0){
 			//temperature change based limit
-			double allowedTempChange = heatChange < 0 ? maxTemp - chambTemp : minTemp - chambTemp;
-			maxReactions = Math.min(maxReactions, (int) Math.max(1, -content * allowedTempChange / (heatChange + amountChange * allowedTempChange)));
+			double allowedTempChange = deltaHeat < 0 ? maxTemp() - chambTemp : minTemp() - chambTemp;
+			maxReactions = Math.min(maxReactions, (int) Math.max(1, -content * allowedTempChange / (deltaHeat + amountChange * allowedTempChange)));
 		}
 
 		if(maxReactions <= 0){
 			return false;
 		}
 
-		for(ReagentStack reag : products){
+		for(ReagentStack reag : getProducts()){
 			reags.addReagent(reag.getType(), maxReactions * reag.getAmount(), reags.getTempC());
 		}
 
-		for(ReagentStack reag : reagents){
+		for(ReagentStack reag : getReagents()){
 			reags.removeReagent(reag.getType(), maxReactions * reag.getAmount());
 		}
 
-		reags.setTemp(HeatUtil.toCelcius((reags.getTempK() * reags.getTotalQty() - heatChange * maxReactions) / reags.getTotalQty()));
+		reags.setTemp(HeatUtil.toCelcius((reags.getTempK() * reags.getTotalQty() - deltaHeat * maxReactions) / reags.getTotalQty()));
 
 		if(type == Type.DESTRUCTIVE){
 			chamb.destroyChamber(Math.min(MAX_BLAST, data * maxReactions));
@@ -261,7 +263,7 @@ public class AlchemyRec implements IRecipe<IInventory>{
 		 * 		"catalyst": <string reagent ID or "NONE">, //Optional, defaults to "NONE". Sets a required catalyst to reagent ID if set to something other than NONE.
 		 * 		"charged": <true or false>, //Optional, defaults to false. If true, the reaction chamber needs to be charged
 		 * 		"data": <number>, //Optional, defaults to 0. Only used by destructive type for controlling blast strength (see gunpowder for reference)
-		 *		"real": <true of false>, //Optional, defaults to true. If false, this recipe will not be added! This is for making it easier to remove reactions through datapacks (to remove a reaction, override it with a version with real=false)
+		 *		"active": <true of false>, //Optional, defaults to true. If false, this recipe will not be added! This is for making it easier to remove reactions through datapacks (to remove a reaction, override it with a version with real=false)
 		 *
 		 * 		//FOR ONE REAGENT
 		 * 		"reagents": {
@@ -302,7 +304,7 @@ public class AlchemyRec implements IRecipe<IInventory>{
 			//Normal specification of recipe group and output
 			String group = JSONUtils.getString(json, "group", "");
 
-			boolean real = JSONUtils.getBoolean(json, "real", true);
+			boolean real = CraftingUtil.isActiveJSON(json);//JSONUtils.getBoolean(json, "real", true);
 			if(real){
 				//Only bother reading the whole file if this is a real recipe
 				Type type = Type.getType(JSONUtils.getString(json, "category", "normal"));

@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
 import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
@@ -24,6 +25,10 @@ public class ReagIngr{
 			Crossroads.logger.throwing(e);
 			throw e;
 		}
+	}
+
+	public ReagIngr(ReagentStack reag){
+		this(reag.getType(), reag.getAmount());
 	}
 
 	public IReagent getReag(){

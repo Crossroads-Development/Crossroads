@@ -3,8 +3,8 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
+import com.Da_Technomancer.crossroads.items.crafting.recipes.OreCleanserRec;
 import com.Da_Technomancer.crossroads.tileentities.fluid.OreCleanserTileEntity;
-import com.google.common.collect.ImmutableList;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -19,7 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
-public class OreCleanserCategory implements IRecipeCategory<OreCleanserRecipe>{
+public class OreCleanserCategory implements IRecipeCategory<OreCleanserRec>{
 
 	public static final ResourceLocation ID = new ResourceLocation(Crossroads.MODID, "ore_cleanser");
 	private final IDrawable back;
@@ -44,8 +44,8 @@ public class OreCleanserCategory implements IRecipeCategory<OreCleanserRecipe>{
 	}
 
 	@Override
-	public Class<? extends OreCleanserRecipe> getRecipeClass(){
-		return OreCleanserRecipe.class;
+	public Class<? extends OreCleanserRec> getRecipeClass(){
+		return OreCleanserRec.class;
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class OreCleanserCategory implements IRecipeCategory<OreCleanserRecipe>{
 	}
 
 	@Override
-	public void draw(OreCleanserRecipe recipe, double mouseX, double mouseY){
+	public void draw(OreCleanserRec recipe, double mouseX, double mouseY){
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
 		slot.draw(54, 50);
@@ -76,15 +76,15 @@ public class OreCleanserCategory implements IRecipeCategory<OreCleanserRecipe>{
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout layout, OreCleanserRecipe recipe, IIngredients ingredients){
+	public void setRecipe(IRecipeLayout layout, OreCleanserRec recipe, IIngredients ingredients){
 		IGuiItemStackGroup itemGroup = layout.getItemStacks();
 		IGuiFluidStackGroup fluidGroup = layout.getFluidStacks();
 
 		itemGroup.init(0, true, 54, 50);
-		itemGroup.set(0, recipe.inputs);
+		itemGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
 
 		itemGroup.init(1, false, 110, 50);
-		itemGroup.set(1, recipe.output);
+		itemGroup.set(1, recipe.getRecipeOutput());
 
 		fluidGroup.init(0, true, 34, 30, 16, 64, 1_000, true, fluidOverlay);
 		fluidGroup.set(0, new FluidStack(CRFluids.steam.still, OreCleanserTileEntity.WATER_USE));
@@ -97,9 +97,9 @@ public class OreCleanserCategory implements IRecipeCategory<OreCleanserRecipe>{
 	}
 
 	@Override
-	public void setIngredients(OreCleanserRecipe recipe, IIngredients ingredients){
-		ingredients.setInputLists(VanillaTypes.ITEM, ImmutableList.of(recipe.inputs));
-		ingredients.setOutput(VanillaTypes.ITEM, recipe.output);
+	public void setIngredients(OreCleanserRec recipe, IIngredients ingredients){
+		ingredients.setInputIngredients(recipe.getIngredients());
+		ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
 		ingredients.setInput(VanillaTypes.FLUID, new FluidStack(CRFluids.steam.still, OreCleanserTileEntity.WATER_USE));
 		ingredients.setOutput(VanillaTypes.FLUID, new FluidStack(CRFluids.dirtyWater.still, OreCleanserTileEntity.WATER_USE));
 	}

@@ -19,8 +19,8 @@ public final class CRRecipes{
 	public static IRecipeSerializer<BeamExtractRec> BEAM_EXTRACT_SERIAL = null;
 	@ObjectHolder("cooling")
 	public static IRecipeSerializer<IceboxRec> COOLING_SERIAL = null;
-	@ObjectHolder("dirty_water")
-	public static IRecipeSerializer<DirtyWaterRec> DIRTY_WATER_SERIAL = null;
+	@ObjectHolder("centrifuge")
+	public static IRecipeSerializer<CentrifugeRec> CENTRIFUGE_SERIAL = null;
 	@ObjectHolder("alchemy")
 	public static IRecipeSerializer<AlchemyRec> ALCHEMY_SERIAL = null;
 	@ObjectHolder("cr_blast_furnace")
@@ -28,13 +28,15 @@ public final class CRRecipes{
 	@ObjectHolder("fluid_cooling")
 	public static IRecipeSerializer<FluidCoolingRec> FLUID_COOLING_SERIAL = null;
 	@ObjectHolder("crucible")
-	public static IRecipeSerializer<FluidCoolingRec> CRUCIBLE_SERIAL = null;
+	public static IRecipeSerializer<CrucibleRec> CRUCIBLE_SERIAL = null;
 	@ObjectHolder("detailed_crafter")
 	public static IRecipeSerializer<DetailedCrafterRec> DETAILED_SERIAL = null;
 	@ObjectHolder("beam_transmute")
 	public static IRecipeSerializer<BeamTransmuteRec> BEAM_TRANSMUTE_SERIAL = null;
 	@ObjectHolder("bobo")
 	public static IRecipeSerializer<BoboRec> BOBO_SERIAL = null;
+	@ObjectHolder("copshowium")
+	public static IRecipeSerializer<CopshowiumRec> COPSHOWIUM_SERIAL = null;
 
 	//Forge hasn't replaced the IRecipeType registry (yet). We use the vanilla registry as a result.
 	public static IRecipeType<MillRec> MILL_TYPE = IRecipeType.register(Crossroads.MODID + ":mill");
@@ -42,7 +44,7 @@ public final class CRRecipes{
 	public static IRecipeType<OreCleanserRec> ORE_CLEANSER_TYPE = IRecipeType.register(Crossroads.MODID + ":ore_cleanser");
 	public static IRecipeType<BeamExtractRec> BEAM_EXTRACT_TYPE = IRecipeType.register(Crossroads.MODID + ":beam_extract");
 	public static IRecipeType<IceboxRec> COOLING_TYPE = IRecipeType.register(Crossroads.MODID + ":cooling");
-	public static IRecipeType<DirtyWaterRec> DIRTY_WATER_TYPE = IRecipeType.register(Crossroads.MODID + ":dirty_water");
+	public static IRecipeType<CentrifugeRec> CENTRIFUGE_TYPE = IRecipeType.register(Crossroads.MODID + ":centrifuge");
 	public static IRecipeType<AlchemyRec> ALCHEMY_TYPE = IRecipeType.register(Crossroads.MODID + ":alchemy");
 	public static IRecipeType<BlastFurnaceRec> BLAST_FURNACE_TYPE = IRecipeType.register(Crossroads.MODID + ":cr_blast_furnace");
 	public static IRecipeType<FluidCoolingRec> FLUID_COOLING_TYPE = IRecipeType.register(Crossroads.MODID + ":fluid_cooling");
@@ -50,5 +52,6 @@ public final class CRRecipes{
 	public static IRecipeType<DetailedCrafterRec> DETAILED_TYPE = IRecipeType.register(Crossroads.MODID + ":detailed_crafter");
 	public static IRecipeType<BeamTransmuteRec> BEAM_TRANSMUTE_TYPE = IRecipeType.register(Crossroads.MODID + ":beam_transmute");
 	public static IRecipeType<BoboRec> BOBO_TYPE = IRecipeType.register(Crossroads.MODID + ":bobo");
+	public static IRecipeType<CopshowiumRec> COPSHOWIUM_TYPE = IRecipeType.register(Crossroads.MODID + ":copshowium");
 
 }

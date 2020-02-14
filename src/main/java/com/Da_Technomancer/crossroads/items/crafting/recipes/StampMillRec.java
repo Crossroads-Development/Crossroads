@@ -8,8 +8,8 @@ import net.minecraft.util.ResourceLocation;
 
 public class StampMillRec extends SingleIngrRecipe{
 
-	public StampMillRec(ResourceLocation location, String name, Ingredient input, ItemStack output){
-		super(CRRecipes.STAMP_MILL_TYPE, CRRecipes.STAMP_MILL_SERIAL, location, name, input, output);
+	public StampMillRec(ResourceLocation location, String name, Ingredient input, ItemStack output, boolean active){
+		super(CRRecipes.STAMP_MILL_TYPE, CRRecipes.STAMP_MILL_SERIAL, location, name, input, output, active);
 	}
 
 	@Override

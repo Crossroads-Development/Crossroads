@@ -7,6 +7,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
@@ -16,12 +18,15 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * This class is a bare-bones block version of net.minecraft.item.crafting.Ingredient
  * In the likely event that either vanilla or Forge adds a standard way to put blocks in recipe inputs, we will switch to that immediately
  */
 public class BlockIngredient implements Predicate<BlockState>{
+
+	public static final BlockIngredient EMPTY = new BlockIngredient();
 
 	private final List<IBlockList> keys;
 	private boolean cacheValid = false;//Currently nothing invalidates the cache
@@ -60,6 +65,17 @@ public class BlockIngredient implements Predicate<BlockState>{
 				throw e;
 			}
 		}
+	}
+
+	/**
+	 * Creates a list of the item forms of every matched block
+	 * @deprecated This is not reliable as many blocks don't map to items cleanly. Use alternatives wherever possible
+	 * @return The item form of every matched block, if an item form exists. Will contain no duplicates, may be empty
+	 */
+	@Deprecated
+	public List<ItemStack> getMatchedItemForm(){
+		updateCache();
+		return matched.parallelStream().unordered().map(ItemStack::new).distinct().filter(s -> s.getItem() != Items.AIR).collect(Collectors.toList());
 	}
 
 	private void updateCache(){

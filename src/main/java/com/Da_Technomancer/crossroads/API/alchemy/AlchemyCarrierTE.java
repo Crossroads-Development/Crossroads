@@ -247,7 +247,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 				if(!crystal){
 					//Refuse if made of glass and cannot hold contents
 					for(IReagent r : contents.keySet()){
-						if(r != null && contents.getQty(r) > 0 && !r.canGlassContain()){
+						if(r != null && contents.getQty(r) > 0 && r.requiresCrystal()){
 							return stack;
 						}
 					}

@@ -54,7 +54,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.IntValue atmosEffect;
 	public static ForgeConfigSpec.BooleanValue atmosLightningHorsemen;
 	public static ForgeConfigSpec.IntValue atmosCap;
-	public static ForgeConfigSpec.DoubleValue copsPerLiq;
+//	public static ForgeConfigSpec.DoubleValue copsPerLiq;
 	public static ForgeConfigSpec.BooleanValue allowOverflow;
 //	public static ForgeConfigSpec.BooleanValue addBoboRecipes;
 //	public static ForgeConfigSpec.ConfigValue<String> cccExpenLiquid;
@@ -156,7 +156,7 @@ public class CRConfig{
 		fePerEntropy = serverBuilder.comment("FE equal to 1 Temporal Entropy").defineInRange("fe_per_entropy", 50, 1, Integer.MAX_VALUE);
 		teTimeAccel = serverBuilder.comment("Allow time acceleration of Tile Entities?", "Disabling this does not affect acceleration of normal entities or block ticks").define("te_accel", true);
 		hardGateway = serverBuilder.comment("Enable hardmode for the Gateway?", "If true, dialing in chevrons only works if the beam alignment matches the chevron being dialed", "Enable this if you want an extra challenge").define("gateway_hard", false);
-		copsPerLiq = serverBuilder.comment("mB of Molten Copshowium produced per mB of input liquid in the CCC").defineInRange("cops_per_liq", 2D, 0, 9);
+//		copsPerLiq = serverBuilder.comment("mB of Molten Copshowium produced per mB of input liquid in the CCC").defineInRange("cops_per_liq", 2D, 0, 9);
 		allowOverflow = serverBuilder.comment("Destroy the CCC if Copshowium overfills the tank?", "Disabling this will make the CCC much easier to use").define("allow_overflow", true);
 		serverBuilder.pop();
 		serverBuilder.push(CAT_ALCHEMY);

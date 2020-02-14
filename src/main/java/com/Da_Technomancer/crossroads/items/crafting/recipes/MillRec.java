@@ -1,13 +1,12 @@
 package com.Da_Technomancer.crossroads.items.crafting.recipes;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
+import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
@@ -20,24 +19,27 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 
-public class MillRec implements IRecipe<IInventory>{
+public class MillRec implements IOptionalRecipe<IInventory>{
 
 	private final ResourceLocation id;
 	private final String group;
 	private final Ingredient ingr;
 	private final ItemStack[] outputs;
+	private final boolean active;
 
 	/**
 	 *
 	 * @param location File ID
 	 * @param name Recipe group
 	 * @param input Input ingredient
+	 * @param active Whether this recipe is active
 	 * @param output Maximum of 3 ItemStacks
 	 */
-	public MillRec(ResourceLocation location, String name, Ingredient input, ItemStack... output){
+	public MillRec(ResourceLocation location, String name, Ingredient input, boolean active, ItemStack... output){
 		id = location;
 		group = name;
 		ingr = input;
+		this.active = active;
 		outputs = output;
 	}
 
@@ -101,12 +103,21 @@ public class MillRec implements IRecipe<IInventory>{
 		return CRRecipes.MILL_TYPE;
 	}
 
+	@Override
+	public boolean isEnabled(){
+		return active;
+	}
+
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<MillRec>{
 
 		@Override
 		public MillRec read(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and ingredient
 			String s = JSONUtils.getString(json, "group", "");
+			if(!CraftingUtil.isActiveJSON(json)){
+				return new MillRec(recipeId, s, Ingredient.EMPTY, false);
+			}
+
 			Ingredient ingredient = CraftingUtil.getIngredient(json, "input", true);
 
 			//Output(s) can be specified in one of 2 ways:
@@ -126,25 +137,29 @@ public class MillRec implements IRecipe<IInventory>{
 				outputs[0] = CraftingUtil.getItemStack(json, "output", false, false);
 			}
 
-			return new MillRec(recipeId, s, ingredient, outputs);
+			return new MillRec(recipeId, s, ingredient, true, outputs);
 		}
 
 		@Nullable
 		@Override
 		public MillRec read(ResourceLocation recipeId, PacketBuffer buffer){
 			String s = buffer.readString(Short.MAX_VALUE);
+			if(!buffer.readBoolean()){
+				return new MillRec(recipeId, s, Ingredient.EMPTY, false);
+			}
 			Ingredient ingredient = Ingredient.read(buffer);
 			int outputCount = buffer.readByte();
 			ItemStack[] outputs = new ItemStack[outputCount];
 			for(int i = 0; i < outputCount; i++){
 				outputs[i] = buffer.readItemStack();
 			}
-			return new MillRec(recipeId, s, ingredient, outputs);
+			return new MillRec(recipeId, s, ingredient, true, outputs);
 		}
 
 		@Override
 		public void write(PacketBuffer buffer, MillRec recipe){
 			buffer.writeString(recipe.getGroup());
+			buffer.writeBoolean(recipe.active);
 			recipe.ingr.write(buffer);
 			buffer.writeByte(recipe.outputs.length);
 			for(ItemStack stack : recipe.outputs){

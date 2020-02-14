@@ -73,7 +73,7 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 			if(contents.getQty(type) == 0){
 				continue;
 			}
-			if(glass && !type.canGlassContain()){
+			if(glass && type.requiresCrystal()){
 				destroy |= type.destroysBadContainer();
 				toRemove.add(type);
 			}

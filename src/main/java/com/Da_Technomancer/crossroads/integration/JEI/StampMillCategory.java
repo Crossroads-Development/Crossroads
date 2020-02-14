@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.google.common.collect.ImmutableList;
+import com.Da_Technomancer.crossroads.items.crafting.recipes.StampMillRec;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -15,7 +15,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class StampMillCategory implements IRecipeCategory<StampMillRecipe>{
+public class StampMillCategory implements IRecipeCategory<StampMillRec>{
 
 	public static final ResourceLocation ID = new ResourceLocation(Crossroads.MODID, "stamp_mill");
 	private final IDrawable back;
@@ -38,8 +38,8 @@ public class StampMillCategory implements IRecipeCategory<StampMillRecipe>{
 	}
 
 	@Override
-	public Class<? extends StampMillRecipe> getRecipeClass(){
-		return StampMillRecipe.class;
+	public Class<? extends StampMillRec> getRecipeClass(){
+		return StampMillRec.class;
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class StampMillCategory implements IRecipeCategory<StampMillRecipe>{
 	}
 
 	@Override
-	public void draw(StampMillRecipe recipe, double mouseX, double mouseY){
+	public void draw(StampMillRec recipe, double mouseX, double mouseY){
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
 		slot.draw(54, 50);
@@ -70,21 +70,21 @@ public class StampMillCategory implements IRecipeCategory<StampMillRecipe>{
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout layout, StampMillRecipe recipe, IIngredients ingredients){
+	public void setRecipe(IRecipeLayout layout, StampMillRec recipe, IIngredients ingredients){
 		IGuiItemStackGroup itemGroup = layout.getItemStacks();
 
 		itemGroup.init(0, true, 54, 50);
-		itemGroup.set(0, recipe.inputs);
+		itemGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
 
 		itemGroup.init(1, false, 110, 50);
-		itemGroup.set(1, recipe.output);
+		itemGroup.set(1, recipe.getRecipeOutput());
 
 		itemGroup.set(ingredients);
 	}
 
 	@Override
-	public void setIngredients(StampMillRecipe recipe, IIngredients ingredients){
-		ingredients.setInputLists(VanillaTypes.ITEM, ImmutableList.of(recipe.inputs));
-		ingredients.setOutput(VanillaTypes.ITEM, recipe.output);
+	public void setIngredients(StampMillRec recipe, IIngredients ingredients){
+		ingredients.setInputIngredients(recipe.getIngredients());
+		ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
 	}
 }

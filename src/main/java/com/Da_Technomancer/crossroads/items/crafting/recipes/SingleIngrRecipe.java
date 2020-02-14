@@ -4,7 +4,6 @@ import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
 import com.google.gson.JsonObject;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
@@ -15,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public abstract class SingleIngrRecipe implements IRecipe<IInventory>{
+public abstract class SingleIngrRecipe implements IOptionalRecipe<IInventory>{
 	
 	protected final Ingredient ingredient;
 	protected final ItemStack result;
@@ -23,14 +22,16 @@ public abstract class SingleIngrRecipe implements IRecipe<IInventory>{
 	private final IRecipeSerializer<?> serializer;
 	protected final ResourceLocation id;
 	protected final String group;
+	protected final boolean active;
 
-	public SingleIngrRecipe(IRecipeType<?> type, IRecipeSerializer<?> serializer, ResourceLocation id, String group, Ingredient ingredient, ItemStack result) {
+	public SingleIngrRecipe(IRecipeType<?> type, IRecipeSerializer<?> serializer, ResourceLocation id, String group, Ingredient ingredient, ItemStack result, boolean active){
 		this.type = type;
 		this.serializer = serializer;
 		this.id = id;
 		this.group = group;
 		this.ingredient = ingredient;
 		this.result = result;
+		this.active = active;
 	}
 
 	@Override
@@ -46,6 +47,11 @@ public abstract class SingleIngrRecipe implements IRecipe<IInventory>{
 	@Override
 	public ResourceLocation getId() {
 		return id;
+	}
+
+	@Override
+	public boolean isEnabled(){
+		return active;
 	}
 
 	/**
@@ -66,11 +72,6 @@ public abstract class SingleIngrRecipe implements IRecipe<IInventory>{
 	}
 
 	@Override
-	public ItemStack getCraftingResult(IInventory inv) {
-		return result.copy();
-	}
-
-	@Override
 	public NonNullList<Ingredient> getIngredients() {
 		NonNullList<Ingredient> nonnulllist = NonNullList.create();
 		nonnulllist.add(ingredient);
@@ -79,7 +80,7 @@ public abstract class SingleIngrRecipe implements IRecipe<IInventory>{
 
 	@Override
 	public boolean matches(IInventory inv, World worldIn){
-		return ingredient.test(inv.getStackInSlot(0));
+		return isEnabled() && ingredient.test(inv.getStackInSlot(0));
 	}
 
 	/**
@@ -101,29 +102,36 @@ public abstract class SingleIngrRecipe implements IRecipe<IInventory>{
 		@Override
 		public T read(ResourceLocation recipeId, JsonObject json){
 			String s = JSONUtils.getString(json, "group", "");
+			if(!CraftingUtil.isActiveJSON(json)){
+				return factory.create(recipeId, s, Ingredient.EMPTY, ItemStack.EMPTY, false);
+			}
 			Ingredient ingredient = CraftingUtil.getIngredient(json, "ingredient", false);
 
 			ItemStack itemstack = CraftingUtil.getItemStack(json, "output", true, true);
-			return factory.create(recipeId, s, ingredient, itemstack);
+			return factory.create(recipeId, s, ingredient, itemstack, true);
 		}
 
 		@Override
 		public T read(ResourceLocation recipeId, PacketBuffer buffer){
 			String s = buffer.readString(Short.MAX_VALUE);
+			if(!buffer.readBoolean()){
+				return factory.create(recipeId, s, Ingredient.EMPTY, ItemStack.EMPTY, false);
+			}
 			Ingredient ingredient = Ingredient.read(buffer);
 			ItemStack itemstack = buffer.readItemStack();
-			return factory.create(recipeId, s, ingredient, itemstack);
+			return factory.create(recipeId, s, ingredient, itemstack, true);
 		}
 
 		@Override
 		public void write(PacketBuffer buffer, T recipe){
 			buffer.writeString(recipe.getGroup());
+			buffer.writeBoolean(recipe.isEnabled());
 			recipe.getIngredients().get(0).write(buffer);
 			buffer.writeItemStack(recipe.getRecipeOutput());
 		}
 
 		public interface IRecipeFactory<T extends SingleIngrRecipe>{
-			T create(ResourceLocation location, String name, Ingredient input, ItemStack output);
+			T create(ResourceLocation location, String name, Ingredient input, ItemStack output, boolean active);
 		}
 	}
 }

@@ -2,13 +2,13 @@ package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.templates.IBeamRenderTE;
+import com.Da_Technomancer.crossroads.CRConfig;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
@@ -73,7 +73,7 @@ public class OmniMeter extends Item{
 
 			LazyOptional<IAxisHandler> axisOpt;
 			if((axisOpt = te.getCapability(Capabilities.AXIS_CAPABILITY, null)).isPresent()){
-				chat.add(new TranslationTextComponent("tt.crossroads.meter.axis", MiscUtil.preciseRound(axisOpt.orElseThrow(NullPointerException::new).getTotalEnergy(), 3)));
+				chat.add(new TranslationTextComponent("tt.crossroads.meter.axis", CRConfig.formatVal(axisOpt.orElseThrow(NullPointerException::new).getTotalEnergy())));
 			}
 
 			LazyOptional<IEnergyStorage> engOpt;

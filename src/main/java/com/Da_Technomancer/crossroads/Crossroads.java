@@ -131,7 +131,7 @@ public final class Crossroads{
 		reg.register(new SingleIngrRecipe.SingleRecipeSerializer<>(OreCleanserRec::new).setRegistryName("ore_cleanser"));
 		reg.register(new BeamExtractRec.Serializer().setRegistryName("beam_extract"));
 		reg.register(new IceboxRec.Serializer().setRegistryName("cooling"));
-		reg.register(new DirtyWaterRec.Serializer().setRegistryName("dirty_water"));
+		reg.register(new CentrifugeRec.Serializer().setRegistryName("centrifuge"));
 		reg.register(new AlchemyRec.Serializer().setRegistryName("alchemy"));
 		reg.register(new BlastFurnaceRec.Serializer().setRegistryName("cr_blast_furnace"));
 		reg.register(new FluidCoolingRec.Serializer().setRegistryName("fluid_cooling"));
@@ -139,6 +139,7 @@ public final class Crossroads{
 		reg.register(new DetailedCrafterRec.Serializer().setRegistryName("detailed_crafter"));
 		reg.register(new BeamTransmuteRec.Serializer().setRegistryName("beam_transmute"));
 		reg.register(new BoboRec.Serializer().setRegistryName("bobo"));
+		reg.register(new CopshowiumRec.Serializer().setRegistryName("copshowium"));
 	}
 
 	@SuppressWarnings("unused")

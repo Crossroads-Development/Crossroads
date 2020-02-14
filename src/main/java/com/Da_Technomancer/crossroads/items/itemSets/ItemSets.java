@@ -7,8 +7,4 @@ public class ItemSets{
 		GearFactory.init();
 		OreSetup.init();
 	}
-
-	public static void craftingInit(){
-		OreSetup.initCrafting();
-	}
 }

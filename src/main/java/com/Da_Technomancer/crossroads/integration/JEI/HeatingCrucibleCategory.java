@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.google.common.collect.ImmutableList;
+import com.Da_Technomancer.crossroads.items.crafting.recipes.CrucibleRec;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -16,7 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class HeatingCrucibleCategory implements IRecipeCategory<HeatingCrucibleRecipe>{
+public class HeatingCrucibleCategory implements IRecipeCategory<CrucibleRec>{
 
 	public static final ResourceLocation ID = new ResourceLocation(Crossroads.MODID, "heating_crucible");
 	private final IDrawable back;
@@ -42,8 +42,8 @@ public class HeatingCrucibleCategory implements IRecipeCategory<HeatingCrucibleR
 	}
 
 	@Override
-	public Class<? extends HeatingCrucibleRecipe> getRecipeClass(){
-		return HeatingCrucibleRecipe.class;
+	public Class<? extends CrucibleRec> getRecipeClass(){
+		return CrucibleRec.class;
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class HeatingCrucibleCategory implements IRecipeCategory<HeatingCrucibleR
 	}
 
 	@Override
-	public void draw(HeatingCrucibleRecipe recipe, double mouseX, double mouseY){
+	public void draw(CrucibleRec recipe, double mouseX, double mouseY){
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
 		Minecraft.getInstance().fontRenderer.drawString("When above 1000°C", 10, 10, 4210752);
@@ -69,15 +69,15 @@ public class HeatingCrucibleCategory implements IRecipeCategory<HeatingCrucibleR
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout layout, HeatingCrucibleRecipe recipe, IIngredients ingredients){
+	public void setRecipe(IRecipeLayout layout, CrucibleRec recipe, IIngredients ingredients){
 		IGuiItemStackGroup itemGroup = layout.getItemStacks();
 		IGuiFluidStackGroup fluidGroup = layout.getFluidStacks();
 
 //		List<FluidStack> fluids = ingredients.getOutputs(VanillaTypes.FLUID).get(0);
-		fluidGroup.init(0, false, 90, 42, 32, 32, recipe.out.getAmount(), false, fluidOverlay);
-		fluidGroup.set(0, recipe.out);
+		fluidGroup.init(0, false, 90, 42, 32, 32, recipe.getOutput().getAmount(), false, fluidOverlay);
+		fluidGroup.set(0, recipe.getOutput());
 		itemGroup.init(0, true, 40, 50);
-		itemGroup.set(0, recipe.in.getMatchingList());
+		itemGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
 	}
 
 	@Override
@@ -86,8 +86,8 @@ public class HeatingCrucibleCategory implements IRecipeCategory<HeatingCrucibleR
 	}
 
 	@Override
-	public void setIngredients(HeatingCrucibleRecipe recipe, IIngredients ingredients){
-		ingredients.setInputLists(VanillaTypes.ITEM, ImmutableList.of(recipe.in.getMatchingList()));
-		ingredients.setOutput(VanillaTypes.FLUID, recipe.out);
+	public void setIngredients(CrucibleRec recipe, IIngredients ingredients){
+		ingredients.setInputIngredients(recipe.getIngredients());
+		ingredients.setOutput(VanillaTypes.FLUID, recipe.getOutput());
 	}
 }

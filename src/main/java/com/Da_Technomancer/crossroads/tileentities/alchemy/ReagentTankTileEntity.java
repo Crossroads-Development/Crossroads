@@ -124,7 +124,7 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 			if(reag.isEmpty()){
 				continue;
 			}
-			if(glass && !reag.getType().canGlassContain()){
+			if(glass && reag.getType().requiresCrystal()){
 				destroy |= reag.getType().destroysBadContainer();
 				toRemove.add(type);
 			}

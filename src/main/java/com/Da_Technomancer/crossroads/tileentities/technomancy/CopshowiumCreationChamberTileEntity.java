@@ -12,18 +12,16 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.CopshowiumMakerContainer;
+import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
+import com.Da_Technomancer.crossroads.items.crafting.recipes.CopshowiumRec;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.tags.Tag;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -38,6 +36,7 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @ObjectHolder(Crossroads.MODID)
@@ -48,15 +47,13 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 
 	public static final int CAPACITY = 1_440;
 	public static final int FLUX_PER_INGOT = 4;
-	private static final Tag<Fluid> noFlux = new FluidTags.Wrapper(new ResourceLocation(Crossroads.MODID, "ccc_no_flux"));
-	private static final Tag<Fluid> yesFlux = new FluidTags.Wrapper(new ResourceLocation(Crossroads.MODID, "ccc_with_flux"));
 
 	private int flux = 0;
 	private final HashSet<BlockPos> link = new HashSet<>(1);
 
 	public CopshowiumCreationChamberTileEntity(){
 		super(type, 0);
-		fluidProps[0] = new TankProperty(CAPACITY, true, true, f -> f != null && (noFlux.contains(f) || yesFlux.contains(f)));//Input
+		fluidProps[0] = new TankProperty(CAPACITY, true, true, f -> f != null && f.getFluid() != CRFluids.moltenCopshowium.still);//Input
 		fluidProps[1] = new TankProperty(CAPACITY, false, true);//Copshowium
 	}
 
@@ -74,6 +71,10 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 
 	public float getRedstone(){
 		return (float) fluids[0].getAmount() / CAPACITY;
+	}
+
+	public FluidStack getInputFluid(){
+		return fluids[0];
 	}
 
 	@Override
@@ -201,29 +202,37 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 				fluids[0] = FluidStack.EMPTY;
 				fluids[1] = FluidStack.EMPTY;
 				markDirty();
-			}else if(align == EnumBeamAlignments.TIME && !fluids[0].isEmpty() && (noFlux.contains(fluids[0].getFluid()) || yesFlux.contains(fluids[0].getFluid()))){
-				int created = (int) (fluids[0].getAmount() * CRConfig.copsPerLiq.get());
-				if(fluids[1].isEmpty()){
-					fluids[1] = new FluidStack(CRFluids.moltenCopshowium.still, created);
-				}else{
-					fluids[1].grow(created);
-				}
-				fluids[0] = FluidStack.EMPTY;
-				markDirty();
-
-				//Check for overflowing
-				if(fluids[1].getAmount() > CAPACITY){
-					if(CRConfig.allowOverflow.get()){
-						world.setBlockState(pos, CRFluids.moltenCopshowium.still.getDefaultState().getBlockState());
+			}else if(align == EnumBeamAlignments.TIME && !fluids[0].isEmpty()){
+				Optional<CopshowiumRec> recOpt = world.getRecipeManager().getRecipe(CRRecipes.COPSHOWIUM_TYPE, CopshowiumCreationChamberTileEntity.this, world);
+				if(recOpt.isPresent()){
+					CopshowiumRec rec = recOpt.get();
+					int created = (int) (fluids[0].getAmount() * rec.getMult());
+					if(fluids[1].isEmpty()){
+						fluids[1] = new FluidStack(CRFluids.moltenCopshowium.still, created);
 					}else{
-						fluids[1].setAmount(CAPACITY);//The config is disabled- just delete any excess fluid
+						fluids[1].grow(created);
 					}
+					fluids[0] = FluidStack.EMPTY;
+					markDirty();
+
+					//Check for overflowing
+					if(fluids[1].getAmount() > CAPACITY){
+						if(CRConfig.allowOverflow.get()){
+							world.setBlockState(pos, CRFluids.moltenCopshowium.still.getDefaultState().getBlockState());
+						}else{
+							fluids[1].setAmount(CAPACITY);//The config is disabled- just delete any excess fluid
+						}
+					}
+					if(rec.isFlux()){
+						//Create flux if applicable
+						addFlux(FLUX_PER_INGOT * created / EnergyConverters.INGOT_MB);
+					}
+				}else{
+					//Wipe the contents- no matching recipe
+					fluids[0] = FluidStack.EMPTY;
+					markDirty();
 				}
-				if(yesFlux.contains(fluids[0].getFluid())){
-					//Create flux if applicable
-					addFlux(FLUX_PER_INGOT * created / EnergyConverters.INGOT_MB);
-				}
-			}
 		}
 	}
 }
+			}

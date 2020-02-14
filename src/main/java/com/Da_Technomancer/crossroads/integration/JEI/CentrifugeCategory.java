@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.items.crafting.recipes.FluidCoolingRec;
+import com.Da_Technomancer.crossroads.items.crafting.recipes.CentrifugeRec;
+import com.google.common.collect.ImmutableList;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -14,13 +14,12 @@ import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRec>{
+public class CentrifugeCategory implements IRecipeCategory<CentrifugeRec>{
 
-	public static final ResourceLocation ID = new ResourceLocation(Crossroads.MODID, "fluid_cooling");
+	public static final ResourceLocation ID = new ResourceLocation(Crossroads.MODID, "centrifuge");
 	private final IDrawable back;
 	private final IDrawable icon;
 	private final IDrawable slot;
@@ -28,10 +27,10 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRec>{
 	private final IDrawableStatic arrowStatic;
 	private final IDrawable fluidOverlay;
 
-	protected FluidCoolingCategory(IGuiHelper guiHelper){
+	protected CentrifugeCategory(IGuiHelper guiHelper){
 		back = guiHelper.createBlankDrawable(180, 100);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(CRBlocks.fluidCoolingChamber, 1));
 		slot = guiHelper.getSlotDrawable();
+		icon = guiHelper.createDrawableIngredient(new ItemStack(CRBlocks.waterCentrifuge, 1));
 		arrowStatic = guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 79, 35, 24, 17);
 		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 176, 14, 24, 17), 40, IDrawableAnimated.StartDirection.LEFT, false);
 		fluidOverlay = guiHelper.createDrawable(new ResourceLocation(Crossroads.MODID, "textures/gui/rectangle_fluid_overlay.png"), 0, 0, 16, 64);
@@ -43,13 +42,13 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRec>{
 	}
 
 	@Override
-	public Class<? extends FluidCoolingRec> getRecipeClass(){
-		return FluidCoolingRec.class;
+	public Class<? extends CentrifugeRec> getRecipeClass(){
+		return CentrifugeRec.class;
 	}
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.fluidCoolingChamber.getNameTextComponent().getFormattedText();
+		return CRBlocks.waterCentrifuge.getNameTextComponent().getFormattedText();
 	}
 
 	@Override
@@ -58,30 +57,28 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRec>{
 	}
 
 	@Override
-	public void draw(FluidCoolingRec rec, double mouseX, double mouseY){
-		Minecraft.getInstance().fontRenderer.drawString(MiscUtil.localize("crossroads.jei.fluid_cooling.max", rec.getMaxTemp()), 10, 10, 4210752);
-		Minecraft.getInstance().fontRenderer.drawString(MiscUtil.localize("crossroads.jei.fluid_cooling.add", rec.getAddedHeat()), 10, 20, 4210752);
+	public void draw(CentrifugeRec rec, double mouseX, double mouseY){
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
-		slot.draw(80, 55);
 		arrowStatic.draw(45, 56);
 		arrow.draw(45, 56);
+		slot.draw(100, 30);
 //		GlStateManager.disableBlend();
 //		GlStateManager.disableAlpha();
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, FluidCoolingRec recipe, IIngredients ingredients){
+	public void setRecipe(IRecipeLayout recipeLayout, CentrifugeRec recipe, IIngredients ingredients){
 		IGuiItemStackGroup itemGroup = recipeLayout.getItemStacks();
 		IGuiFluidStackGroup fluidGroup = recipeLayout.getFluidStacks();
 
-		fluidGroup.init(0, true, 21, 30, 16, 64, 1000, true, fluidOverlay);
-		fluidGroup.set(0, recipe.getInput());
-		itemGroup.init(0, false, 80, 55);
-		itemGroup.set(0, recipe.getRecipeOutput());
+		itemGroup.init(0, false, 100, 30);
+		itemGroup.set(0, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
 
-		itemGroup.set(ingredients);
-		fluidGroup.set(ingredients);
+		fluidGroup.init(0, true, 21, 30, 16, 64, 4000, true, fluidOverlay);
+		fluidGroup.set(0, recipe.getInput());
+		fluidGroup.init(1, false, 80, 30, 16, 64, 4000, true, fluidOverlay);
+		fluidGroup.set(1, ingredients.getOutputs(VanillaTypes.FLUID).get(0));
 	}
 
 	@Override
@@ -90,8 +87,9 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRec>{
 	}
 
 	@Override
-	public void setIngredients(FluidCoolingRec fluidCoolingRecipe, IIngredients ingredients){
-		ingredients.setInput(VanillaTypes.FLUID, fluidCoolingRecipe.getInput());
-		ingredients.setOutput(VanillaTypes.ITEM, fluidCoolingRecipe.getRecipeOutput());
+	public void setIngredients(CentrifugeRec recipe, IIngredients ingredients){
+		ingredients.setInput(VanillaTypes.FLUID, recipe.getInput());
+		ingredients.setOutput(VanillaTypes.FLUID, recipe.getFluidOutput());
+		ingredients.setOutputLists(VanillaTypes.ITEM, ImmutableList.of(recipe.getOutputList()));
 	}
 }

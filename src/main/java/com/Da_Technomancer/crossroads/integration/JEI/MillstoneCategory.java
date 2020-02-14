@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.google.common.collect.ImmutableList;
+import com.Da_Technomancer.crossroads.items.crafting.recipes.MillRec;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -15,7 +15,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class MillstoneCategory implements IRecipeCategory<MillstoneRecipe>{
+public class MillstoneCategory implements IRecipeCategory<MillRec>{
 
 	public static final ResourceLocation ID = new ResourceLocation(Crossroads.MODID, ".millstone");
 	private final IDrawable back;
@@ -38,8 +38,8 @@ public class MillstoneCategory implements IRecipeCategory<MillstoneRecipe>{
 	}
 
 	@Override
-	public Class<? extends MillstoneRecipe> getRecipeClass(){
-		return MillstoneRecipe.class;
+	public Class<? extends MillRec> getRecipeClass(){
+		return MillRec.class;
 	}
 
 	@Override
@@ -58,13 +58,13 @@ public class MillstoneCategory implements IRecipeCategory<MillstoneRecipe>{
 	}
 
 	@Override
-	public void setIngredients(MillstoneRecipe millstoneRecipe, IIngredients ingredients){
-		ingredients.setInputLists(VanillaTypes.ITEM, ImmutableList.of(millstoneRecipe.inputs));
-		ingredients.setOutputs(VanillaTypes.ITEM, millstoneRecipe.outputs);
+	public void setIngredients(MillRec recipe, IIngredients ingredients){
+		ingredients.setInputIngredients(recipe.getIngredients());
+		ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
 	}
 
 	@Override
-	public void draw(MillstoneRecipe recipe, double mouseX, double mouseY){
+	public void draw(MillRec recipe, double mouseX, double mouseY){
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
 		slot.draw(79, 16);
@@ -78,17 +78,17 @@ public class MillstoneCategory implements IRecipeCategory<MillstoneRecipe>{
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, MillstoneRecipe recipeWrapper, IIngredients ingredients){
+	public void setRecipe(IRecipeLayout recipeLayout, MillRec recipe, IIngredients ingredients){
 		IGuiItemStackGroup itemStackGroup = recipeLayout.getItemStacks();
 		itemStackGroup.init(0, true, 79, 16);
-		itemStackGroup.set(0, recipeWrapper.inputs);
+		itemStackGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
 
 		itemStackGroup.init(1, false, 61, 52);
 		itemStackGroup.init(2, false, 79, 52);
 		itemStackGroup.init(3, false, 97, 52);
-		itemStackGroup.set(1, recipeWrapper.outputs.size() >= 1 ? recipeWrapper.outputs.get(0) : null);
-		itemStackGroup.set(2, recipeWrapper.outputs.size() >= 2 ? recipeWrapper.outputs.get(1) : null);
-		itemStackGroup.set(3, recipeWrapper.outputs.size() == 3 ? recipeWrapper.outputs.get(2) : null);
+		itemStackGroup.set(1, recipe.getOutputs().length >= 1 ? recipe.getOutputs()[0] : ItemStack.EMPTY);
+		itemStackGroup.set(2, recipe.getOutputs().length >= 2 ? recipe.getOutputs()[1] : ItemStack.EMPTY);
+		itemStackGroup.set(3, recipe.getOutputs().length == 3 ? recipe.getOutputs()[2] : ItemStack.EMPTY);
 
 		itemStackGroup.set(ingredients);
 	}

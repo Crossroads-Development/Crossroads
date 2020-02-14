@@ -116,4 +116,8 @@ public class CraftingUtil{
 		}
 		throw new JsonParseException("Non-BlockIngredient passed as JSON ingredient");
 	}
+
+	public static boolean isActiveJSON(JsonObject json){
+		return JSONUtils.getBoolean(json, "active", true);
+	}
 }

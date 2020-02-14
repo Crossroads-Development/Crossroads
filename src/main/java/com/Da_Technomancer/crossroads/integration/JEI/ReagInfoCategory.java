@@ -1,6 +1,9 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
+import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.common.collect.ImmutableList;
@@ -19,7 +22,7 @@ import net.minecraft.util.ResourceLocation;
 import java.util.Collections;
 import java.util.List;
 
-public class ReagInfoCategory implements IRecipeCategory<ReagInfoRecipe>{
+public class ReagInfoCategory implements IRecipeCategory<IReagent>{
 
 	public static final ResourceLocation ID = new ResourceLocation(Crossroads.MODID, "reag_info");
 	private final IDrawable back;
@@ -36,35 +39,35 @@ public class ReagInfoCategory implements IRecipeCategory<ReagInfoRecipe>{
 	}
 
 	@Override
-	public Class<? extends ReagInfoRecipe> getRecipeClass(){
-		return ReagInfoRecipe.class;
+	public Class<? extends IReagent> getRecipeClass(){
+		return IReagent.class;
 	}
 
 	@Override
 	public String getTitle(){
-		return "Reagent Info";//TODO localize
+		return "Reagent Info";
 	}
 
 	@Override
-	public List<String> getTooltipStrings(ReagInfoRecipe recipe, double mouseX, double mouseY){
+	public List<String> getTooltipStrings(IReagent recipe, double mouseX, double mouseY){
 		if(mouseX >= 2 && mouseX <= 18 && mouseY >= 2 && mouseY <= 18){
-			return ImmutableList.of(recipe.type.getReag().getName());
+			return ImmutableList.of(recipe.getName());
 		}
 		return Collections.emptyList();
 	}
 
 	@Override
-	public void draw(ReagInfoRecipe recipe, double mouseX, double mouseY){
+	public void draw(IReagent recipe, double mouseX, double mouseY){
 		FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
-		double melt = recipe.type.getReag().getMeltingPoint();
-		double boil = recipe.type.getReag().getBoilingPoint();
-		String line = "Melting: " + (melt >= Short.MAX_VALUE - 10 ? "Never" : melt < HeatUtil.ABSOLUTE_ZERO ? "Always" : (melt + "°C"));//TODO localize
+		double melt = recipe.getMeltingPoint();
+		double boil = recipe.getBoilingPoint();
+		String line = melt >= Short.MAX_VALUE - 10 ? MiscUtil.localize("crossroads.jei.reagent.melting.no") : melt <= HeatUtil.ABSOLUTE_ZERO ? MiscUtil.localize("crossroads.jei.reagent.melting.yes") : MiscUtil.localize("crossroads.jei.reagent.melting", CRConfig.formatVal(melt));
 		fontRenderer.drawString(line, 2, 22, 0x404040);
-		line = "Boiling: " + (boil >= Short.MAX_VALUE - 10 ? "Never" : boil < HeatUtil.ABSOLUTE_ZERO ? "Always" : (boil + "°C"));//TODO localize
+		line = boil >= Short.MAX_VALUE - 10 ? MiscUtil.localize("crossroads.jei.reagent.boiling.no") : boil <= HeatUtil.ABSOLUTE_ZERO ? MiscUtil.localize("crossroads.jei.reagent.boiling.yes") : MiscUtil.localize("crossroads.jei.reagent.boiling", CRConfig.formatVal(boil));
 		fontRenderer.drawString(line, 2, 42, 0x404040);
 
 		//GlStateManager.color(1, 1, 1);
-		ReagentIngredientRenderer.RENDERER.render(Minecraft.getInstance(), 2, 2, recipe.type);
+		ReagentIngredientRenderer.RENDERER.render(2, 2, new ReagIngr(recipe, 1));
 	}
 
 	@Override
@@ -78,26 +81,24 @@ public class ReagInfoCategory implements IRecipeCategory<ReagInfoRecipe>{
 	}
 
 	@Override
-	public void setIngredients(ReagInfoRecipe recipe, IIngredients ingredients){
-		ingredients.setInput(ReagIngr.REAG, recipe.type);
-		ingredients.setOutput(ReagIngr.REAG, recipe.type);
-		if(!recipe.solid.isEmpty()){
-			ingredients.setInputLists(VanillaTypes.ITEM, ImmutableList.of(recipe.solid));
-			ingredients.setOutputLists(VanillaTypes.ITEM, ImmutableList.of(recipe.solid));
-		}
+	public void setIngredients(IReagent recipe, IIngredients ingredients){
+		ReagIngr reagIngr = new ReagIngr(recipe, 1);
+		ingredients.setInput(ReagIngr.REAG, reagIngr);
+		ingredients.setOutput(ReagIngr.REAG, reagIngr);
+		List<List<ItemStack>> solid = ImmutableList.of(recipe.getJEISolids());
+		ingredients.setInputLists(VanillaTypes.ITEM, solid);
+		ingredients.setOutputLists(VanillaTypes.ITEM, solid);
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout layout, ReagInfoRecipe recipe, IIngredients ingredients){
+	public void setRecipe(IRecipeLayout layout, IReagent recipe, IIngredients ingredients){
 //		List<ReagIngr> reag = ingredients.getInputs(ReagIngr.REAG).get(0);
 		IGuiIngredientGroup<ReagIngr> reagGroup = layout.getIngredientsGroup(ReagIngr.REAG);
 
 		reagGroup.init(0, true, 2, 2);
-		reagGroup.set(0, recipe.type);
+		reagGroup.set(0, ingredients.getInputs(ReagIngr.REAG).get(0));
 
-		if(!recipe.solid.isEmpty()){
-			layout.getIngredientsGroup(VanillaTypes.ITEM).init(0, true, 20, 2);
-			layout.getIngredientsGroup(VanillaTypes.ITEM).set(0, recipe.solid);
-		}
+		layout.getIngredientsGroup(VanillaTypes.ITEM).init(0, true, 20, 2);
+		layout.getIngredientsGroup(VanillaTypes.ITEM).set(0, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
 	}
 }

@@ -3,13 +3,10 @@ package com.Da_Technomancer.crossroads.API;
 import com.Da_Technomancer.essentials.ESConfig;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TranslationTextComponent;
-
-import javax.annotation.Nonnull;
 
 public final class MiscUtil{
 
@@ -55,18 +52,6 @@ public final class MiscUtil{
 		return ent.world.rayTraceBlocks(new RayTraceContext(vec3d, vec3d2, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, ent));
 	}
 
-	public static ChunkPos getChunkPosFromLong(long combinedCoord){
-		return new ChunkPos((int) (combinedCoord >> 32), (int) combinedCoord);
-	}
-
-	/**
-	 * Returns a long that contains the chunk's coordinates (In chunk coordinates). Suitable for HashMap keys. 
-	 * It should be noted that this is NOT the same as {@link ChunkPos#asLong(int, int)} in terms of results. 
-	 */
-	public static long getLongFromChunkPos(@Nonnull ChunkPos pos){
-		return (((long) pos.x << 32) | (pos.z & 0xffffffffL));
-	}
-
 	/**
 	 * Localizes the input. Do not trust the result if called on the physical server
 	 * @param input The string to localize
@@ -74,5 +59,15 @@ public final class MiscUtil{
 	 */
 	public static String localize(String input){
 		return new TranslationTextComponent(input).getUnformattedComponentText();
+	}
+
+	/**
+	 * Localizes and formats the input. Do not trust the result if called on the physical server
+	 * @param input The string to localize
+	 * @param formatArgs Arguments to pass the formatter
+	 * @return The localized and formatted string
+	 */
+	public static String localize(String input, Object... formatArgs){
+		return String.format(localize(input), formatArgs);
 	}
 }

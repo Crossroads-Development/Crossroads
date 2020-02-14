@@ -81,6 +81,9 @@ public class ReagentIngredientHelper implements IIngredientHelper<ReagIngr>{
 
 	@Override
 	public String getErrorInfo(ReagIngr ingredient){
+		if(ingredient.getReag() == null){
+			return "ID: NULL; Name: NULL; Parts: " + ingredient.getParts();
+		}
 		return "ID: " + ingredient.getReag().getId() + "; NAME: " + ingredient.getReag().getName() + "; PARTS: " + ingredient.getParts();
 	}
 }

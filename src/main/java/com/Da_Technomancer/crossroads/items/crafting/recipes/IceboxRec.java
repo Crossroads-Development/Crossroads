@@ -1,12 +1,11 @@
 package com.Da_Technomancer.crossroads.items.crafting.recipes;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
+import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
 import com.google.gson.JsonObject;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
@@ -19,18 +18,20 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 
-public class IceboxRec implements IRecipe<IInventory>{
+public class IceboxRec implements IOptionalRecipe<IInventory>{
 
 	private final ResourceLocation id;
 	private final String group;
 	private final Ingredient ingr;
 	private final float cooling;
+	private final boolean active;
 
-	public IceboxRec(ResourceLocation location, String name, Ingredient input, double cooling){
+	public IceboxRec(ResourceLocation location, String name, Ingredient input, double cooling, boolean active){
 		id = location;
 		group = name;
 		ingr = input;
 		this.cooling = (float) cooling;
+		this.active = active;
 	}
 
 	public float getCooling(){
@@ -45,8 +46,13 @@ public class IceboxRec implements IRecipe<IInventory>{
 	}
 
 	@Override
+	public boolean isEnabled(){
+		return active;
+	}
+
+	@Override
 	public boolean matches(IInventory inv, World worldIn){
-		return ingr.test(inv.getStackInSlot(0));
+		return active && ingr.test(inv.getStackInSlot(0));
 	}
 
 	@Override
@@ -95,25 +101,33 @@ public class IceboxRec implements IRecipe<IInventory>{
 		public IceboxRec read(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and ingredient
 			String s = JSONUtils.getString(json, "group", "");
+			if(!CraftingUtil.isActiveJSON(json)){
+				return new IceboxRec(recipeId, s, Ingredient.EMPTY, 0, false);
+			}
+
 			Ingredient ingredient = CraftingUtil.getIngredient(json, "fuel", true);
 
 			//Output specified as 1 float tag
 			double cooling = JSONUtils.getFloat(json, "cooling");
-			return new IceboxRec(recipeId, s, ingredient, cooling);
+			return new IceboxRec(recipeId, s, ingredient, cooling, true);
 		}
 
 		@Nullable
 		@Override
 		public IceboxRec read(ResourceLocation recipeId, PacketBuffer buffer){
 			String s = buffer.readString(Short.MAX_VALUE);
+			if(!buffer.readBoolean()){
+				return new IceboxRec(recipeId, s, Ingredient.EMPTY, 0, false);
+			}
 			Ingredient ingredient = Ingredient.read(buffer);
 			float cooling = buffer.readFloat();
-			return new IceboxRec(recipeId, s, ingredient, cooling);
+			return new IceboxRec(recipeId, s, ingredient, cooling, true);
 		}
 
 		@Override
 		public void write(PacketBuffer buffer, IceboxRec recipe){
 			buffer.writeString(recipe.getGroup());
+			buffer.writeBoolean(recipe.active);
 			recipe.ingr.write(buffer);
 			buffer.writeFloat(recipe.cooling);
 		}

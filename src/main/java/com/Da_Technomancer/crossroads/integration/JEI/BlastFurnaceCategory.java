@@ -1,9 +1,10 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.google.common.collect.ImmutableList;
+import com.Da_Technomancer.crossroads.items.crafting.recipes.BlastFurnaceRec;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -18,7 +19,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class BlastFurnaceCategory implements IRecipeCategory<BlastFurnaceRecipe>{
+public class BlastFurnaceCategory implements IRecipeCategory<BlastFurnaceRec>{
 
 	public static final ResourceLocation ID = new ResourceLocation(Crossroads.MODID, "blast_furnace");
 	private final IDrawable back;
@@ -43,8 +44,8 @@ public class BlastFurnaceCategory implements IRecipeCategory<BlastFurnaceRecipe>
 	}
 
 	@Override
-	public Class<? extends BlastFurnaceRecipe> getRecipeClass(){
-		return BlastFurnaceRecipe.class;
+	public Class<? extends BlastFurnaceRec> getRecipeClass(){
+		return BlastFurnaceRec.class;
 	}
 
 	@Override
@@ -58,7 +59,7 @@ public class BlastFurnaceCategory implements IRecipeCategory<BlastFurnaceRecipe>
 	}
 
 	@Override
-	public void draw(BlastFurnaceRecipe recipe, double mouseX, double mouseY){
+	public void draw(BlastFurnaceRec recipe, double mouseX, double mouseY){
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
 		slot.draw(54, 55);//Input
@@ -67,12 +68,11 @@ public class BlastFurnaceCategory implements IRecipeCategory<BlastFurnaceRecipe>
 		arrow.draw(78, 55);
 //		GlStateManager.disableBlend();
 //		GlStateManager.disableAlpha();
-		//TODO localize
-		Minecraft.getInstance().fontRenderer.drawString("Consumed Carbon: " + recipe.slag, 10, 10, 0x404040);
+		Minecraft.getInstance().fontRenderer.drawString(MiscUtil.localize("crossroads.jei.blast_furnace.carbon", recipe.getSlag()), 10, 10, 0x404040);
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout layout, BlastFurnaceRecipe recipe, IIngredients ingredients){
+	public void setRecipe(IRecipeLayout layout, BlastFurnaceRec recipe, IIngredients ingredients){
 		IGuiItemStackGroup itemGroup = layout.getItemStacks();
 		IGuiFluidStackGroup fluidGroup = layout.getFluidStacks();
 
@@ -93,9 +93,9 @@ public class BlastFurnaceCategory implements IRecipeCategory<BlastFurnaceRecipe>
 	}
 
 	@Override
-	public void setIngredients(BlastFurnaceRecipe recipe, IIngredients ingredients){
-		ingredients.setInputLists(VanillaTypes.ITEM, ImmutableList.of(recipe.input));
-		ingredients.setOutput(VanillaTypes.FLUID, recipe.output);
-		ingredients.setOutput(VanillaTypes.ITEM, new ItemStack(CRItems.slag, recipe.slag));
+	public void setIngredients(BlastFurnaceRec recipe, IIngredients ingredients){
+		ingredients.setInputIngredients(recipe.getIngredients());
+		ingredients.setOutput(VanillaTypes.FLUID, recipe.getOutput());
+		ingredients.setOutput(VanillaTypes.ITEM, new ItemStack(CRItems.slag, recipe.getSlag()));
 	}
 }

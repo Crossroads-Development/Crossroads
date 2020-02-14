@@ -70,7 +70,7 @@ public class CopshowiumCreationChamber extends ContainerBlock implements IReadab
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.ccc.desc"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.ccc.mult", CRConfig.copsPerLiq.get()));
+//		tooltip.add(new TranslationTextComponent("tt.crossroads.ccc.mult", CRConfig.copsPerLiq.get()));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.ccc.flux", CopshowiumCreationChamberTileEntity.FLUX_PER_INGOT));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.ccc.io"));
 		if(CRConfig.allowOverflow.get()){

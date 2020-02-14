@@ -86,14 +86,14 @@ public class StaticReagent implements IReagent{
 	@Override
 	public List<ItemStack> getJEISolids(){
 		if(itemTag != null){
-			return itemTag.getAllElements().stream().map(item -> new ItemStack(item, 1)).collect(Collectors.toList());
+			return itemTag.getAllElements().parallelStream().unordered().map(ItemStack::new).distinct().collect(Collectors.toList());
 		}
 		return ImmutableList.of();
 	}
 
 	@Override
-	public boolean canGlassContain(){
-		return (containType & 3) == 0;
+	public boolean requiresCrystal(){
+		return (containType & 3) != 0;
 	}
 
 	@Override

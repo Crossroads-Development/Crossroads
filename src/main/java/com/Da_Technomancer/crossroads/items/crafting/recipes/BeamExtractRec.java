@@ -2,12 +2,11 @@ package com.Da_Technomancer.crossroads.items.crafting.recipes;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
+import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
 import com.google.gson.JsonObject;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
@@ -20,18 +19,20 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 
-public class BeamExtractRec implements IRecipe<IInventory>{
+public class BeamExtractRec implements IOptionalRecipe<IInventory>{
 
 	private final ResourceLocation id;
 	private final String group;
 	private final Ingredient ingr;
 	private final BeamUnit output;
+	private final boolean active;
 
-	public BeamExtractRec(ResourceLocation location, String name, Ingredient input, BeamUnit output){
+	public BeamExtractRec(ResourceLocation location, String name, Ingredient input, BeamUnit output, boolean active){
 		id = location;
 		group = name;
 		ingr = input;
 		this.output = output;
+		this.active = active;
 	}
 
 	public BeamUnit getOutput(){
@@ -40,12 +41,17 @@ public class BeamExtractRec implements IRecipe<IInventory>{
 
 	@Override
 	public boolean matches(IInventory inv, World worldIn){
-		return ingr.test(inv.getStackInSlot(0));
+		return active && ingr.test(inv.getStackInSlot(0));
 	}
 
 	@Override
 	public ItemStack getCraftingResult(IInventory inv){
 		return getRecipeOutput();
+	}
+
+	@Override
+	public boolean isEnabled(){
+		return active;
 	}
 
 	@Override
@@ -56,6 +62,10 @@ public class BeamExtractRec implements IRecipe<IInventory>{
 	@Override
 	public ItemStack getRecipeOutput(){
 		return ItemStack.EMPTY;
+	}
+
+	public boolean isActive(){
+		return active;
 	}
 
 	@Override
@@ -96,40 +106,52 @@ public class BeamExtractRec implements IRecipe<IInventory>{
 		public BeamExtractRec read(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and ingredient
 			String s = JSONUtils.getString(json, "group", "");
-			Ingredient ingredient = CraftingUtil.getIngredient(json, "input", true);
+			Ingredient ingredient = Ingredient.EMPTY;
+			boolean active = CraftingUtil.isActiveJSON(json);
+			if(active){
+				ingredient = CraftingUtil.getIngredient(json, "input", true);
 
-			//Output specified as 4 integer tags, all of which are optional and default to zero
-			int[] units = new int[4];
-			if(JSONUtils.hasField(json, "energy")){
-				units[0] = JSONUtils.getInt(json, "energy");
+				//Output specified as 4 integer tags, all of which are optional and default to zero
+				int[] units = new int[4];
+				if(JSONUtils.hasField(json, "energy")){
+					units[0] = JSONUtils.getInt(json, "energy");
+				}
+				if(JSONUtils.hasField(json, "potential")){
+					units[1] = JSONUtils.getInt(json, "potential");
+				}
+				if(JSONUtils.hasField(json, "stability")){
+					units[2] = JSONUtils.getInt(json, "stability");
+				}
+				if(JSONUtils.hasField(json, "void")){
+					units[3] = JSONUtils.getInt(json, "void");
+				}
+				return new BeamExtractRec(recipeId, s, ingredient, new BeamUnit(units), true);
 			}
-			if(JSONUtils.hasField(json, "potential")){
-				units[1] = JSONUtils.getInt(json, "potential");
-			}
-			if(JSONUtils.hasField(json, "stability")){
-				units[2] = JSONUtils.getInt(json, "stability");
-			}
-			if(JSONUtils.hasField(json, "void")){
-				units[3] = JSONUtils.getInt(json, "void");
-			}
-			return new BeamExtractRec(recipeId, s, ingredient, new BeamUnit(units));
+			return new BeamExtractRec(recipeId, s, ingredient, BeamUnit.EMPTY, false);
 		}
 
 		@Nullable
 		@Override
 		public BeamExtractRec read(ResourceLocation recipeId, PacketBuffer buffer){
 			String s = buffer.readString(Short.MAX_VALUE);
-			Ingredient ingredient = Ingredient.read(buffer);
-			int[] units = new int[4];
-			for(int i = 0; i < 4; i++){
-				units[i] = buffer.readInt();
+			boolean active = buffer.readBoolean();
+
+			if(active){
+				Ingredient ingredient = Ingredient.read(buffer);
+				int[] units = new int[4];
+				for(int i = 0; i < 4; i++){
+					units[i] = buffer.readInt();
+				}
+				return new BeamExtractRec(recipeId, s, ingredient, new BeamUnit(units), true);
+			}else{
+				return new BeamExtractRec(recipeId, s, Ingredient.EMPTY, BeamUnit.EMPTY, false);
 			}
-			return new BeamExtractRec(recipeId, s, ingredient, new BeamUnit(units));
 		}
 
 		@Override
 		public void write(PacketBuffer buffer, BeamExtractRec recipe){
 			buffer.writeString(recipe.getGroup());
+			buffer.writeBoolean(recipe.active);
 			recipe.ingr.write(buffer);
 			buffer.writeInt(recipe.output.getEnergy());
 			buffer.writeInt(recipe.output.getPotential());

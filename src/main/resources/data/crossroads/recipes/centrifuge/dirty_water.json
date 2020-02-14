@@ -1,0 +1,43 @@
+{
+	"type": "crossroads:centrifuge",
+	"input": {
+		"fluid": "crossroads:dirty_water",
+		"amount": 250
+	},
+	"output_fluid": {
+		"fluid": "crossroads:distilled_water",
+		"amount": 250
+	},
+	"output": [
+		{
+			"item": "crossroads:dust_salt",
+			"count": 1,
+			"weight": 25
+		},
+		{
+			"item": "bone_meal",
+			"count": 1,
+			"weight": 5
+		},
+		{
+			"item": "dirt",
+			"count": 1,
+			"weight": 5
+		},
+		{
+			"item": "gunpowder",
+			"count": 1,
+			"weight": 5
+		},
+		{
+			"item": "redstone",
+			"count": 1,
+			"weight": 1
+		},
+		{
+			"item": "sand",
+			"count": 1,
+			"weight": 10
+		}
+	]
+}

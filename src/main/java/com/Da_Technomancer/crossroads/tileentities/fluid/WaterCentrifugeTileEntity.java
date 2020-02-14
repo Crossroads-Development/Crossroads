@@ -4,15 +4,13 @@ import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.WaterCentrifugeContainer;
-import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
-import com.Da_Technomancer.crossroads.items.crafting.recipes.DirtyWaterRec;
+import com.Da_Technomancer.crossroads.items.crafting.recipes.CentrifugeRec;
+import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -30,7 +28,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
-import java.util.List;
+import java.util.Optional;
 
 @ObjectHolder(Crossroads.MODID)
 public class WaterCentrifugeTileEntity extends InventoryTE{
@@ -40,13 +38,13 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 	
 	public static final double TIP_POINT = .5D;
 	public static final int INERTIA = 115;
-	private static final int BATCH_SIZE = 250;
+//	private static final int BATCH_SIZE = 250;
 	private boolean neg;
 
 	public WaterCentrifugeTileEntity(){
 		super(type, 1);
-		fluidProps[0] = new TankProperty(10_000, true, false, (Fluid f) -> f == Fluids.WATER || f == CRFluids.dirtyWater.still);
-		fluidProps[1] = new TankProperty(10_000, false, true, (Fluid f) -> true);
+		fluidProps[0] = new TankProperty(10_000, true, false, (Fluid f) -> true);
+		fluidProps[1] = new TankProperty(10_000, false, true, (Fluid f) -> false);
 	}
 
 	public boolean isNeg(){
@@ -56,6 +54,10 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 	@Override
 	public int fluidTanks(){
 		return 2;
+	}
+
+	public FluidStack getInputFluid(){
+		return fluids[0];//Used for recipe selection
 	}
 
 	@Override
@@ -72,31 +74,27 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 
 		if(Math.abs(motData[0]) >= TIP_POINT && (Math.signum(motData[0]) == -1) == neg){
 			neg = !neg;
-			if(fluids[0].getAmount() >= BATCH_SIZE){
-				boolean dirty = fluids[0].getFluid() != Fluids.WATER;
-				ItemStack product = ItemStack.EMPTY;
+			//Handle direction switching regardless of whether crafting occurred
 
-				if(dirty){//Dirty water crafting
-					List<DirtyWaterRec> recipes = world.getRecipeManager().getRecipes(CRRecipes.DIRTY_WATER_TYPE, this, world);
-					//Ideally this value would be precalculated and cached- however, due to the possibility of data pack reloading, this becomes more trouble than it's worth
-					//If forge ever implements Forge issue #6260, this would be worth caching
-					int totalWeight = recipes.parallelStream().mapToInt(DirtyWaterRec::getWeight).sum();
-					int choice = world.rand.nextInt(totalWeight) + 1;
+			Optional<CentrifugeRec> recOpt = world.getRecipeManager().getRecipe(CRRecipes.CENTRIFUGE_TYPE, this, world);
+			if(recOpt.isPresent()){
+				CentrifugeRec rec = recOpt.get();
+				//The recipe matches() method checks inputs- those being valid is a given
 
-					for(DirtyWaterRec entry : world.getRecipeManager().getRecipes(CRRecipes.DIRTY_WATER_TYPE, this, world)){
-						choice -= entry.getWeight();
-						if(choice <= 0){
-							product = entry.getCraftingResult(this);
-							break;
-						}
-					}
-				}else{//Normal de-salination
-					product = new ItemStack(CRItemTags.getTagEntry(CRItemTags.SALT));
+				FluidStack fluidOut = rec.getFluidOutput();
+				ItemStack itemOut = rec.getRecipeOutput();
+
+				fluids[0].shrink(rec.getInput().getAmount());
+				if(fluids[1].isEmpty()){
+					fluids[1] = fluidOut.copy();
+				}else if(BlockUtil.sameFluid(fluids[1], fluidOut)){
+					fluids[1].setAmount(Math.min(fluids[1].getAmount() + fluidOut.getAmount(), fluidProps[1].capacity));
 				}
-				fluids[0].shrink(BATCH_SIZE);
-				fluids[1] = new FluidStack(CRFluids.distilledWater.still, Math.min(fluidProps[1].capacity, BATCH_SIZE + fluids[1].getAmount()));
-				if(inventory[0].isEmpty() || inventory[0].isItemEqual(product)){
-					inventory[0] = new ItemStack(product.getItem(), Math.min(product.getMaxStackSize(), 1 + inventory[0].getCount()));
+
+				if(inventory[0].isEmpty()){
+					inventory[0] = itemOut.copy();
+				}else if(BlockUtil.sameItem(inventory[0], itemOut)){
+					inventory[0].setCount(Math.min(inventory[0].getCount() + itemOut.getCount(), itemOut.getMaxStackSize()));
 				}
 				markDirty();
 			}

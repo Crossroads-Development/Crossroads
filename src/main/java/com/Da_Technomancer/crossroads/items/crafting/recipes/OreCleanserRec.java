@@ -8,8 +8,8 @@ import net.minecraft.util.ResourceLocation;
 
 public class OreCleanserRec extends SingleIngrRecipe{
 
-	public OreCleanserRec(ResourceLocation location, String name, Ingredient input, ItemStack output){
-		super(CRRecipes.ORE_CLEANSER_TYPE, CRRecipes.ORE_CLEANSER_SERIAL, location, name, input, output);
+	public OreCleanserRec(ResourceLocation location, String name, Ingredient input, ItemStack output, boolean active){
+		super(CRRecipes.ORE_CLEANSER_TYPE, CRRecipes.ORE_CLEANSER_SERIAL, location, name, input, output, active);
 	}
 
 	@Override

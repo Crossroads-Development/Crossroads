@@ -1,7 +1,9 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.items.crafting.recipes.BeamExtractRec;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -13,8 +15,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.ArrayList;
 
-public class BeamExtractorCategory implements IRecipeCategory<BeamExtractorRecipe>{
+
+public class BeamExtractorCategory implements IRecipeCategory<BeamExtractRec>{
 
 	public static final ResourceLocation ID = new ResourceLocation(Crossroads.MODID, "beam_extractor");
 	private final IDrawable back;
@@ -35,8 +39,8 @@ public class BeamExtractorCategory implements IRecipeCategory<BeamExtractorRecip
 	}
 
 	@Override
-	public Class<? extends BeamExtractorRecipe> getRecipeClass(){
-		return BeamExtractorRecipe.class;
+	public Class<? extends BeamExtractRec> getRecipeClass(){
+		return BeamExtractRec.class;
 	}
 
 	@Override
@@ -55,12 +59,12 @@ public class BeamExtractorCategory implements IRecipeCategory<BeamExtractorRecip
 	}
 
 	@Override
-	public void setIngredients(BeamExtractorRecipe recipe, IIngredients ingredients){
-		ingredients.setInput(VanillaTypes.ITEM, recipe.in);
+	public void setIngredients(BeamExtractRec recipe, IIngredients ingredients){
+		ingredients.setInputIngredients(recipe.getIngredients());
 	}
 
 	@Override
-	public void draw(BeamExtractorRecipe rec, double mouseX, double mouseY){
+	public void draw(BeamExtractRec rec, double mouseX, double mouseY){
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
 		slot.draw(20, 50);
@@ -69,14 +73,27 @@ public class BeamExtractorCategory implements IRecipeCategory<BeamExtractorRecip
 //		GlStateManager.disableAlpha();
 
 		Minecraft minecraft = Minecraft.getInstance();
-		minecraft.fontRenderer.drawString("Energy: " + rec.out.getEnergy(), 80, 25, 0x404040);
-		minecraft.fontRenderer.drawString("Potential: " + rec.out.getPotential(), 80, 45, 0x404040);
-		minecraft.fontRenderer.drawString("Stability: " + rec.out.getStability(), 80, 65, 0x404040);
-		minecraft.fontRenderer.drawString("Void: " + rec.out.getVoid(), 80, 85, 0x404040);
+		ArrayList<String> tt = new ArrayList<>(4);
+		if(rec.getOutput().getEnergy() != 0){
+			tt.add(MiscUtil.localize("crossroads.jei.extract.energy", rec.getOutput().getEnergy()));
+		}
+		if(rec.getOutput().getPotential() != 0){
+			tt.add(MiscUtil.localize("crossroads.jei.extract.potential", rec.getOutput().getPotential()));
+		}
+		if(rec.getOutput().getStability() != 0){
+			tt.add(MiscUtil.localize("crossroads.jei.extract.stability", rec.getOutput().getStability()));
+		}
+		if(rec.getOutput().getVoid() != 0){
+			tt.add(MiscUtil.localize("crossroads.jei.extract.void", rec.getOutput().getVoid()));
+		}
+
+		for(int i = 0; i < tt.size(); i++){
+			minecraft.fontRenderer.drawString(tt.get(i), 80, 25 + 20 * i, 0x404040);
+		}
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout layout, BeamExtractorRecipe recipe, IIngredients ingredients){
+	public void setRecipe(IRecipeLayout layout, BeamExtractRec recipe, IIngredients ingredients){
 		IGuiItemStackGroup itemGroup = layout.getItemStacks();
 		itemGroup.init(0, true, 20, 50);
 		itemGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));

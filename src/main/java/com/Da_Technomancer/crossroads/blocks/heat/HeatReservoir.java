@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatReservoirTileEntity;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
@@ -57,7 +58,7 @@ public class HeatReservoir extends ContainerBlock implements IReadable{
 		tooltip.add(new TranslationTextComponent("tt.crossroads.heat_battery.reds"));
 		CompoundNBT nbt = stack.getTag();
 		if(nbt != null && nbt.contains("temp")){
-			tooltip.add(new TranslationTextComponent("tt.crossroads.heat_battery.temp", MiscUtil.preciseRound(nbt.getDouble("temp"), 3)));
+			tooltip.add(new TranslationTextComponent("tt.crossroads.heat_battery.temp", CRConfig.formatVal(nbt.getDouble("temp"))));
 		}
 	}
 
