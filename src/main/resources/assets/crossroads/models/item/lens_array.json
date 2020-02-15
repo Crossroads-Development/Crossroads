@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:items/lens_array"
+		"layer0": "crossroads:item/lens_array"
 	}
 }

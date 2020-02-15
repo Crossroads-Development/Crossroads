@@ -1,8 +1,8 @@
 {
 	"textures":
 	{
-		"side": "crossroads:blocks/reagent_tank_cryst",
-		"particle": "crossroads:blocks/reagent_tank_cryst"
+		"side": "crossroads:block/reagent_tank_cryst",
+		"particle": "crossroads:block/reagent_tank_cryst"
 	},
 	"elements": [{
 		"from": [ 0, 0, 0 ],

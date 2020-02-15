@@ -32,7 +32,7 @@ import java.util.Optional;
 public class StaffTechnomancy extends BeamUsingItem{
 
 	public StaffTechnomancy(){
-		super(CRItems.itemProp.maxStackSize(1));
+		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
 		String name = "staff_technomancy";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);

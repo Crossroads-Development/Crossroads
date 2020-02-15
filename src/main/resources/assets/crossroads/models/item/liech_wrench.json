@@ -1,6 +1,6 @@
 {
 	"parent": "item/handheld",
 	"textures": {
-		"layer0": "crossroads:items/liech_wrench"
+		"layer0": "crossroads:item/liech_wrench"
 	}
 }

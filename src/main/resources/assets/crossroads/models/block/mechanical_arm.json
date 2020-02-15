@@ -1,12 +1,12 @@
 {
 	"parent": "block/cube_all",
 	"textures": {
-		"north": "crossroads:blocks/iron_redstone",
-		"south": "crossroads:blocks/iron_redstone_yellow",
-		"east": "crossroads:blocks/iron_axle",
-		"west": "crossroads:blocks/iron_axle",
-		"up": "crossroads:blocks/mechanical_arm_top",
-		"down": "crossroads:blocks/iron_axle",
-		"particle": "crossroads:blocks/mechanical_arm_top"
+		"north": "crossroads:block/iron_redstone",
+		"south": "crossroads:block/iron_redstone_yellow",
+		"east": "crossroads:block/iron_axle",
+		"west": "crossroads:block/iron_axle",
+		"up": "crossroads:block/mechanical_arm_top",
+		"down": "crossroads:block/iron_axle",
+		"particle": "crossroads:block/mechanical_arm_top"
 	}
 }

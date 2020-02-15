@@ -1,10 +1,7 @@
 package com.Da_Technomancer.crossroads.items;
 
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
+import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
@@ -14,7 +11,7 @@ public class ChickenBoots extends ArmorItem{
 	protected static final IArmorMaterial BOBO_MATERIAL = new BoboMat();
 
 	protected ChickenBoots(){
-		super(BOBO_MATERIAL, EquipmentSlotType.FEET, CRItems.itemProp.maxStackSize(1));
+		super(BOBO_MATERIAL, EquipmentSlotType.FEET, new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
 		String name = "chicken_boots";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);

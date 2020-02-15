@@ -21,7 +21,7 @@ public class CheatWandRotary extends Item{
 	private static final int RATE = 10_000;
 
 	protected CheatWandRotary(){
-		super(CRItems.itemProp.maxStackSize(1));
+		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
 		String name = "cheat_wand_rotary";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);

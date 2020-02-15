@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:items/solid_regia"
+		"layer0": "crossroads:item/solid_regia"
 	}
 }

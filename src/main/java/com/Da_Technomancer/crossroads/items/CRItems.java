@@ -40,8 +40,6 @@ public final class CRItems{
 		}
 	};
 
-	public static final Item.Properties itemProp = new Item.Properties().group(TAB_CROSSROADS);
-
 	public static final Rarity BOBO_RARITY = Rarity.EPIC;
 	
 	public static CheatWandRotary debugGearWriter;
@@ -128,16 +126,16 @@ public final class CRItems{
 		debugGearWriter = new CheatWandRotary();
 		handCrank = new HandCrank();
 		debugHeatWriter = new CheatWandHeat();
-		toRegister.add(dustSalt = new Item(itemProp).setRegistryName("dust_salt"));
+		toRegister.add(dustSalt = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_salt"));
 //		mashedPotato = new MashedPotato();
 		omnimeter = new OmniMeter();
 		vacuum = new Vacuum();
 		magentaBread = new MagentaBread();
 		edibleBlob = new EdibleBlob();
 		rainIdol = new RainIdol();
-		toRegister.add(pureQuartz = new Item(itemProp).setRegistryName("pure_quartz"));
-		toRegister.add(brightQuartz = new Item(itemProp).setRegistryName("bright_quartz"));
-		toRegister.add(lensArray = new Item(itemProp).setRegistryName("lens_array"));
+		toRegister.add(pureQuartz = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("pure_quartz"));
+		toRegister.add(brightQuartz = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("bright_quartz"));
+		toRegister.add(lensArray = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("lens_array"));
 		squidHelmet = new SquidHelmet();
 		pigZombieChestplate = new PigZombieChestsplate();
 		cowLeggings = new CowLeggings();
@@ -148,13 +146,13 @@ public final class CRItems{
 		beamCage = new BeamCage();
 //		pistol = new PrototypePistol();
 //		watch = new PrototypeWatch();
-		toRegister.add(adamant = new Item(itemProp).setRegistryName("adamant"));
-		toRegister.add(sulfur = new Item(itemProp).setRegistryName("sulfur"));
-		toRegister.add(vanadiumOxide = new Item(itemProp).setRegistryName("vanadium_oxide"));
+		toRegister.add(adamant = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("adamant"));
+		toRegister.add(sulfur = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("sulfur"));
+		toRegister.add(vanadiumOxide = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("vanadium_oxide"));
 		philosopherStone = new PhilStone(false);
 		practitionerStone = new PhilStone(true);
-		toRegister.add(alchCrystal = new Item(itemProp).setRegistryName("alch_crystal"));
-		toRegister.add(alchemySalt = new Item(itemProp).setRegistryName("waste_salt"));
+		toRegister.add(alchCrystal = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("alch_crystal"));
+		toRegister.add(alchemySalt = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("waste_salt"));
 		phialGlass = new Phial(false);
 		florenceFlaskGlass = new FlorenceFlask(false);
 		shellGlass = new Shell(false);
@@ -165,21 +163,21 @@ public final class CRItems{
 		leydenJar = new LeydenJar();
 		nitroglycerin = new Nitroglycerin();
 		poisonVodka = new PoisonVodka();
-		toRegister.add(solidQuicksilver = new Item(itemProp).setRegistryName("solid_quicksilver"));
-		toRegister.add(solidFusas = new Item(itemProp).setRegistryName("solid_fusas"));
-		toRegister.add(solidEldrine = new Item(itemProp).setRegistryName("solid_eldrine"));
-		toRegister.add(solidStasisol = new Item(itemProp).setRegistryName("solid_stasisol"));
-		toRegister.add(solidVoltus = new Item(itemProp).setRegistryName("solid_voltus"));
-		toRegister.add(solidDensus = new Item(itemProp).setRegistryName("solid_densus"));
-		toRegister.add(solidAntiDensus = new Item(itemProp).setRegistryName("solid_anti_densus"));
-		toRegister.add(solidFortis = new Item(itemProp).setRegistryName("solid_fortis"));
-		toRegister.add(solidVitriol = new Item(itemProp).setRegistryName("solid_vitriol"));
-		toRegister.add(solidMuriatic = new Item(itemProp).setRegistryName("solid_muriatic"));
-		toRegister.add(solidRegia = new Item(itemProp).setRegistryName("solid_regia"));
-		toRegister.add(solidCavorite = new Item(itemProp).setRegistryName("solid_cavorite"));
-		toRegister.add(solidSO2 = new Item(itemProp).setRegistryName("solid_sulfur_dioxide"));
-		toRegister.add(solidChlorine = new Item(itemProp).setRegistryName("solid_chlorine"));
-		toRegister.add(bedrockDust = new Item(itemProp).setRegistryName("dust_bedrock"));
+		toRegister.add(solidQuicksilver = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_quicksilver"));
+		toRegister.add(solidFusas = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_fusas"));
+		toRegister.add(solidEldrine = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_eldrine"));
+		toRegister.add(solidStasisol = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_stasisol"));
+		toRegister.add(solidVoltus = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_voltus"));
+		toRegister.add(solidDensus = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_densus"));
+		toRegister.add(solidAntiDensus = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_anti_densus"));
+		toRegister.add(solidFortis = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_fortis"));
+		toRegister.add(solidVitriol = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_vitriol"));
+		toRegister.add(solidMuriatic = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_muriatic"));
+		toRegister.add(solidRegia = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_regia"));
+		toRegister.add(solidCavorite = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_cavorite"));
+		toRegister.add(solidSO2 = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_sulfur_dioxide"));
+		toRegister.add(solidChlorine = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_chlorine"));
+		toRegister.add(bedrockDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_bedrock"));
 		flyingMachine = new FlyingMachine();
 		teslaRay = new TeslaRay();
 		slag = new Slag();
@@ -187,13 +185,13 @@ public final class CRItems{
 		dampingPowder = new DampingPowder();
 		boboRod = new BoboRod();
 
-		oreGravel = (OreProfileItem) new OreProfileItem(itemProp).setRegistryName("ore_gravel");
-		oreClump = (OreProfileItem) new OreProfileItem(itemProp).setRegistryName("ore_clump");
+		oreGravel = (OreProfileItem) new OreProfileItem(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("ore_gravel");
+		oreClump = (OreProfileItem) new OreProfileItem(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("ore_clump");
 
-		ironDust = new Item(itemProp).setRegistryName("dust_iron");
-		goldDust = new Item(itemProp).setRegistryName("dust_gold");
-		copperDust = new Item(itemProp).setRegistryName("dust_copper");
-		tinDust = new Item(itemProp).setRegistryName("dust_tin");
+		ironDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_iron");
+		goldDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_gold");
+		copperDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_copper");
+		tinDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_tin");
 
 		axle = new Axle();
 		clutch = new Clutch(false);

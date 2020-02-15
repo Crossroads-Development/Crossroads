@@ -1,9 +1,9 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"base": "blocks/stonebrick",
-		"frame": "blocks/planks_spruce",
-		"particle": "crossroads:blocks/block_cast_iron"
+		"base": "block/stonebrick",
+		"frame": "block/planks_spruce",
+		"particle": "crossroads:block/block_cast_iron"
 	},
     "elements": [
         {

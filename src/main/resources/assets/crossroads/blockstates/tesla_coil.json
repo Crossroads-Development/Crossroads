@@ -1,10 +1,10 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "crossroads:tesla_coil_base",
+		"model": "crossroads:block/tesla_coil_base",
 		"textures": {
-			"in": "crossroads:blocks/tesla_in",
-			"out": "crossroads:blocks/tesla_out"
+			"in": "crossroads:block/tesla_in",
+			"out": "crossroads:block/tesla_out"
 		},
 		"uvlock": true
 	},
@@ -25,7 +25,7 @@
 		},
 		"active": {
 			"true": {
-				"submodel": "crossroads:tesla_coil_leyden"
+				"submodel": "crossroads:block/tesla_coil_leyden"
 			},
 			"false": {
 

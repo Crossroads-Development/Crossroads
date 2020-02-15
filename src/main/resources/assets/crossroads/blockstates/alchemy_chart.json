@@ -1,8 +1,8 @@
 {
 	"variants": {
-		"horiz_facing=north": { "model": "crossroads:alchemy_chart"},
-		"horiz_facing=south": { "model": "crossroads:alchemy_chart", "y": 180 },
-		"horiz_facing=east": { "model": "crossroads:alchemy_chart", "y": 90 },
-		"horiz_facing=west": { "model": "crossroads:alchemy_chart", "y": 270 }
+		"horiz_facing=north": { "model": "crossroads:block/alchemy_chart"},
+		"horiz_facing=south": { "model": "crossroads:block/alchemy_chart", "y": 180 },
+		"horiz_facing=east": { "model": "crossroads:block/alchemy_chart", "y": 90 },
+		"horiz_facing=west": { "model": "crossroads:block/alchemy_chart", "y": 270 }
 	}
 }

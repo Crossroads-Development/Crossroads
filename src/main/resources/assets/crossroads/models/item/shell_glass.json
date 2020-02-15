@@ -1,7 +1,7 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:items/shell_inner",
-		"layer1": "crossroads:items/shell_glass"
+		"layer0": "crossroads:item/shell_inner",
+		"layer1": "crossroads:item/shell_glass"
 	}
 }

@@ -1,8 +1,8 @@
 {	
 	"ambientocclusion": false,
     "textures": {
-		"particle": "blocks/hardened_clay",
-		"side": "blocks/hardened_clay"
+		"particle": "block/hardened_clay",
+		"side": "block/hardened_clay"
 	},
     "elements": [
         {	"from": [ 0, 0, 0 ],

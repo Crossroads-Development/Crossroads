@@ -1,9 +1,9 @@
 {	
 	"ambientocclusion": false,
     "textures": {
-		"particle": "crossroads:blocks/block_alch_crystal",
-		"side": "crossroads:blocks/block_alch_crystal",
-		"ends": "crossroads:blocks/block_bronze"
+		"particle": "crossroads:block/block_alch_crystal",
+		"side": "crossroads:block/block_alch_crystal",
+		"ends": "crossroads:block/block_bronze"
 	},
     "elements": [
         {	

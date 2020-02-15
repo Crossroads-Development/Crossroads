@@ -1,8 +1,8 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"wall": "crossroads:blocks/alch_tube/cryst_tube_cap",
-		"particle": "#wall"
+		"wall": "crossroads:block/alch_tube/cryst_tube_cap",
+		"particle": "crossroads:block/alch_tube/cryst_tube_cap"
 	},
 	"elements": [
 		{

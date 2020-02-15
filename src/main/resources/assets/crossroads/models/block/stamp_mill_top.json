@@ -1,10 +1,10 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"frame": "blocks/planks_spruce",
-		"top": "blocks/planks_spruce",
-		"rod": "crossroads:blocks/block_cast_iron",
-		"particle": "crossroads:blocks/block_cast_iron"
+		"frame": "block/planks_spruce",
+		"top": "block/planks_spruce",
+		"rod": "crossroads:block/block_cast_iron",
+		"particle": "crossroads:block/block_cast_iron"
 	},
     "elements": [
         {

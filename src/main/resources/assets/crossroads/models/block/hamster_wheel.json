@@ -2,8 +2,8 @@
 	"ambientocclusion": false,
 	"textures": {
 		"fur": "crossroads:model/hamster",
-		"color": "crossroads:blocks/color_sheet",
-		"particle": "blocks/iron_block"
+		"color": "crossroads:block/color_sheet",
+		"particle": "block/iron_block"
 	},
 	"elements": [
 		{

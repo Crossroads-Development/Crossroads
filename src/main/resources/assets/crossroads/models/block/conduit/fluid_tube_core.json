@@ -1,8 +1,8 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"wall": "crossroads:blocks/fluid_tube",
-		"particle": "#wall"
+		"wall": "crossroads:block/fluid_tube",
+		"particle": "crossroads:block/fluid_tube"
 	},
 	"elements": [
 		{

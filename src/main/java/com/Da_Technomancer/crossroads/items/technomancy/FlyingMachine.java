@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 public class FlyingMachine extends Item{
 
 	public FlyingMachine(){
-		super(CRItems.itemProp.maxStackSize(1));
+		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
 		String name = "flying_machine";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);

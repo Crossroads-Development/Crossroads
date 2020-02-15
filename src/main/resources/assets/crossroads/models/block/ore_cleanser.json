@@ -1,8 +1,8 @@
 {
 	"parent": "block/cube_bottom_top",
 	"textures": {
-		"side": "crossroads:blocks/ore_cleanser_side",
-		"top": "crossroads:blocks/tin_fluid",
-		"bottom": "crossroads:blocks/cooling_chamber_bottom"
+		"side": "crossroads:block/ore_cleanser_side",
+		"top": "crossroads:block/tin_fluid",
+		"bottom": "crossroads:block/cooling_chamber_bottom"
 	}
 }

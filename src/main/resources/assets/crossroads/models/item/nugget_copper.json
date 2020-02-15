@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:items/nugget_copper"
+		"layer0": "crossroads:item/nugget_copper"
 	}
 }

@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:permeable_quartz" }
+		"": { "model": "crossroads:block/permeable_quartz" }
 	}
 }

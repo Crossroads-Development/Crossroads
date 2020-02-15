@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:block_copshowium" }
+		"": { "model": "crossroads:block/block_copshowium" }
 	}
 }

@@ -1,7 +1,7 @@
 {
     "textures": {
-		"quartz": "crossroads:blocks/block_pure_quartz",
-		"particle": "crossroads:blocks/block_pure_quartz"
+		"quartz": "crossroads:block/block_pure_quartz",
+		"particle": "crossroads:block/block_pure_quartz"
     },
     "elements": [
         {

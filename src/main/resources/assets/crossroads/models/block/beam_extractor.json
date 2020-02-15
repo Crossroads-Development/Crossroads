@@ -1,12 +1,12 @@
 {
 	"parent": "block/cube_all",
 	"textures": {
-		"north": "crossroads:blocks/beam_extractor_out",
-		"south": "crossroads:blocks/beam_extractor_side",
-		"east": "crossroads:blocks/beam_extractor_side",
-		"west": "crossroads:blocks/beam_extractor_side",
-		"up": "crossroads:blocks/beam_extractor_side",
-		"down": "crossroads:blocks/beam_extractor_side",
-		"particle": "crossroads:blocks/beam_extractor_side"
+		"north": "crossroads:block/beam_extractor_out",
+		"south": "crossroads:block/beam_extractor_side",
+		"east": "crossroads:block/beam_extractor_side",
+		"west": "crossroads:block/beam_extractor_side",
+		"up": "crossroads:block/beam_extractor_side",
+		"down": "crossroads:block/beam_extractor_side",
+		"particle": "crossroads:block/beam_extractor_side"
 	}
 }

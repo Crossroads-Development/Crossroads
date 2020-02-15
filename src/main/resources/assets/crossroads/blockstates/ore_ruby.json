@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:ore_ruby" }
+		"": { "model": "crossroads:block/ore_ruby" }
 	}
 }

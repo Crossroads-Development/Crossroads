@@ -1,7 +1,7 @@
 {
 	"parent": "crossroads:block/heat_limiter",
 	"textures": {
-		"side": "crossroads:blocks/heat_limiter_side"
+		"side": "crossroads:block/heat_limiter_side"
 	},
 	"display": {
 		"thirdperson": {

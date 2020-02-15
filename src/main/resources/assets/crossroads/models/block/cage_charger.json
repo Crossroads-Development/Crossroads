@@ -1,9 +1,9 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"base": "crossroads:blocks/block_pure_quartz",
-		"mount": "crossroads:blocks/block_bronze",
-		"particle": "crossroads:blocks/block_bronze"
+		"base": "crossroads:block/block_pure_quartz",
+		"mount": "crossroads:block/block_bronze",
+		"particle": "crossroads:block/block_bronze"
 	},
 	"elements": [
 		{

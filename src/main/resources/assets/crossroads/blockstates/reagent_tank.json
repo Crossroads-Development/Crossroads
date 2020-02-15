@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:reagent_tank_glass" }
+		"": { "model": "crossroads:block/reagent_tank_glass" }
 	}
 }

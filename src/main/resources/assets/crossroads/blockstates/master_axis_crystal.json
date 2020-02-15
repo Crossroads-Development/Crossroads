@@ -1,10 +1,10 @@
 {
 	"variants": {
-		"facing=north": { "model": "crossroads:master_axis_crystal"},
-		"facing=south": { "model": "crossroads:master_axis_crystal", "y": 180 },
-		"facing=east": { "model": "crossroads:master_axis_crystal", "y": 90 },
-		"facing=west": { "model": "crossroads:master_axis_crystal", "y": 270 },
-		"facing=up": { "model": "crossroads:master_axis_crystal", "x": 270 },
-		"facing=down": { "model": "crossroads:master_axis_crystal", "x": 90 }
+		"facing=north": { "model": "crossroads:block/master_axis_crystal"},
+		"facing=south": { "model": "crossroads:block/master_axis_crystal", "y": 180 },
+		"facing=east": { "model": "crossroads:block/master_axis_crystal", "y": 90 },
+		"facing=west": { "model": "crossroads:block/master_axis_crystal", "y": 270 },
+		"facing=up": { "model": "crossroads:block/master_axis_crystal", "x": 270 },
+		"facing=down": { "model": "crossroads:block/master_axis_crystal", "x": 90 }
 	}
 }

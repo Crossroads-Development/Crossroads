@@ -1,12 +1,12 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"particle": "crossroads:blocks/block_bronze",
-		"bronze": "crossroads:blocks/block_bronze",
-		"iron": "crossroads:blocks/block_cast_iron",
-		"glass": "blocks/glass",
-		"valve_base": "crossroads:blocks/valve",
-		"valve": "crossroads:blocks/valve"
+		"particle": "crossroads:block/block_bronze",
+		"bronze": "crossroads:block/block_bronze",
+		"iron": "crossroads:block/block_cast_iron",
+		"glass": "block/glass",
+		"valve_base": "crossroads:block/valve",
+		"valve": "crossroads:block/valve"
 	},
 	"elements": [
 		{

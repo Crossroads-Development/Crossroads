@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:ore_tin" }
+		"": { "model": "crossroads:block/ore_tin" }
 	}
 }

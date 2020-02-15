@@ -1,6 +1,6 @@
 {
 	"variants": {
-		"horiz_axis=x": { "model": "crossroads:water_centrifuge" },
-		"horiz_axis=z": { "model": "crossroads:water_centrifuge", "y":90 }
+		"horiz_axis=x": { "model": "crossroads:block/water_centrifuge" },
+		"horiz_axis=z": { "model": "crossroads:block/water_centrifuge", "y":90 }
 	}
 }

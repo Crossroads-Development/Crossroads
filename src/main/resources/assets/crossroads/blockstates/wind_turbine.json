@@ -1,8 +1,8 @@
 {
 	"variants": {
-		"horiz_facing=north": { "model": "crossroads:wind_turbine", "x": 270},
-		"horiz_facing=south": { "model": "crossroads:wind_turbine", "x": 270, "y": 180 },
-		"horiz_facing=east": { "model": "crossroads:wind_turbine", "x": 270, "y": 90 },
-		"horiz_facing=west": { "model": "crossroads:wind_turbine", "x": 270, "y": 270 }
+		"horiz_facing=north": { "model": "crossroads:block/wind_turbine", "x": 270},
+		"horiz_facing=south": { "model": "crossroads:block/wind_turbine", "x": 270, "y": 180 },
+		"horiz_facing=east": { "model": "crossroads:block/wind_turbine", "x": 270, "y": 90 },
+		"horiz_facing=west": { "model": "crossroads:block/wind_turbine", "x": 270, "y": 270 }
 	}
 }

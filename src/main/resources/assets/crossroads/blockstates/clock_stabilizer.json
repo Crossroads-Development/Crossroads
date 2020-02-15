@@ -1,10 +1,10 @@
 {
 	"variants": {
-		"facing=north": { "model": "crossroads:clock_stabilizer", "x": 90},
-		"facing=south": { "model": "crossroads:clock_stabilizer", "x": 270 },
-		"facing=east": { "model": "crossroads:clock_stabilizer", "x": 90, "y": 90 },
-		"facing=west": { "model": "crossroads:clock_stabilizer", "x": 90, "y": 270 },
-		"facing=up": { "model": "crossroads:clock_stabilizer"},
-		"facing=down": { "model": "crossroads:clock_stabilizer", "x": 180}
+		"facing=north": { "model": "crossroads:block/clock_stabilizer", "x": 90},
+		"facing=south": { "model": "crossroads:block/clock_stabilizer", "x": 270 },
+		"facing=east": { "model": "crossroads:block/clock_stabilizer", "x": 90, "y": 90 },
+		"facing=west": { "model": "crossroads:block/clock_stabilizer", "x": 90, "y": 270 },
+		"facing=up": { "model": "crossroads:block/clock_stabilizer"},
+		"facing=down": { "model": "crossroads:block/clock_stabilizer", "x": 180}
 	}
 }

@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:chemical_vent" }
+		"": { "model": "crossroads:block/chemical_vent" }
 	}
 }

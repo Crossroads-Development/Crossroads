@@ -1,6 +1,6 @@
 {
 	"variants": {
-		"redstone_bool=false": { "model": "crossroads:chrono_harness" },
-		"redstone_bool=true": { "model": "crossroads:chrono_harness" }
+		"redstone_bool=false": { "model": "crossroads:block/chrono_harness" },
+		"redstone_bool=true": { "model": "crossroads:block/chrono_harness" }
 	}
 }

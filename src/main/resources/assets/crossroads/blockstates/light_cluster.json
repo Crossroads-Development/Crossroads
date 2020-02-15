@@ -1,88 +1,88 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "crossroads:light_cluster"
+		"model": "crossroads:block/light_cluster"
 	},
 	"variants": {
 		"color": {
 			"white": {
 				"textures": {
-					"main": "crossroads:blocks/light_cluster_white"
+					"main": "crossroads:block/light_cluster_white"
 				}
 			},
 			"orange": {
 				"textures": {
-					"main": "crossroads:blocks/light_cluster_orange"
+					"main": "crossroads:block/light_cluster_orange"
 				}
 			},
 			"magenta": {
 				"textures": {
-					"main": "crossroads:blocks/light_cluster_magenta"
+					"main": "crossroads:block/light_cluster_magenta"
 				}
 			},
 			"light_blue": {
 				"textures": {
-					"main": "crossroads:blocks/light_cluster_light_blue"
+					"main": "crossroads:block/light_cluster_light_blue"
 				}
 			},
 			"yellow": {
 				"textures": {
-					"main": "crossroads:blocks/light_cluster_yellow"
+					"main": "crossroads:block/light_cluster_yellow"
 				}
 			},
 			"lime": {
 				"textures": {
-					"main": "crossroads:blocks/light_cluster_lime"
+					"main": "crossroads:block/light_cluster_lime"
 				}
 			},
 			"pink": {
 				"textures": {
-					"main": "crossroads:blocks/light_cluster_pink"
+					"main": "crossroads:block/light_cluster_pink"
 				}
 			},
 			"gray": {
 				"textures": {
-					"main": "crossroads:blocks/light_cluster_gray"
+					"main": "crossroads:block/light_cluster_gray"
 				}
 			},
-			"silver": {
+			"light_gray": {
 				"textures": {
-					"main": "crossroads:blocks/light_cluster_silver"
+					"main": "crossroads:block/light_cluster_silver"
 				}
 			},
 			"cyan": {
 				"textures": {
-					"main": "crossroads:blocks/light_cluster_cyan"
+					"main": "crossroads:block/light_cluster_cyan"
 				}
 			},
 			"purple": {
 				"textures": {
-					"main": "crossroads:blocks/light_cluster_purple"
+					"main": "crossroads:block/light_cluster_purple"
 				}
 			},
 			"blue": {
 				"textures": {
-					"main": "crossroads:blocks/light_cluster_blue"
+					"main": "crossroads:block/light_cluster_blue"
 				}
 			},
 			"brown": {
 				"textures": {
-					"main": "crossroads:blocks/light_cluster_brown"
+					"main": "crossroads:block/light_cluster_brown"
 				}
 			},
 			"green": {
 				"textures": {
-					"main": "crossroads:blocks/light_cluster_green"
+					"main": "crossroads:block/light_cluster_green"
 				}
 			},
 			"red": {
 				"textures": {
-					"main": "crossroads:blocks/light_cluster_red"
+					"main": "crossroads:block/light_cluster_red"
 				}
 			},
 			"black": {
 				"textures": {
-					"main": "crossroads:blocks/light_cluster_black"
+					"main": "crossroads:block/light_cluster_black"
 				}
 			}
 		}

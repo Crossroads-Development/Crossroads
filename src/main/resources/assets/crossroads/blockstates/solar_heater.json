@@ -1,6 +1,6 @@
 {
 	"variants": {
-		"horiz_axis=x": { "model": "crossroads:solar_heater" },
-		"horiz_axis=z": { "model": "crossroads:solar_heater", "y":90 }
+		"horiz_axis=x": { "model": "crossroads:block/solar_heater" },
+		"horiz_axis=z": { "model": "crossroads:block/solar_heater", "y":90 }
 	}
 }

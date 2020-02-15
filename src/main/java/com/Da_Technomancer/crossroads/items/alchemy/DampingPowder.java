@@ -62,7 +62,7 @@ public class DampingPowder extends Item{
 	};
 
 	public DampingPowder(){
-		super(CRItems.itemProp);
+		super(new Properties().group(CRItems.TAB_CROSSROADS));
 		String name = "damping_powder";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);

@@ -69,29 +69,29 @@ public final class OreSetup{
 
 	protected static void init(){
 		//Register CR metal ores, blocks, ingots, nuggets manually
-		ingotTin = new Item(CRItems.itemProp).setRegistryName("ingot_tin");
+		ingotTin = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("ingot_tin");
 		blockTin = new BasicBlock("block_tin", Block.Properties.create(Material.IRON).hardnessAndResistance(5));
-		nuggetTin = new Item(CRItems.itemProp).setRegistryName("nugget_tin", "nuggetTin");
+		nuggetTin = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("nugget_tin");
 		oreTin = new BasicBlock("ore_tin", Block.Properties.create(Material.ROCK).hardnessAndResistance(3));
 
-		ingotCopper = new Item(CRItems.itemProp).setRegistryName("ingot_copper", "ingotCopper");
+		ingotCopper = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("ingot_copper");
 		blockCopper = new BasicBlock("block_copper", Block.Properties.create(Material.IRON).hardnessAndResistance(5));
-		nuggetCopper = new Item(CRItems.itemProp).setRegistryName("nugget_copper", "nuggetCopper");
+		nuggetCopper = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("nugget_copper");
 		oreCopper = new BasicBlock("ore_copper", Block.Properties.create(Material.ROCK).hardnessAndResistance(3));
 
-		ingotBronze = new Item(CRItems.itemProp).setRegistryName("ingot_bronze", "ingotBronze");
+		ingotBronze = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("ingot_bronze");
 		blockBronze = new BasicBlock("block_bronze", Block.Properties.create(Material.IRON).hardnessAndResistance(5));
-		nuggetBronze = new Item(CRItems.itemProp).setRegistryName("nugget_bronze", "nuggetBronze");
+		nuggetBronze = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("nugget_bronze");
 
-		gemRuby = new Item(CRItems.itemProp).setRegistryName("gem_ruby", "gemRuby");
+		gemRuby = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("gem_ruby");
 		blockRuby = new BasicBlock("block_ruby", Block.Properties.create(Material.ROCK).hardnessAndResistance(5));
 		oreRuby = new BasicBlock("ore_ruby", Block.Properties.create(Material.ROCK).hardnessAndResistance(3).harvestLevel(3));
 
-		ingotCopshowium = new Item(CRItems.itemProp).setRegistryName("ingot_copshowium", "ingotCopshowium");
+		ingotCopshowium = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("ingot_copshowium");
 		blockCopshowium = new BasicBlock("block_copshowium", Block.Properties.create(Material.IRON).harvestLevel(5));
-		nuggetCopshowium = new Item(CRItems.itemProp).setRegistryName("nugget_copshowium", "nuggetCopshowium");
+		nuggetCopshowium = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("nugget_copshowium");
 
-		voidCrystal = new Item(CRItems.itemProp).setRegistryName("void_crystal");
+		voidCrystal = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("void_crystal");
 		oreVoid = new BasicBlock("ore_void", Block.Properties.create(Material.ROCK).harvestLevel(3));
 		
 		loadConfig();

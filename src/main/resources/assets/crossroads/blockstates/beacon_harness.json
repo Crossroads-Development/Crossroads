@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:beacon_harness" }
+		"": { "model": "crossroads:block/beacon_harness" }
 	}
 }

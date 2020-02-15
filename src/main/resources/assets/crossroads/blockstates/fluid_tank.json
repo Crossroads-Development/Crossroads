@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:fluid_tank" }
+		"": { "model": "crossroads:block/fluid_tank" }
 	}
 }

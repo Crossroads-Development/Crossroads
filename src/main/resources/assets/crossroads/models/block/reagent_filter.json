@@ -2,10 +2,10 @@
 	"ambientocclusion": false,
 	"uvlock": true,
     "textures": {
-		"particle": "crossroads:blocks/block_cast_iron",
+		"particle": "crossroads:block/block_cast_iron",
 		"side": "#glass",
-		"ends": "crossroads:blocks/block_cast_iron",
-		"core": "crossroads:blocks/block_pure_quartz"
+		"ends": "crossroads:block/block_cast_iron",
+		"core": "crossroads:block/block_pure_quartz"
 	},
     "elements": [
         {	

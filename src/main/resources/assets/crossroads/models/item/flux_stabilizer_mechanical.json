@@ -1,9 +1,9 @@
 {
 	"parent": "crossroads:block/flux_stabilizer",
 	"textures": {
-		"chamber": "crossroads:blocks/flux_stabilizer_glass",
-		"port_rim": "crossroads:blocks/port_iron_side",
-		"port": "crossroads:blocks/port_iron_face"
+		"chamber": "crossroads:block/flux_stabilizer_glass",
+		"port_rim": "crossroads:block/port_iron_side",
+		"port": "crossroads:block/port_iron_face"
 	},
 	"display": {
 		"thirdperson": {

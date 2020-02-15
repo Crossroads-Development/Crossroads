@@ -1,9 +1,9 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "crossroads:drill",
+		"model": "crossroads:block/drill",
 		"textures": {
-			"metal": "blocks/iron_block"
+			"metal": "block/iron_block"
 		}
 	},
 	"variants": {

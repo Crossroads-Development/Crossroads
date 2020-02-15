@@ -1,7 +1,7 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"base": "blocks/iron_block",
+		"base": "block/iron_block",
 		"axle": "crossroads:model/axle"
 	},
 	"elements": [

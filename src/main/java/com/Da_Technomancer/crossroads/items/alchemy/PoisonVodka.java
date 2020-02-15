@@ -26,7 +26,7 @@ public class PoisonVodka extends Item{
 	private static final int DURATION = 3600;
 
 	public PoisonVodka(){
-		super(CRItems.itemProp);
+		super(new Properties().group(CRItems.TAB_CROSSROADS));
 		String name = "poison_vodka";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);

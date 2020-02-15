@@ -1,9 +1,9 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"side": "crossroads:blocks/block_tin",
-		"heat": "crossroads:blocks/block_copper",
-		"particle": "crossroads:blocks/block_tin"
+		"side": "crossroads:block/block_tin",
+		"heat": "crossroads:block/block_copper",
+		"particle": "crossroads:block/block_tin"
 	},
 	"elements": [
 		{	"from": [ 1, 7, 7 ],

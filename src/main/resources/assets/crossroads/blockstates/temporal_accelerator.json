@@ -1,10 +1,10 @@
 {
 	"variants": {
-		"facing=north": { "model": "crossroads:temporal_accelerator", "x": 90},
-		"facing=south": { "model": "crossroads:temporal_accelerator", "x": 270 },
-		"facing=east": { "model": "crossroads:temporal_accelerator", "x": 90, "y": 90 },
-		"facing=west": { "model": "crossroads:temporal_accelerator", "x": 90, "y": 270 },
-		"facing=up": { "model": "crossroads:temporal_accelerator"},
-		"facing=down": { "model": "crossroads:temporal_accelerator", "x": 180}
+		"facing=north": { "model": "crossroads:block/temporal_accelerator", "x": 90},
+		"facing=south": { "model": "crossroads:block/temporal_accelerator", "x": 270 },
+		"facing=east": { "model": "crossroads:block/temporal_accelerator", "x": 90, "y": 90 },
+		"facing=west": { "model": "crossroads:block/temporal_accelerator", "x": 90, "y": 270 },
+		"facing=up": { "model": "crossroads:block/temporal_accelerator"},
+		"facing=down": { "model": "crossroads:block/temporal_accelerator", "x": 180}
 	}
 }

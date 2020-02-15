@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:items/squid_helmet"
+		"layer0": "crossroads:item/squid_helmet"
 	}
 }

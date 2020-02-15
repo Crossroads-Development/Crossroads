@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:ore_copper" }
+		"": { "model": "crossroads:block/ore_copper" }
 	}
 }

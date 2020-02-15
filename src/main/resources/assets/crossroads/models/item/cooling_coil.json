@@ -1,9 +1,9 @@
 {
 	"parent": "crossroads:block/cooling_coil",
 	"textures": {
-		"glass": "crossroads:blocks/alch_tube/glass_tube_cap",
-		"in": "crossroads:blocks/alch_tube/glass_tube_in",
-		"out": "crossroads:blocks/alch_tube/glass_tube_out"
+		"glass": "crossroads:block/alch_tube/glass_tube_cap",
+		"in": "crossroads:block/alch_tube/glass_tube_in",
+		"out": "crossroads:block/alch_tube/glass_tube_out"
 	},
 	"display": {
 		"thirdperson": {

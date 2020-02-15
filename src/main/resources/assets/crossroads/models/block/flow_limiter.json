@@ -1,11 +1,11 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"particle": "crossroads:blocks/flow_limiter_middle",
+		"particle": "crossroads:block/flow_limiter_middle",
 		"glass": "#glass",
 		"cap": "#cap",
-		"mid": "crossroads:blocks/flow_limiter_middle",
-		"gold": "blocks/gold_block"
+		"mid": "crossroads:block/flow_limiter_middle",
+		"gold": "block/gold_block"
     },
     "elements": [
         {

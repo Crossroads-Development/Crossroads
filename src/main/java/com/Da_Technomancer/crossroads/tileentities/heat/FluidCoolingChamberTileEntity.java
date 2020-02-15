@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.heat;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.FluidCoolerContainer;
 import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.FluidCoolingRec;
@@ -27,6 +28,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
+@ObjectHolder(Crossroads.MODID)
 public class FluidCoolingChamberTileEntity extends InventoryTE{
 
 	@ObjectHolder("fluid_cooling_chamber")

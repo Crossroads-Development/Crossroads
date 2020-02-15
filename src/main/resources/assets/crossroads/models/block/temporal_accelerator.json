@@ -1,8 +1,8 @@
 {
 	"textures": {
-		"iron": "crossroads:blocks/block_cast_iron",
-		"bronze": "crossroads:blocks/block_bronze",
-		"particle": "crossroads:blocks/block_cast_iron"
+		"iron": "crossroads:block/block_cast_iron",
+		"bronze": "crossroads:block/block_bronze",
+		"particle": "crossroads:block/block_cast_iron"
 	},
 	"elements": [
 		{

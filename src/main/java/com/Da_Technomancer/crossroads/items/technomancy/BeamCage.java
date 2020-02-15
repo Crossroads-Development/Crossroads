@@ -23,7 +23,7 @@ public class BeamCage extends Item{
 	public static final int CAPACITY = 1024;
 
 	public BeamCage(){
-		super(CRItems.itemProp.maxStackSize(1));
+		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
 		String name = "beam_cage";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
@@ -42,7 +42,7 @@ public class BeamCage extends Item{
 	public static void storeBeam(ItemStack stack, @Nonnull BeamUnit toStore){
 		CompoundNBT nbt = stack.getTag();
 		if(nbt == null){
-			stack.write(new CompoundNBT());
+			stack.setTag(new CompoundNBT());
 			nbt = stack.getTag();
 		}
 		if(toStore.getEnergy() > CAPACITY || toStore.getPotential() > CAPACITY || toStore.getStability() > CAPACITY || toStore.getVoid() > CAPACITY){

@@ -1,10 +1,10 @@
 {
 	"variants": {
-		"facing=north": { "model": "crossroads:mechanism" },
-		"facing=south": { "model": "crossroads:mechanism" },
-		"facing=down": { "model": "crossroads:mechanism" },
-		"facing=up": { "model": "crossroads:mechanism" },
-		"facing=east": { "model": "crossroads:mechanism" },
-		"facing=west": { "model": "crossroads:mechanism" }
+		"facing=north": { "model": "crossroads:block/mechanism" },
+		"facing=south": { "model": "crossroads:block/mechanism" },
+		"facing=down": { "model": "crossroads:block/mechanism" },
+		"facing=up": { "model": "crossroads:block/mechanism" },
+		"facing=east": { "model": "crossroads:block/mechanism" },
+		"facing=west": { "model": "crossroads:block/mechanism" }
 	}
 }

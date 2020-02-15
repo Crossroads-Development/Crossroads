@@ -1,8 +1,8 @@
 {
 	"parent": "block/cube_bottom_top",
 	"textures": {
-		"top": "crossroads:blocks/heat_limiter_front",
-		"bottom": "crossroads:blocks/heat_limiter_back",
+		"top": "crossroads:block/heat_limiter_front",
+		"bottom": "crossroads:block/heat_limiter_back",
 		"side": "#side"
 	}
 }

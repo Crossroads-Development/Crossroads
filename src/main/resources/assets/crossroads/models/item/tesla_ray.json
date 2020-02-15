@@ -1,8 +1,8 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"cast_iron": "crossroads:blocks/block_cast_iron",
-		"iron": "blocks/iron_block"
+		"cast_iron": "crossroads:block/block_cast_iron",
+		"iron": "block/iron_block"
 	},
 	"elements": [
 		{

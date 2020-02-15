@@ -1,6 +1,6 @@
 {
 	"variants": {
-		"active=true": {"model": "crossroads:icebox_on"},
-		"active=false": {"model": "crossroads:icebox_off"}
+		"active=true": {"model": "crossroads:block/icebox_on"},
+		"active=false": {"model": "crossroads:block/icebox_off"}
 	}
 }

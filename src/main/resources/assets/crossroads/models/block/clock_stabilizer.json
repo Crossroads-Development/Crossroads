@@ -1,8 +1,8 @@
 {
 	"textures": {
-		"main": "crossroads:blocks/block_pure_quartz",
-		"cop": "crossroads:blocks/block_copshowium",
-		"particle": "crossroads:blocks/block_pure_quartz"
+		"main": "crossroads:block/block_pure_quartz",
+		"cop": "crossroads:block/block_copshowium",
+		"particle": "crossroads:block/block_pure_quartz"
 	},
 	"elements": [
 	             {

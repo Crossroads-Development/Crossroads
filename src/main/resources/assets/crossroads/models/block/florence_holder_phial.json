@@ -4,7 +4,7 @@
 		"particle": "#glass",
 		"main": "#glass",
 		"stem": "#stem",
-		"cork": "crossroads:blocks/cork"
+		"cork": "crossroads:block/cork"
 	},
 	"elements": [
 		{

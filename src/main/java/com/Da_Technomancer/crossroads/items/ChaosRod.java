@@ -22,7 +22,7 @@ import java.util.List;
 public class ChaosRod extends Item{
 	
 	protected ChaosRod(){
-		super(CRItems.itemProp.maxStackSize(1));
+		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
 		String name = "chaos_rod";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);

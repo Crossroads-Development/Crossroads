@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:items/fluid_gauge"
+		"layer0": "crossroads:item/fluid_gauge"
 	}
 }

@@ -22,7 +22,8 @@ public class OreProfileItem extends Item{
 		if(mat == null){
 			mat = OreSetup.getDefaultMaterial();
 		}
-		ItemStack out = new ItemStack(this, count, new CompoundNBT());
+		ItemStack out = new ItemStack(this, count);
+		out.setTag(new CompoundNBT());
 		out.getTag().putString(KEY, mat.getId());
 		return out;
 	}

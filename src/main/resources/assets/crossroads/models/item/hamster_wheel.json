@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:items/hamster_wheel"
+		"layer0": "crossroads:item/hamster_wheel"
 	}
 }

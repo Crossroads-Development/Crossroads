@@ -1,7 +1,7 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"wall": "crossroads:blocks/block_bronze"
+		"wall": "crossroads:block/block_bronze"
 	},
 	"elements": [
 		{

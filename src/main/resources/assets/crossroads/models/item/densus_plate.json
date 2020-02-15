@@ -1,7 +1,7 @@
 {
 	"parent": "crossroads:block/densus_plate",
 	"textures": {
-		"main": "crossroads:blocks/densus_plate"
+		"main": "crossroads:block/densus_plate"
 	},
 	"display": {
 		"thirdperson": {

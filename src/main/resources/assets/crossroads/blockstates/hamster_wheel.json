@@ -1,8 +1,8 @@
 {
 	"variants": {
-		"horiz_facing=north": { "model": "crossroads:hamster_wheel"},
-		"horiz_facing=south": { "model": "crossroads:hamster_wheel", "y": 180 },
-		"horiz_facing=east": { "model": "crossroads:hamster_wheel", "y": 90 },
-		"horiz_facing=west": { "model": "crossroads:hamster_wheel", "y": 270 }
+		"horiz_facing=north": { "model": "crossroads:block/hamster_wheel"},
+		"horiz_facing=south": { "model": "crossroads:block/hamster_wheel", "y": 180 },
+		"horiz_facing=east": { "model": "crossroads:block/hamster_wheel", "y": 90 },
+		"horiz_facing=west": { "model": "crossroads:block/hamster_wheel", "y": 270 }
 	}
 }

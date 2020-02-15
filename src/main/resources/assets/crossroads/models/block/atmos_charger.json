@@ -5,8 +5,8 @@
 		"south": "#mode",
 		"east": "#mode",
 		"west": "#mode",
-		"up": "crossroads:blocks/atmos_charger_top",
-		"down": "crossroads:blocks/block_cast_iron",
-		"particle": "crossroads:blocks/atmos_charger_top"
+		"up": "crossroads:block/atmos_charger_top",
+		"down": "crossroads:block/block_cast_iron",
+		"particle": "crossroads:block/atmos_charger_top"
 	}
 }

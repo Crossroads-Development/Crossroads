@@ -11,7 +11,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
+//apply plugin: 'maven-publish'
 
 version = "$mc_version-$mod_version"
 group = "com.technomancer.crossroads"
@@ -30,11 +30,11 @@ tasks.withType(JavaCompile) {
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
-	mappings channel: 'snapshot', version: "$mcp_version"
-	
+	mappings channel: 'stable', version: "$mcp_version"
+
 //	replaceIn 'mods.toml'
 //	replace 'essentials_version', '$essentials_version'
-	
+
 	runs {
 		client {
 			workingDirectory project.file('run')
@@ -72,17 +72,18 @@ minecraft {
 
 repositories {
 	maven { url "http://dvs1.progwml6.com/files/maven" }
+	flatDir { dirs 'libs' }//Let's us grab dependencies from the libs folder
 }
 
 dependencies {
-	minecraft "net.minecraftforge:forge:$mc_version-$fg_version"
-	
+	minecraft("net.minecraftforge:forge:$mc_version-$fg_version")
+
 	//Compile against APIs
-	compileOnly fg.deobf("mezz.jei:jei-$mc_version:$jei_version:api")
+	compileOnly(fg.deobf("mezz.jei:jei-$mc_version:$jei_version:api"))
 	//Run with the full versions
-	runtimeOnly fg.deobf("mezz.jei:jei-$mc_version:$jei_version")
+	runtimeOnly(fg.deobf("mezz.jei:jei-$mc_version:$jei_version"))
 	//When setting up a dev environment for Crossroads, make sure to have an essentials jar in a folder called "libs", in the same parent folder as "src"
-	deobf fileTree(dir: 'libs', include: '*.jar')
+	implementation(fg.deobf("com.technomancer.essentials:essentials-$mc_version-$essentials_version:dev"))
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
@@ -121,23 +122,26 @@ processResources {
 		//Copy the Crossroads and essentials version into the toml file
 		expand 'version':project.version
 		expand 'essentials_version':"$essentials_version"
+
+		exclude 'META-INF/mods.toml'
 	}
 
 	// Copy everything else except the mods.toml
-	from(sourceSets.main.resources.srcDirs) {
-		exclude 'META-INF/mods.toml'
-	}
+//	from(sourceSets.main.resources.srcDirs) {
+//		exclude 'META-INF/mods.toml'
+//	}
 }
 
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			artifact reobfArtifact
-		}
-	}
-	repositories {
-		maven {
-			url "file:///${project.projectDir}/mcmodsrepo"
-		}
-	}
-}
+//We don't use Maven
+//publishing {
+//	publications {
+//		mavenJava(MavenPublication) {
+//			artifact reobfArtifact
+//		}
+//	}
+//	repositories {
+//		maven {
+//			url "file:///${project.projectDir}/mcmodsrepo"
+//		}
+//	}
+//}

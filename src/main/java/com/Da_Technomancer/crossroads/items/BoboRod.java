@@ -37,7 +37,7 @@ public class BoboRod extends Item{
 	private static final Tag<Item> offering = new ItemTags.Wrapper(new ResourceLocation(Crossroads.MODID, "bobo_unlock_key"));
 
 	protected BoboRod(){
-		super(CRItems.itemProp.maxStackSize(1).maxDamage(DURABILITY));
+		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1).maxDamage(DURABILITY));
 		String name = "bobo_rod";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);

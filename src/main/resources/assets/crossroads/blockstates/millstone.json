@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:millstone" }
+		"": { "model": "crossroads:block/millstone" }
 	}
 }

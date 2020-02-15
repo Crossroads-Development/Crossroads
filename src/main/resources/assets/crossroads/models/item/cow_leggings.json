@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:items/cow_leggings"
+		"layer0": "crossroads:item/cow_leggings"
 	}
 }

@@ -1,8 +1,8 @@
 {
 	"parent": "block/cube_bottom_top",
 	"textures": {
-		"side": "crossroads:blocks/firebox_off",
-		"top": "crossroads:blocks/firebox_top",
-		"bottom": "blocks/furnace_top"
+		"side": "crossroads:block/firebox_off",
+		"top": "crossroads:block/firebox_top",
+		"bottom": "block/furnace_top"
 	}
 }

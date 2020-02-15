@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:ore_cleanser" }
+		"": { "model": "crossroads:block/ore_cleanser" }
 	}
 }

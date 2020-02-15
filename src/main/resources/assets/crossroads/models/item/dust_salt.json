@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:items/dust_salt"
+		"layer0": "crossroads:item/dust_salt"
 	}
 }

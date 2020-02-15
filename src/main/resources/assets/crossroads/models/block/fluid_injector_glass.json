@@ -1,9 +1,9 @@
 {	
 	"ambientocclusion": false,
     "textures": {
-		"particle": "blocks/glass",
-		"side": "blocks/glass",
-		"ends": "crossroads:blocks/block_bronze"
+		"particle": "block/glass",
+		"side": "block/glass",
+		"ends": "crossroads:block/block_bronze"
 	},
     "elements": [
         {	

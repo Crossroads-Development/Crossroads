@@ -1,10 +1,10 @@
 {
     "ambientocclusion": false,
     "textures": {
-        "particle": "crossroads:blocks/ratiator",
-        "slab": "blocks/stone_slab_top",
-        "top": "crossroads:blocks/ratiator",
-        "lit": "crossroads:blocks/quartz_torch_on"
+        "particle": "crossroads:block/ratiator",
+        "slab": "block/stone_slab_top",
+        "top": "crossroads:block/ratiator",
+        "lit": "crossroads:block/quartz_torch_on"
     },
     "elements": [
         {   "from": [ 0, 0, 0 ],

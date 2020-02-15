@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:items/ingot_bronze"
+		"layer0": "crossroads:item/ingot_bronze"
 	}
 }

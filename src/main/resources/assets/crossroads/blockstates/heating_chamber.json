@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:heating_chamber" }
+		"": { "model": "crossroads:block/heating_chamber" }
 	}
 }

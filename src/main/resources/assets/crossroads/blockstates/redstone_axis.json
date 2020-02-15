@@ -1,10 +1,10 @@
 {
 	"variants": {
-		"facing=north": { "model": "crossroads:redstone_axis"},
-		"facing=south": { "model": "crossroads:redstone_axis", "y": 180 },
-		"facing=east": { "model": "crossroads:redstone_axis", "y": 90 },
-		"facing=west": { "model": "crossroads:redstone_axis", "y": 270 },
-		"facing=up": { "model": "crossroads:redstone_axis", "x": 270 },
-		"facing=down": { "model": "crossroads:redstone_axis", "x": 90 }
+		"facing=north": { "model": "crossroads:block/redstone_axis"},
+		"facing=south": { "model": "crossroads:block/redstone_axis", "y": 180 },
+		"facing=east": { "model": "crossroads:block/redstone_axis", "y": 90 },
+		"facing=west": { "model": "crossroads:block/redstone_axis", "y": 270 },
+		"facing=up": { "model": "crossroads:block/redstone_axis", "x": 270 },
+		"facing=down": { "model": "crossroads:block/redstone_axis", "x": 90 }
 	}
 }

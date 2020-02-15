@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:block_bronze" }
+		"": { "model": "crossroads:block/block_bronze" }
 	}
 }

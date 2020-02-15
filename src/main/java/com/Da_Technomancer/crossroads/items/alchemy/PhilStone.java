@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 public class PhilStone extends Item{
 
 	public PhilStone(boolean pracStone){
-		super(CRItems.itemProp);
+		super(new Properties().group(CRItems.TAB_CROSSROADS));
 		String name = pracStone ? "prac_stone" : "phil_stone";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);

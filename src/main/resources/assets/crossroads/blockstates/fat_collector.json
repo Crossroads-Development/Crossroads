@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:fat_collector" }
+		"": { "model": "crossroads:block/fat_collector" }
 	}
 }

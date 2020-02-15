@@ -34,7 +34,7 @@ public class Slag extends Item{
 	};
 
 	protected Slag(){
-		super(CRItems.itemProp);
+		super(new Properties().group(CRItems.TAB_CROSSROADS));
 		String name = "slag";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);

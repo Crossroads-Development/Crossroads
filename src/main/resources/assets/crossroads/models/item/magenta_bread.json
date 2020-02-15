@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:items/magenta_bread"
+		"layer0": "crossroads:item/magenta_bread"
 	}
 }

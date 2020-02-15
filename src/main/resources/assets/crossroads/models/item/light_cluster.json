@@ -1,7 +1,7 @@
 {
 	"parent": "crossroads:block/light_cluster",
 	"textures": {
-		"texture": "crossroads:blocks/light_cluster_white"
+		"texture": "crossroads:block/light_cluster_white"
 	},
 	"display": {
 		"thirdperson": {

@@ -1,6 +1,6 @@
 {
 	"parent": "block/cube_all",
 	"textures": {
-		"all": "crossroads:blocks/heat_sink"
+		"all": "crossroads:block/heat_sink"
 	}
 }

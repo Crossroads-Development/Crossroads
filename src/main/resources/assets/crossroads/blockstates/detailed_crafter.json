@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:detailed_crafter" }
+		"": { "model": "crossroads:block/detailed_crafter" }
 	}
 }

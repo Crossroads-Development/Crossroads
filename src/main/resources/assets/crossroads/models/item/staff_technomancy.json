@@ -1,9 +1,9 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"copshowium": "crossroads:blocks/block_copshowium",
-		"iron": "crossroads:blocks/block_cast_iron",
-		"quartz": "crossroads:blocks/block_pure_quartz"
+		"copshowium": "crossroads:block/block_copshowium",
+		"iron": "crossroads:block/block_cast_iron",
+		"quartz": "crossroads:block/block_pure_quartz"
 	},
 	"elements": [
 		{

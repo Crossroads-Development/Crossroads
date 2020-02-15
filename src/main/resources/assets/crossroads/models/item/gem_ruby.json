@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:items/gem_ruby"
+		"layer0": "crossroads:item/gem_ruby"
 	}
 }

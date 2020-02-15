@@ -1,8 +1,8 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:items/gear_base",
-		"layer1": "crossroads:items/gear_toggle",
-		"layer2": "crossroads:items/gear_toggle_inv"
+		"layer0": "crossroads:item/gear_base",
+		"layer1": "crossroads:item/gear_toggle",
+		"layer2": "crossroads:item/gear_toggle_inv"
 	}
 }

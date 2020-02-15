@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:items/stamp_mill"
+		"layer0": "crossroads:item/stamp_mill"
 	}
 }

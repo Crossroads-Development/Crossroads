@@ -1,12 +1,12 @@
 {
 	"parent": "block/cube_all",
 	"textures": {
-		"north": "crossroads:blocks/beam_reflector_side",
-		"south": "crossroads:blocks/beam_reflector_side",
-		"east": "crossroads:blocks/beam_reflector_side",
-		"west": "crossroads:blocks/beam_reflector_side",
-		"up": "crossroads:blocks/beam_reflector_out",
-		"down": "crossroads:blocks/beam_reflector_back",
-		"particle": "crossroads:blocks/beam_reflector_side"
+		"north": "crossroads:block/beam_reflector_side",
+		"south": "crossroads:block/beam_reflector_side",
+		"east": "crossroads:block/beam_reflector_side",
+		"west": "crossroads:block/beam_reflector_side",
+		"up": "crossroads:block/beam_reflector_out",
+		"down": "crossroads:block/beam_reflector_back",
+		"particle": "crossroads:block/beam_reflector_side"
 	}
 }

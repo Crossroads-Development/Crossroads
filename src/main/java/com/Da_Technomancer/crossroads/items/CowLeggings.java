@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 public class CowLeggings extends ArmorItem{
 
 	protected CowLeggings(){
-		super(ChickenBoots.BOBO_MATERIAL, EquipmentSlotType.LEGS, CRItems.itemProp.maxStackSize(1));
+		super(ChickenBoots.BOBO_MATERIAL, EquipmentSlotType.LEGS, new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
 		String name = "cow_leggings";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);

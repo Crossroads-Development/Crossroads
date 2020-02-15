@@ -21,7 +21,7 @@ public class LeydenJar extends Item{
 	public static final int MAX_CHARGE = 100_000;
 	
 	protected LeydenJar(){
-		super(CRItems.itemProp.maxStackSize(1));
+		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
 		String name = "leyden_jar";
 //		hasSubtypes = true;
 		setRegistryName(name);

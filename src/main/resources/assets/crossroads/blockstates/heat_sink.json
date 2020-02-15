@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:heat_sink" }
+		"": { "model": "crossroads:block/heat_sink" }
 	}
 }

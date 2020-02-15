@@ -2,51 +2,51 @@
 	"forge_marker": 1,
 	"defaults": {
 		"textures": {
-			"side": "crossroads:blocks/heatcable/ceramic-copper"
+			"side": "crossroads:block/heatcable/ceramic-copper"
 		},
-		"model": "crossroads:conduit/heat_cable_core",
+		"model": "crossroads:block/conduit/heat_cable_core",
 		"uvlock": false
 	},
 	"variants": {
 		"skin": {
-			"copper": { "textures": {"side": "crossroads:blocks/heatcable/ceramic-copper"}},
-			"diamond": { "textures": {"side": "crossroads:blocks/heatcable/ceramic-diamond"}},
-			"iron": { "textures": {"side": "crossroads:blocks/heatcable/ceramic-iron"}},
-			"quartz": { "textures": {"side": "crossroads:blocks/heatcable/ceramic-quartz"}}
+			"copper": { "textures": {"side": "crossroads:block/heatcable/ceramic-copper"}},
+			"diamond": { "textures": {"side": "crossroads:block/heatcable/ceramic-diamond"}},
+			"iron": { "textures": {"side": "crossroads:block/heatcable/ceramic-iron"}},
+			"quartz": { "textures": {"side": "crossroads:block/heatcable/ceramic-quartz"}}
 		},
 		"up": {
 			"true": {
-				"submodel": { "end_0": {"model": "crossroads:conduit/heat_cable_top", "x": 0, "y": 0 }}
+				"submodel": { "end_0": {"model": "crossroads:block/conduit/heat_cable_top", "x": 0, "y": 0 }}
 			},
 			"false": {}
 		},
 		"down": {
 			"true": {
-				"submodel": { "end_1": {"model": "crossroads:conduit/heat_cable_top", "x": 180, "y": 0 }}
+				"submodel": { "end_1": {"model": "crossroads:block/conduit/heat_cable_top", "x": 180, "y": 0 }}
 			},
 			"false": {}
 		},
 		"east": {
 			"true": {
-				"submodel": { "end_2": {"model": "crossroads:conduit/heat_cable_top", "x": 90, "y": 90 }}
+				"submodel": { "end_2": {"model": "crossroads:block/conduit/heat_cable_top", "x": 90, "y": 90 }}
 			},
 			"false": {}
 		},
 		"west": {
 			"true": {
-				"submodel": { "end_3": {"model": "crossroads:conduit/heat_cable_top", "x": 90, "y": 270 }}
+				"submodel": { "end_3": {"model": "crossroads:block/conduit/heat_cable_top", "x": 90, "y": 270 }}
 			},
 			"false": {}
 		},
 		"north": {
 			"true": {
-				"submodel": { "end_4": {"model": "crossroads:conduit/heat_cable_top", "x": 90, "y": 0 }}
+				"submodel": { "end_4": {"model": "crossroads:block/conduit/heat_cable_top", "x": 90, "y": 0 }}
 			},
 			"false": {}
 		},
 		"south": {
 			"true": {
-				"submodel": { "end_5": {"model": "crossroads:conduit/heat_cable_top", "x": 90, "y": 180 }}
+				"submodel": { "end_5": {"model": "crossroads:block/conduit/heat_cable_top", "x": 90, "y": 180 }}
 			},
 			"false": {}
 		}

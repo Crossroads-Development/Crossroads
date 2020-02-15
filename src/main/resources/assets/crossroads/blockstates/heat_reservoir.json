@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:heat_reservoir" }
+		"": { "model": "crossroads:block/heat_reservoir" }
 	}
 }

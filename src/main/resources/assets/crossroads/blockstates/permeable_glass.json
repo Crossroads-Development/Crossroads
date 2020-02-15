@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:permeable_glass" }
+		"": { "model": "crossroads:block/permeable_glass" }
 	}
 }

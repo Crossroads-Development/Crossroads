@@ -1,6 +1,6 @@
 {
 	"variants": {
-		"active=true": { "model": "crossroads:cage_charger_used" },
-		"active=false": { "model": "crossroads:cage_charger" }
+		"active=true": { "model": "crossroads:block/cage_charger_used" },
+		"active=false": { "model": "crossroads:block/cage_charger" }
 	}
 }

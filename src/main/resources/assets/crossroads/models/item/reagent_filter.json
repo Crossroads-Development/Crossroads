@@ -1,7 +1,7 @@
 {
 	"parent": "crossroads:block/reagent_filter",
 	"textures": {
-		"glass": "crossroads:blocks/alch_tube/glass_tube_cap"
+		"glass": "crossroads:block/alch_tube/glass_tube_cap"
 	},
 	"display": {
 		"thirdperson": {

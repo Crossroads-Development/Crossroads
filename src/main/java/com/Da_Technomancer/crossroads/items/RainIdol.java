@@ -23,7 +23,7 @@ public class RainIdol extends Item{
 	private static final String NBT_KEY_TIME = "rain_idol_time";
 	
 	protected RainIdol(){
-		super(CRItems.itemProp.maxStackSize(1));
+		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
 		String name = "rain_idol";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);

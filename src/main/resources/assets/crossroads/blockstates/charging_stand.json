@@ -1,10 +1,10 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "crossroads:tesla_coil_base",
+		"model": "crossroads:block/tesla_coil_base",
 		"textures": {
-			"in": "crossroads:blocks/tesla_in",
-			"out": "crossroads:blocks/tesla_in"
+			"in": "crossroads:block/tesla_in",
+			"out": "crossroads:block/tesla_in"
 		},
 		"uvlock": true
 	},
@@ -15,34 +15,34 @@
 			},
 			"phial": {
 				"submodel": {
-					"base": {"model": "crossroads:phial_holder_base"},
-					"bottle": {"model": "crossroads:phial_holder_phial"}
+					"base": {"model": "crossroads:block/phial_holder_base"},
+					"bottle": {"model": "crossroads:block/phial_holder_phial"}
 				}
 			},
 			"florence": {
 				"submodel": {
-					"base": {"model": "crossroads:florence_holder_base"},
-					"bottle": {"model": "crossroads:florence_holder_phial"}
+					"base": {"model": "crossroads:block/florence_holder_base"},
+					"bottle": {"model": "crossroads:block/florence_holder_phial"}
 				}
 			},
 			"shell": {
 				"submodel": {
-					"base": {"model": "crossroads:shell_holder_base"},
-					"bottle": {"model": "crossroads:shell_holder_phial"}
+					"base": {"model": "crossroads:block/shell_holder_base"},
+					"bottle": {"model": "crossroads:block/shell_holder_phial"}
 				}
 			}
 		},
 		"crystal": {
 			"true": {
 				"textures": {
-					"glass": "crossroads:blocks/crystal_thin",
-					"stem": "crossroads:blocks/crystal_thin"
+					"glass": "crossroads:block/crystal_thin",
+					"stem": "crossroads:block/crystal_thin"
 				}
 			},
 			"false": {
 				"textures": {
-					"glass": "crossroads:blocks/glass_thin",
-					"stem": "crossroads:blocks/glass_thin"
+					"glass": "crossroads:block/glass_thin",
+					"stem": "crossroads:block/glass_thin"
 				}
 			}
 		}

@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:items/edible_blob"
+		"layer0": "crossroads:item/edible_blob"
 	}
 }

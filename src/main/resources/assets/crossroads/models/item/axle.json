@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:items/axle"
+		"layer0": "crossroads:item/axle"
 	}
 }

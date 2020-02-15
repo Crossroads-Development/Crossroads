@@ -20,7 +20,7 @@ import java.util.List;
 public class MagentaBread extends Item{
 
 	protected MagentaBread(){
-		super(CRItems.itemProp.food(new Food.Builder().setAlwaysEdible().hunger(20).saturation(0.5F).effect(new EffectInstance(Effects.JUMP_BOOST, 3600, 20), 1).effect(new EffectInstance(Effects.SPEED, 3600, 100), 1).effect(new EffectInstance(Effects.NAUSEA, 3600, 10), 0.5F).build()));
+		super(new Properties().group(CRItems.TAB_CROSSROADS).food(new Food.Builder().setAlwaysEdible().hunger(20).saturation(0.5F).effect(new EffectInstance(Effects.JUMP_BOOST, 3600, 20), 1).effect(new EffectInstance(Effects.SPEED, 3600, 100), 1).effect(new EffectInstance(Effects.NAUSEA, 3600, 10), 0.5F).build()));
 		String name = "magenta_bread";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);

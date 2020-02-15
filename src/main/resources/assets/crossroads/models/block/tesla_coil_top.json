@@ -1,9 +1,9 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"particle": "crossroads:blocks/block_copper",
-		"copper": "crossroads:blocks/block_copper",
-		"iron": "blocks/iron_block",
+		"particle": "crossroads:block/block_copper",
+		"copper": "crossroads:block/block_copper",
+		"iron": "block/iron_block",
 		"edge": "#siding"
     },
     "elements": [

@@ -26,7 +26,7 @@ import java.util.List;
 public class LiechWrench extends Item{
 
 	public LiechWrench(){
-		super(CRItems.itemProp.addToolType(ToolType.PICKAXE, 1).addToolType(ToolType.SHOVEL, 1).addToolType(ToolType.AXE, 1).maxStackSize(1));
+		super(new Properties().group(CRItems.TAB_CROSSROADS).addToolType(ToolType.PICKAXE, 1).addToolType(ToolType.SHOVEL, 1).addToolType(ToolType.AXE, 1).maxStackSize(1));
 		String name = "liech_wrench";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);

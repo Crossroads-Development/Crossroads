@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:reagent_tank_cryst" }
+		"": { "model": "crossroads:block/reagent_tank_cryst" }
 	}
 }

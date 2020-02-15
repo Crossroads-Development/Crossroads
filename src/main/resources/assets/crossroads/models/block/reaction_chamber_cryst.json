@@ -1,9 +1,9 @@
 {
 	"textures":
 	{
-		"side": "crossroads:blocks/reaction_chamber_side_cryst",
-		"end": "crossroads:blocks/reaction_chamber_bottom_cryst",
-		"particle": "crossroads:blocks/reaction_chamber_bottom_cryst"
+		"side": "crossroads:block/reaction_chamber_side_cryst",
+		"end": "crossroads:block/reaction_chamber_bottom_cryst",
+		"particle": "crossroads:block/reaction_chamber_bottom_cryst"
 	},
 	"elements": [{
 		"from": [ 0, 0, 0 ],

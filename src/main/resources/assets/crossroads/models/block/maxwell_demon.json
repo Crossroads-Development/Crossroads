@@ -1,8 +1,8 @@
 {
 	"parent": "block/cube_bottom_top",
 	"textures": {
-		"side": "crossroads:blocks/maxwell_demon_side",
-		"top": "crossroads:blocks/maxwell_demon_top",
-		"bottom": "crossroads:blocks/maxwell_demon_top"
+		"side": "crossroads:block/maxwell_demon_side",
+		"top": "crossroads:block/maxwell_demon_top",
+		"bottom": "crossroads:block/maxwell_demon_top"
 	}
 }

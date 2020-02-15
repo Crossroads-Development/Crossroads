@@ -1,9 +1,9 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "crossroads:steam_turbine"
+		"model": "crossroads:block/steam_turbine"
 	},
 	"variants": {
-		"normal": [{}]
+		"": [{}]
 	}
 }

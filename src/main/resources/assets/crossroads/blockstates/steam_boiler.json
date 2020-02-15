@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:steam_boiler" }
+		"": { "model": "crossroads:block/steam_boiler" }
 	}
 }

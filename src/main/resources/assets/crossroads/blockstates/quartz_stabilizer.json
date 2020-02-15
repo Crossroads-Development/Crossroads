@@ -1,10 +1,10 @@
 {
 	"variants": {
-		"facing=north": { "model": "crossroads:quartz_stabilizer", "x": 90},
-		"facing=south": { "model": "crossroads:quartz_stabilizer", "x": 270 },
-		"facing=east": { "model": "crossroads:quartz_stabilizer", "x": 90, "y": 90 },
-		"facing=west": { "model": "crossroads:quartz_stabilizer", "x": 90, "y": 270 },
-		"facing=up": { "model": "crossroads:quartz_stabilizer"},
-		"facing=down": { "model": "crossroads:quartz_stabilizer", "x": 180}
+		"facing=north": { "model": "crossroads:block/quartz_stabilizer", "x": 90},
+		"facing=south": { "model": "crossroads:block/quartz_stabilizer", "x": 270 },
+		"facing=east": { "model": "crossroads:block/quartz_stabilizer", "x": 90, "y": 90 },
+		"facing=west": { "model": "crossroads:block/quartz_stabilizer", "x": 90, "y": 270 },
+		"facing=up": { "model": "crossroads:block/quartz_stabilizer"},
+		"facing=down": { "model": "crossroads:block/quartz_stabilizer", "x": 180}
 	}
 }

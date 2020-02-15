@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 public class PigZombieChestsplate extends ArmorItem{
 
 	protected PigZombieChestsplate(){
-		super(ChickenBoots.BOBO_MATERIAL, EquipmentSlotType.CHEST, CRItems.itemProp.maxStackSize(1));
+		super(ChickenBoots.BOBO_MATERIAL, EquipmentSlotType.CHEST, new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
 		String name = "pig_zombie_chestplate";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);

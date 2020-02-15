@@ -1,11 +1,11 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"particle": "crossroads:blocks/reagent_pump_side",
+		"particle": "crossroads:block/reagent_pump_side",
 		"glass": "#glass",
 		"cap": "#cap",
-		"mid": "crossroads:blocks/reagent_pump_side",
-		"end": "crossroads:blocks/block_bronze"
+		"mid": "crossroads:block/reagent_pump_side",
+		"end": "crossroads:block/block_bronze"
 	},
 	"elements": [
 		{

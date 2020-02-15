@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:voltus_generator" }
+		"": { "model": "crossroads:block/voltus_generator" }
 	}
 }

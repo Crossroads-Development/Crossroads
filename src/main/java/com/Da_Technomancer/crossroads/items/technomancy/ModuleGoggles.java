@@ -32,7 +32,7 @@ public class ModuleGoggles extends ArmorItem{
 	private static final IArmorMaterial TECHNOMANCY_MAT = new TechnoMat();
 
 	public ModuleGoggles(){
-		super(TECHNOMANCY_MAT, EquipmentSlotType.HEAD, CRItems.itemProp.maxStackSize(1));
+		super(TECHNOMANCY_MAT, EquipmentSlotType.HEAD, new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
 		String name = "module_goggles";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);

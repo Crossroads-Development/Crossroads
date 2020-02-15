@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:mechanical_arm" }
+		"": { "model": "crossroads:block/mechanical_arm" }
 	}
 }

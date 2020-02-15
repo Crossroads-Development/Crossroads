@@ -1,19 +1,19 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "crossroads:atmos_charger",
+		"model": "crossroads:block/atmos_charger",
 		"uvlock": true
 	},
 	"variants": {
 		"active": {
 			"true": {
 				"textures": {
-					"mode": "crossroads:blocks/tesla_in"
+					"mode": "crossroads:block/tesla_in"
 				}
 			},
 			"false": {
 				"textures": {
-					"mode": "crossroads:blocks/tesla_out"
+					"mode": "crossroads:block/tesla_out"
 				}
 			}
 		}

@@ -2,12 +2,12 @@
 	"uv_lock": true,
 	"parent": "block/cube_all",
 	"textures": {
-		"up": "crossroads:blocks/wind_turbine_axle",
-		"down": "crossroads:blocks/wind_turbine_axle",
-		"east": "crossroads:blocks/wind_turbine",
-		"west": "crossroads:blocks/wind_turbine",
-		"north": "crossroads:blocks/wind_turbine",
-		"south": "crossroads:blocks/wind_turbine",
-		"particle": "crossroads:blocks/wind_turbine"
+		"up": "crossroads:block/wind_turbine_axle",
+		"down": "crossroads:block/wind_turbine_axle",
+		"east": "crossroads:block/wind_turbine",
+		"west": "crossroads:block/wind_turbine",
+		"north": "crossroads:block/wind_turbine",
+		"south": "crossroads:block/wind_turbine",
+		"particle": "crossroads:block/wind_turbine"
 	}
 }

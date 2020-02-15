@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:items/atmos_charger"
+		"layer0": "crossroads:item/atmos_charger"
 	}
 }

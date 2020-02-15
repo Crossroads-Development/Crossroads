@@ -30,10 +30,10 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-@ObjectHolder(Crossroads.MODID)
+//@ObjectHolder(Crossroads.MODID)
 public class MechanismTileEntity extends TileEntity implements ITickableTileEntity, ILongReceiver, IInfoTE{
 
-	@ObjectHolder("mechanism")
+	@ObjectHolder(Crossroads.MODID + ":mechanism")
 	private static TileEntityType<MechanismTileEntity> type = null;
 
 	public static final ArrayList<IMechanism> MECHANISMS = new ArrayList<>(6);//This is a list instead of an array to allow expansion by addons

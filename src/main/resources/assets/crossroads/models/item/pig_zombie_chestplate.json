@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:items/pig_zombie_chestplate"
+		"layer0": "crossroads:item/pig_zombie_chestplate"
 	}
 }

@@ -1,8 +1,8 @@
 {
 	"parent": "block/cube_bottom_top",
 	"textures": {
-		"side": "crossroads:blocks/quartz_side_framed",
-		"top": "crossroads:blocks/tin_fluid",
-		"bottom": "crossroads:blocks/tin_fluid"
+		"side": "crossroads:block/quartz_side_framed",
+		"top": "crossroads:block/tin_fluid",
+		"bottom": "crossroads:block/tin_fluid"
 	}
 }

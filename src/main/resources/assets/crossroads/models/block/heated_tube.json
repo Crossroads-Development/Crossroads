@@ -1,10 +1,10 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"particle": "crossroads:blocks/flow_limiter_middle",
+		"particle": "crossroads:block/flow_limiter_middle",
 		"glass": "#glass",
 		"cap": "#cap",
-		"mid": "crossroads:blocks/block_copper"
+		"mid": "crossroads:block/block_copper"
     },
     "elements": [
         {

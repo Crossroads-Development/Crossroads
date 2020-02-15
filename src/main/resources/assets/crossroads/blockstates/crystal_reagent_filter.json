@@ -1,9 +1,9 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "crossroads:reagent_filter",
+		"model": "crossroads:block/reagent_filter",
 		"textures": {
-			"glass": "crossroads:blocks/alch_tube/cryst_tube_cap"
+			"glass": "crossroads:block/alch_tube/cryst_tube_cap"
 		},
 		"uvlock": false
 	},

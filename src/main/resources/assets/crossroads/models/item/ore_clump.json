@@ -1,7 +1,7 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:items/ore_clump",
-		"layer1": "crossroads:items/ore_clump_mask"
+		"layer0": "crossroads:item/ore_clump",
+		"layer1": "crossroads:item/ore_clump_mask"
 	}
 }

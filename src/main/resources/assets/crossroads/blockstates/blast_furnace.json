@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:blast_furnace" }
+		"": { "model": "crossroads:block/blast_furnace" }
 	}
 }

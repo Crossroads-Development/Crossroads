@@ -1,8 +1,8 @@
 {
 	"parent": "block/cube_bottom_top",
 	"textures": {
-		"side": "crossroads:blocks/cooling_chamber_side",
-		"top": "crossroads:blocks/iron_heat",
-		"bottom": "crossroads:blocks/cooling_chamber_bottom"
+		"side": "crossroads:block/cooling_chamber_side",
+		"top": "crossroads:block/iron_heat",
+		"bottom": "crossroads:block/cooling_chamber_bottom"
 	}
 }

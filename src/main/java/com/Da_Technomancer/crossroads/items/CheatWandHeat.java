@@ -21,7 +21,7 @@ public class CheatWandHeat extends Item{
 	private static final int RATE = 100;
 
 	protected CheatWandHeat(){
-		super(CRItems.itemProp.maxStackSize(1));
+		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
 		String name = "cheat_wand_heat";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);

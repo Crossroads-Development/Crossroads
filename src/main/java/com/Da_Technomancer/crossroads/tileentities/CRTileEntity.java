@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities;
 
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.heat.HeatCable;
 import com.Da_Technomancer.crossroads.items.itemSets.HeatCableFactory;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.*;
 import com.Da_Technomancer.crossroads.tileentities.beams.*;
@@ -19,7 +20,6 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import java.util.Collection;
 import java.util.function.Supplier;
 
 import static com.Da_Technomancer.crossroads.blocks.CRBlocks.*;
@@ -27,7 +27,7 @@ import static com.Da_Technomancer.crossroads.blocks.CRBlocks.*;
 public class CRTileEntity{
 
 	public static void init(IForgeRegistry<TileEntityType<?>> reg){
-		register(HeatCableTileEntity::new, "heat_cable", reg, HeatCableFactory.HEAT_CABLES.values());
+		register(HeatCableTileEntity::new, "heat_cable", reg, HeatCableFactory.HEAT_CABLES.values().toArray(new HeatCable[0]));
 		register(MechanismTileEntity::new, "mechanism", reg, mechanism);
 		register(MasterAxisTileEntity::new, "master_axis", reg, masterAxis);
 		register(MillstoneTileEntity::new, "millstone", reg, millstone);
@@ -49,7 +49,7 @@ public class CRTileEntity{
 		register(RotaryDrillTileEntity::new, "rotary_drill", reg, rotaryDrill, rotaryDrillGold);
 		register(FatCollectorTileEntity::new, "fat_collector", reg, fatCollector);
 		register(FatCongealerTileEntity::new, "fat_congealer", reg, fatCongealer);
-		register(RedstoneHeatCableTileEntity::new, "redstone_heat_cable", reg, HeatCableFactory.REDSTONE_HEAT_CABLES.values());
+		register(RedstoneHeatCableTileEntity::new, "redstone_heat_cable", reg, HeatCableFactory.REDSTONE_HEAT_CABLES.values().toArray(new HeatCable[0]));
 		register(RedstoneFluidTubeTileEntity::new, "redstone_fluid_tube", reg, redstoneFluidTube);
 		register(WaterCentrifugeTileEntity::new, "water_centrifuge", reg, waterCentrifuge);
 		register(BeamExtractorTileEntity::new, "beam_extractor", reg, beamExtractor);
@@ -118,11 +118,6 @@ public class CRTileEntity{
 		register(FluxSinkTileEntity::new, "flux_sink", reg, fluxSink);
 	}
 
-	@SuppressWarnings("unchecked")
-	private static <T extends Block> void register(Supplier<? extends TileEntity> cons, String id, IForgeRegistry<TileEntityType<?>> reg, Collection<T> blocks){
-		register(cons, id, reg, (T[]) blocks.toArray());
-	}
-	
 	private static void register(Supplier<? extends TileEntity> cons, String id, IForgeRegistry<TileEntityType<?>> reg, Block... blocks){
 		TileEntityType<? extends TileEntity> teType = TileEntityType.Builder.create(cons, blocks).build(DSL.nilType());
 		teType.setRegistryName(new ResourceLocation(Crossroads.MODID, id));

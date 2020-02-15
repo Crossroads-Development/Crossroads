@@ -3,7 +3,7 @@
 	"textures": {
 		"particle": "#glass",
 		"main": "#glass",
-		"cork": "crossroads:blocks/cork"
+		"cork": "crossroads:block/cork"
     },
     "elements": [
     	{

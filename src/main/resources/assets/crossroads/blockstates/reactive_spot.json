@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:block_tin" }
+		"": { "model": "crossroads:block_tin" }
 	}
 }

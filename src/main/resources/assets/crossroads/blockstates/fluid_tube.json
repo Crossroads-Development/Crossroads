@@ -1,79 +1,79 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "crossroads:conduit/fluid_tube_core",
+		"model": "crossroads:block/conduit/fluid_tube_core",
 		"uvlock": false
 	},
 	"variants": {
 		"up": {
 			"input": {
-				"submodel": { "end_0": {"model": "crossroads:conduit/fluid_tube_in", "x": 0, "y": 0 }}
+				"submodel": { "end_0": {"model": "crossroads:block/conduit/fluid_tube_in", "x": 0, "y": 0 }}
 			},
 			"output": {
-				"submodel": { "end_0": {"model": "crossroads:conduit/fluid_tube_out", "x": 0, "y": 0 }}
+				"submodel": { "end_0": {"model": "crossroads:block/conduit/fluid_tube_out", "x": 0, "y": 0 }}
 			},
 			"both": {
-				"submodel": { "end_0": {"model": "crossroads:conduit/fluid_tube_bi", "x": 0, "y": 0 }}
+				"submodel": { "end_0": {"model": "crossroads:block/conduit/fluid_tube_bi", "x": 0, "y": 0 }}
 			},
 			"none": {}
 		},
 		"down": {
 			"input": {
-				"submodel": { "end_1": {"model": "crossroads:conduit/fluid_tube_in", "x": 180, "y": 0 }}
+				"submodel": { "end_1": {"model": "crossroads:block/conduit/fluid_tube_in", "x": 180, "y": 0 }}
 			},
 			"output": {
-				"submodel": { "end_1": {"model": "crossroads:conduit/fluid_tube_out", "x": 180, "y": 0 }}
+				"submodel": { "end_1": {"model": "crossroads:block/conduit/fluid_tube_out", "x": 180, "y": 0 }}
 			},
 			"both": {
-				"submodel": { "end_1": {"model": "crossroads:conduit/fluid_tube_bi", "x": 180, "y": 0 }}
+				"submodel": { "end_1": {"model": "crossroads:block/conduit/fluid_tube_bi", "x": 180, "y": 0 }}
 			},
 			"none": {}
 		},
 		"east": {
 			"input": {
-				"submodel": { "end_2": {"model": "crossroads:conduit/fluid_tube_in", "x": 90, "y": 90 }}
+				"submodel": { "end_2": {"model": "crossroads:block/conduit/fluid_tube_in", "x": 90, "y": 90 }}
 			},
 			"output": {
-				"submodel": { "end_2": {"model": "crossroads:conduit/fluid_tube_out", "x": 90, "y": 90 }}
+				"submodel": { "end_2": {"model": "crossroads:block/conduit/fluid_tube_out", "x": 90, "y": 90 }}
 			},
 			"both": {
-				"submodel": { "end_2": {"model": "crossroads:conduit/fluid_tube_bi", "x": 90, "y": 90 }}
+				"submodel": { "end_2": {"model": "crossroads:block/conduit/fluid_tube_bi", "x": 90, "y": 90 }}
 			},
 			"none": {}
 		},
 		"west": {
 			"input": {
-				"submodel": { "end_3": {"model": "crossroads:conduit/fluid_tube_in", "x": 90, "y": 270 }}
+				"submodel": { "end_3": {"model": "crossroads:block/conduit/fluid_tube_in", "x": 90, "y": 270 }}
 			},
 			"output": {
-				"submodel": { "end_3": {"model": "crossroads:conduit/fluid_tube_out", "x": 90, "y": 270 }}
+				"submodel": { "end_3": {"model": "crossroads:block/conduit/fluid_tube_out", "x": 90, "y": 270 }}
 			},
 			"both": {
-				"submodel": { "end_3": {"model": "crossroads:conduit/fluid_tube_bi", "x": 90, "y": 270 }}
+				"submodel": { "end_3": {"model": "crossroads:block/conduit/fluid_tube_bi", "x": 90, "y": 270 }}
 			},
 			"none": {}
 		},
 		"north": {
 			"input": {
-				"submodel": { "end_4": {"model": "crossroads:conduit/fluid_tube_in", "x": 90, "y": 0 }}
+				"submodel": { "end_4": {"model": "crossroads:block/conduit/fluid_tube_in", "x": 90, "y": 0 }}
 			},
 			"output": {
-				"submodel": { "end_4": {"model": "crossroads:conduit/fluid_tube_out", "x": 90, "y": 0 }}
+				"submodel": { "end_4": {"model": "crossroads:block/conduit/fluid_tube_out", "x": 90, "y": 0 }}
 			},
 			"both": {
-				"submodel": { "end_4": {"model": "crossroads:conduit/fluid_tube_bi", "x": 90, "y": 0 }}
+				"submodel": { "end_4": {"model": "crossroads:block/conduit/fluid_tube_bi", "x": 90, "y": 0 }}
 			},
 			"none": {}
 		},
 		"south": {
 			"input": {
-				"submodel": { "end_5": {"model": "crossroads:conduit/fluid_tube_in", "x": 90, "y": 180 }}
+				"submodel": { "end_5": {"model": "crossroads:block/conduit/fluid_tube_in", "x": 90, "y": 180 }}
 			},
 			"output": {
-				"submodel": { "end_5": {"model": "crossroads:conduit/fluid_tube_out", "x": 90, "y": 180 }}
+				"submodel": { "end_5": {"model": "crossroads:block/conduit/fluid_tube_out", "x": 90, "y": 180 }}
 			},
 			"both": {
-				"submodel": { "end_5": {"model": "crossroads:conduit/fluid_tube_bi", "x": 90, "y": 180 }}
+				"submodel": { "end_5": {"model": "crossroads:block/conduit/fluid_tube_bi", "x": 90, "y": 180 }}
 			},
 			"none": {}
 		}

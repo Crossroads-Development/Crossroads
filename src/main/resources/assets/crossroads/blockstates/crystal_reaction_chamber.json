@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:reaction_chamber_cryst" }
+		"": { "model": "crossroads:block/reaction_chamber_cryst" }
 	}
 }

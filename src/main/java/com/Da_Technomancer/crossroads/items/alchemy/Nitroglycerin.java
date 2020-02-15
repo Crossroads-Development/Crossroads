@@ -51,7 +51,7 @@ public class Nitroglycerin extends Item{
 	};
 
 	public Nitroglycerin(){
-		super(CRItems.itemProp);
+		super(new Properties().group(CRItems.TAB_CROSSROADS));
 		String name = "nitroglycerin";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);

@@ -35,7 +35,7 @@ public class TeslaRay extends Item{
 	private static final float DAMAGE = 6;
 
 	public TeslaRay(){
-		super(CRItems.itemProp.maxStackSize(1));
+		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
 		String name = "tesla_ray";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);

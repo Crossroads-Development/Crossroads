@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "crossroads:fat_feeder" }
+		"": { "model": "crossroads:block/fat_feeder" }
 	}
 }

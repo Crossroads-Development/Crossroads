@@ -21,7 +21,7 @@ public class HandCrank extends Item{
 	private static final int RATE = 50;
 
 	protected HandCrank(){
-		super(CRItems.itemProp.maxStackSize(1));
+		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
 		String name = "hand_crank";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);

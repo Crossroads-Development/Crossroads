@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 public class SquidHelmet extends ArmorItem{
 
 	protected SquidHelmet(){
-		super(ChickenBoots.BOBO_MATERIAL, EquipmentSlotType.HEAD, CRItems.itemProp.maxStackSize(1));
+		super(ChickenBoots.BOBO_MATERIAL, EquipmentSlotType.HEAD, new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
 		String name = "squid_helmet";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);

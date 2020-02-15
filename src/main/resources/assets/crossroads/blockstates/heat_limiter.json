@@ -1,18 +1,18 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "crossroads:heat_limiter"
+		"model": "crossroads:block/heat_limiter"
 	},
 	"variants": {
 		"active": {
 			"true": {
 				"textures": {
-					"side": "crossroads:blocks/heat_limiter_side_redstone_blue"
+					"side": "crossroads:block/heat_limiter_side_redstone_blue"
 				}
 			},
 			"false": {
 				"textures": {
-					"side": "crossroads:blocks/heat_limiter_side_redstone"
+					"side": "crossroads:block/heat_limiter_side_redstone"
 				}
 			}
 		},

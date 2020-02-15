@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:items/reag_pump_crystal"
+		"layer0": "crossroads:item/reag_pump_crystal"
 	}
 }

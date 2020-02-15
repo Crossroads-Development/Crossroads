@@ -21,7 +21,7 @@ public class Vacuum extends Item{
 	private static final double ANGLE = Math.cos(Math.PI / 4F);//Pre-calc cosine for speed
 
 	protected Vacuum(){
-		super(CRItems.itemProp.maxStackSize(1).defaultMaxDamage(1200));
+		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1).defaultMaxDamage(1200));
 		String name = "vacuum";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
