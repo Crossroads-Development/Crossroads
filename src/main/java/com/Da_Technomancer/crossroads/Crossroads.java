@@ -32,6 +32,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -74,7 +75,6 @@ public final class Crossroads{
 		CRPackets.preInit();
 		Capabilities.register();
 //		CrossroadsTileEntity.init();
-		CRPackets.preInit();
 //		ModDimensions.init();
 		//Main
 		MinecraftForge.EVENT_BUS.register(new EventHandlerCommon());
@@ -88,13 +88,13 @@ public final class Crossroads{
 
 	private void clientInit(@SuppressWarnings("unused") FMLClientSetupEvent e){
 //		TESRRegistry.init();
-		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
+//		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
 //		ModelLoaderRegistry.registerLoader(new BakedModelLoader());
 		ModEntities.clientInit();
 		CRItems.clientInit();
 		AAModTESR.registerBlockRenderer();
 		Keys.init();
-		CRParticles.clientInit();
+//		CRParticles.clientInit();
 		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
 	}
 
@@ -147,13 +147,13 @@ public final class Crossroads{
 	public static void registerEnts(RegistryEvent.Register<EntityType<?>> e){
 		IForgeRegistry<EntityType<?>> registry = e.getRegistry();
 
-		registry.register(EntityType.Builder.create(EntityFlameCore::new, EntityClassification.MISC).immuneToFire().disableSummoning().setShouldReceiveVelocityUpdates(false).size(1, 1).build("flame_core"));
-		registry.register(EntityType.Builder.<EntityBullet>create(EntityBullet::new, EntityClassification.MISC).immuneToFire().setTrackingRange(64).setUpdateInterval(5).size(0.25F, 0.25F).build("bullet"));
-		registry.register(EntityType.Builder.<EntityShell>create(EntityShell::new, EntityClassification.MISC).immuneToFire().setTrackingRange(64).setUpdateInterval(5).size(.25F, .25F).build("shell"));
-		registry.register(EntityType.Builder.<EntityNitro>create(EntityNitro::new, EntityClassification.MISC).setTrackingRange(64).setUpdateInterval(5).build("nitro"));
-		registry.register(EntityType.Builder.<EntityGhostMarker>create(EntityGhostMarker::new, EntityClassification.MISC).setTrackingRange(64).setUpdateInterval(20).immuneToFire().setShouldReceiveVelocityUpdates(false).build("ghost_marker"));
+		registry.register(EntityType.Builder.create(EntityFlameCore::new, EntityClassification.MISC).immuneToFire().disableSummoning().setShouldReceiveVelocityUpdates(false).size(1, 1).build("flame_core").setRegistryName("flame_core"));
+		registry.register(EntityType.Builder.<EntityBullet>create(EntityBullet::new, EntityClassification.MISC).immuneToFire().setTrackingRange(64).setUpdateInterval(5).size(0.25F, 0.25F).build("bullet").setRegistryName("bullet"));
+		registry.register(EntityType.Builder.<EntityShell>create(EntityShell::new, EntityClassification.MISC).immuneToFire().setTrackingRange(64).setUpdateInterval(5).size(.25F, .25F).build("shell").setRegistryName("shell"));
+		registry.register(EntityType.Builder.<EntityNitro>create(EntityNitro::new, EntityClassification.MISC).setTrackingRange(64).setUpdateInterval(5).build("nitro").setRegistryName("nitro"));
+		registry.register(EntityType.Builder.<EntityGhostMarker>create(EntityGhostMarker::new, EntityClassification.MISC).setTrackingRange(64).setUpdateInterval(20).immuneToFire().setShouldReceiveVelocityUpdates(false).build("ghost_marker").setRegistryName("ghost_marker"));
 //		registry.register(EntityType.Builder.create(EntityArmRidable::new, EntityClassification.MISC).immuneToFire().setUpdateInterval(1).disableSummoning().setTrackingRange(64).size(0.01F, 0.01F).build("arm_ridable"));
-		registry.register(EntityType.Builder.create(EntityFlyingMachine::new, EntityClassification.MISC).size(1F, 1.3F).setTrackingRange(64).setUpdateInterval(1).build("flying_machine"));
+		registry.register(EntityType.Builder.create(EntityFlyingMachine::new, EntityClassification.MISC).size(1F, 1.3F).setTrackingRange(64).setUpdateInterval(1).build("flying_machine").setRegistryName("flying_machine"));
 
 //		EntityRegistry.registerModEntity(new ResourceLocation(Crossroads.MODID, "bullet"), EntityBullet.class, "bullet", id++, Crossroads.instance, 64, 5, true);
 //		EntityRegistry.registerModEntity(new ResourceLocation(Crossroads.MODID, "arm_ridable"), EntityArmRidable.class, "arm_ridable", id++, Crossroads.instance, 64, 1, false);
@@ -173,6 +173,12 @@ public final class Crossroads{
 		registry.register(new ColorParticleType("color_liquid", false));
 		registry.register(new ColorParticleType("color_solid", false));
 		registry.register(new ColorParticleType("color_splash", false));
+	}
+
+	@SubscribeEvent
+	@SuppressWarnings("unused")
+	public static void registerParticleFactories(ParticleFactoryRegisterEvent e){
+		CRParticles.clientInit();
 	}
 
 	@SuppressWarnings("unused")

@@ -1,8 +1,8 @@
 {	
 	"ambientocclusion": false,
     "textures": {
-		"particle": "block/planks_big_oak",
-		"side": "block/planks_big_oak",
+		"particle": "block/dark_oak_planks",
+		"side": "block/dark_oak_planks",
 		"front": "crossroads:block/alchemy_chart_front"
 	},
     "elements": [

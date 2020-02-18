@@ -1,8 +1,8 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"frame": "block/planks_spruce",
-		"top": "block/planks_spruce",
+		"frame": "block/spruce_planks",
+		"top": "block/spruce_planks",
 		"rod": "crossroads:block/block_cast_iron",
 		"particle": "crossroads:block/block_cast_iron"
 	},

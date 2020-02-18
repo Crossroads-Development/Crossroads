@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.AxisTypes;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.Da_Technomancer.essentials.blocks.ESBlocks;
@@ -11,18 +12,28 @@ import com.Da_Technomancer.essentials.blocks.redstone.IRedstoneHandler;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.world.TickPriority;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.registries.ObjectHolder;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+@ObjectHolder(Crossroads.MODID)
 public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
+
+	@ObjectHolder("redstone_axis")
+	private static TileEntityType<RedstoneAxisTileEntity> type = null;
 
 	private int redstone;
 	private float circRedstone;
+
+	public RedstoneAxisTileEntity(){
+		super(type);
+	}
 
 	@Override
 	protected void runCalc(){

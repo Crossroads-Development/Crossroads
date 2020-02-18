@@ -1,10 +1,7 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.essentials.packets.ClientPacket;
-import com.Da_Technomancer.essentials.packets.Packet;
-import com.Da_Technomancer.essentials.packets.PacketManager;
-import com.Da_Technomancer.essentials.packets.ServerPacket;
+import com.Da_Technomancer.essentials.packets.*;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -13,10 +10,13 @@ import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
+import java.util.HashSet;
+
 public class CRPackets{
 
 	public static SimpleChannel channel;
 	private static int index = 0;
+	private static final HashSet<Class<? extends Packet>> registeredTypes = new HashSet<>(20);
 
 	public static void preInit(){
 		channel = NetworkRegistry.newSimpleChannel(new ResourceLocation(Crossroads.MODID, "channel"), () -> "1.0.0", (s) -> s.equals("1.0.0"), (s) -> s.equals("1.0.0"));
@@ -48,25 +48,36 @@ public class CRPackets{
 
 	private static <T extends Packet> void registerPacket(Class<T> clazz){
 		channel.registerMessage(index++, clazz, PacketManager::encode, (buf) -> PacketManager.decode(buf, clazz), PacketManager::activate);
+		registeredTypes.add(clazz);
 	}
 
 	public static void sendPacketAround(World world, BlockPos pos, ClientPacket packet){
-		channel.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), 512.0D, world.dimension.getType())), packet);
+		//Check if this packet is registered with CR. If not, send it via the Essentials packet channel; this is done to make this method correct for all CR usage
+		SimpleChannel messageChannel = registeredTypes.contains(packet.getClass()) ? channel : EssentialsPackets.channel;
+		messageChannel.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), 512.0D, world.dimension.getType())), packet);
 	}
 
 	public static void sendPacketToPlayer(ServerPlayerEntity player, ClientPacket packet){
-		channel.send(PacketDistributor.PLAYER.with(() -> player), packet);
+		//Check if this packet is registered with CR. If not, send it via the Essentials packet channel; this is done to make this method correct for all CR usage
+		SimpleChannel messageChannel = registeredTypes.contains(packet.getClass()) ? channel : EssentialsPackets.channel;
+		messageChannel.send(PacketDistributor.PLAYER.with(() -> player), packet);
 	}
 
 	public static void sendPacketToServer(ServerPacket packet){
-		channel.sendToServer(packet);
+		//Check if this packet is registered with CR. If not, send it via the Essentials packet channel; this is done to make this method correct for all CR usage
+		SimpleChannel messageChannel = registeredTypes.contains(packet.getClass()) ? channel : EssentialsPackets.channel;
+		messageChannel.sendToServer(packet);
 	}
 
 	public static void sendPacketToAll(ClientPacket packet){
-		channel.send(PacketDistributor.ALL.noArg(), packet);
+		//Check if this packet is registered with CR. If not, send it via the Essentials packet channel; this is done to make this method correct for all CR usage
+		SimpleChannel messageChannel = registeredTypes.contains(packet.getClass()) ? channel : EssentialsPackets.channel;
+		messageChannel.send(PacketDistributor.ALL.noArg(), packet);
 	}
 
 	public static void sendPacketToDimension(World world, ClientPacket packet){
-		channel.send(PacketDistributor.DIMENSION.with(() -> world.getDimension().getType()), packet);
+		//Check if this packet is registered with CR. If not, send it via the Essentials packet channel; this is done to make this method correct for all CR usage
+		SimpleChannel messageChannel = registeredTypes.contains(packet.getClass()) ? channel : EssentialsPackets.channel;
+		messageChannel.send(PacketDistributor.DIMENSION.with(() -> world.getDimension().getType()), packet);
 	}
 }

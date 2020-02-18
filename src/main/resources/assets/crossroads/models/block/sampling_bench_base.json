@@ -1,9 +1,9 @@
 {	
 	"ambientocclusion": false,
 	"textures": {
-		"particle": "block/planks_big_oak",
+		"particle": "block/dark_oak_planks",
 		"metal": "crossroads:block/block_cast_iron",
-		"wood": "block/planks_big_oak",
+		"wood": "block/dark_oak_planks",
 		"paper": "block/bone_block_side"
 	},
 	"elements": [

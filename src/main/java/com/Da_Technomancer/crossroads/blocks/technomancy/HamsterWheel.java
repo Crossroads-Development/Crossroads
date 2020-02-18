@@ -35,8 +35,8 @@ public class HamsterWheel extends ContainerBlock{
 	static{
 		SHAPES[0] = makeCuboidShape(0, 0, 8, 16, 16, 16);
 		SHAPES[1] = makeCuboidShape(0, 0, 0, 8, 16, 16);
-		SHAPES[0] = makeCuboidShape(0, 0, 0, 16, 16, 8);
-		SHAPES[0] = makeCuboidShape(8, 0, 0, 16, 16, 16);
+		SHAPES[2] = makeCuboidShape(0, 0, 0, 16, 16, 8);
+		SHAPES[3] = makeCuboidShape(8, 0, 0, 16, 16, 16);
 	}
 
 	public HamsterWheel(){

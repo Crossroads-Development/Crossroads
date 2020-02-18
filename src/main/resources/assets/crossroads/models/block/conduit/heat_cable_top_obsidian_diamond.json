@@ -1,0 +1,18 @@
+{
+	"ambientocclusion": false,
+	"textures": {
+		"wall": "crossroads:block/heatcable/obsidian-diamond"
+	},
+	"elements": [
+		{
+			"from": [ 3.2, 12.8, 3.2 ],
+			"to": [ 12.8, 16.0, 12.8 ],
+			"faces": {
+				"north": { "uv": [ 0, 16, 5.333, 0 ], "texture": "#wall"},
+				"south": { "uv": [ 0, 16, 5.333, 0 ], "texture": "#wall"},
+				"west":  { "uv": [ 16, 0, 0, 5.333 ], "texture": "#wall"},
+				"east":  { "uv": [ 16, 0, 0, 5.333 ], "texture": "#wall"}
+			}
+		}
+	]
+}

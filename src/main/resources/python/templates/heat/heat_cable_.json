@@ -1,0 +1,88 @@
+{
+	"multipart": [
+		{   "when": { "skin": "copper" },
+			"apply": { "model": "<CORE-copper>" }
+		},
+		{   "when": { "skin": "copper", "up": "true" },
+			"apply": { "model": "<END-copper>" }
+		},
+		{   "when": { "skin": "copper", "down": "true" },
+			"apply": { "model": "<END-copper>", "x": 180 }
+		},
+		{   "when": { "skin": "copper", "east": "true" },
+			"apply": { "model": "<END-copper>", "x": 90, "y": 90 }
+		},
+		{   "when": { "skin": "copper", "west": "true" },
+			"apply": { "model": "<END-copper>", "x": 90, "y": 270 }
+		},
+		{   "when": { "skin": "copper", "north": "true" },
+			"apply": { "model": "<END-copper>", "x": 90, "y": 0 }
+		},
+		{   "when": { "skin": "copper", "south": "true" },
+			"apply": { "model": "<END-copper>", "x": 90, "y": 180 }
+		},
+		{   "when": { "skin": "iron" },
+			"apply": { "model": "<CORE-iron>" }
+		},
+		{   "when": { "skin": "iron", "up": "true" },
+			"apply": { "model": "<END-iron>" }
+		},
+		{   "when": { "skin": "iron", "down": "true" },
+			"apply": { "model": "<END-iron>", "x": 180 }
+		},
+		{   "when": { "skin": "iron", "east": "true" },
+			"apply": { "model": "<END-iron>", "x": 90, "y": 90 }
+		},
+		{   "when": { "skin": "iron", "west": "true" },
+			"apply": { "model": "<END-iron>", "x": 90, "y": 270 }
+		},
+		{   "when": { "skin": "iron", "north": "true" },
+			"apply": { "model": "<END-iron>", "x": 90, "y": 0 }
+		},
+		{   "when": { "skin": "iron", "south": "true" },
+			"apply": { "model": "<END-iron>", "x": 90, "y": 180 }
+		},
+		{   "when": { "skin": "quartz" },
+			"apply": { "model": "<CORE-quartz>" }
+		},
+		{   "when": { "skin": "quartz", "up": "true" },
+			"apply": { "model": "<END-quartz>" }
+		},
+		{   "when": { "skin": "quartz", "down": "true" },
+			"apply": { "model": "<END-quartz>", "x": 180 }
+		},
+		{   "when": { "skin": "quartz", "east": "true" },
+			"apply": { "model": "<END-quartz>", "x": 90, "y": 90 }
+		},
+		{   "when": { "skin": "quartz", "west": "true" },
+			"apply": { "model": "<END-quartz>", "x": 90, "y": 270 }
+		},
+		{   "when": { "skin": "quartz", "north": "true" },
+			"apply": { "model": "<END-quartz>", "x": 90, "y": 0 }
+		},
+		{   "when": { "skin": "quartz", "south": "true" },
+			"apply": { "model": "<END-quartz>", "x": 90, "y": 180 }
+		},
+		{   "when": { "skin": "diamond" },
+			"apply": { "model": "<CORE-diamond>" }
+		},
+		{   "when": { "skin": "diamond", "up": "true" },
+			"apply": { "model": "<END-diamond>" }
+		},
+		{   "when": { "skin": "diamond", "down": "true" },
+			"apply": { "model": "<END-diamond>", "x": 180 }
+		},
+		{   "when": { "skin": "diamond", "east": "true" },
+			"apply": { "model": "<END-diamond>", "x": 90, "y": 90 }
+		},
+		{   "when": { "skin": "diamond", "west": "true" },
+			"apply": { "model": "<END-diamond>", "x": 90, "y": 270 }
+		},
+		{   "when": { "skin": "diamond", "north": "true" },
+			"apply": { "model": "<END-diamond>", "x": 90, "y": 0 }
+		},
+		{   "when": { "skin": "diamond", "south": "true" },
+			"apply": { "model": "<END-diamond>", "x": 90, "y": 180 }
+		}
+	]
+}
