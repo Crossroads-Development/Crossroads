@@ -17,7 +17,7 @@
 			"tag": "forge:ingots/tin"
 		},
 		"|": {
-			"type": "minecraft:item_nbt",
+			"type": "forge:nbt",
 			"item": "crossroads:axle",
 			"nbt": {
 				"material": "bronze"

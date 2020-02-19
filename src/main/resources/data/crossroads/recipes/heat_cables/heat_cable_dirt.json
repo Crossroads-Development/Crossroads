@@ -11,10 +11,10 @@
 	],
 	"key": {
 		"I": {
-			"tag": "forge:dirt"
+			"item": "dirt"
 		},
 		"C": {
-			"tag": "forge:ingots/ingot_copper"
+			"tag": "forge:ingots/copper"
 		}
 	}
 }

@@ -1,6 +1,6 @@
 {
 	"type": "minecraft:blasting",
-	"result": "crossroads:ingot_iron",
+	"result": "minecraft:iron_ingot",
 	"count": 1,
 	"experience": 0.7,
 	"ingredient": [

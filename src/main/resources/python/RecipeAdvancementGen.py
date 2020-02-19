@@ -31,7 +31,7 @@ with open("recipe_unlock_template.json", "r") as template:
 		for file in fileList:
 			if file.endswith(".json"):
 				recName = file.replace(".json", "")
-				fullRecName = outDir.replace("../../../../../resources/data/crossroads/advancements/recipes/", "") + recName
+				fullRecName = outDir.replace("../data/crossroads/advancements/recipes/", "") + recName
 				writeTemplate(outDir, template, recName, fullRecName)
 
 	# with open("templates/" + template, "r") as fTemp:

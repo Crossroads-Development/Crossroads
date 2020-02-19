@@ -1,7 +1,7 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"result": {
-		"item": "crossroads:smelter",
+		"item": "crossroads:heating_chamber",
 		"count": 1
 	},
 	"pattern": [

@@ -1,5 +1,7 @@
 {
 	"type": "crossroads:cooling",
-	"item": "blue_ice",
+	"fuel": {
+		"item": "blue_ice"
+	},
 	"cooling": 1600
 }

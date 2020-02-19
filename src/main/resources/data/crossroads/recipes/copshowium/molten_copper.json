@@ -2,7 +2,7 @@
 	"type": "crossroads:copshowium",
 	"input": {
 		"fluid": "crossroads:molten_copper",
-		"amount": "1000"
+		"amount": 1000
 	},
 	"mult": 2,
 	"entropy": false

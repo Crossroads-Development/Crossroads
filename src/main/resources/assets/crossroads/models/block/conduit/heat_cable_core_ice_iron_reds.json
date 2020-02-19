@@ -1,8 +1,8 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"wall": "crossroads:block/heatcable/ice-ironredstone",
-		"particle": "crossroads:block/heatcable/ice-ironredstone"
+		"wall": "crossroads:block/heatcable/ice-iron-redstone",
+		"particle": "crossroads:block/heatcable/ice-iron-redstone"
 	},
 	"elements": [
 		{

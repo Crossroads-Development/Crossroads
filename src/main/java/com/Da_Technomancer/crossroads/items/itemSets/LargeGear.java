@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.items.itemSets;
 
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearSlaveTileEntity;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
@@ -20,7 +19,6 @@ public class LargeGear extends GearMatItem{
 		super();
 		String name = "gear_base_large";
 		setRegistryName(name);
-		CRItems.toRegister.add(this);
 	}
 
 	@Override

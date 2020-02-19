@@ -34,7 +34,7 @@ public class BlastFurnaceCategory implements IRecipeCategory<BlastFurnaceRec>{
 		slot = guiHelper.getSlotDrawable();
 		arrowStatic = guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 79, 35, 24, 17);
 		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 176, 14, 24, 17), 40, IDrawableAnimated.StartDirection.LEFT, false);
-		fluidOverlay = guiHelper.createDrawable(new ResourceLocation(Crossroads.MODID, "textures/gui/rectangle_fluid_overlay.png"), 0, 0, 16, 64);
+		fluidOverlay = JEICrossroadsPlugin.createFluidOverlay(guiHelper);
 		icon = guiHelper.createDrawableIngredient(new ItemStack(CRBlocks.blastFurnace, 1));
 	}
 

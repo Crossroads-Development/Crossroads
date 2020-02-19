@@ -83,12 +83,19 @@ public class MillstoneCategory implements IRecipeCategory<MillRec>{
 		itemStackGroup.init(0, true, 79, 16);
 		itemStackGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
 
-		itemStackGroup.init(1, false, 61, 52);
-		itemStackGroup.init(2, false, 79, 52);
-		itemStackGroup.init(3, false, 97, 52);
-		itemStackGroup.set(1, recipe.getOutputs().length >= 1 ? recipe.getOutputs()[0] : ItemStack.EMPTY);
-		itemStackGroup.set(2, recipe.getOutputs().length >= 2 ? recipe.getOutputs()[1] : ItemStack.EMPTY);
-		itemStackGroup.set(3, recipe.getOutputs().length == 3 ? recipe.getOutputs()[2] : ItemStack.EMPTY);
+		int length = recipe.getOutputs().length;
+		if(length >= 1){
+			itemStackGroup.init(1, false, 61, 52);
+			itemStackGroup.set(1, recipe.getOutputs()[0]);
+			if(length >= 2){
+				itemStackGroup.init(2, false, 79, 52);
+				itemStackGroup.set(2, recipe.getOutputs()[1]);
+				if(length >= 3){
+					itemStackGroup.init(3, false, 97, 52);
+					itemStackGroup.set(3, recipe.getOutputs()[2]);
+				}
+			}
+		}
 
 		itemStackGroup.set(ingredients);
 	}

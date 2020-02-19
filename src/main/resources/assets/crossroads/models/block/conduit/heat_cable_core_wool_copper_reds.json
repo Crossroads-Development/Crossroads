@@ -1,8 +1,8 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"wall": "crossroads:block/heatcable/wool-copperredstone",
-		"particle": "crossroads:block/heatcable/wool-copperredstone"
+		"wall": "crossroads:block/heatcable/wool-copper-redstone",
+		"particle": "crossroads:block/heatcable/wool-copper-redstone"
 	},
 	"elements": [
 		{

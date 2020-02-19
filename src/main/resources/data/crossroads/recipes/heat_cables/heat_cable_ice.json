@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:heat_cable_ice",
+		"count": 4
+	},
+	"pattern": [
+		"III",
+		"CCC",
+		"III"
+	],
+	"key": {
+		"I": {
+			"tag": "crossroads:ice"
+		},
+		"C": {
+			"tag": "forge:ingots/copper"
+		}
+	}
+}

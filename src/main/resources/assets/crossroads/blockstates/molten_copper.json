@@ -1,0 +1,9 @@
+{
+	"multipart": [
+		{
+			"apply": {
+				"model": "crossroads:block/molten_copper"
+			}
+		}
+	]
+}

@@ -19,7 +19,6 @@ public class Axle extends GearMatItem{
 		super();
 		String name = "axle";
 		setRegistryName(name);
-		CRItems.toRegister.add(this);
 	}
 
 	@Override

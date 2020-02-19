@@ -33,7 +33,7 @@ public class HeatingCrucibleCategory implements IRecipeCategory<CrucibleRec>{
 		arrowStatic = guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 79, 35, 24, 17);
 		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 176, 14, 24, 17), 40, IDrawableAnimated.StartDirection.LEFT, false);
 		icon = guiHelper.createDrawableIngredient(new ItemStack(CRBlocks.heatingCrucible, 1));
-		fluidOverlay = guiHelper.createDrawable(new ResourceLocation(Crossroads.MODID, "textures/gui/square_fluid_overlay.png"), 0, 0, 32, 32);
+		fluidOverlay = JEICrossroadsPlugin.createFluidOverlay(guiHelper);//guiHelper.createDrawable(new ResourceLocation(Crossroads.MODID, "textures/gui/rectangle_fluid_overlay.png"), 0, 0, 16, 64);
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class HeatingCrucibleCategory implements IRecipeCategory<CrucibleRec>{
 	public void draw(CrucibleRec recipe, double mouseX, double mouseY){
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
-		Minecraft.getInstance().fontRenderer.drawString("When above 1000°C", 10, 10, 4210752);
+		Minecraft.getInstance().fontRenderer.drawString("When above 1000°C", 10, 10, 0x404040);
 		slot.draw(40, 50);
 		arrowStatic.draw(62, 50);
 		arrow.draw(62, 50);
@@ -74,7 +74,7 @@ public class HeatingCrucibleCategory implements IRecipeCategory<CrucibleRec>{
 		IGuiFluidStackGroup fluidGroup = layout.getFluidStacks();
 
 //		List<FluidStack> fluids = ingredients.getOutputs(VanillaTypes.FLUID).get(0);
-		fluidGroup.init(0, false, 90, 42, 32, 32, recipe.getOutput().getAmount(), false, fluidOverlay);
+		fluidGroup.init(0, false, 90, 30, 16, 64, 2_000, true, fluidOverlay);
 		fluidGroup.set(0, recipe.getOutput());
 		itemGroup.init(0, true, 40, 50);
 		itemGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));

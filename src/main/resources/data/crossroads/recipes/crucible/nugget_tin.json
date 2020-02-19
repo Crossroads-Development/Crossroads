@@ -5,6 +5,6 @@
 	},
 	"output": {
 		"fluid": "crossroads:molten_tin",
-		"amount": "16"
+		"amount": 16
 	}
 }

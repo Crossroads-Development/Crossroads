@@ -1,8 +1,7 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:item/axle",
-		"layer1": "crossroads:item/clutch_base",
-		"layer2": "crossroads:item/clutch_invert"
+		"layer0": "crossroads:item/clutch_base_inv",
+		"layer1": "crossroads:item/axle_clutch"
 	}
 }

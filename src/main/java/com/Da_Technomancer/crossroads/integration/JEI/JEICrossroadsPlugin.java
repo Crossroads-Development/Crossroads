@@ -9,6 +9,8 @@ import com.Da_Technomancer.crossroads.items.crafting.recipes.IOptionalRecipe;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.registration.*;
 import net.minecraft.client.Minecraft;
@@ -102,5 +104,10 @@ public class JEICrossroadsPlugin implements IModPlugin{
 				new BeamTransmuteCategory(guiHelper),
 				new CentrifugeCategory(guiHelper),
 				new CopshowiumCategory(guiHelper));
+	}
+
+	protected static IDrawableStatic createFluidOverlay(IGuiHelper helper){
+//		guiHelper.createDrawable(new ResourceLocation(Crossroads.MODID, "textures/gui/rectangle_fluid_overlay.png"), 0, 0, 16, 64)
+		return helper.drawableBuilder(new ResourceLocation(Crossroads.MODID, "textures/gui/rectangle_fluid_overlay.png"), 0, 0, 16, 64).setTextureSize(64, 64).build();
 	}
 }

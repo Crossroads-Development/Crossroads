@@ -5,6 +5,6 @@
 	},
 	"output": {
 		"fluid": "crossroads:molten_copper",
-		"amount": "144"
+		"amount": 144
 	}
 }

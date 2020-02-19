@@ -1,6 +1,6 @@
 {
 	"type": "minecraft:smelting",
-	"result": "crossroads:ingot_gold",
+	"result": "minecraft:gold_ingot",
 	"count": 1,
 	"experience": 0.7,
 	"ingredient": [

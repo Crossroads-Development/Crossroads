@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:beam_extract",
 	"input": {
-		"tag": "gunpowder"
+		"tag": "forge:gunpowder"
 	},
 	"energy": 24
 }

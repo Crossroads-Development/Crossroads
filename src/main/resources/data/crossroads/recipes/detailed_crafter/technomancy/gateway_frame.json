@@ -12,10 +12,10 @@
 	],
 	"key": {
 		"O": {
-			"item": "forge:obsidian"
+			"tag": "forge:obsidian"
 		},
 		"C": {
-			"item": "forge:ingots/copper"
+			"tag": "forge:ingots/copper"
 		},
 		"I": {
 			"tag": "forge:ingots/iron"

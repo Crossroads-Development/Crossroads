@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:beam_extract",
 	"input": {
-		"tag": "dusts/salt"
+		"tag": "forge:dusts/salt"
 	},
 	"potential" : 18,
 	"stability": 24

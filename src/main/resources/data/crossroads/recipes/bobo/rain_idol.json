@@ -7,7 +7,7 @@
 	],
 	"input_b": [
 		{
-			"tag": "forge:dusts/lapis"
+			"tag": "forge:gems/lapis"
 		}
 	],
 	"input_c": [
@@ -17,6 +17,6 @@
 	],
 	"output": {
 		"item": "crossroads:rain_idol",
-		"count": "1"
+		"count": 1
 	}
 }

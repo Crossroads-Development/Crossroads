@@ -18,10 +18,9 @@ public class ToggleGear extends GearMatItem{
 	private final boolean inverted;
 
 	public ToggleGear(boolean inverted){
-		String name = "gear_toggle" + (inverted ? "inv" : "");
+		String name = "gear_toggle" + (inverted ? "_inv" : "");
 		setRegistryName(name);
 		this.inverted = inverted;
-		CRItems.toRegister.add(this);
 	}
 
 	@Override

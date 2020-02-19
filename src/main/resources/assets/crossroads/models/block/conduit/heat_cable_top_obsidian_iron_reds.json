@@ -1,7 +1,7 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"wall": "crossroads:block/heatcable/obsidian-ironredstone"
+		"wall": "crossroads:block/heatcable/obsidian-iron-redstone"
 	},
 	"elements": [
 		{

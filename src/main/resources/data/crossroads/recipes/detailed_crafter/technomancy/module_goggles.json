@@ -17,7 +17,7 @@
 			"tag": "forge:glass/colorless"
 		},
 		"C": {
-			"item": "crossroads:ingots/copshowium"
+			"tag": "crossroads:ingots/copshowium"
 		}
 	}
 }

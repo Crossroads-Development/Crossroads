@@ -105,7 +105,7 @@ public class IceboxRec implements IOptionalRecipe<IInventory>{
 				return new IceboxRec(recipeId, s, Ingredient.EMPTY, 0, false);
 			}
 
-			Ingredient ingredient = CraftingUtil.getIngredient(json, "fuel", true);
+			Ingredient ingredient = CraftingUtil.getIngredient(json, "fuel", false);
 
 			//Output specified as 1 float tag
 			double cooling = JSONUtils.getFloat(json, "cooling");

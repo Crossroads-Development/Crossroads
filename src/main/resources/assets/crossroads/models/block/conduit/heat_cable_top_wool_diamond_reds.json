@@ -1,7 +1,7 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"wall": "crossroads:block/heatcable/wool-diamondredstone"
+		"wall": "crossroads:block/heatcable/wool-diamond-redstone"
 	},
 	"elements": [
 		{

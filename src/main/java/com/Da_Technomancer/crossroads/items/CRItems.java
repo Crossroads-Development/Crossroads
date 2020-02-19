@@ -188,10 +188,10 @@ public final class CRItems{
 		oreGravel = (OreProfileItem) new OreProfileItem(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("ore_gravel");
 		oreClump = (OreProfileItem) new OreProfileItem(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("ore_clump");
 
-		ironDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_iron");
-		goldDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_gold");
-		copperDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_copper");
-		tinDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_tin");
+		toRegister.add(ironDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_iron"));
+		toRegister.add(goldDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_gold"));
+		toRegister.add(copperDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_copper"));
+		toRegister.add(tinDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_tin"));
 
 		axle = new Axle();
 		clutch = new Clutch(false);
@@ -216,6 +216,6 @@ public final class CRItems{
 			OreSetup.OreProfile mat = OreProfileItem.getProfile(stack);
 			return mat == null ? -1 : mat.getColor().getRGB();
 		};
-		itemColor.register(itemColoring, oreGravel, oreClump, smallGear, largeGear, clutch, invClutch, toggleGear, invToggleGear);
+		itemColor.register(itemColoring, oreGravel, oreClump, axle, smallGear, largeGear, clutch, invClutch, toggleGear, invToggleGear);
 	}
 }

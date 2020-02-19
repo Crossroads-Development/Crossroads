@@ -131,7 +131,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 		}
 		// member
 		type = GearFactory.findMaterial(nbt.getString("type"));
-		inertia = type == null ? 0 : MiscUtil.preciseRound(type.getDensity() * 1.125D * 9D / 8D, 2);
+		inertia = type == null ? 0 : MiscUtil.preciseRound(type.getDensity() * 1.125D * 9D / 8D, 3);
 		//1.125 because r*r/2 so 1.5*1.5/2
 
 		angleW[0] = nbt.getFloat("angle");

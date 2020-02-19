@@ -1,6 +1,7 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:item/axle"
+		"layer0": "crossroads:item/blank",
+		"layer1": "crossroads:item/axle"
 	}
 }

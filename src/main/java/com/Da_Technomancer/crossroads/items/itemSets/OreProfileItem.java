@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
+import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -16,6 +17,7 @@ public class OreProfileItem extends Item{
 
 	public OreProfileItem(Item.Properties prop){
 		super(prop);
+		CRItems.toRegister.add(this);
 	}
 
 	public ItemStack withMaterial(OreSetup.OreProfile mat, int count){

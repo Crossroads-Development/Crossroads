@@ -17,7 +17,7 @@
 			"tag": "forge:ingots/iron"
 		},
 		"S": {
-			"item": "crossroads:glassware_stand"
+			"item": "crossroads:glassware_holder"
 		}
 	}
 }

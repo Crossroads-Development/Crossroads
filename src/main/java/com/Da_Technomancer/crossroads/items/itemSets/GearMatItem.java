@@ -1,11 +1,10 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -56,7 +55,7 @@ public abstract class GearMatItem extends OreProfileItem{
 	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		GearFactory.GearMaterial mat = getMaterial(stack);
 		if(mat != null){
-			tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", + mat.getDensity() * shapeFactor()));
+			tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", MiscUtil.preciseRound(mat.getDensity() * shapeFactor(), 3)));
 		}
 	}
 }

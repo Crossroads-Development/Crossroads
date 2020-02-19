@@ -186,7 +186,7 @@ public class CRBlocks{
 		beamReflector = new BeamReflector();
 		lensFrame = new LensFrame();
 		blockPureQuartz = new BasicBlock("block_pure_quartz", Block.Properties.create(Material.ROCK).hardnessAndResistance(4));
-		blockBrightQuartz = new BasicBlock("block_luminescent_quartz", Block.Properties.create(Material.ROCK).hardnessAndResistance(4).lightValue(15));
+		blockBrightQuartz = new BasicBlock("block_bright_quartz", Block.Properties.create(Material.ROCK).hardnessAndResistance(4).lightValue(15));
 		beamSiphon = new BeamSiphon();
 		beamSplitter = new BeamSplitter();
 		colorChart = new ColorChart();

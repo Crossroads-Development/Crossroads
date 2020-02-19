@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:beam_extract",
 	"input": {
-		"tag": "dusts/glowstone"
+		"tag": "forge:dusts/glowstone"
 	},
 	"energy" : 4,
 	"potential": 4,

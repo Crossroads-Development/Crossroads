@@ -40,7 +40,7 @@ public class MechanismSmallGear implements IMechanism{
 	public double getInertia(GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis){
 		// assume each gear is 1/8 of a cubic meter and has a radius of 1/2 meter.
 		// mass is rounded to make things nicer for everyone
-		return 0.125D * MiscUtil.preciseRound(mat.getDensity() / 8, 1);// .125 because r*r/2 so .5*.5/2
+		return MiscUtil.preciseRound(0.125D * mat.getDensity() / 8, 3);// .125 because r*r/2 so .5*.5/2
 	}
 
 	@Override

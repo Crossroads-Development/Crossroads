@@ -19,7 +19,6 @@ public class BasicGear extends GearMatItem{
 		super();
 		String name = "gear_base";
 		setRegistryName(name);
-		CRItems.toRegister.add(this);
 	}
 
 	@Override

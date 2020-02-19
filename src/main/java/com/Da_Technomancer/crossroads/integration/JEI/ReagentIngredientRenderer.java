@@ -19,8 +19,8 @@ import java.util.List;
 
 public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 
-	private static final ResourceLocation PHIAL_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/items/phial_crystal.png");
-	private static final ResourceLocation INNER_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/items/phial_inner.png");
+	private static final ResourceLocation PHIAL_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/item/phial_crystal.png");
+	private static final ResourceLocation INNER_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/item/phial_inner.png");
 	protected static final ReagentIngredientRenderer RENDERER = new ReagentIngredientRenderer();
 
 	@Override

@@ -91,8 +91,13 @@ public class RotaryDrill extends ContainerBlock{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", RotaryDrillTileEntity.INERTIA[golden ? 1 : 0]));
+		if(golden){
+			tooltip.add(new TranslationTextComponent("tt.crossroads.drill.desc.gold"));
+		}else{
+			tooltip.add(new TranslationTextComponent("tt.crossroads.drill.desc"));
+		}
 		tooltip.add(new TranslationTextComponent("tt.crossroads.drill.power", RotaryDrillTileEntity.ENERGY_USE));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", RotaryDrillTileEntity.INERTIA[golden ? 1 : 0]));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.drill.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

@@ -103,8 +103,8 @@ public final class Crossroads{
 	public static void registerBlocks(RegistryEvent.Register<Block> e){
 		IForgeRegistry<Block> registry = e.getRegistry();
 		CRBlocks.init();
-		CRFluids.init();
 		ItemSets.init();
+		CRFluids.init();
 		for(Block block : CRBlocks.toRegister){
 			registry.register(block);
 		}
@@ -120,6 +120,16 @@ public final class Crossroads{
 			registry.register(item);
 		}
 		CRItems.toRegister.clear();
+	}
+
+	@SuppressWarnings("unused")
+	@SubscribeEvent
+	public static void registerFluids(RegistryEvent.Register<Fluid> e){
+		IForgeRegistry<Fluid> registry = e.getRegistry();
+		for(Fluid f : CRFluids.toRegister){
+			registry.register(f);
+		}
+		CRFluids.toRegister.clear();
 	}
 
 	@SuppressWarnings("unused")
@@ -175,8 +185,8 @@ public final class Crossroads{
 		registry.register(new ColorParticleType("color_splash", false));
 	}
 
-	@SubscribeEvent
 	@SuppressWarnings("unused")
+	@SubscribeEvent
 	public static void registerParticleFactories(ParticleFactoryRegisterEvent e){
 		CRParticles.clientInit();
 	}
@@ -188,9 +198,9 @@ public final class Crossroads{
 		CRTileEntity.init(reg);
 	}
 
-	@SubscribeEvent
 	@SuppressWarnings("unused")
 	@OnlyIn(Dist.CLIENT)
+	@SubscribeEvent
 	public static void registerContainers(RegistryEvent.Register<ContainerType<?>> e){
 		registerCon(FireboxContainer::new, FireboxScreen::new, "firebox", e);
 		registerCon(IceboxContainer::new, IceboxScreen::new, "icebox", e);
@@ -218,9 +228,9 @@ public final class Crossroads{
 		registerCon(CopshowiumMakerContainer::new, CopshowiumMakerScreen::new, "copshowium_maker", e);
 	}
 
-	@SubscribeEvent
 	@SuppressWarnings("unused")
 	@OnlyIn(Dist.DEDICATED_SERVER)
+	@SubscribeEvent
 	public static void registerContainerTypes(RegistryEvent.Register<ContainerType<?>> e){
 		registerConType(FireboxContainer::new, "firebox", e);
 		registerConType(IceboxContainer::new, "icebox", e);
@@ -277,31 +287,21 @@ public final class Crossroads{
 		ScreenManager.registerFactory(contType, screenFactory);
 	}
 
-	@SubscribeEvent
 	@SuppressWarnings("unused")
-	public void registerFluids(RegistryEvent.Register<Fluid> e){
-		IForgeRegistry<Fluid> registry = e.getRegistry();
-		for(Fluid f : CRFluids.toRegister){
-			registry.register(f);
-		}
-		CRFluids.toRegister.clear();
-	}
-
 	@SubscribeEvent
-	@SuppressWarnings("unused")
-	public void registerWorldgen(RegistryEvent.Register<Feature<?>> e){
+	public static void registerWorldgen(RegistryEvent.Register<Feature<?>> e){
 		ModWorldGen.register(e.getRegistry());
 	}
 
-	@SubscribeEvent
 	@SuppressWarnings("unused")
-	public void serverLoading(FMLServerStartingEvent e){
+	@SubscribeEvent
+	public static void serverLoading(FMLServerStartingEvent e){
 		CRCommands.init(e.getCommandDispatcher());
 	}
 
-	@SubscribeEvent
 	@SuppressWarnings("unused")
-	public void serverStarted(FMLServerStartedEvent e){
+	@SubscribeEvent
+	public static void serverStarted(FMLServerStartedEvent e){
 		MinecraftForge.EVENT_BUS.register(new EventHandlerServer());
 	}
 }

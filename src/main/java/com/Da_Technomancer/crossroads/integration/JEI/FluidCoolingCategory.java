@@ -34,7 +34,7 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRec>{
 		slot = guiHelper.getSlotDrawable();
 		arrowStatic = guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 79, 35, 24, 17);
 		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 176, 14, 24, 17), 40, IDrawableAnimated.StartDirection.LEFT, false);
-		fluidOverlay = guiHelper.createDrawable(new ResourceLocation(Crossroads.MODID, "textures/gui/rectangle_fluid_overlay.png"), 0, 0, 16, 64);
+		fluidOverlay = JEICrossroadsPlugin.createFluidOverlay(guiHelper);
 	}
 
 	@Override
@@ -63,9 +63,9 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRec>{
 		Minecraft.getInstance().fontRenderer.drawString(MiscUtil.localize("crossroads.jei.fluid_cooling.add", rec.getAddedHeat()), 10, 20, 4210752);
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
-		slot.draw(80, 55);
-		arrowStatic.draw(45, 56);
-		arrow.draw(45, 56);
+		slot.draw(110, 55);
+		arrowStatic.draw(75, 56);
+		arrow.draw(75, 56);
 //		GlStateManager.disableBlend();
 //		GlStateManager.disableAlpha();
 	}
@@ -75,9 +75,9 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRec>{
 		IGuiItemStackGroup itemGroup = recipeLayout.getItemStacks();
 		IGuiFluidStackGroup fluidGroup = recipeLayout.getFluidStacks();
 
-		fluidGroup.init(0, true, 21, 30, 16, 64, 1000, true, fluidOverlay);
+		fluidGroup.init(0, true, 50, 30, 16, 64, 1000, true, fluidOverlay);
 		fluidGroup.set(0, recipe.getInput());
-		itemGroup.init(0, false, 80, 55);
+		itemGroup.init(0, false, 110, 55);
 		itemGroup.set(0, recipe.getRecipeOutput());
 
 		itemGroup.set(ingredients);

@@ -2,7 +2,7 @@
 	"type": "crossroads:copshowium",
 	"input": {
 		"fluid": "crossroads:distilled_water",
-		"amount": "1000"
+		"amount": 1000
 	},
 	"mult": 2,
 	"entropy": true

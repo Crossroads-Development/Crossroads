@@ -1,6 +1,0 @@
-{
-	"variants": {
-		"redstone_bool=true": { "model": "crossroads:block/redstone_registry"},
-		"redstone_bool=false": { "model": "crossroads:block/redstone_registry"}
-	}
-}

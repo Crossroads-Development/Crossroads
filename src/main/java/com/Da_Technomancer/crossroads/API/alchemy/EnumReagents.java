@@ -43,7 +43,7 @@ public enum EnumReagents{
 	HELLFIRE("hellfire"),
 	ELEM_LIGHT("elem_light"),
 	ELEM_RIFT("elem_rift"),
-	ELEM_EQUAL("elem_equalibrium"),
+	ELEM_EQUAL("elem_equilibrium"),
 	ELEM_FUSION("elem_fusion"),
 	ELEM_CHARGE("elem_charge"),
 	ELEM_TIME("elem_time");

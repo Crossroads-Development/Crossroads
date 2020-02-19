@@ -1,7 +1,7 @@
 {
 	"type": "minecraft:crafting_shapeless",
 	"result": {
-		"item": "crossroads:reds_crystal_alch_tube",
+		"item": "crossroads:crystal_reds_alch_tube",
 		"count": 1
 	},
 	"ingredients": [

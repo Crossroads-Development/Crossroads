@@ -4,10 +4,7 @@
 		{
 			"rolls": 1,
 			"entries": [
-				{
-					"type": "minecraft:item",
-					"name": "crossroads:large_gear_master"
-				}
+				
 			],
 			"conditions": [
 				{

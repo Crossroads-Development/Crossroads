@@ -2,7 +2,7 @@
 	"type": "crossroads:fluid_cooling",
 	"input": {
 		"fluid": "crossroads:molten_coppermolten_copshowium",
-		"amount": "144"
+		"amount": 144
 	},
 	"item": "crossroads:ingot_copshowium",
 	"max_temp": 1500,

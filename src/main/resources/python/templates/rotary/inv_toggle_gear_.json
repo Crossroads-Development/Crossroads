@@ -12,7 +12,7 @@
 			"item": "minecraft:redstone_torch"
 		},
 		{
-			"type": "minecraft:item_nbt",
+			"type": "item_nbt",
 			"item": "crossroads:gear_toggle",
 			"nbt": {
 				"material": "MAT"

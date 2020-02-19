@@ -14,7 +14,7 @@
 			"item": "minecraft:terracotta"
 		},
 		"C": {
-			"tag": "forge:ingots/ingot_copper"
+			"tag": "forge:ingots/copper"
 		}
 	}
 }

@@ -17,7 +17,7 @@ public class ModWorldGen{
 
 	public static void register(IForgeRegistry<Feature<?>> reg){
 		//Create a new feature type for placing single blocks of ore
-		reg.register(GEM_FEATURE = new SingleGen());
+		reg.register((GEM_FEATURE = new SingleGen()).setRegistryName("single_gen"));
 
 		for(Biome biome : ForgeRegistries.BIOMES){
 			//Copper ore gen, doesn't spawn in nether or end category biomes

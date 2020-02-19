@@ -1,0 +1,8 @@
+{
+	"replace": false,
+	"values": [
+		"#crossroads:pure_ice",
+		"#crossroads:raw_ice",
+		"minecraft:blue_ice"
+	]
+}

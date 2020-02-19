@@ -26,7 +26,7 @@ for model in models:
 				with open(modelOutPath + model + insulator + '_' + conductor + '_reds.json', 'w+') as fileOut:
 					lines = template.readlines()
 					template.seek(0)
-					lines = [line.replace("<TEXT>", 'crossroads:block/heatcable/' + insulator + '-' + conductor + 'redstone') for line in lines]
+					lines = [line.replace("<TEXT>", 'crossroads:block/heatcable/' + insulator + '-' + conductor + '-redstone') for line in lines]
 					fileOut.writelines(lines)
 
 # Write the blockstate templates

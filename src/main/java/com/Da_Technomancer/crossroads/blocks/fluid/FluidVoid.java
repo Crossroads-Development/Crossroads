@@ -2,10 +2,12 @@ package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidVoidTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
@@ -24,7 +26,7 @@ public class FluidVoid extends ContainerBlock{
 		String name = "fluid_void";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.blockAddQue(this, new Item.Properties().group(CRItems.TAB_CROSSROADS).rarity(CRItems.BOBO_RARITY));
 	}
 
 	@Override

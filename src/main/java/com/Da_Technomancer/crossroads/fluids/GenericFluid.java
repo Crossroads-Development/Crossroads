@@ -8,79 +8,70 @@ import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.fluid.FlowingFluid;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.Items;
-import net.minecraft.state.StateContainer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 
-public class GenericFluid{
+import java.util.function.Supplier;
+
+public class GenericFluid extends FlowingFluidBlock{
 
 	private static final Block.Properties BLOCK_PROP = Block.Properties.create(Material.WATER).doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops();
 	private static final Block.Properties BLOCK_PROP_HOT = Block.Properties.create(Material.LAVA).doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops().lightValue(15);
 	private static final Item.Properties BUCKET_PROP = new Item.Properties().containerItem(Items.BUCKET).maxStackSize(1).group(ItemGroup.MISC);
 
-	public FlowingFluid flowing;
-	public FlowingFluid still;
-	public FlowingFluidBlock block;
-	public Item bucket;
+	public static FluidData create(String name, boolean lavaLike){
+		FluidData data = new FluidData();
+		Supplier<FlowingFluid> stillS = () -> data.still;
+		Supplier<FlowingFluid> flowS = () -> data.flowing;
+		Supplier<FlowingFluidBlock> blockS = () -> data.block;
+		Supplier<Item> itemS = () -> data.bucket;
+		data.still = new Still(name, stillS, flowS, blockS, itemS);
+		data.flowing = new Flowing(name, stillS, flowS, blockS, itemS);
+		data.bucket = new BucketItem(stillS, BUCKET_PROP).setRegistryName(name + "_bucket");
+		data.block = new GenericFluid(name, stillS, lavaLike ? BLOCK_PROP_HOT : BLOCK_PROP);
 
-	public GenericFluid(String name, boolean lavaLike){
-		CRFluids.toRegister.add(still = new Still(name));
-		CRFluids.toRegister.add(flowing = new Flowing("flowing_" + name));
-		CRBlocks.toRegister.add(block = (FlowingFluidBlock) new FlowingFluidBlock(() -> still, lavaLike ? BLOCK_PROP_HOT : BLOCK_PROP).setRegistryName(name + "_block"));
-		CRItems.toRegister.add(bucket = new BucketItem(() -> still, BUCKET_PROP).setRegistryName(name + "_bucket"));
+		CRFluids.toRegister.add(data.still);
+		CRFluids.toRegister.add(data.flowing);
+		CRBlocks.toRegister.add(data.block);
+		CRItems.toRegister.add(data.bucket);
+		return data;
 	}
 
-	private abstract class FluidBase extends ForgeFlowingFluid{
+	protected GenericFluid(String name, Supplier<FlowingFluid> still, Block.Properties prop){
+		super(still, prop);
+		setRegistryName(name);
+	}
 
-		private FluidBase(String name){
-			super(new Properties(() -> still, () -> flowing, FluidAttributes.builder(new ResourceLocation(Crossroads.MODID, "blocks/" + name + "_still.png"), new ResourceLocation(Crossroads.MODID, "blocks/" + name + "_flow.png"))).block(() -> block).bucket(() -> bucket));
+	public static class FluidData{
+
+		public FlowingFluid still;
+		public FlowingFluid flowing;
+		public FlowingFluidBlock block;
+		public Item bucket;
+
+		private FluidData(){
+
+		}
+	}
+
+	private static class Flowing extends ForgeFlowingFluid.Flowing{
+
+		private Flowing(String name, Supplier<? extends Fluid> stillSupplier, Supplier<? extends Fluid> flowSupplier, Supplier<FlowingFluidBlock> blockSupplier, Supplier<Item> bucketSupplier){
+			super(new Properties(stillSupplier, flowSupplier, FluidAttributes.builder(new ResourceLocation(Crossroads.MODID, "block/" + name + "_still"), new ResourceLocation(Crossroads.MODID, "block/" + name + "_flow"))).block(blockSupplier).bucket(bucketSupplier));
+			setRegistryName("flowing_" + name);
+		}
+	}
+
+	private static class Still extends ForgeFlowingFluid.Source{
+
+		private Still(String name, Supplier<? extends Fluid> stillSupplier, Supplier<? extends Fluid> flowSupplier, Supplier<FlowingFluidBlock> blockSupplier, Supplier<Item> bucketSupplier){
+			super(new Properties(stillSupplier, flowSupplier, FluidAttributes.builder(new ResourceLocation(Crossroads.MODID, "block/" + name + "_still"), new ResourceLocation(Crossroads.MODID, "block/" + name + "_flow"))).block(blockSupplier).bucket(bucketSupplier));
 			setRegistryName(name);
-		}
-	}
-
-	private class Flowing extends FluidBase{
-
-		private Flowing(String name){
-			super(name);
-		}
-
-		@Override
-		protected void fillStateContainer(StateContainer.Builder<Fluid, IFluidState> builder) {
-			super.fillStateContainer(builder);
-			builder.add(LEVEL_1_8);
-		}
-
-		@Override
-		public boolean isSource(IFluidState state){
-			return false;
-		}
-
-		@Override
-		public int getLevel(IFluidState state){
-			return state.get(LEVEL_1_8);
-		}
-	}
-
-	private class Still extends FluidBase{
-
-		private Still(String name){
-			super(name);
-		}
-
-		@Override
-		public boolean isSource(IFluidState state){
-			return true;
-		}
-
-		@Override
-		public int getLevel(IFluidState state){
-			return 8;
 		}
 	}
 }

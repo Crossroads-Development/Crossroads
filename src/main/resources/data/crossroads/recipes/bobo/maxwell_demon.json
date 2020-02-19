@@ -2,14 +2,14 @@
 	"type": "crossroads:bobo",
 	"output": {
 		"item": "crossroads:maxwell_demon",
-		"count": "1"
+		"count": 1
 	},
 	"input_a": [
 		{
 			"tag": "crossroads:dusts/bedrock"
 		},
 		{
-			"item": "minecraft:bedock"
+			"item": "minecraft:bedrock"
 		}
 	],
 	"input_b": [
@@ -19,7 +19,7 @@
 	],
 	"input_c": [
 		{
-			"type": "minecraft:item_nbt",
+			"type": "forge:nbt",
 			"item": "crossroads:edible_blob",
 			"nbt": {
 				"food": 6,

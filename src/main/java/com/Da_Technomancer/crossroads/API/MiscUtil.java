@@ -68,6 +68,6 @@ public final class MiscUtil{
 	 * @return The localized and formatted string
 	 */
 	public static String localize(String input, Object... formatArgs){
-		return String.format(localize(input), formatArgs);
+		return new TranslationTextComponent(input, formatArgs).getFormattedText();
 	}
 }

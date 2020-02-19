@@ -17,7 +17,7 @@
 			"tag": "#forge:ingots/tin"
 		},
 		"|": {
-			"type": "minecraft:item_nbt",
+			"type": "item_nbt",
 			"item": "crossroads:axle",
 			"nbt": {
 				"material": "MAT"

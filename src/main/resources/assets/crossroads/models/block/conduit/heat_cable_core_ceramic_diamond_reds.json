@@ -1,8 +1,8 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"wall": "crossroads:block/heatcable/ceramic-diamondredstone",
-		"particle": "crossroads:block/heatcable/ceramic-diamondredstone"
+		"wall": "crossroads:block/heatcable/ceramic-diamond-redstone",
+		"particle": "crossroads:block/heatcable/ceramic-diamond-redstone"
 	},
 	"elements": [
 		{

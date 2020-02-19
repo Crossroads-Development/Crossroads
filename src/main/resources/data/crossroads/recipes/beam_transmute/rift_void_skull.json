@@ -8,7 +8,7 @@
 			"block": "minecraft:wither_skeleton_skull"
 		},
 		{
-			"block": "minecraft:minecraft:wither_skeleton_wall_skull"
+			"block": "minecraft:wither_skeleton_wall_skull"
 		}
 	],
 	"output": "minecraft:skeleton_skull"

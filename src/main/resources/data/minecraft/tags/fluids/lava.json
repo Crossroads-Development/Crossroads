@@ -2,14 +2,9 @@
 	"replace": false,
 	"values": [
 		"crossroads:molten_iron",
-		"crossroads:flowing_molten_iron",
 		"crossroads:molten_gold",
-		"crossroads:flowing_molten_gold",
 		"crossroads:molten_copper",
-		"crossroads:flowing_molten_copper",
 		"crossroads:molten_tin",
-		"crossroads:flowing_molten_tin",
-		"crossroads:molten_copshowium",
-		"crossroads:flowing_molten_copshowium"
+		"crossroads:molten_copshowium"
 	]
 }

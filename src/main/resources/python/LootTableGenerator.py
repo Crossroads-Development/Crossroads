@@ -21,9 +21,13 @@ def writeGem(file, blockName, gemName):
 
 for name in regNames:
 	filepath = loottablePath + "/" + name
+	if "molten_" in name or "liquid_" in name or "distilled_water" in name or "dirty_water" in name or "steam" in name:
+		# Fluids don't have loot tables
+		continue
+
 	with open(filepath, "w+") as f:
-		if name.startswith("stamp_mill_top") or name.startswith("light_cluster"):
-			# Stamp mill tops and light clusters drop nothing
+		if name.startswith("stamp_mill_top") or name.startswith("light_cluster") or name.startswith("stamp_mill_top") or "large_gear_" in name or "mechanism" in name or "reactive_spot" in name:
+			# Stamp mill tops and light clusters drop nothing; gear drops handled by TE
 			f.write("{\n\t\"type\": \"minecraft:block\",\n\t\"pools\": [\n\t\t{\n\t\t\t\"rolls\": 1,\n\t\t\t\"entries\": [\n\t\t\t\t\n\t\t\t],\n\t\t\t\"conditions\": [\n\t\t\t\t{\n\t\t\t\t\t\"condition\": \"minecraft:survives_explosion\"\n\t\t\t\t}\n\t\t\t]\n\t\t}\n\t]\n}")
 		elif name.startswith("ore_void"):
 			writeGem(f, "crossroads:ore_void", "crossroads:void_crystal")

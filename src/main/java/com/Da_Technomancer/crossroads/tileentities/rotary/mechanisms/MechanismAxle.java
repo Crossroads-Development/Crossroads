@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.items.CRItems;
@@ -32,7 +33,7 @@ public class MechanismAxle implements IMechanism{
 
 	@Override
 	public double getInertia(GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis){
-		return mat.getDensity() / 32_000D;
+		return MiscUtil.preciseRound(mat.getDensity() / 32_000D, 3);
 	}
 
 	@Override

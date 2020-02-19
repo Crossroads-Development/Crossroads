@@ -1,8 +1,10 @@
 {
 	"replace": false,
 	"values": [
-		"#minecraft:water",
-		"#minecraft:lava",
-		"minecraft:ice"
+		"minecraft:water",
+		"minecraft:lava",
+		"minecraft:ice",
+		"crossroads:distilled_water_block",
+		"crossroads:dirty_water_block"
 	]
 }

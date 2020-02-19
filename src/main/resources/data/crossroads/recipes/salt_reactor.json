@@ -20,7 +20,7 @@
 			"tag": "forge:storage_blocks/salt"
 		},
 		"|": {
-			"item": "fluid_tube"
+			"item": "crossroads:fluid_tube"
 		}
 	}
 }

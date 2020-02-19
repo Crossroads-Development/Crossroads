@@ -33,7 +33,7 @@ public class CopshowiumCategory implements IRecipeCategory<CopshowiumRec>{
 		icon = guiHelper.createDrawableIngredient(new ItemStack(CRBlocks.copshowiumCreationChamber, 1));
 		arrowStatic = guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 79, 35, 24, 17);
 		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 176, 14, 24, 17), 40, IDrawableAnimated.StartDirection.LEFT, false);
-		fluidOverlay = guiHelper.createDrawable(new ResourceLocation(Crossroads.MODID, "textures/gui/rectangle_fluid_overlay.png"), 0, 0, 16, 64);
+		fluidOverlay = JEICrossroadsPlugin.createFluidOverlay(guiHelper);
 	}
 
 	@Override
@@ -63,8 +63,8 @@ public class CopshowiumCategory implements IRecipeCategory<CopshowiumRec>{
 		}
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
-		arrowStatic.draw(45, 56);
-		arrow.draw(45, 56);
+		arrowStatic.draw(75, 56);
+		arrow.draw(75, 56);
 //		GlStateManager.disableBlend();
 //		GlStateManager.disableAlpha();
 	}
@@ -73,9 +73,9 @@ public class CopshowiumCategory implements IRecipeCategory<CopshowiumRec>{
 	public void setRecipe(IRecipeLayout recipeLayout, CopshowiumRec recipe, IIngredients ingredients){
 		IGuiFluidStackGroup fluidGroup = recipeLayout.getFluidStacks();
 
-		fluidGroup.init(0, true, 21, 30, 16, 64, 4000, true, fluidOverlay);
+		fluidGroup.init(0, true, 50, 30, 16, 64, 4000, true, fluidOverlay);
 		fluidGroup.set(0, recipe.getInput());
-		fluidGroup.init(1, false, 80, 30, 16, 64, 4000, true, fluidOverlay);
+		fluidGroup.init(1, false, 110, 30, 16, 64, 4000, true, fluidOverlay);
 		fluidGroup.set(1, ingredients.getOutputs(VanillaTypes.FLUID).get(0));
 	}
 

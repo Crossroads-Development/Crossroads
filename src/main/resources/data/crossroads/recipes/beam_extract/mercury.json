@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:beam_extract",
 	"input": {
-		"tag": "gems/mercury"
+		"tag": "forge:gems/mercury"
 	},
 	"potential" : 32
 }

@@ -2,7 +2,7 @@
 	"type": "crossroads:bobo",
 	"output": {
 		"item": "crossroads:chicken_boots",
-		"count": "1"
+		"count": 1
 	},
 	"input_a": [
 		{
@@ -11,7 +11,7 @@
 	],
 	"input_b": [
 		{
-			"tag": "forge:feather"
+			"tag": "forge:feathers"
 		}
 	],
 	"input_c": [

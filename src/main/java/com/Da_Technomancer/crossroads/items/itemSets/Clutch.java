@@ -28,7 +28,6 @@ public class Clutch extends GearMatItem{
 		this.inverted = inverted;
 		String name = "clutch" + (inverted ? "_inv" : "");
 		setRegistryName(name);
-		CRItems.toRegister.add(this);
 	}
 
 	@Override

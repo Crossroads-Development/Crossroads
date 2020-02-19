@@ -6,7 +6,7 @@
 	},
 	"ingredients": [
 		{
-			"item": "crossroads:dusts/alchemy_salt"
+			"tag": "crossroads:dusts/alchemy_salt"
 		},
 		{
 			"tag": "crossroads:dusts/alchemy_salt"

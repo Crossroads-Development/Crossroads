@@ -1,7 +1,7 @@
 {
 	"replace": false,
 	"values": [
-		"#minecraft:glass",
+		"#forge:glass",
 		"minecraft:glowstone",
 		"minecraft:sea_lantern",
 		"#crossroads:storage_blocks/pure_quartz",

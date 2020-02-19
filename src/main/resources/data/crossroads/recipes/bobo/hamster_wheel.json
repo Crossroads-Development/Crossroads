@@ -2,7 +2,7 @@
 	"type": "crossroads:bobo",
 	"output": {
 		"item": "crossroads:hamster_wheel",
-		"count": "1"
+		"count": 1
 	},
 	"input_a": [
 		{
@@ -11,12 +11,12 @@
 	],
 	"input_b": [
 		{
-			"tag": "forge:nuggets/copshowium"
+			"tag": "crossroads:nuggets/copshowium"
 		}
 	],
 	"input_c": [
 		{
-			"type": "minecraft:item_nbt",
+			"type": "forge:nbt",
 			"item": "crossroads:edible_blob",
 			"nbt": {
 				"food": 4,
