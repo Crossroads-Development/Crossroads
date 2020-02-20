@@ -87,7 +87,7 @@ public class Mechanism extends ContainerBlock implements IReadable{
 			VoxelShape shape = VoxelShapes.empty();
 			for(VoxelShape s : mte.boundingBoxes){
 				if(s != null){
-					shape = VoxelShapes.or(s);
+					shape = VoxelShapes.or(shape, s);
 				}
 			}
 			return shape;
@@ -251,13 +251,14 @@ public class Mechanism extends ContainerBlock implements IReadable{
 
 	/**
 	 * You would think this would be built into the VoxelShape class, but noooooooo
-	 * "Contans" is defined as either inside the shape, or on the edge of the shape
+	 * "Contains" is defined as either inside the shape, or on the edge of the shape
 	 * @param shape The voxelshape to check if contains the passed point
 	 * @param point The 3 dimensional point to check if is contained by the passed shape
 	 * @return Whether the passed VoxelShape contains the passed point
 	 */
 	public static boolean voxelContains(VoxelShape shape, Vec3d point){
-		final boolean[] contained = new boolean[1];//We use a size 1 array because lambdas aren't supposed to use non-final fields
+		//We use a size 1 array because lambdas aren't supposed to use non-final variables
+		final boolean[] contained = new boolean[1];
 		shape.forEachBox((double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) -> {
 			if(!contained[0]){
 				contained[0] = xMin <= point.x && xMax >= point.x && yMin <= point.y && yMax >= point.y && zMin <= point.z && zMax >= point.z;

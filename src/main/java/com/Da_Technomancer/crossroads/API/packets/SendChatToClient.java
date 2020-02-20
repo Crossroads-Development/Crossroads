@@ -52,20 +52,20 @@ public class SendChatToClient extends ClientPacket{
 
 		String active = chat;
 		while(active.length() != 0){
-			active = active.substring(1);
+			active = active.substring(1);//Delete divider char
 			int nextInd = active.indexOf(DIVIDER);
 			if(nextInd == -1){
 				nextInd = active.length();
 			}
 			components.add(ITextComponent.Serializer.fromJson(active.substring(0, nextInd)));
 			if(nextInd + 1 < active.length()){
-				active = active.substring(nextInd + 1);
+				active = active.substring(nextInd);
 			}else{
 				active = "";
 			}
 		}
 
-		ITextComponent combined;;
+		ITextComponent combined;
 		StringBuilder combo = new StringBuilder();
 		for(int i = 0; i < components.size(); i++){
 			combo.append(components.get(i).getFormattedText());

@@ -31,12 +31,11 @@ public class CheatWandRotary extends Item{
 	public ActionResultType onItemUse(ItemUseContext context){
 		TileEntity te = context.getWorld().getTileEntity(context.getPos());
 		LazyOptional<IAxleHandler> axleOpt;
-		if(te != null && (axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, null)).isPresent()){
-			IAxleHandler axle = axleOpt.orElseThrow(NullPointerException::new);
+		if(te != null && (axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, context.getFace().getOpposite())).isPresent()){
 			if(context.isPlacerSneaking()){
-				axle.addEnergy(-RATE, true);
+				axleOpt.orElseThrow(NullPointerException::new).addEnergy(-RATE, true);
 			}else{
-				axle.addEnergy(RATE, true);
+				axleOpt.orElseThrow(NullPointerException::new).addEnergy(RATE, true);
 			}
 			return ActionResultType.SUCCESS;
 		}

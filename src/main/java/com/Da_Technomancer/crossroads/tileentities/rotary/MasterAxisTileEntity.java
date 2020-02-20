@@ -283,9 +283,6 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 
 		@Override
 		public void requestUpdate(){
-			if(CRConfig.disableSlaves.get()){
-				return;
-			}
 			memberCopy = new ArrayList<>(rotaryMembers);
 			rotaryMembers.clear();
 			locked = false;

@@ -42,7 +42,7 @@ public class CRConfig{
 //	public static ForgeConfigSpec.BooleanValue magicChunk;
 //	public static ForgeConfigSpec.BooleanValue blastChunk;
 	public static ForgeConfigSpec.BooleanValue fluxEvent;
-	public static ForgeConfigSpec.BooleanValue disableSlaves;
+//	public static ForgeConfigSpec.BooleanValue disableSlaves;
 	public static ForgeConfigSpec.IntValue gearResetTime;
 	public static ForgeConfigSpec.BooleanValue wipeInvalidMappings;
 //	public static ForgeConfigSpec.ConfigValue<List<? extends String>> blockedPrototype;

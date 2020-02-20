@@ -6,10 +6,14 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearMaster;
 import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearSlave;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -95,6 +99,8 @@ public class RotaryUtil{
 		return !state.isNormalCube(world, pos) && state.getBlock() != CRBlocks.largeGearSlave && state.getBlock() != CRBlocks.largeGearMaster;
 	}
 
+	private static final VoxelShape GEAR_ANCHOR_SHAPE = Block.makeCuboidShape(7.0D, 7.0D, 7.0D, 9.0D, 9.0D, 9.0D);
+
 	/**
 	 * Returns whether the block at the provided position is solid to gears on the specified side
 	 * @param world The World
@@ -105,29 +111,12 @@ public class RotaryUtil{
 	public static boolean solidToGears(World world, BlockPos pos, Direction side){
 		//The current definition of "solid":
 		//Block collision shape contains the 2x2 of pixels in the center of the face in side
-		//And block is not a large gear
-		//There's a new method in MC1.15 I want to use for this (used for torches) TODO
+		//And block is not a large gear or leaves
 		BlockState state = world.getBlockState(pos);
 		if(state.getBlock() instanceof LargeGearSlave || state.getBlock() instanceof LargeGearMaster){
 			return false;
 		}
-		VoxelShape shape = state.getCollisionShape(world, pos);
-		Direction.Axis axis = side.getAxis();
-		shape = shape.project(side);//Eliminate all voxels that don't touch the side of interest, and extend remaining voxels
-		final boolean[] passed = new boolean[1];
-		final double rad = 1;
-		//Known issue: If all necessary components of the voxel exist, but are spread over multiple voxels, this will fail because we only check one voxelbox at a time
-		//However, that is a very rare edge case (if you find it in vanilla, let me know and I'll special case it), and checking for it increases complexity from O(n) to- I'm not actually sure, I'm not a CS major, but probably O(n^2) or something
-		shape.forEachBox((xSt, ySt, zSt, xEn, yEn, zEn) -> {
-			//Only continue checking if we haven't found a match
-			if(!passed[0]){
-				//Known: Each box will extend from 0 to 16 on the axis of interest (due to project call)- the axis check is therefore redundant, but lets us speed things up
-				if((axis == Direction.Axis.X || xSt <= 8D - rad && xEn >= 8D + rad) && (axis == Direction.Axis.Y || ySt <= 8D - rad && yEn >= 8D + rad) && (axis == Direction.Axis.Z || zSt <= 8D - rad && zEn >= 8D + rad)){
-					passed[0] = true;
-				}
-			}
-		});
-		return passed[0];
+		return !state.isIn(BlockTags.LEAVES) && !VoxelShapes.compare(state.getCollisionShape(world, pos).project(side), GEAR_ANCHOR_SHAPE, IBooleanFunction.ONLY_SECOND);
 	}
 
 	/**

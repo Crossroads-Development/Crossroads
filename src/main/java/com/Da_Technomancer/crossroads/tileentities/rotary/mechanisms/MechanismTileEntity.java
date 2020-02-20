@@ -21,6 +21,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.capabilities.Capability;
@@ -54,8 +55,9 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		int part = -1;
+		Vec3d hitVec = hit.getHitVec().subtract(pos.getX(), pos.getY(), pos.getZ());//Subtract position, as the VoxelShapes are defined relative to position
 		for(int i = 0; i < 7; i++){
-			if(boundingBoxes[i] != null && Mechanism.voxelContains(boundingBoxes[i], hit.getHitVec())){
+			if(boundingBoxes[i] != null && Mechanism.voxelContains(boundingBoxes[i], hitVec)){
 				part = i;
 				break;
 			}
