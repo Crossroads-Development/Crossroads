@@ -9,25 +9,25 @@
 		"uvlock": false
 	},
 	"variants": {
-		"east": {
+		"east_b": {
 			"true": {
 				"submodel": { "end_2": {"model": "crossroads:block/conduit/alch_tube_glass_in", "x": 90, "y": 90 }}
 			},
 			"false": {}
 		},
-		"west": {
+		"west_b": {
 			"true": {
 				"submodel": { "end_3": {"model": "crossroads:block/conduit/alch_tube_glass_in", "x": 90, "y": 270 }}
 			},
 			"false": {}
 		},
-		"north": {
+		"north_b": {
 			"true": {
 				"submodel": { "end_4": {"model": "crossroads:block/conduit/alch_tube_glass_in", "x": 90, "y": 0 }}
 			},
 			"false": {}
 		},
-		"south": {
+		"south_b": {
 			"true": {
 				"submodel": { "end_5": {"model": "crossroads:block/conduit/alch_tube_glass_in", "x": 90, "y": 180 }}
 			},

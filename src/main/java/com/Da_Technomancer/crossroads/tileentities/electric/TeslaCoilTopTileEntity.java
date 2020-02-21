@@ -107,7 +107,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 		}else if(!world.isRemote){
 			//TRANSFER
 			for(BlockPos linkPos : linked){
-				if(linkPos != null && coilTE.getStored() >= joltQty && linkPos.distanceSq(BlockPos.ZERO) <= range * range){
+				if(linkPos != null && coilTE.getStored() >= joltQty && linkPos.distanceSq(0, 0, 0, false) <= range * range){
 					BlockPos actualPos = linkPos.add(pos.getX(), pos.getY() - 1, pos.getZ());
 					TileEntity te = world.getTileEntity(actualPos);
 					if(te instanceof TeslaCoilTileEntity && world.getTileEntity(actualPos.up()) instanceof TeslaCoilTopTileEntity){

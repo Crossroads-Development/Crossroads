@@ -6,12 +6,14 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearMaster;
 import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearSlave;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.IBooleanFunction;
+import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
@@ -99,7 +101,7 @@ public class RotaryUtil{
 		return !state.isNormalCube(world, pos) && state.getBlock() != CRBlocks.largeGearSlave && state.getBlock() != CRBlocks.largeGearMaster;
 	}
 
-	private static final VoxelShape GEAR_ANCHOR_SHAPE = Block.makeCuboidShape(7.0D, 7.0D, 7.0D, 9.0D, 9.0D, 9.0D);
+	private static final VoxelShape GEAR_ANCHOR_SHAPE = Block.makeCuboidShape(7.05D, 7.05D, 7.05D, 8.95D, 8.95D, 8.95D);
 
 	/**
 	 * Returns whether the block at the provided position is solid to gears on the specified side
@@ -111,12 +113,21 @@ public class RotaryUtil{
 	public static boolean solidToGears(World world, BlockPos pos, Direction side){
 		//The current definition of "solid":
 		//Block collision shape contains the 2x2 of pixels in the center of the face in side
-		//And block is not a large gear or leaves
+		//And block is not the back of a large gear or leaves
 		BlockState state = world.getBlockState(pos);
-		if(state.getBlock() instanceof LargeGearSlave || state.getBlock() instanceof LargeGearMaster){
+		if(state.getBlock() instanceof LargeGearSlave || (state.getBlock() instanceof LargeGearMaster && side != state.get(ESProperties.FACING).getOpposite())){
 			return false;
 		}
-		return !state.isIn(BlockTags.LEAVES) && !VoxelShapes.compare(state.getCollisionShape(world, pos).project(side), GEAR_ANCHOR_SHAPE, IBooleanFunction.ONLY_SECOND);
+		if(state.isIn(BlockTags.LEAVES)){
+			return false;//Vanilla convention has leaves as non-solid
+		}
+
+		//This is where the magic happens
+		//Projections remove all cuboids that don't touch the passed side, and extend those that remain into a full column from one side to the opposite (the project method is poorly named)
+		//Projections are cached by default, so this operation is fast
+		//We have a reference anchor shape, which should fit neatly inside the projected shape if this is a solid surface
+		//We go to the block directly for getting the shape, because BlockState caches the result, and CR Mechanisms have the collision shape vary w/ TE data (this is a workaround)
+		return !VoxelShapes.compare(state.getBlock().getCollisionShape(state, world, pos, ISelectionContext.dummy()).project(side), GEAR_ANCHOR_SHAPE, IBooleanFunction.ONLY_SECOND);
 	}
 
 	/**

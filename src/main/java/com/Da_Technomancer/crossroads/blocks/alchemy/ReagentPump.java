@@ -95,23 +95,14 @@ public class ReagentPump extends ContainerBlock{
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
-		builder.add(CRProperties.ACTIVE, CRProperties.UP, CRProperties.DOWN, CRProperties.EAST, CRProperties.WEST, CRProperties.NORTH, CRProperties.SOUTH);
+		builder.add(CRProperties.ACTIVE, CRProperties.HAS_MATCH_SIDES[2], CRProperties.HAS_MATCH_SIDES[3], CRProperties.HAS_MATCH_SIDES[4], CRProperties.HAS_MATCH_SIDES[5]);
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
 		int index = 0;
-		if(state.get(CRProperties.NORTH)){
-			index |= 1;
-		}
-		if(state.get(CRProperties.SOUTH)){
-			index |= 1 << 1;
-		}
-		if(state.get(CRProperties.WEST)){
-			index |= 1 << 2;
-		}
-		if(state.get(CRProperties.EAST)){
-			index |= 1 << 3;
+		for(int i = 2; i < 5; i++){
+			index |= state.get(CRProperties.HAS_MATCH_SIDES[i]) ? 1 << i - 2 : 0;
 		}
 		return SHAPES[index];
 	}
@@ -128,7 +119,7 @@ public class ReagentPump extends ContainerBlock{
 				connect[i] = true;
 			}
 		}
-		return getDefaultState().with(CRProperties.NORTH, connect[2]).with(CRProperties.SOUTH, connect[3]).with(CRProperties.WEST, connect[4]).with(CRProperties.EAST, connect[5]);
+		return getDefaultState().with(CRProperties.HAS_MATCH_SIDES[2], connect[2]).with(CRProperties.HAS_MATCH_SIDES[3], connect[3]).with(CRProperties.HAS_MATCH_SIDES[4], connect[4]).with(CRProperties.HAS_MATCH_SIDES[5], connect[5]);
 	}
 
 	@Override
@@ -137,23 +128,11 @@ public class ReagentPump extends ContainerBlock{
 		TileEntity thisTE = worldIn.getTileEntity(pos);
 		LazyOptional<IChemicalHandler> otherOpt;
 		boolean connect = thisTE instanceof ReagentPumpTileEntity && te != null && (otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, facing.getOpposite())).isPresent() && otherOpt.orElseThrow(NullPointerException::new).getChannel(facing).connectsWith(crystal ? EnumContainerType.CRYSTAL : EnumContainerType.GLASS);
-		BooleanProperty prop;
-		switch(facing){
-			case NORTH:
-				prop = CRProperties.NORTH;
-				break;
-			case SOUTH:
-				prop = CRProperties.SOUTH;
-				break;
-			case WEST:
-				prop = CRProperties.WEST;
-				break;
-			case EAST:
-				prop = CRProperties.EAST;
-				break;
-			default:
-				return stateIn;
+		if(facing.getAxis() != Direction.Axis.Y){
+			BooleanProperty prop = CRProperties.HAS_MATCH_SIDES[facing.getIndex()];
+			return stateIn.with(prop, connect);
+		}else{
+			return stateIn;
 		}
-		return stateIn.with(prop, connect);
 	}
 }

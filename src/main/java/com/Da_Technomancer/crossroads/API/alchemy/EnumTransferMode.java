@@ -34,7 +34,7 @@ public enum EnumTransferMode implements IStringSerializable{
 
 	@Override
 	public String getName(){
-		return name().toLowerCase();
+		return name().toLowerCase(Locale.US);
 	}
 
 	@Nonnull

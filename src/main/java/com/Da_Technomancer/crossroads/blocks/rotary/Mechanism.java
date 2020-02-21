@@ -32,7 +32,7 @@ import java.util.List;
 
 public class Mechanism extends ContainerBlock implements IReadable{
 
-	private static final VoxelShape BREAK_ALL_BB = Block.makeCuboidShape(5, 5, 5, 11, 11, 11);
+//	private static final VoxelShape BREAK_ALL_BB = Block.makeCuboidShape(5, 5, 5, 11, 11, 11);
 
 	public Mechanism(){
 		super(Block.Properties.create(Material.IRON).hardnessAndResistance(1).sound(SoundType.METAL));
@@ -70,17 +70,20 @@ public class Mechanism extends ContainerBlock implements IReadable{
 		TileEntity te = worldIn.getTileEntity(pos);
 		if(te instanceof MechanismTileEntity){
 			MechanismTileEntity mte = (MechanismTileEntity) te;
-			if(mte.members[6] != null){
+//			if(mte.members[6] != null){
 				return getCollisionShape(state, worldIn, pos, context);
-			}else{
-				return VoxelShapes.or(getCollisionShape(state, worldIn, pos, context), BREAK_ALL_BB);
-			}
+//			}else{
+//				return VoxelShapes.or(getCollisionShape(state, worldIn, pos, context), BREAK_ALL_BB);
+//			}
 		}
-		return BREAK_ALL_BB;//Shouldn't happen unless network weirdness.
+		return VoxelShapes.empty();
+//		return BREAK_ALL_BB;//Shouldn't happen unless network weirdness.
 	}
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+		//There's some sort of issue with this being cached on a per-state level, and all mechanisms use the same blockstate
+
 		TileEntity te = worldIn.getTileEntity(pos);
 		if(te instanceof MechanismTileEntity){
 			MechanismTileEntity mte = (MechanismTileEntity) te;
@@ -98,48 +101,7 @@ public class Mechanism extends ContainerBlock implements IReadable{
 	@Override
 	public boolean removedByPlayer(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid){
 		RotaryUtil.increaseMasterKey(false);
-		if(worldIn.isRemote){
-			return false;
-		}
-
-		TileEntity te = worldIn.getTileEntity(pos);
-		if(te instanceof MechanismTileEntity){
-			MechanismTileEntity gear = (MechanismTileEntity) te;
-			float reDist = player.isCreative() ? 5F : 4.5F;
-			Vec3d start = new Vec3d(player.prevPosX, player.prevPosY + (double) player.getEyeHeight(), player.prevPosZ).subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
-			Vec3d end = start.add(player.getLook(0F).x * reDist, player.getLook(0F).y * reDist, player.getLook(0F).z * reDist);
-
-			int out = getAimedSide(gear, start, end);
-
-			if(out == -1){
-				return false;
-			}
-
-			if(out == 7){
-				if(willHarvest){
-					for(int i = 0; i < 7; i++){
-						if(gear.members[i] != null){
-							spawnAsEntity(worldIn, pos, gear.members[i].getDrop(gear.mats[i]));
-						}
-					}
-				}
-				worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
-				return true;
-			}else{
-				if(willHarvest){
-					spawnAsEntity(worldIn, pos, gear.members[out].getDrop(gear.mats[out]));
-				}
-				gear.setMechanism(out, null, null, null, false);
-				if(gear.members[0] == null && gear.members[1] == null && gear.members[2] == null && gear.members[3] == null && gear.members[4] == null && gear.members[5] == null && gear.members[6] == null){
-					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
-					return true;
-				}
-
-				return false;
-			}
-		}else{
-			return super.removedByPlayer(state, worldIn, pos, player, willHarvest, fluid);
-		}
+		return super.removedByPlayer(state, worldIn, pos, player, willHarvest, fluid);
 	}
 
 	@Override
@@ -165,17 +127,27 @@ public class Mechanism extends ContainerBlock implements IReadable{
 	 * @return The index of the aimed component, 7 if the breakall cube, -1 if none
 	 */
 	private int getAimedSide(MechanismTileEntity te, Vec3d start, Vec3d end){
+		double minDist = Float.MAX_VALUE;
+		int target = -1;
 		for(int i = 0; i < te.boundingBoxes.length; i++){
-			if(te.boundingBoxes[i] != null && te.boundingBoxes[i].rayTrace(start, end, BlockPos.ZERO) != null){
-				return i;
+			BlockRayTraceResult res;
+			if(te.boundingBoxes[i] != null && (res = te.boundingBoxes[i].rayTrace(start, end, BlockPos.ZERO)) != null){
+				double dist = res.getHitVec().subtract(start).lengthSquared();
+				if(dist < minDist){
+					minDist = dist;
+					target = i;
+				}
 			}
 		}
 
 		//Include break-all-cube if no axle
-		if(te.boundingBoxes[6] == null && BREAK_ALL_BB.rayTrace(start, end, BlockPos.ZERO) != null){
-			return 7;
-		}
-		return -1;
+//		BlockRayTraceResult res;
+//		if(te.boundingBoxes[6] == null && (res = BREAK_ALL_BB.rayTrace(start, end, BlockPos.ZERO)) != null){
+//			if(res.getHitVec().subtract(start).lengthSquared() < minDist){
+//				target = 7;
+//			}
+//		}
+		return target;
 	}
 
 	@Override
@@ -185,7 +157,7 @@ public class Mechanism extends ContainerBlock implements IReadable{
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
-		RotaryUtil.increaseMasterKey(true);//
+		RotaryUtil.increaseMasterKey(true);
 
 		if(worldIn.isRemote){
 			return;
@@ -216,19 +188,59 @@ public class Mechanism extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
+	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit){
+		if(ESConfig.isWrench(player.getHeldItem(hand))){
 			TileEntity te = worldIn.getTileEntity(pos);
 			if(te instanceof MechanismTileEntity){
-				MechanismTileEntity mte = (MechanismTileEntity) te;
-				if(mte.axleAxis != null){
-					RotaryUtil.increaseMasterKey(false);
-					if(!worldIn.isRemote){
-						mte.setMechanism(6, mte.members[6], mte.mats[6], Direction.Axis.values()[(mte.axleAxis.ordinal() + 1) % 3], false);
-					}
-					return true;
+				MechanismTileEntity gear = (MechanismTileEntity) te;
+				double reDist = player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue();//Player reach distance
+				Vec3d start = new Vec3d(player.prevPosX, player.prevPosY + (double) player.getEyeHeight(), player.prevPosZ).subtract(pos.getX(), pos.getY(), pos.getZ());
+				Vec3d end = start.add(player.getLook(0F).x * reDist, player.getLook(0F).y * reDist, player.getLook(0F).z * reDist);
+
+				int out = getAimedSide(gear, start, end);
+
+				if(out == -1){
+					//Didn't actually hit
+					return false;
 				}
+
+				if(out == 7){
+					//Player hit the "break all cube" in the center
+					//Spawn drops, as applicable
+					for(int i = 0; i < 7; i++){
+						if(gear.members[i] != null){
+							spawnAsEntity(worldIn, pos, gear.members[i].getDrop(gear.mats[i]));
+						}
+					}
+
+					//Destroy the TE
+					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
+				}else{
+					//Spawn an item as applicable
+					spawnAsEntity(worldIn, pos, gear.members[out].getDrop(gear.mats[out]));
+
+					gear.setMechanism(out, null, null, null, false);//Delete the destroyed mechanism
+					if(gear.members[0] == null && gear.members[1] == null && gear.members[2] == null && gear.members[3] == null && gear.members[4] == null && gear.members[5] == null && gear.members[6] == null){
+						//If the mechanism is now empty, set it to air
+						worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
+					}
+				}
+
+				return true;
 			}
+
+
+//			TileEntity te = worldIn.getTileEntity(pos);
+//			if(te instanceof MechanismTileEntity){
+//				MechanismTileEntity mte = (MechanismTileEntity) te;
+//				if(mte.axleAxis != null){
+//					RotaryUtil.increaseMasterKey(false);
+//					if(!worldIn.isRemote){
+//						mte.setMechanism(6, mte.members[6], mte.mats[6], Direction.Axis.values()[(mte.axleAxis.ordinal() + 1) % 3], false);
+//					}
+//					return true;
+//				}
+//			}
 		}
 		return false;
 	}

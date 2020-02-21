@@ -5,10 +5,10 @@ import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.renderer.texture.ITickable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @ObjectHolder(Crossroads.MODID)
-public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickable{
+public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickableTileEntity{
 
 	@ObjectHolder("flux_sink")
 	private static TileEntityType<FluxSinkTileEntity> type = null;

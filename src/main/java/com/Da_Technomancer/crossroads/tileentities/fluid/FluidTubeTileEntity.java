@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.fluid.FluidTube;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -13,6 +13,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.common.util.NonNullSupplier;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -30,124 +31,40 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 
 	protected static final int CAPACITY = 2000;
 
-	//Whether there exists a block to connect to on each side
-	protected final boolean[] hasMatch = new boolean[6];
-	//The setting of this block on each side. None means locked
-	protected final EnumTransferMode[] configure = new EnumTransferMode[] {EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH};
+	//Caching of instances
+	private final IFluidHandler mainHandlerIns = new MainFluidHandler();
+	private final IFluidHandler inHandlerIns = new InFluidHandler();
+	private final IFluidHandler outHandlerIns = new OutFluidHandler();
+	private final NonNullSupplier<IFluidHandler> mainHandler = () -> mainHandlerIns;
+	private final NonNullSupplier<IFluidHandler> inHandler = () -> inHandlerIns;
+	private final NonNullSupplier<IFluidHandler> outHandler = () -> outHandlerIns;
 
-	private final IFluidHandler mainHandler = new MainFluidHandler();
-	private final IFluidHandler inHandler = new InFluidHandler();
-	private final IFluidHandler outHandler = new OutFluidHandler();
-
+	//Cache of neighboring optionals
 	@SuppressWarnings("unchecked")
 	private LazyOptional<IFluidHandler>[] otherOpts = new LazyOptional[] {LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty()};
+	//The optionals of this tube, in order both, in, out
 	@SuppressWarnings("unchecked")
-	private LazyOptional<IFluidHandler>[] internalOpts = new LazyOptional[] {LazyOptional.of(() -> mainHandler), LazyOptional.of(() -> mainHandler), LazyOptional.of(() -> mainHandler), LazyOptional.of(() -> mainHandler), LazyOptional.of(() -> mainHandler), LazyOptional.of(() -> mainHandler)};
-	private final LazyOptional<IFluidHandler> centerOpt = LazyOptional.of(() -> mainHandler);
+	private LazyOptional<IFluidHandler>[] internalOpts = new LazyOptional[] {LazyOptional.of(mainHandler), LazyOptional.of(inHandler), LazyOptional.of(outHandler)};
 
-	private FluidStack content = null;
-	private boolean init = false;
+	@Nonnull
+	private FluidStack content = FluidStack.EMPTY;
 
 	public FluidTubeTileEntity(){
 		super(type);
 	}
 
-	public void toggleConfigure(int side){
-		switch(configure[side]){
-			case INPUT:
-				configure[side] = EnumTransferMode.NONE;
-				internalOpts[side].invalidate();
-				internalOpts[side] = LazyOptional.empty();
-				break;
-			case OUTPUT:
-				configure[side] = EnumTransferMode.INPUT;
-				internalOpts[side].invalidate();
-				internalOpts[side] = LazyOptional.of(() -> inHandler);
-				break;
-			case NONE:
-				configure[side] = EnumTransferMode.BOTH;
-				internalOpts[side].invalidate();
-				internalOpts[side] = LazyOptional.of(() -> mainHandler);
-				break;
-			case BOTH:
-				configure[side] = EnumTransferMode.OUTPUT;
-				internalOpts[side].invalidate();
-				internalOpts[side] = LazyOptional.of(() -> outHandler);
-				break;
-		}
-		//If another CR pipe is connected, force the other one to update it's state
-		Direction dir = Direction.byIndex(side);
-		TileEntity otherTE = world.getTileEntity(pos.offset(dir));
-		if(otherTE instanceof FluidTubeTileEntity){
-			((FluidTubeTileEntity) otherTE).recheckMode(dir);
-			updateState();
-		}
-		updateState();
-	}
-
 	/**
-	 * Forces this tube to calculate what transfer mode there should be on a side based on neighbor and adjust the configure. DOES NOT UPDATE STATE
-	 * @param side The side to recheck
+	 * Updates all the cached lazyoptionals on a side
+	 * @param side The index of the side that was changed
 	 */
-	protected void recheckMode(Direction side){
-		int sideInd = side.getIndex();
-		TileEntity neighbor = world.getTileEntity(pos.offset(side));
-		LazyOptional<IFluidHandler> otherOpt;
-		if(neighbor != null & (otherOpt = neighbor.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite())).isPresent()){
-			IFluidHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
-			if(otherHandler instanceof MainFluidHandler){
-				//Other pipe with bi-directional mode. Go to both
-				if(configure[sideInd] != EnumTransferMode.BOTH){
-					configure[sideInd] = EnumTransferMode.BOTH;
-					internalOpts[sideInd].invalidate();
-					internalOpts[sideInd] = LazyOptional.of(() -> mainHandler);
-				}
-			}else if(otherHandler instanceof OutFluidHandler){
-				//Other pipe in output mode. Go to input
-				if(configure[sideInd] != EnumTransferMode.INPUT){
-					configure[sideInd] = EnumTransferMode.INPUT;
-					internalOpts[sideInd].invalidate();
-					internalOpts[sideInd] = LazyOptional.of(() -> inHandler);
-				}
-			}else if(otherHandler instanceof InFluidHandler){
-				//Other pipe in input mode. Go to output
-				if(configure[sideInd] != EnumTransferMode.OUTPUT){
-					configure[sideInd] = EnumTransferMode.OUTPUT;
-					internalOpts[sideInd].invalidate();
-					internalOpts[sideInd] = LazyOptional.of(() -> outHandler);
-				}
-			}else if(!(otherHandler instanceof IFluidTank)){//Tanks keep the current mode
-				//Generic fluid handler. Keep the current mode, unless it's both, in which case go to output
-				if(configure[sideInd] == EnumTransferMode.BOTH){
-					configure[sideInd] = EnumTransferMode.OUTPUT;
-					internalOpts[sideInd].invalidate();
-					internalOpts[sideInd] = LazyOptional.of(() -> outHandler);
-				}
-			}
-		}//else no connection- leave current mode
-	}
-
-	protected void updateState(){
-		BlockState state = world.getBlockState(pos);
-		BlockState newState = state;
-		if(state.getBlock() instanceof FluidTube){
-			for(int i = 0; i < 6; i++){
-				newState = newState.with(CRProperties.CONDUIT_SIDES[i], hasMatch[i] ? configure[i] : EnumTransferMode.NONE);
-			}
+	public void toggleConfigure(int side){
+		//Invalidate and regenerate all the optionals
+		for(int i = 0; i < internalOpts.length; i++){
+			internalOpts[i].invalidate();
 		}
-		if(state != newState){
-			world.setBlockState(pos, newState, 2);
-		}
-	}
-
-	private void init(){
-		if(!init){
-			init = true;
-			for(Direction dir : Direction.values()){
-				recheckMode(dir);
-			}
-			updateState();
-		}
+		internalOpts[0] = LazyOptional.of(mainHandler);
+		internalOpts[1] = LazyOptional.of(inHandler);
+		internalOpts[2] = LazyOptional.of(outHandler);
 	}
 
 	@Override
@@ -155,7 +72,6 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 		if(world.isRemote){
 			return;
 		}
-		init();
 
 		//Available handlers are interacted with in two stages: first all 1-way connections are handled, then all 2-way connections
 		//First, we collect all available fluid handlers (and perform the 1-way connections in this stage)
@@ -167,9 +83,15 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 		int totalFluid = 0;
 		FluidStack fluidRef = content.copy();//Defines the fluid type to be balanced for 2-way connections
 
+		EnumTransferMode[] modes = new EnumTransferMode[6];
+		BlockState state = getBlockState();
+
 		for(int i = 0; i < 6; i++){
+			modes[i] = state.get(CRProperties.CONDUIT_SIDES_FULL[i]);
+			boolean hasMatch;
+
 			//Skip disabled directions
-			if(!configure[i].isConnection()){
+			if(!modes[i].isConnection()){
 				continue;
 			}
 
@@ -184,11 +106,11 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 				}
 			}
 
-			hasMatch[i] = handlers[i] != null;
+			hasMatch = handlers[i] != null;
 
 			//Perform 1-way transfers
-			if(hasMatch[i]){
-				switch(configure[i]){
+			if(hasMatch){
+				switch(modes[i]){
 					case BOTH:
 						//Several 2-way connections will be with handlers that only input OR output; they need to be handled as a 1-way connection of fluid flow will act strangely
 						if(handlers[i] instanceof IFluidTank){
@@ -213,17 +135,16 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 							}
 						}else{
 							//Actually should be a 1-way connection.
-							recheckMode(Direction.byIndex(i));
-							updateState();
+							CRBlocks.fluidTube.forceMode(world, pos, getBlockState(), Direction.byIndex(i), EnumTransferMode.INPUT);
 						}
 						break;
 					case INPUT:
 						if(content.isEmpty()){
-							mainHandler.fill(handlers[i].drain(CAPACITY, IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE);
+							mainHandlerIns.fill(handlers[i].drain(CAPACITY, IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE);
 						}else{
 							FluidStack toDrain = content.copy();
 							toDrain.setAmount(CAPACITY - content.getAmount());
-							mainHandler.drain(handlers[i].drain(toDrain, IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE);
+							mainHandlerIns.drain(handlers[i].drain(toDrain, IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE);
 						}
 						break;
 					case OUTPUT:
@@ -232,6 +153,13 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 						}
 						break;
 				}
+			}
+
+			//Update hasMatch
+			if(getBlockState().get(CRProperties.HAS_MATCH_SIDES[i]) != hasMatch){
+				state = state.with(CRProperties.HAS_MATCH_SIDES[i], hasMatch);
+				world.setBlockState(pos, state);
+				updateContainingBlockInfo();
 			}
 		}
 
@@ -270,40 +198,13 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
 		content = FluidStack.loadFluidStackFromNBT(nbt);
-		init = nbt.getBoolean("init");
-		for(int i = 0; i < 6; i++){
-			hasMatch[i] = nbt.getBoolean("match_" + i);
-			configure[i] = EnumTransferMode.fromString(nbt.getString("config_" + i));
-			switch(configure[i]){
-				case INPUT:
-					internalOpts[i].invalidate();
-					internalOpts[i] = LazyOptional.of(() -> inHandler);
-					break;
-				case OUTPUT:
-					internalOpts[i].invalidate();
-					internalOpts[i] = LazyOptional.of(() -> outHandler);
-					break;
-				case BOTH:
-					//Default value- no change needed
-					break;
-				case NONE:
-					internalOpts[i].invalidate();
-					internalOpts[i] = LazyOptional.empty();
-					break;
-			}
-		}
 	}
 
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
-		if(content != null){
+		if(!content.isEmpty()){
 			content.writeToNBT(nbt);
-		}
-		nbt.putBoolean("init", init);
-		for(int i = 0; i < 6; i++){
-			nbt.putBoolean("match_" + i, hasMatch[i]);
-			nbt.putString("config_" + i, configure[i].getName());
 		}
 
 		return nbt;
@@ -315,23 +216,33 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 		for(LazyOptional<?> opt : internalOpts){
 			opt.invalidate();
 		}
-		centerOpt.invalidate();
+		internalOpts[0].invalidate();
+		internalOpts[1].invalidate();
+		internalOpts[2].invalidate();
 	}
 
 	protected boolean canConnect(Direction side){
 		//Clooge so redstone tubes work
-		return side == null || configure[side.getIndex()].isConnection();
+		return side == null || getBlockState().get(CRProperties.CONDUIT_SIDES_FULL[side.getIndex()]).isConnection();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction side){
-		init();
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && canConnect(side)){
 			if(side == null){
-				return (LazyOptional<T>) centerOpt;
+				return (LazyOptional<T>) internalOpts[0];//Main handler
 			}else{
-				return (LazyOptional<T>) internalOpts[side.getIndex()];
+				switch(getBlockState().get(CRProperties.CONDUIT_SIDES_FULL[side.getIndex()])){
+					case INPUT:
+						return (LazyOptional<T>) internalOpts[1];
+					case OUTPUT:
+						return (LazyOptional<T>) internalOpts[2];
+					case BOTH:
+						return (LazyOptional<T>) internalOpts[0];
+					case NONE:
+						return LazyOptional.empty();
+				}
 			}
 		}
 
@@ -369,13 +280,13 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 		@Nonnull
 		@Override
 		public FluidStack drain(FluidStack resource, FluidAction action){
-			return mainHandler.drain(resource, action);
+			return mainHandlerIns.drain(resource, action);
 		}
 
 		@Nonnull
 		@Override
 		public FluidStack drain(int maxDrain, FluidAction action){
-			return mainHandler.drain(maxDrain, action);
+			return mainHandlerIns.drain(maxDrain, action);
 		}
 	}
 
@@ -404,7 +315,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 
 		@Override
 		public int fill(FluidStack resource, FluidAction action){
-			return mainHandler.fill(resource, action);
+			return mainHandlerIns.fill(resource, action);
 		}
 
 		@Nonnull

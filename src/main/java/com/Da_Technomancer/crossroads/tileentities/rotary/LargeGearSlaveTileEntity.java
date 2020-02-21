@@ -2,9 +2,6 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.packets.CRPackets;
-import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
-import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
@@ -14,7 +11,6 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -30,7 +26,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 @ObjectHolder(Crossroads.MODID)
-public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver, IInfoTE{
+public class LargeGearSlaveTileEntity extends TileEntity implements IInfoTE{
 
 	@ObjectHolder("large_gear_slave")
 	private static TileEntityType<LargeGearSlaveTileEntity> type = null;
@@ -66,19 +62,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 	}
 
 	public void setInitial(BlockPos masPos){
-		if(world.isRemote){
-			return;
-		}
 		masterPos = masPos;
-		long longPos = masterPos.toLong();
-		CRPackets.sendPacketAround(world, pos, new SendIntToClient((byte) (int) (longPos >> 32), (int) longPos, pos));
-	}
-
-	@Override
-	public void receiveInt(byte identifier, int message, @Nullable ServerPlayerEntity sendingPlayer){
-		//A BlockPos can be converted to and from a long, AKA 2 ints. The identifier is the first int, the message is the second.
-		long longPos = ((long) identifier << 32L) | (message & 0xFFFFFFFFL);
-		masterPos = BlockPos.fromLong(longPos);
 	}
 
 	public void passBreak(Direction side, boolean drop){
@@ -91,7 +75,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IIntReceiver
 	}
 
 	private boolean isEdge(){
-		return masterPos != null && masterPos.distanceSq(BlockPos.ZERO) == 1;
+		return masterPos != null && masterPos.manhattanDistance(BlockPos.ZERO) == 1;
 	}
 
 	@Override

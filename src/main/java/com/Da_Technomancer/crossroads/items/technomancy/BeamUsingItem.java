@@ -43,6 +43,7 @@ public abstract class BeamUsingItem extends Item{
 		stack.getTag().putByteArray(NBT_KEY, settings);
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	public void adjustSetting(ClientPlayerEntity player, ItemStack stack, int elemIndex, boolean increase){
 		byte[] settings = getSetting(stack);
 		if(increase){

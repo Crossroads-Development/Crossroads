@@ -1,81 +1,67 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "crossroads:block/conduit/fluid_tube_core",
-		"uvlock": false
-	},
-	"variants": {
-		"up": {
-			"input": {
-				"submodel": { "end_0": {"model": "crossroads:block/conduit/fluid_tube_in", "x": 0, "y": 0 }}
-			},
-			"output": {
-				"submodel": { "end_0": {"model": "crossroads:block/conduit/fluid_tube_out", "x": 0, "y": 0 }}
-			},
-			"both": {
-				"submodel": { "end_0": {"model": "crossroads:block/conduit/fluid_tube_bi", "x": 0, "y": 0 }}
-			},
-			"none": {}
+	"multipart": [
+		{
+			"apply": { "model": "crossroads:block/conduit/fluid_tube_core" }
 		},
-		"down": {
-			"input": {
-				"submodel": { "end_1": {"model": "crossroads:block/conduit/fluid_tube_in", "x": 180, "y": 0 }}
-			},
-			"output": {
-				"submodel": { "end_1": {"model": "crossroads:block/conduit/fluid_tube_out", "x": 180, "y": 0 }}
-			},
-			"both": {
-				"submodel": { "end_1": {"model": "crossroads:block/conduit/fluid_tube_bi", "x": 180, "y": 0 }}
-			},
-			"none": {}
+
+		{   "when": { "up": "input" },
+			"apply": { "model": "crossroads:block/conduit/fluid_tube_in" }
 		},
-		"east": {
-			"input": {
-				"submodel": { "end_2": {"model": "crossroads:block/conduit/fluid_tube_in", "x": 90, "y": 90 }}
-			},
-			"output": {
-				"submodel": { "end_2": {"model": "crossroads:block/conduit/fluid_tube_out", "x": 90, "y": 90 }}
-			},
-			"both": {
-				"submodel": { "end_2": {"model": "crossroads:block/conduit/fluid_tube_bi", "x": 90, "y": 90 }}
-			},
-			"none": {}
+		{   "when": { "up": "output" },
+			"apply": { "model": "crossroads:block/conduit/fluid_tube_out" }
 		},
-		"west": {
-			"input": {
-				"submodel": { "end_3": {"model": "crossroads:block/conduit/fluid_tube_in", "x": 90, "y": 270 }}
-			},
-			"output": {
-				"submodel": { "end_3": {"model": "crossroads:block/conduit/fluid_tube_out", "x": 90, "y": 270 }}
-			},
-			"both": {
-				"submodel": { "end_3": {"model": "crossroads:block/conduit/fluid_tube_bi", "x": 90, "y": 270 }}
-			},
-			"none": {}
+		{   "when": { "up": "both" },
+			"apply": { "model": "crossroads:block/conduit/fluid_tube_bi" }
 		},
-		"north": {
-			"input": {
-				"submodel": { "end_4": {"model": "crossroads:block/conduit/fluid_tube_in", "x": 90, "y": 0 }}
-			},
-			"output": {
-				"submodel": { "end_4": {"model": "crossroads:block/conduit/fluid_tube_out", "x": 90, "y": 0 }}
-			},
-			"both": {
-				"submodel": { "end_4": {"model": "crossroads:block/conduit/fluid_tube_bi", "x": 90, "y": 0 }}
-			},
-			"none": {}
+
+		{   "when": { "down": "input" },
+			"apply": { "model": "crossroads:block/conduit/fluid_tube_in", "x": 180, "y": 0 }
 		},
-		"south": {
-			"input": {
-				"submodel": { "end_5": {"model": "crossroads:block/conduit/fluid_tube_in", "x": 90, "y": 180 }}
-			},
-			"output": {
-				"submodel": { "end_5": {"model": "crossroads:block/conduit/fluid_tube_out", "x": 90, "y": 180 }}
-			},
-			"both": {
-				"submodel": { "end_5": {"model": "crossroads:block/conduit/fluid_tube_bi", "x": 90, "y": 180 }}
-			},
-			"none": {}
+		{   "when": { "down": "output" },
+			"apply": { "model": "crossroads:block/conduit/fluid_tube_out", "x": 180, "y": 0 }
+		},
+		{   "when": { "down": "both" },
+			"apply": { "model": "crossroads:block/conduit/fluid_tube_bi", "x": 180, "y": 0 }
+		},
+
+		{   "when": { "east": "input" },
+			"apply": { "model": "crossroads:block/conduit/fluid_tube_in", "x": 90, "y": 90 }
+		},
+		{   "when": { "east": "output" },
+			"apply": { "model": "crossroads:block/conduit/fluid_tube_out", "x": 90, "y": 90 }
+		},
+		{   "when": { "east": "both" },
+			"apply": { "model": "crossroads:block/conduit/fluid_tube_bi", "x": 90, "y": 90 }
+		},
+
+		{   "when": { "west": "input" },
+			"apply": { "model": "crossroads:block/conduit/fluid_tube_in", "x": 90, "y": 270 }
+		},
+		{   "when": { "west": "output" },
+			"apply": { "model": "crossroads:block/conduit/fluid_tube_out", "x": 90, "y": 270 }
+		},
+		{   "when": { "west": "both" },
+			"apply": { "model": "crossroads:block/conduit/fluid_tube_bi", "x": 90, "y": 270 }
+		},
+
+		{   "when": { "north": "input" },
+			"apply": { "model": "crossroads:block/conduit/fluid_tube_in", "x": 90, "y": 0 }
+		},
+		{   "when": { "north": "output" },
+			"apply": { "model": "crossroads:block/conduit/fluid_tube_out", "x": 90, "y": 0 }
+		},
+		{   "when": { "north": "both" },
+			"apply": { "model": "crossroads:block/conduit/fluid_tube_bi", "x": 90, "y": 0 }
+		},
+
+		{   "when": { "south": "input" },
+			"apply": { "model": "crossroads:block/conduit/fluid_tube_in", "x": 90, "y": 180 }
+		},
+		{   "when": { "south": "output" },
+			"apply": { "model": "crossroads:block/conduit/fluid_tube_out", "x": 90, "y": 180 }
+		},
+		{   "when": { "south": "both" },
+			"apply": { "model": "crossroads:block/conduit/fluid_tube_bi", "x": 90, "y": 180 }
 		}
-	}
+	]
 }

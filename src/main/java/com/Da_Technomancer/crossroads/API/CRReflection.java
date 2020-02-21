@@ -9,10 +9,11 @@ import net.minecraft.world.server.ChunkManager;
 import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 public enum CRReflection implements ReflectionUtil.IReflectionKey{
 
-	SET_CHAT(NewChatGui.class, "setChatLine", "func_146237_a", "Update the chat log without spamming it"),
+	SET_CHAT(() -> NewChatGui.class, "setChatLine", "func_146237_a", "Update the chat log without spamming it"),
 	CURE_ZOMBIE(ZombieVillagerEntity.class, "startConverting", "func_191991_a", "Cure zombie villagers with SO2"),
 	EXPLOSION_POWER(Explosion.class, "size", "field_77280_f", "Perpetuate explosions with Collapse beams (1)"),
 	EXPLOSION_SMOKE(Explosion.class, "causesFire", "field_77286_a", "Perpetuate explosions with Collapse beams (2)"),
@@ -27,6 +28,20 @@ public enum CRReflection implements ReflectionUtil.IReflectionKey{
 	public final String obf;//Obfuscated name
 	public final String mcp;//Human readable MCP name
 	private final String purpose;
+
+	CRReflection(Supplier<Class<?>> clazz, String obf, String mcp, String purpose){
+		//The supplier is for loading classes which are only in the client dist; This handles the exception and allows servers to start
+		Class<?> loadClass = null;
+		try{
+			loadClass = clazz.get();
+		}catch(RuntimeException ignored){
+
+		}
+		this.clazz = loadClass;
+		this.obf = obf;
+		this.mcp = mcp;
+		this.purpose = purpose;
+	}
 
 	CRReflection(@Nullable Class<?> clazz, String obf, String mcp, String purpose){
 		this.clazz = clazz;

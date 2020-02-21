@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
-import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.tileentities.heat.RedstoneHeatCableTileEntity;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
@@ -31,7 +31,7 @@ public class RedstoneHeatCable extends HeatCable implements IReadable{
 
 	public RedstoneHeatCable(HeatInsulators insulator){
 		super(insulator, "redstone_heat_cable_" + insulator.toString().toLowerCase());
-		setDefaultState(getDefaultState().with(CRProperties.CONDUCTOR, Conductors.COPPER).with(ESProperties.REDSTONE_BOOL, false));
+		setDefaultState(getDefaultState().with(ESProperties.REDSTONE_BOOL, false));
 	}
 
 	@Override
@@ -41,6 +41,11 @@ public class RedstoneHeatCable extends HeatCable implements IReadable{
 		}else{
 			return SHAPES[0];//Core only
 		}
+	}
+
+	@Override
+	protected boolean evaluate(EnumTransferMode value, BlockState state, @Nullable TileEntity te){
+		return super.evaluate(value, state, te) && state.get(ESProperties.REDSTONE_BOOL);
 	}
 
 	@Override
@@ -65,10 +70,18 @@ public class RedstoneHeatCable extends HeatCable implements IReadable{
 			if(!state.get(ESProperties.REDSTONE_BOOL)){
 				worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, true));
 				worldIn.updateComparatorOutputLevel(pos, this);
+				TileEntity te = worldIn.getTileEntity(pos);
+				if(te != null){
+					te.updateContainingBlockInfo();
+				}
 			}
 		}else if(state.get(ESProperties.REDSTONE_BOOL)){
 			worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, false));
 			worldIn.updateComparatorOutputLevel(pos, this);
+			TileEntity te = worldIn.getTileEntity(pos);
+			if(te != null){
+				te.updateContainingBlockInfo();
+			}
 		}
 	}
 

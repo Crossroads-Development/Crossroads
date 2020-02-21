@@ -9,10 +9,10 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.texture.ITickable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -32,7 +32,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @ObjectHolder(Crossroads.MODID)
-public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, ITickable{
+public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, ITickableTileEntity{
 
 	@ObjectHolder("chrono_harness")
 	private static TileEntityType<ChronoHarnessTileEntity> type = null;

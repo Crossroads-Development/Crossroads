@@ -26,11 +26,31 @@ public class LargeGear extends GearMatItem{
 		return 9D * 1.125D / 8D;
 	}
 
+	/**
+	 * Every position relative to the master to place a slave. Each inner array is for the axis alignment with the same ordinal as the index
+	 */
+	private static final BlockPos[][] relSlavePos = new BlockPos[3][8];
+
+	static{
+		for(Direction.Axis axis : Direction.Axis.values()){
+			int index = 0;
+			for(int i = -1; i < 2; i++){
+				for(int j = -1; j < 2; j++){
+					if(i == 0 && j == 0){
+						continue;//Don't include center
+					}
+					relSlavePos[axis.ordinal()][index] = new BlockPos(axis == Direction.Axis.X ? 0 : i, axis == Direction.Axis.Y ? 0 : j, axis == Direction.Axis.X ? i : (axis == Direction.Axis.Y ? j : 0));
+					index++;
+				}
+			}
+		}
+	}
+
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context){
-		if(context.getWorld().isRemote){
-			return ActionResultType.SUCCESS;
-		}
+//		if(context.getWorld().isRemote){
+//			return ActionResultType.SUCCESS;
+//		}
 		GearFactory.GearMaterial type = getMaterial(context.getItem());
 		if(type == null){
 			return ActionResultType.SUCCESS;
@@ -40,33 +60,34 @@ public class LargeGear extends GearMatItem{
 		PlayerEntity playerIn = context.getPlayer();
 		Direction side = context.getFace();
 		pos = pos.offset(side);
-		
-		BlockPos[] spaces = new BlockPos[9];
-		for(int i = -1; i < 2; i++){
-			for(int j = -1; j < 2; j++){
-				spaces[i * 3 + j + 4] = new BlockPos(side.getXOffset() == 0 ? i : 0, side.getYOffset() == 0 ? j : 0, side.getXOffset() == 0 ? side.getYOffset() == 0 ? 0 : j : i);
-			}
+		BlockItemUseContext blockContext = new BlockItemUseContext(context);
+
+		//Check we have space to place this
+		if(!world.getBlockState(pos).isReplaceable(blockContext)){
+			return ActionResultType.FAIL;
 		}
 
-		for(BlockPos cPos : spaces){
-			if(!world.getBlockState(pos.add(cPos)).isReplaceable(new BlockItemUseContext(context))){
+		for(BlockPos cPos : relSlavePos[side.getAxis().ordinal()]){
+			if(!world.getBlockState(pos.add(cPos)).isReplaceable(blockContext)){
 				return ActionResultType.FAIL;
 			}
 		}
 
-		if(playerIn == null || !playerIn.isCreative()){
+		//Consume the item
+		if(!world.isRemote && (playerIn == null || !playerIn.isCreative())){
 			context.getItem().shrink(1);
 		}
 
-		for(BlockPos cPos : spaces){
-			if(cPos.distanceSq(BlockPos.ZERO) == 0){
-				world.setBlockState(pos, CRBlocks.largeGearMaster.getDefaultState().with(ESProperties.FACING, side.getOpposite()), 3);
-				((LargeGearMasterTileEntity) world.getTileEntity(pos)).initSetup(type);
-			}else{
-				world.setBlockState(pos.add(cPos), CRBlocks.largeGearSlave.getDefaultState().with(ESProperties.FACING, side.getOpposite()), 3);
-				((LargeGearSlaveTileEntity) world.getTileEntity(pos.add(cPos))).setInitial(BlockPos.ZERO.subtract(cPos));
-			}
+		//Place the gear
+		world.setBlockState(pos, CRBlocks.largeGearMaster.getDefaultState().with(ESProperties.FACING, side.getOpposite()), 3);
+		((LargeGearMasterTileEntity) world.getTileEntity(pos)).initSetup(type);
+
+		for(BlockPos cPos : relSlavePos[side.getAxis().ordinal()]){
+			world.setBlockState(pos.add(cPos), CRBlocks.largeGearSlave.getDefaultState().with(ESProperties.FACING, side.getOpposite()), 3);
+			((LargeGearSlaveTileEntity) world.getTileEntity(pos.add(cPos))).setInitial(BlockPos.ZERO.subtract(cPos));
 		}
+
+		//Notify the rotary system of a change
 		RotaryUtil.increaseMasterKey(false);
 
 		return ActionResultType.SUCCESS;

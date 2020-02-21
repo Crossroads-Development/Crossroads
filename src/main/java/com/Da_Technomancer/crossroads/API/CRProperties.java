@@ -24,14 +24,24 @@ public class CRProperties{
 	public static final EnumProperty<TemporalAccelerator.Mode> ACCELERATOR_TARGET = EnumProperty.create("accel_target", TemporalAccelerator.Mode.class);
 
 	//Individual properties for each direction- for blocks with a conduit-like shape
-	public static final BooleanProperty DOWN = BooleanProperty.create("down");
-	public static final BooleanProperty UP = BooleanProperty.create("up");
-	public static final BooleanProperty NORTH = BooleanProperty.create("north");
-	public static final BooleanProperty SOUTH = BooleanProperty.create("south");
-	public static final BooleanProperty WEST = BooleanProperty.create("west");
-	public static final BooleanProperty EAST = BooleanProperty.create("east");
+	public static final BooleanProperty[] HAS_MATCH_SIDES = new BooleanProperty[] {BooleanProperty.create("down_b"), BooleanProperty.create("up_b"), BooleanProperty.create("north_b"), BooleanProperty.create("south_b"), BooleanProperty.create("west_b"), BooleanProperty.create("east_b")};
 
+	//Only both-none connections
 	@SuppressWarnings("unchecked")
-	public static final EnumProperty<EnumTransferMode>[] CONDUIT_SIDES = new EnumProperty[] {EnumProperty.create("down", EnumTransferMode.class), EnumProperty.create("up", EnumTransferMode.class), EnumProperty.create("north", EnumTransferMode.class), EnumProperty.create("south", EnumTransferMode.class), EnumProperty.create("west", EnumTransferMode.class), EnumProperty.create("east", EnumTransferMode.class)};
+	public static final EnumProperty<EnumTransferMode>[] CONDUIT_SIDES_BASE = new EnumProperty[6];
+	//All connection types
+	@SuppressWarnings("unchecked")
+	public static final EnumProperty<EnumTransferMode>[] CONDUIT_SIDES_FULL = new EnumProperty[6];
+	//All one-directional (non BOTH) types
+	@SuppressWarnings("unchecked")
+	public static final EnumProperty<EnumTransferMode>[] CONDUIT_SIDES_SINGLE = new EnumProperty[6];
 
+	static{
+		for(Direction dir : Direction.values()){
+			int ind = dir.getIndex();
+			CONDUIT_SIDES_BASE[ind] = EnumProperty.create(dir.getName2(), EnumTransferMode.class, mode -> mode == EnumTransferMode.NONE || mode == EnumTransferMode.BOTH);
+			CONDUIT_SIDES_FULL[ind] = EnumProperty.create(dir.getName2(), EnumTransferMode.class);
+			CONDUIT_SIDES_SINGLE[ind] = EnumProperty.create(dir.getName2(), EnumTransferMode.class, mode -> mode != EnumTransferMode.BOTH);
+		}
+	}
 }

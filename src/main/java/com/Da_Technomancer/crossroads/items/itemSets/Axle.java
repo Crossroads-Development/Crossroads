@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.items.itemSets;
 
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.IMechanism;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -16,14 +16,21 @@ import net.minecraft.world.World;
 public class Axle extends GearMatItem{
 
 	public Axle(){
+		this("axle");
+	}
+
+	protected Axle(String name){
 		super();
-		String name = "axle";
 		setRegistryName(name);
 	}
 
 	@Override
 	protected double shapeFactor(){
 		return 1D / 32_000D;
+	}
+
+	protected IMechanism mechanismToPlace(){
+		return MechanismTileEntity.MECHANISMS.get(1);
 	}
 
 	@Override
@@ -35,18 +42,19 @@ public class Axle extends GearMatItem{
 		if(type == null){
 			return ActionResultType.SUCCESS;
 		}
+
+		//Attempt to add this axle to a pre-existing mechanism
 		World world = context.getWorld();
 		BlockPos pos = context.getPos();
 		PlayerEntity playerIn = context.getPlayer();
 		Direction side = context.getFace();
-
-		//Attempt to add this axle to a pre-existing mechanism
 		TileEntity te = world.getTileEntity(pos);
+
 		if(te instanceof MechanismTileEntity){
 			MechanismTileEntity mte = (MechanismTileEntity) te;
 			if(mte.members[6] == null){
 				RotaryUtil.increaseMasterKey(true);
-				mte.setMechanism(6, MechanismTileEntity.MECHANISMS.get(1), type, side.getAxis(), false);
+				mte.setMechanism(6, mechanismToPlace(), type, side.getAxis(), false);
 				if(playerIn == null || !playerIn.isCreative()){
 					context.getItem().shrink(1);
 				}
@@ -60,7 +68,7 @@ public class Axle extends GearMatItem{
 			MechanismTileEntity mte = (MechanismTileEntity) te;
 			if(mte.members[6] == null){
 				RotaryUtil.increaseMasterKey(true);
-				mte.setMechanism(6, MechanismTileEntity.MECHANISMS.get(1), type, side.getAxis(), false);
+				mte.setMechanism(6, mechanismToPlace(), type, side.getAxis(), false);
 				if(playerIn == null || !playerIn.isCreative()){
 					context.getItem().shrink(1);
 				}
@@ -78,7 +86,7 @@ public class Axle extends GearMatItem{
 			te = world.getTileEntity(pos.offset(side));
 			if(te instanceof MechanismTileEntity){
 				RotaryUtil.increaseMasterKey(true);
-				((MechanismTileEntity) te).setMechanism(6, MechanismTileEntity.MECHANISMS.get(1), type, side.getAxis(), true);
+				((MechanismTileEntity) te).setMechanism(6, mechanismToPlace(), type, side.getAxis(), true);
 			}
 		}
 

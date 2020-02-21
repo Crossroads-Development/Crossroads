@@ -1,7 +1,7 @@
 {
 	"parent": "block/cube_all",
 	"textures": {
-		"all": "crossroads:block/heatcable/wool-copper"
+		"all": "crossroads:blocks/heatcable/wool-copper"
 	},
 	"display": {
 		"thirdperson": {

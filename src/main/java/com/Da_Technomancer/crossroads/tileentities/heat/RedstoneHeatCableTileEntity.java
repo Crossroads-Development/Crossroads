@@ -43,7 +43,7 @@ public class RedstoneHeatCableTileEntity extends HeatCableTileEntity{
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.HEAT_CAPABILITY){
-			if((facing == null || !locked[facing.getIndex()]) && isUnlocked()){
+			if((facing == null || !locked(facing.getIndex())) && isUnlocked()){
 				return (LazyOptional<T>) heatOpt;
 			}else{
 				return LazyOptional.empty();

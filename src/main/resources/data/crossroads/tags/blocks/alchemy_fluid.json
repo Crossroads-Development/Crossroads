@@ -4,7 +4,7 @@
 		"minecraft:water",
 		"minecraft:lava",
 		"minecraft:ice",
-		"crossroads:distilled_water_block",
-		"crossroads:dirty_water_block"
+		"crossroads:distilled_water",
+		"crossroads:dirty_water"
 	]
 }

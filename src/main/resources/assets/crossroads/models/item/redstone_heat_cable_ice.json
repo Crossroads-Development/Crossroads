@@ -1,7 +1,7 @@
 {
 	"parent": "block/cube_all",
 	"textures": {
-		"all": "crossroads:block/heatcable/ice-copper-redstone"
+		"all": "crossroads:blocks/heatcable/ice-copper-redstone"
 	},
 	"display": {
 		"thirdperson": {

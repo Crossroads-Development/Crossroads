@@ -3,85 +3,85 @@
 		{   "when": { "skin": "copper" },
 			"apply": { "model": "<CORE-copper>" }
 		},
-		{   "when": { "skin": "copper", "up": "true", "redstone_bool": true },
+		{   "when": { "skin": "copper", "up": "both", "up_b": "true", "redstone_bool": true },
 			"apply": { "model": "<END-copper>" }
 		},
-		{   "when": { "skin": "copper", "down": "true", "redstone_bool": true },
+		{   "when": { "skin": "copper", "down": "both", "down_b": "true", "redstone_bool": true },
 			"apply": { "model": "<END-copper>", "x": 180 }
 		},
-		{   "when": { "skin": "copper", "east": "true", "redstone_bool": true },
+		{   "when": { "skin": "copper", "east": "both", "east_b": "true", "redstone_bool": true },
 			"apply": { "model": "<END-copper>", "x": 90, "y": 90 }
 		},
-		{   "when": { "skin": "copper", "west": "true", "redstone_bool": true },
+		{   "when": { "skin": "copper", "west": "both", "west_b": "true", "redstone_bool": true },
 			"apply": { "model": "<END-copper>", "x": 90, "y": 270 }
 		},
-		{   "when": { "skin": "copper", "north": "true", "redstone_bool": true },
+		{   "when": { "skin": "copper", "north": "both", "north_b": "true", "redstone_bool": true },
 			"apply": { "model": "<END-copper>", "x": 90, "y": 0 }
 		},
-		{   "when": { "skin": "copper", "south": "true", "redstone_bool": true },
+		{   "when": { "skin": "copper", "south": "both", "south_b": "true", "redstone_bool": true },
 			"apply": { "model": "<END-copper>", "x": 90, "y": 180 }
 		},
 		{   "when": { "skin": "iron" },
 			"apply": { "model": "<CORE-iron>" }
 		},
-		{   "when": { "skin": "iron", "up": "true", "redstone_bool": true },
+		{   "when": { "skin": "iron", "up": "both", "up_b": "true", "redstone_bool": true },
 			"apply": { "model": "<END-iron>" }
 		},
-		{   "when": { "skin": "iron", "down": "true", "redstone_bool": true },
+		{   "when": { "skin": "iron", "down": "both", "down_b": "true", "redstone_bool": true },
 			"apply": { "model": "<END-iron>", "x": 180 }
 		},
-		{   "when": { "skin": "iron", "east": "true", "redstone_bool": true },
+		{   "when": { "skin": "iron", "east": "both", "east_b": "true", "redstone_bool": true },
 			"apply": { "model": "<END-iron>", "x": 90, "y": 90 }
 		},
-		{   "when": { "skin": "iron", "west": "true", "redstone_bool": true },
+		{   "when": { "skin": "iron", "west": "both", "west_b": "true", "redstone_bool": true },
 			"apply": { "model": "<END-iron>", "x": 90, "y": 270 }
 		},
-		{   "when": { "skin": "iron", "north": "true", "redstone_bool": true },
+		{   "when": { "skin": "iron", "north": "both", "north_b": "true", "redstone_bool": true },
 			"apply": { "model": "<END-iron>", "x": 90, "y": 0 }
 		},
-		{   "when": { "skin": "iron", "south": "true", "redstone_bool": true },
+		{   "when": { "skin": "iron", "south": "both", "south_b": "true", "redstone_bool": true },
 			"apply": { "model": "<END-iron>", "x": 90, "y": 180 }
 		},
 		{   "when": { "skin": "quartz" },
 			"apply": { "model": "<CORE-quartz>" }
 		},
-		{   "when": { "skin": "quartz", "up": "true", "redstone_bool": true },
+		{   "when": { "skin": "quartz", "up": "both", "up_b": "true", "redstone_bool": true },
 			"apply": { "model": "<END-quartz>" }
 		},
-		{   "when": { "skin": "quartz", "down": "true", "redstone_bool": true },
+		{   "when": { "skin": "quartz", "down": "both", "down_b": "true", "redstone_bool": true },
 			"apply": { "model": "<END-quartz>", "x": 180 }
 		},
-		{   "when": { "skin": "quartz", "east": "true", "redstone_bool": true },
+		{   "when": { "skin": "quartz", "east": "both", "east_b": "true", "redstone_bool": true },
 			"apply": { "model": "<END-quartz>", "x": 90, "y": 90 }
 		},
-		{   "when": { "skin": "quartz", "west": "true", "redstone_bool": true },
+		{   "when": { "skin": "quartz", "west": "both", "west_b": "true", "redstone_bool": true },
 			"apply": { "model": "<END-quartz>", "x": 90, "y": 270 }
 		},
-		{   "when": { "skin": "quartz", "north": "true", "redstone_bool": true },
+		{   "when": { "skin": "quartz", "north": "both", "north_b": "true", "redstone_bool": true },
 			"apply": { "model": "<END-quartz>", "x": 90, "y": 0 }
 		},
-		{   "when": { "skin": "quartz", "south": "true", "redstone_bool": true },
+		{   "when": { "skin": "quartz", "south": "both", "south_b": "true", "redstone_bool": true },
 			"apply": { "model": "<END-quartz>", "x": 90, "y": 180 }
 		},
 		{   "when": { "skin": "diamond" },
 			"apply": { "model": "<CORE-diamond>" }
 		},
-		{   "when": { "skin": "diamond", "up": "true", "redstone_bool": true },
+		{   "when": { "skin": "diamond", "up": "both", "up_b": "true", "redstone_bool": true },
 			"apply": { "model": "<END-diamond>" }
 		},
-		{   "when": { "skin": "diamond", "down": "true", "redstone_bool": true },
+		{   "when": { "skin": "diamond", "down": "both", "down_b": "true", "redstone_bool": true },
 			"apply": { "model": "<END-diamond>", "x": 180 }
 		},
-		{   "when": { "skin": "diamond", "east": "true", "redstone_bool": true },
+		{   "when": { "skin": "diamond", "east": "both", "east_b": "true", "redstone_bool": true },
 			"apply": { "model": "<END-diamond>", "x": 90, "y": 90 }
 		},
-		{   "when": { "skin": "diamond", "west": "true", "redstone_bool": true },
+		{   "when": { "skin": "diamond", "west": "both", "west_b": "true", "redstone_bool": true },
 			"apply": { "model": "<END-diamond>", "x": 90, "y": 270 }
 		},
-		{   "when": { "skin": "diamond", "north": "true", "redstone_bool": true },
+		{   "when": { "skin": "diamond", "north": "both", "north_b": "true", "redstone_bool": true },
 			"apply": { "model": "<END-diamond>", "x": 90, "y": 0 }
 		},
-		{   "when": { "skin": "diamond", "south": "true", "redstone_bool": true },
+		{   "when": { "skin": "diamond", "south": "both", "south_b": "true", "redstone_bool": true },
 			"apply": { "model": "<END-diamond>", "x": 90, "y": 180 }
 		}
 	]

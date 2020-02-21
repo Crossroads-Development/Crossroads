@@ -49,7 +49,7 @@ public class LargeGearRenderer extends TileEntityRenderer<LargeGearMasterTileEnt
 		}
 
 		if(handler.isPresent()){
-			GlStateManager.rotated((float) handler.orElseThrow(NullPointerException::new).getAngle(partialTicks) * dirMult, 0F, 1F, 0F);
+			GlStateManager.rotated( handler.orElseThrow(NullPointerException::new).getAngle(partialTicks) * dirMult, 0F, 1F, 0F);
 			GlStateManager.scalef(3, 1, 3);
 			CRModels.draw24Gear(gear.getMember().getColor());
 

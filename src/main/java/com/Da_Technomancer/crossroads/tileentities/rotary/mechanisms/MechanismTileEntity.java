@@ -101,10 +101,9 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	public void setMechanism(int index, @Nullable IMechanism mechanism, @Nullable GearFactory.GearMaterial mat, @Nullable Direction.Axis axis, boolean newTE){
 		members[index] = mechanism;
 		mats[index] = mat;
-
 		if(index == 6 && axleAxis != axis){
 			axleAxis = axis;
-			if(!newTE){
+			if(!newTE && !world.isRemote){
 				CRPackets.sendPacketAround(world, pos, new SendLongToClient(14, axis == null ? -1 : axis.ordinal(), pos));
 			}
 		}

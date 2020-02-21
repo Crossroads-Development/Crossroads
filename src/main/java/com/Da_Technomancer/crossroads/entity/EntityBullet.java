@@ -12,8 +12,11 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ObjectHolder;
 
+@OnlyIn(value = Dist.CLIENT, _interface = IRendersAsItem.class)
 @ObjectHolder(Crossroads.MODID)
 public class EntityBullet extends ThrowableEntity implements IRendersAsItem{
 
@@ -62,6 +65,7 @@ public class EntityBullet extends ThrowableEntity implements IRendersAsItem{
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public ItemStack getItem(){
 		return RENDER_STACK;
 	}

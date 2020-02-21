@@ -15,8 +15,11 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ObjectHolder;
 
+@OnlyIn(value = Dist.CLIENT, _interface = IRendersAsItem.class)
 @ObjectHolder(Crossroads.MODID)
 public class EntityNitro extends ThrowableEntity implements IRendersAsItem{
 
@@ -57,6 +60,7 @@ public class EntityNitro extends ThrowableEntity implements IRendersAsItem{
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public ItemStack getItem(){
 		return RENDER_STACK;
 	}

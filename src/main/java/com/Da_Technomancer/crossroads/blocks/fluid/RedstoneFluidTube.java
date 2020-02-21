@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
+import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RedstoneFluidTubeTileEntity;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.Block;
@@ -9,8 +10,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 public class RedstoneFluidTube extends FluidTube{
 
@@ -32,6 +37,20 @@ public class RedstoneFluidTube extends FluidTube{
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
 		super.fillStateContainer(builder);
 		builder.add(ESProperties.REDSTONE_BOOL);
+	}
+
+	@Override
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+		if(state.get(ESProperties.REDSTONE_BOOL)){
+			return super.getShape(state, worldIn, pos, context);
+		}else{
+			return SHAPES[0];//Core only
+		}
+	}
+
+	@Override
+	protected boolean evaluate(EnumTransferMode value, BlockState state, @Nullable TileEntity te){
+		return super.evaluate(value, state, te) && state.get(ESProperties.REDSTONE_BOOL);
 	}
 
 	@Override
