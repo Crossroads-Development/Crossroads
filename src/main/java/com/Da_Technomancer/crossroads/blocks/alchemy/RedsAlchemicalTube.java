@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
+import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.RedsAlchemicalTubeTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
@@ -14,6 +15,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 public class RedsAlchemicalTube extends AlchemicalTube{
 
@@ -41,34 +44,34 @@ public class RedsAlchemicalTube extends AlchemicalTube{
 			if(!state.get(ESProperties.REDSTONE_BOOL)){
 				worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, true));
 				TileEntity te = worldIn.getTileEntity(pos);
-				if(te instanceof RedsAlchemicalTubeTileEntity){
-					((RedsAlchemicalTubeTileEntity) te).wipeCache();
+				if(te != null){
+					te.updateContainingBlockInfo();
 				}
 			}
 		}else{
 			if(state.get(ESProperties.REDSTONE_BOOL)){
 				worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, false));
 				TileEntity te = worldIn.getTileEntity(pos);
-				if(te instanceof RedsAlchemicalTubeTileEntity){
-					((RedsAlchemicalTubeTileEntity) te).wipeCache();
+				if(te != null){
+					te.updateContainingBlockInfo();
 				}
 			}
 		}
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
-		super.fillStateContainer(builder);
-		builder.add(ESProperties.REDSTONE_BOOL);
+	protected boolean evaluate(EnumTransferMode value, BlockState state, @Nullable TileEntity te){
+		return super.evaluate(value, state, te) && state.get(ESProperties.REDSTONE_BOOL);
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		boolean hasReds = context.getWorld().isBlockPowered(context.getPos());
-		if(hasReds){
-			return super.getStateForPlacement(context).with(ESProperties.REDSTONE_BOOL, true);
-		}else{
-			return getDefaultState().with(ESProperties.REDSTONE_BOOL, false);
-		}
+		return super.getStateForPlacement(context).with(ESProperties.REDSTONE_BOOL, context.getWorld().isBlockPowered(context.getPos()));
+	}
+
+	@Override
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+		super.fillStateContainer(builder);
+		builder.add(ESProperties.REDSTONE_BOOL);
 	}
 }

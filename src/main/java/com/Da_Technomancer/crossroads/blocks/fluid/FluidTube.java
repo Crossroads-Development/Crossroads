@@ -119,7 +119,7 @@ public class FluidTube extends ConduitBlock<EnumTransferMode>{
 		BlockState neighState = world.getBlockState(pos.offset(facing));
 		if(neighState.getBlock() instanceof FluidTube){
 			//Adjust the neighboring pipe alongside this one
-			EnumTransferMode otherMode = newVal;
+			EnumTransferMode otherMode;
 			switch(newVal){
 				case INPUT:
 					otherMode = EnumTransferMode.OUTPUT;
@@ -131,6 +131,7 @@ public class FluidTube extends ConduitBlock<EnumTransferMode>{
 					otherMode = EnumTransferMode.BOTH;
 					break;
 				case NONE:
+				default:
 					otherMode = EnumTransferMode.NONE;
 					break;
 			}

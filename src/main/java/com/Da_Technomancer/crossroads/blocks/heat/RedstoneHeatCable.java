@@ -49,11 +49,6 @@ public class RedstoneHeatCable extends HeatCable implements IReadable{
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return super.getStateForPlacement(context).with(ESProperties.REDSTONE_BOOL, context.getWorld().isBlockPowered(context.getPos()));
-	}
-
-	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		neighborChanged(state, world, pos, this, pos, false);
 	}
@@ -88,6 +83,11 @@ public class RedstoneHeatCable extends HeatCable implements IReadable{
 	@Override
 	public TileEntity createNewTileEntity(IBlockReader worldIn){
 		return new RedstoneHeatCableTileEntity(insulator);
+	}
+
+	@Override
+	public BlockState getStateForPlacement(BlockItemUseContext context){
+		return super.getStateForPlacement(context).with(ESProperties.REDSTONE_BOOL, context.getWorld().isBlockPowered(context.getPos()));
 	}
 
 	@Override

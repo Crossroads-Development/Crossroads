@@ -1,8 +1,8 @@
 {
 	"variants": {
-		"active=false,up=false": { "model": "crossroads:block/gateway_frame" },
-		"active=false,up=true": { "model": "crossroads:block/empty" },
-		"active=true,up=false": { "model": "crossroads:block/empty" },
-		"active=true,up=true": { "model": "crossroads:block/empty" }
+		"active=false,top=false": { "model": "crossroads:block/gateway_frame" },
+		"active=false,top=true": { "model": "crossroads:block/empty" },
+		"active=true,top=false": { "model": "crossroads:block/empty" },
+		"active=true,top=true": { "model": "crossroads:block/empty" }
 	}
 }

@@ -22,6 +22,7 @@ public class CRProperties{
 	public static final EnumProperty<AbstractGlassware.GlasswareTypes> CONTAINER_TYPE = EnumProperty.create("container_type", AbstractGlassware.GlasswareTypes.class);
 //	public static final EnumProperty<MathAxisTileEntity.Arrangement> ARRANGEMENT = EnumProperty.create("arrangement", MathAxisTileEntity.Arrangement.class);
 	public static final EnumProperty<TemporalAccelerator.Mode> ACCELERATOR_TARGET = EnumProperty.create("accel_target", TemporalAccelerator.Mode.class);
+	public static final BooleanProperty TOP = BooleanProperty.create("top");
 
 	//Individual properties for each direction- for blocks with a conduit-like shape
 	public static final BooleanProperty[] HAS_MATCH_SIDES = new BooleanProperty[] {BooleanProperty.create("down_b"), BooleanProperty.create("up_b"), BooleanProperty.create("north_b"), BooleanProperty.create("south_b"), BooleanProperty.create("west_b"), BooleanProperty.create("east_b")};

@@ -6,6 +6,7 @@ import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
@@ -51,6 +52,11 @@ public class RedstoneFluidTube extends FluidTube{
 	@Override
 	protected boolean evaluate(EnumTransferMode value, BlockState state, @Nullable TileEntity te){
 		return super.evaluate(value, state, te) && state.get(ESProperties.REDSTONE_BOOL);
+	}
+
+	@Override
+	public BlockState getStateForPlacement(BlockItemUseContext context){
+		return super.getStateForPlacement(context).with(ESProperties.REDSTONE_BOOL, context.getWorld().isBlockPowered(context.getPos()));
 	}
 
 	@Override

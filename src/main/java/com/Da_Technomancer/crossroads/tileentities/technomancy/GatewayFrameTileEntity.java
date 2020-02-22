@@ -106,7 +106,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	 * @return Whether this block is formed into a multiblock and is the top center block (which handles all the logic)
 	 */
 	public boolean isActive(){
-		return getBlockState().get(CRProperties.ACTIVE) && getBlockState().get(CRProperties.UP);
+		return getBlockState().get(CRProperties.ACTIVE) && getBlockState().get(CRProperties.TOP);
 	}
 
 	@Override
@@ -228,7 +228,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 					//Iterate over a size-by-size square (technically excessive as the multiblock is hollow) and disable each individually (including this)
 					BlockState otherState = world.getBlockState(mutPos);
 					if(otherState.getBlock() == CRBlocks.gatewayFrame){
-						world.setBlockState(mutPos, otherState.with(CRProperties.ACTIVE, false).with(CRProperties.UP, false));
+						world.setBlockState(mutPos, otherState.with(CRProperties.ACTIVE, false).with(CRProperties.TOP, false));
 					}
 					TileEntity te = world.getTileEntity(mutPos);
 					if(te instanceof GatewayFrameTileEntity){
@@ -336,7 +336,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 				BlockState otherState = world.getBlockState(mutPos);
 				if(i == 0 || i == size - 1 || j == 0 || j == size - 1){
 					//We are on the edges
-					world.setBlockState(mutPos, otherState.with(CRProperties.ACTIVE, true).with(CRProperties.UP, i == 0 && j == size / 2));
+					world.setBlockState(mutPos, otherState.with(CRProperties.ACTIVE, true).with(CRProperties.TOP, i == 0 && j == size / 2));
 					TileEntity te = world.getTileEntity(mutPos);
 					if(te instanceof GatewayFrameTileEntity){
 						//Despite the name otherTE, for exactly one position otherTE == this

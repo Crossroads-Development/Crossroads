@@ -2,23 +2,10 @@
 	"ambientocclusion": false,
 	"textures": {
 		"particle": "crossroads:block/reagent_pump_side",
-		"glass": "#glass",
-		"cap": "#cap",
 		"mid": "crossroads:block/reagent_pump_side",
 		"end": "crossroads:block/block_bronze"
 	},
 	"elements": [
-		{
-			"from": [ 5.0, 11.0, 5.0 ],
-			"to": [ 11.0, 16.0, 11.0 ],
-			"faces": {
-				"north": { "uv": [ 0, 0, 16, 16 ], "texture": "#glass"},
-				"south": { "uv": [ 0, 0, 16, 16 ], "texture": "#glass"},
-				"west":  { "uv": [ 0, 0, 16, 16 ], "texture": "#glass"},
-				"east":  { "uv": [ 0, 0, 16, 16 ], "texture": "#glass"},
-				"up": {"uv": [ 0, 0, 16, 16 ], "texture": "#cap"}
-			}
-		},
 		{
 			"from": [ 4.0, 0.0, 4.0 ],
 			"to": [ 12.0, 11.0, 12.0 ],

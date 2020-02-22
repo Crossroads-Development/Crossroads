@@ -1,77 +1,49 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "crossroads:block/conduit/alch_tube_cryst_core",
-		"uvlock": false
-	},
-	"variants": {
-		"redstone_bool": {
-			"true": {
+	"multipart": [
+		{
+			"apply": { "model": "crossroads:block/conduit/fluid_tube_core" }
+		},
 
-			},
-			"false": {
+		{   "when": { "up_b": "true", "up": "input", "redstone_bool": "true" },
+			"apply": { "model": "crossroads:block/conduit/alch_tube_cryst_in" }
+		},
+		{   "when": { "up_b": "true", "up": "output", "redstone_bool": "true" },
+			"apply": { "model": "crossroads:block/conduit/alch_tube_cryst_out" }
+		},
 
-			}
+		{   "when": { "down_b": "true", "down": "input", "redstone_bool": "true" },
+			"apply": { "model": "crossroads:block/conduit/alch_tube_cryst_in", "x": 180, "y": 0 }
 		},
-		"up": {
-			"input": {
-				"submodel": { "end_0": {"model": "crossroads:block/conduit/alch_tube_cryst_in", "x": 0, "y": 0 }}
-			},
-			"output": {
-				"submodel": { "end_0": {"model": "crossroads:block/conduit/alch_tube_cryst_out", "x": 0, "y": 0 }}
-			},
-			"both": {},
-			"none": {}
+		{   "when": { "down_b": "true", "down": "output", "redstone_bool": "true" },
+			"apply": { "model": "crossroads:block/conduit/alch_tube_cryst_out", "x": 180, "y": 0 }
 		},
-		"down": {
-			"input": {
-				"submodel": { "end_1": {"model": "crossroads:block/conduit/alch_tube_cryst_in", "x": 180, "y": 0 }}
-			},
-			"output": {
-				"submodel": { "end_1": {"model": "crossroads:block/conduit/alch_tube_cryst_out", "x": 180, "y": 0 }}
-			},
-			"both": {},
-			"none": {}
+
+		{   "when": { "east_b": "true", "east": "input", "redstone_bool": "true" },
+			"apply": { "model": "crossroads:block/conduit/alch_tube_cryst_in", "x": 90, "y": 90 }
 		},
-		"east": {
-			"input": {
-				"submodel": { "end_2": {"model": "crossroads:block/conduit/alch_tube_cryst_in", "x": 90, "y": 90 }}
-			},
-			"output": {
-				"submodel": { "end_2": {"model": "crossroads:block/conduit/alch_tube_cryst_out", "x": 90, "y": 90 }}
-			},
-			"both": {},
-			"none": {}
+		{   "when": { "east_b": "true", "east": "output", "redstone_bool": "true" },
+			"apply": { "model": "crossroads:block/conduit/alch_tube_cryst_out", "x": 90, "y": 90 }
 		},
-		"west": {
-			"input": {
-				"submodel": { "end_3": {"model": "crossroads:block/conduit/alch_tube_cryst_in", "x": 90, "y": 270 }}
-			},
-			"output": {
-				"submodel": { "end_3": {"model": "crossroads:block/conduit/alch_tube_cryst_out", "x": 90, "y": 270 }}
-			},
-			"both": {},
-			"none": {}
+
+		{   "when": { "west_b": "true", "west": "input", "redstone_bool": "true" },
+			"apply": { "model": "crossroads:block/conduit/alch_tube_cryst_in", "x": 90, "y": 270 }
 		},
-		"north": {
-			"input": {
-				"submodel": { "end_4": {"model": "crossroads:block/conduit/alch_tube_cryst_in", "x": 90, "y": 0 }}
-			},
-			"output": {
-				"submodel": { "end_4": {"model": "crossroads:block/conduit/alch_tube_cryst_out", "x": 90, "y": 0 }}
-			},
-			"both": {},
-			"none": {}
+		{   "when": { "west_b": "true", "west": "output", "redstone_bool": "true" },
+			"apply": { "model": "crossroads:block/conduit/alch_tube_cryst_out", "x": 90, "y": 270 }
 		},
-		"south": {
-			"input": {
-				"submodel": { "end_5": {"model": "crossroads:block/conduit/alch_tube_cryst_in", "x": 90, "y": 180 }}
-			},
-			"output": {
-				"submodel": { "end_5": {"model": "crossroads:block/conduit/alch_tube_cryst_out", "x": 90, "y": 180 }}
-			},
-			"both": {},
-			"none": {}
+
+		{   "when": { "north_b": "true", "north": "input", "redstone_bool": "true" },
+			"apply": { "model": "crossroads:block/conduit/alch_tube_cryst_in", "x": 90, "y": 0 }
+		},
+		{   "when": { "north_b": "true", "north": "output", "redstone_bool": "true" },
+			"apply": { "model": "crossroads:block/conduit/alch_tube_cryst_out", "x": 90, "y": 0 }
+		},
+
+		{   "when": { "south_b": "true", "south": "input", "redstone_bool": "true" },
+			"apply": { "model": "crossroads:block/conduit/alch_tube_cryst_in", "x": 90, "y": 180 }
+		},
+		{   "when": { "south_b": "true", "south": "output", "redstone_bool": "true" },
+			"apply": { "model": "crossroads:block/conduit/alch_tube_cryst_out", "x": 90, "y": 180 }
 		}
-	}
+	]
 }

@@ -34,7 +34,7 @@ public class GatewayFrame extends ContainerBlock implements IReadable{
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
-		setDefaultState(getDefaultState().with(CRProperties.ACTIVE, false).with(CRProperties.UP, false));
+		setDefaultState(getDefaultState().with(CRProperties.ACTIVE, false).with(CRProperties.TOP, false));
 	}
 
 	@Nullable
@@ -51,7 +51,7 @@ public class GatewayFrame extends ContainerBlock implements IReadable{
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
-		builder.add(CRProperties.ACTIVE, CRProperties.UP);//ACTIVE is whether this is formed into a multiblock, UP is whether this is the top block in the multiblock
+		builder.add(CRProperties.ACTIVE, CRProperties.TOP);//ACTIVE is whether this is formed into a multiblock, UP is whether this is the top block in the multiblock
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class GatewayFrame extends ContainerBlock implements IReadable{
 		ItemStack held = player.getHeldItem(hand);
 		if(state.get(CRProperties.ACTIVE)){
 			//Handle linking if this is the top block
-			if(state.get(CRProperties.UP)){
+			if(state.get(CRProperties.TOP)){
 				return FluxUtil.handleFluxLinking(world, pos, held, player);
 			}
 		}else if(ESConfig.isWrench(held)){
@@ -91,7 +91,7 @@ public class GatewayFrame extends ContainerBlock implements IReadable{
 
 	@Override
 	public boolean hasComparatorInputOverride(BlockState state){
-		return state.get(CRProperties.ACTIVE) && state.get(CRProperties.UP);
+		return state.get(CRProperties.ACTIVE) && state.get(CRProperties.TOP);
 	}
 
 	@Override
