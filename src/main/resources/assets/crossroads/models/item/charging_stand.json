@@ -1,9 +1,5 @@
 {
-	"parent": "crossroads:block/tesla_coil_base",
-	"textures": {
-		"in": "crossroads:block/tesla_in",
-		"out": "crossroads:block/tesla_in"
-	},
+	"parent": "crossroads:block/electric_frame",
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170],

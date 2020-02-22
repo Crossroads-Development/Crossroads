@@ -1,90 +1,21 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "crossroads:block/light_cluster"
-	},
 	"variants": {
-		"color": {
-			"white": {
-				"textures": {
-					"main": "crossroads:block/light_cluster_white"
-				}
-			},
-			"orange": {
-				"textures": {
-					"main": "crossroads:block/light_cluster_orange"
-				}
-			},
-			"magenta": {
-				"textures": {
-					"main": "crossroads:block/light_cluster_magenta"
-				}
-			},
-			"light_blue": {
-				"textures": {
-					"main": "crossroads:block/light_cluster_light_blue"
-				}
-			},
-			"yellow": {
-				"textures": {
-					"main": "crossroads:block/light_cluster_yellow"
-				}
-			},
-			"lime": {
-				"textures": {
-					"main": "crossroads:block/light_cluster_lime"
-				}
-			},
-			"pink": {
-				"textures": {
-					"main": "crossroads:block/light_cluster_pink"
-				}
-			},
-			"gray": {
-				"textures": {
-					"main": "crossroads:block/light_cluster_gray"
-				}
-			},
-			"light_gray": {
-				"textures": {
-					"main": "crossroads:block/light_cluster_silver"
-				}
-			},
-			"cyan": {
-				"textures": {
-					"main": "crossroads:block/light_cluster_cyan"
-				}
-			},
-			"purple": {
-				"textures": {
-					"main": "crossroads:block/light_cluster_purple"
-				}
-			},
-			"blue": {
-				"textures": {
-					"main": "crossroads:block/light_cluster_blue"
-				}
-			},
-			"brown": {
-				"textures": {
-					"main": "crossroads:block/light_cluster_brown"
-				}
-			},
-			"green": {
-				"textures": {
-					"main": "crossroads:block/light_cluster_green"
-				}
-			},
-			"red": {
-				"textures": {
-					"main": "crossroads:block/light_cluster_red"
-				}
-			},
-			"black": {
-				"textures": {
-					"main": "crossroads:block/light_cluster_black"
-				}
-			}
-		}
+		"color=white": { "model": "crossroads:block/light_cluster_white" },
+		"color=orange": { "model": "crossroads:block/light_cluster_orange" },
+		"color=magenta": { "model": "crossroads:block/light_cluster_magenta" },
+		"color=light_blue": { "model": "crossroads:block/light_cluster_light_blue" },
+		"color=yellow": { "model": "crossroads:block/light_cluster_yellow" },
+		"color=lime": { "model": "crossroads:block/light_cluster_lime" },
+		"color=pink": { "model": "crossroads:block/light_cluster_pink" },
+		"color=gray": { "model": "crossroads:block/light_cluster_gray" },
+		"color=light_gray": { "model": "crossroads:block/light_cluster_light_gray" },
+		"color=cyan": { "model": "crossroads:block/light_cluster_cyan" },
+		"color=purple": { "model": "crossroads:block/light_cluster_purple" },
+		"color=blue": { "model": "crossroads:block/light_cluster_blue" },
+		"color=brown": { "model": "crossroads:block/light_cluster_brown" },
+		"color=green": { "model": "crossroads:block/light_cluster_green" },
+		"color=red": { "model": "crossroads:block/light_cluster_red" },
+		"color=black": { "model": "crossroads:block/light_cluster_black" }
+
 	}
 }

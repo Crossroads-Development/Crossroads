@@ -1,8 +1,5 @@
 {
-	"parent": "crossroads:block/densus_plate",
-	"textures": {
-		"main": "crossroads:block/anti_densus_plate"
-	},
+	"parent": "crossroads:block/densus_plate_anti",
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170],

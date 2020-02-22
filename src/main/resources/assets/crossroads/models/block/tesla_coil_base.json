@@ -3,8 +3,8 @@
 	"textures": {
 		"particle": "crossroads:block/block_cast_iron",
 		"base": "crossroads:block/block_cast_iron",
-		"in": "#in",
-		"out": "#out"
+		"in": "crossroads:block/tesla_in",
+		"out": "crossroads:block/tesla_out"
     },
     "elements": [
         {

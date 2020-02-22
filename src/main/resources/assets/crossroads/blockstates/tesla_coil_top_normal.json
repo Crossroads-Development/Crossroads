@@ -1,12 +1,7 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "crossroads:block/tesla_coil_top",
-		"textures": {
-			"siding": "crossroads:block/tesla_side_normal"
-		}
-	},
 	"variants": {
-		"": [{}]
+		"": {
+			"model": "crossroads:block/tesla_coil_top_normal"
+		}
 	}
 }

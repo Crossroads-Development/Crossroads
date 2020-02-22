@@ -1,16 +1,7 @@
 {
-	"forge_marker": 1,
 	"variants": {
-		"axis": {
-			"x": {
-				"model": "crossroads:block/lens_holder", "y":90
-			},
-			"y": {
-				"model": "crossroads:block/lens_holder", "x": 90
-			},
-			"z": {
-				"model": "crossroads:block/lens_holder"
-			}
-		}
+		"axis=x": { "model": "crossroads:block/lens_holder", "y": 90 },
+		"axis=y": { "model": "crossroads:block/lens_holder", "x": 90 },
+		"axis=z": { "model": "crossroads:block/lens_holder" }
 	}
 }

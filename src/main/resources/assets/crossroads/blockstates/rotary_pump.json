@@ -1,9 +1,7 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "crossroads:block/rotary_pump"
-	},
 	"variants": {
-		"": [{}]
+		"": {
+			"model": "crossroads:block/rotary_pump"
+		}
 	}
 }

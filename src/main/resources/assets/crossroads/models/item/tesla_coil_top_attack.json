@@ -1,8 +1,5 @@
 {
-	"parent": "crossroads:block/tesla_coil_top",
-	"textures": {
-		"siding": "crossroads:block/tesla_side_attack"
-	},
+	"parent": "crossroads:block/tesla_coil_top_attack",
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170],

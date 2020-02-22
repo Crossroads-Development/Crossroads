@@ -1,11 +1,7 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "crossroads:block/tesla_coil_base",
-		"textures": {
-			"in": "crossroads:block/tesla_in",
-			"out": "crossroads:block/tesla_in"
-		},
+		"model": "crossroads:block/electric_frame",
 		"uvlock": true
 	},
 	"variants": {

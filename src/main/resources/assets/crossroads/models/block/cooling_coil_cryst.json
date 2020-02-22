@@ -1,0 +1,8 @@
+{
+	"parent": "crossroads:block/cooling_coil",
+	"textures": {
+		"glass": "crossroads:block/alch_tube/cryst_tube_cap",
+		"in": "crossroads:block/alch_tube/cryst_tube_in",
+		"out": "crossroads:block/alch_tube/cryst_tube_out"
+	}
+}

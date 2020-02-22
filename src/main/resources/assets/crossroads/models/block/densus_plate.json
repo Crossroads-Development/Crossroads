@@ -1,21 +1,10 @@
 {
-	"ambientocclusion": false,
-	"textures": {
-		"main": "#main",
-		"particle": "#main"
-	},
-	"elements": [
-		{	
-			"from": [ 0, 0, 0 ],
-			"to": [ 16, 2, 16 ],
-			"faces": {
-				"down":  { "uv": [ 0, 0, 16, 16 ], "texture": "#main", "cullface": "down" },
-				"up":    { "uv": [ 0, 0, 16, 16 ], "texture": "#main" },
-				"north": { "uv": [ 0, 0, 16, 2 ], "texture": "#main", "cullface": "north" },
-				"south": { "uv": [ 0, 0, 16, 2 ], "texture": "#main", "cullface": "south" },
-				"west":  { "uv": [ 0, 0, 16, 2 ], "texture": "#main", "cullface": "west" },
-				"east":  { "uv": [ 0, 0, 16, 2 ], "texture": "#main", "cullface": "east" }
-			}
-		}
-		]
+	"variants": {
+		"facing=up": { "model": "crossroads:block/densus_plate", "x": 0 },
+		"facing=down": { "model": "crossroads:block/densus_plate", "x": 180 },
+		"facing=north": { "model": "crossroads:block/densus_plate", "x": 90, "y": 90},
+		"facing=south": { "model": "crossroads:block/densus_plate", "x": 90, "y": 270 },
+		"facing=east": { "model": "crossroads:block/densus_plate", "x": 90, "y": 180 },
+		"facing=west": { "model": "crossroads:block/densus_plate", "x": 90 }
+	}
 }

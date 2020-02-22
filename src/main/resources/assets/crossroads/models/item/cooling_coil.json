@@ -1,10 +1,5 @@
 {
-	"parent": "crossroads:block/cooling_coil",
-	"textures": {
-		"glass": "crossroads:block/alch_tube/glass_tube_cap",
-		"in": "crossroads:block/alch_tube/glass_tube_in",
-		"out": "crossroads:block/alch_tube/glass_tube_out"
-	},
+	"parent": "crossroads:block/cooling_coil_glass",
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170],

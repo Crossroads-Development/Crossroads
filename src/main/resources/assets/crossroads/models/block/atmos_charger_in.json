@@ -1,10 +1,10 @@
 {
 	"parent": "block/cube_all",
 	"textures": {
-		"north": "#mode",
-		"south": "#mode",
-		"east": "#mode",
-		"west": "#mode",
+		"north": "crossroads:block/tesla_in",
+		"south": "crossroads:block/tesla_in",
+		"east": "crossroads:block/tesla_in",
+		"west": "crossroads:block/tesla_in",
 		"up": "crossroads:block/atmos_charger_top",
 		"down": "crossroads:block/block_cast_iron",
 		"particle": "crossroads:block/atmos_charger_top"

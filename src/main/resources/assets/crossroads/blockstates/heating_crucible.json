@@ -1,19 +1,8 @@
 {
-	"forge_marker": 1,
 	"variants": {
-		"fullness": {
-			0: {
-				"model": "crossroads:block/empty_heating_crucible"
-			},
-			1: {
-				"model": "crossroads:block/empty_heating_crucible"
-			},
-			2: {
-				"model": "crossroads:block/empty_heating_crucible"
-			},
-			3: {
-				"model": "crossroads:block/empty_heating_crucible"
-			}
-		}
+		"fullness=0": { "model": "crossroads:block/empty_heating_crucible" },
+		"fullness=1": { "model": "crossroads:block/empty_heating_crucible" },
+		"fullness=2": { "model": "crossroads:block/empty_heating_crucible" },
+		"fullness=3": { "model": "crossroads:block/empty_heating_crucible" }
 	}
 }

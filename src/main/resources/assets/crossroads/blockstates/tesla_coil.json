@@ -1,35 +1,24 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "crossroads:block/tesla_coil_base",
-		"textures": {
-			"in": "crossroads:block/tesla_in",
-			"out": "crossroads:block/tesla_out"
+	"multipart": [
+		{
+			"when": { "horiz_facing": "east" },
+			"apply": { "model": "crossroads:block/tesla_coil_base" }
 		},
-		"uvlock": true
-	},
-	"variants": {
-		"horiz_facing": {
-			"west": {
-				"y": 180
-			},
-			"east": {
-
-			},
-			"north": {
-				"y": 270
-			},
-			"south": {
-				"y": 90
-			}
+		{
+			"when": { "horiz_facing": "south" },
+			"apply": { "model": "crossroads:block/tesla_coil_base", "y": 90 }
 		},
-		"active": {
-			"true": {
-				"submodel": "crossroads:block/tesla_coil_leyden"
-			},
-			"false": {
-
-			}
+		{
+			"when": { "horiz_facing": "west" },
+			"apply": { "model": "crossroads:block/tesla_coil_base", "y": 180 }
+		},
+		{
+			"when": { "horiz_facing": "north" },
+			"apply": { "model": "crossroads:block/tesla_coil_base", "y": 270 }
+		},
+		{
+			"when": { "active": "true" },
+			"apply": { "model": "crossroads:block/tesla_coil_leyden" }
 		}
-	}
+	]
 }

@@ -1,0 +1,6 @@
+{
+	"parent": "crossroads:block/tesla_coil_top",
+	"textures": {
+		"siding": "crossroads:block/tesla_side_efficiency"
+    }
+}

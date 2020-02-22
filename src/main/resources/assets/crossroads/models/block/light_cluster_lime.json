@@ -1,0 +1,6 @@
+{
+	"parent": "crossroads:block/light_cluster",
+	"textures": {
+		"texture": "crossroads:block/light_cluster_lime"
+	}
+}

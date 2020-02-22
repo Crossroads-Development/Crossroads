@@ -1,8 +1,5 @@
 {
-	"parent": "crossroads:block/light_cluster",
-	"textures": {
-		"texture": "crossroads:block/light_cluster_white"
-	},
+	"parent": "crossroads:block/light_cluster_white",
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170],

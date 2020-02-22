@@ -1,31 +1,10 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "crossroads:block/drill",
-		"textures": {
-			"metal": "block/gold_block"
-		}
-	},
 	"variants": {
-		"facing": {
-			"north": {
-
-			},
-			"south": {
-
-			},
-			"east": {
-
-			},
-			"west": {
-
-			},
-			"up": {
-
-			},
-			"down": {
-
-			}
-		}
+		"facing=up": { "model": "crossroads:block/empty" },
+		"facing=down": { "model": "crossroads:block/empty" },
+		"facing=north": { "model": "crossroads:block/empty" },
+		"facing=south": { "model": "crossroads:block/empty" },
+		"facing=west": { "model": "crossroads:block/empty" },
+		"facing=east": { "model": "crossroads:block/empty" }
 	}
 }
