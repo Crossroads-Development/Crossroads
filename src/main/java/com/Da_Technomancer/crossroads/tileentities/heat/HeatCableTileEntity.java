@@ -45,6 +45,15 @@ public class HeatCableTileEntity extends ModuleTE{
 	}
 
 	@Override
+	public void updateContainingBlockInfo(){
+		super.updateContainingBlockInfo();
+		//When adjusting a side to lock, we need to invalidate the optional in case a side was disconnected
+		System.out.println("SIDE: " + world.isRemote);
+		heatOpt.invalidate();
+		heatOpt = LazyOptional.of(this::createHeatHandler);
+	}
+
+	@Override
 	protected boolean useHeat(){
 		return true;
 	}
@@ -62,7 +71,7 @@ public class HeatCableTileEntity extends ModuleTE{
 		BlockState state = getBlockState();
 		if(state.get(CRProperties.HAS_MATCH_SIDES[side]) != newVal){
 			state = state.with(CRProperties.HAS_MATCH_SIDES[side], newVal);
-			world.setBlockState(pos, state);
+			world.setBlockState(pos, state, 2);
 			updateContainingBlockInfo();
 		}
 	}
@@ -98,8 +107,9 @@ public class HeatCableTileEntity extends ModuleTE{
 				handler.addHeat(-handler.getTemp());
 				heatHandlers.add(handler);
 				updateConnect(side.getIndex(), true);
+			}else{
+				updateConnect(side.getIndex(), false);
 			}
-			updateConnect(side.getIndex(), false);
 		}
 
 		temp /= heatHandlers.size() + 1;

@@ -71,8 +71,9 @@ minecraft {
 }
 
 repositories {
-	maven { url "http://dvs1.progwml6.com/files/maven" }
-	flatDir { dirs 'libs' }//Let's us grab dependencies from the libs folder
+	maven { url "http://dvs1.progwml6.com/files/maven" } //JEI
+	maven { url "https://maven.blamejared.com" } //Patchouli
+	flatDir { dirs 'libs' }//Lets us grab dependencies from the libs folder
 }
 
 dependencies {
@@ -82,6 +83,9 @@ dependencies {
 	compileOnly(fg.deobf("mezz.jei:jei-$mc_version:$jei_version:api"))
 	//Run with the full versions
 	runtimeOnly(fg.deobf("mezz.jei:jei-$mc_version:$jei_version"))
+
+	compile fg.deobf("vazkii.patchouli:Patchouli:$mc_version-$patchouli_version")
+
 	//When setting up a dev environment for Crossroads, make sure to have an essentials jar in a folder called "libs", in the same parent folder as "src"
 	implementation(fg.deobf("com.technomancer.essentials:essentials-$mc_version-$essentials_version:dev"))
 }
@@ -115,14 +119,17 @@ processResources {
 	// This will ensure that this task is redone when the versions change.
 	inputs.property 'version', project.version
 
-	// Replace stuff in mods.toml, nothing else
+	// Replace stuff in mods.toml and the patchouli book version, nothing else
 	from(sourceSets.main.resources.srcDirs) {
 		include 'META-INF/mods.toml'
+		include 'patchouli_books/manual/book.json'
 
 		//Copy the Crossroads and essentials version into the toml file
 		expand 'version':project.version
 		expand 'essentials_version':"$essentials_version"
+		expand 'book_version':"$book_version"
 
+		exclude 'patchouli_books/manual/book.json'
 		exclude 'META-INF/mods.toml'
 	}
 

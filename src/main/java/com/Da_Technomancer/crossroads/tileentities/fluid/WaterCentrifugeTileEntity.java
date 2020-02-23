@@ -124,8 +124,8 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void rotate(){
-		super.rotate();
+	public void updateContainingBlockInfo(){
+		super.updateContainingBlockInfo();
 		waterOpt.invalidate();
 		dWaterOpt.invalidate();
 		waterOpt = LazyOptional.of(() -> new FluidHandler(0));

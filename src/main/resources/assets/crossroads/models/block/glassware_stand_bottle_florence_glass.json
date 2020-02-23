@@ -1,0 +1,7 @@
+{
+	"parent": "crossroads:block/glassware_stand_bottle_florence",
+	"textures": {
+		"glass": "crossroads:block/glass_thin",
+		"stem": "crossroads:block/glass_thin"
+	}
+}

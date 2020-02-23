@@ -1,8 +1,5 @@
 {
-	"parent": "crossroads:block/heat_limiter",
-	"textures": {
-		"side": "crossroads:block/heat_limiter_side"
-	},
+	"parent": "crossroads:block/heat_limiter_basic",
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170],

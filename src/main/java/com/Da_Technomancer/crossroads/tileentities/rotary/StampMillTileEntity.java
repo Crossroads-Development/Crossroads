@@ -148,8 +148,8 @@ public class StampMillTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void rotate(){
-		super.rotate();
+	public void updateContainingBlockInfo(){
+		super.updateContainingBlockInfo();
 		axleOpt.invalidate();
 		axleOpt = LazyOptional.of(this::createAxleHandler);
 	}

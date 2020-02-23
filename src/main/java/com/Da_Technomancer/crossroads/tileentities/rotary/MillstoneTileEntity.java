@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.items.crafting.recipes.MillRec;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -98,6 +99,10 @@ public class MillstoneTileEntity extends InventoryTE{
 	}
 
 	private boolean canFit(ItemStack[] outputs){
+		//The millstone is literally the first machine added to Crossroads (called the grindstone at the time)
+		//Which is why the code for this block is so weird- it was written when I had no idea what I was doing
+		//Unlike now, where I have no idea what I was thinking
+
 		boolean viable = true;
 
 		ArrayList<Integer> locked = new ArrayList<>();
@@ -182,7 +187,7 @@ public class MillstoneTileEntity extends InventoryTE{
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && world.getRecipeManager().getRecipe(CRRecipes.MILL_TYPE, this, world).isPresent();
+		return index == 0 && world.getRecipeManager().getRecipe(CRRecipes.MILL_TYPE, new Inventory(stack), world).isPresent();
 	}
 
 	@Override

@@ -137,8 +137,8 @@ public class FatCongealerTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void rotate(){
-		super.rotate();
+	public void updateContainingBlockInfo(){
+		super.updateContainingBlockInfo();
 		itemOpt.invalidate();
 		itemOpt = LazyOptional.of(ItemHandler::new);
 	}

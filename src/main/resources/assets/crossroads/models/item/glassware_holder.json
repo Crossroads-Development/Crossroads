@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:block/phial_holder_base",
+	"parent": "crossroads:block/glassware_stand_base_phial",
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170],

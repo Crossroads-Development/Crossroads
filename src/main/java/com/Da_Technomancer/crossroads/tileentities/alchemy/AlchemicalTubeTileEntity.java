@@ -38,6 +38,14 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE{
 	}
 
 	@Override
+	public void updateContainingBlockInfo(){
+		super.updateContainingBlockInfo();
+		//When adjusting a side to lock, we need to invalidate the optional in case a side was disconnected
+		chemOpt.invalidate();
+		chemOpt = LazyOptional.of(() -> handler);
+	}
+
+	@Override
 	protected EnumTransferMode[] getModes(){
 		BlockState state = getBlockState();
 		EnumTransferMode[] modes = new EnumTransferMode[6];

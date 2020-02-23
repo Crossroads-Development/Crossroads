@@ -1,40 +1,16 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "crossroads:block/heat_limiter"
-	},
 	"variants": {
-		"active": {
-			"true": {
-				"textures": {
-					"side": "crossroads:block/heat_limiter_side_blue"
-				}
-			},
-			"false": {
-				"textures": {
-					"side": "crossroads:block/heat_limiter_side"
-				}
-			}
-		},
-		"facing": {
-			"north": {
-				"x": 90
-			},
-			"south": {
-				"x": 270
-			},
-			"east": {
-				"x": 90, "y": 90
-			},
-			"west": {
-				"x": 270, "y": 90
-			},
-			"up": {
-
-			},
-			"down": {
-				"x": 180
-			}
-		}
+		"active=false,facing=up": { "model": "crossroads:block/heat_limiter_basic", "x": 0, "y": 0 },
+		"active=false,facing=down": { "model": "crossroads:block/heat_limiter_basic", "x": 180, "y": 0 },
+		"active=false,facing=north": { "model": "crossroads:block/heat_limiter_basic", "x": 90, "y": 0 },
+		"active=false,facing=south": { "model": "crossroads:block/heat_limiter_basic", "x": 90, "y": 180 },
+		"active=false,facing=west": { "model": "crossroads:block/heat_limiter_basic", "x": 90, "y": 270 },
+		"active=false,facing=east": { "model": "crossroads:block/heat_limiter_basic", "x": 90, "y": 90 },
+		"active=true,facing=up": { "model": "crossroads:block/heat_limiter_basic_blue", "x": 0, "y": 0 },
+		"active=true,facing=down": { "model": "crossroads:block/heat_limiter_basic_blue", "x": 180, "y": 0 },
+		"active=true,facing=north": { "model": "crossroads:block/heat_limiter_basic_blue", "x": 90, "y": 0 },
+		"active=true,facing=south": { "model": "crossroads:block/heat_limiter_basic_blue", "x": 90, "y": 180 },
+		"active=true,facing=west": { "model": "crossroads:block/heat_limiter_basic_blue", "x": 90, "y": 270 },
+		"active=true,facing=east": { "model": "crossroads:block/heat_limiter_basic_blue", "x": 90, "y": 90 }
 	}
 }

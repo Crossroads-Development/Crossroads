@@ -100,9 +100,25 @@ public class AlchemicalTube extends ConduitBlock<EnumTransferMode>{
 		return BlockRenderLayer.TRANSLUCENT;
 	}
 
+
 	@Override
-	protected void onAdjusted(World world, BlockPos pos, BlockState newState, Direction facing, EnumTransferMode newVal){
-		super.onAdjusted(world, pos, newState, facing, newVal);
+	protected EnumTransferMode getValueForPlacement(World world, BlockPos pos, Direction side, @Nullable TileEntity neighTE){
+		BlockState neighState = world.getBlockState(pos.offset(side));
+		//If adjacent to another pipe, set the initial mode based on the other pipe for continuous flow
+		if(neighState.getBlock() instanceof AlchemicalTube){
+			EnumTransferMode otherMode = neighState.get(getSideProp()[side.getOpposite().getIndex()]);
+			if(otherMode == EnumTransferMode.OUTPUT){
+				return EnumTransferMode.INPUT;
+			}else if(otherMode == EnumTransferMode.INPUT){
+				return EnumTransferMode.OUTPUT;
+			}
+		}
+		return getDefaultValue();
+	}
+
+	@Override
+	protected void onAdjusted(World world, BlockPos pos, BlockState newState, Direction facing, EnumTransferMode newVal, @Nullable TileEntity te){
+		super.onAdjusted(world, pos, newState, facing, newVal, te);
 
 		BlockState neighState = world.getBlockState(pos.offset(facing));
 		if(neighState.getBlock() instanceof AlchemicalTube){

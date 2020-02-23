@@ -118,6 +118,18 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 	}
 
 	@Override
+	protected void onAdjusted(World world, BlockPos pos, BlockState newState, Direction facing, EnumTransferMode newVal, @Nullable TileEntity te){
+		super.onAdjusted(world, pos, newState, facing, newVal, te);
+
+		//(un)lock the neighboring heat cable with this once, if applicable
+		BlockState neighState = world.getBlockState(pos.offset(facing));
+		if(neighState.getBlock() instanceof HeatCable){
+			//Adjust the neighboring pipe alongside this one
+			((HeatCable) neighState.getBlock()).forceMode(world, pos.offset(facing), neighState, facing.getOpposite(), newVal);
+		}
+	}
+
+	@Override
 	protected boolean hasMatch(IWorld world, BlockPos pos, Direction side, EnumTransferMode mode, @Nullable TileEntity thisTE, @Nullable TileEntity neighTE){
 		return neighTE != null && neighTE.getCapability(Capabilities.HEAT_CAPABILITY, side.getOpposite()).isPresent();
 	}

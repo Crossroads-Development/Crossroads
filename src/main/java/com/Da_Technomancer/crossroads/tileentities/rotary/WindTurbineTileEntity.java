@@ -48,7 +48,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 
 	protected Direction getFacing(){
 		if(facing == null){
-			BlockState state = world.getBlockState(pos);
+			BlockState state = getBlockState();
 			if(state.getBlock() != CRBlocks.windTurbine){
 				remove();
 				return Direction.NORTH;
@@ -60,8 +60,8 @@ public class WindTurbineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void rotate(){
-		super.rotate();
+	public void updateContainingBlockInfo(){
+		super.updateContainingBlockInfo();
 		facing = null;
 		axleOpt.invalidate();
 		axleOpt = LazyOptional.of(this::createAxleHandler);

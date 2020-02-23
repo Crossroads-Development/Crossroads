@@ -1,0 +1,9 @@
+{
+	"name": "Technician's Manual",
+	"landing_text": "Welcome to Crossroads$(br2)This is a beta version. Expect a lot of bugs. Please help me fix them by reporting them on the Discord. $(br2)This documentation is incomplete (WIP). Feel free to ask questions on the Discord.",
+	"version": "${book_version}",
+	"book_texture": "patchouli:textures/gui/book_cyan.png",
+	"model": "crossroads:book_tech",
+	"creative_tab": "crossroads",
+	"show_progress": "false"
+}

@@ -39,7 +39,7 @@ public class FluidTube extends ConduitBlock<EnumTransferMode>{
 
 	@Override
 	protected EnumTransferMode getDefaultValue(){
-		return EnumTransferMode.NONE;
+		return EnumTransferMode.INPUT;
 	}
 
 	@Override
@@ -75,15 +75,15 @@ public class FluidTube extends ConduitBlock<EnumTransferMode>{
 	@Override
 	protected EnumTransferMode cycleMode(EnumTransferMode prev){
 		switch(prev){
-			case BOTH:
-				return EnumTransferMode.INPUT;
 			case INPUT:
 				return EnumTransferMode.OUTPUT;
 			case OUTPUT:
+				return EnumTransferMode.BOTH;
+			case BOTH:
 				return EnumTransferMode.NONE;
 			case NONE:
 			default:
-				return EnumTransferMode.BOTH;
+				return EnumTransferMode.INPUT;
 		}
 	}
 
@@ -102,19 +102,16 @@ public class FluidTube extends ConduitBlock<EnumTransferMode>{
 				return EnumTransferMode.INPUT;
 			}else if(otherMode == EnumTransferMode.INPUT){
 				return EnumTransferMode.OUTPUT;
+			}else if(otherMode == EnumTransferMode.BOTH){
+				return EnumTransferMode.BOTH;
 			}
 		}
 		return getDefaultValue();
 	}
 
 	@Override
-	protected void onAdjusted(World world, BlockPos pos, BlockState newState, Direction facing, EnumTransferMode newVal){
-		super.onAdjusted(world, pos, newState, facing, newVal);
-
-		TileEntity te = world.getTileEntity(pos);
-		if(te instanceof FluidTubeTileEntity){
-			((FluidTubeTileEntity) te).toggleConfigure(facing.getIndex());
-		}
+	protected void onAdjusted(World world, BlockPos pos, BlockState newState, Direction facing, EnumTransferMode newVal, @Nullable TileEntity te){
+		super.onAdjusted(world, pos, newState, facing, newVal, te);
 
 		BlockState neighState = world.getBlockState(pos.offset(facing));
 		if(neighState.getBlock() instanceof FluidTube){
@@ -136,15 +133,6 @@ public class FluidTube extends ConduitBlock<EnumTransferMode>{
 					break;
 			}
 			((FluidTube) neighState.getBlock()).forceMode(world, pos.offset(facing), neighState, facing.getOpposite(), otherMode);
-		}
-	}
-
-	@Override
-	public void forceMode(World world, BlockPos pos, BlockState prevState, Direction facing, EnumTransferMode newVal){
-		super.forceMode(world, pos, prevState, facing, newVal);
-		TileEntity te = world.getTileEntity(pos);
-		if(te instanceof FluidTubeTileEntity){
-			((FluidTubeTileEntity) te).toggleConfigure(facing.getIndex());
 		}
 	}
 }

@@ -80,7 +80,7 @@ public class FatCongealer extends ContainerBlock{
 				worldIn.setBlockState(pos, state.cycle(CRProperties.HORIZ_AXIS));
 				te = worldIn.getTileEntity(pos);
 				if(te instanceof ModuleTE){
-					((ModuleTE) te).rotate();
+					((ModuleTE) te).updateContainingBlockInfo();
 				}
 			}
 		}else if(!worldIn.isRemote && (te = worldIn.getTileEntity(pos)) instanceof INamedContainerProvider){

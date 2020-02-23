@@ -51,7 +51,7 @@ public class WindTurbine extends ContainerBlock implements IReadable{
 			if(!worldIn.isRemote){
 				TileEntity te = worldIn.getTileEntity(pos);
 				if(te instanceof WindTurbineTileEntity){
-					((WindTurbineTileEntity) te).rotate();
+					((WindTurbineTileEntity) te).updateContainingBlockInfo();
 				}
 				worldIn.setBlockState(pos, state.with(CRProperties.HORIZ_FACING, state.get(CRProperties.HORIZ_FACING).rotateY()));
 			}

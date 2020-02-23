@@ -1,46 +1,45 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "crossroads:block/electric_frame",
-		"uvlock": true
-	},
-	"variants": {
-		"container_type": {
-			"none": {
-
-			},
-			"phial": {
-				"submodel": {
-					"base": {"model": "crossroads:block/phial_holder_base"},
-					"bottle": {"model": "crossroads:block/phial_holder_phial"}
-				}
-			},
-			"florence": {
-				"submodel": {
-					"base": {"model": "crossroads:block/florence_holder_base"},
-					"bottle": {"model": "crossroads:block/florence_holder_phial"}
-				}
-			},
-			"shell": {
-				"submodel": {
-					"base": {"model": "crossroads:block/shell_holder_base"},
-					"bottle": {"model": "crossroads:block/shell_holder_phial"}
-				}
-			}
+	"multipart": [
+		{
+			"apply": { "model": "crossroads:block/electric_frame" }
 		},
-		"crystal": {
-			"true": {
-				"textures": {
-					"glass": "crossroads:block/crystal_thin",
-					"stem": "crossroads:block/crystal_thin"
-				}
-			},
-			"false": {
-				"textures": {
-					"glass": "crossroads:block/glass_thin",
-					"stem": "crossroads:block/glass_thin"
-				}
-			}
+		{
+			"when": { "container_type": "none|phial" },
+			"apply": { "model": "crossroads:block/glassware_stand_base_phial" }
+		},
+		{
+			"when": { "container_type": "phial", "crystal": "false" },
+			"apply": { "model": "crossroads:block/glassware_stand_bottle_phial_glass" }
+		},
+		{
+			"when": { "container_type": "phial", "crystal": "true" },
+			"apply": { "model": "crossroads:block/glassware_stand_bottle_phial_cryst" }
+		},
+
+		{
+			"when": { "container_type": "florence" },
+			"apply": { "model": "crossroads:block/glassware_stand_base_florence" }
+		},
+		{
+			"when": { "container_type": "florence", "crystal": "false" },
+			"apply": { "model": "crossroads:block/glassware_stand_bottle_florence_glass" }
+		},
+		{
+			"when": { "container_type": "florence", "crystal": "true" },
+			"apply": { "model": "crossroads:block/glassware_stand_bottle_florence_cryst" }
+		},
+
+		{
+			"when": { "container_type": "shell" },
+			"apply": { "model": "crossroads:block/glassware_stand_base_shell" }
+		},
+		{
+			"when": { "container_type": "shell", "crystal": "false" },
+			"apply": { "model": "crossroads:block/glassware_stand_bottle_shell_glass" }
+		},
+		{
+			"when": { "container_type": "shell", "crystal": "true" },
+			"apply": { "model": "crossroads:block/glassware_stand_bottle_shell_cryst" }
 		}
-	}
+	]
 }

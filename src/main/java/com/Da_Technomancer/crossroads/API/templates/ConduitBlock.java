@@ -17,6 +17,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -161,7 +162,7 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 		int index = 0;
 		TileEntity te = worldIn.getTileEntity(pos);
 		for(int i = 0; i < 6; i++){
-			index |= evaluate(state.get(getSideProp()[i]), state, te) ? 1 << i : 0;
+			index |= state.get(CRProperties.HAS_MATCH_SIDES[i]) && evaluate(state.get(getSideProp()[i]), state, te) ? 1 << i : 0;
 		}
 		return getShapes()[index];
 	}
@@ -181,50 +182,48 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 			}
 			if(ESConfig.isWrench(held)){
 				TileEntity te = worldIn.getTileEntity(pos);
-
-				if(!worldIn.isRemote){
-					final double SIZE = getSize();
-					int face;
-					if(hit.getHitVec().y < SIZE){
-						face = 0;//Down
-					}else if(hit.getHitVec().y > 1F - (float) SIZE){
-						face = 1;//Up
-					}else if(hit.getHitVec().z < (float) SIZE){
-						face = 4;//West
-					}else if(hit.getHitVec().z > 1F - (float) SIZE){
-						face = 5;//East
-					}else if(hit.getHitVec().z < (float) SIZE){
-						face = 2;//North
-					}else if(hit.getHitVec().z > 1F - (float) SIZE){
-						face = 3;//South
-					}else{
-						face = hit.getFace().getIndex();
-					}
-
-					Property<T> prop = getSideProp()[face];
-					T newVal = cycleMode(state.get(prop));
-					Direction side = Direction.byIndex(face);
-					TileEntity neighTE = worldIn.getTileEntity(pos.offset(side));
-					state = state.with(prop, newVal);
-					state = state.with(CRProperties.HAS_MATCH_SIDES[face], hasMatch(worldIn, pos, side, newVal, te, neighTE));
-					worldIn.setBlockState(pos, state);
-
-					onAdjusted(worldIn, pos, state, side, newVal);
+				final double SIZE = getSize();
+				int face;
+				final double margin = 0.005D;
+				Vec3d hitVec = hit.getHitVec().subtract(pos.getX(), pos.getY(), pos.getZ());
+				if(hitVec.y < SIZE - margin){
+					face = 0;//Down
+				}else if(hitVec.y - margin > 1F - (float) SIZE){
+					face = 1;//Up
+				}else if(hitVec.x < (float) SIZE - margin){
+					face = 4;//West
+				}else if(hitVec.x - margin > 1F - (float) SIZE){
+					face = 5;//East
+				}else if(hitVec.z < (float) SIZE - margin){
+					face = 2;//North
+				}else if(hitVec.z - margin > 1F - (float) SIZE){
+					face = 3;//South
+				}else{
+					face = hit.getFace().getIndex();
 				}
-				if(te != null){
-					te.updateContainingBlockInfo();
-				}
+
+				Property<T> prop = getSideProp()[face];
+				T newVal = cycleMode(state.get(prop));
+				Direction side = Direction.byIndex(face);
+				TileEntity neighTE = worldIn.getTileEntity(pos.offset(side));
+				state = state.with(prop, newVal);
+				state = state.with(CRProperties.HAS_MATCH_SIDES[face], hasMatch(worldIn, pos, side, newVal, te, neighTE));
+				worldIn.setBlockState(pos, state);
+				onAdjusted(worldIn, pos, state, side, newVal, te);
 				return true;
 			}
 		}
 		return false;
 	}
 
-	protected void onAdjusted(World world, BlockPos pos, BlockState newState, Direction facing, T newVal){
-
+	protected void onAdjusted(World world, BlockPos pos, BlockState newState, Direction facing, T newVal, @Nullable TileEntity te){
+//		//Turns out vanilla behaviour already calls this
+//		if(te != null){
+//			te.updateContainingBlockInfo();
+//		}
 	}
 
-	protected void forceMode(World world, BlockPos pos, BlockState prevState, Direction facing, T newVal){
+	public void forceMode(World world, BlockPos pos, BlockState prevState, Direction facing, T newVal){
 		prevState = prevState.with(getSideProp()[facing.getIndex()], newVal);
 		prevState = prevState.with(CRProperties.HAS_MATCH_SIDES[facing.getIndex()], hasMatch(world, pos, facing, newVal, world.getTileEntity(pos), world.getTileEntity(pos.offset(facing))));
 		world.setBlockState(pos, prevState);

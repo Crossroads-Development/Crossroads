@@ -53,14 +53,12 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 		super(type);
 	}
 
-	/**
-	 * Updates all the cached lazyoptionals on a side
-	 * @param side The index of the side that was changed
-	 */
-	public void toggleConfigure(int side){
+	@Override
+	public void updateContainingBlockInfo(){
+		super.updateContainingBlockInfo();
 		//Invalidate and regenerate all the optionals
-		for(int i = 0; i < internalOpts.length; i++){
-			internalOpts[i].invalidate();
+		for(LazyOptional<IFluidHandler> internalOpt : internalOpts){
+			internalOpt.invalidate();
 		}
 		internalOpts[0] = LazyOptional.of(mainHandler);
 		internalOpts[1] = LazyOptional.of(inHandler);
@@ -361,8 +359,13 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 			}
 			//The zero lower bound is because due to the fluid handling logic in tick(), there is a possibility of content.getAmount() being greater than CAPACITY
 			int filled = Math.max(Math.min(resource.getAmount(), CAPACITY - content.getAmount()), 0);
-			if(action.execute()){
-				content.shrink(filled);
+			if(filled != 0 && action.execute()){
+				if(content.isEmpty()){
+					content = resource.copy();
+					content.setAmount(filled);
+				}else{
+					content.grow(filled);
+				}
 				markDirty();
 			}
 			return filled;

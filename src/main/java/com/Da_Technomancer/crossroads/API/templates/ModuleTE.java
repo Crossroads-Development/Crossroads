@@ -187,13 +187,6 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 		}
 	}
 
-	public void rotate(){
-		//Standard method to be called when this machine is rotated in the world
-		//For invalidating capabilities and such
-		//Many machine types don't use this
-		updateContainingBlockInfo();
-	}
-
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();

@@ -3,6 +3,6 @@
 	"textures": {
 		"top": "crossroads:block/heat_limiter_front",
 		"bottom": "crossroads:block/heat_limiter_back",
-		"side": "#side"
+		"side": "crossroads:block/heat_limiter_side_redstone_blue"
 	}
 }

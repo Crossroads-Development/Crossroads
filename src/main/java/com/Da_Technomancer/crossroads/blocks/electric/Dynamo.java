@@ -66,7 +66,7 @@ public class Dynamo extends ContainerBlock{
 			if(!worldIn.isRemote){
 				TileEntity te = worldIn.getTileEntity(pos);
 				if(te instanceof ModuleTE){
-					((ModuleTE) te).rotate();
+					((ModuleTE) te).updateContainingBlockInfo();
 				}
 				worldIn.setBlockState(pos, state.cycle(CRProperties.HORIZ_FACING));
 			}
