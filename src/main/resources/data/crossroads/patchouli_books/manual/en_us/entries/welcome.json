@@ -1,0 +1,16 @@
+{
+	"category": "intro",
+	"name": "Welcome",
+	"icon": "minecraft:paper",
+	"priority": true,
+	"pages": [
+		{
+			"type": "text",
+			"text": "Welcome to Crossroads!$(br2)Crossroads is a mod about automation. Almost everything in the mod can be automated with the tools Crossroads adds, which are usually simple single-purpose tools that can be assembled into complex systems.$(br2)Rube Goldberg machines will be the simplest way to do things."
+		},
+		{
+			"type": "text",
+			"text": "In this section of the book, you'll get a broad introduction to various systems in the mod- ideal for beginners. All the information in these entries are also in the respective guide categories, but it should be easiest to understand as a beginner from this section.$(br2)If you have any questions or suggestions, feel free to join the $(l:https://discord.gg/6g47knp)Discord$(/l), and if you find any bugs, please report them either on the $(l:https://discord.gg/6g47knp)Discord$(/l) or $(l:https://github.com/Da-Technomancer/Crossroads/)Github$(/l)."
+		}
+	]
+}

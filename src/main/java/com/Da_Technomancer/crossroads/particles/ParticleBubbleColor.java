@@ -28,7 +28,10 @@ public class ParticleBubbleColor extends SpriteTexturedParticle{
 		motionX = xSpeed;//Suggestion: (Math.random() * 2D - 1D) * 0.015D
 		motionY = ySpeed;//Suggestion: Math.random() * 0.015D
 		motionZ = zSpeed;//Suggestion: (Math.random() * 2D - 1D) * 0.015D
+		setColor(c.getRed() / 255F, c.getGreen() / 255F, c.getBlue() / 255F);
+		setAlphaF(c.getAlpha() / 255F);
 		setMaxAge((int) (7.0D / (Math.random() * 0.8D + 0.2D)));
+		selectSpriteWithAge(sprite);
 	}
 
 	@Override

@@ -3,12 +3,10 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.blocks.alchemy.DensusPlate;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -30,8 +28,6 @@ public class DensusPlateTileEntity extends TileEntity implements ITickableTileEn
 
 	private static final Tag<Block> gravityBlocking = new BlockTags.Wrapper(new ResourceLocation(Crossroads.MODID, "gravity_blocking"));
 
-	private Direction facing = null;
-	private Boolean anti = null;
 	private static final int RANGE = CRConfig.gravRange.get();
 
 	public DensusPlateTileEntity(){
@@ -39,27 +35,16 @@ public class DensusPlateTileEntity extends TileEntity implements ITickableTileEn
 	}
 
 	private Direction getFacing(){
-		if(facing == null){
-			BlockState state = world.getBlockState(pos);
-			if(!(state.getBlock() instanceof DensusPlate)){
-				return Direction.DOWN;
-			}
-			facing = state.get(ESProperties.FACING);
-			anti = state.getBlock() == CRBlocks.antiDensusPlate;
+		BlockState state = getBlockState();
+		if(state.has(ESProperties.FACING)){
+			return state.get(ESProperties.FACING);
 		}
-		return facing;
+		return Direction.DOWN;
 	}
 	
 	private boolean isAnti(){
-		if(anti == null){
-			BlockState state = world.getBlockState(pos);
-			if(!(state.getBlock() instanceof DensusPlate)){
-				return false;
-			}
-			facing = state.get(ESProperties.FACING);
-			anti = state.getBlock() == CRBlocks.antiDensusPlate;
-		}
-		return anti;
+		BlockState state = getBlockState();
+		return state.getBlock() == CRBlocks.antiDensusPlate;
 	}
 	
 	@Override
@@ -72,6 +57,7 @@ public class DensusPlateTileEntity extends TileEntity implements ITickableTileEn
 		boolean inverse = isAnti();
 		int effectiveRange = RANGE;
 
+		//Check for cavorite shortening the range
 		for(int i = 1; i <= RANGE; i++){
 			BlockState state = world.getBlockState(pos.offset(dir, i));
 			if(gravityBlocking.contains(state.getBlock())){
@@ -80,9 +66,9 @@ public class DensusPlateTileEntity extends TileEntity implements ITickableTileEn
 			}
 		}
 
-		List<Entity> ents = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.getX() + (dir.getXOffset() == 1 ? 1 : 0), pos.getY() + (dir.getYOffset() == 1 ? 1 : 0), pos.getZ() + (dir.getZOffset() == 1 ? 1 : 0), pos.getX() + (dir.getXOffset() == -1 ? 0 : 1) + effectiveRange * dir.getXOffset(), pos.getY() + (dir.getYOffset() == -1 ? 0 : 1) + effectiveRange * dir.getYOffset(), pos.getZ() + (dir.getZOffset() == -1 ? 0 : 1) + effectiveRange * dir.getZOffset()), EntityPredicates.IS_ALIVE);
+		List<Entity> ents = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.getX() + (dir.getXOffset() == 1 ? 1 : 0), pos.getY() + (dir.getYOffset() == 1 ? 1 : 0), pos.getZ() + (dir.getZOffset() == 1 ? 1 : 0), pos.getX() + (dir.getXOffset() == -1 ? 0 : 1) + effectiveRange * dir.getXOffset(), pos.getY() + (dir.getYOffset() == -1 ? 0 : 1) + effectiveRange * dir.getYOffset(), pos.getZ() + (dir.getZOffset() == -1 ? 0 : 1) + effectiveRange * dir.getZOffset()), EntityPredicates.IS_STANDALONE);
 		for(Entity ent : ents){
-			if(ent.isSneaking() || (ent instanceof PlayerEntity && ((PlayerEntity) ent).isSpectator())){
+			if(ent.isSneaking() || ent.isSpectator()){
 				continue;
 			}
 			switch(dir.getAxis()){

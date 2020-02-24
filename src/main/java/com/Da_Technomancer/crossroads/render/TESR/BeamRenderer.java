@@ -18,7 +18,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
-/** 
+/**
  * All blocks using BeamRenderer MUST return false to isOpaqueCube 
  */
 public class BeamRenderer<T extends TileEntity & IBeamRenderTE> extends TileEntityRenderer<T>{
@@ -36,13 +36,19 @@ public class BeamRenderer<T extends TileEntity & IBeamRenderTE> extends TileEnti
 		for(int dir = 0; dir < 6; ++dir){
 			if(packets[dir] != 0){
 				Triple<Color, Integer, Integer> trip = BeamManager.getTriple(packets[dir]);
-				
+
 				GlStateManager.pushMatrix();
 				GlStateManager.pushLightingAttributes();
 				GlStateManager.translated(x, y, z);
-				GlStateManager.color3f(trip.getLeft().getRed() / 255F, trip.getLeft().getGreen() / 255F, trip.getLeft().getBlue() / 255F);
+//				GlStateManager.color3f(trip.getLeft().getRed() / 255F, trip.getLeft().getGreen() / 255F, trip.getLeft().getBlue() / 255F);
 				Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE_BEACON_BEAM);
 				GlStateManager.disableLighting();
+//				GlStateManager.disableBlend();
+				GlStateManager.disableCull();
+
+//				GlStateManager.texParameter(3553, 10242, 10497);
+//				GlStateManager.texParameter(3553, 10243, 10497);
+
 				Pair<Float, Float> lighting = CRRenderUtil.disableLighting();
 
 				switch(dir){
@@ -82,30 +88,38 @@ public class BeamRenderer<T extends TileEntity & IBeamRenderTE> extends TileEnti
 				double halfWidth = trip.getRight().doubleValue() / (Math.sqrt(2D) * 16D);
 				int length = trip.getMiddle();
 
-				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+				float[] col = new float[4];
+				col[0] = trip.getLeft().getRed() / 255F;
+				col[1] = trip.getLeft().getGreen() / 255F;
+				col[2] = trip.getLeft().getBlue() / 255F;
+				col[3] = 1F;
+
+				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
 				//+Z
-				buf.pos(-halfWidth, length, halfWidth).tex(1, 0).endVertex();
-				buf.pos(-halfWidth, 0, halfWidth).tex(1, length).endVertex();
-				buf.pos(halfWidth, 0, halfWidth).tex(0, length).endVertex();
-				buf.pos(halfWidth, length, halfWidth).tex(0, 0).endVertex();
+				buf.pos(-halfWidth, length, halfWidth).tex(1, 0).color(col[0], col[1], col[2], col[3]).endVertex();
+				buf.pos(-halfWidth, 0, halfWidth).tex(1, length).color(col[0], col[1], col[2], col[3]).endVertex();
+				buf.pos(halfWidth, 0, halfWidth).tex(0, length).color(col[0], col[1], col[2], col[3]).endVertex();
+				buf.pos(halfWidth, length, halfWidth).tex(0, 0).color(col[0], col[1], col[2], col[3]).endVertex();
 				//-Z
-				buf.pos(halfWidth, length, -halfWidth).tex(1, 0).endVertex();
-				buf.pos(halfWidth, 0, -halfWidth).tex(1, length).endVertex();
-				buf.pos(-halfWidth, 0, -halfWidth).tex(0, length).endVertex();
-				buf.pos(-halfWidth, length, -halfWidth).tex(0, 0).endVertex();
+				buf.pos(halfWidth, length, -halfWidth).tex(1, 0).color(col[0], col[1], col[2], col[3]).endVertex();
+				buf.pos(halfWidth, 0, -halfWidth).tex(1, length).color(col[0], col[1], col[2], col[3]).endVertex();
+				buf.pos(-halfWidth, 0, -halfWidth).tex(0, length).color(col[0], col[1], col[2], col[3]).endVertex();
+				buf.pos(-halfWidth, length, -halfWidth).tex(0, 0).color(col[0], col[1], col[2], col[3]).endVertex();
 				//-X
-				buf.pos(-halfWidth, length, -halfWidth).tex(1, 0).endVertex();
-				buf.pos(-halfWidth, 0, -halfWidth).tex(1, length).endVertex();
-				buf.pos(-halfWidth, 0, halfWidth).tex(0, length).endVertex();
-				buf.pos(-halfWidth, length, halfWidth).tex(0, 0).endVertex();
+				buf.pos(-halfWidth, length, -halfWidth).tex(1, 0).color(col[0], col[1], col[2], col[3]).endVertex();
+				buf.pos(-halfWidth, 0, -halfWidth).tex(1, length).color(col[0], col[1], col[2], col[3]).endVertex();
+				buf.pos(-halfWidth, 0, halfWidth).tex(0, length).color(col[0], col[1], col[2], col[3]).endVertex();
+				buf.pos(-halfWidth, length, halfWidth).tex(0, 0).color(col[0], col[1], col[2], col[3]).endVertex();
 				//+X
-				buf.pos(halfWidth, length, halfWidth).tex(1, 0).endVertex();
-				buf.pos(halfWidth, 0, halfWidth).tex(1, length).endVertex();
-				buf.pos(halfWidth, 0, -halfWidth).tex(0, length).endVertex();
-				buf.pos(halfWidth, length, -halfWidth).tex(0, 0).endVertex();
+				buf.pos(halfWidth, length, halfWidth).tex(1, 0).color(col[0], col[1], col[2], col[3]).endVertex();
+				buf.pos(halfWidth, 0, halfWidth).tex(1, length).color(col[0], col[1], col[2], col[3]).endVertex();
+				buf.pos(halfWidth, 0, -halfWidth).tex(0, length).color(col[0], col[1], col[2], col[3]).endVertex();
+				buf.pos(halfWidth, length, -halfWidth).tex(0, 0).color(col[0], col[1], col[2], col[3]).endVertex();
 				tes.draw();
-				
+
 				CRRenderUtil.enableLighting(lighting);
+				GlStateManager.enableCull();
+//				GlStateManager.enableBlend();
 				GlStateManager.enableLighting();
 				GlStateManager.popAttributes();
 				GlStateManager.popMatrix();

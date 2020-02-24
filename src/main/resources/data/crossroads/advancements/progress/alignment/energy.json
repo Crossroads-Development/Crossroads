@@ -1,0 +1,21 @@
+{
+	"parent": "crossroads:progress/root",
+	"display": {
+		"icon": {
+			"item": "crossroads:pure_quartz"
+		},
+		"title": {
+			"translate": "alignment.energy"
+		},
+		"description": {
+			"translate": "crossroads.advancement.align.energy.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": false
+	},
+	"criteria": {
+		"command": {
+			"trigger": "minecraft:impossible"
+		}
+	}
+}

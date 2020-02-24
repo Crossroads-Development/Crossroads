@@ -1,0 +1,28 @@
+{
+	"display": {
+		"icon": {
+			"item": "crossroads:omnimeter"
+		},
+		"title": {
+			"translate": "crossroads.advancement.root"
+		},
+		"description": {
+			"translate": "crossroads.advancement.root.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": false,
+		"background": "minecraft:textures/gui/advancements/backgrounds/stone.png"
+	},
+	"criteria": {
+		"given": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "minecraft:crafting_table"
+					}
+				]
+			}
+		}
+	}
+}

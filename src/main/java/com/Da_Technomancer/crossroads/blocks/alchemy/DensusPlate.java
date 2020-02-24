@@ -32,7 +32,7 @@ public class DensusPlate extends ContainerBlock{
 		SHAPES[1] = makeCuboidShape(0, 0, 0, 16, 2, 16);
 		SHAPES[2] = makeCuboidShape(0, 0, 14, 16, 16, 16);
 		SHAPES[3] = makeCuboidShape(0, 0, 0, 16, 16, 2);
-		SHAPES[4] = makeCuboidShape(0, 0, 14, 16, 16, 16);
+		SHAPES[4] = makeCuboidShape(14, 0, 0, 16, 16, 16);
 		SHAPES[5] = makeCuboidShape(0, 0, 0, 2, 16, 16);
 	}
 

@@ -63,9 +63,4 @@ public abstract class BeamBlock extends ContainerBlock{
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
 		builder.add(ESProperties.FACING);
 	}
-
-//	@Override
-//	public boolean isOpaqueCube(BlockState state){
-//		return false;
-//	}
 }

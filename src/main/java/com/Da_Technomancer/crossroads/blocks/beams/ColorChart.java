@@ -49,17 +49,19 @@ public class ColorChart extends Block{
 
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		NetworkHooks.openGui((ServerPlayerEntity) playerIn, new INamedContainerProvider(){
-			@Override
-			public ITextComponent getDisplayName(){
-				return new TranslationTextComponent("container.color_chart");
-			}
+		if(!worldIn.isRemote){
+			NetworkHooks.openGui((ServerPlayerEntity) playerIn, new INamedContainerProvider(){
+				@Override
+				public ITextComponent getDisplayName(){
+					return new TranslationTextComponent("container.color_chart");
+				}
 
-			@Override
-			public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity){
-				return new ColorChartContainer(i, playerInventory, null);
-			}
-		});
+				@Override
+				public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity){
+					return new ColorChartContainer(i, playerInventory, null);
+				}
+			});
+		}
 		return true;
 	}
 

@@ -1,0 +1,22 @@
+{
+	"parent": "crossroads:progress/root",
+	"display": {
+		"icon": {
+			"item": "crossroads:gear_base",
+			"nbt": "{material:\"copper\"}"
+		},
+		"title": {
+			"translate": "crossroads.advancement.path.technomancy"
+		},
+		"description": {
+			"translate": "crossroads.advancement.path.technomancy.desc"
+		},
+		"frame": "challenge",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"command": {
+			"trigger": "minecraft:impossible"
+		}
+	}
+}

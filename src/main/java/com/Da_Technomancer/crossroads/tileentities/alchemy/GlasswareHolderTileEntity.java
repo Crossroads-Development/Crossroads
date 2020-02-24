@@ -138,22 +138,22 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 		if(heldType() != AbstractGlassware.GlasswareTypes.NONE){
 			if(stack.isEmpty() && sneaking){
 				ItemStack out = getStoredItem();
-				world.setBlockState(pos, state.with(CRProperties.CRYSTAL, false).with(CRProperties.CONTAINER_TYPE, AbstractGlassware.GlasswareTypes.NONE));
 				glassType = null;
 				this.contents.clear();
 				dirtyReag = true;
 				markDirty();
+				world.setBlockState(pos, state.with(CRProperties.CRYSTAL, false).with(CRProperties.CONTAINER_TYPE, AbstractGlassware.GlasswareTypes.NONE));
 				return out;
 			}
-			super.rightClickWithItem(stack, sneaking, player, hand);
+			return super.rightClickWithItem(stack, sneaking, player, hand);
 		}else if(stack.getItem() instanceof AbstractGlassware){
 			//Add item into TE
 			this.contents = ((AbstractGlassware) stack.getItem()).getReagants(stack);
 			glass = !((AbstractGlassware) stack.getItem()).isCrystal();
 			dirtyReag = true;
 			markDirty();
-			world.setBlockState(pos, state.with(CRProperties.CRYSTAL, !glass).with(CRProperties.CONTAINER_TYPE, ((AbstractGlassware) stack.getItem()).containerType()));
 			glassType = null;
+			world.setBlockState(pos, state.with(CRProperties.CRYSTAL, !glass).with(CRProperties.CONTAINER_TYPE, ((AbstractGlassware) stack.getItem()).containerType()));
 			return ItemStack.EMPTY;
 		}
 

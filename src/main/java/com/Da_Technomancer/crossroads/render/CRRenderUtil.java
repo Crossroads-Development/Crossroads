@@ -80,9 +80,9 @@ public class CRRenderUtil{
 	 */
 	@OnlyIn(Dist.CLIENT)
 	public static Pair<Float, Float> disableLighting(){
-		int i = 61680;
-		int j = i % 65536;
-		int k = i / 65536;
+		int i = 0xF0F0;
+		int j = i & 0xFFFF;
+		int k = i / 0x10000;
 		Pair<Float, Float> prev = Pair.of(GLX.lastBrightnessX, GLX.lastBrightnessY);
 		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, j, k);
 		return prev;

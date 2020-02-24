@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.API.CRReflection;
 import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
-import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import com.Da_Technomancer.crossroads.items.CRItems;
@@ -16,7 +15,6 @@ import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.passive.horse.SkeletonHorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -34,7 +32,6 @@ import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
@@ -254,15 +251,15 @@ public final class EventHandlerCommon{
 		}
 	}
 
-	@SubscribeEvent
-	@SuppressWarnings("unused")
-	public void syncPlayerTagToClient(EntityJoinWorldEvent e){
-		//The down-side of using this event is that every time the player switches dimension, the update data has to be resent.
-
-		if(e.getEntity() instanceof ServerPlayerEntity){
-			StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) e.getEntity());
-		}
-	}
+//	@SubscribeEvent
+//	@SuppressWarnings("unused")
+//	public void syncPlayerTagToClient(EntityJoinWorldEvent e){
+//		//The down-side of using this event is that every time the player switches dimension, the update data has to be resent.
+//
+//		if(e.getEntity() instanceof ServerPlayerEntity){
+//			StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) e.getEntity());
+//		}
+//	}
 
 	@SubscribeEvent
 	@SuppressWarnings("unused")

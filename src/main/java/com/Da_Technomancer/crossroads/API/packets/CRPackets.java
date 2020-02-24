@@ -23,7 +23,7 @@ public class CRPackets{
 		registerPacket(SendIntToClient.class);
 		registerPacket(SendStringToClient.class);
 		registerPacket(SendDoubleToClient.class);
-		registerPacket(StoreNBTToClient.class);
+//		registerPacket(StoreNBTToClient.class);
 		registerPacket(SendChatToClient.class);
 		registerPacket(SendBeamItemToServer.class);
 //		registerPacket(SendDimLoadToClient.class);

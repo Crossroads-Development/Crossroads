@@ -1,0 +1,21 @@
+{
+	"parent": "crossroads:progress/root",
+	"display": {
+		"icon": {
+			"item": "minecraft:stick"
+		},
+		"title": {
+			"translate": "crossroads.advancement.path.witchcraft"
+		},
+		"description": {
+			"translate": "crossroads.advancement.path.witchcraft.desc"
+		},
+		"frame": "challenge",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"command": {
+			"trigger": "minecraft:impossible"
+		}
+	}
+}

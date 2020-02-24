@@ -90,10 +90,10 @@ public final class Crossroads{
 //		TESRRegistry.init();
 //		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
 //		ModelLoaderRegistry.registerLoader(new BakedModelLoader());
-		ModEntities.clientInit();
 		CRItems.clientInit();
 		AAModTESR.registerBlockRenderer();
 		Keys.init();
+		ModEntities.clientInit();
 //		CRParticles.clientInit();
 		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
 	}
@@ -158,10 +158,10 @@ public final class Crossroads{
 		IForgeRegistry<EntityType<?>> registry = e.getRegistry();
 
 		registry.register(EntityType.Builder.create(EntityFlameCore::new, EntityClassification.MISC).immuneToFire().disableSummoning().setShouldReceiveVelocityUpdates(false).size(1, 1).build("flame_core").setRegistryName("flame_core"));
-		registry.register(EntityType.Builder.<EntityBullet>create(EntityBullet::new, EntityClassification.MISC).immuneToFire().setTrackingRange(64).setUpdateInterval(5).size(0.25F, 0.25F).build("bullet").setRegistryName("bullet"));
+//		registry.register(EntityType.Builder.<EntityBullet>create(EntityBullet::new, EntityClassification.MISC).immuneToFire().setTrackingRange(64).setUpdateInterval(5).size(0.25F, 0.25F).build("bullet").setRegistryName("bullet"));
 		registry.register(EntityType.Builder.<EntityShell>create(EntityShell::new, EntityClassification.MISC).immuneToFire().setTrackingRange(64).setUpdateInterval(5).size(.25F, .25F).build("shell").setRegistryName("shell"));
 		registry.register(EntityType.Builder.<EntityNitro>create(EntityNitro::new, EntityClassification.MISC).setTrackingRange(64).setUpdateInterval(5).build("nitro").setRegistryName("nitro"));
-		registry.register(EntityType.Builder.<EntityGhostMarker>create(EntityGhostMarker::new, EntityClassification.MISC).setTrackingRange(64).setUpdateInterval(20).immuneToFire().setShouldReceiveVelocityUpdates(false).build("ghost_marker").setRegistryName("ghost_marker"));
+		registry.register(EntityType.Builder.<EntityGhostMarker>create(EntityGhostMarker::new, EntityClassification.MISC).disableSummoning().setTrackingRange(64).setUpdateInterval(20).immuneToFire().setShouldReceiveVelocityUpdates(false).build("ghost_marker").setRegistryName("ghost_marker"));
 //		registry.register(EntityType.Builder.create(EntityArmRidable::new, EntityClassification.MISC).immuneToFire().setUpdateInterval(1).disableSummoning().setTrackingRange(64).size(0.01F, 0.01F).build("arm_ridable"));
 		registry.register(EntityType.Builder.create(EntityFlyingMachine::new, EntityClassification.MISC).size(1F, 1.3F).setTrackingRange(64).setUpdateInterval(1).build("flying_machine").setRegistryName("flying_machine"));
 

@@ -51,7 +51,7 @@ public class SendGoggleConfigureToServer extends ServerPacket{
 				stack.getTag().putBoolean(lensName, newSetting);
 
 				if(EnumGoggleLenses.DIAMOND.name().equals(lensName)){
-					StoreNBTToClient.syncNBTToClient(player);//Sync player path data to client
+//					StoreNBTToClient.syncNBTToClient(player);//Sync player path data to client
 					NetworkHooks.openGui(player, GoggleProvider.INSTANCE, buf -> buf.writeBoolean(false));
 				}
 			}

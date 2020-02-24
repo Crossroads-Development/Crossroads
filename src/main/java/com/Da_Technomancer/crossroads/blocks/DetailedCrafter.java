@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.blocks;
 
-import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.Block;
@@ -44,7 +43,7 @@ public class DetailedCrafter extends Block{
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(!worldIn.isRemote){
-			StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) playerIn);//Sync player path data to client
+//			StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) playerIn);//Sync player path data to client
 			NetworkHooks.openGui((ServerPlayerEntity) playerIn, new DetailedCrafterProvider(pos), buf -> {buf.writeBoolean(false); buf.writeBlockPos(pos);});
 		}
 		return true;

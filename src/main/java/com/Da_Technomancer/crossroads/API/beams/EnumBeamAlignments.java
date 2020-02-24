@@ -1,13 +1,10 @@
 package com.Da_Technomancer.crossroads.API.beams;
 
+import com.Da_Technomancer.crossroads.API.AdvancementTracker;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.effects.*;
-import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -90,35 +87,40 @@ public enum EnumBeamAlignments{
 	}
 
 	/**
-	 * Gets whether a player has discovered this alignment.
-	 * If this is the client side, make sure the nbt cache is up to date (via StoreNBTToClient)
+	 * Gets whether a player has unlocked this alignment.
+	 * If this is the client side, requires AdvancementTracker.listen() having been called first
 	 * @param player The player to check
 	 * @return Whether the given player has unlocked this alignment
 	 */
 	public boolean isDiscovered(PlayerEntity player){
-		return StoreNBTToClient.getPlayerTag(player).getCompound("alignments").getBoolean(toString());
+		return AdvancementTracker.hasAdvancement(player, "progress/alignment/" + this.toString());
 	}
 
 	/**
-	 * Sets whether the player has discovered this alignment
-	 * Only meaningful if called on the server side
-	 * @param player The player to discover this element
-	 * @param discover If true, discover the element. If false, "undiscover" the element
+	 * Sets whether a player has unlocked this alignment.
+	 * Only works on the server side
+	 * @param player The player to (un)lock this path for
+	 * @param discover Whether this player should have this alignment unlocked. If false, relocks this path
 	 */
 	public void discover(PlayerEntity player, boolean discover){
-		CompoundNBT nbt = StoreNBTToClient.getPlayerTag(player);
-		if(!nbt.contains("alignments")){
-			nbt.put("alignments", new CompoundNBT());
+		if(player.world.isRemote){
+			return;//We can't do this on the client side
 		}
-		if(isDiscovered(player) ^ discover){
-			nbt.getCompound("alignments").putBoolean(toString(), discover);
-			StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) player);
-			//Doesn't use deletion-chat as the element discovery notification shouldn't be wiped away in 1 tick.
-			if(discover){
-				player.sendMessage(new TranslationTextComponent("tt.crossroads.element_discover", getLocalName(false)).applyTextStyle(TextFormatting.BOLD));
-			}else{
-				player.sendMessage(new TranslationTextComponent("tt.crossroads.element_discover.undo", getLocalName(false)).applyTextStyle(TextFormatting.BOLD));
-			}
-		}
+		AdvancementTracker.unlockAdvancement((ServerPlayerEntity) player, "progress/alignment/" + toString(), discover);
+//
+//		CompoundNBT nbt = StoreNBTToClient.getPlayerTag(player);
+//		if(!nbt.contains("alignments")){
+//			nbt.put("alignments", new CompoundNBT());
+//		}
+//		if(isDiscovered(player) ^ discover){
+//			nbt.getCompound("alignments").putBoolean(toString(), discover);
+//			StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) player);
+//			//Doesn't use deletion-chat as the element discovery notification shouldn't be wiped away in 1 tick.
+//			if(discover){
+//				player.sendMessage(new TranslationTextComponent("tt.crossroads.element_discover", getLocalName(false)).applyTextStyle(TextFormatting.BOLD));
+//			}else{
+//				player.sendMessage(new TranslationTextComponent("tt.crossroads.element_discover.undo", getLocalName(false)).applyTextStyle(TextFormatting.BOLD));
+//			}
+//		}
 	}
 }

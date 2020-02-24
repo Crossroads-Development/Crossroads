@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.API;
 
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.API.packets.StoreNBTToClient;
 import com.Da_Technomancer.crossroads.CRConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
@@ -50,32 +49,31 @@ public enum EnumPath{
 
 	/**
 	 * Gets whether a player has unlocked this path.
-	 * If this is the client side, make sure the nbt cache is up to date (via StoreNBTToClient)
+	 * If this is the client side, requires AdvancementTracker.listen() having been called first
 	 * @param player The player to check
 	 * @return Whether the given player has unlocked this path
 	 */
 	public boolean isUnlocked(PlayerEntity player){
-		return StoreNBTToClient.getPlayerTag(player).getBoolean(toString());
+		return AdvancementTracker.hasAdvancement(player, "progress/path/" + toString());
 	}
 
 	/**
 	 * Sets whether a player has unlocked this path.
-	 * Only meaningful on the server side
-	 * Also updates the nbt cache (via StoreNBTToClient)
+	 * Only works on the server side
 	 * @param player The player to (un)lock this path for
 	 * @param unlocked Whether this player should have this path unlocked. If false, relocks this path
 	 */
 	public void setUnlocked(PlayerEntity player, boolean unlocked){
-		if(isUnlocked(player) ^ unlocked){
-			StoreNBTToClient.getPlayerTag(player).putBoolean(toString(), unlocked);
-			if(player instanceof ServerPlayerEntity){
-				StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) player);
-			}
+		if(player.world.isRemote){
+			return;//We can't do this on the client side
 		}
+		AdvancementTracker.unlockAdvancement((ServerPlayerEntity) player, "progress/path/" + toString(), unlocked);
 	}
 
 	/**
 	 * Tests whether a player has passed the gate to be allowed to unlock paths
+	 * Current requirement: Discover every alignment other than void and no_match
+	 *
 	 * @param player The player to check
 	 * @return Whether this player should be allowed to unlock paths
 	 */

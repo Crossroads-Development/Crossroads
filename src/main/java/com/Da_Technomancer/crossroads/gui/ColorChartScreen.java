@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.gui;
 
+import com.Da_Technomancer.crossroads.API.AdvancementTracker;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.templates.TextBarGuiObject;
 import com.Da_Technomancer.crossroads.Crossroads;
@@ -34,6 +35,7 @@ public class ColorChartScreen extends ContainerScreen<ColorChartContainer>{
 	public void init(){
 		super.init();
 
+		AdvancementTracker.listen();//Used for beam alignments
 		searchBar = new TextBarGuiObject((width - xSize) / 2, (height - ySize) / 2, 0, 300, 300, 25, "Filter", Character::isAlphabetic);
 	}
 

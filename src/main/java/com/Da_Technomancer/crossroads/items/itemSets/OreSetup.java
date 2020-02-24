@@ -92,7 +92,7 @@ public final class OreSetup{
 		gemRuby = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("gem_ruby");
 		CRItems.toRegister.add(gemRuby);
 		blockRuby = new BasicBlock("block_ruby", Block.Properties.create(Material.ROCK).hardnessAndResistance(5));
-		oreRuby = new BasicBlock("ore_ruby", Block.Properties.create(Material.ROCK).hardnessAndResistance(3).harvestLevel(3));
+		oreRuby = new BasicBlock("ore_ruby", Block.Properties.create(Material.ROCK).hardnessAndResistance(3).harvestLevel(2));
 
 		ingotCopshowium = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("ingot_copshowium");
 		CRItems.toRegister.add(ingotCopshowium);

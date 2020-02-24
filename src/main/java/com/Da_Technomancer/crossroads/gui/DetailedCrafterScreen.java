@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.gui;
 
+import com.Da_Technomancer.crossroads.API.AdvancementTracker;
 import com.Da_Technomancer.crossroads.API.EnumPath;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
@@ -19,6 +20,12 @@ public class DetailedCrafterScreen extends ContainerScreen<DetailedCrafterContai
 		super(cont, playerInv, name);
 		xSize = 176;
 		ySize = 166;
+	}
+
+	@Override
+	protected void init(){
+		super.init();
+		AdvancementTracker.listen();//We use the path advancement
 	}
 
 	@Override

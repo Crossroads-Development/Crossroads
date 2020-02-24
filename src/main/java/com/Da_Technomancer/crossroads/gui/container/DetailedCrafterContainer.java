@@ -236,12 +236,12 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 		if(!world.isRemote){
 			ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) player;
 			ItemStack itemstack = ItemStack.EMPTY;
-			List<DetailedCrafterRec> recipes = world.getServer().getRecipeManager().getRecipes(CRRecipes.DETAILED_TYPE, inInv, world);
+			List<DetailedCrafterRec> recipes = world.getRecipeManager().getRecipes(CRRecipes.DETAILED_TYPE, inInv, world);
 			//Find a detailed crafter specific recipe first
 			Optional<? extends ICraftingRecipe> recipeOpt = recipes.stream().filter(rec -> rec.getPath().isUnlocked(player)).findFirst();
 			//If there is no valid detailed crafter recipe, try vanilla crafting
 			if(!recipeOpt.isPresent()){
-				recipeOpt = world.getServer().getRecipeManager().getRecipe(IRecipeType.CRAFTING, inInv, world);
+				recipeOpt = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, inInv, world);
 			}
 
 			if(recipeOpt.isPresent()){
@@ -287,10 +287,10 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 		public ItemStack onTake(PlayerEntity thePlayer, ItemStack stack){
 			onCrafting(stack);
 			setCraftingPlayer(thePlayer);
-			List<DetailedCrafterRec> recipes = thePlayer.world.getServer().getRecipeManager().getRecipes(CRRecipes.DETAILED_TYPE, craftMatrix, thePlayer.world);
+			List<DetailedCrafterRec> recipes = thePlayer.world.getRecipeManager().getRecipes(CRRecipes.DETAILED_TYPE, craftMatrix, thePlayer.world);
 			Optional<? extends ICraftingRecipe> recipeOpt = recipes.stream().filter(rec -> rec.getPath().isUnlocked(thePlayer)).findFirst();
 			if(!recipeOpt.isPresent()){
-				recipeOpt = thePlayer.world.getServer().getRecipeManager().getRecipe(IRecipeType.CRAFTING, craftMatrix, thePlayer.world);
+				recipeOpt = thePlayer.world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, craftMatrix, thePlayer.world);
 			}
 			if(recipeOpt.isPresent()){
 				//Remove items if there is a matching recipe
