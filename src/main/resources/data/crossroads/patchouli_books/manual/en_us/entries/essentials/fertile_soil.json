@@ -1,0 +1,15 @@
+{
+	"category": "essentials",
+	"name": "Fertile Soil",
+	"icon": "essentials:fertile_soil_wheat",
+	"pages": [
+		{
+			"type": "text",
+			"text": "$(item)Fertile Soil/$ is an aid to farming. It has 11 variants, for wheat, carrots, potatoes, beetroot, netherwart and the 6 saplings. Crops can be planted on $(item)Fertile Soil/$ like it was farmland, and they grow as if on hydrated farmland even without water. They also cannot be trampled."
+		},
+		{
+			"type": "text",
+			"text": "At random intervals, if there is nothing growing on top of $(item)Fertile Soil/$, it plants the crop corresponding to its type on itself for free, saving the trouble of replanting and enabling the automation of farming without villagers."
+		}
+	]
+}

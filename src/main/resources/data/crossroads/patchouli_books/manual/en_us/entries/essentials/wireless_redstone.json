@@ -1,0 +1,15 @@
+{
+	"category": "essentials",
+	"name": "Wireless Redstone",
+	"icon": "essentials:redstone_transmitter",
+	"pages": [
+		{
+			"type": "text",
+			"text": "$(item)Redstone Transmitters/$ and $(item)Redstone Receivers/$ can wirelessly transmit redstone signals (including $(item)Circuitry/$ signals w/ decimal).$(br2)A Transmitter can be linked to one or more $(item)Receivers/$ with a $(item)Linking Tool/$ (a wrench for linking), which will output the redstone signal going into the $(item)Transmitter/$."
+		},
+		{
+			"type": "text",
+			"text": "$(item)Wireless Transmitters/Receivers/$ can be right-clicked with dyes to color code them."
+		}
+	]
+}

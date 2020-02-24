@@ -1,0 +1,11 @@
+{
+	"category": "essentials",
+	"name": "Wrench",
+	"icon": "essentials:wrench",
+	"pages": [
+		{
+			"type": "text",
+			"text": "The $(item)Wrench/$ is a normal adjustment item used for Essentials and Crossroads."
+		}
+	]
+}

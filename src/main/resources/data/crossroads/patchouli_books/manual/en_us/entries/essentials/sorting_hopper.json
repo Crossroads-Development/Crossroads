@@ -1,0 +1,11 @@
+{
+	"category": "essentials",
+	"name": "Sorting Hopper",
+	"icon": "essentials:sorting_hopper",
+	"pages": [
+		{
+			"type": "text",
+			"text": "The $(item)Sorting Hoppers/$ acts like a normal hopper, except it prevents items being drawn from it if the $(item)Sorting Hoppers/$ can output them.$(br2)A column of $(item)Sorting Hoppers/$ pointed sideways will sort out items at each layer. This pairs well with the $(item)Hopper Filter/$ or $(item)Slotted Chest/s!"
+		}
+	]
+}

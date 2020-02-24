@@ -1,0 +1,11 @@
+{
+	"category": "essentials",
+	"name": "Multi-Piston",
+	"icon": "essentials:multi_piston",
+	"pages": [
+		{
+			"type": "text",
+			"text": "$(item)Multi-Pistons/$ are uber-pistons that can extend up to 15 blocks, can push 64 blocks at a time, and extend instantly. They extend a distance equal to the redstone signal strength, and have a sticky variant. When pushing entities with a slime block, the bouncing effect is increased the farther they push, letting them launch mobs or players huge distances."
+		}
+	]
+}
