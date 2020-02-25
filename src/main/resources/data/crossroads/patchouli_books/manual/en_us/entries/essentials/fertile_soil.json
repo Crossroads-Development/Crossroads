@@ -2,6 +2,7 @@
 	"category": "essentials",
 	"name": "Fertile Soil",
 	"icon": "essentials:fertile_soil_wheat",
+	"read_by_default": "true",
 	"pages": [
 		{
 			"type": "text",

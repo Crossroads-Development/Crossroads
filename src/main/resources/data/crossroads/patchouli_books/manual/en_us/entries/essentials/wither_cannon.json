@@ -2,6 +2,7 @@
 	"category": "essentials",
 	"name": "Wither Cannon",
 	"icon": "essentials:wither_cannon",
+	"read_by_default": "true",
 	"pages": [
 		{
 			"type": "text",

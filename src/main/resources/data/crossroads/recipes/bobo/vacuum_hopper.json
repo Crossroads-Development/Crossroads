@@ -4,13 +4,15 @@
 		"item": "minecraft:hopper",
 		"count": 1,
 		"nbt": {
-			"Items": [
-				{
-					"Slot": 0,
-					"id": "crossroads:vacuum",
-					"Count": 1
-				}
-			],
+			"BlockEntityTag": {
+				"Items": [
+					{
+						"Slot": 0,
+						"id": "crossroads:vacuum",
+						"Count": 1
+					}
+				]
+			},
 			"display": {
 				"Name": "{\"translate\": \"item.crossroads.vacuum.hopper_quip\"}",
 				"Lore": [

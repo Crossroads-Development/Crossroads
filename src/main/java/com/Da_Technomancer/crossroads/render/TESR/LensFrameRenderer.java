@@ -19,12 +19,12 @@ public class LensFrameRenderer extends BeamRenderer<LensFrameTileEntity>{
 	private static final ResourceLocation[] textures = new ResourceLocation[6];
 
 	static{
-		textures[0] = new ResourceLocation(Crossroads.MODID, "textures/items/gem_ruby.png");
-		textures[1] = new ResourceLocation("textures/items/emerald.png");
-		textures[2] = new ResourceLocation("textures/items/diamond.png");
-		textures[3] = new ResourceLocation(Crossroads.MODID, "textures/items/pure_quartz.png");
-		textures[4] = new ResourceLocation(Crossroads.MODID, "textures/items/glow_quartz.png");
-		textures[5] = new ResourceLocation(Crossroads.MODID, "textures/items/void_crystal.png");
+		textures[0] = new ResourceLocation(Crossroads.MODID, "textures/item/gem_ruby.png");
+		textures[1] = new ResourceLocation("textures/item/emerald.png");
+		textures[2] = new ResourceLocation("textures/item/diamond.png");
+		textures[3] = new ResourceLocation(Crossroads.MODID, "textures/item/pure_quartz.png");
+		textures[4] = new ResourceLocation(Crossroads.MODID, "textures/item/glow_quartz.png");
+		textures[5] = new ResourceLocation(Crossroads.MODID, "textures/item/void_crystal.png");
 	}
 
 	@Override

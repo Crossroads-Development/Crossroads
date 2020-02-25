@@ -19,7 +19,7 @@ import org.lwjgl.opengl.GL11;
 
 public class RotaryDrillRenderer extends TileEntityRenderer<RotaryDrillTileEntity>{
 
-	private static final ResourceLocation TEXTURE_DRILL = new ResourceLocation("textures/blocks/iron_block.png");
+	private static final ResourceLocation TEXTURE_DRILL = new ResourceLocation("textures/block/iron_block.png");
 
 	@Override
 	public void render(RotaryDrillTileEntity drill, double x, double y, double z, float partialTicks, int destroyStage){
@@ -35,10 +35,10 @@ public class RotaryDrillRenderer extends TileEntityRenderer<RotaryDrillTileEntit
 		}
 
 		GlStateManager.pushMatrix();
-		GlStateManager.translated(x, y, z);
+		GlStateManager.translated(x + 0.5F, y + 0.5F, z + 0.5F);
 
 		//Rotate to face dir
-		GlStateManager.translated(0.5D, 0.5D, 0.5D);
+//		GlStateManager.translated(0.5D, 0.5D, 0.5D);
 		Direction dir = state.get(ESProperties.FACING);
 		if(dir == Direction.DOWN){
 			GlStateManager.rotated(180, 0, 0, 1);
@@ -46,7 +46,7 @@ public class RotaryDrillRenderer extends TileEntityRenderer<RotaryDrillTileEntit
 			GlStateManager.rotated(dir.getHorizontalAngle(), 0, 1, 0);
 			GlStateManager.rotated(90, 1, 0, 0);
 		}
-		GlStateManager.translated(-0.5D, -0.5D, -0.5D);
+//		GlStateManager.translated(-0.5D, -0.5D, -0.5D);
 
 		//Rotate w/ gear angle
 		GlStateManager.rotated(-axle.orElseThrow(NullPointerException::new).getAngle(partialTicks) * dir.getAxisDirection().getOffset(), 0F, 1F, 0F);
@@ -61,23 +61,18 @@ public class RotaryDrillRenderer extends TileEntityRenderer<RotaryDrillTileEntit
 
 		//Grid aligned layers
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		//Bottom
-		vb.pos(3F / 16, 0, 3F / 16).tex(0, 0).endVertex();
-		vb.pos(3F / 16, 0, 10F / 16F).tex(0, 10F / 16).endVertex();
-		vb.pos(10F / 16F, 0, 10F / 16F).tex(10F / 16, 10F / 16).endVertex();
-		vb.pos(10F / 16F, 0, 3F / 16).tex(10F / 16, 0).endVertex();
-
-		renderLayer(vb, 0, 10);
-		renderLayer(vb, 6, 6);
-		renderLayer(vb, 12, 2);
+		
+		renderLayer(vb, -8, 10);
+		renderLayer(vb, -2, 6);
+		renderLayer(vb, 4, 2);
 		Tessellator.getInstance().draw();
 
 		//45* aligned layers
 		GlStateManager.pushMatrix();
 		GlStateManager.rotated(45, 0, 1, 0);
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		renderLayer(vb, 3, 8);
-		renderLayer(vb, 9, 4);
+		renderLayer(vb, -5, 8);
+		renderLayer(vb, 1, 4);
 
 		Tessellator.getInstance().draw();
 		GlStateManager.popMatrix();
@@ -94,36 +89,42 @@ public class RotaryDrillRenderer extends TileEntityRenderer<RotaryDrillTileEntit
 		float top = bottom + height;
 		width /= 16F;
 
-		float start = 0.5F - width / 2;
-		float end = 0.5F + width / 2;
+		float start = -width / 2;
+		float end = width / 2;
 		//Top
 		vb.pos(start, top, start).tex(0, 0).endVertex();
-		vb.pos(end, top, start).tex(width, 0).endVertex();
-		vb.pos(end, top, end).tex(width, width).endVertex();
 		vb.pos(start, top, end).tex(0, width).endVertex();
+		vb.pos(end, top, end).tex(width, width).endVertex();
+		vb.pos(end, top, start).tex(width, 0).endVertex();
 
-		//side
+		//Bottom
 		vb.pos(start, bottom, start).tex(0, 0).endVertex();
 		vb.pos(end, bottom, start).tex(width, 0).endVertex();
-		vb.pos(end, top, start).tex(width, height).endVertex();
+		vb.pos(end, bottom, end).tex(width, width).endVertex();
+		vb.pos(start, bottom, end).tex(0, width).endVertex();
+		
+		//side
+		vb.pos(start, bottom, start).tex(0, 0).endVertex();
 		vb.pos(start, top, start).tex(0, height).endVertex();
+		vb.pos(end, top, start).tex(width, height).endVertex();
+		vb.pos(end, bottom, start).tex(width, 0).endVertex();
 
 		//side
 		vb.pos(start, bottom, end).tex(0, 0).endVertex();
-		vb.pos(start, top, end).tex(0, height).endVertex();
-		vb.pos(end, top, end).tex(width, height).endVertex();
 		vb.pos(end, bottom, end).tex(width, 0).endVertex();
+		vb.pos(end, top, end).tex(width, height).endVertex();
+		vb.pos(start, top, end).tex(0, height).endVertex();
 
 		//side
 		vb.pos(start, bottom, end).tex(0, 0).endVertex();
-		vb.pos(start, bottom, start).tex(0, width).endVertex();
-		vb.pos(start, top, start).tex(height, width).endVertex();
 		vb.pos(start, top, end).tex(height, 0).endVertex();
+		vb.pos(start, top, start).tex(height, width).endVertex();
+		vb.pos(start, bottom, start).tex(0, width).endVertex();
 
 		//side
 		vb.pos(end, bottom, end).tex(0, 0).endVertex();
-		vb.pos(end, top, end).tex(height, 0).endVertex();
-		vb.pos(end, top, start).tex(height, width).endVertex();
 		vb.pos(end, bottom, start).tex(0, width).endVertex();
+		vb.pos(end, top, start).tex(height, width).endVertex();
+		vb.pos(end, top, end).tex(height, 0).endVertex();
 	}
 }

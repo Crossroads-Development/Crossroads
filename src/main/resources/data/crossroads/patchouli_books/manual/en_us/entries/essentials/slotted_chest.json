@@ -2,6 +2,7 @@
 	"category": "essentials",
 	"name": "Slotted Chest",
 	"icon": "essentials:slotted_chest",
+	"read_by_default": "true",
 	"pages": [
 		{
 			"type": "text",

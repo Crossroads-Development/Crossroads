@@ -31,10 +31,10 @@ public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 		Minecraft.getInstance().textureManager.bindTexture(PHIAL_TEXTURE);
 		BufferBuilder buf = Tessellator.getInstance().getBuffer();
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		buf.pos(0, 16, 300).tex(0, 1).endVertex();
-		buf.pos(16, 16, 300).tex(1, 1).endVertex();
-		buf.pos(16, 0, 300).tex(1, 0).endVertex();
-		buf.pos(0, 0, 300).tex(0, 0).endVertex();
+		buf.pos(0, 16, 100).tex(0, 1).endVertex();
+		buf.pos(16, 16, 100).tex(1, 1).endVertex();
+		buf.pos(16, 0, 100).tex(1, 0).endVertex();
+		buf.pos(0, 0, 100).tex(0, 0).endVertex();
 		Tessellator.getInstance().draw();
 
 		Minecraft.getInstance().textureManager.bindTexture(INNER_TEXTURE);

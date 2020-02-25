@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -676,6 +677,11 @@ public class CRModels{
 	 * Draws a vertical screw for pumps and turbines
 	 */
 	public static void renderScrew(){
+		//Draw central axle
+		GlStateManager.translated(0, 0.5, 0);
+		drawAxle(new Color(160, 160, 160));
+		GlStateManager.translated(0, -0.5, 0);
+
 		//TODO check texture mapping and scaling
 		Minecraft.getInstance().textureManager.bindTexture(TEXTURE_SCREW);
 
@@ -684,73 +690,42 @@ public class CRModels{
 
 		//Central axis
 		final float coreRad = 1F / 16F;
-		final float rodHeight = 16.5F / 16F;
 		final float bladeWid = 3F / 16F;
 		final float bladeRad = coreRad + bladeWid;
 		final float incline = 5F / 3F / 16F;
 
-		vb.pos(-coreRad, 0, -coreRad).tex(0, 0).endVertex();
-		vb.pos(-coreRad, rodHeight, -coreRad).tex(0, 16).endVertex();
-		vb.pos(coreRad, rodHeight, -coreRad).tex(2, 16).endVertex();
-		vb.pos(coreRad, 0, -coreRad).tex(2, 0).endVertex();
-
-		vb.pos(-coreRad, 0, coreRad).tex(0, 0).endVertex();
-		vb.pos(-coreRad, rodHeight, coreRad).tex(0, 16).endVertex();
-		vb.pos(coreRad, rodHeight, coreRad).tex(2, 16).endVertex();
-		vb.pos(coreRad, 0, coreRad).tex(2, 0).endVertex();
-
-		vb.pos(-coreRad, 0, -coreRad).tex(0, 0).endVertex();
-		vb.pos(-coreRad, rodHeight, -coreRad).tex(0, 16).endVertex();
-		vb.pos(-coreRad, rodHeight, coreRad).tex(2, 16).endVertex();
-		vb.pos(-coreRad, 0, coreRad).tex(2, 0).endVertex();
-
-		vb.pos(coreRad, 0, -coreRad).tex(0, 0).endVertex();
-		vb.pos(coreRad, rodHeight, -coreRad).tex(0, 16).endVertex();
-		vb.pos(coreRad, rodHeight, coreRad).tex(2, 16).endVertex();
-		vb.pos(coreRad, 0, coreRad).tex(2, 0).endVertex();
-
-		vb.pos(-coreRad, 0, -coreRad).tex(0, 0).endVertex();
-		vb.pos(-coreRad, 0, coreRad).tex(0, 2).endVertex();
-		vb.pos(coreRad, 0, coreRad).tex(2, 2).endVertex();
-		vb.pos(coreRad, 0, -coreRad).tex(2, 0).endVertex();
-
-		vb.pos(-coreRad, rodHeight, -coreRad).tex(0, 0).endVertex();
-		vb.pos(-coreRad, rodHeight, coreRad).tex(0, 2).endVertex();
-		vb.pos(coreRad, rodHeight, coreRad).tex(2, 2).endVertex();
-		vb.pos(coreRad, rodHeight, -coreRad).tex(2, 0).endVertex();
-
 		//Blade 1
 		vb.pos(coreRad, 0, -bladeRad).tex(0, 0).endVertex();
-		vb.pos(bladeRad, 0, -bladeRad).tex(3, 0).endVertex();
-		vb.pos(bladeRad, incline, bladeRad).tex(3, 8).endVertex();
-		vb.pos(coreRad, incline, bladeRad).tex(0, 8).endVertex();
+		vb.pos(bladeRad, 0, -bladeRad).tex(3F/64F, 0).endVertex();
+		vb.pos(bladeRad, incline, bladeRad).tex(3F/64F, 8F/64F).endVertex();
+		vb.pos(coreRad, incline, bladeRad).tex(0, 8F/64F).endVertex();
 
 		vb.pos(coreRad, 0, -bladeRad).tex(0, 0).endVertex();
-		vb.pos(coreRad, incline, bladeRad).tex(0, 8).endVertex();
-		vb.pos(bladeRad, incline, bladeRad).tex(3, 8).endVertex();
-		vb.pos(bladeRad, 0, -bladeRad).tex(3, 0).endVertex();
+		vb.pos(coreRad, incline, bladeRad).tex(0, 8F/64F).endVertex();
+		vb.pos(bladeRad, incline, bladeRad).tex(3F/64F, 8F/64F).endVertex();
+		vb.pos(bladeRad, 0, -bladeRad).tex(3F/64F, 0).endVertex();
 
 		//Blade 2
 		vb.pos(-bladeRad, 2 * incline, coreRad).tex(0, 0).endVertex();
-		vb.pos(bladeRad, incline, coreRad).tex(8, 0).endVertex();
-		vb.pos(bladeRad, incline, coreRad + bladeWid).tex(8, 3).endVertex();
-		vb.pos(-bladeRad, 2 * incline, coreRad + bladeWid).tex(0, 3).endVertex();
+		vb.pos(bladeRad, incline, coreRad).tex(8F/64F, 0).endVertex();
+		vb.pos(bladeRad, incline, coreRad + bladeWid).tex(8F/64F, 3F/64F).endVertex();
+		vb.pos(-bladeRad, 2 * incline, coreRad + bladeWid).tex(0, 3F/64F).endVertex();
 
 		vb.pos(-bladeRad, 2 * incline, coreRad).tex(0, 0).endVertex();
-		vb.pos(-bladeRad, 2 * incline, coreRad + bladeWid).tex(0, 3).endVertex();
-		vb.pos(bladeRad, incline, coreRad + bladeWid).tex(8, 3).endVertex();
-		vb.pos(bladeRad, incline, coreRad).tex(8, 0).endVertex();
+		vb.pos(-bladeRad, 2 * incline, coreRad + bladeWid).tex(0, 3F/64F).endVertex();
+		vb.pos(bladeRad, incline, coreRad + bladeWid).tex(8F/64F, 3F/64F).endVertex();
+		vb.pos(bladeRad, incline, coreRad).tex(8F/64F, 0).endVertex();
 
 		//Blade 3
-		vb.pos(-bladeRad, 2 * incline, bladeRad).tex(0, 8).endVertex();
-		vb.pos(-coreRad, 2 * incline, bladeRad).tex(3, 8).endVertex();
-		vb.pos(-coreRad, 3 * incline, -bladeRad).tex(3, 0).endVertex();
+		vb.pos(-bladeRad, 2 * incline, bladeRad).tex(0, 8F/64F).endVertex();
+		vb.pos(-coreRad, 2 * incline, bladeRad).tex(3F/64F, 8F/64F).endVertex();
+		vb.pos(-coreRad, 3 * incline, -bladeRad).tex(3F/64F, 0).endVertex();
 		vb.pos(-bladeRad, 3 * incline, -bladeRad).tex(0, 0).endVertex();
 
-		vb.pos(-bladeRad, 2 * incline, bladeRad).tex(0, 8).endVertex();
+		vb.pos(-bladeRad, 2 * incline, bladeRad).tex(0, 8F/64F).endVertex();
 		vb.pos(-bladeRad, 3 * incline, -bladeRad).tex(0, 0).endVertex();
-		vb.pos(-coreRad, 3 * incline, -bladeRad).tex(3, 0).endVertex();
-		vb.pos(-coreRad, 2 * incline, bladeRad).tex(3, 8).endVertex();
+		vb.pos(-coreRad, 3 * incline, -bladeRad).tex(3F/64F, 0).endVertex();
+		vb.pos(-coreRad, 2 * incline, bladeRad).tex(3F/64F, 8F/64F).endVertex();
 
 		Tessellator.getInstance().draw();
 	}

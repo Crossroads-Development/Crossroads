@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.items;
 
+import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
@@ -51,7 +52,7 @@ public class ChickenBoots extends ArmorItem{
 
 		@Override
 		public String getName(){
-			return "bobo";
+			return Crossroads.MODID + ":bobo";
 		}
 
 		@Override

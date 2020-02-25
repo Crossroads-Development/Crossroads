@@ -2,6 +2,7 @@
 	"category": "essentials",
 	"name": "Speed Hopper",
 	"icon": "essentials:speed_hopper",
+	"read_by_default": "true",
 	"pages": [
 		{
 			"type": "text",

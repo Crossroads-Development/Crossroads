@@ -39,10 +39,10 @@ public class RotaryDrill extends ContainerBlock{
 	static{
 		SHAPES[0] = VoxelShapes.or(makeCuboidShape(3, 10, 3, 13, 16, 13), makeCuboidShape(5, 4, 5, 11, 10, 11), makeCuboidShape(7, 0, 7, 9, 4, 9));
 		SHAPES[1] = VoxelShapes.or(makeCuboidShape(3, 0, 3, 13, 6, 13), makeCuboidShape(5, 6, 5, 11, 12, 11), makeCuboidShape(7, 12, 7, 9, 16, 9));
-		SHAPES[2] = VoxelShapes.or(makeCuboidShape(10, 3, 3, 16, 13, 13), makeCuboidShape(4, 5, 5, 10, 11, 11), makeCuboidShape(0, 7, 7, 4, 9, 9));
-		SHAPES[3] = VoxelShapes.or(makeCuboidShape(0, 3, 3, 6, 13, 13), makeCuboidShape(6, 5, 5, 12, 11, 11), makeCuboidShape(12, 7, 7, 16, 9, 9));
-		SHAPES[4] = VoxelShapes.or(makeCuboidShape(3, 3, 10, 13, 13, 16), makeCuboidShape(5, 5, 4, 11, 11, 10), makeCuboidShape(7, 7, 0, 9, 9, 4));
-		SHAPES[5] = VoxelShapes.or(makeCuboidShape(3, 3, 0, 13, 13, 6), makeCuboidShape(5, 5, 6, 11, 11, 12), makeCuboidShape(7, 7, 12, 9, 9, 16));
+		SHAPES[2] = VoxelShapes.or(makeCuboidShape(3, 3, 10, 13, 13, 16), makeCuboidShape(5, 5, 4, 11, 11, 10), makeCuboidShape(7, 7, 0, 9, 9, 4));
+		SHAPES[3] = VoxelShapes.or(makeCuboidShape(3, 3, 0, 13, 13, 6), makeCuboidShape(5, 5, 6, 11, 11, 12), makeCuboidShape(7, 7, 12, 9, 9, 16));
+		SHAPES[4] = VoxelShapes.or(makeCuboidShape(10, 3, 3, 16, 13, 13), makeCuboidShape(4, 5, 5, 10, 11, 11), makeCuboidShape(0, 7, 7, 4, 9, 9));
+		SHAPES[5] = VoxelShapes.or(makeCuboidShape(0, 3, 3, 6, 13, 13), makeCuboidShape(6, 5, 5, 12, 11, 11), makeCuboidShape(12, 7, 7, 16, 9, 9));
 	}
 
 	private final boolean golden;

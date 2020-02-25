@@ -34,8 +34,8 @@ import java.util.List;
 public class SolarHeater extends ContainerBlock{
 
 	//Very simple shape currently, could be improved
-	private static final VoxelShape X_SHAPE = Block.makeCuboidShape(0, 0, 0, 16, 8, 16);
-	private static final VoxelShape Z_SHAPE = X_SHAPE;
+	private static final VoxelShape X_SHAPE = Block.makeCuboidShape(0, 0, 1, 16, 8, 15);
+	private static final VoxelShape Z_SHAPE = Block.makeCuboidShape(1, 0, 0, 15, 8, 16);
 
 	public SolarHeater(){
 		super(Block.Properties.create(Material.IRON).hardnessAndResistance(3));

@@ -20,7 +20,7 @@ import java.awt.*;
 
 public class StampMillRenderer extends TileEntityRenderer<StampMillTileEntity>{
 
-	private static final ResourceLocation METAL_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/blocks/block_cast_iron.png");
+	private static final ResourceLocation METAL_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/block/block_cast_iron.png");
 
 	@Override
 	public void render(StampMillTileEntity te, double x, double y, double z, float partialTicks, int destroyStage){

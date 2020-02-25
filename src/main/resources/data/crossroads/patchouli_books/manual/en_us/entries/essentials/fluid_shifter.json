@@ -2,6 +2,7 @@
 	"category": "essentials",
 	"name": "Fluid Shifter",
 	"icon": "essentials:fluid_shifter",
+	"read_by_default": "true",
 	"pages": [
 		{
 			"type": "text",

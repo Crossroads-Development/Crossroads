@@ -2,6 +2,7 @@
 	"category": "essentials",
 	"name": "Circuitry",
 	"icon": "essentials:circuit_wrench",
+	"read_by_default": "true",
 	"pages": [
 		{
 			"type": "text",

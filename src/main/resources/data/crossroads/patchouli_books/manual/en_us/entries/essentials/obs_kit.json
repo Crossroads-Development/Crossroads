@@ -2,6 +2,7 @@
 	"category": "essentials",
 	"name": "Obsidian Cutting Kits",
 	"icon": "essentials:obsidian_cutting_kit",
+	"read_by_default": "true",
 	"pages": [
 		{
 			"type": "text",

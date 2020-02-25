@@ -2,6 +2,7 @@
 	"category": "essentials",
 	"name": "Item Splitter",
 	"icon": "essentials:basic_item_splitter",
+	"read_by_default": "true",
 	"pages": [
 		{
 			"type": "text",

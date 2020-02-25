@@ -2,6 +2,7 @@
 	"category": "essentials",
 	"name": "Sorting Hopper",
 	"icon": "essentials:sorting_hopper",
+	"read_by_default": "true",
 	"pages": [
 		{
 			"type": "text",

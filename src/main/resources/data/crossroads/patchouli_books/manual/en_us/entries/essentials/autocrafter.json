@@ -2,6 +2,7 @@
 	"category": "essentials",
 	"name": "Autocrafting",
 	"icon": "essentials:auto_crafter",
+	"read_by_default": "true",
 	"pages": [
 		{
 			"type": "text",

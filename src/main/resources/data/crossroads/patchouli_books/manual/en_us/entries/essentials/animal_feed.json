@@ -2,6 +2,7 @@
 	"category": "essentials",
 	"name": "Animal Feed",
 	"icon": "essentials:animal_feed",
+	"read_by_default": "true",
 	"pages": [
 		{
 			"type": "text",

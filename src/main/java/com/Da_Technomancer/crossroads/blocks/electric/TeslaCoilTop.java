@@ -16,6 +16,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -26,6 +29,7 @@ import java.util.List;
 
 public class TeslaCoilTop extends ContainerBlock{
 
+	private static final VoxelShape SHAPE = VoxelShapes.or(makeCuboidShape(4, 0, 4, 12, 8, 12), makeCuboidShape(0, 8, 0, 16, 16, 16));
 	public final TeslaCoilVariants variant;
 
 	public TeslaCoilTop(TeslaCoilVariants variant){
@@ -35,6 +39,11 @@ public class TeslaCoilTop extends ContainerBlock{
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
+	}
+
+	@Override
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+		return SHAPE;
 	}
 
 	@Override
