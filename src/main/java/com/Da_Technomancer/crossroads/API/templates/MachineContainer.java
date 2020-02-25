@@ -36,11 +36,11 @@ public abstract class MachineContainer<U extends InventoryTE> extends Container{
 				worldTe = (U) rawTE;
 			}catch(ClassCastException e){
 				//Should never happen
-				Crossroads.logger.warn("UI opened without TE in world!");
+				Crossroads.logger.error("UI opened without TE in world!");
 			}
 		}else{
 			//Should never happen
-			Crossroads.logger.warn("Null TileEntity passed to MachineContainer!");
+			Crossroads.logger.error("Null TileEntity passed to MachineContainer!");
 		}
 		if(worldTe == null){
 			//Just in case one of the two things that should never happen happens, we create a fake instance of type U

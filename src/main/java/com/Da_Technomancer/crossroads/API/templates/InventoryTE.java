@@ -72,14 +72,18 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 	@Override
 	public void markDirty(){
 		super.markDirty();
-		for(int i = 0; i < fluidManagers.length; i++){
-			fluidManagers[i].updateState(fluids[i]);
-		}
-		if(useRotary()){
-			rotaryReference.set((int) Math.round(motData[0] * 100D));
-		}
-		if(useHeat()){
-			heatReference.set((int) temp);
+		if(!world.isRemote){
+			//We update our IntReferenceHolders that notify client side containers
+			//We only update them directly on the server side. Updating on the client is unneeded, and may cause things to get out of sync
+			for(int i = 0; i < fluidManagers.length; i++){
+				fluidManagers[i].updateState(fluids[i]);
+			}
+			if(useRotary()){
+				rotaryReference.set((int) Math.round(motData[0] * 100D));
+			}
+			if(useHeat()){
+				heatReference.set((int) temp);
+			}
 		}
 	}
 
