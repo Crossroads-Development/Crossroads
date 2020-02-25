@@ -49,6 +49,11 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	public static final int REQUIRED = 1000;
 	private int progress = 0;
 	public IntReferenceHolder progressRef = IntReferenceHolder.single();
+	/**
+	 * The texture to be displayed, if any.
+	 */
+	private String activeText = "";
+	private Integer col = null;//Color applied to the liquid texture
 
 	public HeatingCrucibleTileEntity(){
 		super(type, 1);
@@ -80,12 +85,6 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 			}
 		}
 	}
-
-	/**
-	 * The texture to be displayed, if any. 
-	 */
-	private String activeText = "";
-	private Integer col = null;
 
 	public String getActiveTexture(){
 		return activeText;

@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.lwjgl.opengl.GL11;
 
@@ -49,7 +48,7 @@ public class BeamRenderer<T extends TileEntity & IBeamRenderTE> extends TileEnti
 //				GlStateManager.texParameter(3553, 10242, 10497);
 //				GlStateManager.texParameter(3553, 10243, 10497);
 
-				Pair<Float, Float> lighting = CRRenderUtil.disableLighting();
+				CRRenderUtil.setBrightLighting();
 
 				switch(dir){
 					case 0:
@@ -117,7 +116,7 @@ public class BeamRenderer<T extends TileEntity & IBeamRenderTE> extends TileEnti
 				buf.pos(halfWidth, length, -halfWidth).tex(0, 0).color(col[0], col[1], col[2], col[3]).endVertex();
 				tes.draw();
 
-				CRRenderUtil.enableLighting(lighting);
+//				CRRenderUtil.restoreLighting(lighting);
 				GlStateManager.enableCull();
 //				GlStateManager.enableBlend();
 				GlStateManager.enableLighting();

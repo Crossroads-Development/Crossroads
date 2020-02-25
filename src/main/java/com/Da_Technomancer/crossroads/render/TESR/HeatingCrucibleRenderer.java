@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
@@ -35,7 +36,9 @@ public class HeatingCrucibleRenderer extends TileEntityRenderer<HeatingCrucibleT
 		GlStateManager.translated(x, y, z);
 		Minecraft.getInstance().textureManager.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
-		
+
+		CRRenderUtil.setMediumLighting();
+
 		float xzStart = 2F / 16F;
 		float xzEnd = 14F / 16F;
 		float height = (float) (2 + 4 * fullness) / 16F;

@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL11;
 public class FluxNodeRenderer extends LinkLineRenderer<FluxNodeTileEntity>{
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/model/gimbal.png");
-	private static final ResourceLocation TEXTURE_COP = new ResourceLocation(Crossroads.MODID, "textures/blocks/block_copshowium.png");
+	private static final ResourceLocation TEXTURE_COP = new ResourceLocation(Crossroads.MODID, "textures/block/block_copshowium.png");
 
 	@Override
 	public void render(FluxNodeTileEntity te, double x, double y, double z, float partialTicks, int destroyStage){

@@ -35,10 +35,10 @@ public class HamsterWheel extends ContainerBlock{
 	private static final VoxelShape[] SHAPES = new VoxelShape[4];
 
 	static{
-		SHAPES[0] = makeCuboidShape(0, 0, 8, 16, 16, 16);
-		SHAPES[1] = makeCuboidShape(0, 0, 0, 8, 16, 16);
-		SHAPES[2] = makeCuboidShape(0, 0, 0, 16, 16, 8);
-		SHAPES[3] = makeCuboidShape(8, 0, 0, 16, 16, 16);
+		SHAPES[0] = makeCuboidShape(3, 3, 8, 13, 13, 16);
+		SHAPES[1] = makeCuboidShape(0, 3, 3, 8, 13, 13);
+		SHAPES[2] = makeCuboidShape(3, 3, 0, 13, 13, 8);
+		SHAPES[3] = makeCuboidShape(8, 3, 3, 16, 13, 13);
 	}
 
 	public HamsterWheel(){

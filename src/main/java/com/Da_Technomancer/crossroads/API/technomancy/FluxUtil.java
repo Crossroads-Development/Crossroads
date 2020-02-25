@@ -17,6 +17,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Set;
 
@@ -31,7 +32,7 @@ public class FluxUtil{
 	 * This allows flux transfer to tick-order independent
 	 */
 	public static final int FLUX_TIME = BeamManager.BEAM_TIME;
-	public static final int[] COLOR_CODES = new int[] {0xFFF000, 0xFFFA00, 0xFFA000};//color codes for flux rendering
+	public static final int[] COLOR_CODES = new int[] {new Color(255, 240, 0).getRGB(), new Color(255, 80, 0).getRGB(), new Color(255, 160, 0).getRGB()};//color codes for flux rendering
 
 	/**
 	 * Does the simplest flux transfer from a src to linked machines
@@ -63,11 +64,18 @@ public class FluxUtil{
 	 * @return The amount of untransfered flux
 	 */
 	public static int performTransfer(IFluxLink src, Set<BlockPos> links, int toTransfer){
+		if(toTransfer <= 0){
+			return 0;
+		}
 		World world = src.getTE().getWorld();
 		BlockPos pos = src.getTE().getPos();
 		//Run through each link and collect all the valid IFluxLink links
 		//Each object is a TileEntity extending IFluxLink
 		Object[] dests = links.stream().map((linkPos) -> world.getTileEntity(pos.add(linkPos))).filter((te) -> te instanceof IFluxLink).toArray();
+		if(dests.length == 0){
+			return toTransfer;//no recipients
+		}
+
 		int toTransPer = toTransfer / dests.length;//Due to integer division, the source may have a small amount of flux remaining at the end
 		for(Object dest : dests){
 			IFluxLink linked = (IFluxLink) dest;
@@ -79,8 +87,10 @@ public class FluxUtil{
 	}
 
 	public static void renderFlux(World world, BlockPos src, BlockPos dest, int qty){
-		//This is basically a carbon copy of the tesla coil render code- this should probably be tweaked to make it more thematic
-		CRRenderUtil.addArc(world, src.getX() + 0.5F, src.getY() + 0.5F, src.getZ() + 0.5F, dest.getX() + 0.5F, dest.getY() + 0.5F, dest.getZ() + 0.5F, 3, 0.3F, COLOR_CODES[(int) (world.getGameTime() % 3)]);
+		if(qty > 0){
+			//This is basically a carbon copy of the tesla coil render code- this should probably be tweaked to make it more thematic
+			CRRenderUtil.addArc(world, src.getX() + 0.5F, src.getY() + 0.5F, src.getZ() + 0.5F, dest.getX() + 0.5F, dest.getY() + 0.5F, dest.getZ() + 0.5F, 3, 0.3F, COLOR_CODES[(int) (world.getGameTime() % 3)]);
+		}
 	}
 
 	/**
@@ -91,9 +101,9 @@ public class FluxUtil{
 	 */
 	public static void addFluxInfo(List<ITextComponent> tooltip, IFluxLink te, int fluxPerCycle){
 		if(fluxPerCycle < 0){
-			tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.flux_simple", te.getFlux(), te.getMaxFlux(), CRConfig.formatVal(100F * te.getFlux() / te.getMaxFlux())));
+			tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.flux_simple", te.getReadingFlux(), te.getMaxFlux(), CRConfig.formatVal(100F * te.getReadingFlux() / te.getMaxFlux())));
 		}else{
-			tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.flux", te.getFlux(), te.getMaxFlux(), CRConfig.formatVal(100F * te.getFlux() / te.getMaxFlux()), CRConfig.formatVal((float) fluxPerCycle / FLUX_TIME)));
+			tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.flux", te.getReadingFlux(), te.getMaxFlux(), CRConfig.formatVal(100F * te.getReadingFlux() / te.getMaxFlux()), CRConfig.formatVal((float) fluxPerCycle / FLUX_TIME)));
 		}
 	}
 

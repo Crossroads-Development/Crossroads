@@ -12,12 +12,14 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.function.Function;
 
 public class CRRenderUtil{
 
+	/**
+	 * Used internally. Public only for packet use
+	 */
 	@SuppressWarnings("unchecked")
 	public static final Function<CompoundNBT, IVisualEffect>[] visualFactories = (Function<CompoundNBT, IVisualEffect>[]) new Function[2];
 
@@ -25,6 +27,8 @@ public class CRRenderUtil{
 		visualFactories[0] = LooseBeamRenderable::readFromNBT;
 		visualFactories[1] = LooseArcRenderable::readFromNBT;
 	}
+
+	//Pre-made render effects
 
 	public static void addBeam(World world, double x, double y, double z, double length, float angleX, float angleY, byte width, int color){
 		CompoundNBT nbt = new CompoundNBT();
@@ -74,33 +78,30 @@ public class CRRenderUtil{
 		}
 	}
 
+	//Lighting utilities
+
+	@OnlyIn(Dist.CLIENT)
+	public static int getCurrLighting(){
+		return ((int) GLX.lastBrightnessY << 16) | ((int) GLX.lastBrightnessX & 0xFF);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public static void setLighting(int light){
+		int j = light & 0xFF;
+		int k = (light >> 16) & 0xFF;
+		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, j, k);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public static void setMediumLighting(){
+		setLighting(0xA0A0);
+	}
+
 	/**
 	 * Disables lighting in the current GlStateManager render operation, making things glow-in-the-dark
-	 * @return The previous lighting setting- needed to restore normal settings
 	 */
 	@OnlyIn(Dist.CLIENT)
-	public static Pair<Float, Float> disableLighting(){
-		int i = 0xF0F0;
-		int j = i & 0xFFFF;
-		int k = i / 0x10000;
-		Pair<Float, Float> prev = Pair.of(GLX.lastBrightnessX, GLX.lastBrightnessY);
-		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, j, k);
-		return prev;
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public static Pair<Float, Float> setMediumLighting(){
-		Pair<Float, Float> prev = Pair.of(GLX.lastBrightnessX, GLX.lastBrightnessY);
-		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, 160, 160);
-		return prev;
-	}
-
-	/**
-	 * Re-enables lighting in the current GlStateManager render operation, for use after disableLighting
-	 * @param prevSetting The original lighting settings (returned by disable lighting)
-	 */
-	@OnlyIn(Dist.CLIENT)
-	public static void enableLighting(Pair<Float, Float> prevSetting){
-		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, prevSetting.getLeft(), prevSetting.getRight());
+	public static void setBrightLighting(){
+		setLighting(0xF0F0);
 	}
 }

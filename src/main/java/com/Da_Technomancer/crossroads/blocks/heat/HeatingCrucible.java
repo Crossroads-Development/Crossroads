@@ -20,6 +20,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -32,6 +34,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class HeatingCrucible extends ContainerBlock{
+
+	private static final VoxelShape SHAPE = makeCuboidShape(0, 0, 0, 16, 14, 16);
 
 	public HeatingCrucible(){
 		super(Block.Properties.create(Material.ROCK).hardnessAndResistance(3));
@@ -48,6 +52,11 @@ public class HeatingCrucible extends ContainerBlock{
 	}
 
 	@Override
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+		return SHAPE;
+	}
+
+	@Override
 	public TileEntity createNewTileEntity(IBlockReader worldIn){
 		return new HeatingCrucibleTileEntity();
 	}
@@ -59,7 +68,9 @@ public class HeatingCrucible extends ContainerBlock{
 
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
-		InventoryHelper.dropInventoryItems(world, pos, (IInventory) world.getTileEntity(pos));
+		if(newState.getBlock() != this){
+			InventoryHelper.dropInventoryItems(world, pos, (IInventory) world.getTileEntity(pos));
+		}
 		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 

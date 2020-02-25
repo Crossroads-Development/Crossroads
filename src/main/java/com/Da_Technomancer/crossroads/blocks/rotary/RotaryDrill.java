@@ -84,6 +84,11 @@ public class RotaryDrill extends ContainerBlock{
 	}
 
 	@Override
+	public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos){
+		return true;
+	}
+
+	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
 		builder.add(ESProperties.FACING);
 	}

@@ -18,6 +18,12 @@ public class CrucibleScreen extends MachineGUI<CrucibleContainer, HeatingCrucibl
 	}
 
 	@Override
+	protected void init(){
+		super.init();
+		te.fluidManagers[0].initScreen((width - xSize) / 2, (height - ySize) / 2, 70, 70);
+	}
+
+	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
 		Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE);
 

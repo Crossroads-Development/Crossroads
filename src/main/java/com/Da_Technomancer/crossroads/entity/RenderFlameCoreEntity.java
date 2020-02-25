@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -38,7 +37,7 @@ public class RenderFlameCoreEntity extends EntityRenderer<EntityFlameCore>{
 		GlStateManager.disableLighting();
 		GlStateManager.disableCull();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		Pair<Float, Float> lightSetting = CRRenderUtil.disableLighting();
+		CRRenderUtil.setBrightLighting();
 
 		GlStateManager.color4f((float) col.getRed() / 255F, (float) col.getGreen() / 255F, (float) col.getBlue() / 255F, (float) col.getAlpha() / 255F);
 		GlStateManager.translated(x, y, z);
@@ -82,8 +81,7 @@ public class RenderFlameCoreEntity extends EntityRenderer<EntityFlameCore>{
 		buf.pos(1, 1, -1).tex(0, 1).endVertex();
 		
 		Tessellator.getInstance().draw();
-		
-		CRRenderUtil.enableLighting(lightSetting);
+
 		GlStateManager.color4f(1, 1, 1, 1);
 		GlStateManager.enableCull();
 		GlStateManager.enableLighting();

@@ -10,13 +10,12 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
 public class ChronoHarnessRenderer extends LinkLineRenderer<ChronoHarnessTileEntity>{
 
-	private static final ResourceLocation INNER_TEXT = new ResourceLocation(Crossroads.MODID, "textures/blocks/block_copshowium.png");
-	private static final ResourceLocation OUTER_TEXT = new ResourceLocation(Crossroads.MODID, "textures/blocks/block_cast_iron.png");
+	private static final ResourceLocation INNER_TEXT = new ResourceLocation(Crossroads.MODID, "textures/block/block_copshowium.png");
+	private static final ResourceLocation OUTER_TEXT = new ResourceLocation(Crossroads.MODID, "textures/block/block_cast_iron.png");
 	
 	@Override
 	public void render(ChronoHarnessTileEntity te, double x, double y, double z, float partialTicks, int destroyStage){
@@ -36,7 +35,7 @@ public class ChronoHarnessRenderer extends LinkLineRenderer<ChronoHarnessTileEnt
 		GlStateManager.pushLightingAttributes();
 		GlStateManager.disableLighting();
 		GlStateManager.translated(x + 0.5D, y, z + 0.5D);
-		Pair<Float, Float> lighting = CRRenderUtil.setMediumLighting();
+		CRRenderUtil.setMediumLighting();
 
 		float smallOffset = 0.0928F;
 		float largeOffset = 5F / 16F;
@@ -65,7 +64,7 @@ public class ChronoHarnessRenderer extends LinkLineRenderer<ChronoHarnessTileEnt
 		addRod(buf, -largeOffset, -smallOffset);
 		tes.draw();
 
-		CRRenderUtil.enableLighting(lighting);
+//		CRRenderUtil.restoreLighting(lighting);
 		GlStateManager.enableLighting();
 		GlStateManager.popAttributes();
 		GlStateManager.popMatrix();

@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.render.TESR;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.blocks.rotary.RotaryDrill;
+import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.rotary.RotaryDrillTileEntity;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -34,8 +35,10 @@ public class RotaryDrillRenderer extends TileEntityRenderer<RotaryDrillTileEntit
 			return;
 		}
 
+
 		GlStateManager.pushMatrix();
 		GlStateManager.translated(x + 0.5F, y + 0.5F, z + 0.5F);
+		GlStateManager.disableLighting();//
 
 		//Rotate to face dir
 //		GlStateManager.translated(0.5D, 0.5D, 0.5D);
@@ -53,7 +56,7 @@ public class RotaryDrillRenderer extends TileEntityRenderer<RotaryDrillTileEntit
 
 		Minecraft.getInstance().textureManager.bindTexture(TEXTURE_DRILL);
 		if(drill.isGolden()){
-			GlStateManager.color3f(1F, 1F, 0.15F);
+			GlStateManager.color3f(1F, 1F, 0.15F);//Color it yellow
 		}
 
 		//Render the drill
@@ -78,8 +81,10 @@ public class RotaryDrillRenderer extends TileEntityRenderer<RotaryDrillTileEntit
 		GlStateManager.popMatrix();
 
 		if(drill.isGolden()){
-			GlStateManager.color3f(1, 1, 1);
+			GlStateManager.color3f(1, 1, 1);//Restore color
 		}
+
+		GlStateManager.enableLighting();//
 		GlStateManager.popMatrix();
 	}
 

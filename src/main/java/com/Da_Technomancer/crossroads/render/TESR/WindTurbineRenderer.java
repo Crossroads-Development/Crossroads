@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.rotary.WindTurbineTileEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.block.BlockState;
@@ -40,6 +41,8 @@ public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntit
 		GlStateManager.translated(x + .5F, y + .5F, z + .5F);
 		GlStateManager.rotated(-facing.getHorizontalAngle(), 0, 1, 0);
 		GlStateManager.rotated(facing.getAxisDirection().getOffset() * axle.orElseThrow(NullPointerException::new).getAngle(partialTicks), 0, 0, 1);
+
+		CRRenderUtil.setLighting(te.getWorld().getCombinedLight(te.getPos().offset(facing), 0));
 
 		Minecraft.getInstance().textureManager.bindTexture(TEXTURE_BLADE);
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();

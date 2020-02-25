@@ -2,12 +2,12 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
+import com.Da_Technomancer.essentials.packets.SendLongToClient;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -54,7 +54,7 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		chat.add(new TranslationTextComponent("tt.crossroads.chrono_harness.fe", fe, FE_CAPACITY, curPower));
-		FluxUtil.addFluxInfo(chat, this, curPower / EnergyConverters.getFePerFlux());
+		FluxUtil.addFluxInfo(chat, this, shouldRun() ? curPower / EnergyConverters.getFePerFlux() : 0);
 		FluxUtil.addLinkInfo(chat, this);
 	}
 
@@ -85,18 +85,20 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 		}
 	}
 
+	private boolean shouldRun(){
+		return fe < FE_CAPACITY && !hasRedstone();
+	}
+
 	@Override
 	public void tick(){
 		if(world.isRemote){
 			angle += Math.PI / 20F * clientCurPower / POWER;//Maximum of 0.5RPS
 		}else{
-			boolean shouldRun = fe < FE_CAPACITY && !hasRedstone();
-
 			if(world.getGameTime() % FluxUtil.FLUX_TIME == 1){
 				FluxUtil.performTransfer(this, link);
 			}
 
-			if(shouldRun){
+			if(shouldRun()){
 				curPower = Math.min(POWER, FE_CAPACITY - fe);
 				fe += curPower;
 				flux += Math.round((float) curPower / EnergyConverters.getFePerFlux());
@@ -106,7 +108,7 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 
 			if((curPower == 0 ^ clientCurPower == 0) || Math.abs(curPower - clientCurPower) >= 10){
 				clientCurPower = curPower;
-				CRPackets.sendPacketAround(world, pos, new SendIntToClient((byte) 4, clientCurPower, pos));
+				CRPackets.sendPacketAround(world, pos, new SendLongToClient((byte) 4, clientCurPower, pos));
 			}
 
 			if(fe != 0){

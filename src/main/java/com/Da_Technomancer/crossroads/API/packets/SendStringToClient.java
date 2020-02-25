@@ -11,7 +11,7 @@ import java.lang.reflect.Field;
 
 public class SendStringToClient extends ClientPacket{
 
-	public byte sContext;
+	public byte context;
 	public String message;
 	public BlockPos pos;
 
@@ -27,7 +27,7 @@ public class SendStringToClient extends ClientPacket{
 	}
 
 	public SendStringToClient(byte context, String message, BlockPos pos){
-		this.sContext = context;
+		this.context = context;
 		this.message = message;
 		this.pos = pos;
 	}
@@ -47,7 +47,7 @@ public class SendStringToClient extends ClientPacket{
 		TileEntity te = w.getTileEntity(pos);
 
 		if(te instanceof IStringReceiver){
-			((IStringReceiver) te).receiveString(sContext, message, null);
+			((IStringReceiver) te).receiveString(context, message, null);
 		}
 	}
 }

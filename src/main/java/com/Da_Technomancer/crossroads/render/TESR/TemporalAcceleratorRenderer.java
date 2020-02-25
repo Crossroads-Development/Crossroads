@@ -16,7 +16,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
-import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -46,7 +45,7 @@ public class TemporalAcceleratorRenderer extends LinkLineRenderer<TemporalAccele
 			GlStateManager.disableCull();
 			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 			GlStateManager.color4f(1, 100F / 255F, 0, 0.25F);
-			Pair<Float, Float> lighting = CRRenderUtil.disableLighting();
+			CRRenderUtil.setBrightLighting();
 
 			GlStateManager.translated(x + 0.5F, y + 0.5F, z + 0.5F);
 			if(dir == Direction.DOWN){
@@ -94,7 +93,7 @@ public class TemporalAcceleratorRenderer extends LinkLineRenderer<TemporalAccele
 
 			Tessellator.getInstance().draw();
 
-			CRRenderUtil.enableLighting(lighting);
+//			CRRenderUtil.restoreLighting(lighting);
 			GlStateManager.color4f(1, 1, 1, 1);
 			GlStateManager.enableCull();
 			GlStateManager.enableLighting();

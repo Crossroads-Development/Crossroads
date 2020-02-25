@@ -17,7 +17,7 @@ import net.minecraftforge.registries.ObjectHolder;
 @ObjectHolder(Crossroads.MODID)
 public class ReagentFilterContainer extends Container{
 
-	@ObjectHolder("reagent_holder")
+	@ObjectHolder("reagent_filter")
 	private static ContainerType<ReagentFilterContainer> type = null;
 
 	private final IInventory te;

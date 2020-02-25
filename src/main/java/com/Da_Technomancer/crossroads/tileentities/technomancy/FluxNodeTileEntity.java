@@ -68,8 +68,8 @@ public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntit
 	public void tick(){
 		if(world.isRemote){
 			angle += entropy * SPIN_RATE / 20F;
-			//This 5 is distinct from FluxUtil.FLUX_TIME (despite being the same value) in that this is the lifetime of the render
-			if(world.getGameTime() % 5 == 0 && overSafeLimit()){
+			//This 10 is the lifetime of the render
+			if(world.getGameTime() % 10 == 0 && overSafeLimit()){
 				CRRenderUtil.addArc(world, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, pos.getX() + 1.5F, pos.getY() + 1.5F, pos.getZ() + 1.5F, 3, 1F, FluxUtil.COLOR_CODES[(int) (world.getGameTime() % 3)]);
 			}
 		}else if(world.getGameTime() % FluxUtil.FLUX_TIME == 0){
@@ -78,8 +78,7 @@ public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntit
 			markDirty();
 		}else if(world.getGameTime() % FluxUtil.FLUX_TIME == 1){
 			//Perform transfer
-			fluxToTrans -= FluxUtil.performTransfer(this, links, fluxToTrans);
-			entropy += fluxToTrans;
+			entropy += FluxUtil.performTransfer(this, links, fluxToTrans);;
 			fluxToTrans = 0;
 			FluxUtil.checkFluxOverload(this);
 			markDirty();
@@ -140,7 +139,8 @@ public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntit
 		}
 	}
 
-	public int getReadout(){
+	@Override
+	public int getReadingFlux(){
 		return Math.max(entropy, fluxToTrans);
 	}
 

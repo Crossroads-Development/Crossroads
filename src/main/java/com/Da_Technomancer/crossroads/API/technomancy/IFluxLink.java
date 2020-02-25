@@ -8,6 +8,14 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE{
 
 	int getFlux();
 
+	/**
+	 * Used for things like omnimeter readouts and rendering- anything the player would see to smooth out the technical fluctuations in getFlux()
+	 * @return The total flux that should be represented to the player
+	 */
+	default int getReadingFlux(){
+		return getFlux();
+	}
+
 	default void addFlux(int deltaFlux){
 		setFlux(Math.max(getFlux() + deltaFlux, 0));
 	}

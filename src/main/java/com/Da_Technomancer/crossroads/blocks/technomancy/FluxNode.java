@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
+import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxNodeTileEntity;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
@@ -29,7 +30,7 @@ import java.util.List;
 
 public class FluxNode extends ContainerBlock implements IReadable{
 
-	private static final VoxelShape SHAPE = makeCuboidShape(1, 1, 1, 15, 15, 15);
+	private static final VoxelShape SHAPE = makeCuboidShape(4, 4, 4, 12, 12, 12);
 
 	public FluxNode(){
 		super(Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(3));
@@ -72,8 +73,8 @@ public class FluxNode extends ContainerBlock implements IReadable{
 	@Override
 	public float read(World world, BlockPos blockPos, BlockState blockState){
 		TileEntity te = world.getTileEntity(blockPos);
-		if(te instanceof FluxNodeTileEntity){
-			return ((FluxNodeTileEntity) te).getReadout();
+		if(te instanceof IFluxLink){
+			return ((IFluxLink) te).getReadingFlux();
 		}
 		return 0;
 	}

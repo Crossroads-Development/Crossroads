@@ -49,10 +49,6 @@ public class WindTurbine extends ContainerBlock implements IReadable{
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
 			if(!worldIn.isRemote){
-				TileEntity te = worldIn.getTileEntity(pos);
-				if(te instanceof WindTurbineTileEntity){
-					((WindTurbineTileEntity) te).updateContainingBlockInfo();
-				}
 				worldIn.setBlockState(pos, state.with(CRProperties.HORIZ_FACING, state.get(CRProperties.HORIZ_FACING).rotateY()));
 			}
 			return true;

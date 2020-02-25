@@ -23,13 +23,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -78,7 +78,7 @@ public final class EventHandlerClient{
 			GlStateManager.disableCull();
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-			Pair<Float, Float> lighting = CRRenderUtil.disableLighting();
+			CRRenderUtil.setBrightLighting();
 
 			ArrayList<IVisualEffect> toRemove = new ArrayList<>();
 			Tessellator tes = Tessellator.getInstance();
@@ -88,8 +88,8 @@ public final class EventHandlerClient{
 			for(IVisualEffect effect : SafeCallable.effectsToRender){
 				GlStateManager.pushMatrix();
 				GlStateManager.pushLightingAttributes();
-
-				if(effect.render(tes, buf, worldTime, game.player.posX, game.player.posY, game.player.posZ, game.player.getLook(e.getPartialTicks()), RAND, e.getPartialTicks())){
+				Vec3d eyePos = game.player.getEyePosition(e.getPartialTicks());
+				if(effect.render(tes, buf, worldTime, eyePos.x, eyePos.y, eyePos.z, game.player.getLook(e.getPartialTicks()), RAND, e.getPartialTicks())){
 					toRemove.add(effect);
 				}
 
@@ -99,7 +99,7 @@ public final class EventHandlerClient{
 
 			SafeCallable.effectsToRender.removeAll(toRemove);
 
-			CRRenderUtil.enableLighting(lighting);
+//			CRRenderUtil.restoreLighting(lighting);
 			GlStateManager.enableCull();
 			GlStateManager.disableBlend();
 			GlStateManager.enableLighting();

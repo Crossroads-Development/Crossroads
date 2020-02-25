@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.lwjgl.opengl.GL11;
 
@@ -20,8 +19,8 @@ import java.awt.*;
 
 public class BeaconHarnessRenderer extends TileEntityRenderer<BeaconHarnessTileEntity>{
 
-	private static final ResourceLocation INNER_TEXT = new ResourceLocation(Crossroads.MODID, "textures/blocks/block_copshowium.png");
-	private static final ResourceLocation OUTER_TEXT = new ResourceLocation(Crossroads.MODID, "textures/blocks/block_pure_quartz.png");
+	private static final ResourceLocation INNER_TEXT = new ResourceLocation(Crossroads.MODID, "textures/block/block_copshowium.png");
+	private static final ResourceLocation OUTER_TEXT = new ResourceLocation(Crossroads.MODID, "textures/block/block_pure_quartz.png");
 	private static final ResourceLocation TEXTURE_BEACON_BEAM = new ResourceLocation("textures/entity/beacon_beam.png");
 
 	@Override
@@ -47,7 +46,7 @@ public class BeaconHarnessRenderer extends TileEntityRenderer<BeaconHarnessTileE
 				GlStateManager.color3f(trip.getLeft().getRed() / 255F, trip.getLeft().getGreen() / 255F, trip.getLeft().getBlue() / 255F);
 				Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE_BEACON_BEAM);
 				GlStateManager.disableLighting();
-				Pair<Float, Float> lighting = CRRenderUtil.disableLighting();
+				CRRenderUtil.setBrightLighting();
 				
 				switch(dir){
 					case 0:
@@ -90,7 +89,7 @@ public class BeaconHarnessRenderer extends TileEntityRenderer<BeaconHarnessTileE
 				tes.draw();
 
 				GlStateManager.color3f(1, 1, 1);
-				CRRenderUtil.enableLighting(lighting);
+//				CRRenderUtil.restoreLighting(lighting);
 				GlStateManager.enableLighting();
 				GlStateManager.popAttributes();
 				GlStateManager.popMatrix();
@@ -106,7 +105,7 @@ public class BeaconHarnessRenderer extends TileEntityRenderer<BeaconHarnessTileE
 		GlStateManager.pushLightingAttributes();
 		GlStateManager.disableLighting();
 		GlStateManager.translated(x + 0.5D, y, z + 0.5D);
-		Pair<Float, Float> prev = CRRenderUtil.setMediumLighting();
+		CRRenderUtil.setMediumLighting();
 
 		float smallOffset = 0.0928F;
 		float largeOffset = 5F / 16F;
@@ -135,7 +134,7 @@ public class BeaconHarnessRenderer extends TileEntityRenderer<BeaconHarnessTileE
 		addRod(buf, -largeOffset, -smallOffset);
 		tes.draw();
 
-		CRRenderUtil.enableLighting(prev);
+//		CRRenderUtil.restoreLighting(prev);
 		GlStateManager.enableLighting();
 		GlStateManager.popAttributes();
 		GlStateManager.popMatrix();
