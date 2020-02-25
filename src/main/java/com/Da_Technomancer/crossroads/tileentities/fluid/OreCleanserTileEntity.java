@@ -46,6 +46,7 @@ public class OreCleanserTileEntity extends InventoryTE{
 		super(type, 2);
 		fluidProps[0] = new TankProperty(1_000, true, false, (Fluid f) -> f == CRFluids.steam.still);//Steam
 		fluidProps[1] = new TankProperty(1_000, false, true);//Dirty Water
+		initFluidManagers();
 	}
 
 	@Override

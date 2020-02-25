@@ -52,6 +52,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 	public BlastFurnaceTileEntity(){
 		super(type, 3);//0: Input; 1: Carbon; 2: Slag
 		fluidProps[0] = new TankProperty(4_000, false, true);
+		initFluidManagers();
 	}
 
 	@Override

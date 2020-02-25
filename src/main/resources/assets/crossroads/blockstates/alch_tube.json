@@ -4,45 +4,45 @@
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_core" }
 		},
 
-		{   "when": { "up_b": "true", "up": "input" },
+		{   "when": { "up": "input" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_in" }
 		},
-		{   "when": { "up_b": "true", "up": "output" },
+		{   "when": { "up": "output" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_out" }
 		},
 
-		{   "when": { "down_b": "true", "down": "input" },
+		{   "when": { "down": "input" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_in", "x": 180, "y": 0 }
 		},
-		{   "when": { "down_b": "true", "down": "output" },
+		{   "when": { "down": "output" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_out", "x": 180, "y": 0 }
 		},
 
-		{   "when": { "east_b": "true", "east": "input" },
+		{   "when": { "east": "input" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_in", "x": 90, "y": 90 }
 		},
-		{   "when": { "east_b": "true", "east": "output" },
+		{   "when": { "east": "output" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_out", "x": 90, "y": 90 }
 		},
 
-		{   "when": { "west_b": "true", "west": "input" },
+		{   "when": { "west": "input" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_in", "x": 90, "y": 270 }
 		},
-		{   "when": { "west_b": "true", "west": "output" },
+		{   "when": { "west": "output" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_out", "x": 90, "y": 270 }
 		},
 
-		{   "when": { "north_b": "true", "north": "input" },
+		{   "when": { "north": "input" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_in", "x": 90, "y": 0 }
 		},
-		{   "when": { "north_b": "true", "north": "output" },
+		{   "when": { "north": "output" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_out", "x": 90, "y": 0 }
 		},
 
-		{   "when": { "south_b": "true", "south": "input" },
+		{   "when": { "south": "input" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_in", "x": 90, "y": 180 }
 		},
-		{   "when": { "south_b": "true", "south": "output" },
+		{   "when": { "south": "output" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_out", "x": 90, "y": 180 }
 		}
 	]

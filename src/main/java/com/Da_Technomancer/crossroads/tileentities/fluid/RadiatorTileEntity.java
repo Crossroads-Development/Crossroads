@@ -36,6 +36,7 @@ public class RadiatorTileEntity extends InventoryTE{
 		super(type, 0);
 		fluidProps[0] = new TankProperty(10_000, true, false, (Fluid f) -> f == CRFluids.steam.still);
 		fluidProps[1] = new TankProperty(10_000, false, true);
+		initFluidManagers();
 	}
 
 	@Override

@@ -3,85 +3,85 @@
 		{   "when": { "skin": "copper" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_core_wool_copper" }
 		},
-		{   "when": { "skin": "copper", "up": "both", "up_b": "true" },
+		{   "when": { "skin": "copper", "up": "both" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_wool_copper" }
 		},
-		{   "when": { "skin": "copper", "down": "both", "down_b": "true" },
+		{   "when": { "skin": "copper", "down": "both" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_wool_copper", "x": 180 }
 		},
-		{   "when": { "skin": "copper", "east": "both", "east_b": "true" },
+		{   "when": { "skin": "copper", "east": "both" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_wool_copper", "x": 90, "y": 90 }
 		},
-		{   "when": { "skin": "copper", "west": "both", "west_b": "true" },
+		{   "when": { "skin": "copper", "west": "both" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_wool_copper", "x": 90, "y": 270 }
 		},
-		{   "when": { "skin": "copper", "north": "both", "north_b": "true" },
+		{   "when": { "skin": "copper", "north": "both" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_wool_copper", "x": 90, "y": 0 }
 		},
-		{   "when": { "skin": "copper", "south": "both", "south_b": "true" },
+		{   "when": { "skin": "copper", "south": "both" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_wool_copper", "x": 90, "y": 180 }
 		},
 		{   "when": { "skin": "iron" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_core_wool_iron" }
 		},
-		{   "when": { "skin": "iron", "up": "both", "up_b": "true" },
+		{   "when": { "skin": "iron", "up": "both" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_wool_iron" }
 		},
-		{   "when": { "skin": "iron", "down": "both", "down_b": "true" },
+		{   "when": { "skin": "iron", "down": "both" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_wool_iron", "x": 180 }
 		},
-		{   "when": { "skin": "iron", "east": "both", "east_b": "true" },
+		{   "when": { "skin": "iron", "east": "both" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_wool_iron", "x": 90, "y": 90 }
 		},
-		{   "when": { "skin": "iron", "west": "both", "west_b": "true" },
+		{   "when": { "skin": "iron", "west": "both" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_wool_iron", "x": 90, "y": 270 }
 		},
-		{   "when": { "skin": "iron", "north": "both", "north_b": "true" },
+		{   "when": { "skin": "iron", "north": "both" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_wool_iron", "x": 90, "y": 0 }
 		},
-		{   "when": { "skin": "iron", "south": "both", "south_b": "true" },
+		{   "when": { "skin": "iron", "south": "both" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_wool_iron", "x": 90, "y": 180 }
 		},
 		{   "when": { "skin": "quartz" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_core_wool_quartz" }
 		},
-		{   "when": { "skin": "quartz", "up": "both", "up_b": "true" },
+		{   "when": { "skin": "quartz", "up": "both" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_wool_quartz" }
 		},
-		{   "when": { "skin": "quartz", "down": "both", "down_b": "true" },
+		{   "when": { "skin": "quartz", "down": "both" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_wool_quartz", "x": 180 }
 		},
-		{   "when": { "skin": "quartz", "east": "both", "east_b": "true" },
+		{   "when": { "skin": "quartz", "east": "both" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_wool_quartz", "x": 90, "y": 90 }
 		},
-		{   "when": { "skin": "quartz", "west": "both", "west_b": "true" },
+		{   "when": { "skin": "quartz", "west": "both" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_wool_quartz", "x": 90, "y": 270 }
 		},
-		{   "when": { "skin": "quartz", "north": "both", "north_b": "true" },
+		{   "when": { "skin": "quartz", "north": "both" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_wool_quartz", "x": 90, "y": 0 }
 		},
-		{   "when": { "skin": "quartz", "south": "both", "south_b": "true" },
+		{   "when": { "skin": "quartz", "south": "both" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_wool_quartz", "x": 90, "y": 180 }
 		},
 		{   "when": { "skin": "diamond" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_core_wool_diamond" }
 		},
-		{   "when": { "skin": "diamond", "up": "both", "up_b": "true" },
+		{   "when": { "skin": "diamond", "up": "both" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_wool_diamond" }
 		},
-		{   "when": { "skin": "diamond", "down": "both", "down_b": "true" },
+		{   "when": { "skin": "diamond", "down": "both" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_wool_diamond", "x": 180 }
 		},
-		{   "when": { "skin": "diamond", "east": "both", "east_b": "true" },
+		{   "when": { "skin": "diamond", "east": "both" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_wool_diamond", "x": 90, "y": 90 }
 		},
-		{   "when": { "skin": "diamond", "west": "both", "west_b": "true" },
+		{   "when": { "skin": "diamond", "west": "both" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_wool_diamond", "x": 90, "y": 270 }
 		},
-		{   "when": { "skin": "diamond", "north": "both", "north_b": "true" },
+		{   "when": { "skin": "diamond", "north": "both" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_wool_diamond", "x": 90, "y": 0 }
 		},
-		{   "when": { "skin": "diamond", "south": "both", "south_b": "true" },
+		{   "when": { "skin": "diamond", "south": "both" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_wool_diamond", "x": 90, "y": 180 }
 		}
 	]

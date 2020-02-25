@@ -33,6 +33,7 @@ public class FluidTankTileEntity extends InventoryTE{
 	public FluidTankTileEntity(){
 		super(type, 0);
 		fluidProps[0] = new TankProperty(CAPACITY, true, true);
+		initFluidManagers();
 	}
 
 	@Override

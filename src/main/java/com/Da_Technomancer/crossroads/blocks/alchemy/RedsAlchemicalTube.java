@@ -60,7 +60,7 @@ public class RedsAlchemicalTube extends AlchemicalTube{
 	}
 
 	@Override
-	protected boolean evaluate(EnumTransferMode value, BlockState state, @Nullable TileEntity te){
+	protected boolean evaluate(EnumTransferMode value, BlockState state, @Nullable IConduitTE<EnumTransferMode> te){
 		return super.evaluate(value, state, te) && state.get(ESProperties.REDSTONE_BOOL);
 	}
 

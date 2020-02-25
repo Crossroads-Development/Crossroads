@@ -40,6 +40,7 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 	public FluidCoolingChamberTileEntity(){
 		super(type, 1);
 		fluidProps[0] = new TankProperty(4_000, true, false, o -> true);
+		initFluidManagers();
 	}
 
 	@Override

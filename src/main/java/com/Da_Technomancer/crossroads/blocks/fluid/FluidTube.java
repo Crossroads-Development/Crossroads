@@ -14,11 +14,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nullable;
 
@@ -39,7 +35,7 @@ public class FluidTube extends ConduitBlock<EnumTransferMode>{
 
 	@Override
 	protected EnumTransferMode getDefaultValue(){
-		return EnumTransferMode.INPUT;
+		return EnumTransferMode.NONE;
 	}
 
 	@Override
@@ -58,18 +54,8 @@ public class FluidTube extends ConduitBlock<EnumTransferMode>{
 	}
 
 	@Override
-	protected boolean evaluate(EnumTransferMode value, BlockState state, @Nullable TileEntity te){
+	protected boolean evaluate(EnumTransferMode value, BlockState state, @Nullable IConduitTE<EnumTransferMode> te){
 		return value.isConnection();
-	}
-
-	@Override
-	protected boolean hasMatch(IWorld world, BlockPos pos, Direction side, EnumTransferMode mode, @Nullable TileEntity thisTE, @Nullable TileEntity neighTE){
-		if(neighTE != null){
-			LazyOptional<IFluidHandler> opt = neighTE.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite());
-			return opt.isPresent();
-		}
-
-		return false;
 	}
 
 	@Override
@@ -94,27 +80,29 @@ public class FluidTube extends ConduitBlock<EnumTransferMode>{
 
 	@Override
 	protected EnumTransferMode getValueForPlacement(World world, BlockPos pos, Direction side, @Nullable TileEntity neighTE){
-		BlockState neighState = world.getBlockState(pos.offset(side));
 		//If adjacent to another pipe, set the initial mode based on the other pipe for continuous flow
-		if(neighState.getBlock() instanceof FluidTube){
-			EnumTransferMode otherMode = neighState.get(getSideProp()[side.getOpposite().getIndex()]);
-			if(otherMode == EnumTransferMode.OUTPUT){
-				return EnumTransferMode.INPUT;
-			}else if(otherMode == EnumTransferMode.INPUT){
-				return EnumTransferMode.OUTPUT;
-			}else if(otherMode == EnumTransferMode.BOTH){
-				return EnumTransferMode.BOTH;
+		if(neighTE instanceof FluidTubeTileEntity){
+			EnumTransferMode otherMode = ((FluidTubeTileEntity) neighTE).getModes()[side.getOpposite().getIndex()];
+			switch(otherMode){
+				case INPUT:
+					return EnumTransferMode.OUTPUT;
+				case OUTPUT:
+					return EnumTransferMode.INPUT;
+				case BOTH:
+					return EnumTransferMode.BOTH;
+				case NONE:
+					return EnumTransferMode.NONE;
 			}
 		}
-		return getDefaultValue();
+		return EnumTransferMode.INPUT;
 	}
 
 	@Override
-	protected void onAdjusted(World world, BlockPos pos, BlockState newState, Direction facing, EnumTransferMode newVal, @Nullable TileEntity te){
+	protected void onAdjusted(World world, BlockPos pos, BlockState newState, Direction facing, EnumTransferMode newVal, @Nullable IConduitTE<EnumTransferMode> te){
 		super.onAdjusted(world, pos, newState, facing, newVal, te);
 
-		BlockState neighState = world.getBlockState(pos.offset(facing));
-		if(neighState.getBlock() instanceof FluidTube){
+		TileEntity neighTE = world.getTileEntity(pos.offset(facing));
+		if(neighTE instanceof FluidTubeTileEntity){
 			//Adjust the neighboring pipe alongside this one
 			EnumTransferMode otherMode;
 			switch(newVal){
@@ -132,7 +120,7 @@ public class FluidTube extends ConduitBlock<EnumTransferMode>{
 					otherMode = EnumTransferMode.NONE;
 					break;
 			}
-			((FluidTube) neighState.getBlock()).forceMode(world, pos.offset(facing), neighState, facing.getOpposite(), otherMode);
+			((FluidTubeTileEntity) neighTE).setData(facing.getOpposite().getIndex(), otherMode.isConnection(), otherMode);
 		}
 	}
 }

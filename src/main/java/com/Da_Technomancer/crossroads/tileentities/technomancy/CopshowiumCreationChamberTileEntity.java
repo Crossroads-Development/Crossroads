@@ -55,6 +55,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 		super(type, 0);
 		fluidProps[0] = new TankProperty(CAPACITY, true, true, f -> f != null && f.getFluid() != CRFluids.moltenCopshowium.still);//Input
 		fluidProps[1] = new TankProperty(CAPACITY, false, true);//Copshowium
+		initFluidManagers();
 	}
 
 	@Override

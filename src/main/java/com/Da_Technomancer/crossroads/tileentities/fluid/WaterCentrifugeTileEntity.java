@@ -45,6 +45,7 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 		super(type, 1);
 		fluidProps[0] = new TankProperty(10_000, true, false, (Fluid f) -> true);
 		fluidProps[1] = new TankProperty(10_000, false, true, (Fluid f) -> false);
+		initFluidManagers();
 	}
 
 	public boolean isNeg(){

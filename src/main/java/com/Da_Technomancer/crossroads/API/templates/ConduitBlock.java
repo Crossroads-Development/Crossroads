@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.templates;
 
-import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.ESConfig;
 import net.minecraft.block.Block;
@@ -8,8 +8,8 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
@@ -25,7 +25,9 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Arrays;
 
 public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlock{
 
@@ -66,7 +68,7 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 		BlockState defaultState = getDefaultState();
 		Property<T>[] sideProp = getSideProp();
 		for(int i = 0; i < 6; i++){
-			defaultState = defaultState.with(sideProp[i], getDefaultValue()).with(CRProperties.HAS_MATCH_SIDES[i], false);
+			defaultState = defaultState.with(sideProp[i], getDefaultValue());
 		}
 		setDefaultState(defaultState);
 		CRBlocks.toRegister.add(this);
@@ -79,10 +81,15 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 	 */
 	protected abstract double getSize();
 
+	/**
+	 * Gets the default value for the blockstate- NOT for the TE
+	 * @return Default value to place with for mode
+	 */
 	protected abstract T getDefaultValue();
 
 	/**
 	 * Gets the initial value for connection mode on a side
+	 * This is the value given to the TE, not to the blockstate
 	 * The TE and blockstate do not exist when this is called
 	 * @param world The World
 	 * @param pos The position where this will be
@@ -90,9 +97,7 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 	 * @param neighTE The neighboring TE on that side
 	 * @return What the initial connection value should be
 	 */
-	protected T getValueForPlacement(World world, BlockPos pos, Direction side, @Nullable TileEntity neighTE){
-		return getDefaultValue();
-	}
+	protected abstract T getValueForPlacement(World world, BlockPos pos, Direction side, @Nullable TileEntity neighTE);
 
 	/**
 	 * Gets the properties used for the conduit connections, in order of Direction indices
@@ -104,67 +109,80 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 
 	/**
 	 * Interprets a connection property value as connected or not
-	 * Don't check HAS_MATCH_SIDES (assume true), but may check another property
-	 * @param value The value of connection mode to evaluate
+	 * Don't check hasMatch (assume true), but may check another property (such as redstone)
+	 * @param value The value of connection mode to evaluate with
 	 * @param state The blockstate
 	 * @param te This te
-	 * @return Whether it should be considered connected
+	 * @return Whether the mode should be considered connected
 	 */
-	protected abstract boolean evaluate(T value, BlockState state, @Nullable TileEntity te);
+	protected abstract boolean evaluate(T value, BlockState state, @Nullable IConduitTE<T> te);
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
-		builder.add(getSideProp()).add(CRProperties.HAS_MATCH_SIDES);
+		builder.add(getSideProp());
 	}
 
 	/**
-	 * Whether this block could connect to a neighbor
-	 * @param world The world
-	 * @param pos The position of this block
-	 * @param side The side to check
-	 * @param connectMode Connect mode on this side
-	 * @param thisTE This tile entity. May be null, especially if this is still being placed
-	 * @param neighTE The neighboring TE. May be null.
-	 * @return Whether this block is allowed to connect, regardless of the state of this block
-	 */
-	protected abstract boolean hasMatch(IWorld world, BlockPos pos, Direction side, T connectMode, @Nullable TileEntity thisTE, @Nullable TileEntity neighTE);
-
-	/**
 	 * Determines what the next connection mode should be
+	 * Used for wrench adjusting
 	 * @param prev The previous mode
 	 * @return The next connection mode on this side
 	 */
 	protected abstract T cycleMode(T prev);
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos pos, BlockPos facingPos){
-		TileEntity te = worldIn.getTileEntity(pos);
-		if(te != null){
-			te.updateContainingBlockInfo();
+		if(worldIn.isRemote()){
+			return stateIn;
 		}
-		return stateIn.with(CRProperties.HAS_MATCH_SIDES[facing.getIndex()], hasMatch(worldIn, pos, facing, stateIn.get(getSideProp()[facing.getIndex()]), te, worldIn.getTileEntity(facingPos)));
+		TileEntity te = worldIn.getTileEntity(pos);
+		try{
+			if(te instanceof IConduitTE){
+				int side = facing.getIndex();
+				IConduitTE<T> cTE = (IConduitTE<T>) te;
+				T mode = cTE.getModes()[side];
+				boolean hasMatch = cTE.hasMatch(side, cTE.getModes()[side]);
+				cTE.getHasMatch()[side] = hasMatch;
+				cTE.getTE().markDirty();
+				return stateIn.with(getSideProp()[side], hasMatch ? mode : getDefaultValue());
+			}
+		}catch(ClassCastException ignored){
+
+		}
+		return stateIn;
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context){
-		BlockState newState = getDefaultState();
-		for(int i = 0; i < 6; i++){
-			TileEntity neighTE = context.getWorld().getTileEntity(context.getPos().offset(Direction.byIndex(i)));
-			T startVal = getValueForPlacement(context.getWorld(), context.getPos(), Direction.byIndex(i), neighTE);
-			newState = newState.with(getSideProp()[i], startVal);
-			newState = newState.with(CRProperties.HAS_MATCH_SIDES[i], hasMatch(context.getWorld(), context.getPos(), Direction.byIndex(i), startVal, null, neighTE));
+	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving){
+		if(oldState.getBlock() == state.getBlock() || worldIn.isRemote){
+			return;
 		}
-		return newState;
+
+		//We want to allow conduits to choose their starting states based on surroundings
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(te instanceof IConduitTE){
+			IConduitTE<T> cte = (IConduitTE<T>) te;
+			for(int i = 0; i < 6; i++){
+				Direction side = Direction.byIndex(i);
+				T mode = getValueForPlacement(worldIn, pos, side, worldIn.getTileEntity(pos.offset(side)));
+				cte.setData(i, cte.hasMatch(i, mode), mode);
+			}
+		}
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
 		int index = 0;
 		TileEntity te = worldIn.getTileEntity(pos);
-		for(int i = 0; i < 6; i++){
-			index |= state.get(CRProperties.HAS_MATCH_SIDES[i]) && evaluate(state.get(getSideProp()[i]), state, te) ? 1 << i : 0;
+		if(te instanceof IConduitTE){
+			IConduitTE<T> cte = (IConduitTE<T>) te;
+			for(int i = 0; i < 6; i++){
+				index |= evaluate(state.get(getSideProp()[i]), state, cte) ? 1 << i : 0;
+			}
+			return getShapes()[index];
 		}
-		return getShapes()[index];
+		return getShapes()[0];//Core shape
 	}
 
 	@Override
@@ -180,9 +198,14 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 			if(held.isEmpty()){
 				return false;
 			}
-			if(ESConfig.isWrench(held)){
-				TileEntity te = worldIn.getTileEntity(pos);
+			TileEntity te = worldIn.getTileEntity(pos);
+			if(ESConfig.isWrench(held) && te instanceof IConduitTE){
+				if(worldIn.isRemote){
+					return true;
+				}
+
 				final double SIZE = getSize();
+				IConduitTE<T> cte = (IConduitTE<T>) te;
 				int face;
 				final double margin = 0.005D;
 				Vec3d hitVec = hit.getHitVec().subtract(pos.getX(), pos.getY(), pos.getZ());
@@ -202,34 +225,107 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 					face = hit.getFace().getIndex();
 				}
 
-				Property<T> prop = getSideProp()[face];
-				T newVal = cycleMode(state.get(prop));
-				Direction side = Direction.byIndex(face);
-				TileEntity neighTE = worldIn.getTileEntity(pos.offset(side));
-				state = state.with(prop, newVal);
-				state = state.with(CRProperties.HAS_MATCH_SIDES[face], hasMatch(worldIn, pos, side, newVal, te, neighTE));
-				worldIn.setBlockState(pos, state);
-				onAdjusted(worldIn, pos, state, side, newVal, te);
+//				Property<T> prop = getSideProp()[face];
+				T newVal = cycleMode(cte.getModes()[face]);
+				cte.setData(face, cte.hasMatch(face, newVal), newVal);
+				onAdjusted(worldIn, pos, state, Direction.byIndex(face), newVal, cte);
 				return true;
 			}
 		}
 		return false;
 	}
 
-	protected void onAdjusted(World world, BlockPos pos, BlockState newState, Direction facing, T newVal, @Nullable TileEntity te){
+	protected void onAdjusted(World world, BlockPos pos, BlockState newState, Direction facing, T newVal, @Nullable IConduitTE<T> te){
 //		//Turns out vanilla behaviour already calls this
 //		if(te != null){
 //			te.updateContainingBlockInfo();
 //		}
 	}
 
-	public void forceMode(World world, BlockPos pos, BlockState prevState, Direction facing, T newVal){
-		prevState = prevState.with(getSideProp()[facing.getIndex()], newVal);
-		prevState = prevState.with(CRProperties.HAS_MATCH_SIDES[facing.getIndex()], hasMatch(world, pos, facing, newVal, world.getTileEntity(pos), world.getTileEntity(pos.offset(facing))));
-		world.setBlockState(pos, prevState);
-		TileEntity te = world.getTileEntity(pos);
-		if(te != null){
-			te.updateContainingBlockInfo();
+	public interface IConduitTE<T extends Comparable<T>>{
+
+		static EnumTransferMode[] genModeArray(EnumTransferMode defaul){
+			EnumTransferMode[] out = new EnumTransferMode[6];
+			Arrays.fill(out, defaul);
+			return out;
+		}
+
+		@Nonnull
+		default TileEntity getTE(){
+			return (TileEntity) this;
+		}
+
+		/**
+		 * Result must be mutable and write back to the TE
+		 * @return The hasMatch array, size 6
+		 */
+		@Nonnull
+		boolean[] getHasMatch();
+
+		/**
+		 * Result must be mutable and write back to the TE
+		 * @return The modes array, size 6
+		 */
+		@Nonnull
+		T[] getModes();
+
+		@Nonnull
+		T deserialize(String name);
+
+		/**
+		 * Whether this block could connect to a neighbor
+		 * This method should check the actual world, instead of relying on the cached hasMatch value
+		 * @param side The index of the side to check
+		 * @param mode The mode to evaluate with respect to.
+		 * @return Whether this block is allowed to connect, regardless of the state of this block
+		 */
+		boolean hasMatch(int side, T mode);
+
+		default void setData(int side, boolean newMatch, @Nonnull T mode){
+			boolean[] matches = getHasMatch();
+			T[] modes = getModes();
+			if(modes[side] == mode && newMatch == matches[side]){
+				return;//No change
+			}
+
+			TileEntity te = getTE();
+			BlockState prevState = te.getBlockState();
+			ConduitBlock<T> block = (ConduitBlock<T>) prevState.getBlock();
+			//Store previous value
+			T defaul = block.getDefaultValue();
+			T prev = matches[side] ? modes[side] : defaul;
+			//Update values
+			matches[side] = newMatch;
+			modes[side] = mode;
+			te.markDirty();
+			//Check for updating blockstate in world
+			T curr = matches[side] ? modes[side] : defaul;
+			if(!curr.equals(prev)){
+				//Update the state in world without block update
+				te.getWorld().setBlockState(te.getPos(), prevState.with(block.getSideProp()[side], curr), 2);
+			}
+		}
+
+		static EnumTransferMode deserializeEnumMode(String name){
+			return EnumTransferMode.fromString(name);
+		}
+
+		static <T extends Comparable<T>> void writeConduitNBT(CompoundNBT nbt, IConduitTE<T> te){
+			boolean[] hasMatch = te.getHasMatch();
+			T[] modes = te.getModes();
+			for(int i = 0; i < 6; i++){
+				nbt.putBoolean(i + "_match", hasMatch[i]);
+				nbt.putString(i + "_mode", modes[i].toString());
+			}
+		}
+
+		static <T extends Comparable<T>> void readConduitNBT(CompoundNBT nbt, IConduitTE<T> te){
+			boolean[] hasMatch = te.getHasMatch();
+			T[] modes = te.getModes();
+			for(int i = 0; i < 6; i++){
+				hasMatch[i] = nbt.getBoolean(i + "_match");
+				modes[i] = te.deserialize(nbt.getString(i + "_mode"));
+			}
 		}
 	}
 }

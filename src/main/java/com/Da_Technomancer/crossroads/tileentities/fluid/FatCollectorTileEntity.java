@@ -40,6 +40,7 @@ public class FatCollectorTileEntity extends InventoryTE{
 	public FatCollectorTileEntity(){
 		super(type, 1);
 		fluidProps[0] = new TankProperty(2_000, false, true);
+		initFluidManagers();
 	}
 
 	@Override

@@ -2,8 +2,8 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
+import com.Da_Technomancer.crossroads.API.templates.ConduitBlock;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @ObjectHolder(Crossroads.MODID)
-public class FluidTubeTileEntity extends TileEntity implements ITickableTileEntity{
+public class FluidTubeTileEntity extends TileEntity implements ITickableTileEntity, ConduitBlock.IConduitTE<EnumTransferMode>{
 
 	@ObjectHolder("fluid_tube")
 	private static TileEntityType<FluidTubeTileEntity> type = null;
@@ -38,6 +38,9 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 	private final NonNullSupplier<IFluidHandler> mainHandler = () -> mainHandlerIns;
 	private final NonNullSupplier<IFluidHandler> inHandler = () -> inHandlerIns;
 	private final NonNullSupplier<IFluidHandler> outHandler = () -> outHandlerIns;
+
+	protected boolean[] matches = new boolean[6];
+	protected EnumTransferMode[] modes = ConduitBlock.IConduitTE.genModeArray(EnumTransferMode.INPUT);
 
 	//Cache of neighboring optionals
 	@SuppressWarnings("unchecked")
@@ -133,7 +136,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 							}
 						}else{
 							//Actually should be a 1-way connection.
-							CRBlocks.fluidTube.forceMode(world, pos, getBlockState(), Direction.byIndex(i), EnumTransferMode.INPUT);
+							setData(i, hasMatch, EnumTransferMode.INPUT);
 						}
 						break;
 					case INPUT:
@@ -154,11 +157,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 			}
 
 			//Update hasMatch
-			if(getBlockState().get(CRProperties.HAS_MATCH_SIDES[i]) != hasMatch){
-				state = state.with(CRProperties.HAS_MATCH_SIDES[i], hasMatch);
-				world.setBlockState(pos, state);
-				updateContainingBlockInfo();
-			}
+			setData(i, hasMatch, modes[i]);
 		}
 
 		//A separate loop is needed for the second stage, as all handlers need to have been queried to do correct balancing
@@ -195,12 +194,14 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 	@Override
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
+		ConduitBlock.IConduitTE.readConduitNBT(nbt, this);
 		content = FluidStack.loadFluidStackFromNBT(nbt);
 	}
 
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
+		ConduitBlock.IConduitTE.writeConduitNBT(nbt, this);
 		if(!content.isEmpty()){
 			content.writeToNBT(nbt);
 		}
@@ -221,7 +222,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 
 	protected boolean canConnect(Direction side){
 		//Clooge so redstone tubes work
-		return side == null || getBlockState().get(CRProperties.CONDUIT_SIDES_FULL[side.getIndex()]).isConnection();
+		return side == null || modes[side.getIndex()].isConnection();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -231,7 +232,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 			if(side == null){
 				return (LazyOptional<T>) internalOpts[0];//Main handler
 			}else{
-				switch(getBlockState().get(CRProperties.CONDUIT_SIDES_FULL[side.getIndex()])){
+				switch(modes[side.getIndex()]){
 					case INPUT:
 						return (LazyOptional<T>) internalOpts[1];
 					case OUTPUT:
@@ -245,6 +246,35 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 		}
 
 		return super.getCapability(capability, side);
+	}
+
+	@Nonnull
+	@Override
+	public boolean[] getHasMatch(){
+		return matches;
+	}
+
+	@Nonnull
+	@Override
+	public EnumTransferMode[] getModes(){
+		return modes;
+	}
+
+	@Nonnull
+	@Override
+	public EnumTransferMode deserialize(String name){
+		return ConduitBlock.IConduitTE.deserializeEnumMode(name);
+	}
+
+	@Override
+	public boolean hasMatch(int side, EnumTransferMode mode){
+		Direction face = Direction.byIndex(side);
+		TileEntity neighTE = world.getTileEntity(pos.offset(face));
+		if(neighTE != null){
+			LazyOptional<IFluidHandler> opt = neighTE.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, face.getOpposite());
+			return opt.isPresent();
+		}
+		return false;
 	}
 
 	private class OutFluidHandler implements IFluidHandler{

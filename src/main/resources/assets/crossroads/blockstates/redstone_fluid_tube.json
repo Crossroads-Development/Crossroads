@@ -4,63 +4,63 @@
 			"apply": { "model": "crossroads:block/conduit/fluid_tube_core" }
 		},
 
-		{   "when": { "up_b": "true", "up": "input", "redstone_bool": "true" },
+		{   "when": { "up": "input", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/fluid_tube_in" }
 		},
-		{   "when": { "up_b": "true", "up": "output", "redstone_bool": "true" },
+		{   "when": { "up": "output", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/fluid_tube_out" }
 		},
-		{   "when": { "up_b": "true", "up": "both", "redstone_bool": "true" },
+		{   "when": { "up": "both", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/fluid_tube_bi" }
 		},
 
-		{   "when": { "down_b": "true", "down": "input", "redstone_bool": "true" },
+		{   "when": { "down": "input", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/fluid_tube_in", "x": 180, "y": 0 }
 		},
-		{   "when": { "down_b": "true", "down": "output", "redstone_bool": "true" },
+		{   "when": { "down": "output", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/fluid_tube_out", "x": 180, "y": 0 }
 		},
-		{   "when": { "down_b": "true", "down": "both", "redstone_bool": "true" },
+		{   "when": { "down": "both", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/fluid_tube_bi", "x": 180, "y": 0 }
 		},
 
-		{   "when": { "east_b": "true", "east": "input", "redstone_bool": "true" },
+		{   "when": { "east": "input", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/fluid_tube_in", "x": 90, "y": 90 }
 		},
-		{   "when": { "east_b": "true", "east": "output", "redstone_bool": "true" },
+		{   "when": { "east": "output", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/fluid_tube_out", "x": 90, "y": 90 }
 		},
-		{   "when": { "east_b": "true", "east": "both", "redstone_bool": "true" },
+		{   "when": { "east": "both", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/fluid_tube_bi", "x": 90, "y": 90 }
 		},
 
-		{   "when": { "west_b": "true", "west": "input", "redstone_bool": "true" },
+		{   "when": { "west": "input", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/fluid_tube_in", "x": 90, "y": 270 }
 		},
-		{   "when": { "west_b": "true", "west": "output", "redstone_bool": "true" },
+		{   "when": { "west": "output", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/fluid_tube_out", "x": 90, "y": 270 }
 		},
-		{   "when": { "west_b": "true", "west": "both", "redstone_bool": "true" },
+		{   "when": { "west": "both", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/fluid_tube_bi", "x": 90, "y": 270 }
 		},
 
-		{   "when": { "north_b": "true", "north": "input", "redstone_bool": "true" },
+		{   "when": { "north": "input", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/fluid_tube_in", "x": 90, "y": 0 }
 		},
-		{   "when": { "north_b": "true", "north": "output", "redstone_bool": "true" },
+		{   "when": { "north": "output", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/fluid_tube_out", "x": 90, "y": 0 }
 		},
-		{   "when": { "north_b": "true", "north": "both", "redstone_bool": "true" },
+		{   "when": { "north": "both", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/fluid_tube_bi", "x": 90, "y": 0 }
 		},
 
-		{   "when": { "south_b": "true", "south": "input", "redstone_bool": "true" },
+		{   "when": { "south": "input", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/fluid_tube_in", "x": 90, "y": 180 }
 		},
-		{   "when": { "south_b": "true", "south": "output", "redstone_bool": "true" },
+		{   "when": { "south": "output", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/fluid_tube_out", "x": 90, "y": 180 }
 		},
-		{   "when": { "south_b": "true", "south": "both", "redstone_bool": "true" },
+		{   "when": { "south": "both", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/fluid_tube_bi", "x": 90, "y": 180 }
 		}
 	]

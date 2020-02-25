@@ -3,85 +3,85 @@
 		{   "when": { "skin": "copper" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_core_slime_copper_reds" }
 		},
-		{   "when": { "skin": "copper", "up": "both", "up_b": "true", "redstone_bool": true },
+		{   "when": { "skin": "copper", "up": "both", "redstone_bool": true },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_slime_copper_reds" }
 		},
-		{   "when": { "skin": "copper", "down": "both", "down_b": "true", "redstone_bool": true },
+		{   "when": { "skin": "copper", "down": "both", "redstone_bool": true },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_slime_copper_reds", "x": 180 }
 		},
-		{   "when": { "skin": "copper", "east": "both", "east_b": "true", "redstone_bool": true },
+		{   "when": { "skin": "copper", "east": "both", "redstone_bool": true },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_slime_copper_reds", "x": 90, "y": 90 }
 		},
-		{   "when": { "skin": "copper", "west": "both", "west_b": "true", "redstone_bool": true },
+		{   "when": { "skin": "copper", "west": "both", "redstone_bool": true },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_slime_copper_reds", "x": 90, "y": 270 }
 		},
-		{   "when": { "skin": "copper", "north": "both", "north_b": "true", "redstone_bool": true },
+		{   "when": { "skin": "copper", "north": "both", "redstone_bool": true },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_slime_copper_reds", "x": 90, "y": 0 }
 		},
-		{   "when": { "skin": "copper", "south": "both", "south_b": "true", "redstone_bool": true },
+		{   "when": { "skin": "copper", "south": "both", "redstone_bool": true },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_slime_copper_reds", "x": 90, "y": 180 }
 		},
 		{   "when": { "skin": "iron" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_core_slime_iron_reds" }
 		},
-		{   "when": { "skin": "iron", "up": "both", "up_b": "true", "redstone_bool": true },
+		{   "when": { "skin": "iron", "up": "both", "redstone_bool": true },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_slime_iron_reds" }
 		},
-		{   "when": { "skin": "iron", "down": "both", "down_b": "true", "redstone_bool": true },
+		{   "when": { "skin": "iron", "down": "both", "redstone_bool": true },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_slime_iron_reds", "x": 180 }
 		},
-		{   "when": { "skin": "iron", "east": "both", "east_b": "true", "redstone_bool": true },
+		{   "when": { "skin": "iron", "east": "both", "redstone_bool": true },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_slime_iron_reds", "x": 90, "y": 90 }
 		},
-		{   "when": { "skin": "iron", "west": "both", "west_b": "true", "redstone_bool": true },
+		{   "when": { "skin": "iron", "west": "both", "redstone_bool": true },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_slime_iron_reds", "x": 90, "y": 270 }
 		},
-		{   "when": { "skin": "iron", "north": "both", "north_b": "true", "redstone_bool": true },
+		{   "when": { "skin": "iron", "north": "both", "redstone_bool": true },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_slime_iron_reds", "x": 90, "y": 0 }
 		},
-		{   "when": { "skin": "iron", "south": "both", "south_b": "true", "redstone_bool": true },
+		{   "when": { "skin": "iron", "south": "both", "redstone_bool": true },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_slime_iron_reds", "x": 90, "y": 180 }
 		},
 		{   "when": { "skin": "quartz" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_core_slime_quartz_reds" }
 		},
-		{   "when": { "skin": "quartz", "up": "both", "up_b": "true", "redstone_bool": true },
+		{   "when": { "skin": "quartz", "up": "both", "redstone_bool": true },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_slime_quartz_reds" }
 		},
-		{   "when": { "skin": "quartz", "down": "both", "down_b": "true", "redstone_bool": true },
+		{   "when": { "skin": "quartz", "down": "both", "redstone_bool": true },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_slime_quartz_reds", "x": 180 }
 		},
-		{   "when": { "skin": "quartz", "east": "both", "east_b": "true", "redstone_bool": true },
+		{   "when": { "skin": "quartz", "east": "both", "redstone_bool": true },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_slime_quartz_reds", "x": 90, "y": 90 }
 		},
-		{   "when": { "skin": "quartz", "west": "both", "west_b": "true", "redstone_bool": true },
+		{   "when": { "skin": "quartz", "west": "both", "redstone_bool": true },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_slime_quartz_reds", "x": 90, "y": 270 }
 		},
-		{   "when": { "skin": "quartz", "north": "both", "north_b": "true", "redstone_bool": true },
+		{   "when": { "skin": "quartz", "north": "both", "redstone_bool": true },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_slime_quartz_reds", "x": 90, "y": 0 }
 		},
-		{   "when": { "skin": "quartz", "south": "both", "south_b": "true", "redstone_bool": true },
+		{   "when": { "skin": "quartz", "south": "both", "redstone_bool": true },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_slime_quartz_reds", "x": 90, "y": 180 }
 		},
 		{   "when": { "skin": "diamond" },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_core_slime_diamond_reds" }
 		},
-		{   "when": { "skin": "diamond", "up": "both", "up_b": "true", "redstone_bool": true },
+		{   "when": { "skin": "diamond", "up": "both", "redstone_bool": true },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_slime_diamond_reds" }
 		},
-		{   "when": { "skin": "diamond", "down": "both", "down_b": "true", "redstone_bool": true },
+		{   "when": { "skin": "diamond", "down": "both", "redstone_bool": true },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_slime_diamond_reds", "x": 180 }
 		},
-		{   "when": { "skin": "diamond", "east": "both", "east_b": "true", "redstone_bool": true },
+		{   "when": { "skin": "diamond", "east": "both", "redstone_bool": true },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_slime_diamond_reds", "x": 90, "y": 90 }
 		},
-		{   "when": { "skin": "diamond", "west": "both", "west_b": "true", "redstone_bool": true },
+		{   "when": { "skin": "diamond", "west": "both", "redstone_bool": true },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_slime_diamond_reds", "x": 90, "y": 270 }
 		},
-		{   "when": { "skin": "diamond", "north": "both", "north_b": "true", "redstone_bool": true },
+		{   "when": { "skin": "diamond", "north": "both", "redstone_bool": true },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_slime_diamond_reds", "x": 90, "y": 0 }
 		},
-		{   "when": { "skin": "diamond", "south": "both", "south_b": "true", "redstone_bool": true },
+		{   "when": { "skin": "diamond", "south": "both", "redstone_bool": true },
 			"apply": { "model": "crossroads:block/conduit/heat_cable_top_slime_diamond_reds", "x": 90, "y": 180 }
 		}
 	]

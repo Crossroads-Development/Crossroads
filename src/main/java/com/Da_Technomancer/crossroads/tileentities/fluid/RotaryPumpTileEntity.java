@@ -45,6 +45,7 @@ public class RotaryPumpTileEntity extends InventoryTE{
 	public RotaryPumpTileEntity(){
 		super(type, 0);
 		fluidProps[0] = new TankProperty(CAPACITY, false, true);
+		initFluidManagers();
 	}
 
 	@Override

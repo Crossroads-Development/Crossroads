@@ -27,15 +27,11 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 	public final IntReferenceHolder rotaryReference;
 	public final IntReferenceHolder heatReference;
 
-
 	public InventoryTE(TileEntityType<? extends InventoryTE> type, int invSize){
 		super(type);
 		inventory = new ItemStack[invSize];
 		for(int i = 0; i < invSize; i++){
 			inventory[i] = ItemStack.EMPTY;
-		}
-		for(int i = 0; i < fluids.length; i++){
-			fluidManagers[i] = new FluidSlotManager(fluids[i], fluidProps[i].capacity);
 		}
 		if(useRotary()){
 			rotaryReference = IntReferenceHolder.single();
@@ -48,6 +44,15 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 			heatReference.set((int) temp);
 		}else{
 			heatReference = null;
+		}
+	}
+
+	/**
+	 * Call this in your constructor if using fluids. This has to be called after setting fluidProps
+	 */
+	protected void initFluidManagers(){
+		for(int i = 0; i < fluids.length; i++){
+			fluidManagers[i] = new FluidSlotManager(fluids[i], fluidProps[i].capacity);
 		}
 	}
 

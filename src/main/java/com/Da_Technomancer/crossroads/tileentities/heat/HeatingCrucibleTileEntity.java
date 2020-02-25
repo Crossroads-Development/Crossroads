@@ -53,6 +53,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	public HeatingCrucibleTileEntity(){
 		super(type, 1);
 		fluidProps[0] = new TankProperty(4_000, false, true);
+		initFluidManagers();
 	}
 
 	@Override

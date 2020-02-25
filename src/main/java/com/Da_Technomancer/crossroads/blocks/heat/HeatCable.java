@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.templates.ConduitBlock;
@@ -29,7 +28,6 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -65,6 +63,11 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 
 	@Override
 	protected EnumTransferMode getDefaultValue(){
+		return EnumTransferMode.NONE;
+	}
+
+	@Override
+	protected EnumTransferMode getValueForPlacement(World world, BlockPos pos, Direction side, @Nullable TileEntity neighTE){
 		return EnumTransferMode.BOTH;
 	}
 
@@ -79,7 +82,7 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 	}
 
 	@Override
-	protected boolean evaluate(EnumTransferMode value, BlockState state, @Nullable TileEntity te){
+	protected boolean evaluate(EnumTransferMode value, BlockState state, @Nullable IConduitTE<EnumTransferMode> te){
 		return value.isConnection();
 	}
 
@@ -108,30 +111,27 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 				}
 				if(match != null && state.get(CRProperties.CONDUCTOR) != match){
 					if(!worldIn.isRemote){
-						worldIn.setBlockState(pos, state.with(CRProperties.CONDUCTOR, match));
+						worldIn.setBlockState(pos, state.with(CRProperties.CONDUCTOR, match), 2);
 					}
 					return true;
 				}
+			}else{
+				return true;
 			}
 		}
 		return false;
 	}
 
 	@Override
-	protected void onAdjusted(World world, BlockPos pos, BlockState newState, Direction facing, EnumTransferMode newVal, @Nullable TileEntity te){
+	protected void onAdjusted(World world, BlockPos pos, BlockState newState, Direction facing, EnumTransferMode newVal, @Nullable IConduitTE<EnumTransferMode> te){
 		super.onAdjusted(world, pos, newState, facing, newVal, te);
 
 		//(un)lock the neighboring heat cable with this once, if applicable
-		BlockState neighState = world.getBlockState(pos.offset(facing));
-		if(neighState.getBlock() instanceof HeatCable){
-			//Adjust the neighboring pipe alongside this one
-			((HeatCable) neighState.getBlock()).forceMode(world, pos.offset(facing), neighState, facing.getOpposite(), newVal);
+		TileEntity neighTE = world.getTileEntity(pos.offset(facing));
+		if(neighTE instanceof HeatCableTileEntity){
+			//Adjust the neighboring pipe alongside this one to have the same data
+			((HeatCableTileEntity) neighTE).setData(facing.getOpposite().getIndex(), newVal.isConnection(), newVal);
 		}
-	}
-
-	@Override
-	protected boolean hasMatch(IWorld world, BlockPos pos, Direction side, EnumTransferMode mode, @Nullable TileEntity thisTE, @Nullable TileEntity neighTE){
-		return neighTE != null && neighTE.getCapability(Capabilities.HEAT_CAPABILITY, side.getOpposite()).isPresent();
 	}
 
 	@Override

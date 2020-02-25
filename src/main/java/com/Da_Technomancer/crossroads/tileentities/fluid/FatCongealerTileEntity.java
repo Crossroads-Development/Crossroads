@@ -46,6 +46,7 @@ public class FatCongealerTileEntity extends InventoryTE{
 	public FatCongealerTileEntity(){
 		super(type, 1);
 		fluidProps[0] = new TankProperty(10_000, true, false, (Fluid f) -> CRFluids.liquidFat.still == f);
+		initFluidManagers();
 	}
 
 	@Override
