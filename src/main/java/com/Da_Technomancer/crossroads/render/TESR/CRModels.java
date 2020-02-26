@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -18,8 +17,6 @@ public class CRModels{
 	//In some cases, these are going to be used in place of cos in order to store fewer variables. cos(X) = sin(90 - X), so this is allowed.
 	private static final float[] sin24 = new float[5];
 	private static final float radius_24 = 11F / 24F;
-	private static final ResourceLocation TEXTURE_SCREW = new ResourceLocation(Crossroads.MODID, "textures/model/pump.png");
-
 	static{
 		final float buffer_24 = (float) Math.pow(10, -3) * 3F;
 		sin24[0] = (float) (Math.sin(Math.toRadians(7.5)) * radius_24) + buffer_24;
@@ -28,6 +25,7 @@ public class CRModels{
 		sin24[3] = (float) (Math.sin(Math.toRadians(52.5)) * radius_24) + buffer_24;
 		sin24[4] = (float) (Math.sin(Math.toRadians(67.5)) * radius_24) + buffer_24;
 	}
+
 
 	//These contain sqrt, so I don't want to calculate them every frame.
 	private static final float sHalf8 = 7F / (16F * (1F + (float) Math.sqrt(2F)));
@@ -38,6 +36,7 @@ public class CRModels{
 	private static final ResourceLocation TEXTURE_24_RIM = new ResourceLocation(Crossroads.MODID, "textures/model/gear_rim.png");
 	private static final ResourceLocation TEXTURE_ENDS_AXLE = new ResourceLocation(Crossroads.MODID, "textures/model/axle_end.png");
 	private static final ResourceLocation TEXTURE_SIDE_AXLE = new ResourceLocation(Crossroads.MODID, "textures/model/axle.png");
+	private static final ResourceLocation TEXTURE_SCREW = new ResourceLocation(Crossroads.MODID, "textures/block/block_cast_iron.png");
 
 	/**
 	 * Draws a 24 sided gear, at the same scale as a normal small gear.
@@ -686,46 +685,67 @@ public class CRModels{
 		Minecraft.getInstance().textureManager.bindTexture(TEXTURE_SCREW);
 
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
+
+		for(int i = 0; i < 8; i++){
+			drawTurbineBlade(vb, i / 16F);
+			GlStateManager.rotated(-90, 0, 1, 0);
+		}
+	}
+
+	/**
+	 * Draws a turbine blade. Does not bind the texture
+	 * Draws at a horizontal offset in the +x
+	 * @param vb The buffer
+	 * @param height The height of the bottom of the blade
+	 */
+	public static void drawTurbineBlade(BufferBuilder vb, float height){
+		final float edgeIn = 1F / 16F;
+		final float edgeOut = 4F / 16F;
+		final float lenHalf = 3F / 16F;
+		final float bottom = height;
+		final float mid = height + 1F / 16F;
+		final float top = mid + 1F / 16F;
+		//Texture coords
+		//Top & bottom
+		final float uStT = 1F / 16F;
+		final float vStT = 1F / 16F;
+		final float uEnT = 7F / 16F;
+		final float vEnT = 4F / 16F;
+
+		final float vEnS = vStT + 1F / 16F;
+
 		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
-		//Central axis
-		final float coreRad = 1F / 16F;
-		final float bladeWid = 3F / 16F;
-		final float bladeRad = coreRad + bladeWid;
-		final float incline = 5F / 3F / 16F;
-
-		//Blade 1
-		vb.pos(coreRad, 0, -bladeRad).tex(0, 0).endVertex();
-		vb.pos(bladeRad, 0, -bladeRad).tex(3F/64F, 0).endVertex();
-		vb.pos(bladeRad, incline, bladeRad).tex(3F/64F, 8F/64F).endVertex();
-		vb.pos(coreRad, incline, bladeRad).tex(0, 8F/64F).endVertex();
-
-		vb.pos(coreRad, 0, -bladeRad).tex(0, 0).endVertex();
-		vb.pos(coreRad, incline, bladeRad).tex(0, 8F/64F).endVertex();
-		vb.pos(bladeRad, incline, bladeRad).tex(3F/64F, 8F/64F).endVertex();
-		vb.pos(bladeRad, 0, -bladeRad).tex(3F/64F, 0).endVertex();
-
-		//Blade 2
-		vb.pos(-bladeRad, 2 * incline, coreRad).tex(0, 0).endVertex();
-		vb.pos(bladeRad, incline, coreRad).tex(8F/64F, 0).endVertex();
-		vb.pos(bladeRad, incline, coreRad + bladeWid).tex(8F/64F, 3F/64F).endVertex();
-		vb.pos(-bladeRad, 2 * incline, coreRad + bladeWid).tex(0, 3F/64F).endVertex();
-
-		vb.pos(-bladeRad, 2 * incline, coreRad).tex(0, 0).endVertex();
-		vb.pos(-bladeRad, 2 * incline, coreRad + bladeWid).tex(0, 3F/64F).endVertex();
-		vb.pos(bladeRad, incline, coreRad + bladeWid).tex(8F/64F, 3F/64F).endVertex();
-		vb.pos(bladeRad, incline, coreRad).tex(8F/64F, 0).endVertex();
-
-		//Blade 3
-		vb.pos(-bladeRad, 2 * incline, bladeRad).tex(0, 8F/64F).endVertex();
-		vb.pos(-coreRad, 2 * incline, bladeRad).tex(3F/64F, 8F/64F).endVertex();
-		vb.pos(-coreRad, 3 * incline, -bladeRad).tex(3F/64F, 0).endVertex();
-		vb.pos(-bladeRad, 3 * incline, -bladeRad).tex(0, 0).endVertex();
-
-		vb.pos(-bladeRad, 2 * incline, bladeRad).tex(0, 8F/64F).endVertex();
-		vb.pos(-bladeRad, 3 * incline, -bladeRad).tex(0, 0).endVertex();
-		vb.pos(-coreRad, 3 * incline, -bladeRad).tex(3F/64F, 0).endVertex();
-		vb.pos(-coreRad, 2 * incline, bladeRad).tex(3F/64F, 8F/64F).endVertex();
+		//Bottom
+		vb.pos(-lenHalf, mid, edgeIn).tex(uStT, vStT).endVertex();
+		vb.pos(lenHalf, bottom, edgeIn).tex(uEnT, vStT).endVertex();
+		vb.pos(lenHalf, bottom, edgeOut).tex(uEnT, vEnT).endVertex();
+		vb.pos(-lenHalf, mid, edgeOut).tex(uStT, vEnT).endVertex();
+		//Top
+		vb.pos(-lenHalf, top, edgeIn).tex(uStT, vStT).endVertex();
+		vb.pos(-lenHalf, top, edgeOut).tex(uStT, vEnT).endVertex();
+		vb.pos(lenHalf, mid, edgeOut).tex(uEnT, vEnT).endVertex();
+		vb.pos(lenHalf, mid, edgeIn).tex(uEnT, vStT).endVertex();
+		//Side
+		vb.pos(-lenHalf, mid, edgeOut).tex(uStT, vStT).endVertex();
+		vb.pos(lenHalf, bottom, edgeOut).tex(uEnT, vStT).endVertex();
+		vb.pos(lenHalf, mid, edgeOut).tex(uEnT, vEnS).endVertex();
+		vb.pos(-lenHalf, top, edgeOut).tex(uStT, vEnS).endVertex();
+		//Side
+		vb.pos(-lenHalf, top, edgeIn).tex(uStT, vStT).endVertex();
+		vb.pos(lenHalf, mid, edgeIn).tex(uEnT, vStT).endVertex();
+		vb.pos(lenHalf, bottom, edgeIn).tex(uEnT, vEnS).endVertex();
+		vb.pos(-lenHalf, mid, edgeIn).tex(uStT, vEnS).endVertex();
+		//End
+		vb.pos(-lenHalf, top, edgeIn).tex(uStT, vStT).endVertex();
+		vb.pos(-lenHalf, mid, edgeIn).tex(uStT, vEnS).endVertex();
+		vb.pos(-lenHalf, mid, edgeOut).tex(uEnT, vEnS).endVertex();
+		vb.pos(-lenHalf, top, edgeOut).tex(uEnT, vStT).endVertex();
+		//End
+		vb.pos(lenHalf, mid, edgeIn).tex(uStT, vStT).endVertex();
+		vb.pos(lenHalf, mid, edgeOut).tex(uEnT, vStT).endVertex();
+		vb.pos(lenHalf, bottom, edgeOut).tex(uEnT, vEnS).endVertex();
+		vb.pos(lenHalf, bottom, edgeIn).tex(uStT, vEnS).endVertex();
 
 		Tessellator.getInstance().draw();
 	}

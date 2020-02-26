@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
+import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SteamTurbineTileEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -14,10 +15,11 @@ public class SteamTurbineRenderer extends TileEntityRenderer<SteamTurbineTileEnt
 		}
 
 		GlStateManager.pushMatrix();
-		GlStateManager.translated(x, y, z);
-		GlStateManager.translated(.5F, 0F, .5F);
-		GlStateManager.rotated(turbine.getCompletion(), 0F, 1F, 0F);
+		GlStateManager.disableLighting();
+		GlStateManager.translated(x + 0.5F, y, z + 0.5F);
+		GlStateManager.rotated(turbine.getCapability(Capabilities.AXLE_CAPABILITY, null).orElseThrow(NullPointerException::new).getAngle(partialTicks), 0F, 1F, 0F);
 		CRModels.renderScrew();
+		GlStateManager.enableLighting();
 		GlStateManager.popMatrix();
 	}
 }

@@ -2,16 +2,12 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
-import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -53,17 +49,15 @@ public class SteamTurbineTileEntity extends ModuleTE{
 	}
 
 	@Override
+	protected AxleHandler createAxleHandler(){
+		return new AngleAxleHandler();
+	}
+
+	@Override
 	public void tick(){
 		super.tick();
 		
 		if(world.isRemote){
-			IAxleHandler gear = null;
-			TileEntity te = world.getTileEntity(pos.offset(Direction.UP));
-			LazyOptional<IAxleHandler> axleOpt;
-			if(te != null && (axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, Direction.DOWN)).isPresent()){
-				gear = axleOpt.orElseThrow(NullPointerException::new);
-			}
-			completion = (gear == null ? 0 : gear.getAngle(0));
 			return;
 		}
 
@@ -83,16 +77,6 @@ public class SteamTurbineTileEntity extends ModuleTE{
 				}
 			}
 		}
-	}
-	
-	private float completion;
-	
-	/**
-	 * This uses the angle of the attached gear instead of calculating its own for a few reasons. It will always be attached when it should spin, and should always have the same angle as the attached gear (no point calculating).
-	 */
-	@OnlyIn(Dist.CLIENT)
-	public float getCompletion(){
-		return completion;
 	}
 
 	@Override

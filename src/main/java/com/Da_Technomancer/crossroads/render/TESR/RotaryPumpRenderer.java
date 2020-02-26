@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
+import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
@@ -12,7 +13,10 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import org.lwjgl.opengl.GL11;
+
+import java.awt.*;
 
 public class RotaryPumpRenderer extends TileEntityRenderer<RotaryPumpTileEntity>{
 
@@ -25,27 +29,29 @@ public class RotaryPumpRenderer extends TileEntityRenderer<RotaryPumpTileEntity>
 		GlStateManager.pushMatrix();
 		GlStateManager.translated(x, y, z);
 		GlStateManager.translated(0.5F, 0F, .5F);
-		GlStateManager.rotated(pump.getCompletion() * 360F, 0F, 1F, 0F);
-		
+		GlStateManager.rotated(pump.getCapability(Capabilities.AXLE_CAPABILITY, null).orElseThrow(NullPointerException::new).getAngle(partialTicks), 0F, 1F, 0F);
+		GlStateManager.disableLighting();
+
 		CRModels.renderScrew();
 		
 		GlStateManager.popMatrix();
 		
 		if(pump.getCompletion() != 0){
-			IFluidState state = pump.getWorld().getFluidState(pump.getPos().offset(Direction.DOWN));
+			BlockPos fPos = pump.getPos().offset(Direction.DOWN);
+			IFluidState state = pump.getWorld().getFluidState(fPos);
 			TextureAtlasSprite lText;
+			Color fCol;
 			if(!state.isEmpty() && state.isSource()){
 				ResourceLocation textLoc = state.getFluid().getAttributes().getStillTexture();
 				lText = Minecraft.getInstance().getTextureMap().getSprite(textLoc);
+				fCol = new Color(state.getFluid().getAttributes().getColor(pump.getWorld(), fPos));
 			}else{
 				return;
 			}
 
 			GlStateManager.pushMatrix();
 			GlStateManager.translated(x, y, z);
-
-			Minecraft.getInstance().textureManager.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-			BufferBuilder vb = Tessellator.getInstance().getBuffer();
+			GlStateManager.color4f(fCol.getRed() / 255F, fCol.getGreen() / 255F, fCol.getBlue() / 255F, fCol.getAlpha() / 255F);
 
 			float xSt = 3F / 16F;
 			float ySt = 0;
@@ -53,6 +59,10 @@ public class RotaryPumpRenderer extends TileEntityRenderer<RotaryPumpTileEntity>
 			float xEn = 13F / 16F;
 			float yEn = 7F / 16F * pump.getCompletion();
 			float zEn = 13F / 16F;
+
+			//Draw liquid layer
+			Minecraft.getInstance().textureManager.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+			BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
 			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			vb.pos(xEn, ySt, zSt).tex(lText.getInterpolatedU(xEn * 16), lText.getInterpolatedV(16 - (ySt * 16))).endVertex();
@@ -81,6 +91,7 @@ public class RotaryPumpRenderer extends TileEntityRenderer<RotaryPumpTileEntity>
 			vb.pos(xEn, yEn, zEn).tex(lText.getInterpolatedU(xEn * 16), lText.getInterpolatedV(16 - (zEn * 16))).endVertex();
 			Tessellator.getInstance().draw();
 
+			GlStateManager.enableLighting();
 			GlStateManager.popMatrix();
 
 		}

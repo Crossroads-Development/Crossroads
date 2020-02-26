@@ -2,10 +2,10 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
-import com.Da_Technomancer.essentials.packets.SendLongToClient;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.RotaryPumpContainer;
+import com.Da_Technomancer.essentials.packets.SendLongToClient;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IBucketPickupHandler;
@@ -23,6 +23,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.registries.ObjectHolder;
@@ -37,6 +38,7 @@ public class RotaryPumpTileEntity extends InventoryTE{
 
 	public static final int INERTIA = 80;
 	public static final double MAX_POWER = 5;
+	private static final int CAPACITY = 4_000;
 	private static final double REQUIRED = 100;
 
 	private double progress = 0;
@@ -59,6 +61,11 @@ public class RotaryPumpTileEntity extends InventoryTE{
 	}
 
 	@Override
+	protected AxleHandler createAxleHandler(){
+		return new AngleAxleHandler();
+	}
+
+	@Override
 	protected double getMoInertia(){
 		return INERTIA;
 	}
@@ -67,16 +74,28 @@ public class RotaryPumpTileEntity extends InventoryTE{
 	public void tick(){
 		super.tick();
 
-		if(world.isRemote){
+		if(world.isRemote || CAPACITY - fluids[0].getAmount() < FluidAttributes.BUCKET_VOLUME){
 			return;
 		}
 
 		IFluidState fstate = world.getFluidState(pos.down());
-		Fluid fl = fstate.getFluid();
 		if(fstate.isSource()){
+			//Only gain progress if spinning in positive direction
 			double holder = motData[1] < 0 ? 0 : Math.min(Math.min(MAX_POWER, motData[1]), REQUIRED - progress);
 			motData[1] -= holder;
 			progress += holder;
+
+			if(progress >= REQUIRED){
+				progress = 0;
+				BlockState state = world.getBlockState(pos.down());
+				Block block = state.getBlock();
+				if(block instanceof IBucketPickupHandler){
+					Fluid fl = ((IBucketPickupHandler) block).pickupFluid(world, pos.down(), state);
+					fluids[0] = new FluidStack(fl, 1000 + fluids[0].getAmount());
+				}else{
+					Crossroads.logger.info("Pump attempted to drain a non-traditional fluid at pos: " + pos.down().toString());
+				}
+			}
 		}else{
 			progress = 0;
 		}
@@ -97,25 +116,13 @@ public class RotaryPumpTileEntity extends InventoryTE{
 		}
 		*/
 
-		if(progress >= REQUIRED){
-			progress = 0;
-			BlockState state = world.getBlockState(pos.down());
-			Block block = state.getBlock();
-			if(block instanceof IBucketPickupHandler){
-				fl = ((IBucketPickupHandler) block).pickupFluid(world, pos.down(), state);
-				fluids[0] = new FluidStack(fl, 1000 + fluids[0].getAmount());
-			}else{
-				Crossroads.logger.info("Pump attempted to drain a non-traditional fluid at pos: " + pos.down().toString());
-			}
-		}
-
 		if(lastProgress != (int) progress){
+			//This is really bad- sending a packet every tick while running is inefficient
+			//Should be optimized
 			CRPackets.sendPacketAround(world, pos, new SendLongToClient(1, (long) progress, pos));
 			lastProgress = (int) progress;
 		}
 	}
-
-	private static final int CAPACITY = 4_000;
 
 	public float getCompletion(){
 		return ((float) progress) / ((float) REQUIRED);
