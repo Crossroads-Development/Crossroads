@@ -19,24 +19,23 @@ public class EnergizeEffect extends BeamEffect{
 	@Override
 	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, World worldIn, BlockPos pos, @Nullable Direction dir){
 		if(!performTransmute(align, voi, power, worldIn, pos)){
-			TileEntity te = worldIn.getTileEntity(pos);
+			IHeatHandler hitHandler = getHitHandler(worldIn, pos, dir);
 			if(voi){
-				LazyOptional<IHeatHandler> heatOpt;
-				if(te != null && (heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, dir)).isPresent()){
-					IHeatHandler handler = heatOpt.orElseThrow(NullPointerException::new);
-					handler.addHeat(-Math.min(power, handler.getTemp() - HeatUtil.ABSOLUTE_ZERO));
+				if(hitHandler != null){
+					hitHandler.addHeat(-Math.min(power, hitHandler.getTemp() - HeatUtil.ABSOLUTE_ZERO));
 					//Effect in crystal master axis
 				}
 			}else{
-				LazyOptional<IHeatHandler> heatHandler;
-				if(te != null && (heatHandler = te.getCapability(Capabilities.HEAT_CAPABILITY, dir)).isPresent()){
-					heatHandler.orElseThrow(NullPointerException::new).addHeat(power);
+				if(hitHandler != null){
+					hitHandler.addHeat(power);
 					//Effect in crystal master axis
 				}else{
 					BlockState state = worldIn.getBlockState(pos);
 					if(state.getBlock().isAir(state, worldIn, pos)){
+						//Set fires
 						worldIn.setBlockState(pos, Blocks.FIRE.getDefaultState());
-					}else{
+					}else if(dir != null){
+						//Set a fire w/ offset
 						BlockPos offsetPos = pos.offset(dir);
 						state = worldIn.getBlockState(offsetPos);
 						if(state.getBlock().isAir(state, worldIn, offsetPos)){
@@ -46,5 +45,25 @@ public class EnergizeEffect extends BeamEffect{
 				}
 			}
 		}
+	}
+
+	@Nullable
+	private static IHeatHandler getHitHandler(World w, BlockPos pos, Direction side){
+		TileEntity te = w.getTileEntity(pos);
+		if(te == null){
+			return null;
+		}
+		//Try hit face first
+		LazyOptional<IHeatHandler> opt = te.getCapability(Capabilities.HEAT_CAPABILITY, side);
+		if(opt.isPresent()){
+			return opt.orElseThrow(NullPointerException::new);
+		}else if(side != null){
+			//Try the null side as a fallback
+			opt = te.getCapability(Capabilities.HEAT_CAPABILITY, null);
+		}
+		if(opt.isPresent()){
+			return opt.orElseThrow(NullPointerException::new);
+		}
+		return null;
 	}
 }

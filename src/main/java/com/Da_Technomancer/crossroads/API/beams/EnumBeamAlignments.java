@@ -11,7 +11,10 @@ import java.awt.*;
 import java.util.Locale;
 
 public enum EnumBeamAlignments{
-	
+
+	//Alignments that overlap defer to the one with the lower ordinal
+	//i.e. the highest priority alignments are defined first
+
 	TIME(new TimeEffect(), new Color(255, 100, 0), 16),
 	ENCHANTMENT(new EnchantEffect(), new Color(251, 255, 184), 16),
 	EQUILIBRIUM(new EqualibriumEffect(), new Color(255, 132, 255), 40),
@@ -26,7 +29,8 @@ public enum EnumBeamAlignments{
 	POTENTIAL(new GrowEffect(), new Color(0, 255, 0), 254),
 	ENERGY(new EnergizeEffect(), new Color(255, 0, 0), 254),
 	VOID(new VoidEffect(), new Color(0, 0, 0), 0),
-	//If there are any combinations that result in NO_MATCH, then another element should be made to fill that spot- Exists solely to prevent NullPointerExceptions
+	//If there are any combinations that result in NO_MATCH, then another element should be made to fill that spot
+	//Exists solely to prevent NullPointerExceptions and should never appear to the player
 	NO_MATCH(BeamEffect.INSTANCE, new Color(255, 255, 255), 255);
 	
 	private final BeamEffect effect;

@@ -41,6 +41,10 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE{
 		return 16;
 	}
 
+	default boolean allowAccepting(){
+		return true;
+	}
+
 	@Override
 	default boolean canLink(ILinkTE otherTE){
 		switch(getBehaviour()){

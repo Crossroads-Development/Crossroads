@@ -7,6 +7,7 @@ import net.minecraft.entity.IRendersAsItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.IPacket;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
@@ -17,6 +18,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.registries.ObjectHolder;
 
 @OnlyIn(value = Dist.CLIENT, _interface = IRendersAsItem.class)
@@ -57,6 +59,11 @@ public class EntityNitro extends ThrowableEntity implements IRendersAsItem{
 	@Override
 	protected void registerData(){
 
+	}
+
+	@Override
+	public IPacket<?> createSpawnPacket(){
+		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
 	@Override

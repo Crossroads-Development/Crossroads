@@ -1,9 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
-import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
-import com.Da_Technomancer.crossroads.API.packets.CRPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
@@ -14,6 +11,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -32,11 +30,14 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink{
 	private static TileEntityType<BeaconHarnessTileEntity> type = null;
 
 	public static final int FLUX_GEN = 4;
-	public float angle = 0;//Used for rendering. Client side only
+	private static final int LOOP_TIME = 120;//Time to make one full rotation around the color wheel in cycles. Must be a multiple of 3
+	private static final int SAFETY_BUFFER = 8;//Duration of the switchover period in cycles
+	private static final int POWER = 512;//Power of the created beam
 
-	private HashSet<BlockPos> links = new HashSet<>(1);
 	private boolean running;
 	private int cycles;
+	//Flux related fields
+	private HashSet<BlockPos> links = new HashSet<>(1);
 	private int flux = 0;
 
 	public BeaconHarnessTileEntity(){
@@ -45,12 +46,14 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink{
 
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		FluxUtil.addFluxInfo(chat, this, running ? 0 : FLUX_GEN);
+		FluxUtil.addFluxInfo(chat, this, running ? FLUX_GEN : 0);
 	}
 
 	@Override
 	public void tick(){
 		super.tick();
+
+		// Actual beam production is in the emit() method
 
 		if(world.isRemote || world.getGameTime() % FluxUtil.FLUX_TIME != 1){
 			return;
@@ -61,38 +64,40 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink{
 		FluxUtil.checkFluxOverload(this);
 	}
 
-	private boolean invalid(Color col, @Nullable BeamUnit last){
-		if(last == null || last.getVoid() != 0 || (col.getRed() != 0 && last.getEnergy() != 0) || (col.getGreen() != 0 && last.getPotential() != 0) || (col.getBlue() != 0 && last.getStability() != 0)){
+	private boolean invalid(Color col, BeamUnit last){
+		if(last.isEmpty() || last.getVoid() != 0 || (col.getRed() != 0 && last.getEnergy() != 0) || (col.getGreen() != 0 && last.getPotential() != 0) || (col.getBlue() != 0 && last.getStability() != 0)){
 			return true;
 		}
 
 		return positionInvalid();
 	}
 
+	//Requires beneath a beacon, and all blocks between this and the beacon are legal beacon bases
 	private boolean positionInvalid(){
-		BlockPos checkPos = pos;
-		for(int y = 0; y < 4; y++){
-			checkPos = checkPos.up(1);
+		BlockPos.MutableBlockPos checkPos = new BlockPos.MutableBlockPos(pos);
+		for(int y = 0; y < 5; y++){
+			checkPos.move(Direction.UP);
 			BlockState state = world.getBlockState(checkPos);
-			if(!state.isAir(world, checkPos) && !state.isBeaconBase(world, checkPos, checkPos.up())){//The position passed for beaconPos (third arg) will be most likely wrong, but the argument is currently unused by all known implementations
+			if(state.getBlock() == Blocks.BEACON){
+				return false;
+			}
+			if(!state.isBeaconBase(world, checkPos, checkPos)){//The position passed for beaconPos (third arg) will be most likely wrong, but the argument is currently unused by all known implementations
 				return true;
 			}
 		}
-
-		return world.getBlockState(pos.up(5)).getBlock() != Blocks.BEACON;
+		return true;
 	}
 
 	public void trigger(){
 		if(!running && !positionInvalid()){
 			running = true;
-			CRPackets.sendPacketAround(world, pos, new SendIntToClient((byte) 1, BeamManager.toPacket(new BeamUnit(3, 3, 3, 0), 2), pos));//Add a beacon beam
 		}
 	}
 
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
-		nbt.putBoolean("run", running);
+//		nbt.putBoolean("run", running);
 		for(BlockPos linked : links){
 			nbt.putLong("link", linked.toLong());
 		}
@@ -125,14 +130,14 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink{
 	}
 
 	@Override
-	protected void doEmit(BeamUnit toEmit){
+	protected void doEmit(BeamUnit input){
 		if(running){
 			++cycles;
-			cycles %= 120;
-			Color col = Color.getHSBColor(((float) cycles) / 120F, 1, 1);
-			if(!(cycles < 0 || cycles % 40 < 8) && invalid(col, toEmit)){//Don't check color during a safety period
+			cycles %= LOOP_TIME;
+			//The color calculation takes advantage of the fact that the "color wheel" as most people know it is the slice of the HSB color cylinder with saturation=1. The outer rim is brightness=1. The angle is controlled by hue
+			Color outColor = Color.getHSBColor(((float) cycles) / LOOP_TIME, 1, 1);
+			if(cycles >= 0 && cycles % (LOOP_TIME / 3) >= SAFETY_BUFFER && invalid(outColor, input)){//Don't check color during a safety period
 				running = false;
-				CRPackets.sendPacketAround(world, pos, new SendIntToClient((byte) 1, 0, pos));//Wipe the beacon beam
 				cycles = -9;//Easy way of adding a startup cooldown
 
 				if(beamer[0].emit(BeamUnit.EMPTY, world)){
@@ -141,11 +146,11 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink{
 				return;
 			}
 			if(cycles >= 0){
-				BeamUnit out = new BeamUnit(col.getRed(), col.getGreen(), col.getBlue(), 0);
-				out = out.mult(512D / ((double) out.getPower()), false);
+				BeamUnit out = new BeamUnit(outColor.getRed(), outColor.getGreen(), outColor.getBlue(), 0);
+				out = out.mult(POWER / ((double) out.getPower()), false);
 
 				beamer[0].emit(out, world);
-				refreshBeam(1);//Assume the beam changed as the color constantly cycles
+				refreshBeam(0);//Assume the beam changed as the color constantly cycles
 				prevMag[0] = out;
 				addFlux(FLUX_GEN);
 				markDirty();

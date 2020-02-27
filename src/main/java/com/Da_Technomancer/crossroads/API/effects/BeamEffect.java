@@ -15,6 +15,9 @@ import java.util.Optional;
 
 public class BeamEffect{
 
+	/**
+	 * Used for generic alignments with no special effects
+	 */
 	public static final BeamEffect INSTANCE = new BeamEffect();
 
 	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, World worldIn, BlockPos pos, @Nullable Direction dir){

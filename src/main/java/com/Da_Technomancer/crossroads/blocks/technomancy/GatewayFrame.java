@@ -19,6 +19,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
@@ -83,6 +84,7 @@ public class GatewayFrame extends ContainerBlock implements IReadable{
 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flag){
+		tooltip.add(new StringTextComponent("WIP! Do not use"));//TODO
 		tooltip.add(new TranslationTextComponent("tt.crossroads.gateway.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.gateway.dial"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.gateway.proc"));

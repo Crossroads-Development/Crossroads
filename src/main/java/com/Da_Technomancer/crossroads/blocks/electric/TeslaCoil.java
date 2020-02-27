@@ -138,7 +138,7 @@ public class TeslaCoil extends ContainerBlock{
 
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
-		if(state.get(CRProperties.ACTIVE)){
+		if(state.get(CRProperties.ACTIVE) && newState.getBlock() != this){
 			TileEntity te = world.getTileEntity(pos);
 			if(te instanceof TeslaCoilTileEntity){
 				InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ((TeslaCoilTileEntity) te).removeJar());

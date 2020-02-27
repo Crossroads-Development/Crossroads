@@ -9,6 +9,7 @@ import net.minecraft.entity.IRendersAsItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -21,6 +22,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.registries.ObjectHolder;
 
 @OnlyIn(value = Dist.CLIENT, _interface = IRendersAsItem.class)
@@ -80,6 +82,11 @@ public class EntityShell extends ThrowableEntity implements IRendersAsItem{
 		if(contents != null){
 			contents.write(nbt);
 		}
+	}
+
+	@Override
+	public IPacket<?> createSpawnPacket(){
+		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
 	@Override

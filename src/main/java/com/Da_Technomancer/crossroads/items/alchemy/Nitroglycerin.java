@@ -40,14 +40,6 @@ public class Nitroglycerin extends Item{
 			stack.shrink(1);
 			return stack;
 		}
-
-		/**
-		 * Play the dispense sound from the specified block.
-		 */
-		@Override
-		protected void playDispenseSound(IBlockSource source){
-			source.getWorld().playEvent(1000, source.getBlockPos(), 0);
-		}
 	};
 
 	public Nitroglycerin(){
@@ -64,12 +56,12 @@ public class Nitroglycerin extends Item{
 			held.shrink(1);
 		}
 
-		worldIn.playSound((PlayerEntity) null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+		worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
 
 		if(!worldIn.isRemote){
-			EntityNitro entitysnowball = new EntityNitro(worldIn, playerIn);
-			entitysnowball.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
-			worldIn.addEntity(entitysnowball);
+			EntityNitro nitroEntity = new EntityNitro(worldIn, playerIn);
+			nitroEntity.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
+			worldIn.addEntity(nitroEntity);
 		}
 		return new ActionResult<>(ActionResultType.SUCCESS, held);
 	}

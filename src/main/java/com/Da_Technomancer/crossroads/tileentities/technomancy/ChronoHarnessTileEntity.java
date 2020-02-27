@@ -39,6 +39,7 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 
 	public static final int POWER = 100;
 	private static final int FE_CAPACITY = 2_000;//Be careful about raising this- otherwise placing down this machine will instantly cause a flux event from filling the buffer
+	private static final float SPEED = (float) Math.PI / 20F / POWER;//Used for rendering
 
 	private int flux = 0;//Stored flux
 	private int fe = 0;//Stored FE
@@ -59,7 +60,7 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 	}
 
 	public float getRenderAngle(float partialTicks){
-		return (float) (angle + partialTicks * Math.PI / 20F * clientCurPower / POWER);
+		return (float) Math.toDegrees(angle + partialTicks * clientCurPower * SPEED);
 	}
 
 	private boolean hasRedstone(){
@@ -74,7 +75,7 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 	@Override
 	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
 		if(identifier == 4){
-			curPower = (int) message;//Just used as a way of sending power gen
+			clientCurPower = (int) message;//Just used as a way of sending power gen
 		}
 		if(identifier == LINK_PACKET_ID){
 			link.add(BlockPos.fromLong(message));
@@ -92,7 +93,7 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 	@Override
 	public void tick(){
 		if(world.isRemote){
-			angle += Math.PI / 20F * clientCurPower / POWER;//Maximum of 0.5RPS
+			angle += clientCurPower * SPEED;
 		}else{
 			if(world.getGameTime() % FluxUtil.FLUX_TIME == 1){
 				FluxUtil.performTransfer(this, link);
@@ -106,7 +107,7 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 				FluxUtil.checkFluxOverload(this);
 			}
 
-			if((curPower == 0 ^ clientCurPower == 0) || Math.abs(curPower - clientCurPower) >= 10){
+			if(((curPower == 0) ^ (clientCurPower == 0)) || Math.abs(curPower - clientCurPower) >= 10){
 				clientCurPower = curPower;
 				CRPackets.sendPacketAround(world, pos, new SendLongToClient((byte) 4, clientCurPower, pos));
 			}

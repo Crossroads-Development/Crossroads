@@ -14,14 +14,13 @@ import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IndirectEntityDamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
@@ -73,26 +72,36 @@ public class EntityFlyingMachine extends Entity{
 		prevPosX = this.posX;
 		prevPosY = this.posY;
 		prevPosZ = this.posZ;
-		setMotion(getMotion().add(0, -0.08, 0));
-		
+
+		double[] vel = new double[3];
+		vel[0] = getMotion().getX();
+		vel[1] = getMotion().getY();
+		vel[2] = getMotion().getZ();
+
+		vel[1] -= 0.08D;//Gravity
+
 		if(controller == null){
 			dataManager.set(GRAV_PLATE_ANGLE, 0F);
 		}else{
 			float angle = -dataManager.get(GRAV_PLATE_ANGLE);
 			rotationYaw = controller.getRotationYawHead();
-			//Fun fact that isn't documented: The server and client have different definitions of angle in the x-z plane. This is weird and annoying, and a pain to work out. Vanilla server definition: Counter clockwise is positive, 0 degrees at -x axis. Vanilla client definition: Clockwise is positive, 0 degrees at +z axis. Someone stab the people at Mojang, please
-			//TODO NOTE: Test this- this might be fixed in MC1.14, in which case these formulas need to be changed
-			setMotion(getMotion().add(Math.sin(angle) * Math.sin(-Math.toRadians(rotationYaw) - Math.PI) * ACCEL, -Math.cos(angle) * ACCEL, Math.sin(angle) * Math.cos(-Math.toRadians(rotationYaw) - Math.PI) * ACCEL));
+			vel[0] += Math.sin(angle) * Math.sin(-Math.toRadians(rotationYaw) - Math.PI) * ACCEL;
+			vel[1] += -Math.cos(angle) * ACCEL;
+			vel[2] += Math.sin(angle) * Math.cos(-Math.toRadians(rotationYaw) - Math.PI) * ACCEL;
 			controller.velocityChanged = true;
 		}
+		setMotion(vel[0], vel[1], vel[2]);
 		markVelocityChanged();
 		move(MoverType.SELF, getMotion());
 
-		Vec3d mot = getMotion();
-		mot = mot.scale(0.8D);
 		final double min = 0.003D;
-		mot = new Vec3d(Math.abs(mot.x) < min ? 0 : mot.x, Math.abs(mot.y) < min ? 0 : mot.y, Math.abs(mot.z) < min ? 0 : mot.z);
-		setMotion(mot);
+		for(int i = 0; i < 3; i++){
+			vel[i] *= 0.8D;//air resistance
+			if(Math.abs(vel[i]) < min){
+				vel[i] = 0;
+			}
+		}
+		setMotion(vel[0], vel[1], vel[2]);
 		super.tick();
 	}
 
@@ -149,7 +158,7 @@ public class EntityFlyingMachine extends Entity{
 
 	@Override
 	public IPacket<?> createSpawnPacket(){
-		return new SSpawnObjectPacket(this);
+		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
 	@Override

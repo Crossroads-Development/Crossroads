@@ -16,7 +16,7 @@ import java.awt.*;
 
 public class RenderFlameCoreEntity extends EntityRenderer<EntityFlameCore>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/particles/flame.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/particle/flame.png");
 
 	protected RenderFlameCoreEntity(EntityRendererManager renderManager){
 		super(renderManager);

@@ -20,8 +20,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -108,7 +106,6 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 				AtmosChargeSavedData.setCharge((ServerWorld) world, atmosCharge);
 				markDirty();
 				if(renderTimer <= 0){
-					world.playSound(null, pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 0.1F, 0F);
 					renderTimer = 10;
 
 					int arcs = world.rand.nextInt(4) + 2;
@@ -148,8 +145,6 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 				markDirty();
 				if(renderTimer <= 0){
 					renderTimer = 10;
-					world.playSound(null, pos.getX() + 0.5F, pos.getY() + 2F, pos.getZ() + 0.5F, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 0.1F, 0F);
-
 					int arcs = world.rand.nextInt(4) + 2;
 					float angle = (float) Math.PI * 2F / arcs;
 					float[] start = new float[] {pos.getX() + 0.5F, pos.getY() + 1.1F, pos.getZ() + 0.5F};

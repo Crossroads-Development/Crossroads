@@ -32,7 +32,7 @@ public class FluxUtil{
 	 * This allows flux transfer to tick-order independent
 	 */
 	public static final int FLUX_TIME = BeamManager.BEAM_TIME;
-	public static final int[] COLOR_CODES = new int[] {new Color(255, 240, 0).getRGB(), new Color(255, 80, 0).getRGB(), new Color(255, 160, 0).getRGB()};//color codes for flux rendering
+	public static final int[] COLOR_CODES = new int[] {new Color(67, 0, 49).getRGB(), new Color(255, 68, 0).getRGB(), new Color(220, 64, 0).getRGB()};//color codes for flux rendering
 
 	/**
 	 * Does the simplest flux transfer from a src to linked machines
@@ -46,7 +46,7 @@ public class FluxUtil{
 			World world = src.getTE().getWorld();
 			BlockPos endPos = src.getTE().getPos().add(linkPos);
 			TileEntity te = world.getTileEntity(endPos);
-			if(te instanceof IFluxLink){
+			if(te instanceof IFluxLink && ((IFluxLink) te).allowAccepting()){
 				int srcFlux = src.getFlux();
 				((IFluxLink) te).addFlux(srcFlux);
 				src.setFlux(0);
@@ -71,7 +71,7 @@ public class FluxUtil{
 		BlockPos pos = src.getTE().getPos();
 		//Run through each link and collect all the valid IFluxLink links
 		//Each object is a TileEntity extending IFluxLink
-		Object[] dests = links.stream().map((linkPos) -> world.getTileEntity(pos.add(linkPos))).filter((te) -> te instanceof IFluxLink).toArray();
+		Object[] dests = links.stream().map((linkPos) -> world.getTileEntity(pos.add(linkPos))).filter(te -> te instanceof IFluxLink && ((IFluxLink) te).allowAccepting()).toArray();
 		if(dests.length == 0){
 			return toTransfer;//no recipients
 		}

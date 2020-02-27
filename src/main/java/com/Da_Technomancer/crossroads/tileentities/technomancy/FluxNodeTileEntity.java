@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
+import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -169,6 +170,12 @@ public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntit
 	@Override
 	public Behaviour getBehaviour(){
 		return Behaviour.NODE;
+	}
+
+	@Override
+	public boolean allowAccepting(){
+		//We accept flux as long as we don't have a redstone signal
+		return RedstoneUtil.getRedstoneAtPos(world, pos) == 0;
 	}
 
 	@Override

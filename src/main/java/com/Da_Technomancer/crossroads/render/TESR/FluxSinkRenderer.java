@@ -7,7 +7,7 @@ public class FluxSinkRenderer extends TileEntityRenderer<FluxSinkTileEntity>{
 
 	@Override
 	public void render(FluxSinkTileEntity te, double x, double y, double z, float partialTicks, int destroyStage){
-		if(te == null || !te.getWorld().isBlockLoaded(te.getPos())){
+		if(te == null || !te.isRunningForRender()){
 			return;
 		}
 

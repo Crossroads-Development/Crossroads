@@ -16,6 +16,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -28,6 +31,8 @@ import java.util.List;
 
 public class BeaconHarness extends ContainerBlock{
 
+	private static final VoxelShape SHAPE = VoxelShapes.or(makeCuboidShape(0, 0, 0, 16, 1, 16), makeCuboidShape(0, 15, 0, 16, 16, 16), makeCuboidShape(4, 1, 4, 12, 15, 12));
+
 	public BeaconHarness(){
 		super(Properties.create(Material.GLASS).hardnessAndResistance(.5F).lightValue(15));
 		setRegistryName("beacon_harness");
@@ -38,6 +43,11 @@ public class BeaconHarness extends ContainerBlock{
 	@Override
 	public TileEntity createNewTileEntity(IBlockReader worldIn){
 		return new BeaconHarnessTileEntity();
+	}
+
+	@Override
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+		return SHAPE;
 	}
 
 	@Override
