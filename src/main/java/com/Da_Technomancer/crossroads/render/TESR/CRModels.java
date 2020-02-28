@@ -681,7 +681,6 @@ public class CRModels{
 		drawAxle(new Color(160, 160, 160));
 		GlStateManager.translated(0, -0.5, 0);
 
-		//TODO check texture mapping and scaling
 		Minecraft.getInstance().textureManager.bindTexture(TEXTURE_SCREW);
 
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();

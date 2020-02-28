@@ -1,6 +1,6 @@
 {
 	"name": "Heat",
-	"description": "Heat machines",
+	"description": "Heat, cold, and lukewarm. Machines that generate, use, transfer, store, or destroy heat.",
 	"icon": "crossroads:firebox",
 	"sortnum": 2
 }

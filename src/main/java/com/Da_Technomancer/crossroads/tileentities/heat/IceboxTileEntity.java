@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.IceboxRec;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -34,8 +35,8 @@ public class IceboxTileEntity extends InventoryTE{
 	@ObjectHolder("icebox")
 	private static TileEntityType<IceboxTileEntity> type = null;
 
-	public static int RATE = 10;
-	public static int MIN_TEMP = -20;
+	public static final int RATE = 10;
+	public static final int MIN_TEMP = -20;
 
 	private int burnTime;
 	private int maxBurnTime = 0;
@@ -119,7 +120,7 @@ public class IceboxTileEntity extends InventoryTE{
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && world.getRecipeManager().getRecipe(CRRecipes.COOLING_TYPE, this, world).isPresent();
+		return index == 0 && world.getRecipeManager().getRecipe(CRRecipes.COOLING_TYPE, new Inventory(stack), world).isPresent();
 	}
 
 	@Override

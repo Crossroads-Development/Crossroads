@@ -106,7 +106,7 @@ public class CRConfig{
 		ForgeConfigSpec.Builder serverBuilder = new ForgeConfigSpec.Builder();
 
 		serverBuilder.push(CAT_INTERNAL);
-		speedPrecision = serverBuilder.comment("Lower values increase network lag but increases gear speed synchronization").defineInRange("speed_precision", 0.5F, 0.05F, 2F);
+		speedPrecision = serverBuilder.comment("Lower values increase network lag but increases gear speed synchronization").defineInRange("predict_speed", 0.05F, 0.005F, 2F);
 		gearResetTime = serverBuilder.comment("Interval in ticks between gear network checks").defineInRange("network_time", 300, 100, 2400);
 		wipeInvalidMappings = serverBuilder.worldRestart().comment("Wipe internal per player dimension mappings on failure?", "Only change this if you know what you're doing").define("wipe_dim_map", false);
 		serverBuilder.pop();

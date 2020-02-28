@@ -111,9 +111,7 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 			handler.addHeat(temp);
 		}
 
-		//Energy loss
-		double biomeTemp = HeatUtil.convertBiomeTemp(world, pos);
-		temp += Math.min(insulator.getRate(), Math.abs(temp - biomeTemp)) * Math.signum(biomeTemp - temp);
+		temp = runLoss();
 
 		if(temp != prevTemp){
 			markDirty();
@@ -126,6 +124,13 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 				world.setBlockState(pos, Blocks.FIRE.getDefaultState(), 3);
 			}
 		}
+	}
+
+	protected double runLoss(){
+		//Does not change the temperature- only does the calculation
+		//Energy loss
+		double biomeTemp = HeatUtil.convertBiomeTemp(world, pos);
+		return temp + Math.min(insulator.getRate(), Math.abs(temp - biomeTemp)) * Math.signum(biomeTemp - temp);
 	}
 
 	@Override

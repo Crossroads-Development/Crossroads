@@ -15,6 +15,10 @@
 		{
 			"type": "text",
 			"text": "$(item)Circuits/$ can connect directly to vanilla redstone, and a $(item)Wire Splice Plate/$ can connect $(item)Wire Plate/$ with vanilla redstone.$(br2)$(item)Circuits/$ allow compactly and easily making advanced redstone circuitry, and make doing actual math calculations with redstone easy."
+		},
+		{
+			"type": "text",
+			"text": "A very important circuit is the $(item)Reader Circuit/$, which is like a comparator, except it can measure larger values or with decimal points. A lot of Crossroads machines use this, so it's worth remembering!"
 		}
 	]
 }

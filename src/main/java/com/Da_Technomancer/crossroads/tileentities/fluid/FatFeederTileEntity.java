@@ -5,7 +5,6 @@ import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.FatFeederContainer;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.passive.AnimalEntity;
@@ -23,6 +22,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -93,7 +93,8 @@ public class FatFeederTileEntity extends InventoryTE{
 		}
 
 		//Bobo feature: If this is placed on an Emerald Block, it can feed villagers to make them willing to breed without feeding/trading. It does not bypass the village size requirement
-		boolean canBreedVillagers = world.getBlockState(pos.down()).getBlock() == Blocks.EMERALD_BLOCK;
+		//TODO document this
+		boolean canBreedVillagers = Tags.Blocks.STORAGE_BLOCKS_EMERALD.contains(world.getBlockState(pos.down()).getBlock());
 
 		for(AgeableEntity ent : animals){
 			if(ent instanceof AnimalEntity){
@@ -101,17 +102,23 @@ public class FatFeederTileEntity extends InventoryTE{
 				if(fluids[0].getAmount() >= BREED_AMOUNT && anim.getGrowingAge() == 0 && !anim.isInLove()){
 					anim.setInLove(null);
 					fluids[0].shrink(BREED_AMOUNT);
+					markDirty();
 				}
 			}else if(ent instanceof VillagerEntity && canBreedVillagers){
 				VillagerEntity vill = (VillagerEntity) ent;
 
-				//TODO villager breeding changed.
-				/*
-				if(fluids[0].getAmount() >= BREED_AMOUNT && vill.getGrowingAge() == 0 && !vill.getIsWillingToMate(false)){
-					vill.setIsWillingToMate(true);
+				//Vanilla villager bread reqs. as of MC1.14:
+				//Must have foodLevel >= 12, growing age == 0
+				if(fluids[0].getAmount() >= BREED_AMOUNT && vill.getGrowingAge() == 0 && vill.getGrowingAge() == 0 && !vill.canBreed()){
+					//We need to increase the villager's foodLevel. This is a private field with no setters
+					//We can adjust it indirectly, by saving the villager to NBT, modifying the NBT, and then reading from it
+					CompoundNBT villNBT = new CompoundNBT();
+					vill.writeAdditional(villNBT);
+					villNBT.putByte("FoodLevel", (byte) (villNBT.getByte("FoodLevel") + 12));
+					vill.readAdditional(villNBT);
 					fluids[0].shrink(BREED_AMOUNT);
+					markDirty();
 				}
-				*/
 			}
 		}
 	}

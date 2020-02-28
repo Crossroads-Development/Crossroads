@@ -3,8 +3,10 @@ package com.Da_Technomancer.crossroads.tileentities.heat;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
+import net.minecraft.block.Blocks;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
@@ -36,6 +38,22 @@ public class RedstoneHeatCableTileEntity extends HeatCableTileEntity{
 	public void tick(){
 		if(isUnlocked()){
 			super.tick();
+		}else{
+			//Energy loss
+			double prevTemp = temp;
+			temp = runLoss();
+
+			if(temp != prevTemp){
+				markDirty();
+			}
+
+			if(temp > insulator.getLimit()){
+				if(CRConfig.heatEffects.get()){
+					insulator.getEffect().doEffect(world, pos);
+				}else{
+					world.setBlockState(pos, Blocks.FIRE.getDefaultState(), 3);
+				}
+			}
 		}
 	}
 
@@ -53,9 +71,6 @@ public class RedstoneHeatCableTileEntity extends HeatCableTileEntity{
 	}
 
 	public float getTemp(){
-		if(isUnlocked()){
-			return (float) HeatUtil.toKelvin(temp);
-		}
-		return 0;
+		return (float) HeatUtil.toKelvin(temp);
 	}
 }

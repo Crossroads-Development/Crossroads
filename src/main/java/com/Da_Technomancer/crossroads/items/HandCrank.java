@@ -18,7 +18,7 @@ import java.util.List;
 
 public class HandCrank extends Item{
 
-	private static final int RATE = 50;
+	private static final int RATE = 100;
 
 	protected HandCrank(){
 		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));

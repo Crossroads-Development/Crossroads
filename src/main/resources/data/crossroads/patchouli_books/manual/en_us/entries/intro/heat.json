@@ -1,0 +1,17 @@
+{
+	"category": "intro",
+	"name": "Intro to Heat",
+	"icon": "crossroads:firebox",
+	"read_by_default": "true",
+	"sortnum": 1,
+	"pages": [
+		{
+			"type": "text",
+			"text": "$(thing)Heat/$ is the simplest energy system in Crossroads, and one of the first ones you'll use. Heat is used for things like smelting, ore processing, and cooking. Any machine that uses or transfers heat will have a $(thing)temperature/$."
+		},
+		{
+			"type": "text",
+			"text": "Most machines need to be kept above a certain temperature to work- though a few need to be kept cold. Machines will usually work faster the higher temperature they are- but also use heat more quickly. Heat can be transferred with $(l:heat/cable)Heat Cables/$, which will balance the temperature between machines."
+		}
+	]
+}

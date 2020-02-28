@@ -2,6 +2,7 @@
 	"category": "intro",
 	"name": "Welcome",
 	"icon": "minecraft:paper",
+	"read_by_default": "false",
 	"priority": true,
 	"pages": [
 		{
@@ -11,6 +12,16 @@
 		{
 			"type": "text",
 			"text": "In this section of the book, you'll get a broad introduction to various systems in the mod- ideal for beginners. All the information in these entries are also in the respective guide categories, but it should be easiest to understand as a beginner from this section.$(br2)If you have any questions or suggestions, feel free to join the $(l:https://discord.gg/6g47knp)Discord$(/l), and if you find any bugs, please report them either on the $(l:https://discord.gg/6g47knp)Discord$(/l) or $(l:https://github.com/Da-Technomancer/Crossroads/)Github$(/l)."
+		},
+		{
+			"type": "text",
+			"text": "Crossroads has a lot of different energy systems and mechanics, and more will unlock as you get farther in the mod.$(br)If you're just beginning, I suggest you start with $(l:intro/heat)Heat/$. That concludes the introduct-"
+		},
+		{
+			"type": "spotlight",
+			"anchor": "bobo",
+			"item": "crossroads:bobo_rod",
+			"text": "<bobo>hOI!!! i'm bOBO!!\n\ni n0 sTuf! mAnY stUph!\nmAKE MY ROD! uSE WITH Ɛ tINGS! aND THE OfFeRiNg!! tO MAKE A SPECIAL TING!\nuSE R0D oN TRHEE THINGS ON GROUND wih OFFERING!!¡\n\n0nLY gud OFFERING ise POISONOUS POTATOE!!¡\n\nBOBO AWAY!!/$"
 		}
 	]
 }

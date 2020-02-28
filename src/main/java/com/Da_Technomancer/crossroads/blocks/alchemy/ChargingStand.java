@@ -85,8 +85,6 @@ public class ChargingStand extends ContainerBlock{
 		return true;
 	}
 
-	//TODO redo model
-
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){

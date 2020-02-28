@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.heat;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -32,6 +33,7 @@ public class FireboxTileEntity extends InventoryTE{
 	private static TileEntityType<FireboxTileEntity> TYPE = null;
 
 	public static final int POWER = 10;
+	private static final int MAX_TEMP = 15_000;
 
 	public IntReferenceHolder burnProg = IntReferenceHolder.single();
 
@@ -55,7 +57,7 @@ public class FireboxTileEntity extends InventoryTE{
 		}
 
 		if(burnTime != 0){
-			temp += POWER;
+			temp = Math.min(MAX_TEMP, temp + POWER);
 			if(--burnTime == 0){
 				world.setBlockState(pos, CRBlocks.firebox.getDefaultState(), 18);
 			}
