@@ -7,7 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MoverType;
-import net.minecraft.entity.item.BoatEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
@@ -32,7 +31,8 @@ public class EntityFlyingMachine extends Entity{
 	@ObjectHolder("flying_machine")
 	public static EntityType<EntityFlyingMachine> type = null;
 
-	private static final DataParameter<Float> GRAV_PLATE_ANGLE = EntityDataManager.createKey(EntityFlyingMachine.class, DataSerializers.FLOAT);//0 is down, radians, pi/2 is forward
+	//In radians, 0 is down, pi/2 is forward
+	private static final DataParameter<Float> GRAV_PLATE_ANGLE = EntityDataManager.createKey(EntityFlyingMachine.class, DataSerializers.FLOAT);
 	private static final float ACCEL = 0.12F;
 	private int damage = 0;
 
@@ -41,67 +41,86 @@ public class EntityFlyingMachine extends Entity{
 		preventEntitySpawning = true; 
 	}
 
+	@Override
+	protected void registerData(){
+		dataManager.register(GRAV_PLATE_ANGLE, 0F);
+	}
+
 	protected float getAngle(){
 		return dataManager.get(GRAV_PLATE_ANGLE);
 	}
 
-	@Override
-	protected void registerData(){
-		dataManager.register(GRAV_PLATE_ANGLE, 0F);
+	private void setAngle(float newAngle){
+		dataManager.set(GRAV_PLATE_ANGLE, newAngle);
 	}
 
 	@Override
 	public void tick(){
 		Entity controller = getControllingPassenger();
 
-		if(world.isRemote){
-			GameSettings settings = Minecraft.getInstance().gameSettings;
-			if(controller != null && controller == Minecraft.getInstance().player){
-				if(settings.keyBindForward.isKeyDown()){
-					dataManager.set(GRAV_PLATE_ANGLE, dataManager.get(GRAV_PLATE_ANGLE) - (float) Math.PI / 20F);
-				}else if(settings.keyBindBack.isKeyDown()){
-					dataManager.set(GRAV_PLATE_ANGLE, dataManager.get(GRAV_PLATE_ANGLE) + (float) Math.PI / 20F);
-				}
-			}
-		}
+		//Regen health similar to boats and minecarts
 		if(damage > 0){
 			damage--;
 		}
 
-		fallDistance = 0;
+		fallDistance = 0;//Prevent fall damage
+
 		prevPosX = this.posX;
 		prevPosY = this.posY;
 		prevPosZ = this.posZ;
+
+		if(world.isRemote){
+			//Rotate the wheel based on player control
+			GameSettings settings = Minecraft.getInstance().gameSettings;
+			if(controller != null && controller == Minecraft.getInstance().player){
+				if(settings.keyBindForward.isKeyDown()){
+					setAngle(getAngle() - (float) Math.PI / 20F);
+				}else if(settings.keyBindBack.isKeyDown()){
+					setAngle(getAngle() + (float) Math.PI / 20F);
+				}
+			}
+		}else{
+			//Do movement on the client ONLY. The wheel angle isn't correct on the server
+			super.tick();
+			return;
+		}
 
 		double[] vel = new double[3];
 		vel[0] = getMotion().getX();
 		vel[1] = getMotion().getY();
 		vel[2] = getMotion().getZ();
 
-		vel[1] -= 0.08D;//Gravity
+		//Gravity
+		vel[1] -= 0.08D;
 
 		if(controller == null){
-			dataManager.set(GRAV_PLATE_ANGLE, 0F);
+			//When we have no rider, just go down
+			setAngle(0);
 		}else{
-			float angle = -dataManager.get(GRAV_PLATE_ANGLE);
+			//Apply acceleration based on wheel angle. Total acceleration is ACCEL, in direction of wheel
+			float angle = -getAngle();
 			rotationYaw = controller.getRotationYawHead();
 			vel[0] += Math.sin(angle) * Math.sin(-Math.toRadians(rotationYaw) - Math.PI) * ACCEL;
 			vel[1] += -Math.cos(angle) * ACCEL;
 			vel[2] += Math.sin(angle) * Math.cos(-Math.toRadians(rotationYaw) - Math.PI) * ACCEL;
 			controller.velocityChanged = true;
 		}
+
+		//Apply our calculated velocity and move
 		setMotion(vel[0], vel[1], vel[2]);
 		markVelocityChanged();
 		move(MoverType.SELF, getMotion());
 
+		//Air resistance/friction
 		final double min = 0.003D;
 		for(int i = 0; i < 3; i++){
-			vel[i] *= 0.8D;//air resistance
+			vel[i] *= 0.8D;
 			if(Math.abs(vel[i]) < min){
 				vel[i] = 0;
 			}
 		}
 		setMotion(vel[0], vel[1], vel[2]);
+
 		super.tick();
 	}
 
@@ -111,11 +130,14 @@ public class EntityFlyingMachine extends Entity{
 		return entityIn.canBePushed() ? entityIn.getBoundingBox() : null;
 	}
 
+	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount){
+		//Boat/minecart style breaking
+
 		if(isInvulnerableTo(source)){
 			return false;
 		}else if(!world.isRemote && isAlive()){
-			if(source instanceof IndirectEntityDamageSource && source.getTrueSource() != null && this.isPassenger(source.getTrueSource())){
+			if(source instanceof IndirectEntityDamageSource && source.getTrueSource() != null && isPassenger(source.getTrueSource())){
 				return false;
 			}else{
 				damage += amount * 10F;
@@ -124,7 +146,7 @@ public class EntityFlyingMachine extends Entity{
 
 				if(flag || damage > 40){
 					if(!flag && world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)){
-						entityDropItem(CRItems.flyingMachine, 0);
+						entityDropItem(CRItems.flyingMachine);
 					}
 
 					remove();
@@ -140,19 +162,18 @@ public class EntityFlyingMachine extends Entity{
 	}
 
 	public boolean processInitialInteract(PlayerEntity player, Hand hand){
-		if(player.isSneaking()){
-			return false;
-		}else{
-			if(!this.world.isRemote){
+		if(!player.isSneaking()){
+			if(!world.isRemote){
 				player.startRiding(this);
 			}
 			return true;
 		}
+		return false;
 	}
 
 	@Override
 	public Entity getControllingPassenger(){
-		List<Entity> list = this.getPassengers();
+		List<Entity> list = getPassengers();
 		return list.isEmpty() ? null : list.get(0);
 	}
 
@@ -164,17 +185,6 @@ public class EntityFlyingMachine extends Entity{
 	@Override
 	public double getMountedYOffset(){
 		return 1.1D;
-	}
-
-	@Override
-	public void applyEntityCollision(Entity entityIn){
-		if(entityIn instanceof BoatEntity){
-			if(entityIn.getBoundingBox().minY < getBoundingBox().maxY){
-				super.applyEntityCollision(entityIn);
-			}
-		}else if(entityIn.getBoundingBox().minY <= getBoundingBox().minY){
-			super.applyEntityCollision(entityIn);
-		}
 	}
 
 	@Override
