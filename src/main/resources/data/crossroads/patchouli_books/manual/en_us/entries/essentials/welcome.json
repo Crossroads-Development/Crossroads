@@ -6,7 +6,7 @@
 	"pages": [
 		{
 			"type": "text",
-			"text": "This category is about Essentials, which is a much smaller mod Crossroads depends on.$(br2)Essentials is also about automation, but on a smaller scale, designed to be vanilla-style.$(br2)Report bugs with Essentials on the $(l:https://github.com/Da-Technomancer/Essentials)Github$(/l)."
+			"text": "This category is about Essentials, which is a much smaller mod Crossroads depends on.$(br2)Essentials is also about automation, but on a smaller scale, designed to be vanilla-style.$(br2)Report bugs with Essentials on the $(l:https://github.com/Da-Technomancer/Essentials)Essentials Github$(/l)."
 		}
 	]
 }

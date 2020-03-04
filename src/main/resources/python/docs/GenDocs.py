@@ -1,4 +1,4 @@
-# Generates patchoulli entry JSONs in generated based on txt files in src
+# Generates patchouli entry JSONs in generated based on txt files in src
 # Do not try to use this for unusual entries that don't fit my format- make those manually
 # Expects a certain format for the src, detailed below
 # Navigates the folder structure
@@ -24,14 +24,14 @@ import os
 
 
 def run():
-	outputPath = "../docs/generated/"
+	outputPath = "../../data/crossroads/patchouli_books/manual/en_us/entries/"
 	srcPath = "../docs/src/"
 	templatePath = "../docs/template.txt"
 
-	# Delete all previous files in the outputPath
-	for prevTable in os.listdir(outputPath):
-		if os.path.isfile(prevTable):
-			os.unlink(prevTable)
+	# # Delete all previous files in the outputPath
+	# for prevTable in os.listdir(outputPath):
+	# 	if os.path.isfile(prevTable):
+	# 		os.unlink(prevTable)
 
 	# Read the template
 	with open(templatePath, 'r') as fTemp:
@@ -44,13 +44,13 @@ def run():
 		# We want our directory names to end with /
 		if inDir[-1] != '/':
 			inDir = inDir + '/'
-
-		outDir = inDir.replace('\\', '/').replace("/src", "/generated")
+		inDir = inDir.replace('\\', '/')  # Support for more file systems
+		outDir = inDir.replace(srcPath, outputPath)
 		# Create any missing folders
 		os.makedirs(outDir, exist_ok=True)
 
 		# Assume category is the same as the folder, including folder structure starting at generated
-		category = outDir[outDir.rfind("generated/") + 10:-1]
+		category = inDir[inDir.rfind("src/") + 4:-1]
 
 		# Perform conversion for each .txt file
 		for file in fileList:
@@ -71,6 +71,7 @@ def run():
 
 
 				with open(outDir + file.replace(".txt", ".json"), 'w+') as fOut:
+					fOut.truncate(0)  # Remove previous version
 					for line in tempLines:
 						fOut.write(line.replace('CAT', category).replace('NAME', name).replace('ICON', icon).replace('PAGES', pages).replace('SORT', sort))
 					fOut.close()
