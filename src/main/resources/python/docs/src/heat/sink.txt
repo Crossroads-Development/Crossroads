@@ -1,0 +1,6 @@
+Heat Sink
+crossroads:heat_sink
+The <item>Heat Sink/$ is a way of venting heat (or cold) rapidly.
+They can be configured with a <link:essentials/wrench>wrench/$ to adjust the loss rate.
+
+It will move the temperature towards the biome temperature at the set constant rate.

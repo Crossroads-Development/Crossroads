@@ -1,0 +1,4 @@
+Salt Reactor
+crossroads:salt_reactor
+The <item>Salt Reactor/$ is a way of cooling, <link:heat/icebox>even below -20°C/$. It consumes <thing><link:fluid/centrifuge>salt and distilled water/$ in a ratio of 200mB of distilled water per salt, while producing 200mB of normal water for every 200mB of distilled water.
+The <item>Salt Reactor/$ can cool all the way down to <thing>absolute zero/$. <item><link:heat/cable>Heat cables/$ connect to the bottom.

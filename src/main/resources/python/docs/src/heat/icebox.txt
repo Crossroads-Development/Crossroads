@@ -1,0 +1,6 @@
+Icebox
+crossroads:icebox
+The <item>Icebox/$ is the simplest way to produce cold (aka remove heat). It's the cold equivalent of the <item><link:heat/firebox>firebox/$, burning cold items to cool at a constant rate. It can not cool below -20°C.
+It connects to a <item><link:heat/cable>cable/$ on the top.
+
+Typical fuels include (from worst to best): snowballs, snow, and ice. Better fuels last for longer.

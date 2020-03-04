@@ -117,7 +117,7 @@ public class SaltReactorTileEntity extends InventoryTE{
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && CRItemTags.SALT.contains(stack.getItem());
+		return index == 0 && (CRItemTags.SALT.contains(stack.getItem()) || CRItemTags.ALC_SALT.contains(stack.getItem()));
 	}
 
 	@Override

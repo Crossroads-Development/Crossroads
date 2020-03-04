@@ -53,7 +53,9 @@ public class SaltReactor extends ContainerBlock{
 
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
-		InventoryHelper.dropInventoryItems(world, pos, (InventoryTE) world.getTileEntity(pos));
+		if(newState.getBlock() != state.getBlock()){
+			InventoryHelper.dropInventoryItems(world, pos, (InventoryTE) world.getTileEntity(pos));
+		}
 		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 

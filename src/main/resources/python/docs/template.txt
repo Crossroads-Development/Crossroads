@@ -2,6 +2,7 @@
 	"category": "CAT",
 	"name": "NAME",
 	"icon": "ICON",
+	"sortnum": SORT,
 	"read_by_default": "true",
 	"pages": [
 PAGES

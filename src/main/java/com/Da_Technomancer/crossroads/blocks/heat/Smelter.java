@@ -53,7 +53,9 @@ public class Smelter extends ContainerBlock{
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
 		TileEntity te = world.getTileEntity(pos);
-		InventoryHelper.dropInventoryItems(world, pos, (IInventory) te);
+		if(te instanceof IInventory && newState.getBlock() != state.getBlock()){
+			InventoryHelper.dropInventoryItems(world, pos, (IInventory) te);
+		}
 		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 

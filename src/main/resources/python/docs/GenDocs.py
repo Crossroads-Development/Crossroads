@@ -4,7 +4,7 @@
 # Navigates the folder structure
 # Assumes the category of an entry is the same as the folder name
 # Sets read_by_default to true
-# Expects the FIRST LINE of the txt to be the title
+# Expects the FIRST LINE of the txt to be the title. If the title ends with a digit, that digit becomes the sortnum
 # Expects the SECOND LINE of the txt to be the item path used for icon and spotlight page
 # Makes the first page a spotlight, with the entry title
 # Will make all other pages text
@@ -63,10 +63,16 @@ def run():
 				name = rawLinesIn[0][:-1]  # Cut the \n
 				icon = rawLinesIn[1][:-1]  # Cut the \n
 				pages = generatePages(rawLinesIn, icon, name, 2)
+				sort = '0'
+				# Sortnum can be appended to the end of the name
+				if name[-1].isnumeric():
+					sort = name[-1]
+					name = name[:-1]
+
 
 				with open(outDir + file.replace(".txt", ".json"), 'w+') as fOut:
 					for line in tempLines:
-						fOut.write(line.replace('CAT', category).replace('NAME', name).replace('ICON', icon).replace('PAGES', pages))
+						fOut.write(line.replace('CAT', category).replace('NAME', name).replace('ICON', icon).replace('PAGES', pages).replace('SORT', sort))
 					fOut.close()
 
 
