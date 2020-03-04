@@ -1,0 +1,9 @@
+{
+	"category": "CAT",
+	"name": "NAME",
+	"icon": "ICON",
+	"read_by_default": "true",
+	"pages": [
+PAGES
+	]
+}

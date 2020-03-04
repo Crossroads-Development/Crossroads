@@ -1,0 +1,15 @@
+Heat Cables
+crossroads:heat_cable_wool
+<item>Heat Cables/$ transport heat by balancing their temperature with their neighbors. However, if a <item>heat cable/$ gets above its <thing>melting temperature/$, it will break. Make sure your heat networks are using at least as much heat as they make, or your cables will melt!
+<item>Heat Cables/$ also have a <thing>loss/$, which is how much their temperature will move towards the <thing>biome temperature/$ each tick. There are many types of <item>heat cables/$ with different stats- different <thing>melting points/$ and <thing>loss rates/$. Ceramic and obsidian are usually best- but wool will do in a pinch! There are also ice cables that have extremely low <thing>heat loss/$, but melt at 0°C.
+Cables can be disconnected from each other via wrench. Cables can also be reskined by right clicking with iron, diamond, or nether quartz.
+
+There are also <item>Redstone Heat Cables/$. They only connect to other cables and machines when they have a redstone signal. <link:essentials/circuits>Circuits/$ can read the temperature in Kelvin.
+
+<bobo>1tz-A-MEEE,,, B0BO!
+<link:intro/welcome#bobo>rEMEMbER/$<bobo>?!
+tRee tingz &nd OFFRING! deez tings:;:
+glow dUst!
+fR3sh bAKEd bRED!
+aLLIUM jOOs!
+g0TTa g0 FAST!!!/$
