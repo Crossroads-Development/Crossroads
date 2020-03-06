@@ -30,6 +30,10 @@
 		{
 			"type": "text",
 			"text": "<item>Toggle gears/$ act the same as <item>small gears/$, but only connect to their neighbors while they have a redstone signal. They will always connect to axles, however, and cannot be measured with $(l:essentials:circuits)reader circuits/$ unlike a <item>clutch/$.$(br2)There is also an <item>inverted toggle gear/$, which only connects while it <em>doesn't/$ have a redstone signal."
+		},
+		{
+			"type": "text",
+			"text": "Remember, all gear networks need at least one <item>$(l:rotary/axis)master axis/$ to work."
 		}
 	]
 }

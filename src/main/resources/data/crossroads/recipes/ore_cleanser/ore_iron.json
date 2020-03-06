@@ -1,0 +1,15 @@
+{
+	"type": "crossroads:ore_cleanser",
+	"output": {
+		"item": "crossroads:ore_clump",
+		"count": 2,
+		"nbt": {
+			"material": "iron"
+		}
+	},
+	"ingredient": [
+		{
+			"tag": "forge:ores/iron"
+		}
+	]
+}

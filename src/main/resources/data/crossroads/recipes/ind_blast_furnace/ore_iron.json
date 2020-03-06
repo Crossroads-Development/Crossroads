@@ -1,0 +1,13 @@
+{
+	"type": "crossroads:cr_blast_furnace",
+	"output": {
+		"fluid": "crossroads:molten_iron",
+		"amount": 288
+	},
+	"slag": 4,
+	"ingredient": [
+		{
+			"tag": "forge:ores/iron"
+		}
+	]
+}

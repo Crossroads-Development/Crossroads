@@ -1,0 +1,23 @@
+{
+	"category": "rotary",
+	"name": "Steam Turbine",
+	"icon": "crossroads:steam_turbine",
+	"sortnum": 0,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Steam Turbine",
+			"item": "crossroads:steam_turbine",
+			"text": "The <item>Steam Turbine/$ is a way of making <thing>$(l:intro/rotary)rotary power/$ using <thing>$(l:intro/heat)heat/$. The other way to do this is with a <item>$(l:heat/stirling)stirling engine/$.$(br2)A <item>Steam Turbine/$ consumes <thing>$(l:fluid/steam)steam/$ and makes <thing>distilled water/$ and power. <thing>$(l:fluid/steam)Steam/$ goes in the bottom, <thing>distilled water/$ comes out the sides, and an axle or gear can be connected to the "
+		},
+		{
+			"type": "text",
+			"text": "top. An equal amount of <thing>distilled water/$ is produced as <thing>$(l:fluid/steam)steam/$ is consumed."
+		},
+		{
+			"type": "text",
+			"text": "Compared to the <item>$(l:heat/stirling)stirling engine/$, the <item>steam turbine/$ has no maximum speed and is more scalable, but is less efficient and is bigger to set up. The <item>steam turbine/$ is usually better if a lot of power or high speeds are needed."
+		}
+	]
+}
