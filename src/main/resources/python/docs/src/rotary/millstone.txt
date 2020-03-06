@@ -1,0 +1,6 @@
+Millstone
+crossroads:millstone
+The <item>Millstone/$ is a simple <thing><link:intro/rotary>rotary powered/$ grinder. It can double ores, produce gravel and gunpowder, and improve bonemeal yields, among other things.
+The <item>millstone/$ connects to an axle/gear on the top, and works faster at higher <thing><link:intro/rotary>speeds/$- capping out at 5rad/s.
+
+For ore tripling, a heavier duty version called a <item><link:rotary/stamp>stamp mill/$ is needed.

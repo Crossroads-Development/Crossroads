@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.rotary.RotaryDrill;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.mojang.authlib.GameProfile;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
@@ -14,6 +15,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.FakePlayerFactory;
@@ -43,7 +45,7 @@ public class RotaryDrillTileEntity extends ModuleTE{
 	private boolean golden;
 	public static final double ENERGY_USE = 2D;
 	private static final double SPEED_PER_HARDNESS = .2D;
-
+	private static final float DAMAGE_PER_SPEED = 5F;
 	public static final double[] INERTIA = {50, 100};
 
 	public boolean isGolden(){
@@ -65,6 +67,22 @@ public class RotaryDrillTileEntity extends ModuleTE{
 		return INERTIA[golden ? 1 : 0];
 	}
 
+	private Direction getFacing(){
+		BlockState state = getBlockState();
+		if(state.getBlock() instanceof RotaryDrill){
+			return state.get(ESProperties.FACING);
+		}
+		remove();
+		return Direction.UP;
+	}
+
+	@Override
+	public void updateContainingBlockInfo(){
+		super.updateContainingBlockInfo();
+		axleOpt.invalidate();
+		axleOpt = LazyOptional.of(this::createAxleHandler);
+	}
+
 	@Override
 	public void tick(){
 		super.tick();
@@ -73,24 +91,21 @@ public class RotaryDrillTileEntity extends ModuleTE{
 			return;
 		}
 
-		if(!(world.getBlockState(pos).getBlock() instanceof RotaryDrill)){
-			remove();
-			return;
-		}
-
 		if(Math.abs(motData[1]) >= ENERGY_USE){
 			axleHandler.addEnergy(-ENERGY_USE, false);
 			if(++ticksExisted % 8 == 0){
-				Direction facing = world.getBlockState(pos).get(ESProperties.FACING);
-				if(world.getBlockState(pos.offset(facing)).isAir(world, pos.offset(facing))){
-					float hardness = world.getBlockState(pos.offset(facing)).getBlockHardness(world, pos.offset(facing));
+				Direction facing = getFacing();
+				BlockPos targetPos = pos.offset(facing);
+				BlockState targetState = world.getBlockState(targetPos);
+				if(!targetState.isAir(world, targetPos)){
+					float hardness = targetState.getBlockHardness(world, targetPos);
 					if(hardness >= 0 && Math.abs(motData[0]) >= hardness * SPEED_PER_HARDNESS){
-						world.destroyBlock(pos.offset(facing), true);
+						world.destroyBlock(targetPos, true);
 					}
 				}else{
 					List<LivingEntity> ents = world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos.offset(facing)), EntityPredicates.IS_ALIVE);
 					for(LivingEntity ent : ents){
-						ent.attackEntityFrom(golden ? new EntityDamageSource("drill", FakePlayerFactory.get((ServerWorld) world, new GameProfile(null, "drill_player_" + world.getDimension().getType().getId()))) : DRILL, (float) Math.abs(motData[0] / SPEED_PER_HARDNESS));
+						ent.attackEntityFrom(golden ? new EntityDamageSource("drill", FakePlayerFactory.get((ServerWorld) world, new GameProfile(null, "drill_player_" + world.getDimension().getType().getId()))) : DRILL, (float) Math.abs(motData[0]) * DAMAGE_PER_SPEED);
 					}
 				}
 			}
@@ -120,7 +135,7 @@ public class RotaryDrillTileEntity extends ModuleTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.AXLE_CAPABILITY && (side == null || side == world.getBlockState(pos).get(ESProperties.FACING).getOpposite())){
+		if(cap == Capabilities.AXLE_CAPABILITY && (side == null || side == getFacing().getOpposite())){
 			return (LazyOptional<T>) axleOpt;
 		}
 		return super.getCapability(cap, side);

@@ -1,0 +1,35 @@
+{
+	"category": "rotary",
+	"name": "Axles & Small Gears",
+	"icon": "crossroads:gear_base",
+	"sortnum": 0,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Axles & Small Gears",
+			"item": "crossroads:gear_base",
+			"text": "The most basic components for moving <thing>$(l:intro/rotary)rotary energy/$ around are <item>small gears/$ and <item>axles/$.$(br2)Up to 6 <item>small/$ gears can be placed in one blockspace- one on each face. <item>Small gears/$ must be placed against a solid surface, and can be individually removed using a <item>$(l:essentials/wrench)wrench/$."
+		},
+		{
+			"type": "text",
+			"text": "<item>Small gears/$ will connect to gears that are in the same block as them on an adjacent side, with neighboring gears, with axles connecting to them (either on the front or back), or around outside corners. Basically, if it looks like they should connect, they will."
+		},
+		{
+			"type": "text",
+			"text": "<item>Axles/$ are connecting rods that can go in the same blockspace as <item>small gears/$. They go into the center of the block, with a limit of 1 per blockspace. They connect two gears through the center, and can also connect to other axles in other blocks in a line. Once again, if it looks like they should connect, they will."
+		},
+		{
+			"type": "text",
+			"text": "<item>Axles/$ and <item>gears/$ come in several different materials (varying metals), which have different $(l:intro/rotary)'I' values/$ based on density. Axles tend to be extremely light-weight and cheap."
+		},
+		{
+			"type": "text",
+			"text": "There are also redstone versions of <item>Axles/$ and <item>gears/$, called <item>clutches/$ and <item>toggle gears/$ respectively.$(br2)<item>Clutches/$ act the same as an axle, but will only act as a connection between the two ends if it has a redstone signal. <thing>$(l:essentials:circuits)reader circuits/$ will read the speed a clutch is spinning.$(br2)There is also an <item>inverted clutch/$, which only connects while it <em>doesn't/$ have a redstone signal."
+		},
+		{
+			"type": "text",
+			"text": "<item>Toggle gears/$ act the same as <item>small gears/$, but only connect to their neighbors while they have a redstone signal. They will always connect to axles, however, and cannot be measured with $(l:essentials:circuits)reader circuits/$ unlike a <item>clutch/$.$(br2)There is also an <item>inverted toggle gear/$, which only connects while it <em>doesn't/$ have a redstone signal."
+		}
+	]
+}

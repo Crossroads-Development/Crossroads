@@ -149,7 +149,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return (index == 0 && world.getRecipeManager().getRecipe(CRRecipes.ALCHEMY_TYPE, new Inventory(stack), world).isPresent()) || (index == 1 && getCarbonValue(stack) != 0);
+		return (index == 0 && world.getRecipeManager().getRecipe(CRRecipes.BLAST_FURNACE_TYPE, new Inventory(stack), world).isPresent()) || (index == 1 && getCarbonValue(stack) != 0);
 	}
 
 	@Override

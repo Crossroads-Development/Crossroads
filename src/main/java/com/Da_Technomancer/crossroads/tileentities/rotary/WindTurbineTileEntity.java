@@ -32,7 +32,6 @@ public class WindTurbineTileEntity extends ModuleTE{
 	public static final double INERTIA = 200;
 	public static final double POWER_PER_LEVEL = 10D;
 
-	private Direction facing = null;
 	private boolean newlyPlaced = false;
 	private int level = 1;
 	private boolean running = false;
@@ -47,24 +46,20 @@ public class WindTurbineTileEntity extends ModuleTE{
 	}
 
 	protected Direction getFacing(){
-		if(facing == null){
-			BlockState state = getBlockState();
-			if(state.getBlock() != CRBlocks.windTurbine){
-				remove();
-				return Direction.NORTH;
-			}
-			facing = state.get(CRProperties.HORIZ_FACING);
+		BlockState state = getBlockState();
+		if(state.getBlock() != CRBlocks.windTurbine){
+			remove();
+			return Direction.NORTH;
 		}
-
-		return facing;
+		return state.get(CRProperties.HORIZ_FACING);
 	}
 
 	@Override
 	public void updateContainingBlockInfo(){
 		super.updateContainingBlockInfo();
-		facing = null;
 		axleOpt.invalidate();
 		axleOpt = LazyOptional.of(this::createAxleHandler);
+		newlyPlaced = true;
 	}
 
 	@Override
