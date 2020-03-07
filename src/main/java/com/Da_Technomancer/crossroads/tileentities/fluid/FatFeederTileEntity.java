@@ -26,6 +26,7 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
@@ -92,8 +93,7 @@ public class FatFeederTileEntity extends InventoryTE{
 			return;
 		}
 
-		//Bobo feature: If this is placed on an Emerald Block, it can feed villagers to make them willing to breed without feeding/trading. It does not bypass the village size requirement
-		//TODO document this
+		//Bobo feature: If this is placed on an Emerald Block, it can feed villagers to make them willing to breed without feeding/trading.
 		boolean canBreedVillagers = Tags.Blocks.STORAGE_BLOCKS_EMERALD.contains(world.getBlockState(pos.down()).getBlock());
 
 		for(AgeableEntity ent : animals){
@@ -121,6 +121,11 @@ public class FatFeederTileEntity extends InventoryTE{
 				}
 			}
 		}
+	}
+
+	@Override
+	protected IFluidHandler createGlobalFluidHandler(){
+		return new FluidTankHandler(0);//Allow pipes to go in both directions
 	}
 
 	@SuppressWarnings("unchecked")

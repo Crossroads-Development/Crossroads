@@ -3,6 +3,7 @@
 	"name": "Intro to Rotary",
 	"icon": "crossroads:gear_base",
 	"sortnum": 2,
+	"priority": true,
 	"read_by_default": "true",
 	"pages": [
 		{

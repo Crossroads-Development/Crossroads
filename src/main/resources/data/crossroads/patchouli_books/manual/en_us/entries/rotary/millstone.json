@@ -3,6 +3,7 @@
 	"name": "Millstone",
 	"icon": "crossroads:millstone",
 	"sortnum": 0,
+	"priority": false,
 	"read_by_default": "true",
 	"pages": [
 		{

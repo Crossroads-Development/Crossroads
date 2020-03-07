@@ -1,0 +1,5 @@
+Fluid Shifter
+essentials:fluid_shifter
+<item>Fluid Shifters/$ are the fluid version of <item><link:essentials/item_shifter>item shifters/$, having a small internal tank. They eject any liquid into machines/inventories on the front. They cannot eject fluids into the world.
+A line of <item>transport chutes/$ can be attached to the front to allows ejecting fluids to an inventory several blocks away (default limit: 16).
+<item>Fluid shifters/$ are handy for moving fluids cheaply and quickly, including upwards.

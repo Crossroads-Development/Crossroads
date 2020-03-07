@@ -3,6 +3,7 @@
 	"name": "Large Gears",
 	"icon": "crossroads:gear_base_large",
 	"sortnum": 0,
+	"priority": false,
 	"read_by_default": "true",
 	"pages": [
 		{

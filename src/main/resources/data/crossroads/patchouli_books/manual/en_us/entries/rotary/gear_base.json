@@ -3,6 +3,7 @@
 	"name": "Axles & Small Gears",
 	"icon": "crossroads:gear_base",
 	"sortnum": 0,
+	"priority": false,
 	"read_by_default": "true",
 	"pages": [
 		{

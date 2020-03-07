@@ -3,6 +3,7 @@
 	"name": "Firebox",
 	"icon": "crossroads:firebox",
 	"sortnum": 0,
+	"priority": false,
 	"read_by_default": "true",
 	"pages": [
 		{

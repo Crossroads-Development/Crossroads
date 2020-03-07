@@ -33,8 +33,8 @@ public class FatCollectorTileEntity extends InventoryTE{
 	@ObjectHolder("fat_collector")
 	private static TileEntityType<FatCollectorTileEntity> type = null;
 
-	public static final int[] TIERS = {100, 120, 140, 160, 180};
-	public static final double[] EFFICIENCY = {0.8D, 1D, 1.2D, 1D, 0.8D};
+	public static final int[] TIERS = {100, 120, 140, 160, 180, 200};
+	public static final double[] EFFICIENCY = {0.8D, 1D, 1.2D, 1D, 0.8D, 0};
 	private static final double USE_PER_VALUE = 2D;
 
 	public FatCollectorTileEntity(){

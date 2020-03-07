@@ -21,6 +21,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
@@ -83,7 +84,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	 * Used for null-side fluid capability return and fluid slots in UIs
 	 * @return A new fluid handler that can traverse all externally visible fluids in this block
 	 */
-	protected FluidHandler createGlobalFluidHandler(){
+	protected IFluidHandler createGlobalFluidHandler(){
 		return new FluidHandler(-1);
 	}
 
@@ -238,7 +239,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	protected LazyOptional<IHeatHandler> heatOpt;
 	protected AxleHandler axleHandler;
 	protected LazyOptional<IAxleHandler> axleOpt;
-	protected FluidHandler globalFluidHandler;
+	protected IFluidHandler globalFluidHandler;
 	protected LazyOptional<IFluidHandler> globalFluidOpt;
 
 	protected class FluidHandler implements IFluidHandler{
@@ -386,6 +387,118 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 		}
 	}
 
+	/**
+	 * A version of the FluidHandler which also acts as an IFluidTank- allowing pipes to do bidirectional access and having a stricter contract
+	 * Does not allow accessing multiple internal tanks
+	 */
+	protected class FluidTankHandler implements IFluidHandler, IFluidTank{
+
+		protected final int tank;
+
+		/**
+		 * @param tank The index of the FluidStack this is allowed to access. Does not allow setting a negative value or accessing more than one tank. Must be less than fluidTanks()
+		 */
+		public FluidTankHandler(int tank){
+			assert tank >= 0;
+			this.tank = tank;
+		}
+
+		@Nonnull
+		@Override
+		public FluidStack getFluid(){
+			return fluids[tank];
+		}
+
+		@Override
+		public int getFluidAmount(){
+			return fluids[tank].getAmount();
+		}
+
+		@Override
+		public int getCapacity(){
+			return fluidProps[tank].capacity;
+		}
+
+		@Override
+		public boolean isFluidValid(FluidStack stack){
+			return fluidProps[tank].canFill && fluidProps[tank].canAccept.test(stack.getFluid());
+		}
+
+		@Override
+		public int getTanks(){
+			return 1;
+		}
+
+		@Nonnull
+		@Override
+		public FluidStack getFluidInTank(int tank){
+			return getFluid();
+		}
+
+		@Override
+		public int getTankCapacity(int tank){
+			return getCapacity();
+		}
+
+		@Override
+		public boolean isFluidValid(int tank, @Nonnull FluidStack stack){
+			return isFluidValid(stack);
+		}
+
+		@Override
+		public int fill(FluidStack resource, FluidAction action){
+			if(!resource.isEmpty() && isFluidValid(tank, resource) && (fluids[tank].isEmpty() || fluids[tank].isFluidEqual(resource))){
+				int change = Math.min(fluidProps[tank].capacity - fluids[tank].getAmount(), resource.getAmount());
+				if(action == FluidAction.EXECUTE){
+					int prevAmount = fluids[tank].getAmount();
+					fluids[tank] = resource.copy();
+					fluids[tank].setAmount(prevAmount + change);
+					markDirty();
+				}
+				return change;
+			}
+
+			return 0;
+		}
+
+		@Nonnull
+		@Override
+		public FluidStack drain(FluidStack resource, FluidAction action){
+			if(fluidProps[tank].canDrain && resource.isFluidEqual(fluids[tank])){
+				int change = Math.min(fluids[tank].getAmount(), resource.getAmount());
+
+				if(action == FluidAction.EXECUTE){
+					fluids[tank].shrink(change);
+					markDirty();
+				}
+				FluidStack out = resource.copy();
+				out.setAmount(change);
+				return out;
+			}
+
+			return FluidStack.EMPTY;
+		}
+
+		@Nonnull
+		@Override
+		public FluidStack drain(int maxDrain, FluidAction action){
+			if(fluidProps[tank].canDrain && !fluids[tank].isEmpty()){
+				int change = Math.min(fluids[tank].getAmount(), maxDrain);
+				FluidStack content = fluids[tank].copy();
+				content.setAmount(change);
+
+				if(action == FluidAction.EXECUTE){
+					fluids[tank].shrink(change);
+					markDirty();
+				}
+
+				return content;
+			}
+
+			return FluidStack.EMPTY;
+		}
+	}
+
 	protected static class TankProperty{
 
 		public final int capacity;
@@ -399,7 +512,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 		 * @param canDrain Whether this tank can be drained by pipes
 		 */
 		public TankProperty(int capacity, boolean canFill, boolean canDrain){
-			this(capacity, canFill, canDrain, f -> true);
+			this(capacity, canFill, canDrain, f -> canFill);
 		}
 
 		/**

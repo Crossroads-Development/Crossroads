@@ -3,6 +3,7 @@
 	"name": "Wrench",
 	"icon": "essentials:wrench",
 	"sortnum": 0,
+	"priority": false,
 	"read_by_default": "true",
 	"pages": [
 		{

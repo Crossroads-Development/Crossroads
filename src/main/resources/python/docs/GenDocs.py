@@ -64,16 +64,18 @@ def run():
 				icon = rawLinesIn[1][:-1]  # Cut the \n
 				pages = generatePages(rawLinesIn, icon, name, 2)
 				sort = '0'
+				priority = "false"
 				# Sortnum can be appended to the end of the name
 				if name[-1].isnumeric():
 					sort = name[-1]
 					name = name[:-1]
+					priority = "true"
 
 
 				with open(outDir + file.replace(".txt", ".json"), 'w+') as fOut:
 					fOut.truncate(0)  # Remove previous version
 					for line in tempLines:
-						fOut.write(line.replace('CAT', category).replace('NAME', name).replace('ICON', icon).replace('PAGES', pages).replace('SORT', sort))
+						fOut.write(line.replace('CAT', category).replace('NAME', name).replace('ICON', icon).replace('PAGES', pages).replace('SORT', sort).replace("PRIO", priority))
 					fOut.close()
 
 

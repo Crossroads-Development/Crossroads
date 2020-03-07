@@ -3,6 +3,7 @@
 	"name": "Heat Cables",
 	"icon": "crossroads:heat_cable_wool",
 	"sortnum": 0,
+	"priority": false,
 	"read_by_default": "true",
 	"pages": [
 		{

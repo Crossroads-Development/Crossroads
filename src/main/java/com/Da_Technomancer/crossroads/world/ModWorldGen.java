@@ -43,6 +43,6 @@ public class ModWorldGen{
 	}
 
 	private static boolean isOverworld(Biome b){
-		return b.getCategory() != Biome.Category.NETHER && b.getCategory() != Biome.Category.THEEND;
+		return b.getCategory() != Biome.Category.NETHER && b.getCategory() != Biome.Category.THEEND && b.getCategory() != Biome.Category.NONE;
 	}
 }

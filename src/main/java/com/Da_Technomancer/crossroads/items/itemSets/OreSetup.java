@@ -96,13 +96,13 @@ public final class OreSetup{
 
 		ingotCopshowium = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("ingot_copshowium");
 		CRItems.toRegister.add(ingotCopshowium);
-		blockCopshowium = new BasicBlock("block_copshowium", Block.Properties.create(Material.IRON).harvestLevel(5));
+		blockCopshowium = new BasicBlock("block_copshowium", Block.Properties.create(Material.IRON).hardnessAndResistance(5));
 		nuggetCopshowium = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("nugget_copshowium");
 		CRItems.toRegister.add(nuggetCopshowium);
 
 		voidCrystal = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("void_crystal");
 		CRItems.toRegister.add(voidCrystal);
-		oreVoid = new BasicBlock("ore_void", Block.Properties.create(Material.ROCK).harvestLevel(3));
+		oreVoid = new BasicBlock("ore_void", Block.Properties.create(Material.ROCK).harvestLevel(2));
 		
 		loadConfig();
 	}

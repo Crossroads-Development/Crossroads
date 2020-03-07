@@ -3,6 +3,7 @@
 	"name": "Icebox",
 	"icon": "crossroads:icebox",
 	"sortnum": 0,
+	"priority": false,
 	"read_by_default": "true",
 	"pages": [
 		{

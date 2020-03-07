@@ -3,6 +3,7 @@
 	"name": "Hand Crank",
 	"icon": "crossroads:hand_crank",
 	"sortnum": 0,
+	"priority": false,
 	"read_by_default": "true",
 	"pages": [
 		{

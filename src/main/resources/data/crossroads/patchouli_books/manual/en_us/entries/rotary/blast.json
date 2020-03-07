@@ -3,6 +3,7 @@
 	"name": "Industrial Blast Furnace",
 	"icon": "crossroads:blast_furnace",
 	"sortnum": 0,
+	"priority": false,
 	"read_by_default": "true",
 	"pages": [
 		{

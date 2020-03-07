@@ -3,6 +3,7 @@
 	"name": "Solar Heater",
 	"icon": "crossroads:solar_heater",
 	"sortnum": 0,
+	"priority": false,
 	"read_by_default": "true",
 	"pages": [
 		{

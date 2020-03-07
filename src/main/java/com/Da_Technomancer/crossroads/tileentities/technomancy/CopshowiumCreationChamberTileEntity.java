@@ -138,7 +138,8 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 		beamOpt.invalidate();
 	}
 
-	private final LazyOptional<IFluidHandler> inputOpt = LazyOptional.of(() -> new FluidHandler(0));
+	//Make the top handler an IFluidTank to allow pipes to do bi-directional stuff
+	private final LazyOptional<IFluidHandler> inputOpt = LazyOptional.of(() -> new FluidTankHandler(0));
 	private final LazyOptional<IFluidHandler> outputOpt = LazyOptional.of(() -> new FluidHandler(1));
 	private final LazyOptional<IBeamHandler> beamOpt = LazyOptional.of(BeamHandler::new);
 
