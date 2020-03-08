@@ -76,11 +76,11 @@ public class SendChatToClient extends ClientPacket{
 		combined = new StringTextComponent(combo.toString());
 
 		NewChatGui chatGui = Minecraft.getInstance().ingameGUI.getChatGUI();
-		if(SafeCallable.printChatNoLog == null){
+		if(SafeCallable.getPrintChatNoLog() == null){
 			chatGui.printChatMessageWithOptionalDeletion(combined, id);
 		}else{
 			try{
-				SafeCallable.printChatNoLog.invoke(chatGui, combined, id, Minecraft.getInstance().ingameGUI.getTicks(), false);
+				SafeCallable.getPrintChatNoLog().invoke(chatGui, combined, id, Minecraft.getInstance().ingameGUI.getTicks(), false);
 			}catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e){
 				Crossroads.logger.catching(e);
 			}

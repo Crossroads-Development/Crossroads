@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.command.CRCommands;
 import com.Da_Technomancer.crossroads.entity.*;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.*;
@@ -41,7 +40,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.IContainerFactory;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -291,12 +289,6 @@ public final class Crossroads{
 	@SubscribeEvent
 	public static void registerWorldgen(RegistryEvent.Register<Feature<?>> e){
 		ModWorldGen.register(e.getRegistry());
-	}
-
-	@SuppressWarnings("unused")
-	@SubscribeEvent
-	public static void serverLoading(FMLServerStartingEvent e){
-		CRCommands.init(e.getCommandDispatcher());
 	}
 
 	@SuppressWarnings("unused")

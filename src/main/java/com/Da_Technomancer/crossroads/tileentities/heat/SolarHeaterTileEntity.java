@@ -21,6 +21,7 @@ public class SolarHeaterTileEntity extends ModuleTE{
 	public static final double RATE = 5;
 	public static final double CAP = 250;
 
+	private boolean newlyPlaced = true;//Used to immediately generate the cache to reduce the latency for the player with a new heater
 	private boolean running = false;
 
 	public SolarHeaterTileEntity(){
@@ -40,8 +41,9 @@ public class SolarHeaterTileEntity extends ModuleTE{
 		}
 
 		//Every 30 seconds, check if we still have sky view and cache the result
-		if(world.getGameTime() % 600 == 0){
+		if(newlyPlaced || world.getGameTime() % 600 == 0){
 			running = world.canBlockSeeSky(pos);
+			newlyPlaced = false;
 		}
 
 		//This machine can share heat with other Solar Heaters in the same line, but only other Solar Heaters. Otherwise, a heat cable is needed like normal

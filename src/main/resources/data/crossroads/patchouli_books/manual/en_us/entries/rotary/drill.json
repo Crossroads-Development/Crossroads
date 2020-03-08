@@ -10,11 +10,11 @@
 			"type": "spotlight",
 			"title": "Rotary Drill",
 			"item": "crossroads:rotary_drill",
-			"text": "<item>Rotary Drills/$ are <thing>$(l:intro/rotary)rotary powered/$ block breakers and damage dealers. They connect to an axle or gear on the back, and will break/attack things on the front.$(br2)<item>Rotary Drills/$ drain power constantly, regardless of whether they are doing anything.$(br2)When "
+			"text": "<item>Rotary Drills/$ are <thing>$(l:intro/rotary)rotary powered/$ block breakers and damage dealers. They connect to an axle or gear on the back, and will break/attack things on the front.$(br2)<item>Rotary Drills/$ drain power constantly, regardless of whether they are doing anything."
 		},
 		{
 			"type": "text",
-			"text": "breaking blocks, the higher the block's hardness, the higher the required speed (.2rad/s per hardness). When attacking mobs, the higher the speed, the more damage dealt (5 damage per rad/s)."
+			"text": "When breaking blocks, the higher the block's hardness, the higher the required speed (.2rad/s per hardness). When attacking mobs, the higher the speed, the more damage dealt (5 damage per rad/s)."
 		},
 		{
 			"type": "text",

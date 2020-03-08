@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -31,12 +32,16 @@ public class HandCrank extends Item{
 	public ActionResultType onItemUse(ItemUseContext context){
 		TileEntity te = context.getWorld().getTileEntity(context.getPos());
 		LazyOptional<IAxleHandler> axleOpt;
-		if(te != null && (axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, context.getFace().getOpposite())).isPresent()){
+		Direction side = context.getFace().getOpposite();
+		if(te != null && (axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, side)).isPresent()){
+			double signMult = 1;
 			if(context.isPlacerSneaking()){
-				axleOpt.orElseThrow(NullPointerException::new).addEnergy(-RATE, true);
-			}else{
-				axleOpt.orElseThrow(NullPointerException::new).addEnergy(RATE, true);
+				signMult *= -1;
 			}
+			if(side.getAxisDirection() == Direction.AxisDirection.POSITIVE){
+				signMult *= -1;//Makes things seem consistent to the player
+			}
+			axleOpt.orElseThrow(NullPointerException::new).addEnergy(RATE * signMult, true);
 			return ActionResultType.SUCCESS;
 		}
 		return ActionResultType.PASS;

@@ -10,19 +10,23 @@
 			"type": "spotlight",
 			"title": "Wind Turbine",
 			"item": "crossroads:wind_turbine",
-			"text": "The <item>Wind Turbine/$ is a renewable way to generate <thing>$(l:intro/rotary)rotary power/$ at a low <thing>$(l:intro/rotary)speed/$.$(br2)The <item>wind turbine/$ requires a 5x5 empty space in front of it, and the ability for its blades to see the sky. As long as these conditions are met, it will produce a random amount of power based on the wind- either "
+			"text": "The <item>Wind Turbine/$ is a renewable way to generate <thing>$(l:intro/rotary)rotary power/$ at a low <thing>$(l:intro/rotary)speed/$.$(br2)The <item>wind turbine/$ requires a 5x5 empty space in front of it, and the ability for its blades to see the sky. As long as these conditions are met, it will produce a random amount of power based on the wind- "
 		},
 		{
 			"type": "text",
-			"text": "10J/t or 20J/t. The only issue is that <em>the wind doesn't always blow the same direction/$. The direction the <item>wind turbine/$ tries to turn will randomly swap- which may mean it's fighting against energy stored in a rotary system due to momentum.$(br2)The <item>wind turbine/$ will also stop producing power at speeds above 2rad/s- the wind is never that fast.$(br2)The axle connection is on the back."
+			"text": "either 10J/t or 20J/t. The only issue is that <em>the wind doesn't always blow the same direction/$. The direction the <item>wind turbine/$ tries to turn will randomly swap- which may mean it's fighting against energy stored in a rotary system due to momentum.$(br2)The <item>wind turbine/$ will also stop producing power at speeds above 2rad/s- the wind is never that fast.$(br2)The axle connection is on "
 		},
 		{
 			"type": "text",
-			"text": "<thing>$(l:essentials/circuits)Circuit Readers/$ will read 20 +- (the current power output); plus if the <item>wind turbine/$ is producing power in the positive direction (counter-clockwise), - if it is producing power in the negative direction (clockwise).$(br2)That means if a <thing>$(l:essentials/circuits)Circuit Readers/$ reads below 20, the <item>wind turbine/$ is producing power in the negative direction. Combining this with things like <item>$(l:rotary/gear_base)toggle gears & clutches/$ makes it possible to ensure your turbine is <em>never/$ fighting "
+			"text": "the back."
 		},
 		{
 			"type": "text",
-			"text": "momentum. <em>This is probably a good idea!/$ Especially as otherwise, if you're using two <item>wind turbines/$, they might fight each other."
+			"text": "<thing>$(l:essentials/circuits)Circuit Readers/$ will read 20 +- (the current power output); plus if the <item>wind turbine/$ is producing power in the positive direction (counter-clockwise), - if it is producing power in the negative direction (clockwise).$(br2)That means if a <thing>$(l:essentials/circuits)Circuit Readers/$ reads below 20, the <item>wind turbine/$ is producing power in the negative direction. Combining this with things like <item>$(l:rotary/gear_base)toggle gears & clutches/$ makes it possible to ensure your "
+		},
+		{
+			"type": "text",
+			"text": "turbine is <em>never/$ fighting momentum. <em>This is probably a good idea!/$ Especially as otherwise, if you're using two <item>wind turbines/$, they might fight each other."
 		}
 	]
 }

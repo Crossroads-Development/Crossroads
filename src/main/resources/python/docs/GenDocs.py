@@ -61,15 +61,15 @@ def run():
 					fIn.close()
 
 				name = rawLinesIn[0][:-1]  # Cut the \n
-				icon = rawLinesIn[1][:-1]  # Cut the \n
-				pages = generatePages(rawLinesIn, icon, name, 2)
-				sort = '0'
-				priority = "false"
 				# Sortnum can be appended to the end of the name
 				if name[-1].isnumeric():
 					sort = name[-1]
 					name = name[:-1]
 					priority = "true"
+				icon = rawLinesIn[1][:-1]  # Cut the \n
+				pages = generatePages(rawLinesIn, icon, name, 2)
+				sort = '0'
+				priority = "false"
 
 
 				with open(outDir + file.replace(".txt", ".json"), 'w+') as fOut:
@@ -91,8 +91,8 @@ def generatePages(text: list, icon: str, title: str, indents: int) -> str:
 
 	lineSt = '\t' * indents  # Placed at the beginning of every line- for indentation
 	output = ''  # Final output string
-	charLimit = 480  # Maximum characters per text page
-	charLimitTitle = 330  # Maximum characters per title page
+	charLimit = 460  # Maximum characters per text page
+	charLimitTitle = 320  # Maximum characters per title page
 	charPerNewline = 45  # Number of characters to consider a newline
 	space = ' '
 
@@ -219,7 +219,7 @@ def generatePages(text: list, icon: str, title: str, indents: int) -> str:
 		if first:
 			output += lineSt + '\t' + '"title": "' + title + '",\n'
 			output += lineSt + '\t' + '"item": "' + icon + '",\n'
-		output += lineSt + '\t"text": "' + page + '"\n'
+		output += lineSt + '\t"text": "' + page.replace('"', '\\"') + '"\n'
 		output += lineSt + '}'
 		first = False
 

@@ -16,6 +16,7 @@ public class SmelterContainer extends MachineContainer<SmelterTileEntity>{
 
 	public SmelterContainer(int id, PlayerInventory playerInv, PacketBuffer data){
 		super(type, id, playerInv, data);
+		trackInt(te.cookProg);
 	}
 
 	@Override

@@ -332,6 +332,7 @@ public final class EventHandlerCommon{
 	}
 
 	@SubscribeEvent
+	@SuppressWarnings("unused")
 	public void rebuildConfigData(ModConfig.ConfigReloading e){
 		if(e.getConfig().getModId().equals(Crossroads.MODID) && e.getConfig().getType() == ModConfig.Type.SERVER){
 			GearFactory.init();

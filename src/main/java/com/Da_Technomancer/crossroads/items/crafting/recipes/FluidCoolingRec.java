@@ -144,7 +144,6 @@ public class FluidCoolingRec implements IOptionalRecipe<IInventory>{
 			buffer.writeBoolean(recipe.active);
 			recipe.getInput().writeToPacket(buffer);
 			buffer.writeItemStack(recipe.getRecipeOutput());
-			recipe.getIngredients().get(0).write(buffer);
 			buffer.writeFloat(recipe.getMaxTemp());
 			buffer.writeFloat(recipe.getAddedHeat());
 		}

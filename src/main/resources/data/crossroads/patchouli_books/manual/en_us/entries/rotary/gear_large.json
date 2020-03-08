@@ -10,11 +10,11 @@
 			"type": "spotlight",
 			"title": "Large Gears",
 			"item": "crossroads:gear_base_large",
-			"text": "<item>Large Gears/$ are a way of moving <thing>$(l:intro/rotary)rotary energy/$ around, by connecting to form a system of gears and axles.$(br2)Like <item>$(l:rotary/gear_base)small gears/$, <item>large gears/$ can connect around corners, on the sides, or on axles on the front or back. Unlike <item>$(l:rotary/gear_base)small gears/$, <item>large gears/$ can't share a blockspace with anything else, "
+			"text": "<item>Large Gears/$ are a way of moving <thing>$(l:intro/rotary)rotary energy/$ around, by connecting to form a system of gears and axles.$(br2)Like <item>$(l:rotary/gear_base)small gears/$, <item>large gears/$ can connect around corners, on the sides, or on axles on the front or back. Unlike <item>$(l:rotary/gear_base)small gears/$, <item>large gears/$ can't share a blockspace with anything "
 		},
 		{
 			"type": "text",
-			"text": "and are 3x3 in size instead of 1x1. <item>Large gears/$ also don't need a solid surface to be supported on.$(br2)There are several materials for <item>large gears/$ (most of the metals) with different <thing>$(l:intro/rotary)I values/$.$(br2)Because of their large radius, a <item>large gear/$ next to a <item>$(l:rotary/gear_base)small gear/$ will spin at a slower speed than the <item>$(l:rotary/gear_base)small gear/$."
+			"text": "else, and are 3x3 in size instead of 1x1. <item>Large gears/$ also don't need a solid surface to be supported on.$(br2)There are several materials for <item>large gears/$ (most of the metals) with different <thing>$(l:intro/rotary)I values/$.$(br2)Because of their large radius, a <item>large gear/$ next to a <item>$(l:rotary/gear_base)small gear/$ will spin at a slower speed than the <item>$(l:rotary/gear_base)small gear/$."
 		},
 		{
 			"type": "text",

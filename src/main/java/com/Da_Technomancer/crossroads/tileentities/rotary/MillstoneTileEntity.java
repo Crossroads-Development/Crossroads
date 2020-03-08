@@ -53,16 +53,6 @@ public class MillstoneTileEntity extends InventoryTE{
 		super.addInfo(chat, player, hit);
 	}
 
-	private void runMachine(){
-		if(progress == REQUIRED){
-			return;
-		}
-		double used = POWER * RotaryUtil.findEfficiency(motData[0], 0.2D, PEAK_SPEED);
-		progress = Math.min(progress + used, REQUIRED);
-		progRef.set((int) progress);
-		axleHandler.addEnergy(-used, false);
-	}
-
 	private void createOutput(ItemStack[] outputs){
 		if(canFit(outputs)){
 			progress = 0;
@@ -141,21 +131,24 @@ public class MillstoneTileEntity extends InventoryTE{
 	public void tick(){
 		super.tick();
 		if(!world.isRemote){
-			if(!inventory[0].isEmpty()){
-				Optional<MillRec> recOpt = world.getRecipeManager().getRecipe(CRRecipes.MILL_TYPE, this, world);
-				if(!recOpt.isPresent()){
-					progress = 0;
-					progRef.set((int) progress);
-					return;
-				}
-				runMachine();
-				if(progress == REQUIRED){
-					createOutput(recOpt.get().getOutputs());
-				}
-			}else{
+			if(inventory[0].isEmpty()){
 				progress = 0;
-				progRef.set((int) progress);
+			}else{
+				Optional<MillRec> recOpt = world.getRecipeManager().getRecipe(CRRecipes.MILL_TYPE, this, world);
+				if(recOpt.isPresent()){
+					double used = POWER * RotaryUtil.findEfficiency(motData[0], 0.2D, PEAK_SPEED);
+					progress += used;
+					axleHandler.addEnergy(-used, false);
+
+					if(progress >= REQUIRED){
+						createOutput(recOpt.get().getOutputs());//sets progress to 0
+					}
+				}else{
+					progress = 0;
+				}
 			}
+
+			progRef.set((int) progress);
 		}
 	}
 

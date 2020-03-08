@@ -2,31 +2,31 @@
 	"category": "intro",
 	"name": "Intro to Rotary",
 	"icon": "crossroads:gear_base",
-	"sortnum": 2,
-	"priority": true,
+	"sortnum": 0,
+	"priority": false,
 	"read_by_default": "true",
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Intro to Rotary2",
+			"title": "Intro to Rotary",
 			"item": "crossroads:gear_base",
-			"text": "<thing>Rotary/$ is one of the basic energy systems in Crossroads, and usually the first or second one you'll use (alongside <thing>$(l:intro/heat)Heat/$) Rotary is the transfer of mechanical energy using <item>gears/$ and <item>axles.$(br2)Rotary can seem complicated at first when reading about it, but is actually pretty simple in practice."
+			"text": "<thing>Rotary/$ is one of the basic energy systems in Crossroads, and usually the first or second one you'll use (alongside <thing>$(l:intro/heat)Heat/$) Rotary is the transfer of mechanical energy using <item>gears/$ and <item>axles/$.$(br2)Rotary can seem complicated at first when reading about it, but is actually pretty simple "
 		},
 		{
 			"type": "text",
-			"text": "<item>"
+			"text": "in practice.$(br2)Every gear, axle, or other spinning device has a few basic values.$(br2)The <thing>Moment of Inertia/$ is written as 'I', usually in tooltips. The I value can be thought of as the 'weight' of the gear- things with higher I values are heavier and are harder to spin quickly.$(br2)The <thing>Speed/$, usually written 'ω' and measured in 'rad/s' "
 		},
 		{
 			"type": "text",
-			"text": "<item>Every gear, axle, or other spinning device has a few basic values.$(br2)The <thing>Moment of Inertia/$ is written as 'I', usually in tooltips. The I value can be thought of as the 'weight' of the gear- things with higher I values are heavier and are harder to spin quickly.$(br2)The <thing>Speed/$, usually written 'ω' and measured in 'rad/s' in tooltips, is how fast something is spinning. A normal speed might be 2-4rad/s, "
+			"text": "in tooltips, is how fast something is spinning. A normal speed might be 2-4rad/s, while 10rad/s is very fast. A negative speed means the gear is spinning clockwise (counter-clockwise is positive).$(br2)The <thing>Energy/$, usually written 'E' and measured in 'J', is the total energy in a spinning object. As you'ld expect, the faster somethings' speed, the more energy it has, and the higher the I, the more energy. There is actually "
 		},
 		{
 			"type": "text",
-			"text": "while 10rad/s is very fast. A negative speed means the gear is spinning clockwise (counter-clockwise is positive).$(br2)The <thing>Energy/$, usually written 'E' and measured in 'J', is the total energy in a spinning object. As you'ld expect, the faster somethings' speed, the more energy it has, and the higher the I, the more energy. There is actually a formula (E=Iω²/2), but it isn't useful or worth remembering."
+			"text": "a formula (E=Iω²/2), but it isn't useful or worth remembering.$(br2)The <thing>Power/$, measured in 'J/s', is the rate of change of the energy of a gear. No machines look at the power value at all- it only exists to help show the player the change in energy.$(br2)Gears will also have a small amount of <thing>energy loss/$ proportional to the <thing>speed/$. This is a slow decrease in <thing>energy/$ over time unless "
 		},
 		{
 			"type": "text",
-			"text": "The <thing>Power/$, measured in 'J/s', is the rate of change of the energy of a gear. No machines look at the power value at all- it only exists to help show the player the change in energy.$(br2)Gears will also have a small amount of <thing>energy loss/$ proportional to the <thing>speed/$. This is a slow decrease in <thing>energy/$ over time unless power is supplied."
+			"text": "power is supplied."
 		},
 		{
 			"type": "text",
@@ -34,7 +34,7 @@
 		},
 		{
 			"type": "text",
-			"text": "All networks of gears/axles/whatever <em>MUST HAVE/$ a <item>$(l:rotary/axis)Master Axis$ connected somewhere in the network- otherwise nothing will work!"
+			"text": "All networks of gears/axles/whatever <em>MUST HAVE/$ a <item>$(l:rotary/axis)Master Axis/$ connected somewhere in the network- otherwise nothing will work!"
 		}
 	]
 }

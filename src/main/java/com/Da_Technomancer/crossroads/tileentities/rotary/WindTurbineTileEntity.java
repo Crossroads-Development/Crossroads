@@ -6,10 +6,13 @@ import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
+import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -21,6 +24,7 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.List;
 
 @ObjectHolder(Crossroads.MODID)
 public class WindTurbineTileEntity extends ModuleTE{
@@ -35,6 +39,8 @@ public class WindTurbineTileEntity extends ModuleTE{
 	private boolean newlyPlaced = false;
 	private int level = 1;
 	private boolean running = false;
+
+	private AxisAlignedBB targetBB = null;
 
 	public WindTurbineTileEntity(){
 		super(type);
@@ -54,12 +60,27 @@ public class WindTurbineTileEntity extends ModuleTE{
 		return state.get(CRProperties.HORIZ_FACING);
 	}
 
+	private AxisAlignedBB getTargetBB(){
+		if(targetBB == null){
+			Direction dir = getFacing();
+			Direction planeDir = dir.rotateY();
+			if(planeDir.getAxisDirection() == Direction.AxisDirection.NEGATIVE){
+				planeDir = planeDir.getOpposite();
+			}
+			BlockPos center = pos.offset(dir);
+			targetBB = new AxisAlignedBB(center.offset(planeDir, -2).offset(Direction.DOWN, 2), center.offset(planeDir, 3).offset(Direction.UP, 3));
+		}
+
+		return targetBB;
+	}
+
 	@Override
 	public void updateContainingBlockInfo(){
 		super.updateContainingBlockInfo();
 		axleOpt.invalidate();
 		axleOpt = LazyOptional.of(this::createAxleHandler);
 		newlyPlaced = true;
+		targetBB = null;
 	}
 
 	@Override
@@ -120,6 +141,14 @@ public class WindTurbineTileEntity extends ModuleTE{
 				if(motData[0] * Math.signum(level) < MAX_SPEED){
 					motData[1] += (double) level * POWER_PER_LEVEL;
 				}
+
+				if(Math.abs(motData[0]) >= 1.5D){
+					List<LivingEntity> ents = world.getEntitiesWithinAABB(LivingEntity.class, getTargetBB(), EntityPredicates.IS_LIVING_ALIVE);
+					for(LivingEntity ent : ents){
+						ent.attackEntityFrom(DamageSource.FLY_INTO_WALL, 1);
+					}
+				}
+
 				markDirty();
 			}
 		}
