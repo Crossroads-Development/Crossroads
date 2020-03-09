@@ -19,13 +19,18 @@ import java.util.List;
 
 public class HandCrank extends Item{
 
-	private static final int RATE = 100;
-
 	protected HandCrank(){
+		this("hand_crank");
+	}
+
+	protected HandCrank(String name){
 		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
-		String name = "hand_crank";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
+	}
+
+	protected int getRate(){
+		return 100;
 	}
 
 	@Override
@@ -41,7 +46,7 @@ public class HandCrank extends Item{
 			if(side.getAxisDirection() == Direction.AxisDirection.POSITIVE){
 				signMult *= -1;//Makes things seem consistent to the player
 			}
-			axleOpt.orElseThrow(NullPointerException::new).addEnergy(RATE * signMult, true);
+			axleOpt.orElseThrow(NullPointerException::new).addEnergy(getRate() * signMult, true);
 			return ActionResultType.SUCCESS;
 		}
 		return ActionResultType.PASS;
@@ -49,7 +54,7 @@ public class HandCrank extends Item{
 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.crank.desc", RATE));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.crank.back", RATE));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.crank.desc", getRate()));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.crank.back", getRate()));
 	}
 }

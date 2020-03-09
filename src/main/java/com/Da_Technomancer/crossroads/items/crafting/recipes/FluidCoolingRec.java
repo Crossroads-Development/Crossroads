@@ -128,7 +128,7 @@ public class FluidCoolingRec implements IOptionalRecipe<IInventory>{
 		@Override
 		public FluidCoolingRec read(ResourceLocation recipeId, PacketBuffer buffer){
 			String s = buffer.readString(Short.MAX_VALUE);
-			if(!buffer.readBoolean()){
+			if(!buffer.readBoolean()){//active
 				return new FluidCoolingRec(recipeId, s, FluidStack.EMPTY, ItemStack.EMPTY, 0, 0, false);
 			}
 			FluidStack input = FluidStack.readFromPacket(buffer);

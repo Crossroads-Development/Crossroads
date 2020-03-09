@@ -55,8 +55,6 @@ public class MillstoneTileEntity extends InventoryTE{
 
 	private void createOutput(ItemStack[] outputs){
 		if(canFit(outputs)){
-			progress = 0;
-			progRef.set((int) progress);
 			inventory[0].shrink(1);
 
 			for(ItemStack stack : outputs){
@@ -141,7 +139,8 @@ public class MillstoneTileEntity extends InventoryTE{
 					axleHandler.addEnergy(-used, false);
 
 					if(progress >= REQUIRED){
-						createOutput(recOpt.get().getOutputs());//sets progress to 0
+						createOutput(recOpt.get().getOutputs());
+						progress = 0;
 					}
 				}else{
 					progress = 0;

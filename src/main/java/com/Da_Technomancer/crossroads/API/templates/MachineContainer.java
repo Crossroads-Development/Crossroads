@@ -12,6 +12,7 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IntReferenceHolder;
 import net.minecraft.util.math.BlockPos;
 
 import java.lang.reflect.InvocationTargetException;
@@ -104,6 +105,19 @@ public abstract class MachineContainer<U extends InventoryTE> extends Container{
 	 */
 	protected int[] getInvStart(){
 		return new int[] {8, 84};
+	}
+
+	@Override
+	protected IntReferenceHolder trackInt(IntReferenceHolder intIn){
+		intIn = super.trackInt(intIn);
+
+		//TODO
+		int val = intIn.get();
+		intIn.set(val == 0 ? 1 : 0);
+		intIn.isDirty();
+		intIn.set(val);
+
+		return intIn;
 	}
 
 	@Override

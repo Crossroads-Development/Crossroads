@@ -42,30 +42,27 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 	protected ArrayList<IAxleHandler> rotaryMembers = new ArrayList<>();
 
 	/**
-	 * Now I know what you're thinking: "What the heck is this for?". Well it's quite simple- no it isn't that's a lie
-	 * The Master Axis is responsible for keeping the rendering angles of all members synced centrally.
-	 * A Taylor Series (if you don't know what that is, I suggest you google "Taylor Series", "Power Series", "Derivatives calculus", and "Painless suicide methods" in that order)
-	 * is used to estimate and extrapolate future and intermediate gear angles to reduce the number of angle information packets that have to be sent.
-	 * The Taylor Series is only regenerated and resynced when its prediction for speed begins to significantly diverge from actual values
+	 * We model and predict the speeds and angles with a regression of past values
+	 * The used regression is an area of active development;
+	 * Currently: Linear regression for θ(t), constant ω(t)
+	 * Attempted:
+	 * -3rd order Taylor polynomial for θ(t); Failed due to handling asymptote behaviour poorly
+	 * -A/(t + B) + C for ω(t); Failed due to only being a good approximation in limited circumstances
 	 *
-	 * The function we are modeling with this Taylor series, θ(t), is provided to us in the form of the first derivative (ω) at discrete (1-tick) intervals
-	 * We define θ(t) as derivable and continuous, and define ω(t) (AKA θ'(t)) as mostly continuous with jump discontinuities.
-	 * Because Taylor series approximations only work in their purest form when θ'(t) is also continuous, we interpret the value of the series carefully when re-defining it
-	 *
-	 * Our Taylor series is defined about t=seriesTimestamp, which will change each time the series is synchronized
+	 * Timestamp of when the regression was generated and the time it is defined relative to
 	 */
-	private long seriesTimestamp;
+	private long regrTimestamp = 0;
 	/**
-	 * Stores the coefficients on the Taylor series for θ(t). The first value is the lowest order term.
+	 * Stores the coefficients on the regression for θ(t). A, B, C, D
 	 */
-	private float[] taylorSeries = new float[4];
+	private float[] coeff = new float[4];
 	/**
-	 * Stores the coefficients on the Taylor series for ω(t). The first value is the lowest order term.
-	 * Used on the server side to track when to invalidate the angle taylor series
+	 * Stores the coefficients on the regression for ω(t). A, B, C
+	 * Used on the server side to track when to invalidate the angle regression
 	 */
-	private float[] wTaylorSeries = new float[3];
+	private float[] wCoeff = new float[3];
 	/**
-	 * Stores the previous 4 angle values as a reference to calculate and verify the Taylor series.
+	 * Stores the previous 4 angle values as a reference to calculate and verify the regression.
 	 * The first value is the oldest
 	 */
 	private float[] prevAngles = new float[4];
@@ -113,7 +110,10 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 		}
 		for(int i = 0; i < 4; i++){
 			prevAngles[i] = 0;
-			taylorSeries[i] = 0;
+			coeff[i] = 0;
+			if(i != 3){
+				wCoeff[i] = 0;
+			}
 		}
 		rotaryMembers.clear();
 		RotaryUtil.increaseMasterKey(false);
@@ -160,7 +160,10 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 			//Clear all angle data
 			for(int i = 0; i < 4; i++){
 				prevAngles[i] = 0;
-				taylorSeries[i] = 0;
+				coeff[i] = 0;
+				if(i != 3){
+					wCoeff[i] = 0;
+				}
 			}
 		}else if(!world.isRemote){//Server side, has members
 			//Speed in rad/t
@@ -168,6 +171,9 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 			//Add the current angle value to the prevAngles record, and shift the array
 			System.arraycopy(prevAngles, 1, prevAngles, 0, 3);
 			prevAngles[3] = prevAngles[2] + trueSpeed;
+			if(Float.isNaN(prevAngles[3])){
+				prevAngles[3] = 0;
+			}
 
 
 			final float ADJUST_MARGIN = CRConfig.speedPrecision.get().floatValue();
@@ -175,6 +181,9 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 
 			float speedPred = runWSeries(ticksExisted);
 			float diff = Math.abs(speedPred - trueSpeed);
+			if(Float.isNaN(diff)){
+				diff = Float.MAX_VALUE;
+			}
 			boolean signChanged = Math.signum(speedPred) != Math.signum(trueSpeed);
 			if(diff >= ADJUST_MARGIN || signChanged){
 				//Take the current simulated angle as the new "true" angle value, to prevent a "jerking" re-alignment of gear angles on the client side
@@ -183,71 +192,67 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 					prevAngles[i] += delta;
 				}
 
-				//Whether we believe this to be a jump discontinuity, or just the Taylor series diverging
+				//Whether we believe this to be a jump discontinuity, or just the regression diverging
 				boolean jump = diff >= RESET_MARGIN || signChanged;
 
-				//Generate a new series
-				wTaylorSeries[0] = trueSpeed;
-				if(jump){
-					//We can't trust any previous values- they were all before the discontinuity. Therefore, we take the higher order derivatives as 0
-					wTaylorSeries[1] = 0;
-					wTaylorSeries[2] = 0;
-				}else{
-					wTaylorSeries[1] = wTaylorSeries[0] - (prevAngles[2] - prevAngles[1]);
-					wTaylorSeries[2] = wTaylorSeries[1] - ((prevAngles[2] - prevAngles[1]) - (prevAngles[1] - prevAngles[0]));
-				}
+				//Currently this code has more boilerplate than we use. For more advanced regressions, this boilerplate is used
+				//Generate a new regression
+//				float[] prevSpeed = new float[3];
+//				prevSpeed[2] = trueSpeed;
+//
+//				if(jump){
+//					//We can't trust any previous values- they were all before the discontinuity. Therefore, we take the higher order derivatives as 0
+//					prevSpeed[1] = trueSpeed;
+//					prevSpeed[0] = trueSpeed;
+//				}else{
+//					prevSpeed[1] = prevAngles[2] - prevAngles[1];
+//					prevSpeed[0] = prevAngles[1] - prevAngles[0];
+//				}
+
+				//linear regression
+				wCoeff[0] = trueSpeed;
+				wCoeff[1] = 0;
+				wCoeff[2] = 0;
 
 				//Generate angle series
-				taylorSeries[0] = 0;//This line is technically unneeded
-				taylorSeries[1] = wTaylorSeries[0];
-				taylorSeries[2] = wTaylorSeries[1];
-				taylorSeries[3] = wTaylorSeries[2];
+				//A*time + B
+				coeff[0] = trueSpeed;
+				coeff[1] = 0;
+				coeff[2] = 0;
 
-				//Build in the factorial quotients
-				wTaylorSeries[1] /= 1F;//1!
-				wTaylorSeries[2] /= 2F;//2!
-//				wTaylorSeries[3] /= 6F;//3!
+				regrTimestamp = ticksExisted;
 
-				taylorSeries[1] /= 1F;//1!
-				taylorSeries[2] /= 2F;//2!
-				taylorSeries[3] /= 6F;//3!
-				seriesTimestamp = ticksExisted;
-
-				//Set the first term of the Taylor series such that calling runSeries with the current time gets the current angle
+				//Set the constant term of the regression such that calling runSeries with the current time gets the current angle
 				float offset = runSeries(ticksExisted, 0);
-				taylorSeries[0] = prevAngles[3] - offset;
+				coeff[3] = prevAngles[3] - offset;
 
 				//Sync the series to the client
-				CRPackets.sendPacketAround(world, pos, new SendTaylorToClient(seriesTimestamp, taylorSeries, pos));
+				CRPackets.sendPacketAround(world, pos, new SendTaylorToClient(ticksExisted, coeff, pos));
 			}
 		}
 	}
 
 	private float runSeries(long time, float partialTicks){
-		float relTime = time - seriesTimestamp;
-		relTime += partialTicks;
-
-		//The time offsets are due to the higher order derivatives being found as a difference of derivatives- making them defined relative to a different time
-		double result = taylorSeries[0] + (relTime - 0.5F) * taylorSeries[1];
-		result += Math.pow(relTime - 1F, 2F) * taylorSeries[2];
-		result += Math.pow(relTime - 1.5F, 3F) * taylorSeries[3];
-		return (float) result;
+		float relTime = time + partialTicks - regrTimestamp;
+		return coeff[0] * relTime + coeff[3];
+//		float relTime = time - seriesTimestamp;
+//		relTime += partialTicks;
+//
+//		//The time offsets are due to the higher order derivatives being found as a difference of derivatives- making them defined relative to a different time
+//		double result = taylorSeries[0] + (relTime - 0.5F) * taylorSeries[1];
+//		result += Math.pow(relTime - 1F, 2F) * taylorSeries[2];
+//		result += Math.pow(relTime - 1.5F, 3F) * taylorSeries[3];
+//		return (float) result;
 	}
 
 	private float runWSeries(long time){
-		float relTime = time - seriesTimestamp;
-
-		//The time offsets are due to the higher order derivatives being found as a difference of derivatives- making them defined relative to a different time
-		double result = wTaylorSeries[0] + (relTime - 0.5F) * wTaylorSeries[1];
-		result += Math.pow(relTime - 1F, 2F) * wTaylorSeries[2];
-//		result += Math.pow(relTime - 1.5F, 3F) * wTaylorSeries[3]; wTaylor series doesn't have a 3rd order term
-		return (float) result;
+		return wCoeff[0];
 	}
 
 	@Override
 	public void receiveSeries(long timestamp, float[] series){
-		seriesTimestamp = timestamp;
-		taylorSeries = series;
+		regrTimestamp = timestamp;
+		coeff = series;
 	}
 
 	@Override
@@ -277,13 +282,13 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 		ticksExisted = nbt.getLong("life");
 		for(int i = 0; i < 4; i++){
 			prevAngles[i] = nbt.getFloat("prev_" + i);
-			taylorSeries[i] = nbt.getFloat("taylor_" + i);
+			coeff[i] = nbt.getFloat("coeff_" + i);
 			if(i != 3){
-				wTaylorSeries[i] = nbt.getFloat("w_taylor_" + i);
+				wCoeff[i] = nbt.getFloat("w_coeff_" + i);
 			}
 		}
 
-		seriesTimestamp = nbt.getLong("timestamp");
+		regrTimestamp = nbt.getLong("timestamp");
 	}
 
 	@Override
@@ -292,12 +297,12 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 		nbt.putLong("life", ticksExisted);
 		for(int i = 0; i < 4; i++){
 			nbt.putFloat("prev_" + i, prevAngles[i]);
-			nbt.putFloat("taylor_" + i, taylorSeries[i]);
+			nbt.putFloat("coeff_" + i, coeff[i]);
 			if(i != 3){
-				nbt.putFloat("w_taylor_" + i, wTaylorSeries[i]);
+				nbt.putFloat("w_coeff_" + i, wCoeff[i]);
 			}
 		}
-		nbt.putLong("timestamp", seriesTimestamp);
+		nbt.putLong("timestamp", regrTimestamp);
 		return nbt;
 	}
 

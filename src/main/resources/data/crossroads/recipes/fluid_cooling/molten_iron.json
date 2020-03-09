@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:fluid_cooling",
 	"input": {
-		"fluid": "crossroads:molten_coppermolten_iron",
+		"fluid": "crossroads:molten_iron",
 		"amount": 144
 	},
 	"item": "minecraft:iron_ingot",

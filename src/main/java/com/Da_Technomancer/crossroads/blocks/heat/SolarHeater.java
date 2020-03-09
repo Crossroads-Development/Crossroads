@@ -79,7 +79,7 @@ public class SolarHeater extends ContainerBlock{
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return getDefaultState().with(CRProperties.HORIZ_AXIS, context.getPlacementHorizontalFacing().rotateY().getAxis());
+		return getDefaultState().with(CRProperties.HORIZ_AXIS, context.getPlacementHorizontalFacing().getAxis());
 	}
 
 	@Override

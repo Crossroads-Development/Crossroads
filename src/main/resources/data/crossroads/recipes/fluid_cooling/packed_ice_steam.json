@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:fluid_cooling",
 	"input": {
-		"fluid": "crossroads:molten_coppersteam",
+		"fluid": "crossroads:steam",
 		"amount": 1000
 	},
 	"item": "packed_ice",

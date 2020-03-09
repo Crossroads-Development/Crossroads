@@ -36,7 +36,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 	public static final double INERTIA = 200;
 	public static final double POWER_PER_LEVEL = 10D;
 
-	private boolean newlyPlaced = false;
+	private boolean newlyPlaced = true;
 	private int level = 1;
 	private boolean running = false;
 
@@ -68,7 +68,11 @@ public class WindTurbineTileEntity extends ModuleTE{
 				planeDir = planeDir.getOpposite();
 			}
 			BlockPos center = pos.offset(dir);
-			targetBB = new AxisAlignedBB(center.offset(planeDir, -2).offset(Direction.DOWN, 2), center.offset(planeDir, 3).offset(Direction.UP, 3));
+			if(dir.getAxisDirection() == Direction.AxisDirection.POSITIVE){
+				targetBB = new AxisAlignedBB(center.offset(planeDir, -2).offset(Direction.DOWN, 2), center.offset(planeDir, 3).offset(Direction.UP, 3).offset(dir));
+			}else{
+				targetBB = new AxisAlignedBB(center.offset(planeDir, -2).offset(Direction.DOWN, 2), center.offset(planeDir, 3).offset(Direction.UP, 3).offset(dir, -1));
+			}
 		}
 
 		return targetBB;
@@ -78,7 +82,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 	public void updateContainingBlockInfo(){
 		super.updateContainingBlockInfo();
 		axleOpt.invalidate();
-		axleOpt = LazyOptional.of(this::createAxleHandler);
+		axleOpt = LazyOptional.of(() -> axleHandler);
 		newlyPlaced = true;
 		targetBB = null;
 	}
@@ -184,7 +188,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing == world.getBlockState(pos).get(CRProperties.HORIZ_FACING).getOpposite())){
+		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing == getFacing().getOpposite())){
 			return (LazyOptional<T>) axleOpt;
 		}
 		return super.getCapability(capability, facing);
