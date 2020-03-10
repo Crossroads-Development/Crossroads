@@ -12,7 +12,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.IntReferenceHolder;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -24,26 +23,12 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 
 	protected final ItemStack[] inventory;
 	public final FluidSlotManager[] fluidManagers = new FluidSlotManager[fluidTanks()];
-	public final IntReferenceHolder rotaryReference;
-	public final IntReferenceHolder heatReference;
 
 	public InventoryTE(TileEntityType<? extends InventoryTE> type, int invSize){
 		super(type);
 		inventory = new ItemStack[invSize];
 		for(int i = 0; i < invSize; i++){
 			inventory[i] = ItemStack.EMPTY;
-		}
-		if(useRotary()){
-			rotaryReference = IntReferenceHolder.single();
-			rotaryReference.set((int) Math.round(motData[0] * 100D));
-		}else{
-			rotaryReference = null;
-		}
-		if(useHeat()){
-			heatReference = IntReferenceHolder.single();
-			heatReference.set((int) temp);
-		}else{
-			heatReference = null;
 		}
 	}
 
@@ -54,6 +39,26 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 		for(int i = 0; i < fluids.length; i++){
 			fluidManagers[i] = new FluidSlotManager(fluids[i], fluidProps[i].capacity);
 		}
+	}
+
+	/**
+	 * Gets a value that should be used for display in UIs. Usually used in conjunction with IntDeferredRef
+	 * The result is only valid on the virtual server side
+	 * The result is only applicable if useRotary()
+	 * @return 100 * the speed that should be displayed in UIs
+	 */
+	public int getUISpeed(){
+		return (int) Math.round(motData[0] * 100D);
+	}
+
+	/**
+	 * Gets a value that should be used for display in UIs. Usually used in conjunction with IntDeferredRef
+	 * The result is only valid on the virtual server side
+	 * The result is only applicable if useHeat()
+	 * @return The temperature
+	 */
+	public int getUITemp(){
+		return (int) temp;
 	}
 
 	@Override
@@ -77,12 +82,6 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 			//We only update them directly on the server side. Updating on the client is unneeded, and may cause things to get out of sync
 			for(int i = 0; i < fluidManagers.length; i++){
 				fluidManagers[i].updateState(fluids[i]);
-			}
-			if(useRotary()){
-				rotaryReference.set((int) Math.round(motData[0] * 100D));
-			}
-			if(useHeat()){
-				heatReference.set((int) temp);
 			}
 		}
 	}

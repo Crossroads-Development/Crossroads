@@ -4,7 +4,6 @@ import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MillstoneTileEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.registries.ObjectHolder;

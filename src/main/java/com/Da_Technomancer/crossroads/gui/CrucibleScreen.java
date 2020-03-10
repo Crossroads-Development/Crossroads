@@ -20,7 +20,7 @@ public class CrucibleScreen extends MachineGUI<CrucibleContainer, HeatingCrucibl
 	@Override
 	protected void init(){
 		super.init();
-		te.fluidManagers[0].initScreen((width - xSize) / 2, (height - ySize) / 2, 70, 70);
+		initFluidManager(0, 70, 70);
 	}
 
 	@Override

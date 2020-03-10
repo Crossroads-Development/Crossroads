@@ -20,7 +20,7 @@ public class FatCongealerScreen extends MachineGUI<FatCongealerContainer, FatCon
 	@Override
 	public void init(){
 		super.init();
-		te.fluidManagers[0].initScreen((width - xSize) / 2, (height - ySize) / 2, 24, 70);
+		initFluidManager(0, 24, 70);
 	}
 
 	@Override

@@ -20,7 +20,7 @@ public class FluidCoolerScreen extends MachineGUI<FluidCoolerContainer, FluidCoo
 	@Override
 	protected void init(){
 		super.init();
-		te.fluidManagers[0].initScreen( (width - xSize) / 2, (height - ySize) / 2, 10, 70);
+		initFluidManager(0, 10, 70);
 	}
 
 	@Override

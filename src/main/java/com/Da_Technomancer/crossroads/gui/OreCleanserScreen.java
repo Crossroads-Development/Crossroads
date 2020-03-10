@@ -20,8 +20,8 @@ public class OreCleanserScreen extends MachineGUI<OreCleanserContainer, OreClean
 	@Override
 	public void init(){
 		super.init();
-		te.fluidManagers[0].initScreen((width - xSize) / 2, (height - ySize) / 2, 8, 70);
-		te.fluidManagers[1].initScreen((width - xSize) / 2, (height - ySize) / 2, 62, 70);
+		initFluidManager(0, 8, 70);
+		initFluidManager(1, 62, 70);
 	}
 
 

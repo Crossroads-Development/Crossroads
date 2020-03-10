@@ -20,7 +20,7 @@ public class FatCollectorScreen extends MachineGUI<FatCollectorContainer, FatCol
 	@Override
 	public void init(){
 		super.init();
-		te.fluidManagers[0].initScreen((width - xSize) / 2, (height - ySize) / 2, 70, 70);
+		initFluidManager(0, 70, 70);
 	}
 
 	@Override

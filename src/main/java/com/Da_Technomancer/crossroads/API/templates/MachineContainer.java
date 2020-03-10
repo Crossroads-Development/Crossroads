@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.API.templates;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
+import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -12,7 +13,6 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IntReferenceHolder;
 import net.minecraft.util.math.BlockPos;
 
 import java.lang.reflect.InvocationTargetException;
@@ -22,6 +22,9 @@ public abstract class MachineContainer<U extends InventoryTE> extends Container{
 
 	protected final IInventory playerInv;
 	protected final U te;
+	public final IntDeferredRef heatRef;
+	public final IntDeferredRef rotRef;
+	public final IntDeferredRef[][] fluidManagerRefs;//Outer array is each fluid manager, inner array is size 2 {id, qty}
 
 	//The passed PacketBuffer must have the blockpos as the first encoded datum
 	@SuppressWarnings("unchecked")
@@ -52,15 +55,29 @@ public abstract class MachineContainer<U extends InventoryTE> extends Container{
 		}
 		this.te = worldTe;
 
+		//Track rotary info for UI
 		if(te.useRotary()){
-			trackInt(te.rotaryReference);
+			rotRef = new IntDeferredRef(te::getUISpeed);
+			trackInt(rotRef);
+		}else{
+			rotRef = null;
 		}
+		//Track heat info for UI
 		if(te.useHeat()){
-			trackInt(te.heatReference);
+			heatRef = new IntDeferredRef(te::getUITemp);
+			trackInt(heatRef);
+		}else{
+			heatRef = null;
 		}
-		for(FluidSlotManager manager : te.fluidManagers){
-			trackInt(manager.getFluidIdHolder());
-			trackInt(manager.getFluidQtyHolder());
+		//Track fluid info for UI
+		fluidManagerRefs = new IntDeferredRef[te.fluidManagers.length][2];
+		for(int i = 0; i < te.fluidManagers.length; i++){
+			//Generate 2 int references for each fluid manager, track those references, and store them in an array
+			FluidSlotManager manager = te.fluidManagers[i];
+			fluidManagerRefs[i][0] = new IntDeferredRef(manager::getFluidId);
+			fluidManagerRefs[i][1] = new IntDeferredRef(manager::getFluidQty);
+			trackInt(fluidManagerRefs[i][0]);
+			trackInt(fluidManagerRefs[i][1]);
 		}
 
 		addSlots();
@@ -105,19 +122,6 @@ public abstract class MachineContainer<U extends InventoryTE> extends Container{
 	 */
 	protected int[] getInvStart(){
 		return new int[] {8, 84};
-	}
-
-	@Override
-	protected IntReferenceHolder trackInt(IntReferenceHolder intIn){
-		intIn = super.trackInt(intIn);
-
-		//TODO
-		int val = intIn.get();
-		intIn.set(val == 0 ? 1 : 0);
-		intIn.isDirty();
-		intIn.set(val);
-
-		return intIn;
 	}
 
 	@Override

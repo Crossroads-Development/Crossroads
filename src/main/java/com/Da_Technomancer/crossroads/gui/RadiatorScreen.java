@@ -20,8 +20,8 @@ public class RadiatorScreen extends MachineGUI<RadiatorContainer, RadiatorTileEn
 	@Override
 	public void init(){
 		super.init();
-		te.fluidManagers[0].initScreen((width - xSize) / 2, (height - ySize) / 2, 10, 70);
-		te.fluidManagers[1].initScreen((width - xSize) / 2, (height - ySize) / 2, 70, 70);
+		initFluidManager(0, 10, 70);
+		initFluidManager(1, 70, 70);
 	}
 
 

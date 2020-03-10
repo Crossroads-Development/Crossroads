@@ -20,7 +20,7 @@ public class BlastFurnaceScreen extends MachineGUI<BlastFurnaceContainer, BlastF
 	@Override
 	public void init(){
 		super.init();
-		te.fluidManagers[0].initScreen( (width - xSize) / 2, (height - ySize) / 2, 63, 70);
+		te.fluidManagers[0].initScreen( (width - xSize) / 2, (height - ySize) / 2, 63, 70, container.fluidManagerRefs[0][0], container.fluidManagerRefs[0][1]);
 	}
 
 	@Override

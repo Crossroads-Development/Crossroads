@@ -18,14 +18,14 @@
 	"block.crossroads.master_axis": "Master Axis",
 	"block.crossroads.millstone": "Millstone",
 	"block.crossroads.heat_cable_wool": "Wool Insulated Heat Cable",
-	"block.crossroads.heat_cable_dirt": "Dirt \"Insulated\" Heat Cable",
+	"block.crossroads.heat_cable_dirt": "Dirt 'Insulated' Heat Cable",
 	"block.crossroads.heat_cable_slime": "Slime Insulated Heat Cable",
 	"block.crossroads.heat_cable_ice": "Ice Insulated Heat Cable",
 	"block.crossroads.heat_cable_obsidian": "Obsidian Insulated Heat Cable",
 	"block.crossroads.heat_cable_ceramic": "Ceramic Insulated Heat Cable",
 	"block.crossroads.heat_cable_densus": "Densus Insulated Heat Cable",
 	"block.crossroads.redstone_heat_cable_wool": "Redstone Wool Insulated Heat Cable",
-	"block.crossroads.redstone_heat_cable_dirt": "Redstone Dirt \"Insulated\" Heat Cable",
+	"block.crossroads.redstone_heat_cable_dirt": "Redstone Dirt 'Insulated' Heat Cable",
 	"block.crossroads.redstone_heat_cable_slime": "Redstone Slime Insulated Heat Cable",
 	"block.crossroads.redstone_heat_cable_ice": "Redstone Ice Insulated Heat Cable",
 	"block.crossroads.redstone_heat_cable_obsidian": "Redstone Obsidian Insulated Heat Cable",
@@ -538,6 +538,10 @@
 	"tt.crossroads.chrono_harness.desc": "Produces FE for free, but creates Temporal Entropy as a byproduct",
 	"tt.crossroads.chrono_harness.power": "Maximum power of %1$dFE/t; Produces %2$dFE/TEn",
 	"tt.crossroads.chrono_harness.reds": "Disabled by a redstone signal",
+
+
+	"container.crossroads.boilerplate.temp": "%1$d°C",
+	"container.crossroads.boilerplate.speed": "%1$f rad/s",
 
 
 	"container.smelter": "Smelter",
