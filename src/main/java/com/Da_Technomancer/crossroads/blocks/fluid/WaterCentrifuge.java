@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.fluid.WaterCentrifugeTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
@@ -53,10 +52,6 @@ public class WaterCentrifuge extends ContainerBlock{
 		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
 			if(!worldIn.isRemote){
 				worldIn.setBlockState(pos, state.cycle(CRProperties.HORIZ_AXIS));
-				te = worldIn.getTileEntity(pos);
-				if(te instanceof ModuleTE){
-					((ModuleTE) te).updateContainingBlockInfo();
-				}
 			}
 		}else if(!worldIn.isRemote && (te = worldIn.getTileEntity(pos)) instanceof INamedContainerProvider){
 			NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);

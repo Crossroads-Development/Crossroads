@@ -84,15 +84,15 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 		int totalFluid = 0;
 		FluidStack fluidRef = content.copy();//Defines the fluid type to be balanced for 2-way connections
 
-		EnumTransferMode[] modes = new EnumTransferMode[6];
+		EnumTransferMode[] stateModes = new EnumTransferMode[6];
 		BlockState state = getBlockState();
 
 		for(int i = 0; i < 6; i++){
-			modes[i] = state.get(CRProperties.CONDUIT_SIDES_FULL[i]);
+			stateModes[i] = state.get(CRProperties.CONDUIT_SIDES_FULL[i]);
 			boolean hasMatch;
 
 			//Skip disabled directions
-			if(!modes[i].isConnection()){
+			if(!stateModes[i].isConnection()){
 				continue;
 			}
 
@@ -111,7 +111,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 
 			//Perform 1-way transfers
 			if(hasMatch){
-				switch(modes[i]){
+				switch(stateModes[i]){
 					case BOTH:
 						//Several 2-way connections will be with handlers that only input OR output; they need to be handled as a 1-way connection of fluid flow will act strangely
 						if(handlers[i] instanceof IFluidTank){
@@ -136,6 +136,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 							}
 						}else{
 							//Actually should be a 1-way connection.
+							stateModes[i] = EnumTransferMode.INPUT;
 							setData(i, hasMatch, EnumTransferMode.INPUT);
 						}
 						break;
@@ -145,7 +146,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 						}else{
 							FluidStack toDrain = content.copy();
 							toDrain.setAmount(CAPACITY - content.getAmount());
-							mainHandlerIns.drain(handlers[i].drain(toDrain, IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE);
+							mainHandlerIns.fill(handlers[i].drain(toDrain, IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE);
 						}
 						break;
 					case OUTPUT:
@@ -157,7 +158,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 			}
 
 			//Update hasMatch
-			setData(i, hasMatch, modes[i]);
+			setData(i, hasMatch, stateModes[i]);
 		}
 
 		//A separate loop is needed for the second stage, as all handlers need to have been queried to do correct balancing

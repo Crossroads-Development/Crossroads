@@ -423,6 +423,7 @@
 	"tt.crossroads.boilerplate.link": "Linked Position: X: %1$d, Y: %2$d, Z: %3$d",
 	"tt.crossroads.boilerplate.link.none": "No linked machines",
 	"tt.crossroads.boilerplate.link.excess": "And %1$d more...",
+	"tt.crossroads.boilerplate.empty": "Empty",
 	"tt.crossroads.tesla_coil_top.range": "Range: %1$d Blocks",
 	"tt.crossroads.tesla_coil_top.fe": "Spark Amount: %1$dFE",
 	"tt.crossroads.tesla_coil_top.eff": "Loss: %1$d%%",

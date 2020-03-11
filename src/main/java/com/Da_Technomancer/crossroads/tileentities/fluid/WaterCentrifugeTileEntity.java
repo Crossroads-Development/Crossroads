@@ -140,10 +140,10 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction facing){
-		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing.getAxis() != world.getBlockState(pos).get(CRProperties.HORIZ_AXIS)){
+		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != null && facing.getAxis() != getBlockState().get(CRProperties.HORIZ_AXIS)){
 			return (LazyOptional<T>) waterOpt;
 		}
-		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing.getAxis() == world.getBlockState(pos).get(CRProperties.HORIZ_AXIS)){
+		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != null && facing.getAxis() == getBlockState().get(CRProperties.HORIZ_AXIS)){
 			return (LazyOptional<T>) dWaterOpt;
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){

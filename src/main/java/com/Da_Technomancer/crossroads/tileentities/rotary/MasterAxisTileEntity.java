@@ -176,7 +176,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 			}
 
 
-			final float ADJUST_MARGIN = CRConfig.speedPrecision.get().floatValue();
+			final float ADJUST_MARGIN = CRConfig.speedPrecision.get().floatValue() / 20F;
 			final float RESET_MARGIN = ADJUST_MARGIN * 2F;
 
 			float speedPred = runWSeries(ticksExisted);
@@ -192,8 +192,8 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 					prevAngles[i] += delta;
 				}
 
-				//Whether we believe this to be a jump discontinuity, or just the regression diverging
-				boolean jump = diff >= RESET_MARGIN || signChanged;
+//				//Whether we believe this to be a jump discontinuity, or just the regression diverging
+//				boolean jump = diff >= RESET_MARGIN || signChanged;
 
 				//Currently this code has more boilerplate than we use. For more advanced regressions, this boilerplate is used
 				//Generate a new regression

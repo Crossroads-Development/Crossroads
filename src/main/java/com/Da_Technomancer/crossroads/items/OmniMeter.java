@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
@@ -67,7 +68,7 @@ public class OmniMeter extends Item{
 					//Hi future me,
 					//If you're (me're?) looking at this, someone wrote a translation lang file for CR and subsequently discovered that the fluid printout isn't localized properly
 					//It's a straightforward fix- send the fluid registry name in the packet and localize on the client- it's just kind of weird
-					chat.add(new TranslationTextComponent("tt.crossroads.meter.fluid_tank.info", pipe.getTankCapacity(tank), pipe.getFluidInTank(tank).getDisplayName(), pipe.getFluidInTank(tank).getAmount()));
+					chat.add(new TranslationTextComponent("tt.crossroads.meter.fluid_tank.info", pipe.getTankCapacity(tank), MiscUtil.getLocalizedFluidName(pipe.getFluidInTank(tank).getTranslationKey()), pipe.getFluidInTank(tank).getAmount()));
 				}
 			}
 

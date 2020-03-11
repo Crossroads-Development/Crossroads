@@ -70,4 +70,8 @@ public final class MiscUtil{
 	public static String localize(String input, Object... formatArgs){
 		return new TranslationTextComponent(input, formatArgs).getFormattedText();
 	}
+
+	public static String getLocalizedFluidName(String localizationKey){
+		return localizationKey == null || localizationKey.isEmpty() || localizationKey.equals("block.minecraft.air") ? localize("tt.crossroads.boilerplate.empty") : localize(localizationKey);
+	}
 }

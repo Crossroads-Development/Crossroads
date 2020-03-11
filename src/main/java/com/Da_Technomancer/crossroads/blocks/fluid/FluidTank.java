@@ -81,7 +81,7 @@ public class FluidTank extends ContainerBlock implements IReadable{
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(!worldIn.isRemote){
 			TileEntity te;
-			if(FluidUtil.getFluidHandler(playerIn.getHeldItem(Hand.MAIN_HAND)) != null){
+			if(FluidUtil.getFluidHandler(playerIn.getHeldItem(Hand.MAIN_HAND)).isPresent()){
 				//Tanks be clicked on with buckets/equivalent
 				return FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, null);
 			}else if((te = worldIn.getTileEntity(pos)) instanceof INamedContainerProvider){
