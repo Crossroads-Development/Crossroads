@@ -3,6 +3,9 @@
 	"input_a": [
 		{
 			"tag": "forge:cobblestone"
+		},
+		{
+			"tag": "forge:stone"
 		}
 	],
 	"input_b": [

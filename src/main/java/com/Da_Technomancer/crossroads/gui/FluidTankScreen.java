@@ -20,7 +20,7 @@ public class FluidTankScreen extends MachineGUI<FluidTankContainer, FluidTankTil
 	@Override
 	public void init(){
 		super.init();
-		te.fluidManagers[0].initScreen((width - xSize) / 2, (height - ySize) / 2, 80, 71, container.fluidManagerRefs[0][0], container.fluidManagerRefs[0][1]);
+		initFluidManager(0, 80, 71);
 	}
 
 

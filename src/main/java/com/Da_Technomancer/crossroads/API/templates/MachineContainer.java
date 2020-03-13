@@ -52,19 +52,21 @@ public abstract class MachineContainer<U extends InventoryTE> extends Container{
 			worldTe = generateEmptyTE();
 			worldTe.setWorld(playerInv.player.world);
 			worldTe.setPos(pos);
+			Crossroads.logger.error("Null world tile entity! Generating dummy TE. Report to mod author; type=%1$s", type.toString());
 		}
 		this.te = worldTe;
 
+		boolean remote = te.getWorld().isRemote;
 		//Track rotary info for UI
 		if(te.useRotary()){
-			rotRef = new IntDeferredRef(te::getUISpeed);
+			rotRef = new IntDeferredRef(te::getUISpeed, remote);
 			trackInt(rotRef);
 		}else{
 			rotRef = null;
 		}
 		//Track heat info for UI
 		if(te.useHeat()){
-			heatRef = new IntDeferredRef(te::getUITemp);
+			heatRef = new IntDeferredRef(te::getUITemp, remote);
 			trackInt(heatRef);
 		}else{
 			heatRef = null;
@@ -74,8 +76,8 @@ public abstract class MachineContainer<U extends InventoryTE> extends Container{
 		for(int i = 0; i < te.fluidManagers.length; i++){
 			//Generate 2 int references for each fluid manager, track those references, and store them in an array
 			FluidSlotManager manager = te.fluidManagers[i];
-			fluidManagerRefs[i][0] = new IntDeferredRef(manager::getFluidId);
-			fluidManagerRefs[i][1] = new IntDeferredRef(manager::getFluidQty);
+			fluidManagerRefs[i][0] = new IntDeferredRef(manager::getFluidId, remote);
+			fluidManagerRefs[i][1] = new IntDeferredRef(manager::getFluidQty, remote);
 			trackInt(fluidManagerRefs[i][0]);
 			trackInt(fluidManagerRefs[i][1]);
 		}

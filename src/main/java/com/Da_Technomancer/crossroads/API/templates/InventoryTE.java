@@ -71,13 +71,14 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 				nbt.put("inv_" + i, stackTag);
 			}
 		}
+		nbt.putBoolean("server", true);
 		return nbt;
 	}
 
 	@Override
 	public void markDirty(){
 		super.markDirty();
-		if(!world.isRemote){
+		if(world != null && !world.isRemote){
 			//We update our IntReferenceHolders that notify client side containers
 			//We only update them directly on the server side. Updating on the client is unneeded, and may cause things to get out of sync
 			for(int i = 0; i < fluidManagers.length; i++){
@@ -92,6 +93,11 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 		for(int i = 0; i < inventory.length; i++){
 			if(nbt.contains("inv_" + i)){
 				inventory[i] = ItemStack.read(nbt.getCompound("inv_" + i));
+			}
+		}
+		if(nbt.getBoolean("server")){
+			for(int i = 0; i < fluidManagers.length; i++){
+				fluidManagers[i].updateState(fluids[i]);
 			}
 		}
 	}

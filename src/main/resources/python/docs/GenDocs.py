@@ -94,6 +94,7 @@ def generatePages(text: list, icon: str, title: str, indents: int) -> str:
 	charLimit = 460  # Maximum characters per text page
 	charLimitTitle = 320  # Maximum characters per title page
 	charPerNewline = 45  # Number of characters to consider a newline
+	boboMult = 1.1  # Bolded 'bobo' text is thicker; multiplier for charcount on bold text
 	space = ' '
 
 	pages = []
@@ -145,7 +146,7 @@ def generatePages(text: list, icon: str, title: str, indents: int) -> str:
 					# found the end of a word- add it to the page
 					currPage += line[0:wordEndInd + 1]
 					line = line[wordEndInd + 1:]
-					currChars += wordEndInd + 1
+					currChars += (wordEndInd + 1) * (boboMult if '<bobo>' in activeFormat else 1)
 
 					if currChars > (charLimitTitle if len(pages) == 0 else charLimit):
 						# New page
@@ -160,7 +161,7 @@ def generatePages(text: list, icon: str, title: str, indents: int) -> str:
 					# found the end of a word- add it to the page
 					currPage += line[0:wordEndInd]
 					line = line[wordEndInd:]
-					currChars += wordEndInd
+					currChars += wordEndInd * (boboMult if '<bobo>' in activeFormat else 1)
 
 					if currChars > (charLimitTitle if len(pages) == 0 else charLimit):
 						# New page
@@ -194,7 +195,7 @@ def generatePages(text: list, icon: str, title: str, indents: int) -> str:
 			else:
 				# Reached the end without finding the "word end"
 				currPage += line
-				currChars += len(line)
+				currChars += len(line) * (boboMult if '<bobo>' in activeFormat else 1)
 				line = ''
 
 				if currChars > (charLimitTitle if len(pages) == 0 else charLimit):

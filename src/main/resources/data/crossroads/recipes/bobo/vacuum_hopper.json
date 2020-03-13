@@ -24,6 +24,15 @@
 	"input_a": [
 		{
 			"item": "crossroads:fluid_tube"
+		},
+		{
+			"item": "crossroads:redstone_fluid_tube"
+		},
+		{
+			"item": "crossroads:alch_tube"
+		},
+		{
+			"item": "crossroads:crystal_alch_tube"
 		}
 	],
 	"input_b": [

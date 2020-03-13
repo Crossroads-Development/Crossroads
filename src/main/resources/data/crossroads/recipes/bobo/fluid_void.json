@@ -7,11 +7,17 @@
 	"input_a": [
 		{
 			"tag": "crossroads:gems/void"
+		},
+		{
+			"tag": "forge:obsidian"
 		}
 	],
 	"input_b": [
 		{
 			"item": "minecraft:sponge"
+		},
+		{
+			"item": "minecraft:wet_sponge"
 		}
 	],
 	"input_c": [

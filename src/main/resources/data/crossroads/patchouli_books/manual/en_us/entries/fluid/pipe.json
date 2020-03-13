@@ -19,6 +19,10 @@
 		{
 			"type": "text",
 			"text": "There are also <item>redstone fluid tubes/$, which will only connect to/transfer with their neighbors at all while they have a redstone signal."
+		},
+		{
+			"type": "text",
+			"text": "<bobo>hAPPY $(l:intro/welcome#bobo)BOBO/$<bobo> dAY!$(br2)u cAN usE a TUBE to MAKE a VACUUM HOPPPER! alSo da HOPPER &nd s0me cLOTH!$(br2)bOBO AWAY!/$"
 		}
 	]
 }

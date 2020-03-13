@@ -1,0 +1,5 @@
+Wireless Redstone
+essentials:redstone_transmitter
+<item>Redstone Transmitters/$ and <item>Redstone Receivers/$ can wirelessly transmit redstone signals (including <thing><link:essentials/circuits>Circuitry/$ signals w/ decimal).
+A <item>transmitter/$ can be linked to one or more <item>receivers/$ with a <item><link:essentials/linking_tool>linking tool/$, which will output the redstone signal going into the <item>transmitter/$.
+<item>Wireless transmitters/receivers/$ can be right-clicked with dyes to color code them.

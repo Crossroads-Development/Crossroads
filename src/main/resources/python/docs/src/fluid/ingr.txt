@@ -1,0 +1,11 @@
+Misc Ingredients
+crossroads:slag
+Crossroads adds a few crafting ingredients and byproducts. The important ones are listed here.
+
+<item>Salt/$: A crafting ingredient. Also <link:fluid/centrifuge>produced/$ or <link:heat/salt_reactor>consumed/$ by a few machines.
+
+<item>Slag/$: A byproduct of <link:rotary/blast>ore tripling/$. It can be used as bonemeal, and has some crafting uses.
+
+<item>Pure Quartz/$: Used as a crafting ingredient in everything <thing><link:intro/beam>beams/$.
+
+<bobo>p0ISON POTATO!: mUCH iMPORTANT FOR <link:intro/welcome#bobo>b0B0 tings!/$

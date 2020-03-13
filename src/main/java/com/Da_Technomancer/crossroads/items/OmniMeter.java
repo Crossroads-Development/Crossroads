@@ -86,16 +86,22 @@ public class OmniMeter extends Item{
 
 		if(te instanceof IBeamRenderTE){
 			BeamUnit[] mag = ((IBeamRenderTE) te).getLastSent();
+			boolean output = false;
 			if(mag != null){
 				for(int i = 0; i < mag.length; i++){
 					BeamUnit check = mag[i];
 					if(!check.isEmpty()){
+						output = true;
 						EnumBeamAlignments.getAlignment(check).discover(player, true);
 						String dir = Direction.byIndex(i).toString();
 						dir = Character.toUpperCase(dir.charAt(0)) + dir.substring(1);
 						chat.add(new TranslationTextComponent("tt.crossroads.meter.beam", dir, check.toString()));
 					}
 				}
+			}
+			if(!output){
+				//Generic message so it doesn't output nothing to the user
+				chat.add(new TranslationTextComponent("tt.crossroads.meter.beam.none"));
 			}
 		}
 

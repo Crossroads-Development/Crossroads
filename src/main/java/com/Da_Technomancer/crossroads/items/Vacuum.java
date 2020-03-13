@@ -21,7 +21,7 @@ public class Vacuum extends Item{
 	private static final double ANGLE = Math.cos(Math.PI / 4F);//Pre-calc cosine for speed
 
 	protected Vacuum(){
-		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1).defaultMaxDamage(1200));
+		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1).defaultMaxDamage(2400));
 		String name = "vacuum";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
@@ -36,10 +36,14 @@ public class Vacuum extends Item{
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand){
 		ArrayList<Entity> entities = (ArrayList<Entity>) worldIn.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(playerIn.posX, playerIn.posY, playerIn.posZ, playerIn.posX, playerIn.posY, playerIn.posZ).grow(RANGE), EntityPredicates.IS_ALIVE);
 
+		//Affects a conical region
 		//Removes entities from the list if they aren't in the conical region in the direction the player is looking
 		Vec3d look = playerIn.getLookVec().scale(RANGE);
 		Vec3d playPos = playerIn.getPositionVector();
-		entities.removeIf((Entity e) -> {Vec3d ePos = e.getPositionVector().subtract(playPos); return ePos.dotProduct(look) / (ePos.length() * look.length()) <= ANGLE || ePos.length() >= RANGE;});
+		entities.removeIf((Entity e) -> {
+			Vec3d ePos = e.getPositionVector().subtract(playPos);
+			return ePos.length() >= RANGE || ePos.dotProduct(look) / (ePos.length() * look.length()) <= ANGLE;
+		});
 
 		for(Entity ent : entities){
 			Vec3d motVec = playerIn.getPositionVector().subtract(ent.getPositionVector()).scale(0.25D);

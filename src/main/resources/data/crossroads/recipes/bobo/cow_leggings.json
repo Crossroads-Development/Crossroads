@@ -17,6 +17,9 @@
 	"input_c": [
 		{
 			"item": "minecraft:beef"
+		},
+		{
+			"item": "minecraft:cooked_beef"
 		}
 	]
 }

@@ -20,8 +20,8 @@ public class CopshowiumMakerScreen extends MachineGUI<CopshowiumMakerContainer, 
 	@Override
 	public void init(){
 		super.init();
-		te.fluidManagers[0].initScreen((width - xSize) / 2, (height - ySize) / 2, 10, 70, container.fluidManagerRefs[0][0], container.fluidManagerRefs[0][1]);
-		te.fluidManagers[1].initScreen((width - xSize) / 2, (height - ySize) / 2, 70, 70, container.fluidManagerRefs[1][0], container.fluidManagerRefs[1][1]);
+		initFluidManager(0, 10, 70);
+		initFluidManager(1, 70, 70);
 	}
 
 
