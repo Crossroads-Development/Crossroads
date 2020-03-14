@@ -7,13 +7,13 @@ public class RedstoneFluidTubeTileEntity extends FluidTubeTileEntity{
 
 	@Override
 	public void tick(){
-		if(!world.isRemote && world.getBlockState(pos).get(ESProperties.REDSTONE_BOOL)){
+		if(getBlockState().get(ESProperties.REDSTONE_BOOL)){
 			super.tick();
 		}
 	}
 
 	@Override
 	protected boolean canConnect(Direction side){
-		return super.canConnect(side) && world.getBlockState(pos).get(ESProperties.REDSTONE_BOOL);
+		return super.canConnect(side) && getBlockState().get(ESProperties.REDSTONE_BOOL);
 	}
 }

@@ -65,7 +65,7 @@ public class BoboRod extends Item{
 				Optional<BoboRec> rec = context.getWorld().getRecipeManager().getRecipe(CRRecipes.BOBO_TYPE, inv, context.getWorld());
 				if(rec.isPresent()){
 					items.forEach(Entity::remove);
-					InventoryHelper.spawnItemStack(context.getWorld(), hitVec.x, hitVec.y, hitVec.z, rec.get().getRecipeOutput());
+					InventoryHelper.spawnItemStack(context.getWorld(), hitVec.x, hitVec.y, hitVec.z, rec.get().getCraftingResult(inv));
 
 					//Spawn some particles and sound
 					context.getWorld().addParticle(ParticleTypes.POOF, hitVec.x, hitVec.y, hitVec.z, Math.random() * 0.02, Math.random() * 0.02, Math.random() * 0.02);

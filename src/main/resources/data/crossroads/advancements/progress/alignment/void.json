@@ -10,7 +10,7 @@
 		"description": {
 			"translate": "crossroads.advancement.align.void.desc"
 		},
-		"frame": "goal",
+		"frame": "task",
 		"announce_to_chat": false
 	},
 	"criteria": {

@@ -61,14 +61,9 @@ public class RedstoneFluidTube extends FluidTube{
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
-		if(worldIn.isBlockPowered(pos)){
-			if(!state.get(ESProperties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, true));
-			}
-		}else{
-			if(state.get(ESProperties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, false));
-			}
+		boolean isPowered = worldIn.isBlockPowered(pos);
+		if(isPowered != state.get(ESProperties.REDSTONE_BOOL)){
+			worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, isPowered));
 		}
 	}
 }

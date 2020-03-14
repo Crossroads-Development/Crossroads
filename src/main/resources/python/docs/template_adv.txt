@@ -1,0 +1,12 @@
+{
+	"category": "CAT",
+	"name": "NAME",
+	"icon": "ICON",
+	"sortnum": SORT,
+	"priority": PRIO,
+	"advancement": "ADV",
+	"read_by_default": "true",
+	"pages": [
+PAGES
+	]
+}

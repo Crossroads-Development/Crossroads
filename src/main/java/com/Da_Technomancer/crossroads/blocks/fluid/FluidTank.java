@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.fluid;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidTankTileEntity;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
+import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
@@ -53,7 +54,7 @@ public class FluidTank extends ContainerBlock implements IReadable{
 		CompoundNBT nbt = stack.getTag();
 		if(nbt != null && nbt.contains("FluidName")){
 			FluidStack fStack = FluidStack.loadFluidStackFromNBT(stack.getTag());
-			tooltip.add(new TranslationTextComponent("tt.fluid_tank", fStack.getAmount(), fStack.getDisplayName().getFormattedText()));
+			tooltip.add(new TranslationTextComponent("tt.crossroads.fluid_tank", fStack.getAmount(), fStack.getDisplayName().getFormattedText()));
 		}
 	}
 
@@ -98,8 +99,7 @@ public class FluidTank extends ContainerBlock implements IReadable{
 
 	@Override
 	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos){
-		TileEntity te = worldIn.getTileEntity(pos);
-		return te instanceof FluidTankTileEntity ? ((FluidTankTileEntity) te).getRedstone() : 0;
+		return RedstoneUtil.clampToVanilla(read(worldIn, pos, blockState));
 	}
 
 	@Override

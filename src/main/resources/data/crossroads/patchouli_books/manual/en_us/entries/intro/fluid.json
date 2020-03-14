@@ -2,8 +2,8 @@
 	"category": "intro",
 	"name": "Intro to Fluids",
 	"icon": "crossroads:fluid_tube",
-	"sortnum": 0,
-	"priority": false,
+	"sortnum": 3,
+	"priority": true,
 	"read_by_default": "true",
 	"pages": [
 		{

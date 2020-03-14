@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<item>Salt/$: A crafting ingredient. Also $(l:fluid/centrifuge)produced/$ or $(l:heat/salt_reactor)consumed/$ by a few machines."
+			"text": "<item>Salt/$: A crafting ingredient. Also $(l:fluid/centrifuge)produced/$ or $(l:heat/salt_reactor)consumed/$ by a few machines.$(br2)<item>Salt/$ can be made <item>Salt Blocks/$, which will kill plants around them, allowing you to literally salt the earth. They also kill any slimes or creepers that touch them."
 		},
 		{
 			"type": "text",

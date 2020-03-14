@@ -229,10 +229,10 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction side){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && canConnect(side)){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			if(side == null){
 				return (LazyOptional<T>) internalOpts[0];//Main handler
-			}else{
+			}else if(canConnect(side)){
 				switch(modes[side.getIndex()]){
 					case INPUT:
 						return (LazyOptional<T>) internalOpts[1];

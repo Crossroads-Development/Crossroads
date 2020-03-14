@@ -33,7 +33,7 @@ public class SendGoggleConfigureToServer extends ServerPacket{
 	}
 
 	public SendGoggleConfigureToServer(EnumGoggleLenses lens, boolean setting){
-		this.lensName = lens.name();
+		this.lensName = lens.toString();
 		this.newSetting = setting;
 	}
 
@@ -50,7 +50,7 @@ public class SendGoggleConfigureToServer extends ServerPacket{
 			if(stack.getItem() == CRItems.moduleGoggles && stack.hasTag() && stack.getTag().contains(lensName)){
 				stack.getTag().putBoolean(lensName, newSetting);
 
-				if(EnumGoggleLenses.DIAMOND.name().equals(lensName)){
+				if(EnumGoggleLenses.DIAMOND.toString().equals(lensName)){
 //					StoreNBTToClient.syncNBTToClient(player);//Sync player path data to client
 					NetworkHooks.openGui(player, GoggleProvider.INSTANCE, buf -> buf.writeBoolean(false));
 				}

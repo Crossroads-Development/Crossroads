@@ -6,6 +6,7 @@
 	"model": "crossroads:book_tech",
 	"creative_tab": "crossroads",
 	"show_progress": "false",
+	"advancement_namespaces": ["crossroads"],
 	"macros": {
 		"\n": "$(br)",
 		"<em>": "$(o)",

@@ -50,7 +50,7 @@ public class ModuleGoggles extends ArmorItem{
 			ArrayList<ITextComponent> chat = new ArrayList<>();
 			BlockRayTraceResult ray = MiscUtil.rayTrace(player, 8);
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
-				if(nbt.getBoolean(lens.name())){
+				if(nbt.getBoolean(lens.toString())){
 					lens.doEffect(world, player, chat, ray);
 				}
 			}

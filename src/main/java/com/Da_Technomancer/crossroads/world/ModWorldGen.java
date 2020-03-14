@@ -30,10 +30,10 @@ public class ModWorldGen{
 			}
 			//Ruby ore gen, spawn in nether category biomes, in nether quartz ore
 			//The reason the spawn attempts is so high for rubies is that it can only generate in quartz ore.
-			//The average number of quartz ore per chunk divided by the number of blockspaces in the given height range (heights nether quartz spawns at) is about 1/350, so 1000 tries will give an average of about 1 ruby per chunk.
+			//The average number of quartz ore per chunk divided by the number of blockspaces in the given height range (heights nether quartz spawns at) is about 1/350, so 5000 tries will give an average of about 5 rubies per chunk.
 			//Happy Mining!
 			if(CRConfig.genRubyOre.get() && biome.getCategory() == Biome.Category.NETHER){
-				biome.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, Biome.createDecoratedFeature(GEM_FEATURE, new SingleGen.SingleOreConfig(SingleGen.SingleOreConfig.CRFillerType.QUARTZ, OreSetup.oreRuby.getDefaultState()), Placement.COUNT_RANGE, new CountRangeConfig(1000, 8, 8, 118)));
+				biome.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, Biome.createDecoratedFeature(GEM_FEATURE, new SingleGen.SingleOreConfig(SingleGen.SingleOreConfig.CRFillerType.QUARTZ, OreSetup.oreRuby.getDefaultState()), Placement.COUNT_RANGE, new CountRangeConfig(5000, 8, 8, 118)));
 			}
 			//Void crystal gen, spawn in end category biomes, in endstone
 			if(CRConfig.genVoidOre.get() && biome.getCategory() == Biome.Category.THEEND){

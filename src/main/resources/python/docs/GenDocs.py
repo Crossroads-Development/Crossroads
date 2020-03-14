@@ -6,6 +6,7 @@
 # Sets read_by_default to true
 # Expects the FIRST LINE of the txt to be the title. If the title ends with a digit, that digit becomes the sortnum
 # Expects the SECOND LINE of the txt to be the item path used for icon and spotlight page
+# If the SECOND LINE contains a | (pipe symbol), it will treat everything after the | as an advancement to lock the entry behind
 # Makes the first page a spotlight, with the entry title
 # Will make all other pages text
 # Each line in the txt after the first two are considered the body
@@ -27,6 +28,7 @@ def run():
 	outputPath = "../../data/crossroads/patchouli_books/manual/en_us/entries/"
 	srcPath = "../docs/src/"
 	templatePath = "../docs/template.txt"
+	advTemplatePath = "../docs/template_adv.txt"
 
 	# # Delete all previous files in the outputPath
 	# for prevTable in os.listdir(outputPath):
@@ -36,6 +38,10 @@ def run():
 	# Read the template
 	with open(templatePath, 'r') as fTemp:
 		tempLines = fTemp.readlines()
+		fTemp.close()
+	# Read the adv template
+	with open(advTemplatePath, 'r') as fTemp:
+		tempAdvLines = fTemp.readlines()
 		fTemp.close()
 
 	for inDir, subDirList, fileList in os.walk(srcPath):
@@ -62,20 +68,33 @@ def run():
 
 				name = rawLinesIn[0][:-1]  # Cut the \n
 				# Sortnum can be appended to the end of the name
+				sort = '0'
+				priority = "false"
 				if name[-1].isnumeric():
 					sort = name[-1]
 					name = name[:-1]
 					priority = "true"
 				icon = rawLinesIn[1][:-1]  # Cut the \n
-				pages = generatePages(rawLinesIn, icon, name, 2)
-				sort = '0'
-				priority = "false"
 
+				# Optional advancement setting
+				advancement = ''
+				if '|' in icon:
+					index = icon.find('|')
+					advancement = icon[index + 1:]
+					icon = icon[:index]
+
+				pages = generatePages(rawLinesIn, icon, name, 2)
 
 				with open(outDir + file.replace(".txt", ".json"), 'w+') as fOut:
 					fOut.truncate(0)  # Remove previous version
-					for line in tempLines:
-						fOut.write(line.replace('CAT', category).replace('NAME', name).replace('ICON', icon).replace('PAGES', pages).replace('SORT', sort).replace("PRIO", priority))
+
+					if len(advancement) == 0:
+						for line in tempLines:
+							fOut.write(line.replace('CAT', category).replace('NAME', name).replace('ICON', icon).replace('PAGES', pages).replace('SORT', sort).replace("PRIO", priority))
+					else:
+						for line in tempAdvLines:
+							fOut.write(line.replace('CAT', category).replace('NAME', name).replace('ICON', icon).replace('PAGES', pages).replace('SORT', sort).replace("PRIO", priority).replace('ADV', advancement))
+
 					fOut.close()
 
 

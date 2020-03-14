@@ -17,7 +17,7 @@ public interface IGuiObject extends IGuiEventListener{
 	 * @param fontRenderer a FontRenderer object.
 	 * @return Whether anything was drawn.
 	 */
-	public boolean drawBack(float partialTicks, int mouseX, int mouseY, FontRenderer fontRenderer);
+	boolean drawBack(float partialTicks, int mouseX, int mouseY, FontRenderer fontRenderer);
 	
 	/**
 	 * Draws the foreground layer.
@@ -27,5 +27,5 @@ public interface IGuiObject extends IGuiEventListener{
 	 * @param fontRenderer a FontRenderer object.
 	 * @return Whether anything was drawn.
 	 */
-	public boolean drawFore(int mouseX, int mouseY, FontRenderer fontRenderer);
+	boolean drawFore(int mouseX, int mouseY, FontRenderer fontRenderer);
 }

@@ -48,7 +48,7 @@ public final class EventHandlerClient{
 
 		//Goggle entity glowing
 		if(game.world.getGameTime() % 5 == 0){
-			boolean glow = helmet.getItem() == CRItems.moduleGoggles && helmet.hasTag() && helmet.getTag().getBoolean(EnumGoggleLenses.VOID.name());
+			boolean glow = helmet.getItem() == CRItems.moduleGoggles && helmet.hasTag() && helmet.getTag().getBoolean(EnumGoggleLenses.VOID.toString());
 			for(Entity ent : game.world.getAllEntities()){
 				CompoundNBT entNBT = ent.getPersistentData();
 				if(entNBT == null){
@@ -241,8 +241,8 @@ public final class EventHandlerClient{
 			CompoundNBT nbt = helmet.getTag();
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				KeyBinding key = lens.getKey();
-				if(key != null && key.isPressed() && key.isKeyDown() && nbt.contains(lens.name())){
-					CRPackets.channel.sendToServer(new SendGoggleConfigureToServer(lens, !nbt.getBoolean(lens.name())));
+				if(key != null && key.isPressed() && key.isKeyDown() && nbt.contains(lens.toString())){
+					CRPackets.channel.sendToServer(new SendGoggleConfigureToServer(lens, !nbt.getBoolean(lens.toString())));
 					break;
 				}
 			}

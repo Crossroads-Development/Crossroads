@@ -2,8 +2,8 @@
 	"category": "intro",
 	"name": "Intro to Rotary",
 	"icon": "crossroads:gear_base",
-	"sortnum": 0,
-	"priority": false,
+	"sortnum": 2,
+	"priority": true,
 	"read_by_default": "true",
 	"pages": [
 		{

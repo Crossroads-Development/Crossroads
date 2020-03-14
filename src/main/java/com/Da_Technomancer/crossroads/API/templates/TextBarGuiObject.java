@@ -13,7 +13,7 @@ import java.awt.*;
 import java.util.function.Predicate;
 
 public class TextBarGuiObject implements IGuiObject{
-	
+
 	private static final ResourceLocation BAR = new ResourceLocation(Crossroads.MODID, "textures/gui/container/search_bar.png");
 	private final int x;
 	private final int y;
@@ -24,13 +24,13 @@ public class TextBarGuiObject implements IGuiObject{
 	private final Predicate<Character> acceptedChar;
 	private final int baseX;
 	private final int baseY;
-	
+
 	private boolean selected;
 	private String text = "";
 	private int index;
-	
+
 	/**
-	 * 
+	 *
 	 * @param windowX X-coordinate where the GUI starts.
 	 * @param windowY Y-coordinate where the GUI starts.
 	 * @param x X-coordinate where the text bar starts, relative to the GUI.
@@ -51,48 +51,59 @@ public class TextBarGuiObject implements IGuiObject{
 		this.emptyText = emptyText;
 		this.acceptedChar = acceptedChar;
 	}
-	
+
 	@Override
-	public boolean charTyped(char key, int keyCode){
-		if(selected){
-			//Enter & Esc
-			if(key == 13 || key == 27){
+	public boolean keyPressed(int key, int p_keyPressed_2_, int p_keyPressed_3_){
+		switch(key){
+			case 257:
+			case 335:
+				//Enter?
 				selected = false;
 				index = text.length();
 				return true;
-			//Backspace
-			}else if(key == 8){
+			case 259:
+				//Backspace
 				if(!text.isEmpty() && index != 0){
 					text = text.substring(0, index - 1) + (index == text.length() ? "" : text.substring(index));
 					index--;
 					return true;
 				}
-			//Delete
-			}else if(keyCode == 211){
+				break;
+			case 261:
+				//Delete
 				if(index < text.length()){
 					text = text.substring(0, index) + text.substring(index + 1);
 					return true;
 				}
-			//Left arrow
-			}else if(keyCode == 203){
+				break;
+			case 263:
+				//Left arrow
 				if(index > 0){
 					index--;
 					return true;
 				}
-			//Right arrow
-			}else if(keyCode == 205){
+				break;
+			case 262:
+				//Right arrow
 				if(index < text.length()){
 					index++;
 					return true;
 				}
-			}else{
-				if(acceptedChar.test(key)){
-					if(text.length() < maxChar){
-						text = text.substring(0, index) + key + text.substring(index);
-						index++;
-					}
-					return true;
+				break;
+
+		}
+		return false;
+	}
+
+	@Override
+	public boolean charTyped(char key, int keyCode){
+		if(selected){
+			if(acceptedChar.test(key)){//Normal typing
+				if(text.length() < maxChar){
+					text = text.substring(0, index) + key + text.substring(index);
+					index++;
 				}
+				return true;
 			}
 		}
 		return false;
@@ -124,7 +135,7 @@ public class TextBarGuiObject implements IGuiObject{
 		AbstractGui.blit(x + 2, y, 2, 0, endX - x - 4, 20, 300, 20);
 		AbstractGui.blit(endX - 2, y, 298, 0, 2, 20, 300, 20);
 		GlStateManager.color3f(1, 1, 1);
-		
+
 		return true;
 	}
 
@@ -138,16 +149,16 @@ public class TextBarGuiObject implements IGuiObject{
 		GlStateManager.color3f(1, 1, 1);
 		return true;
 	}
-	
+
 	public String getText(){
 		return text;
 	}
-	
+
 	public void setText(@Nonnull String text){
 		this.text = text;
 		index = text.length();
 	}
-	
+
 	public boolean isSelected(){
 		return selected;
 	}

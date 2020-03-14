@@ -260,7 +260,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 				for(int i = 0; i < fluids.length; i++){
 					if(!resource.isEmpty() && isFluidValid(i, resource) && (fluids[i].isEmpty() || fluids[i].isFluidEqual(resource))){
 						int change = Math.min(fluidProps[i].capacity - fluids[i].getAmount(), resource.getAmount());
-						if(action == FluidAction.EXECUTE){
+						if(action == FluidAction.EXECUTE && change > 0){
 							int prevAmount = fluids[i].getAmount();
 							fluids[i] = resource.copy();
 							fluids[i].setAmount(prevAmount + change);
@@ -272,7 +272,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 			}else{
 				if(!resource.isEmpty() && isFluidValid(tank, resource) && (fluids[tank].isEmpty() || fluids[tank].isFluidEqual(resource))){
 					int change = Math.min(fluidProps[tank].capacity - fluids[tank].getAmount(), resource.getAmount());
-					if(action == FluidAction.EXECUTE){
+					if(action == FluidAction.EXECUTE && change >= 0){
 						int prevAmount = fluids[tank].getAmount();
 						fluids[tank] = resource.copy();
 						fluids[tank].setAmount(prevAmount + change);
@@ -298,7 +298,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 					if(fluidProps[i].canDrain && resource.isFluidEqual(fluids[i])){
 						int change = Math.min(fluids[i].getAmount(), resource.getAmount());
 
-						if(action == FluidAction.EXECUTE){
+						if(action == FluidAction.EXECUTE && change >= 0){
 							fluids[i].shrink(change);
 							markDirty();
 						}
@@ -327,7 +327,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 		@Nonnull
 		@Override
 		public FluidStack drain(int maxDrain, FluidAction action){
-			if(maxDrain == 0){
+			if(maxDrain <= 0){
 				return FluidStack.EMPTY;
 			}
 
@@ -367,23 +367,31 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 
 		@Override
 		public int getTanks(){
-			return fluids.length;
+			return tank < 0 ? fluids.length : 1;
+		}
+
+		protected int calcTank(int rawTank){
+			if(tank < 0){
+				return rawTank;
+			}else{
+				return tank;
+			}
 		}
 
 		@Nonnull
 		@Override
 		public FluidStack getFluidInTank(int tank){
-			return fluids[tank];
+			return fluids[calcTank(tank)];
 		}
 
 		@Override
 		public int getTankCapacity(int tank){
-			return fluidProps[tank].capacity;
+			return fluidProps[calcTank(tank)].capacity;
 		}
 
 		@Override
 		public boolean isFluidValid(int tank, @Nonnull FluidStack stack){
-			return fluidProps[tank].canFill && fluidProps[tank].canAccept.test(stack.getFluid());
+			return fluidProps[calcTank(tank)].canFill && fluidProps[calcTank(tank)].canAccept.test(stack.getFluid());
 		}
 	}
 
@@ -391,16 +399,14 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	 * A version of the FluidHandler which also acts as an IFluidTank- allowing pipes to do bidirectional access and having a stricter contract
 	 * Does not allow accessing multiple internal tanks
 	 */
-	protected class FluidTankHandler implements IFluidHandler, IFluidTank{
-
-		protected final int tank;
+	protected class FluidTankHandler extends FluidHandler implements IFluidTank{
 
 		/**
 		 * @param tank The index of the FluidStack this is allowed to access. Does not allow setting a negative value or accessing more than one tank. Must be less than fluidTanks()
 		 */
 		public FluidTankHandler(int tank){
+			super(tank);
 			assert tank >= 0;
-			this.tank = tank;
 		}
 
 		@Nonnull
@@ -422,80 +428,6 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 		@Override
 		public boolean isFluidValid(FluidStack stack){
 			return fluidProps[tank].canFill && fluidProps[tank].canAccept.test(stack.getFluid());
-		}
-
-		@Override
-		public int getTanks(){
-			return 1;
-		}
-
-		@Nonnull
-		@Override
-		public FluidStack getFluidInTank(int tank){
-			return getFluid();
-		}
-
-		@Override
-		public int getTankCapacity(int tank){
-			return getCapacity();
-		}
-
-		@Override
-		public boolean isFluidValid(int tank, @Nonnull FluidStack stack){
-			return isFluidValid(stack);
-		}
-
-		@Override
-		public int fill(FluidStack resource, FluidAction action){
-			if(!resource.isEmpty() && isFluidValid(tank, resource) && (fluids[tank].isEmpty() || fluids[tank].isFluidEqual(resource))){
-				int change = Math.min(fluidProps[tank].capacity - fluids[tank].getAmount(), resource.getAmount());
-				if(action == FluidAction.EXECUTE){
-					int prevAmount = fluids[tank].getAmount();
-					fluids[tank] = resource.copy();
-					fluids[tank].setAmount(prevAmount + change);
-					markDirty();
-				}
-				return change;
-			}
-
-			return 0;
-		}
-
-		@Nonnull
-		@Override
-		public FluidStack drain(FluidStack resource, FluidAction action){
-			if(fluidProps[tank].canDrain && resource.isFluidEqual(fluids[tank])){
-				int change = Math.min(fluids[tank].getAmount(), resource.getAmount());
-
-				if(action == FluidAction.EXECUTE){
-					fluids[tank].shrink(change);
-					markDirty();
-				}
-				FluidStack out = resource.copy();
-				out.setAmount(change);
-				return out;
-			}
-
-			return FluidStack.EMPTY;
-		}
-
-		@Nonnull
-		@Override
-		public FluidStack drain(int maxDrain, FluidAction action){
-			if(fluidProps[tank].canDrain && !fluids[tank].isEmpty()){
-				int change = Math.min(fluids[tank].getAmount(), maxDrain);
-				FluidStack content = fluids[tank].copy();
-				content.setAmount(change);
-
-				if(action == FluidAction.EXECUTE){
-					fluids[tank].shrink(change);
-					markDirty();
-				}
-
-				return content;
-			}
-
-			return FluidStack.EMPTY;
 		}
 	}
 

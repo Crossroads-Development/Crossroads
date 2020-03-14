@@ -10,7 +10,6 @@ import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -44,7 +43,7 @@ public class FatFeederTileEntity extends InventoryTE{
 
 	public FatFeederTileEntity(){
 		super(type, 0);
-		fluidProps[0] = new TankProperty(10_000, true, true, (Fluid f) -> f == CRFluids.liquidFat.still);
+		fluidProps[0] = new TankProperty(10_000, true, true, f -> f == CRFluids.liquidFat.still);
 		initFluidManagers();
 	}
 

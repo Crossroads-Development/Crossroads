@@ -241,7 +241,8 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 	protected void doEmit(BeamUnit toEmit){
 		Direction dir = getFacing();
 		BeamUnit mag = BeamUnit.EMPTY;
-		if(!inv.isEmpty()){
+		//Can be disabled with a redstone signal
+		if(!inv.isEmpty() && !world.isBlockPowered(pos)){
 			Optional<BeamExtractRec> recOpt = world.getRecipeManager().getRecipe(CRRecipes.BEAM_EXTRACT_TYPE, this, world);
 			if(recOpt.isPresent()){
 				mag = recOpt.get().getOutput();

@@ -1,0 +1,5 @@
+Intro to Beams4
+crossroads:lens_array
+Wait! This is a mid-game feature. By this point, you should have <em>at least/$ <link:rotary/millstone>ore doubling/$ (if not <link:rotary:stamp>tripling/$), <link:fluid/centrifuge>automated salt production/$, and probably a <link:fluid/fat_collector>stable food source/$. If you don't, <thing>beams/$ are going to be too expensive to run.
+<thing>Beams/$ are a powerful way of creating various effects in the world. They can do things like summoning lightning, producing redstone, placing blocks, and more.
+TODO WIP docs

@@ -233,16 +233,16 @@ public final class EventHandlerCommon{
 			}
 			CompoundNBT nbt = e.getLeft().getTag();
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
-				if(lens.matchesRecipe(e.getRight()) && !nbt.contains(lens.name())){
+				if(lens.matchesRecipe(e.getRight()) && !nbt.contains(lens.toString())){
 					ItemStack out = e.getLeft().copy();
 					int cost = 1;
 					for(EnumGoggleLenses otherLens : EnumGoggleLenses.values()){
-						if(nbt.contains(otherLens.name())){
+						if(nbt.contains(otherLens.toString())){
 							cost *= 2;
 						}
 					}
 					e.setCost(cost);
-					out.getTag().putBoolean(lens.name(), true);
+					out.getTag().putBoolean(lens.toString(), false);
 					e.setOutput(out);
 					e.setMaterialCost(1);
 					break;

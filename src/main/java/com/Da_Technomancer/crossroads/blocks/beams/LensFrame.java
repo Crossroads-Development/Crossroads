@@ -136,11 +136,7 @@ public class LensFrame extends ContainerBlock implements IReadable{
 
 	@Override
 	public int getComparatorInputOverride(BlockState blockState, World world, BlockPos pos){
-		TileEntity te = world.getTileEntity(pos);
-		if(te instanceof LensFrameTileEntity){
-			return RedstoneUtil.clampToVanilla(((LensFrameTileEntity) te).getRedstone());
-		}
-		return 0;
+		return RedstoneUtil.clampToVanilla(read(world, pos, blockState));
 	}
 
 	@Override

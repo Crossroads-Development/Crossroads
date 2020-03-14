@@ -75,7 +75,7 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 		//We can not use the recipe manager to filter recipes due to the fluid input
 		List<FluidCoolingRec> recipes = world.getRecipeManager().getRecipes(CRRecipes.FLUID_COOLING_TYPE, this, world);
 		//Filter the recipes by fluid type, fluid qty, temperature, and item type of output, and take the first recipe that matches the laundry list of specifications
-		Optional<FluidCoolingRec> recOpt = recipes.parallelStream().filter(rec -> rec.getMaxTemp() > temp + storedHeat && BlockUtil.sameFluid(rec.getInput(), fluids[0]) && rec.getInput().getAmount() >= fluids[0].getAmount() && (inventory[0].isEmpty() || BlockUtil.sameItem(inventory[0], rec.getRecipeOutput()))).findFirst();
+		Optional<FluidCoolingRec> recOpt = recipes.parallelStream().filter(rec -> rec.getMaxTemp() > temp + storedHeat && BlockUtil.sameFluid(rec.getInput(), fluids[0]) && rec.getInput().getAmount() <= fluids[0].getAmount() && (inventory[0].isEmpty() || BlockUtil.sameItem(inventory[0], rec.getRecipeOutput()))).findFirst();
 		if(recOpt.isPresent()){
 			FluidCoolingRec rec = recOpt.get();
 			//Check the output will fit

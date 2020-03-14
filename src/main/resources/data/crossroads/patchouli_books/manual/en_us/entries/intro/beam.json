@@ -1,0 +1,16 @@
+{
+	"category": "intro",
+	"name": "Intro to Beams",
+	"icon": "crossroads:lens_array",
+	"sortnum": 4,
+	"priority": true,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Intro to Beams",
+			"item": "crossroads:lens_array",
+			"text": "Wait! This is a mid-game feature. By this point, you should have <em>at least/$ $(l:rotary/millstone)ore doubling/$ (if not $(l:rotary:stamp)tripling/$), $(l:fluid/centrifuge)automated salt production/$, and probably a $(l:fluid/fat_collector)stable food source/$. If you don't, <thing>beams/$ are going to be too expensive to run.$(br2)<thing>Beams/$ are"
+		}
+	]
+}
