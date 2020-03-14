@@ -28,4 +28,5 @@ public interface IGuiObject extends IGuiEventListener{
 	 * @return Whether anything was drawn.
 	 */
 	boolean drawFore(int mouseX, int mouseY, FontRenderer fontRenderer);
+
 }

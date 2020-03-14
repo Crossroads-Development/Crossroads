@@ -79,4 +79,25 @@ public abstract class MachineGUI<T extends MachineContainer<U>, U extends Invent
 			manager.renderFore(mouseX, mouseY, font, tooltip);
 		}
 	}
+
+	@Override
+	public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_){
+		for(IGuiEventListener gui : children){
+			if(gui.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_)){
+				return true;
+			}
+		}
+		return super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
+	}
+
+	@Override
+	public boolean charTyped(char key, int keyCode){
+		for(IGuiEventListener gui : children){
+			if(gui.charTyped(key, keyCode)){
+				return true;
+			}
+		}
+
+		return super.charTyped(key, keyCode);
+	}
 }

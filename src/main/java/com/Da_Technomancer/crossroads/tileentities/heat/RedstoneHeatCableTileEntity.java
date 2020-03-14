@@ -31,7 +31,7 @@ public class RedstoneHeatCableTileEntity extends HeatCableTileEntity{
 	}
 
 	private boolean isUnlocked(){
-		return world.getBlockState(pos).get(ESProperties.REDSTONE_BOOL);
+		return getBlockState().get(ESProperties.REDSTONE_BOOL);
 	}
 
 	@Override

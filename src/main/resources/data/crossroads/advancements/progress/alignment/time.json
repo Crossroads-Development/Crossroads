@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:progress/alignment/energy",
+	"parent": "crossroads:progress/alignment/charge",
 	"display": {
 		"icon": {
 			"item": "crossroads:pure_quartz"

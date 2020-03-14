@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:progress/root",
+	"parent": "crossroads:progress/path/alchemy",
 	"display": {
 		"icon": {
 			"item": "crossroads:gear_base",

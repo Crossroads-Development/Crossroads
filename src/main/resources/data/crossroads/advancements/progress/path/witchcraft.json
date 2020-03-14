@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:progress/root",
+	"parent": "crossroads:progress/path/technomancy",
 	"display": {
 		"icon": {
 			"item": "minecraft:stick"

@@ -5,6 +5,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.util.InputMappings;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
@@ -54,10 +55,18 @@ public class TextBarGuiObject implements IGuiObject{
 
 	@Override
 	public boolean keyPressed(int key, int p_keyPressed_2_, int p_keyPressed_3_){
+		if(!selected){
+			return false;
+		}
+
+		InputMappings.Input mouseKey = InputMappings.getInputByCode(key, p_keyPressed_2_);
+		if(Minecraft.getInstance().gameSettings.keyBindInventory.isActiveAndMatches(mouseKey)){
+			return true;//Prevent the UI from being closed- typically this would be the 'e' key
+		}
+
 		switch(key){
-			case 257:
-			case 335:
-				//Enter?
+			case 257://Enter
+			case 256://Esc
 				selected = false;
 				index = text.length();
 				return true;
@@ -90,8 +99,8 @@ public class TextBarGuiObject implements IGuiObject{
 					return true;
 				}
 				break;
-
 		}
+
 		return false;
 	}
 

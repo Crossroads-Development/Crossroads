@@ -53,6 +53,10 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 	private FluidStack content = FluidStack.EMPTY;
 
 	public FluidTubeTileEntity(){
+		this(type);
+	}
+
+	protected FluidTubeTileEntity(TileEntityType<? extends FluidTubeTileEntity> type){
 		super(type);
 	}
 

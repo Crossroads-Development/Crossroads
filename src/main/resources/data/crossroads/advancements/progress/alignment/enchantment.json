@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:progress/alignment/light",
+	"parent": "crossroads:progress/alignment/fusion",
 	"display": {
 		"icon": {
 			"item": "crossroads:pure_quartz"

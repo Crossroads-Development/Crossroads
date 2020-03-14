@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.gui.container.ColorChartContainer;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
@@ -37,6 +38,7 @@ public class ColorChartScreen extends ContainerScreen<ColorChartContainer>{
 
 		AdvancementTracker.listen();//Used for beam alignments
 		searchBar = new TextBarGuiObject((width - xSize) / 2, (height - ySize) / 2, 0, 300, 300, 25, "Filter", Character::isAlphabetic);
+		children.add(searchBar);
 	}
 
 	private static Color getColor(int x, int y){
@@ -71,7 +73,7 @@ public class ColorChartScreen extends ContainerScreen<ColorChartContainer>{
 		searchBar.drawFore(mouseX, mouseY, font);
 
 		Minecraft.getInstance().getTextureManager().bindTexture(BACKGROUND);
-		int spotLength = 2;
+		final int spotLength = 1;
 
 		for(int i = 0; i < 2 * RADIUS / spotLength; i++){
 			for(int j = 0; j < 2 * RADIUS / spotLength; j++){
@@ -89,15 +91,27 @@ public class ColorChartScreen extends ContainerScreen<ColorChartContainer>{
 
 	@Override
 	public boolean mouseClicked(double x, double y, int button){
-		return super.mouseClicked(x, y, button) | searchBar.mouseClicked(x, y, button);
+		return searchBar.mouseClicked(x, y, button) || super.mouseClicked(x, y, button);
+	}
+
+	@Override
+	public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_){
+		for(IGuiEventListener gui : children){
+			if(gui.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_)){
+				return true;
+			}
+		}
+		return super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
 	}
 
 	@Override
 	public boolean charTyped(char key, int keyCode){
-		if(!searchBar.charTyped(key, keyCode)){
-			return super.charTyped(key, keyCode);
-		}else{
-			return true;
+		for(IGuiEventListener gui : children){
+			if(gui.charTyped(key, keyCode)){
+				return true;
+			}
 		}
+
+		return super.charTyped(key, keyCode);
 	}
 }
