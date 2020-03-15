@@ -68,7 +68,9 @@ public class FatCongealer extends ContainerBlock{
 
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
-		InventoryHelper.dropInventoryItems(world, pos, (IInventory) world.getTileEntity(pos));
+		if(newState.getBlock() != this){
+			InventoryHelper.dropInventoryItems(world, pos, (IInventory) world.getTileEntity(pos));
+		}
 		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 
@@ -78,10 +80,6 @@ public class FatCongealer extends ContainerBlock{
 		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
 			if(!worldIn.isRemote){
 				worldIn.setBlockState(pos, state.cycle(CRProperties.HORIZ_AXIS));
-				te = worldIn.getTileEntity(pos);
-				if(te instanceof ModuleTE){
-					((ModuleTE) te).updateContainingBlockInfo();
-				}
 			}
 		}else if(!worldIn.isRemote && (te = worldIn.getTileEntity(pos)) instanceof INamedContainerProvider){
 			NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);

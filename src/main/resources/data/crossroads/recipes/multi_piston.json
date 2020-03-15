@@ -1,0 +1,22 @@
+{
+	"result": {
+		"item": "essentials:multi_piston"
+	},
+	"pattern": [
+		"TTT",
+		"BPB",
+		"BBB"
+	],
+	"type": "minecraft:crafting_shaped",
+	"key": {
+		"B": {
+			"tag": "forge:ingots/bronze"
+		},
+		"T": {
+			"tag": "forge:ingots/tin"
+		},
+		"P": {
+			"tag": "minecraft:piston"
+		}
+	}
+}

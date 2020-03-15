@@ -88,10 +88,6 @@ public class LensFrame extends ContainerBlock implements IReadable{
 
 			if(ESConfig.isWrench(stack)){
 				worldIn.setBlockState(pos, state.cycle(ESProperties.AXIS));
-				TileEntity te = worldIn.getTileEntity(pos);
-				if(te instanceof LensFrameTileEntity){
-					((LensFrameTileEntity) te).refresh();
-				}
 			}else{
 				TileEntity te = worldIn.getTileEntity(pos);
 				if(!(te instanceof LensFrameTileEntity)){
@@ -123,7 +119,7 @@ public class LensFrame extends ContainerBlock implements IReadable{
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
 		TileEntity te = world.getTileEntity(pos);
-		if(te instanceof LensFrameTileEntity){
+		if(newState.getBlock() != this && te instanceof LensFrameTileEntity){
 			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ((LensFrameTileEntity) te).getItem());
 		}
 		super.onReplaced(state, world, pos, newState, isMoving);

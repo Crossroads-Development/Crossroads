@@ -64,6 +64,10 @@ public class StampMill extends ContainerBlock{
 		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
 			if(!worldIn.isRemote){
 				worldIn.setBlockState(pos, state.cycle(CRProperties.HORIZ_AXIS));
+				BlockState upState = worldIn.getBlockState(pos.up());
+				if(upState.getBlock() instanceof StampMillTop){
+					worldIn.setBlockState(pos.up(), upState.cycle(CRProperties.HORIZ_AXIS));
+				}
 			}
 		}else if(!worldIn.isRemote && (te = worldIn.getTileEntity(pos)) instanceof INamedContainerProvider){
 			NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);

@@ -38,10 +38,13 @@ public class SmelterTileEntity extends InventoryTE{
 	public static final int USAGE = 5;
 
 	private int progress = 0;
-	public IntReferenceHolder cookProg = IntReferenceHolder.single();
 
 	public SmelterTileEntity(){
 		super(type, 2);// 0 = Input, 1 = Output
+	}
+
+	public int getProgress(){
+		return progress;
 	}
 
 	@Override
@@ -73,10 +76,8 @@ public class SmelterTileEntity extends InventoryTE{
 					}
 					inventory[0].shrink(1);
 				}
-				cookProg.set(progress);
 			}else{
 				progress = 0;
-				cookProg.set(progress);
 			}
 			markDirty();
 		}

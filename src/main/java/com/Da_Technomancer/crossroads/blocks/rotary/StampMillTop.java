@@ -58,7 +58,7 @@ public class StampMillTop extends Block{
 				worldIn.setBlockState(pos, state.cycle(CRProperties.HORIZ_AXIS));
 				BlockState lowerState = worldIn.getBlockState(pos.down());
 				if(lowerState.getBlock() == CRBlocks.stampMill){
-					worldIn.setBlockState(pos, state.with(CRProperties.HORIZ_AXIS, worldIn.getBlockState(pos).get(CRProperties.HORIZ_AXIS)));
+					worldIn.setBlockState(pos.down(), lowerState.cycle(CRProperties.HORIZ_AXIS));
 				}
 			}
 			return true;

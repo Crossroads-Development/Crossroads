@@ -593,7 +593,7 @@
 	"alignment.equilibrium": "Equilibrium",
 	"alignment.time": "Time",
 	"alignment.enchantment": "Enchantment",
-	"alignment.none": "None (ERROR!)",
+	"alignment.none": "None",
 	"alignment.energy.void": "Cold",
 	"alignment.potential.void": "Death",
 	"alignment.stability.void": "Chaos",

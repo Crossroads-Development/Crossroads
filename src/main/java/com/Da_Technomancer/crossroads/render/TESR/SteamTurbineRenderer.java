@@ -12,7 +12,7 @@ public class SteamTurbineRenderer extends TileEntityRenderer<SteamTurbineTileEnt
 
 	@Override
 	public void render(SteamTurbineTileEntity turbine, double x, double y, double z, float partialTicks, int destroyStage){
-		if(turbine == null || turbine.getWorld().getBlockState(turbine.getPos()).getBlock() != CRBlocks.steamTurbine){
+		if(turbine == null){
 			return;
 		}
 

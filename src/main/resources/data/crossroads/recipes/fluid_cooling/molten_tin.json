@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:fluid_cooling",
+	"input": {
+		"fluid": "crossroads:molten_tin",
+		"amount": 144
+	},
+	"item": "crossroads:ingot_tin",
+	"max_temp": 1500,
+	"temp_change": 100
+}

@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"tag": "crossroads:ores/void"
+	},
+	"output": [
+		{
+			"item": "crossroads:void_crystal",
+			"count": 2
+		}
+	]
+}

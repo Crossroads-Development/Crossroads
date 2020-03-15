@@ -42,7 +42,7 @@ public class AdvancementTracker implements ClientAdvancementManager.IListener{
 		if(ent instanceof ServerPlayerEntity){
 			return ((ServerPlayerEntity) ent).getAdvancements().getProgress(ent.world.getServer().getAdvancementManager().getAdvancement(new ResourceLocation(Crossroads.MODID, advancement))).isDone();
 		}else if(ent instanceof ClientPlayerEntity){
-			return progressMap.get(advancement);
+			return progressMap.getOrDefault(advancement, false);
 		}else{
 			Crossroads.logger.error("Advancement fetch on illegal entity type: " + (ent == null ? "NULL" : ent.toString()) + "; with advancement: " + advancement + "; Report to mod author");
 			return false;

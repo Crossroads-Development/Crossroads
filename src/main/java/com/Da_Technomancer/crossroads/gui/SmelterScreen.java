@@ -27,6 +27,6 @@ public class SmelterScreen extends MachineGUI<SmelterContainer, SmelterTileEntit
 		int j = (this.height - this.ySize) / 2;
 		blit(i, j, 0, 0, xSize, ySize);
 
-		blit(i + 79, j + 34, 176, 0, te.cookProg.get() * 24 / SmelterTileEntity.REQUIRED, 17);
+		blit(i + 79, j + 34, 176, 0, container.cookProg.get() * 24 / SmelterTileEntity.REQUIRED, 17);
 	}
 }

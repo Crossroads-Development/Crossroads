@@ -86,7 +86,7 @@ public class CageCharger extends ContainerBlock implements IReadable{
 
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
-		if(!isMoving && state.get(CRProperties.ACTIVE)){
+		if(!isMoving && state.get(CRProperties.ACTIVE) && newState.getBlock() != this){
 			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ((CageChargerTileEntity) world.getTileEntity(pos)).getCage());
 		}
 		super.onReplaced(state, world, pos, newState, isMoving);

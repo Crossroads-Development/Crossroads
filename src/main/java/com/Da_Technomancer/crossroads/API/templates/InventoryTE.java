@@ -255,7 +255,9 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 
 			int moved = Math.min(amount, inventory[slot].getCount());
 			if(simulate){
-				return new ItemStack(inventory[slot].getItem(), moved, inventory[slot].hasTag() ? inventory[slot].getTag().copy() : null);
+				ItemStack simOut = inventory[slot].copy();
+				simOut.setCount(moved);
+				return simOut;
 			}
 			markDirty();
 			return inventory[slot].split(moved);

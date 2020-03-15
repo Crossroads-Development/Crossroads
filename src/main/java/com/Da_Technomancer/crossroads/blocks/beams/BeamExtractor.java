@@ -39,7 +39,9 @@ public class BeamExtractor extends BeamBlock{
 
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
-		InventoryHelper.dropInventoryItems(world, pos, (IInventory) world.getTileEntity(pos));
+		if(newState.getBlock() != this){
+			InventoryHelper.dropInventoryItems(world, pos, (IInventory) world.getTileEntity(pos));
+		}
 		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 

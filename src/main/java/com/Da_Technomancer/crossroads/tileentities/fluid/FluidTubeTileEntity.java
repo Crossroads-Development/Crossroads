@@ -140,8 +140,8 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 							}
 						}else{
 							//Actually should be a 1-way connection.
-							stateModes[i] = EnumTransferMode.INPUT;
-							setData(i, hasMatch, EnumTransferMode.INPUT);
+							stateModes[i] = EnumTransferMode.NONE;
+							setData(i, hasMatch, EnumTransferMode.NONE);
 						}
 						break;
 					case INPUT:

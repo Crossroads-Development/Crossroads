@@ -164,7 +164,7 @@ public class StampMillTileEntity extends InventoryTE{
 			return (LazyOptional<T>) itemOpt;
 		}
 
-		BlockState state = world.getBlockState(pos);
+		BlockState state = getBlockState();
 		if(state.getBlock() == CRBlocks.stampMill && cap == Capabilities.AXLE_CAPABILITY && (side == null || side.getAxis() == state.get(CRProperties.HORIZ_AXIS))){
 			return (LazyOptional<T>) axleOpt;
 		}

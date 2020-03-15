@@ -48,7 +48,7 @@ public class RiftEffect extends BeamEffect{
 //
 				//Spawn mobs
 				ServerWorld worldServ = (ServerWorld) worldIn;
-				if(worldServ.countEntities().getInt(EntityClassification.MONSTER) <= worldServ.getPlayers().size() * 3 * EntityClassification.MONSTER.getMaxNumberOfCreature() && RAND.nextInt(256) < power){
+				if(RAND.nextInt(256) < power){
 					try{
 						List<Biome.SpawnListEntry> list = worldServ.getChunkProvider().generator.getPossibleCreatures(EntityClassification.MONSTER, pos);
 						list = ForgeEventFactory.getPotentialSpawns(worldServ, EntityClassification.MONSTER, pos, list);

@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.gui.container;
 import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.heat.SmelterTileEntity;
+import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.network.PacketBuffer;
@@ -14,9 +15,12 @@ public class SmelterContainer extends MachineContainer<SmelterTileEntity>{
 	@ObjectHolder("smelter")
 	private static ContainerType<SmelterContainer> type = null;
 
+	public final IntDeferredRef cookProg;
+
 	public SmelterContainer(int id, PlayerInventory playerInv, PacketBuffer data){
 		super(type, id, playerInv, data);
-		trackInt(te.cookProg);
+		cookProg = new IntDeferredRef(te::getProgress, te.getWorld().isRemote);
+		trackInt(cookProg);
 	}
 
 	@Override

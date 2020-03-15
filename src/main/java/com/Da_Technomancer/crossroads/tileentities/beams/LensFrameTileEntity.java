@@ -120,19 +120,26 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 		return contents;
 	}
 
-	public void refresh(){
-		if(beamer[1] != null){
+	@Override
+	public void updateContainingBlockInfo(){
+		super.updateContainingBlockInfo();
+		if(beamer[1] != null && world != null){
 			beamer[1].emit(BeamUnit.EMPTY, world);
 			refreshBeam(true);
 		}
-		if(beamer[0] != null){
+		if(beamer[0] != null && world != null){
 			beamer[0].emit(BeamUnit.EMPTY, world);
 			refreshBeam(false);
 		}
 		axis = null;
 		magicOpt.invalidate();
 		magicOptNeg.invalidate();
-		CRPackets.sendPacketAround(world, pos, new SendIntToClient((byte) 3, 0, pos));
+		magicOpt = LazyOptional.of(() -> new BeamHandler(AxisDirection.NEGATIVE));
+		magicOptNeg = LazyOptional.of(() -> new BeamHandler(AxisDirection.POSITIVE));
+
+		if(world != null){
+			CRPackets.sendPacketAround(world, pos, new SendIntToClient((byte) 3, 0, pos));
+		}
 	}
 
 	private void refreshBeam(boolean positive){
@@ -224,8 +231,8 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 		lensOpt.invalidate();
 	}
 
-	private final LazyOptional<IBeamHandler> magicOpt = LazyOptional.of(() -> new BeamHandler(AxisDirection.NEGATIVE));
-	private final LazyOptional<IBeamHandler> magicOptNeg = LazyOptional.of(() -> new BeamHandler(AxisDirection.POSITIVE));
+	private LazyOptional<IBeamHandler> magicOpt = LazyOptional.of(() -> new BeamHandler(AxisDirection.NEGATIVE));
+	private LazyOptional<IBeamHandler> magicOptNeg = LazyOptional.of(() -> new BeamHandler(AxisDirection.POSITIVE));
 	private final LazyOptional<IItemHandler> lensOpt = LazyOptional.of(LensHandler::new);
 
 	@SuppressWarnings("unchecked")
