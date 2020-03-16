@@ -36,12 +36,11 @@ public class NbtToEntityClient extends ClientPacket{
 
 	@Override
 	protected void run(){
-		ClientWorld worldClient = Minecraft.getInstance().world;
-		if(worldClient == null || entity == null){
+		if(entity == null){
 			return;
 		}
 		Entity ent = null;
-		for(Entity loadedEnt : worldClient.getAllEntities()){
+		for(Entity loadedEnt : Minecraft.getInstance().world.getAllEntities()){
 			if(entity.equals(loadedEnt.getUniqueID())){
 				ent = loadedEnt;
 				break;

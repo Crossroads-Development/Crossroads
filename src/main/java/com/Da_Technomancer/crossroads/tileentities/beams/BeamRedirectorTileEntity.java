@@ -64,10 +64,11 @@ public class BeamRedirectorTileEntity extends BeamRenderTE{
 	@Override
 	protected void doEmit(BeamUnit out){
 		Direction facing = getDir();
-		if(beamer[facing.getIndex()].emit(redstone ? out : BeamUnit.EMPTY, world)){
+		boolean reds = redstone;//Store this before emitting, as the redstone field can be modified during execution
+		if(beamer[facing.getIndex()].emit(reds ? out : BeamUnit.EMPTY, world)){
 			refreshBeam(facing.getIndex());
 		}
-		if(beamer[facing.getOpposite().getIndex()].emit(redstone ? BeamUnit.EMPTY : out, world)){
+		if(beamer[facing.getOpposite().getIndex()].emit(reds ? BeamUnit.EMPTY : out, world)){
 			refreshBeam(facing.getOpposite().getIndex());
 		}
 	}

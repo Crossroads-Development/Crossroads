@@ -41,23 +41,10 @@ public class RedstoneAxis extends ContainerBlock{
 		tooltip.add(new TranslationTextComponent("tt.crossroads.redstone_axis.power"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.redstone_axis.circuit"));
 	}
-
-	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
-		TileEntity te = world.getTileEntity(pos);
-		if(te instanceof RedstoneAxisTileEntity){
-			((RedstoneAxisTileEntity) te).disconnect();
-		}
-		super.onReplaced(state, world, pos, newState, isMoving);
-	}
 	
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
-			TileEntity te = worldIn.getTileEntity(pos);
-			if(te instanceof RedstoneAxisTileEntity){
-				((RedstoneAxisTileEntity) te).disconnect();
-			}
 			if(!worldIn.isRemote){
 				worldIn.setBlockState(pos, state.cycle(ESProperties.FACING));
 			}

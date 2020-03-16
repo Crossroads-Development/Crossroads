@@ -171,8 +171,8 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 		totalCapacity += CAPACITY;
 		totalFluid += content.getAmount();
 		float pressure = (float) totalFluid / totalCapacity;
-		totalFluid = content.getAmount();//From this point on, total fluid tracks the amount of fluid in this pipe to prevent rounding error based dupe bugs
 		if(totalFluid != 0 && (content.isEmpty() || BlockUtil.sameFluid(content, fluidRef))){
+			totalFluid = content.getAmount();//From this point on, total fluid tracks the amount of fluid in this pipe to prevent rounding error based dupe bugs
 			for(int i = 0; i < biHandlerCount; i++){
 				IFluidHandler otherHand = biHandlers[i];
 				int target = (int) (otherHand.getTankCapacity(0) * pressure);

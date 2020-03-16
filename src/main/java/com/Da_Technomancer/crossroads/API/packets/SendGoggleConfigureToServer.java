@@ -12,6 +12,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -47,12 +48,13 @@ public class SendGoggleConfigureToServer extends ServerPacket{
 	protected void run(@Nullable ServerPlayerEntity player){
 		if(player != null){
 			ItemStack stack = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
-			if(stack.getItem() == CRItems.moduleGoggles && stack.hasTag() && stack.getTag().contains(lensName)){
-				stack.getTag().putBoolean(lensName, newSetting);
+			CompoundNBT nbt = stack.getTag();
+			if(stack.getItem() == CRItems.moduleGoggles && nbt != null && nbt.contains(lensName)){
+				nbt.putBoolean(lensName, newSetting);
 
 				if(EnumGoggleLenses.DIAMOND.toString().equals(lensName)){
 //					StoreNBTToClient.syncNBTToClient(player);//Sync player path data to client
-					NetworkHooks.openGui(player, GoggleProvider.INSTANCE, buf -> buf.writeBoolean(false));
+					NetworkHooks.openGui(player, GoggleProvider.INSTANCE, buf -> buf.writeBoolean(true));
 				}
 			}
 		}

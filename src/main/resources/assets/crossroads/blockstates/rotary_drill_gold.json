@@ -1,10 +1,10 @@
 {
 	"variants": {
-		"facing=up": { "model": "crossroads:block/empty" },
-		"facing=down": { "model": "crossroads:block/empty" },
-		"facing=north": { "model": "crossroads:block/empty" },
-		"facing=south": { "model": "crossroads:block/empty" },
-		"facing=west": { "model": "crossroads:block/empty" },
-		"facing=east": { "model": "crossroads:block/empty" }
+		"facing=up": { "model": "minecraft:block/gold_block" },
+		"facing=down": { "model": "minecraft:block/gold_block" },
+		"facing=north": { "model": "minecraft:block/gold_block" },
+		"facing=south": { "model": "minecraft:block/gold_block" },
+		"facing=west": { "model": "minecraft:block/gold_block" },
+		"facing=east": { "model": "minecraft:block/gold_block" }
 	}
 }

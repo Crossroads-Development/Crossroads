@@ -9,7 +9,6 @@ import com.Da_Technomancer.crossroads.items.crafting.recipes.IOptionalRecipe;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
-import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.registration.*;
@@ -53,8 +52,8 @@ public class JEICrossroadsPlugin implements IModPlugin{
 
 	@Override
 	public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration){
-		registration.addRecipeTransferHandler(DetailedCrafterContainer.class, DetailedCrafterCategory.ID, 0, 9, 10, 36);
-		registration.addRecipeTransferHandler(DetailedCrafterContainer.class, VanillaRecipeCategoryUid.CRAFTING, 0, 9, 10, 36);
+		registration.addRecipeTransferHandler(DetailedCrafterContainer.class, DetailedCrafterCategory.ID, 1, 9, 10, 36);
+		registration.addRecipeTransferHandler(DetailedCrafterContainer.class, VanillaRecipeCategoryUid.CRAFTING, 1, 9, 10, 36);
 	}
 
 	@Override

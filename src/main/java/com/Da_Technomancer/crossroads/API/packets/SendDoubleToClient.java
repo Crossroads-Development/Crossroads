@@ -36,11 +36,7 @@ public class SendDoubleToClient extends ClientPacket{
 
 	@Override
 	protected void run(){
-		World worldClient = Minecraft.getInstance().world;
-		if(worldClient == null){
-			return;
-		}
-		TileEntity te = worldClient.getTileEntity(pos);
+		TileEntity te = Minecraft.getInstance().world.getTileEntity(pos);
 
 		if(te instanceof IDoubleReceiver){
 			((IDoubleReceiver) te).receiveDouble(identifier, message, null);

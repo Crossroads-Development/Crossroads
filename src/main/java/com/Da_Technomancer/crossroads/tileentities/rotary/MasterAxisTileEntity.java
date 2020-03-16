@@ -12,6 +12,7 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -98,6 +99,12 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 		disconnect();
 		axisOpt.invalidate();
 		axisOpt = LazyOptional.of(() -> handler);
+	}
+
+	@Override
+	public void updateContainingBlockInfo(){
+		super.updateContainingBlockInfo();
+		disconnect();
 	}
 
 	public void disconnect(){
@@ -219,7 +226,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 				coeff[0] = trueSpeed;
 				coeff[1] = 0;
 				coeff[2] = 0;
-
+				coeff[3] = 0;
 				regrTimestamp = ticksExisted;
 
 				//Set the constant term of the regression such that calling runSeries with the current time gets the current angle
@@ -251,8 +258,12 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 
 	@Override
 	public void receiveSeries(long timestamp, float[] series){
+		float partTicks = Minecraft.getInstance().getRenderPartialTicks();
+		float prevAngle = runSeries(ticksExisted, partTicks);
 		regrTimestamp = timestamp;
 		coeff = series;
+		//Fine tune the linear term to match up with the currently displayed angle- preventing a jerking motion
+		coeff[3] += prevAngle - runSeries(ticksExisted, partTicks);
 	}
 
 	@Override

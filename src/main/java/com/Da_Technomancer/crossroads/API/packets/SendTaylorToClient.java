@@ -4,7 +4,6 @@ import com.Da_Technomancer.essentials.packets.ClientPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
@@ -45,12 +44,7 @@ public class SendTaylorToClient extends ClientPacket{
 
 	@Override
 	protected void run(){
-		World worldClient = Minecraft.getInstance().world;
-		if(worldClient == null){
-			return;
-		}
-		TileEntity te = worldClient.getTileEntity(pos);
-
+		TileEntity te = Minecraft.getInstance().world.getTileEntity(pos);
 		if(te instanceof ITaylorReceiver){
 			((ITaylorReceiver) te).receiveSeries(timestamp, new float[] {term0, term1, term2, term3});
 		}

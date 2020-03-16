@@ -16,18 +16,20 @@ import javax.annotation.Nullable;
 
 public class EnergizeEffect extends BeamEffect{
 
+	private static final double MULT = 25;
+
 	@Override
 	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, World worldIn, BlockPos pos, @Nullable Direction dir){
 		if(!performTransmute(align, voi, power, worldIn, pos)){
 			IHeatHandler hitHandler = getHitHandler(worldIn, pos, dir);
 			if(voi){
 				if(hitHandler != null){
-					hitHandler.addHeat(-Math.min(power, hitHandler.getTemp() - HeatUtil.ABSOLUTE_ZERO));
+					hitHandler.addHeat(-Math.min(MULT * power, hitHandler.getTemp() - HeatUtil.ABSOLUTE_ZERO));
 					//Effect in crystal master axis
 				}
 			}else{
 				if(hitHandler != null){
-					hitHandler.addHeat(power);
+					hitHandler.addHeat(MULT * power);
 					//Effect in crystal master axis
 				}else{
 					BlockState state = worldIn.getBlockState(pos);

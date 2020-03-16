@@ -14,6 +14,6 @@ public class EmeraldGoggleEffect implements IGoggleEffect{
 
 	@Override
 	public void armorTick(World world, PlayerEntity player, ArrayList<ITextComponent> chat, BlockRayTraceResult ray){
-		player.addPotionEffect(new EffectInstance(Effects.NIGHT_VISION, 10, 0, false, false));
+		player.addPotionEffect(new EffectInstance(Effects.NIGHT_VISION, 300, 0, false, false));
 	}
 }

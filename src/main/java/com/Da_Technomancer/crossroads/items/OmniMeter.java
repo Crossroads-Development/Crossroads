@@ -10,6 +10,8 @@ import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.templates.IBeamRenderTE;
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.essentials.blocks.redstone.IRedstoneHandler;
+import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
@@ -81,6 +83,13 @@ public class OmniMeter extends Item{
 			if((engOpt = te.getCapability(CapabilityEnergy.ENERGY, null)).isPresent()){
 				IEnergyStorage batt = engOpt.orElseThrow(NullPointerException::new);
 				chat.add(new TranslationTextComponent("tt.crossroads.meter.fe", batt.getEnergyStored(), batt.getMaxEnergyStored()));
+			}
+
+			//Read circuit output
+			LazyOptional<IRedstoneHandler> redsOpt;
+			if((redsOpt = te.getCapability(RedstoneUtil.REDSTONE_CAPABILITY, null)).isPresent()){
+				IRedstoneHandler redstoneHandler = redsOpt.orElseThrow(NullPointerException::new);
+				chat.add(new TranslationTextComponent("tt.crossroads.meter.circuit", CRConfig.formatVal(redstoneHandler.getOutput())));
 			}
 		}
 

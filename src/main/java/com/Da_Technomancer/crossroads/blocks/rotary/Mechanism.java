@@ -225,7 +225,7 @@ public class Mechanism extends ContainerBlock implements IReadable{
 						worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
 					}
 				}
-
+				RotaryUtil.increaseMasterKey(!worldIn.isRemote);
 				return true;
 			}
 

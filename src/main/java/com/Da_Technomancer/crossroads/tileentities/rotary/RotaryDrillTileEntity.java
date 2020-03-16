@@ -91,7 +91,7 @@ public class RotaryDrillTileEntity extends ModuleTE{
 			return;
 		}
 
-		if(Math.abs(motData[1]) >= ENERGY_USE){
+		if(Math.abs(motData[1]) >= ENERGY_USE && Math.abs(motData[0]) >= 0.05D){
 			axleHandler.addEnergy(-ENERGY_USE, false);
 			if(++ticksExisted % 8 == 0){
 				Direction facing = getFacing();
@@ -102,11 +102,11 @@ public class RotaryDrillTileEntity extends ModuleTE{
 					if(hardness >= 0 && Math.abs(motData[0]) >= hardness * SPEED_PER_HARDNESS){
 						world.destroyBlock(targetPos, true);
 					}
-				}else{
-					List<LivingEntity> ents = world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos.offset(facing)), EntityPredicates.IS_ALIVE);
-					for(LivingEntity ent : ents){
-						ent.attackEntityFrom(golden ? new EntityDamageSource("drill", FakePlayerFactory.get((ServerWorld) world, new GameProfile(null, "drill_player_" + world.getDimension().getType().getId()))) : DRILL, (float) Math.abs(motData[0]) * DAMAGE_PER_SPEED);
-					}
+				}
+
+				List<LivingEntity> ents = world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos.offset(facing)), EntityPredicates.IS_ALIVE);
+				for(LivingEntity ent : ents){
+					ent.attackEntityFrom(golden ? new EntityDamageSource("drill", FakePlayerFactory.get((ServerWorld) world, new GameProfile(null, "drill_player_" + world.getDimension().getType().getId()))) : DRILL, (float) Math.abs(motData[0]) * DAMAGE_PER_SPEED);
 				}
 			}
 		}

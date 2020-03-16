@@ -41,9 +41,6 @@ public class SendBiomeUpdateToClient extends ClientPacket{
 
 	@Override
 	protected void run(){
-		World w = Minecraft.getInstance().world;
-		if(w != null){
-			w.getChunk(pos).getBiomes()[(pos.getZ() & 15) << 4 | (pos.getX() & 15)] = ForgeRegistries.BIOMES.getValue(new ResourceLocation(newBiome));
-		}
+		Minecraft.getInstance().world.getChunk(pos).getBiomes()[(pos.getZ() & 15) << 4 | (pos.getX() & 15)] = ForgeRegistries.BIOMES.getValue(new ResourceLocation(newBiome));
 	}
 }

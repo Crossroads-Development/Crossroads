@@ -16,7 +16,7 @@
 			"tag": "forge:ingots/tin"
 		},
 		"P": {
-			"tag": "minecraft:piston"
+			"item": "minecraft:piston"
 		}
 	}
 }

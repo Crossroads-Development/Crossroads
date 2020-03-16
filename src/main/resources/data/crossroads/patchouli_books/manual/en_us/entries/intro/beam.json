@@ -10,7 +10,11 @@
 			"type": "spotlight",
 			"title": "Intro to Beams",
 			"item": "crossroads:lens_array",
-			"text": "Wait! This is a mid-game feature. By this point, you should have <em>at least/$ $(l:rotary/millstone)ore doubling/$ (if not $(l:rotary:stamp)tripling/$), $(l:fluid/centrifuge)automated salt production/$, and probably a $(l:fluid/fat_collector)stable food source/$. If you don't, <thing>beams/$ are going to be too expensive to run.$(br2)<thing>Beams/$ are"
+			"text": "Wait! This is a mid-game feature. By this point, you should have <em>at least/$ $(l:rotary/millstone)ore doubling/$ (if not $(l:rotary:stamp)tripling/$), $(l:fluid/centrifuge)automated salt production/$, and probably a $(l:fluid/fat_collector)stable food source/$. If you don't, <thing>beams/$ are going to be too expensive to run.$(br2)<thing>Beams/$ are a powerful way of creating various effects "
+		},
+		{
+			"type": "text",
+			"text": "in the world. They can do things like summoning lightning, producing redstone, placing blocks, and more.$(br2)TODO WIP docs"
 		}
 	]
 }

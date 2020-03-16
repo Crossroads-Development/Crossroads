@@ -42,23 +42,10 @@ public class CrystalMasterAxis extends ContainerBlock implements IReadable{
 	public BlockState getStateForPlacement(BlockItemUseContext context){
 		return getDefaultState().with(ESProperties.FACING, context.getNearestLookingDirection().getOpposite());
 	}
-
-	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
-		TileEntity te = world.getTileEntity(pos);
-		if(te instanceof CrystalMasterAxisTileEntity){
-			((CrystalMasterAxisTileEntity) te).disconnect();
-		}
-		super.onReplaced(state, world, pos, newState, isMoving);
-	}
 	
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
-			TileEntity te = worldIn.getTileEntity(pos);
-			if(te instanceof CrystalMasterAxisTileEntity){
-				((CrystalMasterAxisTileEntity) te).disconnect();
-			}
 			if(!worldIn.isRemote){
 				worldIn.setBlockState(pos, state.cycle(ESProperties.FACING));
 			}

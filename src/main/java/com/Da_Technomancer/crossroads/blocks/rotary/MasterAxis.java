@@ -39,10 +39,6 @@ public class MasterAxis extends ContainerBlock{
 	@Override
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
-			TileEntity te = worldIn.getTileEntity(pos);
-			if(te instanceof MasterAxisTileEntity){
-				((MasterAxisTileEntity) te).disconnect();
-			}
 			if(!worldIn.isRemote){
 				worldIn.setBlockState(pos, state.cycle(ESProperties.FACING));
 			}
@@ -60,15 +56,6 @@ public class MasterAxis extends ContainerBlock{
 	public TileEntity createNewTileEntity(IBlockReader worldIn){
 		return new MasterAxisTileEntity();
 
-	}
-
-	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
-		TileEntity te = world.getTileEntity(pos);
-		if(te instanceof MasterAxisTileEntity){
-			((MasterAxisTileEntity) te).disconnect();
-		}
-		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 
 	@Override

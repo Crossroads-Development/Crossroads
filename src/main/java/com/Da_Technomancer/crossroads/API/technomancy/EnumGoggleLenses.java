@@ -22,22 +22,24 @@ import java.util.function.Predicate;
 public enum EnumGoggleLenses{
 	
 	//Don't reorder these unless you want to rename all the goggle texture files.
-	RUBY((s) -> CRItemTags.GEMS_RUBY.contains(s.getItem()), "_ruby", new RubyGoggleEffect(), Keys.controlEnergy),
-	EMERALD((s) -> Tags.Items.GEMS_EMERALD.contains(s.getItem()), "_emerald", new EmeraldGoggleEffect(), Keys.controlPotential),
-	DIAMOND((s) -> Tags.Items.GEMS_DIAMOND.contains(s.getItem()), "_diamond", new DiamondGoggleEffect(), Keys.controlStability),
-	QUARTZ(Ingredient.fromItems(CRItems.pureQuartz), "_quartz", new QuartzGoggleEffect(), null),
-	VOID(Ingredient.fromItems(OreSetup.voidCrystal), "", new VoidGoggleEffect(), Keys.controlVoid);
+	RUBY(Ingredient.fromTag(CRItemTags.GEMS_RUBY), "_ruby", new RubyGoggleEffect(), Keys.controlEnergy, true),
+	EMERALD(Ingredient.fromTag(Tags.Items.GEMS_EMERALD), "_emerald", new EmeraldGoggleEffect(), Keys.controlPotential, true),
+	DIAMOND(Ingredient.fromTag(Tags.Items.GEMS_DIAMOND), "_diamond", new DiamondGoggleEffect(), Keys.controlStability, false),
+	QUARTZ(Ingredient.fromItems(CRItems.pureQuartz), "_quartz", new QuartzGoggleEffect(), null, false),
+	VOID(Ingredient.fromItems(OreSetup.voidCrystal), "", new VoidGoggleEffect(), Keys.controlVoid, true);
 	
 	private final Predicate<ItemStack> item;
 	private final String texturePath;
 	private final IGoggleEffect effect;
 	private final KeyBinding key;
+	private final boolean requireEnable;
 
-	EnumGoggleLenses(Predicate<ItemStack> item, String texturePath, IGoggleEffect effect, @Nullable KeyBinding toggleKey){
+	EnumGoggleLenses(Predicate<ItemStack> item, String texturePath, IGoggleEffect effect, @Nullable KeyBinding toggleKey, boolean requireEnable){
 		this.item = item;
 		this.texturePath = texturePath;
 		this.effect = effect;
 		this.key = toggleKey;
+		this.requireEnable = requireEnable;
 	}
 
 	public boolean matchesRecipe(ItemStack stack){
@@ -48,8 +50,13 @@ public enum EnumGoggleLenses{
 		return texturePath;
 	}
 
+	@Nullable
 	public KeyBinding getKey(){
 		return key;
+	}
+
+	public boolean useKey(){
+		return requireEnable;
 	}
 	
 	/**
@@ -61,6 +68,6 @@ public enum EnumGoggleLenses{
 
 	@Override
 	public String toString(){
-		return name().toLowerCase(Locale.ENGLISH);
+		return name().toLowerCase(Locale.US);
 	}
 }

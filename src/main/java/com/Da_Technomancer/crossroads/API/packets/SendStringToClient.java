@@ -40,11 +40,7 @@ public class SendStringToClient extends ClientPacket{
 
 	@Override
 	protected void run(){
-		World w = Minecraft.getInstance().world;
-		if(w == null){
-			return;
-		}
-		TileEntity te = w.getTileEntity(pos);
+		TileEntity te = Minecraft.getInstance().world.getTileEntity(pos);
 
 		if(te instanceof IStringReceiver){
 			((IStringReceiver) te).receiveString(context, message, null);

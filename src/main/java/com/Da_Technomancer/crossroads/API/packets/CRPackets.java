@@ -29,7 +29,7 @@ public class CRPackets{
 //		registerPacket(SendDimLoadToClient.class);
 		registerPacket(SendDoubleToServer.class);
 		registerPacket(SendIntToServer.class);
-		registerPacket(SendLogToClient.class);
+//		registerPacket(SendLogToClient.class);
 		registerPacket(SendStringToServer.class);
 //		registerPacket(SendNBTToClient.class);
 		registerPacket(SendPlayerTickCountToClient.class);
@@ -38,7 +38,7 @@ public class CRPackets{
 //		registerPacket(SendSpinToClient.class);
 		registerPacket(AddVisualToClient.class);
 		registerPacket(NbtToEntityClient.class);
-		registerPacket(NbtToEntityServer.class);
+//		registerPacket(NbtToEntityServer.class);
 		registerPacket(SendBiomeUpdateToClient.class);
 		registerPacket(SendGoggleConfigureToServer.class);
 //		registerPacket(SendLongToClient.class); moved to Essentials

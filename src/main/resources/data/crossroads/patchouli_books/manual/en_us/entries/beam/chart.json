@@ -1,0 +1,16 @@
+{
+	"category": "beam",
+	"name": "Color Chart",
+	"icon": "crossroads:color_chart",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Color Chart",
+			"item": "crossroads:color_chart",
+			"text": "TODO"
+		}
+	]
+}

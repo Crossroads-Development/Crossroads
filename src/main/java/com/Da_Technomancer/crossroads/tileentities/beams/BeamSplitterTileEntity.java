@@ -8,6 +8,7 @@ import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.Da_Technomancer.essentials.blocks.ESBlocks;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.blocks.redstone.IRedstoneHandler;
+import com.Da_Technomancer.essentials.blocks.redstone.IWireConnect;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -23,7 +24,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 @ObjectHolder(Crossroads.MODID)
-public class BeamSplitterTileEntity extends BeamRenderTE{
+public class BeamSplitterTileEntity extends BeamRenderTE implements IWireConnect{
 
 	@ObjectHolder("beam_splitter")
 	private static TileEntityType<BeamSplitterTileEntity> type = null;
@@ -216,6 +217,11 @@ public class BeamSplitterTileEntity extends BeamRenderTE{
 				world.getPendingBlockTicks().scheduleTick(pos, ESBlocks.redstoneTransmitter, RedstoneUtil.DELAY, TickPriority.NORMAL);
 			}
 		}
+	}
+
+	@Override
+	public boolean canConnect(Direction side, BlockState state){
+		return true;
 	}
 
 	private class CircHandler implements IRedstoneHandler{

@@ -51,7 +51,7 @@ public class RotaryDrillRenderer extends TileEntityRenderer<RotaryDrillTileEntit
 //		GlStateManager.translated(-0.5D, -0.5D, -0.5D);
 
 		//Rotate w/ gear angle
-		GlStateManager.rotated(-axle.orElseThrow(NullPointerException::new).getAngle(partialTicks) * dir.getAxisDirection().getOffset(), 0F, 1F, 0F);
+		GlStateManager.rotated(axle.orElseThrow(NullPointerException::new).getAngle(partialTicks) * dir.getAxisDirection().getOffset(), 0F, 1F, 0F);
 
 		Minecraft.getInstance().textureManager.bindTexture(TEXTURE_DRILL);
 		if(drill.isGolden()){

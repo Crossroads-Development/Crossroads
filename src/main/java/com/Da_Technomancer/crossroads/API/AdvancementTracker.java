@@ -16,9 +16,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 
-public class AdvancementTracker implements ClientAdvancementManager.IListener{
+public class AdvancementTracker{
 
-	private static final AdvancementTracker INSTANCE = new AdvancementTracker();
 	private static final HashMap<String, Boolean> progressMap = new HashMap<>(16);
 
 	/**
@@ -28,7 +27,7 @@ public class AdvancementTracker implements ClientAdvancementManager.IListener{
 	 */
 	@OnlyIn(Dist.CLIENT)
 	public static void listen(){
-		Minecraft.getInstance().player.connection.getAdvancementManager().setListener(INSTANCE);
+		Minecraft.getInstance().player.connection.getAdvancementManager().setListener(Listener.INSTANCE);
 	}
 
 	/**
@@ -75,41 +74,47 @@ public class AdvancementTracker implements ClientAdvancementManager.IListener{
 		}
 	}
 
-	@Override
-	public void onUpdateAdvancementProgress(Advancement advancementIn, AdvancementProgress progress){
-		ResourceLocation id = advancementIn.getId();
-		if(id.getNamespace().equals(Crossroads.MODID)){
-			progressMap.put(id.getPath(), progress.isDone());
+	@OnlyIn(Dist.CLIENT)
+	private static class Listener implements  ClientAdvancementManager.IListener{
+
+		private static final Listener INSTANCE = new Listener();
+
+		@Override
+		public void onUpdateAdvancementProgress(Advancement advancementIn, AdvancementProgress progress){
+			ResourceLocation id = advancementIn.getId();
+			if(id.getNamespace().equals(Crossroads.MODID)){
+				progressMap.put(id.getPath(), progress.isDone());
+			}
 		}
-	}
 
-	@Override
-	public void setSelectedTab(@Nullable Advancement advancementIn){
+		@Override
+		public void setSelectedTab(@Nullable Advancement advancementIn){
 
-	}
+		}
 
-	@Override
-	public void rootAdvancementAdded(Advancement advancementIn){
+		@Override
+		public void rootAdvancementAdded(Advancement advancementIn){
 
-	}
+		}
 
-	@Override
-	public void rootAdvancementRemoved(Advancement advancementIn){
+		@Override
+		public void rootAdvancementRemoved(Advancement advancementIn){
 
-	}
+		}
 
-	@Override
-	public void nonRootAdvancementAdded(Advancement advancementIn){
+		@Override
+		public void nonRootAdvancementAdded(Advancement advancementIn){
 
-	}
+		}
 
-	@Override
-	public void nonRootAdvancementRemoved(Advancement advancementIn){
+		@Override
+		public void nonRootAdvancementRemoved(Advancement advancementIn){
 
-	}
+		}
 
-	@Override
-	public void advancementsCleared(){
-		progressMap.clear();
+		@Override
+		public void advancementsCleared(){
+			progressMap.clear();
+		}
 	}
 }
