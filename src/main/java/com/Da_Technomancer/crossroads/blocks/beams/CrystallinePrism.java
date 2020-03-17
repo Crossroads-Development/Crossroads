@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
 import com.Da_Technomancer.crossroads.API.templates.BeamBlock;
-import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.tileentities.beams.CrystallinePrismTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
@@ -38,11 +37,7 @@ public class CrystallinePrism extends BeamBlock{
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
 			if(!worldIn.isRemote){
-				TileEntity te = worldIn.getTileEntity(pos);
 				worldIn.setBlockState(pos, state.cycle(ESProperties.HORIZ_FACING));
-				if(te instanceof BeamRenderTE){
-					((BeamRenderTE) te).resetBeamer();
-				}
 			}
 			return true;
 		}

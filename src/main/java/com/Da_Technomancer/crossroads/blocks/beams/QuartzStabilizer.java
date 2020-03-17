@@ -60,9 +60,6 @@ public class QuartzStabilizer extends BeamBlock{
 				TileEntity te = worldIn.getTileEntity(pos);
 				if(!playerIn.isSneaking()){
 					worldIn.setBlockState(pos, state.cycle(ESProperties.FACING));
-					if(te instanceof BeamRenderTE){
-						((BeamRenderTE) te).resetBeamer();
-					}
 				}else if(te instanceof QuartzStabilizerTileEntity){
 					playerIn.sendMessage(new TranslationTextComponent("tt.crossroads.quartz_stabilizer.setting", ((QuartzStabilizerTileEntity) te).adjustSetting()));
 				}

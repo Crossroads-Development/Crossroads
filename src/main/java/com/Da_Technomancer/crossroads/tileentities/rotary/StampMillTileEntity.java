@@ -21,7 +21,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.IntReferenceHolder;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -51,11 +50,16 @@ public class StampMillTileEntity extends InventoryTE{
 	private double progress = 0;
 	private int timer = 0;
 
-	public IntReferenceHolder progRef = IntReferenceHolder.single();
-	public IntReferenceHolder timeRef = IntReferenceHolder.single();
-
 	public StampMillTileEntity(){
 		super(type, 2);
+	}
+
+	public int getProgress(){
+		return (int) Math.round(progress);
+	}
+
+	public int getTimer(){
+		return timer;
 	}
 
 	@Override
@@ -94,12 +98,10 @@ public class StampMillTileEntity extends InventoryTE{
 			motData[1] -= Math.signum(motData[1]) * progChange;
 			if(inventory[1].isEmpty() && !inventory[0].isEmpty()){
 				progress += progChange;
-				progRef.set((int) Math.round(progress));
 				if(++timer >= TIME_LIMIT || progress >= REQUIRED){
 					timer = 0;
 					if(progress >= REQUIRED){
 						progress = 0;
-						progRef.set((int) Math.round(progress));
 						world.playSound(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.BLOCKS, 1, world.rand.nextFloat(), true);
 						Optional<StampMillRec> recOpt = world.getRecipeManager().getRecipe(CRRecipes.STAMP_MILL_TYPE, this, world);
 						ItemStack produced;
@@ -118,10 +120,8 @@ public class StampMillTileEntity extends InventoryTE{
 						if(progress < 0){
 							progress = 0;
 						}
-						progRef.set((int) Math.round(progress));
 					}
 				}
-				timeRef.set(timer);
 				markDirty();
 			}
 		}

@@ -18,7 +18,7 @@
 		},
 		{
 			"type": "text",
-			"text": "If the machine runs out of time, the progress bar will carry over to the next crafting.$(br2)The progress bar fills up faster at higher <thing>speeds/$. At <thing>speeds/$ above 10rad/s, ore will be processed correctly every time. At a <thing>speed/$ of 5rad/s, it will succeed about half the time, and fail the other half- and so on.$(br2)It's your choice if you want to filter out the unprocessed ore and run "
+			"text": "If the machine runs out of time, the progress bar will carry over to the next crafting.$(br2)The progress bar fills up faster at higher <thing>speeds/$. At <thing>speeds/$ above 8rad/s, ore will be processed correctly every time. At a <thing>speed/$ of 5rad/s, it will succeed about half the time, and fail the other half- and so on.$(br2)It's your choice if you want to filter out the unprocessed ore and run "
 		},
 		{
 			"type": "text",

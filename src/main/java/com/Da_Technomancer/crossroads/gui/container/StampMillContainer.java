@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.gui.container;
 import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.rotary.StampMillTileEntity;
+import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.network.PacketBuffer;
@@ -14,10 +15,15 @@ public class StampMillContainer extends MachineContainer<StampMillTileEntity>{
 	@ObjectHolder("stamp_mill")
 	private static ContainerType<StampMillContainer> type = null;
 
+	public final IntDeferredRef progRef;
+	public final IntDeferredRef timeRef;
+
 	public StampMillContainer(int windowId, PlayerInventory playerInv, PacketBuffer data){
 		super(type, windowId, playerInv, data);
-		trackInt(te.progRef);
-		trackInt(te.timeRef);
+		progRef = new IntDeferredRef(te::getProgress, te.getWorld().isRemote);
+		timeRef = new IntDeferredRef(te::getTimer, te.getWorld().isRemote);
+		trackInt(progRef);
+		trackInt(timeRef);
 	}
 
 	@Override

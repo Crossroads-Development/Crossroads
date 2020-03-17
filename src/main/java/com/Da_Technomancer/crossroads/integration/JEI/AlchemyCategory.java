@@ -92,7 +92,7 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 		FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
 		double maxTemp = recipe.maxTemp();
 		String line;
-		if(maxTemp >= Short.MAX_VALUE - 100){
+		if(maxTemp <= Short.MAX_VALUE - 100){
 			line = MiscUtil.localize("crossroads.jei.alchemy.temp.dual", CRConfig.formatVal(Math.max(recipe.minTemp(), HeatUtil.ABSOLUTE_ZERO)), CRConfig.formatVal(maxTemp));
 		}else{
 			line = MiscUtil.localize("crossroads.jei.alchemy.temp", CRConfig.formatVal(Math.max(recipe.minTemp(), HeatUtil.ABSOLUTE_ZERO)));

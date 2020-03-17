@@ -48,8 +48,8 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 	}
 
 	@Override
-	public void resetBeamer(){
-		super.resetBeamer();
+	public void updateContainingBlockInfo(){
+		super.updateContainingBlockInfo();
 		dir = null;
 	}
 

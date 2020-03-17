@@ -52,11 +52,9 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 		return new AxisAlignedBB(pos.add(-BeamManager.MAX_DISTANCE, -BeamManager.MAX_DISTANCE, -BeamManager.MAX_DISTANCE), pos.add(1 + BeamManager.MAX_DISTANCE, 1 + BeamManager.MAX_DISTANCE, 1 + BeamManager.MAX_DISTANCE));
 	}
 
-	/**
-	 * Sets the beamer variable to null, use whenever rotating the block. 
-	 */
-	public void resetBeamer(){
-//		refresh();
+	@Override
+	public void updateContainingBlockInfo(){
+		super.updateContainingBlockInfo();
 		beamer = null;
 		beamPackets = new int[6];
 		for(int i = 0; i < 6; i++){

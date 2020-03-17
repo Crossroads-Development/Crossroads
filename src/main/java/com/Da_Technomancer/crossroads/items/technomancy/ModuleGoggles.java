@@ -86,7 +86,7 @@ public class ModuleGoggles extends ArmorItem{
 		CompoundNBT nbt = stack.getTag();
 		if(nbt != null){
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
-				if(nbt.contains(lens.name())){
+				if(nbt.contains(lens.toString())){
 					path.append(lens.getTexturePath());
 				}
 			}

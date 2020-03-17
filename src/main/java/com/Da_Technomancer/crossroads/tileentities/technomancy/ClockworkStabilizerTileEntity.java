@@ -33,7 +33,7 @@ public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 
 	private Direction getDir(){
 		if(dir == null){
-			BlockState state = world.getBlockState(pos);
+			BlockState state = getBlockState();
 			if(state.getBlock() != CRBlocks.clockworkStabilizer){
 				return Direction.NORTH;
 			}
@@ -43,8 +43,8 @@ public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 	}
 
 	@Override
-	public void resetBeamer(){
-		super.resetBeamer();
+	public void updateContainingBlockInfo(){
+		super.updateContainingBlockInfo();
 		dir = null;
 	}
 

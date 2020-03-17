@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"item": "minecraft:sugar_cane"
+	},
+	"output": {
+		"item": "minecraft:sugar",
+		"count": 2
+	}
+}

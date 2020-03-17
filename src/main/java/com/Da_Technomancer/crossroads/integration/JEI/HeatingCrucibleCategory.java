@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.CrucibleRec;
+import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntity;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -61,6 +62,7 @@ public class HeatingCrucibleCategory implements IRecipeCategory<CrucibleRec>{
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
 		Minecraft.getInstance().fontRenderer.drawString("When above 1000°C", 10, 10, 0x404040);
+		Minecraft.getInstance().fontRenderer.drawString(String.format("Total Heat Consumed: %1$d°C", HeatingCrucibleTileEntity.REQUIRED), 10, 20, 0x404040);
 		slot.draw(40, 50);
 		arrowStatic.draw(62, 50);
 		arrow.draw(62, 50);

@@ -2,14 +2,14 @@
 	"parent": "minecraft:recipes/root",
 	"rewards": {
 		"recipes": [
-			"crossroads:color_chart"
+			"crossroads:sorting_hopper"
 		]
 	},
 	"criteria": {
 		"has_recipe": {
 			"trigger": "minecraft:recipe_unlocked",
 			"conditions": {
-				"recipe": "crossroads:color_chart"
+				"recipe": "crossroads:sorting_hopper"
 			}
 		}
 	},

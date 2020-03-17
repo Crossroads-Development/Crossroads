@@ -11,7 +11,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -36,11 +35,7 @@ public abstract class BeamBlock extends ContainerBlock{
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
 			if(!worldIn.isRemote){
-				TileEntity te = worldIn.getTileEntity(pos);
 				worldIn.setBlockState(pos, state.cycle(ESProperties.FACING));
-				if(te instanceof BeamRenderTE){
-					((BeamRenderTE) te).resetBeamer();
-				}
 			}
 			return true;
 		}

@@ -34,8 +34,8 @@ public class CrystallinePrismTileEntity extends BeamRenderTE{
 	}
 
 	@Override
-	public void resetBeamer(){
-		super.resetBeamer();
+	public void updateContainingBlockInfo(){
+		super.updateContainingBlockInfo();
 		dir = null;
 	}
 

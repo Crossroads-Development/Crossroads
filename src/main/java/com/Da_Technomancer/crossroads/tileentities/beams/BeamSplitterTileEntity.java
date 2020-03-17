@@ -1,36 +1,28 @@
 package com.Da_Technomancer.crossroads.tileentities.beams;
 
+import com.Da_Technomancer.crossroads.API.CircuitUtil;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.essentials.blocks.BlockUtil;
-import com.Da_Technomancer.essentials.blocks.ESBlocks;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.blocks.redstone.IRedstoneHandler;
-import com.Da_Technomancer.essentials.blocks.redstone.IWireConnect;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.world.TickPriority;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-
 @ObjectHolder(Crossroads.MODID)
-public class BeamSplitterTileEntity extends BeamRenderTE implements IWireConnect{
+public class BeamSplitterTileEntity extends BeamRenderTE{
 
 	@ObjectHolder("beam_splitter")
 	private static TileEntityType<BeamSplitterTileEntity> type = null;
 
 	private int redstone = 0;
-	private float circRedstone = 0;
 	private Direction dir = null;
 
 	public BeamSplitterTileEntity(){
@@ -39,7 +31,7 @@ public class BeamSplitterTileEntity extends BeamRenderTE implements IWireConnect
 
 	private Direction getDir(){
 		if(dir == null){
-			BlockState state = world.getBlockState(pos);
+			BlockState state = getBlockState();
 			if(state.getBlock() != CRBlocks.beamSplitter){
 				return Direction.NORTH;
 			}
@@ -49,8 +41,8 @@ public class BeamSplitterTileEntity extends BeamRenderTE implements IWireConnect
 	}
 
 	@Override
-	public void resetBeamer(){
-		super.resetBeamer();
+	public void updateContainingBlockInfo(){
+		super.updateContainingBlockInfo();
 		dir = null;
 	}
 
@@ -65,7 +57,7 @@ public class BeamSplitterTileEntity extends BeamRenderTE implements IWireConnect
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
 		nbt.putInt("reds", redstone);
-		nbt.putFloat("circ_reds", circRedstone);
+		nbt.putFloat("circ_reds", redsHandler.getCircRedstone());
 		return nbt;
 	}
 
@@ -73,14 +65,14 @@ public class BeamSplitterTileEntity extends BeamRenderTE implements IWireConnect
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
 		redstone = nbt.getInt("reds");
-		circRedstone = nbt.getFloat("circ_reds");
+		redsHandler.setCircRedstone(nbt.getFloat("circ_reds"));
 	}
 
 	@Override
 	protected void doEmit(BeamUnit out){
 		//As it would turn out, the problem of meeting a quota for the sum of values drawn from a limited source while also approximately maintaining the source ratio is quite messy when all values must be integers
 		//This is about as clean an implementation as is possible
-		int toFill = Math.round(out.getPower() * calcRedsInput() / 15F);
+		int toFill = Math.round(out.getPower() * Math.min(15, Math.round(CircuitUtil.combineRedsSources(redsHandler, redstone))) / 15F);
 		Direction facing = getDir();
 		BeamUnit toDraw;
 		BeamUnit remain;
@@ -162,8 +154,8 @@ public class BeamSplitterTileEntity extends BeamRenderTE implements IWireConnect
 		redsOpt.invalidate();
 	}
 
-	private LazyOptional<IRedstoneHandler> redsOpt = LazyOptional.of(CircHandler::new);
-	private WeakReference<LazyOptional<IRedstoneHandler>> redsRef = new WeakReference<>(redsOpt);
+	public CircuitUtil.CircHandler redsHandler = new CircuitUtil.CircHandler();
+	private LazyOptional<IRedstoneHandler> redsOpt = CircuitUtil.makeBaseCircuitOptional(this, redsHandler, 0);
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -172,113 +164,5 @@ public class BeamSplitterTileEntity extends BeamRenderTE implements IWireConnect
 			return (LazyOptional<T>) redsOpt;
 		}
 		return super.getCapability(cap, dir);
-	}
-
-	private float calcRedsInput(){
-		if(!builtConnections){
-			buildConnections();
-		}
-		//Splitter caps signal at 15
-
-		//Something we have to be careful of is that any circuit input (other than circuit connections directly from wire) will also create a normal redstone value
-		//But the vanilla redstone value created is the rounded version of the circuit value.
-		//So if the highest vanilla redstone signal is equal to the rounded highest circuit input,
-		//we assume it is the output from the circuit and use the circuit value instead.
-		//In very unusual cases, THIS ASSUMPTION COULD BE FALSE (ex. vanilla redstone dust with 13, circuit of 12.8, this code uses 12.8 when it should use 13)
-		//This is a known edge case bug
-		if(Math.round(circRedstone) == redstone){
-			return Math.min(15, circRedstone);
-		}
-		return Math.min(Math.max(redstone, circRedstone), 15);
-	}
-
-	private ArrayList<WeakReference<LazyOptional<IRedstoneHandler>>> sources = new ArrayList<>(1);
-	private boolean builtConnections = false;
-
-	public void buildConnections() {
-		//Rebuild the sources list
-		if(!world.isRemote){
-			builtConnections = true;
-			ArrayList<WeakReference<LazyOptional<IRedstoneHandler>>> preSrc = new ArrayList<>(sources.size());
-			preSrc.addAll(sources);
-			//Wipe old sources
-			sources.clear();
-
-			for(Direction checkDir : Direction.values()){
-				TileEntity te = world.getTileEntity(pos.offset(checkDir));
-				IRedstoneHandler otherHandler;
-				if(te != null && (otherHandler = BlockUtil.get(te.getCapability(RedstoneUtil.REDSTONE_CAPABILITY, checkDir.getOpposite()))) != null){
-					otherHandler.requestSrc(redsRef, 0, checkDir.getOpposite(), checkDir);
-				}
-			}
-
-			//if sources changed, schedule an update
-			if(sources.size() != preSrc.size() || !sources.containsAll(preSrc)){
-				world.getPendingBlockTicks().scheduleTick(pos, ESBlocks.redstoneTransmitter, RedstoneUtil.DELAY, TickPriority.NORMAL);
-			}
-		}
-	}
-
-	@Override
-	public boolean canConnect(Direction side, BlockState state){
-		return true;
-	}
-
-	private class CircHandler implements IRedstoneHandler{
-
-		@Override
-		public float getOutput(){
-			return 0;
-		}
-
-		@Override
-		public void findDependents(WeakReference<LazyOptional<IRedstoneHandler>> weakReference, int i, Direction fromSide, Direction nominalSide){
-			LazyOptional<IRedstoneHandler> srcOption = weakReference.get();
-			if(srcOption != null && srcOption.isPresent()){
-				IRedstoneHandler srcHandler = BlockUtil.get(srcOption);
-				srcHandler.addDependent(redsRef, nominalSide);
-				if(!sources.contains(weakReference)){
-					sources.add(weakReference);
-				}
-			}
-		}
-
-		@Override
-		public void requestSrc(WeakReference<LazyOptional<IRedstoneHandler>> weakReference, int i, Direction direction, Direction direction1){
-			//No-op
-		}
-
-		@Override
-		public void addSrc(WeakReference<LazyOptional<IRedstoneHandler>> weakReference, Direction direction){
-			if(!sources.contains(weakReference)){
-				sources.add(weakReference);
-				notifyInputChange(weakReference);
-			}
-		}
-
-		@Override
-		public void addDependent(WeakReference<LazyOptional<IRedstoneHandler>> weakReference, Direction direction){
-			//No-op
-		}
-
-		@Override
-		public void notifyInputChange(WeakReference<LazyOptional<IRedstoneHandler>> weakReference){
-			float prevCirc = circRedstone;
-			circRedstone = 0;
-			for(int i = 0; i < sources.size(); i++){
-				WeakReference<LazyOptional<IRedstoneHandler>> src = sources.get(i);
-				LazyOptional<IRedstoneHandler> srcOpt;
-				if((srcOpt = src.get()) != null && srcOpt.isPresent()){
-					circRedstone = Math.max(circRedstone, RedstoneUtil.sanitize(srcOpt.orElseThrow(NullPointerException::new).getOutput()));
-				}else{
-					//Remove invalid entries to speed up future checks
-					sources.remove(i);
-					i--;
-				}
-			}
-			if(RedstoneUtil.didChange(prevCirc, circRedstone)){
-				markDirty();
-			}
-		}
 	}
 } 

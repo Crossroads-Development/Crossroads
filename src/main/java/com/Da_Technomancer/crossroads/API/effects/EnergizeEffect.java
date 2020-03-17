@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
 
 public class EnergizeEffect extends BeamEffect{
 
-	private static final double MULT = 25;
+	private static final double MULT = 50;
 
 	@Override
 	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, World worldIn, BlockPos pos, @Nullable Direction dir){

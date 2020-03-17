@@ -27,9 +27,9 @@ public class StampMillScreen extends MachineGUI<StampMillContainer, StampMillTil
 
 
 		//Time meter
-		blit(i + 55, j + 34, 176, 0, Math.min(66, te.timeRef.get() * 66 / StampMillTileEntity.TIME_LIMIT), 9);
+		blit(i + 55, j + 34, 176, 0, Math.min(66, container.timeRef.get() * 66 / StampMillTileEntity.TIME_LIMIT), 9);
 		//Progress meter
-		blit(i + 55, j + 45, 176, 0, (int) Math.min(66, te.progRef.get() * 66 / StampMillTileEntity.REQUIRED), 9);
+		blit(i + 55, j + 45, 176, 0, (int) Math.min(66, container.progRef.get() * 66 / StampMillTileEntity.REQUIRED), 9);
 
 		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
 	}

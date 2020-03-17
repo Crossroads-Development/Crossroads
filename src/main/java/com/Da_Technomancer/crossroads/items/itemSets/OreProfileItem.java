@@ -45,6 +45,15 @@ public class OreProfileItem extends Item{
 	}
 
 	@Override
+	public String getTranslationKey(ItemStack stack){
+//		return super.getTranslationKey(stack);
+		//We 'cheat' here. Instead of returning the translation key, we return the translated text, w/ formatting applied.
+		//This is because most things calling this method don't know to pass the material name as a formatter argument (and most things use getDisplayName instead)
+		//This is mainly important for WAILA
+		return getDisplayName(stack).getFormattedText();
+	}
+
+	@Override
 	@OnlyIn(Dist.CLIENT)
 	public ITextComponent getName(){
 		//Incorrectly displays the default material for all variants- we don't have access to an itemstack/nbt to differentiate
@@ -54,7 +63,8 @@ public class OreProfileItem extends Item{
 	@Override
 	public ITextComponent getDisplayName(ItemStack stack){
 		OreSetup.OreProfile mat = getProfile(stack);
-		return new TranslationTextComponent(getTranslationKey(stack), mat == null ? "INVALID" : mat.getName());
+		//Note that we use the super of getTranslationKey to prevent an infinite loop
+		return new TranslationTextComponent(super.getTranslationKey(stack), mat == null ? "INVALID" : mat.getName());
 	}
 
 	@Override

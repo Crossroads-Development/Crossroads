@@ -82,8 +82,8 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 	}
 
 	@Override
-	public void resetBeamer(){
-		super.resetBeamer();
+	public void updateContainingBlockInfo(){
+		super.updateContainingBlockInfo();
 		facing = null;
 		itemOpt.invalidate();
 		itemOpt = LazyOptional.of(ItemHandler::new);

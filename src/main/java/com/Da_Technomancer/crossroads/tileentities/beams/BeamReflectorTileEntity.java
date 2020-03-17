@@ -19,14 +19,14 @@ public class BeamReflectorTileEntity extends BeamRenderTE{
 	}
 
 	@Override
-	public void resetBeamer(){
-		super.resetBeamer();
+	public void updateContainingBlockInfo(){
+		super.updateContainingBlockInfo();
 		facing = -1;
 	}
 
 	private int getFacing(){
 		if(facing == -1){
-			BlockState s = world.getBlockState(pos);
+			BlockState s = getBlockState();
 			if(s.has(ESProperties.FACING)){
 				facing = s.get(ESProperties.FACING).getIndex();
 			}else{
