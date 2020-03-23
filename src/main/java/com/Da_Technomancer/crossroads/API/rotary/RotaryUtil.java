@@ -13,7 +13,6 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
@@ -127,8 +126,7 @@ public class RotaryUtil{
 		//Projections remove all cuboids that don't touch the passed side, and extend those that remain into a full column from one side to the opposite (the project method is poorly named)
 		//Projections are cached by default, so this operation is fast
 		//We have a reference anchor shape, which should fit neatly inside the projected shape if this is a solid surface
-		//We go to the block directly for getting the shape, because BlockState caches the result, and CR Mechanisms have the collision shape vary w/ TE data (this is a workaround)
-		return !VoxelShapes.compare(state.getBlock().getCollisionShape(state, world, pos, ISelectionContext.dummy()).project(side), GEAR_ANCHOR_SHAPE, IBooleanFunction.ONLY_SECOND);
+		return !VoxelShapes.compare(state.getCollisionShape(world, pos).project(side), GEAR_ANCHOR_SHAPE, IBooleanFunction.ONLY_SECOND);
 	}
 
 	/**

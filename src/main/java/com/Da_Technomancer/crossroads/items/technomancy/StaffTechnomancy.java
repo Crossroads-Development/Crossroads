@@ -1,10 +1,7 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.beams.BeamManager;
-import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
-import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
+import com.Da_Technomancer.crossroads.API.beams.*;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.google.common.collect.Multimap;
@@ -52,7 +49,7 @@ public class StaffTechnomancy extends BeamUsingItem{
 
 	@Override
 	public void onUsingTick(ItemStack stack, LivingEntity player, int count){
-		if(!player.world.isRemote && player.isAlive() && (getUseDuration(stack) - count) % BeamManager.BEAM_TIME == 0){
+		if(!player.world.isRemote && player.isAlive() && (getUseDuration(stack) - count) % BeamUtil.BEAM_TIME == 0){
 			ItemStack cage = player.getHeldItem(player.getActiveHand() == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND);
 			if(cage.getItem() != CRItems.beamCage || cage.hasTag()){
 				player.resetActiveHand();
@@ -71,6 +68,7 @@ public class StaffTechnomancy extends BeamUsingItem{
 				double[] end = new double[] {player.posX, player.getEyeHeight() + player.posY, player.posZ};
 				BlockPos endPos = null;
 				Vec3d look = player.getLookVec().scale(0.2D);
+				Direction collisionDir = Direction.getFacingFromVector(look.x, look.y, look.z);//Used for beam collision detection
 				Direction effectDir = null;
 				//Raytrace manually along the look direction
 				for(double d = 0; d < 32; d += 0.2D){
@@ -97,7 +95,7 @@ public class StaffTechnomancy extends BeamUsingItem{
 					}
 					endPos = newEndPos;
 					BlockState state = player.world.getBlockState(endPos);
-					if(BeamManager.solidToBeams(state, player.world, endPos)){
+					if(BeamUtil.solidToBeams(state, player.world, endPos, collisionDir, mag.getPower())){
 						//Note: this VoxelShape has no offset
 						VoxelShape shape = state.getRaytraceShape(player.world, endPos);//.getBoundingBox(player.world, endPos).offset(endPos);
 						BlockRayTraceResult res = shape.rayTrace(start, new Vec3d(end[0] + look.x * 5D, end[1] + look.y * 5D, end[2] + look.z * 5D), endPos);//bb.calculateIntercept(start, new Vec3d(end[0] + look.x * 5D, end[1] + look.y * 5D, end[2] + look.z * 5D));

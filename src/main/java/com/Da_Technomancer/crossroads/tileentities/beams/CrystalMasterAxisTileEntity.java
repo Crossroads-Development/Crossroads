@@ -3,10 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.beams;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.beams.BeamManager;
-import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
-import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
+import com.Da_Technomancer.crossroads.API.beams.*;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
@@ -158,10 +155,10 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 				if(newElem != currentElement){
 					currentElement = newElem;
 					if(mag.getVoid() == 0){
-						time = mag.getPower() * BeamManager.BEAM_TIME;
+						time = mag.getPower() * BeamUtil.BEAM_TIME;
 					}
 				}else{
-					time = Math.max(mag.getVoid() == 0 ? time + mag.getPower() * BeamManager.BEAM_TIME : time - mag.getPower() * BeamManager.BEAM_TIME, 0);
+					time = Math.max(mag.getVoid() == 0 ? time + mag.getPower() * BeamUtil.BEAM_TIME : time - mag.getPower() * BeamUtil.BEAM_TIME, 0);
 				}
 			}
 		}

@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.API.technomancy;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumReagents;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
-import com.Da_Technomancer.crossroads.API.beams.BeamManager;
+import com.Da_Technomancer.crossroads.API.beams.BeamUtil;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
@@ -31,7 +31,7 @@ public class FluxUtil{
 	 *
 	 * This allows flux transfer to tick-order independent
 	 */
-	public static final int FLUX_TIME = BeamManager.BEAM_TIME;
+	public static final int FLUX_TIME = BeamUtil.BEAM_TIME;
 	public static final int[] COLOR_CODES = new int[] {new Color(67, 0, 49).getRGB(), new Color(255, 68, 0).getRGB(), new Color(220, 64, 0).getRGB()};//color codes for flux rendering
 
 	/**

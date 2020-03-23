@@ -1,10 +1,7 @@
 package com.Da_Technomancer.crossroads.API.templates;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.beams.BeamManager;
-import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
-import com.Da_Technomancer.crossroads.API.beams.BeamUnitStorage;
-import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
+import com.Da_Technomancer.crossroads.API.beams.*;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
@@ -49,7 +46,7 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){
 		//Expand the render box to include all possible beams from this block
-		return new AxisAlignedBB(pos.add(-BeamManager.MAX_DISTANCE, -BeamManager.MAX_DISTANCE, -BeamManager.MAX_DISTANCE), pos.add(1 + BeamManager.MAX_DISTANCE, 1 + BeamManager.MAX_DISTANCE, 1 + BeamManager.MAX_DISTANCE));
+		return new AxisAlignedBB(pos.add(-BeamUtil.MAX_DISTANCE, -BeamUtil.MAX_DISTANCE, -BeamUtil.MAX_DISTANCE), pos.add(1 + BeamUtil.MAX_DISTANCE, 1 + BeamUtil.MAX_DISTANCE, 1 + BeamUtil.MAX_DISTANCE));
 	}
 
 	@Override
@@ -85,7 +82,7 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 			return;
 		}
 		
-		if(world.getGameTime() % BeamManager.BEAM_TIME == 0){
+		if(world.getGameTime() % BeamUtil.BEAM_TIME == 0){
 			if(beamer == null){
 				beamer = new BeamManager[6];
 				boolean[] outputs = outputSides();

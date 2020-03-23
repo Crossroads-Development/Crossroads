@@ -35,7 +35,10 @@ public class Mechanism extends ContainerBlock implements IReadable{
 //	private static final VoxelShape BREAK_ALL_BB = Block.makeCuboidShape(5, 5, 5, 11, 11, 11);
 
 	public Mechanism(){
-		super(Block.Properties.create(Material.IRON).hardnessAndResistance(1).sound(SoundType.METAL));
+		super(Block.Properties.create(Material.IRON).hardnessAndResistance(1).sound(SoundType.METAL).variableOpacity());
+		//The variableOpacity flag is important
+		//This trait name is poorly mapped by MCP- it controls whether BlockState instances are allowed to cache the results of several common methods
+		//Most importantly, the getShape() method (and its variants). As this block varies shape with TE data instead of state, we cannot use the cache
 		String name = "mechanism";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
@@ -69,7 +72,7 @@ public class Mechanism extends ContainerBlock implements IReadable{
 		//Used for selection. Adds break all cube if the axle slot is empty
 		TileEntity te = worldIn.getTileEntity(pos);
 		if(te instanceof MechanismTileEntity){
-			MechanismTileEntity mte = (MechanismTileEntity) te;
+//			MechanismTileEntity mte = (MechanismTileEntity) te;
 //			if(mte.members[6] != null){
 				return getCollisionShape(state, worldIn, pos, context);
 //			}else{
@@ -78,6 +81,11 @@ public class Mechanism extends ContainerBlock implements IReadable{
 		}
 		return VoxelShapes.empty();
 //		return BREAK_ALL_BB;//Shouldn't happen unless network weirdness.
+	}
+
+	@Override
+	public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos){
+		return VoxelShapes.empty();
 	}
 
 	@Override

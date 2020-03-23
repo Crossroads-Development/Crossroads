@@ -2,14 +2,9 @@ package com.Da_Technomancer.crossroads.API.beams;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.effects.BeamEffect;
-import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
@@ -19,10 +14,6 @@ import javax.annotation.Nonnull;
 import java.awt.*;
 
 public class BeamManager{
-
-	private static final Tag<Block> PASSABLE = new BlockTags.Wrapper(new ResourceLocation(Crossroads.MODID, "beam_passable"));
-	public static final int MAX_DISTANCE = 16;
-	public static final int BEAM_TIME = 5;
 
 	private final Direction dir;
 	private final BlockPos pos;
@@ -37,7 +28,7 @@ public class BeamManager{
 	}
 
 	public boolean emit(@Nonnull BeamUnit mag, World world){
-		for(int i = 1; i <= BeamManager.MAX_DISTANCE; i++){
+		for(int i = 1; i <= BeamUtil.MAX_DISTANCE; i++){
 			TileEntity checkTE = world.getTileEntity(pos.offset(dir, i));
 			LazyOptional<IBeamHandler> opt;
 			if(checkTE != null && (opt = checkTE.getCapability(Capabilities.BEAM_CAPABILITY, dir.getOpposite())).isPresent()){
@@ -52,7 +43,7 @@ public class BeamManager{
 			}
 
 			BlockState checkState = world.getBlockState(pos.offset(dir, i));
-			if(i == BeamManager.MAX_DISTANCE || solidToBeams(checkState, world, pos.offset(dir, i))){
+			if(i == BeamUtil.MAX_DISTANCE || BeamUtil.solidToBeams(checkState, world, pos.offset(dir, i), dir, mag.getPower())){
 				if(!mag.isEmpty()){
 					EnumBeamAlignments align = EnumBeamAlignments.getAlignment(mag);
 					BeamEffect e = align.getEffect();
@@ -71,17 +62,6 @@ public class BeamManager{
 	}
 
 	/**
-	 * Determines whether beams should collide with a given block
-	 * @param state The state to check
-	 * @param world The world this state exists in (Use any non-null world if this is unavailable)
-	 * @param pos The position of the passed state in the world (use the origin if this is unavailable)
-	 * @return Whether beams should collide with this block
-	 */
-	public static boolean solidToBeams(BlockState state, World world, BlockPos pos){
-		return !state.isAir(world, pos) && !PASSABLE.contains(state.getBlock());
-	}
-
-	/**
 	 * Serializes information needed by this class on the client side into an integer
 	 * @param mag The beam unit to render
 	 * @param dist The length of the last beam send
@@ -91,7 +71,13 @@ public class BeamManager{
 		if(mag == null){
 			return 0;
 		}
-		return ((dist - 1) << 24) + (mag.getRGB().getRGB() & 0xFFFFFF) + (Math.min(7, (int) Math.round(Math.sqrt(mag.getPower())) - 1) << 28);
+		int packet = 0;
+		if(mag.getPower() != 0){
+			packet |= mag.getRGB().getRGB() & 0xFFFFFF;//Encode color, Remove the alpha bits
+			packet |= ((dist - 1) & 0xF) << 24;//Encode length
+			packet |= ((BeamUtil.getBeamRadius(mag.getPower()) - 1) & 0xF) << 28;//Encode beam radius
+		}
+		return packet;
 	}
 
 	public int genPacket(){
@@ -104,7 +90,7 @@ public class BeamManager{
 	 * @return A triple with the color to render, the length of the beam to render, and the size (adjusted for rendering, not the original power of the beam) of the beam to render
 	 */
 	public static Triple<Color, Integer, Integer> getTriple(int packet){
-		return packet == 0 ? Triple.of(Color.BLACK, 0, 0) : Triple.of(Color.decode(Integer.toString(packet & 0xFFFFFF)), ((packet >> 24) & 15) + 1, (packet >> 28) + 1);
+		return packet == 0 ? Triple.of(Color.BLACK, 0, 0) : Triple.of(Color.decode(Integer.toString(packet & 0xFFFFFF)), ((packet >>> 24) & 0xF) + 1, (packet >>> 28) + 1);
 	}
 
 	@Nonnull

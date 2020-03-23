@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.electric;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.electric.DynamoTileEntity;
@@ -10,6 +9,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -33,8 +34,8 @@ public class Dynamo extends ContainerBlock{
 
 	private static final VoxelShape[] SHAPES = new VoxelShape[2];
 	static{
-		SHAPES[0] = makeCuboidShape(0, 0, 4, 16, 8, 12);
-		SHAPES[1] = makeCuboidShape(4, 0, 0, 12, 8, 16);
+		SHAPES[0] = VoxelShapes.or(makeCuboidShape(0, 0, 4, 16, 8, 12), makeCuboidShape(0, 7, 7, 16, 9, 9));
+		SHAPES[1] = VoxelShapes.or(makeCuboidShape(4, 0, 0, 12, 8, 16), makeCuboidShape(7, 7, 0, 9, 9, 16));
 	}
 
 	public Dynamo(){
@@ -64,10 +65,6 @@ public class Dynamo extends ContainerBlock{
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
 			if(!worldIn.isRemote){
-				TileEntity te = worldIn.getTileEntity(pos);
-				if(te instanceof ModuleTE){
-					((ModuleTE) te).updateContainingBlockInfo();
-				}
 				worldIn.setBlockState(pos, state.cycle(CRProperties.HORIZ_FACING));
 			}
 			return true;
@@ -81,6 +78,12 @@ public class Dynamo extends ContainerBlock{
 		tooltip.add(new TranslationTextComponent("tt.crossroads.dynamo.power", CRConfig.electPerJoule.get()));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.dynamo.usage", DynamoTileEntity.INERTIA / 2));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", DynamoTileEntity.INERTIA));
+	}
+
+	@Nullable
+	@Override
+	public BlockState getStateForPlacement(BlockItemUseContext context){
+		return getDefaultState().with(CRProperties.HORIZ_FACING, context.getPlacementHorizontalFacing());
 	}
 
 	@Override

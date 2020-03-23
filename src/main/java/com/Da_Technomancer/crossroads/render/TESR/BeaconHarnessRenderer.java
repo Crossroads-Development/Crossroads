@@ -59,7 +59,7 @@ public class BeaconHarnessRenderer extends LinkLineRenderer<BeaconHarnessTileEnt
 				GlStateManager.rotated((beam.getWorld().getGameTime() + partialTicks) * 2F, 0, 1, 0);
 			}
 
-			final double rad = trip.getRight().doubleValue() / 16D / Math.sqrt(2D);
+			final double rad = trip.getRight().doubleValue() / 16D / Math.sqrt(2);//Convert diagonal radius to side length
 			final int length = trip.getMiddle();
 
 			buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);

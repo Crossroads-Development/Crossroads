@@ -84,7 +84,7 @@ public class BeamRenderer<T extends TileEntity & IBeamRenderTE> extends TileEnti
 				Tessellator tes = Tessellator.getInstance();
 				BufferBuilder buf = tes.getBuffer();
 
-				double halfWidth = trip.getRight().doubleValue() / (Math.sqrt(2D) * 16D);
+				double halfWidth = trip.getRight().doubleValue() / 16D / Math.sqrt(2);//Convert diagonal radius to side length
 				int length = trip.getMiddle();
 
 				float[] col = new float[4];
