@@ -34,6 +34,10 @@ public class FluxUtil{
 	public static final int FLUX_TIME = BeamUtil.BEAM_TIME;
 	public static final int[] COLOR_CODES = new int[] {new Color(67, 0, 49).getRGB(), new Color(255, 68, 0).getRGB(), new Color(220, 64, 0).getRGB()};//color codes for flux rendering
 
+	public static int findReadingFlux(IFluxLink te, int flux, int fluxToTrans){
+		return Math.max(flux, fluxToTrans);
+	}
+
 	/**
 	 * Does the simplest flux transfer from a src to linked machines
 	 * Using this method is not recommended unless linkPos is size 0 or 1, as it does not distribute flux between multiple outputs well
@@ -41,6 +45,7 @@ public class FluxUtil{
 	 * @param src The source to transfer from
 	 * @param links The linked relative position(s) to transfer to (will be checked), ideally size [0-1]
 	 */
+	@Deprecated
 	public static void performTransfer(IFluxLink src, Set<BlockPos> links){
 		for(BlockPos linkPos : links){
 			World world = src.getTE().getWorld();
@@ -89,7 +94,7 @@ public class FluxUtil{
 	public static void renderFlux(World world, BlockPos src, BlockPos dest, int qty){
 		if(qty > 0){
 			//This is basically a carbon copy of the tesla coil render code- this should probably be tweaked to make it more thematic
-			CRRenderUtil.addArc(world, src.getX() + 0.5F, src.getY() + 0.5F, src.getZ() + 0.5F, dest.getX() + 0.5F, dest.getY() + 0.5F, dest.getZ() + 0.5F, 3, 0.3F, COLOR_CODES[(int) (world.getGameTime() % 3)]);
+			CRRenderUtil.addArc(world, src.getX() + 0.5F, src.getY() + 0.5F, src.getZ() + 0.5F, dest.getX() + 0.5F, dest.getY() + 0.5F, dest.getZ() + 0.5F, 3, 0F, COLOR_CODES[(int) (world.getGameTime() % 3)]);
 		}
 	}
 

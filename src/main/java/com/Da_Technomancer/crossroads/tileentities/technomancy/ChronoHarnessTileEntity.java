@@ -42,6 +42,7 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 	private static final float SPEED = (float) Math.PI / 20F / POWER;//Used for rendering
 
 	private int flux = 0;//Stored flux
+	private int fluxToTrans = 0;
 	private int fe = 0;//Stored FE
 	private int curPower = 0;//Current power generation (fe/t); used for readouts
 	private int clientCurPower = 0;//Current power gen on the client; used for rendering. On the server side, tracks last sent value
@@ -95,8 +96,16 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 		if(world.isRemote){
 			angle += clientCurPower * SPEED;
 		}else{
-			if(world.getGameTime() % FluxUtil.FLUX_TIME == 1){
-				FluxUtil.performTransfer(this, link);
+			//Handle flux
+			long stage = world.getGameTime() % FluxUtil.FLUX_TIME;
+			if(stage == 0 && flux != 0){
+				fluxToTrans += flux;
+				flux = 0;
+				markDirty();
+			}else if(stage == 1){
+				flux += FluxUtil.performTransfer(this, link, fluxToTrans);
+				fluxToTrans = 0;
+				FluxUtil.checkFluxOverload(this);
 			}
 
 			if(shouldRun()){
@@ -137,6 +146,11 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 	}
 
 	@Override
+	public int getReadingFlux(){
+		return FluxUtil.findReadingFlux(this, flux, fluxToTrans);
+	}
+
+	@Override
 	public void remove(){
 		super.remove();
 		energyOpt.invalidate();
@@ -159,6 +173,7 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 		super.write(nbt);
 		nbt.putInt("fe", fe);
 		nbt.putInt("flux", flux);
+		nbt.putInt("flux_trans", fluxToTrans);
 		nbt.putInt("pow", curPower);
 		for(BlockPos linked : link){//Size 0 or 1
 			nbt.putLong("link", linked.toLong());
@@ -172,6 +187,7 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 		super.read(nbt);
 		fe = nbt.getInt("fe");
 		flux = nbt.getInt("flux");
+		fluxToTrans = nbt.getInt("flux_trans");
 		curPower = nbt.getInt("pow");
 		clientCurPower = curPower;
 		if(nbt.contains("link")){

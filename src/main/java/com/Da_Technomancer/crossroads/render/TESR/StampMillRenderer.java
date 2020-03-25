@@ -29,7 +29,7 @@ public class StampMillRenderer extends TileEntityRenderer<StampMillTileEntity>{
 			return;
 		}
 		
-		Color ironColor = GearFactory.findMaterial("Iron").getColor();
+		Color ironColor = GearFactory.findMaterial("iron").getColor();
 
 		float prog = te.renderAngle(partialTicks);
 		GlStateManager.pushMatrix();

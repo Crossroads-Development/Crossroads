@@ -49,6 +49,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	public static final int FLUX_PER_INGOT = 4;
 
 	private int flux = 0;
+	private int fluxToTrans = 0;
 	private final HashSet<BlockPos> link = new HashSet<>(1);
 
 	public CopshowiumCreationChamberTileEntity(){
@@ -82,9 +83,16 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	public void tick(){
 		super.tick();
 
-		if(world.getGameTime() % FluxUtil.FLUX_TIME == 1){
+		//Handle flux
+		long stage = world.getGameTime() % FluxUtil.FLUX_TIME;
+		if(stage == 0 && flux != 0){
+			fluxToTrans += flux;
+			flux = 0;
+			markDirty();
+		}else if(stage == 1){
+			flux += FluxUtil.performTransfer(this, link, fluxToTrans);
+			fluxToTrans = 0;
 			FluxUtil.checkFluxOverload(this);
-			FluxUtil.performTransfer(this, link);
 		}
 	}
 
@@ -92,6 +100,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
 		nbt.putInt("flux", flux);
+		nbt.putInt("flux_trans", fluxToTrans);
 		for(BlockPos linked : link){//Size 0 or 1
 			nbt.putLong("link", linked.toLong());
 		}
@@ -102,6 +111,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
 		flux = nbt.getInt("flux");
+		fluxToTrans = nbt.getInt("flux_trans");
 		if(nbt.contains("link")){
 			link.add(BlockPos.fromLong(nbt.getLong("link")));
 		}else{
@@ -116,6 +126,11 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 			nbt.putLong("link", linked.toLong());
 		}
 		return nbt;
+	}
+
+	@Override
+	public int getReadingFlux(){
+		return FluxUtil.findReadingFlux(this, flux, fluxToTrans);
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
+import com.Da_Technomancer.crossroads.API.beams.BeamUtil;
 import com.Da_Technomancer.crossroads.API.templates.IBeamRenderTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
@@ -11,7 +12,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.tuple.Triple;
 import org.lwjgl.opengl.GL11;
 
@@ -22,8 +22,6 @@ import java.awt.*;
  */
 public class BeamRenderer<T extends TileEntity & IBeamRenderTE> extends TileEntityRenderer<T>{
 
-	protected static final ResourceLocation TEXTURE_BEACON_BEAM = new ResourceLocation("textures/entity/beacon_beam.png");
-
 	@Override
 	public void render(T beam, double x, double y, double z, float partialTicks, int destroyStage){
 		if(!beam.getWorld().isBlockLoaded(beam.getPos())){
@@ -32,47 +30,36 @@ public class BeamRenderer<T extends TileEntity & IBeamRenderTE> extends TileEnti
 
 		int[] packets = beam.getRenderedBeams();
 
-		for(int dir = 0; dir < 6; ++dir){
+		for(int dir = 0; dir < 6; dir++){
 			if(packets[dir] != 0){
 				Triple<Color, Integer, Integer> trip = BeamManager.getTriple(packets[dir]);
 
 				GlStateManager.pushMatrix();
 				GlStateManager.pushLightingAttributes();
-				GlStateManager.translated(x, y, z);
-//				GlStateManager.color3f(trip.getLeft().getRed() / 255F, trip.getLeft().getGreen() / 255F, trip.getLeft().getBlue() / 255F);
-				Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE_BEACON_BEAM);
+				GlStateManager.translated(x + 0.5F, y + 0.5F, z + 0.5F);
+				Minecraft.getInstance().getTextureManager().bindTexture(BeamUtil.BEAM_TEXT);
 				GlStateManager.disableLighting();
-//				GlStateManager.disableBlend();
 				GlStateManager.disableCull();
-
-//				GlStateManager.texParameter(3553, 10242, 10497);
-//				GlStateManager.texParameter(3553, 10243, 10497);
 
 				CRRenderUtil.setBrightLighting();
 
 				switch(dir){
 					case 0:
 						GlStateManager.rotated(180, 1, 0, 0);
-						GlStateManager.translated(.5D, -.5D, -.5D);
 						break;
 					case 1:
-						GlStateManager.translated(.5D, .5D, .5D);
-						break;
-					case 5:
-						GlStateManager.rotated(-90, 0, 0, 1);
-						GlStateManager.translated(-.5D, .5D, .5D);
-						break;
-					case 4:
-						GlStateManager.rotated(90, 0, 0, 1);
-						GlStateManager.translated(.5D, -.5D, .5D);
 						break;
 					case 2:
 						GlStateManager.rotated(-90, 1, 0, 0);
-						GlStateManager.translated(.5D, -.5D, .5D);
 						break;
 					case 3:
 						GlStateManager.rotated(90, 1, 0, 0);
-						GlStateManager.translated(.5D, .5D, -.5D);
+						break;
+					case 4:
+						GlStateManager.rotated(90, 0, 0, 1);
+						break;
+					case 5:
+						GlStateManager.rotated(-90, 0, 0, 1);
 						break;
 				}
 
@@ -114,6 +101,23 @@ public class BeamRenderer<T extends TileEntity & IBeamRenderTE> extends TileEnti
 				buf.pos(halfWidth, 0, halfWidth).tex(1, length).color(col[0], col[1], col[2], col[3]).endVertex();
 				buf.pos(halfWidth, 0, -halfWidth).tex(0, length).color(col[0], col[1], col[2], col[3]).endVertex();
 				buf.pos(halfWidth, length, -halfWidth).tex(0, 0).color(col[0], col[1], col[2], col[3]).endVertex();
+				tes.draw();
+
+				//Ends
+				Minecraft.getInstance().getTextureManager().bindTexture(BeamUtil.BEAM_END_TEXT);
+
+				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+				//Out end
+				buf.pos(-halfWidth, length, halfWidth).tex(1, 0).color(col[0], col[1], col[2], col[3]).endVertex();
+				buf.pos(-halfWidth, length, -halfWidth).tex(1, 1).color(col[0], col[1], col[2], col[3]).endVertex();
+				buf.pos(halfWidth, length, -halfWidth).tex(0, 1).color(col[0], col[1], col[2], col[3]).endVertex();
+				buf.pos(halfWidth, length, halfWidth).tex(0, 0).color(col[0], col[1], col[2], col[3]).endVertex();
+
+				//Start end
+				buf.pos(-halfWidth, 0, halfWidth).tex(1, 0).color(col[0], col[1], col[2], col[3]).endVertex();
+				buf.pos(-halfWidth, 0, -halfWidth).tex(1, 1).color(col[0], col[1], col[2], col[3]).endVertex();
+				buf.pos(halfWidth, 0, -halfWidth).tex(0, 1).color(col[0], col[1], col[2], col[3]).endVertex();
+				buf.pos(halfWidth, 0, halfWidth).tex(0, 0).color(col[0], col[1], col[2], col[3]).endVertex();
 				tes.draw();
 
 //				CRRenderUtil.restoreLighting(lighting);

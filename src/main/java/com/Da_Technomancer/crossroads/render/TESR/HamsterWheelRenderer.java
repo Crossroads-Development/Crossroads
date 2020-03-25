@@ -67,7 +67,7 @@ public class HamsterWheelRenderer extends TileEntityRenderer<HamsterWheelTileEnt
 		GlStateManager.translated(0, -.4375D, 0);
 		GlStateManager.scaled(1, .8D, 1);
 		GlStateManager.rotated(90, 1, 0, 0);
-		CRModels.drawAxle(GearFactory.findMaterial("Iron").getColor());
+		CRModels.drawAxle(GearFactory.findMaterial("iron").getColor());
 		GlStateManager.popMatrix();
 
 		float lHalf = .375F;

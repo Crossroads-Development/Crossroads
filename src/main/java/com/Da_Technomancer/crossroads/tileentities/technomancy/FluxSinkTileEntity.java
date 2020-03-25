@@ -34,6 +34,7 @@ public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickab
 
 	private static final int CAPACITY = 10_000;
 	private int flux = 0;
+	private int prevFlux = 0;
 	private boolean running = false;
 
 	public FluxSinkTileEntity(){
@@ -48,9 +49,12 @@ public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickab
 
 	@Override
 	public void tick(){
-		if(world.getGameTime() % FluxUtil.FLUX_TIME == 0 && isRunning() && flux != 0){
-			flux = 0;
-			markDirty();
+		if(world.getGameTime() % FluxUtil.FLUX_TIME == 0){
+			prevFlux = flux;
+			if(isRunning() && flux != 0){
+				flux = 0;
+				markDirty();
+			}
 		}
 	}
 
@@ -150,6 +154,11 @@ public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickab
 	@Override
 	public int getMaxFlux(){
 		return CAPACITY;
+	}
+
+	@Override
+	public int getReadingFlux(){
+		return FluxUtil.findReadingFlux(this, flux, prevFlux);
 	}
 
 	@Override

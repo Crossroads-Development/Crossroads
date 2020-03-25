@@ -1,0 +1,21 @@
+{
+	"parent": "minecraft:recipes/root",
+	"rewards": {
+		"recipes": [
+			"crossroads:mill/furnace"
+		]
+	},
+	"criteria": {
+		"has_recipe": {
+			"trigger": "minecraft:recipe_unlocked",
+			"conditions": {
+				"recipe": "crossroads:mill/furnace"
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_recipe"
+		]
+	]
+}

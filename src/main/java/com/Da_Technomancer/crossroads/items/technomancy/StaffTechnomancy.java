@@ -51,7 +51,7 @@ public class StaffTechnomancy extends BeamUsingItem{
 	public void onUsingTick(ItemStack stack, LivingEntity player, int count){
 		if(!player.world.isRemote && player.isAlive() && (getUseDuration(stack) - count) % BeamUtil.BEAM_TIME == 0){
 			ItemStack cage = player.getHeldItem(player.getActiveHand() == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND);
-			if(cage.getItem() != CRItems.beamCage || cage.hasTag()){
+			if(cage.getItem() != CRItems.beamCage || !cage.hasTag()){
 				player.resetActiveHand();
 				return;
 			}
@@ -64,7 +64,7 @@ public class StaffTechnomancy extends BeamUsingItem{
 
 				//Calculate the start and end point of the fired beam
 				double heldOffset = .22D * (player.getActiveHand() == Hand.MAIN_HAND ^ player.getPrimaryHand() == HandSide.LEFT ? 1D : -1D);
-				Vec3d start = new Vec3d(player.posX - (heldOffset * Math.cos(Math.toRadians(player.rotationYaw))), player.posY + 2.1D, player.posZ - (heldOffset * Math.sin(Math.toRadians(player.rotationYaw))));
+				Vec3d start = new Vec3d(player.posX - (heldOffset * Math.cos(Math.toRadians(player.rotationYaw))), player.posY + player.getEyeHeight() + 0.4D, player.posZ - (heldOffset * Math.sin(Math.toRadians(player.rotationYaw))));
 				double[] end = new double[] {player.posX, player.getEyeHeight() + player.posY, player.posZ};
 				BlockPos endPos = null;
 				Vec3d look = player.getLookVec().scale(0.2D);
@@ -97,7 +97,7 @@ public class StaffTechnomancy extends BeamUsingItem{
 					BlockState state = player.world.getBlockState(endPos);
 					if(BeamUtil.solidToBeams(state, player.world, endPos, collisionDir, mag.getPower())){
 						//Note: this VoxelShape has no offset
-						VoxelShape shape = state.getRaytraceShape(player.world, endPos);//.getBoundingBox(player.world, endPos).offset(endPos);
+						VoxelShape shape = state.getRenderShape(player.world, endPos);//.getBoundingBox(player.world, endPos).offset(endPos);
 						BlockRayTraceResult res = shape.rayTrace(start, new Vec3d(end[0] + look.x * 5D, end[1] + look.y * 5D, end[2] + look.z * 5D), endPos);//bb.calculateIntercept(start, new Vec3d(end[0] + look.x * 5D, end[1] + look.y * 5D, end[2] + look.z * 5D));
 						if(res != null){
 							Vec3d hitVec = res.getHitVec();

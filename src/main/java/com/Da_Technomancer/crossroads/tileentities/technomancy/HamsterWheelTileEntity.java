@@ -17,7 +17,7 @@ public class HamsterWheelTileEntity extends TileEntity implements ITickableTileE
 	@ObjectHolder("hamster_wheel")
 	private static TileEntityType<HamsterWheelTileEntity> type = null;
 
-	public static final int POWER = 2;
+	public static final int POWER = 5;
 
 	public float angle = 0;
 	public float nextAngle = 0;
@@ -28,7 +28,7 @@ public class HamsterWheelTileEntity extends TileEntity implements ITickableTileE
 
 	@Override
 	public void tick(){
-		Direction facing = world.getBlockState(pos).get(CRProperties.HORIZ_FACING);
+		Direction facing = getBlockState().get(CRProperties.HORIZ_FACING);
 		TileEntity te = world.getTileEntity(pos.offset(facing));
 		LazyOptional<IAxleHandler> axleOpt;
 		if(te != null && (axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, facing.getOpposite())).isPresent()){

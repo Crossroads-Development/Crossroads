@@ -79,7 +79,7 @@ public class FatCongealer extends ContainerBlock{
 		TileEntity te;
 		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.cycle(CRProperties.HORIZ_AXIS));
+				worldIn.setBlockState(pos, state.cycle(ESProperties.HORIZ_FACING));
 			}
 		}else if(!worldIn.isRemote && (te = worldIn.getTileEntity(pos)) instanceof INamedContainerProvider){
 			NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);

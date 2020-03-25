@@ -52,6 +52,7 @@ public final class EventHandlerClient{
 			for(Entity ent : game.world.getAllEntities()){
 				CompoundNBT entNBT = ent.getPersistentData();
 				if(entNBT == null){
+					Crossroads.logger.info("Found entity with null persistent data! Report to the mod author of the mod that added the entity: %s", ent.getType().getRegistryName().toString());
 					continue;//Should never be null, but some mods override the entNBT method to return null for some reason
 				}
 				if(!entNBT.contains("glow")){
@@ -88,7 +89,7 @@ public final class EventHandlerClient{
 			for(IVisualEffect effect : SafeCallable.effectsToRender){
 				GlStateManager.pushMatrix();
 				GlStateManager.pushLightingAttributes();
-				Vec3d eyePos = game.player.getEyePosition(e.getPartialTicks());
+				Vec3d eyePos = game.getRenderManager().info.getProjectedView();//.player.getEyePosition(e.getPartialTicks());
 				if(effect.render(tes, buf, worldTime, eyePos.x, eyePos.y, eyePos.z, game.player.getLook(e.getPartialTicks()), RAND, e.getPartialTicks())){
 					toRemove.add(effect);
 				}
@@ -110,13 +111,15 @@ public final class EventHandlerClient{
 
 	private static final ResourceLocation MAGIC_BAR_BACKGROUND = new ResourceLocation(Crossroads.MODID, "textures/gui/magic_info_back.png");
 	private static final ResourceLocation MAGIC_BAR_FOREGROUND = new ResourceLocation(Crossroads.MODID, "textures/gui/magic_info_front.png");
-	private static final ResourceLocation COLOR_SHEET = new ResourceLocation(Crossroads.MODID, "textures/blocks/color_sheet.png");
+	private static final ResourceLocation COLOR_SHEET = new ResourceLocation(Crossroads.MODID, "textures/block/color_sheet.png");
 
 	@SubscribeEvent
 	@SuppressWarnings("unused")
 	public void magicUsingItemOverlay(RenderGameOverlayEvent e){
 		if(e.getType() == ElementType.HOTBAR){
 			PlayerEntity player = Minecraft.getInstance().player;
+
+			//Beam cage overlay
 			ItemStack offStack = player.getHeldItem(Hand.OFF_HAND);
 			if(offStack.getItem() == CRItems.beamCage){
 				BeamUnit stored = BeamCage.getStored(offStack);
@@ -137,10 +140,13 @@ public final class EventHandlerClient{
 				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
 				for(int i = 0; i < 4; i++){
 					int extension = 9 * stored.getValues()[i] / 128;
-					buf.pos(24, 84 + (9 * i), -2).tex(.25F + (((float) i) * .0625F), .0625F).color(i == 0 ? 255 : 0, i == 1 ? 255 : 0, i == 2 ? 255 : 0, 255).endVertex();
-					buf.pos(24 + extension, 84 + (9 * i), -2).tex(.3125F + (((float) i) * .0625F), .0625F).color(i == 0 ? 255 : 0, i == 1 ? 255 : 0, i == 2 ? 255 : 0, 255).endVertex();
-					buf.pos(24 + extension, 78 + (9 * i), -2).tex(.3125F + (((float) i) * .0625F), 0).color(i == 0 ? 255 : 0, i == 1 ? 255 : 0, i == 2 ? 255 : 0, 255).endVertex();
-					buf.pos(24, 78 + (9 * i), -2).tex(.25F + (((float) i) * .0625F), 0).color(i == 0 ? 255 : 0, i == 1 ? 255 : 0, i == 2 ? 255 : 0, 255).endVertex();
+					int[] col = new int[4];
+					col[3] = 255;
+					col[i] = 255;//For void, overrides the alpha. Conveniently not an issue
+					buf.pos(24, 84 + (9 * i), -2).tex(.25F + (((float) i) * .0625F), .0625F).color(col[0], col[1], col[2], col[3]).endVertex();
+					buf.pos(24 + extension, 84 + (9 * i), -2).tex(.3125F + (((float) i) * .0625F), .0625F).color(col[0], col[1], col[2], col[3]).endVertex();
+					buf.pos(24 + extension, 78 + (9 * i), -2).tex(.3125F + (((float) i) * .0625F), 0).color(col[0], col[1], col[2], col[3]).endVertex();
+					buf.pos(24, 78 + (9 * i), -2).tex(.25F + (((float) i) * .0625F), 0).color(col[0], col[1], col[2], col[3]).endVertex();
 				}
 				tes.draw();
 
@@ -153,15 +159,16 @@ public final class EventHandlerClient{
 				tes.draw();
 
 				Minecraft.getInstance().fontRenderer.drawString(offStack.getDisplayName().getFormattedText(), 16, 65, Color.DARK_GRAY.getRGB());
-				GlStateManager.disableBlend();
+				GlStateManager.disableAlphaTest();
 				GlStateManager.color3f(1, 1, 1);
 				GlStateManager.disableBlend();
 				GlStateManager.popAttributes();
 				GlStateManager.popMatrix();
 			}
+
+			//Beam using item overlay
 			ItemStack mainStack = player.getHeldItem(Hand.MAIN_HAND);
 			if(mainStack.getItem() instanceof BeamUsingItem){
-				CompoundNBT nbt = mainStack.hasTag() ? mainStack.getTag() : new CompoundNBT();
 				GlStateManager.pushMatrix();
 				GlStateManager.pushLightingAttributes();
 				GlStateManager.enableBlend();
@@ -177,12 +184,16 @@ public final class EventHandlerClient{
 
 				Minecraft.getInstance().getTextureManager().bindTexture(COLOR_SHEET);
 				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+				byte[] settings = BeamUsingItem.getSetting(mainStack);
 				for(int i = 0; i < 4; i++){
-					int extension = 9 * nbt.getInt(i == 0 ? "ENERGY" : i == 1 ? "POTENTIAL" : i == 2 ? "STABILITY" : "VOID");
-					buf.pos(24, 24 + (9 * i), -2).tex(.25F + (((float) i) * .0625F), .0625F).color(i == 0 ? 255 : 0, i == 1 ? 255 : 0, i == 2 ? 255 : 0, 255).endVertex();
-					buf.pos(24 + extension, 24 + (9 * i), -2).tex(.3125F + (((float) i) * .0625F), .0625F).color(i == 0 ? 255 : 0, i == 1 ? 255 : 0, i == 2 ? 255 : 0, 255).endVertex();
-					buf.pos(24 + extension, 18 + (9 * i), -2).tex(.3125F + (((float) i) * .0625F), 0).color(i == 0 ? 255 : 0, i == 1 ? 255 : 0, i == 2 ? 255 : 0, 255).endVertex();
-					buf.pos(24, 18 + (9 * i), -2).tex(.25F + (((float) i) * .0625F), 0).color(i == 0 ? 255 : 0, i == 1 ? 255 : 0, i == 2 ? 255 : 0, 255).endVertex();
+					int[] col = new int[4];
+					col[3] = 255;
+					col[i] = 255;//For void, overrides the alpha. Conveniently not an issue
+					int extension = 9 * settings[i];
+					buf.pos(24, 24 + (9 * i), -2).tex(.25F + (((float) i) * .0625F), .0625F).color(col[0], col[1], col[2], col[3]).endVertex();
+					buf.pos(24 + extension, 24 + (9 * i), -2).tex(.3125F + (((float) i) * .0625F), .0625F).color(col[0], col[1], col[2], col[3]).endVertex();
+					buf.pos(24 + extension, 18 + (9 * i), -2).tex(.3125F + (((float) i) * .0625F), 0).color(col[0], col[1], col[2], col[3]).endVertex();
+					buf.pos(24, 18 + (9 * i), -2).tex(.25F + (((float) i) * .0625F), 0).color(col[0], col[1], col[2], col[3]).endVertex();
 				}
 				tes.draw();
 
@@ -196,7 +207,7 @@ public final class EventHandlerClient{
 
 				Minecraft.getInstance().fontRenderer.drawString(mainStack.getDisplayName().getFormattedText(), 16, 5, Color.DARK_GRAY.getRGB());
 
-				GlStateManager.disableBlend();
+				GlStateManager.disableAlphaTest();
 				GlStateManager.color3f(1, 1, 1);
 				GlStateManager.disableBlend();
 				GlStateManager.popAttributes();
@@ -235,7 +246,7 @@ public final class EventHandlerClient{
 			int key = Keys.controlEnergy.matchesKey(e.getKey(), e.getScanCode()) ? 0 : Keys.controlPotential.matchesKey(e.getKey(), e.getScanCode()) ? 1 : Keys.controlStability.matchesKey(e.getKey(), e.getScanCode()) ? 2 : Keys.controlVoid.matchesKey(e.getKey(), e.getScanCode()) ? 3 : -1;
 			ItemStack stack = play.getHeldItemMainhand();
 			if(key != -1 && stack.getItem() instanceof BeamUsingItem){
-				((BeamUsingItem) stack.getItem()).adjustSetting(Minecraft.getInstance().player, stack, key, play.isSneaking());
+				((BeamUsingItem) stack.getItem()).adjustSetting(Minecraft.getInstance().player, stack, key, !play.isSneaking());
 			}
 		}else if(helmet.getItem() == CRItems.moduleGoggles && helmet.hasTag()){
 			CompoundNBT nbt = helmet.getTag();

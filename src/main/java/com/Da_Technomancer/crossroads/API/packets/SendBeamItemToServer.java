@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.API.packets;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamUsingItem;
 import com.Da_Technomancer.essentials.packets.ServerPacket;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,10 +32,15 @@ public class SendBeamItemToServer extends ServerPacket{
 
 	@Override
 	protected void run(@Nullable ServerPlayerEntity player){
-		if(player != null && player.getHeldItemMainhand().getItem() instanceof BeamUsingItem){
-			BeamUsingItem.setSetting(player.getHeldItemMainhand(), newSetting);
-		}else if(player != null && player.getHeldItemOffhand().getItem() instanceof BeamUsingItem){
-			BeamUsingItem.setSetting(player.getHeldItemOffhand(), newSetting);
+		if(player != null){
+			ItemStack stack;
+			stack = player.getHeldItemMainhand();
+			if(!(stack.getItem() instanceof BeamUsingItem)){
+				stack = player.getHeldItemOffhand();
+			}
+			if(stack.getItem() instanceof BeamUsingItem){
+				BeamUsingItem.setSetting(stack, newSetting);
+			}
 		}
 	}
 }

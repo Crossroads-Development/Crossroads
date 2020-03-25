@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
+import com.Da_Technomancer.crossroads.API.CircuitUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneAxisTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
@@ -61,7 +62,7 @@ public class RedstoneAxis extends ContainerBlock{
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return getDefaultState().with(ESProperties.FACING, context.getNearestLookingDirection());
+		return getDefaultState().with(ESProperties.FACING, context.getNearestLookingDirection().getOpposite());
 	}
 
 	@Override
@@ -85,11 +86,9 @@ public class RedstoneAxis extends ContainerBlock{
 		TileEntity te = worldIn.getTileEntity(pos);
 
 		if(te instanceof RedstoneAxisTileEntity){
-			//Simple optimization- if the block update is just signal strength changing, we don't need to rebuild connections
-			if(blockIn != Blocks.REDSTONE_WIRE && !(blockIn instanceof RedstoneDiodeBlock)){
-				((RedstoneAxisTileEntity) te).buildConnections();
-			}
-			((RedstoneAxisTileEntity) te).setRedstone(RedstoneUtil.getRedstoneAtPos(worldIn, pos));
+			RedstoneAxisTileEntity bte = (RedstoneAxisTileEntity) te;
+			CircuitUtil.updateFromWorld(bte.redsHandler, blockIn);
+			bte.setRedstone(RedstoneUtil.getRedstoneAtPos(worldIn, pos));
 		}
 	}
 }

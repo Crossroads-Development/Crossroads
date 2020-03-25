@@ -22,6 +22,8 @@ public abstract class BeamUsingItem extends Item{
 
 	private static final String NBT_KEY = "setting";
 
+	private static long lastKeyTime = 0;//Used on the client side as a cooldown between setting changes
+
 	protected BeamUsingItem(Properties properties){
 		super(properties);
 	}
@@ -45,14 +47,34 @@ public abstract class BeamUsingItem extends Item{
 
 	@OnlyIn(Dist.CLIENT)
 	public void adjustSetting(ClientPlayerEntity player, ItemStack stack, int elemIndex, boolean increase){
-		byte[] settings = getSetting(stack);
-		if(increase){
-			settings[elemIndex] = (byte) Math.min(settings[elemIndex] + 1, maxSetting());
-		}else{
-			settings[elemIndex] = (byte) Math.max(settings[elemIndex] - 1, 0);
+		long currTime = System.currentTimeMillis();
+		long timeSince = currTime - lastKeyTime;
+		if(timeSince < 0){
+			//Something weird is going on with system time.
+			timeSince = 1_000_000;//Arbitrary large number
 		}
-		player.world.playSound(player, player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 5, (float) Math.random());
-		CRPackets.sendPacketToServer(new SendBeamItemToServer(settings));
+		if(timeSince < 250){
+			return;
+		}
+		lastKeyTime = currTime;
+		byte[] settings = getSetting(stack);
+		boolean acted = false;
+		if(increase){
+			if(settings[elemIndex] < maxSetting()){
+				settings[elemIndex] += 1;
+				acted = true;
+			}
+		}else if(settings[elemIndex] > 0){
+			settings[elemIndex] -= 1;
+			acted = true;
+		}
+		if(acted){
+			player.world.playSound(player, player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 4, (float) Math.random() / 4 + 0.5F);
+			CRPackets.sendPacketToServer(new SendBeamItemToServer(settings));
+		}else{
+			//Play a sound at a slightly lower pitch
+			player.world.playSound(player, player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 4, (float) Math.random() / 4);
+		}
 	}
 
 	@Override

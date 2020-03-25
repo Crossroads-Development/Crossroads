@@ -39,6 +39,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink{
 	//Flux related fields
 	private HashSet<BlockPos> links = new HashSet<>(1);
 	private int flux = 0;
+	private int fluxToTrans = 0;
 
 	public BeaconHarnessTileEntity(){
 		super(type);
@@ -55,13 +56,26 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink{
 
 		// Actual beam production is in the emit() method
 
-		if(world.isRemote || world.getGameTime() % FluxUtil.FLUX_TIME != 1){
+		if(world.isRemote){
 			return;
 		}
 
 		//Handle flux
-		FluxUtil.performTransfer(this, links);
-		FluxUtil.checkFluxOverload(this);
+		long stage = world.getGameTime() % FluxUtil.FLUX_TIME;
+		if(stage == 0 && flux != 0){
+			fluxToTrans += flux;
+			flux = 0;
+			markDirty();
+		}else if(stage == 1){
+			flux += FluxUtil.performTransfer(this, links, fluxToTrans);
+			fluxToTrans = 0;
+			FluxUtil.checkFluxOverload(this);
+		}
+	}
+
+	@Override
+	public int getReadingFlux(){
+		return FluxUtil.findReadingFlux(this, flux, fluxToTrans);
 	}
 
 	private boolean invalid(Color col, BeamUnit last){
@@ -110,6 +124,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink{
 		nbt.putBoolean("run", running);
 		nbt.putInt("cycle", cycles);
 		nbt.putInt("flux", flux);
+		nbt.putInt("flux_trans", fluxToTrans);
 		for(BlockPos linked : links){
 			nbt.putLong("link", linked.toLong());
 		}
@@ -122,6 +137,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink{
 		running = nbt.getBoolean("run");
 		cycles = nbt.getInt("cycle");
 		flux = nbt.getInt("flux");
+		fluxToTrans = nbt.getInt("flux_trans");
 		if(nbt.contains("link")){
 			links.add(BlockPos.fromLong(nbt.getLong("link")));
 		}else{
@@ -180,8 +196,10 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink{
 
 	@Override
 	public void setFlux(int newFlux){
-		flux = newFlux;
-		markDirty();
+		if(flux != newFlux){
+			flux = newFlux;
+			markDirty();
+		}
 	}
 
 	@Override

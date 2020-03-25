@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"item": "minecraft:furnace"
+	},
+	"output": [
+		{
+			"item": "minecraft:cobblestone",
+			"count": 8
+		}
+	]
+}

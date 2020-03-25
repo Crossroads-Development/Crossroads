@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
+import com.Da_Technomancer.crossroads.API.beams.BeamUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
@@ -21,7 +22,6 @@ public class BeaconHarnessRenderer extends LinkLineRenderer<BeaconHarnessTileEnt
 
 	private static final ResourceLocation INNER_TEXT = new ResourceLocation(Crossroads.MODID, "textures/block/block_copshowium.png");
 	private static final ResourceLocation OUTER_TEXT = new ResourceLocation(Crossroads.MODID, "textures/block/block_pure_quartz.png");
-	private static final ResourceLocation TEXTURE_BEACON_BEAM = new ResourceLocation("textures/entity/beacon_beam.png");
 
 	@Override
 	public void render(BeaconHarnessTileEntity beam, double x, double y, double z, float partialTicks, int destroyStage){
@@ -46,14 +46,14 @@ public class BeaconHarnessRenderer extends LinkLineRenderer<BeaconHarnessTileEnt
 
 			GlStateManager.pushMatrix();
 			GlStateManager.pushLightingAttributes();
-			GlStateManager.translated(x, y, z);
+			GlStateManager.translated(x + 0.5D, y + 0.5D, z + 0.5D);
 			GlStateManager.color3f(trip.getLeft().getRed() / 255F, trip.getLeft().getGreen() / 255F, trip.getLeft().getBlue() / 255F);
 			GlStateManager.disableLighting();
 			GlStateManager.rotated(180, 1, 0, 0);
-			GlStateManager.translated(.5D, -.5D, -.5D);
+//			GlStateManager.translated(.5D, -.5D, -.5D);
 
 			CRRenderUtil.setBrightLighting();
-			Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE_BEACON_BEAM);
+			Minecraft.getInstance().getTextureManager().bindTexture(BeamUtil.BEAM_TEXT);
 
 			if(CRConfig.rotateBeam.get()){
 				GlStateManager.rotated((beam.getWorld().getGameTime() + partialTicks) * 2F, 0, 1, 0);
@@ -61,28 +61,46 @@ public class BeaconHarnessRenderer extends LinkLineRenderer<BeaconHarnessTileEnt
 
 			final double rad = trip.getRight().doubleValue() / 16D / Math.sqrt(2);//Convert diagonal radius to side length
 			final int length = trip.getMiddle();
+			final float stOffset = 7F / 16F;
 
 			buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			//+Z
 			buf.pos(-rad, length, rad).tex(1, 0).endVertex();
-			buf.pos(-rad, 0.5F, rad).tex(1, length - 0.5F).endVertex();
-			buf.pos(rad, 0.5F, rad).tex(0, length - 0.5F).endVertex();
+			buf.pos(-rad, stOffset, rad).tex(1, length - stOffset).endVertex();
+			buf.pos(rad, stOffset, rad).tex(0, length - stOffset).endVertex();
 			buf.pos(rad, length, rad).tex(0, 0).endVertex();
 			//-Z
 			buf.pos(rad, length, -rad).tex(1, 0).endVertex();
-			buf.pos(rad, 0.5F, -rad).tex(1, length - 0.5F).endVertex();
-			buf.pos(-rad, 0.5F, -rad).tex(0, length - 0.5F).endVertex();
+			buf.pos(rad, stOffset, -rad).tex(1, length - stOffset).endVertex();
+			buf.pos(-rad, stOffset, -rad).tex(0, length - stOffset).endVertex();
 			buf.pos(-rad, length, -rad).tex(0, 0).endVertex();
 			//-X
 			buf.pos(-rad, length, -rad).tex(1, 0).endVertex();
-			buf.pos(-rad, 0.5F, -rad).tex(1, length - 0.5F).endVertex();
-			buf.pos(-rad, 0.5F, rad).tex(0, length - 0.5F).endVertex();
+			buf.pos(-rad, stOffset, -rad).tex(1, length - stOffset).endVertex();
+			buf.pos(-rad, stOffset, rad).tex(0, length - stOffset).endVertex();
 			buf.pos(-rad, length, rad).tex(0, 0).endVertex();
 			//+X
 			buf.pos(rad, length, rad).tex(1, 0).endVertex();
-			buf.pos(rad, 0.5F, rad).tex(1, length - 0.5F).endVertex();
-			buf.pos(rad, 0.5F, -rad).tex(0, length - 0.5F).endVertex();
+			buf.pos(rad, stOffset, rad).tex(1, length - stOffset).endVertex();
+			buf.pos(rad, stOffset, -rad).tex(0, length - stOffset).endVertex();
 			buf.pos(rad, length, -rad).tex(0, 0).endVertex();
+			tes.draw();
+
+			//Ends
+			Minecraft.getInstance().getTextureManager().bindTexture(BeamUtil.BEAM_END_TEXT);
+			buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+
+			//Out end
+			buf.pos(-rad, length, rad).tex(1, 0).endVertex();
+			buf.pos(-rad, length, -rad).tex(1, 1).endVertex();
+			buf.pos(rad, length, -rad).tex(0, 1).endVertex();
+			buf.pos(rad, length, rad).tex(0, 0).endVertex();
+
+			//Start end
+			buf.pos(-rad, stOffset, rad).tex(1, 0).endVertex();
+			buf.pos(-rad, stOffset, -rad).tex(1, 1).endVertex();
+			buf.pos(rad, stOffset, -rad).tex(0, 1).endVertex();
+			buf.pos(rad, stOffset, rad).tex(0, 0).endVertex();
 			tes.draw();
 
 			GlStateManager.color3f(1, 1, 1);
@@ -97,10 +115,11 @@ public class BeaconHarnessRenderer extends LinkLineRenderer<BeaconHarnessTileEnt
 		GlStateManager.pushLightingAttributes();
 		GlStateManager.disableLighting();
 		GlStateManager.translated(x + 0.5D, y, z + 0.5D);
-		CRRenderUtil.setMediumLighting();
+//		CRRenderUtil.setMediumLighting();
 
 		float smallOffset = 0.0928F;
-		float largeOffset = 5F / 16F;
+		float medOffset = 4F / 16;
+		float largeOffset = 6F / 16F;
 
 		GlStateManager.rotated(angle, 0, 1, 0);
 
@@ -116,14 +135,14 @@ public class BeaconHarnessRenderer extends LinkLineRenderer<BeaconHarnessTileEnt
 
 		Minecraft.getInstance().getTextureManager().bindTexture(OUTER_TEXT);
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		addRod(buf, smallOffset, largeOffset);
-		addRod(buf, smallOffset, -largeOffset);
-		addRod(buf, -smallOffset, largeOffset);
-		addRod(buf, -smallOffset, -largeOffset);
-		addRod(buf, largeOffset, smallOffset);
-		addRod(buf, largeOffset, -smallOffset);
-		addRod(buf, -largeOffset, smallOffset);
-		addRod(buf, -largeOffset, -smallOffset);
+		addRod(buf, medOffset, largeOffset);
+		addRod(buf, medOffset, -largeOffset);
+		addRod(buf, -medOffset, largeOffset);
+		addRod(buf, -medOffset, -largeOffset);
+		addRod(buf, largeOffset, medOffset);
+		addRod(buf, largeOffset, -medOffset);
+		addRod(buf, -largeOffset, medOffset);
+		addRod(buf, -largeOffset, -medOffset);
 		tes.draw();
 
 //		CRRenderUtil.restoreLighting(prev);

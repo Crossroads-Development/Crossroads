@@ -15,6 +15,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -28,7 +30,8 @@ import java.util.List;
 
 public class FluxSink extends ContainerBlock{
 
-	private float[] COLOR_CODE = new float[] {1, 100F / 255F, 0};//R: 255, G: 100, B: 0
+	private final float[] COLOR_CODE = new float[] {1, 100F / 255F, 0};//R: 255, G: 100, B: 0
+	private final VoxelShape SHAPE = makeCuboidShape(4, 4, 4, 12, 12, 12);
 
 	public FluxSink(){
 		super(Properties.create(Material.IRON).hardnessAndResistance(2.5F));
@@ -73,5 +76,10 @@ public class FluxSink extends ContainerBlock{
 	@Override
 	public float[] getBeaconColorMultiplier(BlockState state, IWorldReader world, BlockPos pos, BlockPos beaconPos){
 		return COLOR_CODE;//Allows beacon beams to pass through this block, and dyes them the color of the time alignment
+	}
+
+	@Override
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+		return SHAPE;
 	}
 }

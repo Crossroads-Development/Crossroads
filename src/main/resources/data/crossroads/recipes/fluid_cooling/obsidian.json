@@ -5,6 +5,6 @@
 		"amount": 1000
 	},
 	"item": "obsidian",
-	"max_temp": 2500,
+	"max_temp": 2250,
 	"temp_change": 1500
 }

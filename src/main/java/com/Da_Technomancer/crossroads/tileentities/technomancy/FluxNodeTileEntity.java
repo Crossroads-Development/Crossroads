@@ -79,7 +79,7 @@ public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntit
 			markDirty();
 		}else if(world.getGameTime() % FluxUtil.FLUX_TIME == 1){
 			//Perform transfer
-			entropy += FluxUtil.performTransfer(this, links, fluxToTrans);;
+			entropy += FluxUtil.performTransfer(this, links, fluxToTrans);
 			fluxToTrans = 0;
 			FluxUtil.checkFluxOverload(this);
 			markDirty();
@@ -142,7 +142,7 @@ public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntit
 
 	@Override
 	public int getReadingFlux(){
-		return Math.max(entropy, fluxToTrans);
+		return FluxUtil.findReadingFlux(this, entropy, fluxToTrans);
 	}
 
 	@Override

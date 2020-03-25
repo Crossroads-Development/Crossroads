@@ -9,6 +9,9 @@
 		},
 		{
 			"tag": "forge:cobblestone"
+		},
+		{
+			"tag": "forge:sandstone"
 		}
 	],
 	"output": "minecraft:redstone_block"

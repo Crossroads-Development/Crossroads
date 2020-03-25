@@ -389,8 +389,17 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 				gear.getMotionData()[3] = 0;
 				gear.markChanged();
 			}
+			for(int i = 0; i < 4; i++){
+				prevAngles[i] = 0;
+				coeff[i] = 0;
+				if(i != 3){
+					wCoeff[i] = 0;
+				}
+			}
 			rotaryMembers.clear();
-			memberCopy.clear();
+			if(memberCopy != null){
+				memberCopy.clear();
+			}
 		}
 
 		@Override

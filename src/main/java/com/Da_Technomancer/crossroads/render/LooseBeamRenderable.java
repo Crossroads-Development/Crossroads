@@ -1,12 +1,12 @@
 package com.Da_Technomancer.crossroads.render;
 
+import com.Da_Technomancer.crossroads.API.beams.BeamUtil;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 
@@ -26,8 +26,6 @@ public class LooseBeamRenderable implements IVisualEffect{
 	public byte lifeTime = 6;
 	public long lastTick = 0;
 
-	private static final ResourceLocation TEXTURE_BEACON_BEAM = new ResourceLocation("textures/entity/beacon_beam.png");
-	
 	private LooseBeamRenderable(double x, double y, double z, double length, float angleX, float angleY, byte width, int color){
 		this.x = x;
 		this.y = y;
@@ -52,7 +50,7 @@ public class LooseBeamRenderable implements IVisualEffect{
 		GlStateManager.rotatef(angleX + 90F, 1, 0, 0);
 
 
-		Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE_BEACON_BEAM);
+		Minecraft.getInstance().getTextureManager().bindTexture(BeamUtil.BEAM_TEXT);
 
 		final double small = -(width / 16D);
 		final double big = (width / 16D);
@@ -78,6 +76,24 @@ public class LooseBeamRenderable implements IVisualEffect{
 		buf.pos(big, 0, small).tex(0, length).endVertex();
 		buf.pos(big, length, small).tex(0, 0).endVertex();
 		tess.draw();
+
+		//Ends
+		Minecraft.getInstance().getTextureManager().bindTexture(BeamUtil.BEAM_END_TEXT);
+		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		//Out end
+		buf.pos(small, length, big).tex(1, 0).endVertex();
+		buf.pos(small, length, small).tex(1, 1).endVertex();
+		buf.pos(big, length, small).tex(0, 1).endVertex();
+		buf.pos(big, length, big).tex(0, 0).endVertex();
+
+		//Start end
+		buf.pos(small, 0, big).tex(1, 0).endVertex();
+		buf.pos(small, 0, small).tex(1, 1).endVertex();
+		buf.pos(big, 0, small).tex(0, 1).endVertex();
+		buf.pos(big, 0, big).tex(0, 0).endVertex();
+		tess.draw();
+		
+		
 		GlStateManager.color3f(1, 1, 1);
 
 

@@ -4,9 +4,7 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
 
 public class GearFactory{
@@ -26,7 +24,7 @@ public class GearFactory{
 
 
 	public static GearMaterial findMaterial(String id){
-		return gearMats.getOrDefault(id, getDefaultMaterial());
+		return gearMats.getOrDefault(id.toLowerCase(Locale.US), getDefaultMaterial());
 	}
 
 	public static Collection<GearMaterial> getMaterials(){
@@ -34,7 +32,7 @@ public class GearFactory{
 	}
 
 	public static void registerGearMaterial(GearMaterial mat){
-		gearMats.put(mat.getId(), mat);
+		gearMats.put(mat.getId().toLowerCase(Locale.US), mat);
 		mat.pos = gearMatList.size();
 		gearMatList.add(mat);
 	}

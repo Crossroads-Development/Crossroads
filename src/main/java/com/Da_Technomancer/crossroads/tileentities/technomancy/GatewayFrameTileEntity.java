@@ -62,6 +62,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	//These fields are only correct for the top center block of the multiblock (isActive() returns true)
 	//They will not necessarily be null/empty/0 if this inactive- always check isActive()
 	private int flux = 0;
+	private int fluxToTrans = 0;
 	private HashSet<BlockPos> links = new HashSet<>(1);
 	private GatewayAddress address = null;//The address of THIS gateway
 	private double[] rotary = new double[4];//Rotary spin data (0: speed, 1: energy, 2: power, 3: last energy)
@@ -364,6 +365,11 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	@Override
+	public int getReadingFlux(){
+		return FluxUtil.findReadingFlux(this, flux, fluxToTrans);
+	}
+
+	@Override
 	public void tick(){
 		if(isActive()){
 			//This TE only ticks if it is active
@@ -405,12 +411,21 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 					}
 				}
 
-				//Flux
-				if(origin && world.getGameTime() % FluxUtil.FLUX_TIME == 1){
-					flux += FLUX_PER_CYCLE;
-					FluxUtil.performTransfer(this, links);
+				//Handle flux
+				long stage = world.getGameTime() % FluxUtil.FLUX_TIME;
+				if(stage == 0){
+					if(origin){
+						flux += FLUX_PER_CYCLE;
+					}
+					if(flux != 0){
+						fluxToTrans += flux;
+						flux = 0;
+						markDirty();
+					}
+				}else if(stage == 1){
+					flux += FluxUtil.performTransfer(this, links, fluxToTrans);
+					fluxToTrans = 0;
 					FluxUtil.checkFluxOverload(this);
-					markDirty();
 				}
 			}
 		}
@@ -430,6 +445,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 		super.read(nbt);
 		//Active only
 		flux = nbt.getInt("flux");
+		fluxToTrans = nbt.getInt("flux_trans");
 		if(nbt.contains("link")){
 			links.add(BlockPos.fromLong(nbt.getLong("link")));
 		}else{
@@ -456,6 +472,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 		super.write(nbt);
 		//Active only
 		nbt.putInt("flux", flux);
+		nbt.putInt("flux_trans", fluxToTrans);
 		if(links.size() == 1){
 			nbt.putLong("link", links.iterator().next().toLong());
 		}

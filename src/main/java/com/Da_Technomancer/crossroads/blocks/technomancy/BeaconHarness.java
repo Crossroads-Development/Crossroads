@@ -31,7 +31,7 @@ import java.util.List;
 
 public class BeaconHarness extends ContainerBlock{
 
-	private static final VoxelShape SHAPE = VoxelShapes.or(makeCuboidShape(0, 0, 0, 16, 1, 16), makeCuboidShape(0, 15, 0, 16, 16, 16), makeCuboidShape(4, 1, 4, 12, 15, 12));
+	private static final VoxelShape SHAPE = VoxelShapes.or(makeCuboidShape(0, 15, 0, 16, 16, 16), makeCuboidShape(2, 1, 2, 14, 15, 14));
 
 	public BeaconHarness(){
 		super(Properties.create(Material.GLASS).hardnessAndResistance(.5F).lightValue(15));

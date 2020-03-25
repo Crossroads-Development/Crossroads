@@ -31,11 +31,11 @@ public class DynamoRenderer extends TileEntityRenderer<DynamoTileEntity>{
 		GlStateManager.rotated(270F - facing.getHorizontalAngle(), 0, 1, 0);
 		GlStateManager.rotated(90, 0, 0, 1);
 		GlStateManager.rotated(-facing.getAxisDirection().getOffset() * axle.orElseThrow(NullPointerException::new).getAngle(partialTicks), 0, 1, 0);
-		CRModels.drawAxle(GearFactory.findMaterial("Iron").getColor());
+		CRModels.drawAxle(GearFactory.findMaterial("iron").getColor());
 		GlStateManager.pushMatrix();
-		GlStateManager.translated(0, 0.5F, 0);
+		GlStateManager.translated(0, 0.45625F, 0);
 		GlStateManager.scaled(0.7D, 0.7D, 0.7D);
-		CRModels.draw8Gear(GearFactory.findMaterial("Copper").getColor());
+		CRModels.draw8Gear(GearFactory.findMaterial("copper").getColor());
 		GlStateManager.popMatrix();
 		GlStateManager.enableLighting();
 		GlStateManager.popMatrix();

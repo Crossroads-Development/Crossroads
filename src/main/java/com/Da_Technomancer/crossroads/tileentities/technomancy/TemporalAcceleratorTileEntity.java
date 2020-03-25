@@ -47,6 +47,7 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 	public static final int SIZE = 5;
 
 	private int flux = 0;
+	private int fluxToTrans = 0;
 	private final HashSet<BlockPos> linkPos = new HashSet<>(1);
 	private int intensity = 0;//Power of the incoming beam
 	private long lastRunTick;//Used to prevent accelerators affecting each other
@@ -133,13 +134,16 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 			lastRunTick = world.getGameTime();
 			int extraTicks = extraTicks();
 
-			if(world.getGameTime() % FluxUtil.FLUX_TIME == 1){
-				FluxUtil.performTransfer(this, linkPos);
-			}else if(world.getGameTime() % FluxUtil.FLUX_TIME == 0){
-				//Sped up time
+			//Handle flux
+			long stage = world.getGameTime() % FluxUtil.FLUX_TIME;
+			if(stage == 0){
 				addFlux(producedFlux());
 				intensity = 0;//Reset stored beam power
-				markDirty();
+				fluxToTrans += flux;
+				flux = 0;
+			}else if(stage == 1){
+				flux += FluxUtil.performTransfer(this, linkPos, fluxToTrans);
+				fluxToTrans = 0;
 				FluxUtil.checkFluxOverload(this);
 			}
 
@@ -252,6 +256,7 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 		nbt.putInt("intensity", intensity);
 		nbt.putLong("last_run", lastRunTick);
 		nbt.putInt("flux", flux);
+		nbt.putInt("flux_trans", fluxToTrans);
 		for(BlockPos linked : linkPos){//Size 0 or 1
 			nbt.putLong("link", linked.toLong());
 		}
@@ -264,6 +269,7 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 		intensity = nbt.getInt("intensity");
 		lastRunTick = nbt.getLong("last_run");
 		flux = nbt.getInt("flux");
+		fluxToTrans = nbt.getInt("flux_trans");
 		if(nbt.contains("link")){
 			linkPos.add(BlockPos.fromLong(nbt.getLong("link")));
 		}else{
