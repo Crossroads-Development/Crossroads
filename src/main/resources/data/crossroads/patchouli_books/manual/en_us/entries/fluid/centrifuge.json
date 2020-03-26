@@ -10,15 +10,15 @@
 			"type": "spotlight",
 			"title": "Water Centrifuge",
 			"item": "crossroads:water_centrifuge",
-			"text": "The <item>Water Centrifuge/$ produces <thing>$(l:intro/fluid)distilled water/$ and <item>salt/$ using normal water. It can also reprocess <thing>$(l:intro/fluid)dirty water/$ into <thing>$(l:intro/fluid)distilled water/$ and various different outputs (chosen randomly, see JEI).$(br2)There is a $(l:intro/rotary)gear/axle/$ connection on the top. Sides with an <em>orange/$ port are fluid inputs, sides "
+			"text": "The <item>Water Centrifuge/$ produces <thing>$(l:intro/fluid)distilled water/$ and <item>salt/$ using normal water. It can also reprocess <thing>$(l:intro/fluid)dirty water/$ into <thing>$(l:intro/fluid)distilled water/$ and various different outputs (chosen randomly, see JEI).$(br2)There is a $(l:intro/rotary)gear/axle/$ connection on the top. Sides with an <em>orange/$ port are fluid "
 		},
 		{
 			"type": "text",
-			"text": "with a <em>red/$ port are fluid outputs.$(br2)In order to perform a crafting operation, it must have a <thing>$(l:intro/rotary)speed/$ of at least 0.5rad/s. Every time the <thing>$(l:intro/rotary)speed/$ reaches 0.5rad/s, it performs one operation, and <em>expects the gear to spin in the opposite direction/$ for the next batch. This means that to run, the attached gear/axle must <em>keep switching direction/$ every time it reaches 0.5rad/s. There is no limit on how fast the <item>water centrifuge"
+			"text": "inputs, sides with a <em>red/$ port are fluid outputs.$(br2)In order to perform a crafting operation, it must have a <thing>$(l:intro/rotary)speed/$ of at least 0.5rad/s. Every time the <thing>$(l:intro/rotary)speed/$ reaches 0.5rad/s, it performs one operation, and <em>expects the gear to spin in the opposite direction/$ for the next batch. This means that to run, the attached gear/axle must <em>keep switching direction/$ every time it reaches 0.5rad/s. There is no limit on how fast the "
 		},
 		{
 			"type": "text",
-			"text": "<item>/$ can run.$(br2)If either output (fluid or item) fills up, the <item>water centrifuge/$ will continue running. Any product that can't fit will be <em>voided/$."
+			"text": "<item>water centrifuge/$ can run.$(br2)If either output (fluid or item) fills up, the <item>water centrifuge/$ will continue running. Any product that can't fit will be <em>voided/$."
 		}
 	]
 }

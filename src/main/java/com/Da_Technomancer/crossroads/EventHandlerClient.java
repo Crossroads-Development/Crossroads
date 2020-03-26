@@ -139,7 +139,7 @@ public final class EventHandlerClient{
 				Minecraft.getInstance().getTextureManager().bindTexture(COLOR_SHEET);
 				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
 				for(int i = 0; i < 4; i++){
-					int extension = 9 * stored.getValues()[i] / 128;
+					int extension = 72 * stored.getValues()[i] / BeamCage.CAPACITY;
 					int[] col = new int[4];
 					col[3] = 255;
 					col[i] = 255;//For void, overrides the alpha. Conveniently not an issue

@@ -10,11 +10,11 @@
 			"type": "spotlight",
 			"title": "Intro to Rotary",
 			"item": "crossroads:gear_base",
-			"text": "<thing>Rotary/$ is one of the basic energy systems in Crossroads, and usually the first or second one you'll use (alongside <thing>$(l:intro/heat)Heat/$) Rotary is the transfer of mechanical energy using <item>gears/$ and <item>axles/$.$(br2)Rotary can seem complicated at first when reading about it, but is actually pretty simple "
+			"text": "<thing>Rotary/$ is one of the basic energy systems in Crossroads, and usually the first or second one you'll use (alongside <thing>$(l:intro/heat)Heat/$) Rotary is the transfer of mechanical energy using <item>gears/$ and <item>axles/$.$(br2)Rotary can seem complicated at first when reading about it, but is actually pretty "
 		},
 		{
 			"type": "text",
-			"text": "in practice.$(br2)Every gear, axle, or other spinning device has a few basic values.$(br2)The <thing>Moment of Inertia/$ is written as 'I', usually in tooltips. The I value can be thought of as the 'weight' of the gear- things with higher I values are heavier and are harder to spin quickly.$(br2)The <thing>Speed/$, usually written 'ω' and measured in 'rad/s' "
+			"text": "simple in practice.$(br2)Every gear, axle, or other spinning device has a few basic values.$(br2)The <thing>Moment of Inertia/$ is written as 'I', usually in tooltips. The I value can be thought of as the 'weight' of the gear- things with higher I values are heavier and are harder to spin quickly.$(br2)The <thing>Speed/$, usually written 'ω' and measured in 'rad/s' "
 		},
 		{
 			"type": "text",

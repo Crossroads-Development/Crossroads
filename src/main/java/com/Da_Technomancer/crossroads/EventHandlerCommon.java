@@ -40,8 +40,9 @@ import net.minecraftforge.fml.config.ModConfig;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 public final class EventHandlerCommon{
 
@@ -52,14 +53,14 @@ public final class EventHandlerCommon{
 	public void onEntitySpawn(LivingSpawnEvent e){
 		if(entityList != null && e.getWorld() instanceof ServerWorld){
 			ServerWorld world = (ServerWorld) e.getWorld();
-			List<Entity> entities;
+			Map<UUID, Entity> entities;
 			try{
-				entities = (List<Entity>) entityList.get(world);
+				entities = (Map<UUID, Entity>) entityList.get(world);
 			}catch(IllegalAccessException | ClassCastException ex){
 				Crossroads.logger.error(ex);
 				return;
 			}
-			for(Entity ent : entities){
+			for(Entity ent : entities.values()){
 				if(ent instanceof EntityGhostMarker){
 					EntityGhostMarker mark = (EntityGhostMarker) ent;
 					if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.BLOCK_SPAWNING && mark.data != null && mark.getPositionVector().subtract(e.getEntity().getPositionVector()).length() <= mark.data.getInt("range")){
@@ -295,15 +296,15 @@ public final class EventHandlerCommon{
 			return;
 		}
 
-		List<Entity> entities;
+		Map<UUID, Entity> entities;
 		try{
-			entities = (List<Entity>) entityList.get(e.getWorld());
+			entities = (Map<UUID, Entity>) entityList.get(e.getWorld());
 		}catch(IllegalAccessException ex){
 			Crossroads.logger.error(ex);
 			return;
 		}
 		boolean perpetuate = false;
-		for(Entity ent : entities){
+		for(Entity ent : entities.values()){
 			if(ent instanceof EntityGhostMarker){
 				EntityGhostMarker mark = (EntityGhostMarker) ent;
 				if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.EQUILIBRIUM && mark.data != null && mark.getPositionVector().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInt("range")){

@@ -60,6 +60,9 @@ public class LiechWrench extends Item{
 				return 4F;
 			}
 		}
+		if(mat == Material.IRON || mat == Material.ANVIL || mat == Material.ROCK){
+			return 4F;
+		}
 		return 1.0F;
 	}
 

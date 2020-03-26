@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.BasicBlock;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
@@ -102,7 +103,7 @@ public final class OreSetup{
 
 		voidCrystal = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("void_crystal");
 		CRItems.toRegister.add(voidCrystal);
-		oreVoid = new BasicBlock("ore_void", Block.Properties.create(Material.ROCK).harvestLevel(2));
+		oreVoid = new BasicBlock("ore_void", Block.Properties.create(Material.ROCK).hardnessAndResistance(3, 9).harvestLevel(2));
 		
 		loadConfig();
 	}

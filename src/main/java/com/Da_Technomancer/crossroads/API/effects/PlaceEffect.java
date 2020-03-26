@@ -45,7 +45,8 @@ public class PlaceEffect extends BeamEffect{
 						if(!stack.isEmpty() && stack.getItem() instanceof BlockItem){
 							BlockItemUseContext context = new BlockItemUseContext(new ItemUseContext(placer, Hand.MAIN_HAND, new BlockRayTraceResult(new Vec3d(ent.posX, ent.posY, ent.posZ), Direction.DOWN, ent.getPosition(), false)));
 							BlockState state = ((BlockItem) stack.getItem()).getBlock().getStateForPlacement(context);
-							if(state.isValidPosition(worldIn, ent.getPosition())){
+							BlockState worldState = worldIn.getBlockState(ent.getPosition());
+							if(worldState.isReplaceable(context) && state.isValidPosition(worldIn, ent.getPosition())){
 								worldIn.setBlockState(ent.getPosition(), state);
 								state.getBlock().onBlockPlacedBy(worldIn, ent.getPosition(), worldIn.getBlockState(ent.getPosition()), placer, stack);
 								SoundType soundtype = state.getBlock().getSoundType(worldIn.getBlockState(pos), worldIn, pos, placer);

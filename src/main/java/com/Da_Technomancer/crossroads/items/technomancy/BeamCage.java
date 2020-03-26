@@ -20,7 +20,7 @@ import java.util.List;
 
 public class BeamCage extends Item{
 
-	public static final int CAPACITY = 1024;
+	public static final int CAPACITY = 2048;
 
 	public BeamCage(){
 		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));

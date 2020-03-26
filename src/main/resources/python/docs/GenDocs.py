@@ -111,9 +111,9 @@ def generatePages(text: list, icon: str, title: str, indents: int) -> str:
 	lineSt = '\t' * indents  # Placed at the beginning of every line- for indentation
 	output = ''  # Final output string
 	charLimit = 460  # Maximum characters per text page
-	charLimitTitle = 320  # Maximum characters per title page
+	charLimitTitle = 310  # Maximum characters per title page
 	charPerNewline = 45  # Number of characters to consider a newline
-	boboMult = 1.1  # Bolded 'bobo' text is thicker; multiplier for charcount on bold text
+	boboMult = 1.15  # Bolded 'bobo' text is thicker; multiplier for charcount on bold text
 	space = ' '
 
 	pages = []

@@ -10,15 +10,15 @@
 			"type": "spotlight",
 			"title": "Wind Turbine",
 			"item": "crossroads:wind_turbine",
-			"text": "The <item>Wind Turbine/$ is a renewable way to generate <thing>$(l:intro/rotary)rotary power/$ at a low <thing>$(l:intro/rotary)speed/$.$(br2)The <item>wind turbine/$ requires a 5x5 empty space in front of it, and the ability for its blades to see the sky. As long as these conditions are met, it will produce a random amount of power based on the wind- "
+			"text": "The <item>Wind Turbine/$ is a renewable way to generate <thing>$(l:intro/rotary)rotary power/$ at a low <thing>$(l:intro/rotary)speed/$.$(br2)The <item>wind turbine/$ requires a 5x5 empty space in front of it, and the ability for its blades to see the sky. As long as these conditions are met, it will produce a random amount of power based "
 		},
 		{
 			"type": "text",
-			"text": "either 10J/t or 20J/t. The only issue is that <em>the wind doesn't always blow the same direction/$. The direction the <item>wind turbine/$ tries to turn will randomly swap- which may mean it's fighting against energy stored in a rotary system due to momentum.$(br2)The <item>wind turbine/$ will also stop producing power at speeds above 2rad/s- the wind is never that fast.$(br2)The axle connection is on "
+			"text": "on the wind- either 10J/t or 20J/t. The only issue is that <em>the wind doesn't always blow the same direction/$. The direction the <item>wind turbine/$ tries to turn will randomly swap- which may mean it's fighting against energy stored in a rotary system due to momentum.$(br2)The <item>wind turbine/$ will also stop producing power at speeds above 2rad/s- the wind is never that fast.$(br2)The axle connection "
 		},
 		{
 			"type": "text",
-			"text": "the back."
+			"text": "is on the back."
 		},
 		{
 			"type": "text",

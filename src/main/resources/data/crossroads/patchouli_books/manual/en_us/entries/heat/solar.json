@@ -10,11 +10,11 @@
 			"type": "spotlight",
 			"title": "Solar Heater",
 			"item": "crossroads:solar_heater",
-			"text": "The <item>Solar Heater/$ is a solar panel that produces heat. When in direct sunlight during the day in clear weather, the <item>solar heat/$ will produce heat at a slow steady rate, up to a maximum temperature of 250°C.$(br2)This isn't hot enough to run advanced machines- but it could be used for "
+			"text": "The <item>Solar Heater/$ is a solar panel that produces heat. When in direct sunlight during the day in clear weather, the <item>solar heat/$ will produce heat at a slow steady rate, up to a maximum temperature of 250°C.$(br2)This isn't hot enough to run advanced machines- but it could "
 		},
 		{
 			"type": "text",
-			"text": "$(l:heat/smelter)smelting/$ or <thing>$(l:fluid/steam)steam generation/$.$(br2)A line of <item>solar heaters/$ connected on their copper ends will share heat. The copper ends are also where <item>$(l:heat/cable)cables/$ can be connected."
+			"text": "be used for $(l:heat/smelter)smelting/$ or <thing>$(l:fluid/steam)steam generation/$.$(br2)A line of <item>solar heaters/$ connected on their copper ends will share heat. The copper ends are also where <item>$(l:heat/cable)cables/$ can be connected."
 		},
 		{
 			"type": "text",

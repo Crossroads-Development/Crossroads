@@ -20,7 +20,7 @@ public enum CRReflection implements ReflectionUtil.IReflectionKey{
 	EXPLOSION_SMOKE(Explosion.class, "causesFire", "field_77286_a", "Perpetuate explosions with Collapse beams (2)"),
 	EXPLOSION_MODE(Explosion.class, "mode", "field_222260_b", "Perpetuate explosions with Collapse beams (3)"),
 	SWING_TIME(LivingEntity.class, "ticksSinceLastSwing", "field_184617_aD", "Mechanical Arm attacking"),
-	ENTITY_LIST(ServerWorld.class, "globalEntities", "field_217497_w", "Prevent mob spawning with Closure beams, modify explosions with Collapse/Equilibrium beams"),
+	ENTITY_LIST(ServerWorld.class, "entitiesByUuid", "field_175741_N", "Prevent mob spawning with Closure beams, modify explosions with Collapse/Equilibrium beams"),
 	LOADED_CHUNKS(ChunkManager.class, "getLoadedChunksIterable", "func_223491_f ", "Spawn lightning at high atmospheric charge"),
 	LIGHTNING_POS(ServerWorld.class, "adjustPosToNearbyEntity", "func_175736_a", "Target lightning at high atmospheric charge"),
 	SPAWN_RADIUS(ChunkManager.class, "isOutsideSpawningRadius", "func_219243_d", "Spawn lightning at high atmospheric charge");

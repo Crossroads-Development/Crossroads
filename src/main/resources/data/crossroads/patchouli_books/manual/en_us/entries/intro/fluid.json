@@ -10,15 +10,15 @@
 			"type": "spotlight",
 			"title": "Intro to Fluids",
 			"item": "crossroads:fluid_tube",
-			"text": "<thing>Fluids/$ in Crossroads act the same as in all other mods. They can be moved with <item>$(l:fluid/pipe)pipes/$, stored in <item>$(l:fluid/tank)tanks/$, and so on.$(br2)The typical fluids added by Crossroads are:$(br2)<thing>Distilled Water/$: This is usually used to produce <thing>$(l:fluid/steam)steam/$, and is treated as \"pure\" "
+			"text": "<thing>Fluids/$ in Crossroads act the same as in all other mods. They can be moved with <item>$(l:fluid/pipe)pipes/$, stored in <item>$(l:fluid/tank)tanks/$, and so on.$(br2)The typical fluids added by Crossroads are:$(br2)<thing>Distilled Water/$: This is usually used to produce <thing>$(l:fluid/steam)steam/$, and is treated "
 		},
 		{
 			"type": "text",
-			"text": "water in the mod.$(br2)<thing>$(l:fluid/steam)Steam/$: This is a way of moving energy around as a fluid, and can be readily converted into either <thing>$(l:heat/radiator)heat/$ or <thing>$(l:rotary/steam_turbine)rotary energy/$. It is produced in a <item>$(l:fluid/boiler)steam boiler/$.$(br2)<thing>Dirty Water/$: This is usually a byproduct. It can be reprocessed into <thing>distilled water/$ and useful byproducts in a <item>$(l:fluid/centrifuge)water centrifuge/$.$(br2)<thing>Liquid Fat/$: This is food in "
+			"text": "as \"pure\" water in the mod.$(br2)<thing>$(l:fluid/steam)Steam/$: This is a way of moving energy around as a fluid, and can be readily converted into either <thing>$(l:heat/radiator)heat/$ or <thing>$(l:rotary/steam_turbine)rotary energy/$. It is produced in a <item>$(l:fluid/boiler)steam boiler/$.$(br2)<thing>Dirty Water/$: This is usually a byproduct. It can be reprocessed into <thing>distilled water/$ and useful byproducts in a <item>$(l:fluid/centrifuge)water centrifuge/$.$(br2)<thing>Liquid Fat/$: This "
 		},
 		{
 			"type": "text",
-			"text": "liquid form. There are machines to <item>$(l:fluid/fat_collector)produce it/$, <item>$(l:fluid/fat_feeder)feed it to nearby players or animals/$, and <item>$(l:fluid/fat_congealer)turn it into custom food/$.$(br2)<thing>Molten Metal/$: There is a molten metal for each of the basic metals (iron, gold, copper, tin- other mods may add more). It can be <item>$(l:heat/fcc)cooled into ingots/$."
+			"text": "is food in liquid form. There are machines to <item>$(l:fluid/fat_collector)produce it/$, <item>$(l:fluid/fat_feeder)feed it to nearby players or animals/$, and <item>$(l:fluid/fat_congealer)turn it into custom food/$.$(br2)<thing>Molten Metal/$: There is a molten metal for each of the basic metals (iron, gold, copper, tin- other mods may add more). It can be <item>$(l:heat/fcc)cooled into ingots/$."
 		}
 	]
 }

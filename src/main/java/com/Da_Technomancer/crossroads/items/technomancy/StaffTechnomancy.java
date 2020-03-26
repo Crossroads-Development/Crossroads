@@ -28,6 +28,8 @@ import java.util.Optional;
 
 public class StaffTechnomancy extends BeamUsingItem{
 
+	private static final int MAX_RANGE = 64;
+
 	public StaffTechnomancy(){
 		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
 		String name = "staff_technomancy";
@@ -71,7 +73,7 @@ public class StaffTechnomancy extends BeamUsingItem{
 				Direction collisionDir = Direction.getFacingFromVector(look.x, look.y, look.z);//Used for beam collision detection
 				Direction effectDir = null;
 				//Raytrace manually along the look direction
-				for(double d = 0; d < 32; d += 0.2D){
+				for(double d = 0; d < MAX_RANGE; d += 0.2D){
 					end[0] += look.x;
 					end[1] += look.y;
 					end[2] += look.z;

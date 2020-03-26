@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<item>$(l:heat/cable)Heat cables/$ and pipes can connect to any side other than the top. Items can be inserted into any side."
+			"text": "$(br2)<item>$(l:heat/cable)Heat cables/$ and pipes can connect to any side other than the top. Items can be inserted into any side."
 		},
 		{
 			"type": "text",

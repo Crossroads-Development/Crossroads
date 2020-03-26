@@ -14,6 +14,7 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -36,6 +37,7 @@ public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickab
 	private int flux = 0;
 	private int prevFlux = 0;
 	private boolean running = false;
+	private long runningStartTime;//Used for rendering
 
 	public FluxSinkTileEntity(){
 		super(type);
@@ -58,9 +60,17 @@ public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickab
 		}
 	}
 
-	public boolean isRunningForRender(){
-		//We don't use the isRunning() method for rendering, as at 60FPS, that would invalidate the cache 3 times in one tick
-		return running;
+	/**
+	 * Used for rendering. Doesn't tamper with the cache- unlike isRunning()
+	 * @return Gets the time since this started running, or -1 if this is not running
+	 */
+	public double getRunDuration(float partialTicks){
+		return running ? world.getGameTime() - runningStartTime + partialTicks : -1;
+	}
+
+	@Override
+	public AxisAlignedBB getRenderBoundingBox(){
+		return new AxisAlignedBB(pos.add(-3, -3, -3), pos.add(4, 4, 4));
 	}
 
 	private boolean isRunning(){
@@ -81,7 +91,7 @@ public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickab
 			}while(!running && mutPos.getY() > 1);
 			if(prevRunning != running){
 				//Notify the clients
-				CRPackets.sendPacketAround(world, pos, new SendLongToClient(1, running ? 1 : 0, pos));
+				CRPackets.sendPacketAround(world, pos, new SendLongToClient(1, running ? world.getGameTime() : 0, pos));
 				markDirty();
 			}
 		}
@@ -109,6 +119,7 @@ public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickab
 
 		//Receive running info
 		if(identifier == 1){
+			runningStartTime = message;
 			running = message != 0;
 		}
 	}
@@ -118,6 +129,7 @@ public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickab
 		super.read(nbt);
 		flux = nbt.getInt("flux");
 		running = nbt.getBoolean("running");
+		runningStartTime = nbt.getLong("run_time");
 	}
 
 	@Override
@@ -125,6 +137,7 @@ public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickab
 		super.write(nbt);
 		nbt.putInt("flux", flux);
 		nbt.putBoolean("running", running);
+		nbt.putLong("run_time", runningStartTime);
 		return nbt;
 	}
 
@@ -132,6 +145,7 @@ public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickab
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
 		nbt.putBoolean("running", running);
+		nbt.putLong("run_time", runningStartTime);
 		return nbt;
 	}
 

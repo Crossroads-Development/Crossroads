@@ -10,11 +10,11 @@
 			"type": "spotlight",
 			"title": "Rotary Pump",
 			"item": "crossroads:rotary_pump",
-			"text": "The <item>Rotary Pump/$ is a <thing>$(l:intro/rotary)rotary/$ powered fluid pump. It collects fluid source blocks from the world, and allows it to be moved around in pipes.$(br2)It <em>only collects fluid sources directly underneath it/$. This means is it usually only useful for collecting water, and not for draining lakes "
+			"text": "The <item>Rotary Pump/$ is a <thing>$(l:intro/rotary)rotary/$ powered fluid pump. It collects fluid source blocks from the world, and allows it to be moved around in pipes.$(br2)It <em>only collects fluid sources directly underneath it/$. This means is it usually only useful for collecting water, and not for draining "
 		},
 		{
 			"type": "text",
-			"text": "or ponds.$(br2)It connects to a gear or axle on the top, and only works if the attached gear/axle is spinning in the <em>positive direction/$ (counter-clockwise). It runs faster at higher <thing>speeds/$."
+			"text": "lakes or ponds.$(br2)It connects to a gear or axle on the top, and only works if the attached gear/axle is spinning in the <em>positive direction/$ (counter-clockwise). It runs faster at higher <thing>speeds/$."
 		}
 	]
 }

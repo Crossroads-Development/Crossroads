@@ -10,19 +10,19 @@
 			"type": "spotlight",
 			"title": "Dynamo",
 			"item": "crossroads:dynamo",
-			"text": "The <item>Dynamo/$ produce <thing>Forge Energy (FE)/$ using <thing>$(l:intro/rotary)rotary power/$.$(br2)Higher <thing>$(l:intro/rotary)speeds/$ will produce more power. FE is output on the side opposite the axle.$(br2)Crossroads itself has very few uses for FE. Crossroads adds a way of transmitting FE using <item>$(l:fluid/tesla)tesla "
+			"text": "The <item>Dynamo/$ produce <thing>Forge Energy (FE)/$ using <thing>$(l:intro/rotary)rotary power/$.$(br2)Higher <thing>$(l:intro/rotary)speeds/$ will produce more power. FE is output on the side opposite the axle.$(br2)Crossroads itself has very few uses for FE. Crossroads adds a way of transmitting FE "
 		},
 		{
 			"type": "text",
-			"text": "<item>$(l:fluid/tesla)coils/$."
+			"text": "using <item>$(l:fluid/tesla)tesla coils/$."
 		},
 		{
 			"type": "text",
-			"text": "<bobo>top O' da mourning 2 ya! $(l:intro/welcome#bobo)iTT\"S ME, bOBO!/$<bobo>$(br2)mEE no liik wether. iT neVER be da waY I WANT! dIS WHY EYE INTRODUUS dA rAIN ID0L! sIMPLY h0ld &nd d0 a RAIN DANCE*, an BAM! rAIN! wANT rAIN gONE? dO oPPOSITE 0f RAIN DANCE*! BAM!$(br2)maKE wid grae dull rock, BLUE shiny rok, smidge o' gOLD!$(br2)*Note: Performing a Rain "
+			"text": "<bobo>top O' da mourning 2 ya! $(l:intro/welcome#bobo)iTT\"S ME, bOBO!/$<bobo>$(br2)mEE no liik wether. iT neVER be da waY I WANT! dIS WHY EYE INTRODUUS dA rAIN ID0L! sIMPLY h0ld &nd d0 a RAIN DANCE*, an BAM! rAIN! wANT rAIN gONE? dO oPPOSITE 0f RAIN DANCE*! BAM!$(br2)maKE wid grae dull rock, BLUE shiny rok, smidge o' gOLD!$(br2)*Note: Performing "
 		},
 		{
 			"type": "text",
-			"text": "<bobo>Dance may trigger 'sticky keys'. Terms and conditions apply. By performing a rain dance, you waive your right to your soul."
+			"text": "<bobo>a Rain Dance may trigger 'sticky keys'. Terms and conditions apply. By performing a rain dance, you waive your right to your soul."
 		}
 	]
 }
