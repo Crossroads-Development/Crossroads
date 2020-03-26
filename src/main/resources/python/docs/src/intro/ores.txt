@@ -8,4 +8,4 @@ Crossroads adds a few ores to world gen. Crossroads also adds several methods fo
 
 <item>Ruby ore/$ only spawns in the nether in veins of nether quartz ore. It is overall quite rare- but easy to find if you mine quartz ore veins. It drops <item>ruby/$ gems, which are used for <thing><link:intro/beam>beams/$.
 
-<item>Void ore/$ only spawns in the end. It fairly easy to find. It drops <item>void crystals/$, which are used for late game <thing><link:intro/beam>beams/$.
+<item>Void ore/$ only spawns in the end on the outer end islands. It fairly easy to find. It drops <item>void crystals/$, which are used for late game <thing><link:intro/beam>beams/$ (specifically creating <thing><link:beam/void>void/$).

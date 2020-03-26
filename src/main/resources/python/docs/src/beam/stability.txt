@@ -1,0 +1,6 @@
+Alignment: Stability-1
+minecraft:diamond|crossroads:progress/alignment/stability
+<thing>Stability/$ (blue) is one of the basic <thing>alignments/$- the <thing>alignment/$ of a pure <thing>stability/$ beam.
+Pure <thing>stability/$ does nothing, having no effect.
+
+<thing>Void-Stability/$ AKA <thing>Chaos/$ will create explosions with a strength=<thing>power/$/4. These explosions will drop all items, similar to TNT explosions.

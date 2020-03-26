@@ -229,6 +229,13 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 		magicOpt.invalidate();
 		magicOptNeg.invalidate();
 		lensOpt.invalidate();
+		if(beamer != null && world != null){
+			for(BeamManager manager : beamer){
+				if(manager != null){
+					manager.emit(BeamUnit.EMPTY, world);
+				}
+			}
+		}
 	}
 
 	private LazyOptional<IBeamHandler> magicOpt = LazyOptional.of(() -> new BeamHandler(AxisDirection.NEGATIVE));
@@ -261,16 +268,6 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 			if(beamer[0] == null || beamer[1] == null){
 				beamer[0] = new BeamManager(Direction.getFacingFromAxis(AxisDirection.NEGATIVE, getAxis()), pos);
 				beamer[1] = new BeamManager(Direction.getFacingFromAxis(AxisDirection.POSITIVE, getAxis()), pos);
-			}
-
-			if(mag.getVoid() != 0 && contents != 0 && contents != 6){
-				setContents(0);
-				if(beamer[dir == AxisDirection.POSITIVE ? 1 : 0].emit(mag, world)){
-					refreshBeam(dir == AxisDirection.POSITIVE);
-				}
-				lastRedstone = Math.max(beamer[0].getLastSent().getPower(), beamer[1].getLastSent().getPower());
-				markDirty();
-				return;
 			}
 
 			switch(contents){

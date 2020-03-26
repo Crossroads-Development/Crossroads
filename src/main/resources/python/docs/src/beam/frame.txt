@@ -1,0 +1,12 @@
+Lens Frame
+crossroads:lens_frame
+The <item>Lens Frame/$ is a utility device for manipulating <thing><link:intro/beam>beams/$, and has many uses. Beams can travel through it along the axis with the giant hole, and the <item>lens frame/$ <em>will not delay the beam at all/$, even if it is performing an effect.
+
+Several different items can be used as a 'lens' by right-clicking it into the <item>frame/$. Only one lens per <item>frame/$ at a time (but multiple <item>frames/$ can be used in a row).
+Using a <link:intro/ores>ruby/$ will delete anything from the beam that isn't <thing>energy/$.
+Using an emerald will delete anything from the beam that isn't <thing>potential/$.
+Using a diamond will delete anything from the beam that isn't <thing>stability/$.
+Using a <link:intro/ores>void crystal/$ will convert the entire beam to <thing><link:beam/void>void/$.
+Using <link:fluid/ingr>pure quartz/$ with a <thing>light alignment/$ beam will convert the <link:fluid/ingr>pure quartz/$ to bright quartz. This is a cheap way to make bright quartz, as it doesn't consume the beam.
+
+<thing><link:essentials/circuits>Circuits/$ will read the <thing>power/$ of the beam currently going through the <item>lens frame/$.

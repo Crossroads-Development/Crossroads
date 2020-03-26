@@ -1,0 +1,28 @@
+{
+	"category": "beam",
+	"name": "Lens Frame",
+	"icon": "crossroads:lens_frame",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Lens Frame",
+			"item": "crossroads:lens_frame",
+			"text": "The <item>Lens Frame/$ is a utility device for manipulating <thing>$(l:intro/beam)beams/$, and has many uses. Beams can travel through it along the axis with the giant hole, and the <item>lens frame/$ <em>will not delay the beam at all/$, even if it is performing an effect."
+		},
+		{
+			"type": "text",
+			"text": "Several different items can be used as a 'lens' by right-clicking it into the <item>frame/$. Only one lens per <item>frame/$ at a time (but multiple <item>frames/$ can be used in a row).$(br2)Using a $(l:intro/ores)ruby/$ will delete anything from the beam that isn't <thing>energy/$.$(br2)Using an emerald will delete anything from the beam that isn't <thing>potential/$.$(br2)Using a diamond will delete "
+		},
+		{
+			"type": "text",
+			"text": "anything from the beam that isn't <thing>stability/$.$(br2)Using a $(l:intro/ores)void crystal/$ will convert the entire beam to <thing>$(l:beam/void)void/$.$(br2)Using $(l:fluid/ingr)pure quartz/$ with a <thing>light alignment/$ beam will convert the $(l:fluid/ingr)pure quartz/$ to bright quartz. This is a cheap way to make bright quartz, as it doesn't consume the beam."
+		},
+		{
+			"type": "text",
+			"text": "<thing>$(l:essentials/circuits)Circuits/$ will read the <thing>power/$ of the beam currently going through the <item>lens frame/$."
+		}
+	]
+}

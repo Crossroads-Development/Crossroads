@@ -42,7 +42,7 @@ public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntit
 	}
 
 	private void syncFlux(){
-		if(entropyClient == 0 ^ entropy == 0 || Math.abs(entropyClient - entropy) >= 5){
+		if((entropyClient == 0) ^ (entropy == 0) || Math.abs(entropyClient - entropy) >= 4){
 			entropyClient = entropy;
 			CRPackets.sendPacketAround(world, pos, new SendLongToClient((byte) 0, entropy, pos));
 		}
@@ -130,8 +130,7 @@ public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntit
 	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity serverPlayerEntity){
 		if(identifier == 0){
 			entropy = (int) message;
-		}
-		if(identifier == LINK_PACKET_ID){
+		}else if(identifier == LINK_PACKET_ID){
 			links.add(BlockPos.fromLong(message));
 			markDirty();
 		}else if(identifier == CLEAR_PACKET_ID){

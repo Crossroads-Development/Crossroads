@@ -31,7 +31,7 @@ import java.util.List;
 public class FluxSink extends ContainerBlock{
 
 	private final float[] COLOR_CODE = new float[] {1, 1, 1F};//R: 255, G: 100, B: 0
-	private final VoxelShape SHAPE = makeCuboidShape(4, 4, 4, 12, 12, 12);
+	private final VoxelShape SHAPE = makeCuboidShape(1, 1, 1, 15, 15, 15);
 
 	public FluxSink(){
 		super(Properties.create(Material.IRON).hardnessAndResistance(2.5F));

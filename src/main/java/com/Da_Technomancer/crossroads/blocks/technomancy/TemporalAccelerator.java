@@ -20,10 +20,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.*;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
@@ -100,6 +97,7 @@ public class TemporalAccelerator extends ContainerBlock{
 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+		tooltip.add(new StringTextComponent("WIP! Do not use"));//TODO
 		tooltip.add(new TranslationTextComponent("tt.crossroads.time_accel.desc", TemporalAcceleratorTileEntity.SIZE));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.time_accel.beam"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.time_accel.wrench"));

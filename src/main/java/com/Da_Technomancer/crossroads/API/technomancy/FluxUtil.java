@@ -32,7 +32,8 @@ public class FluxUtil{
 	 * This allows flux transfer to tick-order independent
 	 */
 	public static final int FLUX_TIME = BeamUtil.BEAM_TIME;
-	public static final int[] COLOR_CODES = new int[] {new Color(67, 0, 49).getRGB(), new Color(255, 68, 0).getRGB(), new Color(220, 64, 0).getRGB()};//color codes for flux rendering
+//	public static final int[] COLOR_CODES = new int[] {new Color(67, 0, 49).getRGB(), new Color(255, 68, 0).getRGB(), new Color(220, 64, 0).getRGB()};//color codes for flux rendering
+	public static final int[] COLOR_CODES = new int[] {new Color(0, 0, 0).getRGB(), new Color(42, 0, 51).getRGB(), new Color(212, 192, 220).getRGB()};//color codes for flux rendering
 
 	public static int findReadingFlux(IFluxLink te, int flux, int fluxToTrans){
 		return Math.max(flux, fluxToTrans);

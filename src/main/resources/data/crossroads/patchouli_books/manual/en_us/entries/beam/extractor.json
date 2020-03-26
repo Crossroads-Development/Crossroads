@@ -1,0 +1,20 @@
+{
+	"category": "beam",
+	"name": "Resonance Extractor",
+	"icon": "crossroads:beam_extractor",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Resonance Extractor",
+			"item": "crossroads:beam_extractor",
+			"text": "The <item>Resonance Extractor/$ is the main way of producing <thing>$(l:intro/beam)beams/$. It consumes items as fuel.$(br2)It consumes one item every cycle (5 ticks or quarter second), producing a <thing>$(l:intro/beam)beam/$ out the front. Different items produce different <thing>$(l:intro/beam)beams/$- with different amounts of <thing>energy/$, <thing>potential/$, "
+		},
+		{
+			"type": "text",
+			"text": "and <thing>stability/$. No items produce <thing>$(l:beam/void)void/$."
+		}
+	]
+}

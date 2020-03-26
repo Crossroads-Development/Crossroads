@@ -4,7 +4,7 @@
 # Navigates the folder structure
 # Assumes the category of an entry is the same as the folder name
 # Sets read_by_default to true
-# Expects the FIRST LINE of the txt to be the title. If the title ends with a digit, that digit becomes the sortnum
+# Expects the FIRST LINE of the txt to be the title. If the title ends with a digit, that digit becomes the sortnum. A dash can be placed before the sortnum to prevent priority mode
 # Expects the SECOND LINE of the txt to be the item path used for icon and spotlight page
 # If the SECOND LINE contains a | (pipe symbol), it will treat everything after the | as an advancement to lock the entry behind
 # Makes the first page a spotlight, with the entry title
@@ -73,7 +73,10 @@ def run():
 				if name[-1].isnumeric():
 					sort = name[-1]
 					name = name[:-1]
-					priority = "true"
+					if name[-1] == '-':
+						name = name[:-1]
+					else:
+						priority = "true"
 				icon = rawLinesIn[1][:-1]  # Cut the \n
 
 				# Optional advancement setting

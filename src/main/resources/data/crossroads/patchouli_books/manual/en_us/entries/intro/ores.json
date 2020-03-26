@@ -26,7 +26,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<item>Void ore/$ only spawns in the end. It fairly easy to find. It drops <item>void crystals/$, which are used for late game <thing>$(l:intro/beam)beams/$."
+			"text": "<item>Void ore/$ only spawns in the end on the outer end islands. It fairly easy to find. It drops <item>void crystals/$, which are used for late game <thing>$(l:intro/beam)beams/$ (specifically creating <thing>$(l:beam/void)void/$)."
 		}
 	]
 }

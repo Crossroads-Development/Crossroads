@@ -179,6 +179,13 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 	public void remove(){
 		super.remove();
 		lazyOptional.invalidate();
+		if(beamer != null && world != null){
+			for(BeamManager manager : beamer){
+				if(manager != null){
+					manager.emit(BeamUnit.EMPTY, world);
+				}
+			}
+		}
 	}
 
 //	protected final BeamHandler handler = new BeamHandler();
