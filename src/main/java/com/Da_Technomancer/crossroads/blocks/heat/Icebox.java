@@ -49,7 +49,9 @@ public class Icebox extends ContainerBlock{
 
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
-		InventoryHelper.dropInventoryItems(world, pos, (IInventory) world.getTileEntity(pos));
+		if(state.getBlock() != newState.getBlock()){
+			InventoryHelper.dropInventoryItems(world, pos, (IInventory) world.getTileEntity(pos));
+		}
 		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 
