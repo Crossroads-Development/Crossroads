@@ -26,8 +26,6 @@ public class BeamSiphonTileEntity extends BeamRenderTE{
 		super(type);
 	}
 
-	private int redstone;
-
 	private Direction dir = null;
 
 	private Direction getDir(){
@@ -47,33 +45,24 @@ public class BeamSiphonTileEntity extends BeamRenderTE{
 		dir = null;
 	}
 
-	public void setRedstone(int redstone){
-		if(this.redstone != redstone){
-			this.redstone = redstone;
-			markDirty();
-		}
-	}
-
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
-		nbt.putInt("reds", redstone);
-		nbt.putFloat("circ_reds", redsHandler.getCircRedstone());
+		redsHandler.write(nbt);
 		return nbt;
 	}
 
 	@Override
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
-		redstone = nbt.getInt("reds");
-		redsHandler.setCircRedstone(nbt.getFloat("circ_reds"));
+		redsHandler.read(nbt);
 	}
 
 	@Override
 	protected void doEmit(BeamUnit out){
 		//As it would turn out, the problem of meeting a quota for the sum of values drawn from a limited source while also approximately maintaining the source ratio is quite messy when all values must be integers
 		//This is about as clean an implementation as is possible
-		int toFill = Math.round(CircuitUtil.combineRedsSources(redsHandler, redstone));
+		int toFill = Math.round(CircuitUtil.combineRedsSources(redsHandler));
 		Direction facing = getDir();
 		BeamUnit toDraw;
 		BeamUnit remain;

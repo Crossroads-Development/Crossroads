@@ -312,7 +312,7 @@
 	"tt.crossroads.heat_sink.rate": "Loss Rate: -%1$d, -%2$d, -%3$d, -%4$d, or -%5$d°C/t",
 	"tt.crossroads.heat_sink.loss": "Current Loss: -%1$d°C/t",
 	"tt.crossroads.icebox.desc": "Adds: -%1$d°C/t while using cold items as fuel",
-	"tt.crossroads.icebox.min": "Minimum temp: -%1$d°C",
+	"tt.crossroads.icebox.min": "Minimum temp: %1$d°C",
 	"tt.crossroads.salt_reactor.desc": "Consumes salt and distilled water to cool",
 	"tt.crossroads.salt_reactor.rate": "Cooling: -%1$d°C/t while active",
 	"tt.crossroads.salt_reactor.quip": "Nothing actually reacts, so what makes it a reactor?",

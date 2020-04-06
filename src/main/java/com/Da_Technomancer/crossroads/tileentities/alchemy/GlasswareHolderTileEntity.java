@@ -42,7 +42,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 
 	private AbstractGlassware.GlasswareTypes heldType(){
 		if(glassType == null){
-			BlockState state = world.getBlockState(pos);
+			BlockState state = getBlockState();
 			if(state.has(CRProperties.CONTAINER_TYPE)){
 				glassType = state.get(CRProperties.CONTAINER_TYPE);
 				return glassType;
@@ -72,14 +72,15 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	}
 
 
-	private ItemStack getStoredItem(){
-		if(heldType() == AbstractGlassware.GlasswareTypes.NONE){
+	private ItemStack getStoredItem(BlockState state){
+		AbstractGlassware.GlasswareTypes heldType = state.get(CRProperties.CONTAINER_TYPE);
+		if(heldType == AbstractGlassware.GlasswareTypes.NONE){
 			return ItemStack.EMPTY;
 		}
-		boolean crystal = world.getBlockState(pos).get(CRProperties.CRYSTAL);
+		boolean crystal = state.get(CRProperties.CRYSTAL);
 		ItemStack out;
 		//This feels like a really bad way of doing this
-		switch(heldType()){
+		switch(heldType){
 			case PHIAL:
 				out = crystal ? new ItemStack(CRItems.phialCrystal, 1) : new ItemStack(CRItems.phialGlass, 1);
 				break;
@@ -113,8 +114,8 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 
 
 	public void onBlockDestroyed(BlockState state){
-		if(heldType() != AbstractGlassware.GlasswareTypes.NONE){
-			ItemStack out = getStoredItem();
+		if(state.get(CRProperties.CONTAINER_TYPE) != AbstractGlassware.GlasswareTypes.NONE){
+			ItemStack out = getStoredItem(state);
 			this.contents = new ReagentMap();
 			dirtyReag = true;
 			glassType = AbstractGlassware.GlasswareTypes.NONE;
@@ -133,11 +134,11 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	@Nonnull
 	@Override
 	public ItemStack rightClickWithItem(ItemStack stack, boolean sneaking, PlayerEntity player, Hand hand){
-		BlockState state = world.getBlockState(pos);
+		BlockState state = getBlockState();
 
 		if(heldType() != AbstractGlassware.GlasswareTypes.NONE){
 			if(stack.isEmpty() && sneaking){
-				ItemStack out = getStoredItem();
+				ItemStack out = getStoredItem(getBlockState());
 				glassType = null;
 				this.contents.clear();
 				dirtyReag = true;

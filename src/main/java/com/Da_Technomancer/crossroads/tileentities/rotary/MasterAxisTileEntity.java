@@ -142,7 +142,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 		}
 
 		sumEnergy = RotaryUtil.getTotalEnergy(rotaryMembers);
-		if(sumEnergy < 1 && sumEnergy > -1){
+		if(sumEnergy < 1 && sumEnergy > -1 || Double.isNaN(sumEnergy)){
 			sumEnergy = 0;
 		}
 
@@ -323,6 +323,11 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 		return write(nbt);
 	}
 
+	/**
+	 * Describes the behaviour of this master axis into broad categories.
+	 * Currently unused
+	 * @return The type of this axis
+	 */
 	protected AxisTypes getAxisType(){
 		return AxisTypes.NORMAL;
 	}

@@ -88,7 +88,6 @@ public class RedstoneAxis extends ContainerBlock{
 		if(te instanceof RedstoneAxisTileEntity){
 			RedstoneAxisTileEntity bte = (RedstoneAxisTileEntity) te;
 			CircuitUtil.updateFromWorld(bte.redsHandler, blockIn);
-			bte.setRedstone(RedstoneUtil.getRedstoneAtPos(worldIn, pos));
 		}
 	}
 }

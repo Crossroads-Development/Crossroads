@@ -17,6 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -24,7 +25,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class GlasswareHolder extends ContainerBlock{
 
-	private static final VoxelShape SHAPE = makeCuboidShape(5, 0, 5, 11, 16, 11);
+	private static final VoxelShape EMPTY_SHAPE = makeCuboidShape(5, 0, 5, 11, 8, 11);
+	private static final VoxelShape PHIAL_SHAPE = makeCuboidShape(5, 0, 5, 11, 16, 11);
+	private static final VoxelShape FLORENCE_SHAPE = VoxelShapes.or(makeCuboidShape(5, 8, 5, 11, 16, 11), makeCuboidShape(3, 0, 3, 13, 8, 13));
+	private static final VoxelShape SHELL_SHAPE = makeCuboidShape(4, 0, 4, 12, 12, 12);
 
 	public GlasswareHolder(){
 		super(Properties.create(Material.IRON).hardnessAndResistance(2).sound(SoundType.METAL));
@@ -41,7 +45,17 @@ public class GlasswareHolder extends ContainerBlock{
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
-		return SHAPE;
+		switch(state.get(CRProperties.CONTAINER_TYPE)){
+			case NONE:
+				return EMPTY_SHAPE;
+			case PHIAL:
+				return PHIAL_SHAPE;
+			case FLORENCE:
+				return FLORENCE_SHAPE;
+			case SHELL:
+				return SHELL_SHAPE;
+		}
+		return VoxelShapes.fullCube();
 	}
 
 	@Override

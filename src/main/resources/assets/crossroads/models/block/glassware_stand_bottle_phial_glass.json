@@ -1,7 +1,7 @@
 {
 	"parent": "crossroads:block/glassware_stand_bottle_phial",
 	"textures": {
-		"glass": "crossroads:block/crystal_thin",
-		"stem": "crossroads:block/crystal_thin"
+		"glass": "crossroads:block/glass_thin",
+		"stem": "crossroads:block/glass_thin"
 	}
 }

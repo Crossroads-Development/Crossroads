@@ -22,7 +22,6 @@ public class BeamSplitterTileEntity extends BeamRenderTE{
 	@ObjectHolder("beam_splitter")
 	private static TileEntityType<BeamSplitterTileEntity> type = null;
 
-	private int redstone = 0;
 	private Direction dir = null;
 
 	public BeamSplitterTileEntity(){
@@ -46,33 +45,24 @@ public class BeamSplitterTileEntity extends BeamRenderTE{
 		dir = null;
 	}
 
-	public void setRedstone(int redstone){
-		if(this.redstone != redstone){
-			this.redstone = redstone;
-			markDirty();
-		}
-	}
-
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
-		nbt.putInt("reds", redstone);
-		nbt.putFloat("circ_reds", redsHandler.getCircRedstone());
+		redsHandler.write(nbt);
 		return nbt;
 	}
 
 	@Override
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
-		redstone = nbt.getInt("reds");
-		redsHandler.setCircRedstone(nbt.getFloat("circ_reds"));
+		redsHandler.read(nbt);
 	}
 
 	@Override
 	protected void doEmit(BeamUnit out){
 		//As it would turn out, the problem of meeting a quota for the sum of values drawn from a limited source while also approximately maintaining the source ratio is quite messy when all values must be integers
 		//This is about as clean an implementation as is possible
-		int toFill = Math.round(out.getPower() * Math.min(15, Math.round(CircuitUtil.combineRedsSources(redsHandler, redstone))) / 15F);
+		int toFill = Math.round(out.getPower() * Math.min(15, Math.round(CircuitUtil.combineRedsSources(redsHandler))) / 15F);
 		Direction facing = getDir();
 		BeamUnit toDraw;
 		BeamUnit remain;

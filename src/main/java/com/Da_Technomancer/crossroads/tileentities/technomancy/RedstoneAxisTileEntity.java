@@ -23,8 +23,6 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 	@ObjectHolder("redstone_axis")
 	private static TileEntityType<RedstoneAxisTileEntity> type = null;
 
-	private int redstone;
-
 	public RedstoneAxisTileEntity(){
 		super(type);
 	}
@@ -33,15 +31,15 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 	protected void runCalc(){
 		Direction facing = getFacing();
 
-		double baseSpeed = CircuitUtil.combineRedsSources(redsHandler, redstone);
-		double sumIRot = 0;
+		double baseSpeed = CircuitUtil.combineRedsSources(redsHandler);
+		double sumIRot = 0;//Sum of every gear's moment of inertia time rotation ratio squared
 		sumEnergy = RotaryUtil.getTotalEnergy(rotaryMembers);
 
 		for(IAxleHandler gear : rotaryMembers){
 			sumIRot += gear.getMoInertia() * Math.pow(gear.getRotationRatio(), 2);
 		}
 
-		double cost = sumIRot * Math.pow(baseSpeed, 2) / 2D;
+		double cost = sumIRot * Math.pow(baseSpeed, 2) / 2D;//Total energy required to hold the output at the requested base speed
 		TileEntity backTE = world.getTileEntity(pos.offset(facing.getOpposite()));
 		LazyOptional<IAxleHandler> backOpt = backTE == null ? LazyOptional.empty() : backTE.getCapability(Capabilities.AXLE_CAPABILITY, facing);
 		IAxleHandler sourceAxle = backOpt.isPresent() ? backOpt.orElseThrow(NullPointerException::new) : null;
@@ -49,7 +47,7 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 		if(sourceAxle != null){
 			availableEnergy += Math.abs(sourceAxle.getMotionData()[1]);
 		}
-		if(availableEnergy - cost < 0){
+		if(sumIRot > 0 && availableEnergy - cost < 0){
 			baseSpeed = 0;
 			cost = 0;
 		}
@@ -86,26 +84,17 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 		return AxisTypes.FIXED;
 	}
 
-	public void setRedstone(int redstone){
-		if(this.redstone != redstone){
-			this.redstone = redstone;
-			markDirty();
-		}
-	}
-
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
-		nbt.putInt("reds", redstone);
-		nbt.putFloat("circ_reds", redsHandler.getCircRedstone());
+		redsHandler.write(nbt);
 		return nbt;
 	}
 
 	@Override
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
-		redstone = nbt.getInt("reds");
-		redsHandler.setCircRedstone(nbt.getFloat("circ_reds"));
+		redsHandler.read(nbt);
 	}
 
 	@Override

@@ -4,7 +4,6 @@ import com.Da_Technomancer.crossroads.API.CircuitUtil;
 import com.Da_Technomancer.crossroads.API.templates.BeamBlock;
 import com.Da_Technomancer.crossroads.tileentities.beams.BeamSiphonTileEntity;
 import com.Da_Technomancer.essentials.blocks.redstone.IWireConnect;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -44,7 +43,6 @@ public class BeamSiphon extends BeamBlock implements IWireConnect{
 		if(te instanceof BeamSiphonTileEntity){
 			BeamSiphonTileEntity bte = (BeamSiphonTileEntity) te;
 			CircuitUtil.updateFromWorld(bte.redsHandler, blockIn);
-			bte.setRedstone(RedstoneUtil.getRedstoneAtPos(worldIn, pos));
 		}
 	}
 
