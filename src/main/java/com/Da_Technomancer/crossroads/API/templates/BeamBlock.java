@@ -39,7 +39,6 @@ public abstract class BeamBlock extends ContainerBlock{
 			}
 			return true;
 		}
-
 		return false;
 	}
 

@@ -24,6 +24,7 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @ObjectHolder(Crossroads.MODID)
@@ -35,6 +36,13 @@ public class WindTurbineTileEntity extends ModuleTE{
 	public static final double MAX_SPEED = 2D;
 	public static final double INERTIA = 200;
 	public static final double POWER_PER_LEVEL = 10D;
+
+	//Undocumented 'easter egg'. All of these are the same person, who takes way more damage from windmills
+	//Don't ask.
+	private static final HashSet<String> murderEasterEgg = new HashSet<>(12);
+	static{
+		murderEasterEgg.add("dinidini");
+	}
 
 	private boolean newlyPlaced = true;
 	private int level = 1;
@@ -149,7 +157,11 @@ public class WindTurbineTileEntity extends ModuleTE{
 				if(Math.abs(motData[0]) >= 1.5D){
 					List<LivingEntity> ents = world.getEntitiesWithinAABB(LivingEntity.class, getTargetBB(), EntityPredicates.IS_LIVING_ALIVE);
 					for(LivingEntity ent : ents){
-						ent.attackEntityFrom(DamageSource.FLY_INTO_WALL, 1);
+						if(ent instanceof PlayerEntity && murderEasterEgg.contains(((PlayerEntity) ent).getGameProfile().getName())){
+							ent.attackEntityFrom(DamageSource.FLY_INTO_WALL, 100);//This seems fair
+						}else{
+							ent.attackEntityFrom(DamageSource.FLY_INTO_WALL, 1);
+						}
 					}
 				}
 

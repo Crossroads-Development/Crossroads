@@ -330,7 +330,7 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 						JsonObject obj = (JsonObject) elem;
 						IReagent reagent = AlchemyCore.REAGENTS.get(JSONUtils.getString(obj, "type"));
 						assert reagent != null;
-						reags[i] = new ReagentStack(reagent, JSONUtils.getInt(json, "qty", 1));
+						reags[i] = new ReagentStack(reagent, JSONUtils.getInt(obj, "qty", 1));
 					}
 				}
 				if(JSONUtils.isJsonArray(json, "products")){
@@ -346,7 +346,7 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 						JsonObject obj = (JsonObject) elem;
 						IReagent reagent = AlchemyCore.REAGENTS.get(JSONUtils.getString(obj, "type"));
 						assert reagent != null;
-						prods[i] = new ReagentStack(reagent, JSONUtils.getInt(json, "qty", 1));
+						prods[i] = new ReagentStack(reagent, JSONUtils.getInt(obj, "qty", 1));
 					}
 				}
 

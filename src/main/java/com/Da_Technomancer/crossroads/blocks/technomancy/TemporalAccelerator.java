@@ -20,6 +20,9 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.*;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
@@ -29,6 +32,16 @@ import java.util.List;
 import java.util.Locale;
 
 public class TemporalAccelerator extends ContainerBlock{
+
+	private static final VoxelShape[] SHAPES = new VoxelShape[6];
+	static{
+		SHAPES[0] = VoxelShapes.or(makeCuboidShape(0, 0, 0, 16, 4, 16), makeCuboidShape(4, 4, 4, 12, 8, 12));
+		SHAPES[1] = VoxelShapes.or(makeCuboidShape(0, 12, 0, 16, 16, 16), makeCuboidShape(4, 8, 4, 12, 12, 12));
+		SHAPES[2] = VoxelShapes.or(makeCuboidShape(0, 0, 0, 16, 16, 4), makeCuboidShape(4, 4, 4, 12, 12, 8));
+		SHAPES[3] = VoxelShapes.or(makeCuboidShape(0, 0, 12, 16, 16, 16), makeCuboidShape(4, 4, 8, 12, 12, 12));
+		SHAPES[4] = VoxelShapes.or(makeCuboidShape(0, 0, 0, 4, 16, 16), makeCuboidShape(4, 4, 4, 8, 12, 12));
+		SHAPES[5] = VoxelShapes.or(makeCuboidShape(12, 0, 0, 16, 16, 16), makeCuboidShape(8, 4, 4, 12, 12, 12));
+	}
 
 	public TemporalAccelerator(){
 		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
@@ -42,6 +55,11 @@ public class TemporalAccelerator extends ContainerBlock{
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
 		builder.add(ESProperties.FACING, CRProperties.ACCELERATOR_TARGET);
+	}
+
+	@Override
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+		return SHAPES[state.get(ESProperties.FACING).getIndex()];
 	}
 
 	@Nullable
@@ -97,7 +115,6 @@ public class TemporalAccelerator extends ContainerBlock{
 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-		tooltip.add(new StringTextComponent("WIP! Do not use"));//TODO
 		tooltip.add(new TranslationTextComponent("tt.crossroads.time_accel.desc", TemporalAcceleratorTileEntity.SIZE));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.time_accel.beam"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.time_accel.wrench"));

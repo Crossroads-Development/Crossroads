@@ -63,7 +63,7 @@ public class ChargingStand extends ContainerBlock{
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
 		TileEntity te = world.getTileEntity(pos);
-		if(te instanceof ChargingStandTileEntity){
+		if(newState.getBlock() != state.getBlock() && te instanceof ChargingStandTileEntity){
 			((ChargingStandTileEntity) te).onBlockDestroyed(state);
 		}
 		super.onReplaced(state, world, pos, newState, isMoving);

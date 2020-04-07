@@ -45,7 +45,7 @@ public class RotaryDrillRenderer extends TileEntityRenderer<RotaryDrillTileEntit
 		if(dir == Direction.DOWN){
 			GlStateManager.rotated(180, 0, 0, 1);
 		}else if(dir != Direction.UP){
-			GlStateManager.rotated(dir.getHorizontalAngle(), 0, 1, 0);
+			GlStateManager.rotated(-dir.getHorizontalAngle(), 0, 1, 0);
 			GlStateManager.rotated(90, 1, 0, 0);
 		}
 //		GlStateManager.translated(-0.5D, -0.5D, -0.5D);

@@ -144,6 +144,9 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 				dirtyReag = true;
 				markDirty();
 				world.setBlockState(pos, state.with(CRProperties.CRYSTAL, false).with(CRProperties.CONTAINER_TYPE, AbstractGlassware.GlasswareTypes.NONE));
+				//Invalidate the heat capability, as if we went from florence -> non florence, we stopped allowing cable connections
+				heatOpt.invalidate();
+				heatOpt = LazyOptional.of(HeatHandler::new);
 				return out;
 			}
 			return super.rightClickWithItem(stack, sneaking, player, hand);
@@ -213,7 +216,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 		heatOpt.invalidate();
 	}
 
-	private final LazyOptional<IHeatHandler> heatOpt = LazyOptional.of(HeatHandler::new);
+	private LazyOptional<IHeatHandler> heatOpt = LazyOptional.of(HeatHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override

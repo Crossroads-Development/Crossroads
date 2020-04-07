@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.TemporalAcceleratorTileEntity;
@@ -8,6 +9,7 @@ import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.render.LinkLineRenderer;
 import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -31,10 +33,18 @@ public class TemporalAcceleratorRenderer extends LinkLineRenderer<TemporalAccele
 		if(te == null || !te.getWorld().isBlockLoaded(te.getPos())){
 			return;
 		}
+		BlockState state = te.getWorld().getBlockState(te.getPos());
+		if(state.getBlock() != CRBlocks.temporalAccelerator){
+			return;
+		}
 		super.render(te, x, y, z, partialTicks, destroyStage);
 
-		Direction dir = te.getWorld().getBlockState(te.getPos()).get(ESProperties.FACING);
+
+		Direction dir = state.get(ESProperties.FACING);
 		BufferBuilder vb = Tessellator.getInstance().getBuffer();
+
+		int light = CRRenderUtil.getCurrLighting();
+		CRRenderUtil.setBrightLighting();
 
 		//Area of effect overlay when holding wrench
 		if(ESConfig.isWrench(Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND)) || ESConfig.isWrench(Minecraft.getInstance().player.getHeldItem(Hand.OFF_HAND))){
@@ -45,7 +55,6 @@ public class TemporalAcceleratorRenderer extends LinkLineRenderer<TemporalAccele
 			GlStateManager.disableCull();
 			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 			GlStateManager.color4f(1, 100F / 255F, 0, 0.25F);
-			CRRenderUtil.setBrightLighting();
 
 			GlStateManager.translated(x + 0.5F, y + 0.5F, z + 0.5F);
 			if(dir == Direction.DOWN){
@@ -182,5 +191,6 @@ public class TemporalAcceleratorRenderer extends LinkLineRenderer<TemporalAccele
 		GlStateManager.enableLighting();
 		GlStateManager.popAttributes();
 		GlStateManager.popMatrix();
+		CRRenderUtil.setLighting(light);
 	}
 }

@@ -12,6 +12,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTier;
 import net.minecraft.item.Rarity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -26,7 +27,7 @@ import java.util.List;
 public class LiechWrench extends Item{
 
 	public LiechWrench(){
-		super(new Properties().group(CRItems.TAB_CROSSROADS).addToolType(ToolType.PICKAXE, 1).addToolType(ToolType.SHOVEL, 1).addToolType(ToolType.AXE, 1).addToolType(ToolType.get("wrench"), 0).maxStackSize(1));
+		super(new Properties().group(CRItems.TAB_CROSSROADS).addToolType(ToolType.PICKAXE, ItemTier.STONE.getHarvestLevel()).addToolType(ToolType.SHOVEL, ItemTier.STONE.getHarvestLevel()).addToolType(ToolType.AXE, ItemTier.STONE.getHarvestLevel()).addToolType(ToolType.get("wrench"), 0).maxStackSize(1));
 		String name = "liech_wrench";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
@@ -64,6 +65,16 @@ public class LiechWrench extends Item{
 			return 4F;
 		}
 		return 1.0F;
+	}
+
+	@Override
+	public boolean canHarvestBlock(BlockState blockIn){
+		int i = ItemTier.STONE.getHarvestLevel();
+		if (blockIn.getHarvestTool() == ToolType.PICKAXE) {
+			return i >= blockIn.getHarvestLevel();
+		}
+		Material material = blockIn.getMaterial();
+		return material == Material.ROCK || material == Material.IRON || material == Material.ANVIL;
 	}
 
 	@Override

@@ -137,7 +137,7 @@ public class AlchemyUtil{
 						}
 					}
 				}
-			}else{
+			}else if(solQty > 0){
 				//Perform solid independently
 				solCol[0] /= solQty;
 				solCol[1] /= solQty;

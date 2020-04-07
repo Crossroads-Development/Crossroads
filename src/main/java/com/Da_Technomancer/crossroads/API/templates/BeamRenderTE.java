@@ -65,7 +65,9 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 	protected void refreshBeam(int index){
 		int packet = beamer == null || beamer[index] == null ? 0 : beamer[index].genPacket();
 		beamPackets[index] = packet;
-		CRPackets.sendPacketAround(world, pos, new SendIntToClient((byte) index, packet, pos));
+		if(!world.isRemote){
+			CRPackets.sendPacketAround(world, pos, new SendIntToClient((byte) index, packet, pos));
+		}
 		if(beamer != null && beamer[index] != null && !beamer[index].getLastSent().isEmpty()){
 			prevMag[index] = beamer[index].getLastSent();
 		}

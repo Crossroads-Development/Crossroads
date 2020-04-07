@@ -86,7 +86,11 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 	 * @return The flux to be produced this cycle
 	 */
 	private int producedFlux(){
-		return (int) Math.pow(2, extraTicks()) * FLUX_MULT;
+		int boost = extraTicks();
+		if(boost > 0){
+			return (int) Math.pow(2, boost) * FLUX_MULT;
+		}
+		return 0;
 	}
 
 	@Override

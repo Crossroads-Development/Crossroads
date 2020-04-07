@@ -175,6 +175,9 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 		}else if(!world.isRemote){//Server side, has members
 			//Speed in rad/t
 			float trueSpeed = (float) (rotaryMembers.get(0).getMotionData()[0] / rotaryMembers.get(0).getRotationRatio()) / 20F;
+			if(Float.isNaN(trueSpeed)){
+				trueSpeed = 0;
+			}
 			//Add the current angle value to the prevAngles record, and shift the array
 			System.arraycopy(prevAngles, 1, prevAngles, 0, 3);
 			prevAngles[3] = prevAngles[2] + trueSpeed;
@@ -195,6 +198,9 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 			if(diff >= ADJUST_MARGIN || signChanged){
 				//Take the current simulated angle as the new "true" angle value, to prevent a "jerking" re-alignment of gear angles on the client side
 				float delta = runSeries(ticksExisted, 0) - prevAngles[3];
+				if(Float.isNaN(delta)){
+					delta = 0;
+				}
 				for(int i = 0; i < 4; i++){
 					prevAngles[i] += delta;
 				}

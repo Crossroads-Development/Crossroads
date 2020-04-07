@@ -74,6 +74,7 @@ public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntit
 				CRRenderUtil.addArc(world, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, pos.getX() + 1.5F, pos.getY() + 1.5F, pos.getZ() + 1.5F, 3, 1F, FluxUtil.COLOR_CODES[(int) (world.getGameTime() % 3)]);
 			}
 		}else if(world.getGameTime() % FluxUtil.FLUX_TIME == 0){
+			syncFlux();
 			fluxToTrans += entropy;//Save flux to a separate variable so tick order doesn't interfere with the amount transferred next tick
 			entropy = 0;
 			markDirty();
@@ -83,7 +84,6 @@ public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntit
 			fluxToTrans = 0;
 			FluxUtil.checkFluxOverload(this);
 			markDirty();
-			syncFlux();
 		}
 	}
 
