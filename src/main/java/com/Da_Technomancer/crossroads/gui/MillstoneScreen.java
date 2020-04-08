@@ -23,6 +23,6 @@ public class MillstoneScreen extends MachineGUI<MillstoneContainer, MillstoneTil
 		GlStateManager.color3f(1, 1, 1);
 		Minecraft.getInstance().getTextureManager().bindTexture(BACKGROUND);
 		blit(guiLeft, guiTop, 0, 0, xSize, ySize);
-		blit(guiLeft + 66, guiTop + 35, 176, 0, 44, (int) Math.ceil(te.progRef.get() * 17 / MillstoneTileEntity.REQUIRED));
+		blit(guiLeft + 66, guiTop + 35, 176, 0, 44, (int) Math.ceil(container.progRef.get() * 17 / MillstoneTileEntity.REQUIRED));
 	}
 }

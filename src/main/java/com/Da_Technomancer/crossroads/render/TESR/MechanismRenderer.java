@@ -20,7 +20,7 @@ public class MechanismRenderer extends TileEntityRenderer<MechanismTileEntity>{
 
 		for(int i = 0; i < 7; i++){
 			if(te.members[i] != null){
-				te.members[i].doRender(te, partialTicks, te.mats[i], i == 6 ? null : Direction.byIndex(i), te.axleAxis);
+				te.members[i].doRender(te, partialTicks, te.mats[i], i == 6 ? null : Direction.byIndex(i), te.getAxleAxis());
 			}
 		}
 

@@ -47,26 +47,28 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 		if(sourceAxle != null){
 			availableEnergy += Math.abs(sourceAxle.getMotionData()[1]);
 		}
-		if(sumIRot > 0 && availableEnergy - cost < 0){
-			baseSpeed = 0;
-			cost = 0;
-		}
+//		if(sumIRot > 0 && availableEnergy - cost < 0){
+//			baseSpeed = 0;
+//			cost = 0;
+//		}
+
+		//As much energy as possible until it would reach the desired speed is pulled into the system
+		cost = Math.min(cost, availableEnergy);
+		sumEnergy = cost;
 		availableEnergy -= cost;
-		sumEnergy = 0;
 
 		for(IAxleHandler gear : rotaryMembers){
-			double newEnergy;
-
 			// set w
-			gear.getMotionData()[0] = gear.getRotationRatio() * baseSpeed;
+			double newSpeed = Math.signum(sumEnergy * gear.getRotationRatio()) * Math.sqrt(Math.abs(sumEnergy) * 2D * Math.pow(gear.getRotationRatio(), 2) / sumIRot);
+			gear.getMotionData()[0] = newSpeed;
 			// set energy
-			newEnergy = Math.signum(gear.getMotionData()[0]) * Math.pow(gear.getMotionData()[0], 2) * gear.getMoInertia() / 2D;
+			double newEnergy = Math.signum(newSpeed) * Math.pow(newSpeed, 2) * gear.getMoInertia() / 2D;
 			gear.getMotionData()[1] = newEnergy;
-			sumEnergy += newEnergy;
 			// set power
-			gear.getMotionData()[2] = (newEnergy - gear.getMotionData()[3]) * 20;
+			gear.getMotionData()[2] = (newEnergy - gear.getMotionData()[3]) * 20D;
 			// set lastE
 			gear.getMotionData()[3] = newEnergy;
+
 
 			gear.markChanged();
 		}

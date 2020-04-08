@@ -43,6 +43,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	private static TileEntityType<LargeGearMasterTileEntity> teType = null;
 
 	private GearFactory.GearMaterial type;
+	private boolean newTE = false;//Used when placing the gear, to signify that the type data needs to be sent to clients. Sending immediately after placement can cause a packet race condition if the packet arrives before the TE exists
 	private double[] motionData = new double[4];
 	private double inertia = 0;
 	private boolean borken = false;//Any PR which changes the spelling on this line will be rejected
@@ -79,9 +80,8 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 
 	public void initSetup(GearFactory.GearMaterial typ){
 		type = typ;
-
 		if(!world.isRemote){
-			CRPackets.sendPacketAround(world, pos, new SendLongToClient((byte) 1, type == null ? -1 : type.serialize(), pos));
+			newTE = true;
 		}
 
 		inertia = type == null ? 0 : MiscUtil.preciseRound(type.getDensity() * 1.125D * 9D / 8D, 2);//1.125 because r*r/2 so 1.5*1.5/2
@@ -118,6 +118,11 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	public void tick(){
 		if(world.isRemote){
 			angleW[0] += angleW[1] * 9D / Math.PI;
+		}else if(newTE){
+			newTE = false;
+			//This is newly placed. Lazy-load send (lazy send? lazy network?) the type data to any clients.
+			//This is unnecessary for the client that placed this, but needed in MP for other clients
+			CRPackets.sendPacketAround(world, pos, new SendLongToClient((byte) 1, type == null ? -1 : type.serialize(), pos));
 		}
 	}
 
@@ -314,11 +319,6 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 		@Override
 		public void markChanged(){
 			markDirty();
-		}
-		
-		@Override
-		public boolean shouldManageAngle(){
-			return true;
 		}
 	}
 }

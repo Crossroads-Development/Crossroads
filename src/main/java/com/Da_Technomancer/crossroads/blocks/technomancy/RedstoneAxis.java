@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneAxisTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
+import com.Da_Technomancer.essentials.blocks.redstone.IWireConnect;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -26,7 +27,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class RedstoneAxis extends ContainerBlock{
+public class RedstoneAxis extends ContainerBlock implements IWireConnect{
 	
 	public RedstoneAxis(){
 		super(Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(3));
@@ -89,5 +90,10 @@ public class RedstoneAxis extends ContainerBlock{
 			RedstoneAxisTileEntity bte = (RedstoneAxisTileEntity) te;
 			CircuitUtil.updateFromWorld(bte.redsHandler, blockIn);
 		}
+	}
+
+	@Override
+	public boolean canConnect(Direction side, BlockState state){
+		return true;
 	}
 }

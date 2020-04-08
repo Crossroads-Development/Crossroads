@@ -85,8 +85,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	public final VoxelShape[] boundingBoxes = new VoxelShape[7];
 
 	private boolean updateMembers = false;
-	//Public for read-only, use setMechanism
-	public Direction.Axis axleAxis;
+	private Direction.Axis axleAxis;
 	//Public for read-only
 	public double redstoneIn = 0;
 
@@ -101,7 +100,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	public void setMechanism(int index, @Nullable IMechanism mechanism, @Nullable GearFactory.GearMaterial mat, @Nullable Direction.Axis axis, boolean newTE){
 		members[index] = mechanism;
 		mats[index] = mat;
-		if(index == 6 && axleAxis != axis){
+		if(index == 6 && getAxleAxis() != axis){
 			axleAxis = axis;
 			if(!newTE && !world.isRemote){
 				CRPackets.sendPacketAround(world, pos, new SendLongToClient(14, axis == null ? -1 : axis.ordinal(), pos));
@@ -140,8 +139,8 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 			}
 		}
 
-		if(members[6] != null && mats[6] != null && axleAxis != null){
-			nbt.putInt("axis", axleAxis.ordinal());
+		if(members[6] != null && mats[6] != null && getAxleAxis() != null){
+			nbt.putInt("axis", getAxleAxis().ordinal());
 		}
 
 		nbt.putDouble("reds", redstoneIn);
@@ -162,8 +161,8 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 			}
 		}
 
-		if(members[6] != null && mats[6] != null && axleAxis != null){
-			nbt.putInt("axis", axleAxis.ordinal());
+		if(members[6] != null && mats[6] != null && getAxleAxis() != null){
+			nbt.putInt("axis", getAxleAxis().ordinal());
 		}
 		nbt.putDouble("reds", redstoneIn);
 
@@ -240,7 +239,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 		//TODO see if it's possible to make this not a ticking tile entity
 
 		if(updateMembers && !world.isRemote){
-			CRPackets.sendPacketAround(world, pos, new SendLongToClient(14, axleAxis == null ? -1 : axleAxis.ordinal(), pos));
+			CRPackets.sendPacketAround(world, pos, new SendLongToClient(14, getAxleAxis() == null ? -1 : getAxleAxis().ordinal(), pos));
 			for(int i = 0; i < 7; i++){
 				axleHandlers[i].updateStates(true);
 			}
@@ -257,7 +256,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 			markDirty();
 			for(int i = 0; i < 7; i++){
 				if(members[i] != null){
-					members[i].onRedstoneChange(redstoneIn, reds, mats[i], i == 6 ? null : Direction.byIndex(i), axleAxis, motionData[i], this);
+					members[i].onRedstoneChange(redstoneIn, reds, mats[i], i == 6 ? null : Direction.byIndex(i), getAxleAxis(), motionData[i], this);
 				}
 			}
 			redstoneIn = reds;
@@ -266,7 +265,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	public float getRedstone(){
-		return members[6] != null && axleAxis != null ? (float) members[6].getCircuitSignal(mats[6], axleAxis, motionData[6], this) : 0;
+		return members[6] != null && getAxleAxis() != null ? (float) members[6].getCircuitSignal(mats[6], getAxleAxis(), motionData[6], this) : 0;
 	}
 
 	//Direct access to the axle handlers is needed
@@ -291,23 +290,27 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.COG_CAPABILITY && facing != null){
-			if(members[facing.getIndex()] != null && members[facing.getIndex()].hasCap(capability, facing, mats[facing.getIndex()], facing, axleAxis, this)){
+			if(members[facing.getIndex()] != null && members[facing.getIndex()].hasCap(capability, facing, mats[facing.getIndex()], facing, getAxleAxis(), this)){
 				return (LazyOptional<T>) cogOpts[facing.getIndex()];
 			}else{
 				return LazyOptional.empty();
 			}
 		}
 		if(capability == Capabilities.AXLE_CAPABILITY && facing != null){
-			if(members[facing.getIndex()] == null && axleAxis == facing.getAxis()){
+			if(members[facing.getIndex()] == null && getAxleAxis() == facing.getAxis() && members[6] != null){
 				//Connect to axle
-				return members[6].hasCap(capability, facing, mats[6], null, axleAxis, this) ? (LazyOptional<T>) axleOpts[6] : LazyOptional.empty();
+				return members[6].hasCap(capability, facing, mats[6], null, getAxleAxis(), this) ? (LazyOptional<T>) axleOpts[6] : LazyOptional.empty();
 			}else{
 				//Connect to gear on that side
-				return members[facing.getIndex()] != null && members[facing.getIndex()].hasCap(capability, facing, mats[facing.getIndex()], facing, axleAxis, this) ? (LazyOptional<T>) axleOpts[facing.getIndex()] : LazyOptional.empty();
+				return members[facing.getIndex()] != null && members[facing.getIndex()].hasCap(capability, facing, mats[facing.getIndex()], facing, getAxleAxis(), this) ? (LazyOptional<T>) axleOpts[facing.getIndex()] : LazyOptional.empty();
 			}
 		}
 
 		return super.getCapability(capability, facing);
+	}
+
+	public Direction.Axis getAxleAxis(){
+		return axleAxis;
 	}
 
 	private class SidedCogHandler implements ICogHandler{
@@ -357,7 +360,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 			if(members[side] != null){
 				this.renderOffset = renderOffset;
 				axis = masterIn;
-				members[side].propogate(mats[side], side == 6 ? null : Direction.byIndex(side), axleAxis, MechanismTileEntity.this, this, masterIn, key, rotRatioIn, lastRadius);
+				members[side].propogate(mats[side], side == 6 ? null : Direction.byIndex(side), getAxleAxis(), MechanismTileEntity.this, this, masterIn, key, rotRatioIn, lastRadius);
 			}
 		}
 
@@ -384,8 +387,8 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 				motionData[side][3] = 0;
 				boundingBoxes[side] = null;
 			}else{
-				inertia[side] = members[side].getInertia(mats[side], side == 6 ? null : Direction.byIndex(side), axleAxis);
-				boundingBoxes[side] = members[side].getBoundingBox(side == 6 ? null : Direction.byIndex(side), axleAxis);
+				inertia[side] = members[side].getInertia(mats[side], side == 6 ? null : Direction.byIndex(side), getAxleAxis());
+				boundingBoxes[side] = members[side].getBoundingBox(side == 6 ? null : Direction.byIndex(side), getAxleAxis());
 			}
 
 			if(sendPacket && !world.isRemote){

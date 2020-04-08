@@ -29,6 +29,7 @@ public class GrowEffect extends BeamEffect{
 	@Override
 	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, World worldIn, BlockPos pos, @Nullable Direction dir){
 		if(!performTransmute(align, voi, power, worldIn, pos)){
+			double range = Math.sqrt(power) / 2D;
 			if(voi){
 				BlockState state = worldIn.getBlockState(pos);
 				if(state.getBlock() instanceof IGrowable && state.getBlock() != Blocks.DEAD_BUSH){
@@ -38,7 +39,7 @@ public class GrowEffect extends BeamEffect{
 						worldIn.setBlockState(pos, Blocks.DEAD_BUSH.getDefaultState());
 					}
 				}
-				double range = Math.sqrt(power);
+
 				List<LivingEntity> ents = worldIn.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range + 1, pos.getY() + range + 1, pos.getZ() + range + 1), EntityPredicates.IS_ALIVE);
 				for(LivingEntity ent : ents){
 					if(ent.isEntityUndead()){
@@ -48,7 +49,6 @@ public class GrowEffect extends BeamEffect{
 					}
 				}
 			}else{
-				double range = Math.sqrt(power);
 				List<LivingEntity> ents = worldIn.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range, pos.getY() + range, pos.getZ() + range), EntityPredicates.IS_ALIVE);
 				for(LivingEntity ent : ents){
 					if(ent.isEntityUndead()){

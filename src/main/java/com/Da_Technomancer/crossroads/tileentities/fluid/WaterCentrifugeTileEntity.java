@@ -37,7 +37,7 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 	private static TileEntityType<WaterCentrifugeTileEntity> type = null;
 	
 	public static final double TIP_POINT = .5D;
-	public static final int INERTIA = 115;
+	public static final int INERTIA = 50;
 //	private static final int BATCH_SIZE = 250;
 	private boolean neg;
 

@@ -8,6 +8,7 @@ import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -80,11 +81,17 @@ public class LargeGear extends GearMatItem{
 
 		//Place the gear
 		world.setBlockState(pos, CRBlocks.largeGearMaster.getDefaultState().with(ESProperties.FACING, side.getOpposite()), 3);
-		((LargeGearMasterTileEntity) world.getTileEntity(pos)).initSetup(type);
+		TileEntity te = world.getTileEntity(pos);
+		if(te instanceof LargeGearMasterTileEntity){
+			((LargeGearMasterTileEntity) te).initSetup(type);
+		}
 
 		for(BlockPos cPos : relSlavePos[side.getAxis().ordinal()]){
 			world.setBlockState(pos.add(cPos), CRBlocks.largeGearSlave.getDefaultState().with(ESProperties.FACING, side.getOpposite()), 3);
-			((LargeGearSlaveTileEntity) world.getTileEntity(pos.add(cPos))).setInitial(BlockPos.ZERO.subtract(cPos));
+			TileEntity relTE = world.getTileEntity(pos.add(cPos));
+			if(relTE instanceof LargeGearSlaveTileEntity){
+				((LargeGearSlaveTileEntity) relTE).setInitial(BlockPos.ZERO.subtract(cPos));
+			}
 		}
 
 		//Notify the rotary system of a change

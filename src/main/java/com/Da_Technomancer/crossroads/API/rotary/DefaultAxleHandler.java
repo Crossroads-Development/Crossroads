@@ -33,9 +33,4 @@ public class DefaultAxleHandler implements IAxleHandler{
 	public float getAngle(float partialTicks){
 		return 0;
 	}
-
-	@Override
-	public boolean shouldManageAngle(){
-		return false;
-	}
 }

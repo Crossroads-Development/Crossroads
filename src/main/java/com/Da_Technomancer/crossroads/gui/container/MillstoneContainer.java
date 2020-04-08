@@ -3,9 +3,11 @@ package com.Da_Technomancer.crossroads.gui.container;
 import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MillstoneTileEntity;
+import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.IntReferenceHolder;
 import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder(Crossroads.MODID)
@@ -14,9 +16,12 @@ public class MillstoneContainer extends MachineContainer<MillstoneTileEntity>{
 	@ObjectHolder("millstone")
 	private static ContainerType<MillstoneContainer> type = null;
 
+	public IntReferenceHolder progRef;
+
 	public MillstoneContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
 		super(type, id, playerInv, buf);
-		trackInt(te.progRef);
+		progRef = new IntDeferredRef(te::getProgress, te.getWorld().isRemote);
+		trackInt(progRef);
 	}
 
 	@Override

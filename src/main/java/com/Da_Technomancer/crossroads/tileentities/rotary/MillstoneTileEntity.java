@@ -16,7 +16,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.IntReferenceHolder;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -37,7 +36,6 @@ public class MillstoneTileEntity extends InventoryTE{
 	private static TileEntityType<MillstoneTileEntity> type = null;
 
 	private double progress = 0;
-	public IntReferenceHolder progRef = IntReferenceHolder.single();
 	public static final double REQUIRED = 400;
 	public static final double PEAK_SPEED = 5D;
 	public static final double POWER = 10D;
@@ -51,6 +49,10 @@ public class MillstoneTileEntity extends InventoryTE{
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.progress", (int) progress, (int) REQUIRED));
 		super.addInfo(chat, player, hit);
+	}
+
+	public int getProgress(){
+		return (int) progress;
 	}
 
 	private void createOutput(ItemStack[] outputs){
@@ -146,8 +148,6 @@ public class MillstoneTileEntity extends InventoryTE{
 					progress = 0;
 				}
 			}
-
-			progRef.set((int) progress);
 		}
 	}
 
@@ -198,7 +198,6 @@ public class MillstoneTileEntity extends InventoryTE{
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
 		progress = nbt.getDouble("prog");
-		progRef.set((int) progress);
 	}
 
 	@Override

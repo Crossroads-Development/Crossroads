@@ -303,6 +303,9 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 			if(i != 3){
 				wCoeff[i] = nbt.getFloat("w_coeff_" + i);
 			}
+			if(Float.isNaN(prevAngles[i])){
+				prevAngles[i] = 0;//Unlikely to occur, but one NaN value can corrupt the entire angle regression
+			}
 		}
 
 		regrTimestamp = nbt.getLong("timestamp");

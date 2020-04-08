@@ -61,15 +61,6 @@ public interface IAxleHandler{
 	 * @return The angle of this axle for rendering. In degrees
 	 */
 	float getAngle(float partialTicks);
-	
-	/**
-	 * @deprecated Due to improvements in how angles are synchronized and calculated, this method is no longer used
-	 * @return Whether the Master Axis should keep the angle and clientW synchronized to client.
-	 */
-	@Deprecated
-	default boolean shouldManageAngle(){
-		return true;
-	}
 
 	/**
 	 * Called by the controlling master axis when relinquishing control of this axle. Can be used along with propogate to determine if this axle is actively controlled by an axis
