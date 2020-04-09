@@ -42,10 +42,6 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 		chat.add(new TranslationTextComponent("tt.crossroads.crystal_master_axis.info", currentElement == null ? MiscUtil.localize("alignment.none") : currentElement.getLocalName(time < 0), Math.abs(time)));
 	}
 
-	public EnumBeamAlignments getElement(){
-		return currentElement;
-	}
-
 	public int getTime(){
 		return time;
 	}
@@ -76,7 +72,7 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 			}else if(currentElement == EnumBeamAlignments.CHARGE){
 				sumEnergy += CRConfig.crystalAxisMult.get();
 			}else if(currentElement == EnumBeamAlignments.EQUILIBRIUM){
-				sumEnergy = (sumEnergy + 3D * lastSumEnergy) / 4D;
+				sumEnergy = (sumEnergy + 9D * lastSumEnergy) / 10D;
 			}
 		}
 

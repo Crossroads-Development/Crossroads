@@ -22,7 +22,7 @@ public enum EnumBeamAlignments{
 	CHARGE(new ChargeEffect(), new Color(255, 255, 0), 128),
 	EXPANSION(new PlaceEffect(), new Color(0, 255, 255), 72),
 	FUSION(BeamEffect.INSTANCE, new Color(132, 255, 255), 64),
-	LIGHT(BeamEffect.INSTANCE, new Color(255, 255, 255), 128),
+	LIGHT(new LightEffect(), new Color(255, 255, 255), 128),
 	
 	//These MUST be declared last so they have bottom priority.
 	STABILITY(new ExplodeEffect(), new Color(0, 0, 255), 254),

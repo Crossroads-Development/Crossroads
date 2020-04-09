@@ -1,0 +1,25 @@
+{
+	"category": "beam",
+	"name": "Alignment: Enchantment",
+	"icon": "crossroads:pure_quartz",
+	"sortnum": 1,
+	"priority": false,
+	"advancement": "crossroads:progress/alignment/enchantment",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Alignment: Enchantment",
+			"item": "crossroads:pure_quartz",
+			"text": "<thing>Enchantment/$ (light yellow) will enchant all items dropped in the world within range. They will be enchanted with a level equal to the beam <thing>power/$. If the beam <thing>power/$ >= 64, then it can get treasure enchantments (like Mending). The range is a radius of sqrt(<thing>power/$) / 2 blocks."
+		},
+		{
+			"type": "text",
+			"text": "This beam is very powerful, as one shot can enchant an unlimited number of items with max level enchants, including treasure enchants."
+		},
+		{
+			"type": "text",
+			"text": "<thing>Void-Enchantment/$ AKA <thing>Disenchantment/$ will disenchant all items dropped in the world within range. The range is a radius of sqrt(<thing>power/$) / 2 blocks. This can also remove curses from items."
+		}
+	]
+}

@@ -14,15 +14,19 @@
 		},
 		{
 			"type": "text",
-			"text": "effects in the world. They can do things like summoning lightning, producing redstone, placing blocks, and more. They look like giant colorful laser beams.$(br2)Every <thing>beam/$ has two traits: <thing>power/$ and <thing>alignment/$. The <thing>power/$ controls the intensity of effects (capped at <thing>power/$=64), while the <thing>alignment/$ controls what the effect is.$(br2)Each beam is composed of four resources, each of which "
+			"text": "effects in the world. They can do things like summoning lightning, producing redstone, placing blocks, and more. They look like giant colorful laser beams.$(br2)Every <thing>beam/$ has two traits: <thing>power/$ and <thing>alignment/$. The <thing>power/$ controls the intensity of effects (capped at <thing>power/$=64), while the <thing>alignment/$ controls what the effect is. Effects are applied every 5 ticks for a continuous beam."
 		},
 		{
 			"type": "text",
-			"text": "is a certain color: <thing>Energy/$- red, <thing>Potential/$- green, <thing>Stability/$- blue, and <thing>$(l:beam/void)Void/$- black. <thing>Void/$ is later game, and won't be used early on.$(br2)The <thing>power/$ of the beam is the total quantity of the four resources (<thing>energy/$ + <thing>potential/$ + <thing>stability/$ + <thing>void/$).$(br2)The <thing>alignment/$ is based on the color of the overall beam- the four (early game just three) resources in the beam combine their colors "
+			"text": "Each beam is composed of four resources, each of which is a certain color: <thing>Energy/$- red, <thing>Potential/$- green, <thing>Stability/$- blue, and <thing>$(l:beam/void)Void/$- black. <thing>Void/$ is later game, and won't be used early on.$(br2)The <thing>power/$ of the beam is the total quantity of the four resources (<thing>energy/$ + <thing>potential/$ + <thing>stability/$ + <thing>void/$).$(br2)The <thing>alignment/$ is based on the color of the overall beam- the four (early game "
 		},
 		{
 			"type": "text",
-			"text": "like on a color wheel. Certain <thing>alignments/$ require more specific colors than others- making them harder to make. The <item>$(l:beam/chart)color chart/$ will help you discover <thing>alignments/$ you're missing.$(br2)You also need to discover <thing>alignments/$- once you discover one, an entry will appear in this book. You can use an <item>$(l:intro/omnimeter)omnimeter/$ to measure <thing>beams/$, and discover the <thing>alignment/$ if you haven't discovered it yet."
+			"text": "just three) resources in the beam combine their colors like on a color wheel. Certain <thing>alignments/$ require more specific colors than others- making them harder to make. The <item>$(l:beam/chart)color chart/$ will help you discover <thing>alignments/$ you're missing.$(br2)You also need to discover <thing>alignments/$- once you discover one, an entry will appear in this book. You can use an <item>$(l:intro/omnimeter)omnimeter/$ to measure <thing>beams/$, and discover the <thing>alignment/$ if you haven't discovered "
+		},
+		{
+			"type": "text",
+			"text": "it yet."
 		},
 		{
 			"type": "text",

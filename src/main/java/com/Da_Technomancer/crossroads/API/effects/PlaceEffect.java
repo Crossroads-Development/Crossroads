@@ -37,7 +37,8 @@ public class PlaceEffect extends BeamEffect{
 					worldIn.destroyBlock(pos, true);
 				}
 			}else{
-				List<ItemEntity> items = worldIn.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos.add(-power, -power, -power), pos.add(power, power, power)), EntityPredicates.IS_ALIVE);
+				int range = (int) Math.sqrt(power) / 2;
+				List<ItemEntity> items = worldIn.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos.add(-range, -range, -range), pos.add(range + 1, range + 1, range + 1)), EntityPredicates.IS_ALIVE);
 				if(items.size() != 0){
 					FakePlayer placer = FakePlayerFactory.get((ServerWorld) worldIn, new GameProfile(null, Crossroads.MODID + "-place_effect-" + worldIn.getDimension().getType().getId()));
 					for(ItemEntity ent : items){

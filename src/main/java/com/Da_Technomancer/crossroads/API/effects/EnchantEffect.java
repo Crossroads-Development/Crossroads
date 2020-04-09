@@ -26,9 +26,9 @@ public class EnchantEffect extends BeamEffect{
 	@Override
 	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, World worldIn, BlockPos pos, @Nullable Direction dir){
 		if(!performTransmute(align, voi, power, worldIn, pos)){
+			int range = (int) Math.sqrt(power) / 2;
+			ArrayList<ItemEntity> items = (ArrayList<ItemEntity>) worldIn.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos.add(-range, -range, -range), pos.add(range + 1, range + 1, range + 1)), EntityPredicates.IS_ALIVE);
 			if(voi){
-				power = Math.min(power, 8);
-				ArrayList<ItemEntity> items = (ArrayList<ItemEntity>) worldIn.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos.add(-power, -power, -power), pos.add(power, power, power)), EntityPredicates.IS_ALIVE);
 				if(items.size() != 0){
 					for(ItemEntity ent : items){
 						if(ent.getItem().getTag() != null && ent.getItem().getTag().contains("ench")){
@@ -41,8 +41,6 @@ public class EnchantEffect extends BeamEffect{
 					}
 				}
 			}else{
-				int range = Math.min(power, 8);
-				ArrayList<ItemEntity> items = (ArrayList<ItemEntity>) worldIn.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos.add(-range, -range, -range), pos.add(range, range, range)), EntityPredicates.IS_ALIVE);
 				if(items.size() != 0){
 					for(ItemEntity ent : items){
 						ItemStack stack = ent.getItem();
