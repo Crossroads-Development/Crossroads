@@ -35,6 +35,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.config.ModConfig;
 
@@ -64,13 +65,17 @@ public final class EventHandlerCommon{
 				if(ent instanceof EntityGhostMarker){
 					EntityGhostMarker mark = (EntityGhostMarker) ent;
 					if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.BLOCK_SPAWNING && mark.data != null && mark.getPositionVector().subtract(e.getEntity().getPositionVector()).length() <= mark.data.getInt("range")){
-						e.setCanceled(true);
+						e.setResult(Event.Result.DENY);
 						return;
 					}
 				}
 			}
 		}
-
+	}
+	
+	@SubscribeEvent
+	@SuppressWarnings("unused")
+	public void chargeCreepers(LivingSpawnEvent.SpecialSpawn e){
 		if(e.getWorld() instanceof ServerWorld && e.getEntity() instanceof CreeperEntity && (float) AtmosChargeSavedData.getCharge((ServerWorld) e.getWorld()) / (float) AtmosChargeSavedData.getCapacity() >= 0.9F && (CRConfig.atmosEffect.get() & 2) == 2){
 			CompoundNBT nbt = new CompoundNBT();
 			e.getEntityLiving().writeAdditional(nbt);
