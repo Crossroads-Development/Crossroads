@@ -23,12 +23,12 @@ public class ChargeEffect extends BeamEffect{
 			if(voi){
 				LazyOptional<IEnergyStorage> energy;
 				if(te != null && (energy = te.getCapability(CapabilityEnergy.ENERGY, dir)).isPresent()){
-					energy.orElseThrow(NullPointerException::new).extractEnergy(CRConfig.fePerCharge.get(), false);
+					energy.orElseThrow(NullPointerException::new).extractEnergy(CRConfig.fePerCharge.get() * power, false);
 				}
 			}else{
 				LazyOptional<IEnergyStorage> opt;
 				if(te != null && (opt = te.getCapability(CapabilityEnergy.ENERGY, dir)).isPresent()){
-					opt.orElseThrow(NullPointerException::new).receiveEnergy(CRConfig.fePerCharge.get(), false);
+					opt.orElseThrow(NullPointerException::new).receiveEnergy(CRConfig.fePerCharge.get() * power, false);
 					return;
 				}
 

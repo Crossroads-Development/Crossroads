@@ -6,7 +6,6 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.BasicBlock;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
@@ -174,7 +173,11 @@ public final class OreSetup{
 			return color;
 		}
 
-		@OnlyIn(Dist.CLIENT)
+		/**
+		 * Gets the localized name of this material (as an adjective)- to be combined with a component
+		 * Do not trust the result on the physical server side (due to missing localization maps)
+		 * @return The localized name
+		 */
 		public String getName(){
 			return MiscUtil.localize("material." + id);
 		}
