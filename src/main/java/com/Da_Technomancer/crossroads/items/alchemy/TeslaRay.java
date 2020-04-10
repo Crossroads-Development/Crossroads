@@ -30,9 +30,9 @@ import java.util.function.Predicate;
 public class TeslaRay extends Item{
 
 	private static final int FE_USE = 1000;
-	private static final int RANGE = 8;
-	private static final int RADIUS = 4;
-	private static final float DAMAGE = 6;
+	private static final int RANGE = 12;
+	private static final int RADIUS = 5;
+	private static final float DAMAGE = 7;
 
 	public TeslaRay(){
 		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
@@ -45,8 +45,8 @@ public class TeslaRay extends Item{
 	public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack){
 		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
 
-		if (slot == EquipmentSlotType.MAINHAND){
-			multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -3D, AttributeModifier.Operation.ADDITION));
+		if(slot == EquipmentSlotType.MAINHAND){
+			multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -2D, AttributeModifier.Operation.ADDITION));
 		}
 
 		return multimap;

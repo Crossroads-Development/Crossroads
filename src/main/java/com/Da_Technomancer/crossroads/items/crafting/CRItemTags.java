@@ -8,6 +8,7 @@ import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Optional;
@@ -26,7 +27,7 @@ public class CRItemTags{
 	public static final Tag<Item> DENSUS = new ItemTags.Wrapper(new ResourceLocation(CR, "gems/densus"));
 	public static final Tag<Item> ANTI_DENSUS = new ItemTags.Wrapper(new ResourceLocation(CR, "gems/anti_densus"));
 	public static final Tag<Item> CAVORITE = new ItemTags.Wrapper(new ResourceLocation(CR, "gems/cavorite"));
-	public static final Tag<Item> ALCH_CRYSTAL = new ItemTags.Wrapper(new ResourceLocation(CR, "gems/alchemy_crystal"));
+	public static final Tag<Item> ALCH_CRYSTAL = new ItemTags.Wrapper(new ResourceLocation(CR, "gems/alch_cryst"));
 	public static final Tag<Item> DUSTS_ADAMANT = new ItemTags.Wrapper(new ResourceLocation(CR, "dusts/adamant"));
 	public static final Tag<Item> DUSTS_BEDROCK = new ItemTags.Wrapper(new ResourceLocation(CR, "dusts/bedrock"));
 	public static final Tag<Item> DUSTS_SULFURIC = new ItemTags.Wrapper(new ResourceLocation(CR, "dusts/sulfuric_acid"));
@@ -57,8 +58,12 @@ public class CRItemTags{
 	 * @param <T> The type of the tag. Normally Block or Item
 	 * @return An entry in the tag.
 	 */
+	@Nullable
 	public static <T extends IForgeRegistryEntry<T>> T getTagEntry(Tag<T> tag){
 		Collection<T> elems = tag.getAllElements();
+		if(elems.isEmpty()){
+			return null;
+		}
 		T randEntry = elems.iterator().next();
 		if(elems instanceof LinkedHashSet){
 			return randEntry;//This is an ordered tag. Return the first entry

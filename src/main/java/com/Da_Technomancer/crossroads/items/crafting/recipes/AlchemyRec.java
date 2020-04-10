@@ -135,12 +135,11 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 					reags.remove(AlchemyCore.REAGENTS.get(EnumReagents.AETHER.id()));
 					reags.remove(AlchemyCore.REAGENTS.get(EnumReagents.ADAMANT.id()));
 					reags.addReagent(prod, created, reags.getTempC());
+					return created > 0;
 				}
 			}
 			return false;
 		}
-
-
 
 		//Check charged, catalyst, temperature, and solvent requirements
 		if(charged() && !chamb.isCharged()){
@@ -160,11 +159,23 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 
 		int maxReactions = amountChange <= 0 ? 200 : (chamb.getReactionCapacity() - content) / amountChange;//200 chosen arbitrarily as a moderately large positive number
 
+		int prevMax = 0;
 		for(ReagentStack reag : reagents){
 			if(reags.getQty(reag.getType()) <= 0){
 				return false;
 			}
-			maxReactions = Math.min(maxReactions, reags.getQty(reag.getType()) / reag.getAmount());
+
+			int maxFromReag = reags.getQty(reag.getType()) / reag.getAmount();
+			maxReactions = Math.min(maxReactions, maxFromReag);
+
+			//Destroy the chamber for precise type if the ratio isn't perfect for the input
+			if(type == Type.PRECISE && maxReactions > 0){
+				if(prevMax != 0 && prevMax != maxFromReag){
+					chamb.destroyChamber(0);
+				}else{
+					prevMax = maxFromReag;
+				}
+			}
 		}
 
 		double deltaHeat = deltaHeatPer();
@@ -191,13 +202,6 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 		if(type == Type.DESTRUCTIVE){
 			chamb.destroyChamber(Math.min(MAX_BLAST, data * maxReactions));
 			chamb.addVisualEffect(ParticleTypes.SMOKE, 0, 0, 0);
-		}else if(type == Type.PRECISE){
-			for(ReagentStack reag : reagents){
-				if(reags.getQty(reag.getType()) != 0){
-					chamb.destroyChamber(0);
-					break;
-				}
-			}
 		}
 
 		return true;

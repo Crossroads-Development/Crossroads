@@ -67,7 +67,7 @@ public class ElementalReagent implements IElementReagent{
 
 	@Nullable
 	@Override
-	public IAlchEffect getEffect(EnumMatterPhase phase){
+	public IAlchEffect getEffect(){
 		return effect;
 	}
 	

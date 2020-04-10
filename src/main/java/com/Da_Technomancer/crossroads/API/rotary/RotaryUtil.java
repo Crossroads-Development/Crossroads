@@ -82,6 +82,9 @@ public class RotaryUtil{
 			sumIW += axle.getMoInertia() * Math.abs(axle.getMotionData()[0]);
 		}
 
+		if(sumInertia <= 0){
+			return 0;
+		}
 		//Apply energy loss; based on average speed weighted by moment of inertia
 		sumEnergy = Math.signum(sumEnergy) * Math.max(0, Math.abs(sumEnergy) - CRConfig.rotaryLoss.get() * Math.pow(sumIW / sumInertia, 2));
 		return sumEnergy;

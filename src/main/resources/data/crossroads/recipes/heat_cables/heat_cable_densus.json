@@ -11,7 +11,7 @@
 	],
 	"key": {
 		"I": {
-			"item": "crossroads:solid_densus"
+			"tag": "crossroads:gems/densus"
 		},
 		"C": {
 			"tag": "forge:ingots/copper"

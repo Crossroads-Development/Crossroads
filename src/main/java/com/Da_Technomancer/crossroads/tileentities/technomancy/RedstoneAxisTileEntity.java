@@ -44,6 +44,9 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 		LazyOptional<IAxleHandler> backOpt = backTE == null ? LazyOptional.empty() : backTE.getCapability(Capabilities.AXLE_CAPABILITY, facing);
 		IAxleHandler sourceAxle = backOpt.isPresent() ? backOpt.orElseThrow(NullPointerException::new) : null;
 		double availableEnergy = Math.abs(sumEnergy);
+		if(Double.isNaN(availableEnergy)){
+			availableEnergy = 0;//There's a NaN bug somewhere, and I can't find it. This should work
+		}
 		if(sourceAxle != null){
 			availableEnergy += Math.abs(sourceAxle.getMotionData()[1]);
 		}
@@ -54,12 +57,20 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 
 		//As much energy as possible until it would reach the desired speed is pulled into the system
 		cost = Math.min(cost, availableEnergy);
+		if(Double.isNaN(cost)){
+			cost = 0;//There's a NaN bug somewhere, and I can't find it. This should work
+		}
 		sumEnergy = cost;
 		availableEnergy -= cost;
 
 		for(IAxleHandler gear : rotaryMembers){
 			// set w
-			double newSpeed = Math.signum(sumEnergy * gear.getRotationRatio()) * Math.sqrt(Math.abs(sumEnergy) * 2D * Math.pow(gear.getRotationRatio(), 2) / sumIRot);
+			double newSpeed;
+			if(sumIRot <= 0 || Double.isNaN(sumIRot)){
+				newSpeed = baseSpeed * gear.getRotationRatio();
+			}else{
+				newSpeed = Math.signum(sumEnergy * gear.getRotationRatio()) * Math.sqrt(Math.abs(sumEnergy) * 2D * Math.pow(gear.getRotationRatio(), 2) / sumIRot);
+			}
 			gear.getMotionData()[0] = newSpeed;
 			// set energy
 			double newEnergy = Math.signum(newSpeed) * Math.pow(newSpeed, 2) * gear.getMoInertia() / 2D;

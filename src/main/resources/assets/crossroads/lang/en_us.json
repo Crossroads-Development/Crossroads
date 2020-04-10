@@ -446,6 +446,7 @@
 	"tt.crossroads.maxwell_demon.read_bottom": "Bottom Temp: %1$s°C",
 	"tt.crossroads.maxwell_demon.read_biome": "Biome Temp: %1$s°C",
 	"tt.crossroads.boilerplate.alchemy_empty": "Empty",
+	"tt.crossroads.boilerplate.alchemy_capacity": "Capacity: %1$d",
 	"tt.crossroads.boilerplate.alchemy_content": "%1$s, Qty: %2$d",
 	"tt.crossroads.boilerplate.alchemy_excess": "And %1$d more...",
 	"tt.crossroads.nitroglycerin.quip": "Handle with care!",

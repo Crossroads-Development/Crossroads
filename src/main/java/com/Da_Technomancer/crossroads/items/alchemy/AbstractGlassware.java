@@ -103,6 +103,7 @@ public abstract class AbstractGlassware extends Item{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.alchemy_capacity", getCapacity()));
 		if(!stack.hasTag()){
 			return;
 		}
@@ -141,7 +142,7 @@ public abstract class AbstractGlassware extends Item{
 		NONE(0, false),
 		PHIAL(20, false),
 		FLORENCE(100, true),
-		SHELL(25, false);
+		SHELL(20, false);
 
 		public final int capacity;
 		public final boolean connectToCable;

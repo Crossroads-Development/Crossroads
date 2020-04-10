@@ -49,7 +49,7 @@ public interface IReagent{
 	Color getColor(EnumMatterPhase phase);
 
 	@Nullable
-	default IAlchEffect getEffect(EnumMatterPhase phase){
+	default IAlchEffect getEffect(){
 		return null;
 	}
 	

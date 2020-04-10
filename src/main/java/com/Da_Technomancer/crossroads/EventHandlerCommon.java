@@ -50,7 +50,7 @@ public final class EventHandlerCommon{
 
 	@SubscribeEvent
 	@SuppressWarnings("unused")
-	public void onEntitySpawn(LivingSpawnEvent e){
+	public void onEntitySpawn(LivingSpawnEvent.CheckSpawn e){
 		if(entityList != null && e.getWorld() instanceof ServerWorld){
 			ServerWorld world = (ServerWorld) e.getWorld();
 			Map<UUID, Entity> entities;

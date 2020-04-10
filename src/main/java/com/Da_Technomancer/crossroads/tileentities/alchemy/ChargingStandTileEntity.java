@@ -145,6 +145,7 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 		BlockState state = world.getBlockState(pos);
 
 		if(heldType() != AbstractGlassware.GlasswareTypes.NONE){
+			//Remove glassware
 			if(stack.isEmpty() && sneaking){
 				ItemStack out = getStoredItem();
 				world.setBlockState(pos, state.with(CRProperties.CRYSTAL, false).with(CRProperties.CONTAINER_TYPE, AbstractGlassware.GlasswareTypes.NONE));
@@ -154,7 +155,9 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 				markDirty();
 				return out;
 			}
-			super.rightClickWithItem(stack, sneaking, player, hand);
+
+			//Reagent interaction
+			return super.rightClickWithItem(stack, sneaking, player, hand);
 		}else if(stack.getItem() instanceof AbstractGlassware){
 			//Add item into TE
 			this.contents = ((AbstractGlassware) stack.getItem()).getReagants(stack);

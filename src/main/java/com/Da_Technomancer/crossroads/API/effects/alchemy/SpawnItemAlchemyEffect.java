@@ -18,7 +18,7 @@ public class SpawnItemAlchemyEffect implements IAlchEffect{
 
 	@Override
 	public void doEffect(World world, BlockPos pos, int amount, EnumMatterPhase phase, ReagentMap reags){
-		if(phase == EnumMatterPhase.SOLID){
+		if(phase == EnumMatterPhase.SOLID){//Very important requirement- otherwise we spawn a massive number of these, creating a dupe bug
 			InventoryHelper.spawnItemStack(world, pos.getX() + Math.random(), pos.getY() + Math.random(), pos.getZ() + Math.random(), new ItemStack(spawnedItem, amount));
 		}
 	}

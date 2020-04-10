@@ -34,7 +34,8 @@ public class PhilStone extends Item{
 
 	private static void clearBlock(World world, BlockPos pos){
 		BlockState state = world.getBlockState(pos);
-		if(!state.getBlock().isAir(state, world, pos)){
+		//Able to break any non-indestructible block, and also bedrock
+		if(!state.getBlock().isAir(state, world, pos) && (state.getBlockHardness(world, pos) >= 0 || state.getBlock() == Blocks.BEDROCK)){
 			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 			world.addParticle(ParticleTypes.SMOKE, pos.getX() + world.rand.nextDouble(), pos.getY() + world.rand.nextDouble(), pos.getZ() + world.rand.nextDouble(), 0, 0, 0);
 		}

@@ -20,6 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -30,7 +31,7 @@ import java.util.List;
 
 public class CageCharger extends ContainerBlock implements IReadable{
 
-	private static final VoxelShape SHAPE = makeCuboidShape(4, 0, 4, 12, 8, 12);
+	private static final VoxelShape SHAPE = VoxelShapes.or(makeCuboidShape(0, 0, 0, 16, 4, 16), makeCuboidShape(4, 4, 4, 12, 8, 12));
 
 	public CageCharger(){
 		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));

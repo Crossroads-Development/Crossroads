@@ -27,7 +27,7 @@ public class AlchemyUtil{
 	public static final int ALCHEMY_TIME = 2;
 
 	private static int getGasRange(int gasQty){
-		return Math.min((int) Math.sqrt(gasQty), 8);
+		return Math.min(8, Math.max(1, gasQty / 3));
 	}
 
 	private static int getSplashRange(int liquidQty){
@@ -72,7 +72,7 @@ public class AlchemyUtil{
 						gasCol[1] += c.getGreen() * qty;
 						gasCol[2] += c.getBlue() * qty;
 						gasCol[3] += c.getAlpha() * qty;
-						effectsGas.add(new QueuedEffect(reag.getEffect(p), p, qty));
+						effectsGas.add(new QueuedEffect(reag.getEffect(), qty));
 						break;
 					case LIQUID:
 						liqQty += qty;
@@ -80,7 +80,7 @@ public class AlchemyUtil{
 						liqCol[1] += c.getGreen() * qty;
 						liqCol[2] += c.getBlue() * qty;
 						liqCol[3] += c.getAlpha() * qty;
-						effectsLiq.add(new QueuedEffect(reag.getEffect(p), p, qty));
+						effectsLiq.add(new QueuedEffect(reag.getEffect(), qty));
 						break;
 					case SOLID:
 						solQty += qty;
@@ -88,10 +88,11 @@ public class AlchemyUtil{
 						solCol[1] += c.getGreen() * qty;
 						solCol[2] += c.getBlue() * qty;
 						solCol[3] += c.getAlpha() * qty;
-						effectsSol.add(new QueuedEffect(reag.getEffect(p), p, qty));
+						effectsSol.add(new QueuedEffect(reag.getEffect(), qty));
+						break;
 					default:
 						//If we hit the default, then someone has invented a new form of matter
-						Crossroads.logger.error("Attempted to perform effect with invalid reagent phase %1$s and reagent %2$s.", p.name(), reag.getName());
+						Crossroads.logger.error(String.format("Attempted to perform effect with invalid reagent phase %1$s and reagent %2$s.", p.name(), reag.getName()));
 						break;
 				}
 			}
@@ -120,10 +121,10 @@ public class AlchemyUtil{
 				liqCol[1] = (liqCol[1] + solCol[1]) / (liqQty + solQty);
 				liqCol[2] = (liqCol[2] + solCol[2]) / (liqQty + solQty);
 				liqCol[3] = (liqCol[3] + solCol[3]) / (liqQty + solQty);
-				for(int i = 0; i < 16; i++){
+				for(int i = 0; i < 32; i++){
 					float horizSpeed = maxRange / 20F;
-					float offset = i < 8 ? 0 : 1;
-					((ServerWorld) world).spawnParticle(new ColorParticleData(CRParticles.COLOR_SPLASH, new Color(liqCol[0], liqCol[1], liqCol[2], liqCol[3])), pos.getX() + 0.5D, pos.getY() + 1.3F, pos.getZ() + 0.5D, 1, horizSpeed * Math.cos((2 * i + offset) * Math.PI / 8), (3 * offset + 1) * horizSpeed / 8D, horizSpeed * Math.sin((2 * i + offset) * Math.PI / 8), 1F);
+					float offset = i < 16 ? 0 : 1;
+					((ServerWorld) world).spawnParticle(new ColorParticleData(CRParticles.COLOR_SPLASH, new Color(liqCol[0], liqCol[1], liqCol[2], liqCol[3])), pos.getX() + 0.5D, pos.getY() + 1.3F, pos.getZ() + 0.5D, 1, Math.cos((i + offset) * Math.PI / 8), (3 * offset + 1) / 8D, Math.sin((i + offset) * Math.PI / 8), horizSpeed);
 				}
 				for(int i = -maxRange; i <= maxRange; i++){
 					for(int j = -maxRange; j <= maxRange; j++){
@@ -131,7 +132,7 @@ public class AlchemyUtil{
 							for(QueuedEffect eff : effectsLiq){
 								//Pythagorean distance- not taxicab
 								if(maxRange * maxRange >= i * i + j * j + k * k){
-									eff.perform(world, pos.add(i, j, k), reags);
+									eff.perform(world, pos.add(i, j, k), reags, EnumMatterPhase.LIQUID);
 								}
 							}
 						}
@@ -145,10 +146,10 @@ public class AlchemyUtil{
 				solCol[3] /= solQty;
 
 				for(QueuedEffect e : effectsSol){
-					e.perform(world, pos, reags);
+					e.perform(world, pos, reags, EnumMatterPhase.SOLID);
 				}
 				for(int i = 0; i < 5; i++){
-					((ServerWorld) world).spawnParticle(new ColorParticleData(CRParticles.COLOR_SOLID, new Color(solCol[0], solCol[1], solCol[2], solCol[3])), pos.getX() + 0.25D + world.rand.nextFloat() / 2F, pos.getY() + 1.3F, pos.getZ() + 0.25D + world.rand.nextFloat() / 2F, 1, 0, 0, 0, 1F);
+					((ServerWorld) world).spawnParticle(new ColorParticleData(CRParticles.COLOR_SOLID, new Color(solCol[0], solCol[1], solCol[2], solCol[3])), pos.getX() + 0.25D + world.rand.nextFloat() / 2F, pos.getY() + 1.3F, pos.getZ() + 0.25D + world.rand.nextFloat() / 2F, 1, 0, 0, 0, 0F);
 				}
 			}
 			if(gasQty > 0){
@@ -163,8 +164,8 @@ public class AlchemyUtil{
 							for(QueuedEffect eff : effectsGas){
 								//Pythagorean distance- not taxicab
 								if(maxRange * maxRange >= i * i + j * j + k * k){
-									eff.perform(world, pos.add(i, j, k), reags);
-									((ServerWorld) world).spawnParticle(new ColorParticleData(CRParticles.COLOR_GAS, new Color(gasCol[0], gasCol[1], gasCol[2], gasCol[3])), (float) pos.getX() + Math.random(), (float) pos.getY() + Math.random(), (float) pos.getZ() + Math.random(), 1, (Math.random() * 2D - 1D) * 0.015D, Math.random() * 0.015D, (Math.random() * 2D - 1D) * 0.015D, 1F);
+									eff.perform(world, pos.add(i, j, k), reags, EnumMatterPhase.GAS);
+									((ServerWorld) world).spawnParticle(new ColorParticleData(CRParticles.COLOR_GAS, new Color(gasCol[0], gasCol[1], gasCol[2], gasCol[3])), (float) pos.getX() + Math.random(), (float) pos.getY() + Math.random(), (float) pos.getZ() + Math.random(), 1, (Math.random() * 2D - 1D), Math.random(), (Math.random() * 2D - 1D), 0.015D);
 								}
 							}
 						}
@@ -177,16 +178,14 @@ public class AlchemyUtil{
 	private static class QueuedEffect{
 
 		private final IAlchEffect effect;
-		private final EnumMatterPhase phase;
 		private final int qty;
 
-		private QueuedEffect(@Nullable IAlchEffect effect, EnumMatterPhase phase, int qty){
+		private QueuedEffect(@Nullable IAlchEffect effect, int qty){
 			this.effect = effect;
-			this.phase = phase;
 			this.qty = qty;
 		}
 
-		private void perform(World world, BlockPos pos, ReagentMap reags){
+		private void perform(World world, BlockPos pos, ReagentMap reags, EnumMatterPhase phase){
 			if(effect != null){
 				effect.doEffect(world, pos, qty, phase, reags);
 			}

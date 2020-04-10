@@ -103,7 +103,7 @@ public class StaticReagent implements IReagent{
 
 	@Nullable
 	@Override
-	public IAlchEffect getEffect(EnumMatterPhase phase){
+	public IAlchEffect getEffect(){
 		return effect;
 	}
 
