@@ -93,18 +93,20 @@ public class EntityFlyingMachine extends Entity{
 		//Gravity
 		vel[1] -= 0.08D;
 
+		float angle = 0;
 		if(controller == null){
 			//When we have no rider, just go down
 			setAngle(0);
 		}else{
 			//Apply acceleration based on wheel angle. Total acceleration is ACCEL, in direction of wheel
-			float angle = -getAngle();
+			angle = -getAngle();
 			rotationYaw = controller.getRotationYawHead();
-			vel[0] += Math.sin(angle) * Math.sin(-Math.toRadians(rotationYaw) - Math.PI) * ACCEL;
-			vel[1] += -Math.cos(angle) * ACCEL;
-			vel[2] += Math.sin(angle) * Math.cos(-Math.toRadians(rotationYaw) - Math.PI) * ACCEL;
 			controller.velocityChanged = true;
 		}
+
+		vel[0] += Math.sin(angle) * Math.sin(-Math.toRadians(rotationYaw) - Math.PI) * ACCEL;
+		vel[1] += -Math.cos(angle) * ACCEL;
+		vel[2] += Math.sin(angle) * Math.cos(-Math.toRadians(rotationYaw) - Math.PI) * ACCEL;
 
 		//Apply our calculated velocity and move
 		setMotion(vel[0], vel[1], vel[2]);

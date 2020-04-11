@@ -1,35 +1,35 @@
 package com.Da_Technomancer.crossroads.API.effects.alchemy;
 
-import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 
-public class LumenEffect extends AetherEffect{
+public class FusasEffect extends AetherEffect{
 
 	@Override
 	protected Block soilBlock(){
-		return Blocks.SAND;
+		return Blocks.CLAY;
 	}
 
 	@Override
 	protected Block rockBlock(){
-		return Blocks.SANDSTONE;
+		return Blocks.PRISMARINE;
 	}
 
 	@Override
 	protected Block crystalBlock(){
-		return CRBlocks.blockSalt;
+		return Blocks.SEA_LANTERN;
 	}
 
 	@Override
 	protected Block fluidBlock(){
-		return Blocks.AIR;
+		return CRFluids.distilledWater.block;
 	}
 
 	@Override
 	protected Biome biome(){
-		return Biomes.DESERT;
+		return Biomes.DEEP_OCEAN;
 	}
 }

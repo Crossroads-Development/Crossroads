@@ -33,7 +33,7 @@ public class GrowEffect extends BeamEffect{
 			if(voi){
 				BlockState state = worldIn.getBlockState(pos);
 				if(state.getBlock() instanceof IGrowable && state.getBlock() != Blocks.DEAD_BUSH){
-					if(state.getBlock() == Blocks.GRASS){
+					if(state.getBlock() == Blocks.GRASS_BLOCK){
 						worldIn.setBlockState(pos, Blocks.DIRT.getDefaultState());
 					}else{
 						worldIn.setBlockState(pos, Blocks.DEAD_BUSH.getDefaultState());

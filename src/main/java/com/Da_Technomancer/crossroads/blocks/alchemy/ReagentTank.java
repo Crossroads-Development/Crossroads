@@ -135,8 +135,10 @@ public class ReagentTank extends ContainerBlock implements IReadable{
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		if(stack.hasTag()){
-			ReagentTankTileEntity te = (ReagentTankTileEntity) world.getTileEntity(pos);
-			te.writeContentNBT(stack.getTag());
+			TileEntity te = world.getTileEntity(pos);
+			if(te instanceof ReagentTankTileEntity){
+				((ReagentTankTileEntity) te).writeContentNBT(stack.getTag().getCompound(TAG_NAME));
+			}
 		}
 	}
 

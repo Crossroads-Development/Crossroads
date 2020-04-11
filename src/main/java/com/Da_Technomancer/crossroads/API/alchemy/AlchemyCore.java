@@ -118,7 +118,7 @@ public final class AlchemyCore{
 		REAGENTS.put(ELEM_LIGHT.id(), new ElementalReagent(ELEM_LIGHT.id(), -275, -100, new LumenEffect(), false, EnumBeamAlignments.LIGHT, new Color(200, 255, 255), null));
 		REAGENTS.put(ELEM_RIFT.id(), new ElementalReagent(ELEM_RIFT.id(), -100, 350, new EldrineEffect(), true, EnumBeamAlignments.RIFT, Color.MAGENTA, CRItems.solidEldrine));
 		REAGENTS.put(ELEM_EQUAL.id(), new ElementalReagent(ELEM_EQUAL.id(), 800, 1800, new StasisolEffect(), false, EnumBeamAlignments.EQUILIBRIUM, new Color(255, 128, 255), CRItems.solidStasisol));
-		REAGENTS.put(ELEM_FUSION.id(), new ElementalReagent(ELEM_FUSION.id(), 1000, 2500, null, false, EnumBeamAlignments.FUSION, new Color(128, 255, 255), CRItems.solidFusas));
+		REAGENTS.put(ELEM_FUSION.id(), new ElementalReagent(ELEM_FUSION.id(), 1000, 2500, new FusasEffect(), false, EnumBeamAlignments.FUSION, new Color(128, 255, 255), CRItems.solidFusas));
 		REAGENTS.put(ELEM_CHARGE.id(), new ElementalReagent(ELEM_CHARGE.id(), -260, -100, new VoltusEffect(), true, EnumBeamAlignments.CHARGE, new Color(255, 255, 64, 255), CRItems.solidVoltus));
 		REAGENTS.put(ELEM_TIME.id(), new ElementalReagent(ELEM_TIME.id(), 1500, 2500, null, false, EnumBeamAlignments.TIME, new Color(255, 130, 0, 255), OreSetup.nuggetCopshowium));//Don't register an elemental reaction for time- making copshowium needs to be technomancy specific for balance reasons
 		IReagent hellfire;
