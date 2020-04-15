@@ -137,7 +137,7 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 		magicOpt = LazyOptional.of(() -> new BeamHandler(AxisDirection.NEGATIVE));
 		magicOptNeg = LazyOptional.of(() -> new BeamHandler(AxisDirection.POSITIVE));
 
-		if(world != null){
+		if(world != null && !world.isRemote){
 			CRPackets.sendPacketAround(world, pos, new SendIntToClient((byte) 3, 0, pos));
 		}
 	}

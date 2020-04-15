@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.beams;
 
 import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnitStorage;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
@@ -30,27 +31,17 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 
 	private int setting = 0;
 	private BeamUnitStorage storage = new BeamUnitStorage();
-	private Direction dir = null;
 
 	public QuartzStabilizerTileEntity(){
 		super(type);
 	}
 
 	private Direction getDir(){
-		if(dir == null){
-			BlockState state = world.getBlockState(pos);
-			if(state.getBlock() != CRBlocks.quartzStabilizer){
-				return Direction.NORTH;
-			}
-			dir = state.get(ESProperties.FACING);
+		BlockState state = getBlockState();
+		if(state.getBlock() != CRBlocks.quartzStabilizer){
+			return Direction.NORTH;
 		}
-		return dir;
-	}
-
-	@Override
-	public void updateContainingBlockInfo(){
-		super.updateContainingBlockInfo();
-		dir = null;
+		return state.get(ESProperties.FACING);
 	}
 
 	public int adjustSetting(){
@@ -89,41 +80,8 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 		Direction dir = getDir();
 
 		if(!storage.isEmpty()){
-			//As it would turn out, the problem of meeting a quota for the sum of values drawn from a limited source while also approximately maintaining the source ratio is quite messy when all values must be integers
-			//This is about as clean an implementation as is possible
 			int toFill = RATES[setting];
-			BeamUnit toDraw;
-
-			if(toFill < storage.getPower()){
-				int[] output = storage.getOutput().mult(((double) toFill) / ((double) storage.getPower()), true).getValues();//Use the floor formula as a starting point
-				int[] stored = storage.getOutput().getValues();
-				int available = 0;
-
-				for(int i = 0; i < 4; i++){
-					stored[i] -= output[i];
-					available += stored[i];
-					toFill -= output[i];
-				}
-
-				toFill = Math.min(toFill, available);
-
-				int source = 0;
-
-				//Round-robin distribution of drawing additional power from storage to meet the quota
-				//Ignoring the source element ratio, as toFill << RATES[storage] in most cases, making the effect on ratio minor
-				for(int i = 0; i < toFill; i++){
-					while(stored[source] == 0){
-						source++;
-					}
-					output[source]++;
-					stored[source]--;
-					source++;
-				}
-				toDraw = new BeamUnit(output);
-			}else{
-				toDraw = storage.getOutput();
-			}
-
+			BeamUnit toDraw = new BeamUnit(MiscUtil.withdrawExact(storage.getOutput().getValues(), toFill));
 			storage.subtractBeam(toDraw);
 
 			if(beamer[dir.getIndex()].emit(toDraw, world)){

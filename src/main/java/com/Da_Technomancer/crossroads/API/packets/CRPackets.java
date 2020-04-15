@@ -52,6 +52,9 @@ public class CRPackets{
 	}
 
 	public static void sendPacketAround(World world, BlockPos pos, ClientPacket packet){
+		if(world.isRemote){
+			throw new IllegalStateException("Packet to client sent from client!");
+		}
 		//Check if this packet is registered with CR. If not, send it via the Essentials packet channel; this is done to make this method correct for all CR usage
 		SimpleChannel messageChannel = registeredTypes.contains(packet.getClass()) ? channel : EssentialsPackets.channel;
 		messageChannel.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), 512.0D, world.dimension.getType())), packet);

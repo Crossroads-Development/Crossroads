@@ -14,7 +14,11 @@
 		},
 		{
 			"type": "text",
-			"text": "The <item>Tesla Coil Top/$ is placed on top of the base, and transmits FE between <item>tesla coils/$. Use a <item>$(l:essentials/linking_tool)linking tool/$ to connect the source <item>tesla coil top/$ to the <item>tesla coil top(s)/$ it should transmit to.$(br2)Transmitting FE this way has a small energy loss. Later on, there are special tops that can improve this."
+			"text": "The <item>Tesla Coil Top/$ is placed on top of the base, and transmits FE between <item>tesla coils/$. Use a <item>$(l:essentials/linking_tool)linking tool/$ to connect the source <item>tesla coil top/$ to the <item>tesla coil top(s)/$ it should transmit to.$(br2)Transmitting FE this way has a small energy loss. Later on, there are special tops that can improve this.$(br2)A redstone signal will stop it from outputting FE- either by transmitting from "
+		},
+		{
+			"type": "text",
+			"text": "the top, or by outputting from the base."
 		},
 		{
 			"type": "text",

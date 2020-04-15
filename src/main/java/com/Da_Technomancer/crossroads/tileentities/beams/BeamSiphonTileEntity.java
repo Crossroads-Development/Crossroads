@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.beams;
 
 import com.Da_Technomancer.crossroads.API.CircuitUtil;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
@@ -60,54 +61,17 @@ public class BeamSiphonTileEntity extends BeamRenderTE{
 
 	@Override
 	protected void doEmit(BeamUnit out){
-		//As it would turn out, the problem of meeting a quota for the sum of values drawn from a limited source while also approximately maintaining the source ratio is quite messy when all values must be integers
-		//This is about as clean an implementation as is possible
 		int toFill = Math.round(CircuitUtil.combineRedsSources(redsHandler));
 		Direction facing = getDir();
 		BeamUnit toDraw;
 		BeamUnit remain;
 
 		if(out.isEmpty() || toFill == 0){
-			if(beamer[facing.getIndex()].emit(BeamUnit.EMPTY, world)){
-				refreshBeam(facing.getIndex());
-			}
-			if(beamer[facing.getOpposite().getIndex()].emit(out, world)){
-				refreshBeam(facing.getOpposite().getIndex());
-			}
-			return;
-		}
-
-		if(toFill < out.getPower()){
-			int[] output = out.mult(((double) toFill) / ((double) out.getPower()), true).getValues();//Use the floor formula as a starting point
-			int[] stored = out.getValues();
-			int available = 0;
-
-			for(int i = 0; i < 4; i++){
-				stored[i] -= output[i];
-				available += stored[i];
-				toFill -= output[i];
-			}
-
-			toFill = Math.min(toFill, available);
-//			available -= toFill;
-
-			int source = 0;
-
-			//Round-robin distribution of drawing additional power from storage to meet the quota
-			//Ignoring the source element ratio, as toFill << RATES[storage] in most cases, making the effect on ratio minor
-			for(int i = 0; i < toFill; i++){
-				while(stored[source] == 0){
-					source++;
-				}
-				output[source]++;
-				stored[source]--;
-				source++;
-			}
-			toDraw = new BeamUnit(output);
-			remain = new BeamUnit(stored[0], stored[1], stored[2], stored[3]);
+			toDraw = BeamUnit.EMPTY;
+			remain = out;
 		}else{
-			toDraw = out;
-			remain = BeamUnit.EMPTY;
+			toDraw = new BeamUnit(MiscUtil.withdrawExact(out.getValues(), toFill));
+			remain = new BeamUnit(out.getEnergy() - toDraw.getEnergy(), out.getPotential() - toDraw.getPotential(), out.getStability() - toDraw.getStability(), out.getVoid() - toDraw.getVoid());
 		}
 
 		if(beamer[facing.getIndex()].emit(toDraw, world)){
@@ -116,6 +80,38 @@ public class BeamSiphonTileEntity extends BeamRenderTE{
 		if(beamer[facing.getOpposite().getIndex()].emit(remain, world)){
 			refreshBeam(facing.getOpposite().getIndex());
 		}
+//		if(toFill < out.getPower()){
+//			int[] output = out.mult(((double) toFill) / ((double) out.getPower()), true).getValues();//Use the floor formula as a starting point
+//			int[] stored = out.getValues();
+//			int available = 0;
+//
+//			for(int i = 0; i < 4; i++){
+//				stored[i] -= output[i];
+//				available += stored[i];
+//				toFill -= output[i];
+//			}
+//
+//			toFill = Math.min(toFill, available);
+////			available -= toFill;
+//
+//			int source = 0;
+//
+//			//Round-robin distribution of drawing additional power from storage to meet the quota
+//			//Ignoring the source element ratio, as toFill << RATES[storage] in most cases, making the effect on ratio minor
+//			for(int i = 0; i < toFill; i++){
+//				while(stored[source] == 0){
+//					source++;
+//				}
+//				output[source]++;
+//				stored[source]--;
+//				source++;
+//			}
+//			toDraw = new BeamUnit(output);
+//			remain = new BeamUnit(stored[0], stored[1], stored[2], stored[3]);
+//		}else{
+//			toDraw = out;
+//			remain = BeamUnit.EMPTY;
+//		}
 	}
 
 	@Override

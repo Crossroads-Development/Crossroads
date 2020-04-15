@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnitStorage;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
@@ -75,9 +76,15 @@ public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 		Direction dir = getDir();
 
 		if(!storage.isEmpty()){
-			BeamUnit mag = storage.getOutput().mult(RATE, true);
-			storage.subtractBeam(mag);
-			if(beamer[dir.getIndex()].emit(mag, world)){
+			double toWithdraw = RATE * storage.getPower();
+			if(toWithdraw < 1){
+				toWithdraw = 1;//Withdraw a minimum of 1, to prevent a small quantity getting 'stuck'
+			}else{
+				toWithdraw = Math.round(toWithdraw);
+			}
+			BeamUnit output = new BeamUnit(MiscUtil.withdrawExact(storage.getOutput().getValues(), (int) toWithdraw));
+			storage.subtractBeam(output);
+			if(beamer[dir.getIndex()].emit(output, world)){
 				refreshBeam(dir.getIndex());
 			}
 		}else if(beamer[dir.getIndex()].emit(BeamUnit.EMPTY, world)){

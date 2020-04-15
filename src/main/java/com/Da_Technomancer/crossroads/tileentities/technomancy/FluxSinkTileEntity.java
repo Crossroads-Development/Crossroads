@@ -51,7 +51,7 @@ public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickab
 
 	@Override
 	public void tick(){
-		if(world.getGameTime() % FluxUtil.FLUX_TIME == 0){
+		if(!world.isRemote && world.getGameTime() % FluxUtil.FLUX_TIME == 0){
 			prevFlux = flux;
 			if(isRunning() && flux != 0){
 				flux = 0;

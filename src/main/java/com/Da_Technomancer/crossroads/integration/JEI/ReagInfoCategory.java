@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
-import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.common.collect.ImmutableList;
@@ -85,9 +84,9 @@ public class ReagInfoCategory implements IRecipeCategory<IReagent>{
 		ReagIngr reagIngr = new ReagIngr(recipe, 1);
 		ingredients.setInput(ReagIngr.REAG, reagIngr);
 		ingredients.setOutput(ReagIngr.REAG, reagIngr);
-		List<List<ItemStack>> solid = ImmutableList.of(recipe.getJEISolids());
-		ingredients.setInputLists(VanillaTypes.ITEM, solid);
-		ingredients.setOutputLists(VanillaTypes.ITEM, solid);
+		List<ItemStack> solid = recipe.getJEISolids();
+		ingredients.setInputs(VanillaTypes.ITEM, solid);
+		ingredients.setOutputs(VanillaTypes.ITEM, solid);
 	}
 
 	@Override

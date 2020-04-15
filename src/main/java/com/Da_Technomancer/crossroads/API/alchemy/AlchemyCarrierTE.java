@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
@@ -34,6 +35,7 @@ import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.function.Predicate;
 
 /**
@@ -253,21 +255,54 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 					}
 				}
 
-				double portion = Math.min(1D, (double) ((AbstractGlassware) stack.getItem()).getCapacity() / (double) contents.getTotalQty());
-
-				for(IReagent type : contents.keySet()){
-					phial.transferReagent(type, (int) (contents.getQty(type) * portion), contents);
+				//Maps each reagent type to an integer index. Allows us to use the helper method in MiscUtil
+				IReagent[] transferableTypes = new IReagent[contents.size()];
+				int[] transferableQty = new int[contents.size()];
+				int index = 0;
+				for(Map.Entry<IReagent, Integer> entry : contents.entrySet()){
+					transferableTypes[index] = entry.getKey();
+					transferableQty[index] = entry.getValue();
+					index++;
 				}
 
+				//Transfer the full available capacity to the glassware, at portions specified by the withdrawExact method
+				int[] toMove = MiscUtil.withdrawExact(transferableQty, ((AbstractGlassware) stack.getItem()).getCapacity());
+				for(int i = 0; i < toMove.length; i++){
+					if(toMove[i] > 0){
+						phial.transferReagent(transferableTypes[i], toMove[i], contents);
+					}
+				}
 				((AbstractGlassware) out.getItem()).setReagents(out, phial);
-			}else{
+//				double portion = Math.min(1D, (double) ((AbstractGlassware) stack.getItem()).getCapacity() / (double) contents.getTotalQty());
+//				for(IReagent type : contents.keySet()){
+//					phial.transferReagent(type, (int) (contents.getQty(type) * portion), contents);
+//				}
+			}else if(transferCapacity() > contents.getTotalQty()){
 				//Move from glassware to carrier
-				double portion = Math.max(0, Math.min(1D, (double) (transferCapacity() - contents.getTotalQty()) / (double) phial.getTotalQty()));
 
-				for(IReagent type : phial.keySet()){
-					contents.transferReagent(type, (int) (phial.getQty(type) * portion), phial);
+				//Maps each reagent type to an integer index. Allows us to use the helper method in MiscUtil
+				IReagent[] transferableTypes = new IReagent[phial.size()];
+				int[] transferableQty = new int[phial.size()];
+				int index = 0;
+				for(Map.Entry<IReagent, Integer> entry : phial.entrySet()){
+					transferableTypes[index] = entry.getKey();
+					transferableQty[index] = entry.getValue();
+					index++;
 				}
 
+				//Transfer the full available capacity from the glassware, at portions specified by the withdrawExact method
+				int[] toMove = MiscUtil.withdrawExact(transferableQty, transferCapacity() - contents.getTotalQty());
+				for(int i = 0; i < toMove.length; i++){
+					if(toMove[i] > 0){
+						contents.transferReagent(transferableTypes[i], toMove[i], phial);
+					}
+				}
+
+//				double portion = Math.max(0, Math.min(1D, (double) (transferCapacity() - contents.getTotalQty()) / (double) phial.getTotalQty()));
+//
+//				for(IReagent type : phial.keySet()){
+//					contents.transferReagent(type, (int) (phial.getQty(type) * portion), phial);
+//				}
 				((AbstractGlassware) out.getItem()).setReagents(out, phial);
 			}
 		}else if(FluidUtil.interactWithFluidHandler(player, hand, falseFluidHandler)){
