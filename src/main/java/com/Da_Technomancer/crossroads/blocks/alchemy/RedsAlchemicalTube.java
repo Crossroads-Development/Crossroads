@@ -40,22 +40,9 @@ public class RedsAlchemicalTube extends AlchemicalTube{
 	
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
-		if(worldIn.isBlockPowered(pos)){
-			if(!state.get(ESProperties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, true));
-				TileEntity te = worldIn.getTileEntity(pos);
-				if(te != null){
-					te.updateContainingBlockInfo();
-				}
-			}
-		}else{
-			if(state.get(ESProperties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, false));
-				TileEntity te = worldIn.getTileEntity(pos);
-				if(te != null){
-					te.updateContainingBlockInfo();
-				}
-			}
+		boolean isPowered = worldIn.isBlockPowered(pos);
+		if(isPowered != state.get(ESProperties.REDSTONE_BOOL)){
+			worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, isPowered));
 		}
 	}
 

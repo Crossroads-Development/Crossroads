@@ -20,19 +20,19 @@ public class RedsAlchemicalTubeTileEntity extends AlchemicalTubeTileEntity{
 		super(type, glass);
 	}
 
-	private boolean isLocked(){
+	private boolean isUnlocked(){
 		return getBlockState().get(ESProperties.REDSTONE_BOOL);
 	}
 
 	@Override
 	protected void performTransfer(){
-		if(!isLocked()){
+		if(isUnlocked()){
 			super.performTransfer();
 		}
 	}
 
 	@Override
 	protected boolean allowConnect(Direction side){
-		return !isLocked() && super.allowConnect(side);
+		return isUnlocked() && super.allowConnect(side);
 	}
 }

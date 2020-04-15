@@ -4,9 +4,14 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.BoboRec;
+import net.minecraft.block.DispenserBlock;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.dispenser.IBlockSource;
+import net.minecraft.dispenser.IDispenseItemBehavior;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
@@ -21,6 +26,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -32,28 +38,41 @@ import java.util.Optional;
 
 public class BoboRod extends Item{
 
-	private static final int DURABILITY = 100;
+	private static final IDispenseItemBehavior BOBO_DISPENSER_BEHAVIOR = new DefaultDispenseItemBehavior(){
+
+		@Override
+		public ItemStack dispenseStack(IBlockSource source, ItemStack stack){
+			//Able to do bobo crafting via dispenser
+			act(source.getWorld(), source.getBlockPos(), new Vec3d(source.getX(), source.getY(), source.getZ()), null);
+			return stack;
+		}
+	};
+
 	//Items that are considered valid offerings
 	private static final Tag<Item> offering = new ItemTags.Wrapper(new ResourceLocation(Crossroads.MODID, "bobo_unlock_key"));
 
 	protected BoboRod(){
-		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1).maxDamage(DURABILITY));
+		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
 		String name = "bobo_rod";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
+		DispenserBlock.registerDispenseBehavior(this, BOBO_DISPENSER_BEHAVIOR);
 	}
 
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context){
-		Vec3d hitVec = context.getHitVec();
-		List<ItemEntity> items = context.getWorld().getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(hitVec.add(-1, -1, -1), hitVec.add(1, 1, 1)), Entity::isAlive);
+		return act(context.getWorld(), context.getPos(), context.getHitVec(), context.getPlayer()) ? ActionResultType.SUCCESS : ActionResultType.FAIL;
+	}
+	
+	private static boolean act(World world, BlockPos pos, Vec3d hitVec, @Nullable PlayerEntity player){
+		List<ItemEntity> items = world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(hitVec.add(-1, -1, -1), hitVec.add(1, 1, 1)), Entity::isAlive);
 		if(items.size() == 4){
 			Inventory inv = new Inventory(3);
 			boolean hasOffering = false;
 			for(ItemEntity ent : items){
 				if(ent.getItem().getCount() != 1){
-					context.getWorld().playSound(context.getPlayer(), context.getPos(), SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.PLAYERS, 1F, (float) Math.random());
-					return ActionResultType.FAIL;
+					world.playSound(player, pos, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.PLAYERS, 1F, (float) Math.random());
+					return false;
 				}
 				if(!hasOffering && offering.contains(ent.getItem().getItem())){
 					hasOffering = true;
@@ -62,20 +81,19 @@ public class BoboRod extends Item{
 				}
 			}
 			if(hasOffering){
-				Optional<BoboRec> rec = context.getWorld().getRecipeManager().getRecipe(CRRecipes.BOBO_TYPE, inv, context.getWorld());
+				Optional<BoboRec> rec = world.getRecipeManager().getRecipe(CRRecipes.BOBO_TYPE, inv, world);
 				if(rec.isPresent()){
 					items.forEach(Entity::remove);
-					InventoryHelper.spawnItemStack(context.getWorld(), hitVec.x, hitVec.y, hitVec.z, rec.get().getCraftingResult(inv));
+					InventoryHelper.spawnItemStack(world, hitVec.x, hitVec.y, hitVec.z, rec.get().getCraftingResult(inv));
 
 					//Spawn some particles and sound
-					context.getWorld().addParticle(ParticleTypes.POOF, hitVec.x, hitVec.y, hitVec.z, Math.random() * 0.02, Math.random() * 0.02, Math.random() * 0.02);
-					context.getWorld().playSound(context.getPlayer(), context.getPos(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1F, (float) Math.random());
-					return ActionResultType.SUCCESS;
+					world.addParticle(ParticleTypes.POOF, hitVec.x, hitVec.y, hitVec.z, Math.random() * 0.02, Math.random() * 0.02, Math.random() * 0.02);
+					world.playSound(player, pos, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1F, (float) Math.random());
+					return true;
 				}
 			}
 		}
-		context.getWorld().playSound(context.getPlayer(), context.getPos(), SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.PLAYERS, 1F, (float) Math.random());
-		return ActionResultType.FAIL;
+		return false;
 	}
 
 	@Override

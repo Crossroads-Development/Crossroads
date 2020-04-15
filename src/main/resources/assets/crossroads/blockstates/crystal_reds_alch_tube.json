@@ -1,7 +1,7 @@
 {
 	"multipart": [
 		{
-			"apply": { "model": "crossroads:block/conduit/fluid_tube_core" }
+			"apply": { "model": "crossroads:block/conduit/alch_tube_cryst_core" }
 		},
 
 		{   "when": { "up": "input", "redstone_bool": "true" },
