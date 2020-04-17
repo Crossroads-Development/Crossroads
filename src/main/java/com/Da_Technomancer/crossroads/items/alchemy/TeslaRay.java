@@ -104,8 +104,9 @@ public class TeslaRay extends Item{
 
 
 			//Only chains if attack is fully charged. Additional targets are found in a cubical area from previous ones
-			if(scale >= 0.99F){
-				for(int i = 0; i < 3; i++){
+			if(scale >= 0.99F){//Check attack meter is charged
+				//An arbitrary limit of 32 targets exists to prevent glitchy infinite chaining behaviour- which could occur under exceptional circumstances
+				for(int i = 0; i < 32; i++){
 					entities = worldIn.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(targets.get(i).posX, targets.get(i).posY, targets.get(i).posZ, targets.get(i).posX, targets.get(i).posY, targets.get(i).posZ).grow(RADIUS - i), EntityPredicates.IS_ALIVE);
 					entities.removeIf(cannotTarget);
 					if(entities.isEmpty()){

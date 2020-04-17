@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "If multiple <thing>$(l:intro/beam)beams/$ are going into the same <item>reflector/$ at once, they will be combined for the output. All <thing>$(l:intro/beam)beams/$ are emitted with a 5 tick (quarter second) delay, as usual.$(br2)Loops of <item>beam reflectors/$ are totally legal, and are pretty good way to store beams losslessly."
+			"text": "If multiple <thing>$(l:intro/beam)beams/$ are going into the same <item>reflector/$ at once, they will be combined for the output. All <thing>$(l:intro/beam)beams/$ are emitted with a 4 tick (fifth second) delay, as usual.$(br2)Loops of <item>beam reflectors/$ are totally legal, and are pretty good way to store beams losslessly."
 		}
 	]
 }

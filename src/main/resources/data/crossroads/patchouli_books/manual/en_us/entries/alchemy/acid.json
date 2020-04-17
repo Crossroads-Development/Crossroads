@@ -1,0 +1,29 @@
+{
+	"category": "alchemy",
+	"name": "Acids & Aqua Regia",
+	"icon": "crossroads:solid_regia",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/alchemy",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Acids & Aqua Regia",
+			"item": "crossroads:solid_regia",
+			"text": "<thing>Alchemy/$ adds four different reagents that are acids: <item>Sulfuric Acid/$, <item>Muriatic Acid/$, <item>Aziotic Acid/$, and <item>Aqua Regia/$. Three of these (Sulfuric, Muriatic, and Aziotic) act identically. <item>Aqua Regia/$ is more powerful than the other three, and allows <em>breaking bedrock/$ and getting <item>Bedrock Dust/$."
+		},
+		{
+			"type": "text",
+			"text": "The three normal acids have the same <thing>$(l:alchemy/effect)effect/$: They deal 8 damage to any entity they hit, and will break metal blocks other than gold."
+		},
+		{
+			"type": "text",
+			"text": "<item>Aqua Regia/$ will do 12 damage to hit entities, and will break metal blocks (including gold). Much more importantly, any bedrock that <item>aqua regia/$ hits will be broken, dropping 1 <item>Bedrock Dust/$, an important reagent.$(br2)As <thing>aqua regia/$ can be expensive and you will need a lot of <item>bedrock dust/$, it suggested to mix it with a cheap liquid (like water) "
+		},
+		{
+			"type": "text",
+			"text": "to splash the <thing>$(l:alchemy/effect)effect/$ over a large area. See the <thing>$(l:alchemy/effect)effects/$ page for full details."
+		}
+	]
+}

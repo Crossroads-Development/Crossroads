@@ -109,7 +109,6 @@ public class CRBlocks{
 	public static TeslaCoilTop teslaCoilTopDecorative;
 	public static MaxwellDemon maxwellDemon;
 	public static GlasswareHolder glasswareHolder;
-	public static Alembic alembic;
 	public static DensusPlate densusPlate;
 	public static DensusPlate antiDensusPlate;
 	public static BasicBlock cavorite;
@@ -241,7 +240,6 @@ public class CRBlocks{
 		teslaCoilTopDecorative = new TeslaCoilTop(TeslaCoilTop.TeslaCoilVariants.DECORATIVE);
 		maxwellDemon = new MaxwellDemon();
 		glasswareHolder = new GlasswareHolder();
-		alembic = new Alembic();
 		densusPlate = new DensusPlate(false);
 		antiDensusPlate = new DensusPlate(true);
 		cavorite = new BasicBlock("block_cavorite", Block.Properties.create(Material.ROCK).hardnessAndResistance(3)){

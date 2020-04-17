@@ -20,7 +20,7 @@ public class VoltusEffect implements IAlchEffect{
 	@Override
 	public void doEffect(World world, BlockPos pos, int amount, EnumMatterPhase phase, ReagentMap reags) {
 		//The odds of spawning a bolt in flame form is decreased due to the much larger number of total calls to this method there will be
-		if(Math.random() > (phase == EnumMatterPhase.FLAME ? 0.92D : 0.8D)){
+		if(Math.random() > (phase == EnumMatterPhase.FLAME ? 0.92D : phase == EnumMatterPhase.SOLID ? 0 : 0.8D)){
 			List<LivingEntity> ents = world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos.getX() - 5, pos.getY() - 5, pos.getZ() - 5, pos.getX() + 5, pos.getY() + 5, pos.getZ() + 5), EntityPredicates.IS_ALIVE);
 			for(LivingEntity ent : ents){
 				ent.onStruckByLightning(null);//Deals 5 lightning damage

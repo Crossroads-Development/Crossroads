@@ -10,11 +10,11 @@
 			"type": "spotlight",
 			"title": "Industrial Crucible",
 			"item": "crossroads:heating_crucible",
-			"text": "The <item>Industrial Crucible/$ is a crafting machine that converts items into liquids using heat. It only works above 1000°C.$(br2)It drains heat constantly while above 1000°C, but will work faster and drain heat more quickly at higher temperatures. The efficiency stays the same."
+			"text": "The <item>Industrial Crucible/$ is a crafting machine that converts items into liquids using heat. It only works above 1000°C.$(br2)It drains heat constantly while above 1000°C, but will work faster and drain heat more quickly at higher temperatures. The efficiency stays "
 		},
 		{
 			"type": "text",
-			"text": "$(br2)<item>$(l:heat/cable)Heat cables/$ and pipes can connect to any side other than the top. Items can be inserted into any side."
+			"text": "the same.$(br2)<item>$(l:heat/cable)Heat cables/$ and pipes can connect to any side other than the top. Items can be inserted into any side."
 		},
 		{
 			"type": "text",

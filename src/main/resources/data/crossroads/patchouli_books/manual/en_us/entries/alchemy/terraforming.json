@@ -1,0 +1,17 @@
+{
+	"category": "alchemy",
+	"name": "Terraforming with Reagents",
+	"icon": "minecraft:grass_block",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/alchemy",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Terraforming with Reagents",
+			"item": "minecraft:grass_block",
+			"text": "TODO"
+		}
+	]
+}

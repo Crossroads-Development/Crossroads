@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 public class BeamUtil{
 
 	public static final int MAX_DISTANCE = 16;
-	public static final int BEAM_TIME = 5;
+	public static final int BEAM_TIME = 4;
 	public static final ResourceLocation BEAM_TEXT = new ResourceLocation(Crossroads.MODID, "textures/model/beam.png");
 	public static final ResourceLocation BEAM_END_TEXT = new ResourceLocation(Crossroads.MODID, "textures/model/beam_end.png");
 	private static final Tag<Block> PASSABLE = new BlockTags.Wrapper(new ResourceLocation(Crossroads.MODID, "beam_passable"));

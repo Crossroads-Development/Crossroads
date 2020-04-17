@@ -64,6 +64,9 @@ public class ReagInfoCategory implements IRecipeCategory<IReagent>{
 		fontRenderer.drawString(line, 2, 22, 0x404040);
 		line = boil >= Short.MAX_VALUE - 10 ? MiscUtil.localize("crossroads.jei.reagent.boiling.no") : boil <= HeatUtil.ABSOLUTE_ZERO ? MiscUtil.localize("crossroads.jei.reagent.boiling.yes") : MiscUtil.localize("crossroads.jei.reagent.boiling", Math.round(boil));
 		fontRenderer.drawString(line, 2, 42, 0x404040);
+		if(recipe.requiresCrystal()){
+			fontRenderer.drawString(MiscUtil.localize("crossroads.jei.reagent.crystal"), 2, 62, 0x404040);
+		}
 
 		//GlStateManager.color(1, 1, 1);
 		ReagentIngredientRenderer.RENDERER.render(2, 2, new ReagIngr(recipe, 1));

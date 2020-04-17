@@ -1,0 +1,17 @@
+{
+	"category": "alchemy",
+	"name": "Philosopher's & Practitioner's Stone",
+	"icon": "crossroads:phil_stone",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/alchemy",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Philosopher's & Practitioner's Stone",
+			"item": "crossroads:phil_stone",
+			"text": "TODO"
+		}
+	]
+}

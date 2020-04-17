@@ -158,6 +158,10 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 			markDirty();
 			glassType = null;
 			world.setBlockState(pos, state.with(CRProperties.CRYSTAL, !glass).with(CRProperties.CONTAINER_TYPE, ((AbstractGlassware) stack.getItem()).containerType()));
+			if(contents.getTotalQty() > 0){
+				//Force cable temperature to bottle temperature, prevents averaging with previous temperature
+				cableTemp = contents.getTempC();
+			}
 			return ItemStack.EMPTY;
 		}
 

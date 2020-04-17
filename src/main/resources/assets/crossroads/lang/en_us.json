@@ -690,6 +690,7 @@
 	"crossroads.jei.reagent.boiling": "Boiling: %1$s°C",
 	"crossroads.jei.reagent.boiling.yes": "Boiling: Always",
 	"crossroads.jei.reagent.boiling.no": "Boiling: Never",
+	"crossroads.jei.reagent.crystal": "Must be contained in crystal",
 	"crossroads.jei.copshowium.flux": "Produces Temporal Entropy",
 
 

@@ -26,7 +26,11 @@
 		},
 		{
 			"type": "text",
-			"text": "There are also redstone versions of <item>Axles/$ and <item>gears/$, called <item>clutches/$ and <item>toggle gears/$ respectively.$(br2)<item>Clutches/$ act the same as an axle, but will only act as a connection between the two ends if it has a redstone signal. <thing>$(l:essentials/circuits)reader circuits/$ will read the speed a clutch is spinning.$(br2)There is also an <item>inverted clutch/$, which only connects while it <em>doesn't/$ have a redstone signal."
+			"text": "There are also redstone versions of <item>Axles/$ and <item>gears/$, called <item>clutches/$ and <item>toggle gears/$ respectively.$(br2)<item>Clutches/$ act the same as an axle, but will only act as a connection between the two ends if it has a redstone signal. <thing>$(l:essentials/circuits)reader circuits/$ will read the speed a clutch is spinning.$(br2)There is also an "
+		},
+		{
+			"type": "text",
+			"text": "<item>inverted clutch/$, which only connects while it <em>doesn't/$ have a redstone signal."
 		},
 		{
 			"type": "text",

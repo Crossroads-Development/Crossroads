@@ -4,6 +4,6 @@ crossroads:pure_quartz|crossroads:progress/alignment/equilibrium
 Any explosions within the range will do no damage, destroy nothing, and will be completely stopped.
 
 <thing>Void-Equilibrium/$ AKA <thing>Cataclysm/$ will cause any explosions within range to repeat continuously as long as the beam is maintained. The radius is the beam <thing>power/$.
-Any explosion in range will repeat- with the same location, power, and traits- every 5 ticks while the beam is running. This does include wither explosions and extremely large <thing>Chaos/$ beam explosions.
+Any explosion in range will repeat- with the same location, power, and traits- every 4 ticks while the beam is running. This does include wither explosions and extremely large <thing>Chaos/$ beam explosions.
 If a <thing>Cataclysm/$ and <thing>Equilibrium/$ beam apply to the same explosion, the <thing>Equilibrium/$ beam wins.
 It is difficult to overstate how devastating and power a non-stop massive <thing>Chaos/$ explosion can be.

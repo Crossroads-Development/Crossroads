@@ -1,0 +1,17 @@
+{
+	"category": "alchemy",
+	"name": "Electrolyzer",
+	"icon": "crossroads:charging_stand",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/alchemy",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Electrolyzer",
+			"item": "crossroads:charging_stand",
+			"text": "TODO"
+		}
+	]
+}

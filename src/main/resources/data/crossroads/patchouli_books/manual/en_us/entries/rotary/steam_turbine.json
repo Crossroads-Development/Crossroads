@@ -10,11 +10,11 @@
 			"type": "spotlight",
 			"title": "Steam Turbine",
 			"item": "crossroads:steam_turbine",
-			"text": "The <item>Steam Turbine/$ is a way of making <thing>$(l:intro/rotary)rotary power/$ using <thing>$(l:intro/heat)heat/$. The other way to do this is with a <item>$(l:heat/stirling)stirling engine/$.$(br2)A <item>Steam Turbine/$ consumes <thing>$(l:fluid/steam)steam/$ and makes <thing>distilled water/$ and power. <thing>$(l:fluid/steam)Steam/$ goes in the bottom, <thing>distilled water/$ comes out the sides, and an axle or gear can "
+			"text": "The <item>Steam Turbine/$ is a way of making <thing>$(l:intro/rotary)rotary power/$ using <thing>$(l:intro/heat)heat/$. The other way to do this is with a <item>$(l:heat/stirling)stirling engine/$.$(br2)A <item>Steam Turbine/$ consumes <thing>$(l:fluid/steam)steam/$ and makes <thing>distilled water/$ and power. <thing>$(l:fluid/steam)Steam/$ goes in the bottom, <thing>distilled water/$ comes out the sides, and an axle "
 		},
 		{
 			"type": "text",
-			"text": "be connected to the top. An equal amount of <thing>distilled water/$ is produced as <thing>$(l:fluid/steam)steam/$ is consumed."
+			"text": "or gear can be connected to the top. An equal amount of <thing>distilled water/$ is produced as <thing>$(l:fluid/steam)steam/$ is consumed."
 		},
 		{
 			"type": "text",

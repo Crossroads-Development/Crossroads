@@ -14,11 +14,11 @@
 		},
 		{
 			"type": "text",
-			"text": "The fourth resource in <thing>$(l:intro/beam)beams/$ is <thing>Void/$. <thing>Void/$ is black- unlike the three other resources of <thing>energy/$, <thing>potential/$, and <thing>stability/$ which are primary colors. Adding <thing>void/$ to a beam will not affect the <thing>alignment/$ of the beam normally, but instead even a single point of <thing>void/$ will make it act as a special <thing>void alignment/$, which acts in the opposite way as normal.$(br2)For example, while the <thing>energy/$ alignment produces heat, the void-energy "
+			"text": "The fourth resource in <thing>$(l:intro/beam)beams/$ is <thing>Void/$. <thing>Void/$ is black- unlike the three other resources of <thing>energy/$, <thing>potential/$, and <thing>stability/$ which are primary colors. Adding <thing>void/$ to a beam will not affect the <thing>alignment/$ of the beam normally, but instead even a single point of <thing>void/$ will make it act as a special <thing>void alignment/$, which acts in the opposite way as normal."
 		},
 		{
 			"type": "text",
-			"text": "(called <thing>cold/$) <thing>alignment/$ removes heat.$(br2)<thing>Void/$ is produced by sending any beam through a <item>$(l:beam/frame)lens frame/$ with a <item>$(l:intro/ores)void crystal/$. The entire <thing>power/$ of the original beam will be converted to <thing>void/$."
+			"text": "For example, while the <thing>energy/$ alignment produces heat, the void-energy (called <thing>cold/$) <thing>alignment/$ removes heat.$(br2)<thing>Void/$ is produced by sending any beam through a <item>$(l:beam/frame)lens frame/$ with a <item>$(l:intro/ores)void crystal/$. The entire <thing>power/$ of the original beam will be converted to <thing>void/$."
 		}
 	]
 }

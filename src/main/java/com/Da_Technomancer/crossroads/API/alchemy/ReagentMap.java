@@ -108,6 +108,11 @@ public class ReagentMap extends HashMap<IReagent, Integer>{
 		super.clear();
 	}
 
+	@Override
+	public boolean isEmpty(){
+		return totalQty == 0;
+	}
+
 	public ReagentStack getStack(IReagent reag){
 		return new ReagentStack(reag, getQty(reag));
 	}

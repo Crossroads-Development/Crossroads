@@ -34,7 +34,6 @@ import org.apache.logging.log4j.Level;
 import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -444,29 +443,30 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 				double callerTemp = reag.getTempC();
 				boolean changed = false;
 
-				HashSet<String> validIds = new HashSet<>(4);
-				int totalValid = 0;
-
+				//Map the moveable reags to an int array of quantities so we can use the relevant MiscUtil method
+				IReagent[] mapping = new IReagent[reag.size()];
+				int[] preQty = new int[mapping.length];
+				int index = 0;
 				for(IReagent type : reag.keySet()){
+					mapping[index] = type;
 					ReagentStack r = reag.getStack(type);
-					if(!r.isEmpty()){
-						EnumMatterPhase phase = type.getPhase(callerTemp);
-						if(ignorePhase || (phase.flows() && (side != Direction.UP || phase.flowsDown()) && (side != Direction.DOWN || phase.flowsUp()))){
-							validIds.add(type.getId());
-							totalValid += r.getAmount();
-						}
+					EnumMatterPhase phase;
+					if(!r.isEmpty() && (ignorePhase || (phase = type.getPhase(callerTemp)).flows() && (side != Direction.UP || phase.flowsDown()) && (side != Direction.DOWN || phase.flowsUp()))){
+						preQty[index] = r.getAmount();
+					}else{
+						preQty[index] = 0;//Set the pre-qty to 0 to indicate no transfer of that type is allowed
 					}
+					index++;
 				}
 
-				double portion = Math.min(1D, (double) space / (double) totalValid);
-				for(String id : validIds){
-					int moved = (int) (reag.getQty(id) * portion);
-					if(moved <= 0){
-						continue;
+				//Use the MiscUtil method
+				int[] toTrans = MiscUtil.withdrawExact(preQty, space);
+				for(int i = 0; i < toTrans.length; i++){
+					if(toTrans[i] > 0){
+						//Transfer each reagent individually, in qty calculated by withdrawExact
+						changed = true;
+						contents.transferReagent(mapping[i], toTrans[i], reag);
 					}
-					changed = true;
-
-					contents.transferReagent(id, moved, reag);
 				}
 
 				if(changed){

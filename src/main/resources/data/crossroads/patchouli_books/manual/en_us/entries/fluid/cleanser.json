@@ -10,11 +10,11 @@
 			"type": "spotlight",
 			"title": "Ore Cleanser",
 			"item": "crossroads:ore_cleanser",
-			"text": "The <item>Ore Cleanser/$ is an <em>optional/$ processing stage for ore tripling. It uses <thing>$(l:intro/fluid)steam/$ to convert <item>metal gravel/$ from a <item>$(l:rotary/stamp)stamp mill/$ to produce <item>metal clumps/$ and <thing>$(l:intro/fluid)dirty water/$ as a byproduct. By doing this, less coal/charcoal is consumed by the <item>$(l:rotary/blast)blast furnace/$ to triple ores.$(br2)There "
+			"text": "The <item>Ore Cleanser/$ is an <em>optional/$ processing stage for ore tripling. It uses <thing>$(l:intro/fluid)steam/$ to convert <item>metal gravel/$ from a <item>$(l:rotary/stamp)stamp mill/$ to produce <item>metal clumps/$ and <thing>$(l:intro/fluid)dirty water/$ as a byproduct. By doing this, less coal/charcoal is consumed by the <item>$(l:rotary/blast)blast furnace/$ to triple ores."
 		},
 		{
 			"type": "text",
-			"text": "is a fluid output on the top, and fluid inputs on the sides. Each operation consumes 250mB of <thing>$(l:intro/fluid)steam/$ and produces 250mB of <thing>$(l:intro/fluid)dirty water/$. This <thing>$(l:intro/fluid)dirty water/$ can be reprocessed in an <item>$(l:fluid/centrifuge)water centrifuge/$."
+			"text": "There is a fluid output on the top, and fluid inputs on the sides. Each operation consumes 250mB of <thing>$(l:intro/fluid)steam/$ and produces 250mB of <thing>$(l:intro/fluid)dirty water/$. This <thing>$(l:intro/fluid)dirty water/$ can be reprocessed in an <item>$(l:fluid/centrifuge)water centrifuge/$."
 		},
 		{
 			"type": "text",

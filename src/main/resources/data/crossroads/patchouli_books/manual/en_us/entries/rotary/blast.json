@@ -10,11 +10,15 @@
 			"type": "spotlight",
 			"title": "Industrial Blast Furnace",
 			"item": "crossroads:blast_furnace",
-			"text": "The <item>Industrial Blast Furnace/$ is part of the process to <em>triple/$ ores. It produces molten metal that can be cooled into ingots in a <item>$(l:heat/fcc)fluid cooling chamber/$. It consumes <item>metal gravel/$ made in a <item>$(l:rotary/stamp)stamp mill/$ or <item>metal clumps/$ made in an <item>$(l:fluid/cleanser)ore cleanser/$.$(br2)The <item>Industrial Blast Furnace"
+			"text": "The <item>Industrial Blast Furnace/$ is part of the process to <em>triple/$ ores. It produces molten metal that can be cooled into ingots in a <item>$(l:heat/fcc)fluid cooling chamber/$. It consumes <item>metal gravel/$ made in a <item>$(l:rotary/stamp)stamp mill/$ or <item>metal clumps/$ made in an <item>$(l:fluid/cleanser)ore cleanser/$.$(br2)The <item>Industrial Blast "
 		},
 		{
 			"type": "text",
-			"text": "<item>/$ also uses carbon to run, in the form of either coal or charcoal- simply insert 1 coal or charcoal to get 8 carbon. Every unit of carbon consumed will produce 1 <item>slag/$ as a byproduct- which has a few crafting uses. Processing <item>metal gravel/$ takes 2 carbon, while processing <item>metal clumps/$ only takes 1- so it may be worth adding an <item>$(l:fluid/cleanser)ore cleanser/$ to your ore processing line if coal/charcoal is running short."
+			"text": "<item>Furnace/$ also uses carbon to run, in the form of either coal or charcoal- simply insert 1 coal or charcoal to get 8 carbon. Every unit of carbon consumed will produce 1 <item>slag/$ as a byproduct- which has a few crafting uses. Processing <item>metal gravel/$ takes 2 carbon, while processing <item>metal clumps/$ only takes 1- so it may be worth adding an <item>$(l:fluid/cleanser)ore cleanser/$ to your ore processing line if coal/charcoal "
+		},
+		{
+			"type": "text",
+			"text": "is running short."
 		},
 		{
 			"type": "text",

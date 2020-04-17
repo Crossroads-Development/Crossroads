@@ -29,7 +29,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	private static TileEntityType<ReactionChamberTileEntity> type = null;
 
 	private int energy = 0;
-	private static final int ENERGY_CAPACITY = 100;
+	private static final int ENERGY_CAPACITY = 20;
 	public static final int DRAIN = 10;
 
 	public ReactionChamberTileEntity(){

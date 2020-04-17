@@ -18,11 +18,11 @@
 		},
 		{
 			"type": "text",
-			"text": "<bobo>hEY! YOU! lUKE! lISTEN! iTS mE,, $(l:intro/welcome#bobo)BOBO/$<bobo>!$(br2)sTEAL h(IS/ER/??/¿¿) LOOK! gET sPECIAL pROTECT! LETHER + too more things!$(br2)4 wATER! sqUIb jUiCE + water meat!$(br2)4 FYRE! BAKON~ fIRE DUST!$(br2)4 pOISON! STAKE an' malk!$(br2)4 gravIty! "
+			"text": "<bobo>hEY! YOU! lUKE! lISTEN! iTS mE,, $(l:intro/welcome#bobo)BOBO/$<bobo>!$(br2)sTEAL h(IS/ER/??/¿¿) LOOK! gET sPECIAL pROTECT! LETHER + too more things!$(br2)4 wATER! sqUIb jUiCE + water meat!$(br2)4 FYRE! BAKON~ fIRE DUST!"
 		},
 		{
 			"type": "text",
-			"text": "<bobo>fEATHER aND bIG SWAMP LEAF!/$"
+			"text": "<bobo>4 pOISON! STAKE an' malk!$(br2)4 gravIty! fEATHER aND bIG SWAMP LEAF!/$"
 		}
 	]
 }

@@ -11,11 +11,11 @@
 			"type": "spotlight",
 			"title": "Alignment: Potential",
 			"item": "minecraft:emerald",
-			"text": "<thing>Potential/$ (green) is one of the basic <thing>alignments/$- the <thing>alignment/$ of a pure <thing>potential/$ beam.$(br2)<thing>Potential/$ acts as bonemeal, applied a number of times equal to the <thing>power/$ of the beam. In addition, entities within range=sqrt(<thing>power/$) are healed by <thing>power/$/2. Undead are harmed instead "
+			"text": "<thing>Potential/$ (green) is one of the basic <thing>alignments/$- the <thing>alignment/$ of a pure <thing>potential/$ beam.$(br2)<thing>Potential/$ acts as bonemeal, applied a number of times equal to the <thing>power/$ of the beam. In addition, entities within range=sqrt(<thing>power/$) are healed by <thing>power/$/2. Undead are "
 		},
 		{
 			"type": "text",
-			"text": "of healed."
+			"text": "harmed instead of healed."
 		},
 		{
 			"type": "text",

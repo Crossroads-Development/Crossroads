@@ -91,7 +91,6 @@ public class CRTileEntity{
 		register(MaxwellDemonTileEntity::new, "maxwell_demon", reg, maxwellDemon);
 		register(GlasswareHolderTileEntity::new, "glassware_holder", reg, glasswareHolder);
 		register(RedsAlchemicalTubeTileEntity::new, "reds_alchemical_tube", reg, redsAlchemicalTubeCrystal, redsAlchemicalTubeGlass);
-		register(AlembicTileEntity::new, "alembic", reg, alembic);
 		register(DensusPlateTileEntity::new, "densus_plate", reg, densusPlate, antiDensusPlate);
 		register(ChargingStandTileEntity::new, "charging_stand", reg, chargingStand);
 		register(AtmosChargerTileEntity::new, "atmos_charger", reg, atmosCharger);

@@ -166,6 +166,10 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 			markDirty();
 			world.setBlockState(pos, state.with(CRProperties.CRYSTAL, !glass).with(CRProperties.CONTAINER_TYPE, ((AbstractGlassware) stack.getItem()).containerType()));
 			glassType = null;
+			if(contents.getTotalQty() > 0){
+				//Force cable temperature to bottle temperature, prevents averaging with previous temperature
+				cableTemp = contents.getTempC();
+			}
 			return ItemStack.EMPTY;
 		}
 

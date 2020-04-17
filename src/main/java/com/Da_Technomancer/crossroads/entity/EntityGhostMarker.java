@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.entity;
 
+import com.Da_Technomancer.crossroads.API.beams.BeamUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -100,10 +101,10 @@ public class EntityGhostMarker extends Entity{
 
 	public enum EnumMarkerType{
 
-		EQUILIBRIUM(6, null),
-		VOID_EQUILIBRIUM(6, null),
-		DELAYED_EXPLOSION(5, (EntityGhostMarker marker) -> {if(marker.data != null && marker.data.contains("power")) marker.world.createExplosion(marker, marker.posX, marker.posY, marker.posZ, marker.data.getFloat("power"), marker.data.getBoolean("flaming"), Explosion.Mode.valueOf(marker.data.getString("blast_type")));}),
-		BLOCK_SPAWNING(6, null);
+		EQUILIBRIUM(BeamUtil.BEAM_TIME + 1, null),
+		VOID_EQUILIBRIUM(BeamUtil.BEAM_TIME + 1, null),
+		DELAYED_EXPLOSION(BeamUtil.BEAM_TIME, (EntityGhostMarker marker) -> {if(marker.data != null && marker.data.contains("power")) marker.world.createExplosion(marker, marker.posX, marker.posY, marker.posZ, marker.data.getFloat("power"), marker.data.getBoolean("flaming"), Explosion.Mode.valueOf(marker.data.getString("blast_type")));}),
+		BLOCK_SPAWNING(BeamUtil.BEAM_TIME + 1, null);
 
 		private final int defaultLifespan;
 		private final Consumer<EntityGhostMarker> expireEffect;

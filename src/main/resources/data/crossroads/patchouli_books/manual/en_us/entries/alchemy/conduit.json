@@ -1,0 +1,17 @@
+{
+	"category": "alchemy",
+	"name": "Reagent Conduits",
+	"icon": "crossroads:alch_tube",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/alchemy",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Reagent Conduits",
+			"item": "crossroads:alch_tube",
+			"text": "TODO"
+		}
+	]
+}

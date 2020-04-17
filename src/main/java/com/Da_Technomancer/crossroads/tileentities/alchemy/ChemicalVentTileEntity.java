@@ -4,6 +4,8 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -14,13 +16,47 @@ import net.minecraftforge.registries.ObjectHolder;
 import java.util.HashSet;
 
 @ObjectHolder(Crossroads.MODID)
-public class ChemicalVentTileEntity extends TileEntity{
+public class ChemicalVentTileEntity extends TileEntity implements ITickableTileEntity{
 
 	@ObjectHolder("chemical_vent")
 	private static TileEntityType<ChemicalVentTileEntity> type = null;
 
+	/*
+	 * In order to make behaviour more consistent when venting large quantities or mixes (expecially phelostogen + anything else),
+	 * Instead of venting immediately, wait three cycles after receiving to see if more is input. If so, vent all inputs together. Otherwise, vent the input from first cycle
+	 *
+	 * Combines up to 4 cycles worth of input- equivalent to 4 full phials being dumped
+	 */
+	//Timestamp from the last received input
+	private long lastInputTime = 0;
+	//Stored reagents to vent
+	private ReagentMap reags = new ReagentMap();
+
 	public ChemicalVentTileEntity(){
 		super(type);
+	}
+
+	@Override
+	public void tick(){
+		if(!reags.isEmpty() && (world.getGameTime() - lastInputTime) >= 3 * AlchemyUtil.ALCHEMY_TIME){
+			AlchemyUtil.releaseChemical(world, pos, reags);
+			reags = new ReagentMap();
+		}
+	}
+
+	@Override
+	public void read(CompoundNBT nbt){
+		super.read(nbt);
+		lastInputTime = nbt.getLong("last_input");
+		reags = ReagentMap.readFromNBT(nbt);
+	}
+
+	@Override
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putLong("last_input", lastInputTime);
+		reags.write(nbt);
+		return nbt;
 	}
 
 	@Override
@@ -66,8 +102,6 @@ public class ChemicalVentTileEntity extends TileEntity{
 		public boolean insertReagents(ReagentMap reag, Direction side, IChemicalHandler caller, boolean ignorePhase){
 			double callerTemp = reag.getTempK();
 
-			ReagentMap toRelease = new ReagentMap();
-
 			HashSet<String> validIds = new HashSet<>(4);
 
 			for(IReagent type : reag.keySet()){
@@ -80,16 +114,19 @@ public class ChemicalVentTileEntity extends TileEntity{
 				}
 			}
 
+			boolean acted = false;
 			for(String id : validIds){
 				int moved = reag.getQty(id);
 				if(moved != 0){
-					toRelease.transferReagent(id, moved, reag);
+					reags.transferReagent(id, moved, reag);
+					acted = true;
 				}
 			}
+			if(acted && (world.getGameTime() - lastInputTime) > 3 * AlchemyUtil.ALCHEMY_TIME){
+				lastInputTime = world.getGameTime();
+			}
 
-			AlchemyUtil.releaseChemical(world, pos, toRelease);
-
-			return toRelease.getTotalQty() != 0;
+			return acted;
 		}
 
 		@Override

@@ -14,11 +14,15 @@
 		},
 		{
 			"type": "text",
-			"text": "Several different items can be used as a 'lens' by right-clicking it into the <item>frame/$. Only one lens per <item>frame/$ at a time (but multiple <item>frames/$ can be used in a row).$(br2)Using a $(l:intro/ores)ruby/$ will delete anything from the beam that isn't <thing>energy/$.$(br2)Using an emerald will delete anything from the beam that isn't <thing>potential/$.$(br2)Using a diamond will delete "
+			"text": "Several different items can be used as a 'lens' by right-clicking it into the <item>frame/$. Only one lens per <item>frame/$ at a time (but multiple <item>frames/$ can be used in a row).$(br2)Using a $(l:intro/ores)ruby/$ will delete anything from the beam that isn't <thing>energy/$.$(br2)Using an emerald will delete anything from the beam that isn't "
 		},
 		{
 			"type": "text",
-			"text": "anything from the beam that isn't <thing>stability/$.$(br2)Using a $(l:intro/ores)void crystal/$ will convert the entire beam to <thing>$(l:beam/void)void/$.$(br2)Using $(l:fluid/ingr)pure quartz/$ with a <thing>light alignment/$ beam will convert the $(l:fluid/ingr)pure quartz/$ to bright quartz. This is a cheap way to make bright quartz, as it doesn't consume the beam."
+			"text": "<thing>potential/$.$(br2)Using a diamond will delete anything from the beam that isn't <thing>stability/$.$(br2)Using a $(l:intro/ores)void crystal/$ will convert the entire beam to <thing>$(l:beam/void)void/$.$(br2)Using $(l:fluid/ingr)pure quartz/$ with a <thing>light alignment/$ beam will convert the $(l:fluid/ingr)pure quartz/$ to bright quartz. This is a cheap "
+		},
+		{
+			"type": "text",
+			"text": "way to make bright quartz, as it doesn't consume the beam."
 		},
 		{
 			"type": "text",

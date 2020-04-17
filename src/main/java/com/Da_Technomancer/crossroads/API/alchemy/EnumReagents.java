@@ -10,7 +10,7 @@ public enum EnumReagents{
 	AETHER("aether"),
 	ADAMANT("adamant"),
 	SULFUR("sulfur"),
-	SULPHUR("sulfur"),
+//	SULPHUR("sulfur"),
 	QUICKSILVER("quicksilver"),
 	ALCHEMICAL_SALT("alc_salt"),
 	GUNPOWDER("gunpowder"),

@@ -10,11 +10,11 @@
 			"type": "spotlight",
 			"title": "Fluid Cooling Chamber",
 			"item": "crossroads:fluid_cooling_chamber",
-			"text": "The <item>Fluid Cooling Chamber/$ is a crafting machine that converts liquids into items. It requires temperatures below a certain threshold.$(br2)A typical recipe takes liquid, has a maximum temperature to work, and produces an item alongside heat. There is a <item>$(l:heat/cable)cable/$ connection on "
+			"text": "The <item>Fluid Cooling Chamber/$ is a crafting machine that converts liquids into items. It requires temperatures below a certain threshold.$(br2)A typical recipe takes liquid, has a maximum temperature to work, and produces an item alongside heat. There is a <item>$(l:heat/cable)cable/$ connection "
 		},
 		{
 			"type": "text",
-			"text": "the top.$(br2)Any created heat will be released at a constant rate until all the created heat has been produced."
+			"text": "on the top.$(br2)Any created heat will be released at a constant rate until all the created heat has been produced."
 		},
 		{
 			"type": "text",
