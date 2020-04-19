@@ -3,6 +3,7 @@
 	"textures": {
 		"base": "block/stone_bricks",
 		"frame": "block/spruce_planks",
+		"frame_axle": "crossroads:block/spruce_axle",
 		"particle": "crossroads:block/block_cast_iron"
 	},
     "elements": [
@@ -22,20 +23,20 @@
             "from": [ 3.0, 4.0, 0.0 ],
             "to": [ 11.0, 16.0, 1.0 ],
             "faces": {
-                "north": { "texture": "#frame", "uv": [ 0.0, 0.0, 8.0, 8.0 ], "cullface": "north" },
-                "south": { "texture": "#frame", "uv": [ 0.0, 0.0, 8.0, 8.0 ] },
-				"east": { "texture": "#frame", "uv": [ 0.0, 0.0, 1.0, 8.0 ] },
-				"west": { "texture": "#frame", "uv": [ 0.0, 0.0, 1.0, 8.0 ] }
+                "north": { "texture": "#frame_axle", "uv": [ 11.0, 16.0, 3.0, 4.0 ], "cullface": "north" },
+                "south": { "texture": "#frame", "uv": [ 3.0, 16.0, 11.0, 4.0 ] },
+				"east": { "texture": "#frame", "uv": [ 0.0, 16.0, 1.0, 4.0 ] },
+				"west": { "texture": "#frame", "uv": [ 0.0, 16.0, 1.0, 4.0 ] }
             }
         },
 		{
 			"from": [ 3.0, 4.0, 15.0 ],
 			"to": [ 11.0, 16.0, 16.0 ],
 			"faces": {
-				"north": { "texture": "#frame", "uv": [ 0.0, 0.0, 8.0, 8.0 ] },
-				"south": { "texture": "#frame", "uv": [ 0.0, 0.0, 8.0, 8.0 ], "cullface": "south" },
-				"east": { "texture": "#frame", "uv": [ 0.0, 0.0, 1.0, 8.0 ] },
-				"west": { "texture": "#frame", "uv": [ 0.0, 0.0, 1.0, 8.0 ] }
+				"north": { "texture": "#frame", "uv": [ 3.0, 16.0, 11.0, 4.0 ] },
+				"south": { "texture": "#frame_axle", "uv": [ 3.0, 16.0, 11.0, 4.0 ], "cullface": "south" },
+				"east": { "texture": "#frame", "uv": [ 0.0, 16.0, 1.0, 4.0 ] },
+				"west": { "texture": "#frame", "uv": [ 0.0, 16.0, 1.0, 4.0 ] }
 			}
 		}
     ]

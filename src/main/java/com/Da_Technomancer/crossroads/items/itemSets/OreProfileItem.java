@@ -11,8 +11,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nullable;
-
 public class OreProfileItem extends Item{
 
 	protected static final String KEY = "material";
@@ -32,16 +30,22 @@ public class OreProfileItem extends Item{
 		return out;
 	}
 
-
-	@Nullable
 	public static OreSetup.OreProfile getProfile(ItemStack stack){
+		Item item = stack.getItem();
+		if(item instanceof OreProfileItem){
+			return ((OreProfileItem) item).getSelfProfile(stack);
+		}
+		return OreSetup.getDefaultMaterial();
+	}
+
+	protected OreSetup.OreProfile getSelfProfile(ItemStack stack){
 		String matKey;
 		if(!stack.hasTag()){
-			return GearFactory.getDefaultMaterial();
+			return OreSetup.getDefaultMaterial();
 		}else{
 			matKey = stack.getTag().getString(KEY);
 		}
-		return GearFactory.findMaterial(matKey);
+		return OreSetup.findMaterial(matKey);
 	}
 
 	@Override

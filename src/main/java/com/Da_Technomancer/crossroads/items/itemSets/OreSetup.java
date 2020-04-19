@@ -8,8 +8,6 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -131,6 +129,7 @@ public final class OreSetup{
 			}catch(NumberFormatException e){
 				//Pick a random color because the user messed up, and if the user ends up with hot-pink lead that's their problem
 				col = Color.getHSBColor((float) Math.random(), 1F, 1F);
+				Crossroads.logger.error(String.format("Invalid color defined for ore profile: %s; Selecting random color", metal), e);
 			}
 
 			registerMaterial(new OreProfile(metal, col));

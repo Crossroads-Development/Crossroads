@@ -27,7 +27,6 @@ public abstract class GearMatItem extends OreProfileItem{
 	 * @param stack A stack with a GearMatItem
 	 * @return The configured GearMaterial. Null if it has a non-existent material, iron if not configured (default)
 	 */
-	@Nullable
 	public static GearFactory.GearMaterial getMaterial(ItemStack stack){
 		String matKey;
 		if(!stack.hasTag()){
@@ -36,6 +35,12 @@ public abstract class GearMatItem extends OreProfileItem{
 			matKey = stack.getTag().getString(KEY);
 		}
 		return GearFactory.findMaterial(matKey);
+	}
+
+	@Override
+	protected OreSetup.OreProfile getSelfProfile(ItemStack stack){
+		//Use the gear factory registry instead of the ore processing registry
+		return getMaterial(stack);
 	}
 
 	@Override
