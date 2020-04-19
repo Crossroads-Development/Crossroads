@@ -1,0 +1,5 @@
+Voltus Generator
+crossroads:voltus_generator|crossroads:progress/path/alchemy
+The <item>Voltus Generator/$ is a way of converting <item><link:alchemy/stones>Voltus/$ into FE. It accepts <item><link:alchemy/stones>voltus/$ through a <item><link:alchemy/conduit>conduit/$ connection on any side, and will auto-output FE on all sides.
+It converts (by default) 1 <item>voltus/$ to 2,000FE at 2,000FE/t, and can store a buffer of 100 <item>voltus/$.
+A good way of transferring and storing the FE it makes is with an <item><link:alchemy/atmos_fe>Atmospheric Attenuator/$.

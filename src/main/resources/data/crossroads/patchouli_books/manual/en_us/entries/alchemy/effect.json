@@ -47,7 +47,7 @@
 		},
 		{
 			"type": "text",
-			"text": "released. Locked to <thing>flame phase/$, spreading <thing>effects/$ over a massive area (see above).$(br2)<item>Aether, Lumen, Eldrine, Fusas, and Stasisol:/$ See the $(l:alchemy/terraforming)Terraforming page/$.$(br2)<item>Voltus:/$ Electrocutes any nearby entities with lightning arcs (10 damage per hit, may hit several times). Can charge creepers/pigs/etc. Combine "
+			"text": "released. Locked to <thing>flame phase/$, spreading <thing>effects/$ over a massive area (see above).$(br2)<item>Aether, Lumen, Eldrine, Fusas, and Stasisol:/$ See the $(l:alchemy/terraforming)Terraforming entry/$.$(br2)<item>Voltus:/$ Electrocutes any nearby entities with lightning arcs (10 damage per hit, may hit several times). Can charge creepers/pigs/etc. Combine "
 		},
 		{
 			"type": "text",

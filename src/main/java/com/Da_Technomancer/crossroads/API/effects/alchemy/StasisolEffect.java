@@ -20,7 +20,7 @@ public class StasisolEffect extends AetherEffect{
 
 	@Override
 	protected Block crystalBlock(){
-		return CRBlocks.blockPureQuartz;
+		return Blocks.BLUE_ICE;
 	}
 
 	@Override

@@ -1,0 +1,17 @@
+{
+	"category": "alchemy",
+	"name": "Atmospheric Attenuator",
+	"icon": "crossroads:atmos_charger",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/alchemy",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Atmospheric Attenuator",
+			"item": "crossroads:atmos_charger",
+			"text": "TODO"
+		}
+	]
+}

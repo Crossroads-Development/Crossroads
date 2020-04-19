@@ -10,49 +10,37 @@ import javax.annotation.Nonnull;
 public interface IReactionChamber{
 
 	@Nonnull
-	public ReagentMap getReagants();
-	
-//	/**
-//	 * Not the same as temperature.
-//	 * @return
-//	 */
-//	public double getHeat();
-//
-//	public void setHeat(double heatIn);
-//
-//	public default void addHeat(double heatChange){
-//		setHeat(getHeat() + heatChange);
-//	}
+	ReagentMap getReagants();
 	
 	/**
 	 * @return This chamber's temperature in Degrees C
 	 */
-	public default double getTemp(){
+	default double getTemp(){
 		return getReagants().getTempC();
 	}
 	
-	public default int getContent(){
+	default int getContent(){
 		return getReagants().getTotalQty();
 	}
 	
-	public default boolean isCharged(){
-		return getReagants().getQty(EnumReagents.ELEM_CHARGE.id()) != 0;
+	default boolean isCharged(){
+		return false;
 	}
 	
-	public int getReactionCapacity();
+	int getReactionCapacity();
 	
 	/**
 	 * Destroys the chamber, and creates an explosion
 	 */
-	public void destroyChamber(float strength);
+	void destroyChamber(float strength);
 	
 	
 	/**
 	 * Adds temporary particles for visual effect after a reaction. 
-	 * @param particleType
-	 * @param speedX
-	 * @param speedY
-	 * @param speedZ
+	 * @param particleType The particle type to spawn
+	 * @param speedX Will be passed as offsetX
+	 * @param speedY Will be passed as offsetY
+	 * @param speedZ Will be passed as offsetZ
 	 */
-	public <T extends IParticleData> void addVisualEffect(T particleType, double speedX, double speedY, double speedZ);
+	<T extends IParticleData> void addVisualEffect(T particleType, double speedX, double speedY, double speedZ);
 }

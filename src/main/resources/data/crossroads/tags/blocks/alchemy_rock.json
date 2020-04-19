@@ -8,7 +8,6 @@
 		"#forge:netherrack",
 		"#forge:ores",
 		"#forge:sandstone",
-		"minecraft:packed_ice",
-		"minecraft:blue_ice"
+		"minecraft:packed_ice"
 	]
 }

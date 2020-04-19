@@ -15,5 +15,5 @@ The following useful effects exist:
 <item>Chlorine:/$ Apply a massive number of crippling debuffs to any entities. Wither, slowness, weakness, blindness, and others- the quintessential chemical weapon.
 <item>Sulfur Dioxide:/$ Cures Zombie Villagers. Also cures poison and hunger.
 <item>Phelostogen and Ignis Infernum:/$ Destroys all blocks and sets fires, unless there is any (even 1) <item>alchemical salt/$ in the mix being released. Locked to <thing>flame phase/$, spreading <thing>effects/$ over a massive area (see above).
-<item>Aether, Lumen, Eldrine, Fusas, and Stasisol:/$ See the <link:alchemy/terraforming>Terraforming page/$.
+<item>Aether, Lumen, Eldrine, Fusas, and Stasisol:/$ See the <link:alchemy/terraforming>Terraforming entry/$.
 <item>Voltus:/$ Electrocutes any nearby entities with lightning arcs (10 damage per hit, may hit several times). Can charge creepers/pigs/etc. Combine with a <thing>flame phase/$ for an expanding cloud of electric death.

@@ -38,7 +38,7 @@ public class EntityFlyingMachine extends Entity{
 
 	public EntityFlyingMachine(EntityType<EntityFlyingMachine> type, World worldIn){
 		super(type, worldIn);
-		preventEntitySpawning = true; 
+		preventEntitySpawning = true;
 	}
 
 	@Override
@@ -69,22 +69,6 @@ public class EntityFlyingMachine extends Entity{
 		prevPosY = this.posY;
 		prevPosZ = this.posZ;
 
-		if(world.isRemote){
-			//Rotate the wheel based on player control
-			GameSettings settings = Minecraft.getInstance().gameSettings;
-			if(controller != null && controller == Minecraft.getInstance().player){
-				if(settings.keyBindForward.isKeyDown()){
-					setAngle(getAngle() - (float) Math.PI / 20F);
-				}else if(settings.keyBindBack.isKeyDown()){
-					setAngle(getAngle() + (float) Math.PI / 20F);
-				}
-			}
-		}else{
-			//Do movement on the client ONLY. The wheel angle isn't correct on the server
-			super.tick();
-			return;
-		}
-
 		double[] vel = new double[3];
 		vel[0] = getMotion().getX();
 		vel[1] = getMotion().getY();
@@ -93,35 +77,64 @@ public class EntityFlyingMachine extends Entity{
 		//Gravity
 		vel[1] -= 0.08D;
 
-		float angle = 0;
-		if(controller == null){
+		//When there is a player riding, let the client control movement
+		//When there isn't a player, let the server control movement
+		//Never let both sides control movement
+		if(controller instanceof PlayerEntity){
+
+			//Do movement on the client ONLY. The wheel angle isn't correct on the server
+			if(world.isRemote && controller == Minecraft.getInstance().player){
+				//Rotate the wheel based on player control
+				GameSettings settings = Minecraft.getInstance().gameSettings;
+				if(settings.keyBindForward.isKeyDown()){
+					setAngle(getAngle() - (float) Math.PI / 20F);
+				}else if(settings.keyBindBack.isKeyDown()){
+					setAngle(getAngle() + (float) Math.PI / 20F);
+				}
+
+				float angle = 0;
+				//Apply acceleration based on wheel angle. Total acceleration is ACCEL, in direction of wheel
+				angle = -getAngle();
+				rotationYaw = controller.getRotationYawHead();
+				controller.velocityChanged = true;
+
+				vel[0] += Math.sin(angle) * Math.sin(-Math.toRadians(rotationYaw) - Math.PI) * ACCEL;
+				vel[1] += -Math.cos(angle) * ACCEL;
+				vel[2] += Math.sin(angle) * Math.cos(-Math.toRadians(rotationYaw) - Math.PI) * ACCEL;
+
+				//Apply our calculated velocity and move
+				setMotion(vel[0], vel[1], vel[2]);
+				markVelocityChanged();
+				move(MoverType.SELF, getMotion());
+
+				//Air resistance/friction
+				final double min = 0.003D;
+				for(int i = 0; i < 3; i++){
+					vel[i] *= 0.8D;
+					if(Math.abs(vel[i]) < min){
+						vel[i] = 0;
+					}
+				}
+				setMotion(vel[0], vel[1], vel[2]);
+			}
+		}else if(!world.isRemote){
 			//When we have no rider, just go down
 			setAngle(0);
-		}else{
-			//Apply acceleration based on wheel angle. Total acceleration is ACCEL, in direction of wheel
-			angle = -getAngle();
-			rotationYaw = controller.getRotationYawHead();
-			controller.velocityChanged = true;
-		}
+			vel[1] -= ACCEL;
 
-		vel[0] += Math.sin(angle) * Math.sin(-Math.toRadians(rotationYaw) - Math.PI) * ACCEL;
-		vel[1] += -Math.cos(angle) * ACCEL;
-		vel[2] += Math.sin(angle) * Math.cos(-Math.toRadians(rotationYaw) - Math.PI) * ACCEL;
+			markVelocityChanged();
+			move(MoverType.SELF, getMotion());
 
-		//Apply our calculated velocity and move
-		setMotion(vel[0], vel[1], vel[2]);
-		markVelocityChanged();
-		move(MoverType.SELF, getMotion());
-
-		//Air resistance/friction
-		final double min = 0.003D;
-		for(int i = 0; i < 3; i++){
-			vel[i] *= 0.8D;
-			if(Math.abs(vel[i]) < min){
-				vel[i] = 0;
+			//Air resistance/friction
+			final double min = 0.003D;
+			for(int i = 0; i < 3; i++){
+				vel[i] *= 0.8D;
+				if(Math.abs(vel[i]) < min){
+					vel[i] = 0;
+				}
 			}
+			setMotion(vel[0], vel[1], vel[2]);
 		}
-		setMotion(vel[0], vel[1], vel[2]);
 
 		super.tick();
 	}

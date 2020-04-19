@@ -167,7 +167,7 @@ public class CRConfig{
 		atmosEffect = serverBuilder.comment("Level of effects from overcharging the atmosphere", "0: No negative effects", "1: Allow lightning strikes", "2: Allow creeper charging", "3: Allow lightning strikes & creeper charging").defineInRange("atmos_effects", 3, 0, 3);
 		atmosLightningHorsemen = serverBuilder.comment("Whether lightning bolts from atmospheric overcharging can spawn the 4 horsemen", "Overriden by gamerules").define("atmos_horses", true);
 		atmosCap = serverBuilder.comment("Maximum charge for the atmosphere").defineInRange("charge_limit", 1_000_000_000, 0, 2_000_000_000);
-		voltusValue = serverBuilder.comment("FE produced by one Voltus").defineInRange("voltus_power", 10_000, 0, 100_000);
+		voltusValue = serverBuilder.comment("FE produced by one Voltus").defineInRange("voltus_power", 2_000, 0, 100_000);
 		stampMillDamping = serverBuilder.comment("Percentage of Stamp Mill progress to be lost on failure", "Effectively nerfs ore-tripling").defineInRange("mill_damping", 0, 0, 100);
 //		bedrockDust = serverBuilder.comment("Bedrock craftability", "Can bedrock be crafted from bedrock dust?").define("bedrock_dust", true);
 		gravRange = serverBuilder.comment("Range of Density Plates").defineInRange("grav_range", 64, 0, 128);
@@ -187,7 +187,16 @@ public class CRConfig{
 
 	private static Predicate<Object> compileRegex(String regex){
 		Pattern p = Pattern.compile(regex);
-		return (Object o) -> o instanceof String && p.matcher((String) o).matches();
+		return (Object o) -> {
+			if(o instanceof Iterable<?>){
+				for(Object ent : (Iterable<?>) o){
+					if(!(ent instanceof String) || !p.matcher((String) ent).matches()){
+						return false;
+					}
+				}
+			}
+			return true;
+		};
 	}
 
 	/**
