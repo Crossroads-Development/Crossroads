@@ -76,7 +76,7 @@ public final class EventHandlerCommon{
 	@SubscribeEvent
 	@SuppressWarnings("unused")
 	public void chargeCreepers(LivingSpawnEvent.SpecialSpawn e){
-		if(e.getWorld() instanceof ServerWorld && e.getEntity() instanceof CreeperEntity && (float) AtmosChargeSavedData.getCharge((ServerWorld) e.getWorld()) / (float) AtmosChargeSavedData.getCapacity() >= 0.9F && (CRConfig.atmosEffect.get() & 2) == 2){
+		if(e.getWorld() instanceof ServerWorld && e.getEntity() instanceof CreeperEntity && (CRConfig.atmosEffect.get() & 2) == 2 && (float) AtmosChargeSavedData.getCharge((ServerWorld) e.getWorld()) / (float) AtmosChargeSavedData.getCapacity() >= 0.9F){
 			CompoundNBT nbt = new CompoundNBT();
 			e.getEntityLiving().writeAdditional(nbt);
 			nbt.putBoolean("powered", true);
