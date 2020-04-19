@@ -1,6 +1,6 @@
 {
 	"variants": {
-		"active=true": { "model": "crossroads:block/atmos_charger_in" },
-		"active=false": { "model": "crossroads:block/atmos_charger_out" }
+		"active=false": { "model": "crossroads:block/atmos_charger_in" },
+		"active=true": { "model": "crossroads:block/atmos_charger_out" }
 	}
 }

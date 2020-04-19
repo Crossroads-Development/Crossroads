@@ -77,9 +77,9 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	private boolean isValidStructure(){
-		//Requires 3 iron bars (block type controlled via tag) placed in a pillar on top
+		//Requires 4 iron bars (block type controlled via tag) placed in a pillar on top
 		BlockPos checkPos = pos;
-		for(int i = 0; i < 3; i++){
+		for(int i = 0; i < 4; i++){
 			checkPos = checkPos.up();
 			if(!world.getBlockState(checkPos).isIn(ANTENNA_TAG)){
 				return false;
@@ -105,20 +105,7 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 				atmosCharge -= op * 1000;
 				AtmosChargeSavedData.setCharge((ServerWorld) world, atmosCharge);
 				markDirty();
-				if(renderTimer <= 0){
-					renderTimer = 10;
-
-					int arcs = world.rand.nextInt(4) + 2;
-					float angle = (float) Math.PI * 2F / arcs;
-					float[] start = new float[] {pos.getX() + 0.5F, pos.getY() + 4F, pos.getZ() + 0.5F};
-					float[] startEn = new float[] {start[0], pos.getY() + 1.1F, start[2]};
-					Vec3d arcVec = new Vec3d(1, 0, 0);
-					int color = TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)];
-					for(int i = 0; i < arcs; i++){
-						arcVec = arcVec.rotateYaw(angle);
-						CRRenderUtil.addArc(world, start[0], start[1], start[2], start[0] + (float) arcVec.x, start[1] + (float) arcVec.y, start[2] + (float) arcVec.z, startEn[0], startEn[1], startEn[2], 1, 0F, (byte) 10, color);
-					}
-				}
+				renderArc(false);
 			}
 
 			//Transfer fe out
@@ -143,19 +130,30 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 				atmosCharge += op * 1000;
 				AtmosChargeSavedData.setCharge((ServerWorld) world, atmosCharge);
 				markDirty();
-				if(renderTimer <= 0){
-					renderTimer = 10;
-					int arcs = world.rand.nextInt(4) + 2;
-					float angle = (float) Math.PI * 2F / arcs;
-					float[] start = new float[] {pos.getX() + 0.5F, pos.getY() + 1.1F, pos.getZ() + 0.5F};
-					float[] startEn = new float[] {start[0], pos.getY() + 4F, start[2]};
-					Vec3d arcVec = new Vec3d(1, 0, 0);
-					int color = TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)];
-					for(int i = 0; i < arcs; i++){
-						arcVec = arcVec.rotateYaw(angle);
-						CRRenderUtil.addArc(world, start[0], start[1], start[2], start[0] + (float) arcVec.x, start[1] + (float) arcVec.y, start[2] + (float) arcVec.z, startEn[0], startEn[1], startEn[2], 1, 0F, (byte) 10, color);
-					}
-				}
+				renderArc(true);
+			}
+		}
+	}
+
+	private void renderArc(boolean up){
+		if(renderTimer <= 0){
+			renderTimer = 10;
+			int arcs = world.rand.nextInt(4) + 2;
+			float angle = (float) Math.PI * 2F / arcs;
+			float[] start = new float[] {pos.getX() + 0.5F, pos.getY() + 1.1F, pos.getZ() + 0.5F};
+			float[] startEn = new float[] {start[0], pos.getY() + 4.75F, start[2]};
+			if(!up){
+				//Flip travel direction to go down
+				float swap = start[1];
+				start[1] = startEn[1];
+				startEn[1] = swap;
+			}
+
+			Vec3d arcVec = CRRenderUtil.VEC_K.scale(1.4D);
+			int color = TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)];
+			for(int i = 0; i < arcs; i++){
+				arcVec = arcVec.rotateYaw(angle);
+				CRRenderUtil.addArc(world, start[0], start[1], start[2], start[0] + (float) arcVec.x, start[1] + (float) arcVec.y, start[2] + (float) arcVec.z, startEn[0], startEn[1], startEn[2], 1, 0F, (byte) 20, color);
 			}
 		}
 	}

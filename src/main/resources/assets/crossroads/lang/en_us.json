@@ -455,7 +455,7 @@
 	"tt.crossroads.atmos_charger.charging": "Charging Mode",
 	"tt.crossroads.atmos_charger.desc": "Stores and retrieves FE from a shared \"atmosphere\"",
 	"tt.crossroads.atmos_charger.safety": "Charging the atmosphere over 50% could have global consequences",
-	"tt.crossroads.atmos_charger.structure": "Requires 3 iron bars placed as a pole on top",
+	"tt.crossroads.atmos_charger.structure": "Requires 4 iron bars placed as a pole on top",
 	"tt.crossroads.atmos_charger.circuit": "Circuits measure atmospheric charge level as a percentage (0-100)",
 	"tt.crossroads.atmos_charger.reading": "%1$d/%2$dFE in atmosphere (%3$f%%)",
 	"tt.crossroads.charging_stand.desc": "Allows reagents to react in a charged environment",

@@ -85,7 +85,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 				coilTE.setStored(coilTE.getStored() - joltQty);
 				markDirty();
 
-				CRRenderUtil.addArc(world, pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F, (float) ent.posX, (float) ent.posY, (float) ent.posZ, 5, 0.6F, ATTACK_COLOR_CODES[(int) (world.getGameTime() % 3)]);
+				CRRenderUtil.addArc(world, pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F, (float) ent.posX, (float) ent.posY, (float) ent.posZ, 5, 0.2F, ATTACK_COLOR_CODES[(int) (world.getGameTime() % 3)]);
 				ent.onStruckByLightning(new LightningBoltEntity(world, ent.posX, ent.posY, ent.posZ, true));
 			}
 		}else if(variant == TeslaCoilTop.TeslaCoilVariants.DECORATIVE){
@@ -98,7 +98,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 						float angle = world.rand.nextFloat() * 2F * (float) Math.PI;
 						float rad = world.rand.nextFloat() * 2F + 3F;
 						Vec3d end = start.add(new Vec3d(rad * Math.cos(angle), world.rand.nextFloat() * 2F - 1F, rad * Math.sin(angle)));
-						CRRenderUtil.addArc(world, start, end, 4, 0.6F, COLOR_CODES[world.rand.nextInt(COLOR_CODES.length)]);
+						CRRenderUtil.addArc(world, start, end, 6, 0.6F, COLOR_CODES[world.rand.nextInt(COLOR_CODES.length)]);
 					}
 				}else{
 					coilTE.setStored(coilTE.getStored() - TeslaCoilTop.TeslaCoilVariants.DECORATIVE.joltAmt);
@@ -118,7 +118,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 							coilTE.setStored(coilTE.getStored() - joltQty);
 							markDirty();
 
-							CRRenderUtil.addArc(world, pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F, actualPos.getX() + 0.5F, actualPos.getY() + 1.75F, actualPos.getZ() + 0.5F, 3, 0.3F, COLOR_CODES[(int) (world.getGameTime() % 3)]);
+							CRRenderUtil.addArc(world, pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F, actualPos.getX() + 0.5F, actualPos.getY() + 1.75F, actualPos.getZ() + 0.5F, 5, (100F - variant.efficiency) / 100F, COLOR_CODES[(int) (world.getGameTime() % 3)]);
 							break;
 						}
 					}

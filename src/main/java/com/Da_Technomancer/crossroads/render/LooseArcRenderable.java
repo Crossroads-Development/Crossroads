@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -57,7 +56,7 @@ public class LooseArcRenderable implements IVisualEffect{
 	public boolean render(Tessellator tess, BufferBuilder buf, long worldTime, double playerX, double playerY, double playerZ, Vec3d playerLook, Random rand, float partialTicks){
 		final float arcWidth = 0.03F;
 		Color col = new Color(color, true);
-		float mult = ((float) lifeSpan - lifeTime + partialTicks) / (float) lifeSpan;
+		float mult = ((float) (lifeSpan - lifeTime) + partialTicks) / (float) lifeSpan;
 		Vec3d start = new Vec3d(mult * (xStFin - xSt) + xSt, mult * (yStFin - ySt) + ySt, mult * (zStFin - zSt) + zSt);
 
 		GlStateManager.disableTexture();
@@ -72,10 +71,10 @@ public class LooseArcRenderable implements IVisualEffect{
 			//lengthVec is a normalized vector pointing from the start to end point
 			lengthVec = lengthVec.normalize();
 			//crossVec is a normalized vector perpendicular to the lengthVec. Used to make bolts jut outwards from the center
-			Vec3d crossVec = lengthVec.crossProduct(playerLook);
-			//In the unlikely event that playerLook happens to be parallel to lengthVec, we need to recreate crossVec with a random vector. This process can be repeated to ensure a non-zero length as necessary (though this running even once is rare)
-			while(crossVec.lengthSquared() == 0){
-				crossVec = lengthVec.crossProduct(new Vec3d(1, 1, rand.nextInt(16)));
+			Vec3d crossVec = lengthVec.crossProduct(CRRenderUtil.VEC_I);
+			//In the unlikely event that the I unit vector happens to be parallel to lengthVec, we use an a different arbitrary vector
+			if(crossVec.lengthSquared() == 0){
+				crossVec = lengthVec.crossProduct(CRRenderUtil.VEC_J);
 			}
 			crossVec = crossVec.normalize();
 
@@ -93,7 +92,11 @@ public class LooseArcRenderable implements IVisualEffect{
 						portion = 0D;
 					}
 					//Generate the next node position
-					states[i][node] = lengthVec.scale(portion * length).add(crossVec.scale(length / 6D * (diverged ? Math.sqrt(portion) : Math.sqrt(portion) - Math.pow(portion, 2)))).add(rand.nextDouble() / 4D, rand.nextDouble() / 4D, rand.nextDouble() / 4D);
+					states[i][node] = lengthVec.scale(portion * length).add(crossVec.scale(length / 6D * (diverged ? Math.sqrt(portion) : Math.sqrt(portion) - Math.pow(portion, 2))));
+					//Endpoints are fixed- otherwise add some random variance in position
+					if(node != 0 && node != states[i].length - 1){
+						states[i][node] = states[i][node].add(rand.nextDouble() / 4D, rand.nextDouble() / 4D, rand.nextDouble() / 4D);
+					}
 				}
 				
 				//Rotates crossVec angle radians about lengthVec
@@ -105,18 +108,22 @@ public class LooseArcRenderable implements IVisualEffect{
 		//Render the arcs as stored in states
 		for(int i = 0; i < count; i++){
 			for(int node = 1; node < states[0].length; node++){
-				//We generate a vector based on the player's perspective for use creating a thickness to rendered lines. The vector is chosen such to maximize the apparent thickness from the given view angle
-				//The width vector is the vector from the player's eyes to the closest point on the link line (were it extended indefinitely) to the player's eyes, all cross the link line vector.
-				//If you want to know where this formula comes from... I'm not cramming a quarter page of calculus into these comments
-				Vec3d offsetVec = new Vec3d(states[i][node - 1].x + start.x - playerX, states[i][node - 1].y + start.y - playerY - Minecraft.getInstance().player.getEyeHeight(), states[i][node - 1].z + start.z - playerZ);
-				Vec3d deltaVec = states[i][node].subtract(states[i][node - 1]);
-				Vec3d vec = offsetVec.add(deltaVec.scale(-deltaVec.dotProduct(offsetVec) / deltaVec.lengthSquared())).crossProduct(deltaVec);
-				vec = vec.scale(arcWidth / 2F / vec.length());
+				//Replaced with a full 3d render using a helper method
 
-				buf.pos(states[i][node].x - vec.x, states[i][node].y - vec.y, states[i][node].z - vec.z).endVertex();
-				buf.pos(states[i][node].x + vec.x, states[i][node].y + vec.y, states[i][node].z + vec.z).endVertex();
-				buf.pos(states[i][node - 1].x + vec.x, states[i][node - 1].y + vec.y, states[i][node - 1].z + vec.z).endVertex();
-				buf.pos(states[i][node - 1].x - vec.x, states[i][node - 1].y - vec.y, states[i][node - 1].z - vec.z).endVertex();
+//				//We generate a vector based on the player's perspective for use creating a thickness to rendered lines. The vector is chosen such to maximize the apparent thickness from the given view angle
+//				//The width vector is the vector from the player's eyes to the closest point on the link line (were it extended indefinitely) to the player's eyes, all cross the link line vector.
+//				//If you want to know where this formula comes from... I'm not cramming a quarter page of calculus into these comments
+//				Vec3d offsetVec = new Vec3d(states[i][node - 1].x + start.x - playerX, states[i][node - 1].y + start.y - playerY - Minecraft.getInstance().player.getEyeHeight(), states[i][node - 1].z + start.z - playerZ);
+//				Vec3d deltaVec = states[i][node].subtract(states[i][node - 1]);
+//				Vec3d vec = offsetVec.add(deltaVec.scale(-deltaVec.dotProduct(offsetVec) / deltaVec.lengthSquared())).crossProduct(deltaVec);
+//				vec = vec.scale(arcWidth / 2F / vec.length());
+//
+//				buf.pos(states[i][node].x - vec.x, states[i][node].y - vec.y, states[i][node].z - vec.z).endVertex();
+//				buf.pos(states[i][node].x + vec.x, states[i][node].y + vec.y, states[i][node].z + vec.z).endVertex();
+//				buf.pos(states[i][node - 1].x + vec.x, states[i][node - 1].y + vec.y, states[i][node - 1].z + vec.z).endVertex();
+//				buf.pos(states[i][node - 1].x - vec.x, states[i][node - 1].y - vec.y, states[i][node - 1].z - vec.z).endVertex();
+
+				CRRenderUtil.draw3dLine(buf, states[i][node - 1], states[i][node], arcWidth);
 			}
 		}
 
@@ -126,7 +133,7 @@ public class LooseArcRenderable implements IVisualEffect{
 
 		if(lastTick != worldTime){
 			lastTick = worldTime;
-			return lifeTime-- < 0;
+			return --lifeTime < 0;
 		}
 
 		return false;
