@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.blocks.alchemy.GlasswareHolder;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
@@ -34,9 +35,13 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	@ObjectHolder("glassware_holder")
 	private static TileEntityType<GlasswareHolderTileEntity> type = null;
 
-	private AbstractGlassware.GlasswareTypes glassType = null;
+	protected AbstractGlassware.GlasswareTypes glassType = null;
 
 	public GlasswareHolderTileEntity(){
+		this(type);
+	}
+
+	protected GlasswareHolderTileEntity(TileEntityType<? extends GlasswareHolderTileEntity> type){
 		super(type);
 	}
 
@@ -100,7 +105,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 
 	@Override
 	public void destroyChamber(float strength){
-		BlockState state = world.getBlockState(pos);
+		BlockState state = getBlockState();
 		world.setBlockState(pos, state.with(CRProperties.CRYSTAL, false).with(CRProperties.CONTAINER_TYPE, AbstractGlassware.GlasswareTypes.NONE));
 		world.playSound(null, pos, SoundType.GLASS.getBreakSound(), SoundCategory.BLOCKS, SoundType.GLASS.getVolume(), SoundType.GLASS.getPitch());
 		glassType = null;
@@ -184,7 +189,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	@Override
 	protected void performTransfer(){
 		BlockState state = world.getBlockState(pos);
-		if(state.getBlock() == CRBlocks.glasswareHolder && heldType() != AbstractGlassware.GlasswareTypes.NONE){
+		if(state.getBlock() instanceof GlasswareHolder && heldType() != AbstractGlassware.GlasswareTypes.NONE){
 			Direction side = Direction.UP;
 			TileEntity te = world.getTileEntity(pos.offset(side));
 			LazyOptional<IChemicalHandler> otherOpt;
@@ -198,7 +203,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 				return;
 			}
 
-			if(otherHandler.insertReagents(contents, side.getOpposite(), handler, state.get(ESProperties.REDSTONE_BOOL))){
+			if(otherHandler.insertReagents(contents, side.getOpposite(), handler, state.has(ESProperties.REDSTONE_BOOL) && state.get(ESProperties.REDSTONE_BOOL))){
 				correctReag();
 				markDirty();
 			}

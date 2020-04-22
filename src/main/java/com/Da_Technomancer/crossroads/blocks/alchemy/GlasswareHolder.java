@@ -31,8 +31,11 @@ public class GlasswareHolder extends ContainerBlock{
 	private static final VoxelShape SHELL_SHAPE = makeCuboidShape(4, 0, 4, 12, 12, 12);
 
 	public GlasswareHolder(){
+		this("glassware_holder");
+	}
+
+	protected GlasswareHolder(String name){
 		super(Properties.create(Material.IRON).hardnessAndResistance(2).sound(SoundType.METAL));
-		String name = "glassware_holder";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);

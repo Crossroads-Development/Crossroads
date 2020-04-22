@@ -74,7 +74,7 @@ public class Mechanism extends ContainerBlock implements IReadable{
 		if(te instanceof MechanismTileEntity){
 //			MechanismTileEntity mte = (MechanismTileEntity) te;
 //			if(mte.members[6] != null){
-				return getCollisionShape(state, worldIn, pos, context);
+			return getCollisionShape(state, worldIn, pos, context);
 //			}else{
 //				return VoxelShapes.or(getCollisionShape(state, worldIn, pos, context), BREAK_ALL_BB);
 //			}
@@ -132,7 +132,7 @@ public class Mechanism extends ContainerBlock implements IReadable{
 	 * @param te The TileEntity aimed at
 	 * @param start Start vector, subtract position first
 	 * @param end End vector, subtract position first
-	 * @return The index of the aimed component, 7 if the breakall cube, -1 if none
+	 * @return The index of the aimed component, -1 if none, 6 for axle
 	 */
 	private int getAimedSide(MechanismTileEntity te, Vec3d start, Vec3d end){
 		double minDist = Float.MAX_VALUE;
@@ -212,20 +212,27 @@ public class Mechanism extends ContainerBlock implements IReadable{
 					return false;
 				}
 
-				if(out == 7){
-					//Player hit the "break all cube" in the center
-					//Spawn drops, as applicable
-					for(int i = 0; i < 7; i++){
-						if(gear.members[i] != null){
-							spawnAsEntity(worldIn, pos, gear.members[i].getDrop(gear.mats[i]));
-						}
-					}
+//				Break-all cube (index 7, BB that could be targeted to remove entire block) was removed
+//				if(out == 7){
+//					//Player hit the "break all cube" in the center
+//					//Spawn drops, as applicable
+//					for(int i = 0; i < 7; i++){
+//						if(gear.members[i] != null){
+//							spawnAsEntity(worldIn, pos, gear.members[i].getDrop(gear.mats[i]));
+//						}
+//					}
+//
+//					//Destroy the TE
+//					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
+//				}else{
 
-					//Destroy the TE
-					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
-				}else{
+				if(!worldIn.isRemote){
+					//Don't remove on the client side. If the client and server have slightly different player data (common occurrence when removing several quickly), removing on the client could lead to an invisible, solid mechanism that exists on the server
+
 					//Spawn an item as applicable
-					spawnAsEntity(worldIn, pos, gear.members[out].getDrop(gear.mats[out]));
+					if(!player.isCreative()){
+						spawnAsEntity(worldIn, pos, gear.members[out].getDrop(gear.mats[out]));
+					}
 
 					gear.setMechanism(out, null, null, null, false);//Delete the destroyed mechanism
 					if(gear.members[0] == null && gear.members[1] == null && gear.members[2] == null && gear.members[3] == null && gear.members[4] == null && gear.members[5] == null && gear.members[6] == null){
@@ -233,6 +240,7 @@ public class Mechanism extends ContainerBlock implements IReadable{
 						worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
 					}
 				}
+//				}
 				RotaryUtil.increaseMasterKey(!worldIn.isRemote);
 				return true;
 			}

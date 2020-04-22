@@ -1,36 +1,21 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
-import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyReactorTE;
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyUtil;
+import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
-import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.world.Explosion;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.registries.ObjectHolder;
 
-import javax.annotation.Nonnull;
-
 @ObjectHolder(Crossroads.MODID)
-public class ChargingStandTileEntity extends AlchemyReactorTE{
+public class ChargingStandTileEntity extends GlasswareHolderTileEntity{
 
 	@ObjectHolder("charging_stand")
 	private static TileEntityType<ChargingStandTileEntity> type = null;
@@ -38,24 +23,10 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 	private static final int ENERGY_CAPACITY = 100;
 	public static final int DRAIN = 10;
 
-	private AbstractGlassware.GlasswareTypes glassType = null;
 	private int fe = 0;
 
 	public ChargingStandTileEntity(){
 		super(type);
-	}
-
-	private AbstractGlassware.GlasswareTypes heldType(){
-		if(glassType == null){
-			BlockState state = world.getBlockState(pos);
-			if(state.has(CRProperties.CONTAINER_TYPE)){
-				glassType = state.get(CRProperties.CONTAINER_TYPE);
-				return glassType;
-			}
-
-			return AbstractGlassware.GlasswareTypes.NONE;
-		}
-		return glassType;
 	}
 
 	@Override
@@ -78,105 +49,6 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	protected int transferCapacity(){
-		return heldType().capacity;
-	}
-
-	@Override
-	public void destroyChamber(float strength){
-		BlockState state = world.getBlockState(pos);
-		world.setBlockState(pos, state.with(CRProperties.CRYSTAL, false).with(CRProperties.CONTAINER_TYPE, AbstractGlassware.GlasswareTypes.NONE));
-		world.playSound(null, pos, SoundType.GLASS.getBreakSound(), SoundCategory.BLOCKS, SoundType.GLASS.getVolume(), SoundType.GLASS.getPitch());
-		glassType = null;
-		dirtyReag = true;
-		AlchemyUtil.releaseChemical(world, pos, contents);
-		contents = new ReagentMap();
-		if(strength > 0){
-			world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), strength, Explosion.Mode.BREAK);
-		}
-	}
-
-	public void onBlockDestroyed(BlockState state){
-		if(heldType() != AbstractGlassware.GlasswareTypes.NONE){
-			ItemStack out = getStoredItem();
-			this.contents = new ReagentMap();
-			dirtyReag = true;
-			glassType = AbstractGlassware.GlasswareTypes.NONE;
-			markDirty();
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), out);
-		}
-	}
-
-	private ItemStack getStoredItem(){
-		if(heldType() == AbstractGlassware.GlasswareTypes.NONE){
-			return ItemStack.EMPTY;
-		}
-		boolean crystal = world.getBlockState(pos).get(CRProperties.CRYSTAL);
-		ItemStack out;
-		//This feels like a really bad way of doing this
-		switch(heldType()){
-			case PHIAL:
-				out = crystal ? new ItemStack(CRItems.phialCrystal, 1) : new ItemStack(CRItems.phialGlass, 1);
-				break;
-			case FLORENCE:
-				out =  crystal ? new ItemStack(CRItems.florenceFlaskCrystal, 1) : new ItemStack(CRItems.florenceFlaskGlass, 1);
-				break;
-			case SHELL:
-				out =  crystal ? new ItemStack(CRItems.shellCrystal, 1) : new ItemStack(CRItems.shellGlass, 1);
-				break;
-			default:
-				return ItemStack.EMPTY;
-		}
-
-		((AbstractGlassware) (out.getItem())).setReagents(out, contents);
-		return out;
-	}
-
-	/**
-	 * Normal behavior: 
-	 * Shift click with empty hand: Remove phial
-	 * Normal click with empty hand: Try to remove solid reagent
-	 * Normal click with phial: Add phial to stand, or merge phial contents
-	 * Normal click with non-phial item: Try to add solid reagent
-	 */
-	@Nonnull
-	@Override
-	public ItemStack rightClickWithItem(ItemStack stack, boolean sneaking, PlayerEntity player, Hand hand){
-		BlockState state = world.getBlockState(pos);
-
-		if(heldType() != AbstractGlassware.GlasswareTypes.NONE){
-			//Remove glassware
-			if(stack.isEmpty() && sneaking){
-				ItemStack out = getStoredItem();
-				world.setBlockState(pos, state.with(CRProperties.CRYSTAL, false).with(CRProperties.CONTAINER_TYPE, AbstractGlassware.GlasswareTypes.NONE));
-				glassType = null;
-				this.contents.clear();
-				dirtyReag = true;
-				markDirty();
-				return out;
-			}
-
-			//Reagent interaction
-			return super.rightClickWithItem(stack, sneaking, player, hand);
-		}else if(stack.getItem() instanceof AbstractGlassware){
-			//Add item into TE
-			this.contents = ((AbstractGlassware) stack.getItem()).getReagants(stack);
-			glass = !((AbstractGlassware) stack.getItem()).isCrystal();
-			dirtyReag = true;
-			markDirty();
-			world.setBlockState(pos, state.with(CRProperties.CRYSTAL, !glass).with(CRProperties.CONTAINER_TYPE, ((AbstractGlassware) stack.getItem()).containerType()));
-			glassType = null;
-			if(contents.getTotalQty() > 0){
-				//Force cable temperature to bottle temperature, prevents averaging with previous temperature
-				cableTemp = contents.getTempC();
-			}
-			return ItemStack.EMPTY;
-		}
-
-		return stack;
-	}
-
-	@Override
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
 		fe = nbt.getInt("fe");
@@ -191,6 +63,7 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 
 	@Override
 	protected EnumTransferMode[] getModes(){
+		//Does not connect to conduits, unlike the glassware holder
 		return new EnumTransferMode[] {EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE};
 	}
 
@@ -207,6 +80,11 @@ public class ChargingStandTileEntity extends AlchemyReactorTE{
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == CapabilityEnergy.ENERGY){
 			return (LazyOptional<T>) elecOpt;
+		}
+		if(side == Direction.UP && cap == Capabilities.CHEMICAL_CAPABILITY){
+			//The super class (glassware holder) would return the handler for a conduit connection on the top
+			//The charging stand does not allow that connection
+			return LazyOptional.empty();
 		}
 		return super.getCapability(cap, side);
 	}
