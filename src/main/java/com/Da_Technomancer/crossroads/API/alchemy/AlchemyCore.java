@@ -131,10 +131,10 @@ public final class AlchemyCore{
 		FLAME_RANGES.put(hellfire, (Integer amount) -> CRConfig.allowHellfire.get() ? (int) Math.min(64, amount * 4D) : (int) Math.min(8, Math.round(amount / 2D)));
 
 		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CRFluids.distilledWater.still, 100), REAGENTS.get(WATER.id())));
-		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CRFluids.moltenIron.still, EnergyConverters.INGOT_MB), REAGENTS.get(IRON.id())));
-		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CRFluids.moltenGold.still, EnergyConverters.INGOT_MB), REAGENTS.get(GOLD.id())));
-		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CRFluids.moltenCopper.still, EnergyConverters.INGOT_MB), REAGENTS.get(COPPER.id())));
-		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CRFluids.moltenTin.still, EnergyConverters.INGOT_MB), REAGENTS.get(TIN.id())));
+		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CRFluids.moltenIron.still, EnergyConverters.INGOT_MB / 9), REAGENTS.get(IRON.id())));
+		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CRFluids.moltenGold.still, EnergyConverters.INGOT_MB / 9), REAGENTS.get(GOLD.id())));
+		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CRFluids.moltenCopper.still, EnergyConverters.INGOT_MB / 9), REAGENTS.get(COPPER.id())));
+		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CRFluids.moltenTin.still, EnergyConverters.INGOT_MB / 9), REAGENTS.get(TIN.id())));
 
 		// Reactions
 
