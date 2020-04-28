@@ -1,0 +1,4 @@
+Hopper Filter
+essentials:hopper_filter
+The <item>Hopper Filter/$ is a way of preventing hoppers from moving items that don't match a filter. It can be placed either between the hopper and the block it's pulling items from, to prevent the hopper extracting items that don't match, or between the hopper and the block it's pushing items to, to prevent the hopper inserting items that don't match.
+The filter can be set by right clicking an item into the filter. If a shulker box is used as the filter, the filter will match everything in the shulker box. 
