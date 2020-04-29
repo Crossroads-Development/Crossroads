@@ -29,7 +29,7 @@ public class EnergizeEffect extends BeamEffect{
 				}
 			}else{
 				if(hitHandler != null){
-					hitHandler.addHeat(MULT * power);
+					hitHandler.addHeat(Math.min(MULT * power, HeatUtil.MAX_TEMP - hitHandler.getTemp()));
 					//Effect in crystal master axis
 				}else{
 					BlockState state = worldIn.getBlockState(pos);

@@ -30,24 +30,14 @@ public class CRConfig{
 	public static ForgeConfigSpec.ConfigValue<List<? extends String>> processableOres;
 	public static ForgeConfigSpec.ConfigValue<List<? extends String>> gearTypes;
 	public static ForgeConfigSpec.DoubleValue speedPrecision;
+	public static ForgeConfigSpec.BooleanValue enchantDestruction;
 //	public static ForgeConfigSpec.ConfigValue<String> retrogen; TODO
 	public static ForgeConfigSpec.BooleanValue heatEffects;
 	public static ForgeConfigSpec.BooleanValue allowAllSingle;
 	public static ForgeConfigSpec.BooleanValue allowAllServer;
-//	public static ForgeConfigSpec.BooleanValue technomancy; Moved to tag controlling unlock item
-//	public static ForgeConfigSpec.BooleanValue alchemy;
-//	public static ForgeConfigSpec.BooleanValue witchcraft;//NYI
-//	public static ForgeConfigSpec.BooleanValue voidChunk;
-//	public static ForgeConfigSpec.BooleanValue resetChunk;
-//	public static ForgeConfigSpec.BooleanValue magicChunk;
-//	public static ForgeConfigSpec.BooleanValue blastChunk;
 	public static ForgeConfigSpec.BooleanValue fluxEvent;
-//	public static ForgeConfigSpec.BooleanValue disableSlaves;
 	public static ForgeConfigSpec.IntValue gearResetTime;
 	public static ForgeConfigSpec.BooleanValue wipeInvalidMappings;
-//	public static ForgeConfigSpec.ConfigValue<List<? extends String>> blockedPrototype;
-//	public static ForgeConfigSpec.IntValue allowPrototype;
-//	public static ForgeConfigSpec.IntValue maximumPistolDamage;
 	public static ForgeConfigSpec.BooleanValue beamPowerCollision;
 	public static ForgeConfigSpec.IntValue electPerJoule;
 	public static ForgeConfigSpec.BooleanValue allowHellfire;
@@ -55,11 +45,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.IntValue atmosEffect;
 	public static ForgeConfigSpec.BooleanValue atmosLightningHorsemen;
 	public static ForgeConfigSpec.IntValue atmosCap;
-//	public static ForgeConfigSpec.DoubleValue copsPerLiq;
 	public static ForgeConfigSpec.BooleanValue allowOverflow;
-//	public static ForgeConfigSpec.BooleanValue addBoboRecipes;
-//	public static ForgeConfigSpec.ConfigValue<String> cccExpenLiquid;
-//	public static ForgeConfigSpec.ConfigValue<String> cccEntropLiquid;
 	public static ForgeConfigSpec.DoubleValue rotaryLoss;
 	public static ForgeConfigSpec.DoubleValue crystalAxisMult;
 	public static ForgeConfigSpec.IntValue steamWorth;
@@ -68,19 +54,17 @@ public class CRConfig{
 	public static ForgeConfigSpec.DoubleValue stirlingMultiplier;
 	public static ForgeConfigSpec.IntValue fePerCharge;
 	public static ForgeConfigSpec.IntValue stampMillDamping;
-//	public static ForgeConfigSpec.BooleanValue bedrockDust;
 	public static ForgeConfigSpec.BooleanValue phelEffect;
 	public static ForgeConfigSpec.IntValue gravRange;
 	public static ForgeConfigSpec.IntValue fePerEntropy;
-//	public static ForgeConfigSpec.IntValue entropyDecayRate;
 	public static ForgeConfigSpec.BooleanValue entropyDropBlock;
 	public static ForgeConfigSpec.BooleanValue rotateBeam;
 	public static ForgeConfigSpec.BooleanValue teTimeAccel;
 	public static ForgeConfigSpec.BooleanValue hardGateway;
+	public static ForgeConfigSpec.IntValue growMultiplier;
+//	public static ForgeConfigSpec.IntValue colorChartResolution;
 
 	private static final Tag<Block> destroyBlacklist = new BlockTags.Wrapper(new ResourceLocation(Crossroads.MODID, "destroy_blacklist"));
-
-//	public static ArrayList<ForgeConfigSpec.-Value> boboItemProperties = new ArrayList<>();
 
 	private static ForgeConfigSpec clientSpec;
 	private static ForgeConfigSpec serverSpec;
@@ -98,6 +82,7 @@ public class CRConfig{
 		ForgeConfigSpec.Builder clientBuilder = new ForgeConfigSpec.Builder();
 
 		rotateBeam = clientBuilder.comment("Should beams visually rotate?").define("rotate_beam", true);
+//		colorChartResolution = clientBuilder.comment("Pixel size on the color chart", "Higher values will reduce FPS lag in the color chart UI, but will make it less precise and 'smooth' looking").defineInRange("color_res", 1, 1, 4);
 
 		clientSpec = clientBuilder.build();
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, clientSpec);
@@ -108,6 +93,7 @@ public class CRConfig{
 
 		serverBuilder.push(CAT_INTERNAL);
 		speedPrecision = serverBuilder.comment("Lower values increase network lag but increases gear speed synchronization").defineInRange("predict_speed", 0.20F, 0.05F, 10F);
+		enchantDestruction = serverBuilder.comment("Whether Enchantment beams have a chance to destroy items").define("enchant_destroy", true);
 		gearResetTime = serverBuilder.comment("Interval in ticks between gear network checks").defineInRange("network_time", 300, 100, 2400);
 		wipeInvalidMappings = serverBuilder.worldRestart().comment("Wipe internal per player dimension mappings on failure?", "Only change this if you know what you're doing").define("wipe_dim_map", false);
 		serverBuilder.pop();
@@ -130,6 +116,7 @@ public class CRConfig{
 		beamPowerCollision = serverBuilder.comment("Whether beams decide what they can pass through based on beam power", "If true, low power beams require a smaller hole, and high power beams require a larger empty space in blocks to pass through").define("beam_collision_use_power", false);
 		electPerJoule = serverBuilder.comment("FE generated from 1J. Set to 0 to effectively disable the dynamo").defineInRange("dynamo_efficiency", 2,0, Integer.MAX_VALUE);
 		crystalAxisMult = serverBuilder.comment("Power generated by the Crystal Master Axis in J/t").defineInRange("crystal_power", 100D, 0, Integer.MAX_VALUE);
+		growMultiplier = serverBuilder.comment("Power divider for potential beams grow effect", "For example, 2 will cause twice as much beam power for the same effect").defineInRange("grow_divider", 1, 1, 64);
 		serverBuilder.pop();
 		serverBuilder.push(CAT_MISC);
 		heatEffects = serverBuilder.comment("Enable overheat effects?", "If false, all heat cable overheating effects are replaced with burning").define("cable_effects", true);
@@ -139,26 +126,12 @@ public class CRConfig{
 		serverBuilder.push(CAT_SPECIALIZATION);
 		allowAllSingle = serverBuilder.comment("Allow Multiple specializations per player in Singleplayer?").define("paths_single", true);
 		allowAllServer = serverBuilder.comment("Allow Multiple specializations per player in Multiplayer?").define("paths_multi", false);
-//		technomancy = serverBuilder.comment("Enable unlocking Technomancy?").define("technomancy", true);
-//		alchemy = serverBuilder.comment("Enable unlocking Alchemy?").define("alchemy", true);
-//		witchcraft = serverBuilder.comment("Enable unlocking Witchcraft?", false, "Default: true; NYI");
 		serverBuilder.push(CAT_TECHNOMANCY);
-//		entropyDecayRate = serverBuilder.comment("Natural Temporal Entropy decay rate").defineInRange("entropy_decay", 1, 0, EntropySavedData.MAX_VALUE);
 		entropyDropBlock = serverBuilder.comment("Whether Technomancy machines should drop an item when overloaded").define("drop_machine", false);
-//		voidChunk = serverBuilder.comment("Allow Chunk Voiding disaster from Technomancy?").define("chunk_void", true);
-//		resetChunk = serverBuilder.comment("Allow Chunk Reset disaster from Technomancy?").define("chunk_reset", true);
-//		magicChunk = serverBuilder.comment("Allow Chunk Misc disaster from Technomancy?").define("chunk_beam", true);
-//		blastChunk = serverBuilder.comment("Allow Explosion disaster from Technomancy?").define("chunk_explode", true);
 		fluxEvent = serverBuilder.comment("Allow Temporal Entropy disasters from Technomancy?", "If disabled, disasters create a small explosion instead").define("flux_disaster", true);
-//		blockedPrototype = serverBuilder.comment("Blocks disallowed to be used in prototypes", "Should be in the format 'modid:blockregistryname', ex. 'minecraft:obsidian' or 'crossroads:block_salt'", "Use to prevent exploits, bugs, travel to the prototype dimension, griefing, and other naughty things. Also, most modded multiblocks should be blocked to prevent bugs.").define("proto_banned", initList(Crossroads.MODID + ":large_gear_slave", Crossroads.MODID + ":large_gear_master", Crossroads.MODID + ":prototype", Crossroads.MODID + ":gateway_frame", "minecraft:portal", "rftools:matter_transmitter", "bloodmagic:blockteleposer"), compileRegex("[^\\:\\n\\t ]+?:[^\\:\\n\\t ]+"));
-//		allowPrototype = serverBuilder.comment("Restrictions on prototyping", "-1: Prototyping is disabled. May block large amounts of the mod.", "0: Default value.", "1: Prototyping destroys the template structure the prototype was made from instead of copying the template. (prevents unintended dupe exploits)", "2: Prototyping works as normal, except prototype blocks themselves cannot be placed, only used within other compatible devices (such as the watch)").defineInRange("proto_mode", 0, -1, 2);
-//		maximumPistolDamage = serverBuilder.comment("Maximum pistol damage per shot", "-1 for no cap").defineInRange("pistol_cap", -1, -1, Integer.MAX_VALUE);
-//		cccExpenLiquid = serverBuilder.comment("Liquid type for the Copshowium Creation Chamber without Temporal Entropy", "An invalid liquid will disable the crafting").define("ccc_expen", "copper");
-//		cccEntropLiquid = serverBuilder.comment("Liquid type for the Copshowium Creation Chamber with Temporal Entropy", "An invalid liquid will disable the crafting").define("ccc_cheap", "distilled_water");
 		fePerEntropy = serverBuilder.comment("FE equal to 1 Temporal Entropy").defineInRange("fe_per_entropy", 50, 1, Integer.MAX_VALUE);
 		teTimeAccel = serverBuilder.comment("Allow time acceleration of Tile Entities?", "Disabling this does not affect acceleration of normal entities or block ticks").define("te_accel", true);
 		hardGateway = serverBuilder.comment("Enable hardmode for the Gateway?", "If true, dialing in chevrons only works if the beam alignment matches the chevron being dialed", "Enable this if you want an extra challenge").define("gateway_hard", false);
-//		copsPerLiq = serverBuilder.comment("mB of Molten Copshowium produced per mB of input liquid in the CCC").defineInRange("cops_per_liq", 2D, 0, 9);
 		allowOverflow = serverBuilder.comment("Destroy the CCC if Copshowium overfills the tank?", "Disabling this will make the CCC much easier to use").define("allow_overflow", true);
 		serverBuilder.pop();
 		serverBuilder.push(CAT_ALCHEMY);
@@ -169,7 +142,6 @@ public class CRConfig{
 		atmosCap = serverBuilder.comment("Maximum charge for the atmosphere").defineInRange("charge_limit", 1_000_000_000, 0, 2_000_000_000);
 		voltusValue = serverBuilder.comment("FE produced by one Voltus").defineInRange("voltus_power", 2_000, 0, 100_000);
 		stampMillDamping = serverBuilder.comment("Percentage of Stamp Mill progress to be lost on failure", "Effectively nerfs ore-tripling").defineInRange("mill_damping", 0, 0, 100);
-//		bedrockDust = serverBuilder.comment("Bedrock craftability", "Can bedrock be crafted from bedrock dust?").define("bedrock_dust", true);
 		gravRange = serverBuilder.comment("Range of Density Plates").defineInRange("grav_range", 64, 0, 128);
 		serverBuilder.pop();
 		serverBuilder.pop();

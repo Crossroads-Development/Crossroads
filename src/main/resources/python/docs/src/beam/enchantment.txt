@@ -1,6 +1,7 @@
 Alignment: Enchantment-1
 crossroads:pure_quartz|crossroads:progress/alignment/enchantment
-<thing>Enchantment/$ (light yellow) will enchant all items dropped in the world within range. They will be enchanted with a level equal to the beam <thing>power/$. If the beam <thing>power/$ >= 64, then it can get treasure enchantments (like Mending). The range is a radius of sqrt(<thing>power/$) / 2 blocks.
-This beam is very powerful, as one shot can enchant an unlimited number of items with max level enchants, including treasure enchants.
+<thing>Enchantment/$ (light yellow) will enchant 1 item dropped in the world within range. They will be enchanted with a level equal to the beam <thing>power/$. If the beam <thing>power/$ >= 64, then it can get treasure enchantments (like Mending). The range is a radius of sqrt(<thing>power/$) / 2 blocks.
+However, <em>any enchanted item has a chance to be destroyed/$. When an item is enchanted by this beam, there is a (power)% chance to destroy the item. For example, a power 15 beam has a 15% chance to destroy the enchanted item. This can be disabled in the config.
+This beam is very powerful, as one shot can enchant an items with max level enchants, including treasure enchants, without costing XP.
 
 <thing>Void-Enchantment/$ AKA <thing>Disenchantment/$ will disenchant all items dropped in the world within range. The range is a radius of sqrt(<thing>power/$) / 2 blocks. This can also remove curses from items.

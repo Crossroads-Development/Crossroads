@@ -16,6 +16,11 @@ public class HeatUtil{
 	 */
 	public static final double ABSOLUTE_ZERO = -273D;
 
+	/**
+	 * Suggested maximum temperature value. Not required to enforce a maximum temperature- but if doing so to avoid overflows, this value should be the upper bound
+	 */
+	public static final double MAX_TEMP = 50_000;
+
 	public static double toKelvin(double celcius){
 		return celcius - ABSOLUTE_ZERO;
 	}

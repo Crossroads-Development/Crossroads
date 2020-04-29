@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
+import com.Da_Technomancer.crossroads.CRConfig;
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.item.ItemEntity;
@@ -8,8 +9,12 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction;
 import net.minecraft.util.EntityPredicates;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -49,25 +54,30 @@ public class EnchantEffect extends BeamEffect{
 							continue;
 						}
 
-						for(int i = 0; i < stack.getCount(); i++){
-							ItemStack created;
+						List<EnchantmentData> ench = EnchantmentHelper.buildEnchantmentList(RAND, stack, Math.min(power, 45), power >= 64);
 
-							List<EnchantmentData> ench = EnchantmentHelper.buildEnchantmentList(RAND, stack, Math.min(power, 45), power >= 64);
+						if(ench.isEmpty()){
+							//Non-enchantable items should be skipped
+							continue;
+						}
 
-							if(ench.isEmpty()){
-								break;//Non-enchantable items shouldn't have their stacks recreated
-							}
+//						for(int i = 0; i < stack.getCount(); i++){
+						ItemStack created;
 
+						if(CRConfig.enchantDestruction.get() && RAND.nextInt(100) < power){
+							//Destroy the item
+							created = ItemStack.EMPTY;
+							worldIn.addParticle(ParticleTypes.SMOKE, ent.posX, ent.posY, ent.posZ, 0, 0, 0);
+							worldIn.playSound(null, ent.posX, ent.posY, ent.posZ, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 1, 1);
+						}else{
 							if(stack.getItem() == Items.BOOK){
 								created = new ItemStack(Items.ENCHANTED_BOOK, 1);
+								if(ench.size() > 1){
+									ench.remove(0);//Vanilla behavior when enchanting books is to put on 1 fewer enchantments
+								}
 							}else{
 								created = stack.copy();
 								created.setCount(1);
-							}
-
-							if(created.getItem() == Items.ENCHANTED_BOOK && ench.size() > 1){
-								//Vanilla behavior when enchanting books is to put on 1 fewer enchantments
-								ench.remove(0);
 							}
 
 							for(EnchantmentData datum : ench){
@@ -77,10 +87,14 @@ public class EnchantEffect extends BeamEffect{
 									created.addEnchantment(datum.enchantment, datum.enchantmentLevel);
 								}
 							}
+						}
 
-							InventoryHelper.spawnItemStack(worldIn, ent.posX, ent.posY, ent.posZ, created);
+						InventoryHelper.spawnItemStack(worldIn, ent.posX, ent.posY, ent.posZ, created);
+						ent.getItem().shrink(1);
+						if(ent.getItem().isEmpty()){
 							ent.remove();
 						}
+						return;//Only enchant 1 item
 					}
 				}
 			}

@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -56,6 +57,12 @@ public class GrowEffect extends BeamEffect{
 					}else{
 						ent.heal(power / 2F);
 					}
+				}
+
+				//Optional config option to nerf the bonemeal effect
+				int growMultiplier = CRConfig.growMultiplier.get();
+				if(growMultiplier > 1){
+					power = power / growMultiplier + ((worldIn.rand.nextInt(growMultiplier) < power % growMultiplier) ? 1 : 0);
 				}
 
 				for(int i = 0; i < power; i++){
