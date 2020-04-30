@@ -3,5 +3,6 @@
 	"input": {
 		"tag": "forge:gems/mercury"
 	},
-	"potential" : 32
+	"potential": 16,
+	"duration": 2
 }

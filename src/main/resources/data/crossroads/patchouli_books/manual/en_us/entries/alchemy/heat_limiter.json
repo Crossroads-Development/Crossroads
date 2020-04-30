@@ -1,0 +1,12 @@
+{
+	"category": "alchemy",
+	"name": "Thermal Regulator",
+	"icon": "crossroads:heat_limiter_basic",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/alchem",
+	"read_by_default": "true",
+	"pages": [
+
+	]
+}

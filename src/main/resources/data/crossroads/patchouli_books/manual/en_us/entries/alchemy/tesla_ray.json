@@ -1,0 +1,17 @@
+{
+	"category": "alchemy",
+	"name": "Tesla Ray",
+	"icon": "crossroads:tesla_ray",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/alchemy",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Tesla Ray",
+			"item": "crossroads:tesla_ray",
+			"text": "TODO"
+		}
+	]
+}

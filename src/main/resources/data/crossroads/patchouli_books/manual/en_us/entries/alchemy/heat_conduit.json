@@ -1,0 +1,17 @@
+{
+	"category": "alchemy",
+	"name": "Thermal Conduit",
+	"icon": "crossroads:heated_tube",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/alchemy",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Thermal Conduit",
+			"item": "crossroads:heated_tube",
+			"text": "TODO"
+		}
+	]
+}

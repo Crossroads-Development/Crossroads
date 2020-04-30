@@ -9,6 +9,9 @@ import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.particles.CRParticles;
 import com.Da_Technomancer.crossroads.particles.ColorParticleData;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.SoundType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
@@ -18,10 +21,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -47,6 +52,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 	protected boolean glass;
 	protected ReagentMap contents = new ReagentMap();
 	protected boolean dirtyReag = false;
+	protected boolean broken = false;
 
 	/**
 	 * Position to spawn particles for contents
@@ -99,6 +105,20 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 		this.glass = glass;
 	}
 
+	protected void destroyCarrier(float strength){
+		if(!broken){
+			broken = true;
+			BlockState state = world.getBlockState(pos);
+			world.setBlockState(pos, Blocks.AIR.getDefaultState());
+			SoundType sound = state.getBlock().getSoundType(state, world, pos, null);
+			world.playSound(null, pos, sound.getBreakSound(), SoundCategory.BLOCKS, sound.getVolume(), sound.getPitch());
+			AlchemyUtil.releaseChemical(world, pos, contents);
+			if(strength > 0F){
+				world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), strength, Explosion.Mode.BREAK);//We will drop items, because an explosion in your lab is devastating enough without having to re-craft everything
+			}
+		}
+	}
+
 	/**
 	 * @return What the current temperature of this machine should be. Can be overwritten to allow external control of temperature
 	 */
@@ -121,6 +141,30 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 		dirtyReag = false;
 		contents.refresh();
 		contents.setTemp(correctTemp());
+
+		//Check for uncontainable reagents
+		if(glass){
+			boolean destroy = false;
+			ArrayList<IReagent> toRemove = new ArrayList<>(1);//Rare that there is more than 1
+
+			for(IReagent type : contents.keySet()){
+				if(contents.getQty(type) > 0 && type.requiresCrystal()){
+					toRemove.add(type);
+					if(type.destroysBadContainer()){
+						destroy = true;
+						break;
+					}
+				}
+			}
+
+			if(destroy){
+				destroyCarrier(0);
+			}else{
+				for(IReagent type : toRemove){
+					contents.remove(type);
+				}
+			}
+		}
 	}
 
 	@Override

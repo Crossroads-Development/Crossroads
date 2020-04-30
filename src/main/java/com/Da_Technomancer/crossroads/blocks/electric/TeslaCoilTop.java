@@ -26,6 +26,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Locale;
 
 public class TeslaCoilTop extends ContainerBlock{
 
@@ -107,7 +108,7 @@ public class TeslaCoilTop extends ContainerBlock{
 
 		@Override
 		public String toString(){
-			return name().toLowerCase();
+			return name().toLowerCase(Locale.US);
 		}
 	}
 }

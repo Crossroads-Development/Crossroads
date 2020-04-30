@@ -1,0 +1,4 @@
+Cooling Coil Conduit
+crossroads:cooling_coil|crossroads:progress/path/alchemy
+The <item>Cooling Coil Conduit/$ is a special <item><link:alchemy/conduit>conduit/$ that sets the temperature of all <thing><link:intro/alchemy>reagents/$ flowing through it to the <thing><link:intro/heat>biome temperature/$.
+They input <thing><link:intro/alchemy>reagents/$ on one side, and output on the opposite side. They cannot face vertically, and have both a glass and crystal variant.

@@ -1,0 +1,2 @@
+Thermal Regulator
+crossroads:heat_limiter_basic|crossroads:progress/path/alchemy

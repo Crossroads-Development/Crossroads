@@ -43,6 +43,11 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 	private ItemStack inv = ItemStack.EMPTY;
 	private Direction facing = null;
 
+	//Used for multi-cycle output
+	//Will always be EMPTY and 0 for single cycle fuels
+	private BeamUnit output = BeamUnit.EMPTY;
+	private int timeRemaining = 0;
+
 	public BeamExtractorTileEntity(){
 		super(type);
 	}
@@ -66,6 +71,9 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 		if(!inv.isEmpty()){
 			nbt.put("inv", inv.write(new CompoundNBT()));
 		}
+		output.writeToNBT("output", nbt);
+		nbt.putInt("remain", timeRemaining);
+
 		return nbt;
 	}
 
@@ -73,6 +81,8 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
 		inv = nbt.contains("inv") ? ItemStack.read(nbt.getCompound("inv")) : ItemStack.EMPTY;
+		output = BeamUnit.readFromNBT("output", nbt);
+		timeRemaining = nbt.getInt("remain");
 	}
 
 	@Override
@@ -176,6 +186,55 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 		return new BeamExtractorContainer(i, playerInventory, new PacketBuffer(Unpooled.buffer()).writeBlockPos(pos));
 	}
 
+	@Override
+	protected void doEmit(BeamUnit toEmit){
+		Direction dir = getFacing();
+		BeamUnit mag = BeamUnit.EMPTY;
+
+		//If we have a multi-cycle fuel being used, continue to emit that rather than consuming more fuel
+		if(!output.isEmpty() && timeRemaining > 0){
+			mag = output;
+			if(--timeRemaining == 0){
+				output = BeamUnit.EMPTY;
+			}
+			markDirty();
+		}else if(!inv.isEmpty() && !world.isBlockPowered(pos)){//Consume fuel; Can be disabled with a redstone signal
+			Optional<BeamExtractRec> recOpt = world.getRecipeManager().getRecipe(CRRecipes.BEAM_EXTRACT_TYPE, this, world);
+			if(recOpt.isPresent()){
+				BeamExtractRec rec = recOpt.get();
+				mag = rec.getOutput();
+				inv.shrink(1);
+				if(rec.getDuration() > 1){
+					//This is a multi-cycle fuel. Store this
+					timeRemaining = rec.getDuration() - 1;
+					output = rec.getOutput();
+				}
+				markDirty();
+			}else if(inv.getItem() == CRItems.beamCage){
+				//Beam cages are emitted in their entirety in one pulse
+				//The empty cage remains in the extractor
+				mag = BeamCage.getStored(inv);
+				BeamCage.storeBeam(inv, BeamUnit.EMPTY);
+				markDirty();
+			}
+		}
+		if(beamer[dir.getIndex()].emit(mag, world)){
+			refreshBeam(dir.getIndex());
+		}
+	}
+
+	@Override
+	protected boolean[] inputSides(){
+		return new boolean[6];//All false
+	}
+
+	@Override
+	protected boolean[] outputSides(){
+		boolean[] out = new boolean[6];
+		out[getFacing().getIndex()] = true;
+		return out;
+	}
+
 	private class ItemHandler implements IItemHandler{
 
 		@Override
@@ -213,7 +272,8 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate){
-			if(slot == 0){
+			//We can only extract empty beam cages via automation
+			if(slot == 0 && inv.getItem() == CRItems.beamCage && BeamCage.getStored(inv).isEmpty()){
 				int moved = Math.min(amount, inv.getCount());
 				if(simulate){
 					ItemStack out = inv.copy();
@@ -235,37 +295,5 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 		public boolean isItemValid(int slot, @Nonnull ItemStack stack){
 			return isItemValidForSlot(slot, stack);
 		}
-	}
-
-	@Override
-	protected void doEmit(BeamUnit toEmit){
-		Direction dir = getFacing();
-		BeamUnit mag = BeamUnit.EMPTY;
-		//Can be disabled with a redstone signal
-		if(!inv.isEmpty() && !world.isBlockPowered(pos)){
-			Optional<BeamExtractRec> recOpt = world.getRecipeManager().getRecipe(CRRecipes.BEAM_EXTRACT_TYPE, this, world);
-			if(recOpt.isPresent()){
-				mag = recOpt.get().getOutput();
-				inv.shrink(1);
-			}else if(inv.getItem() == CRItems.beamCage){
-				mag = BeamCage.getStored(inv);
-				BeamCage.storeBeam(inv, BeamUnit.EMPTY);
-			}
-		}
-		if(beamer[dir.getIndex()].emit(mag, world)){
-			refreshBeam(dir.getIndex());
-		}
-	}
-
-	@Override
-	protected boolean[] inputSides(){
-		return new boolean[6];//All false
-	}
-
-	@Override
-	protected boolean[] outputSides(){
-		boolean[] out = new boolean[6];
-		out[getFacing().getIndex()] = true;
-		return out;
 	}
 }

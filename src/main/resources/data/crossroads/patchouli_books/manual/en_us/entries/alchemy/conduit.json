@@ -11,7 +11,15 @@
 			"type": "spotlight",
 			"title": "Reagent Conduits",
 			"item": "crossroads:alch_tube",
-			"text": "TODO"
+			"text": "<item>Alchemy Conduits/$ are the automated way of moving <thing>$(l:intro/alchemy)reagents/$. They will move <thing>$(l:intro/alchemy)reagents/$ like <item>$(l:fluid/pipe)pipes/$, and can have connections adjusted with a <item>$(l:essentials/wrench)wrench/$.$(br2)<thing>$(l:intro/alchemy)Solid and liquid reagents/$ <em>will not flow up/$, while <thing>$(l:intro/alchemy)gas and flame reagents/$ will not flow down. This is useful for separating "
+		},
+		{
+			"type": "text",
+			"text": "<thing>$(l:intro/alchemy)reagents/$ by <thing>$(l:intro/alchemy)phase/$, or by type by taking advantage of different <thing><thing>$(l:intro/alchemy)boiling/melting temperatures/$. <thing>$(l:intro/alchemy)Reagents/$ can be forced to flow up/down using a <item>$(l:alchemy/pump)reagent pump/$.$(br2)There are both crystal and glass versions of <item>alchemy conduits/$, and they will not connect. Some <thing>$(l:intro/alchemy)reagents/$ can not be safely contained in glass."
+		},
+		{
+			"type": "text",
+			"text": "<item>Redstone Alchemy Conduits/$ are like normal <item>alchemy conduits/$, except they will only connect to their neighbors while they have a redstone signal."
 		}
 	]
 }

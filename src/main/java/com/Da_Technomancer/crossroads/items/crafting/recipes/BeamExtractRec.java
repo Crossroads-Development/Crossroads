@@ -25,18 +25,25 @@ public class BeamExtractRec implements IOptionalRecipe<IInventory>{
 	private final String group;
 	private final Ingredient ingr;
 	private final BeamUnit output;
-	private final boolean active;
 
-	public BeamExtractRec(ResourceLocation location, String name, Ingredient input, BeamUnit output, boolean active){
+	private final int duration;
+
+	private final boolean active;
+	public BeamExtractRec(ResourceLocation location, String name, Ingredient input, BeamUnit output, int duration, boolean active){
 		id = location;
 		group = name;
 		ingr = input;
 		this.output = output;
+		this.duration = duration;
 		this.active = active;
 	}
 
 	public BeamUnit getOutput(){
 		return output;
+	}
+
+	public int getDuration(){
+		return duration;
 	}
 
 	@Override
@@ -125,9 +132,12 @@ public class BeamExtractRec implements IOptionalRecipe<IInventory>{
 				if(JSONUtils.hasField(json, "void")){
 					units[3] = JSONUtils.getInt(json, "void");
 				}
-				return new BeamExtractRec(recipeId, s, ingredient, new BeamUnit(units), true);
+
+				//Optional duration tag, for number of cycles an output lasts
+				int dur = JSONUtils.getInt(json, "duration", 1);
+				return new BeamExtractRec(recipeId, s, ingredient, new BeamUnit(units), dur, true);
 			}
-			return new BeamExtractRec(recipeId, s, ingredient, BeamUnit.EMPTY, false);
+			return new BeamExtractRec(recipeId, s, ingredient, BeamUnit.EMPTY, 0, false);
 		}
 
 		@Nullable
@@ -138,13 +148,15 @@ public class BeamExtractRec implements IOptionalRecipe<IInventory>{
 
 			if(active){
 				Ingredient ingredient = Ingredient.read(buffer);
+				int duration = buffer.readVarInt();
+
 				int[] units = new int[4];
 				for(int i = 0; i < 4; i++){
-					units[i] = buffer.readInt();
+					units[i] = buffer.readVarInt();
 				}
-				return new BeamExtractRec(recipeId, s, ingredient, new BeamUnit(units), true);
+				return new BeamExtractRec(recipeId, s, ingredient, new BeamUnit(units), duration, true);
 			}else{
-				return new BeamExtractRec(recipeId, s, Ingredient.EMPTY, BeamUnit.EMPTY, false);
+				return new BeamExtractRec(recipeId, s, Ingredient.EMPTY, BeamUnit.EMPTY, 0, false);
 			}
 		}
 
@@ -153,10 +165,11 @@ public class BeamExtractRec implements IOptionalRecipe<IInventory>{
 			buffer.writeString(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
 			recipe.ingr.write(buffer);
-			buffer.writeInt(recipe.output.getEnergy());
-			buffer.writeInt(recipe.output.getPotential());
-			buffer.writeInt(recipe.output.getStability());
-			buffer.writeInt(recipe.output.getVoid());
+			buffer.writeVarInt(recipe.duration);
+			buffer.writeVarInt(recipe.output.getEnergy());
+			buffer.writeVarInt(recipe.output.getPotential());
+			buffer.writeVarInt(recipe.output.getStability());
+			buffer.writeVarInt(recipe.output.getVoid());
 		}
 	}
 }

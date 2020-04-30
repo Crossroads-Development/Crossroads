@@ -6,7 +6,6 @@ import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.alchemy.GlasswareHolder;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
@@ -104,7 +103,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	public void destroyChamber(float strength){
+	protected void destroyCarrier(float strength){
 		BlockState state = getBlockState();
 		world.setBlockState(pos, state.with(CRProperties.CRYSTAL, false).with(CRProperties.CONTAINER_TYPE, AbstractGlassware.GlasswareTypes.NONE));
 		world.playSound(null, pos, SoundType.GLASS.getBreakSound(), SoundCategory.BLOCKS, SoundType.GLASS.getVolume(), SoundType.GLASS.getPitch());

@@ -1,0 +1,17 @@
+{
+	"category": "alchemy",
+	"name": "Limiter Conduit",
+	"icon": "crossroads:flow_limiter",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/alchemy",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Limiter Conduit",
+			"item": "crossroads:flow_limiter",
+			"text": "TODO"
+		}
+	]
+}

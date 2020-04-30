@@ -26,7 +26,7 @@ import java.util.function.Predicate;
 
 public class DampingPowder extends Item{
 
-	private static final int RANGE = 16;
+	private static final int RANGE = 32;
 	private static final Predicate<Entity> FLAME_PREDICATE = entity -> entity instanceof EntityFlameCore;
 
 	private static final IDispenseItemBehavior DAMPING_DISPENSER_BEHAVIOR = new DefaultDispenseItemBehavior(){

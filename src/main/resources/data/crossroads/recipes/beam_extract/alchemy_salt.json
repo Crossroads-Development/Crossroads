@@ -3,5 +3,6 @@
 	"input": {
 		"tag": "crossroads:dusts/alchemy_salt"
 	},
-	"stability": 32
+	"stability": 16,
+	"duration": 2
 }

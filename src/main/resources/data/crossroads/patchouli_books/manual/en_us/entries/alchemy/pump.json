@@ -1,0 +1,17 @@
+{
+	"category": "alchemy",
+	"name": "Reagent Pump",
+	"icon": "crossroads:reagent_pump",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/alchemy",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Reagent Pump",
+			"item": "crossroads:reagent_pump",
+			"text": "TODO"
+		}
+	]
+}

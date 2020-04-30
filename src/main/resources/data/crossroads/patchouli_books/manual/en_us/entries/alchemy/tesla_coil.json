@@ -1,0 +1,17 @@
+{
+	"category": "alchemy",
+	"name": "Upgraded Tesla Coils",
+	"icon": "crossroads:tesla_coil_top_efficiency",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/alchemy",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Upgraded Tesla Coils",
+			"item": "crossroads:tesla_coil_top_efficiency",
+			"text": "TODO"
+		}
+	]
+}

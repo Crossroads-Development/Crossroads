@@ -3,5 +3,6 @@
 	"input": {
 		"tag": "forge:dusts/sulfur"
 	},
-	"energy": 32
+	"energy": 16,
+	"duration": 2
 }

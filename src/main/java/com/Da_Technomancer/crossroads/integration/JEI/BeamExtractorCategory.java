@@ -87,8 +87,15 @@ public class BeamExtractorCategory implements IRecipeCategory<BeamExtractRec>{
 			tt.add(MiscUtil.localize("crossroads.jei.extract.void", rec.getOutput().getVoid()));
 		}
 
+		tt.add("");//Newline
+		//Different localization based on singular or plural for english grammar
+		if(rec.getDuration() == 1){
+			tt.add(MiscUtil.localize("crossroads.jei.extract.duration.single", rec.getDuration()));//Duration
+		}else{
+			tt.add(MiscUtil.localize("crossroads.jei.extract.duration.plural", rec.getDuration()));//Duration
+		}
 		for(int i = 0; i < tt.size(); i++){
-			minecraft.fontRenderer.drawString(tt.get(i), 80, 25 + 20 * i, 0x404040);
+			minecraft.fontRenderer.drawString(tt.get(i), 80, 5 + 20 * i, 0x404040);
 		}
 	}
 

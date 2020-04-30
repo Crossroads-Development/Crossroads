@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<thing>/$, and <thing>stability/$. No items produce <thing>$(l:beam/void)void/$."
+			"text": "<thing>/$, and <thing>stability/$. No items produce <thing>$(l:beam/void)void/$.$(br2)Most fuels last for 1 cycle. Some will last for multiple cycles, and will be shown in JEI as lasting X cycles. They will continue to output constant power for X cycles for each item consumed.$(br2)The <item>resonance extractor/$ can be disabled with a redstone signal."
 		}
 	]
 }

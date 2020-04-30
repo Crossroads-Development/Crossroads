@@ -7,6 +7,10 @@ import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.Arrays;
 
+/**
+ * An immutable class that represents one beam pulse lasting one cycle. It stores the energy, potential, stability, and void values and has several helper methods
+ * For a mutable version, see BeamUnitStorage
+ */
 public class BeamUnit{
 
 	public static final BeamUnit EMPTY = new BeamUnit(0, 0, 0, 0);

@@ -1,0 +1,17 @@
+{
+	"category": "alchemy",
+	"name": "Density Plate",
+	"icon": "crossroads:densus_plate",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/alchemy",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Density Plate",
+			"item": "crossroads:densus_plate",
+			"text": "TODO"
+		}
+	]
+}

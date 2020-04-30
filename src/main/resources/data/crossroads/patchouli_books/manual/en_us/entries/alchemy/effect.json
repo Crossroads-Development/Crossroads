@@ -35,7 +35,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<em>unless there is any <item>alchemical salt/$<em> in the mix/$. That means any <thing>effect/$ can be spread out over a massive area using 16 of a <thing>flame reagent/$, 1 unit of <item>alchemical salt/$ to prevent destroying blocks, and the <thing>reagents/$ you want applied."
+			"text": "<em>unless there is any <item>alchemical salt/$<em> in the mix/$. That means any <thing>effect/$ can be spread out over a massive area using 16 of a <thing>flame reagent/$, 1 unit of <item>alchemical salt/$ to prevent destroying blocks, and the <thing>reagents/$ you want applied. As flame clouds are extremely destructive, it is recommended to keep some <item>$(l:alchemy/damping)damping powder/$ on hand for accidents."
 		},
 		{
 			"type": "text",
