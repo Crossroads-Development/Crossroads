@@ -25,3 +25,4 @@ If applicable, add screenshots to help explain your problem.
 
 **Additional context [Optional]**
 Add any other context about the problem here.
+If you have a crash report or log, a link to it would go here.
