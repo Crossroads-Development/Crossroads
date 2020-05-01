@@ -6,8 +6,12 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.ColumnPos;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.server.ServerChunkProvider;
+import net.minecraft.world.server.TicketType;
 import net.minecraftforge.common.DimensionManager;
 
 import javax.annotation.Nullable;
@@ -94,7 +98,8 @@ public class GatewayAddress{
 	}
 
 	public static EnumBeamAlignments getLegalEntry(int index){
-		return LEGAL_VALS[index % LEGAL_VALS.length];
+		//((a % b) + b) % b is used instead of a % b in order to handle negative indices
+		return LEGAL_VALS[((index % LEGAL_VALS.length) + LEGAL_VALS.length) % LEGAL_VALS.length];
 	}
 
 	public static class Location{
@@ -131,6 +136,9 @@ public class GatewayAddress{
 			if(w == null){
 				return null;
 			}
+			//Load the chunk
+			ChunkPos chunkPos = new ChunkPos(pos);
+			((ServerChunkProvider) (w.getChunkProvider())).func_217228_a(TicketType.PORTAL, chunkPos, 3, new ColumnPos(pos));
 			TileEntity te = w.getTileEntity(pos);
 			if(te instanceof GatewayFrameTileEntity){
 				return (GatewayFrameTileEntity) te;

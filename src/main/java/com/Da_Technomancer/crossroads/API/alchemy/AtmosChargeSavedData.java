@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.DimensionSavedDataManager;
 import net.minecraft.world.storage.WorldSavedData;
@@ -32,7 +33,14 @@ public class AtmosChargeSavedData extends WorldSavedData{
 	}
 
 	private static AtmosChargeSavedData get(ServerWorld world){
-		DimensionSavedDataManager storage = world.getSavedData();
+		//We want all dimensions to share the same saved data,
+		//So we always reference the overworld instance
+		DimensionSavedDataManager storage;
+		if(world.dimension.getType() == DimensionType.OVERWORLD){
+			storage = world.getSavedData();
+		}else{
+			storage = world.getServer().func_71218_a(DimensionType.OVERWORLD).getSavedData();
+		}
 		AtmosChargeSavedData data;
 		try{
 			data = storage.getOrCreate(AtmosChargeSavedData::new, ID);

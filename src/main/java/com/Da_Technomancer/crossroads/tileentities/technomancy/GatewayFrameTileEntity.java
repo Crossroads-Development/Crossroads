@@ -32,14 +32,12 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.*;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.server.TicketType;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -81,21 +79,58 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	private int size = 0;//Diameter of the multiblock, from top center to bottom center
 	private Direction.Axis plane = null;//Legal values are null (unformed), x (for structure in x-y plane), and z (for structure in y-z plane). This should never by y
 
-	private static void teleportEntity(Entity e, World target, double posX, double posY, double posZ){
+	private static void teleportEntity(Entity e, ServerWorld target, double posX, double posY, double posZ, float yawRotation){
 		//Moves an entity to any position in any dimension
-		if(e.world.dimension.getType() == target.dimension.getType()){
-			//Same dimension TP
-			e.setPosition(posX, posY, posZ);
-		}else{
-			//Different dimension TP
-			//TODO This is not practical to implement in MC1.14, but is in MC1.15;
-			//see https://github.com/MinecraftForge/MinecraftForge/pull/6404
-			//Log an info and put a warning in chat
-			Crossroads.logger.info("Cross-dimensional teleportation not implemented for the Gateway in MC1.14, due to forge issues. See forge pull request #6404 for more information");
-			if(e instanceof PlayerEntity){
-				e.sendMessage(new StringTextComponent("Cross-dimensional teleportation NYI! Sorry. Same dimensional portals work"));//I know I should be using localization- but this is temporary due to forge
+
+		if(e instanceof ServerPlayerEntity){
+			//Based on TeleportCommand
+
+			//Load endpoint chunk
+			target.getChunkProvider().func_217228_a(TicketType.POST_TELEPORT, new ChunkPos(new BlockPos(posX, posY, posZ)), 1, e.getEntityId());
+
+			e.stopRiding();
+			ServerPlayerEntity play = (ServerPlayerEntity) e;
+			if(play.isSleeping()){
+				play.wakeUpPlayer(true, true, false);
 			}
+
+			float prevHeadYaw = play.getRotationYawHead();
+			Vec3d prevVelocity = play.getMotion();
+			if(target == e.world){
+				play.connection.setPlayerLocation(posX, posY, posZ, play.getYaw(1) + yawRotation, play.getPitch(1));
+			}else{
+				play.func_200619_a(target, posX, posY, posZ, play.getYaw(1) + yawRotation, play.getPitch(1));
+			}
+			play.setRotationYawHead(prevHeadYaw + yawRotation);
+			play.setMotion(prevVelocity.rotateYaw(yawRotation));
+		}else{
+			Vec3d prevVelocity = e.getMotion();
+			if(target == e.world){
+				float prevHeadYaw = e.getRotationYawHead();
+				e.setLocationAndAngles(posX, posY, posZ, e.getYaw(1) + yawRotation, e.getPitch(1));
+				e.setRotationYawHead(prevHeadYaw + yawRotation);
+			}else{
+				//We clone the entity, and delete the original
+				e.detach();
+				e.dimension = target.dimension.getType();
+				Entity entity = e;
+				e = e.getType().create(target);
+				if(e == null){
+					return;
+				}
+
+				e.copyDataFromOld(entity);
+				e.setLocationAndAngles(posX, posY, posZ, entity.getYaw(1) + yawRotation, entity.getPitch(1));
+				e.setRotationYawHead(entity.getRotationYawHead() + yawRotation);
+				target.func_217460_e(e);
+				entity.remove();//Remove the copy in the source dimension
+			}
+			e.setMotion(prevVelocity.rotateYaw(yawRotation));
 		}
+		//We use the timeUntilPortal field in Entity to add a cooldown between travelling
+		//That isn't really what it's for, but meh
+		//Measured in ticks
+		e.timeUntilPortal = 60;
 	}
 
 	public GatewayFrameTileEntity(){
@@ -121,18 +156,30 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			chat.add(new TranslationTextComponent("tt.crossroads.gateway.chevron.address", names[0], names[1], names[2], names[3]));
 
 			//Chevrons
+			boolean addedPotential = false;//Whether we have added the name of the potentially next alignment to dial
 			for(int i = 0; i < 4; i++){
 				if(chevrons[i] == null){
-					names[i] = MiscUtil.localize("tt.crossroads.gateway.chevron.none");
+					if(addedPotential){
+						names[i] = MiscUtil.localize("tt.crossroads.gateway.chevron.none");
+					}else{
+						addedPotential = true;
+						names[i] = String.format("[%s]", GatewayAddress.getLegalEntry(Math.round(angle * 8F / 2F / (float) Math.PI)).getLocalName(false));
+					}
 				}else{
 					names[i] = chevrons[i].getLocalName(false);
 				}
 			}
 			chat.add(new TranslationTextComponent("tt.crossroads.gateway.chevron.dialed", names[0], names[1], names[2], names[3]));
-
+			genOptionals();
 			RotaryUtil.addRotaryInfo(chat, rotary, INERTIA, axleOpt.orElseGet(AxleHandler::new).getRotationRatio(), true);
-			FluxUtil.addFluxInfo(chat, this, chevrons[3] != null ? FLUX_PER_CYCLE : 0);
+			FluxUtil.addFluxInfo(chat, this, chevrons[3] != null && origin ? FLUX_PER_CYCLE : 0);
 			FluxUtil.addLinkInfo(chat, this);
+		}else if(key != null){
+			//Non-top frames call the top for addInfo
+			TileEntity te = world.getTileEntity(pos.add(key));
+			if(te instanceof GatewayFrameTileEntity){
+				((GatewayFrameTileEntity) te).addInfo(chat, player, hit);
+			}
 		}
 	}
 
@@ -185,10 +232,11 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 				}
 			}
 			//Successful linking after confirming the partner exists
+			//Set the chevrons again
 			for(int i = 0; i < 4; i++){
 				chevrons[i] = toLinkTo.getEntry(i);
 			}
-			origin = false;
+			origin = source;
 			playEffects(true);
 			return true;
 		}else{
@@ -223,9 +271,10 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 
 			BlockPos.MutableBlockPos mutPos = new BlockPos.MutableBlockPos(pos);
 			Direction horiz = plane == Direction.Axis.X ? Direction.EAST : Direction.SOUTH;//horizontal direction
-			mutPos.move(horiz, -size / 2);
-			for(int i = 0; i < size; i++){
-				for(int j = 0; j < size; j++){
+			int preSize = size;//We have to store this, as the field will be modified in the loop
+			mutPos.move(horiz, -preSize / 2);
+			for(int i = 0; i < preSize; i++){
+				for(int j = 0; j < preSize; j++){
 					//Iterate over a size-by-size square (technically excessive as the multiblock is hollow) and disable each individually (including this)
 					BlockState otherState = world.getBlockState(mutPos);
 					if(otherState.getBlock() == CRBlocks.gatewayFrame){
@@ -244,8 +293,11 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 						otherTE.markDirty();
 						otherTE.updateContainingBlockInfo();
 					}
-					mutPos.move(horiz, 1).move(Direction.DOWN, 1);
+					mutPos.move(horiz, 1);
 				}
+				mutPos.move(horiz, -preSize);
+				mutPos.move(Direction.DOWN, 1);
+
 			}
 		}else if(key != null){
 			//The rest of the multiblock asks the head to dismantle
@@ -297,6 +349,8 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			return false;//There wasn't even enough of the structure to determine what orientation it's supposed to have
 		}
 
+		size = newSize;
+
 		//First pass over the area is to confirm this is a legal structure
 		Direction horiz = Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis);
 		mutPos.setPos(pos).move(horiz, -size / 2);
@@ -316,6 +370,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 
 				mutPos.move(horiz, 1);
 			}
+			mutPos.move(horiz, -size);
 			mutPos.move(Direction.DOWN, 1);
 		}
 
@@ -351,6 +406,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 
 				mutPos.move(horiz, 1);
 			}
+			mutPos.move(horiz, -size);
 			mutPos.move(Direction.DOWN, 1);
 		}
 
@@ -389,14 +445,19 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 				if(chevrons[3] != null && plane != null){
 					Direction horiz = Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, plane);
 					AxisAlignedBB area = new AxisAlignedBB(pos.down(size).offset(horiz, -size / 2), pos.offset(horiz, size / 2 + 1));
-					List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, area, EntityPredicates.IS_ALIVE);
+					//We use the timeUntilPortal field in Entity to not spam TP entities between two portals
+					List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, area, EntityPredicates.IS_ALIVE.and(e -> e.timeUntilPortal <= 0));
 					if(!entities.isEmpty()){
 						GatewayAddress.Location loc = GatewaySavedData.lookupAddress((ServerWorld) world, new GatewayAddress(chevrons));
 						if(loc != null){
 							GatewayFrameTileEntity otherTE = loc.evalTE(world.getServer());
-							BlockPos endPos = loc.pos.down(2);
+							BlockPos endPos = loc.pos;
+							//When teleporting, go the the same position relative to the input portal scaled by the ratio of the endpoint and source portal scales.
+							float distMult = 1;
+							float rotate = 0;
 							if(otherTE != null && otherTE.plane != null){
-								endPos = endPos.offset(Direction.getFacingFromAxisDirection(otherTE.plane, Direction.AxisDirection.NEGATIVE).rotateY());
+								rotate = otherTE.plane == plane ? 0 : 90;
+								distMult = otherTE.size / (float) this.size;
 							}
 							World targetWorld = loc.evalDim(world.getServer());
 							if(targetWorld == null){
@@ -404,9 +465,9 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 							}
 							for(Entity e : entities){
 								playTPEffect(world, e.posX, e.posY, e.posZ);//Play effects at the start position
-								teleportEntity(e, targetWorld, endPos.getX() + 0.5D, endPos.getY(), endPos.getZ() + 0.5D);
+								teleportEntity(e, (ServerWorld) targetWorld, (e.posX - pos.getX()) * distMult + endPos.getX(), (e.posY - pos.getY()) * distMult + endPos.getY(), (e.posZ - pos.getZ()) * distMult + endPos.getZ(), rotate);
+								playTPEffect(targetWorld, e.posX, e.posY, e.posZ);//Play effects at the end position
 							}
-							playTPEffect(targetWorld, endPos.getX() + 0.5D, endPos.getY(), endPos.getZ() + 0.5D);
 						}
 					}
 				}
@@ -671,6 +732,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			if(chevrons[3] != null){
 				//We're dialed into something. Reset
 				undial();
+				return;
 			}
 
 			int index = 0;//Find the first undialed chevron
@@ -692,8 +754,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			chevrons[index] = alignment;//Dial in a new chevron
 			if(index == 3){
 				//If this is the final chevron, make the connection
-				boolean success = dial(new GatewayAddress(chevrons), true);
-				playEffects(success);
+				dial(new GatewayAddress(chevrons), true);
 			}
 			CRPackets.sendPacketAround(world, pos, new SendLongToClient(3, new GatewayAddress(chevrons).serialize(), pos));
 			markDirty();

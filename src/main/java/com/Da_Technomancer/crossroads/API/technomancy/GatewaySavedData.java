@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.DimensionSavedDataManager;
 import net.minecraft.world.storage.WorldSavedData;
@@ -12,8 +13,27 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class GatewaySavedData extends WorldSavedData{
+
+	/**
+	 * Determines a reserved address based on world seed that may not be assigned to new gateways
+	 * This address is being reserved for a feature to be added in the future TODO
+	 * @param w The world, to get the seed from
+	 * @return An address that can not be assigned to gateways
+	 */
+	public static GatewayAddress getReservedAddress(@Nonnull ServerWorld w){
+		EnumBeamAlignments[] address = new EnumBeamAlignments[4];
+		address[0] = EnumBeamAlignments.RIFT;//Fix the first alignment as rift
+		long seed = w.getSeed();
+		Random rand = new Random(seed);
+		//The other 3 alignments are chosen randomly based on seed
+		for(int i = 1; i < address.length; i++){
+			address[i] = GatewayAddress.getLegalEntry(rand.nextInt(Integer.MAX_VALUE));
+		}
+		return new GatewayAddress(address);
+	}
 
 	/**
 	 * Generates a unique new address and registers it
@@ -38,7 +58,7 @@ public class GatewaySavedData extends WorldSavedData{
 				address[i] = GatewayAddress.getLegalEntry(w.rand.nextInt(GatewayAddress.LEGAL_VALS.length));
 			}
 			gateAdd = new GatewayAddress(address);
-		}while(data.addressBook.containsKey(gateAdd));//Generate a new address every time the generated address is already in use
+		}while(data.addressBook.containsKey(gateAdd) || gateAdd.equals(getReservedAddress(w)));//Generate a new address every time the generated address is already in use
 
 		//Register this new address in the addressBook
 		data.addressBook.put(gateAdd, new GatewayAddress.Location(pos, w));
@@ -73,7 +93,14 @@ public class GatewaySavedData extends WorldSavedData{
 	}
 
 	private static GatewaySavedData get(ServerWorld world){
-		DimensionSavedDataManager storage = world.getSavedData();//This should be the universal (cross-dimension) storage
+		//We want all dimensions to share the same saved data,
+		//So we always reference the overworld instance
+		DimensionSavedDataManager storage;
+		if(world.dimension.getType() == DimensionType.OVERWORLD){
+			storage = world.getSavedData();
+		}else{
+			storage = world.getServer().func_71218_a(DimensionType.OVERWORLD).getSavedData();
+		}
 		GatewaySavedData data;
 		try{
 			data = storage.getOrCreate(GatewaySavedData::new, ID);

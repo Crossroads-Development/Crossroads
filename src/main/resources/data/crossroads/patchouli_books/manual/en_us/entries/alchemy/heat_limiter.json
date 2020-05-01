@@ -27,7 +27,7 @@
 		},
 		{
 			"type": "text",
-			"text": "There are two variants of the <item>temperature regulator/$: The <item>Temperature Regulator/$ has the target <thing>$(l:intro/heat)temperature/$ set via a UI, while the <item>Redstone Temperature Regulator/$ has the target <thing>$(l:intro/heat)temperature/$ set to the current <thing>$(l:essentials/circuit)circuit/$ input."
+			"text": "There are two variants of the <item>temperature regulator/$: The <item>Temperature Regulator/$ has the target <thing>$(l:intro/heat)temperature/$ in Kelvin (Kelvin = 273 + Celcius) set via a UI, while the <item>Redstone Temperature Regulator/$ has the target <thing>$(l:intro/heat)temperature/$ in Kelvin (Kelvin = 273 + Celcius) set to the current <thing>$(l:essentials/circuit)circuit/$ input."
 		},
 		{
 			"type": "text",

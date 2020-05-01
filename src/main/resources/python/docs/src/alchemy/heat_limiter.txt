@@ -7,7 +7,7 @@ The <item>temperature regulator/$ has two modes: Red mode and blue mode, which c
 In red mode, heat will be moved from the input to the output up to the target <thing><link:intro/heat>temperature/$, but no hotter. It can not heat the front higher than the back. In effect, it heats the output up to a set <thing><link:intro/heat>temperature/$. 
 In blue mode, heat will be moved from the output to the input down to the target <thing><link:intro/heat>temperature/$, but no colder. It can not cool the front lower than the back. In effect, it cools the output down to a set <thing><link:intro/heat>temperature/$.
 
-There are two variants of the <item>temperature regulator/$: The <item>Temperature Regulator/$ has the target <thing><link:intro/heat>temperature/$ set via a UI, while the <item>Redstone Temperature Regulator/$ has the target <thing><link:intro/heat>temperature/$ set to the current <thing><link:essentials/circuit>circuit/$ input.
+There are two variants of the <item>temperature regulator/$: The <item>Temperature Regulator/$ has the target <thing><link:intro/heat>temperature/$ in Kelvin (Kelvin = 273 + Celcius) set via a UI, while the <item>Redstone Temperature Regulator/$ has the target <thing><link:intro/heat>temperature/$ in Kelvin (Kelvin = 273 + Celcius) set to the current <thing><link:essentials/circuit>circuit/$ input.
 
 <bobo><link:intro/welcome#bobo>eye IZ bOqr!!/$<bobo> me hAs !!!!iMPOrtANT tINg~~~! mUcH heAT! mUCH c01D! dEFY hot/cold-o-dyanmics! 4 FREEE!!!
 reD METAL baAR!
