@@ -20,6 +20,14 @@
 		{
 			"type": "text",
 			"text": "<em>a <item>$(l:alchemy/conduit)alchemy conduit/$."
+		},
+		{
+			"type": "text",
+			"text": "<bobo>Hi, $(l:intro/welcome#bobo)Bobo/$<bobo> here with the alltim8 FEUL!!!!!$(br2)bURN bURM 4 pWR bRUN!$(br2)sUl4iC aCYD!$(br2)bOTTEL!$(br2)da OFFERING aGAIN! bUT FRESH!$(br2)du N0t DRINK! mUCH dISSOLVE "
+		},
+		{
+			"type": "text",
+			"text": "<bobo>lIVER! b0B0 AWAY/$"
 		}
 	]
 }

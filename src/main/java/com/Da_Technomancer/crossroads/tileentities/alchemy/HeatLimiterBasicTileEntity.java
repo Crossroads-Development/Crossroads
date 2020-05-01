@@ -75,6 +75,7 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 		boolean blueMode = world.getBlockState(pos).get(CRProperties.ACTIVE);
 
 		if(blueMode){
+			//Trick to re-use the same logic; reverted at the end
 			heatIn = -heatIn;
 			heatOut = -heatOut;
 			goalTemp = -goalTemp;
@@ -111,6 +112,7 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 		}
 
 		if(blueMode){
+			//Trick to re-use the same logic. Started above
 			heatIn = -heatIn;
 			heatOut = -heatOut;
 		}

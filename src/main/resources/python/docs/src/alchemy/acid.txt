@@ -5,3 +5,8 @@ The three normal acids have the same <thing><link:alchemy/effect>effect/$: They 
 
 <item>Aqua Regia/$ will do 12 damage to hit entities, and will break metal blocks (including gold). Much more importantly, any bedrock that <item>aqua regia/$ hits will be broken, dropping 1 <item>Bedrock Dust/$, an important reagent.
 As <thing>aqua regia/$ can be expensive and you will need a lot of <item>bedrock dust/$, it suggested to mix it with a cheap liquid (like water) to splash the <thing><link:alchemy/effect>effect/$ over a large area. See the <thing><link:alchemy/effect>effects/$ page for full details.
+
+<bobo><link:intro/welcome#bobo>iz BOBO!/$<bobo> KABANG! KABOOM! KABLOOEY! (bles U)
+I HAZ BANG BOTTEL! bUTtt b33 KaRE_UN_EMTPY!! eLES U g0->> bUUM!
+y3LLOW dUST! fRRRESH BAkCC0ON!! und bUTT:E for SHOP-AGGE!
+bOBO AWAY!/$

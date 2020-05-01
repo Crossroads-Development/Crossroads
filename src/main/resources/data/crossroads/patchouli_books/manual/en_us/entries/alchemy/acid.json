@@ -24,6 +24,10 @@
 		{
 			"type": "text",
 			"text": "to splash the <thing>$(l:alchemy/effect)effect/$ over a large area. See the <thing>$(l:alchemy/effect)effects/$ page for full details."
+		},
+		{
+			"type": "text",
+			"text": "<bobo>$(l:intro/welcome#bobo)iz BOBO!/$<bobo> KABANG! KABOOM! KABLOOEY! (bles U)$(br2)I HAZ BANG BOTTEL! bUTtt b33 KaRE_UN_EMTPY!! eLES U g0->> bUUM!$(br2)y3LLOW dUST! fRRRESH BAkCC0ON!! und bUTT:E for SHOP-AGGE!$(br2)bOBO AWAY!/$"
 		}
 	]
 }

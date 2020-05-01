@@ -12,6 +12,12 @@
 	"input_b": [
 		{
 			"item": "minecraft:glass_bottle"
+		},
+		{
+			"item": "crossroads:phial_glass"
+		},
+		{
+			"item": "crossroads:phial_cryst"
 		}
 	],
 	"input_c": [

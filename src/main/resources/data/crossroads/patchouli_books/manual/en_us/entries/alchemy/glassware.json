@@ -11,23 +11,23 @@
 			"type": "spotlight",
 			"title": "Glassware",
 			"item": "crossroads:florence_flask_glass",
-			"text": "When doing <thing>$(l:intro/alchemy)reactions/$ manually (either because it's early on or you're only doing small batches), <item>glassware/$ is the most convenient method.$(br2)There are three types of <item>glassware/$: <item>Phials/$, <item>Florence Flasks/$, and <item>Shells/$. They can be placed onto a <item>Glassware Stand/$, which "
+			"text": "When doing <thing>$(l:intro/alchemy)reactions/$ manually (either because it's early on or you're only doing small batches), <item>glassware/$ is the most convenient method. The automated version is <item>$(l:alchemy/vessel)reaction vessels/$.$(br2)There are three types of <item>glassware/$: <item>Phials/$, <item>Florence Flasks/$, and <item>Shells/$. They "
 		},
 		{
 			"type": "text",
-			"text": "you will want several of. Each type of <item>glassware/$ has a glass and crystal variant (the crystal variant is for containing higher tier <thing>$(l:intro/alchemy)reagents/$).$(br2)<item>Glassware/$ can be placed onto a <item>stand/$ by right clicking with the <item>glassware/$. It can be removed- with all contents staying in the <item>glassware/$- by shift-right clicking with an empty hand. <thing>$(l:intro/alchemy)Reagents/$ can "
+			"text": "can be placed onto a <item>Glassware Stand/$, which you will want several of. Each type of <item>glassware/$ has a glass and crystal variant (the crystal variant is for containing higher tier <thing>$(l:intro/alchemy)reagents/$).$(br2)<item>Glassware/$ can be placed onto a <item>stand/$ by right clicking with the <item>glassware/$. It can be removed- with all contents staying in the <item>glassware/$- by shift-right "
 		},
 		{
 			"type": "text",
-			"text": "be transferred between <item>glassware/$ on a <item>stand/$ and held <item>glassware/$ by right clicking with the <item>glassware/$. Items that are the solid for of a <thing>$(l:intro/alchemy)reagent/$ can be added to <item>glassware/$ on a <item>stand/$ by right clicking the <item>stand/$ with the item. The item forms of solid <thing>$(l:intro/alchemy)reagents/$ can be removed by right clicking with an empty hand. The liquid form of <thing>$(l:intro/alchemy)reagents/$ can be added by right clicking with a bucket "
+			"text": "clicking with an empty hand. <thing>$(l:intro/alchemy)Reagents/$ can be transferred between <item>glassware/$ on a <item>stand/$ and held <item>glassware/$ by right clicking with the <item>glassware/$. Items that are the solid for of a <thing>$(l:intro/alchemy)reagent/$ can be added to <item>glassware/$ on a <item>stand/$ by right clicking the <item>stand/$ with the item. The item forms of solid <thing>$(l:intro/alchemy)reagents/$ can be removed by right clicking with an empty hand. The liquid form of <thing>$(l:intro/alchemy)reagents/$ can "
 		},
 		{
 			"type": "text",
-			"text": "filled with the $(l:alchemy/fluid_injector)corresponding liquid/$ (ex. distilled water bucket -> <item>water reagent/$). Liquid <thing>$(l:intro/alchemy)reagent/$ can be removed with a bucket by right clicking with a bucket <em>if that reagent has a bucket form (most don't) and there is enough present).$(br2)<item>$(l:alchemy/conduit)Conduits/$ can connect to the top of the <item>stand/$ if there is <item>glassware/$ in it, allowing <item>$(l:alchemy/conduit)conduits/$ to interact "
+			"text": "be added by right clicking with a bucket filled with the $(l:alchemy/fluid_injector)corresponding liquid/$ (ex. distilled water bucket -> <item>water reagent/$). Liquid <thing>$(l:intro/alchemy)reagent/$ can be removed with a bucket by right clicking with a bucket <em>if that reagent has a bucket form (most don't) and there is enough present).$(br2)<item>$(l:alchemy/conduit)Conduits/$ can connect to the top of the <item>stand/$ if there is <item>glassware"
 		},
 		{
 			"type": "text",
-			"text": "with <item>glassware/$. If the <item>stand/$ has a redstone signal, it will force <thing>$(l:intro/alchemy)reagents/$ upwards out through any connected <item>$(l:alchemy/conduit)conduits/$- even if it is in a phase that normally wouldn't flow up (like liquid)."
+			"text": "<item>/$ in it, allowing <item>$(l:alchemy/conduit)conduits/$ to interact with <item>glassware/$. If the <item>stand/$ has a redstone signal, it will force <thing>$(l:intro/alchemy)reagents/$ upwards out through any connected <item>$(l:alchemy/conduit)conduits/$- even if it is in a phase that normally wouldn't flow up (like liquid)."
 		},
 		{
 			"type": "text",

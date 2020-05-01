@@ -11,7 +11,11 @@
 			"type": "spotlight",
 			"title": "Tesla Ray",
 			"item": "crossroads:tesla_ray",
-			"text": "TODO"
+			"text": "The <item>Tesla Ray/$ is an electrical AOE weapon. In order to fire, it requires a <item>$(l:fluid/tesla)leyden jar/$ in the offhand as a power source.$(br2)When fired, it will use 1000FE per shot, and will chain between <em>unlimited targets/$ within 5 blocks of each other for 7 electric damage."
+		},
+		{
+			"type": "text",
+			"text": "It has an attack cooldown like a melee weapon, and will do less damage and <em>won't chain attacks unless fully cooled-down/$."
 		}
 	]
 }

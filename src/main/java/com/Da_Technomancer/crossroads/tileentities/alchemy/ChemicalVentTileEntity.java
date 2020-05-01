@@ -25,12 +25,13 @@ public class ChemicalVentTileEntity extends TileEntity implements ITickableTileE
 	 * In order to make behaviour more consistent when venting large quantities or mixes (expecially phelostogen + anything else),
 	 * Instead of venting immediately, wait three cycles after receiving to see if more is input. If so, vent all inputs together. Otherwise, vent the input from first cycle
 	 *
-	 * Combines up to 4 cycles worth of input- equivalent to 4 full phials being dumped
+	 * Combines up to 10 cycles worth of input- equal to 1 second, or 5 full phials or one full florence flask being dumped
 	 */
 	//Timestamp from the last received input
 	private long lastInputTime = 0;
 	//Stored reagents to vent
 	private ReagentMap reags = new ReagentMap();
+	private static final int CYCLES = 10;//The number of cycles of input to combine
 
 	public ChemicalVentTileEntity(){
 		super(type);
@@ -38,7 +39,7 @@ public class ChemicalVentTileEntity extends TileEntity implements ITickableTileE
 
 	@Override
 	public void tick(){
-		if(!reags.isEmpty() && (world.getGameTime() - lastInputTime) >= 3 * AlchemyUtil.ALCHEMY_TIME){
+		if(!reags.isEmpty() && (world.getGameTime() - lastInputTime) >= (CYCLES - 1) * AlchemyUtil.ALCHEMY_TIME){
 			AlchemyUtil.releaseChemical(world, pos, reags);
 			reags = new ReagentMap();
 		}
@@ -122,7 +123,7 @@ public class ChemicalVentTileEntity extends TileEntity implements ITickableTileE
 					acted = true;
 				}
 			}
-			if(acted && (world.getGameTime() - lastInputTime) > 3 * AlchemyUtil.ALCHEMY_TIME){
+			if(acted && (world.getGameTime() - lastInputTime) > (CYCLES - 1) * AlchemyUtil.ALCHEMY_TIME){
 				lastInputTime = world.getGameTime();
 			}
 

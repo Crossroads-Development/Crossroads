@@ -1,3 +1,6 @@
 Reagent Pump
 crossroads:reagent_pump|crossroads:progress/path/alchemy
-TODO
+The <item>Reagent Pump/$ is the way to force <thing><link:intro/alchemy>reagents/$ to flow up/down in <item><link:alchemy/conduit>conduits/$. It does not require any power or fuel of any kind.
+As <thing><link:intro/alchemy>gasses and flame phase/$ will not flow down on their own, and <thing><link:intro/alchemy>solids and liquids/$ will not flow up on their own, pumps are needed to force them up or down.
+<thing><link:intro/alchemy>Reagents/$ get inserted into the sides by <item><link:alchemy/conduit>conduits/$, and will be pushed into the <item><link:alchemy/conduit>conduit/$/<item>reagent pump/$/other above/below them. For moving several blocks up/down, you will need a column of <item>reagent pumps/$.
+A <item><link:essentials/wrench>wrench/$ is used to adjust whether the <item>reagent pump/$ pushes up or down. There is both a glass and crystal version.

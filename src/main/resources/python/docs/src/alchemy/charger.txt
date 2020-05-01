@@ -2,3 +2,10 @@ Electrolyzer
 crossroads:charging_stand|crossroads:progress/path/alchemy
 The <item>Electrolyzer/$ is a way of allowing <thing><link:intro/alchemy>reactions/$ to occur in <item><link:alchemy/glassware>manual glassware/$ in a charged environment. It acts like a more expensive <item><link:alchemy/glassware>glassware stand/$ that accepts FE (Forge Energy) on all sides. It will drain 10FE/t, regardless of whether it is active, and any <item><link:alchemy/glassware>florence flask/$ placed inside will allow <thing><link:intro/alchemy>reactions/$ that need a charged environment (these <thing><link:intro/alchemy>reactions/$ are shown by a lightning bolt symbol in the JEI recipe page).
 It drains 10FE/t at all times, and has a capacity of 100FE. Like the <item><link:alchemy/glassware>glassware stand/$, <item><link:heat/cable>heat cables/$ can connect to the bottom if it contains a <item><link:alchemy/glassware>florence flask/$, but unlike the <item><link:alchemy/glassware>glassware stand/$, it will <em>never connect on the top to a <item><link:alchemy/conduit>alchemy conduit/$.
+
+<bobo>Hi, <link:intro/welcome#bobo>Bobo/$<bobo> here with the alltim8 FEUL!!!!!
+bURN bURM 4 pWR bRUN!
+sUl4iC aCYD!
+bOTTEL!
+da OFFERING aGAIN! bUT FRESH!
+du N0t DRINK! mUCH dISSOLVE lIVER! b0B0 AWAY/$

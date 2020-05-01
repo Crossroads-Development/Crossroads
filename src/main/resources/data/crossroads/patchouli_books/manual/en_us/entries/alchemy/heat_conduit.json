@@ -11,7 +11,15 @@
 			"type": "spotlight",
 			"title": "Thermal Conduit",
 			"item": "crossroads:heated_tube",
-			"text": "TODO"
+			"text": "The <item>Thermal Conduit/$ is a way of heating or cooling <thing>$(l:intro/alchemy)reagents/$ flowing through <item>$(l:alchemy/conduit)conduits/$. Another way to do this is by using a <item>$(l:alchemy/vessel)reaction vessel/$.$(br2)They input <thing>$(l:intro/alchemy)reagents/$ on one side, and output on the opposite side. They cannot face vertically, and have both a glass "
+		},
+		{
+			"type": "text",
+			"text": "and crystal variant. A <item>$(l:heat/cable)heat cable/$ can connect to the top/bottom.$(br2)Any <thing>$(l:intro/alchemy)reagents/$ flowing through the tube will have the temperature set to that of the attached <item>$(l:heat/cable)heat cable/$. This will change the temperature of the <item>$(l:heat/cable)heat cable/$ towards the temperature of the <thing>$(l:intro/alchemy)reagents/$, so it may be necessary to have multiple <item>thermal conduits/$ in series if there "
+		},
+		{
+			"type": "text",
+			"text": "is a high throughput."
 		}
 	]
 }
