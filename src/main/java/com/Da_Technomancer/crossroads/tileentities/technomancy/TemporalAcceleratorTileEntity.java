@@ -94,6 +94,12 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 	}
 
 	@Override
+	public AxisAlignedBB getRenderBoundingBox(){
+		//Increase render BB to include links
+		return new AxisAlignedBB(pos).grow(getRange());
+	}
+
+	@Override
 	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
 		if(identifier == LINK_PACKET_ID){
 			linkPos.add(BlockPos.fromLong(message));

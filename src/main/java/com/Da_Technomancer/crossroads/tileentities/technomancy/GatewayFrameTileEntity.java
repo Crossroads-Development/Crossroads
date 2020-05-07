@@ -38,6 +38,8 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.server.TicketType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -78,6 +80,41 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	private BlockPos key = null;//The relative position of the top center of the multiblock. Null if this is not formed
 	private int size = 0;//Diameter of the multiblock, from top center to bottom center
 	private Direction.Axis plane = null;//Legal values are null (unformed), x (for structure in x-y plane), and z (for structure in y-z plane). This should never by y
+
+	/**
+	 * Used for rendering
+	 * Do not modify the array
+	 * @return The currently dialed chevrons. May contain null
+	 */
+	@Nonnull
+	public EnumBeamAlignments[] getChevrons(){
+		return chevrons;
+	}
+
+	/**
+	 * Used for rendering
+	 * @return The size of the formed multiblock. Only valid on the client for the top-center block of the formed multiblock
+	 */
+	public int getSize(){
+		return size;
+	}
+
+	/**
+	 * Used for rendering
+	 * @return The plane of the formed multiblock. Only valid on the client for the top-center block of the formed multiblock
+	 */
+	@Nullable
+	public Direction.Axis getPlane(){
+		return plane;
+	}
+
+	/**
+	 * Used for rendering
+	 * @return The angle of the octagonal ring used for dialing
+	 */
+	public double getAngle(){
+		return clientAngle;
+	}
 
 	private static void teleportEntity(Entity e, ServerWorld target, double posX, double posY, double posZ, float yawRotation){
 		//Moves an entity to any position in any dimension
@@ -246,6 +283,12 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 		}
 	}
 
+	@Override
+	public AxisAlignedBB getRenderBoundingBox(){
+		//Increase render BB to include links and the entire formed frame
+		return new AxisAlignedBB(pos).grow(Math.max(getRange(), isActive() ? size : 0));
+	}
+
 	/**
 	 * Creates purely aesthetic sounds/particles
 	 * Virtual-server side only
@@ -315,6 +358,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	 * @return Whether this suceeded at forming the multiblock
 	 */
 	public boolean assemble(){
+		//TODO multi-thick frame
 		if(world.isRemote){
 			return false;//Server side only
 		}
@@ -325,19 +369,27 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 		//First step is to determine the size
 		int newSize = 0;
 		BlockPos.MutableBlockPos mutPos = new BlockPos.MutableBlockPos(pos);
-		//Maximum size is a 9x9, odd sized squares only
-		for(int i = 1; i < 9; i++){
+		//Maximum size is a 63x63, odd sized squares only
+		boolean foundAir = false;//Indicates we have passed the top section of the frame
+		int foundThickness = 1;
+		for(int i = 1; i < 63; i++){
 			mutPos.move(Direction.DOWN);
 			BlockState state = world.getBlockState(mutPos);
 			if(legalForGateway(state)){
-				newSize = i + 1;
-				break;
+				if(foundAir){
+					newSize = i + foundThickness;
+					break;
+				}else{
+					foundThickness++;
+				}
 			}else if(!state.isAir(world, mutPos)){
 				return false;//There is an obstruction
+			}else{
+				foundAir = true;
 			}
 		}
-		if(newSize % 2 == 0){
-			return false;//Even sizes are not allowed! Also catches newSize == 0
+		if(newSize < 5 || newSize % 2 == 0){
+			return false;//Even sizes are not allowed
 		}
 
 		Direction.Axis axis;
@@ -350,6 +402,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 		}
 
 		size = newSize;
+		int thickness = Math.max(1, size / 5);//required thickness of frame blocks
 
 		//First pass over the area is to confirm this is a legal structure
 		Direction horiz = Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis);
@@ -359,8 +412,8 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 				//Iterate over a size-by-size square and check each pos
 				BlockState otherState = world.getBlockState(mutPos);
 
-				if(i == 0 || i == size - 1 || j == 0 || j == size - 1){
-					//We are on the edges
+				if(i < thickness || size - i <= thickness || j < thickness || size - j <= thickness){
+					//We are on the edges, and expect a frame block
 					if(!legalForGateway(otherState)){
 						return false;
 					}
@@ -390,7 +443,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			for(int j = 0; j < size; j++){
 				//Iterate over a size-by-size square and modify each edge
 				BlockState otherState = world.getBlockState(mutPos);
-				if(i == 0 || i == size - 1 || j == 0 || j == size - 1){
+				if(i < thickness || size - i <= thickness || j < thickness || size - j <= thickness){
 					//We are on the edges
 					world.setBlockState(mutPos, otherState.with(CRProperties.ACTIVE, true).with(CRProperties.TOP, i == 0 && j == size / 2));
 					TileEntity te = world.getTileEntity(mutPos);
@@ -432,11 +485,12 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			clientAngle += clientW / 20F;
 			if(!world.isRemote){
 				angle += rotary[0] / 20F;
-				if(Math.abs(clientAngle - angle) >= Math.PI / 8D || Math.abs(clientW - rotary[0]) >= Math.PI / 16D){
+				final double errorMargin = Math.PI / 32D;
+				if(Math.abs(clientAngle - angle) >= errorMargin || Math.abs(clientW - rotary[0]) >= errorMargin / 2D){
 					//Resync the speed and angle to the client
 					clientAngle = angle;
 					clientW = (float) rotary[0];
-					long packet = (long) Float.floatToIntBits(clientAngle) << 32L | (long) Float.floatToIntBits(clientW);
+					long packet = (Integer.toUnsignedLong(Float.floatToRawIntBits(clientAngle)) << 32L) | Integer.toUnsignedLong(Float.floatToRawIntBits(clientW));
 					CRPackets.sendPacketAround(world, pos, new SendLongToClient(4, packet, pos));
 					markDirty();
 				}
@@ -668,6 +722,12 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 				size = (int) (message >>> 2);
 				break;
 		}
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public double getMaxRenderDistanceSquared(){
+		return 65536;//Same as beacon
 	}
 
 	private class AxleHandler implements IAxleHandler{

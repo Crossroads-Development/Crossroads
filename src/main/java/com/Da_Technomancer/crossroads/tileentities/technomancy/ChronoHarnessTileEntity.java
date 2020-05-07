@@ -16,6 +16,7 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -62,6 +63,12 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 
 	public float getRenderAngle(float partialTicks){
 		return (float) Math.toDegrees(angle + partialTicks * clientCurPower * SPEED);
+	}
+
+	@Override
+	public AxisAlignedBB getRenderBoundingBox(){
+		//Increase render BB to include links
+		return new AxisAlignedBB(pos).grow(getRange());
 	}
 
 	private boolean hasRedstone(){

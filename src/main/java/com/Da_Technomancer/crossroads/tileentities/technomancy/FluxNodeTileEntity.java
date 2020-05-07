@@ -13,6 +13,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -55,6 +56,12 @@ public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntit
 	 */
 	public float getRenderAngle(float partialTicks){
 		return angle + partialTicks * entropy * SPIN_RATE / 20F;
+	}
+
+	@Override
+	public AxisAlignedBB getRenderBoundingBox(){
+		//Increase render BB to include links
+		return new AxisAlignedBB(pos).grow(getRange());
 	}
 
 	/**

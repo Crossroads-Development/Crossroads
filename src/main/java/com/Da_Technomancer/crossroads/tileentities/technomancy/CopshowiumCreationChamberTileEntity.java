@@ -22,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -77,6 +78,12 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 
 	public FluidStack getInputFluid(){
 		return fluids[0];
+	}
+
+	@Override
+	public AxisAlignedBB getRenderBoundingBox(){
+		//Increase render BB to include links
+		return new AxisAlignedBB(pos).grow(getRange());
 	}
 
 	@Override
