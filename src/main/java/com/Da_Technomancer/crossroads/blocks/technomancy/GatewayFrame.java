@@ -84,7 +84,6 @@ public class GatewayFrame extends ContainerBlock implements IReadable{
 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flag){
-		tooltip.add(new StringTextComponent("WIP! Do not use"));//TODO
 		tooltip.add(new TranslationTextComponent("tt.crossroads.gateway.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.gateway.dial"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.gateway.proc"));

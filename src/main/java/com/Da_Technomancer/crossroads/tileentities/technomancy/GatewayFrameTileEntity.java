@@ -358,7 +358,6 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	 * @return Whether this suceeded at forming the multiblock
 	 */
 	public boolean assemble(){
-		//TODO multi-thick frame
 		if(world.isRemote){
 			return false;//Server side only
 		}

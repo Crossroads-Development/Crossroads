@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.entity.*;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.*;
 import com.Da_Technomancer.crossroads.gui.container.*;
+import com.Da_Technomancer.crossroads.integration.curios.CurioHelper;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.*;
 import com.Da_Technomancer.crossroads.items.itemSets.ItemSets;
@@ -78,7 +79,7 @@ public final class Crossroads{
 		MinecraftForge.EVENT_BUS.register(new EventHandlerCommon());
 		//NetworkRegistry.INSTANCE.registerGuiHandler(Crossroads.instance, new GuiHandler());
 //		ModIntegration.init();
-
+		CurioHelper.initIntegration();
 //		CrossroadsConfig.config.save();
 
 //		ModIntegration.preInit();

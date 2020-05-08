@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
 import com.Da_Technomancer.crossroads.API.packets.SendGoggleConfigureToServer;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
+import com.Da_Technomancer.crossroads.integration.curios.CurioHelper;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamUsingItem;
@@ -120,9 +121,9 @@ public final class EventHandlerClient{
 			PlayerEntity player = Minecraft.getInstance().player;
 
 			//Beam cage overlay
-			ItemStack offStack = player.getHeldItem(Hand.OFF_HAND);
-			if(offStack.getItem() == CRItems.beamCage){
-				BeamUnit stored = BeamCage.getStored(offStack);
+			ItemStack cageStack = CurioHelper.getEquipped(CRItems.beamCage, player);
+			if(!cageStack.isEmpty()){
+				BeamUnit stored = BeamCage.getStored(cageStack);
 				GlStateManager.pushMatrix();
 				GlStateManager.pushLightingAttributes();
 				GlStateManager.enableBlend();
@@ -158,7 +159,7 @@ public final class EventHandlerClient{
 				buf.pos(0, 60, -1).tex(0, 0).endVertex();
 				tes.draw();
 
-				Minecraft.getInstance().fontRenderer.drawString(offStack.getDisplayName().getFormattedText(), 16, 65, Color.DARK_GRAY.getRGB());
+				Minecraft.getInstance().fontRenderer.drawString(cageStack.getDisplayName().getFormattedText(), 16, 65, Color.DARK_GRAY.getRGB());
 				GlStateManager.disableAlphaTest();
 				GlStateManager.color3f(1, 1, 1);
 				GlStateManager.disableBlend();

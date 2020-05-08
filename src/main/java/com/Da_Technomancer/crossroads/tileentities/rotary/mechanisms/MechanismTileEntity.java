@@ -236,8 +236,6 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 //			}
 //		}
 
-		//TODO see if it's possible to make this not a ticking tile entity
-
 		if(updateMembers && !world.isRemote){
 			CRPackets.sendPacketAround(world, pos, new SendLongToClient(14, getAxleAxis() == null ? -1 : getAxleAxis().ordinal(), pos));
 			for(int i = 0; i < 7; i++){

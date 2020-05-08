@@ -74,6 +74,7 @@ repositories {
 	maven { url "http://dvs1.progwml6.com/files/maven" } //JEI
 	maven { url "https://maven.blamejared.com" } //Patchouli
 	maven {url "http://tehnut.info/maven"} //hywla
+	maven {url "https://maven.theillusivec4.top/"} //Curios
 	flatDir { dirs 'libs' }//Lets us grab dependencies from the libs folder
 }
 
@@ -81,12 +82,15 @@ dependencies {
 	minecraft("net.minecraftforge:forge:$mc_version-$fg_version")
 
 	//Compile against APIs
-	compileOnly(fg.deobf("mezz.jei:jei-$mc_version:$jei_version:api"))
+	compileOnly(fg.deobf("mezz.jei:jei-$mc_version:$jei_version:api"))//JEI
+	compileOnly(fg.deobf("top.theillusivec4.curios:curios:$curios_version:api"))//Curios
 	//Run with the full versions
-	runtimeOnly(fg.deobf("mezz.jei:jei-$mc_version:$jei_version"))
+	runtimeOnly(fg.deobf("mezz.jei:jei-$mc_version:$jei_version"))//JEI
+	runtimeOnly(fg.deobf("top.theillusivec4.curios:curios:$curios_version"))//Curios
 
 	compile(fg.deobf("vazkii.patchouli:Patchouli:$mc_version-$patchouli_version"))
 
+	//No special CR integration for hwayla- only used for testing, so no compile inclusion needed
 	runtimeOnly(fg.deobf("mcp.mobius.waila:Hwyla:$hwyla_version"))
 
 	//When setting up a dev environment for Crossroads, make sure to have an essentials jar in a folder called "libs", in the same parent folder as "src"

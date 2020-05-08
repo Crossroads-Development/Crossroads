@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.integration.curios.CurioHelper;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.LeydenJar;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
@@ -68,7 +69,8 @@ public class TeslaRay extends Item{
 			return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(hand));
 		}
 
-		if(hand == Hand.MAIN_HAND && LeydenJar.getCharge(playerIn.getHeldItemOffhand()) >= FE_USE){
+		ItemStack leyden = CurioHelper.getEquipped(CRItems.leydenJar, playerIn);
+		if(hand == Hand.MAIN_HAND && !leyden.isEmpty() && LeydenJar.getCharge(leyden) >= FE_USE){
 			//Stores attack targets, in order
 			ArrayList<LivingEntity> targets = new ArrayList<>(4);
 
@@ -95,9 +97,8 @@ public class TeslaRay extends Item{
 				return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(hand));
 			}
 
-			ItemStack leydenStack = playerIn.getHeldItemOffhand();
-			LeydenJar.setCharge(leydenStack, LeydenJar.getCharge(leydenStack) - FE_USE);
-			playerIn.setHeldItem(Hand.OFF_HAND, leydenStack);
+			LeydenJar.setCharge(leyden, LeydenJar.getCharge(leyden) - FE_USE);
+//			playerIn.setHeldItem(Hand.OFF_HAND, leydenStack);
 
 			targets.add(closest);
 			closest.attackEntityFrom(DamageSource.LIGHTNING_BOLT, DAMAGE * scale);
