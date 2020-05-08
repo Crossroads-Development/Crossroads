@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
+import com.Da_Technomancer.crossroads.API.technomancy.GatewayAddress;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileEntity;
@@ -73,6 +74,8 @@ public class GatewayFrameRenderer extends LinkLineRenderer<GatewayFrameTileEntit
 		final double iconEdgeZRad = octDepth;//When icons are rendered in the x-z plane, this is used for z to keep the icon square with uneven scaling
 		final double iconEdgeXRad = iconEdgeZRad / radius;//When icons are rendered in the x-z plane, this is used for x to keep the icon square with uneven scaling
 		final double zFightingOffset = 0.003D;//Small offset used to prevent z-fighting
+		final double iconDialBottom = squareIn * (Math.sqrt(2) + 0.25D);
+		final double iconDialTop = iconDialBottom + 2D * iconEdgeRad;
 
 		//Texture UV coords
 		//Symbols are the 8 alignment icons. They are arranged in a column on the texture
@@ -176,6 +179,9 @@ public class GatewayFrameRenderer extends LinkLineRenderer<GatewayFrameTileEntit
 		if(linked){
 			//Render double sided
 			GlStateManager.disableCull();
+			//Glow in the dark
+			int light = CRRenderUtil.getCurrLighting();
+			CRRenderUtil.setBrightLighting();
 
 			vb.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION_TEX);
 
@@ -191,6 +197,7 @@ public class GatewayFrameRenderer extends LinkLineRenderer<GatewayFrameTileEntit
 
 			tess.draw();
 
+			CRRenderUtil.setLighting(light);
 			GlStateManager.enableCull();
 		}
 
@@ -285,6 +292,51 @@ public class GatewayFrameRenderer extends LinkLineRenderer<GatewayFrameTileEntit
 		vb.pos(-triLen, squareOut, -sqDepth).tex(triEdgeUEn, triVSt).endVertex();
 
 		tess.draw();
+
+		//Dialed icons
+		if(frame.chevrons[0] != null){
+			CRRenderUtil.setBrightLighting();//Glow in the dark
+
+			//Front
+			GlStateManager.pushMatrix();
+			GlStateManager.rotated(45, 0, 0, 1);
+
+			//Draw each symbol individually
+			for(int i = 0; i < frame.chevrons.length; i++){
+				if(frame.chevrons[i] == null){
+					break;
+				}
+				vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+				vb.pos(-iconEdgeRad, iconDialTop, sqDepth + zFightingOffset).tex(symbolUSt, getIconVSt(GatewayAddress.getEntryID(frame.chevrons[i]))).endVertex();
+				vb.pos(-iconEdgeRad, iconDialBottom, sqDepth + zFightingOffset).tex(symbolUSt, getIconVEn(GatewayAddress.getEntryID(frame.chevrons[i]))).endVertex();
+				vb.pos(iconEdgeRad, iconDialBottom, sqDepth + zFightingOffset).tex(symbolUEn, getIconVEn(GatewayAddress.getEntryID(frame.chevrons[i]))).endVertex();
+				vb.pos(iconEdgeRad, iconDialTop, sqDepth + zFightingOffset).tex(symbolUEn, getIconVSt(GatewayAddress.getEntryID(frame.chevrons[i]))).endVertex();
+				tess.draw();
+				GlStateManager.rotated(-90, 0, 0, 1);
+			}
+
+			GlStateManager.popMatrix();
+
+			//Other front
+			GlStateManager.pushMatrix();
+			GlStateManager.rotated(-45, 0, 0, 1);
+
+			//Draw each symbol individually
+			for(int i = 0; i < frame.chevrons.length; i++){
+				if(frame.chevrons[i] == null){
+					break;
+				}
+				vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+				vb.pos(-iconEdgeRad, iconDialTop, -sqDepth - zFightingOffset).tex(symbolUEn, getIconVSt(GatewayAddress.getEntryID(frame.chevrons[i]))).endVertex();
+				vb.pos(iconEdgeRad, iconDialTop, -sqDepth - zFightingOffset).tex(symbolUSt, getIconVSt(GatewayAddress.getEntryID(frame.chevrons[i]))).endVertex();
+				vb.pos(iconEdgeRad, iconDialBottom, -sqDepth - zFightingOffset).tex(symbolUSt, getIconVEn(GatewayAddress.getEntryID(frame.chevrons[i]))).endVertex();
+				vb.pos(-iconEdgeRad, iconDialBottom, -sqDepth - zFightingOffset).tex(symbolUEn, getIconVEn(GatewayAddress.getEntryID(frame.chevrons[i]))).endVertex();
+				tess.draw();
+				GlStateManager.rotated(90, 0, 0, 1);
+			}
+
+			GlStateManager.popMatrix();
+		}
 
 		GlStateManager.enableLighting();
 		GlStateManager.popAttributes();

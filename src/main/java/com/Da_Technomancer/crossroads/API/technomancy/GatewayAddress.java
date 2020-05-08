@@ -102,6 +102,15 @@ public class GatewayAddress{
 		return LEGAL_VALS[((index % LEGAL_VALS.length) + LEGAL_VALS.length) % LEGAL_VALS.length];
 	}
 
+	public static int getEntryID(EnumBeamAlignments align){
+		for(int i = 0; i < LEGAL_VALS.length; i++){
+			if(LEGAL_VALS[i] == align){
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	public static class Location{
 
 		public final BlockPos pos;

@@ -813,8 +813,10 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 
 			chevrons[index] = alignment;//Dial in a new chevron
 			if(index == 3){
-				//If this is the final chevron, make the connection
+				//If this is the final chevron, make the connection and reset the angle
 				dial(new GatewayAddress(chevrons), true);
+				angle = 0;
+				clientAngle = 1000;//Force a resync of the angle to the client
 			}
 			CRPackets.sendPacketAround(world, pos, new SendLongToClient(3, new GatewayAddress(chevrons).serialize(), pos));
 			markDirty();
