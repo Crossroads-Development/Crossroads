@@ -46,6 +46,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.BooleanValue atmosLightningHorsemen;
 	public static ForgeConfigSpec.IntValue atmosCap;
 	public static ForgeConfigSpec.BooleanValue allowOverflow;
+	public static ForgeConfigSpec.BooleanValue cccRequireTime;
 	public static ForgeConfigSpec.DoubleValue rotaryLoss;
 	public static ForgeConfigSpec.DoubleValue crystalAxisMult;
 	public static ForgeConfigSpec.IntValue steamWorth;
@@ -133,6 +134,7 @@ public class CRConfig{
 		teTimeAccel = serverBuilder.comment("Allow time acceleration of Tile Entities?", "Disabling this does not affect acceleration of normal entities or block ticks").define("te_accel", true);
 		hardGateway = serverBuilder.comment("Enable hardmode for the Gateway?", "If true, dialing in chevrons only works if the beam alignment matches the chevron being dialed", "Enable this if you want an extra challenge").define("gateway_hard", false);
 		allowOverflow = serverBuilder.comment("Destroy the CCC if Copshowium overfills the tank?", "Disabling this will make the CCC much easier to use").define("allow_overflow", true);
+		cccRequireTime = serverBuilder.comment("Does the CCC require specifically a Time beam?").define("ccc_req_time", true);
 		serverBuilder.pop();
 		serverBuilder.push(CAT_ALCHEMY);
 		phelEffect = serverBuilder.comment("Allow the full effect of Phelostogen?", "If disabled Phelostogen lights a single small fire instead").define("phel_effect", true);

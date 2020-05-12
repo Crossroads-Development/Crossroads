@@ -1,0 +1,17 @@
+{
+	"category": "technomancy",
+	"name": "Temporal Accelerator",
+	"icon": "crossroads:temporal_accelerator",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/technomancy",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Temporal Accelerator",
+			"item": "crossroads:temporal_accelerator",
+			"text": "TODO"
+		}
+	]
+}

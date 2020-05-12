@@ -1,0 +1,17 @@
+{
+	"category": "technomancy",
+	"name": "Gateway",
+	"icon": "crossroads:gateway_frame",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/technomancy",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Gateway",
+			"item": "crossroads:gateway_frame",
+			"text": "TODO"
+		}
+	]
+}

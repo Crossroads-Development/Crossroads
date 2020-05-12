@@ -103,7 +103,7 @@
 	"block.crossroads.fat_feeder": "Fat Feeder",
 	"item.crossroads.module_goggles": "Modular Goggles",
 	"itemGroup.gear": "Crossroads Gears",
-	"block.crossroads.redstone_axis": "Redstone Axis",
+	"block.crossroads.redstone_axis": "Redstone Master Axis",
 	"block.crossroads.mechanical_beam_splitter": "Mechanical Beam Splitter",
 	"crossroads": "Crossroads",
 	"control_energy.name": "Item Energy Control",

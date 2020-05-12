@@ -73,7 +73,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	}
 
 	public float getRedstone(){
-		return (float) fluids[0].getAmount() / CAPACITY;
+		return 100F * (float) fluids[0].getAmount() / CAPACITY;
 	}
 
 	public FluidStack getInputFluid(){
@@ -220,13 +220,17 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 
 		@Override
 		public void setBeam(BeamUnit mag){
+			if(mag.isEmpty()){
+				return;
+			}
+
 			EnumBeamAlignments align = EnumBeamAlignments.getAlignment(mag);
 			if(mag.getVoid() != 0){
 				//A void beam destroys all stored liquid
 				fluids[0] = FluidStack.EMPTY;
 				fluids[1] = FluidStack.EMPTY;
 				markDirty();
-			}else if(align == EnumBeamAlignments.TIME && !fluids[0].isEmpty()){
+			}else if((!CRConfig.cccRequireTime.get() || align == EnumBeamAlignments.TIME) && !fluids[0].isEmpty()){
 				Optional<CopshowiumRec> recOpt = world.getRecipeManager().getRecipe(CRRecipes.COPSHOWIUM_TYPE, CopshowiumCreationChamberTileEntity.this, world);
 				if(recOpt.isPresent()){
 					CopshowiumRec rec = recOpt.get();
@@ -256,7 +260,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 					fluids[0] = FluidStack.EMPTY;
 					markDirty();
 				}
+			}
 		}
 	}
 }
-			}

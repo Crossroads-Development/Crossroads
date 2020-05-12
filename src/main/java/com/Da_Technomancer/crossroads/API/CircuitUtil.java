@@ -101,7 +101,7 @@ public class CircuitUtil extends RedstoneUtil{
 
 		/**
 		 * Measures and recalculates the overall redstone value from the vanilla redstone system
-		 * Ignores redstone input on any side with a redstone input
+		 * Ignores redstone input on any side with a circuit input
 		 */
 		public void updateWorldRedstone(){
 			int prevWorldReds = worldRedstone;

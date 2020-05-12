@@ -8,17 +8,14 @@
 	"pattern": [
 		"OOO",
 		"CCC",
-		"III"
+		"OCO"
 	],
 	"key": {
 		"O": {
 			"tag": "forge:obsidian"
 		},
 		"C": {
-			"tag": "forge:ingots/copper"
-		},
-		"I": {
-			"tag": "forge:ingots/iron"
+			"tag": "crossroads:ingots/copshowium"
 		}
 	}
 }

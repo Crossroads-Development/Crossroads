@@ -34,7 +34,15 @@
 		},
 		{
 			"type": "text",
-			"text": "<thing>Technomancy/$ is a <thing>path/$ about time manipulation and high-power, high-risk systems. TODO"
+			"text": "<thing>Technomancy/$ is a <thing>path/$ about time manipulation and high-power, high-risk systems. It is also the path with the most cool gadgets. It allows manipulating time in an area, and is fairly simple to start with, but making even a small mistake <em>has drastic consequences/$ (unlike <thing>Alchemy/$, where small mistakes have small consequences).$(br2)<thing>Technomancy"
+		},
+		{
+			"type": "text",
+			"text": "<thing>/$ also allows much more precise control over <thing>$(l:intro/rotary)rotary/$ systems, making it possible to dramatically simplify and improve existing <thing>$(l:intro/rotary)rotary/$ setups. Most machines in <thing>Technomancy/$ require having at least one nether star (but won't consume it).$(br2)To unlock <thing>Technomancy/$, in a <item>detailed crafter/$, surround a <item>$(l:rotary/gear_base)small gear/$ with gems (diamond/lapis/ruby/etc) after "
+		},
+		{
+			"type": "text",
+			"text": "having discovered every non-<thing>$(l:beam/void)void/$ <thing>$(l:intro/beam)alignment/$. The items will be consumed."
 		}
 	]
 }

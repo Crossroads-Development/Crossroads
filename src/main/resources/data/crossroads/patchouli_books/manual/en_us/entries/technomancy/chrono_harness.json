@@ -1,0 +1,17 @@
+{
+	"category": "technomancy",
+	"name": "Chrono-Harness",
+	"icon": "crossroads:chrono_harness",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/technomancy",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Chrono-Harness",
+			"item": "crossroads:chrono_harness",
+			"text": "TODO"
+		}
+	]
+}

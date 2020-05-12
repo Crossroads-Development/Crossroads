@@ -1,0 +1,17 @@
+{
+	"category": "technomancy",
+	"name": "Beam Staff",
+	"icon": "crossroads:staff_technomancy",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/technomancy",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Beam Staff",
+			"item": "crossroads:staff_technomancy",
+			"text": "TODO"
+		}
+	]
+}

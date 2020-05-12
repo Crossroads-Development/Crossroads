@@ -1,0 +1,17 @@
+{
+	"category": "technomancy",
+	"name": "Beacon Harness",
+	"icon": "crossroads:beacon_harness",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/technomancy",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Beacon Harness",
+			"item": "crossroads:beacon_harness",
+			"text": "TODO"
+		}
+	]
+}

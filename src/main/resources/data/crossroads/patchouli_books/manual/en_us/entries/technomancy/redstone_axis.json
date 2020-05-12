@@ -1,0 +1,17 @@
+{
+	"category": "technomancy",
+	"name": "Redstone Master Axis",
+	"icon": "crossroads:redstone_axis",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/technomancy",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Redstone Master Axis",
+			"item": "crossroads:redstone_axis",
+			"text": "TODO"
+		}
+	]
+}

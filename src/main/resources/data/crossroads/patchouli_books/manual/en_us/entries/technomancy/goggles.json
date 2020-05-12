@@ -1,0 +1,17 @@
+{
+	"category": "technomancy",
+	"name": "Modular Goggles",
+	"icon": "crossroads:module_goggles",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/technomancy",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Modular Goggles",
+			"item": "crossroads:module_goggles",
+			"text": "TODO"
+		}
+	]
+}
