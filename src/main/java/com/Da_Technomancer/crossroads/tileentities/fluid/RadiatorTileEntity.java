@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.RadiatorContainer;
@@ -54,7 +54,7 @@ public class RadiatorTileEntity extends InventoryTE{
 		super.tick();
 
 		if(!world.isRemote && fluids[0].getAmount() >= FLUID_USE && fluidProps[1].capacity - fluids[1].getAmount() >= FLUID_USE){
-			temp += FLUID_USE * EnergyConverters.degPerSteamBucket() / 1000;
+			temp += FLUID_USE * (double) CRConfig.steamWorth.get() / 1000;
 			if(fluids[1].isEmpty()){
 				fluids[1] = new FluidStack(CRFluids.distilledWater.still, FLUID_USE);
 			}else{

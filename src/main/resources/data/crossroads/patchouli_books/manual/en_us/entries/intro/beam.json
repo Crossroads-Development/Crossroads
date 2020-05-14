@@ -18,19 +18,23 @@
 		},
 		{
 			"type": "text",
-			"text": "applied every 4 ticks for a continuous beam.$(br2)Each beam is composed of four resources, each of which is a certain color: <thing>Energy/$- red, <thing>Potential/$- green, <thing>Stability/$- blue, and <thing>$(l:beam/void)Void/$- black. <thing>Void/$ is later game, and won't be used early on.$(br2)The <thing>power/$ of the beam is the total quantity of the four resources "
+			"text": "applied every 4 ticks (once per <thing>cycle/$) for a continuous beam.$(br2)Each beam is composed of four resources, each of which is a certain color: <thing>Energy/$- red, <thing>Potential/$- green, <thing>Stability/$- blue, and <thing>$(l:beam/void)Void/$- black. <thing>Void/$ is later game, and won't be used early on.$(br2)The <thing>power/$ of the beam is the total quantity "
 		},
 		{
 			"type": "text",
-			"text": "(<thing>energy/$ + <thing>potential/$ + <thing>stability/$ + <thing>void/$).$(br2)The <thing>alignment/$ is based on the color of the overall beam- the four (early game just three) resources in the beam combine their colors like on a color wheel. Certain <thing>alignments/$ require more specific colors than others- making them harder to make. The <item>$(l:beam/chart)color chart/$ will help you discover <thing>alignments/$ you're "
+			"text": "of the four resources (<thing>energy/$ + <thing>potential/$ + <thing>stability/$ + <thing>void/$).$(br2)The <thing>alignment/$ is based on the color of the overall beam- the four (early game just three) resources in the beam combine their colors like on a color wheel. Certain <thing>alignments/$ require more specific colors than others- making them harder to make. The <item>$(l:beam/chart)color chart/$ will help you "
 		},
 		{
 			"type": "text",
-			"text": "missing.$(br2)You also need to discover <thing>alignments/$- once you discover one, an entry will appear in this book. You can use an <item>$(l:intro/omnimeter)omnimeter/$ to measure <thing>beams/$, and discover the <thing>alignment/$ if you haven't discovered it yet."
+			"text": "discover <thing>alignments/$ you're missing.$(br2)You also need to discover <thing>alignments/$- once you discover one, an entry will appear in this book. You can use an <item>$(l:intro/omnimeter)omnimeter/$ to measure <thing>beams/$, and discover the <thing>alignment/$ if you haven't discovered it yet."
 		},
 		{
 			"type": "text",
-			"text": "Many <thing>beam alignments/$ will transmute blocks they hit in the world if they are high enough power.$(br2)<thing>Beams/$ are usually moved around with <item>$(l:beam/reflector)beam reflectors/$, and created with a <item>$(l:beam/extractor)Resonance Extractor/$. Every machine or block a <thing>beam/$ travels through adds a 4 tick (fifth second) delay, and beams have a 16 block range between machines for transmission."
+			"text": "Many <thing>beam alignments/$ will transmute blocks they hit in the world if they are high enough power.$(br2)<thing>Beams/$ are usually moved around with <item>$(l:beam/reflector)beam reflectors/$, and created with a <item>$(l:beam/extractor)Resonance Extractor/$. Every machine or block a <thing>beam/$ travels through adds a 4 tick (fifth second) delay (this is called 1 <thing>cycle/$), and beams have a 16 block range between machines "
+		},
+		{
+			"type": "text",
+			"text": "for transmission. Beams have a <thing>power/$ cap of 64,000."
 		}
 	]
 }

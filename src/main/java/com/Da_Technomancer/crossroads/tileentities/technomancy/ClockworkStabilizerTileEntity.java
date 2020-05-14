@@ -19,7 +19,7 @@ public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 	@ObjectHolder("clock_stab")
 	private static TileEntityType<ClockworkStabilizerTileEntity> type = null;
 
-	public static final double RATE = 0.25D;
+	public static final double RATE = 0.2D;
 	private BeamUnitStorage storage = new BeamUnitStorage();
 	private Direction dir = null;
 
@@ -29,7 +29,7 @@ public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 
 	@Override
 	protected int getLimit(){
-		return (int) (super.getLimit() / RATE);//This block can store 4 times as much so it emits a full power beam at capacity
+		return (int) (super.getLimit() / RATE);//This block can store 5 times as much so it emits a full power beam at capacity
 	}
 
 	private Direction getDir(){

@@ -152,24 +152,26 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink{
 			cycles %= LOOP_TIME;
 			//The color calculation takes advantage of the fact that the "color wheel" as most people know it is the slice of the HSB color cylinder with saturation=1. The outer rim is brightness=1. The angle is controlled by hue
 			Color outColor = Color.getHSBColor(((float) cycles) / LOOP_TIME, 1, 1);
-			if(cycles >= 0 && cycles % (LOOP_TIME / 3) >= SAFETY_BUFFER && invalid(outColor, input)){//Don't check color during a safety period
-				running = false;
-				cycles = -9;//Easy way of adding a startup cooldown
-
-				if(beamer[0].emit(BeamUnit.EMPTY, world)){
-					refreshBeam(0);
-				}
-				return;
-			}
 			if(cycles >= 0){
-				BeamUnit out = new BeamUnit(outColor.getRed(), outColor.getGreen(), outColor.getBlue(), 0);
-				out = out.mult(POWER / ((double) out.getPower()), false);
+				//Don't check color during a safety period
+				if(cycles % (LOOP_TIME / 3) >= SAFETY_BUFFER && invalid(outColor, input)){
+					//Wrong input- shut down
+					running = false;
+					cycles = -11;//Easy way of adding a startup cooldown- 10 cycles
 
-				beamer[0].emit(out, world);
-				refreshBeam(0);//Assume the beam changed as the color constantly cycles
-				prevMag[0] = out;
-				addFlux(FLUX_GEN);
-				markDirty();
+					if(beamer[0].emit(BeamUnit.EMPTY, world)){
+						refreshBeam(0);
+					}
+				}else{
+					BeamUnit out = new BeamUnit(outColor.getRed(), outColor.getGreen(), outColor.getBlue(), 0);
+					out = out.mult(POWER / ((double) out.getPower()), false);
+
+					beamer[0].emit(out, world);
+					refreshBeam(0);//Assume the beam changed as the color constantly cycles
+					prevMag[0] = out;
+					addFlux(FLUX_GEN);
+					markDirty();
+				}
 			}
 		}
 	}

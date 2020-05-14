@@ -87,7 +87,7 @@ public class ChronoHarness extends ContainerBlock{
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.chrono_harness.desc"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.chrono_harness.power", ChronoHarnessTileEntity.POWER, CRConfig.fePerEntropy.get()));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.chrono_harness.power", 64 / FluxUtil.FLUX_TIME * CRConfig.fePerEntropy.get(), CRConfig.fePerEntropy.get()));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.chrono_harness.reds"));
 	}
 }

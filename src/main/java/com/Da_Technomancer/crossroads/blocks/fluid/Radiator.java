@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RadiatorTileEntity;
 import net.minecraft.block.BlockRenderType;
@@ -61,7 +61,7 @@ public class Radiator extends ContainerBlock{
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.radiator.desc"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.radiator.heat", RadiatorTileEntity.FLUID_USE * EnergyConverters.degPerSteamBucket() / 1000));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.radiator.heat", RadiatorTileEntity.FLUID_USE * (double) CRConfig.steamWorth.get() / 1000));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.radiator.water", RadiatorTileEntity.FLUID_USE));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.radiator.steam", RadiatorTileEntity.FLUID_USE));
 	}

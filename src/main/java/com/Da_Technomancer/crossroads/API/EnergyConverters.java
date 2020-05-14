@@ -11,13 +11,6 @@ public final class EnergyConverters{
 	public static final int FAT_PER_VALUE = 100;
 
 	/**
-	 * @return The number of degrees one bucket of steam is worth
-	 */
-	public static double degPerSteamBucket(){
-		return CRConfig.steamWorth.get();
-	}
-
-	/**
 	 * @return The numbers of degrees one Joule (Rotary energy) is worth
 	 */
 	public static double degPerJoule(){
@@ -29,7 +22,4 @@ public final class EnergyConverters{
 	 */
 	public static final int INGOT_MB = 144;
 
-	public static int getFePerFlux(){
-		return CRConfig.fePerEntropy.get();
-	}
 }

@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SteamTurbineTileEntity;
 import net.minecraft.block.BlockRenderType;
@@ -62,7 +63,7 @@ public class SteamTurbine extends ContainerBlock{
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.steam_turbine.input", 100 * SteamTurbineTileEntity.LIMIT));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.steam_turbine.output", ((double) SteamTurbineTileEntity.LIMIT) * 0.1D * EnergyConverters.degPerSteamBucket() / EnergyConverters.degPerJoule()));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.steam_turbine.output", ((double) SteamTurbineTileEntity.LIMIT) * 0.1D * (double) CRConfig.steamWorth.get() / EnergyConverters.degPerJoule()));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", SteamTurbineTileEntity.INERTIA));
 	}
 }

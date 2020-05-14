@@ -1,7 +1,7 @@
 Entropy Node
 crossroads:flux_node|crossroads:progress/path/technomancy
 The <item>Entropy Node/$ is the main way to transfer <thing><link:intro/technomancy>temporal entropy/$. They one-way transfer <thing><link:intro/technomancy>temporal entropy/$ wirelessly, and through walls.
-Their outputs are set using a <item><link:essentials/linking_tool>linking tool/$. They have a range of 16 blocks, and can have up to 16 outputs each.
+Their outputs are set using a <item><link:essentials/linking_tool>linking tool/$. They have a range of 16 blocks, and can have up to 16 outputs each. Machines that produce <thing><link:intro/technomancy>temporal entropy/$ also have to be linked to the <item>node/$.
 They transfer their entire storage of <thing><link:intro/technomancy>temporal entropy/$ every 4 ticks split between all available outputs, and <em>can overfill connected machines/$. Remember, if anything overfills, it explodes! <item>Entropy nodes/$ have a <thing><link:intro/technomancy>temporal entropy/$ capacity of 64.
 <item><link:essentials/circuits>Circuits/$ read the current stored <thing><link:intro/technomancy>temporal entropy/$ or <thing><link:intro/technomancy>temporal entropy/$ throughput of the <item>node/$.
 If a <item>node/$ has a redstone signal, it will stop accepting <thing><link:intro/technomancy>temporal entropy/$ (any <item>nodes/$ outputting into it will send <thing><link:intro/technomancy>temporal entropy/$ to their other connected outputs instead). They can still output <thing><link:intro/technomancy>temporal entropy/$ already in the <item>node/$ with a redstone signal, however.

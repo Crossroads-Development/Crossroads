@@ -1,3 +1,4 @@
 Chrono-Harness
 crossroads:chrono_harness|crossroads:progress/path/technomancy
-TODO
+The <item>Chrono-Harness/$ is a way of producing Forge Energy that produce <thing><link:intro/technomancy>temporal entropy/$ as a byproduct.
+It has no maximum FE power output, but produces 1 <thing><link:intro/technomancy>temporal entropy/$ for every 50FE produced (by default). As a result, producing more than 800FE/tick will create <thing><link:intro/technomancy>temporal entropy/$ faster than it can be drained by <thing><link:technomancy/node>entropy nodes/$, causing it to inevitably explode.

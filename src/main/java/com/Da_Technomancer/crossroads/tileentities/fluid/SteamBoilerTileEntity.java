@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.SteamBoilerContainer;
@@ -70,7 +70,7 @@ public class SteamBoilerTileEntity extends InventoryTE{
 		int tier = HeatUtil.getHeatTier(temp, TIERS);
 		
 		if(tier != -1){
-			temp -= EnergyConverters.degPerSteamBucket() * (tier + 1) * (double) BATCH_SIZE / 1000D;
+			temp -= (double) CRConfig.steamWorth.get() * (tier + 1) * (double) BATCH_SIZE / 1000D;
 
 			int fluidCap = fluidProps[0].capacity;
 			

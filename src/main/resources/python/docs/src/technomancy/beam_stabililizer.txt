@@ -1,3 +1,6 @@
 Clockwork Stabilizer
 crossroads:clock_stabilizer|crossroads:progress/path/technomancy
-TODO
+The <item>Clockwork Stabilizer/$ is a more advanced version of the <item><link:beam/stabilizer>quartz stabilizer/$ designed for use in high-<thing><link:intro/beam>power/$ centralized <thing><link:intro/beam>beam/$ systems.
+It will store all received <thing><link:intro/beam>beams/$, with a maximum storage of 320,000 <thing><link:intro/beam>power/$. It will output 20% of all stored <link:intro/beam>beams/$ out the front each <link:intro/beam>cycle/$, with the same color as the total stored <link:intro/beam>beam/$.
+This has the effect of 'smoothing' out received <thing><link:intro/beam>beams/$, turning pulses into continuous <thing><link:intro/beam>beams/$ and reducing fluctuations in input.
+<item><link:essentials/circuits>Circuits/$ measure the total stored <thing><link:intro/beam>power/$.

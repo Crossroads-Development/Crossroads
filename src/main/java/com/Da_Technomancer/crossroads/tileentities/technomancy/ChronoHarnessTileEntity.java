@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
@@ -38,13 +38,12 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 	@ObjectHolder("chrono_harness")
 	private static TileEntityType<ChronoHarnessTileEntity> type = null;
 
-	public static final int POWER = 100;
-	private static final int FE_CAPACITY = 2_000;//Be careful about raising this- otherwise placing down this machine will instantly cause a flux event from filling the buffer
-	private static final float SPEED = (float) Math.PI / 20F / POWER;//Used for rendering
+	private static final int FE_CAPACITY = 20_000;
+	private static final float SPEED = (float) Math.PI / 20F / 400F;//Used for rendering
 
 	private int flux = 0;//Stored flux
 	private int fluxToTrans = 0;
-	private int fe = 0;//Stored FE
+	private int fe = FE_CAPACITY;//Stored FE. Placed with full FE
 	private int curPower = 0;//Current power generation (fe/t); used for readouts
 	private int clientCurPower = 0;//Current power gen on the client; used for rendering. On the server side, tracks last sent value
 	private float angle = 0;//Used for rendering. Client side only
@@ -57,7 +56,7 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		chat.add(new TranslationTextComponent("tt.crossroads.chrono_harness.fe", fe, FE_CAPACITY, curPower));
-		FluxUtil.addFluxInfo(chat, this, shouldRun() ? curPower / EnergyConverters.getFePerFlux() : 0);
+		FluxUtil.addFluxInfo(chat, this, shouldRun() ? curPower / CRConfig.fePerEntropy.get() : 0);
 		FluxUtil.addLinkInfo(chat, this);
 	}
 
@@ -116,9 +115,9 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 			}
 
 			if(shouldRun()){
-				curPower = Math.min(POWER, FE_CAPACITY - fe);
+				curPower = FE_CAPACITY - fe;
 				fe += curPower;
-				flux += Math.round((float) curPower / EnergyConverters.getFePerFlux());
+				flux += Math.round((float) curPower / CRConfig.fePerEntropy.get());
 				markDirty();
 				FluxUtil.checkFluxOverload(this);
 			}

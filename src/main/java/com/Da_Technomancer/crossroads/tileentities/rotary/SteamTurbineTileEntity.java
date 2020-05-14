@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import net.minecraft.fluid.Fluid;
@@ -73,7 +74,7 @@ public class SteamTurbineTileEntity extends ModuleTE{
 					fluids[0].grow(100 * limit);
 				}
 				if(axleHandler.axis != null){
-					axleHandler.addEnergy(((double) limit) * .1D * EnergyConverters.degPerSteamBucket() / EnergyConverters.degPerJoule(), true);
+					axleHandler.addEnergy(((double) limit) * .1D * (double) CRConfig.steamWorth.get() / EnergyConverters.degPerJoule(), true);
 				}
 			}
 		}

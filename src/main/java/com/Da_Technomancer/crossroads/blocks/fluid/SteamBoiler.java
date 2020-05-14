@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamBoilerTileEntity;
 import net.minecraft.block.BlockRenderType;
@@ -69,7 +69,7 @@ public class SteamBoiler extends ContainerBlock{
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		for(int i = 0; i < SteamBoilerTileEntity.TIERS.length; i++){
-			tooltip.add(new TranslationTextComponent("tt.crossroads.steam_boiler.tier", SteamBoilerTileEntity.TIERS[i], (i + 1) * SteamBoilerTileEntity.BATCH_SIZE, (int) (SteamBoilerTileEntity.BATCH_SIZE * (i + 1) * EnergyConverters.degPerSteamBucket() / 1000)));
+			tooltip.add(new TranslationTextComponent("tt.crossroads.steam_boiler.tier", SteamBoilerTileEntity.TIERS[i], (i + 1) * SteamBoilerTileEntity.BATCH_SIZE, (int) (SteamBoilerTileEntity.BATCH_SIZE * (i + 1) * (double) CRConfig.steamWorth.get() / 1000)));
 		}
 	}
 }

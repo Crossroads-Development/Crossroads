@@ -11,19 +11,19 @@
 			"type": "spotlight",
 			"title": "Entropy Node",
 			"item": "crossroads:flux_node",
-			"text": "The <item>Entropy Node/$ is the main way to transfer <thing>$(l:intro/technomancy)temporal entropy/$. They one-way transfer <thing>$(l:intro/technomancy)temporal entropy/$ wirelessly, and through walls.$(br2)Their outputs are set using a <item>$(l:essentials/linking_tool)linking tool/$. They have a range of 16 blocks, and can have up to 16 outputs each."
+			"text": "The <item>Entropy Node/$ is the main way to transfer <thing>$(l:intro/technomancy)temporal entropy/$. They one-way transfer <thing>$(l:intro/technomancy)temporal entropy/$ wirelessly, and through walls.$(br2)Their outputs are set using a <item>$(l:essentials/linking_tool)linking tool/$. They have a range of 16 blocks, and can have up to 16 outputs each. Machines that "
 		},
 		{
 			"type": "text",
-			"text": "They transfer their entire storage of <thing>$(l:intro/technomancy)temporal entropy/$ every 4 ticks split between all available outputs, and <em>can overfill connected machines/$. Remember, if anything overfills, it explodes! <item>Entropy nodes/$ have a <thing>$(l:intro/technomancy)temporal entropy/$ capacity of 64.$(br2)<item>$(l:essentials/circuits)Circuits/$ read the current stored <thing>$(l:intro/technomancy)temporal entropy/$ or <thing>$(l:intro/technomancy)temporal entropy/$ throughput of the <item>node/$."
+			"text": "produce <thing>$(l:intro/technomancy)temporal entropy/$ also have to be linked to the <item>node/$.$(br2)They transfer their entire storage of <thing>$(l:intro/technomancy)temporal entropy/$ every 4 ticks split between all available outputs, and <em>can overfill connected machines/$. Remember, if anything overfills, it explodes! <item>Entropy nodes/$ have a <thing>$(l:intro/technomancy)temporal entropy/$ capacity of 64."
 		},
 		{
 			"type": "text",
-			"text": "If a <item>node/$ has a redstone signal, it will stop accepting <thing>$(l:intro/technomancy)temporal entropy/$ (any <item>nodes/$ outputting into it will send <thing>$(l:intro/technomancy)temporal entropy/$ to their other connected outputs instead). They can still output <thing>$(l:intro/technomancy)temporal entropy/$ already in the <item>node/$ with a redstone signal, however.$(br2)<item>$(l:essentials/circuits)Circuits/$ and redstone control allows making 'smart' routing systems for "
+			"text": "<item>$(l:essentials/circuits)Circuits/$ read the current stored <thing>$(l:intro/technomancy)temporal entropy/$ or <thing>$(l:intro/technomancy)temporal entropy/$ throughput of the <item>node/$.$(br2)If a <item>node/$ has a redstone signal, it will stop accepting <thing>$(l:intro/technomancy)temporal entropy/$ (any <item>nodes/$ outputting into it will send <thing>$(l:intro/technomancy)temporal entropy/$ to their other connected outputs instead). They can still output <thing>$(l:intro/technomancy)temporal entropy/$ already in the <item>node/$ with a redstone "
 		},
 		{
 			"type": "text",
-			"text": "<thing>$(l:intro/technomancy)temporal entropy/$ that sends it along a different route- or stores it- when one <item>node/$ chain is almost full. For low overall <thing>$(l:intro/technomancy)temporal entropy/$ production, this isn't a concern- but for larger bases, this could be important."
+			"text": "signal, however.$(br2)<item>$(l:essentials/circuits)Circuits/$ and redstone control allows making 'smart' routing systems for <thing>$(l:intro/technomancy)temporal entropy/$ that sends it along a different route- or stores it- when one <item>node/$ chain is almost full. For low overall <thing>$(l:intro/technomancy)temporal entropy/$ production, this isn't a concern- but for larger bases, this could be important."
 		}
 	]
 }

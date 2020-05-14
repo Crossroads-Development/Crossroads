@@ -540,7 +540,7 @@
 	"tt.crossroads.flux_sink.beacon": "Must be placed over a beacon to function",
 	"tt.crossroads.flux_sink.quip": "Dumps unstable waste into an unsuspecting parallel universe",
 	"tt.crossroads.chrono_harness.desc": "Produces FE for free, but creates Temporal Entropy as a byproduct",
-	"tt.crossroads.chrono_harness.power": "Maximum power of %1$dFE/t; Produces %2$dFE/TEn",
+	"tt.crossroads.chrono_harness.power": "Maximum 'safe' power of %1$dFE/t; Produces %2$dFE/TEn",
 	"tt.crossroads.chrono_harness.reds": "Disabled by a redstone signal",
 
 
