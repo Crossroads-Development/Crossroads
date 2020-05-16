@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<thing>$(l:intro/beam)/$ to show all the colors that create that <thing>$(l:intro/beam)alignment/$."
+			"text": "<thing>$(l:intro/beam)/$ to show all the colors that create that <thing>$(l:intro/beam)alignment/$.$(br2)"
 		}
 	]
 }

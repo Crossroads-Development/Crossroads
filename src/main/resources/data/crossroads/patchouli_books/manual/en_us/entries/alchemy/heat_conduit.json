@@ -19,7 +19,7 @@
 		},
 		{
 			"type": "text",
-			"text": "is a high throughput."
+			"text": "is a high throughput.$(br2)"
 		}
 	]
 }

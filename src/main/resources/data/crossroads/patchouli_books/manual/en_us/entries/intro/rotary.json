@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "pretty simple in practice.$(br2)Every gear, axle, or other spinning device has a few basic values.$(br2)The <thing>Moment of Inertia/$ is written as 'I', usually in tooltips. The I value can be thought of as the 'weight' of the gear- things with higher I values are heavier and are harder to spin quickly."
+			"text": "pretty simple in practice.$(br2)Every gear, axle, or other spinning device has a few basic values.$(br2)The <thing>Moment of Inertia/$ is written as 'I', usually in tooltips. The I value can be thought of as the 'weight' of the gear- things with higher I values are heavier and are harder to spin quickly.$(br2)"
 		},
 		{
 			"type": "text",
@@ -22,11 +22,11 @@
 		},
 		{
 			"type": "text",
-			"text": "object. As you'ld expect, the faster somethings' speed, the more energy it has, and the higher the I, the more energy. There is actually a formula (E=Iω²/2), but it isn't useful or worth remembering.$(br2)The <thing>Power/$, measured in 'J/s', is the rate of change of the energy of a gear. No machines look at the power value at all- it only exists "
+			"text": "object. As you'ld expect, the faster somethings' speed, the more energy it has, and the higher the I, the more energy. There is actually a formula (E=Iω²/2), but it isn't useful or worth remembering.$(br2)The <thing>Power/$, measured in 'J/s', is the rate of change of the energy of a gear. No machines look at the power value at all- it only exists to "
 		},
 		{
 			"type": "text",
-			"text": "to help show the player the change in energy.$(br2)Gears will also have a small amount of <thing>energy loss/$ proportional to the <thing>speed/$. This is a slow decrease in <thing>energy/$ over time unless power is supplied."
+			"text": "help show the player the change in energy.$(br2)Gears will also have a small amount of <thing>energy loss/$ proportional to the <thing>speed/$. This is a slow decrease in <thing>energy/$ over time unless power is supplied.$(br2)"
 		},
 		{
 			"type": "text",
@@ -38,7 +38,7 @@
 		},
 		{
 			"type": "text",
-			"text": "All networks of gears/axles/whatever <em>MUST HAVE/$ a <item>$(l:rotary/axis)Master Axis/$ connected somewhere in the network- otherwise nothing will work!"
+			"text": "All networks of gears/axles/whatever <em>MUST HAVE/$ a <item>$(l:rotary/axis)Master Axis/$ connected somewhere in the network- otherwise nothing will work!$(br2)"
 		}
 	]
 }

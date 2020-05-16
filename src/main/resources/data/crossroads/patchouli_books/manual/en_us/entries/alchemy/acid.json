@@ -15,7 +15,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<em>breaking bedrock/$ and getting <item>Bedrock Dust/$.$(br2)The three normal acids have the same <thing>$(l:alchemy/effect)effect/$: They deal 8 damage to any entity they hit, and will break metal blocks other than gold."
+			"text": "<em>breaking bedrock/$ and getting <item>Bedrock Dust/$.$(br2)The three normal acids have the same <thing>$(l:alchemy/effect)effect/$: They deal 8 damage to any entity they hit, and will break metal blocks other than gold.$(br2)"
 		},
 		{
 			"type": "text",
@@ -23,11 +23,11 @@
 		},
 		{
 			"type": "text",
-			"text": "to splash the <thing>$(l:alchemy/effect)effect/$ over a large area. See the <thing>$(l:alchemy/effect)effects/$ page for full details."
+			"text": "to splash the <thing>$(l:alchemy/effect)effect/$ over a large area. See the <thing>$(l:alchemy/effect)effects/$ page for full details.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<bobo>$(l:intro/welcome#bobo)iz BOBO!/$<bobo> KABANG! KABOOM! KABLOOEY! (bles U)$(br2)I HAZ BANG BOTTEL! bUTtt b33 KaRE_UN_EMTPY!! eLES U g0->> bUUM!$(br2)y3LLOW dUST! fRRRESH BAkCC0ON!! und bUTT:E for SHOP-AGGE!$(br2)bOBO AWAY!/$"
+			"text": "<bobo>$(l:intro/welcome#bobo)iz BOBO!/$<bobo> KABANG! KABOOM! KABLOOEY! (bles U)$(br2)<bobo>I HAZ BANG BOTTEL! bUTtt b33 KaRE_UN_EMTPY!! eLES U g0->> bUUM!$(br2)<bobo>y3LLOW dUST! fRRRESH BAkCC0ON!! und bUTT:E for SHOP-AGGE!$(br2)<bobo>bOBO AWAY!/$$(br2)"
 		}
 	]
 }

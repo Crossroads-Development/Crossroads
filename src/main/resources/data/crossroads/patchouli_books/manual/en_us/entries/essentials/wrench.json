@@ -10,7 +10,7 @@
 			"type": "spotlight",
 			"title": "Wrench",
 			"item": "essentials:wrench",
-			"text": "The $(item)Wrench/$ is a normal adjustment tool used for Essentials and Crossroads.$(br2)It does not have durability. Both mods will accept other mods' wrench tools in most cases."
+			"text": "The $(item)Wrench/$ is a normal adjustment tool used for Essentials and Crossroads.$(br2)It does not have durability. Both mods will accept other mods' wrench tools in most cases.$(br2)"
 		}
 	]
 }

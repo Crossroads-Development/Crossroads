@@ -26,7 +26,7 @@
 		},
 		{
 			"type": "text",
-			"text": "discover <thing>alignments/$ you're missing.$(br2)You also need to discover <thing>alignments/$- once you discover one, an entry will appear in this book. You can use an <item>$(l:intro/omnimeter)omnimeter/$ to measure <thing>beams/$, and discover the <thing>alignment/$ if you haven't discovered it yet."
+			"text": "discover <thing>alignments/$ you're missing.$(br2)You also need to discover <thing>alignments/$- once you discover one, an entry will appear in this book. You can use an <item>$(l:intro/omnimeter)omnimeter/$ to measure <thing>beams/$, and discover the <thing>alignment/$ if you haven't discovered it yet.$(br2)"
 		},
 		{
 			"type": "text",
@@ -34,7 +34,7 @@
 		},
 		{
 			"type": "text",
-			"text": "for transmission. Beams have a <thing>power/$ cap of 64,000."
+			"text": "for transmission. Beams have a <thing>power/$ cap of 64,000.$(br2)"
 		}
 	]
 }

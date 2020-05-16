@@ -12,7 +12,7 @@
 # Each line in the txt after the first two are considered the body
 # The body will be auto-divided into pages
 # A new line will be represented as a new paragraph or a new page
-# A full empty line will force a new page
+# A full empty line will force a new page; it can have <page|TYPE|data0|data1|...> to have a special type for the next page of TYPE, with data parameters passed. The parameters depend on the page- see specific functions below
 # This script will recognize and maintain (incl between pages) the following formatting codes ONLY:
 # /$: Clear formatting
 # <item> -> Item formatting
@@ -62,7 +62,7 @@ def run():
 		for file in fileList:
 			# Expects src to be txt files
 			if '.txt' in file:
-				with open(inDir + file, 'r') as fIn:
+				with open(inDir + file, mode='r', encoding='utf-8') as fIn:
 					rawLinesIn = fIn.readlines()
 					fIn.close()
 
@@ -86,9 +86,9 @@ def run():
 					advancement = icon[index + 1:]
 					icon = icon[:index]
 
-				pages = generatePages(rawLinesIn, icon, name, 2)
+				pages = parseBody(rawLinesIn[2:], icon, name, 2)
 
-				with open(outDir + file.replace(".txt", ".json"), 'w+') as fOut:
+				with open(outDir + file.replace(".txt", ".json"), mode='w+', encoding='utf-8') as fOut:
 					fOut.truncate(0)  # Remove previous version
 
 					if len(advancement) == 0:
@@ -101,10 +101,177 @@ def run():
 					fOut.close()
 
 
-def generatePages(text: list, icon: str, title: str, indents: int) -> str:
+def parseLine(line: str, size: int, prevFormat: str) -> (str, str, str, int):
+	"""
+	Parses one text line, pulling words up to size and applies existing format
+	:param line: The line
+	:param size: The max size of text being pulled, nominally in characters
+	:param prevFormat: The existing format, or empty string
+	:return: (pulled text, remaining text, text format to carry forward, remaining size
+	"""
+
+	boboMult = 1.2  # Bolded 'bobo' text is thicker; multiplier for charcount on bold text
+	boboTag = '<bobo>'
+	space = ' '
+	currPage = prevFormat  # Output text
+	currChars = 0  # Used size
+	activeFormat = prevFormat  # Currently applied active format
+
+	# We iterate over the entire line one character at a time, and add text to the page one word at a time
+	while len(line) != 0:
+		wordEndInd = 0
+		while wordEndInd < len(line):  # Finds entire words and adds them
+			if line[wordEndInd] == space:
+				# found the end of a word- add it to the page
+				currPage += line[0:wordEndInd + 1]
+				line = line[wordEndInd + 1:]
+				currChars += (wordEndInd + 1) * (boboMult if boboTag in activeFormat else 1)
+				if currChars > size:
+					# Filled page
+					return (currPage, line, activeFormat, 0)
+				break
+			elif getFormCode(line[wordEndInd:]):
+				# We found a formatting code. We have to do things, and also consider this the end of the word
+				code = getFormCode(line[wordEndInd:])
+
+				# found the end of a word- add it to the page
+				currPage += line[0:wordEndInd]
+				line = line[wordEndInd:]
+				currChars += wordEndInd * (boboMult if boboTag in activeFormat else 1)
+
+				if currChars > size:
+					# Filled page
+					return (currPage, line, activeFormat, 0)
+
+				# Handle the formatting code
+				if code in ['<item>', '<thing>', '<em>', '<bobo>']:
+					activeFormat += code
+					currPage += code
+					line = line[len(code):]  # Remove the formatting code from the source line
+				elif code == '/$':
+					activeFormat = ''
+					currPage += '/$'
+					line = line[len(code):]  # Remove the formatting code from the source line
+				else:
+					# This is a link
+					# Special casing has to happen for the link path
+					endLinkInd = line.find('>')  # Find the close of the link
+					linkForm = '$(l:' + line[len(code):endLinkInd]
+					linkForm += ')'
+					currPage += linkForm
+					activeFormat += linkForm
+					line = line[endLinkInd + 1:]  # Remove the formatting code from the source line
+
+				break
+			else:
+				# Did not find the end of the word/formatting code- continue
+				wordEndInd += 1
+		else:
+			# Reached the end without finding the "word end"
+			currPage += line
+			currChars += len(line) * (boboMult if boboTag in activeFormat else 1)
+			line = ''
+
+	return (currPage, line, activeFormat, max(0, size - currChars))
+
+
+def writeTextPage(output: str, text: str, lineSt: str, data: [str, ...]) -> str:
+	"""
+	Writes a text page in JSON to output
+	:param output: The previous output json
+	:param text: The body text to write
+	:param lineSt Filler indents at the start of each written line
+	:param data Possibly empty list of params, in order [anchor]
+	:return: The new output string
+	"""
+	if len(output) > 0:
+		output += ',\n'
+	output += lineSt + '{\n'
+	output += lineSt + '\t"type": ' + '"text",\n'
+	if len(data) != 0 and len(data[0]) != 0:
+		output += lineSt + '\t"anchor": "' + data[0] + '",\n'
+	output += lineSt + '\t"text": "' + text.replace('"', '\\"') + '"\n'
+	output += lineSt + '}'
+	return output
+
+
+def writeSpotlightPage(output: str, text: str, lineSt: str, data: [str, ...]) -> str:
+	"""
+	Writes a spotlight page in JSON to output
+	:param output: The previous output json
+	:param text: The body text to write
+	:param lineSt Filler indents at the start of each written line
+	:param data Possibly empty list of params, in order [anchor, item, title]
+	:return: The new output string
+	"""
+	if len(output) > 0:
+		output += ',\n'
+	output += lineSt + '{\n'
+	output += lineSt + '\t"type": ' + '"spotlight",\n'
+	if len(data) != 0 and len(data[0]) != 0:
+		output += lineSt + '\t"anchor": "' + data[0] + '",\n'
+	if len(data) > 2 and len(data[2]) != 0:
+		output += lineSt + '\t' + '"title": "' + data[2] + '",\n'
+	output += lineSt + '\t' + '"item": "' + (data[1] if len(data) > 1 else 'minecraft:stick') + '",\n'
+	output += lineSt + '\t"text": "' + text.replace('"', '\\"') + '"\n'
+	output += lineSt + '}'
+	return output
+
+
+def writeImagePage(output: str, text: str, lineSt: str, data: [str, ...]) -> str:
+	"""
+	Writes an image page in JSON to output
+	:param output: The previous output json
+	:param text: The body text to write
+	:param lineSt Filler indents at the start of each written line
+	:param data Possibly empty list of params, in order [anchor, title, images...]
+	:return: The new output string
+	"""
+	if len(output) > 0:
+		output += ',\n'
+	output += lineSt + '{\n'
+	output += lineSt + '\t"type": ' + '"image",\n'
+	if len(data) != 0 and len(data[0]) != 0:
+		output += lineSt + '\t"anchor": "' + data[0] + '",\n'
+	output += lineSt + '\t"border": "true"\n'
+	if len(data) > 1 and len(data[1]) != 0:
+		output += lineSt + '\t"title": "' + data[1] + '",\n'
+	if len(data) > 2:
+		output += lineSt + '\t"images": ['
+		for i in range(2, len(data)):
+			output += lineSt + '\t\t"' + data[i] + '"' + (',' if i == len(data) - 1 else '') + '\n'
+		output += lineSt + '\t],'
+	output += lineSt + '\t"text": "' + text.replace('"', '\\"') + '"\n'
+	output += lineSt + '}'
+	return output
+
+
+def writeEntityPage(output: str, text: str, lineSt: str, data: [str, ...]) -> str:
+	"""
+	Writes an entity page in JSON to output
+	:param output: The previous output json
+	:param text: The body text to write
+	:param lineSt Filler indents at the start of each written line
+	:param data Possibly empty list of params, in order [anchor, entity]
+	:return: The new output string
+	"""
+	if len(output) > 0:
+		output += ',\n'
+	output += lineSt + '{\n'
+	output += lineSt + '\t"type": ' + '"entity",\n'
+	if len(data) != 0 and len(data[0]) != 0:
+		output += lineSt + '\t"anchor": "' + data[0] + '",\n'
+	if len(data) > 1:
+		output += lineSt + '\t' + '"entity": "' + data[1] + '",\n'
+	output += lineSt + '\t"text": "' + text.replace('"', '\\"') + '"\n'
+	output += lineSt + '}'
+	return output
+
+
+def parseBody(text: [str, ...], icon: str, title: str, indents: int) -> str:
 	"""
 	Generates pages from the raw input
-	:param text: The list of strings where each string is one line in the source file
+	:param text: The list of strings where each string is one body line in the source file
 	:param icon: The icon path
 	:param title: The title of this entry
 	:param indents: The number of indentations to include at minimum on each output line
@@ -113,138 +280,73 @@ def generatePages(text: list, icon: str, title: str, indents: int) -> str:
 
 	lineSt = '\t' * indents  # Placed at the beginning of every line- for indentation
 	output = ''  # Final output string
-	charLimit = 380  # Maximum characters per text page
-	charLimitTitle = 300  # Maximum characters per title page
+	pageCharLimit = {'text': 380, 'spotlight': 300, 'image': 80, 'entity': 80}
 	charPerNewline = 45  # Number of characters to consider a newline
-	boboMult = 1.2  # Bolded 'bobo' text is thicker; multiplier for charcount on bold text
-	space = ' '
+	jsonWriters = {'text': writeTextPage, 'spotlight': writeSpotlightPage, 'image': writeImagePage, 'entity': writeEntityPage}
 
-	pages = []
+	# First page is always a spotlight page
+	pageType = 'spotlight'
+	pageData = ['', icon, title]
 
-	activeFormat = ''  # Current active formatting codes being applied- used to continue onto next page
-	currPage = ''
-	currChars = 0  # Number of chars on current page, not counting formatting codes
+	pageFormat = ''
+	pageText = ''
+	pageSpaceRemain = pageCharLimit[pageType]
 
-	lineNum = 2  # Start at line 3, after name and icon spec
-	lineCount = len(text)
-	forcedPage = False
-	while lineNum < lineCount:
-		if lineNum != 2:
-			# This is a new line. We need to check for either a break or new paragraph
-			if len(text[lineNum]) <= 1:
-				# Force a new page (empty line)
-				pages.append(currPage)
-				currPage = activeFormat  # Continue our current formatting
-				currChars = 0
-				lineNum += 1
-				forcedPage = True
-				continue
-			elif not forcedPage:
-				# Force a new paragraph, or a new page
-				currChars += charPerNewline
-				if currChars > (charLimitTitle if len(pages) == 0 else charLimit):
-					# New page
-					pages.append(currPage)
-					currPage = activeFormat  # Continue our current formatting
-					currChars = 0
-				else:
-					# Append an empty line
-					# Note the escaped backslashes
-					# We want \n to be written in the JSON, which the JSON itself will interpret as a newline
-					currPage += '$(br2)'
-		forcedPage = False
+	for line in text:
+		if line == '\n' or line == '':
+			# Empty line. Treat as <page:text>
+			line = '<page|text>\n'
+		if line.startswith('<page|'):
+			# This line forces a new page, and does not contain body text
+			# Create page with previous text
+			output = jsonWriters[pageType](output, pageText, lineSt, pageData)
+			pageText = ''
 
-		# Add the contents of this line, divided into pages
+			# Parse data for following page
+			parts = [x if x is not None else '' for x in line[6:-2].split('|')]  # Sanitize the input, replace None entries with empty string
+			pageType = parts[0]
+			pageData = [] if len(parts) < 2 else parts[1:]
+			pageSpaceRemain = pageCharLimit[pageType]
+		else:
+			# Body text
 
-		line = text[lineNum]
-		if line[-1] == '\n':
-			line = line[:-1]  # Remove the newline
+			# Check for page length due to previous line adding line breaks
+			if pageSpaceRemain <= 0:
+				output = jsonWriters[pageType](output, pageText, lineSt, pageData)
+				pageText = ''
+				pageType = 'text'
+				pageData = []
+				pageSpaceRemain = pageCharLimit[pageType]
 
-		# We iterate over the entire line one character at a time, and add text to the page one word at a time
-		while len(line) != 0:
-			wordEndInd = 0
-			while wordEndInd < len(line):  # Finds entire words and adds them
-				if line[wordEndInd] == space:
-					# found the end of a word- add it to the page
-					currPage += line[0:wordEndInd + 1]
-					line = line[wordEndInd + 1:]
-					currChars += (wordEndInd + 1) * (boboMult if '<bobo>' in activeFormat else 1)
+			# Add text from the line, and divide the line into pages until finished
+			lineText = line
+			if lineText[-1] == '\n':
+				# Trim the newline character
+				lineText = lineText[:-1]
 
-					if currChars > (charLimitTitle if len(pages) == 0 else charLimit):
-						# New page
-						pages.append(currPage)
-						currPage = activeFormat  # Continue our current formatting
-						currChars = 0
-					break
-				elif getFormCode(line[wordEndInd:]):
-					# We found a formatting code. We have to do things, and also consider this the end of the word
-					code = getFormCode(line[wordEndInd:])
+			while len(lineText) > 0:
+				(newPageText, lineText, pageFormat, pageSpaceRemain) = parseLine(lineText, pageSpaceRemain, pageFormat)
+				pageText += newPageText
+				if pageSpaceRemain <= 0:
+					# Add page and reset
+					output = jsonWriters[pageType](output, pageText, lineSt, pageData)
+					pageText = ''
+					pageType = 'text'
+					pageData = []
+					pageSpaceRemain = pageCharLimit[pageType]
 
-					# found the end of a word- add it to the page
-					currPage += line[0:wordEndInd]
-					line = line[wordEndInd:]
-					currChars += wordEndInd * (boboMult if '<bobo>' in activeFormat else 1)
-
-					if currChars > (charLimitTitle if len(pages) == 0 else charLimit):
-						# New page
-						pages.append(currPage)
-						currPage = activeFormat  # Continue our current formatting
-						currChars = 0
-
-					# Handle the formatting code
-					if code in ['<item>', '<thing>', '<em>', '<bobo>']:
-						activeFormat += code
-						currPage += code
-						line = line[len(code):]  # Remove the formatting code from the source line
-					elif code == '/$':
-						currPage += '/$'
-						activeFormat = ''
-						line = line[len(code):]  # Remove the formatting code from the source line
-					else:
-						# This is a link
-						# Special casing has to happen for the link path
-						endLinkInd = line.find('>')  # Find the close of the link
-						format = '$(l:' + line[len(code):endLinkInd]
-						format += ')'
-						currPage += format
-						activeFormat += format
-						line = line[endLinkInd + 1:]  # Remove the formatting code from the source line
-
-					break
-				else:
-					# Did not find the end of the word/formatting code- continue
-					wordEndInd += 1
-			else:
-				# Reached the end without finding the "word end"
-				currPage += line
-				currChars += len(line) * (boboMult if '<bobo>' in activeFormat else 1)
-				line = ''
-
-				if currChars > (charLimitTitle if len(pages) == 0 else charLimit):
-					# New page
-					pages.append(currPage)
-					currPage = activeFormat  # Continue our current formatting
-					currChars = 0
-
-		lineNum += 1  # Move to the next line
-
-	if len(currPage) != 0:
-		# Add any remaining text from the last line
-		pages.append(currPage)
-
-	# Convert the pages into a single string with newlines
-	first = True  # Whether this is the first page
-	for page in pages:
-		if not first:
-			output += ',\n'
-		output += lineSt + '{\n'
-		output += lineSt + '\t"type": ' + ('"spotlight",\n' if first else '"text",\n')
-		if first:
-			output += lineSt + '\t' + '"title": "' + title + '",\n'
-			output += lineSt + '\t' + '"item": "' + icon + '",\n'
-		output += lineSt + '\t"text": "' + page.replace('"', '\\"') + '"\n'
-		output += lineSt + '}'
-		first = False
+			# Add paragraph break- the next line will do the check for if this forces a new page
+			if pageText != '':
+				pageText += '$(br2)'
+				pageSpaceRemain -= charPerNewline
+	else:
+		# Ended final line, add any remaining text as a final page
+		if len(pageText) > 0 or pageType != 'text':
+			output = jsonWriters[pageType](output, pageText, lineSt, pageData)
+			pageText = ''
+			pageType = 'text'
+			pageData = []
+			pageSpaceRemain = pageCharLimit[pageType]
 
 	return output
 

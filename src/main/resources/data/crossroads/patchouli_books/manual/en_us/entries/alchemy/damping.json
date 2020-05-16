@@ -15,7 +15,7 @@
 		},
 		{
 			"type": "text",
-			"text": "a massive chunk of your base, it is <em>strongly recommended/$ to keep some on hand in your $(l:intro/alchemy)alchemy/$ lab before getting a <item>$(l:alchemy/stones)philosopher's stone/$.$(br2)<item>Damping Powder/$ can also be used by dispensers."
+			"text": "a massive chunk of your base, it is <em>strongly recommended/$ to keep some on hand in your $(l:intro/alchemy)alchemy/$ lab before getting a <item>$(l:alchemy/stones)philosopher's stone/$.$(br2)<item>Damping Powder/$ can also be used by dispensers.$(br2)"
 		}
 	]
 }

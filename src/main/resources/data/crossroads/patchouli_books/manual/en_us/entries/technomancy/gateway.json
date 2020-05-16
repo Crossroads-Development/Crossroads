@@ -11,7 +11,7 @@
 			"type": "spotlight",
 			"title": "Gateway",
 			"item": "crossroads:gateway_frame",
-			"text": "<item>Gateway Frames/$ can be built into a multiblock <item>Gateway/$. The <item>gateway/$ is a portal that can connect to any other <item>gateway/$, including between dimensions. In order to connect to another <item>gateway/$, one of the <item>gateways/$ has to be dialed, and will produce <thing>$(l:intro/technomancy)temporal entropy/$ as a byproduct."
+			"text": "<item>Gateway Frames/$ can be built into a multiblock <item>Gateway/$. The <item>gateway/$ is a portal that can connect to any other <item>gateway/$, including between dimensions. In order to connect to another <item>gateway/$, one of the <item>gateways/$ has to be dialed, and will produce <thing>$(l:intro/technomancy)temporal entropy/$ as a byproduct.$(br2)"
 		},
 		{
 			"type": "text",
@@ -19,7 +19,7 @@
 		},
 		{
 			"type": "text",
-			"text": "formed by right-clicking the top center block with a <item>$(l:essentials/wrench)wrench/$."
+			"text": "formed by right-clicking the top center block with a <item>$(l:essentials/wrench)wrench/$.$(br2)"
 		},
 		{
 			"type": "text",
@@ -35,11 +35,11 @@
 		},
 		{
 			"type": "text",
-			"text": "'address' is dialed."
+			"text": "'address' is dialed.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The <item>gateway/$ that dialed the connection (not the receiving end!) will produce 1 <thing>$(l:intro/technomancy)temporal entropy/$ per tick while connected. Both players and other entities can travel through <item>gateways/$."
+			"text": "The <item>gateway/$ that dialed the connection (not the receiving end!) will produce 1 <thing>$(l:intro/technomancy)temporal entropy/$ per tick while connected. Both players and other entities can travel through <item>gateways/$.$(br2)"
 		}
 	]
 }

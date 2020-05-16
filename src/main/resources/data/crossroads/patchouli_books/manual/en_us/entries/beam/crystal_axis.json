@@ -14,15 +14,15 @@
 		},
 		{
 			"type": "text",
-			"text": "rule to the <item>crystal master axis/$ and all gears/axles it controls. The <thing>$(l:intro/beam)beam/$ does not need to be continuously supplied- higher power beams will last for longer, with 1 point of power lasting 5 ticks (added every 5 ticks).$(br2)Only one <thing>$(l:intro/beam)alignment/$ can be active at a time, and the <thing>$(l:beam/void)void/$ versions of the <thing>$(l:intro/beam)alignments/$ can not be used."
+			"text": "rule to the <item>crystal master axis/$ and all gears/axles it controls. The <thing>$(l:intro/beam)beam/$ does not need to be continuously supplied- higher power beams will last for longer, with 1 point of power lasting 5 ticks (added every 5 ticks).$(br2)Only one <thing>$(l:intro/beam)alignment/$ can be active at a time, and the <thing>$(l:beam/void)void/$ versions of the <thing>$(l:intro/beam)alignments/$ can not be used.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<thing>$(l:essentials/circuits)Circuits/$ measure the time remaining on the current <thing>$(l:intro/beam)alignment/$."
+			"text": "<thing>$(l:essentials/circuits)Circuits/$ measure the time remaining on the current <thing>$(l:intro/beam)alignment/$.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The following effects exist (not all <thing>$(l:intro/beam)alignments/$ have an effect):$(br2)<thing>Stability/$ will make there be no energy loss at all.$(br2)<thing>Energy/$ will add energy to the system every tick, in the direction that the system is already moving. (Amount controlled by config, default 100J/t)"
+			"text": "The following effects exist (not all <thing>$(l:intro/beam)alignments/$ have an effect):$(br2)<thing>Stability/$ will make there be no energy loss at all.$(br2)<thing>Energy/$ will add energy to the system every tick, in the direction that the system is already moving. (Amount controlled by config, default 100J/t)$(br2)"
 		},
 		{
 			"type": "text",
@@ -30,7 +30,7 @@
 		},
 		{
 			"type": "text",
-			"text": "actually be consumed. On the other hand, if a turbine was going to make 100J, it would only make 10J. This has the effect of helping hold speeds steady and reducing fluctuations from the equilibrium speed."
+			"text": "actually be consumed. On the other hand, if a turbine was going to make 100J, it would only make 10J. This has the effect of helping hold speeds steady and reducing fluctuations from the equilibrium speed.$(br2)"
 		}
 	]
 }

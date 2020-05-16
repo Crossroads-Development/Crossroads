@@ -11,11 +11,11 @@
 			"type": "spotlight",
 			"title": "Alignment: Rift",
 			"item": "crossroads:pure_quartz",
-			"text": "<thing>Rift/$ (purple) will spawn hostile mobs native to the biome. It has a <thing>power/$ / 256 chance to spawn a mob, with the chance capped at 1/4.$(br2)It can spawn mobs in solid blocks, and ignores the mob spawning cap."
+			"text": "<thing>Rift/$ (purple) will spawn hostile mobs native to the biome. It has a <thing>power/$ / 256 chance to spawn a mob, with the chance capped at 1/4.$(br2)It can spawn mobs in solid blocks, and ignores the mob spawning cap.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<thing>Void-Rift/$ AKA <thing>Isolation/$ will prevent any hostile mob spawning nearby as long as the beam maintained. The range of this effect is the beam <thing>power/$, and requires the beam to be continuously maintained. Mobs can spawn while the beam isn't running."
+			"text": "<thing>Void-Rift/$ AKA <thing>Isolation/$ will prevent any hostile mob spawning nearby as long as the beam maintained. The range of this effect is the beam <thing>power/$, and requires the beam to be continuously maintained. Mobs can spawn while the beam isn't running.$(br2)"
 		}
 	]
 }

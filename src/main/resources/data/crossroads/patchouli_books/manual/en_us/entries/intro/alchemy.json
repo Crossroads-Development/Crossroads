@@ -23,7 +23,7 @@
 		},
 		{
 			"type": "text",
-			"text": "have JEI installed.$(br2)Commonly used <thing>reagents/$ that you will want a large supply of are: Distilled Water (or Packed Ice), Salt, Redstone Dust, and either Gunpowder or $(l:fluid/ingr)Slag/$."
+			"text": "have JEI installed.$(br2)Commonly used <thing>reagents/$ that you will want a large supply of are: Distilled Water (or Packed Ice), Salt, Redstone Dust, and either Gunpowder or $(l:fluid/ingr)Slag/$.$(br2)"
 		},
 		{
 			"type": "text",
@@ -39,7 +39,7 @@
 		},
 		{
 			"type": "text",
-			"text": "no products that just explode. For example, gunpowder above its ignition temperature. These <thing>reactions/$ are shown by a 'bomb' symbol in JEI with no products."
+			"text": "no products that just explode. For example, gunpowder above its ignition temperature. These <thing>reactions/$ are shown by a 'bomb' symbol in JEI with no products.$(br2)"
 		},
 		{
 			"type": "text",
@@ -55,7 +55,7 @@
 		},
 		{
 			"type": "text",
-			"text": "will make things much easier. Your first goal if you want to progress should probably be to make <item>$(l:alchemy/acid)Aqua Regia/$."
+			"text": "will make things much easier. Your first goal if you want to progress should probably be to make <item>$(l:alchemy/acid)Aqua Regia/$.$(br2)"
 		}
 	]
 }

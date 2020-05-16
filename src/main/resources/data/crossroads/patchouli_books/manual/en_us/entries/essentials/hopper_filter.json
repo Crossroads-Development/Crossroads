@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "the hopper inserting items that don't match.$(br2)The filter can be set by right clicking an item into the filter. If a shulker box is used as the filter, the filter will match everything in the shulker box. "
+			"text": "the hopper inserting items that don't match.$(br2)The filter can be set by right clicking an item into the filter. If a shulker box is used as the filter, the filter will match everything in the shulker box. $(br2)"
 		}
 	]
 }

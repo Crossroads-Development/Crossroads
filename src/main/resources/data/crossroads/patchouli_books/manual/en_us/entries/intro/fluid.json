@@ -22,7 +22,7 @@
 		},
 		{
 			"type": "text",
-			"text": "It can be <item>$(l:heat/fcc)cooled into ingots/$."
+			"text": "It can be <item>$(l:heat/fcc)cooled into ingots/$.$(br2)"
 		}
 	]
 }

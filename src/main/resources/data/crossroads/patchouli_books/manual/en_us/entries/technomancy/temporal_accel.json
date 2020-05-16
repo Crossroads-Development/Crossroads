@@ -19,7 +19,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<thing>$(l:intro/technomancy)/$ is produced- the amount produced grows exponentially with the applied boost- producing (2^(extra ticks))/2 <thing>$(l:intro/technomancy)temporal entropy/$ per tick (aka: +100% boost is 1TEn/tick, +200% boost is 2TEn/tick, +300% is 4TEn/tick, etc.).$(br2)Multiple overlapping <item>temporal accelerators/$ stack additively."
+			"text": "<thing>$(l:intro/technomancy)/$ is produced- the amount produced grows exponentially with the applied boost- producing (2^(extra ticks))/2 <thing>$(l:intro/technomancy)temporal entropy/$ per tick (aka: +100% boost is 1TEn/tick, +200% boost is 2TEn/tick, +300% is 4TEn/tick, etc.).$(br2)Multiple overlapping <item>temporal accelerators/$ stack additively.$(br2)"
 		}
 	]
 }

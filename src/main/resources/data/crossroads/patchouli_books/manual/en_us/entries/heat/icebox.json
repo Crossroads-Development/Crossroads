@@ -10,19 +10,19 @@
 			"type": "spotlight",
 			"title": "Icebox",
 			"item": "crossroads:icebox",
-			"text": "The <item>Icebox/$ is the simplest way to produce cold (aka remove heat). It's the cold equivalent of the <item>$(l:heat/firebox)firebox/$, burning cold items to cool at a constant rate. It can not cool below -20°C.$(br2)It connects to a <item>$(l:heat/cable)cable/$ on the top."
+			"text": "The <item>Icebox/$ is the simplest way to produce cold (aka remove heat). It's the cold equivalent of the <item>$(l:heat/firebox)firebox/$, burning cold items to cool at a constant rate. It can not cool below -20°C.$(br2)It connects to a <item>$(l:heat/cable)cable/$ on the top.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "Typical fuels include (from worst to best): snowballs, snow, and ice. Better fuels last for longer."
+			"text": "Typical fuels include (from worst to best): snowballs, snow, and ice. Better fuels last for longer.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<bobo>hEY! YOU! lUKE! lISTEN! iTS mE,, $(l:intro/welcome#bobo)BOBO/$<bobo>!$(br2)sTEAL h(IS/ER/??/¿¿) LOOK! gET sPECIAL pROTECT! LETHER + too more things!$(br2)4 wATER! sqUIb jUiCE + water meat!$(br2)4 FYRE! BAKON~ fIRE DUST!"
+			"text": "<bobo>hEY! YOU! lUKE! lISTEN! iTS mE,, $(l:intro/welcome#bobo)BOBO/$<bobo>!$(br2)<bobo>sTEAL h(IS/ER/??/¿¿) LOOK! gET sPECIAL pROTECT! LETHER + too more things!$(br2)<bobo>4 wATER! sqUIb jUiCE + water meat!$(br2)<bobo>4 FYRE! BAKON~ fIRE DUST!$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<bobo>4 pOISON! STAKE an' malk!$(br2)4 gravIty! fEATHER aND bIG SWAMP LEAF!/$"
+			"text": "<bobo>4 pOISON! STAKE an' malk!$(br2)<bobo>4 gravIty! fEATHER aND bIG SWAMP LEAF!/$$(br2)"
 		}
 	]
 }

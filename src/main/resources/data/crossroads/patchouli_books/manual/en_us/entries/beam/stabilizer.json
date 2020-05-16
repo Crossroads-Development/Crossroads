@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "them slowly over time. The power of the emitted beam can be configured by shift-clicking with a <item>$(l:essentials/wrench)wrench/$.$(br2)This has the effect of spreading large beams out into a continuous beam of constant power."
+			"text": "them slowly over time. The power of the emitted beam can be configured by shift-clicking with a <item>$(l:essentials/wrench)wrench/$.$(br2)This has the effect of spreading large beams out into a continuous beam of constant power.$(br2)"
 		}
 	]
 }

@@ -18,11 +18,11 @@
 		},
 		{
 			"type": "text",
-			"text": "do Share (bi-directional) connections with this machine, as if it were a tank. <em>This should make is easier to keep it at 50% full./$"
+			"text": "do Share (bi-directional) connections with this machine, as if it were a tank. <em>This should make is easier to keep it at 50% full./$$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<bobo>caAAAAnnnnn YOU HEAr dAAA LUV 2NITE~~~$(br2)iIIII\"m bACK!!;! hI bACK, i\"m $(l:intro/welcome#bobo)bobo/$<bobo>$(br2)sPR3AD da luve t0 da biG-noSES wih A bIG SHInY mOn€¥ bl0ck under-knees dA fAT machine! kApEESH?/$"
+			"text": "<bobo>caAAAAnnnnn YOU HEAr dAAA LUV 2NITE~~~$(br2)<bobo>iIIII\"m bACK!!;! hI bACK, i\"m $(l:intro/welcome#bobo)bobo/$<bobo>$(br2)<bobo>sPR3AD da luve t0 da biG-noSES wih A bIG SHInY mOn€¥ bl0ck under-knees dA fAT machine! kApEESH?/$$(br2)"
 		}
 	]
 }

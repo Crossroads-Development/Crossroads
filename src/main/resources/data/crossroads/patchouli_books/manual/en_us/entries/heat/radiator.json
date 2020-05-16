@@ -10,11 +10,11 @@
 			"type": "spotlight",
 			"title": "Radiator",
 			"item": "crossroads:radiator",
-			"text": "The <item>Radiator/$ is a way of producing heat using <thing>$(l:fluid/steam)steam/$. <thing>$(l:fluid/steam)Steam/$ goes in the bottom, <thing>distilled water/$ comes out the top, and <item>$(l:heat/cable)cables/$ connect to the sides.$(br2)<thing>Distilled water/$ is produced in equal quantity of <thing>$(l:fluid/steam)steam/$ consumed. The <thing>radiator/$ has no maximum temperature."
+			"text": "The <item>Radiator/$ is a way of producing heat using <thing>$(l:fluid/steam)steam/$. <thing>$(l:fluid/steam)Steam/$ goes in the bottom, <thing>distilled water/$ comes out the top, and <item>$(l:heat/cable)cables/$ connect to the sides.$(br2)<thing>Distilled water/$ is produced in equal quantity of <thing>$(l:fluid/steam)steam/$ consumed. The <thing>radiator/$ has no maximum temperature.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The because <thing>$(l:fluid/steam)steam/$ is usually made <em>using/$ <thing>heat/$ in the same ratio as the <item>radiator/$ produces, the <item>radiator/$ is mainly useful for moving heat long distances, or for increasing the maximum reachable temperature- as <thing>$(l:fluid/steam)steam/$ can be produced at as cold as 100°C, while the <item>radiator/$ has no maximum temperature."
+			"text": "The because <thing>$(l:fluid/steam)steam/$ is usually made <em>using/$ <thing>heat/$ in the same ratio as the <item>radiator/$ produces, the <item>radiator/$ is mainly useful for moving heat long distances, or for increasing the maximum reachable temperature- as <thing>$(l:fluid/steam)steam/$ can be produced at as cold as 100°C, while the <item>radiator/$ has no maximum temperature.$(br2)"
 		}
 	]
 }

@@ -18,11 +18,11 @@
 		},
 		{
 			"type": "text",
-			"text": "at a slower speed than the <item>$(l:rotary/gear_base)small gear/$."
+			"text": "at a slower speed than the <item>$(l:rotary/gear_base)small gear/$.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "Remember, all gear networks need at least one <item>$(l:rotary/axis)master axis/$ to work."
+			"text": "Remember, all gear networks need at least one <item>$(l:rotary/axis)master axis/$ to work.$(br2)"
 		}
 	]
 }

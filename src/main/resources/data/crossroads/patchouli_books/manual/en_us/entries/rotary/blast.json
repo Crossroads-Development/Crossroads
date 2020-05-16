@@ -18,11 +18,11 @@
 		},
 		{
 			"type": "text",
-			"text": "is running short."
+			"text": "is running short.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The <item>Industrial Blast Furnace/$ uses <thing>$(l:intro/rotary)rotary power/$ to run. An axle/gear can connect to the top, and the machine has a minimum speed of 2.5rad/s."
+			"text": "The <item>Industrial Blast Furnace/$ uses <thing>$(l:intro/rotary)rotary power/$ to run. An axle/gear can connect to the top, and the machine has a minimum speed of 2.5rad/s.$(br2)"
 		}
 	]
 }

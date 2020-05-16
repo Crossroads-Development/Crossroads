@@ -10,19 +10,19 @@
 			"type": "spotlight",
 			"title": "Beam Permeable Blocks",
 			"item": "crossroads:permeable_quartz",
-			"text": "There are a few decorative blocks that are solid, but allow <thing>$(l:intro/beam)beams/$ to pass through them freely as if they were air."
+			"text": "There are a few decorative blocks that are solid, but allow <thing>$(l:intro/beam)beams/$ to pass through them freely as if they were air.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<item>Permeable Quartz/$ looks like a block of pure quartz, but allows beams to pass through."
+			"text": "<item>Permeable Quartz/$ looks like a block of pure quartz, but allows beams to pass through.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<item>Permeable Glass/$ allows light to pass through, and is transparent like normal glass. It does not look identical to normal glass, but allows beams to pass through."
+			"text": "<item>Permeable Glass/$ allows light to pass through, and is transparent like normal glass. It does not look identical to normal glass, but allows beams to pass through.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<item>Light Clusters/$ are small, non-solid light sources that can float in mid air and that entities can pass through. Beams can pass through them, and they can be dyed colors by right-clicking with dyes (dye not consumed)."
+			"text": "<item>Light Clusters/$ are small, non-solid light sources that can float in mid air and that entities can pass through. Beams can pass through them, and they can be dyed colors by right-clicking with dyes (dye not consumed).$(br2)"
 		}
 	]
 }

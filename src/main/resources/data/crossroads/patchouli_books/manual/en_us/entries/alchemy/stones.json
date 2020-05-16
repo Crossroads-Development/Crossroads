@@ -15,11 +15,11 @@
 		},
 		{
 			"type": "text",
-			"text": "'tier 3 alchemy'."
+			"text": "'tier 3 alchemy'.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The <item>Philosopher's Stone/$ is used to make <item>Phelostogen/$, <item>Aether/$, and <thing>Adamant/$, which are three very important <thing>reagents/$ which many features are locked behind. The <item>philosopher's stone/$, <item>phelostogen/$, and <item>aether/$ need to be contained in crystal glassware- they will destroy glass. Before making the <item>stone/$, make sure to be doing the <thing>$(l:intro/alchemy)reaction/$ in crystal glassware."
+			"text": "The <item>Philosopher's Stone/$ is used to make <item>Phelostogen/$, <item>Aether/$, and <thing>Adamant/$, which are three very important <thing>reagents/$ which many features are locked behind. The <item>philosopher's stone/$, <item>phelostogen/$, and <item>aether/$ need to be contained in crystal glassware- they will destroy glass. Before making the <item>stone/$, make sure to be doing the <thing>$(l:intro/alchemy)reaction/$ in crystal glassware.$(br2)"
 		},
 		{
 			"type": "text",
@@ -35,11 +35,11 @@
 		},
 		{
 			"type": "text",
-			"text": "want.$(br2)For example, 1:1:0 of <item>phelostogen/$:<item>aether/$:<item>adamant/$ will make <item>voltus/$, but so will 4:3:0."
+			"text": "want.$(br2)For example, 1:1:0 of <item>phelostogen/$:<item>aether/$:<item>adamant/$ will make <item>voltus/$, but so will 4:3:0.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The main use of the <thing>elemental reagents/$ made with a <item>practitioner's stone/$ is their effects. See the $(l:alchemy/terraforming)terraforming entry/$ for more.$(br2)<item>Voltus/$ can also be used as an FE source in a <item>$(l:alchemy/generator)Voltus Generator/$, or used to deal damage (see the $(l:alchemy/effect)effects page/$ for details)."
+			"text": "The main use of the <thing>elemental reagents/$ made with a <item>practitioner's stone/$ is their effects. See the $(l:alchemy/terraforming)terraforming entry/$ for more.$(br2)<item>Voltus/$ can also be used as an FE source in a <item>$(l:alchemy/generator)Voltus Generator/$, or used to deal damage (see the $(l:alchemy/effect)effects page/$ for details).$(br2)"
 		}
 	]
 }

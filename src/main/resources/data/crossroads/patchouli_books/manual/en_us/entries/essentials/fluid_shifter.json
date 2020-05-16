@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "fluids to an inventory several blocks away (default limit: 16).$(br2)<item>Fluid shifters/$ are handy for moving fluids cheaply and quickly, including upwards."
+			"text": "fluids to an inventory several blocks away (default limit: 16).$(br2)<item>Fluid shifters/$ are handy for moving fluids cheaply and quickly, including upwards.$(br2)"
 		}
 	]
 }

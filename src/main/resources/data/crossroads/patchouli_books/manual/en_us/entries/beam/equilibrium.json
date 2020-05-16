@@ -15,7 +15,7 @@
 		},
 		{
 			"type": "text",
-			"text": "and will be completely stopped."
+			"text": "and will be completely stopped.$(br2)"
 		},
 		{
 			"type": "text",
@@ -23,7 +23,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<thing>/$ beam explosions.$(br2)If a <thing>Cataclysm/$ and <thing>Equilibrium/$ beam apply to the same explosion, the <thing>Equilibrium/$ beam wins.$(br2)It is difficult to overstate how devastating and power a non-stop massive <thing>Chaos/$ explosion can be."
+			"text": "<thing>/$ beam explosions.$(br2)If a <thing>Cataclysm/$ and <thing>Equilibrium/$ beam apply to the same explosion, the <thing>Equilibrium/$ beam wins.$(br2)It is difficult to overstate how devastating and power a non-stop massive <thing>Chaos/$ explosion can be.$(br2)"
 		}
 	]
 }

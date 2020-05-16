@@ -14,15 +14,15 @@
 		},
 		{
 			"type": "text",
-			"text": "FE using <item>$(l:fluid/tesla)tesla coils/$."
+			"text": "FE using <item>$(l:fluid/tesla)tesla coils/$.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<bobo>top O' da mourning 2 ya! $(l:intro/welcome#bobo)iTT\"S ME, bOBO!/$<bobo>$(br2)mEE no liik wether. iT neVER be da waY I WANT! dIS WHY EYE INTRODUUS dA rAIN ID0L! sIMPLY h0ld &nd d0 a RAIN DANCE*, an BAM! rAIN! wANT rAIN gONE? dO oPPOSITE 0f RAIN DANCE*! BAM!$(br2)maKE wid grae dull rock, "
+			"text": "<bobo>top O' da mourning 2 ya! $(l:intro/welcome#bobo)iTT\"S ME, bOBO!/$<bobo>$(br2)<bobo>mEE no liik wether. iT neVER be da waY I WANT! dIS WHY EYE INTRODUUS dA rAIN ID0L! sIMPLY h0ld &nd d0 a RAIN DANCE*, an BAM! rAIN! wANT rAIN gONE? dO oPPOSITE 0f RAIN DANCE*! BAM!$(br2)<bobo>maKE wid grae dull rock, "
 		},
 		{
 			"type": "text",
-			"text": "<bobo>BLUE shiny rok, smidge o' gOLD!$(br2)*Note: Performing a Rain Dance may trigger 'sticky keys'. Terms and conditions apply. By performing a rain dance, you waive your right to your soul."
+			"text": "<bobo>BLUE shiny rok, smidge o' gOLD!$(br2)<bobo>*Note: Performing a Rain Dance may trigger 'sticky keys'. Terms and conditions apply. By performing a rain dance, you waive your right to your soul.$(br2)"
 		}
 	]
 }

@@ -10,7 +10,7 @@
 			"type": "spotlight",
 			"title": "Splitting Beams",
 			"item": "crossroads:beam_siphon",
-			"text": "There are three different blocks that can split or redirect <thing>$(l:intro/beam)beams/$: The <item>Beam Splitter/$, the <item>Beam Siphon/$, and the <item>Beam Redirector/$."
+			"text": "There are three different blocks that can split or redirect <thing>$(l:intro/beam)beams/$: The <item>Beam Splitter/$, the <item>Beam Siphon/$, and the <item>Beam Redirector/$.$(br2)"
 		},
 		{
 			"type": "text",
@@ -18,15 +18,15 @@
 		},
 		{
 			"type": "text",
-			"text": "go with redstone."
+			"text": "go with redstone.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The <item>Beam Splitter/$ will split off a percentage of the incoming beam out the front, and send the remainder out the back. The portion sent out the front is (redstone signal in)/15. It can accept a <thing>$(l:essentials/circuits)circuit/$ input for more precision. It is a good way of splitting a large incoming beam between two directions."
+			"text": "The <item>Beam Splitter/$ will split off a percentage of the incoming beam out the front, and send the remainder out the back. The portion sent out the front is (redstone signal in)/15. It can accept a <thing>$(l:essentials/circuits)circuit/$ input for more precision. It is a good way of splitting a large incoming beam between two directions.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The <item>Beam Siphon/$ will send a set power from the incoming beam out the front, and send the remainder out the back. The power of the beam siphoned off to the front is equal to the redstone signal received. It can accept a <thing>$(l:essentials/circuits)circuit/$ input for higher powers. It is a good way of supplying beams of a specific power to something, even if the input beam power is unknown."
+			"text": "The <item>Beam Siphon/$ will send a set power from the incoming beam out the front, and send the remainder out the back. The power of the beam siphoned off to the front is equal to the redstone signal received. It can accept a <thing>$(l:essentials/circuits)circuit/$ input for higher powers. It is a good way of supplying beams of a specific power to something, even if the input beam power is unknown.$(br2)"
 		}
 	]
 }

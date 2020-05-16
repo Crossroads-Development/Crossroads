@@ -10,7 +10,7 @@
 			"type": "spotlight",
 			"title": "Firebox",
 			"item": "crossroads:firebox",
-			"text": "The <item>Firebox/$ is the simplest way to produce heat by burning fuel. Any furnace fuel can be used to produce heat at a constant rate.$(br2)It connects to a <item>$(l:heat/cable)cable/$ on the top."
+			"text": "The <item>Firebox/$ is the simplest way to produce heat by burning fuel. Any furnace fuel can be used to produce heat at a constant rate.$(br2)It connects to a <item>$(l:heat/cable)cable/$ on the top.$(br2)"
 		}
 	]
 }

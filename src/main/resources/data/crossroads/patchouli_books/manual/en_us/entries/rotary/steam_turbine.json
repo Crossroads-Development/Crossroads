@@ -14,11 +14,11 @@
 		},
 		{
 			"type": "text",
-			"text": "or gear can be connected to the top. An equal amount of <thing>distilled water/$ is produced as <thing>$(l:fluid/steam)steam/$ is consumed."
+			"text": "or gear can be connected to the top. An equal amount of <thing>distilled water/$ is produced as <thing>$(l:fluid/steam)steam/$ is consumed.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "Compared to the <item>$(l:heat/stirling)stirling engine/$, the <item>steam turbine/$ has no maximum speed and is more scalable, but is less efficient and is bigger to set up. The <item>steam turbine/$ is usually better if a lot of power or high speeds are needed."
+			"text": "Compared to the <item>$(l:heat/stirling)stirling engine/$, the <item>steam turbine/$ has no maximum speed and is more scalable, but is less efficient and is bigger to set up. The <item>steam turbine/$ is usually better if a lot of power or high speeds are needed.$(br2)"
 		}
 	]
 }

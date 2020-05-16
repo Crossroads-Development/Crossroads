@@ -11,7 +11,7 @@
 			"type": "spotlight",
 			"title": "Alignment: Enchantment",
 			"item": "crossroads:pure_quartz",
-			"text": "<thing>Enchantment/$ (light yellow) will enchant 1 item dropped in the world within range. They will be enchanted with a level equal to the beam <thing>power/$. If the beam <thing>power/$ >= 64, then it can get treasure enchantments (like Mending). The range is a radius of sqrt(<thing>power/$) / 2 blocks."
+			"text": "<thing>Enchantment/$ (light yellow) will enchant 1 item dropped in the world within range. They will be enchanted with a level equal to the beam <thing>power/$. If the beam <thing>power/$ >= 64, then it can get treasure enchantments (like Mending). The range is a radius of sqrt(<thing>power/$) / 2 blocks.$(br2)"
 		},
 		{
 			"type": "text",
@@ -19,11 +19,11 @@
 		},
 		{
 			"type": "text",
-			"text": "including treasure enchants, without costing XP."
+			"text": "including treasure enchants, without costing XP.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<thing>Void-Enchantment/$ AKA <thing>Disenchantment/$ will disenchant all items dropped in the world within range. The range is a radius of sqrt(<thing>power/$) / 2 blocks. This can also remove curses from items."
+			"text": "<thing>Void-Enchantment/$ AKA <thing>Disenchantment/$ will disenchant all items dropped in the world within range. The range is a radius of sqrt(<thing>power/$) / 2 blocks. This can also remove curses from items.$(br2)"
 		}
 	]
 }

@@ -15,7 +15,7 @@
 		},
 		{
 			"type": "text",
-			"text": "before release. This is significant for things like the range of liquids/gasses, or for blending <thing>$(l:alchemy/effect)effects/$ for a flame cloud. As a <item>$(l:alchemy/conduit)conduit/$ can only transfer 5 units per tick, 1 second means it can group up to 100 units of <thing>$(l:intro/alchemy)reagents/$.$(br2)<item>Chemical vents/$ can handle <thing>$(l:intro/alchemy)reagents/$ that normally need to be contained in crystal safely."
+			"text": "before release. This is significant for things like the range of liquids/gasses, or for blending <thing>$(l:alchemy/effect)effects/$ for a flame cloud. As a <item>$(l:alchemy/conduit)conduit/$ can only transfer 5 units per tick, 1 second means it can group up to 100 units of <thing>$(l:intro/alchemy)reagents/$.$(br2)<item>Chemical vents/$ can handle <thing>$(l:intro/alchemy)reagents/$ that normally need to be contained in crystal safely.$(br2)"
 		}
 	]
 }

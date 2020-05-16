@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "to <thing>absolute zero/$. <item>$(l:heat/cable)Heat cables/$ connect to the bottom."
+			"text": "to <thing>absolute zero/$. <item>$(l:heat/cable)Heat cables/$ connect to the bottom.$(br2)"
 		}
 	]
 }

@@ -19,7 +19,7 @@
 		},
 		{
 			"type": "text",
-			"text": "There is both a glass and crystal version."
+			"text": "There is both a glass and crystal version.$(br2)"
 		}
 	]
 }

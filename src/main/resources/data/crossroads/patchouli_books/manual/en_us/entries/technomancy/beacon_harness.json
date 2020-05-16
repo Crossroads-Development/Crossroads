@@ -31,7 +31,7 @@
 		},
 		{
 			"type": "text",
-			"text": "(this can be a pulse). It takes 2 seconds (10 <thing>$(l:intro/beam)cycles/$) to startup."
+			"text": "(this can be a pulse). It takes 2 seconds (10 <thing>$(l:intro/beam)cycles/$) to startup.$(br2)"
 		}
 	]
 }

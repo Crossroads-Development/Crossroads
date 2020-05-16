@@ -15,11 +15,11 @@
 		},
 		{
 			"type": "text",
-			"text": "harmed instead of healed."
+			"text": "harmed instead of healed.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<thing>Void-Potential/$ AKA <thing>Death/$ will kill plants, and harms living things within range=sqrt(<thing>power/$) by <thing>power/$/2. This ignores armor, and undead are healed instead of being harmed."
+			"text": "<thing>Void-Potential/$ AKA <thing>Death/$ will kill plants, and harms living things within range=sqrt(<thing>power/$) by <thing>power/$/2. This ignores armor, and undead are healed instead of being harmed.$(br2)"
 		}
 	]
 }

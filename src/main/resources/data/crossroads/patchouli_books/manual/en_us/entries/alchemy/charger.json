@@ -19,15 +19,15 @@
 		},
 		{
 			"type": "text",
-			"text": "<em>a <item>$(l:alchemy/conduit)alchemy conduit/$."
+			"text": "<em>a <item>$(l:alchemy/conduit)alchemy conduit/$.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<bobo>Hi, $(l:intro/welcome#bobo)Bobo/$<bobo> here with the alltim8 FEUL!!!!!$(br2)bURN bURM 4 pWR bRUN!$(br2)sUl4iC aCYD!$(br2)bOTTEL!$(br2)da OFFERING aGAIN! bUT FRESH!$(br2)du N0t DRINK! mUCH dISSOLVE "
+			"text": "<bobo>Hi, $(l:intro/welcome#bobo)Bobo/$<bobo> here with the alltim8 FEUL!!!!!$(br2)<bobo>bURN bURM 4 pWR bRUN!$(br2)<bobo>sUl4iC aCYD!$(br2)<bobo>bOTTEL!$(br2)<bobo>da OFFERING aGAIN! bUT FRESH!$(br2)<bobo>du N0t DRINK! mUCH dISSOLVE "
 		},
 		{
 			"type": "text",
-			"text": "<bobo>lIVER! b0B0 AWAY/$"
+			"text": "<bobo>lIVER! b0B0 AWAY/$$(br2)"
 		}
 	]
 }

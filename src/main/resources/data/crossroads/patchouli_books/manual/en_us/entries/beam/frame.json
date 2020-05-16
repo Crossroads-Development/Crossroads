@@ -10,7 +10,7 @@
 			"type": "spotlight",
 			"title": "Lens Frame",
 			"item": "crossroads:lens_frame",
-			"text": "The <item>Lens Frame/$ is a utility device for manipulating <thing>$(l:intro/beam)beams/$, and has many uses. Beams can travel through it along the axis with the giant hole, and the <item>lens frame/$ <em>will not delay the beam at all/$, even if it is performing an effect."
+			"text": "The <item>Lens Frame/$ is a utility device for manipulating <thing>$(l:intro/beam)beams/$, and has many uses. Beams can travel through it along the axis with the giant hole, and the <item>lens frame/$ <em>will not delay the beam at all/$, even if it is performing an effect.$(br2)"
 		},
 		{
 			"type": "text",
@@ -22,11 +22,11 @@
 		},
 		{
 			"type": "text",
-			"text": "way to make bright quartz, as it doesn't consume the beam."
+			"text": "way to make bright quartz, as it doesn't consume the beam.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<thing>$(l:essentials/circuits)Circuits/$ will read the <thing>power/$ of the beam currently going through the <item>lens frame/$."
+			"text": "<thing>$(l:essentials/circuits)Circuits/$ will read the <thing>power/$ of the beam currently going through the <item>lens frame/$.$(br2)"
 		}
 	]
 }

@@ -15,11 +15,11 @@
 		},
 		{
 			"type": "text",
-			"text": "with a <item>$(l:essentials/wrench)wrench/$. They will not insert any <thing>$(l:intro/alchemy)reagent/$ into the container they are outputting to beyond the configured limit.$(br2)This is useful for both preventing completely filling a <item>$(l:alchemy/vessel)reaction vessel/$ with a <thing>$(l:intro/alchemy)reagent/$, and for controlling the ratio of reagents for certain $(l:intro/alchemy)dangerous reactions/$ or making <item>$(l:alchemy/stones)advanced elemental reagents/$."
+			"text": "with a <item>$(l:essentials/wrench)wrench/$. They will not insert any <thing>$(l:intro/alchemy)reagent/$ into the container they are outputting to beyond the configured limit.$(br2)This is useful for both preventing completely filling a <item>$(l:alchemy/vessel)reaction vessel/$ with a <thing>$(l:intro/alchemy)reagent/$, and for controlling the ratio of reagents for certain $(l:intro/alchemy)dangerous reactions/$ or making <item>$(l:alchemy/stones)advanced elemental reagents/$.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "There is both a crystal and glass variant."
+			"text": "There is both a crystal and glass variant.$(br2)"
 		}
 	]
 }

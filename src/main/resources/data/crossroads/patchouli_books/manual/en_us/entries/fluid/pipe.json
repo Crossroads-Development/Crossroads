@@ -14,15 +14,15 @@
 		},
 		{
 			"type": "text",
-			"text": "a <item>$(l:essentials/wrench)wrench/$ on their connections to adjust the mode. Each connection has 4 modes: Input, Output, Locked, and Share. Input or Output modes only input/output fluid with a neighbor, Locked will be disconnected, and Share only applies to other pipes and <item>$(l:fluid/tank)tanks/$ (including tanks from other mods). In Share mode, pipes will balance their contents to be the same % fullness."
+			"text": "a <item>$(l:essentials/wrench)wrench/$ on their connections to adjust the mode. Each connection has 4 modes: Input, Output, Locked, and Share. Input or Output modes only input/output fluid with a neighbor, Locked will be disconnected, and Share only applies to other pipes and <item>$(l:fluid/tank)tanks/$ (including tanks from other mods). In Share mode, pipes will balance their contents to be the same % fullness.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "There are also <item>redstone fluid tubes/$, which will only connect to/transfer with their neighbors at all while they have a redstone signal."
+			"text": "There are also <item>redstone fluid tubes/$, which will only connect to/transfer with their neighbors at all while they have a redstone signal.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<bobo>hAPPY $(l:intro/welcome#bobo)BOBO/$<bobo> dAY!$(br2)u cAN usE a TUBE to MAKE a VACUUM HOPPPER! alSo da HOPPER &nd s0me cLOTH!$(br2)bOBO AWAY!/$"
+			"text": "<bobo>hAPPY $(l:intro/welcome#bobo)BOBO/$<bobo> dAY!$(br2)<bobo>u cAN usE a TUBE to MAKE a VACUUM HOPPPER! alSo da HOPPER &nd s0me cLOTH!$(br2)<bobo>bOBO AWAY!/$$(br2)"
 		}
 	]
 }

@@ -19,7 +19,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<item>$(l:technomancy/copshowium)Copshowium/$ to craft. It's worth getting a decent supply before starting.$(br2)A good first <thing>Technomancy/$ machine is the <item>$(l:technomancy/beacon_harness)Beacon Harness/$, which produces massive amounts of <thing>$(l:intro/beam)beams/$ cheaply."
+			"text": "<item>$(l:technomancy/copshowium)Copshowium/$ to craft. It's worth getting a decent supply before starting.$(br2)A good first <thing>Technomancy/$ machine is the <item>$(l:technomancy/beacon_harness)Beacon Harness/$, which produces massive amounts of <thing>$(l:intro/beam)beams/$ cheaply.$(br2)"
 		}
 	]
 }

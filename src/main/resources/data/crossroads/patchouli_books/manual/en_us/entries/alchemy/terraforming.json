@@ -11,11 +11,11 @@
 			"type": "spotlight",
 			"title": "Terraforming with Reagents",
 			"item": "minecraft:grass_block",
-			"text": "There are several <thing>$(l:intro/alchemy)reagents/$ which have <thing>$(l:alchemy/effect)effects/$ that change the biome and transmute blocks.$(br2)By combining one of these <thing>$(l:intro/alchemy)reagents/$ with $(l:alchemy/stones)<item>phelostogen/$ or $(l:alchemy/stones)<item>ignis infernum/$, the <thing>$(l:alchemy/effect)effect/$ can be spread over a large area by the <thing>$(l:alchemy/effect)flame cloud/$ for terraforming."
+			"text": "There are several <thing>$(l:intro/alchemy)reagents/$ which have <thing>$(l:alchemy/effect)effects/$ that change the biome and transmute blocks.$(br2)By combining one of these <thing>$(l:intro/alchemy)reagents/$ with $(l:alchemy/stones)<item>phelostogen/$ or $(l:alchemy/stones)<item>ignis infernum/$, the <thing>$(l:alchemy/effect)effect/$ can be spread over a large area by the <thing>$(l:alchemy/effect)flame cloud/$ for terraforming.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "If any <item>quicksilver/$ is present in the released mix, then the <thing>$(l:alchemy/effect)effect/$ will be changed- in addition to changing the biome and transmuting blocks, air will be filled in with certain blocks- allowing filling in massive areas."
+			"text": "If any <item>quicksilver/$ is present in the released mix, then the <thing>$(l:alchemy/effect)effect/$ will be changed- in addition to changing the biome and transmuting blocks, air will be filled in with certain blocks- allowing filling in massive areas.$(br2)"
 		},
 		{
 			"type": "text",
@@ -35,15 +35,15 @@
 		},
 		{
 			"type": "text",
-			"text": "blue ice, and will turn liquids to ice. <item>$(l:alchemy/stones)Stasisol/$ is basically a snow terraformer. When mixed with <item>quicksilver/$, it will fill empty space with snow."
+			"text": "blue ice, and will turn liquids to ice. <item>$(l:alchemy/stones)Stasisol/$ is basically a snow terraformer. When mixed with <item>quicksilver/$, it will fill empty space with snow.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The 'ideal mix' for terraforming is 1 unit of the <thing>$(l:intro/alchemy)reagent/$ used for terraforming, 1 unit of <item>alchemical salt/$ to prevent <item>$(l:alchemy/stones)phelostogen/$/<item>$(l:alchemy/stones)ignis infernum/$ from destroying blocks, optionally 1 unit of <item>quicksilver/$ if you want to fill all empty space instead of just terraforming, and as much <item>$(l:alchemy/stones)phelostogen/$/<item>$(l:alchemy/stones)ignis infernum/$ as desired to make the effect apply over a large area."
+			"text": "The 'ideal mix' for terraforming is 1 unit of the <thing>$(l:intro/alchemy)reagent/$ used for terraforming, 1 unit of <item>alchemical salt/$ to prevent <item>$(l:alchemy/stones)phelostogen/$/<item>$(l:alchemy/stones)ignis infernum/$ from destroying blocks, optionally 1 unit of <item>quicksilver/$ if you want to fill all empty space instead of just terraforming, and as much <item>$(l:alchemy/stones)phelostogen/$/<item>$(l:alchemy/stones)ignis infernum/$ as desired to make the effect apply over a large area.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "For such a large and complicated mix being released, it is suggested to release it using a <item>$(l:alchemy/glassware)shell/$ or <item>$(l:alchemy/glassware)phial/$."
+			"text": "For such a large and complicated mix being released, it is suggested to release it using a <item>$(l:alchemy/glassware)shell/$ or <item>$(l:alchemy/glassware)phial/$.$(br2)"
 		}
 	]
 }

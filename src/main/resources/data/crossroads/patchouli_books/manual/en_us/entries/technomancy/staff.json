@@ -23,11 +23,11 @@
 		},
 		{
 			"type": "text",
-			"text": "fired <thing>$(l:intro/beam)beams/$ from a <item>$(l:technomancy/cage)beam cage/$, which is required for the <item>staff/$ to work, and must be in either the offhand or a baubles slot (if Curios is installed)."
+			"text": "fired <thing>$(l:intro/beam)beams/$ from a <item>$(l:technomancy/cage)beam cage/$, which is required for the <item>staff/$ to work, and must be in either the offhand or a baubles slot (if Curios is installed).$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<bobo>hI hII hIII hIV;;;; iz ME! $(l:intro/welcome#bobo)b0Bo!/$<bobo>$(br2)mE nO uther multi-mega-omni-all-tule!$(br2)dIs sTICK! cONFigURaTIOn sTIcK! gEAR pOWEr sTICK/$"
+			"text": "<bobo>hI hII hIII hIV;;;; iz ME! $(l:intro/welcome#bobo)b0Bo!/$<bobo>$(br2)<bobo>mE nO uther multi-mega-omni-all-tule!$(br2)<bobo>dIs sTICK! cONFigURaTIOn sTIcK! gEAR pOWEr sTICK/$$(br2)"
 		}
 	]
 }

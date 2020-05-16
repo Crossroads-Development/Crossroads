@@ -15,7 +15,7 @@
 		},
 		{
 			"type": "text",
-			"text": "variant."
+			"text": "variant.$(br2)"
 		}
 	]
 }

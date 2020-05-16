@@ -15,15 +15,15 @@
 		},
 		{
 			"type": "text",
-			"text": "(including <item>$(l:essentials/circuits)circuit/$ input).$(br2)Any required <thing>$(l:intro/rotary)energy/$ to increase the <thing>$(l:intro/rotary)speed/$ will be drawn from a gear/axle attached to the back of the <item>redstone master axis/$, if possible. Any excess <thing>$(l:intro/rotary)energy/$ being removed from the system to decrease the <thing>$(l:intro/rotary)speed/$ will be added to an attached gear on the back, if available."
+			"text": "(including <item>$(l:essentials/circuits)circuit/$ input).$(br2)Any required <thing>$(l:intro/rotary)energy/$ to increase the <thing>$(l:intro/rotary)speed/$ will be drawn from a gear/axle attached to the back of the <item>redstone master axis/$, if possible. Any excess <thing>$(l:intro/rotary)energy/$ being removed from the system to decrease the <thing>$(l:intro/rotary)speed/$ will be added to an attached gear on the back, if available.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "It is generally better to use a larger (higher <thing>$(l:intro/rotary)I value/$) gear on the back as an <thing>$(l:intro/rotary)energy/$ source, as that allows the <item>redstone master axis/$ to draw <thing>$(l:intro/rotary)energy/$ more quickly."
+			"text": "It is generally better to use a larger (higher <thing>$(l:intro/rotary)I value/$) gear on the back as an <thing>$(l:intro/rotary)energy/$ source, as that allows the <item>redstone master axis/$ to draw <thing>$(l:intro/rotary)energy/$ more quickly.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<bobo>limitted POWAH! uNLIMITID eNErGY! i AM THE $(l:intro/welcome#bobo)BOBO!/$<bobo>$(br2)watz broun und schtick-y?$(br2)oRANGE ti3m nUGG-NUGG!$(br2)dA ME3NING uv lI3F! ThA MANY-VERSE! &nd EVERYTING! butte on MEET nUGG-nUGG!/$"
+			"text": "<bobo>limitted POWAH! uNLIMITID eNErGY! i AM THE $(l:intro/welcome#bobo)BOBO!/$<bobo>$(br2)<bobo>watz broun und schtick-y?$(br2)<bobo>oRANGE ti3m nUGG-NUGG!$(br2)<bobo>dA ME3NING uv lI3F! ThA MANY-VERSE! &nd EVERYTING! butte on MEET nUGG-nUGG!/$$(br2)"
 		}
 	]
 }

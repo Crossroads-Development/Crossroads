@@ -14,11 +14,11 @@
 		},
 		{
 			"type": "text",
-			"text": "it could be used for $(l:heat/smelter)smelting/$ or <thing>$(l:fluid/steam)steam generation/$.$(br2)A line of <item>solar heaters/$ connected on their copper ends will share heat. The copper ends are also where <item>$(l:heat/cable)cables/$ can be connected."
+			"text": "it could be used for $(l:heat/smelter)smelting/$ or <thing>$(l:fluid/steam)steam generation/$.$(br2)A line of <item>solar heaters/$ connected on their copper ends will share heat. The copper ends are also where <item>$(l:heat/cable)cables/$ can be connected.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "This block pairs well with the <item>$(l:heat/reserve)Heat Reservoir/$ to store heat generated during the day for use at night."
+			"text": "This block pairs well with the <item>$(l:heat/reserve)Heat Reservoir/$ to store heat generated during the day for use at night.$(br2)"
 		}
 	]
 }

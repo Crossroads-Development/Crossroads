@@ -14,15 +14,15 @@
 		},
 		{
 			"type": "text",
-			"text": "inputs, the more power is produced, and the more efficient the <item>stirling engine/$ is. There must be a minimum 100°C difference to produce any power. Heat will be exchanged between the two inputs- the higher the temperature difference, the faster this happens (5°C/t per 100°C difference).$(br2)The <item>stirling engine/$ will stop producing any power "
+			"text": "inputs, the more power is produced, and the more efficient the <item>stirling engine/$ is. There must be a minimum 100°C difference to produce any power. Heat will be exchanged between the two inputs- the higher the temperature difference, the faster this happens (5°C/t per 100°C difference).$(br2)The <item>stirling engine/$ will stop producing any power above "
 		},
 		{
 			"type": "text",
-			"text": "above speeds of 1rad/s [config controlled- trust the tooltip]. The <item>stirling engine/$ also has <em>no minimum temperature/$, only a minimum temperature difference. If one side is room temperature, and the other side is extremely cold, this can also produce power. There is no limit on the maximum efficiency of the <item>stirling engine/$."
+			"text": "speeds of 1rad/s [config controlled- trust the tooltip]. The <item>stirling engine/$ also has <em>no minimum temperature/$, only a minimum temperature difference. If one side is room temperature, and the other side is extremely cold, this can also produce power. There is no limit on the maximum efficiency of the <item>stirling engine/$.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "Compared to the <item>$(l:rotary/steam_turbine)steam turbine/$, the <item>stirling engine/$ can be much more efficient, and has no minimum temperature. However, it is harder to scale up <item>stirling engines/$ than <item>$(l:rotary/steam_turbine)steam turbines/$, and the low maximum speed of the <item>stirling engine/$ means it can't power most machines without <thing>$(l:rotary/gear_large)gearing to multiply the speed/$."
+			"text": "Compared to the <item>$(l:rotary/steam_turbine)steam turbine/$, the <item>stirling engine/$ can be much more efficient, and has no minimum temperature. However, it is harder to scale up <item>stirling engines/$ than <item>$(l:rotary/steam_turbine)steam turbines/$, and the low maximum speed of the <item>stirling engine/$ means it can't power most machines without <thing>$(l:rotary/gear_large)gearing to multiply the speed/$.$(br2)"
 		}
 	]
 }

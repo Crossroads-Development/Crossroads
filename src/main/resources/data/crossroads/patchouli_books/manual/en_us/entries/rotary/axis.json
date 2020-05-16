@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "The <item>master axis/$ doesn't have any <thing>I value/$ or anything else like that- in early game it just exists to make everything work.$(br2)Later game, there are some <item>$(l:beam/crystal_axis)special master axes/$ with useful effects."
+			"text": "The <item>master axis/$ doesn't have any <thing>I value/$ or anything else like that- in early game it just exists to make everything work.$(br2)Later game, there are some <item>$(l:beam/crystal_axis)special master axes/$ with useful effects.$(br2)"
 		}
 	]
 }

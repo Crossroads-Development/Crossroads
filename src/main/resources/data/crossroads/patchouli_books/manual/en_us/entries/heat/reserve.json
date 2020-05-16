@@ -14,11 +14,11 @@
 		},
 		{
 			"type": "text",
-			"text": "when broken."
+			"text": "when broken.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "This block pairs well with <item>$(l:heat/solar)Solar Heaters/$ to make them viable at night."
+			"text": "This block pairs well with <item>$(l:heat/solar)Solar Heaters/$ to make them viable at night.$(br2)"
 		}
 	]
 }

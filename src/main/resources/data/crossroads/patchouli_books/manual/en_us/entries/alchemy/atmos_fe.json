@@ -23,7 +23,7 @@
 		},
 		{
 			"type": "text",
-			"text": "will spawn as charged creepers. <em>It would be a good idea to setup a system to prevent the charge from getting too high!/$$(br2)<thing>$(l:essentials/circuits)Circuits/$ will measure the percentage fullness of the shared <thing>atmospheric storage/$- reading from 0 to 100."
+			"text": "will spawn as charged creepers. <em>It would be a good idea to setup a system to prevent the charge from getting too high!/$$(br2)<thing>$(l:essentials/circuits)Circuits/$ will measure the percentage fullness of the shared <thing>atmospheric storage/$- reading from 0 to 100.$(br2)"
 		}
 	]
 }

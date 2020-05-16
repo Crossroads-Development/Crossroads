@@ -15,7 +15,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<thing>$(l:intro/technomancy)temporal entropy/$ faster than it can be drained by <thing>$(l:technomancy/node)entropy nodes/$, causing it to inevitably explode."
+			"text": "<thing>$(l:intro/technomancy)temporal entropy/$ faster than it can be drained by <thing>$(l:technomancy/node)entropy nodes/$, causing it to inevitably explode.$(br2)It can be disabled by a redstone signal.$(br2)"
 		}
 	]
 }

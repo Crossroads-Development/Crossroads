@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<item>/$.$(br2)<item>Wireless transmitters/receivers/$ can be right-clicked with dyes to color code them."
+			"text": "<item>/$.$(br2)<item>Wireless transmitters/receivers/$ can be right-clicked with dyes to color code them.$(br2)"
 		}
 	]
 }

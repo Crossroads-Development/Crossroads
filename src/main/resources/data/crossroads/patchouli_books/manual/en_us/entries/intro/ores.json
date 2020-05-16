@@ -10,23 +10,23 @@
 			"type": "spotlight",
 			"title": "Ores",
 			"item": "crossroads:gem_ruby",
-			"text": "Crossroads adds a few ores to world gen. Crossroads also adds several methods for <thing>$(l:rotary/millstone)ore doubling/$ and a method of <thing>$(l:rotary/stamp)ore tripling/$."
+			"text": "Crossroads adds a few ores to world gen. Crossroads also adds several methods for <thing>$(l:rotary/millstone)ore doubling/$ and a method of <thing>$(l:rotary/stamp)ore tripling/$.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<item>Copper/$ is quite common, spawning in large veins below y=30."
+			"text": "<item>Copper/$ is quite common, spawning in large veins below y=30.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<item>Tin/$ is about as rare as gold, spawning scattered as a single ore block below y=30. For an optional extra challenge, you can keep Crossroads tin separate from other mods' tin, and use only the Crossroads tin for Crossroads machines."
+			"text": "<item>Tin/$ is about as rare as gold, spawning scattered as a single ore block below y=30. For an optional extra challenge, you can keep Crossroads tin separate from other mods' tin, and use only the Crossroads tin for Crossroads machines.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<item>Ruby ore/$ only spawns in the nether in veins of nether quartz ore. It is overall quite rare- but easy to find if you mine quartz ore veins. It drops <item>ruby/$ gems, which are used for <thing>$(l:intro/beam)beams/$."
+			"text": "<item>Ruby ore/$ only spawns in the nether in veins of nether quartz ore. It is overall quite rare- but easy to find if you mine quartz ore veins. It drops <item>ruby/$ gems, which are used for <thing>$(l:intro/beam)beams/$.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<item>Void ore/$ only spawns in the end on the outer end islands. It fairly easy to find. It drops <item>void crystals/$, which are used for late game <thing>$(l:intro/beam)beams/$ (specifically creating <thing>$(l:beam/void)void/$)."
+			"text": "<item>Void ore/$ only spawns in the end on the outer end islands. It fairly easy to find. It drops <item>void crystals/$, which are used for late game <thing>$(l:intro/beam)beams/$ (specifically creating <thing>$(l:beam/void)void/$).$(br2)"
 		}
 	]
 }

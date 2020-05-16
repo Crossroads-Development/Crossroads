@@ -15,7 +15,7 @@
 		},
 		{
 			"type": "text",
-			"text": "each $(l:intro/beam)cycle/$, with the same color as the total stored $(l:intro/beam)beam/$.$(br2)This has the effect of 'smoothing' out received <thing>$(l:intro/beam)beams/$, turning pulses into continuous <thing>$(l:intro/beam)beams/$ and reducing fluctuations in input.$(br2)<item>$(l:essentials/circuits)Circuits/$ measure the total stored <thing>$(l:intro/beam)power/$."
+			"text": "each $(l:intro/beam)cycle/$, with the same color as the total stored $(l:intro/beam)beam/$.$(br2)This has the effect of 'smoothing' out received <thing>$(l:intro/beam)beams/$, turning pulses into continuous <thing>$(l:intro/beam)beams/$ and reducing fluctuations in input.$(br2)<item>$(l:essentials/circuits)Circuits/$ measure the total stored <thing>$(l:intro/beam)power/$.$(br2)"
 		}
 	]
 }

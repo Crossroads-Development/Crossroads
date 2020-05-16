@@ -11,11 +11,11 @@
 			"type": "spotlight",
 			"title": "Voltus Generator",
 			"item": "crossroads:voltus_generator",
-			"text": "The <item>Voltus Generator/$ is a way of converting <item>$(l:alchemy/stones)Voltus/$ into FE. It accepts <item>$(l:alchemy/stones)voltus/$ through a <item>$(l:alchemy/conduit)conduit/$ connection on any side, and will auto-output FE on all sides.$(br2)It converts (by default) 1 <item>voltus/$ to 2,000FE at 2,000FE/t, and can store a buffer of 100 <item>voltus/$."
+			"text": "The <item>Voltus Generator/$ is a way of converting <item>$(l:alchemy/stones)Voltus/$ into FE. It accepts <item>$(l:alchemy/stones)voltus/$ through a <item>$(l:alchemy/conduit)conduit/$ connection on any side, and will auto-output FE on all sides.$(br2)It converts (by default) 1 <item>voltus/$ to 2,000FE at 2,000FE/t, and can store a buffer of 100 <item>voltus/$.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "A good way of transferring and storing the FE it makes is with an <item>$(l:alchemy/atmos_fe)Atmospheric Attenuator/$."
+			"text": "A good way of transferring and storing the FE it makes is with an <item>$(l:alchemy/atmos_fe)Atmospheric Attenuator/$.$(br2)"
 		}
 	]
 }

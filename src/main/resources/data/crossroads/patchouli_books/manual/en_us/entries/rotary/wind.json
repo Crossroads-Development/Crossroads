@@ -18,7 +18,7 @@
 		},
 		{
 			"type": "text",
-			"text": "the wind is never that fast.$(br2)The axle connection is on the back."
+			"text": "the wind is never that fast.$(br2)The axle connection is on the back.$(br2)"
 		},
 		{
 			"type": "text",
@@ -26,7 +26,7 @@
 		},
 		{
 			"type": "text",
-			"text": "this with things like <item>$(l:rotary/gear_base)toggle gears & clutches/$ makes it possible to ensure your turbine is <em>never/$ fighting momentum. <em>This is probably a good idea!/$ Especially as otherwise, if you're using two <item>wind turbines/$, they might fight each other."
+			"text": "this with things like <item>$(l:rotary/gear_base)toggle gears & clutches/$ makes it possible to ensure your turbine is <em>never/$ fighting momentum. <em>This is probably a good idea!/$ Especially as otherwise, if you're using two <item>wind turbines/$, they might fight each other.$(br2)"
 		}
 	]
 }

@@ -14,11 +14,11 @@
 		},
 		{
 			"type": "text",
-			"text": "that the player has an <item>omnimeter/$ for Crossroads machines. WAILA is not a good substitute."
+			"text": "that the player has an <item>omnimeter/$ for Crossroads machines. WAILA is not a good substitute.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "Another basic tool that Crossroads uses a lot is the <item>$(l:essentials/wrench)wrench/$- though basically any mods' wrench will work."
+			"text": "Another basic tool that Crossroads uses a lot is the <item>$(l:essentials/wrench)wrench/$- though basically any mods' wrench will work.$(br2)"
 		}
 	]
 }

@@ -18,11 +18,11 @@
 		},
 		{
 			"type": "text",
-			"text": "recipes. In order to unlock any <thing>path/$, you <em>must/$ have discovered every <thing>$(l:intro/beam)alignment/$ (other than <thing>$(l:beam/void)void/$)- otherwise the <thing>path/$ will not unlock."
+			"text": "recipes. In order to unlock any <thing>path/$, you <em>must/$ have discovered every <thing>$(l:intro/beam)alignment/$ (other than <thing>$(l:beam/void)void/$)- otherwise the <thing>path/$ will not unlock.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<thing>Alchemy/$ is a <thing>path/$ all about chemistry, materials, and transmutation. It adds a new crafting system based on chemical reactions. <thing>Alchemy/$ allows mass producing gems and metals, making special new super-dense materials that allow controlling gravity, doing terraforming and biome changing, and generally manipulating the forces of nature on a massive scale."
+			"text": "<thing>Alchemy/$ is a <thing>path/$ all about chemistry, materials, and transmutation. It adds a new crafting system based on chemical reactions. <thing>Alchemy/$ allows mass producing gems and metals, making special new super-dense materials that allow controlling gravity, doing terraforming and biome changing, and generally manipulating the forces of nature on a massive scale.$(br2)"
 		},
 		{
 			"type": "text",
@@ -30,7 +30,7 @@
 		},
 		{
 			"type": "text",
-			"text": "the <item>Practitioner's Stone/$.$(br2)To unlock <thing>Alchemy/$, in a <item>detailed crafter/$, surround a glass bottle with gems (diamond/lapis/ruby/etc) after having discovered every non-<thing>$(l:beam/void)void/$ <thing>$(l:intro/beam)alignment/$. The items will be consumed."
+			"text": "the <item>Practitioner's Stone/$.$(br2)To unlock <thing>Alchemy/$, in a <item>detailed crafter/$, surround a glass bottle with gems (diamond/lapis/ruby/etc) after having discovered every non-<thing>$(l:beam/void)void/$ <thing>$(l:intro/beam)alignment/$. The items will be consumed.$(br2)"
 		},
 		{
 			"type": "text",
@@ -42,7 +42,7 @@
 		},
 		{
 			"type": "text",
-			"text": "having discovered every non-<thing>$(l:beam/void)void/$ <thing>$(l:intro/beam)alignment/$. The items will be consumed."
+			"text": "having discovered every non-<thing>$(l:beam/void)void/$ <thing>$(l:intro/beam)alignment/$. The items will be consumed.$(br2)"
 		}
 	]
 }

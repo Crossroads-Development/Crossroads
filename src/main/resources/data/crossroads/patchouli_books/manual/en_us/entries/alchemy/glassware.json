@@ -23,15 +23,15 @@
 		},
 		{
 			"type": "text",
-			"text": "be added by right clicking with a bucket filled with the $(l:alchemy/fluid_injector)corresponding liquid/$ (ex. distilled water bucket -> <item>water reagent/$). Liquid <thing>$(l:intro/alchemy)reagent/$ can be removed with a bucket by right clicking with a bucket <em>if that reagent has a bucket form (most don't) and there is enough present).$(br2)<item>$(l:alchemy/conduit)Conduits/$ can connect to the top of the <item>stand/$ if there is <item>glassware"
+			"text": "be added by right clicking with a bucket filled with the $(l:alchemy/fluid_injector)corresponding liquid/$ (ex. distilled water bucket -> <item>water reagent/$). Liquid <thing>$(l:intro/alchemy)reagent/$ can be removed with a bucket by right clicking with a bucket <em>if that reagent has a bucket form (most don't) and there is enough present).$(br2)<em><item>$(l:alchemy/conduit)Conduits/$ can connect to the top of the <item>stand/$ if there is <item>glassware"
 		},
 		{
 			"type": "text",
-			"text": "<item>/$ in it, allowing <item>$(l:alchemy/conduit)conduits/$ to interact with <item>glassware/$. If the <item>stand/$ has a redstone signal, it will force <thing>$(l:intro/alchemy)reagents/$ upwards out through any connected <item>$(l:alchemy/conduit)conduits/$- even if it is in a phase that normally wouldn't flow up (like liquid)."
+			"text": "<item>/$ in it, allowing <item>$(l:alchemy/conduit)conduits/$ to interact with <item>glassware/$. If the <item>stand/$ has a redstone signal, it will force <thing>$(l:intro/alchemy)reagents/$ upwards out through any connected <item>$(l:alchemy/conduit)conduits/$- even if it is in a phase that normally wouldn't flow up (like liquid).$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<item>Phials/$ are used for storing and transferring <thing>$(l:intro/alchemy)reagents/$. They <em>will not/$ allow <thing>$(l:intro/alchemy)reactions/$ to occur inside them. They have a capacity of 20, and are cheap to make. They can also be right-clicked in the world to pour out their <thing>$(l:intro/alchemy)reagents/$, emptying the <item>phial/$ and allowing the <thing>$(l:intro/alchemy)reagents/$ to perform their <thing>$(l:alchemy/effect)effects/$."
+			"text": "<item>Phials/$ are used for storing and transferring <thing>$(l:intro/alchemy)reagents/$. They <em>will not/$ allow <thing>$(l:intro/alchemy)reactions/$ to occur inside them. They have a capacity of 20, and are cheap to make. They can also be right-clicked in the world to pour out their <thing>$(l:intro/alchemy)reagents/$, emptying the <item>phial/$ and allowing the <thing>$(l:intro/alchemy)reagents/$ to perform their <thing>$(l:alchemy/effect)effects/$.$(br2)"
 		},
 		{
 			"type": "text",
@@ -39,11 +39,11 @@
 		},
 		{
 			"type": "text",
-			"text": "be <thing>$(l:intro/alchemy)charged/$ by a <item>stand/$- it you want to do <thing>$(l:intro/alchemy)reactions/$ manually in a <thing>$(l:intro/alchemy)charged environment/$, use a <item>$(l:alchemy/charger)electrolyzer/$."
+			"text": "be <thing>$(l:intro/alchemy)charged/$ by a <item>stand/$- it you want to do <thing>$(l:intro/alchemy)reactions/$ manually in a <thing>$(l:intro/alchemy)charged environment/$, use a <item>$(l:alchemy/charger)electrolyzer/$.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<item>Shells/$ are used for throwing <thing>$(l:intro/alchemy)reagents/$ to use their <thing>$(l:alchemy/effect)effects/$ far away from the user. They act like <item>phials/$ while in a <item>stand/$ (capacity 20, no reactions), but can be thrown with a right click. They will shatter where they land, releasing their <thing>$(l:intro/alchemy)reagents/$ to perform their <thing>$(l:alchemy/effect)effects/$. They can also be thrown by dispensors."
+			"text": "<item>Shells/$ are used for throwing <thing>$(l:intro/alchemy)reagents/$ to use their <thing>$(l:alchemy/effect)effects/$ far away from the user. They act like <item>phials/$ while in a <item>stand/$ (capacity 20, no reactions), but can be thrown with a right click. They will shatter where they land, releasing their <thing>$(l:intro/alchemy)reagents/$ to perform their <thing>$(l:alchemy/effect)effects/$. They can also be thrown by dispensors.$(br2)"
 		}
 	]
 }

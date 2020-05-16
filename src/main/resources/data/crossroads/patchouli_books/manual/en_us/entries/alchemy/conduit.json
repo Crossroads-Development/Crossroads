@@ -19,11 +19,11 @@
 		},
 		{
 			"type": "text",
-			"text": "<thing>$(l:intro/alchemy)in a <item>conduit/$."
+			"text": "<thing>$(l:intro/alchemy)in a <item>conduit/$.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<item>Redstone Alchemy Conduits/$ are like normal <item>alchemy conduits/$, except they will only connect to their neighbors while they have a redstone signal."
+			"text": "<item>Redstone Alchemy Conduits/$ are like normal <item>alchemy conduits/$, except they will only connect to their neighbors while they have a redstone signal.$(br2)"
 		}
 	]
 }

@@ -22,11 +22,11 @@
 		},
 		{
 			"type": "text",
-			"text": "<bobo>1tz-A-MEEE,,, B0BO!$(br2)$(l:intro/welcome#bobo)rEMEMbER/$<bobo>?!$(br2)tRee tingz &nd OFFRING! deez tings:;:$(br2)glow dUst!$(br2)fR3sh bAKEd bRED!$(br2)aLLIUM jOOs!"
+			"text": "<bobo>1tz-A-MEEE,,, B0BO!$(br2)<bobo>$(l:intro/welcome#bobo)rEMEMbER/$<bobo>?!$(br2)<bobo>tRee tingz &nd OFFRING! deez tings:;:$(br2)<bobo>glow dUst!$(br2)<bobo>fR3sh bAKEd bRED!$(br2)<bobo>aLLIUM jOOs!$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<bobo>g0TTa g0 FAST!!!/$"
+			"text": "<bobo>g0TTa g0 FAST!!!/$$(br2)"
 		}
 	]
 }
