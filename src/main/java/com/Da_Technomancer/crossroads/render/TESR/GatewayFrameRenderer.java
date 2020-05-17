@@ -35,6 +35,9 @@ public class GatewayFrameRenderer extends LinkLineRenderer<GatewayFrameTileEntit
 		GlStateManager.pushLightingAttributes();
 		GlStateManager.disableLighting();//Needed for lighting to work when rotating
 
+		GlStateManager.enableBlend();
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+
 		//Define lighting based on the interior of the frame, as the frame itself is solid blocks
 		CRRenderUtil.setLighting(frame.getWorld().getCombinedLight(frame.getPos().down(frame.getSize() / 5), 0));
 
@@ -182,6 +185,7 @@ public class GatewayFrameRenderer extends LinkLineRenderer<GatewayFrameTileEntit
 			//Glow in the dark
 			int light = CRRenderUtil.getCurrLighting();
 			CRRenderUtil.setBrightLighting();
+			GlStateManager.color4f(1, 1, 1, 0.8F);
 
 			vb.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION_TEX);
 
@@ -197,6 +201,7 @@ public class GatewayFrameRenderer extends LinkLineRenderer<GatewayFrameTileEntit
 
 			tess.draw();
 
+			GlStateManager.color4f(1, 1, 1, 1);
 			CRRenderUtil.setLighting(light);
 			GlStateManager.enableCull();
 		}
@@ -338,6 +343,7 @@ public class GatewayFrameRenderer extends LinkLineRenderer<GatewayFrameTileEntit
 			GlStateManager.popMatrix();
 		}
 
+		GlStateManager.disableBlend();
 		GlStateManager.enableLighting();
 		GlStateManager.popAttributes();
 		GlStateManager.popMatrix();
@@ -353,6 +359,6 @@ public class GatewayFrameRenderer extends LinkLineRenderer<GatewayFrameTileEntit
 
 	@Override
 	public boolean isGlobalRenderer(GatewayFrameTileEntity te){
-		return true;
+		return te.isActive();
 	}
 }

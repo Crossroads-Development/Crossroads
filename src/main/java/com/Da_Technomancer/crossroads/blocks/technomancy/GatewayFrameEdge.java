@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayEdgeTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
@@ -26,11 +27,11 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class GatewayFrame extends ContainerBlock implements IReadable{
+public class GatewayFrameEdge extends ContainerBlock implements IReadable{
 
-	public GatewayFrame(){
+	public GatewayFrameEdge(){
 		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
-		String name = "gateway_frame";
+		String name = "gateway_edge";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
@@ -40,13 +41,12 @@ public class GatewayFrame extends ContainerBlock implements IReadable{
 	@Nullable
 	@Override
 	public TileEntity createNewTileEntity(IBlockReader worldIn){
-		return new GatewayFrameTileEntity();
+		return new GatewayEdgeTileEntity();
 	}
 
 	@Override
 	public BlockRenderType getRenderType(BlockState state){
-		//If this is formed into a multiblock, we let the TESR on the top handle all rendering
-		return state.get(CRProperties.ACTIVE) ? BlockRenderType.ENTITYBLOCK_ANIMATED : BlockRenderType.MODEL;
+		return BlockRenderType.MODEL;
 	}
 
 	@Override
@@ -55,26 +55,10 @@ public class GatewayFrame extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult ray){
-		ItemStack held = player.getHeldItem(hand);
-		if(state.get(CRProperties.ACTIVE)){
-			//Handle linking if this is the top block
-			return FluxUtil.handleFluxLinking(world, pos, held, player);
-		}else if(ESConfig.isWrench(held)){
-			//Attempt to form the multiblock
-			TileEntity te = world.getTileEntity(pos);
-			if(te instanceof GatewayFrameTileEntity){
-				return ((GatewayFrameTileEntity) te).assemble();
-			}
-		}
-		return false;
-	}
-
-	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
 		TileEntity te = world.getTileEntity(pos);
-		if(newState.getBlock() != state.getBlock() && te instanceof GatewayFrameTileEntity){
-			((GatewayFrameTileEntity) te).dismantle();//Shutdown the multiblock
+		if(newState.getBlock() != state.getBlock() && te instanceof GatewayEdgeTileEntity){
+			((GatewayEdgeTileEntity) te).dismantle();//Shutdown the multiblock
 		}
 		super.onReplaced(state, world, pos, newState, isMoving);
 	}
@@ -99,16 +83,13 @@ public class GatewayFrame extends ContainerBlock implements IReadable{
 
 	@Override
 	public float read(World world, BlockPos pos, BlockState state){
+		if(!state.get(CRProperties.ACTIVE)){
+			return 0;
+		}
 		//Read the number of entries in the dialed address [0-4]
 		TileEntity te = world.getTileEntity(pos);
-		if(te instanceof GatewayFrameTileEntity){
-			EnumBeamAlignments[] chev = ((GatewayFrameTileEntity) te).chevrons;
-			for(int i = 0; i < chev.length; i++){
-				if(chev[i] == null){
-					return i;
-				}
-			}
-			return chev.length;
+		if(te instanceof GatewayEdgeTileEntity){
+			return ((GatewayEdgeTileEntity) te).getCircuitRead();
 		}
 		return 0;
 	}

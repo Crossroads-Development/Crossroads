@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"north": "crossroads:block/gateway_edge",
+		"south": "crossroads:block/gateway_edge",
+		"east": "crossroads:block/gateway_edge",
+		"west": "crossroads:block/gateway_edge",
+		"up": "crossroads:block/gateway_edge",
+		"down": "crossroads:block/gateway_edge",
+		"particle": "crossroads:block/gateway_edge"
+	}
+}

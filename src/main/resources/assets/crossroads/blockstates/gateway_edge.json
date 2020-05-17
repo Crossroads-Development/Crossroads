@@ -1,6 +1,6 @@
 {
 	"variants": {
-		"active=false": { "model": "crossroads:block/gateway_frame" },
+		"active=false": { "model": "crossroads:block/gateway_edge" },
 		"active=true": { "model": "crossroads:block/gateway_frame_empty" }
 	}
 }

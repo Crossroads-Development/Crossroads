@@ -69,6 +69,7 @@ public class CRTileEntity{
 		register(HamsterWheelTileEntity::new, "hamster_wheel", reg, hamsterWheel);
 		register(CopshowiumCreationChamberTileEntity::new, "copshowium_creation_chamber", reg, copshowiumCreationChamber);
 		register(GatewayFrameTileEntity::new, "gateway_frame", reg, gatewayFrame);
+		register(GatewayEdgeTileEntity::new, "gateway_edge", reg, gatewayEdge);
 //		register(RedstoneKeyboardTileEntity::new, "redstone_keyboard", reg, redstoneKeyboard);
 //		register(PrototypingTableTileEntity::new, "prototyping_table", reg, prototypingTable);
 //		register(PrototypeTileEntity::new, "prototype", reg, prototype);

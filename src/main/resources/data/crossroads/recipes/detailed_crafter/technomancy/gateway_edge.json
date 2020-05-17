@@ -2,17 +2,17 @@
 	"type": "crossroads:detailed_crafter",
 	"path": "technomancy",
 	"result": {
-		"item": "crossroads:gateway_frame",
-		"count": 1
+		"item": "crossroads:gateway_edge",
+		"count": 4
 	},
 	"pattern": [
-		"COC",
-		"OCO",
-		"COC"
+		"OOO",
+		"CCC",
+		"OCO"
 	],
 	"key": {
 		"O": {
-			"item": "crossroads:gateway_edge"
+			"tag": "forge:obsidian"
 		},
 		"C": {
 			"tag": "crossroads:ingots/copshowium"

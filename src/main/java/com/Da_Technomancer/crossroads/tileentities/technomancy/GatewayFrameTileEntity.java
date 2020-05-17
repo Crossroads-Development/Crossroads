@@ -76,20 +76,8 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	private LazyOptional<IAxleHandler> axleOpt = null;
 	private LazyOptional<IBeamHandler> beamOpt = null;
 
-	//These fields will be correct for any portion of a formed multiblock
-	private BlockPos key = null;//The relative position of the top center of the multiblock. Null if this is not formed
 	private int size = 0;//Diameter of the multiblock, from top center to bottom center
 	private Direction.Axis plane = null;//Legal values are null (unformed), x (for structure in x-y plane), and z (for structure in y-z plane). This should never by y
-
-	/**
-	 * Used for rendering
-	 * Do not modify the array
-	 * @return The currently dialed chevrons. May contain null
-	 */
-	@Nonnull
-	public EnumBeamAlignments[] getChevrons(){
-		return chevrons;
-	}
 
 	/**
 	 * Used for rendering
@@ -179,16 +167,21 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	 * @return Whether this block is formed into a multiblock and is the top center block (which handles all the logic)
 	 */
 	public boolean isActive(){
-		return getBlockState().get(CRProperties.ACTIVE) && getBlockState().get(CRProperties.TOP);
+		BlockState state = getBlockState();
+		return state.getBlock() == CRBlocks.gatewayFrame && getBlockState().get(CRProperties.ACTIVE);
 	}
 
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		if(isActive()){
+		if(isActive() && address != null){
 			//Address of this gateway
 			String[] names = new String[4];
 			for(int i = 0; i < 4; i++){
-				names[i] = address.getEntry(i).getLocalName(false);
+				EnumBeamAlignments align = address.getEntry(i);
+				if(align == null){
+					align = EnumBeamAlignments.NO_MATCH;//Should never ahppen
+				}
+				names[i] = align.getLocalName(false);
 			}
 			chat.add(new TranslationTextComponent("tt.crossroads.gateway.chevron.address", names[0], names[1], names[2], names[3]));
 
@@ -211,12 +204,6 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			RotaryUtil.addRotaryInfo(chat, rotary, INERTIA, axleOpt.orElseGet(AxleHandler::new).getRotationRatio(), true);
 			FluxUtil.addFluxInfo(chat, this, chevrons[3] != null && origin ? FLUX_PER_CYCLE : 0);
 			FluxUtil.addLinkInfo(chat, this);
-		}else if(key != null){
-			//Non-top frames call the top for addInfo
-			TileEntity te = world.getTileEntity(pos.add(key));
-			if(te instanceof GatewayFrameTileEntity){
-				((GatewayFrameTileEntity) te).addInfo(chat, player, hit);
-			}
 		}
 	}
 
@@ -320,34 +307,33 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 				for(int j = 0; j < preSize; j++){
 					//Iterate over a size-by-size square (technically excessive as the multiblock is hollow) and disable each individually (including this)
 					BlockState otherState = world.getBlockState(mutPos);
-					if(otherState.getBlock() == CRBlocks.gatewayFrame){
-						world.setBlockState(mutPos, otherState.with(CRProperties.ACTIVE, false).with(CRProperties.TOP, false));
+					if(otherState.getBlock() == CRBlocks.gatewayEdge){
+						world.setBlockState(mutPos, otherState.with(CRProperties.ACTIVE, false));
 					}
 					TileEntity te = world.getTileEntity(mutPos);
-					if(te instanceof GatewayFrameTileEntity){
-						GatewayFrameTileEntity otherTE = (GatewayFrameTileEntity) te;
-						otherTE.key = null;
-						otherTE.size = 0;
-						otherTE.plane = null;
-						otherTE.axleOpt = null;
-						otherTE.beamOpt = null;
-						otherTE.address = null;
-						otherTE.origin = false;
-						otherTE.markDirty();
-						otherTE.updateContainingBlockInfo();
+					if(te instanceof GatewayEdgeTileEntity){
+						GatewayEdgeTileEntity otherTE = (GatewayEdgeTileEntity) te;
+						otherTE.reset();
 					}
 					mutPos.move(horiz, 1);
 				}
 				mutPos.move(horiz, -preSize);
 				mutPos.move(Direction.DOWN, 1);
+			}
 
+			//Reset this block
+			BlockState state = getBlockState();
+			if(state.getBlock() == CRBlocks.gatewayFrame){
+				world.setBlockState(pos, getBlockState().with(CRProperties.ACTIVE, false));
 			}
-		}else if(key != null){
-			//The rest of the multiblock asks the head to dismantle
-			TileEntity te = world.getTileEntity(pos.add(key));
-			if(te instanceof GatewayFrameTileEntity){
-				((GatewayFrameTileEntity) te).dismantle();
-			}
+			size = 0;
+			plane = null;
+			axleOpt = null;
+			beamOpt = null;
+			address = null;
+			origin = false;
+			markDirty();
+			updateContainingBlockInfo();
 		}
 	}
 
@@ -401,6 +387,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 		}
 
 		size = newSize;
+		plane = axis;
 		int thickness = Math.max(1, size / 5);//required thickness of frame blocks
 
 		//First pass over the area is to confirm this is a legal structure
@@ -413,12 +400,14 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 
 				if(i < thickness || size - i <= thickness || j < thickness || size - j <= thickness){
 					//We are on the edges, and expect a frame block
-					if(!legalForGateway(otherState)){
+					if((i != 0 || j != size / 2) && !legalForGateway(otherState)){
 						return false;
 					}
-				}else if(!otherState.isAir(world, mutPos)){
-					return false;//We are on the inside, and expect air
 				}
+				//Removed hollow requirement
+//				else if(!otherState.isAir(world, mutPos)){
+//					return false;//We are on the inside, and expect air
+//				}
 
 				mutPos.move(horiz, 1);
 			}
@@ -444,14 +433,11 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 				BlockState otherState = world.getBlockState(mutPos);
 				if(i < thickness || size - i <= thickness || j < thickness || size - j <= thickness){
 					//We are on the edges
-					world.setBlockState(mutPos, otherState.with(CRProperties.ACTIVE, true).with(CRProperties.TOP, i == 0 && j == size / 2));
+					world.setBlockState(mutPos, otherState.with(CRProperties.ACTIVE, true));
 					TileEntity te = world.getTileEntity(mutPos);
-					if(te instanceof GatewayFrameTileEntity){
-						//Despite the name otherTE, for exactly one position otherTE == this
-						GatewayFrameTileEntity otherTE = (GatewayFrameTileEntity) te;
-						otherTE.key = pos.subtract(mutPos);
-						otherTE.plane = axis;
-						otherTE.size = size;
+					if(te instanceof GatewayEdgeTileEntity){
+						GatewayEdgeTileEntity otherTE = (GatewayEdgeTileEntity) te;
+						otherTE.setKey(pos.subtract(mutPos));
 						otherTE.updateContainingBlockInfo();
 					}
 				}
@@ -462,6 +448,10 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			mutPos.move(Direction.DOWN, 1);
 		}
 
+		//Update this block
+		world.setBlockState(pos, getBlockState().with(CRProperties.ACTIVE, true));
+		updateContainingBlockInfo();
+
 		//Send a packet to the client with the size and orientation info
 		CRPackets.sendPacketAround(world, pos, new SendLongToClient(5, plane.ordinal() | (size << 2), pos));
 
@@ -469,7 +459,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	private static boolean legalForGateway(BlockState state){
-		return state.getBlock() == CRBlocks.gatewayFrame && !state.get(CRProperties.ACTIVE);
+		return state.getBlock() == CRBlocks.gatewayEdge && !state.get(CRProperties.ACTIVE);
 	}
 
 	@Override
@@ -576,7 +566,6 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 		origin = nbt.getBoolean("origin");
 
 		//Generic
-		key = nbt.contains("key") ? BlockPos.fromLong(nbt.getLong("key")) : null;
 		size = nbt.getInt("size");
 		plane = nbt.contains("plane") ? Direction.Axis.values()[nbt.getInt("plane")] : null;
 	}
@@ -603,9 +592,6 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 		nbt.putBoolean("origin", origin);
 
 		//Generic
-		if(key != null){
-			nbt.putLong("key", key.toLong());
-		}
 		nbt.putInt("size", size);
 		if(plane != null){
 			nbt.putInt("plane", plane.ordinal());

@@ -70,6 +70,7 @@ public class CRBlocks{
 	public static HamsterWheel hamsterWheel;
 	public static CopshowiumCreationChamber copshowiumCreationChamber;
 	public static GatewayFrame gatewayFrame;
+	public static GatewayFrameEdge gatewayEdge;
 	public static DetailedCrafter detailedCrafter;
 //	public static PrototypingTable prototypingTable;
 //	public static Prototype prototype;
@@ -200,6 +201,7 @@ public class CRBlocks{
 		copshowiumCreationChamber = new CopshowiumCreationChamber();
 //		mathAxis = new MathAxis();
 		gatewayFrame = new GatewayFrame();
+		gatewayEdge = new GatewayFrameEdge();
 //		redstoneKeyboard = new RedstoneKeyboard();
 		detailedCrafter = new DetailedCrafter();
 //		prototypingTable = new PrototypingTable();

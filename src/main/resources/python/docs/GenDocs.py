@@ -233,14 +233,14 @@ def writeImagePage(output: str, text: str, lineSt: str, data: [str, ...]) -> str
 	output += lineSt + '\t"type": ' + '"image",\n'
 	if len(data) != 0 and len(data[0]) != 0:
 		output += lineSt + '\t"anchor": "' + data[0] + '",\n'
-	output += lineSt + '\t"border": "true"\n'
+	output += lineSt + '\t"border": "true",\n'
 	if len(data) > 1 and len(data[1]) != 0:
 		output += lineSt + '\t"title": "' + data[1] + '",\n'
 	if len(data) > 2:
-		output += lineSt + '\t"images": ['
+		output += lineSt + '\t"images": [\n'
 		for i in range(2, len(data)):
-			output += lineSt + '\t\t"' + data[i] + '"' + (',' if i == len(data) - 1 else '') + '\n'
-		output += lineSt + '\t],'
+			output += lineSt + '\t\t"' + data[i] + '"' + (',' if i != len(data) - 1 else '') + '\n'
+		output += lineSt + '\t],\n'
 	output += lineSt + '\t"text": "' + text.replace('"', '\\"') + '"\n'
 	output += lineSt + '}'
 	return output
