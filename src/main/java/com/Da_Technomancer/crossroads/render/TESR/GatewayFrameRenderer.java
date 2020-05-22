@@ -29,7 +29,7 @@ public class GatewayFrameRenderer extends LinkLineRenderer<GatewayFrameTileEntit
 		double radius = frame.getSize() / 2D;
 		Direction.Axis plane = frame.getPlane();
 		boolean linked = frame.chevrons[frame.chevrons.length - 1] != null;//Whether this gateway is active and linked to another
-		double dialingWheelAngle = frame.getAngle();
+		double dialingWheelAngle = frame.getAngle(partialTicks);
 
 		GlStateManager.pushMatrix();
 		GlStateManager.pushLightingAttributes();

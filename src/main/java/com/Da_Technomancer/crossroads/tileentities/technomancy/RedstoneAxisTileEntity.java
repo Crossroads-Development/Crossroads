@@ -44,11 +44,11 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 		LazyOptional<IAxleHandler> backOpt = backTE == null ? LazyOptional.empty() : backTE.getCapability(Capabilities.AXLE_CAPABILITY, facing);
 		IAxleHandler sourceAxle = backOpt.isPresent() ? backOpt.orElseThrow(NullPointerException::new) : null;
 		double availableEnergy = Math.abs(sumEnergy);
-		if(Double.isNaN(availableEnergy)){
-			availableEnergy = 0;//There's a NaN bug somewhere, and I can't find it. This should work
-		}
 		if(sourceAxle != null){
 			availableEnergy += Math.abs(sourceAxle.getMotionData()[1]);
+		}
+		if(Double.isNaN(availableEnergy)){
+			availableEnergy = 0;//There's a NaN bug somewhere, and I can't find it. This should work
 		}
 //		if(sumIRot > 0 && availableEnergy - cost < 0){
 //			baseSpeed = 0;
@@ -85,7 +85,7 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 		}
 
 		if(sourceAxle != null){
-			sourceAxle.getMotionData()[1] = availableEnergy * RotaryUtil.posOrNeg(sourceAxle.getMotionData()[1], 1);
+			sourceAxle.getMotionData()[1] = sourceAxle.getMotionData()[1] < 0 ? -availableEnergy : availableEnergy;
 			sourceAxle.markChanged();
 		}
 

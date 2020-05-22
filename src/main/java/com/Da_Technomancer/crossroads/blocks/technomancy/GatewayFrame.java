@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.tileentities.rotary.MillstoneTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
@@ -85,6 +86,7 @@ public class GatewayFrame extends ContainerBlock implements IReadable{
 		tooltip.add(new TranslationTextComponent("tt.crossroads.gateway.dial"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.gateway.proc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.gateway.flux", GatewayFrameTileEntity.FLUX_PER_CYCLE));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", GatewayFrameTileEntity.INERTIA));
 	}
 
 	@Override

@@ -59,10 +59,6 @@ public class RotaryUtil{
 		return speedIn < lowerLimit ? 0 : (speedIn >= upperLimit ? 1 : (speedIn - lowerLimit) / (upperLimit - lowerLimit));
 	}
 
-	public static double posOrNeg(double in, double zeroCase){
-		return in == 0D || in == -0D ? zeroCase : Math.signum(in);
-	}
-
 	/**
 	 * Returns the total energy, adjusted for energy loss, of the passed IAxleHandlers
 	 * @param axles A list of IAxleHandlers to have their energies summed and adjusted

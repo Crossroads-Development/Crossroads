@@ -87,7 +87,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	private boolean updateMembers = false;
 	private Direction.Axis axleAxis;
 	//Public for read-only
-	public double redstoneIn = 0;
+	public double redstoneIn = 0;//TODO Why is this a double? This doesn't accept circuit input
 
 	/**
 	 * Sets the mechanism in a slot
@@ -246,10 +246,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	public void updateRedstone(){
-		double reds = 0;
-		for(Direction dir : Direction.values()){
-			reds = Math.max(RedstoneUtil.getRedstoneOnSide(world, pos, dir), reds);
-		}
+		int reds = RedstoneUtil.getRedstoneAtPos(world, pos);
 		if(reds != redstoneIn){
 			markDirty();
 			for(int i = 0; i < 7; i++){

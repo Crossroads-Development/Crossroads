@@ -56,8 +56,9 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 
 	@ObjectHolder("gateway_frame")
 	private static TileEntityType<GatewayFrameTileEntity> type = null;
-	private static final int INERTIA = 100;//Moment of inertia
+	public static final int INERTIA = 0;//Moment of inertia
 	public static final int FLUX_PER_CYCLE = 4;
+	private static final float ROTATION_SPEED = (float) Math.PI / 40F;//Rate of convergence between angle and axle 'speed' in radians/tick. Yes, this terminology is confusing
 
 	//These fields are only correct for the top center block of the multiblock (isActive() returns true)
 	//They will not necessarily be null/empty/0 if this inactive- always check isActive()
@@ -68,7 +69,8 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	private double[] rotary = new double[4];//Rotary spin data (0: speed, 1: energy, 2: power, 3: last energy)
 	private float angle = 0;//Used for rendering and dialing chevrons. Because it's used for logic, we don't use the master axis angle syncing, which is render-based
 	private float clientAngle = 0;//Angle on the client. On the server, acts as a record of value sent to client
-	private float clientW = 0;//Speed on the client. On the server, acts as a record of value sent to client
+	private float clientW = 0;//Speed on the client (post adjustment). On the server, acts as a record of value sent to client
+	private float referenceSpeed = 0;//Speed which angles will be defined relative to on the server
 	//Visible for rendering
 	public EnumBeamAlignments[] chevrons = new EnumBeamAlignments[4];//Current values locked into chevrons. Null for unset chevrons
 	private boolean origin = false;//Whether this gateway started the connection in dialed (determines which side has flux)
@@ -98,10 +100,11 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 
 	/**
 	 * Used for rendering
+	 * @param partialTicks The partial ticks in [0, 1]
 	 * @return The angle of the octagonal ring used for dialing
 	 */
-	public double getAngle(){
-		return clientAngle;
+	public double getAngle(float partialTicks){
+		return calcAngleChange(clientW, clientAngle) * partialTicks + clientAngle;
 	}
 
 	private static void teleportEntity(Entity e, ServerWorld target, double posX, double posY, double posZ, float yawRotation){
@@ -230,6 +233,8 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 				te.undial();//Undial the connected gateway
 			}
 		}
+		referenceSpeed = 0;
+		resyncToClient();
 		markDirty();
 		CRPackets.sendPacketAround(world, pos, new SendLongToClient(3, 0L, pos));
 	}
@@ -262,6 +267,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			}
 			origin = source;
 			playEffects(true);
+			CRPackets.sendPacketAround(world, pos, new SendLongToClient(3, new GatewayAddress(chevrons).serialize(), pos));//Send chevrons to client
 			return true;
 		}else{
 			//This has failed
@@ -471,17 +477,20 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	public void tick(){
 		if(isActive()){
 			//This TE only ticks if it is active
-			clientAngle += clientW / 20F;
+
+			//Perform angle movement on the client, and track what the client is probably doing on the server
+			clientAngle += calcAngleChange(clientW, clientAngle);
+
 			if(!world.isRemote){
-				angle += rotary[0] / 20F;
+				//Perform angle movement on the server
+				float angleTarget = (float) rotary[0] - referenceSpeed;
+				angle += calcAngleChange(angleTarget, angle);
+
+				//Check for resyncing angle data to client
 				final double errorMargin = Math.PI / 32D;
-				if(Math.abs(clientAngle - angle) >= errorMargin || Math.abs(clientW - rotary[0]) >= errorMargin / 2D){
+				if(Math.abs(clientAngle - angle) >= errorMargin || Math.abs(clientW - angleTarget) >= errorMargin / 2D){
 					//Resync the speed and angle to the client
-					clientAngle = angle;
-					clientW = (float) rotary[0];
-					long packet = (Integer.toUnsignedLong(Float.floatToRawIntBits(clientAngle)) << 32L) | Integer.toUnsignedLong(Float.floatToRawIntBits(clientW));
-					CRPackets.sendPacketAround(world, pos, new SendLongToClient(4, packet, pos));
-					markDirty();
+					resyncToClient();
 				}
 
 				//Teleportation
@@ -489,6 +498,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 					Direction horiz = Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, plane);
 					AxisAlignedBB area = new AxisAlignedBB(pos.down(size).offset(horiz, -size / 2), pos.offset(horiz, size / 2 + 1));
 					//We use the timeUntilPortal field in Entity to not spam TP entities between two portals
+					//This is both not what it's for, and exactly what it's for
 					List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, area, EntityPredicates.IS_ALIVE.and(e -> e.timeUntilPortal <= 0));
 					if(!entities.isEmpty()){
 						GatewayAddress.Location loc = GatewaySavedData.lookupAddress((ServerWorld) world, new GatewayAddress(chevrons));
@@ -535,6 +545,28 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 		}
 	}
 
+	/**
+	 * Calculates the change in angle each tick, based on the target angle and current angle
+	 * Takes the shortest path, has a maximum angle change per tick
+	 * @param target The target angle
+	 * @param current The current angle
+	 * @return The change in angle to occur this tick. Positive is counter-clockwise, negative is clockwise
+	 */
+	private static float calcAngleChange(float target, float current){
+		final float pi2 = (float) Math.PI * 2F;
+		//Due to circular path, the two routes to the target need to be compared, and the shortest taken
+		float angleChange = (target % pi2) - (current % pi2);
+		if(angleChange > Math.PI || angleChange < -Math.PI){
+			if(angleChange > 0){
+				angleChange -= pi2;
+			}else{
+				angleChange += pi2;
+			}
+		}
+		angleChange = MathHelper.clamp(angleChange, -ROTATION_SPEED, ROTATION_SPEED);
+		return angleChange;
+	}
+
 	private static void playTPEffect(World world, double xPos, double yPos, double zPos){
 		//Spawn smoke particles
 		for(int i = 0; i < 10; i++){
@@ -563,6 +595,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 		clientW = (float) rotary[0];
 		angle = nbt.getFloat("angle");
 		clientAngle = angle;
+		referenceSpeed = nbt.getFloat("reference");
 		origin = nbt.getBoolean("origin");
 
 		//Generic
@@ -589,6 +622,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			}
 		}
 		nbt.putFloat("angle", angle);
+		nbt.putFloat("reference", referenceSpeed);
 		nbt.putBoolean("origin", origin);
 
 		//Generic
@@ -619,6 +653,13 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			nbt.putInt("plane", plane.ordinal());
 		}
 		return nbt;
+	}
+
+	private void resyncToClient(){
+		clientAngle = angle;
+		clientW = (float) rotary[0] - referenceSpeed;
+		long packet = (Integer.toUnsignedLong(Float.floatToRawIntBits(clientAngle)) << 32L) | Integer.toUnsignedLong(Float.floatToRawIntBits(clientW));
+		CRPackets.sendPacketAround(world, pos, new SendLongToClient(4, packet, pos));
 	}
 
 	//Flux boilerplate
@@ -797,12 +838,14 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			}
 
 			chevrons[index] = alignment;//Dial in a new chevron
+			referenceSpeed = (float) rotary[0];//Re-define our reference to the current input speed
 			if(index == 3){
-				//If this is the final chevron, make the connection and reset the angle
+				//If this is the final chevron, make the connection and reset the target
 				dial(new GatewayAddress(chevrons), true);
-				angle = 0;
-				clientAngle = 1000;//Force a resync of the angle to the client
+				//Reset
+				referenceSpeed = 0;
 			}
+			resyncToClient();//Force a resync of the speed and angle to the client
 			CRPackets.sendPacketAround(world, pos, new SendLongToClient(3, new GatewayAddress(chevrons).serialize(), pos));
 			markDirty();
 		}
