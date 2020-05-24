@@ -87,7 +87,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	private boolean updateMembers = false;
 	private Direction.Axis axleAxis;
 	//Public for read-only
-	public double redstoneIn = 0;//TODO Why is this a double? This doesn't accept circuit input
+	public int redstoneIn = 0;
 
 	/**
 	 * Sets the mechanism in a slot
@@ -143,7 +143,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 			nbt.putInt("axis", getAxleAxis().ordinal());
 		}
 
-		nbt.putDouble("reds", redstoneIn);
+		nbt.putInt("reds", redstoneIn);
 
 		return nbt;
 	}
@@ -164,7 +164,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 		if(members[6] != null && mats[6] != null && getAxleAxis() != null){
 			nbt.putInt("axis", getAxleAxis().ordinal());
 		}
-		nbt.putDouble("reds", redstoneIn);
+		nbt.putInt("reds", redstoneIn);
 
 		return nbt;
 	}
@@ -200,7 +200,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 			}
 		}
 
-		redstoneIn = nbt.getDouble("reds");
+		redstoneIn = nbt.getInt("reds");
 	}
 
 	@Override
@@ -222,7 +222,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 			axleAxis = message == -1 ? null : Direction.Axis.values()[(int) message];
 			axleHandlers[6].updateStates(false);
 		}else if(identifier == 15){
-			redstoneIn = Double.longBitsToDouble(message);
+			redstoneIn = (int) message;
 		}
 	}
 
@@ -255,7 +255,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 				}
 			}
 			redstoneIn = reds;
-			CRPackets.sendPacketAround(world, pos, new SendLongToClient(15, Double.doubleToLongBits(redstoneIn), pos));
+			CRPackets.sendPacketAround(world, pos, new SendLongToClient(15, (long) redstoneIn, pos));
 		}
 	}
 

@@ -63,7 +63,6 @@ public class CRConfig{
 	public static ForgeConfigSpec.BooleanValue teTimeAccel;
 	public static ForgeConfigSpec.BooleanValue hardGateway;
 	public static ForgeConfigSpec.IntValue growMultiplier;
-//	public static ForgeConfigSpec.IntValue colorChartResolution;
 
 	private static final Tag<Block> destroyBlacklist = new BlockTags.Wrapper(new ResourceLocation(Crossroads.MODID, "destroy_blacklist"));
 
