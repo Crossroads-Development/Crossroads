@@ -1,24 +1,19 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayEdgeTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileEntity;
-import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -92,5 +87,10 @@ public class GatewayFrameEdge extends ContainerBlock implements IReadable{
 			return ((GatewayEdgeTileEntity) te).getCircuitRead();
 		}
 		return 0;
+	}
+
+	@Override
+	public PushReaction getPushReaction(BlockState state){
+		return PushReaction.BLOCK;//Some mods make TileEntities piston moveable. That would be really bad for this block
 	}
 }

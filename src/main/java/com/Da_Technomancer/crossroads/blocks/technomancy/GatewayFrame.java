@@ -4,13 +4,13 @@ import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.rotary.MillstoneTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -113,5 +113,10 @@ public class GatewayFrame extends ContainerBlock implements IReadable{
 			return chev.length;
 		}
 		return 0;
+	}
+
+	@Override
+	public PushReaction getPushReaction(BlockState state){
+		return PushReaction.BLOCK;//Some mods make TileEntities piston moveable. That would be really bad for this block
 	}
 }

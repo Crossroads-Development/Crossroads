@@ -5,3 +5,8 @@ crossroads:void_crystal
 The fourth resource in <thing><link:intro/beam>beams/$ is <thing>Void/$. <thing>Void/$ is black- unlike the three other resources of <thing>energy/$, <thing>potential/$, and <thing>stability/$ which are primary colors. Adding <thing>void/$ to a beam will not affect the <thing>alignment/$ of the beam normally, but instead even a single point of <thing>void/$ will make it act as a special <thing>void alignment/$, which acts in the opposite way as normal.
 For example, while the <thing>energy/$ alignment produces heat, the void-energy (called <thing>cold/$) <thing>alignment/$ removes heat.
 <thing>Void/$ is produced by sending any beam through a <item><link:beam/frame>lens frame/$ with a <item><link:intro/ores>void crystal/$. The entire <thing>power/$ of the original beam will be converted to <thing>void/$.
+
+<bobo>hhOI! iz m3 <link:intro/welcome#bobo>BOQR/$<bobo>! eyE HAS amAZEng tELE-pOTat0-ION sTICK! me smoogled yte oUT uv OTHER DIMENSHUN!!
+h0t R0d!
+dA PRIZE dat stART da WOOD HORSE WAR!
+dRaGON holy-t0e-zis!

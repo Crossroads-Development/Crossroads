@@ -19,6 +19,10 @@
 		{
 			"type": "text",
 			"text": "For example, while the <thing>energy/$ alignment produces heat, the void-energy (called <thing>cold/$) <thing>alignment/$ removes heat.$(br2)<thing>Void/$ is produced by sending any beam through a <item>$(l:beam/frame)lens frame/$ with a <item>$(l:intro/ores)void crystal/$. The entire <thing>power/$ of the original beam will be converted to <thing>void/$.$(br2)"
+		},
+		{
+			"type": "text",
+			"text": "<bobo>hhOI! iz m3 $(l:intro/welcome#bobo)BOQR/$<bobo>! eyE HAS amAZEng tELE-pOTat0-ION sTICK! me smoogled yte oUT uv OTHER DIMENSHUN!!$(br2)<bobo>h0t R0d!$(br2)<bobo>dA PRIZE dat stART da WOOD HORSE WAR!$(br2)<bobo>dRaGON holy-t0e-zis!$(br2)"
 		}
 	]
 }
