@@ -2,9 +2,9 @@ package com.Da_Technomancer.crossroads.API;
 
 import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
 import com.Da_Technomancer.essentials.ReflectionUtil;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.ZombieVillagerEntity;
 import net.minecraft.world.Explosion;
+import net.minecraft.world.biome.BiomeContainer;
 import net.minecraft.world.server.ChunkManager;
 import net.minecraft.world.server.ServerWorld;
 
@@ -19,11 +19,12 @@ public enum CRReflection implements ReflectionUtil.IReflectionKey{
 	EXPLOSION_POWER(Explosion.class, "size", "field_77280_f", "Perpetuate explosions with Collapse beams (1)"),
 	EXPLOSION_SMOKE(Explosion.class, "causesFire", "field_77286_a", "Perpetuate explosions with Collapse beams (2)"),
 	EXPLOSION_MODE(Explosion.class, "mode", "field_222260_b", "Perpetuate explosions with Collapse beams (3)"),
-	SWING_TIME(LivingEntity.class, "ticksSinceLastSwing", "field_184617_aD", "Mechanical Arm attacking"),
+//	SWING_TIME(LivingEntity.class, "ticksSinceLastSwing", "field_184617_aD", "Mechanical Arm attacking"),
 	ENTITY_LIST(ServerWorld.class, "entitiesByUuid", "field_175741_N", "Prevent mob spawning with Closure beams, modify explosions with Collapse/Equilibrium beams"),
 	LOADED_CHUNKS(ChunkManager.class, "getLoadedChunksIterable", "func_223491_f ", "Spawn lightning at high atmospheric charge"),
 	LIGHTNING_POS(ServerWorld.class, "adjustPosToNearbyEntity", "func_175736_a", "Target lightning at high atmospheric charge"),
-	SPAWN_RADIUS(ChunkManager.class, "isOutsideSpawningRadius", "func_219243_d", "Spawn lightning at high atmospheric charge");
+	SPAWN_RADIUS(ChunkManager.class, "isOutsideSpawningRadius", "func_219243_d", "Spawn lightning at high atmospheric charge"),
+	BIOME_ARRAY(BiomeContainer.class, "biomes", "field_227054_f_", "Terraforming alchemy reagents changing the biome");
 
 	private Class<?> clazz;
 	@Nullable

@@ -18,7 +18,7 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -26,8 +26,6 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 
@@ -64,11 +62,11 @@ public class LensFrame extends ContainerBlock implements IReadable{
 		return BlockRenderType.MODEL;
 	}
 
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public BlockRenderLayer getRenderLayer(){
-		return BlockRenderLayer.CUTOUT;
-	}
+//	@Override
+//	@OnlyIn(Dist.CLIENT)
+//	public BlockRenderLayer getRenderLayer(){
+//		return BlockRenderLayer.CUTOUT;
+//	}
 
 	@Nullable
 	@Override
@@ -82,7 +80,7 @@ public class LensFrame extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(!worldIn.isRemote){
 			ItemStack stack = playerIn.getHeldItem(hand);
 
@@ -91,7 +89,7 @@ public class LensFrame extends ContainerBlock implements IReadable{
 			}else{
 				TileEntity te = worldIn.getTileEntity(pos);
 				if(!(te instanceof LensFrameTileEntity)){
-					return false;
+					return ActionResultType.SUCCESS;
 				}
 				LensFrameTileEntity lens = (LensFrameTileEntity) te;
 				ItemStack held = lens.getItem();
@@ -113,7 +111,7 @@ public class LensFrame extends ContainerBlock implements IReadable{
 				}
 			}
 		}
-		return true;
+		return ActionResultType.SUCCESS;
 	}
 
 	@Override

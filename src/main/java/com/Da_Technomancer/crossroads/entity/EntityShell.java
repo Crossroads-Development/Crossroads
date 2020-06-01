@@ -30,7 +30,7 @@ import net.minecraftforge.registries.ObjectHolder;
 public class EntityShell extends ThrowableEntity implements IRendersAsItem{
 
 	@ObjectHolder("shell")
-	private static EntityType<EntityShell> type = null;
+	public static EntityType<EntityShell> type = null;
 	private static final DataParameter<Boolean> crystal = EntityDataManager.createKey(EntityShell.class, DataSerializers.BOOLEAN);
 	private static final ItemStack[] RENDER_STACK = new ItemStack[] {new ItemStack(CRItems.shellGlass), new ItemStack(CRItems.shellCrystal)};
 
@@ -59,7 +59,7 @@ public class EntityShell extends ThrowableEntity implements IRendersAsItem{
 				Vec3d hit = result.getHitVec();
 				AlchemyUtil.releaseChemical(world, new BlockPos(hit.x, hit.y, hit.z), contents);
 			}
-			world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.NEUTRAL, 0.5F, 0.4F / (rand.nextFloat() * 0.4F + 0.8F));
+			world.playSound(null, getPosX(), getPosY(), getPosZ(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.NEUTRAL, 0.5F, 0.4F / (rand.nextFloat() * 0.4F + 0.8F));
 			world.setEntityState(this, (byte) 3);
 			remove();
 		}

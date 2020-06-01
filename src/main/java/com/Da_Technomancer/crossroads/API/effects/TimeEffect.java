@@ -9,6 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 
@@ -35,7 +36,7 @@ public class TimeEffect extends BeamEffect{
 
 					BlockState state = worldIn.getBlockState(pos);
 					if(state.ticksRandomly()){
-						state.randomTick(worldIn, pos, worldIn.rand);
+						state.randomTick((ServerWorld) worldIn, pos, worldIn.rand);
 					}
 				}
 			}

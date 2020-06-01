@@ -52,7 +52,9 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 		super(type);
 	}
 
-	public void resetCache(){
+	@Override
+	public void updateContainingBlockInfo(){
+		super.updateContainingBlockInfo();
 		mode = null;
 	}
 

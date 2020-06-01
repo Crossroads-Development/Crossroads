@@ -30,7 +30,7 @@ tasks.withType(JavaCompile) {
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
-	mappings channel: 'stable', version: "$mcp_version"
+	mappings channel: "$mcp_channel", version: "$mcp_version"
 
 //	replaceIn 'mods.toml'
 //	replace 'essentials_version', '$essentials_version'

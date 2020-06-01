@@ -37,7 +37,7 @@ public class CowLeggings extends ArmorItem{
 			player.removePotionEffect(Effects.MINING_FATIGUE);
 			player.removePotionEffect(Effects.UNLUCK);
 			player.removePotionEffect(Effects.BAD_OMEN);
-			world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_COW_HURT, SoundCategory.PLAYERS, 2.5F, 1F);
+			world.playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ENTITY_COW_HURT, SoundCategory.PLAYERS, 2.5F, 1F);
 		}
 	}
 }

@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 public class EntityGhostMarker extends Entity{
 
 	@ObjectHolder("ghost_marker")
-	private static EntityType<EntityGhostMarker> type = null;
+	public static EntityType<EntityGhostMarker> type = null;
 
 	private long time;
 	private int lifespan;
@@ -103,7 +103,7 @@ public class EntityGhostMarker extends Entity{
 
 		EQUILIBRIUM(BeamUtil.BEAM_TIME + 1, null),
 		VOID_EQUILIBRIUM(BeamUtil.BEAM_TIME + 1, null),
-		DELAYED_EXPLOSION(BeamUtil.BEAM_TIME, (EntityGhostMarker marker) -> {if(marker.data != null && marker.data.contains("power")) marker.world.createExplosion(marker, marker.posX, marker.posY, marker.posZ, marker.data.getFloat("power"), marker.data.getBoolean("flaming"), Explosion.Mode.valueOf(marker.data.getString("blast_type")));}),
+		DELAYED_EXPLOSION(BeamUtil.BEAM_TIME, (EntityGhostMarker marker) -> {if(marker.data != null && marker.data.contains("power")) marker.world.createExplosion(marker, marker.getPosX(), marker.getPosY(), marker.getPosZ(), marker.data.getFloat("power"), marker.data.getBoolean("flaming"), Explosion.Mode.valueOf(marker.data.getString("blast_type")));}),
 		BLOCK_SPAWNING(BeamUtil.BEAM_TIME + 1, null);
 
 		private final int defaultLifespan;

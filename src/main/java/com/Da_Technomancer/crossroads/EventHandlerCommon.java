@@ -147,7 +147,7 @@ public final class EventHandlerCommon{
 				try{
 					Iterable<ChunkHolder> iterable = (Iterable<ChunkHolder>) getLoadedChunks.invoke(((ServerChunkProvider) e.world.getChunkProvider()).chunkManager);
 					for(ChunkHolder holder : iterable){
-						Optional<Chunk> opt = holder.func_219297_b().getNow(ChunkHolder.UNLOADED_CHUNK).left();//The obfusucated method is some sort of getter. Returns CompletableFuture<Either<Chunk, ChunkHolder.IChunkLoadingError>>- but there are 3 methods that do that. Be careful to get the right one when mcp updates
+						Optional<Chunk> opt = holder.getEntityTickingFuture().getNow(ChunkHolder.UNLOADED_CHUNK).left();
 						if(opt.isPresent()){
 							ChunkPos chunkPos = opt.get().getPos();
 							if(!(boolean) spawnRadius.invoke(((ServerChunkProvider) e.world.getChunkProvider()).chunkManager, chunkPos)){
@@ -276,14 +276,14 @@ public final class EventHandlerCommon{
 			ItemStack boots = ent.getItemStackFromSlot(EquipmentSlotType.FEET);
 			if(boots.getItem() == CRItems.chickenBoots){
 				e.setCanceled(true);
-				ent.getEntityWorld().playSound(null, ent.posX, ent.posY, ent.posZ, SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.PLAYERS, 2.5F, 1F);
+				ent.getEntityWorld().playSound(null, ent.getPosX(), ent.getPosY(), ent.getPosZ(), SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.PLAYERS, 2.5F, 1F);
 				return;
 			}
 
 			if(ent instanceof PlayerEntity){
 				PlayerEntity player = (PlayerEntity) ent;
 				if(player.inventory.clearMatchingItems(s -> s.getItem() == CRItems.nitroglycerin, -1) > 0){
-					player.world.createExplosion(null, player.posX, player.posY, player.posZ, 5F, Explosion.Mode.BREAK);
+					player.world.createExplosion(null, player.getPosX(), player.getPosY(), player.getPosZ(), 5F, Explosion.Mode.BREAK);
 				}
 			}
 		}
@@ -339,7 +339,7 @@ public final class EventHandlerCommon{
 
 	@SubscribeEvent
 	@SuppressWarnings("unused")
-	public void rebuildConfigData(ModConfig.ConfigReloading e){
+	public void rebuildConfigData(ModConfig.Reloading e){
 		if(e.getConfig().getModId().equals(Crossroads.MODID) && e.getConfig().getType() == ModConfig.Type.SERVER){
 			GearFactory.init();
 			OreSetup.loadConfig();

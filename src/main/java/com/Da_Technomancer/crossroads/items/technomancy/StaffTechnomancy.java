@@ -63,8 +63,8 @@ public class StaffTechnomancy extends BeamUsingItem{
 
 				//Calculate the start and end point of the fired beam
 				double heldOffset = .22D * (player.getActiveHand() == Hand.MAIN_HAND ^ player.getPrimaryHand() == HandSide.LEFT ? 1D : -1D);
-				Vec3d start = new Vec3d(player.posX - (heldOffset * Math.cos(Math.toRadians(player.rotationYaw))), player.posY + player.getEyeHeight() + 0.4D, player.posZ - (heldOffset * Math.sin(Math.toRadians(player.rotationYaw))));
-				double[] end = new double[] {player.posX, player.getEyeHeight() + player.posY, player.posZ};
+				Vec3d start = new Vec3d(player.getPosX() - (heldOffset * Math.cos(Math.toRadians(player.rotationYaw))), player.getPosY() + player.getEyeHeight() + 0.4D, player.getPosZ() - (heldOffset * Math.sin(Math.toRadians(player.rotationYaw))));
+				double[] end = new double[] {player.getPosX(), player.getEyeHeight() + player.getPosY(), player.getPosZ()};
 				BlockPos endPos = null;
 				Vec3d look = player.getLookVec().scale(0.2D);
 				Direction collisionDir = Direction.getFacingFromVector(look.x, look.y, look.z);//Used for beam collision detection

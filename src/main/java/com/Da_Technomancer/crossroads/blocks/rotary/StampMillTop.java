@@ -15,6 +15,7 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -52,7 +53,7 @@ public class StampMillTop extends Block{
 	}
 
 	@Override
-	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
 			if(!worldIn.isRemote){
 				worldIn.setBlockState(pos, state.cycle(CRProperties.HORIZ_AXIS));
@@ -61,14 +62,14 @@ public class StampMillTop extends Block{
 					worldIn.setBlockState(pos.down(), lowerState.cycle(CRProperties.HORIZ_AXIS));
 				}
 			}
-			return true;
+			return ActionResultType.SUCCESS;
 		}
 
 		TileEntity te;
 		if(!worldIn.isRemote && (te = worldIn.getTileEntity(pos.down())) instanceof INamedContainerProvider){
 			NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos.down());
 		}
-		return true;
+		return ActionResultType.SUCCESS;
 	}
 
 	@Override

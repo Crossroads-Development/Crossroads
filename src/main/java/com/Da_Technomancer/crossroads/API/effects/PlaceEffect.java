@@ -44,7 +44,7 @@ public class PlaceEffect extends BeamEffect{
 					for(ItemEntity ent : items){
 						ItemStack stack = ent.getItem();
 						if(!stack.isEmpty() && stack.getItem() instanceof BlockItem){
-							BlockItemUseContext context = new BlockItemUseContext(new ItemUseContext(placer, Hand.MAIN_HAND, new BlockRayTraceResult(new Vec3d(ent.posX, ent.posY, ent.posZ), Direction.DOWN, ent.getPosition(), false)));
+							BlockItemUseContext context = new BlockItemUseContext(new ItemUseContext(placer, Hand.MAIN_HAND, new BlockRayTraceResult(new Vec3d(ent.getPosX(), ent.getPosY(), ent.getPosZ()), Direction.DOWN, ent.getPosition(), false)));
 							BlockState state = ((BlockItem) stack.getItem()).getBlock().getStateForPlacement(context);
 							BlockState worldState = worldIn.getBlockState(ent.getPosition());
 							if(worldState.isReplaceable(context) && state.isValidPosition(worldIn, ent.getPosition())){

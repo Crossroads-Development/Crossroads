@@ -73,18 +73,18 @@ public class DensusPlateTileEntity extends TileEntity implements ITickableTileEn
 			}
 			switch(dir.getAxis()){
 				case X:
-					ent.addVelocity(0.6D * (ent.posX < pos.getX() ^ inverse ? 1D : -1D), 0, 0);
+					ent.addVelocity(0.6D * (ent.getPosX() < pos.getX() ^ inverse ? 1D : -1D), 0, 0);
 					ent.velocityChanged = true;
 					break;
 				case Y:
-					ent.addVelocity(0, 0.6D * (ent.posY < pos.getY() ^ inverse ? 1D : -1D), 0);
+					ent.addVelocity(0, 0.6D * (ent.getPosY() < pos.getY() ^ inverse ? 1D : -1D), 0);
 					ent.velocityChanged = true;
 					if(inverse && dir == Direction.UP || !inverse && dir == Direction.DOWN){
 						ent.fallDistance = 0;
 					}
 					break;
 				case Z:
-					ent.addVelocity(0, 0, 0.6D * (ent.posZ < pos.getZ() ^ inverse ? 1D : -1D));
+					ent.addVelocity(0, 0, 0.6D * (ent.getPosZ() < pos.getZ() ^ inverse ? 1D : -1D));
 					ent.velocityChanged = true;
 					break;
 				default:

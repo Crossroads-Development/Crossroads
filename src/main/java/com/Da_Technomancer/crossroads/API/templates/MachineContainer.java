@@ -50,8 +50,7 @@ public abstract class MachineContainer<U extends InventoryTE> extends Container{
 			//Just in case one of the two things that should never happen happens, we create a fake instance of type U
 			//The UI will be basically non-functional, but we prevent a hard crash
 			worldTe = generateEmptyTE();
-			worldTe.setWorld(playerInv.player.world);
-			worldTe.setPos(pos);
+			worldTe.setWorldAndPos(playerInv.player.world, pos);
 			Crossroads.logger.error("Null world tile entity! Generating dummy TE. Report to mod author; type=%1$s", type.toString());
 		}
 		this.te = worldTe;

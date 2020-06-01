@@ -20,9 +20,8 @@ public class RenderFlyingMachine extends EntityRenderer<EntityFlyingMachine>{
 		super(renderManager);
 	}
 
-	@Nullable
 	@Override
-	protected ResourceLocation getEntityTexture(EntityFlyingMachine entity){
+	public ResourceLocation getEntityTexture(EntityFlyingMachine entity){
 		return TEXTURE;
 	}
 

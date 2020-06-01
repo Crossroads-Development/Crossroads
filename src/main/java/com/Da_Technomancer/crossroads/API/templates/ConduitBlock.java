@@ -13,6 +13,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -191,17 +192,17 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 	}
 
 	@Override
-	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		//Handle wrenching
 		if(playerIn != null && hand != null){
 			ItemStack held = playerIn.getHeldItem(hand);
 			if(held.isEmpty()){
-				return false;
+				return ActionResultType.PASS;
 			}
 			TileEntity te = worldIn.getTileEntity(pos);
 			if(ESConfig.isWrench(held) && te instanceof IConduitTE){
 				if(worldIn.isRemote){
-					return true;
+					return ActionResultType.SUCCESS;
 				}
 
 				final double SIZE = getSize();
@@ -229,10 +230,10 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 				T newVal = cycleMode(cte.getModes()[face]);
 				cte.setData(face, cte.hasMatch(face, newVal), newVal);
 				onAdjusted(worldIn, pos, state, Direction.byIndex(face), newVal, cte);
-				return true;
+				return ActionResultType.SUCCESS;
 			}
 		}
-		return false;
+		return ActionResultType.PASS;
 	}
 
 	protected void onAdjusted(World world, BlockPos pos, BlockState newState, Direction facing, T newVal, @Nullable IConduitTE<T> te){

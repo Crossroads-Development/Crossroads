@@ -14,6 +14,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
@@ -89,9 +90,9 @@ public class BlockSalt extends FallingBlock{
 			worldIn.setBlockState(pos, coralMap.get(killState.getBlock()).getDefaultState());
 		}
 	}
-	
+
 	@Override
-	public void tick(BlockState state, World worldIn, BlockPos pos, Random rand){
+	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand){
 		if(worldIn.isRemote){
 			return;
 		}

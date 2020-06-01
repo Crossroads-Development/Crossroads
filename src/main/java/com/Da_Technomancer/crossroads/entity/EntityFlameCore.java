@@ -153,7 +153,7 @@ public class EntityFlameCore extends Entity{
 
 		if(ticksExisted % 8 == 0){
 			int radius = Math.round(FLAME_VEL * (float) ticksExisted);
-			BlockPos pos = new BlockPos(posX, posY, posZ);
+			BlockPos pos = new BlockPos(getPosX(), getPosY(), getPosZ());
 			boolean lastAction = maxRadius <= radius;
 
 			double temp = reags.getTempC();

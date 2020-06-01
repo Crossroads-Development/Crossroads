@@ -88,7 +88,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink{
 
 	//Requires beneath a beacon, and all blocks between this and the beacon are legal beacon bases
 	private boolean positionInvalid(){
-		BlockPos.MutableBlockPos checkPos = new BlockPos.MutableBlockPos(pos);
+		BlockPos.Mutable checkPos = new BlockPos.Mutable(pos);
 		for(int y = 0; y < 5; y++){
 			checkPos.move(Direction.UP);
 			BlockState state = world.getBlockState(checkPos);

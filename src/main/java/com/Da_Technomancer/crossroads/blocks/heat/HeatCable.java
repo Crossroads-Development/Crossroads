@@ -19,6 +19,7 @@ import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tags.Tag;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
@@ -98,9 +99,9 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 	}
 
 	@Override
-	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(playerIn != null && hand != null){
-			if(!super.onBlockActivated(state, worldIn, pos, playerIn, hand, hit)){
+			if(!super.onBlockActivated(state, worldIn, pos, playerIn, hand, hit).isSuccess()){
 				Conductors match = null;
 				Item item = playerIn.getHeldItem(hand).getItem();
 				for(Conductors c : Conductors.values()){
@@ -113,13 +114,13 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 					if(!worldIn.isRemote){
 						worldIn.setBlockState(pos, state.with(CRProperties.CONDUCTOR, match), 2);
 					}
-					return true;
+					return ActionResultType.SUCCESS;
 				}
 			}else{
-				return true;
+				return ActionResultType.SUCCESS;
 			}
 		}
-		return false;
+		return ActionResultType.PASS;
 	}
 
 	@Override

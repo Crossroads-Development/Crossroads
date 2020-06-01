@@ -277,7 +277,7 @@ public final class Crossroads{
 	 * @param cons Container factory
 	 * @param screenFactory The screen factory to be linked to the type
 	 * @param id The ID to use
-	 * @param reg Registery event
+	 * @param reg Registry event
 	 * @param <T> Container subclass
 	 */
 	@OnlyIn(Dist.CLIENT)

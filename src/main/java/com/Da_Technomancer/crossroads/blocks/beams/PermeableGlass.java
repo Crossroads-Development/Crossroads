@@ -7,7 +7,6 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -44,11 +43,11 @@ public class PermeableGlass extends Block{
 		return false;
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	@Override
-	public BlockRenderLayer getRenderLayer(){
-		return BlockRenderLayer.CUTOUT;
-	}
+//	@OnlyIn(Dist.CLIENT)
+//	@Override
+//	public BlockRenderLayer getRenderLayer(){
+//		return BlockRenderLayer.CUTOUT;
+//	}
 
 	@OnlyIn(Dist.CLIENT)
 	@Override

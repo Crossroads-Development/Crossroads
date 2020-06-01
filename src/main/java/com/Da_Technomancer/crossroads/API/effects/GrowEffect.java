@@ -17,6 +17,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -77,7 +78,7 @@ public class GrowEffect extends BeamEffect{
 					}
 					IGrowable growable = (IGrowable) state.getBlock();
 					if(growable.canGrow(worldIn, pos, state, false)){
-						growable.grow(worldIn, worldIn.rand, pos, state);
+						growable.grow((ServerWorld) worldIn, worldIn.rand, pos, state);
 					}
 				}
 			}

@@ -80,7 +80,7 @@ public class DampingPowder extends Item{
 		Vec3d partPos = playerIn.getEyePosition(1).add(playerIn.getLookVec().scale(0.5));
 		worldIn.addParticle(ParticleTypes.END_ROD, partPos.x, partPos.y, partPos.z, 0, 0, 0);
 		if(!ents.isEmpty()){
-			worldIn.playSound(null, playerIn.posX, playerIn.posY + playerIn.getEyeHeight(), playerIn.posZ, SoundEvents.ITEM_TOTEM_USE, SoundCategory.PLAYERS, 1, 0);
+			worldIn.playSound(null, playerIn.getPosX(), playerIn.getPosY() + playerIn.getEyeHeight(), playerIn.getPosZ(), SoundEvents.ITEM_TOTEM_USE, SoundCategory.PLAYERS, 1, 0);
 		}
 		return new ActionResult<>(ActionResultType.SUCCESS, held);
 	}

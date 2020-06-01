@@ -2,10 +2,12 @@ package com.Da_Technomancer.crossroads.entity;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.culling.ICamera;
+import net.minecraft.client.renderer.culling.ClippingHelperImpl;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -23,7 +25,7 @@ public class RenderFlameCoreEntity extends EntityRenderer<EntityFlameCore>{
 	}
 
 	@Override
-	protected ResourceLocation getEntityTexture(EntityFlameCore entity){
+	public ResourceLocation getEntityTexture(EntityFlameCore entity){
 		return TEXTURE;
 	}
 
@@ -91,7 +93,7 @@ public class RenderFlameCoreEntity extends EntityRenderer<EntityFlameCore>{
 	}
 
 	@Override
-	public boolean shouldRender(EntityFlameCore livingEntity, ICamera camera, double camX, double camY, double camZ){
+	public boolean shouldRender(EntityFlameCore entity, ClippingHelperImpl helper, double camX, double camY, double camZ){
 		return true;
 	}
 }

@@ -12,6 +12,7 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -46,14 +47,14 @@ public class BeamExtractor extends BeamBlock{
 	}
 
 	@Override
-	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(!super.onBlockActivated(state, worldIn, pos, playerIn, hand, hit) && !worldIn.isRemote){
+	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		if(!super.onBlockActivated(state, worldIn, pos, playerIn, hand, hit).isSuccess() && !worldIn.isRemote){
 			TileEntity te = worldIn.getTileEntity(pos);
 			if(te instanceof INamedContainerProvider){
 				NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);
 			}
 		}
-		return true;
+		return ActionResultType.SUCCESS;
 	}
 
 

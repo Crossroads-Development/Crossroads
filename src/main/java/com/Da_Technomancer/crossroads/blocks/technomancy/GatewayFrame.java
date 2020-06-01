@@ -16,6 +16,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -56,7 +57,7 @@ public class GatewayFrame extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult ray){
+	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult ray){
 		ItemStack held = player.getHeldItem(hand);
 		if(state.get(CRProperties.ACTIVE)){
 			//Handle linking if this is the top block
@@ -65,10 +66,11 @@ public class GatewayFrame extends ContainerBlock implements IReadable{
 			//Attempt to form the multiblock
 			TileEntity te = world.getTileEntity(pos);
 			if(te instanceof GatewayFrameTileEntity){
-				return ((GatewayFrameTileEntity) te).assemble();
+				((GatewayFrameTileEntity) te).assemble();
+				return ActionResultType.SUCCESS;
 			}
 		}
-		return false;
+		return ActionResultType.PASS;
 	}
 
 	@Override

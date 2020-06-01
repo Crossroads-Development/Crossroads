@@ -28,10 +28,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -114,12 +111,12 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			//Based on TeleportCommand
 
 			//Load endpoint chunk
-			target.getChunkProvider().func_217228_a(TicketType.POST_TELEPORT, new ChunkPos(new BlockPos(posX, posY, posZ)), 1, e.getEntityId());
+			target.getChunkProvider().registerTicket(TicketType.POST_TELEPORT, new ChunkPos(new BlockPos(posX, posY, posZ)), 1, e.getEntityId());
 
 			e.stopRiding();
 			ServerPlayerEntity play = (ServerPlayerEntity) e;
 			if(play.isSleeping()){
-				play.wakeUpPlayer(true, true, false);
+				play.stopSleepInBed(true, true);
 			}
 
 			float prevHeadYaw = play.getRotationYawHead();
@@ -127,7 +124,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			if(target == e.world){
 				play.connection.setPlayerLocation(posX, posY, posZ, play.getYaw(1) + yawRotation, play.getPitch(1));
 			}else{
-				play.func_200619_a(target, posX, posY, posZ, play.getYaw(1) + yawRotation, play.getPitch(1));
+				play.teleport(target, posX, posY, posZ, play.getYaw(1) + yawRotation, play.getPitch(1));
 			}
 			play.setRotationYawHead(prevHeadYaw + yawRotation);
 			play.setMotion(prevVelocity.rotateYaw(yawRotation));
@@ -150,7 +147,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 				e.copyDataFromOld(entity);
 				e.setLocationAndAngles(posX, posY, posZ, entity.getYaw(1) + yawRotation, entity.getPitch(1));
 				e.setRotationYawHead(entity.getRotationYawHead() + yawRotation);
-				target.func_217460_e(e);
+				target.addFromAnotherDimension(e);
 				entity.remove();//Remove the copy in the source dimension
 			}
 			e.setMotion(prevVelocity.rotateYaw(yawRotation));
@@ -305,7 +302,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			//Release our address back into the pool
 			GatewaySavedData.releaseAddress((ServerWorld) world, address);
 
-			BlockPos.MutableBlockPos mutPos = new BlockPos.MutableBlockPos(pos);
+			BlockPos.Mutable mutPos = new BlockPos.Mutable(pos);
 			Direction horiz = plane == Direction.Axis.X ? Direction.EAST : Direction.SOUTH;//horizontal direction
 			int preSize = size;//We have to store this, as the field will be modified in the loop
 			mutPos.move(horiz, -preSize / 2);
@@ -359,7 +356,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 
 		//First step is to determine the size
 		int newSize = 0;
-		BlockPos.MutableBlockPos mutPos = new BlockPos.MutableBlockPos(pos);
+		BlockPos.Mutable mutPos = new BlockPos.Mutable(pos);
 		//Maximum size is a 63x63, odd sized squares only
 		boolean foundAir = false;//Indicates we have passed the top section of the frame
 		int foundThickness = 1;
@@ -517,9 +514,9 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 								return;
 							}
 							for(Entity e : entities){
-								playTPEffect(world, e.posX, e.posY, e.posZ);//Play effects at the start position
-								teleportEntity(e, (ServerWorld) targetWorld, (e.posX - pos.getX()) * distMult + endPos.getX(), (e.posY - pos.getY()) * distMult + endPos.getY(), (e.posZ - pos.getZ()) * distMult + endPos.getZ(), rotate);
-								playTPEffect(targetWorld, e.posX, e.posY, e.posZ);//Play effects at the end position
+								playTPEffect(world, e.getPosX(), e.getPosY(), e.getPosZ());//Play effects at the start position
+								teleportEntity(e, (ServerWorld) targetWorld, (e.getPosX() - pos.getX()) * distMult + endPos.getX(), (e.getPosY() - pos.getY()) * distMult + endPos.getY(), (e.getPosZ() - pos.getZ()) * distMult + endPos.getZ(), rotate);
+								playTPEffect(targetWorld, e.getPosX(), e.getPosY(), e.getPosZ());//Play effects at the end position
 							}
 						}
 					}

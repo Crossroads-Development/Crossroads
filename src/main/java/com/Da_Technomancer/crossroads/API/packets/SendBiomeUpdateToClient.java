@@ -1,10 +1,10 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
+import com.Da_Technomancer.crossroads.API.effects.alchemy.AetherEffect;
 import com.Da_Technomancer.essentials.packets.ClientPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
@@ -41,6 +41,6 @@ public class SendBiomeUpdateToClient extends ClientPacket{
 
 	@Override
 	protected void run(){
-		Minecraft.getInstance().world.getChunk(pos).getBiomes()[(pos.getZ() & 15) << 4 | (pos.getX() & 15)] = ForgeRegistries.BIOMES.getValue(new ResourceLocation(newBiome));
+		AetherEffect.setBiomeAtPos(Minecraft.getInstance().world, pos, ForgeRegistries.BIOMES.getValue(new ResourceLocation(newBiome)));
 	}
 }

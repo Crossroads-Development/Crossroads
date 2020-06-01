@@ -40,7 +40,7 @@ public class EntityNitro extends ThrowableEntity implements IRendersAsItem{
 	@Override
 	public void setFire(int seconds){
 		if(seconds > 0){
-			onImpact(new BlockRayTraceResult(new Vec3d(posX, posY, posZ), Direction.UP, getPosition(), true));
+			onImpact(new BlockRayTraceResult(new Vec3d(getPosX(), getPosY(), getPosZ()), Direction.UP, getPosition(), true));
 		}
 	}
 
@@ -49,8 +49,8 @@ public class EntityNitro extends ThrowableEntity implements IRendersAsItem{
 		if(!world.isRemote){
 			Vec3d vec = result.getHitVec();
 			world.createExplosion(null, vec.x, vec.y, vec.z, 5F, Explosion.Mode.BREAK);
-			world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.NEUTRAL, 0.5F, 0.4F / (rand.nextFloat() * 0.4F + 0.8F));
-			world.playSound(null, posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.NEUTRAL, 1F, 0.4F / (rand.nextFloat() * 0.4F + 0.8F));
+			world.playSound(null, getPosX(), getPosY(), getPosZ(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.NEUTRAL, 0.5F, 0.4F / (rand.nextFloat() * 0.4F + 0.8F));
+			world.playSound(null, getPosX(), getPosY(), getPosZ(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.NEUTRAL, 1F, 0.4F / (rand.nextFloat() * 0.4F + 0.8F));
 			world.setEntityState(this, (byte) 3);
 			remove();
 		}

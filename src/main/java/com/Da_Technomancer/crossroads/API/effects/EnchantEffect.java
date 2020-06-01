@@ -67,8 +67,8 @@ public class EnchantEffect extends BeamEffect{
 						if(CRConfig.enchantDestruction.get() && RAND.nextInt(100) < power){
 							//Destroy the item
 							created = ItemStack.EMPTY;
-							worldIn.addParticle(ParticleTypes.SMOKE, ent.posX, ent.posY, ent.posZ, 0, 0, 0);
-							worldIn.playSound(null, ent.posX, ent.posY, ent.posZ, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 1, 1);
+							worldIn.addParticle(ParticleTypes.SMOKE, ent.getPosX(), ent.getPosY(), ent.getPosZ(), 0, 0, 0);
+							worldIn.playSound(null, ent.getPosX(), ent.getPosY(), ent.getPosZ(), SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 1, 1);
 						}else{
 							if(stack.getItem() == Items.BOOK){
 								created = new ItemStack(Items.ENCHANTED_BOOK, 1);
@@ -89,7 +89,7 @@ public class EnchantEffect extends BeamEffect{
 							}
 						}
 
-						InventoryHelper.spawnItemStack(worldIn, ent.posX, ent.posY, ent.posZ, created);
+						InventoryHelper.spawnItemStack(worldIn, ent.getPosX(), ent.getPosY(), ent.getPosZ(), created);
 						ent.getItem().shrink(1);
 						if(ent.getItem().isEmpty()){
 							ent.remove();

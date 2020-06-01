@@ -85,8 +85,8 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 				coilTE.setStored(coilTE.getStored() - joltQty);
 				markDirty();
 
-				CRRenderUtil.addArc(world, pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F, (float) ent.posX, (float) ent.posY, (float) ent.posZ, 5, 0.2F, ATTACK_COLOR_CODES[(int) (world.getGameTime() % 3)]);
-				ent.onStruckByLightning(new LightningBoltEntity(world, ent.posX, ent.posY, ent.posZ, true));
+				CRRenderUtil.addArc(world, pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F, (float) ent.getPosX(), (float) ent.getPosY(), (float) ent.getPosZ(), 5, 0.2F, ATTACK_COLOR_CODES[(int) (world.getGameTime() % 3)]);
+				ent.onStruckByLightning(new LightningBoltEntity(world, ent.getPosX(), ent.getPosY(), ent.getPosZ(), true));
 			}
 		}else if(variant == TeslaCoilTop.TeslaCoilVariants.DECORATIVE){
 			if(coilTE.getStored() >= TeslaCoilTop.TeslaCoilVariants.DECORATIVE.joltAmt){

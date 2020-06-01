@@ -99,7 +99,7 @@ public class GatewaySavedData extends WorldSavedData{
 		if(world.dimension.getType() == DimensionType.OVERWORLD){
 			storage = world.getSavedData();
 		}else{
-			storage = world.getServer().func_71218_a(DimensionType.OVERWORLD).getSavedData();
+			storage = world.getServer().getWorld(DimensionType.OVERWORLD).getSavedData();
 		}
 		GatewaySavedData data;
 		try{

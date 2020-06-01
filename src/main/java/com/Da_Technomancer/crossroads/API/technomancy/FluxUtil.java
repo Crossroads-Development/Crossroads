@@ -11,6 +11,7 @@ import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -133,15 +134,15 @@ public class FluxUtil{
 		return false;
 	}
 
-	public static boolean handleFluxLinking(World world, BlockPos pos, ItemStack stack, PlayerEntity player){
+	public static ActionResultType handleFluxLinking(World world, BlockPos pos, ItemStack stack, PlayerEntity player){
 		if(ILinkTE.isLinkTool(stack)){
 			TileEntity te = world.getTileEntity(pos);
 			if(!world.isRemote && te instanceof ILinkTE){
 				((ILinkTE) te).wrench(stack, player);
 			}
-			return true;
+			return ActionResultType.SUCCESS;
 		}
-		return false;
+		return ActionResultType.PASS;
 	}
 
 	public static void fluxEvent(World worldIn, BlockPos pos){

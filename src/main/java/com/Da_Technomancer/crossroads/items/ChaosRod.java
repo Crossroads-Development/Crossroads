@@ -32,16 +32,16 @@ public class ChaosRod extends Item{
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand){
 		if(worldIn.isRemote){
 			playerIn.playSound(SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, 1, 1);
-			return ActionResult.newResult(ActionResultType.SUCCESS, playerIn.getHeldItem(hand));
+			return ActionResult.resultSuccess(playerIn.getHeldItem(hand));
 		}
 		Vec3d change = playerIn.getLookVec().scale(8);
-		playerIn.setPositionAndUpdate(playerIn.posX + change.x, playerIn.posY + change.y, playerIn.posZ + change.z);
+		playerIn.setPositionAndUpdate(playerIn.getPosX() + change.x, playerIn.getPosY() + change.y, playerIn.getPosZ() + change.z);
 		//Long story short, Potus4mine is the username of the person who found an exploit, which I left in only for them. 
 		if(playerIn.getGameProfile().getName().equals("Potus4mine") ? playerIn.getActivePotionEffect(Effects.WEAKNESS) != null : playerIn.getActivePotionEffect(Effects.GLOWING) != null){
 			playerIn.attackEntityFrom(DamageSource.DRAGON_BREATH, 5F);
 		}
 		playerIn.addPotionEffect(new EffectInstance(playerIn.getGameProfile().getName().equals("Potus4mine") ? Effects.WEAKNESS : Effects.GLOWING, 100, 0));
-		return ActionResult.newResult(ActionResultType.SUCCESS, playerIn.getHeldItem(hand));
+		return ActionResult.resultSuccess(playerIn.getHeldItem(hand));
 	}
 
 	@Override

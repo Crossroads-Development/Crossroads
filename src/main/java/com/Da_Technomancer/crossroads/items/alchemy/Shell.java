@@ -63,7 +63,7 @@ public class Shell extends AbstractGlassware{
 				held = ItemStack.EMPTY;
 			}
 
-			worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+			worldIn.playSound(null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
 
 			if(!worldIn.isRemote){
 				EntityShell entitysnowball = new EntityShell(worldIn, playerIn, contents, isCrystal);

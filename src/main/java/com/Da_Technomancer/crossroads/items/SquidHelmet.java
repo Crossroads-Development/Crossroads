@@ -27,7 +27,7 @@ public class SquidHelmet extends ArmorItem{
 	public void onArmorTick(ItemStack stack, World world, PlayerEntity player){
 		if(player.getAir() <= 150){
 			player.setAir(300);
-			world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_SQUID_DEATH, SoundCategory.PLAYERS, 2.5F, 1F);
+			world.playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ENTITY_SQUID_DEATH, SoundCategory.PLAYERS, 2.5F, 1F);
 		}
 	}
 

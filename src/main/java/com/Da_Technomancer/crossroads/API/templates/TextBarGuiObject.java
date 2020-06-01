@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.API.templates;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
@@ -138,12 +138,12 @@ public class TextBarGuiObject implements IGuiObject{
 	public boolean drawBack(float partialTicks, int mouseX, int mouseY, FontRenderer fontRenderer){
 		Minecraft.getInstance().getTextureManager().bindTexture(BAR);
 		if(selected){
-			GlStateManager.color3f(1, 1, 0);
+			RenderSystem.color3f(1, 1, 0);
 		}
 		AbstractGui.blit(x, y, 0, 0, 2, 20, 300, 20);
 		AbstractGui.blit(x + 2, y, 2, 0, endX - x - 4, 20, 300, 20);
 		AbstractGui.blit(endX - 2, y, 298, 0, 2, 20, 300, 20);
-		GlStateManager.color3f(1, 1, 1);
+		RenderSystem.color3f(1, 1, 1);
 
 		return true;
 	}
@@ -155,7 +155,7 @@ public class TextBarGuiObject implements IGuiObject{
 		}
 		char indexChar = index == text.length() ? '_' : '|';
 		fontRenderer.drawStringWithShadow(text.isEmpty() ? emptyText : text.substring(0, index) + indexChar + text.substring(index), 5 + baseX, 7 + baseY, text.isEmpty() ? Color.GRAY.getRGB() : Color.WHITE.getRGB());
-		GlStateManager.color3f(1, 1, 1);
+		RenderSystem.color3f(1, 1, 1);
 		return true;
 	}
 

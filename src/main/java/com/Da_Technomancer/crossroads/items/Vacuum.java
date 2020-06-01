@@ -6,7 +6,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -34,7 +33,7 @@ public class Vacuum extends Item{
 
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand){
-		ArrayList<Entity> entities = (ArrayList<Entity>) worldIn.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(playerIn.posX, playerIn.posY, playerIn.posZ, playerIn.posX, playerIn.posY, playerIn.posZ).grow(RANGE), EntityPredicates.IS_ALIVE);
+		ArrayList<Entity> entities = (ArrayList<Entity>) worldIn.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ()).grow(RANGE), EntityPredicates.IS_ALIVE);
 
 		//Affects a conical region
 		//Removes entities from the list if they aren't in the conical region in the direction the player is looking
@@ -52,6 +51,6 @@ public class Vacuum extends Item{
 
 		playerIn.getHeldItem(hand).damageItem(1, playerIn, p -> p.sendBreakAnimation(hand));
 
-		return ActionResult.newResult(ActionResultType.SUCCESS, playerIn.getHeldItem(hand));
+		return ActionResult.resultSuccess(playerIn.getHeldItem(hand));
 	}
 }

@@ -76,7 +76,7 @@ public class TeslaRay extends Item{
 
 			//Populate and damage targets
 			//The first target is found in a conical area with the vertex at the player
-			List<LivingEntity> entities = worldIn.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(playerIn.posX, playerIn.posY + playerIn.getEyeHeight(), playerIn.posZ, playerIn.posX, playerIn.posY + playerIn.getEyeHeight(), playerIn.posZ).grow(RANGE), EntityPredicates.IS_ALIVE);
+			List<LivingEntity> entities = worldIn.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(playerIn.getPosX(), playerIn.getPosY() + playerIn.getEyeHeight(), playerIn.getPosZ(), playerIn.getPosX(), playerIn.getPosY() + playerIn.getEyeHeight(), playerIn.getPosZ()).grow(RANGE), EntityPredicates.IS_ALIVE);
 			Predicate<LivingEntity> cannotTarget = (LivingEntity e) -> targets.contains(e) || e == playerIn || e instanceof ServerPlayerEntity && !playerIn.canAttackPlayer((PlayerEntity) e);
 
 			//Removes entities from the list if they aren't in the conical region in the direction the player is looking, and checks PVP rules
@@ -108,7 +108,7 @@ public class TeslaRay extends Item{
 			if(scale >= 0.99F){//Check attack meter is charged
 				//An arbitrary limit of 32 targets exists to prevent glitchy infinite chaining behaviour- which could occur under exceptional circumstances
 				for(int i = 0; i < 32; i++){
-					entities = worldIn.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(targets.get(i).posX, targets.get(i).posY, targets.get(i).posZ, targets.get(i).posX, targets.get(i).posY, targets.get(i).posZ).grow(RADIUS - i), EntityPredicates.IS_ALIVE);
+					entities = worldIn.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(targets.get(i).getPosX(), targets.get(i).getPosY(), targets.get(i).getPosZ(), targets.get(i).getPosX(), targets.get(i).getPosY(), targets.get(i).getPosZ()).grow(RADIUS - i), EntityPredicates.IS_ALIVE);
 					entities.removeIf(cannotTarget);
 					if(entities.isEmpty()){
 						break;

@@ -65,9 +65,9 @@ public class EntityFlyingMachine extends Entity{
 
 		fallDistance = 0;//Prevent fall damage
 
-		prevPosX = this.posX;
-		prevPosY = this.posY;
-		prevPosZ = this.posZ;
+		prevPosX = this.getPosX();
+		prevPosY = this.getPosY();
+		prevPosZ = this.getPosZ();
 
 		double[] vel = new double[3];
 		vel[0] = getMotion().getX();

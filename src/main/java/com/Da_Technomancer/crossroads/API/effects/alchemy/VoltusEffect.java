@@ -25,7 +25,7 @@ public class VoltusEffect implements IAlchEffect{
 			for(LivingEntity ent : ents){
 				ent.onStruckByLightning(null);//Deals 5 lightning damage
 				ent.attackEntityFrom(DamageSource.LIGHTNING_BOLT, 5.0F);//Deal an additional 5 damage
-				CRRenderUtil.addArc(world, (float) pos.getX() + 0.5F, (float) pos.getY() + 0.5F, (float) pos.getZ() + 0.5F, (float) ent.posX, (float) ent.posY, (float) ent.posZ, 1, 0F, BOLT_COLORS[(int) (world.getGameTime() % 3)].getRGB());
+				CRRenderUtil.addArc(world, (float) pos.getX() + 0.5F, (float) pos.getY() + 0.5F, (float) pos.getZ() + 0.5F, (float) ent.getPosX(), (float) ent.getPosY(), (float) ent.getPosZ(), 1, 0F, BOLT_COLORS[(int) (world.getGameTime() % 3)].getRGB());
 			}
 		}
 	}

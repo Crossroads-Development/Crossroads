@@ -13,6 +13,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -196,7 +197,7 @@ public class Mechanism extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit){
+	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit){
 		if(ESConfig.isWrench(player.getHeldItem(hand))){
 			TileEntity te = worldIn.getTileEntity(pos);
 			if(te instanceof MechanismTileEntity){
@@ -209,7 +210,7 @@ public class Mechanism extends ContainerBlock implements IReadable{
 
 				if(out == -1){
 					//Didn't actually hit
-					return false;
+					return ActionResultType.FAIL;
 				}
 
 //				Break-all cube (index 7, BB that could be targeted to remove entire block) was removed
@@ -242,7 +243,7 @@ public class Mechanism extends ContainerBlock implements IReadable{
 				}
 //				}
 				RotaryUtil.increaseMasterKey(!worldIn.isRemote);
-				return true;
+				return ActionResultType.SUCCESS;
 			}
 
 
@@ -258,7 +259,7 @@ public class Mechanism extends ContainerBlock implements IReadable{
 //				}
 //			}
 		}
-		return false;
+		return ActionResultType.PASS;
 	}
 
 	@Override

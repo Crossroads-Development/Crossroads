@@ -18,6 +18,7 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -95,7 +96,7 @@ public class TeslaCoil extends ContainerBlock{
 	}
 
 	@Override
-	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		ItemStack heldItem = playerIn.getHeldItem(hand);
 
 		if(ESConfig.isWrench(heldItem)){
@@ -106,7 +107,7 @@ public class TeslaCoil extends ContainerBlock{
 					((TeslaCoilTileEntity) te).rotate();
 				}
 			}
-			return true;
+			return ActionResultType.SUCCESS;
 		}
 
 		if(heldItem.getItem() == CRItems.leydenJar){
@@ -118,7 +119,7 @@ public class TeslaCoil extends ContainerBlock{
 						playerIn.setHeldItem(hand, ItemStack.EMPTY);
 						worldIn.setBlockState(pos, state.with(CRProperties.ACTIVE, true));
 					}
-					return true;
+					return ActionResultType.SUCCESS;
 				}
 			}
 		}else if(heldItem.isEmpty()){
@@ -129,11 +130,11 @@ public class TeslaCoil extends ContainerBlock{
 						playerIn.setHeldItem(hand, ((TeslaCoilTileEntity) te).removeJar());
 						worldIn.setBlockState(pos, state.with(CRProperties.ACTIVE, false));
 					}
-					return true;
+					return ActionResultType.SUCCESS;
 				}
 			}
 		}
-		return false;
+		return ActionResultType.PASS;
 	}
 
 	@Override

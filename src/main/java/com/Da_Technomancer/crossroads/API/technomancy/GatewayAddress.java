@@ -7,7 +7,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.ColumnPos;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerChunkProvider;
@@ -147,7 +146,7 @@ public class GatewayAddress{
 			}
 			//Load the chunk
 			ChunkPos chunkPos = new ChunkPos(pos);
-			((ServerChunkProvider) (w.getChunkProvider())).func_217228_a(TicketType.PORTAL, chunkPos, 3, new ColumnPos(pos));
+			((ServerChunkProvider) (w.getChunkProvider())).registerTicket(TicketType.PORTAL, chunkPos, 3, pos);
 			TileEntity te = w.getTileEntity(pos);
 			if(te instanceof GatewayFrameTileEntity){
 				return (GatewayFrameTileEntity) te;
