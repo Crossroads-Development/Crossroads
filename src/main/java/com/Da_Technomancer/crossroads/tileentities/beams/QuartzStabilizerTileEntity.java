@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 
 	@ObjectHolder("quartz_stabilizer")
-	private static TileEntityType<QuartzStabilizerTileEntity> type = null;
+	public static TileEntityType<QuartzStabilizerTileEntity> type = null;
 
 	private static final int CAPACITY = 1024;
 	private static final int[] RATES = new int[] {1, 2, 4, 8, 16, 32, 64};

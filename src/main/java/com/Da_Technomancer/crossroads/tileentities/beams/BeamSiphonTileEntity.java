@@ -21,7 +21,7 @@ import net.minecraftforge.registries.ObjectHolder;
 public class BeamSiphonTileEntity extends BeamRenderTE{
 
 	@ObjectHolder("beam_siphon")
-	private static TileEntityType<BeamSiphonTileEntity> type = null;
+	public static TileEntityType<BeamSiphonTileEntity> type = null;
 
 	public BeamSiphonTileEntity(){
 		super(type);

@@ -21,7 +21,7 @@ import net.minecraftforge.registries.ObjectHolder;
 public class BeamSplitterTileEntity extends BeamRenderTE{
 
 	@ObjectHolder("beam_splitter")
-	private static TileEntityType<BeamSplitterTileEntity> type = null;
+	public static TileEntityType<BeamSplitterTileEntity> type = null;
 
 	private Direction dir = null;
 

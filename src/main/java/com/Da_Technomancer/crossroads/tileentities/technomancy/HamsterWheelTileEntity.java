@@ -15,7 +15,7 @@ import net.minecraftforge.registries.ObjectHolder;
 public class HamsterWheelTileEntity extends TileEntity implements ITickableTileEntity{
 
 	@ObjectHolder("hamster_wheel")
-	private static TileEntityType<HamsterWheelTileEntity> type = null;
+	public static TileEntityType<HamsterWheelTileEntity> type = null;
 
 	public static final int POWER = 5;
 

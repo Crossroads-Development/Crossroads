@@ -19,7 +19,7 @@ import net.minecraftforge.registries.ObjectHolder;
 public class DynamoTileEntity extends ModuleTE{
 
 	@ObjectHolder("dynamo")
-	private static TileEntityType<DynamoTileEntity> type = null;
+	public static TileEntityType<DynamoTileEntity> type = null;
 
 	private static final int CHARGE_CAPACITY = 8_000;
 	public static final int INERTIA = 200;

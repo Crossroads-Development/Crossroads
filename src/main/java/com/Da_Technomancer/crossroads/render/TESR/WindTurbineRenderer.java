@@ -3,102 +3,99 @@ package com.Da_Technomancer.crossroads.render.TESR;
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.rotary.WindTurbineTileEntity;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.util.LazyOptional;
-import org.lwjgl.opengl.GL11;
 
 public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntity>{
 
-	private static final ResourceLocation TEXTURE_BLADE = new ResourceLocation(Crossroads.MODID, "textures/model/wind_turbine_blade.png");
+	protected WindTurbineRenderer(TileEntityRendererDispatcher dispatcher){
+		super(dispatcher);
+	}
 
 	@Override
-	public void render(WindTurbineTileEntity te, double x, double y, double z, float partialTicks, int destroyStage){
-		if(!te.getWorld().isBlockLoaded(te.getPos())){
-			return;
-		}
-		BlockState state = te.getWorld().getBlockState(te.getPos());
+	public void render(WindTurbineTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
+		BlockState state = te.getBlockState();
 		LazyOptional<IAxleHandler> axle = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
 
 		if(state.getBlock() != CRBlocks.windTurbine || !axle.isPresent()){
 			return;
 		}
 
+		TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(CRRenderTypes.WINDMILL_TEXTURE);
+		IVertexBuilder builder = buffer.getBuffer(RenderType.getCutout());
 		Direction facing = state.get(CRProperties.HORIZ_FACING);
-		GlStateManager.pushMatrix();
-		GlStateManager.disableLighting();
-		GlStateManager.translated(x + .5F, y + .5F, z + .5F);
-		GlStateManager.rotated(-facing.getHorizontalAngle(), 0, 1, 0);
-		GlStateManager.rotated(facing.getAxisDirection().getOffset() * axle.orElseThrow(NullPointerException::new).getAngle(partialTicks), 0, 0, 1);
+		int light = CRRenderUtil.getLightAtPos(te.getWorld(), te.getPos().offset(facing));//Get light from the block in front
 
-		CRRenderUtil.setLighting(te.getWorld().getCombinedLight(te.getPos().offset(facing), 0));
-
-		Minecraft.getInstance().textureManager.bindTexture(TEXTURE_BLADE);
-		BufferBuilder vb = Tessellator.getInstance().getBuffer();
+		matrix.push();
+		matrix.translate(.5F, .5F, .5F);
+		matrix.rotate(Vector3f.YP.rotation(-facing.getHorizontalAngle()));
+		matrix.rotate(Vector3f.ZP.rotation(facing.getAxisDirection().getOffset() * axle.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
 
 		//Center piece
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-0.25D, -0.25D, 0.6D).tex(0, 0.25F).endVertex();
-		vb.pos(0.25D, -0.25D, 0.6D).tex(0, 0.5F).endVertex();
-		vb.pos(0.25D, 0.25D, 0.6D).tex(0.25F, 0.5F).endVertex();
-		vb.pos(-0.25D, 0.25D, 0.6D).tex(0.25F, 0.25F).endVertex();
-		Tessellator.getInstance().draw();
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, -0.25F, 0.6F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(4), 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, -0.25F, 0.6F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(8), 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 0.25F, 0.6F, sprite.getInterpolatedU(4), sprite.getInterpolatedV(8), 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, 0.25F, 0.6F, sprite.getInterpolatedU(4), sprite.getInterpolatedV(4), 0, 0, 1, light);
 
 		//Blades
 		for(int i = 0; i < 4; i++){
-			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			//Center cap
-			vb.pos(-0.25D, 0.25D, 0.5D).tex(0, 0.25F).endVertex();
-			vb.pos(-0.25D, 0.25D, 0.6D).tex(0.05F, 0.25F).endVertex();
-			vb.pos(0.25D, 0.25D, 0.6D).tex(0.05F, 0.5F).endVertex();
-			vb.pos(0.25D, 0.25D, 0.5D).tex(0, 0.5F).endVertex();
+			CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, 0.25F, 0.5F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(4), 0, 1, 0, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, 0.25F, 0.6F, sprite.getInterpolatedU(0.8D), sprite.getInterpolatedV(4), 0, 1, 0, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 0.25F, 0.6F, sprite.getInterpolatedU(0.8D), sprite.getInterpolatedV(8), 0, 1, 0, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 0.25F, 0.5F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(8), 0, 1, 0, light);
 
 			//Wood spoke
-			vb.pos(-0.0625D, 0.25D, 0.6D).tex(0, .09375F).endVertex();
-			vb.pos(0.0625D, 0.25D, 0.6D).tex(0, .15625F).endVertex();
-			vb.pos(0.0625D, 2, 0.6D).tex(.75F, .15625F).endVertex();
-			vb.pos(-0.0625D, 2, 0.6D).tex(.75F, .09375F).endVertex();
+			CRRenderUtil.addVertexBlock(builder, matrix, -0.0625F, 0.25F, 0.6F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(1.5F), 0, 0, 1, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, 0.0625F, 0.25F, 0.6F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(2.5F), 0, 0, 1, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, 0.0625F, 2, 0.6F, sprite.getInterpolatedU(12), sprite.getInterpolatedV(2.5F), 0, 0, 1, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, -0.0625F, 2, 0.6F, sprite.getInterpolatedU(12), sprite.getInterpolatedV(1.5F), 0, 0, 1, light);
 
 			//Wool panel
-			vb.pos(-.25D, 0.25D, 0.5D).tex(0, 0F).endVertex();
-			vb.pos(-0.0625D, 0.25D, 0.6D).tex(0, .09375F).endVertex();
-			vb.pos(-0.0625D, 2, 0.6D).tex(.75F, .09375F).endVertex();
-			vb.pos(-.25D, 2, 0.5D).tex(.75F, 0F).endVertex();
+			Vec3d normal = CRRenderUtil.findNormal(new Vec3d(-0.0625D, 0.25D, 0.6D), new Vec3d(-.25D, 0.25D, 0.5D), new Vec3d(-0.0625D, 2, 0.6D));
+			CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, 0.25F, 0.5F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(0), (float) normal.x, (float) normal.y, (float) normal.z, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, -0.0625F, 0.25F, 0.6F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(1.5D), (float) normal.x, (float) normal.y, (float) normal.z, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, -0.0625F, 2, 0.6F, sprite.getInterpolatedU(12), sprite.getInterpolatedV(1.5D), (float) normal.x, (float) normal.y, (float) normal.z, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, 2, 0.5F, sprite.getInterpolatedU(12), sprite.getInterpolatedV(0), (float) normal.x, (float) normal.y, (float) normal.z, light);
 
 			//Wool panel
-			vb.pos(0.0625D, 0.25D, 0.6D).tex(0, 0F).endVertex();
-			vb.pos(.25D, 0.25D, 0.5D).tex(0, .09375F).endVertex();
-			vb.pos(.25D, 2, 0.5D).tex(.75F, .09375F).endVertex();
-			vb.pos(0.0625D, 2, 0.6D).tex(.75F, 0F).endVertex();
+			normal = CRRenderUtil.findNormal(new Vec3d(.25D, 0.25D, 0.5D), new Vec3d(0.0625D, 0.25D, 0.6D), new Vec3d(.25D, 2, 0.5D));
+			CRRenderUtil.addVertexBlock(builder, matrix, 0.0625F, 0.25F, 0.6F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(0), (float) normal.x, (float) normal.y, (float) normal.z, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 0.25F, 0.5F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(1.5D), (float) normal.x, (float) normal.y, (float) normal.z, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 2, 0.5F, sprite.getInterpolatedU(12), sprite.getInterpolatedV(1.5D), (float) normal.x, (float) normal.y, (float) normal.z, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, 0.0625F, 2, 0.6F, sprite.getInterpolatedU(12), sprite.getInterpolatedV(0), (float) normal.x, (float) normal.y, (float) normal.z, light);
 
 			//Back
-			vb.pos(-0.25D, 0.25D, 0.5D).tex(0, 0).endVertex();
-			vb.pos(-0.25D, 2, 0.5D).tex(.75F, 0).endVertex();
-			vb.pos(0.25D, 2, 0.5D).tex(.75F, .25F).endVertex();
-			vb.pos(0.25D, 0.25D, 0.5D).tex(0, .25F).endVertex();
+			CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, 0.25F, 0.5F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(0), 0, 0, 1, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, 2, 0.5F, sprite.getInterpolatedU(12), sprite.getInterpolatedV(0), 0, 0, 1, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 2, 0.5F, sprite.getInterpolatedU(12), sprite.getInterpolatedV(4), 0, 0, 1, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 0.25F, 0.5F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(4), 0, 0, 1, light);
 
 			//End cap
-			vb.pos(-0.25D, 2, 0.5D).tex(0, 0.5F).endVertex();
-			vb.pos(-0.0625D, 2, 0.6D).tex(0.05F, 0.40625F).endVertex();
-			vb.pos(0.0625D, 2, 0.6D).tex(0.05F, 0.34375F).endVertex();
-			vb.pos(0.25D, 2, 0.5D).tex(0, 0.25F).endVertex();
+			CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, 2, 0.5F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(8), 0, 1, 0, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, -0.0625F, 2, 0.6F, sprite.getInterpolatedU(0.8D), sprite.getInterpolatedV(6.5D), 0, 1, 0, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, 0.0625F, 2, 0.6F, sprite.getInterpolatedU(0.8D), sprite.getInterpolatedV(5.5D), 0, 1, 0, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 2, 0.5F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(4), 0, 1, 0, light);
 
-			Tessellator.getInstance().draw();
-			GlStateManager.rotated(90, 0, 0, 1);
+			matrix.rotate(Vector3f.ZP.rotationDegrees(90));
 		}
 
-		GlStateManager.enableLighting();
-		GlStateManager.popMatrix();
+		matrix.pop();
 	}
 }

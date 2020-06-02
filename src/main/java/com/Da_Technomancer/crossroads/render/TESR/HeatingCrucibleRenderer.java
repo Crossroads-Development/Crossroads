@@ -1,58 +1,48 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntity;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import org.lwjgl.opengl.GL11;
-
-import java.awt.*;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.inventory.container.PlayerContainer;
 
 public class HeatingCrucibleRenderer extends TileEntityRenderer<HeatingCrucibleTileEntity>{
 
+	protected HeatingCrucibleRenderer(TileEntityRendererDispatcher dispatcher){
+		super(dispatcher);
+	}
+
 	@Override
-	public void render(HeatingCrucibleTileEntity te, double x, double y, double z, float partialTicks, int destroStage){
-		if(te == null || !te.getWorld().isBlockLoaded(te.getPos()) || te.getActiveTexture().isEmpty()){
+	public void render(HeatingCrucibleTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
+		if(te.getActiveTexture() == null || te.getBlockState().getBlock() != CRBlocks.heatingCrucible){
 			return;
 		}
-		int fullness = te.getWorld().getBlockState(te.getPos()).get(CRProperties.FULLNESS);
+		int fullness = te.getBlockState().get(CRProperties.FULLNESS);
 		if(fullness == 0){
 			return;
 		}
 
-		TextureAtlasSprite text = Minecraft.getInstance().getTextureMap().getAtlasSprite(te.getActiveTexture());
-		GlStateManager.pushMatrix();
-		GlStateManager.pushLightingAttributes();
-		GlStateManager.disableLighting();
-		Color col = te.getCol();
-		GlStateManager.color4f(col.getRed() / 255F, col.getGreen() / 255F, col.getBlue() / 255F, 1);
-		GlStateManager.translated(x, y, z);
-		Minecraft.getInstance().textureManager.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-		BufferBuilder vb = Tessellator.getInstance().getBuffer();
+		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
+		TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(te.getActiveTexture());
 
-		CRRenderUtil.setMediumLighting();
-
+		int light = CRRenderUtil.calcMediumLighting(combinedLight);//We want the molten fluid to glow in the dark slightly
 		float xzStart = 2F / 16F;
 		float xzEnd = 14F / 16F;
 		float height = (float) (2 + 4 * fullness) / 16F;
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(xzEnd, height, xzStart).tex(text.getInterpolatedU(xzEnd * 16), text.getInterpolatedV(16 - (xzStart * 16))).endVertex();
-		vb.pos(xzStart, height, xzStart).tex(text.getInterpolatedU(xzStart * 16), text.getInterpolatedV(16 - (xzStart * 16))).endVertex();
-		vb.pos(xzStart, height, xzEnd).tex(text.getInterpolatedU(xzStart * 16), text.getInterpolatedV(16 - (xzEnd * 16))).endVertex();
-		vb.pos(xzEnd, height, xzEnd).tex(text.getInterpolatedU(xzEnd * 16), text.getInterpolatedV(16 - (xzEnd * 16))).endVertex();
-		Tessellator.getInstance().draw();
-
-		GlStateManager.enableLighting();
-		GlStateManager.popAttributes();
-		GlStateManager.popMatrix();
-
+		matrix.push();
+		CRRenderUtil.addVertexBlock(builder, matrix, xzEnd, height, xzStart, sprite.getInterpolatedU(xzEnd * 16), sprite.getInterpolatedV(16 - (xzStart * 16)), 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, xzStart, height, xzStart, sprite.getInterpolatedU(xzStart * 16), sprite.getInterpolatedV(16 - (xzStart * 16)), 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, xzStart, height, xzEnd, sprite.getInterpolatedU(xzStart * 16), sprite.getInterpolatedV(16 - (xzEnd * 16)), 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, xzEnd, height, xzEnd, sprite.getInterpolatedU(xzEnd * 16), sprite.getInterpolatedV(16 - (xzEnd * 16)), 0, 1, 0, light);
+		matrix.pop();
 	}
 }

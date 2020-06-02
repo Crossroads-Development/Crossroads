@@ -28,7 +28,7 @@ import java.util.Set;
 public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntity, IFluxLink{
 
 	@ObjectHolder("flux_node")
-	private static TileEntityType<FluxNodeTileEntity> type = null;
+	public static TileEntityType<FluxNodeTileEntity> type = null;
 
 	private static final float SPIN_RATE = 3.6F;//For rendering
 

@@ -44,7 +44,7 @@ import java.util.Set;
 public class CopshowiumCreationChamberTileEntity extends InventoryTE implements IFluxLink{
 
 	@ObjectHolder("copshowium_creation_chamber")
-	private static TileEntityType<CopshowiumCreationChamberTileEntity> type = null;
+	public static TileEntityType<CopshowiumCreationChamberTileEntity> type = null;
 
 	public static final int CAPACITY = 1_440;
 	public static final int FLUX_PER_INGOT = 4;

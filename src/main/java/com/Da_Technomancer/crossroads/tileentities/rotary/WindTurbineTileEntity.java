@@ -31,7 +31,7 @@ import java.util.List;
 public class WindTurbineTileEntity extends ModuleTE{
 
 	@ObjectHolder("wind_turbine")
-	private static TileEntityType<WindTurbineTileEntity> type = null;
+	public static TileEntityType<WindTurbineTileEntity> type = null;
 
 	public static final double MAX_SPEED = 2D;
 	public static final double INERTIA = 200;

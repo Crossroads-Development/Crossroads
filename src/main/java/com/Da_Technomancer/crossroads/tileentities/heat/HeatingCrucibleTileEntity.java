@@ -24,6 +24,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IntReferenceHolder;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
@@ -42,7 +43,7 @@ import java.util.Optional;
 public class HeatingCrucibleTileEntity extends InventoryTE implements IStringReceiver{
 
 	@ObjectHolder("crucible")
-	private static TileEntityType<HeatingCrucibleTileEntity> type = null;
+	public static TileEntityType<HeatingCrucibleTileEntity> type = null;
 
 	public static final int[] TEMP_TIERS = {1000, 1500, 2500};
 	public static final int USAGE = 20;
@@ -52,7 +53,8 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	/**
 	 * The texture to be displayed, if any.
 	 */
-	private String activeText = "";
+	@Nullable
+	private ResourceLocation activeText = null;
 	private Integer col = null;//Color applied to the liquid texture
 
 	public HeatingCrucibleTileEntity(){
@@ -75,7 +77,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	public void receiveString(byte context, String message, @Nullable ServerPlayerEntity sender){
 		if(world.isRemote){
 			if(context == 0){
-				activeText = message;
+				activeText = message.length() == 0 ? null : new ResourceLocation(message);
 			}else if(context == 1){
 				try{
 					col = Integer.valueOf(message);
@@ -86,7 +88,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 		}
 	}
 
-	public String getActiveTexture(){
+	public ResourceLocation getActiveTexture(){
 		return activeText;
 	}
 
@@ -115,16 +117,16 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 			}
 
 			if(fullness != 0 && !fluids[0].isEmpty()){
-				String goal = fluids[0].getFluid().getAttributes().getStillTexture().toString();
+				ResourceLocation goal = fluids[0].getFluid().getAttributes().getStillTexture();
 				if(!goal.equals(activeText)){
 					activeText = goal;
 					col = fluids[0].getFluid().getAttributes().getColor(fluids[0]);
-					CRPackets.sendPacketAround(world, pos, new SendStringToClient(0, activeText, pos));
+					CRPackets.sendPacketAround(world, pos, new SendStringToClient(0, activeText.toString(), pos));
 					CRPackets.sendPacketAround(world, pos, new SendStringToClient(1, Integer.toString(col), pos));
 				}
-			}else if(!activeText.isEmpty()){
-				activeText = "";
-				CRPackets.sendPacketAround(world, pos, new SendStringToClient(0, activeText, pos));
+			}else if(activeText != null){
+				activeText = null;
+				CRPackets.sendPacketAround(world, pos, new SendStringToClient(0, "", pos));
 			}
 		}
 
@@ -164,7 +166,12 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	@Override
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
-		activeText = nbt.getString("act");
+		String textStr = nbt.getString("act");
+		if(textStr.length() == 0){
+			activeText = null;
+		}else{
+			activeText = new ResourceLocation(textStr);
+		}
 		col = nbt.contains("col") ? nbt.getInt("col") : null;
 		progress = nbt.getInt("prog");
 		progressRef.set(progress);
@@ -173,11 +180,9 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
-		if(activeText.length() != 0){
-			nbt.putString("act", activeText);
-			if(col != null){
-				nbt.putInt("col", col);
-			}
+		nbt.putString("act", activeText == null ? "" : activeText.toString());
+		if(col != null){
+			nbt.putInt("col", col);
 		}
 		nbt.putInt("prog", progress);
 
@@ -187,11 +192,9 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
-		if(activeText.length() != 0){
-			nbt.putString("act", activeText);
-			if(col != null){
-				nbt.putInt("col", col);
-			}
+		nbt.putString("act", activeText == null ? "" : activeText.toString());
+		if(col != null){
+			nbt.putInt("col", col);
 		}
 		return nbt;
 	}

@@ -28,7 +28,7 @@ import java.util.List;
 public class RotaryDrillTileEntity extends ModuleTE{
 
 	@ObjectHolder("rotary_drill")
-	private static TileEntityType<RotaryDrillTileEntity> type = null;
+	public static TileEntityType<RotaryDrillTileEntity> type = null;
 
 	private static final DamageSource DRILL = new DamageSource("drill");
 

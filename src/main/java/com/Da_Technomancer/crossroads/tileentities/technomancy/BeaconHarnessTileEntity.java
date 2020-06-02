@@ -27,7 +27,7 @@ import java.util.Set;
 public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink{
 
 	@ObjectHolder("beacon_harness")
-	private static TileEntityType<BeaconHarnessTileEntity> type = null;
+	public static TileEntityType<BeaconHarnessTileEntity> type = null;
 
 	public static final int FLUX_GEN = 4;
 	private static final int LOOP_TIME = 120;//Time to make one full rotation around the color wheel in cycles. Must be a multiple of 3

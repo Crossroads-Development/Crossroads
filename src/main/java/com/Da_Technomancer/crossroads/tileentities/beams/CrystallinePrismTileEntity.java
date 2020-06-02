@@ -14,7 +14,7 @@ import net.minecraftforge.registries.ObjectHolder;
 public class CrystallinePrismTileEntity extends BeamRenderTE{
 
 	@ObjectHolder("crystal_prism")
-	private static TileEntityType<CrystallinePrismTileEntity> type = null;
+	public static TileEntityType<CrystallinePrismTileEntity> type = null;
 
 	private Direction dir = null;
 

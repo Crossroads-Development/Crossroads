@@ -39,7 +39,7 @@ import javax.annotation.Nullable;
 public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, IIntReceiver{
 
 	@ObjectHolder("lens_frame")
-	private static TileEntityType<LensFrameTileEntity> type = null;
+	public static TileEntityType<LensFrameTileEntity> type = null;
 
 	private int packetNeg;
 	private int packetPos;

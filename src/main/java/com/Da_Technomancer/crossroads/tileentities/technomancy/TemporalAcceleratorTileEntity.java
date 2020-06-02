@@ -41,7 +41,7 @@ import java.util.Set;
 public class TemporalAcceleratorTileEntity extends TileEntity implements ITickableTileEntity, IFluxLink{
 
 	@ObjectHolder("temporal_accelerator")
-	private static TileEntityType<TemporalAcceleratorTileEntity> type = null;
+	public static TileEntityType<TemporalAcceleratorTileEntity> type = null;
 
 	public static final int FLUX_MULT = 2;
 	public static final int SIZE = 5;

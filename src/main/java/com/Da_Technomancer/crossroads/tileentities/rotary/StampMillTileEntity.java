@@ -41,7 +41,7 @@ import java.util.Optional;
 public class StampMillTileEntity extends InventoryTE{
 
 	@ObjectHolder("stamp_mill")
-	private static TileEntityType<StampMillTileEntity> type = null;
+	public static TileEntityType<StampMillTileEntity> type = null;
 
 	public static final int TIME_LIMIT = 100;
 	public static final int INERTIA = 200;

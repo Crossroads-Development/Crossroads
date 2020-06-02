@@ -52,7 +52,7 @@ import java.util.Set;
 public class GatewayFrameTileEntity extends TileEntity implements ITickableTileEntity, IInfoTE, IFluxLink{
 
 	@ObjectHolder("gateway_frame")
-	private static TileEntityType<GatewayFrameTileEntity> type = null;
+	public static TileEntityType<GatewayFrameTileEntity> type = null;
 	public static final int INERTIA = 0;//Moment of inertia
 	public static final int FLUX_PER_CYCLE = 4;
 	private static final float ROTATION_SPEED = (float) Math.PI / 40F;//Rate of convergence between angle and axle 'speed' in radians/tick. Yes, this terminology is confusing

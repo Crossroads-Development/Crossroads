@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 public class SteamTurbineTileEntity extends ModuleTE{
 
 	@ObjectHolder("steam_turbine")
-	private static TileEntityType<SteamTurbineTileEntity> type = null;
+	public static TileEntityType<SteamTurbineTileEntity> type = null;
 
 	public static final double INERTIA = 80D;
 	private static final int CAPACITY = 10_000;

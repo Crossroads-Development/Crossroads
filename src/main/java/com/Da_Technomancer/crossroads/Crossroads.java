@@ -13,7 +13,8 @@ import com.Da_Technomancer.crossroads.items.crafting.recipes.*;
 import com.Da_Technomancer.crossroads.items.itemSets.ItemSets;
 import com.Da_Technomancer.crossroads.particles.CRParticles;
 import com.Da_Technomancer.crossroads.particles.ColorParticleType;
-import com.Da_Technomancer.crossroads.render.TESR.AAModTESR;
+import com.Da_Technomancer.crossroads.render.CRRenderTypes;
+import com.Da_Technomancer.crossroads.render.TESR.CRRendererRegistry;
 import com.Da_Technomancer.crossroads.tileentities.CRTileEntity;
 import com.Da_Technomancer.crossroads.world.ModWorldGen;
 import net.minecraft.block.Block;
@@ -33,6 +34,7 @@ import net.minecraft.world.gen.feature.Feature;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -90,7 +92,7 @@ public final class Crossroads{
 //		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
 //		ModelLoaderRegistry.registerLoader(new BakedModelLoader());
 		CRItems.clientInit();
-		AAModTESR.registerBlockRenderer();
+		CRRendererRegistry.registerBlockRenderer();
 		Keys.init();
 		ModEntities.clientInit();
 //		CRParticles.clientInit();
@@ -296,5 +298,13 @@ public final class Crossroads{
 	@SubscribeEvent
 	public static void serverStarted(FMLServerStartedEvent e){
 		MinecraftForge.EVENT_BUS.register(new EventHandlerServer());
+	}
+
+	@SubscribeEvent
+	@SuppressWarnings("unused")
+	@OnlyIn(Dist.CLIENT)
+	public static void onTextureStitch(TextureStitchEvent.Pre event){
+		//Add textures used in TESRs
+		CRRenderTypes.stitchTextures(event);
 	}
 }

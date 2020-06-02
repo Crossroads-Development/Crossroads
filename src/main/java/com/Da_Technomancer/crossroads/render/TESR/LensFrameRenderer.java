@@ -2,67 +2,77 @@ package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.beams.LensFrameTileEntity;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 
 public class LensFrameRenderer extends BeamRenderer<LensFrameTileEntity>{
 
-	private static final ResourceLocation[] textures = new ResourceLocation[6];
+	//All of these textures are associated with blocks, and don't need to be stitched
+	private static final ResourceLocation[] LENS_FRAME_TEXTURES = new ResourceLocation[6];
 
 	static{
-		textures[0] = new ResourceLocation(Crossroads.MODID, "textures/item/gem_ruby.png");
-		textures[1] = new ResourceLocation("textures/item/emerald.png");
-		textures[2] = new ResourceLocation("textures/item/diamond.png");
-		textures[3] = new ResourceLocation(Crossroads.MODID, "textures/item/pure_quartz.png");
-		textures[4] = new ResourceLocation(Crossroads.MODID, "textures/item/glow_quartz.png");
-		textures[5] = new ResourceLocation(Crossroads.MODID, "textures/item/void_crystal.png");
+		LENS_FRAME_TEXTURES[0] = new ResourceLocation(Crossroads.MODID, "textures/item/gem_ruby.png");
+		LENS_FRAME_TEXTURES[1] = new ResourceLocation("textures/item/emerald.png");
+		LENS_FRAME_TEXTURES[2] = new ResourceLocation("textures/item/diamond.png");
+		LENS_FRAME_TEXTURES[3] = new ResourceLocation(Crossroads.MODID, "textures/item/pure_quartz.png");
+		LENS_FRAME_TEXTURES[4] = new ResourceLocation(Crossroads.MODID, "textures/item/glow_quartz.png");
+		LENS_FRAME_TEXTURES[5] = new ResourceLocation(Crossroads.MODID, "textures/item/void_crystal.png");
+	}
+
+	protected LensFrameRenderer(TileEntityRendererDispatcher dispatcher){
+		super(dispatcher);
 	}
 
 	@Override
-	public void render(LensFrameTileEntity beam, double x, double y, double z, float partialTicks, int destroyStage){
-		if(!beam.getWorld().isBlockLoaded(beam.getPos())){
-			return;
-		}
-		BlockState state = beam.getWorld().getBlockState(beam.getPos());
-		super.render(beam, x, y, z, partialTicks, destroyStage);
-		int content = ((LensFrameTileEntity) beam).getContents();
+	public void render(LensFrameTileEntity beam, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
+		super.render(beam, partialTicks, matrix, buffer, combinedLight, combinedOverlay);
+
+		//Render the item in the frame
+		BlockState state = beam.getBlockState();
+		int content = beam.getContents();
+
 		if(content != 0 && state.getBlock() == CRBlocks.lensFrame){
 			Direction.Axis axis = state.get(ESProperties.AXIS);
-			GlStateManager.pushMatrix();
-			GlStateManager.disableLighting();
-			GlStateManager.translated(x + 0.5F, y + 0.5F, z + 0.5F);
-			if(axis == Direction.Axis.X){
-				GlStateManager.rotated(90, 0, 1, 0);
+
+			matrix.push();
+			matrix.translate(0.5F, 0.5F, 0.5F);
+			switch(axis){
+				case X:
+					matrix.rotate(Direction.WEST.getRotation());
+					break;
+				case Z:
+					matrix.rotate(Direction.NORTH.getRotation());
+					break;
 			}
-			if(axis != Direction.Axis.Y){
-				GlStateManager.rotated(90, 1, 0, 0);
-			}
 
-			Minecraft.getInstance().getTextureManager().bindTexture(textures[content - 1]);
+			IVertexBuilder builder = buffer.getBuffer(RenderType.getCutout());
+			float scale = 0.5F;
+			float height = 0.1F;
+			TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(LENS_FRAME_TEXTURES[content]);
 
-			BufferBuilder buf = Tessellator.getInstance().getBuffer();
-			buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			buf.pos(-0.5F, 0.1F, -0.5F).tex(0, 0).endVertex();
-			buf.pos(-0.5F, 0.1F, 0.5F).tex(0, 1).endVertex();
-			buf.pos(0.5F, 0.1F, 0.5F).tex(1, 1).endVertex();
-			buf.pos(0.5F, 0.1F, -0.5F).tex(1, 0).endVertex();
+			CRRenderUtil.addVertexBlock(builder, matrix, -scale, height, -scale, sprite.getMinU(), sprite.getMinV(), 0, 1, 0, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, -scale, height, scale, sprite.getMinU(), sprite.getMaxV(), 0, 1, 0, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, scale, height, scale, sprite.getMaxU(), sprite.getMaxV(), 0, 1, 0, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, scale, height, -scale, sprite.getMaxU(), sprite.getMinV(), 0, 1, 0, combinedLight);
 
-			buf.pos(-0.5F, -0.1F, -0.5F).tex(0, 0).endVertex();
-			buf.pos(0.5F, -0.1F, -0.5F).tex(1, 0).endVertex();
-			buf.pos(0.5F, -0.1F, 0.5F).tex(1, 1).endVertex();
-			buf.pos(-0.5F, -0.1F, 0.5F).tex(0, 1).endVertex();
-			Tessellator.getInstance().draw();
-			GlStateManager.enableLighting();
-			GlStateManager.popMatrix();
+			CRRenderUtil.addVertexBlock(builder, matrix, -scale, -height, -scale, sprite.getMinU(), sprite.getMinV(), 0, 1, 0, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, scale, -height, -scale, sprite.getMaxU(), sprite.getMinV(), 0, 1, 0, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, scale, -height, scale, sprite.getMaxU(), sprite.getMaxV(), 0, 1, 0, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, -scale, -height, scale, sprite.getMinU(), sprite.getMaxV(), 0, 1, 0, combinedLight);
+
+			matrix.pop();
 		}
 	}
 }

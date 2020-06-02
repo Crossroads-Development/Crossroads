@@ -35,7 +35,7 @@ import java.util.ArrayList;
 public class MechanismTileEntity extends TileEntity implements ITickableTileEntity, ILongReceiver, IInfoTE{
 
 	@ObjectHolder(Crossroads.MODID + ":mechanism")
-	private static TileEntityType<MechanismTileEntity> type = null;
+	public static TileEntityType<MechanismTileEntity> type = null;
 
 	public static final ArrayList<IMechanism> MECHANISMS = new ArrayList<>(6);//This is a list instead of an array to allow expansion by addons
 

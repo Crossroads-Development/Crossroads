@@ -36,7 +36,7 @@ import java.util.Set;
 public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, ITickableTileEntity{
 
 	@ObjectHolder("chrono_harness")
-	private static TileEntityType<ChronoHarnessTileEntity> type = null;
+	public static TileEntityType<ChronoHarnessTileEntity> type = null;
 
 	private static final int FE_CAPACITY = 20_000;
 	private static final float SPEED = (float) Math.PI / 20F / 400F;//Used for rendering

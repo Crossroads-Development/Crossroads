@@ -17,7 +17,7 @@ import net.minecraftforge.registries.ObjectHolder;
 public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 
 	@ObjectHolder("clock_stab")
-	private static TileEntityType<ClockworkStabilizerTileEntity> type = null;
+	public static TileEntityType<ClockworkStabilizerTileEntity> type = null;
 
 	public static final double RATE = 0.2D;
 	private BeamUnitStorage storage = new BeamUnitStorage();

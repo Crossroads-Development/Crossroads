@@ -31,7 +31,7 @@ import java.util.List;
 public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILinkTE{
 
 	@ObjectHolder("tesla_coil_top")
-	private static TileEntityType<TeslaCoilTopTileEntity> type = null;
+	public static TileEntityType<TeslaCoilTopTileEntity> type = null;
 
 	public static final int[] COLOR_CODES = {0xFFECCFFF, 0xFFFCDFFF, 0xFFFFFAFF};
 	private static final int[] ATTACK_COLOR_CODES = {0xFFFFCCCC, 0xFFFFFFCC, 0xFFFFFAFA};

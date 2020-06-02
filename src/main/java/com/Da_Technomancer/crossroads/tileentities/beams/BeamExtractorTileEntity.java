@@ -38,7 +38,7 @@ import java.util.Optional;
 public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory, INamedContainerProvider{
 
 	@ObjectHolder("beam_extractor")
-	private static TileEntityType<BeamExtractorTileEntity> type = null;
+	public static TileEntityType<BeamExtractorTileEntity> type = null;
 
 	private ItemStack inv = ItemStack.EMPTY;
 	private Direction facing = null;

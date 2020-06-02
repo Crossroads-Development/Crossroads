@@ -34,7 +34,7 @@ import javax.annotation.Nullable;
 public class RotaryPumpTileEntity extends InventoryTE{
 
 	@ObjectHolder("rotary_pump")
-	private static TileEntityType<RotaryPumpTileEntity> type = null;
+	public static TileEntityType<RotaryPumpTileEntity> type = null;
 
 	public static final int INERTIA = 80;
 	public static final double MAX_POWER = 5;

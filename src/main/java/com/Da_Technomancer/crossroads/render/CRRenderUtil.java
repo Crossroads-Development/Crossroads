@@ -3,8 +3,10 @@ package com.Da_Technomancer.crossroads.render;
 import com.Da_Technomancer.crossroads.API.packets.AddVisualToClient;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
-import com.mojang.blaze3d.platform.GLX;
+import com.Da_Technomancer.essentials.render.RenderUtil;
+import jdk.internal.jline.internal.Nullable;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -14,7 +16,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.function.Function;
 
-public class CRRenderUtil{
+public class CRRenderUtil extends RenderUtil{
 
 	public static final Vec3d VEC_I = new Vec3d(1, 0, 0);
 	public static final Vec3d VEC_J = new Vec3d(0, 1, 0);
@@ -82,31 +84,65 @@ public class CRRenderUtil{
 		}
 	}
 
-	//Lighting utilities
+	//Tessellation utilities
 
-	@OnlyIn(Dist.CLIENT)
-	public static int getCurrLighting(){
-		return ((int) GLX.lastBrightnessY << 16) | ((int) GLX.lastBrightnessX & 0xFF);
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public static void setLighting(int light){
-		int j = light & 0xFF;
-		int k = (light >> 16) & 0xFF;
-		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, j, k);
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public static void setMediumLighting(){
-		setLighting(0xA0A0);
+	/**
+	 * Gets the time to be used for rendering animations
+	 * @param partialTicks The partial ticks [0, 1]
+	 * @param world Any world reference
+	 * @return The animation render time
+	 */
+	public static float getRenderTime(float partialTicks, @Nullable World world){
+		if(world == null){
+			return 0;//We really don't want to crash for this
+		}else{
+			return world.getGameTime() % Integer.MAX_VALUE + partialTicks;
+		}
 	}
 
 	/**
-	 * Disables lighting in the current GlStateManager render operation, making things glow-in-the-dark
+	 * Finds the normal vector for a vertex
+	 * If all vertices in a polygon are in the same plane, this result will apply to all
+	 * @param point0 The position of the vertex this normal is for
+	 * @param point1 The position of an adjacent vertex
+	 * @param point2 The position of the other adjacent vertex
+	 * @return The normal vector
 	 */
-	@OnlyIn(Dist.CLIENT)
-	public static void setBrightLighting(){
-		setLighting(0xF0F0);
+	public static Vec3d findNormal(Vec3d point0, Vec3d point1, Vec3d point2){
+		point1 = point1.subtract(point0);
+		point2 = point2.subtract(point0);
+		return point1.crossProduct(point2);
+	}
+
+	/**
+	 * Finds the combined packed light at a position, for rendering
+	 * @param world The world
+	 * @param pos The position to check
+	 * @return The light value, as a packed lightmap coordinate
+	 */
+	public static int getLightAtPos(World world, BlockPos pos){
+		if(world != null){
+			return WorldRenderer.getCombinedLight(world, pos);
+		}else{
+			return BRIGHT_LIGHT;
+		}
+	}
+
+	/**
+	 * Calculates a combined light coordinate for things that should 'slightly' glow in the dark
+	 * Returns the world light if above a minimum value, otherwise brings it to the minimum
+	 * @param worldLight The combined light coordinate in the world
+	 * @return The light value to use for a moderate glow-in-the-dark effect
+	 */
+	public static int calcMediumLighting(int worldLight){
+		int skyLight = (worldLight >> 16) & 0xF0;
+		int blockLight = worldLight & 0xF0;
+		if(blockLight < 0x80){
+			blockLight = 0x80;//Minimum block light level of 8.
+			return (skyLight << 16) | blockLight;
+		}
+
+		return worldLight;
 	}
 
 	/**

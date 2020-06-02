@@ -31,7 +31,7 @@ import java.util.Set;
 public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickableTileEntity{
 
 	@ObjectHolder("flux_sink")
-	private static TileEntityType<FluxSinkTileEntity> type = null;
+	public static TileEntityType<FluxSinkTileEntity> type = null;
 
 	private static final int CAPACITY = 10_000;
 	private int flux = 0;

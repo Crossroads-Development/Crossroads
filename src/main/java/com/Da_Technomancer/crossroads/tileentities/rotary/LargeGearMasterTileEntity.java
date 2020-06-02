@@ -40,7 +40,7 @@ import java.util.ArrayList;
 public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiver, ITickableTileEntity, IInfoTE{
 
 	@ObjectHolder("large_gear_master")
-	private static TileEntityType<LargeGearMasterTileEntity> teType = null;
+	public static TileEntityType<LargeGearMasterTileEntity> teType = null;
 
 	private GearFactory.GearMaterial type;
 	private boolean newTE = false;//Used when placing the gear, to signify that the type data needs to be sent to clients. Sending immediately after placement can cause a packet race condition if the packet arrives before the TE exists

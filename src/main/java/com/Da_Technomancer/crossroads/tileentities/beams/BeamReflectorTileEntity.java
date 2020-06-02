@@ -12,7 +12,7 @@ import net.minecraftforge.registries.ObjectHolder;
 public class BeamReflectorTileEntity extends BeamRenderTE{
 
 	@ObjectHolder("beam_reflector")
-	private static TileEntityType<BeamReflectorTileEntity> type = null;
+	public static TileEntityType<BeamReflectorTileEntity> type = null;
 
 	public BeamReflectorTileEntity(){
 		super(type);

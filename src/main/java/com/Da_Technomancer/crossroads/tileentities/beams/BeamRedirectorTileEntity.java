@@ -15,7 +15,7 @@ import net.minecraftforge.registries.ObjectHolder;
 public class BeamRedirectorTileEntity extends BeamRenderTE{
 
 	@ObjectHolder("beam_redirector")
-	private static TileEntityType<BeamRedirectorTileEntity> type = null;
+	public static TileEntityType<BeamRedirectorTileEntity> type = null;
 
 	private boolean redstone;
 	private Direction dir = null;
