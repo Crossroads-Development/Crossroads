@@ -38,11 +38,9 @@ public class HeatingCrucibleRenderer extends TileEntityRenderer<HeatingCrucibleT
 		float xzEnd = 14F / 16F;
 		float height = (float) (2 + 4 * fullness) / 16F;
 
-		matrix.push();
 		CRRenderUtil.addVertexBlock(builder, matrix, xzEnd, height, xzStart, sprite.getInterpolatedU(xzEnd * 16), sprite.getInterpolatedV(16 - (xzStart * 16)), 0, 1, 0, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, xzStart, height, xzStart, sprite.getInterpolatedU(xzStart * 16), sprite.getInterpolatedV(16 - (xzStart * 16)), 0, 1, 0, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, xzStart, height, xzEnd, sprite.getInterpolatedU(xzStart * 16), sprite.getInterpolatedV(16 - (xzEnd * 16)), 0, 1, 0, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, xzEnd, height, xzEnd, sprite.getInterpolatedU(xzEnd * 16), sprite.getInterpolatedV(16 - (xzEnd * 16)), 0, 1, 0, light);
-		matrix.pop();
 	}
 }

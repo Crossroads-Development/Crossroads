@@ -5,9 +5,13 @@ import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
 import com.Da_Technomancer.essentials.render.RenderUtil;
 import jdk.internal.jline.internal.Nullable;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -85,6 +89,15 @@ public class CRRenderUtil extends RenderUtil{
 	}
 
 	//Tessellation utilities
+
+	/**
+	 * Gets the texture atlas sprite for a texture in the blocks texture map. Does not work for other texture maps
+	 * @param location The location of the texture (including file ending)
+	 * @return The corresponding texture atlas sprite
+	 */
+	public static TextureAtlasSprite getTextureSprite(ResourceLocation location){
+		return Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(location);
+	}
 
 	/**
 	 * Gets the time to be used for rendering animations

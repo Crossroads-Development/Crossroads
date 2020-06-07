@@ -15,14 +15,19 @@ public class CRRenderTypes extends RenderType{
 	//Textures
 	public static final ResourceLocation WINDMILL_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/wind_turbine_blade.png");
 	public static final ResourceLocation BEAM_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/beam.png");
+	public static final ResourceLocation DRILL_TEXTURE = new ResourceLocation("textures/block/iron_block.png");
+	public static final ResourceLocation NODE_GIMBAL_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/gimbal.png");
+	public static final ResourceLocation COPSHOWIUM_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/block/block_copshowium.png");
 
 	//Types
 	public static final RenderType BEAM_TYPE = RenderType.makeType("beam", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, false, true, RenderType.State.getBuilder().cull(RenderState.CULL_DISABLED).texture(new RenderState.TextureState(BEAM_TEXTURE, false, false)).build(false));
 
 
 	public static void stitchTextures(TextureStitchEvent.Pre event){
+		//We only need to register textures which are not already part of a block model
 		if(event.getMap().getTextureLocation().equals(AtlasTexture.LOCATION_BLOCKS_TEXTURE)) {
 			event.addSprite(WINDMILL_TEXTURE);
+			event.addSprite(NODE_GIMBAL_TEXTURE);
 		}
 	}
 
