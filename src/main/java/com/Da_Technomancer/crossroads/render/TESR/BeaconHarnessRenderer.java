@@ -3,16 +3,18 @@ package com.Da_Technomancer.crossroads.render.TESR;
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
 import com.Da_Technomancer.crossroads.API.beams.BeamUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.BeaconHarnessTileEntity;
 import com.Da_Technomancer.essentials.render.LinkLineRenderer;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.tuple.Triple;
 import org.lwjgl.opengl.GL11;
 
@@ -20,16 +22,13 @@ import java.awt.*;
 
 public class BeaconHarnessRenderer extends LinkLineRenderer<BeaconHarnessTileEntity>{
 
-	private static final ResourceLocation INNER_TEXT = new ResourceLocation(Crossroads.MODID, "textures/block/block_copshowium.png");
-	private static final ResourceLocation OUTER_TEXT = new ResourceLocation(Crossroads.MODID, "textures/block/block_pure_quartz.png");
+//	protected BeaconHarnessRenderer(TileEntityRendererDispatcher dispatcher){
+//		super(dispatcher);
+//	}
 
 	@Override
-	public void render(BeaconHarnessTileEntity beam, double x, double y, double z, float partialTicks, int destroyStage){
-		if(!beam.getWorld().isBlockLoaded(beam.getPos())){
-			return;
-		}
-
-		super.render(beam, x, y, z, partialTicks, destroyStage);
+	public void render(BeaconHarnessTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
+		super.render(te, partialTicks, matrix, buffer, combinedLight, combinedOverlay);
 
 		Tessellator tes = Tessellator.getInstance();
 		BufferBuilder buf = tes.getBuffer();
@@ -37,12 +36,12 @@ public class BeaconHarnessRenderer extends LinkLineRenderer<BeaconHarnessTileEnt
 		float angle = 0;
 
 		//Render output beam
-		int[] beamPacket = beam.getRenderedBeams();
+		int[] beamPacket = te.getRenderedBeams();
 		//Beacon harness only outputs beams down
 		Triple<Color, Integer, Integer> trip = BeamManager.getTriple(beamPacket[0]);
 		if(trip.getRight() != 0){
 			//We are running. Calculate angle for rods
-			angle = calcAngle(beam, partialTicks);
+			angle = calcAngle(te, partialTicks);
 
 			GlStateManager.pushMatrix();
 			GlStateManager.pushLightingAttributes();
@@ -56,7 +55,7 @@ public class BeaconHarnessRenderer extends LinkLineRenderer<BeaconHarnessTileEnt
 			Minecraft.getInstance().getTextureManager().bindTexture(BeamUtil.BEAM_TEXT);
 
 			if(CRConfig.rotateBeam.get()){
-				GlStateManager.rotated((beam.getWorld().getGameTime() + partialTicks) * 2F, 0, 1, 0);
+				GlStateManager.rotated((te.getWorld().getGameTime() + partialTicks) * 2F, 0, 1, 0);
 			}
 
 			final double rad = trip.getRight().doubleValue() / 16D / Math.sqrt(2);//Convert diagonal radius to side length
@@ -123,7 +122,7 @@ public class BeaconHarnessRenderer extends LinkLineRenderer<BeaconHarnessTileEnt
 
 		GlStateManager.rotated(angle, 0, 1, 0);
 
-		Minecraft.getInstance().getTextureManager().bindTexture(INNER_TEXT);
+		Minecraft.getInstance().getTextureManager().bindTexture(CRRenderTypes.COPSHOWIUM_TEXTURE);
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		addRod(buf, smallOffset, smallOffset);
 		addRod(buf, smallOffset, -smallOffset);
@@ -133,7 +132,7 @@ public class BeaconHarnessRenderer extends LinkLineRenderer<BeaconHarnessTileEnt
 
 		GlStateManager.rotated(-2F * angle, 0, 1, 0);
 
-		Minecraft.getInstance().getTextureManager().bindTexture(OUTER_TEXT);
+		Minecraft.getInstance().getTextureManager().bindTexture(CRRenderTypes.QUARTZ_TEXTURE);
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		addRod(buf, medOffset, largeOffset);
 		addRod(buf, medOffset, -largeOffset);

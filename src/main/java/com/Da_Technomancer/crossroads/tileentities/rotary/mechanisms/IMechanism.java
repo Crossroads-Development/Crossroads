@@ -2,6 +2,8 @@ package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -92,5 +94,5 @@ public interface IMechanism{
 	public VoxelShape getBoundingBox(@Nullable Direction side, @Nullable Direction.Axis axis);
 
 	@OnlyIn(Dist.CLIENT)
-	public void doRender(MechanismTileEntity te, float partialTicks, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis);
+	public void doRender(MechanismTileEntity te, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, float partialTicks, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis);
 }

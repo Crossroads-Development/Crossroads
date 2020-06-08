@@ -1,32 +1,36 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 
 public class MechanismRenderer extends TileEntityRenderer<MechanismTileEntity>{
 
-	@Override
-	public void render(MechanismTileEntity te, double x, double y, double z, float partialTicks, int destroyStage){
-		if(!te.getWorld().isBlockLoaded(te.getPos())){
-			return;
-		}
+	protected MechanismRenderer(TileEntityRendererDispatcher rendererDispatcherIn){
+		super(rendererDispatcherIn);
+	}
 
-		GlStateManager.pushMatrix();
-		GlStateManager.pushLightingAttributes();
-		GlStateManager.disableLighting();
-		GlStateManager.translated(x + .5D, y + .5D, z + .5D);
+	@Override
+	public void render(MechanismTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
+//		GlStateManager.pushMatrix();
+//		GlStateManager.pushLightingAttributes();
+//		GlStateManager.disableLighting();
+//		GlStateManager.translated(x + .5D, y + .5D, z + .5D);
+
+		matrix.translate(0.5D, 0.5D, 0.5D);
 
 		for(int i = 0; i < 7; i++){
 			if(te.members[i] != null){
-				te.members[i].doRender(te, partialTicks, te.mats[i], i == 6 ? null : Direction.byIndex(i), te.getAxleAxis());
+				te.members[i].doRender(te, matrix, buffer, combinedLight, partialTicks, te.mats[i], i == 6 ? null : Direction.byIndex(i), te.getAxleAxis());
 			}
 		}
 
-		GlStateManager.enableLighting();
-		GlStateManager.popAttributes();
-		GlStateManager.popMatrix();
+//		GlStateManager.enableLighting();
+//		GlStateManager.popAttributes();
+//		GlStateManager.popMatrix();
 
 
 //		Color color;
