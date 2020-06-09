@@ -39,7 +39,7 @@ public class FatCollectorTileEntity extends InventoryTE{
 
 	public FatCollectorTileEntity(){
 		super(type, 1);
-		fluidProps[0] = new TankProperty(2_000, false, true);
+		fluidProps[0] = new TankProperty(8_000, false, true);
 		initFluidManagers();
 	}
 
@@ -62,7 +62,7 @@ public class FatCollectorTileEntity extends InventoryTE{
 		Food food;
 		if(tier != -1 && !inventory[0].isEmpty() && (food = inventory[0].getItem().getFood()) != null){
 			//I don't know why vanilla multiplies saturation by 2, but it does
-			int liqAm = food.getHealing() + (int) (food.getHealing() * food.getSaturation() * 2F);
+			int liqAm = Math.min(food.getHealing() + (int) (food.getHealing() * food.getSaturation() * 2F), fluidProps[0].capacity);
 			double heatUse = ((double) liqAm) * USE_PER_VALUE;
 			liqAm *= EnergyConverters.FAT_PER_VALUE;
 			liqAm *= EFFICIENCY[tier];
