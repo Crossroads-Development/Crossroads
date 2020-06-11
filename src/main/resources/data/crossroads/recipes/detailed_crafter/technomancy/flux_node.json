@@ -3,22 +3,22 @@
 	"path": "technomancy",
 	"result": {
 		"item": "crossroads:flux_node",
-		"count": 1
+		"count": 2
 	},
 	"pattern": [
-		"iIi",
 		"ICI",
-		"iIi"
+		" D ",
+		"ICI"
 	],
 	"key": {
 		"C": {
-			"tag": "crossroads:ingots/copshowium"
+			"tag": "crossroads:storage_blocks/copshowium"
 		},
 		"I": {
 			"tag": "forge:ingots/iron"
 		},
-		"i": {
-			"tag": "forge:nuggets/iron"
+		"D": {
+			"tag": "forge:gems/diamond"
 		}
 	}
 }
