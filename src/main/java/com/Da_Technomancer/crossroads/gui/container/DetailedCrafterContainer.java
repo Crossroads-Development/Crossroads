@@ -216,12 +216,20 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 		return 10;
 	}
 
+	/**
+	 * On the client side, there can be a delay before the client is informed when unlocking a path.
+	 * This represents the last path unlocked in this UI by this player on the client, and is wiped every time the ui is re-opened
+	 * It exists to prevent unlocking the same path several times on the client side during this delay- a minor visual inventory-desync glitch when unlocking while holding shift
+	 */
+	private byte lastUnlock = -1;
+
 	@Override
 	public void onCraftMatrixChanged(IInventory inventoryIn){
 		for(EnumPath path : EnumPath.values()){
 			//Check for path unlocking
-			if(!path.isUnlocked(player) && path.pathGatePassed(player) && unlockRecipe(path)){
+			if(!path.isUnlocked(player) && path.pathGatePassed(player) && unlockRecipe(path) && (!world.isRemote || lastUnlock != path.getIndex())){
 				if(world.isRemote){
+					lastUnlock = path.getIndex();
 					playUnlockSound();
 				}else{
 					path.setUnlocked(player, true);
