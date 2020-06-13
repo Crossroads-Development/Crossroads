@@ -1,0 +1,27 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"item": "crossroads:recall_device",
+		"count": 1
+	},
+	"pattern": [
+		" G ",
+		"ITI",
+		"ICI"
+	],
+	"key": {
+		"G": {
+			"tag": "forge:ingots/gold"
+		},
+		"I": {
+			"tag": "forge:ingots/iron"
+		},
+		"C": {
+			"tag": "crossroads:ingots/copshowium"
+		},
+		"T": {
+			"item": "minecraft:clock"
+		}
+	}
+}

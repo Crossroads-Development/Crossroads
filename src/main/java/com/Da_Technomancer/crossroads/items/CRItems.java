@@ -103,6 +103,7 @@ public final class CRItems{
 	//	public static LinkingTool linkingTool;
 	public static DampingPowder dampingPowder;
 	public static BoboRod boboRod;
+	public static RecallDevice recallDevice;
 
 	public static OreProfileItem oreGravel;
 	public static OreProfileItem oreClump;
@@ -184,6 +185,7 @@ public final class CRItems{
 //		linkingTool = new LinkingTool();
 		dampingPowder = new DampingPowder();
 		boboRod = new BoboRod();
+		recallDevice = new RecallDevice();
 
 		oreGravel = (OreProfileItem) new OreProfileItem(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("ore_gravel");
 		oreClump = (OreProfileItem) new OreProfileItem(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("ore_clump");

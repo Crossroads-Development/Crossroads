@@ -22,7 +22,7 @@ import java.util.List;
 public class FluidVoid extends ContainerBlock{
 
 	public FluidVoid(){
-		super(Block.Properties.create(Material.IRON).hardnessAndResistance(0.6F).sound(SoundType.METAL));
+		super(Block.Properties.create(Material.SPONGE).hardnessAndResistance(0.6F).sound(SoundType.PLANT));
 		String name = "fluid_void";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

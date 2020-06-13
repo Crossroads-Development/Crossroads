@@ -2,6 +2,9 @@ package com.Da_Technomancer.crossroads.API;
 
 import com.Da_Technomancer.essentials.ESConfig;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.FoodStats;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.Vec3d;
@@ -159,5 +162,21 @@ public final class MiscUtil{
 			//Less total in src than to withdraw. Return same as in src
 			return Arrays.copyOf(src, src.length);
 		}
+	}
+
+	/**
+	 * Server-side safe way of setting hunger and saturation of a player
+	 * @param player The player to set the food of
+	 * @param hunger New hunger value, [0, 20]
+	 * @param saturation New saturation value, [0, 20]
+	 */
+	public static void setPlayerFood(PlayerEntity player, int hunger, float saturation){
+		// The way saturation is coded is weird, and the best way to do this is through nbt.
+		CompoundNBT nbt = new CompoundNBT();
+		FoodStats stats = player.getFoodStats();
+		stats.write(nbt);
+		nbt.putInt("foodLevel", Math.min(hunger, 20));
+		nbt.putFloat("foodSaturationLevel", Math.min(20F, saturation));
+		stats.read(nbt);
 	}
 }

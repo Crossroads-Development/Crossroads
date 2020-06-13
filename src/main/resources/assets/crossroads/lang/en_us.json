@@ -245,7 +245,7 @@
 	"item.crossroads.molten_copper_bucket": "Molten Copper Bucket",
 	"item.crossroads.molten_tin_bucket": "Molten Tin Bucket",
 	"item.crossroads.molten_copshowium_bucket": "Molten Copshowium Bucket",
-
+	"item.crossroads.recall_device": "Personal Time Rewinder",
 
 	"item.crossroads.ore_gravel": "Raw %1$s Grit",
 	"item.crossroads.ore_clump": "%1$s Clump",
@@ -542,11 +542,20 @@
 	"tt.crossroads.chrono_harness.desc": "Produces FE for free, but creates Temporal Entropy as a byproduct",
 	"tt.crossroads.chrono_harness.power": "Maximum 'safe' power of %1$dFE/t; Produces %2$dFE/TEn",
 	"tt.crossroads.chrono_harness.reds": "Disabled by a redstone signal",
+	"tt.crossroads.recall_device.desc": "Allows rewinding time for yourself. Save by shift-right-clicking, recall and save previous moments by right-clicking",
+	"tt.crossroads.recall_device.debuff": "Applies debuffs based on far back time is rewound",
+	"tt.crossroads.recall_device.config": "Can rewind time by up to %1$d seconds",
+	"tt.crossroads.recall_device.config.disabled": "This item has been disabled in the config",
+	"tt.crossroads.recall_device.config.unlimited": "Has no limit on how far it can rewind time",
+	"tt.crossroads.recall_device.current": "Stored moment was %1$d seconds ago",
+	"tt.crossroads.recall_device.current.none": "No moment stored",
+	"tt.crossroads.recall_device.wrong_player": "You are not the player who stored this moment",
+	"tt.crossroads.recall_device.expired": "This saved moment is too old",
+	"tt.crossroads.recall_device.none": "No moment is saved",
 
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
 	"container.crossroads.boilerplate.speed": "%1$f rad/s",
-
 
 	"container.smelter": "Smelter",
 	"container.firebox": "Firebox",

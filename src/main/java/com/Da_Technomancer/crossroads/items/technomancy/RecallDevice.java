@@ -1,0 +1,190 @@
+package com.Da_Technomancer.crossroads.items.technomancy;
+
+import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.items.CRItems;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
+import net.minecraft.util.*;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.DimensionManager;
+
+import javax.annotation.Nullable;
+import java.util.List;
+
+public class RecallDevice extends Item{
+
+	public RecallDevice(){
+		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
+		String name = "recall_device";
+		setRegistryName(name);
+		CRItems.toRegister.add(this);
+	}
+
+	@Override
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+		tooltip.add(new TranslationTextComponent("tt.crossroads.recall_device.desc"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.recall_device.debuff"));
+		if(CRConfig.recallTimeLimit.get() == 0){
+			//Disabled
+			tooltip.add(new TranslationTextComponent("tt.crossroads.recall_device.config.disabled"));
+		}else{
+			int limit = CRConfig.recallTimeLimit.get();
+			if(limit < 0){
+				//Unlimited recall
+				tooltip.add(new TranslationTextComponent("tt.crossroads.recall_device.config.unlimited"));
+			}else{
+				tooltip.add(new TranslationTextComponent("tt.crossroads.recall_device.config", limit));
+			}
+			CompoundNBT nbt = stack.getOrCreateChildTag("recall_data");
+			long timeElapsed;
+			if(nbt.contains("timestamp") && (timeElapsed = worldIn.getGameTime() - nbt.getLong("timestamp")) < limit * 20){
+				tooltip.add(new TranslationTextComponent("tt.crossroads.recall_device.current", (int) (timeElapsed / 20)));
+			}else{
+				tooltip.add(new TranslationTextComponent("tt.crossroads.recall_device.current.none"));
+			}
+		}
+	}
+
+	private static void storeData(CompoundNBT data, PlayerEntity player){
+		//Data to store is:
+		//Timestamp
+		//Player username
+		//Dimension
+		//Position
+		//Orientation
+		//Health
+		//Hunger
+		//Velocity
+
+		data.putLong("timestamp", player.world.getGameTime());
+		String playerName = player.getGameProfile().getName();
+		data.putString("username", playerName == null ? "NULL" : playerName);
+		data.putString("dimension", player.dimension.getRegistryName().toString());
+		data.putDouble("pos_x", player.posX);
+		data.putDouble("pos_y", player.posY);
+		data.putDouble("pos_z", player.posZ);
+		data.putLong("position", player.getPosition().toLong());
+		data.putFloat("yaw", player.getYaw(1F));
+		data.putFloat("yaw_head", player.getRotationYawHead());
+		data.putFloat("pitch", player.getPitch(1F));
+		data.putFloat("health", player.getHealth());
+		data.putInt("hunger", player.getFoodStats().getFoodLevel());
+		data.putFloat("saturation", player.getFoodStats().getSaturationLevel());
+		data.putDouble("vel_x", player.getMotion().getX());
+		data.putDouble("vel_y", player.getMotion().getY());
+		data.putDouble("vel_z", player.getMotion().getZ());
+
+		if(player.world.isRemote()){
+			//Player only sound for setting a position
+			player.playSound(SoundEvents.BLOCK_BELL_USE, 2F, 1F);
+		}
+	}
+
+	private static void recall(CompoundNBT data, PlayerEntity player){
+		if(!data.contains("timestamp")){
+			player.sendMessage(new TranslationTextComponent("tt.crossroads.recall_device.none"));
+			return;//No data stored
+		}
+		//Check time delay and that it's the same player
+		long delay = player.world.getGameTime() - data.getLong("timestamp");
+		int limit = CRConfig.recallTimeLimit.get() * 20;//In ticks
+		if(limit >= 0 && delay > limit){
+			player.sendMessage(new TranslationTextComponent("tt.crossroads.recall_device.expired"));
+			return;//Too old- do nothing
+		}
+		String playerName = player.getGameProfile().getName();
+		if(playerName == null || !playerName.equals(data.getString("username"))){
+			player.sendMessage(new TranslationTextComponent("tt.crossroads.recall_device.wrong_player"));
+			return;//Wrong player or null profile
+		}
+
+		if(CRConfig.allowStatRecall.get()){
+			//Only restore health and hunger if enabled in config
+			player.setHealth(data.getFloat("health"));
+			MiscUtil.setPlayerFood(player, data.getInt("hunger"), data.getFloat("saturation"));
+		}
+
+		if(!player.world.isRemote){
+			ServerPlayerEntity playerServ = (ServerPlayerEntity) player;
+			ResourceLocation targetDimension = new ResourceLocation(data.getString("dimension"));
+			ServerWorld targetWorld;//World we are recalling to. Almost always the same as current dimension. Null if something went wrong
+			if(targetDimension.equals(player.dimension.getRegistryName())){
+				targetWorld = (ServerWorld) player.world;
+			}else{
+				try{
+					DimensionType dimType = DimensionType.byName(targetDimension);
+					if(dimType == null){
+						targetWorld = null;//Only happens if a dimension is unregistered
+					}else{
+						targetWorld = DimensionManager.getWorld(playerServ.server, dimType, true, true);
+					}
+				}catch(Exception e){
+					targetWorld = null;
+				}
+			}
+			if(targetWorld == player.world){
+				playerServ.connection.setPlayerLocation(data.getDouble("pos_x"), data.getDouble("pos_y"), data.getDouble("pos_z"), data.getFloat("yaw"), data.getFloat("pitch"));
+			}else if(targetWorld != null){
+				playerServ.func_200619_a(targetWorld, data.getDouble("pos_x"), data.getDouble("pos_y"), data.getDouble("pos_z"), data.getFloat("yaw"), data.getFloat("pitch"));
+			}
+		}
+
+		player.setRotationYawHead(data.getFloat("yaw_head"));
+		player.setMotion(new Vec3d(data.getDouble("vel_x"), data.getDouble("vel_y"), data.getDouble("vel_z")));
+
+		applySickness(player, delay, limit);
+	}
+
+	private static void applySickness(PlayerEntity player, long delay, long delayLimit){
+		//Penalty of nausea (time scaling with delay), and poison for very long delays
+		//Durations are in ticks
+		int poisonStTime = 20 * 30;
+		player.addPotionEffect(new EffectInstance(Effects.NAUSEA, (int) MathHelper.clampedLerp(20 * 5, 20 * 30, (float) delay / poisonStTime), 0));
+		if(delay > poisonStTime){
+			//For unlimited delay config setting, a constant 10 second poison is applied instead of basing it on the portion of the delay limit expended
+			int poisonDuration = delayLimit < 0 ? 20 * 10 : (int) MathHelper.clampedLerp(20 * 5, 20 * 30, (float) (delay - poisonStTime) / (delayLimit - poisonStTime));
+			player.addPotionEffect(new EffectInstance(Effects.POISON, poisonDuration, 0));
+		}
+
+		//Also plays sound
+		player.world.playSound(null, player.getPosition(), SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.PLAYERS, 1F, 1F);
+	}
+
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand){
+
+		//If shift right clicking, set current data
+		//If normal right clicking, revert to last save and set current position as data
+		//Apply sickness based on time between uses
+
+		ItemStack held = playerIn.getHeldItem(hand);
+		CompoundNBT nbt = held.getOrCreateChildTag("recall_data");
+
+		CompoundNBT newStored = new CompoundNBT();
+		storeData(newStored, playerIn);
+
+		if(!playerIn.isSneaking()){
+			//World sound for recalling
+			//Played at source and destination
+			worldIn.playSound(null, playerIn.getPosition(), SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.PLAYERS, 1F, 1F);
+			recall(nbt, playerIn);//Will do nothing if over time limit, wrong player, or no data stored
+		}
+
+		held.getTag().put("recall_data", newStored);
+
+		return ActionResult.newResult(ActionResultType.SUCCESS, held);
+	}
+}

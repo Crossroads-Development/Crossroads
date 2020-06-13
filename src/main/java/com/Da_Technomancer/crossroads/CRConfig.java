@@ -27,6 +27,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.BooleanValue genTinOre;
 	public static ForgeConfigSpec.BooleanValue genRubyOre;
 	public static ForgeConfigSpec.BooleanValue genVoidOre;
+	public static ForgeConfigSpec.IntValue rubyRarity;
 	public static ForgeConfigSpec.ConfigValue<List<? extends String>> processableOres;
 	public static ForgeConfigSpec.ConfigValue<List<? extends String>> gearTypes;
 	public static ForgeConfigSpec.DoubleValue speedPrecision;
@@ -61,6 +62,8 @@ public class CRConfig{
 	public static ForgeConfigSpec.BooleanValue entropyDropBlock;
 	public static ForgeConfigSpec.BooleanValue rotateBeam;
 	public static ForgeConfigSpec.BooleanValue teTimeAccel;
+	public static ForgeConfigSpec.BooleanValue allowStatRecall;
+	public static ForgeConfigSpec.IntValue recallTimeLimit;
 	public static ForgeConfigSpec.BooleanValue hardGateway;
 	public static ForgeConfigSpec.IntValue growMultiplier;
 
@@ -102,6 +105,7 @@ public class CRConfig{
 		genTinOre = serverBuilder.comment("Generate Tin Ore?").define("tin", true);
 		genRubyOre = serverBuilder.comment("Generate Ruby Ore?").define("ruby", true);
 		genVoidOre = serverBuilder.comment("Generate Void Crystal Ore?").define("void", true);
+		rubyRarity = serverBuilder.comment("Ruby ore spawn frequency").defineInRange("ruby_common", 25_000, 1, 100_000);
 //		retrogen = serverBuilder.comment("Retrogen Key", "Changing this value will cause retrogen. Leaving it blank disables retrogen", "Turn this off when you are done!").define("retrogen", "");
 		processableOres = serverBuilder.worldRestart().comment("Metal ore types that Crossroads should generate tripling items for", "Specify the metal then a space then a hexadecimal color, ex. \"copper FF4800\"", "Doesn't register a molten fluid, recipes, or localization", "Use a datapack to register any desired recipes or localization for new materials, Find a mod already adding the desired molten fluid for the fluid").define("process_ores", initList("copper FF7800", "tin C8C8C8", "iron A0A0A0", "gold FFFF00"), compileRegex("\\w++ [0-9A-Fa-f]{6}+"));
 		gearTypes = serverBuilder.worldRestart().comment("Metal types that Crossroads should add gears for", "Specify the metal then a space then a hexadecimal color then a space then a density in kg/m3", "Adding a new gear material requires adding localization and recipes via datapack", "Removing a default gear material is not recommended").define("gear_types", initList("copper FF783C 9000", "tin F0F0F0 7300", "iron A0A0A0 8000", "gold FFFF00 20000", "bronze FFA03C 8800", "copshowium FF8200 0"), compileRegex("\\w++ [0-9A-Fa-f]{6}+ [+]?\\d*\\.?[0-9]+"));
@@ -134,6 +138,8 @@ public class CRConfig{
 		hardGateway = serverBuilder.comment("Enable hardmode for the Gateway?", "If true, dialing in chevrons only works if the beam alignment matches the chevron being dialed", "Enable this if you want an extra challenge").define("gateway_hard", false);
 		allowOverflow = serverBuilder.comment("Destroy the CCC if Copshowium overfills the tank?", "Disabling this will make the CCC much easier to use").define("allow_overflow", true);
 		cccRequireTime = serverBuilder.comment("Does the CCC require specifically a Time beam?").define("ccc_req_time", true);
+		allowStatRecall = serverBuilder.comment("Should recalling restore previous health and hunger?", "Recommended to disable this for PvP").define("stat_recall", true);
+		recallTimeLimit = serverBuilder.comment("Maximum time duration for recalling, in seconds. Set to -1 to disable limit, 0 to disable recalling").defineInRange("time_recall", 60*5, -1, 60*60*24);
 		serverBuilder.pop();
 		serverBuilder.push(CAT_ALCHEMY);
 		phelEffect = serverBuilder.comment("Allow the full effect of Phelostogen?", "If disabled Phelostogen lights a single small fire instead").define("phel_effect", true);
