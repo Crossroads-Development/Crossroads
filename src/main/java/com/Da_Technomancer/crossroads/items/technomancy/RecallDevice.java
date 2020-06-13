@@ -73,9 +73,9 @@ public class RecallDevice extends Item{
 		String playerName = player.getGameProfile().getName();
 		data.putString("username", playerName == null ? "NULL" : playerName);
 		data.putString("dimension", player.dimension.getRegistryName().toString());
-		data.putDouble("pos_x", player.posX);
-		data.putDouble("pos_y", player.posY);
-		data.putDouble("pos_z", player.posZ);
+		data.putDouble("pos_x", player.getPosX());
+		data.putDouble("pos_y", player.getPosY());
+		data.putDouble("pos_z", player.getPosZ());
 		data.putLong("position", player.getPosition().toLong());
 		data.putFloat("yaw", player.getYaw(1F));
 		data.putFloat("yaw_head", player.getRotationYawHead());
@@ -138,7 +138,7 @@ public class RecallDevice extends Item{
 			if(targetWorld == player.world){
 				playerServ.connection.setPlayerLocation(data.getDouble("pos_x"), data.getDouble("pos_y"), data.getDouble("pos_z"), data.getFloat("yaw"), data.getFloat("pitch"));
 			}else if(targetWorld != null){
-				playerServ.func_200619_a(targetWorld, data.getDouble("pos_x"), data.getDouble("pos_y"), data.getDouble("pos_z"), data.getFloat("yaw"), data.getFloat("pitch"));
+				playerServ.teleport(targetWorld, data.getDouble("pos_x"), data.getDouble("pos_y"), data.getDouble("pos_z"), data.getFloat("yaw"), data.getFloat("pitch"));
 			}
 		}
 
@@ -185,6 +185,6 @@ public class RecallDevice extends Item{
 
 		held.getTag().put("recall_data", newStored);
 
-		return ActionResult.newResult(ActionResultType.SUCCESS, held);
+		return ActionResult.resultSuccess(held);
 	}
 }
