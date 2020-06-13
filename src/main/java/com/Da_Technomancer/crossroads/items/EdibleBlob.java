@@ -104,12 +104,7 @@ public class EdibleBlob extends Item{
 		if(entityLiving instanceof PlayerEntity){
 			FoodStats stats = ((PlayerEntity) entityLiving).getFoodStats();
 
-			// The way saturation is coded is weird, and the best way to do this is through nbt.
-			CompoundNBT nbt = new CompoundNBT();
-			stats.write(nbt);
-			nbt.putInt("foodLevel", Math.min(stats.getFoodLevel() + getHealAmount(stack), 20));
-			nbt.putFloat("foodSaturationLevel", Math.min(20F, stats.getSaturationLevel() + getTrueSat(stack)));
-			stats.read(nbt);
+			MiscUtil.setPlayerFood((PlayerEntity) entityLiving, stats.getFoodLevel() + getHealAmount(stack), stats.getSaturationLevel() + getTrueSat(stack));
 
 			((PlayerEntity) entityLiving).addStat(Stats.ITEM_USED.get(this));
 			worldIn.playSound(null, entityLiving.posX, entityLiving.posY, entityLiving.posZ, SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);

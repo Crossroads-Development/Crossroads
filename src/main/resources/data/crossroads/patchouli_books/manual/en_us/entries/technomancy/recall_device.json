@@ -1,0 +1,25 @@
+{
+	"category": "technomancy",
+	"name": "Personal Time Rewinder",
+	"icon": "crossroads:recall_device",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/technomancy",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Personal Time Rewinder",
+			"item": "crossroads:recall_device",
+			"text": "The <item>Personal Time Rewinder/$ is a handheld gadget which allows 'saving' a moment in time, and restoring yourself to it. Restoring a moment will move you back to the location, health, hunger, orientation, and momentum you saved (by default).$(br2)Save a moment by shift-right-clicking, "
+		},
+		{
+			"type": "text",
+			"text": "and restore to a moment by right clicking. Only one moment can be saved at a time, and restoring a moment will save a new moment when you activate it.$(br2)Restoring a moment will cause temporal-whiplash in the form of nausea and possibly poison. The effect is more serious the longer ago the moment was saved.$(br2)"
+		},
+		{
+			"type": "text",
+			"text": "By default, saved moments will expire if not used within 5 minutes.$(br2)"
+		}
+	]
+}

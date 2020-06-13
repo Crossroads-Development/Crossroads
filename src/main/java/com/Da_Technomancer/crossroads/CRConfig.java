@@ -62,6 +62,8 @@ public class CRConfig{
 	public static ForgeConfigSpec.BooleanValue entropyDropBlock;
 	public static ForgeConfigSpec.BooleanValue rotateBeam;
 	public static ForgeConfigSpec.BooleanValue teTimeAccel;
+	public static ForgeConfigSpec.BooleanValue allowStatRecall;
+	public static ForgeConfigSpec.IntValue recallTimeLimit;
 	public static ForgeConfigSpec.BooleanValue hardGateway;
 	public static ForgeConfigSpec.IntValue growMultiplier;
 
@@ -136,6 +138,8 @@ public class CRConfig{
 		hardGateway = serverBuilder.comment("Enable hardmode for the Gateway?", "If true, dialing in chevrons only works if the beam alignment matches the chevron being dialed", "Enable this if you want an extra challenge").define("gateway_hard", false);
 		allowOverflow = serverBuilder.comment("Destroy the CCC if Copshowium overfills the tank?", "Disabling this will make the CCC much easier to use").define("allow_overflow", true);
 		cccRequireTime = serverBuilder.comment("Does the CCC require specifically a Time beam?").define("ccc_req_time", true);
+		allowStatRecall = serverBuilder.comment("Should recalling restore previous health and hunger?", "Recommended to disable this for PvP").define("stat_recall", true);
+		recallTimeLimit = serverBuilder.comment("Maximum time duration for recalling, in seconds. Set to -1 to disable limit, 0 to disable recalling").defineInRange("time_recall", 60*5, -1, 60*60*24);
 		serverBuilder.pop();
 		serverBuilder.push(CAT_ALCHEMY);
 		phelEffect = serverBuilder.comment("Allow the full effect of Phelostogen?", "If disabled Phelostogen lights a single small fire instead").define("phel_effect", true);
