@@ -10,7 +10,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexBuffer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -39,8 +38,6 @@ public class CRModels{
 	public static final ResourceLocation TEXTURE_8 = new ResourceLocation(Crossroads.MODID, "textures/model/gear_oct.png");
 	private static final ResourceLocation TEXTURE_24 = new ResourceLocation(Crossroads.MODID, "textures/model/gear_24.png");
 	private static final ResourceLocation TEXTURE_24_RIM = new ResourceLocation(Crossroads.MODID, "textures/model/gear_rim.png");
-	private static final ResourceLocation TEXTURE_ENDS_AXLE = new ResourceLocation(Crossroads.MODID, "textures/model/axle_end.png");
-	private static final ResourceLocation TEXTURE_SIDE_AXLE = new ResourceLocation(Crossroads.MODID, "textures/model/axle.png");
 
 	/**
 	 * Draws a 24 sided gear, at the same scale as a normal small gear.
@@ -202,6 +199,8 @@ public class CRModels{
 	 * @param color The color to shade this by
 	 */
 	public static void draw8Gear(Color color){
+
+		//TODO
 
 		float top = 0.0625F;//-.375F;
 		float lHalf = .4375F;
@@ -622,8 +621,8 @@ public class CRModels{
 	 * Draws centered at the current position
 	 * @param color The color to shade this by
 	 */
-	public static void drawAxle(Color color){
-		drawAxle(TEXTURE_SIDE_AXLE, TEXTURE_ENDS_AXLE, color);
+	public static void drawAxle(MatrixStack matrix, IRenderTypeBuffer buffer, int light, Color color){
+		drawAxle(matrix, buffer, light, CRRenderUtil.getTextureSprite(CRRenderTypes.AXLE_SIDE_TEXTURE), CRRenderUtil.getTextureSprite(CRRenderTypes.AXLE_ENDS_TEXTURE), color);
 	}
 
 	/**
@@ -633,46 +632,45 @@ public class CRModels{
 	 * @param color Color
 	 */
 	@Deprecated
-	public static void drawAxle(ResourceLocation sides, ResourceLocation ends, Color color){
+	public static void drawAxle(MatrixStack matrix, IRenderTypeBuffer buffer, int light, TextureAtlasSprite sides, TextureAtlasSprite ends, Color color){
 		float radius = 1F / 16F;
+		float len = .4999F;
+		int[] col = {color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()};
+		float sideUEn = sides.getInterpolatedU(2);
 
-		BufferBuilder vb = Tessellator.getInstance().getBuffer();
+		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
 
-		GlStateManager.color3f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
-		Minecraft.getInstance().textureManager.bindTexture(ends);
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-radius, -.4999F, -radius).tex(0, 0).endVertex();
-		vb.pos(radius, -.4999F, -radius).tex(1, 0).endVertex();
-		vb.pos(radius, -.4999F, radius).tex(1, 1).endVertex();
-		vb.pos(-radius, -.4999F, radius).tex(0, 1).endVertex();
+		//Ends
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, -radius, ends.getMinU(), ends.getMinV(), 0, -1, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, -radius, ends.getMaxU(), ends.getMinV(), 0, -1, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, radius, ends.getMaxU(), ends.getMaxV(), 0, -1, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, radius, ends.getMinU(), ends.getMaxV(), 0, -1, 0, light, col);
 
-		vb.pos(-radius, .4999F, radius).tex(0, 1).endVertex();
-		vb.pos(radius, .4999F, radius).tex(1, 1).endVertex();
-		vb.pos(radius, .4999F, -radius).tex(1, 0).endVertex();
-		vb.pos(-radius, .4999F, -radius).tex(0, 0).endVertex();
-		Tessellator.getInstance().draw();
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, radius, ends.getMinU(), ends.getMaxV(), 0, 1, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, radius, ends.getMaxU(), ends.getMaxV(), 0, 1, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, -radius, ends.getMaxU(), ends.getMinV(), 0, 1, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, -radius, ends.getMinU(), ends.getMinV(), 0, 1, 0, light, col);
 
-		Minecraft.getInstance().textureManager.bindTexture(sides);
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-radius, .4999F, -radius).tex(0, 1).endVertex();
-		vb.pos(radius, .4999F, -radius).tex(0.125D, 1).endVertex();
-		vb.pos(radius, -.4999F, -radius).tex(0.125D, 0).endVertex();
-		vb.pos(-radius, -.4999F, -radius).tex(0, 0).endVertex();
+		//Sides
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, -radius, sides.getMinU(), sides.getMaxV(), 0, 0, -1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, -radius, sideUEn, sides.getMaxV(), 0, 0, -1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, -radius, sideUEn, sides.getMinV(), 0, 0, -1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, -radius, sides.getMinU(), sides.getMinV(), 0, 0, -1, light, col);
 
-		vb.pos(-radius, -.4999F, radius).tex(0.125D, 0).endVertex();
-		vb.pos(radius, -.4999F, radius).tex(0, 0).endVertex();
-		vb.pos(radius, .4999F, radius).tex(0, 1).endVertex();
-		vb.pos(-radius, .4999F, radius).tex(0.125D, 1).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, radius, sideUEn, sides.getMinV(), 0, 0, 1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, radius, sides.getMinU(), sides.getMinV(), 0, 0, 1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, radius, sides.getMinU(), sides.getMaxV(), 0, 0, 1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, radius, sideUEn, sides.getMaxV(), 0, 0, 1, light, col);
 
-		vb.pos(-radius, -.4999F, radius).tex(0, 0).endVertex();
-		vb.pos(-radius, .4999F, radius).tex(0, 1).endVertex();
-		vb.pos(-radius, .4999F, -radius).tex(0.125D, 1).endVertex();
-		vb.pos(-radius, -.4999F, -radius).tex(0.125D, 0).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, radius, sides.getMinU(), sides.getMinV(), -1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, radius, sides.getMinU(), sides.getMaxV(), -1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, -radius, sideUEn, sides.getMaxV(), -1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, -radius, sideUEn, sides.getMinV(), -1, 0, 0, light, col);
 
-		vb.pos(radius, .4999F, -radius).tex(0, 1).endVertex();
-		vb.pos(radius, .4999F, radius).tex(0.125D, 1).endVertex();
-		vb.pos(radius, -.4999F, radius).tex(0.125D, 0).endVertex();
-		vb.pos(radius, -.4999F, -radius).tex(0, 0).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, -radius, sides.getMinU(), sides.getMaxV(), 1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, radius, sideUEn, sides.getMaxV(), 1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, radius, sideUEn, sides.getMinV(), 1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, -radius, sides.getMinU(), sides.getMinV(), 1, 0, 0, light, col);
 		Tessellator.getInstance().draw();
 	}
 
@@ -683,7 +681,7 @@ public class CRModels{
 		//Draw central axle
 		matrix.push();
 		matrix.translate(0, 0.5D, 0);
-		drawAxle(new Color(160, 160, 160));
+		drawAxle(matrix, buffer, light, new Color(160, 160, 160));
 		matrix.pop();
 
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.CAST_IRON_TEXTURE);

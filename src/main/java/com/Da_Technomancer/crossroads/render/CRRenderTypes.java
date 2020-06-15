@@ -20,6 +20,8 @@ public class CRRenderTypes extends RenderType{
 	public static final ResourceLocation COPSHOWIUM_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/block/block_copshowium.png");
 	public static final ResourceLocation QUARTZ_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/block/block_pure_quartz.png");
 	public static final ResourceLocation CAST_IRON_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/block/block_cast_iron.png");
+	public static final ResourceLocation AXLE_ENDS_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/axle_end.png");
+	public static final ResourceLocation AXLE_SIDE_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/axle.png");
 
 	//Types
 	public static final RenderType BEAM_TYPE = RenderType.makeType("beam", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, false, true, RenderType.State.getBuilder().cull(RenderState.CULL_DISABLED).texture(new RenderState.TextureState(BEAM_TEXTURE, false, false)).build(false));
@@ -30,6 +32,8 @@ public class CRRenderTypes extends RenderType{
 		if(event.getMap().getTextureLocation().equals(AtlasTexture.LOCATION_BLOCKS_TEXTURE)) {
 			event.addSprite(WINDMILL_TEXTURE);
 			event.addSprite(NODE_GIMBAL_TEXTURE);
+			event.addSprite(AXLE_ENDS_TEXTURE);
+			event.addSprite(AXLE_SIDE_TEXTURE);
 		}
 	}
 

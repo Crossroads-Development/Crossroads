@@ -4,6 +4,8 @@ import com.Da_Technomancer.crossroads.API.packets.AddVisualToClient;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
 import com.Da_Technomancer.essentials.render.RenderUtil;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import jdk.internal.jline.internal.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -97,6 +99,26 @@ public class CRRenderUtil extends RenderUtil{
 	 */
 	public static TextureAtlasSprite getTextureSprite(ResourceLocation location){
 		return Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(location);
+	}
+
+	/**
+	 * Adds a vertex to the builder using the BLOCK vertex format
+	 * @param builder The active builder
+	 * @param matrix The reference matrix
+	 * @param x The x position of this vertex
+	 * @param y The y position of this vertex
+	 * @param z The z position of this vertex
+	 * @param u The u coord of this vertex texture mapping
+	 * @param v The v coord of this vertex texture mapping
+	 * @param normalX The normal x component to this vertex
+	 * @param normalY The normal y component to this vertex
+	 * @param normalZ The normal z component to this vertex
+	 * @param light The light value
+	 * @param col A size 4 array (r, g, b, a) defining the color, scale [0, 255]
+	 */
+	@OnlyIn(Dist.CLIENT)
+	public static void addVertexBlock(IVertexBuilder builder, MatrixStack matrix, float x, float y, float z, float u, float v, float normalX, float normalY, float normalZ, int light, int[] col){
+		builder.pos(matrix.getLast().getMatrix(), x, y, z).color(col[0], col[1], col[2], col[3]).tex(u, v).lightmap(light).normal(normalX, normalY, normalZ).endVertex();
 	}
 
 	/**
