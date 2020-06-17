@@ -1,92 +1,123 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
+import com.Da_Technomancer.crossroads.render.CRRenderTypes;
+import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.HamsterWheelTileEntity;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 import java.awt.*;
 
 public class HamsterWheelRenderer extends TileEntityRenderer<HamsterWheelTileEntity>{
 
-	private static final ResourceLocation textureHam = new ResourceLocation(Crossroads.MODID, "textures/model/hamster.png");
+	protected HamsterWheelRenderer(TileEntityRendererDispatcher dispatcher){
+		super(dispatcher);
+	}
 
 	@Override
-	public void render(HamsterWheelTileEntity wheel, double x, double y, double z, float partialTicks, int destroyStage){
-		World world = wheel.getWorld();
-		BlockPos pos = wheel.getPos();
-		if(!world.isBlockLoaded(pos) || world.getBlockState(pos).getBlock() != CRBlocks.hamsterWheel){
+	public void render(HamsterWheelTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
+		if(!te.getBlockState().has(CRProperties.HORIZ_FACING)){
 			return;
 		}
-		Direction facing = world.getBlockState(pos).get(CRProperties.HORIZ_FACING);
+		Direction facing = te.getBlockState().get(CRProperties.HORIZ_FACING);
 
-		GlStateManager.pushMatrix();
-		GlStateManager.pushLightingAttributes();
-		GlStateManager.disableLighting();
-		GlStateManager.translated(x + .5D, y + .5D, z + .5D);
-		GlStateManager.rotated(-facing.getHorizontalAngle() + 180, 0, 1, 0);
-		GlStateManager.rotated(90, 1, 0, 0);
+		matrix.translate(0.5D, 0.5D, 0.5D);
+		matrix.rotate(Vector3f.YP.rotationDegrees(-facing.getHorizontalAngle() + 180));
+		matrix.rotate(Vector3f.XP.rotationDegrees(90));
 
-		float angle = wheel.nextAngle - wheel.angle;
+		float angle = te.nextAngle - te.angle;
 		angle *= partialTicks;
-		angle += wheel.angle;
+		angle += te.angle;
 		angle *= -facing.getAxisDirection().getOffset();
 
 		//Feet
-		GlStateManager.pushMatrix();
-		GlStateManager.translated(-.2D, -.25D, .30D);
+		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
+		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.HAMSTER_TEXTURE);
+
+		matrix.push();
+		matrix.translate(-.2D, -.25D, .30D);
 		float peakAngle = 60;
 		float degreesPerCycle = 50;
 		float feetAngle = Math.abs((4 * peakAngle * Math.abs(angle) / degreesPerCycle) % (4 * peakAngle) - (2 * peakAngle)) - peakAngle;
+		float xRad = .025F;
+		float yRad = .035F;
+		float zRad = .03125F;
+		float sideUEn = sprite.getInterpolatedU(2);
+		int[] col = {255, 255, 255, 255};
+
 		for(int i = 0; i < 2; i++){
 			for(int j = 0; j < 2; j++){
-				GlStateManager.pushMatrix();
-				GlStateManager.translated(j == 0 ? 0 : .4D, i == 0 ? -.065D : .065D, 0);
-				GlStateManager.scaled(.4D, .07D, .49D);
-				GlStateManager.rotated(i + j % 2 == 0 ? feetAngle : -feetAngle, 0, 1, 0);
-				CRModels.drawAxle(textureHam, textureHam, Color.LIGHT_GRAY);
-				GlStateManager.popMatrix();
+				matrix.push();
+				matrix.translate(j == 0 ? 0 : .4D, i == 0 ? -.065D : .065D, 0);
+				matrix.rotate(Vector3f.YP.rotationDegrees(i + j % 2 == 0 ? feetAngle : -feetAngle));
+				
+				//Ends
+				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, -zRad, sprite.getMinU(), sprite.getMinV(), 0, -1, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, -zRad, sprite.getMaxU(), sprite.getMinV(), 0, -1, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, zRad, sprite.getMaxU(), sprite.getMaxV(), 0, -1, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, zRad, sprite.getMinU(), sprite.getMaxV(), 0, -1, 0, combinedLight, col);
+
+				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, zRad, sprite.getMinU(), sprite.getMaxV(), 0, 1, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, zRad, sprite.getMaxU(), sprite.getMaxV(), 0, 1, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, -zRad, sprite.getMaxU(), sprite.getMinV(), 0, 1, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, -zRad, sprite.getMinU(), sprite.getMinV(), 0, 1, 0, combinedLight, col);
+
+				//Sides
+				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, -zRad, sprite.getMinU(), sprite.getMaxV(), 0, 0, -1, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, -zRad, sideUEn, sprite.getMaxV(), 0, 0, -1, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, -zRad, sideUEn, sprite.getMinV(), 0, 0, -1, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, -zRad, sprite.getMinU(), sprite.getMinV(), 0, 0, -1, combinedLight, col);
+
+				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, zRad, sideUEn, sprite.getMinV(), 0, 0, 1, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, zRad, sprite.getMinU(), sprite.getMinV(), 0, 0, 1, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, zRad, sprite.getMinU(), sprite.getMaxV(), 0, 0, 1, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, zRad, sideUEn, sprite.getMaxV(), 0, 0, 1, combinedLight, col);
+
+				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, zRad, sprite.getMinU(), sprite.getMinV(), -1, 0, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, zRad, sprite.getMinU(), sprite.getMaxV(), -1, 0, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, -zRad, sideUEn, sprite.getMaxV(), -1, 0, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, -zRad, sideUEn, sprite.getMinV(), -1, 0, 0, combinedLight, col);
+
+				CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, -zRad, sprite.getMinU(), sprite.getMaxV(), 1, 0, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, zRad, sideUEn, sprite.getMaxV(), 1, 0, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, zRad, sideUEn, sprite.getMinV(), 1, 0, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, -zRad, sprite.getMinU(), sprite.getMinV(), 1, 0, 0, combinedLight, col);
+				
+				matrix.pop();
 			}
 		}
-
-		GlStateManager.popMatrix();
+		matrix.pop();
 
 		//Wheel
-		GlStateManager.pushMatrix();
-		GlStateManager.rotated(angle, 0F, 1F, 0F);
+		matrix.rotate(Vector3f.YP.rotationDegrees(angle));
 
 		//Axle Support
-		GlStateManager.pushMatrix();
-		GlStateManager.translated(0, -.4375D, 0);
-		GlStateManager.scaled(1, .8D, 1);
-		GlStateManager.rotated(90, 1, 0, 0);
-		CRModels.drawAxle(GearFactory.findMaterial("iron").getColor());
-		GlStateManager.popMatrix();
+		matrix.push();
+		matrix.translate(0, -.4375D, 0);
+		matrix.scale(1, .8F, 1);
+		matrix.rotate(Vector3f.XP.rotationDegrees(90));
+		CRModels.drawAxle(matrix, buffer, combinedLight, GearFactory.findMaterial("iron").getColor());
+		matrix.pop();
 
 		float lHalf = .375F;
 
 		for(int i = 0; i < 8; i++){
-			GlStateManager.pushMatrix();
-			GlStateManager.rotated(45F * (float) i, 0, 1, 0);
-			GlStateManager.translated(lHalf, -.25F, 0);
-			GlStateManager.scaled(.41D, i % 2 == 0 ? .5D : .45D, 7.5D * lHalf);
+			matrix.push();
+			matrix.rotate(Vector3f.YP.rotationDegrees(45F * (float) i));
+			matrix.translate(lHalf, -.25F, 0);
+			matrix.scale(.41F, i % 2 == 0 ? .5F : .45F, 7.5F * lHalf);
 
-			CRModels.drawAxle(Color.GRAY);
-			GlStateManager.popMatrix();
+			CRModels.drawAxle(matrix, buffer, combinedLight, Color.GRAY);
+			matrix.pop();
 		}
-
-		GlStateManager.color3f(1, 1, 1);
-		GlStateManager.popMatrix();
-
-		GlStateManager.enableLighting();
-		GlStateManager.popAttributes();
-		GlStateManager.popMatrix();
 	}
 }

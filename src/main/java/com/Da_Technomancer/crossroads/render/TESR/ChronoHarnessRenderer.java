@@ -1,98 +1,83 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ChronoHarnessTileEntity;
 import com.Da_Technomancer.essentials.render.LinkLineRenderer;
-import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 
 public class ChronoHarnessRenderer extends LinkLineRenderer<ChronoHarnessTileEntity>{
 
-	private static final ResourceLocation INNER_TEXT = new ResourceLocation(Crossroads.MODID, "textures/block/block_copshowium.png");
-	private static final ResourceLocation OUTER_TEXT = new ResourceLocation(Crossroads.MODID, "textures/block/block_cast_iron.png");
-	
+	protected ChronoHarnessRenderer(TileEntityRendererDispatcher dispatcher){
+		super(dispatcher);
+	}
+
 	@Override
-	public void render(ChronoHarnessTileEntity te, double x, double y, double z, float partialTicks, int destroyStage){
-		if(!te.getWorld().isBlockLoaded(te.getPos())){
-			return;
-		}
-//		super.func_199341_a(te, x, y, z, partialTicks, destroyStage);
-		super.render(te, x, y, z, partialTicks, destroyStage);
+	public void render(ChronoHarnessTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
+		super.render(te, partialTicks, matrix, buffer, combinedLight, combinedOverlay);
 
 		float angle = te.getRenderAngle(partialTicks);
-
-		Tessellator tes = Tessellator.getInstance();
-		BufferBuilder buf = tes.getBuffer();
+		int medLight = CRRenderUtil.calcMediumLighting(combinedLight);
+		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
 
 		//Revolving rods
-		GlStateManager.pushMatrix();
-		GlStateManager.pushLightingAttributes();
-		GlStateManager.disableLighting();
-		GlStateManager.translated(x + 0.5D, y, z + 0.5D);
-		CRRenderUtil.setMediumLighting();
+		matrix.translate(0.5D, 0.5D, 0.5D);
 
 		float smallOffset = 0.0928F;
 		float largeOffset = 5F / 16F;
 
-		GlStateManager.rotated(angle, 0, 1, 0);
+		matrix.rotate(Vector3f.YP.rotationDegrees(angle));
 
-		Minecraft.getInstance().getTextureManager().bindTexture(INNER_TEXT);
-		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		addRod(buf, smallOffset, smallOffset);
-		addRod(buf, smallOffset, -smallOffset);
-		addRod(buf, -smallOffset, -smallOffset);
-		addRod(buf, -smallOffset, smallOffset);
-		tes.draw();
+		TextureAtlasSprite innerSprite = CRRenderUtil.getTextureSprite(CRRenderTypes.COPSHOWIUM_TEXTURE);
+		addRod(builder, matrix, smallOffset, smallOffset, innerSprite, medLight);
+		addRod(builder, matrix, smallOffset, -smallOffset, innerSprite, medLight);
+		addRod(builder, matrix, -smallOffset, -smallOffset, innerSprite, medLight);
+		addRod(builder, matrix, -smallOffset, smallOffset, innerSprite, medLight);
 
-		GlStateManager.rotated(-2F * angle, 0, 1, 0);
+		matrix.rotate(Vector3f.YP.rotationDegrees(-2F * angle));
 
-		Minecraft.getInstance().getTextureManager().bindTexture(OUTER_TEXT);
-		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		addRod(buf, smallOffset, largeOffset);
-		addRod(buf, smallOffset, -largeOffset);
-		addRod(buf, -smallOffset, largeOffset);
-		addRod(buf, -smallOffset, -largeOffset);
-		addRod(buf, largeOffset, smallOffset);
-		addRod(buf, largeOffset, -smallOffset);
-		addRod(buf, -largeOffset, smallOffset);
-		addRod(buf, -largeOffset, -smallOffset);
-		tes.draw();
-
-//		CRRenderUtil.restoreLighting(lighting);
-		GlStateManager.enableLighting();
-		GlStateManager.popAttributes();
-		GlStateManager.popMatrix();
+		TextureAtlasSprite outerSprite = CRRenderUtil.getTextureSprite(CRRenderTypes.CAST_IRON_TEXTURE);
+		addRod(builder, matrix, smallOffset, largeOffset, outerSprite, medLight);
+		addRod(builder, matrix, smallOffset, -largeOffset, outerSprite, medLight);
+		addRod(builder, matrix, -smallOffset, largeOffset, outerSprite, medLight);
+		addRod(builder, matrix, -smallOffset, -largeOffset, outerSprite, medLight);
+		addRod(builder, matrix, largeOffset, smallOffset, outerSprite, medLight);
+		addRod(builder, matrix, largeOffset, -smallOffset, outerSprite, medLight);
+		addRod(builder, matrix, -largeOffset, smallOffset, outerSprite, medLight);
+		addRod(builder, matrix, -largeOffset, -smallOffset, outerSprite, medLight);
 	}
 
-	private void addRod(BufferBuilder buf, double x, double z){
+	private void addRod(IVertexBuilder builder, MatrixStack matrix, float x, float z, TextureAtlasSprite sprite, int light){
 		float rad = 1F / 16F;
 		float minY = 2F / 16F;
 		float maxY = 14F / 16F;
-		buf.pos(x - rad, minY, z - rad).tex(0, 0).endVertex();
-		buf.pos(x - rad, maxY, z - rad).tex(0, 1).endVertex();
-		buf.pos(x + rad, maxY, z - rad).tex(2F * rad, 1).endVertex();
-		buf.pos(x + rad, minY, z - rad).tex(2F * rad, 0).endVertex();
 
-		buf.pos(x - rad, minY, z + rad).tex(0, 0).endVertex();
-		buf.pos(x + rad, minY, z + rad).tex(2F * rad, 0).endVertex();
-		buf.pos(x + rad, maxY, z + rad).tex(2F * rad, 1).endVertex();
-		buf.pos(x - rad, maxY, z + rad).tex(0, 1).endVertex();
+		float uEn = sprite.getInterpolatedU(2 * rad * 16);
 
+		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, minY, z - rad, sprite.getMinU(), sprite.getMinV(), 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, maxY, z - rad, sprite.getMinU(), sprite.getMaxV(), 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, maxY, z - rad, uEn, sprite.getMaxV(), 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, minY, z - rad, uEn, sprite.getMinV(), 0, 0, -1, light);
 
-		buf.pos(x - rad, minY, z - rad).tex(0, 0).endVertex();
-		buf.pos(x - rad, minY, z + rad).tex(2F * rad, 0).endVertex();
-		buf.pos(x - rad, maxY, z + rad).tex(2F * rad, 1).endVertex();
-		buf.pos(x - rad, maxY, z - rad).tex(0, 1).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, minY, z + rad, sprite.getMinU(), sprite.getMinV(), 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, minY, z + rad, uEn, sprite.getMinV(), 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, maxY, z + rad, uEn, sprite.getMaxV(), 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, maxY, z + rad, sprite.getMinU(), sprite.getMaxV(), 0, 0, 1, light);
 
-		buf.pos(x + rad, minY, z - rad).tex(0, 0).endVertex();
-		buf.pos(x + rad, maxY, z - rad).tex(0, 1).endVertex();
-		buf.pos(x + rad, maxY, z + rad).tex(2F * rad, 1).endVertex();
-		buf.pos(x + rad, minY, z + rad).tex(2F * rad, 0).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, minY, z - rad, sprite.getMinU(), sprite.getMinV(), -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, minY, z + rad, uEn, sprite.getMinV(), -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, maxY, z + rad, uEn, sprite.getMaxV(), -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, maxY, z - rad, sprite.getMaxU(), sprite.getMinV(), -1, 0, 0, light);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, minY, z - rad, sprite.getMinU(), sprite.getMinV(), 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, maxY, z - rad, sprite.getMinU(), sprite.getMaxV(), 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, maxY, z + rad, uEn, sprite.getMaxV(), 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, minY, z + rad, uEn, sprite.getMinV(), 1, 0, 0, light);
 	}
 }

@@ -13,8 +13,9 @@ import org.lwjgl.opengl.GL11;
 public class CRRenderTypes extends RenderType{
 
 	//Textures
+
+	//Stitched to block atlas
 	public static final ResourceLocation WINDMILL_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/wind_turbine_blade.png");
-	public static final ResourceLocation BEAM_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/beam.png");
 	public static final ResourceLocation DRILL_TEXTURE = new ResourceLocation("textures/block/iron_block.png");
 	public static final ResourceLocation NODE_GIMBAL_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/gimbal.png");
 	public static final ResourceLocation COPSHOWIUM_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/block/block_copshowium.png");
@@ -22,10 +23,17 @@ public class CRRenderTypes extends RenderType{
 	public static final ResourceLocation CAST_IRON_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/block/block_cast_iron.png");
 	public static final ResourceLocation AXLE_ENDS_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/axle_end.png");
 	public static final ResourceLocation AXLE_SIDE_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/axle.png");
+	public static final ResourceLocation HAMSTER_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/hamster.png");
+
+	//Stitched to beam atlas
+	public static final ResourceLocation BEAM_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/beam.png");
+
+	//Stitched to flux sink atlas
+	public static final ResourceLocation FLUX_SINK_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/flux_sink.png");
 
 	//Types
 	public static final RenderType BEAM_TYPE = RenderType.makeType("beam", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, false, true, RenderType.State.getBuilder().cull(RenderState.CULL_DISABLED).texture(new RenderState.TextureState(BEAM_TEXTURE, false, false)).build(false));
-
+	public static final RenderType FLUX_SINK_TYPE = RenderType.makeType("flux_sink", DefaultVertexFormats.POSITION_COLOR_TEX_LIGHTMAP, GL11.GL_QUADS, 256, false, true, RenderType.State.getBuilder().cull(RenderState.CULL_DISABLED).texture(new RenderState.TextureState(FLUX_SINK_TEXTURE, false, false)).transparency(RenderState.TRANSLUCENT_TRANSPARENCY).build(false));
 
 	public static void stitchTextures(TextureStitchEvent.Pre event){
 		//We only need to register textures which are not already part of a block model
@@ -34,6 +42,7 @@ public class CRRenderTypes extends RenderType{
 			event.addSprite(NODE_GIMBAL_TEXTURE);
 			event.addSprite(AXLE_ENDS_TEXTURE);
 			event.addSprite(AXLE_SIDE_TEXTURE);
+			event.addSprite(HAMSTER_TEXTURE);
 		}
 	}
 

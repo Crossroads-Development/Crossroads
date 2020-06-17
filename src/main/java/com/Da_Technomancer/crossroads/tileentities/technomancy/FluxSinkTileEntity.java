@@ -64,7 +64,7 @@ public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickab
 	 * Used for rendering. Doesn't tamper with the cache- unlike isRunning()
 	 * @return Gets the time since this started running, or -1 if this is not running
 	 */
-	public double getRunDuration(float partialTicks){
+	public float getRunDuration(float partialTicks){
 		return running ? world.getGameTime() - runningStartTime + partialTicks : -1;
 	}
 
