@@ -4,20 +4,22 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
-import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
+import com.Da_Technomancer.crossroads.render.CRRenderTypes;
+import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.render.TESR.CRModels;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Quaternion;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -26,7 +28,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -137,64 +138,63 @@ public class MechanismClutch extends MechanismAxle{
 		return side != null || axis == null ? VoxelShapes.empty() : SHAPES_CLUTCH[axis.ordinal()];
 	}
 
-	private static final ResourceLocation RESOURCE_ENDS = new ResourceLocation(Crossroads.MODID, "textures/model/axle_end.png");
-	private static final ResourceLocation RESOURCE_SIDE = new ResourceLocation(Crossroads.MODID, "textures/model/clutch.png");
-	private static final ResourceLocation RESOURCE_SIDE_INV = new ResourceLocation(Crossroads.MODID, "textures/model/clutch_inv.png");
-
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void doRender(MechanismTileEntity te, float partialTicks, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis){
+	public void doRender(MechanismTileEntity te, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, float partialTicks, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis){
 		if(axis == null){
 			return;
 		}
 
 		MechanismTileEntity.SidedAxleHandler handler = te.axleHandlers[6];
 
-		GlStateManager.pushMatrix();
-		GlStateManager.rotatef(axis == Direction.Axis.Y ? 0 : 90F, axis == Direction.Axis.Z ? 1 : 0, 0, axis == Direction.Axis.X ? -1 : 0);
+		//Orientation
+		if(axis != Direction.Axis.Y){
+			Quaternion rotation = (axis == Direction.Axis.X ? Vector3f.ZN : Vector3f.XP).rotationDegrees(90);
+			matrix.rotate(rotation);
+		}
 		
 		//Clutch mechanism
-		BufferBuilder vb = Tessellator.getInstance().getBuffer();
+		TextureAtlasSprite endSprite = CRRenderUtil.getTextureSprite(CRRenderTypes.AXLE_ENDS_TEXTURE);
+		TextureAtlasSprite sideSprite = CRRenderUtil.getTextureSprite(inverted ? CRRenderTypes.CLUTCH_SIDE_INVERTED_TEXTURE : CRRenderTypes.CLUTCH_SIDE_TEXTURE);
+		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
+		float size = 0.25F;
+		float height = 0.4998F;
 
-		Minecraft.getInstance().textureManager.bindTexture(RESOURCE_ENDS);
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-0.25F, 0, -0.25F).tex(0, 0).endVertex();
-		vb.pos(0.25F, 0, -0.25F).tex(1, 0).endVertex();
-		vb.pos(0.25F, 0, 0.25F).tex(1, 1).endVertex();
-		vb.pos(-0.25F, 0, 0.25F).tex(0, 1).endVertex();
+		//Ends
+		CRRenderUtil.addVertexBlock(builder, matrix, -size, 0, -size, endSprite.getMinU(), endSprite.getMinV(), 0, -1, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, size, 0, -size, endSprite.getMaxU(), endSprite.getMinV(), 0, -1, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, size, 0, size, endSprite.getMaxU(), endSprite.getMaxV(), 0, -1, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, -size, 0, size, endSprite.getMinU(), endSprite.getMaxV(), 0, -1, 0, combinedLight);
 
-		vb.pos(-0.25F, 0.4998F, 0.25F).tex(0, 1).endVertex();
-		vb.pos(0.25F, 0.4998F, 0.25F).tex(1, 1).endVertex();
-		vb.pos(0.25F, 0.4998F, -0.25F).tex(1, 0).endVertex();
-		vb.pos(-0.25F, 0.4998F, -0.25F).tex(0, 0).endVertex();
-		Tessellator.getInstance().draw();
+		CRRenderUtil.addVertexBlock(builder, matrix, -size, height, size, endSprite.getMinU(), endSprite.getMaxV(), 0, 1, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, size, height, size, endSprite.getMaxU(), endSprite.getMaxV(), 0, 1, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, size, height, -size, endSprite.getMaxU(), endSprite.getMinV(), 0, 1, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, -size, height, -size, endSprite.getMinU(), endSprite.getMinV(), 0, 1, 0, combinedLight);
 
-		Minecraft.getInstance().textureManager.bindTexture(inverted ? RESOURCE_SIDE_INV : RESOURCE_SIDE);
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-0.25F, 0.4998F, -0.25F).tex(0, 1).endVertex();
-		vb.pos(0.25F, 0.4998F, -0.25F).tex(1, 1).endVertex();
-		vb.pos(0.25F, 0, -0.25F).tex(1, 0).endVertex();
-		vb.pos(-0.25F, 0, -0.25F).tex(0, 0).endVertex();
+		//Sides
+		CRRenderUtil.addVertexBlock(builder, matrix, -size, height, -size, sideSprite.getMinU(), sideSprite.getMaxV(), 0, 0, -1, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, size, height, -size, sideSprite.getMaxU(), sideSprite.getMaxV(), 0, 0, -1, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, size, 0, -size, sideSprite.getMaxU(), sideSprite.getMinV(), 0, 0, -1, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, -size, 0, -size, sideSprite.getMinU(), sideSprite.getMinV(), 0, 0, -1, combinedLight);
 
-		vb.pos(-0.25F, 0, 0.25F).tex(1, 0).endVertex();
-		vb.pos(0.25F, 0, 0.25F).tex(0, 0).endVertex();
-		vb.pos(0.25F, 0.4998F, 0.25F).tex(0, 1).endVertex();
-		vb.pos(-0.25F, 0.4998F, 0.25F).tex(1, 1).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, -size, 0, size, sideSprite.getMaxU(), sideSprite.getMinV(), 0, 0, 1, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, size, 0, size, sideSprite.getMinU(), sideSprite.getMinV(), 0, 0, 1, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, size, height, size, sideSprite.getMinU(), sideSprite.getMaxV(), 0, 0, 1, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, -size, height, size, sideSprite.getMaxU(), sideSprite.getMaxV(), 0, 0, 1, combinedLight);
 
-		vb.pos(-0.25F, 0, 0.25F).tex(0, 0).endVertex();
-		vb.pos(-0.25F, 0.4998F, 0.25F).tex(0, 1).endVertex();
-		vb.pos(-0.25F, 0.4998F, -0.25F).tex(1, 1).endVertex();
-		vb.pos(-0.25F, 0, -0.25F).tex(1, 0).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, -size, 0, size, sideSprite.getMinU(), sideSprite.getMinV(), -1, 0, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, -size, height, size, sideSprite.getMinU(), sideSprite.getMaxV(), -1, 0, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, -size, height, -size, sideSprite.getMaxU(), sideSprite.getMaxV(), -1, 0, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, -size, 0, -size, sideSprite.getMaxU(), sideSprite.getMinV(), -1, 0, 0, combinedLight);
 
-		vb.pos(0.25F, 0.4998F, -0.25F).tex(0, 1).endVertex();
-		vb.pos(0.25F, 0.4998F, 0.25F).tex(1, 1).endVertex();
-		vb.pos(0.25F, 0, 0.25F).tex(1, 0).endVertex();
-		vb.pos(0.25F, 0, -0.25F).tex(0, 0).endVertex();
-		Tessellator.getInstance().draw();
-		
+		CRRenderUtil.addVertexBlock(builder, matrix, size, height, -size, sideSprite.getMinU(), sideSprite.getMaxV(), 1, 0, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, size, height, size, sideSprite.getMaxU(), sideSprite.getMaxV(), 1, 0, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, size, 0, size, sideSprite.getMaxU(), sideSprite.getMinV(), 1, 0, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, size, 0, -size, sideSprite.getMinU(), sideSprite.getMinV(), 1, 0, 0, combinedLight);
+
+		//Axle
 		float angle = handler.getAngle(partialTicks);
-		GlStateManager.rotatef(angle, 0F, 1F, 0F);
-		CRModels.drawAxle(mat.getColor());
-		GlStateManager.popMatrix();
+		matrix.rotate(Vector3f.YP.rotationDegrees(angle));
+		CRModels.drawAxle(matrix, buffer, combinedLight, mat.getColor());
 	}
 }

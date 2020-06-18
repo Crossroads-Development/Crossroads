@@ -26,7 +26,7 @@ public interface IMechanism{
 	 * @param motData The motion data of this mechanism, in order [0]=w, [1]=E, [2]=P, [3]=lastE
 	 * @param te The containing TileEntity
 	 */
-	public default void onRedstoneChange(double prevValue, double newValue, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis, double[] motData, MechanismTileEntity te){
+	default void onRedstoneChange(double prevValue, double newValue, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis, double[] motData, MechanismTileEntity te){
 
 	}
 
@@ -38,7 +38,7 @@ public interface IMechanism{
 	 * @param te The calling TE
 	 * @return The value a Circuit Reader should read. If a comparator is reading this, it will be rounded and bounded to [0, 15].
 	 */
-	public default double getCircuitSignal(GearFactory.GearMaterial mat, @Nonnull Direction.Axis axis, double[] motData, MechanismTileEntity te){
+	default double getCircuitSignal(GearFactory.GearMaterial mat, @Nonnull Direction.Axis axis, double[] motData, MechanismTileEntity te){
 		return 0;
 	}
 
@@ -49,7 +49,7 @@ public interface IMechanism{
 	 * @param axis If side is null (axle slot), this is the orientation of this mechanism. If side is not null, this should be ignored, and may be null
 	 * @return The moment of inertia
 	 */
-	public double getInertia(GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis);
+	double getInertia(GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis);
 
 	/**
 	 * Whether the capability exists. Will only be called for the AxleHandlerCapability and CogHandlerCapability
@@ -61,7 +61,7 @@ public interface IMechanism{
 	 * @param te The containing TileEntity
 	 * @return Whether to allow this capability
 	 */
-	public boolean hasCap(Capability<?> cap, Direction capSide, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te);
+	boolean hasCap(Capability<?> cap, Direction capSide, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te);
 
 	/**
 	 * Called when performing a rotary propogation. The mechanism is responsible for propogating
@@ -75,7 +75,7 @@ public interface IMechanism{
 	 * @param rotRatioIn The previous rotation ratio
 	 * @param lastRadius The previous radius
 	 */
-	public void propogate(GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te, MechanismTileEntity.SidedAxleHandler handler, IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius);
+	void propogate(GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te, MechanismTileEntity.SidedAxleHandler handler, IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius);
 
 	/**
 	 * Used to get the item that should be dropped when broken
@@ -83,7 +83,7 @@ public interface IMechanism{
 	 * @return The dropped itemstack
 	 */
 	@Nonnull
-	public ItemStack getDrop(GearFactory.GearMaterial mat);
+	ItemStack getDrop(GearFactory.GearMaterial mat);
 
 	/**
 	 * Used to get the bounding box for breaking and collision
@@ -91,8 +91,20 @@ public interface IMechanism{
 	 * @param axis If side is null (axle slot), this is the orientation of this mechanism. If side is not null, this should be ignored, and may be null
 	 * @return The bounding box of this mechanism
 	 */
-	public VoxelShape getBoundingBox(@Nullable Direction side, @Nullable Direction.Axis axis);
+	VoxelShape getBoundingBox(@Nullable Direction side, @Nullable Direction.Axis axis);
 
+	/**
+	 * Renders this mechanism as part of the tile entity
+	 * Implementers do not need to restore the matrix stack to original condition
+	 * @param te The tile entity this is part of
+	 * @param matrix The matrix, centered but not oriented
+	 * @param buffer A buffer
+	 * @param combinedLight World light
+	 * @param partialTicks partial time, [0, 1]
+	 * @param mat Gear material of this mechanism
+	 * @param side The side this mechanism is on, null if in axle slot
+	 * @param axis The axle orientation, null if not in axle slot
+	 */
 	@OnlyIn(Dist.CLIENT)
-	public void doRender(MechanismTileEntity te, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, float partialTicks, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis);
+	void doRender(MechanismTileEntity te, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, float partialTicks, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis);
 }

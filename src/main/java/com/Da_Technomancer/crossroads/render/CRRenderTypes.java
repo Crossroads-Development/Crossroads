@@ -24,6 +24,9 @@ public class CRRenderTypes extends RenderType{
 	public static final ResourceLocation AXLE_ENDS_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/axle_end.png");
 	public static final ResourceLocation AXLE_SIDE_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/axle.png");
 	public static final ResourceLocation HAMSTER_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/hamster.png");
+	public static final ResourceLocation GEAR_8_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/gear_oct.png");
+	public static final ResourceLocation CLUTCH_SIDE_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/clutch.png");
+	public static final ResourceLocation CLUTCH_SIDE_INVERTED_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/clutch_inv.png");
 
 	//Stitched to beam atlas
 	public static final ResourceLocation BEAM_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/beam.png");
@@ -31,9 +34,13 @@ public class CRRenderTypes extends RenderType{
 	//Stitched to flux sink atlas
 	public static final ResourceLocation FLUX_SINK_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/flux_sink.png");
 
+	//Stitched to area-of-effect atlas
+	public static final ResourceLocation AREA_OVERLAY_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/field.png");
+
 	//Types
-	public static final RenderType BEAM_TYPE = RenderType.makeType("beam", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, false, true, RenderType.State.getBuilder().cull(RenderState.CULL_DISABLED).texture(new RenderState.TextureState(BEAM_TEXTURE, false, false)).build(false));
-	public static final RenderType FLUX_SINK_TYPE = RenderType.makeType("flux_sink", DefaultVertexFormats.POSITION_COLOR_TEX_LIGHTMAP, GL11.GL_QUADS, 256, false, true, RenderType.State.getBuilder().cull(RenderState.CULL_DISABLED).texture(new RenderState.TextureState(FLUX_SINK_TEXTURE, false, false)).transparency(RenderState.TRANSLUCENT_TRANSPARENCY).build(false));
+	public static final RenderType BEAM_TYPE = RenderType.makeType("cr_beam", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, false, true, RenderType.State.getBuilder().cull(RenderState.CULL_DISABLED).texture(new RenderState.TextureState(BEAM_TEXTURE, false, false)).build(false));
+	public static final RenderType FLUX_SINK_TYPE = RenderType.makeType("cr_flux_sink", DefaultVertexFormats.POSITION_COLOR_TEX_LIGHTMAP, GL11.GL_QUADS, 256, false, true, RenderType.State.getBuilder().cull(RenderState.CULL_DISABLED).texture(new RenderState.TextureState(FLUX_SINK_TEXTURE, false, false)).lightmap(RenderState.LIGHTMAP_ENABLED).transparency(RenderState.TRANSLUCENT_TRANSPARENCY).build(false));
+	public static final RenderType AREA_OVERLAY_TYPE = RenderType.makeType("cr_area_overlay", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, false, true, RenderType.State.getBuilder().cull(RenderState.CULL_DISABLED).texture(new RenderState.TextureState(AREA_OVERLAY_TEXTURE, false, false)).transparency(RenderState.TRANSLUCENT_TRANSPARENCY).build(false));
 
 	public static void stitchTextures(TextureStitchEvent.Pre event){
 		//We only need to register textures which are not already part of a block model
@@ -43,6 +50,9 @@ public class CRRenderTypes extends RenderType{
 			event.addSprite(AXLE_ENDS_TEXTURE);
 			event.addSprite(AXLE_SIDE_TEXTURE);
 			event.addSprite(HAMSTER_TEXTURE);
+			event.addSprite(GEAR_8_TEXTURE);
+			event.addSprite(CLUTCH_SIDE_TEXTURE);
+			event.addSprite(CLUTCH_SIDE_INVERTED_TEXTURE);
 		}
 	}
 

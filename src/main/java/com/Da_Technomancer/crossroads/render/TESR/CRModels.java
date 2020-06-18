@@ -30,14 +30,8 @@ public class CRModels{
 		sin24[4] = (float) (Math.sin(Math.toRadians(67.5)) * radius_24) + buffer_24;
 	}
 
-
-	//These contain sqrt, so I don't want to calculate them every frame.
-	private static final float sHalf8 = 7F / (16F * (1F + (float) Math.sqrt(2F)));
-	private static final float sHalfT8 = .5F / (1F + (float) Math.sqrt(2F));
-
-	public static final ResourceLocation TEXTURE_8 = new ResourceLocation(Crossroads.MODID, "textures/model/gear_oct.png");
 	private static final ResourceLocation TEXTURE_24 = new ResourceLocation(Crossroads.MODID, "textures/model/gear_24.png");
-	private static final ResourceLocation TEXTURE_24_RIM = new ResourceLocation(Crossroads.MODID, "textures/model/gear_rim.png");
+	private static final ResourceLocation TEXTURE_24_RIM = new ResourceLocation(Crossroads.MODID, "textures/model/gear_24_rim.png");
 
 	/**
 	 * Draws a 24 sided gear, at the same scale as a normal small gear.
@@ -193,427 +187,206 @@ public class CRModels{
 		}
 	}
 
+	//These contain sqrt, so I don't want to calculate them every frame.
+	private static final float sHalf8 = 1F / (2F * (1F + (float) Math.sqrt(2F)));//Half the side length of a 1 block sized octagon
+	private static final float sHalfT8 = 8F / (1F + (float) Math.sqrt(2F));//Used for texture mapping to an octagon
+
+	/**
+	 * Draws an octagon with side-to-side distance (center length) of 1 block
+	 * Draws centered at the current position, oriented up
+	 * @param builder A vertex builder with BLOCK vertex buffer format
+	 * @param matrix The reference matrix
+	 * @param color The color to shade by, as a size 4 array
+	 * @param light The combined light value
+	 * @param sprite The sprite that will be mapped onto the octagon
+	 */
+	public static void drawOctagon(IVertexBuilder builder, MatrixStack matrix, int[] color, int light, TextureAtlasSprite sprite){
+		float lHalf = 0.5F;//Distance from center to side
+		//Texture coords
+		float lHalfT = 8F;
+		float uSSt = sprite.getInterpolatedU(8 - sHalfT8);
+		float uSEn = sprite.getInterpolatedU(8 + sHalfT8);
+		float uLSt = sprite.getInterpolatedU(8 - lHalfT);
+		float uLEn = sprite.getInterpolatedU(8 + lHalfT);
+		float vSSt = sprite.getInterpolatedV(8 - sHalfT8);
+		float vSEn = sprite.getInterpolatedV(8 + sHalfT8);
+		float vLSt = sprite.getInterpolatedV(8 - lHalfT);
+		float vLEn = sprite.getInterpolatedV(8 + lHalfT);
+
+		//Because we're in GL_QUADS draw mode, we split the octagon into 3 quadrilaterals
+		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8, 0, lHalf, uSSt, vLSt, 0, 1, 0, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8, 0, -lHalf, uSSt, vLEn, 0, 1, 0, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, 0, -sHalf8, uLEn, vSSt, 0, 1, 0, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, 0, sHalf8, uLSt, vSSt, 0, 1, 0, light, color);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8, 0, lHalf, uSSt, vLSt, 0, 1, 0, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8, 0, lHalf, uSEn, vLSt, 0, 1, 0, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8, 0, -lHalf, uSEn, vLEn, 0, 1, 0, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8, 0, -lHalf, uSSt, vLEn, 0, 1, 0, light, color);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8, 0, lHalf, uSEn, vLSt, 0, 1, 0, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, lHalf, 0, sHalf8, uLEn, vSSt, 0, 1, 0, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, lHalf, 0, -sHalf8, uLEn, vSEn, 0, 1, 0, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8, 0, -lHalf, uSEn, vLEn, 0, 1, 0, light, color);
+	}
+
+	/**
+	 * Draws an octagonal prism with side-to-side distance (center length) of 1 block and height of 2 pixels
+	 * Draws centered at the current position, oriented up
+	 * @param builder A vertex builder with BLOCK vertex buffer format
+	 * @param matrix The reference matrix, will not be modified
+	 * @param color The color to shade by, as a size 4 array
+	 * @param light The combined light value
+	 * @param sprite The sprite that will be mapped onto the octagon
+	 */
+	public static void draw8Core(IVertexBuilder builder, MatrixStack matrix, int[] color, int light, TextureAtlasSprite sprite){
+		float top = 0.0625F;//Half of height
+		float lHalf = 0.5F;//Half the side length of the octagon
+		float sHalf8S = sHalf8;//Scaled version of sHalf8 for gears
+
+		//Draw 2 octagons
+		//Top
+		matrix.push();
+		matrix.scale(2F * lHalf, 1, 2F * lHalf);
+		matrix.translate(0, top, 0);
+		drawOctagon(builder, matrix, color, light, sprite);
+		matrix.pop();
+
+		//Bottom
+		matrix.push();
+		matrix.scale(2F * lHalf, -1, 2F * lHalf);//The -1 y flips it upside-down
+		matrix.translate(0, top, 0);
+		drawOctagon(builder, matrix, color, light, sprite);
+		matrix.pop();
+
+		//The sides are darker than the prongs and top
+		int[] sideCol = new int[] {color[0] - 130, color[1] - 130, color[2] - 130, color[3]};
+		float tHeight = 1F / 16F;
+
+		//Texture coords
+		float tHeightT = tHeight * 16F;
+		float uSt = sprite.getMinU();
+		float uEn = sprite.getMaxU();
+		float uSSt = sprite.getInterpolatedU(8 - sHalfT8);
+		float uSEn = sprite.getInterpolatedU(8 + sHalfT8);
+		float uHSt = sprite.getInterpolatedU(tHeightT);
+		float uHEn = sprite.getInterpolatedU(16 - tHeightT);
+		float vSt = sprite.getMinV();
+		float vEn = sprite.getMaxV();
+		float vSSt = sprite.getInterpolatedV(8 - sHalfT8);
+		float vSEn = sprite.getInterpolatedV(8 + sHalfT8);
+		float vHSt = sprite.getInterpolatedV(tHeightT);
+		float vHEn = sprite.getInterpolatedV(16 - tHeightT);
+
+		//Sides
+		//Can't be done via loop due to distinct texture mapping
+
+		CRRenderUtil.addVertexBlock(builder, matrix, lHalf, -top, sHalf8S, uEn, vSSt, 1, 0, 0, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, lHalf, -top, -sHalf8S, uEn, vSEn, 1, 0, 0, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, lHalf, top, -sHalf8S, uHEn, vSEn, 1, 0, 0, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, lHalf, top, sHalf8S, uHEn, vSSt, 1, 0, 0, light, sideCol);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, top, sHalf8S, uHSt, vSSt, -1, 0, 0, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, top, -sHalf8S, uHSt, vSEn, -1, 0, 0, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, -top, -sHalf8S, uSt, vSEn, -1, 0, 0, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, -top, sHalf8S, uSt, vSSt, -1, 0, 0, light, sideCol);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8S, top, lHalf, uSEn, vSt, 0, 0, 1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8S, top, lHalf, uSSt, vSt, 0, 0, 1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8S, -top, lHalf, uSSt, vHSt, 0, 0, 1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8S, -top, lHalf, uSEn, vHSt, 0, 0, 1, light, sideCol);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8S, -top, -lHalf, uSEn, vHEn, 0, 0, -1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8S, -top, -lHalf, uSSt, vHEn, 0, 0, -1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8S, top, -lHalf, uSSt, vEn, 0, 0, -1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8S, top, -lHalf, uSEn, vEn, 0, 0, -1, light, sideCol);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8S, top, -lHalf, uSEn, vEn, 1, 0, -1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, lHalf, top, -sHalf8S, uEn, vSEn, 1, 0, -1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, lHalf, -top, -sHalf8S, uEn, vSEn, 1, 0, -1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8S, -top, -lHalf, uSEn, vEn, 1, 0, -1, light, sideCol);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8S, -top, -lHalf, uSSt, vEn, -1, 0, -1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, -top, -sHalf8S, uSt, vSEn, -1, 0, -1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, top, -sHalf8S, uSt, vSEn, -1, 0, -1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8S, top, -lHalf, uSSt, vEn, -1, 0, -1, light, sideCol);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8S, -top, lHalf, uSEn, vSt, 1, 0, 1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, lHalf, -top, sHalf8S, uEn, vSSt, 1, 0, 1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, lHalf, top, sHalf8S, uEn, vSSt, 1, 0, 1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8S, top, lHalf, uSEn, vSt, 1, 0, 1, light, sideCol);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8S, top, lHalf, uSSt, vSt, -1, 0, 1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, top, sHalf8S, uSt, vSSt, -1, 0, 1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, -top, sHalf8S, uSt, vSSt, -1, 0, 1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8S, -top, lHalf, uSSt, vSt, -1, 0, 1, light, sideCol);
+	}
+
 	/**
 	 * Draws an 8 sided gear, at the normal scale
 	 * Draws centered at the current position
-	 * @param color The color to shade this by
+	 * @param matrix The reference matrix
+	 * @param builder A vertex builder with BLOCK vertex buffer format
+	 * @param color The color to shade by, as a size 4 array
+	 * @param light The combined light value
 	 */
-	public static void draw8Gear(Color color){
+	public static void draw8Gear(MatrixStack matrix, IVertexBuilder builder, int[] color, int light){
+		matrix.push();
 
-		//TODO
+		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_TEXTURE);
+		float lHalf = 7F / 16F;//Half the side length of the octagon
 
-		float top = 0.0625F;//-.375F;
-		float lHalf = .4375F;
-
-		float lHalfT = .5F;
-		float tHeight = 1F / 16F;
-
-		float extend = .5625F;
-
-		float topP = 0.0575F;//-.380F;
-		float bottomP = -0.0575F;//-.495F;
-
-		Minecraft.getInstance().textureManager.bindTexture(TEXTURE_8);
-		BufferBuilder vb = Tessellator.getInstance().getBuffer();
-
-		GlStateManager.color3f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
-
-		vb.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(sHalf8, top, -lHalf).tex(.5F + sHalfT8, .5F - (-lHalfT)).endVertex();
-		vb.pos(-sHalf8, top, -lHalf).tex(.5F + -sHalfT8, .5F - (-lHalfT)).endVertex();
-		vb.pos(-lHalf, top, -sHalf8).tex(.5F + -lHalfT, .5F - (-sHalfT8)).endVertex();
-		vb.pos(-lHalf, top, sHalf8).tex(.5F + -lHalfT, .5F - (sHalfT8)).endVertex();
-		vb.pos(-sHalf8, top, lHalf).tex(.5F + -sHalfT8, .5F - (lHalfT)).endVertex();
-		vb.pos(sHalf8, top, lHalf).tex(.5F + sHalfT8, .5F - (lHalfT)).endVertex();
-		vb.pos(lHalf, top, sHalf8).tex(.5F + lHalfT, .5F - (sHalfT8)).endVertex();
-		vb.pos(lHalf, top, -sHalf8).tex(.5F + lHalfT, .5F - (-sHalfT8)).endVertex();
-		Tessellator.getInstance().draw();
-
-		vb.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(lHalf, -top, -sHalf8).tex(.5F + lHalfT, .5F - (-sHalfT8)).endVertex();
-		vb.pos(lHalf, -top, sHalf8).tex(.5F + lHalfT, .5F - (sHalfT8)).endVertex();
-		vb.pos(sHalf8, -top, lHalf).tex(.5F + sHalfT8, .5F - (lHalfT)).endVertex();
-		vb.pos(-sHalf8, -top, lHalf).tex(.5F + -sHalfT8, .5F - (lHalfT)).endVertex();
-		vb.pos(-lHalf, -top, sHalf8).tex(.5F + -lHalfT, .5F - (sHalfT8)).endVertex();
-		vb.pos(-lHalf, -top, -sHalf8).tex(.5F + -lHalfT, .5F - (-sHalfT8)).endVertex();
-		vb.pos(-sHalf8, -top, -lHalf).tex(.5F + -sHalfT8, .5F - (-lHalfT)).endVertex();
-		vb.pos(sHalf8, -top, -lHalf).tex(.5F + sHalfT8, .5F - (-lHalfT)).endVertex();
-		Tessellator.getInstance().draw();
-
-		GlStateManager.color3f((color.getRed() - 130F) / 255F, (color.getGreen() - 130F) / 255F, (color.getBlue() - 130F) / 255F);
-
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(lHalf, -top, sHalf8).tex(1F, .5F + -sHalfT8).endVertex();
-		vb.pos(lHalf, -top, -sHalf8).tex(1F, .5F + sHalfT8).endVertex();
-		vb.pos(lHalf, top, -sHalf8).tex(1F - tHeight, .5F + sHalfT8).endVertex();
-		vb.pos(lHalf, top, sHalf8).tex(1F - tHeight, .5F + -sHalfT8).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-lHalf, top, sHalf8).tex(tHeight, .5F + -sHalfT8).endVertex();
-		vb.pos(-lHalf, top, -sHalf8).tex(tHeight, .5F + sHalfT8).endVertex();
-		vb.pos(-lHalf, -top, -sHalf8).tex(0, .5F + sHalfT8).endVertex();
-		vb.pos(-lHalf, -top, sHalf8).tex(0, .5F + -sHalfT8).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(sHalf8, top, lHalf).tex(.5F + sHalfT8, 0).endVertex();
-		vb.pos(-sHalf8, top, lHalf).tex(.5F + -sHalfT8, 0).endVertex();
-		vb.pos(-sHalf8, -top, lHalf).tex(.5F + -sHalfT8, tHeight).endVertex();
-		vb.pos(sHalf8, -top, lHalf).tex(.5F + sHalfT8, tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(sHalf8, -top, -lHalf).tex(.5F + sHalfT8, 1F - tHeight).endVertex();
-		vb.pos(-sHalf8, -top, -lHalf).tex(.5F + -sHalfT8, 1F - tHeight).endVertex();
-		vb.pos(-sHalf8, top, -lHalf).tex(.5F + -sHalfT8, 1).endVertex();
-		vb.pos(sHalf8, top, -lHalf).tex(.5F + sHalfT8, 1).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(sHalf8, top, -lHalf).tex(.5F + sHalfT8, .5F - -lHalfT).endVertex();
-		vb.pos(lHalf, top, -sHalf8).tex(.5F + lHalfT, .5F - -sHalfT8).endVertex();
-		vb.pos(lHalf, -top, -sHalf8).tex(.5F + lHalfT, .5F - -sHalfT8).endVertex();
-		vb.pos(sHalf8, -top, -lHalf).tex(.5F + sHalfT8, .5F - -lHalfT).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-sHalf8, -top, -lHalf).tex(.5F + -sHalfT8, .5F - -lHalfT).endVertex();
-		vb.pos(-lHalf, -top, -sHalf8).tex(.5F + -lHalfT, .5F - -sHalfT8).endVertex();
-		vb.pos(-lHalf, top, -sHalf8).tex(.5F + -lHalfT, .5F - -sHalfT8).endVertex();
-		vb.pos(-sHalf8, top, -lHalf).tex(.5F + -sHalfT8, .5F - -lHalfT).endVertex();
-		//Tessellator.getInstance().draw();
-
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(sHalf8, -top, lHalf).tex(.5F + sHalfT8, .5F - lHalfT).endVertex();
-		vb.pos(lHalf, -top, sHalf8).tex(.5F + lHalfT, .5F - sHalfT8).endVertex();
-		vb.pos(lHalf, top, sHalf8).tex(.5F + lHalfT, .5F - sHalfT8).endVertex();
-		vb.pos(sHalf8, top, lHalf).tex(.5F + sHalfT8, .5F - lHalfT).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-sHalf8, top, lHalf).tex(.5F + -sHalfT8, .5F - lHalfT).endVertex();
-		vb.pos(-lHalf, top, sHalf8).tex(.5F + -lHalfT, .5F - sHalfT8).endVertex();
-		vb.pos(-lHalf, -top, sHalf8).tex(.5F + -lHalfT, .5F - sHalfT8).endVertex();
-		vb.pos(-sHalf8, -top, lHalf).tex(.5F + -sHalfT8, .5F - lHalfT).endVertex();
-		Tessellator.getInstance().draw();
+		//Renders the core of the gear, leaving only the prongs
+		matrix.push();
+		matrix.scale(2F * lHalf, 1, 2F * lHalf);
+		draw8Core(builder, matrix, color, light, sprite);
+		matrix.pop();
 
 		//Prongs
+		//Given the option of hand coding 8 orientations for each 5 sided prong or using matrix transformations and a loop, I took the path of sanity retention
+		float tHeight = 1F / 16F;
+		Quaternion rotation = Vector3f.YP.rotationDegrees(360F / 8F);
+		float extend = .5625F;
+		float topP = 0.0575F;
+		float bottomP = -0.0575F;
 
-		GlStateManager.color3f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
+		//Texture coords
+		float tHeightT = tHeight * 16F;
+		float uEn = sprite.getMaxU();
+		float uHEn = sprite.getInterpolatedU(16 - tHeightT);
+		float vHMSt = sprite.getInterpolatedV(8 - tHeightT);
+		float vHMEn = sprite.getInterpolatedV(8 + tHeightT);
 
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(extend, bottomP, tHeight).tex(1F, .5F + -tHeight).endVertex();
-		vb.pos(extend, bottomP, -tHeight).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(extend, topP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(extend, topP, tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
+		for(int i = 0; i < 8; i++){
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomP, tHeight, uEn, vHMSt, 1, 0, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomP, -tHeight, uEn, vHMEn, 1, 0, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topP, -tHeight, uHEn, vHMEn, 1, 0, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topP, tHeight, uHEn, vHMSt, 1, 0, 0, light, color);
 
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(extend, bottomP, -tHeight).tex(1F, .5F + -tHeight).endVertex();
-		vb.pos(lHalf, bottomP, -tHeight).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(lHalf, topP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(extend, topP, -tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomP, -tHeight, uEn, vHMSt, 0, 0, -1, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, lHalf, bottomP, -tHeight, uEn, vHMEn, 0, 0, -1, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, lHalf, topP, -tHeight, uHEn, vHMEn, 0, 0, -1, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topP, -tHeight, uHEn, vHMSt, 0, 0, -1, light, color);
 
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(extend, topP, tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		vb.pos(lHalf, topP, tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(lHalf, bottomP, tHeight).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(extend, bottomP, tHeight).tex(1F, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topP, tHeight, uHEn, vHMSt, 0, 0, 1, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, lHalf, topP, tHeight, uHEn, vHMEn, 0, 0, 1, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, lHalf, bottomP, tHeight, uEn, vHMEn, 0, 0, 1, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomP, tHeight, uEn, vHMSt, 0, 0, 1, light, color);
 
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(extend, topP, -tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		vb.pos(lHalf, topP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(lHalf, topP, tHeight).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(extend, topP, tHeight).tex(1F, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topP, -tHeight, uHEn, vHMSt, 0, 1, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, lHalf, topP, -tHeight, uHEn, vHMEn, 0, 1, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, lHalf, topP, tHeight, uEn, vHMEn, 0, 1, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topP, tHeight, uEn, vHMSt, 0, 1, 0, light, color);
 
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(extend, bottomP, tHeight).tex(1F, .5F + -tHeight).endVertex();
-		vb.pos(lHalf, bottomP, tHeight).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(lHalf, bottomP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(extend, bottomP, -tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomP, tHeight, uEn, vHMSt, 0, -1, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, lHalf, bottomP, tHeight, uEn, vHMEn, 0, -1, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, lHalf, bottomP, -tHeight, uHEn, vHMEn, 0, -1, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomP, -tHeight, uHEn, vHMSt, 0, -1, 0, light, color);
 
-		//next prong
+			matrix.rotate(rotation);
+		}
 
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-extend, topP, tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		vb.pos(-extend, topP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(-extend, bottomP, -tHeight).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(-extend, bottomP, tHeight).tex(1F, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-extend, bottomP, tHeight).tex(1F, .5F + -tHeight).endVertex();
-		vb.pos(-lHalf, bottomP, tHeight).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(-lHalf, topP, tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(-extend, topP, tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-extend, topP, -tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		vb.pos(-lHalf, topP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(-lHalf, bottomP, -tHeight).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(-extend, bottomP, -tHeight).tex(1F, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-extend, bottomP, -tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		vb.pos(-lHalf, bottomP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(-lHalf, bottomP, tHeight).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(-extend, bottomP, tHeight).tex(1F, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-extend, topP, tHeight).tex(1F, .5F + -tHeight).endVertex();
-		vb.pos(-lHalf, topP, tHeight).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(-lHalf, topP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(-extend, topP, -tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//next prong
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-tHeight, topP, -extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		vb.pos(tHeight, topP, -extend).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(tHeight, bottomP, -extend).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(-tHeight, bottomP, -extend).tex(1F, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-tHeight, bottomP, -extend).tex(1F, .5F + -tHeight).endVertex();
-		vb.pos(-tHeight, bottomP, lHalf).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(-tHeight, topP, lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(-tHeight, topP, -extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(tHeight, topP, -extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		vb.pos(tHeight, topP, -lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(tHeight, bottomP, -lHalf).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(tHeight, bottomP, -extend).tex(1F, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(tHeight, bottomP, -extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		vb.pos(tHeight, bottomP, -lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(-tHeight, bottomP, -lHalf).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(-tHeight, bottomP, -extend).tex(1F, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-tHeight, topP, -extend).tex(1F, .5F + -tHeight).endVertex();
-		vb.pos(-tHeight, topP, -lHalf).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(tHeight, topP, -lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(tHeight, topP, -extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//next prong
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(tHeight, topP, extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		vb.pos(-tHeight, topP, extend).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(-tHeight, bottomP, extend).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(tHeight, bottomP, extend).tex(1F, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(tHeight, bottomP, extend).tex(1F, .5F + -tHeight).endVertex();
-		vb.pos(tHeight, bottomP, -lHalf).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(tHeight, topP, -lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(tHeight, topP, extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-tHeight, topP, extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		vb.pos(-tHeight, topP, lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(-tHeight, bottomP, lHalf).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(-tHeight, bottomP, extend).tex(1F, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-tHeight, bottomP, extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		vb.pos(-tHeight, bottomP, lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(tHeight, bottomP, lHalf).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(tHeight, bottomP, extend).tex(1F, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(tHeight, topP, extend).tex(1F, .5F + -tHeight).endVertex();
-		vb.pos(tHeight, topP, lHalf).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(-tHeight, topP, lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(-tHeight, topP, extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
-
-
-		GlStateManager.pushMatrix();
-		GlStateManager.rotated(45, 0, 1, 0);
-
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(extend, bottomP, tHeight).tex(1F, .5F + -tHeight).endVertex();
-		vb.pos(extend, bottomP, -tHeight).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(extend, topP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(extend, topP, tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(extend, bottomP, -tHeight).tex(1F, .5F + -tHeight).endVertex();
-		vb.pos(lHalf, bottomP, -tHeight).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(lHalf, topP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(extend, topP, -tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(extend, topP, tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		vb.pos(lHalf, topP, tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(lHalf, bottomP, tHeight).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(extend, bottomP, tHeight).tex(1F, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(extend, topP, -tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		vb.pos(lHalf, topP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(lHalf, topP, tHeight).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(extend, topP, tHeight).tex(1F, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(extend, bottomP, tHeight).tex(1F, .5F + -tHeight).endVertex();
-		vb.pos(lHalf, bottomP, tHeight).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(lHalf, bottomP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(extend, bottomP, -tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//next prong
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-extend, topP, tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		vb.pos(-extend, topP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(-extend, bottomP, -tHeight).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(-extend, bottomP, tHeight).tex(1F, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-extend, bottomP, tHeight).tex(1F, .5F + -tHeight).endVertex();
-		vb.pos(-lHalf, bottomP, tHeight).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(-lHalf, topP, tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(-extend, topP, tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-extend, topP, -tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		vb.pos(-lHalf, topP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(-lHalf, bottomP, -tHeight).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(-extend, bottomP, -tHeight).tex(1F, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-extend, bottomP, -tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		vb.pos(-lHalf, bottomP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(-lHalf, bottomP, tHeight).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(-extend, bottomP, tHeight).tex(1F, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-extend, topP, tHeight).tex(1F, .5F + -tHeight).endVertex();
-		vb.pos(-lHalf, topP, tHeight).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(-lHalf, topP, -tHeight).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(-extend, topP, -tHeight).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//next prong
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-tHeight, topP, -extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		vb.pos(tHeight, topP, -extend).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(tHeight, bottomP, -extend).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(-tHeight, bottomP, -extend).tex(1F, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-tHeight, bottomP, -extend).tex(1F, .5F + -tHeight).endVertex();
-		vb.pos(-tHeight, bottomP, lHalf).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(-tHeight, topP, lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(-tHeight, topP, -extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(tHeight, topP, -extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		vb.pos(tHeight, topP, -lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(tHeight, bottomP, -lHalf).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(tHeight, bottomP, -extend).tex(1F, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(tHeight, bottomP, -extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		vb.pos(tHeight, bottomP, -lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(-tHeight, bottomP, -lHalf).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(-tHeight, bottomP, -extend).tex(1F, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-tHeight, topP, -extend).tex(1F, .5F + -tHeight).endVertex();
-		vb.pos(-tHeight, topP, -lHalf).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(tHeight, topP, -lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(tHeight, topP, -extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//next prong
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(tHeight, topP, extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		vb.pos(-tHeight, topP, extend).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(-tHeight, bottomP, extend).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(tHeight, bottomP, extend).tex(1F, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(tHeight, bottomP, extend).tex(1F, .5F + -tHeight).endVertex();
-		vb.pos(tHeight, bottomP, -lHalf).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(tHeight, topP, -lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(tHeight, topP, extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-tHeight, topP, extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		vb.pos(-tHeight, topP, lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(-tHeight, bottomP, lHalf).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(-tHeight, bottomP, extend).tex(1F, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-tHeight, bottomP, extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		vb.pos(-tHeight, bottomP, lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(tHeight, bottomP, lHalf).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(tHeight, bottomP, extend).tex(1F, .5F + -tHeight).endVertex();
-		//Tessellator.getInstance().draw();
-
-
-		//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(tHeight, topP, extend).tex(1F, .5F + -tHeight).endVertex();
-		vb.pos(tHeight, topP, lHalf).tex(1F, .5F + tHeight).endVertex();
-		vb.pos(-tHeight, topP, lHalf).tex(1F - tHeight, .5F + tHeight).endVertex();
-		vb.pos(-tHeight, topP, extend).tex(1F - tHeight, .5F + -tHeight).endVertex();
-		Tessellator.getInstance().draw();
-
-		GlStateManager.color3f(1F, 1F, 1F);
-
-		GlStateManager.popMatrix();
+		matrix.pop();
 	}
 
 	/**

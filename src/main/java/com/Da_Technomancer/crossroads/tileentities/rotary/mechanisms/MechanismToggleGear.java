@@ -7,12 +7,15 @@ import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
+import com.Da_Technomancer.crossroads.render.CRRenderTypes;
+import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.render.TESR.CRModels;
-import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -22,7 +25,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -140,137 +142,53 @@ public class MechanismToggleGear extends MechanismSmallGear{
 		return inverted ? CRItems.invToggleGear.withMaterial(mat, 1) : CRItems.toggleGear.withMaterial(mat, 1);
 	}
 
-	private final float sHalf = 7F / (16F * (1F + (float) Math.sqrt(2F)));
-	private final float sHalfT = .5F / (1F + (float) Math.sqrt(2F));
-
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void doRender(MechanismTileEntity te, float partialTicks, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis){
+	public void doRender(MechanismTileEntity te, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, float partialTicks, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis){
 		if(side == null){
 			return;
 		}
 
 		MechanismTileEntity.SidedAxleHandler handler = te.axleHandlers[side.getIndex()];
-
-		GlStateManager.pushMatrix();
-		GlStateManager.rotatef(side == Direction.DOWN ? 0 : side == Direction.UP ? 180F : side == Direction.NORTH || side == Direction.EAST ? 90F : -90F, side.getAxis() == Direction.Axis.Z ? 1 : 0, 0, side.getAxis() == Direction.Axis.Z ? 0 : 1);
+		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
+		
+		matrix.rotate(side.getOpposite().getRotation());//Apply orientation
 		float angle = handler.getAngle(partialTicks);
-		GlStateManager.translatef(0, -0.4375F, 0);
-		GlStateManager.rotatef((float) -side.getAxisDirection().getOffset() * angle, 0F, 1F, 0F);
+		matrix.translate(0, -0.4375D, 0);
+		matrix.rotate(Vector3f.YP.rotationDegrees(-side.getAxisDirection().getOffset() * angle));
 
-		float top = 0.0625F;//-.375F;
+		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_TEXTURE);
+		float top = 0.0625F;
 
+		//If inverted, renders the core as red
 		if(inverted){
-			BufferBuilder vb = Tessellator.getInstance().getBuffer();
-			Minecraft.getInstance().textureManager.bindTexture(CRModels.TEXTURE_8);
-			GlStateManager.color3f(1, 0, 0);
-
+			int[] invertCol = new int[] {255, 0, 0, 255};
+			
 			float radius = 2F / 16F;
-
-			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			vb.pos(-radius, top + 0.001F, radius).tex(.5F - radius, .5F + radius).endVertex();
-			vb.pos(radius, top + 0.001F, radius).tex(.5F + radius, .5F + radius).endVertex();
-			vb.pos(radius, top + 0.001F, -radius).tex(.5F + radius, .5F - radius).endVertex();
-			vb.pos(-radius, top + 0.001F, -radius).tex(.5F - radius, .5F - radius).endVertex();
-			Tessellator.getInstance().draw();
+			float zFightOffset = 0.001F;//Vertical offset to prevent z-fighting
+			//Texture coords
+			float radiusT = radius * 16F;
+			float uSt = sprite.getInterpolatedU(8 - radiusT);
+			float uEn = sprite.getInterpolatedU(8 + radiusT);
+			float vSt = sprite.getInterpolatedV(8 - radiusT);
+			float vEn = sprite.getInterpolatedV(8 + radiusT);
+			
+			CRRenderUtil.addVertexBlock(builder, matrix, -radius, top + zFightOffset, radius, uSt, vEn, 0, 1, 0, combinedLight, invertCol);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius, top + zFightOffset, radius, uEn, vEn, 0, 1, 0, combinedLight, invertCol);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius, top + zFightOffset, -radius, uEn, vSt, 0, 1, 0, combinedLight, invertCol);
+			CRRenderUtil.addVertexBlock(builder, matrix, -radius, top + zFightOffset, -radius, uSt, vSt, 0, 1, 0, combinedLight, invertCol);
 		}
+
+		int[] color = CRRenderUtil.convertColor(mat.getColor());
 
 		if(te.redstoneIn != 0 ^ inverted){
-			CRModels.draw8Gear(mat.getColor());
+			//Render normally when active
+			CRModels.draw8Gear(matrix, builder, color, combinedLight);
 		}else{
 			//Render without prongs
-			float lHalf = .4375F;
-
-			float lHalfT = .5F;
-			float tHeight = 1F / 16F;
-
-			Minecraft.getInstance().textureManager.bindTexture(CRModels.TEXTURE_8);
-			BufferBuilder vb = Tessellator.getInstance().getBuffer();
-
-			GlStateManager.color3f(mat.getColor().getRed() / 255F, mat.getColor().getGreen() / 255F, mat.getColor().getBlue() / 255F);
-
-			vb.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION_TEX);
-			vb.pos(sHalf, top, -lHalf).tex(.5F + sHalfT, .5F - (-lHalfT)).endVertex();
-			vb.pos(-sHalf, top, -lHalf).tex(.5F + -sHalfT, .5F - (-lHalfT)).endVertex();
-			vb.pos(-lHalf, top, -sHalf).tex(.5F + -lHalfT, .5F - (-sHalfT)).endVertex();
-			vb.pos(-lHalf, top, sHalf).tex(.5F + -lHalfT, .5F - (sHalfT)).endVertex();
-			vb.pos(-sHalf, top, lHalf).tex(.5F + -sHalfT, .5F - (lHalfT)).endVertex();
-			vb.pos(sHalf, top, lHalf).tex(.5F + sHalfT, .5F - (lHalfT)).endVertex();
-			vb.pos(lHalf, top, sHalf).tex(.5F + lHalfT, .5F - (sHalfT)).endVertex();
-			vb.pos(lHalf, top, -sHalf).tex(.5F + lHalfT, .5F - (-sHalfT)).endVertex();
-			Tessellator.getInstance().draw();
-
-			vb.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION_TEX);
-			vb.pos(lHalf, -top, -sHalf).tex(.5F + lHalfT, .5F - (-sHalfT)).endVertex();
-			vb.pos(lHalf, -top, sHalf).tex(.5F + lHalfT, .5F - (sHalfT)).endVertex();
-			vb.pos(sHalf, -top, lHalf).tex(.5F + sHalfT, .5F - (lHalfT)).endVertex();
-			vb.pos(-sHalf, -top, lHalf).tex(.5F + -sHalfT, .5F - (lHalfT)).endVertex();
-			vb.pos(-lHalf, -top, sHalf).tex(.5F + -lHalfT, .5F - (sHalfT)).endVertex();
-			vb.pos(-lHalf, -top, -sHalf).tex(.5F + -lHalfT, .5F - (-sHalfT)).endVertex();
-			vb.pos(-sHalf, -top, -lHalf).tex(.5F + -sHalfT, .5F - (-lHalfT)).endVertex();
-			vb.pos(sHalf, -top, -lHalf).tex(.5F + sHalfT, .5F - (-lHalfT)).endVertex();
-			Tessellator.getInstance().draw();
-
-			GlStateManager.color3f((mat.getColor().getRed() - 130F) / 255F, (mat.getColor().getGreen() - 130F) / 255F, (mat.getColor().getBlue() - 130F) / 255F);
-
-			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			vb.pos(lHalf, -top, sHalf).tex(1F, .5F + -sHalfT).endVertex();
-			vb.pos(lHalf, -top, -sHalf).tex(1F, .5F + sHalfT).endVertex();
-			vb.pos(lHalf, top, -sHalf).tex(1F - tHeight, .5F + sHalfT).endVertex();
-			vb.pos(lHalf, top, sHalf).tex(1F - tHeight, .5F + -sHalfT).endVertex();
-			//Tessellator.getInstance().draw();
-
-			//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			vb.pos(-lHalf, top, sHalf).tex(tHeight, .5F + -sHalfT).endVertex();
-			vb.pos(-lHalf, top, -sHalf).tex(tHeight, .5F + sHalfT).endVertex();
-			vb.pos(-lHalf, -top, -sHalf).tex(0, .5F + sHalfT).endVertex();
-			vb.pos(-lHalf, -top, sHalf).tex(0, .5F + -sHalfT).endVertex();
-			//Tessellator.getInstance().draw();
-
-			//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			vb.pos(sHalf, top, lHalf).tex(.5F + sHalfT, 0).endVertex();
-			vb.pos(-sHalf, top, lHalf).tex(.5F + -sHalfT, 0).endVertex();
-			vb.pos(-sHalf, -top, lHalf).tex(.5F + -sHalfT, tHeight).endVertex();
-			vb.pos(sHalf, -top, lHalf).tex(.5F + sHalfT, tHeight).endVertex();
-			//Tessellator.getInstance().draw();
-
-			//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			vb.pos(sHalf, -top, -lHalf).tex(.5F + sHalfT, 1F - tHeight).endVertex();
-			vb.pos(-sHalf, -top, -lHalf).tex(.5F + -sHalfT, 1F - tHeight).endVertex();
-			vb.pos(-sHalf, top, -lHalf).tex(.5F + -sHalfT, 1).endVertex();
-			vb.pos(sHalf, top, -lHalf).tex(.5F + sHalfT, 1).endVertex();
-			//Tessellator.getInstance().draw();
-
-			//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			vb.pos(sHalf, top, -lHalf).tex(.5F + sHalfT, .5F - -lHalfT).endVertex();
-			vb.pos(lHalf, top, -sHalf).tex(.5F + lHalfT, .5F - -sHalfT).endVertex();
-			vb.pos(lHalf, -top, -sHalf).tex(.5F + lHalfT, .5F - -sHalfT).endVertex();
-			vb.pos(sHalf, -top, -lHalf).tex(.5F + sHalfT, .5F - -lHalfT).endVertex();
-			//Tessellator.getInstance().draw();
-
-			//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			vb.pos(-sHalf, -top, -lHalf).tex(.5F + -sHalfT, .5F - -lHalfT).endVertex();
-			vb.pos(-lHalf, -top, -sHalf).tex(.5F + -lHalfT, .5F - -sHalfT).endVertex();
-			vb.pos(-lHalf, top, -sHalf).tex(.5F + -lHalfT, .5F - -sHalfT).endVertex();
-			vb.pos(-sHalf, top, -lHalf).tex(.5F + -sHalfT, .5F - -lHalfT).endVertex();
-			//Tessellator.getInstance().draw();
-
-
-			//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			vb.pos(sHalf, -top, lHalf).tex(.5F + sHalfT, .5F - lHalfT).endVertex();
-			vb.pos(lHalf, -top, sHalf).tex(.5F + lHalfT, .5F - sHalfT).endVertex();
-			vb.pos(lHalf, top, sHalf).tex(.5F + lHalfT, .5F - sHalfT).endVertex();
-			vb.pos(sHalf, top, lHalf).tex(.5F + sHalfT, .5F - lHalfT).endVertex();
-			//Tessellator.getInstance().draw();
-
-			//vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			vb.pos(-sHalf, top, lHalf).tex(.5F + -sHalfT, .5F - lHalfT).endVertex();
-			vb.pos(-lHalf, top, sHalf).tex(.5F + -lHalfT, .5F - sHalfT).endVertex();
-			vb.pos(-lHalf, -top, sHalf).tex(.5F + -lHalfT, .5F - sHalfT).endVertex();
-			vb.pos(-sHalf, -top, lHalf).tex(.5F + -sHalfT, .5F - lHalfT).endVertex();
-			Tessellator.getInstance().draw();
+			float lHalf = 7F / 16F;//Half the side length of the octagon
+			matrix.scale(2F * lHalf, 1, 2F * lHalf);
+			CRModels.draw8Core(builder, matrix, color, combinedLight, sprite);
 		}
-
-		GlStateManager.popMatrix();
 	}
 }

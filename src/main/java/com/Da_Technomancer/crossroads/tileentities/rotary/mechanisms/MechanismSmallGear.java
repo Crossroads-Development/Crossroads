@@ -8,9 +8,13 @@ import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
+import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.render.TESR.CRModels;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -142,19 +146,17 @@ public class MechanismSmallGear implements IMechanism{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void doRender(MechanismTileEntity te, float partialTicks, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis){
+	public void doRender(MechanismTileEntity te, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, float partialTicks, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis){
 		if(side == null){
 			return;
 		}
 
 		MechanismTileEntity.SidedAxleHandler handler = te.axleHandlers[side.getIndex()];
 
-		GlStateManager.pushMatrix();
-		GlStateManager.rotatef(side == Direction.DOWN ? 0 : side == Direction.UP ? 180F : side == Direction.NORTH || side == Direction.EAST ? 90F : -90F, side.getAxis() == Direction.Axis.Z ? 1 : 0, 0, side.getAxis() == Direction.Axis.Z ? 0 : 1);
+		matrix.rotate(side.getOpposite().getRotation());//Apply orientation
 		float angle = handler.getAngle(partialTicks);
-		GlStateManager.translatef(0, -0.4375F, 0);
-		GlStateManager.rotatef((float) -side.getAxisDirection().getOffset() * angle, 0F, 1F, 0F);
-		CRModels.draw8Gear(mat.getColor());
-		GlStateManager.popMatrix();
+		matrix.translate(0, -0.4375D, 0);
+		matrix.rotate(Vector3f.YP.rotationDegrees(-side.getAxisDirection().getOffset() * angle));
+		CRModels.draw8Gear(matrix, buffer.getBuffer(RenderType.getSolid()), CRRenderUtil.convertColor(mat.getColor()), combinedLight);
 	}
 }

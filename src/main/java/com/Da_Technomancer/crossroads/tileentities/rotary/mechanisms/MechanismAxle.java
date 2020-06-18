@@ -7,8 +7,11 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.TESR.CRModels;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Quaternion;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -111,18 +114,20 @@ public class MechanismAxle implements IMechanism{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void doRender(MechanismTileEntity te, float partialTicks, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis){
+	public void doRender(MechanismTileEntity te, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, float partialTicks, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis){
 		if(axis == null){
 			return;
 		}
 
 		MechanismTileEntity.SidedAxleHandler handler = te.axleHandlers[6];
 
-		GlStateManager.pushMatrix();
-		GlStateManager.rotatef(axis == Direction.Axis.Y ? 0 : 90F, axis == Direction.Axis.Z ? 1 : 0, 0, axis == Direction.Axis.X ? -1 : 0);
+		if(axis != Direction.Axis.Y){
+			Quaternion rotation = (axis == Direction.Axis.X ? Vector3f.ZN : Vector3f.XP).rotationDegrees(90);
+			matrix.rotate(rotation);
+		}
+
 		float angle = handler.getAngle(partialTicks);
-		GlStateManager.rotatef(angle, 0F, 1F, 0F);
-		CRModels.drawAxle(mat.getColor());
-		GlStateManager.popMatrix();
+		matrix.rotate(Vector3f.YP.rotationDegrees(angle));
+		CRModels.drawAxle(matrix, buffer, combinedLight, mat.getColor());
 	}
 }

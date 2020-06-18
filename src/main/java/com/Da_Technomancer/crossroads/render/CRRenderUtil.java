@@ -20,6 +20,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
+import java.awt.*;
 import java.util.function.Function;
 
 public class CRRenderUtil extends RenderUtil{
@@ -133,6 +135,16 @@ public class CRRenderUtil extends RenderUtil{
 		}else{
 			return world.getGameTime() % Integer.MAX_VALUE + partialTicks;
 		}
+	}
+
+	/**
+	 * Converts a color to a size 4 integer array of values [0, 255], in order r,g,b,a
+	 * @param color The source color
+	 * @return A size 4 array
+	 */
+	@Nonnull
+	public static int[] convertColor(@Nonnull Color color){
+		return new int[] {color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()};
 	}
 
 	/**
