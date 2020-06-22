@@ -1,17 +1,11 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
@@ -22,7 +16,7 @@ public class CRModels{
 	private static final float[] sin24 = new float[5];
 	private static final float radius_24 = 11F / 24F;
 	static{
-		final float buffer_24 = (float) Math.pow(10, -3) * 3F;
+		final float buffer_24 = 3E-3F;//3 * 10^-3
 		sin24[0] = (float) (Math.sin(Math.toRadians(7.5)) * radius_24) + buffer_24;
 		sin24[1] = (float) (Math.sin(Math.toRadians(22.5)) * radius_24) + buffer_24;
 		sin24[2] = (float) (Math.sin(Math.toRadians(37.5)) * radius_24) + buffer_24;
@@ -30,160 +24,195 @@ public class CRModels{
 		sin24[4] = (float) (Math.sin(Math.toRadians(67.5)) * radius_24) + buffer_24;
 	}
 
-	private static final ResourceLocation TEXTURE_24 = new ResourceLocation(Crossroads.MODID, "textures/model/gear_24.png");
-	private static final ResourceLocation TEXTURE_24_RIM = new ResourceLocation(Crossroads.MODID, "textures/model/gear_24_rim.png");
+	private static void draw24Polygon(MatrixStack matrix, IVertexBuilder builder, int light, int[] col, TextureAtlasSprite sprite){
+		//Commented numbers specify the order of vertices on the final polygon, increasing clockwise
+
+		float uSt0 = sprite.getInterpolatedU(8 - 16 * sin24[0]);
+		float uSt1 = sprite.getInterpolatedU(8 - 16 * sin24[1]);
+		float uSt2 = sprite.getInterpolatedU(8 - 16 * sin24[2]);
+		float uSt3 = sprite.getInterpolatedU(8 - 16 * sin24[3]);
+		float uSt4 = sprite.getInterpolatedU(8 - 16 * sin24[4]);
+		float uStR = sprite.getInterpolatedU(8 - 16 * radius_24);
+		float uEn0 = sprite.getInterpolatedU(8 + 16 * sin24[0]);
+		float uEn1 = sprite.getInterpolatedU(8 + 16 * sin24[1]);
+		float uEn2 = sprite.getInterpolatedU(8 + 16 * sin24[2]);
+		float uEn3 = sprite.getInterpolatedU(8 + 16 * sin24[3]);
+		float uEn4 = sprite.getInterpolatedU(8 + 16 * sin24[4]);
+		float uEnR = sprite.getInterpolatedU(8 + 16 * radius_24);
+
+		float vSt0 = sprite.getInterpolatedV(8 - 16 * sin24[0]);
+		float vSt1 = sprite.getInterpolatedV(8 - 16 * sin24[1]);
+		float vSt2 = sprite.getInterpolatedV(8 - 16 * sin24[2]);
+		float vSt3 = sprite.getInterpolatedV(8 - 16 * sin24[3]);
+		float vSt4 = sprite.getInterpolatedV(8 - 16 * sin24[4]);
+		float vStR = sprite.getInterpolatedV(8 - 16 * radius_24);
+		float vEn0 = sprite.getInterpolatedV(8 + 16 * sin24[0]);
+		float vEn1 = sprite.getInterpolatedV(8 + 16 * sin24[1]);
+		float vEn2 = sprite.getInterpolatedV(8 + 16 * sin24[2]);
+		float vEn3 = sprite.getInterpolatedV(8 + 16 * sin24[3]);
+		float vEn4 = sprite.getInterpolatedV(8 + 16 * sin24[4]);
+		float vEnR = sprite.getInterpolatedV(8 + 16 * radius_24);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, sin24[0], 0, radius_24, uEn0, vStR, 0, 1, 0, light, col);//1
+		CRRenderUtil.addVertexBlock(builder, matrix, sin24[1], 0, sin24[4], uEn1, vSt4, 0, 1, 0, light, col);//2
+		CRRenderUtil.addVertexBlock(builder, matrix, sin24[2], 0, sin24[3], uEn2, vSt3, 0, 1, 0, light, col);//3
+		CRRenderUtil.addVertexBlock(builder, matrix, sin24[3], 0, sin24[2], uEn3, vSt2, 0, 1, 0, light, col);//4
+
+		CRRenderUtil.addVertexBlock(builder, matrix, sin24[3], 0, sin24[2], uEn3, vSt2, 0, 1, 0, light, col);//4
+		CRRenderUtil.addVertexBlock(builder, matrix, sin24[4], 0, sin24[1], uEn4, vSt1, 0, 1, 0, light, col);//5
+		CRRenderUtil.addVertexBlock(builder, matrix, -sin24[0], 0, radius_24, uSt0, vStR, 0, 1, 0, light, col);//24
+		CRRenderUtil.addVertexBlock(builder, matrix, sin24[0], 0, radius_24, uEn0, vStR, 0, 1, 0, light, col);//1
+
+		CRRenderUtil.addVertexBlock(builder, matrix, sin24[4], 0, sin24[1], uEn4, vSt1, 0, 1, 0, light, col);//5
+		CRRenderUtil.addVertexBlock(builder, matrix, radius_24, 0, sin24[0], uEnR, vSt0, 0, 1, 0, light, col);//6
+		CRRenderUtil.addVertexBlock(builder, matrix, -sin24[1], 0, sin24[4], uSt1, vSt4, 0, 1, 0, light, col);//23
+		CRRenderUtil.addVertexBlock(builder, matrix, -sin24[0], 0, radius_24, uSt0, vStR, 0, 1, 0, light, col);//24
+
+		CRRenderUtil.addVertexBlock(builder, matrix, radius_24, 0, sin24[0], uEnR, vSt0, 0, 1, 0, light, col);//6
+		CRRenderUtil.addVertexBlock(builder, matrix, radius_24, 0, -sin24[0], uEnR, vEn0, 0, 1, 0, light, col);//7
+		CRRenderUtil.addVertexBlock(builder, matrix, -sin24[2], 0, sin24[3], uSt2, vSt3, 0, 1, 0, light, col);//22
+		CRRenderUtil.addVertexBlock(builder, matrix, -sin24[1], 0, sin24[4], uSt1, vSt4, 0, 1, 0, light, col);//23
+
+		CRRenderUtil.addVertexBlock(builder, matrix, radius_24, 0, -sin24[0], uEnR, vEn0, 0, 1, 0, light, col);//7
+		CRRenderUtil.addVertexBlock(builder, matrix, sin24[4], 0, -sin24[1], uEn4, vEn1, 0, 1, 0, light, col);//8
+		CRRenderUtil.addVertexBlock(builder, matrix, -sin24[3], 0, sin24[2], uSt3, vSt2, 0, 1, 0, light, col);//21
+		CRRenderUtil.addVertexBlock(builder, matrix, -sin24[2], 0, sin24[3], uSt2, vSt3, 0, 1, 0, light, col);//22
+
+		CRRenderUtil.addVertexBlock(builder, matrix, sin24[4], 0, -sin24[1], uEn4, vEn1, 0, 1, 0, light, col);//8
+		CRRenderUtil.addVertexBlock(builder, matrix, sin24[3], 0, -sin24[2], uEn3, vEn2, 0, 1, 0, light, col);//9
+		CRRenderUtil.addVertexBlock(builder, matrix, -sin24[4], 0, sin24[1], uSt4, vSt1, 0, 1, 0, light, col);//20
+		CRRenderUtil.addVertexBlock(builder, matrix, -sin24[3], 0, sin24[2], uSt3, vSt2, 0, 1, 0, light, col);//21
+
+		CRRenderUtil.addVertexBlock(builder, matrix, sin24[3], 0, -sin24[2], uEn3, vEn2, 0, 1, 0, light, col);//9
+		CRRenderUtil.addVertexBlock(builder, matrix, sin24[2], 0, -sin24[3], uEn2, vEn3, 0, 1, 0, light, col);//10
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius_24, 0, sin24[0], uStR, vSt0, 0, 1, 0, light, col);//19
+		CRRenderUtil.addVertexBlock(builder, matrix, -sin24[4], 0, sin24[1], uSt4, vSt1, 0, 1, 0, light, col);//20
+
+		CRRenderUtil.addVertexBlock(builder, matrix, sin24[2], 0, -sin24[3], uEn2, vEn3, 0, 1, 0, light, col);//10
+		CRRenderUtil.addVertexBlock(builder, matrix, sin24[1], 0, -sin24[4], uEn1, vEn4, 0, 1, 0, light, col);//11
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius_24, 0, -sin24[0], uStR, vEn0, 0, 1, 0, light, col);//18
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius_24, 0, sin24[0], uStR, vSt0, 0, 1, 0, light, col);//19
+
+		CRRenderUtil.addVertexBlock(builder, matrix, sin24[1], 0, -sin24[4], uEn1, vEn4, 0, 1, 0, light, col);//11
+		CRRenderUtil.addVertexBlock(builder, matrix, sin24[0], 0, -radius_24, uEn0, vEnR, 0, 1, 0, light, col);//12
+		CRRenderUtil.addVertexBlock(builder, matrix, -sin24[4], 0, -sin24[1], uSt4, vEn1, 0, 1, 0, light, col);//17
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius_24, 0, -sin24[0], uStR, vEn0, 0, 1, 0, light, col);//18
+
+		CRRenderUtil.addVertexBlock(builder, matrix, sin24[0], 0, -radius_24, uEn0, vEnR, 0, 1, 0, light, col);//12
+		CRRenderUtil.addVertexBlock(builder, matrix, -sin24[0], 0, -radius_24, uSt0, vEnR, 0, 1, 0, light, col);//13
+		CRRenderUtil.addVertexBlock(builder, matrix, -sin24[3], 0, -sin24[2], uSt3, vEn2, 0, 1, 0, light, col);//16
+		CRRenderUtil.addVertexBlock(builder, matrix, -sin24[4], 0, -sin24[1], uSt4, vEn1, 0, 1, 0, light, col);//17
+
+		CRRenderUtil.addVertexBlock(builder, matrix, -sin24[0], 0, -radius_24, uSt0, vEnR, 0, 1, 0, light, col);//13
+		CRRenderUtil.addVertexBlock(builder, matrix, -sin24[1], 0, -sin24[4], uSt1, vEn4, 0, 1, 0, light, col);//14
+		CRRenderUtil.addVertexBlock(builder, matrix, -sin24[2], 0, -sin24[3], uSt2, vEn3, 0, 1, 0, light, col);//15
+		CRRenderUtil.addVertexBlock(builder, matrix, -sin24[3], 0, -sin24[2], uSt3, vEn2, 0, 1, 0, light, col);//16
+	}
 
 	/**
 	 * Draws a 24 sided gear, at the same scale as a normal small gear.
-	 * This needs to be scaled x3 for most uses
+	 * This needs to be scaled x3 horizontally for most uses
 	 * Draws centered at the current position
+	 * @param matrix The matrix to render relative to, will not be modified
+	 * @param buffer A generic buffer
+	 * @param light The combined light value
 	 * @param color The color to shade this by
 	 */
-	public static void draw24Gear(Color color){
+	public static void draw24Gear(MatrixStack matrix, IRenderTypeBuffer buffer, int light, Color color){
 
-		double top = -0.375F;
-		double bottom = -.5F;
+		float top = -0.375F;
+		float bottom = -.5F;
 
 		float extend = 25F / 48F;
 		float topProng = -.376F;
 		float bottomProng = -.495F;
 		float widthProng = 1F / 48F;
 
-		Minecraft.getInstance().textureManager.bindTexture(TEXTURE_24);
-		BufferBuilder vb = Tessellator.getInstance().getBuffer();
+		int[] col = CRRenderUtil.convertColor(color);
+		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
+		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_24_TEXTURE);
 
-		GlStateManager.color3f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
+		//Top and bottom (sprite)
+		matrix.push();
+		matrix.translate(0, top, 0);
+		draw24Polygon(matrix, builder, light, col, sprite);//Top
+		matrix.translate(0, bottom - top, 0);
+		matrix.scale(1, -1, 1);//Flip orientation
+		draw24Polygon(matrix, builder, light, col, sprite);//Bottom
+		matrix.pop();
 
-		//Top and bottom
-		vb.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(-sin24[0], bottom, radius_24).tex(.5F - sin24[0], .5 - radius_24).endVertex();
-		vb.pos(-sin24[1], bottom, sin24[4]).tex(.5F - sin24[1], .5 - sin24[4]).endVertex();
-		vb.pos(-sin24[2], bottom, sin24[3]).tex(.5F - sin24[2], .5 - sin24[3]).endVertex();
-		vb.pos(-sin24[3], bottom, sin24[2]).tex(.5F - sin24[3], .5 - sin24[2]).endVertex();
-		vb.pos(-sin24[4], bottom, sin24[1]).tex(.5F - sin24[4], .5 - sin24[1]).endVertex();
-		vb.pos(-radius_24, bottom, sin24[0]).tex(.5F - radius_24, .5 - sin24[0]).endVertex();
-		vb.pos(-radius_24, bottom, -sin24[0]).tex(.5F - radius_24, .5 + sin24[0]).endVertex();
-		vb.pos(-sin24[4], bottom, -sin24[1]).tex(.5F - sin24[4], .5 + sin24[1]).endVertex();
-		vb.pos(-sin24[3], bottom, -sin24[2]).tex(.5F - sin24[3], .5 + sin24[2]).endVertex();
-		vb.pos(-sin24[2], bottom, -sin24[3]).tex(.5F - sin24[2], .5 + sin24[3]).endVertex();
-		vb.pos(-sin24[1], bottom, -sin24[4]).tex(.5F - sin24[1], .5 + sin24[4]).endVertex();
-		vb.pos(-sin24[0], bottom, -radius_24).tex(.5F - sin24[0], .5 + radius_24).endVertex();
-		vb.pos(sin24[0], bottom, -radius_24).tex(.5F + sin24[0], .5 + radius_24).endVertex();
-		vb.pos(sin24[1], bottom, -sin24[4]).tex(.5F + sin24[1], .5 + sin24[4]).endVertex();
-		vb.pos(sin24[2], bottom, -sin24[3]).tex(.5F + sin24[2], .5 + sin24[3]).endVertex();
-		vb.pos(sin24[3], bottom, -sin24[2]).tex(.5F + sin24[3], .5 + sin24[2]).endVertex();
-		vb.pos(sin24[4], bottom, -sin24[1]).tex(.5F + sin24[4], .5 + sin24[1]).endVertex();
-		vb.pos(radius_24, bottom, -sin24[0]).tex(.5F + radius_24, .5 + sin24[0]).endVertex();
-		vb.pos(radius_24, bottom, sin24[0]).tex(.5F + radius_24, .5 - sin24[0]).endVertex();
-		vb.pos(sin24[4], bottom, sin24[1]).tex(.5F + sin24[4], .5 - sin24[1]).endVertex();
-		vb.pos(sin24[3], bottom, sin24[2]).tex(.5F + sin24[3], .5 - sin24[2]).endVertex();
-		vb.pos(sin24[2], bottom, sin24[3]).tex(.5F + sin24[2], .5 - sin24[3]).endVertex();
-		vb.pos(sin24[1], bottom, sin24[4]).tex(.5F + sin24[1], .5 - sin24[4]).endVertex();
-		vb.pos(sin24[0], bottom, radius_24).tex(.5F + sin24[0], .5 - radius_24).endVertex();
-		Tessellator.getInstance().draw();
+		//Sides (spriteSide)
+		TextureAtlasSprite spriteSide = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_24_RIM_TEXTURE);
+		Quaternion rotation = Vector3f.YP.rotationDegrees(15);
 
-		vb.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION_TEX);
-		vb.pos(sin24[0], top, radius_24).tex(.5F + sin24[0], .5 - radius_24).endVertex();
-		vb.pos(sin24[1], top, sin24[4]).tex(.5F + sin24[1], .5 - sin24[4]).endVertex();
-		vb.pos(sin24[2], top, sin24[3]).tex(.5F + sin24[2], .5 - sin24[3]).endVertex();
-		vb.pos(sin24[3], top, sin24[2]).tex(.5F + sin24[3], .5 - sin24[2]).endVertex();
-		vb.pos(sin24[4], top, sin24[1]).tex(.5F + sin24[4], .5 - sin24[1]).endVertex();
-		vb.pos(radius_24, top, sin24[0]).tex(.5F + radius_24, .5 - sin24[0]).endVertex();
-		vb.pos(radius_24, top, -sin24[0]).tex(.5F + radius_24, .5 + sin24[0]).endVertex();
-		vb.pos(sin24[4], top, -sin24[1]).tex(.5F + sin24[4], .5 + sin24[1]).endVertex();
-		vb.pos(sin24[3], top, -sin24[2]).tex(.5F + sin24[3], .5 + sin24[2]).endVertex();
-		vb.pos(sin24[2], top, -sin24[3]).tex(.5F + sin24[2], .5 + sin24[3]).endVertex();
-		vb.pos(sin24[1], top, -sin24[4]).tex(.5F + sin24[1], .5 + sin24[4]).endVertex();
-		vb.pos(sin24[0], top, -radius_24).tex(.5F + sin24[0], .5 + radius_24).endVertex();
-		vb.pos(-sin24[0], top, -radius_24).tex(.5F - sin24[0], .5 + radius_24).endVertex();
-		vb.pos(-sin24[1], top, -sin24[4]).tex(.5F - sin24[1], .5 + sin24[4]).endVertex();
-		vb.pos(-sin24[2], top, -sin24[3]).tex(.5F - sin24[2], .5 + sin24[3]).endVertex();
-		vb.pos(-sin24[3], top, -sin24[2]).tex(.5F - sin24[3], .5 + sin24[2]).endVertex();
-		vb.pos(-sin24[4], top, -sin24[1]).tex(.5F - sin24[4], .5 + sin24[1]).endVertex();
-		vb.pos(-radius_24, top, -sin24[0]).tex(.5F - radius_24, .5 + sin24[0]).endVertex();
-		vb.pos(-radius_24, top, sin24[0]).tex(.5F - radius_24, .5 - sin24[0]).endVertex();
-		vb.pos(-sin24[4], top, sin24[1]).tex(.5F - sin24[4], .5 - sin24[1]).endVertex();
-		vb.pos(-sin24[3], top, sin24[2]).tex(.5F - sin24[3], .5 - sin24[2]).endVertex();
-		vb.pos(-sin24[2], top, sin24[3]).tex(.5F - sin24[2], .5 - sin24[3]).endVertex();
-		vb.pos(-sin24[1], top, sin24[4]).tex(.5F - sin24[1], .5 - sin24[4]).endVertex();
-		vb.pos(-sin24[0], top, radius_24).tex(.5F - sin24[0], .5 - radius_24).endVertex();
-		Tessellator.getInstance().draw();
+		float vSt = spriteSide.getMinV();
+		float vEn = spriteSide.getInterpolatedV(1);
 
-		//Sides
-		Minecraft.getInstance().textureManager.bindTexture(TEXTURE_24_RIM);
-		GlStateManager.pushMatrix();
+		matrix.push();
 		for(float i = 0; i < 6; i++){
-			GlStateManager.rotated(15, 0, 1, 0);
+			matrix.rotate(rotation);//15 deg
 
-			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			vb.pos(radius_24, bottom, sin24[0]).tex((i + 1F) / 16F, 0).endVertex();
-			vb.pos(radius_24, bottom, -sin24[0]).tex((i + 1F) / 16F, 0).endVertex();
-			vb.pos(radius_24, top, -sin24[0]).tex(i / 16F, 1F / 16F).endVertex();
-			vb.pos(radius_24, top, sin24[0]).tex(i / 16F, 1F / 16F).endVertex();
-			Tessellator.getInstance().draw();
+			float uSt = spriteSide.getInterpolatedU(i);
+			float uEn = spriteSide.getInterpolatedU(i + 1);
+			float u0St = spriteSide.getInterpolatedU(5 - i);
+			float u0En = spriteSide.getInterpolatedU(6 - i);
 
-			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			vb.pos(-radius_24, top, sin24[0]).tex((i + 1F) / 16F, 0).endVertex();
-			vb.pos(-radius_24, top, -sin24[0]).tex((i + 1F) / 16F, 0).endVertex();
-			vb.pos(-radius_24, bottom, -sin24[0]).tex(i / 16F, 1F / 16F).endVertex();
-			vb.pos(-radius_24, bottom, sin24[0]).tex(i / 16F, 1F / 16F).endVertex();
-			Tessellator.getInstance().draw();
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, bottom, sin24[0], uEn, vSt, 1, 0, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, bottom, -sin24[0], uEn, vSt, 1, 0, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, top, -sin24[0], uSt, vEn, 1, 0, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, top, sin24[0], uSt, vEn, 1, 0, 0, light, col);
 
-			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			vb.pos(sin24[0], top, radius_24).tex((6F - i) / 16F, 0).endVertex();
-			vb.pos(-sin24[0], top, radius_24).tex((6F - i) / 16F, 0).endVertex();
-			vb.pos(-sin24[0], bottom, radius_24).tex((5F - i) / 16F, 1F / 16F).endVertex();
-			vb.pos(sin24[0], bottom, radius_24).tex((5F - i) / 16F, 1F / 16F).endVertex();
-			Tessellator.getInstance().draw();
+			CRRenderUtil.addVertexBlock(builder, matrix, -radius_24, top, sin24[0], uEn, vSt, -1, 0, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, -radius_24, top, -sin24[0], uEn, vSt, -1, 0, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, -radius_24, bottom, -sin24[0], uSt, vEn, -1, 0, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, -radius_24, bottom, sin24[0], uSt, vEn, -1, 0, 0, light, col);
 
-			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			vb.pos(sin24[0], bottom, -radius_24).tex((6F - i) / 16F, 0).endVertex();
-			vb.pos(-sin24[0], bottom, -radius_24).tex((6F - i) / 16F, 0).endVertex();
-			vb.pos(-sin24[0], top, -radius_24).tex((5F - i) / 16F, 1F / 16F).endVertex();
-			vb.pos(sin24[0], top, -radius_24).tex((5F - i) / 16F, 1F / 16F).endVertex();
-			Tessellator.getInstance().draw();
+			CRRenderUtil.addVertexBlock(builder, matrix, sin24[0], top, radius_24, u0En, vSt, 0, 0, 1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, -sin24[0], top, radius_24, u0En, vSt, 0, 0, 1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, -sin24[0], bottom, radius_24, u0St, vEn, 0, 0, 1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, sin24[0], bottom, radius_24, u0St, vEn, 0, 0, 1, light, col);
+
+			CRRenderUtil.addVertexBlock(builder, matrix, sin24[0], bottom, -radius_24, u0En, vSt, 0, 0, -1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, -sin24[0], bottom, -radius_24, u0En, vSt, 0, 0, -1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, -sin24[0], top, -radius_24, u0St, vEn, 0, 0, -1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, sin24[0], top, -radius_24, u0St, vEn, 0, 0, -1, light, col);
 		}
-		GlStateManager.popMatrix();
+		matrix.pop();
 
-		//Prongs
-		GlStateManager.color3f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
+		//Prongs (spriteSide)
+
+		float u1 = spriteSide.getInterpolatedU(1);
+		float u2 = spriteSide.getInterpolatedU(2);
+		float u3 = spriteSide.getInterpolatedU(3);
+		float u4 = spriteSide.getInterpolatedU(4);
+		float u5 = spriteSide.getInterpolatedU(5);
 		for(int i = 0; i < 24; i++){
-			GlStateManager.rotated(15, 0, 1, 0);
+			matrix.rotate(rotation);//15 deg
 
-			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			vb.pos(extend, bottomProng, widthProng).tex(4F / 16F, 0).endVertex();
-			vb.pos(extend, bottomProng, -widthProng).tex(4F / 16F, 0).endVertex();
-			vb.pos(extend, topProng, -widthProng).tex(3F / 16F, 1F / 16F).endVertex();
-			vb.pos(extend, topProng, widthProng).tex(3F / 16F, 1F / 16F).endVertex();
-			Tessellator.getInstance().draw();
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomProng, widthProng, u4, vSt, 1, 0, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomProng, -widthProng, u4, vSt, 1, 0, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topProng, -widthProng, u3, vEn, 1, 0, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topProng, widthProng, u3, vEn, 1, 0, 0, light, col);
 
-			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			vb.pos(extend, bottomProng, -widthProng).tex(4F / 16F, 0).endVertex();
-			vb.pos(radius_24, bottomProng, -widthProng).tex(4F / 16F, 0).endVertex();
-			vb.pos(radius_24, topProng, -widthProng).tex(5F / 16F, 1F / 16F).endVertex();
-			vb.pos(extend, topProng, -widthProng).tex(5F / 16F, 1F / 16F).endVertex();
-			Tessellator.getInstance().draw();
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomProng, -widthProng, u4, vSt, 0, 0, -1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, bottomProng, -widthProng, u4, vSt, 0, 0, -1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, topProng, -widthProng, u5, vEn, 0, 0, -1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topProng, -widthProng, u5, vEn, 0, 0, -1, light, col);
 
-			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			vb.pos(extend, topProng, widthProng).tex(1F / 16F, 0).endVertex();
-			vb.pos(radius_24, topProng, widthProng).tex(1F / 16F, 0).endVertex();
-			vb.pos(radius_24, bottomProng, widthProng).tex(2F / 16F, 1F / 16F).endVertex();
-			vb.pos(extend, bottomProng, widthProng).tex(2F / 16F, 1F / 16F).endVertex();
-			Tessellator.getInstance().draw();
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topProng, widthProng, u1, vSt, 0, 0, 1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, topProng, widthProng, u1, vSt, 0, 0, 1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, bottomProng, widthProng, u2, vEn, 0, 0, 1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomProng, widthProng, u2, vEn, 0, 0, 1, light, col);
 
-			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			vb.pos(extend, topProng, -widthProng).tex(2F / 16F, 0).endVertex();
-			vb.pos(radius_24, topProng, -widthProng).tex(2F / 16F, 0).endVertex();
-			vb.pos(radius_24, topProng, widthProng).tex(3F / 16F, 1F / 16F).endVertex();
-			vb.pos(extend, topProng, widthProng).tex(3F / 16F, 1F / 16F).endVertex();
-			Tessellator.getInstance().draw();
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topProng, -widthProng, u2, vSt, 0, 1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, topProng, -widthProng, u2, vSt, 0, 1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, topProng, widthProng, u3, vEn, 0, 1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topProng, widthProng, u3, vEn, 0, 1, 0, light, col);
 
-			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			vb.pos(extend, bottomProng, widthProng).tex(3F / 16F, 1F / 16F).endVertex();
-			vb.pos(radius_24, bottomProng, widthProng).tex(3F / 16F, 1F / 16F).endVertex();
-			vb.pos(radius_24, bottomProng, -widthProng).tex(2F / 16F, 0).endVertex();
-			vb.pos(extend, bottomProng, -widthProng).tex(2F / 16F, 0).endVertex();
-			Tessellator.getInstance().draw();
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomProng, widthProng, u3, vEn, 0, -1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, bottomProng, widthProng, u3, vEn, 0, -1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, bottomProng, -widthProng, u2, vSt, 0, -1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomProng, -widthProng, u2, vSt, 0, -1, 0, light, col);
 		}
 	}
 
@@ -392,6 +421,9 @@ public class CRModels{
 	/**
 	 * Draws an axle, at the normal scale
 	 * Draws centered at the current position
+	 * @param matrix The matrix to render relative to
+	 * @param buffer A generic buffer
+	 * @param light The combined light value
 	 * @param color The color to shade this by
 	 */
 	public static void drawAxle(MatrixStack matrix, IRenderTypeBuffer buffer, int light, Color color){
@@ -400,9 +432,12 @@ public class CRModels{
 
 	/**
 	 * Switch to the other method if possible, otherwise stop using axles to draw arbitrary rectangular prisms
+	 * @param matrix The matrix to render relative to
+	 * @param buffer A generic buffer
+	 * @param light The combined light value
 	 * @param sides Side texture
 	 * @param ends End texture
-	 * @param color Color
+	 * @param color The color to shade this by
 	 */
 	@Deprecated
 	public static void drawAxle(MatrixStack matrix, IRenderTypeBuffer buffer, int light, TextureAtlasSprite sides, TextureAtlasSprite ends, Color color){

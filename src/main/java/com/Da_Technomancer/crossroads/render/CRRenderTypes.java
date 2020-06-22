@@ -25,6 +25,8 @@ public class CRRenderTypes extends RenderType{
 	public static final ResourceLocation AXLE_SIDE_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/axle.png");
 	public static final ResourceLocation HAMSTER_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/hamster.png");
 	public static final ResourceLocation GEAR_8_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/gear_oct.png");
+	public static final ResourceLocation GEAR_24_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/gear_24.png");
+	public static final ResourceLocation GEAR_24_RIM_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/gear_24_rim.png");
 	public static final ResourceLocation CLUTCH_SIDE_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/clutch.png");
 	public static final ResourceLocation CLUTCH_SIDE_INVERTED_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/clutch_inv.png");
 
@@ -51,6 +53,8 @@ public class CRRenderTypes extends RenderType{
 			event.addSprite(AXLE_SIDE_TEXTURE);
 			event.addSprite(HAMSTER_TEXTURE);
 			event.addSprite(GEAR_8_TEXTURE);
+			event.addSprite(GEAR_24_TEXTURE);
+			event.addSprite(GEAR_24_RIM_TEXTURE);
 			event.addSprite(CLUTCH_SIDE_TEXTURE);
 			event.addSprite(CLUTCH_SIDE_INVERTED_TEXTURE);
 		}
