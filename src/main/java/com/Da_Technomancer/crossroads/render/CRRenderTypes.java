@@ -29,6 +29,7 @@ public class CRRenderTypes extends RenderType{
 	public static final ResourceLocation GEAR_24_RIM_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/gear_24_rim.png");
 	public static final ResourceLocation CLUTCH_SIDE_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/clutch.png");
 	public static final ResourceLocation CLUTCH_SIDE_INVERTED_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/clutch_inv.png");
+	public static final ResourceLocation GATEWAY_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/gateway.png");
 
 	//Stitched to beam atlas
 	public static final ResourceLocation BEAM_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/beam.png");
@@ -57,6 +58,7 @@ public class CRRenderTypes extends RenderType{
 			event.addSprite(GEAR_24_RIM_TEXTURE);
 			event.addSprite(CLUTCH_SIDE_TEXTURE);
 			event.addSprite(CLUTCH_SIDE_INVERTED_TEXTURE);
+			event.addSprite(GATEWAY_TEXTURE);
 		}
 	}
 

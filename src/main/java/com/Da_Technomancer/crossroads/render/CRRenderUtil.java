@@ -6,7 +6,6 @@ import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
 import com.Da_Technomancer.essentials.render.RenderUtil;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import jdk.internal.jline.internal.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -21,6 +20,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.function.Function;
 

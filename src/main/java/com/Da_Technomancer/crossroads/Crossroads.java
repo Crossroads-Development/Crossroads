@@ -94,7 +94,7 @@ public final class Crossroads{
 		CRItems.clientInit();
 		CRRendererRegistry.registerBlockRenderer();
 		Keys.init();
-		ModEntities.clientInit();
+		CREntities.clientInit();
 //		CRParticles.clientInit();
 		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
 	}

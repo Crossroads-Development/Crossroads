@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Tessellator;
@@ -30,15 +31,12 @@ public class RenderFlameCoreEntity extends EntityRenderer<EntityFlameCore>{
 	}
 
 	@Override
-	public void doRender(EntityFlameCore entity, double x, double y, double z, float entityYaw, float partialTicks){
+	public void render(EntityFlameCore entity, float entityYaw, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int packedLight){
 		Color col = new Color(entity.getDataManager().get(EntityFlameCore.COLOR), true);
 
-		GlStateManager.pushMatrix();
-		GlStateManager.pushLightingAttributes();
+		matrix.push();
+
 		GlStateManager.enableBlend();
-		GlStateManager.disableLighting();
-		GlStateManager.disableCull();
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		CRRenderUtil.setBrightLighting();
 
 		GlStateManager.color4f((float) col.getRed() / 255F, (float) col.getGreen() / 255F, (float) col.getBlue() / 255F, (float) col.getAlpha() / 255F);
@@ -49,47 +47,39 @@ public class RenderFlameCoreEntity extends EntityRenderer<EntityFlameCore>{
 
 		bindEntityTexture(entity);
 
-		BufferBuilder buf = Tessellator.getInstance().getBuffer();
-		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		
 		buf.pos(-1, -1, -1).tex(0, 0).endVertex();
 		buf.pos(1, -1, -1).tex(1, 0).endVertex();
 		buf.pos(1, 1, -1).tex(1, 1).endVertex();
 		buf.pos(-1, 1, -1).tex(0, 1).endVertex();
-		
+
 		buf.pos(-1, -1, -1).tex(0, 0).endVertex();
 		buf.pos(1, -1, -1).tex(1, 0).endVertex();
 		buf.pos(1, -1, 1).tex(1, 1).endVertex();
 		buf.pos(-1, -1, 1).tex(0, 1).endVertex();
-		
+
 		buf.pos(-1, -1, -1).tex(0, 0).endVertex();
 		buf.pos(-1, -1, 1).tex(1, 0).endVertex();
 		buf.pos(-1, 1, 1).tex(1, 1).endVertex();
 		buf.pos(-1, 1, -1).tex(0, 1).endVertex();
-		
+
 		buf.pos(-1, -1, 1).tex(0, 0).endVertex();
 		buf.pos(1, -1, 1).tex(1, 0).endVertex();
 		buf.pos(1, 1, 1).tex(1, 1).endVertex();
 		buf.pos(-1, 1, 1).tex(0, 1).endVertex();
-		
+
 		buf.pos(-1, 1, -1).tex(0, 0).endVertex();
 		buf.pos(1, 1, -1).tex(1, 0).endVertex();
 		buf.pos(1, 1, 1).tex(1, 1).endVertex();
 		buf.pos(-1, 1, 1).tex(0, 1).endVertex();
-		
+
 		buf.pos(1, -1, -1).tex(0, 0).endVertex();
 		buf.pos(1, -1, 1).tex(1, 0).endVertex();
 		buf.pos(1, 1, 1).tex(1, 1).endVertex();
 		buf.pos(1, 1, -1).tex(0, 1).endVertex();
-		
-		Tessellator.getInstance().draw();
 
-		GlStateManager.color4f(1, 1, 1, 1);
-		GlStateManager.enableCull();
-		GlStateManager.enableLighting();
-		GlStateManager.disableBlend();
-		GlStateManager.popAttributes();
-		GlStateManager.popMatrix();
+		matrix.pop();
+
+		super.render(entity, entityYaw, partialTicks, matrix, buffer, packedLight);
 	}
 
 	@Override
