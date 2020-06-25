@@ -44,8 +44,8 @@ public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntit
 
 		matrix.push();
 		matrix.translate(.5F, .5F, .5F);
-		matrix.rotate(Vector3f.YP.rotation(-facing.getHorizontalAngle()));
-		matrix.rotate(Vector3f.ZP.rotation(facing.getAxisDirection().getOffset() * axle.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
+		matrix.rotate(Vector3f.YP.rotationDegrees(-facing.getHorizontalAngle()));
+		matrix.rotate(Vector3f.ZP.rotationDegrees(facing.getAxisDirection().getOffset() * axle.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
 
 		//Center piece
 		CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, -0.25F, 0.6F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(4), 0, 0, 1, light);

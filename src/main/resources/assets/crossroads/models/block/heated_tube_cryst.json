@@ -1,0 +1,7 @@
+{
+	"parent": "crossroads:block/heated_tube",
+	"textures": {
+		"glass": "crossroads:block/alch_tube/cryst_tube_out",
+		"cap": "crossroads:block/alch_tube/cryst_tube_cap"
+	}
+}

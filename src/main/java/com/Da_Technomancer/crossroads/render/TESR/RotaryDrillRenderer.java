@@ -62,7 +62,7 @@ public class RotaryDrillRenderer extends TileEntityRenderer<RotaryDrillTileEntit
 		renderLayer(builder, matrix, 1, 4, sprite, col, combinedLight);
 	}
 
-	private static void renderLayer(IVertexBuilder vb, MatrixStack matrix, float bottom, float width, TextureAtlasSprite sprite, int[] color, int light){
+	private static void renderLayer(IVertexBuilder builder, MatrixStack matrix, float bottom, float width, TextureAtlasSprite sprite, int[] color, int light){
 
 		bottom /= 16F;
 		float height = 3F / 16F;
@@ -73,40 +73,48 @@ public class RotaryDrillRenderer extends TileEntityRenderer<RotaryDrillTileEntit
 
 		float start = -width / 2;
 		float end = width / 2;
+
+		float uSt = sprite.getMinU();
+		float uEn = sprite.getInterpolatedU(texWidth);
+		float uHe = sprite.getInterpolatedU(texHeight);
+		float vSt = sprite.getMinV();
+		float vEn = sprite.getInterpolatedV(texWidth);
+		float vHe = sprite.getInterpolatedV(texHeight);
+
 		//Top
-		vb.pos(matrix.getLast().getMatrix(), start, top, start).color(color[0], color[1], color[2], color[3]).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 1, 0).endVertex();
-		vb.pos(matrix.getLast().getMatrix(), start, top, end).color(color[0], color[1], color[2], color[3]).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(texWidth)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 1, 0).endVertex();
-		vb.pos(matrix.getLast().getMatrix(), end, top, end).color(color[0], color[1], color[2], color[3]).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(texWidth)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 1, 0).endVertex();
-		vb.pos(matrix.getLast().getMatrix(), end, top, start).color(color[0], color[1], color[2], color[3]).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 1, 0).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, start, top, start, uSt, vSt, 0, 1, 0, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, start, top, end, uSt, vEn, 0, 1, 0, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, end, top, end, uEn, vEn, 0, 1, 0, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, end, top, start, uEn, vSt, 0, 1, 0, light, color);
 
 		//Bottom
-		vb.pos(matrix.getLast().getMatrix(), start, bottom, start).color(color[0], color[1], color[2], color[3]).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 0, -1, 0).endVertex();
-		vb.pos(matrix.getLast().getMatrix(), end, bottom, start).color(color[0], color[1], color[2], color[3]).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 0, -1, 0).endVertex();
-		vb.pos(matrix.getLast().getMatrix(), end, bottom, end).color(color[0], color[1], color[2], color[3]).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(texWidth)).lightmap(light).normal(matrix.getLast().getNormal(), 0, -1, 0).endVertex();
-		vb.pos(matrix.getLast().getMatrix(), start, bottom, end).color(color[0], color[1], color[2], color[3]).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(texWidth)).lightmap(light).normal(matrix.getLast().getNormal(), 0, -1, 0).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, start, bottom, start, uSt, vSt, 0, -1, 0, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, end, bottom, start, uEn, vSt, 0, -1, 0, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, end, bottom, end, uEn, vEn, 0, -1, 0, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, start, bottom, end, uSt, vEn, 0, -1, 0, light, color);
+		
+		//side
+		CRRenderUtil.addVertexBlock(builder, matrix, start, bottom, start, uSt, vSt, 0, 0, -1, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, start, top, start, uSt, vHe, 0, 0, -1, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, end, top, start, uEn, vHe, 0, 0, -1, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, end, bottom, start, uEn, vSt, 0, 0, -1, light, color);
 
 		//side
-		vb.pos(matrix.getLast().getMatrix(), start, bottom, start).color(color[0], color[1], color[2], color[3]).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
-		vb.pos(matrix.getLast().getMatrix(), start, top, start).color(color[0], color[1], color[2], color[3]).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(texHeight)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
-		vb.pos(matrix.getLast().getMatrix(), end, top, start).color(color[0], color[1], color[2], color[3]).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(texHeight)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
-		vb.pos(matrix.getLast().getMatrix(), end, bottom, start).color(color[0], color[1], color[2], color[3]).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, start, bottom, end, uSt, vSt, 0, 0, 1, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, end, bottom, end, uHe, vSt, 0, 0, 1, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, end, top, end, uHe, vEn, 0, 0, 1, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, start, top, end, uSt, vEn, 0, 0, 1, light, color);
 
 		//side
-		vb.pos(start, bottom, end).color(color[0], color[1], color[2], color[3]).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
-		vb.pos(end, bottom, end).color(color[0], color[1], color[2], color[3]).tex(sprite.getInterpolatedU(texHeight), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
-		vb.pos(end, top, end).color(color[0], color[1], color[2], color[3]).tex(sprite.getInterpolatedU(texHeight), sprite.getInterpolatedV(texWidth)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
-		vb.pos(start, top, end).color(color[0], color[1], color[2], color[3]).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(texWidth)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, start, bottom, end, uSt, vSt, -1, 0, 0, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, start, top, end, uHe, vSt, -1, 0, 0, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, start, top, start, uHe, vEn, -1, 0, 0, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, start, bottom, start, uSt, vEn, -1, 0, 0, light, color);
 
 		//side
-		vb.pos(start, bottom, end).color(color[0], color[1], color[2], color[3]).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), -1, 0, 0).endVertex();
-		vb.pos(start, top, end).color(color[0], color[1], color[2], color[3]).tex(sprite.getInterpolatedU(texHeight), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), -1, 0, 0).endVertex();
-		vb.pos(start, top, start).color(color[0], color[1], color[2], color[3]).tex(sprite.getInterpolatedU(texHeight), sprite.getInterpolatedV(texWidth)).lightmap(light).normal(matrix.getLast().getNormal(), -1, 0, 0).endVertex();
-		vb.pos(start, bottom, start).color(color[0], color[1], color[2], color[3]).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(texWidth)).lightmap(light).normal(matrix.getLast().getNormal(), -1, 0, 0).endVertex();
-
-		//side
-		vb.pos(end, bottom, end).color(color[0], color[1], color[2], color[3]).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(texWidth)).lightmap(light).normal(matrix.getLast().getNormal(), 1, 0, 0).endVertex();
-		vb.pos(end, bottom, start).color(color[0], color[1], color[2], color[3]).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(texWidth)).lightmap(light).normal(matrix.getLast().getNormal(), 1, 0, 0).endVertex();
-		vb.pos(end, top, start).color(color[0], color[1], color[2], color[3]).tex(sprite.getInterpolatedU(texHeight), sprite.getInterpolatedV(texWidth)).lightmap(light).normal(matrix.getLast().getNormal(), 1, 0, 0).endVertex();
-		vb.pos(end, top, end).color(color[0], color[1], color[2], color[3]).tex(sprite.getInterpolatedU(texHeight), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 1, 0, 0).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, end, bottom, end, uSt, vSt, 1, 0, 0, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, end, bottom, start, uSt, vEn, 1, 0, 0, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, end, top, start, uHe, vEn, 1, 0, 0, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, end, top, end, uHe, vSt, 1, 0, 0, light, color);
 	}
 }

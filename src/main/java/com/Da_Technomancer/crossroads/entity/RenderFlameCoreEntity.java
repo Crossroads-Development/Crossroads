@@ -35,35 +35,35 @@ public class RenderFlameCoreEntity extends EntityRenderer<EntityFlameCore>{
 
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getEntityTranslucent(getEntityTexture(entity)));
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -scale, -scale, -scale, 0, 0, 0, 0, -1, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, scale, -scale, -scale, 1, 0, 0, 0, -1, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, scale, scale, -scale, 1, 1, 0, 0, -1, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, -scale, scale, -scale, 0, 1, 0, 0, -1, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexEntity(builder, matrix, -scale, -scale, -scale, 0, 0, 0, 0, -1, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexEntity(builder, matrix, scale, -scale, -scale, 1, 0, 0, 0, -1, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexEntity(builder, matrix, scale, scale, -scale, 1, 1, 0, 0, -1, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexEntity(builder, matrix, -scale, scale, -scale, 0, 1, 0, 0, -1, CRRenderUtil.BRIGHT_LIGHT, col);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -scale, -scale, -scale, 0, 0, 0, -1, 0, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, scale, -scale, -scale, 1, 0, 0, -1, 0, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, scale, -scale, scale, 1, 1, 0, -1, 0, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, -scale, -scale, scale, 0, 1, 0, -1, 0, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexEntity(builder, matrix, -scale, -scale, -scale, 0, 0, 0, -1, 0, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexEntity(builder, matrix, scale, -scale, -scale, 1, 0, 0, -1, 0, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexEntity(builder, matrix, scale, -scale, scale, 1, 1, 0, -1, 0, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexEntity(builder, matrix, -scale, -scale, scale, 0, 1, 0, -1, 0, CRRenderUtil.BRIGHT_LIGHT, col);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -scale, -scale, -scale, 0, 0, -1, 0, 0, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, -scale, -scale, scale, 1, 0, -1, 0, 0, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, -scale, scale, scale, 1, 1, -1, 0, 0, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, -scale, scale, -scale, 0, 1, -1, 0, 0, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexEntity(builder, matrix, -scale, -scale, -scale, 0, 0, -1, 0, 0, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexEntity(builder, matrix, -scale, -scale, scale, 1, 0, -1, 0, 0, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexEntity(builder, matrix, -scale, scale, scale, 1, 1, -1, 0, 0, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexEntity(builder, matrix, -scale, scale, -scale, 0, 1, -1, 0, 0, CRRenderUtil.BRIGHT_LIGHT, col);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -scale, -scale, scale, 0, 0, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, scale, -scale, scale, 1, 0, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, scale, scale, scale, 1, 1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, -scale, scale, scale, 0, 1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexEntity(builder, matrix, -scale, -scale, scale, 0, 0, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexEntity(builder, matrix, scale, -scale, scale, 1, 0, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexEntity(builder, matrix, scale, scale, scale, 1, 1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexEntity(builder, matrix, -scale, scale, scale, 0, 1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -scale, scale, -scale, 0, 0, 0, 1, 0, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, scale, scale, -scale, 1, 0, 0, 1, 0, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, scale, scale, scale, 1, 1, 0, 1, 0, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, -scale, scale, scale, 0, 1, 0, 1, 0, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexEntity(builder, matrix, -scale, scale, -scale, 0, 0, 0, 1, 0, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexEntity(builder, matrix, scale, scale, -scale, 1, 0, 0, 1, 0, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexEntity(builder, matrix, scale, scale, scale, 1, 1, 0, 1, 0, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexEntity(builder, matrix, -scale, scale, scale, 0, 1, 0, 1, 0, CRRenderUtil.BRIGHT_LIGHT, col);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, scale, -scale, -scale, 0, 0, 1, 0, 0, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, scale, -scale, scale, 1, 0, 1, 0, 0, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, scale, scale, scale, 1, 1, 1, 0, 0, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, scale, scale, -scale, 0, 1, 1, 0, 0, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexEntity(builder, matrix, scale, -scale, -scale, 0, 0, 1, 0, 0, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexEntity(builder, matrix, scale, -scale, scale, 1, 0, 1, 0, 0, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexEntity(builder, matrix, scale, scale, scale, 1, 1, 1, 0, 0, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexEntity(builder, matrix, scale, scale, -scale, 0, 1, 1, 0, 0, CRRenderUtil.BRIGHT_LIGHT, col);
 
 		super.render(entity, entityYaw, partialTicks, matrix, buffer, packedLight);
 	}

@@ -1,28 +1,8 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "crossroads:block/reagent_filter",
-		"textures": {
-			"glass": "crossroads:block/alch_tube/cryst_tube_cap"
-		},
-		"uvlock": false
-	},
 	"variants": {
-		"horiz_facing": {
-			"west": {
-				"x": 90,
-				"y": 270
-			},
-			"east": {
-				"x": 90,
-				"y": 90
-			},
-			"north": {
-				"x": 90
-			},
-			"south": {
-				"x": 270
-			}
-		}
+		"horiz_facing=west": {"model": "crossroads:block/reagent_filter_cryst", "x": 90, "y": 270},
+		"horiz_facing=east": {"model": "crossroads:block/reagent_filter_cryst", "x": 90, "y": 90},
+		"horiz_facing=north": {"model": "crossroads:block/reagent_filter_cryst", "x": 90},
+		"horiz_facing=south": {"model": "crossroads:block/reagent_filter_cryst", "x": 270}
 	}
 }

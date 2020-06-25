@@ -39,129 +39,129 @@ public class RenderFlyingMachine extends EntityRenderer<EntityFlyingMachine>{
 		//Future me, if you're reading this and need to re-work them again, sucks to be you --Your past self
 		
 		//Axle
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.125F, -0.125F, 0, 1, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.125F, 0.125F, 0, 0.9375F, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.125F, 0.125F, 0.25F, 0.9375F, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.125F, -0.125F, 0.25F, 1, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, 0.125F, -0.125F, 0, 1, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, 0.125F, 0.125F, 0, 0.9375F, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.5F, 0.125F, 0.125F, 0.25F, 0.9375F, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.5F, 0.125F, -0.125F, 0.25F, 1, 0, 1, 0, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, -0.125F, -0.125F, 0.25F, 1, 0, -1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, -0.125F, 0.125F, 0.25F, 0.9375F, 0, -1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, -0.125F, 0.125F, 0, 0.9375F, 0, -1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, -0.125F, -0.125F, 0, 1, 0, -1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.5F, -0.125F, -0.125F, 0.25F, 1, 0, -1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.5F, -0.125F, 0.125F, 0.25F, 0.9375F, 0, -1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, -0.125F, 0.125F, 0, 0.9375F, 0, -1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, -0.125F, -0.125F, 0, 1, 0, -1, 0, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, -0.125F, 0.125F, 0.25F, 1, 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.125F, 0.125F, 0.25F, 0.9375F, 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.125F, 0.125F, 0, 0.9375F, 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, -0.125F, 0.125F, 0, 1, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.5F, -0.125F, 0.125F, 0.25F, 1, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.5F, 0.125F, 0.125F, 0.25F, 0.9375F, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, 0.125F, 0.125F, 0, 0.9375F, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, -0.125F, 0.125F, 0, 1, 0, 0, 1, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, -0.125F, -0.125F, 0, 1, 0, 0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.125F, -0.125F, 0, 0.9375F, 0, 0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.125F, -0.125F, 0.25F, 0.9375F, 0, 0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, -0.125F, -0.125F, 0.25F, 1, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, -0.125F, -0.125F, 0, 1, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, 0.125F, -0.125F, 0, 0.9375F, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.5F, 0.125F, -0.125F, 0.25F, 0.9375F, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.5F, -0.125F, -0.125F, 0.25F, 1, 0, 0, -1, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, -0.125F, -0.125F, 0, 0.875F, 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.125F, -0.125F, 0.0625F, 0.875F, 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.125F, 0.125F, 0.0625F, 0.9375F, 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, -0.125F, 0.125F, 0, 0.9375F, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.5F, -0.125F, -0.125F, 0, 0.875F, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.5F, 0.125F, -0.125F, 0.0625F, 0.875F, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.5F, 0.125F, 0.125F, 0.0625F, 0.9375F, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.5F, -0.125F, 0.125F, 0, 0.9375F, 1, 0, 0, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, -0.125F, 0.125F, 0, 0.9375F, -1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.125F, 0.125F, 0.0625F, 0.9375F, -1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.125F, -0.125F, 0.0625F, 0.875F, -1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, -0.125F, -0.125F, 0, 0.875F, -1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, -0.125F, 0.125F, 0, 0.9375F, -1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, 0.125F, 0.125F, 0.0625F, 0.9375F, -1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, 0.125F, -0.125F, 0.0625F, 0.875F, -1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, -0.125F, -0.125F, 0, 0.875F, -1, 0, 0, light);
 
 		//Gravity plates
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.35F, 0.2F, -0.35F, 0.5F, 1, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.35F, 0.2F, 0.35F, 0.5F, 0.75F, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.35F, 0.2F, 0.35F, 0.75F, 0.75F, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.35F, 0.2F, -0.35F, 0.75F, 1, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.35F, 0.2F, -0.35F, 0.5F, 1, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.35F, 0.2F, 0.35F, 0.5F, 0.75F, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.35F, 0.2F, 0.35F, 0.75F, 0.75F, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.35F, 0.2F, -0.35F, 0.75F, 1, 0, 1, 0, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.35F, -0.2F, -0.35F, 0.5F, 1, 0, -1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.35F, -0.2F, 0.35F, 0.5F, 0.75F, 0, -1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.35F, -0.2F, 0.35F, 0.25F, 0.75F, 0, -1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.35F, -0.2F, -0.35F, 0.25F, 1, 0, -1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.35F, -0.2F, -0.35F, 0.5F, 1, 0, -1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.35F, -0.2F, 0.35F, 0.5F, 0.75F, 0, -1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.35F, -0.2F, 0.35F, 0.25F, 0.75F, 0, -1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.35F, -0.2F, -0.35F, 0.25F, 1, 0, -1, 0, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.35F, -0.2F, 0.35F, 1, 1, 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.35F, 0.2F, 0.35F, 1, 0.90625F, 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.35F, 0.2F, 0.35F, 0.75F, 0.90625F, 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.35F, -0.2F, 0.35F, 0.75F, 1, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.35F, -0.2F, 0.35F, 1, 1, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.35F, 0.2F, 0.35F, 1, 0.90625F, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.35F, 0.2F, 0.35F, 0.75F, 0.90625F, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.35F, -0.2F, 0.35F, 0.75F, 1, 0, 0, 1, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.35F, -0.2F, -0.35F, 0.75F, 1, 0, 0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.35F, 0.2F, -0.35F, 0.75F, 0.90625F, 0, 0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.35F, 0.2F, -0.35F, 1, 0.90625F, 0, 0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.35F, -0.2F, -0.35F, 1, 1, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.35F, -0.2F, -0.35F, 0.75F, 1, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.35F, 0.2F, -0.35F, 0.75F, 0.90625F, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.35F, 0.2F, -0.35F, 1, 0.90625F, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.35F, -0.2F, -0.35F, 1, 1, 0, 0, -1, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.35F, -0.2F, 0.35F, 1, 1, 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.35F, -0.2F, -0.35F, 0.75F, 1, 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.35F, 0.2F, -0.35F, 0.75F, 0.90625F, 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.35F, 0.2F, 0.35F, 1, 0.90625F, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.35F, -0.2F, 0.35F, 1, 1, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.35F, -0.2F, -0.35F, 0.75F, 1, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.35F, 0.2F, -0.35F, 0.75F, 0.90625F, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.35F, 0.2F, 0.35F, 1, 0.90625F, 1, 0, 0, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.35F, -0.2F, -0.35F, 1, 1, -1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.35F, -0.2F, 0.35F, 0.75F, 1, -1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.35F, 0.2F, 0.35F, 0.75F, 0.90625F, -1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.35F, 0.2F, -0.35F, 1, 0.90625F, -1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.35F, -0.2F, -0.35F, 1, 1, -1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.35F, -0.2F, 0.35F, 0.75F, 1, -1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.35F, 0.2F, 0.35F, 0.75F, 0.90625F, -1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.35F, 0.2F, -0.35F, 1, 0.90625F, -1, 0, 0, light);
 
 		matrix.pop();
 		
 		//End boxes
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.7F, -0.2F, 0.25F, 0.5F, 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.7F, 0.2F, 0, 0.5F, 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.3F, 0.2F, 0, 0.75F, 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.3F, -0.2F, 0.25F, 0.75F, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, 0.7F, -0.2F, 0.25F, 0.5F, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, 0.7F, 0.2F, 0, 0.5F, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, 0.3F, 0.2F, 0, 0.75F, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, 0.3F, -0.2F, 0.25F, 0.75F, 1, 0, 0, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.3F, -0.2F, 0.25F, 0.75F, 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.3F, 0.2F, 0, 0.75F, 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.7F, 0.2F, 0, 0.5F, 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.7F, -0.2F, 0.25F, 0.5F, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.5F, 0.3F, -0.2F, 0.25F, 0.75F, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.5F, 0.3F, 0.2F, 0, 0.75F, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.5F, 0.7F, 0.2F, 0, 0.5F, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.5F, 0.7F, -0.2F, 0.25F, 0.5F, 1, 0, 0, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.7F, 0.7F, -0.2F, 0.25F, 0.5F, 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.7F, 0.7F, 0.2F, 0, 0.5F, 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.7F, 0.3F, 0.2F, 0, 0.75F, 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.7F, 0.3F, -0.2F, 0.25F, 0.75F, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.7F, 0.7F, -0.2F, 0.25F, 0.5F, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.7F, 0.7F, 0.2F, 0, 0.5F, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.7F, 0.3F, 0.2F, 0, 0.75F, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.7F, 0.3F, -0.2F, 0.25F, 0.75F, 1, 0, 0, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.7F, 0.3F, -0.2F, 0.25F, 0.75F, -1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.7F, 0.3F, 0.2F, 0, 0.75F, -1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.7F, 0.7F, 0.2F, 0, 0.5F, -1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.7F, 0.7F, -0.2F, 0.25F, 0.5F, -1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.7F, 0.3F, -0.2F, 0.25F, 0.75F, -1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.7F, 0.3F, 0.2F, 0, 0.75F, -1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.7F, 0.7F, 0.2F, 0, 0.5F, -1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.7F, 0.7F, -0.2F, 0.25F, 0.5F, -1, 0, 0, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.7F, 0.7F, -0.2F, 0.25F, 0.75F, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.7F, 0.7F, 0.2F, 0, 0.75F, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.7F, 0.2F, 0, 0.5F, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.7F, -0.2F, 0.25F, 0.5F, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.7F, 0.7F, -0.2F, 0.25F, 0.75F, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.7F, 0.7F, 0.2F, 0, 0.75F, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, 0.7F, 0.2F, 0, 0.5F, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, 0.7F, -0.2F, 0.25F, 0.5F, 0, 1, 0, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.7F, -0.2F, 0.25F, 0.75F, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.7F, 0.2F, 0, 0.75F, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.7F, 0.7F, 0.2F, 0, 0.5F, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.7F, 0.7F, -0.2F, 0.25F, 0.5F, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.5F, 0.7F, -0.2F, 0.25F, 0.75F, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.5F, 0.7F, 0.2F, 0, 0.75F, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.7F, 0.7F, 0.2F, 0, 0.5F, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.7F, 0.7F, -0.2F, 0.25F, 0.5F, 0, 1, 0, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.3F, -0.2F, 0.25F, 0.5F, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.3F, 0.2F, 0, 0.5F, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.7F, 0.3F, 0.2F, 0, 0.75F, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.7F, 0.3F, -0.2F, 0.25F, 0.75F, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, 0.3F, -0.2F, 0.25F, 0.5F, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, 0.3F, 0.2F, 0, 0.5F, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.7F, 0.3F, 0.2F, 0, 0.75F, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.7F, 0.3F, -0.2F, 0.25F, 0.75F, 0, 1, 0, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.7F, 0.3F, -0.2F, 0.25F, 0.5F, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.7F, 0.3F, 0.2F, 0, 0.5F, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.3F, 0.2F, 0, 0.75F, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.3F, -0.2F, 0.25F, 0.75F, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.7F, 0.3F, -0.2F, 0.25F, 0.5F, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.7F, 0.3F, 0.2F, 0, 0.5F, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.5F, 0.3F, 0.2F, 0, 0.75F, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.5F, 0.3F, -0.2F, 0.25F, 0.75F, 0, 1, 0, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.7F, 0.3F, -0.2F, 0.25F, 0.5F, 0, 0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.7F, 0.7F, -0.2F, 0, 0.5F, 0, 0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.7F, -0.2F, 0, 0.75F, 0, 0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.3F, -0.2F, 0.25F, 0.75F, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.7F, 0.3F, -0.2F, 0.25F, 0.5F, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.7F, 0.7F, -0.2F, 0, 0.5F, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, 0.7F, -0.2F, 0, 0.75F, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, 0.3F, -0.2F, 0.25F, 0.75F, 0, 0, -1, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.3F, -0.2F, 0.25F, 0.5F, 0, 0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.7F, -0.2F, 0, 0.5F, 0, 0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.7F, 0.7F, -0.2F, 0, 0.75F, 0, 0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.7F, 0.3F, -0.2F, 0.25F, 0.75F, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.5F, 0.3F, -0.2F, 0.25F, 0.5F, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.5F, 0.7F, -0.2F, 0, 0.5F, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.7F, 0.7F, -0.2F, 0, 0.75F, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.7F, 0.3F, -0.2F, 0.25F, 0.75F, 0, 0, -1, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.3F, 0.2F, 0.25F, 0.75F, 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.7F, 0.2F, 0, 0.75F, 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.7F, 0.7F, 0.2F, 0, 0.5F, 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -0.7F, 0.3F, 0.2F, 0.25F, 0.5F, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, 0.3F, 0.2F, 0.25F, 0.75F, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, 0.7F, 0.2F, 0, 0.75F, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.7F, 0.7F, 0.2F, 0, 0.5F, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -0.7F, 0.3F, 0.2F, 0.25F, 0.5F, 0, 0, 1, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.7F, 0.3F, 0.2F, 0.25F, 0.75F, 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.7F, 0.7F, 0.2F, 0, 0.75F, 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.7F, 0.2F, 0, 0.5F, 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.3F, 0.2F, 0.25F, 0.5F, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.7F, 0.3F, 0.2F, 0.25F, 0.75F, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.7F, 0.7F, 0.2F, 0, 0.75F, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.5F, 0.7F, 0.2F, 0, 0.5F, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, 0.5F, 0.3F, 0.2F, 0.25F, 0.5F, 0, 0, 1, light);
 
 		//Legs
 		renderLeg(builder, matrix, light);
@@ -196,35 +196,35 @@ public class RenderFlyingMachine extends EntityRenderer<EntityFlyingMachine>{
 		float seatVSt = 0.5F;
 		float seatVEn = 0.75F;
 
-		CRRenderUtil.addVertexBlock(builder, matrix, seatX, seatYEn, seatZ, seatUEn, seatVSt, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, seatX, seatYEn, -seatZ, seatUEn, seatVEn, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -seatX, seatYEn, -seatZ, seatUSt, seatVEn, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -seatX, seatYEn, seatZ, seatUSt, seatVSt, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, seatX, seatYEn, seatZ, seatUEn, seatVSt, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, seatX, seatYEn, -seatZ, seatUEn, seatVEn, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -seatX, seatYEn, -seatZ, seatUSt, seatVEn, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -seatX, seatYEn, seatZ, seatUSt, seatVSt, 0, 1, 0, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -seatX, seatYSt, seatZ, seatUSt, seatVSt, 0, -1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -seatX, seatYSt, -seatZ, seatUSt, seatVEn, 0, -1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, seatX, seatYSt, -seatZ, seatUEn, seatVEn, 0, -1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, seatX, seatYSt, seatZ, seatUEn, seatVSt, 0, -1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -seatX, seatYSt, seatZ, seatUSt, seatVSt, 0, -1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -seatX, seatYSt, -seatZ, seatUSt, seatVEn, 0, -1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, seatX, seatYSt, -seatZ, seatUEn, seatVEn, 0, -1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, seatX, seatYSt, seatZ, seatUEn, seatVSt, 0, -1, 0, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -seatX, seatYEn, seatZ, seatUSt, seatVSt, 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -seatX, seatYSt, seatZ, seatUMid, seatVSt, 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, seatX, seatYSt, seatZ, seatUMid, seatVEn, 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, seatX, seatYEn, seatZ, seatUSt, seatVEn, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -seatX, seatYEn, seatZ, seatUSt, seatVSt, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -seatX, seatYSt, seatZ, seatUMid, seatVSt, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, seatX, seatYSt, seatZ, seatUMid, seatVEn, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, seatX, seatYEn, seatZ, seatUSt, seatVEn, 0, 0, 1, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, seatX, seatYEn, -seatZ, seatUSt, seatVEn, 0, 0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, seatX, seatYSt, -seatZ, seatUMid, seatVEn, 0, 0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -seatX, seatYSt, -seatZ, seatUMid, seatVSt, 0, 0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -seatX, seatYEn, -seatZ, seatUSt, seatVSt, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, seatX, seatYEn, -seatZ, seatUSt, seatVEn, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, seatX, seatYSt, -seatZ, seatUMid, seatVEn, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -seatX, seatYSt, -seatZ, seatUMid, seatVSt, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -seatX, seatYEn, -seatZ, seatUSt, seatVSt, 0, 0, -1, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -seatX, seatYEn, -seatZ, seatUSt, seatVEn, -1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -seatX, seatYSt, -seatZ, seatUMid, seatVEn, -1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -seatX, seatYSt, seatZ, seatUMid, seatVSt, -1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -seatX, seatYEn, seatZ, seatUSt, seatVSt, -1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -seatX, seatYEn, -seatZ, seatUSt, seatVEn, -1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -seatX, seatYSt, -seatZ, seatUMid, seatVEn, -1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -seatX, seatYSt, seatZ, seatUMid, seatVSt, -1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -seatX, seatYEn, seatZ, seatUSt, seatVSt, -1, 0, 0, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, seatX, seatYEn, seatZ, seatUSt, seatVSt, 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, seatX, seatYSt, seatZ, seatUMid, seatVSt, 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, seatX, seatYSt, -seatZ, seatUMid, seatVEn, 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, seatX, seatYEn, -seatZ, seatUSt, seatVEn, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, seatX, seatYEn, seatZ, seatUSt, seatVSt, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, seatX, seatYSt, seatZ, seatUMid, seatVSt, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, seatX, seatYSt, -seatZ, seatUMid, seatVEn, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, seatX, seatYEn, -seatZ, seatUSt, seatVEn, 1, 0, 0, light);
 	}
 
 	private static void renderSupport(IVertexBuilder builder, MatrixStack matrix, int light){
@@ -234,36 +234,36 @@ public class RenderFlyingMachine extends EntityRenderer<EntityFlyingMachine>{
 		float supportYEn = 1.2F;
 		float supportZ = 0.0625F;
 		float supportUSt = 0;
-		float supportUMid = 0.0625F;
+//		float supportUMid = 0.0625F;
 		float supportUEn = 0.25F;
-		float supportVSt = 0.875F;
+//		float supportVSt = 0.875F;
 		float supportVMid = 0.9375F;
 		float supportVEn = 1;
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -supportXSt, supportYEn, supportZ, supportUMid, supportVSt, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -supportXSt, supportYEn, -supportZ, supportUMid, supportVEn, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -supportXEn, supportYEn, -supportZ, supportUSt, supportVEn, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -supportXEn, supportYEn, supportZ, supportUSt, supportVSt, 0, 1, 0, light);
+//		CRRenderUtil.addVertexEntity(builder, matrix, -supportXSt, supportYEn, supportZ, supportUMid, supportVSt, 0, 1, 0, light);
+//		CRRenderUtil.addVertexEntity(builder, matrix, -supportXSt, supportYEn, -supportZ, supportUMid, supportVEn, 0, 1, 0, light);
+//		CRRenderUtil.addVertexEntity(builder, matrix, -supportXEn, supportYEn, -supportZ, supportUSt, supportVEn, 0, 1, 0, light);
+//		CRRenderUtil.addVertexEntity(builder, matrix, -supportXEn, supportYEn, supportZ, supportUSt, supportVSt, 0, 1, 0, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -supportXEn, supportYEn, supportZ, supportUSt, supportVMid, 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -supportXEn, supportYSt, supportZ, supportUEn, supportVMid, 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -supportXSt, supportYSt, supportZ, supportUEn, supportVEn, 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -supportXSt, supportYSt, supportZ, supportUSt, supportVEn, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -supportXEn, supportYEn, supportZ, supportUSt, supportVMid, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -supportXEn, supportYSt, supportZ, supportUEn, supportVMid, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -supportXSt, supportYSt, supportZ, supportUEn, supportVEn, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -supportXSt, supportYEn, supportZ, supportUSt, supportVEn, 0, 0, 1, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -supportXSt, supportYEn, -supportZ, supportUSt, supportVEn, 0, 0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -supportXSt, supportYSt, -supportZ, supportUEn, supportVEn, 0, 0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -supportXEn, supportYSt, -supportZ, supportUEn, supportVMid, 0, 0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -supportXEn, supportYEn, -supportZ, supportUSt, supportVMid, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -supportXSt, supportYEn, -supportZ, supportUSt, supportVEn, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -supportXSt, supportYSt, -supportZ, supportUEn, supportVEn, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -supportXEn, supportYSt, -supportZ, supportUEn, supportVMid, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -supportXEn, supportYEn, -supportZ, supportUSt, supportVMid, 0, 0, -1, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -supportXEn, supportYEn, -supportZ, supportUSt, supportVEn, -1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -supportXEn, supportYSt, -supportZ, supportUEn, supportVEn, -1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -supportXEn, supportYSt, supportZ, supportUEn, supportVMid, -1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -supportXEn, supportYEn, supportZ, supportUSt, supportVMid, -1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -supportXEn, supportYEn, -supportZ, supportUSt, supportVEn, -1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -supportXEn, supportYSt, -supportZ, supportUEn, supportVEn, -1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -supportXEn, supportYSt, supportZ, supportUEn, supportVMid, -1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -supportXEn, supportYEn, supportZ, supportUSt, supportVMid, -1, 0, 0, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -supportXSt, supportYEn, supportZ, supportUSt, supportVMid, 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -supportXSt, supportYSt, supportZ, supportUEn, supportVMid, 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -supportXSt, supportYSt, -supportZ, supportUEn, supportVEn, 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -supportXSt, supportYEn, -supportZ, supportUSt, supportVEn, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -supportXSt, supportYEn, supportZ, supportUSt, supportVMid, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -supportXSt, supportYSt, supportZ, supportUEn, supportVMid, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -supportXSt, supportYSt, -supportZ, supportUEn, supportVEn, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -supportXSt, supportYEn, -supportZ, supportUSt, supportVEn, 1, 0, 0, light);
 	}
 
 	private static void renderLeg(IVertexBuilder builder, MatrixStack matrix, int light){
@@ -282,34 +282,34 @@ public class RenderFlyingMachine extends EntityRenderer<EntityFlyingMachine>{
 		float legVEn = 1;
 
 		//Leg
-		CRRenderUtil.addVertexBlock(builder, matrix, -legXEn, legYEn, -legZEn, legUSt, legVSt, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -legXEn, legYEn, -legZSt, legUSt, legVMid, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -legXSt, legYEn, -legZSt, legUMid, legVMid, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -legXSt, legYEn, -legZEn, legUMid, legVSt, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -legXEn, legYEn, -legZEn, legUSt, legVSt, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -legXEn, legYEn, -legZSt, legUSt, legVMid, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -legXSt, legYEn, -legZSt, legUMid, legVMid, 0, 1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -legXSt, legYEn, -legZEn, legUMid, legVSt, 0, 1, 0, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -legXSt, legYSt, -legZEn, legUMid, legVSt, 0, -1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -legXSt, legYSt, -legZSt, legUMid, legVMid, 0, -1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -legXEn, legYSt, -legZSt, legUSt, legVMid, 0, -1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -legXEn, legYSt, -legZEn, legUSt, legVSt, 0, -1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -legXSt, legYSt, -legZEn, legUMid, legVSt, 0, -1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -legXSt, legYSt, -legZSt, legUMid, legVMid, 0, -1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -legXEn, legYSt, -legZSt, legUSt, legVMid, 0, -1, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -legXEn, legYSt, -legZEn, legUSt, legVSt, 0, -1, 0, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -legXSt, legYEn, -legZEn, legUSt, legVEn, 0, 0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -legXSt, legYSt, -legZEn, legUMid, legVEn, 0, 0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -legXEn, legYSt, -legZEn, legUMid, legVMid, 0, 0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -legXEn, legYEn, -legZEn, legUSt, legVMid, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -legXSt, legYEn, -legZEn, legUSt, legVEn, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -legXSt, legYSt, -legZEn, legUEn, legVEn, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -legXEn, legYSt, -legZEn, legUEn, legVMid, 0, 0, -1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -legXEn, legYEn, -legZEn, legUSt, legVMid, 0, 0, -1, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -legXEn, legYEn, -legZSt, legUSt, legVMid, 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -legXEn, legYSt, -legZSt, legUEn, legVMid, 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -legXSt, legYSt, -legZSt, legUEn, legVEn, 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -legXSt, legYEn, -legZSt, legUSt, legVEn, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -legXEn, legYEn, -legZSt, legUSt, legVMid, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -legXEn, legYSt, -legZSt, legUEn, legVMid, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -legXSt, legYSt, -legZSt, legUEn, legVEn, 0, 0, 1, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -legXSt, legYEn, -legZSt, legUSt, legVEn, 0, 0, 1, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -legXEn, legYEn, -legZEn, legUSt, legVMid, -1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -legXEn, legYSt, -legZEn, legUEn, legVMid, -1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -legXEn, legYSt, -legZSt, legUEn, legVEn, -1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -legXEn, legYEn, -legZSt, legUSt, legVEn, -1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -legXEn, legYEn, -legZEn, legUSt, legVMid, -1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -legXEn, legYSt, -legZEn, legUEn, legVMid, -1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -legXEn, legYSt, -legZSt, legUEn, legVEn, -1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -legXEn, legYEn, -legZSt, legUSt, legVEn, -1, 0, 0, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -legXSt, legYEn, -legZSt, legUSt, legVEn, 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -legXSt, legYSt, -legZSt, legUEn, legVEn, 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -legXSt, legYSt, -legZEn, legUEn, legVMid, 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -legXSt, legYEn, -legZEn, legUSt, legVMid, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -legXSt, legYEn, -legZSt, legUSt, legVEn, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -legXSt, legYSt, -legZSt, legUEn, legVEn, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -legXSt, legYSt, -legZEn, legUEn, legVMid, 1, 0, 0, light);
+		CRRenderUtil.addVertexEntity(builder, matrix, -legXSt, legYEn, -legZEn, legUSt, legVMid, 1, 0, 0, light);
 	}
 }

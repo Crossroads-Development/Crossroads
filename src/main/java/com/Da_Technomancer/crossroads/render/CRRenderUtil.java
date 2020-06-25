@@ -8,6 +8,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.nbt.CompoundNBT;
@@ -28,6 +29,7 @@ public class CRRenderUtil extends RenderUtil{
 	public static final Vec3d VEC_I = new Vec3d(1, 0, 0);
 	public static final Vec3d VEC_J = new Vec3d(0, 1, 0);
 	public static final Vec3d VEC_K = new Vec3d(0, 0, 1);
+	private static final int[] WHITE_COLOR = {255, 255, 255, 255};
 
 	/**
 	 * Used internally. Public only for packet use
@@ -120,6 +122,45 @@ public class CRRenderUtil extends RenderUtil{
 	@OnlyIn(Dist.CLIENT)
 	public static void addVertexBlock(IVertexBuilder builder, MatrixStack matrix, float x, float y, float z, float u, float v, float normalX, float normalY, float normalZ, int light, int[] col){
 		builder.pos(matrix.getLast().getMatrix(), x, y, z).color(col[0], col[1], col[2], col[3]).tex(u, v).lightmap(light).normal(normalX, normalY, normalZ).endVertex();
+	}
+
+	/**
+	 * Adds a vertex to the builder using the ENTITY vertex format
+	 * @param builder The active builder
+	 * @param matrix The reference matrix
+	 * @param x The x position of this vertex
+	 * @param y The y position of this vertex
+	 * @param z The z position of this vertex
+	 * @param u The u coord of this vertex texture mapping
+	 * @param v The v coord of this vertex texture mapping
+	 * @param normalX The normal x component to this vertex
+	 * @param normalY The normal y component to this vertex
+	 * @param normalZ The normal z component to this vertex
+	 * @param light The light value
+	 * @param col A size 4 array (r, g, b, a) defining the color, scale [0, 255]
+	 */
+	@OnlyIn(Dist.CLIENT)
+	public static void addVertexEntity(IVertexBuilder builder, MatrixStack matrix, float x, float y, float z, float u, float v, float normalX, float normalY, float normalZ, int light, int[] col){
+		builder.pos(matrix.getLast().getMatrix(), x, y, z).color(col[0], col[1], col[2], col[3]).tex(u, v).overlay(OverlayTexture.NO_OVERLAY).lightmap(light).normal(normalX, normalY, normalZ).endVertex();
+	}
+
+	/**
+	 * Adds a vertex to the builder using the ENTITY vertex format
+	 * @param builder The active builder
+	 * @param matrix The reference matrix
+	 * @param x The x position of this vertex
+	 * @param y The y position of this vertex
+	 * @param z The z position of this vertex
+	 * @param u The u coord of this vertex texture mapping
+	 * @param v The v coord of this vertex texture mapping
+	 * @param normalX The normal x component to this vertex
+	 * @param normalY The normal y component to this vertex
+	 * @param normalZ The normal z component to this vertex
+	 * @param light The light value
+	 */
+	@OnlyIn(Dist.CLIENT)
+	public static void addVertexEntity(IVertexBuilder builder, MatrixStack matrix, float x, float y, float z, float u, float v, float normalX, float normalY, float normalZ, int light){
+		addVertexEntity(builder, matrix, x, y, z, u, v, normalX, normalY, normalZ, light, WHITE_COLOR);
 	}
 
 	/**
