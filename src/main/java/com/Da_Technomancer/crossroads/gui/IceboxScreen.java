@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.IceboxContainer;
 import com.Da_Technomancer.crossroads.tileentities.heat.IceboxTileEntity;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
@@ -23,7 +23,7 @@ public class IceboxScreen extends MachineGUI<IceboxContainer, IceboxTileEntity>{
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
-		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.color4f(1, 1, 1, 1);
 		Minecraft.getInstance().getTextureManager().bindTexture(GUI_TEXTURES);
 
 		int i = (width - xSize) / 2;

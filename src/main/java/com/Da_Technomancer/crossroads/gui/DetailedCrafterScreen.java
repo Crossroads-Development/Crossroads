@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.AdvancementTracker;
 import com.Da_Technomancer.crossroads.API.EnumPath;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.resources.I18n;
@@ -30,7 +30,7 @@ public class DetailedCrafterScreen extends ContainerScreen<DetailedCrafterContai
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
-		GlStateManager.color3f(1, 1, 1);
+		RenderSystem.color4f(1, 1, 1, 1);
 		Minecraft.getInstance().getTextureManager().bindTexture(BACKGROUND);
 		blit(guiLeft, guiTop, 0, 0, xSize, ySize);
 		if(EnumPath.TECHNOMANCY.isUnlocked(playerInventory.player)){

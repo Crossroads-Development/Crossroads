@@ -7,7 +7,6 @@ import com.Da_Technomancer.essentials.render.RenderUtil;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.inventory.container.PlayerContainer;
@@ -193,16 +192,28 @@ public class CRRenderUtil extends RenderUtil{
 	}
 
 	/**
-	 * Adds a long, thin triangular prism '3d line' to the vertex buffer
+	 * Gets the position of the player's camera
+	 * Client side only
+	 * @return The camera position relative to the world
+	 */
+	@OnlyIn(Dist.CLIENT)
+	public static Vec3d getCameraPos(){
+		return Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
+	}
+
+	/**
+	 * Draws a long, thin triangular prism '3d line'
 	 * Expects the buffer to be drawing in QUADS mode, DefaultVertexFormats.POSITION
-	 * Will not finalize the draw
-	 * @param buf The buffer to write vertices to
+	 * @param builder A builder with QUADS mode in DefaultVertexFormats.POSITION_COLOR_LIGHTMAP
+	 * @param matrix Matrix translated to world origin (0, 0, 0). Will not be modified
 	 * @param start Vector position to start from
 	 * @param end Vector position to end at
 	 * @param width Width of the line to draw- same scale as position vectors
+	 * @param col A size 4 integer array representing color (r, g, b, a) values [0, 255]
+	 * @param light The combined light coordinate to render with
 	 */
 	@OnlyIn(Dist.CLIENT)
-	public static void draw3dLine(BufferBuilder buf, Vec3d start, Vec3d end, double width){
+	public static void draw3dLine(IVertexBuilder builder, MatrixStack matrix, Vec3d start, Vec3d end, double width, int[] col, int light){
 		Vec3d lineVec = end.subtract(start);
 		//Find any perpendicular vector using a deterministic method
 		Vec3d[] perpVec = new Vec3d[3];
@@ -222,10 +233,10 @@ public class CRRenderUtil extends RenderUtil{
 		for(int i = 0; i < 3; i++){
 			Vec3d offsetPrev = perpVec[i];
 			Vec3d offsetNext = perpVec[(i + 1) % perpVec.length];
-			buf.pos(start.getX() + offsetPrev.getX(), start.getY() + offsetPrev.getY(), start.getZ() + offsetPrev.getZ()).endVertex();
-			buf.pos(end.getX() + offsetPrev.getX(), end.getY() + offsetPrev.getY(), end.getZ() + offsetPrev.getZ()).endVertex();
-			buf.pos(end.getX() + offsetNext.getX(), end.getY() + offsetNext.getY(), end.getZ() + offsetNext.getZ()).endVertex();
-			buf.pos(start.getX() + offsetNext.getX(), start.getY() + offsetNext.getY(), start.getZ() + offsetNext.getZ()).endVertex();
+			builder.pos(matrix.getLast().getMatrix(), (float) (start.getX() + offsetPrev.getX()), (float) (start.getY() + offsetPrev.getY()), (float) (start.getZ() + offsetPrev.getZ())).color(col[0], col[1], col[2], col[3]).lightmap(light).endVertex();
+			builder.pos(matrix.getLast().getMatrix(), (float) (end.getX() + offsetPrev.getX()), (float) (end.getY() + offsetPrev.getY()), (float) (end.getZ() + offsetPrev.getZ())).color(col[0], col[1], col[2], col[3]).lightmap(light).endVertex();
+			builder.pos(matrix.getLast().getMatrix(), (float) (end.getX() + offsetNext.getX()), (float) (end.getY() + offsetNext.getY()), (float) (end.getZ() + offsetNext.getZ())).color(col[0], col[1], col[2], col[3]).lightmap(light).endVertex();
+			builder.pos(matrix.getLast().getMatrix(), (float) (start.getX() + offsetNext.getX()), (float) (start.getY() + offsetNext.getY()), (float) (start.getZ() + offsetNext.getZ())).color(col[0], col[1], col[2], col[3]).lightmap(light).endVertex();
 		}
 	}
 }

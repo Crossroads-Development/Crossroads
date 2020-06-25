@@ -21,7 +21,7 @@ public class ParticlePowderColor extends SpriteTexturedParticle{
 		canCollide = false;
 		sprite = s;
 //		setParticleTextureIndex(177);
-		multipleParticleScaleBy(rand.nextFloat() * 0.6F + 0.6F);
+		multiplyParticleScaleBy(rand.nextFloat() * 0.6F + 0.6F);
 		motionX = xSpeed;//Suggestion: 0
 		motionY = ySpeed;//Suggestion: 0
 		motionZ = zSpeed;//Suggestion: 0

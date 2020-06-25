@@ -245,7 +245,7 @@ public class CRModels{
 		//Because we're in GL_QUADS draw mode, we split the octagon into 3 quadrilaterals
 		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8, 0, lHalf, uSSt, vLSt, 0, 1, 0, light, color);
 		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8, 0, -lHalf, uSSt, vLEn, 0, 1, 0, light, color);
-		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, 0, -sHalf8, uLEn, vSSt, 0, 1, 0, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, 0, -sHalf8, uLSt, vSEn, 0, 1, 0, light, color);
 		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, 0, sHalf8, uLSt, vSSt, 0, 1, 0, light, color);
 
 		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8, 0, lHalf, uSSt, vLSt, 0, 1, 0, light, color);
@@ -283,13 +283,14 @@ public class CRModels{
 
 		//Bottom
 		matrix.push();
-		matrix.scale(2F * lHalf, -1, 2F * lHalf);//The -1 y flips it upside-down
-		matrix.translate(0, top, 0);
+		matrix.translate(0, -top, 0);
+		matrix.rotate(Vector3f.XP.rotationDegrees(180));//Flip upside down
+		matrix.scale(2F * lHalf, 1, 2F * lHalf);
 		drawOctagon(builder, matrix, color, light, sprite);
 		matrix.pop();
 
 		//The sides are darker than the prongs and top
-		int[] sideCol = new int[] {color[0] - 130, color[1] - 130, color[2] - 130, color[3]};
+		int[] sideCol = new int[] {Math.max(color[0] - 130, 0), Math.max(color[1] - 130, 0), Math.max(color[2] - 130, 0), color[3]};
 		float tHeight = 1F / 16F;
 
 		//Texture coords

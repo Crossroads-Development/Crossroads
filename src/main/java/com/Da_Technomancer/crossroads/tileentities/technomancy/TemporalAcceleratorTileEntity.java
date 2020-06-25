@@ -28,6 +28,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -231,7 +232,7 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 									BlockState state = world.getBlockState(effectPos);
 									//Blocks have a 16^3/randomTickSpeed chance of a random tick each game tick in vanilla
 									if(state.ticksRandomly() && world.rand.nextInt(16 * 16 * 16 / world.getGameRules().getInt(GameRules.RANDOM_TICK_SPEED)) < extraTicks){
-										state.randomTick(world, effectPos, world.rand);
+										state.randomTick((ServerWorld) world, effectPos, world.rand);
 									}
 								}
 							}

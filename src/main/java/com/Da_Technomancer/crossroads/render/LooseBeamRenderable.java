@@ -1,14 +1,10 @@
 package com.Da_Technomancer.crossroads.render;
 
-import com.Da_Technomancer.crossroads.API.beams.BeamUtil;
-import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import com.Da_Technomancer.crossroads.render.TESR.BeamRenderer;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.Vec3d;
-import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.util.Random;
@@ -42,60 +38,11 @@ public class LooseBeamRenderable implements IVisualEffect{
 	}
 
 	@Override
-	public boolean render(Tessellator tess, BufferBuilder buf, long worldTime, double playerX, double playerY, double playerZ, Vec3d playerLook, Random rand, float partialTicks){
-		Color col = new Color(color);
-		GlStateManager.color3f(col.getRed() / 255F, col.getGreen() / 255F, col.getBlue() / 255F);
-		GlStateManager.translated(x - playerX, y - playerY, z - playerZ);
-		GlStateManager.rotatef(-angleY, 0, 1, 0);
-		GlStateManager.rotatef(angleX + 90F, 1, 0, 0);
-
-
-		Minecraft.getInstance().getTextureManager().bindTexture(BeamUtil.BEAM_TEXT);
-
-		final double small = -(width / 16D);
-		final double big = (width / 16D);
-		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		//+Z
-		buf.pos(small, length, big).tex(1, 0).endVertex();
-		buf.pos(small, 0, big).tex(1, length).endVertex();
-		buf.pos(big, 0, big).tex(0, length).endVertex();
-		buf.pos(big, length, big).tex(0, 0).endVertex();
-		//-Z
-		buf.pos(big, length, small).tex(1, 0).endVertex();
-		buf.pos(big, 0, small).tex(1, length).endVertex();
-		buf.pos(small, 0, small).tex(0, length).endVertex();
-		buf.pos(small, length, small).tex(0, 0).endVertex();
-		//-X
-		buf.pos(small, length, small).tex(1, 0).endVertex();
-		buf.pos(small, 0, small).tex(1, length).endVertex();
-		buf.pos(small, 0, big).tex(0, length).endVertex();
-		buf.pos(small, length, big).tex(0, 0).endVertex();
-		//+X
-		buf.pos(big, length, big).tex(1, 0).endVertex();
-		buf.pos(big, 0, big).tex(1, length).endVertex();
-		buf.pos(big, 0, small).tex(0, length).endVertex();
-		buf.pos(big, length, small).tex(0, 0).endVertex();
-		tess.draw();
-
-		//Ends
-		Minecraft.getInstance().getTextureManager().bindTexture(BeamUtil.BEAM_END_TEXT);
-		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		//Out end
-		buf.pos(small, length, big).tex(1, 0).endVertex();
-		buf.pos(small, length, small).tex(1, 1).endVertex();
-		buf.pos(big, length, small).tex(0, 1).endVertex();
-		buf.pos(big, length, big).tex(0, 0).endVertex();
-
-		//Start end
-		buf.pos(small, 0, big).tex(1, 0).endVertex();
-		buf.pos(small, 0, small).tex(1, 1).endVertex();
-		buf.pos(big, 0, small).tex(0, 1).endVertex();
-		buf.pos(big, 0, big).tex(0, 0).endVertex();
-		tess.draw();
-		
-		
-		GlStateManager.color3f(1, 1, 1);
-
+	public boolean render(MatrixStack matrix, IRenderTypeBuffer buffer, long worldTime, float partialTicks, Random rand){
+		matrix.translate(x, y, z);
+		matrix.rotate(Vector3f.YP.rotationDegrees(-angleY));
+		matrix.rotate(Vector3f.XP.rotationDegrees(angleX + 90F));
+		BeamRenderer.drawBeam(matrix, buffer.getBuffer(CRRenderTypes.BEAM_TYPE), (float) length, width / 8F, new Color(color));
 
 		if(lastTick != worldTime){
 			lastTick = worldTime;

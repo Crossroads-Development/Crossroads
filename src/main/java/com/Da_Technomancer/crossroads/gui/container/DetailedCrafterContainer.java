@@ -104,7 +104,7 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 	}
 
 	@Override
-	public void func_201771_a(RecipeItemHelper helper){
+	public void fillStackedContents(RecipeItemHelper helper){
 		inInv.fillStackedContents(helper);
 	}
 

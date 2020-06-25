@@ -11,9 +11,11 @@ import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamUsingItem;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.render.IVisualEffect;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.settings.KeyBinding;
@@ -45,68 +47,72 @@ public final class EventHandlerClient{
 	@SuppressWarnings("unused")
 	public void drawFieldsAndBeams(RenderWorldLastEvent e){
 		Minecraft game = Minecraft.getInstance();
-		ItemStack helmet = Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD);
 
-		//Goggle entity glowing
+//		//Goggle entity glowing (Moved to tick event handler)
+//		game.getProfiler().startSection(Crossroads.MODNAME + ": Goggle Glowing Application");
+//		handleGoggleGlowing(game);
+//		game.getProfiler().endSection();
+
+		//IVisualEffects
+		if(!SafeCallable.effectsToRender.isEmpty()){
+			game.getProfiler().startSection(Crossroads.MODNAME + ": Visual Effects Draw");
+
+			MatrixStack matrix = e.getMatrixStack();
+
+			matrix.push();
+			Vec3d cameraPos = CRRenderUtil.getCameraPos();
+			matrix.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);//Translate to 0,0,0 world coords
+
+			ArrayList<IVisualEffect> toRemove = new ArrayList<>();
+			IRenderTypeBuffer buffer = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
+			long worldTime = game.world.getGameTime();
+			float partialTicks = e.getPartialTicks();
+
+			for(IVisualEffect effect : SafeCallable.effectsToRender){
+				matrix.push();
+
+				if(effect.render(matrix, buffer, worldTime, partialTicks, RAND)){
+					toRemove.add(effect);
+				}
+
+				matrix.pop();
+			}
+
+			SafeCallable.effectsToRender.removeAll(toRemove);
+
+			matrix.pop();
+
+			game.getProfiler().endSection();
+		}
+	}
+
+	private static void handleGoggleGlowing(Minecraft game){
+		//Handles glow in the dark entities when wearing goggles
 		if(game.world.getGameTime() % 5 == 0){
-			boolean glow = helmet.getItem() == CRItems.moduleGoggles && helmet.hasTag() && helmet.getTag().getBoolean(EnumGoggleLenses.VOID.toString());
+			ItemStack helmet = Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD);
+			boolean doGlowing = helmet.getItem() == CRItems.moduleGoggles && helmet.hasTag() && helmet.getTag().getBoolean(EnumGoggleLenses.VOID.toString());
 			for(Entity ent : game.world.getAllEntities()){
 				CompoundNBT entNBT = ent.getPersistentData();
 				if(entNBT == null){
 					Crossroads.logger.info("Found entity with null persistent data! Report to the mod author of the mod that added the entity: %s", ent.getType().getRegistryName().toString());
 					continue;//Should never be null, but some mods override the entNBT method to return null for some reason
 				}
-				if(!entNBT.contains("glow")){
+
+				//The NBT shenanigans is to prevent this purely client side glowing effect from interfering with server-side glowing effects (such as being hit with the glowing arrow) when disabled
+				if(!entNBT.contains("cr_glow")){
 					ent.setGlowing(false);
 				}else{
-					entNBT.remove("glow");
+					entNBT.remove("cr_glow");
 				}
 
-				if(glow){
+				if(doGlowing){
 					if(ent.isGlowing()){
-						entNBT.putBoolean("glow", true);
+						entNBT.putBoolean("cr_glow", true);
 					}else{
 						ent.setGlowing(true);
 					}
 				}
 			}
-		}
-
-		//IVisualEffects
-		if(!SafeCallable.effectsToRender.isEmpty()){
-			game.getProfiler().startSection(Crossroads.MODNAME + ": Visual Effects Draw");
-
-			GlStateManager.disableLighting();
-			GlStateManager.disableCull();
-			GlStateManager.enableBlend();
-			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-			CRRenderUtil.setBrightLighting();
-
-			ArrayList<IVisualEffect> toRemove = new ArrayList<>();
-			Tessellator tes = Tessellator.getInstance();
-			BufferBuilder buf = tes.getBuffer();
-			long worldTime = game.world.getGameTime();
-
-			for(IVisualEffect effect : SafeCallable.effectsToRender){
-				GlStateManager.pushMatrix();
-				GlStateManager.pushLightingAttributes();
-				Vec3d eyePos = game.getRenderManager().info.getProjectedView();//.player.getEyePosition(e.getPartialTicks());
-				if(effect.render(tes, buf, worldTime, eyePos.x, eyePos.y, eyePos.z, game.player.getLook(e.getPartialTicks()), RAND, e.getPartialTicks())){
-					toRemove.add(effect);
-				}
-
-				GlStateManager.popAttributes();
-				GlStateManager.popMatrix();
-			}
-
-			SafeCallable.effectsToRender.removeAll(toRemove);
-
-//			CRRenderUtil.restoreLighting(lighting);
-			GlStateManager.enableCull();
-			GlStateManager.disableBlend();
-			GlStateManager.enableLighting();
-
-			game.getProfiler().endSection();
 		}
 	}
 
@@ -124,9 +130,9 @@ public final class EventHandlerClient{
 			ItemStack cageStack = CurioHelper.getEquipped(CRItems.beamCage, player);
 			if(!cageStack.isEmpty()){
 				BeamUnit stored = BeamCage.getStored(cageStack);
-				GlStateManager.pushMatrix();
-				GlStateManager.pushLightingAttributes();
-				GlStateManager.enableBlend();
+				RenderSystem.pushMatrix();
+				RenderSystem.pushLightingAttributes();
+				RenderSystem.enableBlend();
 				Minecraft.getInstance().getTextureManager().bindTexture(MAGIC_BAR_BACKGROUND);
 				Tessellator tes = Tessellator.getInstance();
 				BufferBuilder buf = tes.getBuffer();
@@ -138,16 +144,16 @@ public final class EventHandlerClient{
 				tes.draw();
 
 				Minecraft.getInstance().getTextureManager().bindTexture(COLOR_SHEET);
-				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
 				for(int i = 0; i < 4; i++){
 					int extension = 72 * stored.getValues()[i] / BeamCage.CAPACITY;
 					int[] col = new int[4];
 					col[3] = 255;
 					col[i] = 255;//For void, overrides the alpha. Conveniently not an issue
-					buf.pos(24, 84 + (9 * i), -2).tex(.25F + (((float) i) * .0625F), .0625F).color(col[0], col[1], col[2], col[3]).endVertex();
-					buf.pos(24 + extension, 84 + (9 * i), -2).tex(.3125F + (((float) i) * .0625F), .0625F).color(col[0], col[1], col[2], col[3]).endVertex();
-					buf.pos(24 + extension, 78 + (9 * i), -2).tex(.3125F + (((float) i) * .0625F), 0).color(col[0], col[1], col[2], col[3]).endVertex();
-					buf.pos(24, 78 + (9 * i), -2).tex(.25F + (((float) i) * .0625F), 0).color(col[0], col[1], col[2], col[3]).endVertex();
+					buf.pos(24, 84 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).tex(.25F + (((float) i) * .0625F), .0625F).endVertex();
+					buf.pos(24 + extension, 84 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).tex(.3125F + (((float) i) * .0625F), .0625F).endVertex();
+					buf.pos(24 + extension, 78 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).tex(.3125F + (((float) i) * .0625F), 0).endVertex();
+					buf.pos(24, 78 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).tex(.25F + (((float) i) * .0625F), 0).endVertex();
 				}
 				tes.draw();
 
@@ -160,19 +166,19 @@ public final class EventHandlerClient{
 				tes.draw();
 
 				Minecraft.getInstance().fontRenderer.drawString(cageStack.getDisplayName().getFormattedText(), 16, 65, Color.DARK_GRAY.getRGB());
-				GlStateManager.disableAlphaTest();
-				GlStateManager.color3f(1, 1, 1);
-				GlStateManager.disableBlend();
-				GlStateManager.popAttributes();
-				GlStateManager.popMatrix();
+				RenderSystem.color4f(1, 1, 1, 1);
+				RenderSystem.disableAlphaTest();
+				RenderSystem.disableBlend();
+				RenderSystem.popAttributes();
+				RenderSystem.popMatrix();
 			}
 
 			//Beam using item overlay
 			ItemStack mainStack = player.getHeldItem(Hand.MAIN_HAND);
 			if(mainStack.getItem() instanceof BeamUsingItem){
-				GlStateManager.pushMatrix();
-				GlStateManager.pushLightingAttributes();
-				GlStateManager.enableBlend();
+				RenderSystem.pushMatrix();
+				RenderSystem.pushLightingAttributes();
+				RenderSystem.enableBlend();
 				Minecraft.getInstance().getTextureManager().bindTexture(MAGIC_BAR_BACKGROUND);
 				Tessellator tes = Tessellator.getInstance();
 				BufferBuilder buf = tes.getBuffer();
@@ -184,17 +190,17 @@ public final class EventHandlerClient{
 				tes.draw();
 
 				Minecraft.getInstance().getTextureManager().bindTexture(COLOR_SHEET);
-				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+				buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
 				byte[] settings = BeamUsingItem.getSetting(mainStack);
 				for(int i = 0; i < 4; i++){
 					int[] col = new int[4];
 					col[3] = 255;
 					col[i] = 255;//For void, overrides the alpha. Conveniently not an issue
 					int extension = 9 * settings[i];
-					buf.pos(24, 24 + (9 * i), -2).tex(.25F + (((float) i) * .0625F), .0625F).color(col[0], col[1], col[2], col[3]).endVertex();
-					buf.pos(24 + extension, 24 + (9 * i), -2).tex(.3125F + (((float) i) * .0625F), .0625F).color(col[0], col[1], col[2], col[3]).endVertex();
-					buf.pos(24 + extension, 18 + (9 * i), -2).tex(.3125F + (((float) i) * .0625F), 0).color(col[0], col[1], col[2], col[3]).endVertex();
-					buf.pos(24, 18 + (9 * i), -2).tex(.25F + (((float) i) * .0625F), 0).color(col[0], col[1], col[2], col[3]).endVertex();
+					buf.pos(24, 24 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).tex(.25F + (((float) i) * .0625F), .0625F).endVertex();
+					buf.pos(24 + extension, 24 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).tex(.3125F + (((float) i) * .0625F), .0625F).endVertex();
+					buf.pos(24 + extension, 18 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).tex(.3125F + (((float) i) * .0625F), 0).endVertex();
+					buf.pos(24, 18 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).tex(.25F + (((float) i) * .0625F), 0).endVertex();
 				}
 				tes.draw();
 
@@ -208,11 +214,11 @@ public final class EventHandlerClient{
 
 				Minecraft.getInstance().fontRenderer.drawString(mainStack.getDisplayName().getFormattedText(), 16, 5, Color.DARK_GRAY.getRGB());
 
-				GlStateManager.disableAlphaTest();
-				GlStateManager.color3f(1, 1, 1);
-				GlStateManager.disableBlend();
-				GlStateManager.popAttributes();
-				GlStateManager.popMatrix();
+				RenderSystem.disableAlphaTest();
+				RenderSystem.color4f(1, 1, 1, 1);
+				RenderSystem.disableBlend();
+				RenderSystem.popAttributes();
+				RenderSystem.popMatrix();
 			}
 		}
 	}
@@ -225,6 +231,14 @@ public final class EventHandlerClient{
 			if(player == null){
 				return;
 			}
+
+			//Goggle entity glowing
+			Minecraft game = Minecraft.getInstance();
+			game.getProfiler().startSection(Crossroads.MODNAME + ": Goggle Glowing Application");
+			handleGoggleGlowing(game);
+			game.getProfiler().endSection();
+
+			//Handle time dilation for players
 			if(SafeCallable.playerTickCount > 0){
 				for(int i = 0; i < SafeCallable.playerTickCount; i++){
 					player.tick();

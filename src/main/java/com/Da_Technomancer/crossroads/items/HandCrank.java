@@ -40,7 +40,7 @@ public class HandCrank extends Item{
 		Direction side = context.getFace().getOpposite();
 		if(te != null && (axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, side)).isPresent()){
 			double signMult = 1;
-			if(context.isPlacerSneaking()){
+			if(context.getPlayer() != null && context.getPlayer().isSneaking()){
 				signMult *= -1;
 			}
 			if(side.getAxisDirection() == Direction.AxisDirection.POSITIVE){

@@ -1,16 +1,15 @@
 package com.Da_Technomancer.crossroads.entity;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
+import com.Da_Technomancer.crossroads.render.CRRenderUtil;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
-
-import javax.annotation.Nullable;
 
 public class RenderFlyingMachine extends EntityRenderer<EntityFlyingMachine>{
 
@@ -26,369 +25,291 @@ public class RenderFlyingMachine extends EntityRenderer<EntityFlyingMachine>{
 	}
 
 	@Override
-	public void doRender(EntityFlyingMachine entity, double x, double y, double z, float entityYaw, float partialTicks){
-		GlStateManager.pushMatrix();
-		GlStateManager.pushLightingAttributes();
-		GlStateManager.disableLighting();
-		GlStateManager.translated(x, y, z);
-		GlStateManager.rotatef(-entityYaw, 0, 1, 0);
+	public void render(EntityFlyingMachine entity, float entityYaw, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int light){
+		matrix.rotate(Vector3f.YP.rotationDegrees(-entityYaw));
 
-		bindEntityTexture(entity);
+		IVertexBuilder builder = buffer.getBuffer(RenderType.getEntitySolid(getEntityTexture(entity)));
 
-		BufferBuilder buf = Tessellator.getInstance().getBuffer();
+		matrix.push();
+		matrix.translate(0, 0.5D, 0);
+		matrix.rotate(Vector3f.XP.rotation(-entity.getAngle()));
 
-		GlStateManager.pushMatrix();
-		GlStateManager.translated(0, 0.5D, 0);
-		GlStateManager.rotatef((float) -Math.toDegrees(entity.getAngle()), 1, 0, 0);
-
-
-		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-
+		//All of these texture coords were originally specified as literals, and now that I have to port it to the new renderer, I regret this fact
+		//But am also too lazy to fix this for the future
+		//Future me, if you're reading this and need to re-work them again, sucks to be you --Your past self
+		
 		//Axle
-		buf.pos(-0.5D, 0.125D, -0.125D).tex(0, 1).endVertex();
-		buf.pos(-0.5D, 0.125D, 0.125D).tex(0, 0.9375D).endVertex();
-		buf.pos(0.5D, 0.125D, 0.125D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(0.5D, 0.125D, -0.125D).tex(0.25D, 1).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.125F, -0.125F, 0, 1, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.125F, 0.125F, 0, 0.9375F, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.125F, 0.125F, 0.25F, 0.9375F, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.125F, -0.125F, 0.25F, 1, 0, 1, 0, light);
 
-		buf.pos(0.5D, -0.125D, -0.125D).tex(0.25D, 1).endVertex();
-		buf.pos(0.5D, -0.125D, 0.125D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(-0.5D, -0.125D, 0.125D).tex(0, 0.9375D).endVertex();
-		buf.pos(-0.5D, -0.125D, -0.125D).tex(0, 1).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, -0.125F, -0.125F, 0.25F, 1, 0, -1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, -0.125F, 0.125F, 0.25F, 0.9375F, 0, -1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, -0.125F, 0.125F, 0, 0.9375F, 0, -1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, -0.125F, -0.125F, 0, 1, 0, -1, 0, light);
 
-		buf.pos(0.5D, -0.125D, 0.125D).tex(0.25D, 1).endVertex();
-		buf.pos(0.5D, 0.125D, 0.125D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(-0.5D, 0.125D, 0.125D).tex(0, 0.9375D).endVertex();
-		buf.pos(-0.5D, -0.125D, 0.125D).tex(0, 1).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, -0.125F, 0.125F, 0.25F, 1, 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.125F, 0.125F, 0.25F, 0.9375F, 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.125F, 0.125F, 0, 0.9375F, 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, -0.125F, 0.125F, 0, 1, 0, 0, 1, light);
 
-		buf.pos(-0.5D, -0.125D, -0.125D).tex(0, 1).endVertex();
-		buf.pos(-0.5D, 0.125D, -0.125D).tex(0, 0.9375D).endVertex();
-		buf.pos(0.5D, 0.125D, -0.125D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(0.5D, -0.125D, -0.125D).tex(0.25D, 1).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, -0.125F, -0.125F, 0, 1, 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.125F, -0.125F, 0, 0.9375F, 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.125F, -0.125F, 0.25F, 0.9375F, 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, -0.125F, -0.125F, 0.25F, 1, 0, 0, -1, light);
 
-		buf.pos(0.5D, -0.125D, -0.125D).tex(0, 0.875D).endVertex();
-		buf.pos(0.5D, 0.125D, -0.125D).tex(0.0625D, 0.875D).endVertex();
-		buf.pos(0.5D, 0.125D, 0.125D).tex(0.0625D, 0.9375D).endVertex();
-		buf.pos(0.5D, -0.125D, 0.125D).tex(0, 0.9375D).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, -0.125F, -0.125F, 0, 0.875F, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.125F, -0.125F, 0.0625F, 0.875F, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.125F, 0.125F, 0.0625F, 0.9375F, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, -0.125F, 0.125F, 0, 0.9375F, 1, 0, 0, light);
 
-		buf.pos(-0.5D, -0.125D, 0.125D).tex(0, 0.9375D).endVertex();
-		buf.pos(-0.5D, 0.125D, 0.125D).tex(0.0625D, 0.9375D).endVertex();
-		buf.pos(-0.5D, 0.125D, -0.125D).tex(0.0625D, 0.875D).endVertex();
-		buf.pos(-0.5D, -0.125D, -0.125D).tex(0, 0.875D).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, -0.125F, 0.125F, 0, 0.9375F, -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.125F, 0.125F, 0.0625F, 0.9375F, -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.125F, -0.125F, 0.0625F, 0.875F, -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, -0.125F, -0.125F, 0, 0.875F, -1, 0, 0, light);
 
 		//Gravity plates
-		buf.pos(-0.35D, 0.2D, -0.35D).tex(0.5D, 1).endVertex();
-		buf.pos(-0.35D, 0.2D, 0.35D).tex(0.5D, 0.75D).endVertex();
-		buf.pos(0.35D, 0.2D, 0.35D).tex(0.75D, 0.75D).endVertex();
-		buf.pos(0.35D, 0.2D, -0.35D).tex(0.75D, 1).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.35F, 0.2F, -0.35F, 0.5F, 1, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.35F, 0.2F, 0.35F, 0.5F, 0.75F, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.35F, 0.2F, 0.35F, 0.75F, 0.75F, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.35F, 0.2F, -0.35F, 0.75F, 1, 0, 1, 0, light);
 
-		buf.pos(0.35D, -0.2D, -0.35D).tex(0.5D, 1).endVertex();
-		buf.pos(0.35D, -0.2D, 0.35D).tex(0.5D, 0.75D).endVertex();
-		buf.pos(-0.35D, -0.2D, 0.35D).tex(0.25D, 0.75D).endVertex();
-		buf.pos(-0.35D, -0.2D, -0.35D).tex(0.25D, 1).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.35F, -0.2F, -0.35F, 0.5F, 1, 0, -1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.35F, -0.2F, 0.35F, 0.5F, 0.75F, 0, -1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.35F, -0.2F, 0.35F, 0.25F, 0.75F, 0, -1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.35F, -0.2F, -0.35F, 0.25F, 1, 0, -1, 0, light);
 
-		buf.pos(0.35D, -0.2D, 0.35D).tex(1, 1).endVertex();
-		buf.pos(0.35D, 0.2D, 0.35D).tex(1, 0.90625D).endVertex();
-		buf.pos(-0.35D, 0.2D, 0.35D).tex(0.75D, 0.90625D).endVertex();
-		buf.pos(-0.35D, -0.2D, 0.35D).tex(0.75D, 1).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.35F, -0.2F, 0.35F, 1, 1, 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.35F, 0.2F, 0.35F, 1, 0.90625F, 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.35F, 0.2F, 0.35F, 0.75F, 0.90625F, 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.35F, -0.2F, 0.35F, 0.75F, 1, 0, 0, 1, light);
 
-		buf.pos(-0.35D, -0.2D, -0.35D).tex(0.75D, 1).endVertex();
-		buf.pos(-0.35D, 0.2D, -0.35D).tex(0.75D, 0.90625D).endVertex();
-		buf.pos(0.35D, 0.2D, -0.35D).tex(1, 0.90625D).endVertex();
-		buf.pos(0.35D, -0.2D, -0.35D).tex(1, 1).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.35F, -0.2F, -0.35F, 0.75F, 1, 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.35F, 0.2F, -0.35F, 0.75F, 0.90625F, 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.35F, 0.2F, -0.35F, 1, 0.90625F, 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.35F, -0.2F, -0.35F, 1, 1, 0, 0, -1, light);
 
-		buf.pos(0.35D, -0.2D, 0.35D).tex(1, 1).endVertex();
-		buf.pos(0.35D, -0.2D, -0.35D).tex(0.75D, 1).endVertex();
-		buf.pos(0.35D, 0.2D, -0.35D).tex(0.75D, 0.90625D).endVertex();
-		buf.pos(0.35D, 0.2D, 0.35D).tex(1, 0.90625D).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.35F, -0.2F, 0.35F, 1, 1, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.35F, -0.2F, -0.35F, 0.75F, 1, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.35F, 0.2F, -0.35F, 0.75F, 0.90625F, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.35F, 0.2F, 0.35F, 1, 0.90625F, 1, 0, 0, light);
 
-		buf.pos(-0.35D, -0.2D, -0.35D).tex(1, 1).endVertex();
-		buf.pos(-0.35D, -0.2D, 0.35D).tex(0.75D, 1).endVertex();
-		buf.pos(-0.35D, 0.2D, 0.35D).tex(0.75D, 0.90625D).endVertex();
-		buf.pos(-0.35D, 0.2D, -0.35D).tex(1, 0.90625D).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.35F, -0.2F, -0.35F, 1, 1, -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.35F, -0.2F, 0.35F, 0.75F, 1, -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.35F, 0.2F, 0.35F, 0.75F, 0.90625F, -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.35F, 0.2F, -0.35F, 1, 0.90625F, -1, 0, 0, light);
 
-		Tessellator.getInstance().draw();
-		GlStateManager.popMatrix();
-
-		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-
+		matrix.pop();
+		
 		//End boxes
-		buf.pos(-0.5D, 0.7D, -0.2D).tex(0.25D, 0.5D).endVertex();
-		buf.pos(-0.5D, 0.7D, 0.2D).tex(0, 0.5D).endVertex();
-		buf.pos(-0.5D, 0.3D, 0.2D).tex(0, 0.75D).endVertex();
-		buf.pos(-0.5D, 0.3D, -0.2D).tex(0.25D, 0.75D).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.7F, -0.2F, 0.25F, 0.5F, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.7F, 0.2F, 0, 0.5F, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.3F, 0.2F, 0, 0.75F, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.3F, -0.2F, 0.25F, 0.75F, 1, 0, 0, light);
 
-		buf.pos(0.5D, 0.3D, -0.2D).tex(0.25D, 0.75D).endVertex();
-		buf.pos(0.5D, 0.3D, 0.2D).tex(0, 0.75D).endVertex();
-		buf.pos(0.5D, 0.7D, 0.2D).tex(0, 0.5D).endVertex();
-		buf.pos(0.5D, 0.7D, -0.2D).tex(0.25D, 0.5D).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.3F, -0.2F, 0.25F, 0.75F, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.3F, 0.2F, 0, 0.75F, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.7F, 0.2F, 0, 0.5F, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.7F, -0.2F, 0.25F, 0.5F, 1, 0, 0, light);
 
-		buf.pos(0.7D, 0.7D, -0.2D).tex(0.25D, 0.5D).endVertex();
-		buf.pos(0.7D, 0.7D, 0.2D).tex(0, 0.5D).endVertex();
-		buf.pos(0.7D, 0.3D, 0.2D).tex(0, 0.75D).endVertex();
-		buf.pos(0.7D, 0.3D, -0.2D).tex(0.25D, 0.75D).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.7F, 0.7F, -0.2F, 0.25F, 0.5F, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.7F, 0.7F, 0.2F, 0, 0.5F, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.7F, 0.3F, 0.2F, 0, 0.75F, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.7F, 0.3F, -0.2F, 0.25F, 0.75F, 1, 0, 0, light);
 
-		buf.pos(-0.7D, 0.3D, -0.2D).tex(0.25D, 0.75D).endVertex();
-		buf.pos(-0.7D, 0.3D, 0.2D).tex(0, 0.75D).endVertex();
-		buf.pos(-0.7D, 0.7D, 0.2D).tex(0, 0.5D).endVertex();
-		buf.pos(-0.7D, 0.7D, -0.2D).tex(0.25D, 0.5D).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.7F, 0.3F, -0.2F, 0.25F, 0.75F, -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.7F, 0.3F, 0.2F, 0, 0.75F, -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.7F, 0.7F, 0.2F, 0, 0.5F, -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.7F, 0.7F, -0.2F, 0.25F, 0.5F, -1, 0, 0, light);
 
-		buf.pos(-0.7D, 0.7D, -0.2D).tex(0.25D, 0.75D).endVertex();
-		buf.pos(-0.7D, 0.7D, 0.2D).tex(0, 0.75D).endVertex();
-		buf.pos(-0.5D, 0.7D, 0.2D).tex(0, 0.5D).endVertex();
-		buf.pos(-0.5D, 0.7D, -0.2D).tex(0.25D, 0.5D).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.7F, 0.7F, -0.2F, 0.25F, 0.75F, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.7F, 0.7F, 0.2F, 0, 0.75F, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.7F, 0.2F, 0, 0.5F, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.7F, -0.2F, 0.25F, 0.5F, 0, 1, 0, light);
 
-		buf.pos(0.5D, 0.7D, -0.2D).tex(0.25D, 0.75D).endVertex();
-		buf.pos(0.5D, 0.7D, 0.2D).tex(0, 0.75D).endVertex();
-		buf.pos(0.7D, 0.7D, 0.2D).tex(0, 0.5D).endVertex();
-		buf.pos(0.7D, 0.7D, -0.2D).tex(0.25D, 0.5D).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.7F, -0.2F, 0.25F, 0.75F, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.7F, 0.2F, 0, 0.75F, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.7F, 0.7F, 0.2F, 0, 0.5F, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.7F, 0.7F, -0.2F, 0.25F, 0.5F, 0, 1, 0, light);
 
-		buf.pos(-0.5D, 0.3D, -0.2D).tex(0.25D, 0.5D).endVertex();
-		buf.pos(-0.5D, 0.3D, 0.2D).tex(0, 0.5D).endVertex();
-		buf.pos(-0.7D, 0.3D, 0.2D).tex(0, 0.75D).endVertex();
-		buf.pos(-0.7D, 0.3D, -0.2D).tex(0.25D, 0.75D).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.3F, -0.2F, 0.25F, 0.5F, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.3F, 0.2F, 0, 0.5F, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.7F, 0.3F, 0.2F, 0, 0.75F, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.7F, 0.3F, -0.2F, 0.25F, 0.75F, 0, 1, 0, light);
 
-		buf.pos(0.7D, 0.3D, -0.2D).tex(0.25D, 0.5D).endVertex();
-		buf.pos(0.7D, 0.3D, 0.2D).tex(0, 0.5D).endVertex();
-		buf.pos(0.5D, 0.3D, 0.2D).tex(0, 0.75D).endVertex();
-		buf.pos(0.5D, 0.3D, -0.2D).tex(0.25D, 0.75D).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.7F, 0.3F, -0.2F, 0.25F, 0.5F, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.7F, 0.3F, 0.2F, 0, 0.5F, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.3F, 0.2F, 0, 0.75F, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.3F, -0.2F, 0.25F, 0.75F, 0, 1, 0, light);
 
-		buf.pos(-0.7D, 0.3D, -0.2D).tex(0.25D, 0.5D).endVertex();
-		buf.pos(-0.7D, 0.7D, -0.2D).tex(0, 0.5D).endVertex();
-		buf.pos(-0.5D, 0.7D, -0.2D).tex(0, 0.75D).endVertex();
-		buf.pos(-0.5D, 0.3D, -0.2D).tex(0.25D, 0.75D).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.7F, 0.3F, -0.2F, 0.25F, 0.5F, 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.7F, 0.7F, -0.2F, 0, 0.5F, 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.7F, -0.2F, 0, 0.75F, 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.3F, -0.2F, 0.25F, 0.75F, 0, 0, -1, light);
 
-		buf.pos(0.5D, 0.3D, -0.2D).tex(0.25D, 0.5D).endVertex();
-		buf.pos(0.5D, 0.7D, -0.2D).tex(0, 0.5D).endVertex();
-		buf.pos(0.7D, 0.7D, -0.2D).tex(0, 0.75D).endVertex();
-		buf.pos(0.7D, 0.3D, -0.2D).tex(0.25D, 0.75D).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.3F, -0.2F, 0.25F, 0.5F, 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.7F, -0.2F, 0, 0.5F, 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.7F, 0.7F, -0.2F, 0, 0.75F, 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.7F, 0.3F, -0.2F, 0.25F, 0.75F, 0, 0, -1, light);
 
-		buf.pos(-0.5D, 0.3D, 0.2D).tex(0.25D, 0.75D).endVertex();
-		buf.pos(-0.5D, 0.7D, 0.2D).tex(0, 0.75D).endVertex();
-		buf.pos(-0.7D, 0.7D, 0.2D).tex(0, 0.5D).endVertex();
-		buf.pos(-0.7D, 0.3D, 0.2D).tex(0.25D, 0.5D).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.3F, 0.2F, 0.25F, 0.75F, 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.5F, 0.7F, 0.2F, 0, 0.75F, 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.7F, 0.7F, 0.2F, 0, 0.5F, 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -0.7F, 0.3F, 0.2F, 0.25F, 0.5F, 0, 0, 1, light);
 
-		buf.pos(0.7D, 0.3D, 0.2D).tex(0.25D, 0.75D).endVertex();
-		buf.pos(0.7D, 0.7D, 0.2D).tex(0, 0.75D).endVertex();
-		buf.pos(0.5D, 0.7D, 0.2D).tex(0, 0.5D).endVertex();
-		buf.pos(0.5D, 0.3D, 0.2D).tex(0.25D, 0.5D).endVertex();
-
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.7F, 0.3F, 0.2F, 0.25F, 0.75F, 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.7F, 0.7F, 0.2F, 0, 0.75F, 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.7F, 0.2F, 0, 0.5F, 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0.5F, 0.3F, 0.2F, 0.25F, 0.5F, 0, 0, 1, light);
 
 		//Legs
-		//Leg
-		buf.pos(-0.7D, 0.7D, -0.325D).tex(0, 0.875D).endVertex();
-		buf.pos(-0.7D, 0.7D, -0.2D).tex(0, 0.9375D).endVertex();
-		buf.pos(-0.575D, 0.7D, -0.2D).tex(0.0625D, 0.9375D).endVertex();
-		buf.pos(-0.575D, 0.7D, -0.325D).tex(0.0625D, 0.875D).endVertex();
-
-		buf.pos(-0.575D, 0, -0.325D).tex(0.0625D, 0.875D).endVertex();
-		buf.pos(-0.575D, 0, -0.2D).tex(0.0625D, 0.9375D).endVertex();
-		buf.pos(-0.7D, 0, -0.2D).tex(0, 0.9375D).endVertex();
-		buf.pos(-0.7D, 0, -0.325D).tex(0, 0.875D).endVertex();
-
-		buf.pos(-0.575D, 0.7D, -0.325D).tex(0, 1).endVertex();
-		buf.pos(-0.575D, 0D, -0.325D).tex(0.25D, 1).endVertex();
-		buf.pos(-0.7D, 0D, -0.325D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(-0.7D, 0.7D, -0.325D).tex(0, 0.9375D).endVertex();
-
-		buf.pos(-0.7D, 0.7D, -0.2D).tex(0, 0.9375D).endVertex();
-		buf.pos(-0.7D, 0D, -0.2D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(-0.575D, 0D, -0.2D).tex(0.25D, 1).endVertex();
-		buf.pos(-0.575D, 0.7D, -0.2D).tex(0, 1).endVertex();
-
-		buf.pos(-0.7D, 0.7D, -0.325D).tex(0, 0.9375D).endVertex();
-		buf.pos(-0.7D, 0D, -0.325D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(-0.7D, 0D, -0.2D).tex(0.25D, 1).endVertex();
-		buf.pos(-0.7D, 0.7D, -0.2D).tex(0, 1).endVertex();
-
-		buf.pos(-0.575D, 0.7D, -0.2D).tex(0, 1).endVertex();
-		buf.pos(-0.575D, 0D, -0.2D).tex(0.25D, 1).endVertex();
-		buf.pos(-0.575D, 0D, -0.325D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(-0.575D, 0.7D, -0.325D).tex(0, 0.9375D).endVertex();
-
-		//Leg
-		buf.pos(0.575D, 0.7D, -0.325D).tex(0.0625D, 0.875D).endVertex();
-		buf.pos(0.575D, 0.7D, -0.2D).tex(0.0625D, 0.9375D).endVertex();
-		buf.pos(0.7D, 0.7D, -0.2D).tex(0, 0.9375D).endVertex();
-		buf.pos(0.7D, 0.7D, -0.325D).tex(0, 0.875D).endVertex();
-
-		buf.pos(0.7D, 0, -0.325D).tex(0, 0.875D).endVertex();
-		buf.pos(0.7D, 0, -0.2D).tex(0, 0.9375D).endVertex();
-		buf.pos(0.575D, 0, -0.2D).tex(0.0625D, 0.9375D).endVertex();
-		buf.pos(0.575D, 0, -0.325D).tex(0.0625D, 0.875D).endVertex();
-
-		buf.pos(0.7D, 0.7D, -0.325D).tex(0, 0.9375D).endVertex();
-		buf.pos(0.7D, 0D, -0.325D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(0.575D, 0D, -0.325D).tex(0.25D, 1).endVertex();
-		buf.pos(0.575D, 0.7D, -0.325D).tex(0, 1).endVertex();
-
-		buf.pos(0.575D, 0.7D, -0.2D).tex(0, 1).endVertex();
-		buf.pos(0.575D, 0D, -0.2D).tex(0.25D, 1).endVertex();
-		buf.pos(0.7D, 0D, -0.2D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(0.7D, 0.7D, -0.2D).tex(0, 0.9375D).endVertex();
-
-		buf.pos(0.7D, 0.7D, -0.2D).tex(0, 1).endVertex();
-		buf.pos(0.7D, 0D, -0.2D).tex(0.25D, 1).endVertex();
-		buf.pos(0.7D, 0D, -0.325D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(0.7D, 0.7D, -0.325D).tex(0, 0.9375D).endVertex();
-
-		buf.pos(0.575D, 0.7D, -0.325D).tex(0, 0.9375D).endVertex();
-		buf.pos(0.575D, 0D, -0.325D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(0.575D, 0D, -0.2D).tex(0.25D, 1).endVertex();
-		buf.pos(0.575D, 0.7D, -0.2D).tex(0, 1).endVertex();
-
-		//Leg
-		buf.pos(0.7D, 0.7D, 0.325D).tex(0, 0.875D).endVertex();
-		buf.pos(0.7D, 0.7D, 0.2D).tex(0, 0.9375D).endVertex();
-		buf.pos(0.575D, 0.7D, 0.2D).tex(0.0625D, 0.9375D).endVertex();
-		buf.pos(0.575D, 0.7D, 0.325D).tex(0.0625D, 0.875D).endVertex();
-
-		buf.pos(0.575D, 0, 0.325D).tex(0.0625D, 0.875D).endVertex();
-		buf.pos(0.575D, 0, 0.2D).tex(0.0625D, 0.9375D).endVertex();
-		buf.pos(0.7D, 0, 0.2D).tex(0, 0.9375D).endVertex();
-		buf.pos(0.7D, 0, 0.325D).tex(0, 0.875D).endVertex();
-
-		buf.pos(0.575D, 0.7D, 0.325D).tex(0, 1).endVertex();
-		buf.pos(0.575D, 0D, 0.325D).tex(0.25D, 1).endVertex();
-		buf.pos(0.7D, 0D, 0.325D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(0.7D, 0.7D, 0.325D).tex(0, 0.9375D).endVertex();
-
-		buf.pos(0.7D, 0.7D, 0.2D).tex(0, 0.9375D).endVertex();
-		buf.pos(0.7D, 0D, 0.2D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(0.575D, 0D, 0.2D).tex(0.25D, 1).endVertex();
-		buf.pos(0.575D, 0.7D, 0.2D).tex(0, 1).endVertex();
-
-		buf.pos(0.7D, 0.7D, 0.325D).tex(0, 0.9375D).endVertex();
-		buf.pos(0.7D, 0D, 0.325D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(0.7D, 0D, 0.2D).tex(0.25D, 1).endVertex();
-		buf.pos(0.7D, 0.7D, 0.2D).tex(0, 1).endVertex();
-
-		buf.pos(0.575D, 0.7D, 0.2D).tex(0, 1).endVertex();
-		buf.pos(0.575D, 0D, 0.2D).tex(0.25D, 1).endVertex();
-		buf.pos(0.575D, 0D, 0.325D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(0.575D, 0.7D, 0.325D).tex(0, 0.9375D).endVertex();
-
-		//Leg
-		buf.pos(-0.575D, 0.7D, 0.325D).tex(0.0625D, 0.875D).endVertex();
-		buf.pos(-0.575D, 0.7D, 0.2D).tex(0.0625D, 0.9375D).endVertex();
-		buf.pos(-0.7D, 0.7D, 0.2D).tex(0, 0.9375D).endVertex();
-		buf.pos(-0.7D, 0.7D, 0.325D).tex(0, 0.875D).endVertex();
-
-		buf.pos(-0.7D, 0, 0.325D).tex(0, 0.875D).endVertex();
-		buf.pos(-0.7D, 0, 0.2D).tex(0, 0.9375D).endVertex();
-		buf.pos(-0.575D, 0, 0.2D).tex(0.0625D, 0.9375D).endVertex();
-		buf.pos(-0.575D, 0, 0.325D).tex(0.0625D, 0.875D).endVertex();
-
-		buf.pos(-0.7D, 0.7D, 0.325D).tex(0, 0.9375D).endVertex();
-		buf.pos(-0.7D, 0D, 0.325D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(-0.575D, 0D, 0.325D).tex(0.25D, 1).endVertex();
-		buf.pos(-0.575D, 0.7D, 0.325D).tex(0, 1).endVertex();
-
-		buf.pos(-0.575D, 0.7D, 0.2D).tex(0, 1).endVertex();
-		buf.pos(-0.575D, 0D, 0.2D).tex(0.25D, 1).endVertex();
-		buf.pos(-0.7D, 0D, 0.2D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(-0.7D, 0.7D, 0.2D).tex(0, 0.9375D).endVertex();
-
-		buf.pos(-0.7D, 0.7D, 0.2D).tex(0, 1).endVertex();
-		buf.pos(-0.7D, 0D, 0.2D).tex(0.25D, 1).endVertex();
-		buf.pos(-0.7D, 0D, 0.325D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(-0.7D, 0.7D, 0.325D).tex(0, 0.9375D).endVertex();
-
-		buf.pos(-0.575D, 0.7D, 0.325D).tex(0, 0.9375D).endVertex();
-		buf.pos(-0.575D, 0D, 0.325D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(-0.575D, 0D, 0.2D).tex(0.25D, 1).endVertex();
-		buf.pos(-0.575D, 0.7D, 0.2D).tex(0, 1).endVertex();
+		renderLeg(builder, matrix, light);
+		matrix.push();
+		float xTranslation = 1.275F;
+		float zTranslation = 0.525F;
+		matrix.translate(xTranslation, 0, 0);
+		renderLeg(builder, matrix, light);
+		matrix.translate(0, 0, zTranslation);
+		renderLeg(builder, matrix, light);
+		matrix.pop();
+		matrix.push();
+		matrix.translate(0, 0, zTranslation);
+		renderLeg(builder, matrix, light);
+		matrix.pop();
 
 		//Supports
-		//Support
-		buf.pos(-0.575D, 1.2D, 0.0625D).tex(0.0625D, 0.875D).endVertex();
-		buf.pos(-0.575D, 1.2D, -0.0625D).tex(0.0625D, 0.9375D).endVertex();
-		buf.pos(-0.7D, 1.2D, -0.0625D).tex(0, 0.9375D).endVertex();
-		buf.pos(-0.7D, 1.2D, 0.0625D).tex(0, 0.875D).endVertex();
-
-		buf.pos(-0.7D, 1.2D, 0.0625D).tex(0, 0.9375D).endVertex();
-		buf.pos(-0.7D, 0.7D, 0.0625D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(-0.575D, 0.7D, 0.0625D).tex(0.25D, 1).endVertex();
-		buf.pos(-0.575D, 1.2D, 0.0625D).tex(0, 1).endVertex();
-
-		buf.pos(-0.575D, 1.2D, -0.0625D).tex(0, 1).endVertex();
-		buf.pos(-0.575D, 0.7D, -0.0625D).tex(0.25D, 1).endVertex();
-		buf.pos(-0.7D, 0.7D, -0.0625D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(-0.7D, 1.2D, -0.0625D).tex(0, 0.9375D).endVertex();
-
-		buf.pos(-0.7D, 1.2D, -0.0625D).tex(0, 1).endVertex();
-		buf.pos(-0.7D, 0.7D, -0.0625D).tex(0.25D, 1).endVertex();
-		buf.pos(-0.7D, 0.7D, 0.0625D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(-0.7D, 1.2D, 0.0625D).tex(0, 0.9375D).endVertex();
-
-		buf.pos(-0.575D, 1.2D, 0.0625D).tex(0, 0.9375D).endVertex();
-		buf.pos(-0.575D, 0.7D, 0.0625D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(-0.575D, 0.7D, -0.0625D).tex(0.25D, 1).endVertex();
-		buf.pos(-0.575D, 1.2D, -0.0625D).tex(0, 1).endVertex();
-
-		//Support
-		buf.pos(0.7D, 1.2D, 0.0625D).tex(0, 0.875D).endVertex();
-		buf.pos(0.7D, 1.2D, -0.0625D).tex(0, 0.9375D).endVertex();
-		buf.pos(0.575D, 1.2D, -0.0625D).tex(0.0625D, 0.9375D).endVertex();
-		buf.pos(0.575D, 1.2D, 0.0625D).tex(0.0625D, 0.875D).endVertex();
-
-		buf.pos(0.575D, 1.2D, 0.0625D).tex(0, 1).endVertex();
-		buf.pos(0.575D, 0.7D, 0.0625D).tex(0.25D, 1).endVertex();
-		buf.pos(0.7D, 0.7D, 0.0625D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(0.7D, 1.2D, 0.0625D).tex(0, 0.9375D).endVertex();
-
-		buf.pos(0.7D, 1.2D, -0.0625D).tex(0, 0.9375D).endVertex();
-		buf.pos(0.7D, 0.7D, -0.0625D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(0.575D, 0.7D, -0.0625D).tex(0.25D, 1).endVertex();
-		buf.pos(0.575D, 1.2D, -0.0625D).tex(0, 1).endVertex();
-
-		buf.pos(0.7D, 1.2D, 0.0625D).tex(0, 0.9375D).endVertex();
-		buf.pos(0.7D, 0.7D, 0.0625D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(0.7D, 0.7D, -0.0625D).tex(0.25D, 1).endVertex();
-		buf.pos(0.7D, 1.2D, -0.0625D).tex(0, 1).endVertex();
-
-		buf.pos(0.575D, 1.2D, -0.0625D).tex(0, 1).endVertex();
-		buf.pos(0.575D, 0.7D, -0.0625D).tex(0.25D, 1).endVertex();
-		buf.pos(0.575D, 0.7D, 0.0625D).tex(0.25D, 0.9375D).endVertex();
-		buf.pos(0.575D, 1.2D, 0.0625D).tex(0, 0.9375D).endVertex();
+		matrix.push();
+		renderSupport(builder, matrix, light);
+		matrix.translate(1.275, 0, 0);
+		renderSupport(builder, matrix, light);
+		matrix.pop();
 
 		//Seat
-		buf.pos(0.7D, 1.3D, 0.4D).tex(0.25D, 0.5D).endVertex();
-		buf.pos(0.7D, 1.3D, -0.4D).tex(0.25D, 0.75D).endVertex();
-		buf.pos(-0.7D, 1.3D, -0.4D).tex(0, 0.75D).endVertex();
-		buf.pos(-0.7D, 1.3D, 0.4D).tex(0, 0.5D).endVertex();
+		float seatX = 0.7F;
+		float seatYSt = 1.2F;
+		float seatYEn = 1.3F;
+		float seatZ = 0.4F;
+		float seatUSt = 0;
+		float seatUMid = 0.015625F;
+		float seatUEn = 0.25F;
+		float seatVSt = 0.5F;
+		float seatVEn = 0.75F;
 
-		buf.pos(-0.7D, 1.2D, 0.4D).tex(0, 0.5D).endVertex();
-		buf.pos(-0.7D, 1.2D, -0.4D).tex(0, 0.75D).endVertex();
-		buf.pos(0.7D, 1.2D, -0.4D).tex(0.25D, 0.75D).endVertex();
-		buf.pos(0.7D, 1.2D, 0.4D).tex(0.25D, 0.5D).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, seatX, seatYEn, seatZ, seatUEn, seatVSt, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, seatX, seatYEn, -seatZ, seatUEn, seatVEn, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -seatX, seatYEn, -seatZ, seatUSt, seatVEn, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -seatX, seatYEn, seatZ, seatUSt, seatVSt, 0, 1, 0, light);
 
-		buf.pos(-0.7D, 1.3D, 0.4D).tex(0, 0.5D).endVertex();
-		buf.pos(-0.7D, 1.2D, 0.4D).tex(0.015625D, 0.5D).endVertex();
-		buf.pos(0.7D, 1.2D, 0.4D).tex(0.015625D, 0.75D).endVertex();
-		buf.pos(0.7D, 1.3D, 0.4D).tex(0, 0.75D).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, -seatX, seatYSt, seatZ, seatUSt, seatVSt, 0, -1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -seatX, seatYSt, -seatZ, seatUSt, seatVEn, 0, -1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, seatX, seatYSt, -seatZ, seatUEn, seatVEn, 0, -1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, seatX, seatYSt, seatZ, seatUEn, seatVSt, 0, -1, 0, light);
 
-		buf.pos(0.7D, 1.3D, -0.4D).tex(0, 0.75D).endVertex();
-		buf.pos(0.7D, 1.2D, -0.4D).tex(0.015625D, 0.75D).endVertex();
-		buf.pos(-0.7D, 1.2D, -0.4D).tex(0.015625D, 0.5D).endVertex();
-		buf.pos(-0.7D, 1.3D, -0.4D).tex(0, 0.5D).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, -seatX, seatYEn, seatZ, seatUSt, seatVSt, 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -seatX, seatYSt, seatZ, seatUMid, seatVSt, 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, seatX, seatYSt, seatZ, seatUMid, seatVEn, 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, seatX, seatYEn, seatZ, seatUSt, seatVEn, 0, 0, 1, light);
 
-		buf.pos(-0.7D, 1.3D, -0.4D).tex(0, 0.75D).endVertex();
-		buf.pos(-0.7D, 1.2D, -0.4D).tex(0.015625D, 0.75D).endVertex();
-		buf.pos(-0.7D, 1.2D, 0.4D).tex(0.015625D, 0.5D).endVertex();
-		buf.pos(-0.7D, 1.3D, 0.4D).tex(0, 0.5D).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, seatX, seatYEn, -seatZ, seatUSt, seatVEn, 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, seatX, seatYSt, -seatZ, seatUMid, seatVEn, 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -seatX, seatYSt, -seatZ, seatUMid, seatVSt, 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -seatX, seatYEn, -seatZ, seatUSt, seatVSt, 0, 0, -1, light);
 
-		buf.pos(0.7D, 1.3D, 0.4D).tex(0, 0.5D).endVertex();
-		buf.pos(0.7D, 1.2D, 0.4D).tex(0.015625D, 0.5D).endVertex();
-		buf.pos(0.7D, 1.2D, -0.4D).tex(0.015625D, 0.75D).endVertex();
-		buf.pos(0.7D, 1.3D, -0.4D).tex(0, 0.75D).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, -seatX, seatYEn, -seatZ, seatUSt, seatVEn, -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -seatX, seatYSt, -seatZ, seatUMid, seatVEn, -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -seatX, seatYSt, seatZ, seatUMid, seatVSt, -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -seatX, seatYEn, seatZ, seatUSt, seatVSt, -1, 0, 0, light);
 
+		CRRenderUtil.addVertexBlock(builder, matrix, seatX, seatYEn, seatZ, seatUSt, seatVSt, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, seatX, seatYSt, seatZ, seatUMid, seatVSt, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, seatX, seatYSt, -seatZ, seatUMid, seatVEn, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, seatX, seatYEn, -seatZ, seatUSt, seatVEn, 1, 0, 0, light);
+	}
 
+	private static void renderSupport(IVertexBuilder builder, MatrixStack matrix, int light){
+		float supportXSt = 0.575F;
+		float supportXEn = 0.7F;
+		float supportYSt = 0.7F;
+		float supportYEn = 1.2F;
+		float supportZ = 0.0625F;
+		float supportUSt = 0;
+		float supportUMid = 0.0625F;
+		float supportUEn = 0.25F;
+		float supportVSt = 0.875F;
+		float supportVMid = 0.9375F;
+		float supportVEn = 1;
 
-		Tessellator.getInstance().draw();
+		CRRenderUtil.addVertexBlock(builder, matrix, -supportXSt, supportYEn, supportZ, supportUMid, supportVSt, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -supportXSt, supportYEn, -supportZ, supportUMid, supportVEn, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -supportXEn, supportYEn, -supportZ, supportUSt, supportVEn, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -supportXEn, supportYEn, supportZ, supportUSt, supportVSt, 0, 1, 0, light);
 
+		CRRenderUtil.addVertexBlock(builder, matrix, -supportXEn, supportYEn, supportZ, supportUSt, supportVMid, 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -supportXEn, supportYSt, supportZ, supportUEn, supportVMid, 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -supportXSt, supportYSt, supportZ, supportUEn, supportVEn, 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -supportXSt, supportYSt, supportZ, supportUSt, supportVEn, 0, 0, 1, light);
 
-		GlStateManager.enableLighting();
-		GlStateManager.popAttributes();
-		GlStateManager.popMatrix();
+		CRRenderUtil.addVertexBlock(builder, matrix, -supportXSt, supportYEn, -supportZ, supportUSt, supportVEn, 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -supportXSt, supportYSt, -supportZ, supportUEn, supportVEn, 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -supportXEn, supportYSt, -supportZ, supportUEn, supportVMid, 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -supportXEn, supportYEn, -supportZ, supportUSt, supportVMid, 0, 0, -1, light);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, -supportXEn, supportYEn, -supportZ, supportUSt, supportVEn, -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -supportXEn, supportYSt, -supportZ, supportUEn, supportVEn, -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -supportXEn, supportYSt, supportZ, supportUEn, supportVMid, -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -supportXEn, supportYEn, supportZ, supportUSt, supportVMid, -1, 0, 0, light);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, -supportXSt, supportYEn, supportZ, supportUSt, supportVMid, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -supportXSt, supportYSt, supportZ, supportUEn, supportVMid, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -supportXSt, supportYSt, -supportZ, supportUEn, supportVEn, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -supportXSt, supportYEn, -supportZ, supportUSt, supportVEn, 1, 0, 0, light);
+	}
+
+	private static void renderLeg(IVertexBuilder builder, MatrixStack matrix, int light){
+		//Legs
+		float legXSt = 0.575F;
+		float legXEn = 0.7F;
+		float legYSt = 0;
+		float legYEn = 0.7F;
+		float legZSt = 0.2F;
+		float legZEn = 0.325F;
+		float legUSt = 0;
+		float legUMid = 0.0625F;
+		float legUEn = 0.25F;
+		float legVSt = 0.875F;
+		float legVMid = 0.9375F;
+		float legVEn = 1;
+
+		//Leg
+		CRRenderUtil.addVertexBlock(builder, matrix, -legXEn, legYEn, -legZEn, legUSt, legVSt, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -legXEn, legYEn, -legZSt, legUSt, legVMid, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -legXSt, legYEn, -legZSt, legUMid, legVMid, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -legXSt, legYEn, -legZEn, legUMid, legVSt, 0, 1, 0, light);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, -legXSt, legYSt, -legZEn, legUMid, legVSt, 0, -1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -legXSt, legYSt, -legZSt, legUMid, legVMid, 0, -1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -legXEn, legYSt, -legZSt, legUSt, legVMid, 0, -1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -legXEn, legYSt, -legZEn, legUSt, legVSt, 0, -1, 0, light);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, -legXSt, legYEn, -legZEn, legUSt, legVEn, 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -legXSt, legYSt, -legZEn, legUMid, legVEn, 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -legXEn, legYSt, -legZEn, legUMid, legVMid, 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -legXEn, legYEn, -legZEn, legUSt, legVMid, 0, 0, -1, light);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, -legXEn, legYEn, -legZSt, legUSt, legVMid, 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -legXEn, legYSt, -legZSt, legUEn, legVMid, 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -legXSt, legYSt, -legZSt, legUEn, legVEn, 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -legXSt, legYEn, -legZSt, legUSt, legVEn, 0, 0, 1, light);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, -legXEn, legYEn, -legZEn, legUSt, legVMid, -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -legXEn, legYSt, -legZEn, legUEn, legVMid, -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -legXEn, legYSt, -legZSt, legUEn, legVEn, -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -legXEn, legYEn, -legZSt, legUSt, legVEn, -1, 0, 0, light);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, -legXSt, legYEn, -legZSt, legUSt, legVEn, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -legXSt, legYSt, -legZSt, legUEn, legVEn, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -legXSt, legYSt, -legZEn, legUEn, legVMid, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -legXSt, legYEn, -legZEn, legUSt, legVMid, 1, 0, 0, light);
 	}
 }

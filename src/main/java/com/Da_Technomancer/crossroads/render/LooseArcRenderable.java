@@ -1,12 +1,10 @@
 package com.Da_Technomancer.crossroads.render;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.util.Random;
@@ -53,16 +51,15 @@ public class LooseArcRenderable implements IVisualEffect{
 	}
 
 	@Override
-	public boolean render(Tessellator tess, BufferBuilder buf, long worldTime, double playerX, double playerY, double playerZ, Vec3d playerLook, Random rand, float partialTicks){
+	public boolean render(MatrixStack matrix, IRenderTypeBuffer buffer, long worldTime, float partialTicks, Random rand){
 		final float arcWidth = 0.03F;
-		Color col = new Color(color, true);
+		Color colorObj = new Color(color, true);
+		int[] col = {colorObj.getRed(), colorObj.getGreen(), colorObj.getBlue(), colorObj.getAlpha()};
 		float mult = ((float) (lifeSpan - lifeTime) + partialTicks) / (float) lifeSpan;
 		Vec3d start = new Vec3d(mult * (xStFin - xSt) + xSt, mult * (yStFin - ySt) + ySt, mult * (zStFin - zSt) + zSt);
+		IVertexBuilder builder = buffer.getBuffer(CRRenderTypes.ELECTRIC_ARC_TYPE);
 
-		GlStateManager.disableTexture();
-		GlStateManager.color4f(col.getRed() / 255F, col.getGreen() / 255F, col.getBlue() / 255F, col.getAlpha() / 255F);
-		GlStateManager.translated(start.x - playerX, start.y - playerY, start.z - playerZ);
-		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+		matrix.translate(start.x, start.y, start.z);
 
 		//If the arc is newly created, generate its path
 		if(lastTick != worldTime && lastTick < 0){
@@ -123,13 +120,9 @@ public class LooseArcRenderable implements IVisualEffect{
 //				buf.pos(states[i][node - 1].x + vec.x, states[i][node - 1].y + vec.y, states[i][node - 1].z + vec.z).endVertex();
 //				buf.pos(states[i][node - 1].x - vec.x, states[i][node - 1].y - vec.y, states[i][node - 1].z - vec.z).endVertex();
 
-				CRRenderUtil.draw3dLine(buf, states[i][node - 1], states[i][node], arcWidth);
+				CRRenderUtil.draw3dLine(builder, matrix, states[i][node - 1], states[i][node], arcWidth, col, CRRenderUtil.BRIGHT_LIGHT);
 			}
 		}
-
-		tess.draw();
-		GlStateManager.color3f(1, 1, 1);
-		GlStateManager.enableTexture();
 
 		if(lastTick != worldTime){
 			lastTick = worldTime;

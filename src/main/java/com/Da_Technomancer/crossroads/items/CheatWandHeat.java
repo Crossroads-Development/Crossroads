@@ -33,7 +33,7 @@ public class CheatWandHeat extends Item{
 		LazyOptional<IHeatHandler> heatOpt;
 		if(te != null && (heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, null)).isPresent()){
 			IHeatHandler cable = heatOpt.orElseThrow(NullPointerException::new);
-			if(context.isPlacerSneaking()){
+			if(context.getPlayer() != null && context.getPlayer().isSneaking()){
 				cable.addHeat(-RATE);
 			}else{
 				cable.addHeat(RATE);
