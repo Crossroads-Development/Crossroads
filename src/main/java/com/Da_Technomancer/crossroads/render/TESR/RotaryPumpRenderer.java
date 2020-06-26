@@ -30,7 +30,7 @@ public class RotaryPumpRenderer extends TileEntityRenderer<RotaryPumpTileEntity>
 	public void render(RotaryPumpTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
 		//Render the screw
 		matrix.push();
-		matrix.translate(0.5D, 0.5D, 0.5D);
+		matrix.translate(0.5D, 0, 0.5D);
 		LazyOptional<IAxleHandler> opt = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
 		if(opt.isPresent()){
 			matrix.rotate(Vector3f.YP.rotationDegrees(opt.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
@@ -66,52 +66,32 @@ public class RotaryPumpRenderer extends TileEntityRenderer<RotaryPumpTileEntity>
 			float vEn = lText.getInterpolatedV(16 - (yEn * 16));
 
 			//Draw liquid layer
-			IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
-			
-			builder.pos(matrix.getLast().getMatrix(), xEn, ySt, zSt).color(cols[0], cols[1], cols[2], cols[3]).tex(uEn, vSt).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
-			builder.pos(matrix.getLast().getMatrix(), xSt, ySt, zSt).color(cols[0], cols[1], cols[2], cols[3]).tex(uSt, vSt).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
-			builder.pos(matrix.getLast().getMatrix(), xSt, yEn, zSt).color(cols[0], cols[1], cols[2], cols[3]).tex(uSt, vEn).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
-			builder.pos(matrix.getLast().getMatrix(), xEn, yEn, zSt).color(cols[0], cols[1], cols[2], cols[3]).tex(uEn, vEn).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
-//			vb.pos(xEn, ySt, zSt).tex(lText.getInterpolatedU(xEn * 16), lText.getInterpolatedV(16 - (ySt * 16))).endVertex();
-//			vb.pos(xSt, ySt, zSt).tex(lText.getInterpolatedU(xSt * 16), lText.getInterpolatedV(16 - (ySt * 16))).endVertex();
-//			vb.pos(xSt, yEn, zSt).tex(lText.getInterpolatedU(xSt * 16), lText.getInterpolatedV(16 - (yEn * 16))).endVertex();
-//			vb.pos(xEn, yEn, zSt).tex(lText.getInterpolatedU(xEn * 16), lText.getInterpolatedV(16 - (yEn * 16))).endVertex();
+			IVertexBuilder builder = buffer.getBuffer(RenderType.getTranslucentNoCrumbling());
 
-			builder.pos(matrix.getLast().getMatrix(), xSt, ySt, zEn).color(cols[0], cols[1], cols[2], cols[3]).tex(uSt, vSt).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
-			builder.pos(matrix.getLast().getMatrix(), xEn, ySt, zEn).color(cols[0], cols[1], cols[2], cols[3]).tex(uEn, vSt).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
-			builder.pos(matrix.getLast().getMatrix(), xEn, yEn, zEn).color(cols[0], cols[1], cols[2], cols[3]).tex(uEn, vEn).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
-			builder.pos(matrix.getLast().getMatrix(), xSt, yEn, zEn).color(cols[0], cols[1], cols[2], cols[3]).tex(uSt, vEn).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
-//			vb.pos(xSt, ySt, zEn).tex(lText.getInterpolatedU(xSt * 16), lText.getInterpolatedV(16 - (ySt * 16))).endVertex();
-//			vb.pos(xEn, ySt, zEn).tex(lText.getInterpolatedU(xEn * 16), lText.getInterpolatedV(16 - (ySt * 16))).endVertex();
-//			vb.pos(xEn, yEn, zEn).tex(lText.getInterpolatedU(xEn * 16), lText.getInterpolatedV(16 - (yEn * 16))).endVertex();
-//			vb.pos(xSt, yEn, zEn).tex(lText.getInterpolatedU(xSt * 16), lText.getInterpolatedV(16 - (yEn * 16))).endVertex();
+			CRRenderUtil.addVertexBlock(builder, matrix, xEn, ySt, zSt, uEn, vSt, 0, 0, -1, combinedLight, cols);
+			CRRenderUtil.addVertexBlock(builder, matrix, xSt, ySt, zSt, uSt, vSt, 0, 0, -1, combinedLight, cols);
+			CRRenderUtil.addVertexBlock(builder, matrix, xSt, yEn, zSt, uSt, vEn, 0, 0, -1, combinedLight, cols);
+			CRRenderUtil.addVertexBlock(builder, matrix, xEn, yEn, zSt, uEn, vEn, 0, 0, -1, combinedLight, cols);
 
-			builder.pos(matrix.getLast().getMatrix(), xEn, ySt, zEn).color(cols[0], cols[1], cols[2], cols[3]).tex(uEn, vSt).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 1, 0, 0).endVertex();
-			builder.pos(matrix.getLast().getMatrix(), xEn, ySt, zSt).color(cols[0], cols[1], cols[2], cols[3]).tex(uSt, vSt).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 1, 0, 0).endVertex();
-			builder.pos(matrix.getLast().getMatrix(), xEn, yEn, zSt).color(cols[0], cols[1], cols[2], cols[3]).tex(uSt, vEn).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 1, 0, 0).endVertex();
-			builder.pos(matrix.getLast().getMatrix(), xEn, yEn, zEn).color(cols[0], cols[1], cols[2], cols[3]).tex(uEn, vEn).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 1, 0, 0).endVertex();
-//			vb.pos(xEn, ySt, zEn).tex(lText.getInterpolatedU(zEn * 16), lText.getInterpolatedV(16 - (ySt * 16))).endVertex();
-//			vb.pos(xEn, ySt, zSt).tex(lText.getInterpolatedU(zSt * 16), lText.getInterpolatedV(16 - (ySt * 16))).endVertex();
-//			vb.pos(xEn, yEn, zSt).tex(lText.getInterpolatedU(zSt * 16), lText.getInterpolatedV(16 - (yEn * 16))).endVertex();
-//			vb.pos(xEn, yEn, zEn).tex(lText.getInterpolatedU(zEn * 16), lText.getInterpolatedV(16 - (yEn * 16))).endVertex();
+			CRRenderUtil.addVertexBlock(builder, matrix, xSt, ySt, zEn, uSt, vSt, 0, 0, 1, combinedLight, cols);
+			CRRenderUtil.addVertexBlock(builder, matrix, xEn, ySt, zEn, uEn, vSt, 0, 0, 1, combinedLight, cols);
+			CRRenderUtil.addVertexBlock(builder, matrix, xEn, yEn, zEn, uEn, vEn, 0, 0, 1, combinedLight, cols);
+			CRRenderUtil.addVertexBlock(builder, matrix, xSt, yEn, zEn, uSt, vEn, 0, 0, 1, combinedLight, cols);
 
-			builder.pos(matrix.getLast().getMatrix(), xSt, ySt, zSt).color(cols[0], cols[1], cols[2], cols[3]).tex(uSt, vSt).lightmap(combinedLight).normal(matrix.getLast().getNormal(), -1, 0, 0).endVertex();
-			builder.pos(matrix.getLast().getMatrix(), xSt, ySt, zEn).color(cols[0], cols[1], cols[2], cols[3]).tex(uEn, vSt).lightmap(combinedLight).normal(matrix.getLast().getNormal(), -1, 0, 0).endVertex();
-			builder.pos(matrix.getLast().getMatrix(), xSt, yEn, zEn).color(cols[0], cols[1], cols[2], cols[3]).tex(uEn, vEn).lightmap(combinedLight).normal(matrix.getLast().getNormal(), -1, 0, 0).endVertex();
-			builder.pos(matrix.getLast().getMatrix(), xSt, yEn, zSt).color(cols[0], cols[1], cols[2], cols[3]).tex(uSt, vEn).lightmap(combinedLight).normal(matrix.getLast().getNormal(), -1, 0, 0).endVertex();
-//			vb.pos(xSt, ySt, zSt).tex(lText.getInterpolatedU(zSt * 16), lText.getInterpolatedV(16 - (ySt * 16))).endVertex();
-//			vb.pos(xSt, ySt, zEn).tex(lText.getInterpolatedU(zEn * 16), lText.getInterpolatedV(16 - (ySt * 16))).endVertex();
-//			vb.pos(xSt, yEn, zEn).tex(lText.getInterpolatedU(zEn * 16), lText.getInterpolatedV(16 - (yEn * 16))).endVertex();
-//			vb.pos(xSt, yEn, zSt).tex(lText.getInterpolatedU(zSt * 16), lText.getInterpolatedV(16 - (yEn * 16))).endVertex();
+			CRRenderUtil.addVertexBlock(builder, matrix, xSt, ySt, zSt, uSt, vSt, -1, 0, 0, combinedLight, cols);
+			CRRenderUtil.addVertexBlock(builder, matrix, xSt, ySt, zEn, uEn, vSt, -1, 0, 0, combinedLight, cols);
+			CRRenderUtil.addVertexBlock(builder, matrix, xSt, yEn, zEn, uEn, vEn, -1, 0, 0, combinedLight, cols);
+			CRRenderUtil.addVertexBlock(builder, matrix, xSt, yEn, zSt, uSt, vEn, -1, 0, 0, combinedLight, cols);
 
-			builder.pos(matrix.getLast().getMatrix(), xEn, yEn, zSt).color(cols[0], cols[1], cols[2], cols[3]).tex(uEn, vSt).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, 1, 0).endVertex();
-			builder.pos(matrix.getLast().getMatrix(), xSt, yEn, zSt).color(cols[0], cols[1], cols[2], cols[3]).tex(uSt, vSt).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, 1, 0).endVertex();
-			builder.pos(matrix.getLast().getMatrix(), xSt, yEn, zEn).color(cols[0], cols[1], cols[2], cols[3]).tex(uSt, vEn).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, 1, 0).endVertex();
-			builder.pos(matrix.getLast().getMatrix(), xEn, yEn, zEn).color(cols[0], cols[1], cols[2], cols[3]).tex(uEn, vEn).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, 1, 0).endVertex();
-//			vb.pos(xEn, yEn, zSt).tex(lText.getInterpolatedU(xEn * 16), lText.getInterpolatedV(16 - (zSt * 16))).endVertex();
-//			vb.pos(xSt, yEn, zSt).tex(lText.getInterpolatedU(xSt * 16), lText.getInterpolatedV(16 - (zSt * 16))).endVertex();
-//			vb.pos(xSt, yEn, zEn).tex(lText.getInterpolatedU(xSt * 16), lText.getInterpolatedV(16 - (zEn * 16))).endVertex();
-//			vb.pos(xEn, yEn, zEn).tex(lText.getInterpolatedU(xEn * 16), lText.getInterpolatedV(16 - (zEn * 16))).endVertex();
+			CRRenderUtil.addVertexBlock(builder, matrix, xEn, yEn, zSt, uEn, vSt, 1, 0, 0, combinedLight, cols);
+			CRRenderUtil.addVertexBlock(builder, matrix, xEn, yEn, zEn, uEn, vEn, 1, 0, 0, combinedLight, cols);
+			CRRenderUtil.addVertexBlock(builder, matrix, xEn, ySt, zEn, uSt, vEn, 1, 0, 0, combinedLight, cols);
+			CRRenderUtil.addVertexBlock(builder, matrix, xEn, ySt, zSt, uSt, vSt, 1, 0, 0, combinedLight, cols);
+
+			CRRenderUtil.addVertexBlock(builder, matrix, xSt, yEn, zSt, lText.getMinU(), lText.getMinV(), 0, 1, 0, combinedLight, cols);
+			CRRenderUtil.addVertexBlock(builder, matrix, xSt, yEn, zEn, lText.getMinU(), lText.getMaxV(), 0, 1, 0, combinedLight, cols);
+			CRRenderUtil.addVertexBlock(builder, matrix, xEn, yEn, zEn, lText.getMaxU(), lText.getMaxV(), 0, 1, 0, combinedLight, cols);
+			CRRenderUtil.addVertexBlock(builder, matrix, xEn, yEn, zSt, lText.getMaxU(), lText.getMinV(), 0, 1, 0, combinedLight, cols);
 		}
 	}
 }

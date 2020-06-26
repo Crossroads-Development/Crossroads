@@ -40,7 +40,7 @@ public class DynamoRenderer extends TileEntityRenderer<DynamoTileEntity>{
 		matrix.rotate(Vector3f.YP.rotationDegrees(-facing.getAxisDirection().getOffset() * axle.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
 		CRModels.drawAxle(matrix, buffer, combinedLight, GearFactory.findMaterial("iron").getColor());
 
-		matrix.translate(0, 0.45625D, 0);
+		matrix.translate(0, 0.45626D, 0);
 		matrix.scale(0.7F, 0.7F, 0.7F);
 		CRModels.draw8Gear(matrix, buffer.getBuffer(RenderType.getSolid()), CRRenderUtil.convertColor(GearFactory.findMaterial("copper").getColor()), combinedLight);
 	}

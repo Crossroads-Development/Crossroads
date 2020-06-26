@@ -42,10 +42,9 @@ public class MechanismClutch extends MechanismAxle{
 
 	private static final VoxelShape[] SHAPES_CLUTCH = new VoxelShape[3];
 	static{
-		VoxelShape core = Block.makeCuboidShape(4, 4, 4, 12, 12, 12);
-		SHAPES_CLUTCH[0] = VoxelShapes.or(SHAPES[0], core);
-		SHAPES_CLUTCH[1] = VoxelShapes.or(SHAPES[1], core);
-		SHAPES_CLUTCH[2] = VoxelShapes.or(SHAPES[2], core);
+		SHAPES_CLUTCH[0] = VoxelShapes.or(SHAPES[0], Block.makeCuboidShape(8, 4, 4, 16, 12, 12));
+		SHAPES_CLUTCH[1] = VoxelShapes.or(SHAPES[1], Block.makeCuboidShape(4, 8, 4, 12, 16, 4));
+		SHAPES_CLUTCH[2] = VoxelShapes.or(SHAPES[2], Block.makeCuboidShape(4, 4, 8, 12, 12, 16));
 	}
 
 	@Override
@@ -158,7 +157,7 @@ public class MechanismClutch extends MechanismAxle{
 		TextureAtlasSprite sideSprite = CRRenderUtil.getTextureSprite(inverted ? CRRenderTypes.CLUTCH_SIDE_INVERTED_TEXTURE : CRRenderTypes.CLUTCH_SIDE_TEXTURE);
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
 		float size = 0.25F;
-		float height = 0.4998F;
+		float height = 0.5001F;
 
 		//Ends
 		CRRenderUtil.addVertexBlock(builder, matrix, -size, 0, -size, endSprite.getMinU(), endSprite.getMinV(), 0, -1, 0, combinedLight);

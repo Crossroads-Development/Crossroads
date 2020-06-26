@@ -88,7 +88,7 @@ public class StampMillTileEntity extends InventoryTE{
 	public void tick(){
 		super.tick();
 		if(!world.isRemote){
-			BlockState state = world.getBlockState(pos);
+			BlockState state = getBlockState();
 
 			if(state.getBlock() != CRBlocks.stampMill){
 				return;
@@ -152,7 +152,7 @@ public class StampMillTileEntity extends InventoryTE{
 	public void updateContainingBlockInfo(){
 		super.updateContainingBlockInfo();
 		axleOpt.invalidate();
-		axleOpt = LazyOptional.of(this::createAxleHandler);
+		axleOpt = LazyOptional.of(() -> axleHandler);
 	}
 
 	private final LazyOptional<IItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
@@ -191,7 +191,7 @@ public class StampMillTileEntity extends InventoryTE{
 			updateKey = key;
 			axis = masterIn;
 
-			BlockState state = world.getBlockState(pos);
+			BlockState state = getBlockState();
 			if(state.getBlock() != CRBlocks.stampMill){
 				return;
 			}

@@ -27,7 +27,7 @@ public class ChronoHarnessRenderer extends LinkLineRenderer<ChronoHarnessTileEnt
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
 
 		//Revolving rods
-		matrix.translate(0.5D, 0.5D, 0.5D);
+		matrix.translate(0.5D, 0, 0.5D);
 
 		float smallOffset = 0.0928F;
 		float largeOffset = 5F / 16F;
@@ -65,15 +65,15 @@ public class ChronoHarnessRenderer extends LinkLineRenderer<ChronoHarnessTileEnt
 		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, maxY, z - rad, uEn, sprite.getMaxV(), 0, 0, -1, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, minY, z - rad, uEn, sprite.getMinV(), 0, 0, -1, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, minY, z + rad, sprite.getMinU(), sprite.getMinV(), 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, minY, z + rad, uEn, sprite.getMinV(), 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, maxY, z + rad, uEn, sprite.getMaxV(), 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, maxY, z + rad, sprite.getMinU(), sprite.getMaxV(), 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, minY, z + rad, uEn, sprite.getMinV(), 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, minY, z + rad, sprite.getMinU(), sprite.getMinV(), 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, maxY, z + rad, sprite.getMinU(), sprite.getMaxV(), 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, maxY, z + rad, uEn, sprite.getMaxV(), 0, 0, 1, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, minY, z - rad, sprite.getMinU(), sprite.getMinV(), -1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, minY, z + rad, uEn, sprite.getMinV(), -1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, maxY, z + rad, uEn, sprite.getMaxV(), -1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, maxY, z - rad, sprite.getMaxU(), sprite.getMinV(), -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, minY, z - rad, uEn, sprite.getMinV(), -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, minY, z + rad, sprite.getMinU(), sprite.getMinV(), -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, maxY, z + rad, sprite.getMinU(), sprite.getMaxV(), -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, maxY, z - rad, uEn, sprite.getMaxV(), -1, 0, 0, light);
 
 		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, minY, z - rad, sprite.getMinU(), sprite.getMinV(), 1, 0, 0, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, maxY, z - rad, sprite.getMinU(), sprite.getMaxV(), 1, 0, 0, light);

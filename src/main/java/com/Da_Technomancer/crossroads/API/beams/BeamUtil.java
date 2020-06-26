@@ -19,9 +19,6 @@ public class BeamUtil{
 	public static final int MAX_DISTANCE = 16;
 	public static final int BEAM_TIME = 4;
 
-	public static final float BEAM_SIDE_U = 0;
-	public static final float BEAM_END_U = 0.5F;
-	public static final float BEAM_V_STOP = 0.5F;
 	private static final Tag<Block> PASSABLE = new BlockTags.Wrapper(new ResourceLocation(Crossroads.MODID, "beam_passable"));
 	private static final VoxelShape[] COLLISION_MASK = new VoxelShape[3];
 

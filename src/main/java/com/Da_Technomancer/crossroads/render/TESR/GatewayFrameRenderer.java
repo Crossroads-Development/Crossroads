@@ -51,10 +51,6 @@ public class GatewayFrameRenderer extends LinkLineRenderer<GatewayFrameTileEntit
 
 		//From this point, everything should be rendered within [-1, 1] on the x-y; it will be scaled up
 
-		//The outer edge of the render is aligned with the outside of the block frame. The inside is not aligned with anything
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
-		IVertexBuilder builderTrans = buffer.getBuffer(RenderType.getTranslucentNoCrumbling());//Trans is short for translucent, not transgender. IVertexBuilders do not have genders (probably)
-
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.GATEWAY_TEXTURE);
 
 		//Quad dimensions
@@ -121,105 +117,11 @@ public class GatewayFrameRenderer extends LinkLineRenderer<GatewayFrameTileEntit
 		//We abuse rotations to draw one segment rotated several times instead of hard-defining every vertex
 		//Because I can't be bothered to math out all 32 distinct vertex positions on an octagon ring
 
-		//Rotating octagonal ring
-		matrix.push();
-		matrix.rotate(Vector3f.ZP.rotation(dialingWheelAngle));
-
-		Quaternion segmentRotation = Vector3f.ZP.rotationDegrees(-45);
-
-		for(int i = 0; i < 8; i++){
-
-			//Front
-			CRRenderUtil.addVertexBlock(builder, matrix, octOutWid, octOutLen, octDepth, polyUEn, octFrVSt, 0, 0, 1, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -octOutWid, octOutLen, octDepth, polyUSt, octFrVSt, 0, 0, 1, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -octOutWid, octInLen, octDepth, octFrUSt, octFrVEn, 0, 0, 1, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, octOutWid, octInLen, octDepth, octFrUEn, octFrVEn, 0, 0, 1, combinedLight);
-
-			//Other front (in some bizarre cultures this is called the 'back'. However, I speak American)
-			CRRenderUtil.addVertexBlock(builder, matrix, octOutWid, octOutLen, -octDepth, polyUEn, octFrVSt, 0, 0, -1, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, octOutWid, octInLen, -octDepth, octFrUEn, octFrVEn, 0, 0, -1, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -octOutWid, octInLen, -octDepth, octFrUSt, octFrVEn, 0, 0, -1, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -octOutWid, octOutLen, -octDepth, polyUSt, octFrVSt, 0, 0, -1, combinedLight);
-
-			//Outer edge
-			CRRenderUtil.addVertexBlock(builder, matrix, octOutWid, octOutLen, -octDepth, polyUEn, octOutVEn, 0, 1, 0, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -octOutWid, octOutLen, -octDepth, polyUSt, octOutVEn, 0, 1, 0, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -octOutWid, octOutLen, octDepth, polyUSt, octOutVSt, 0, 1, 0, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, octOutWid, octOutLen, octDepth, polyUEn, octOutVSt, 0, 1, 0, combinedLight);
-
-			//Inner edge
-			CRRenderUtil.addVertexBlock(builder, matrix, octOutWid, octInLen, -octDepth, polyUEn, octInVSt, 0, -1, 0, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, octOutWid, octInLen, octDepth, polyUEn, octInVEn, 0, -1, 0, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -octOutWid, octInLen, octDepth, polyUSt, octInVEn, 0, -1, 0, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -octOutWid, octInLen, -octDepth, polyUSt, octInVSt, 0, -1, 0, combinedLight);
-
-			//Inside icons
-			CRRenderUtil.addVertexBlock(builder, matrix, -iconEdgeXRad, octInLen - zFightingOffset, -iconEdgeZRad, symbolUEn, getIconVSt(sprite, i), 0, -1, 0, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, iconEdgeXRad, octInLen - zFightingOffset, -iconEdgeZRad, symbolUSt, getIconVSt(sprite, i), 0, -1, 0, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, iconEdgeXRad, octInLen - zFightingOffset, iconEdgeZRad, symbolUSt, getIconVEn(sprite, i), 0, -1, 0, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -iconEdgeXRad, octInLen - zFightingOffset, iconEdgeZRad, symbolUEn, getIconVEn(sprite, i), 0, -1, 0, combinedLight);
-
-			//Front icons
-			CRRenderUtil.addVertexBlock(builder, matrix, iconEdgeRad, iconTop, octDepth + zFightingOffset, symbolUEn, getIconVSt(sprite, i), 0, 0, 1, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -iconEdgeRad, iconTop, octDepth + zFightingOffset, symbolUSt, getIconVSt(sprite, i), 0, 0, 1, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -iconEdgeRad, iconBottom, octDepth + zFightingOffset, symbolUSt, getIconVEn(sprite, i), 0, 0, 1, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, iconEdgeRad, iconBottom, octDepth + zFightingOffset, symbolUEn, getIconVEn(sprite, i), 0, 0, 1, combinedLight);
-
-			//Other front icons
-			CRRenderUtil.addVertexBlock(builder, matrix, iconEdgeRad, iconTop, -octDepth - zFightingOffset, symbolUSt, getIconVSt(sprite, i), 0, 0, -1, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, iconEdgeRad, iconBottom, -octDepth - zFightingOffset, symbolUSt, getIconVEn(sprite, i), 0, 0, -1, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -iconEdgeRad, iconBottom, -octDepth - zFightingOffset, symbolUEn, getIconVEn(sprite, i), 0, 0, -1, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -iconEdgeRad, iconTop, -octDepth - zFightingOffset, symbolUEn, getIconVSt(sprite, i), 0, 0, -1, combinedLight);
-
-			matrix.rotate(segmentRotation);
-		}
-
-		//Portal, rendered with translucent type
-		if(linked){
-
-			//Render a double sided octagonal portal
-			//Bright lighting, translucent
-			//Has to be done via 3 quadrilaterals for the octagon, all done twice for both sides
-			int[] col = {255, 255, 255, 200};
-
-			//Vertices are commented with the number of the vertex on the final octagon
-
-			//Front
-			CRRenderUtil.addVertexBlock(builderTrans, matrix, octInWid, octInLen, 0, portalUMid2, portalVEn, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//1
-			CRRenderUtil.addVertexBlock(builderTrans, matrix, -octInWid, octInLen, 0, portalUMid1, portalVEn, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//2
-			CRRenderUtil.addVertexBlock(builderTrans, matrix, -octInLen, octInWid, 0, portalUMid1, portalVMid2, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//3
-			CRRenderUtil.addVertexBlock(builderTrans, matrix, -octInLen, -octInWid, 0, portalUSt, portalVMid1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//4
-
-			CRRenderUtil.addVertexBlock(builderTrans, matrix, -octInLen, -octInWid, 0, portalUSt, portalVMid1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//4
-			CRRenderUtil.addVertexBlock(builderTrans, matrix, octInWid, -octInLen, 0, portalUSt, portalVSt, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//5
-			CRRenderUtil.addVertexBlock(builderTrans, matrix, octInLen, octInWid, 0, portalUEn, portalVMid2, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//8
-			CRRenderUtil.addVertexBlock(builderTrans, matrix, octInWid, octInLen, 0, portalUMid2, portalVEn, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//1
-
-			CRRenderUtil.addVertexBlock(builderTrans, matrix, octInWid, -octInLen, 0, portalUSt, portalVSt, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//5
-			CRRenderUtil.addVertexBlock(builderTrans, matrix, octInWid, -octInLen, 0, portalUMid1, portalVSt, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//6
-			CRRenderUtil.addVertexBlock(builderTrans, matrix, octInLen, -octInWid, 0, portalUEn, portalVMid1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//7
-			CRRenderUtil.addVertexBlock(builderTrans, matrix, octInLen, octInWid, 0, portalUEn, portalVMid2, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//8
-
-			//Other front
-			CRRenderUtil.addVertexBlock(builderTrans, matrix, octInWid, octInLen, 0, portalUMid2, portalVEn, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//1
-			CRRenderUtil.addVertexBlock(builderTrans, matrix, -octInLen, -octInWid, 0, portalUSt, portalVMid1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//4
-			CRRenderUtil.addVertexBlock(builderTrans, matrix, -octInLen, octInWid, 0, portalUMid1, portalVMid2, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//3
-			CRRenderUtil.addVertexBlock(builderTrans, matrix, -octInWid, octInLen, 0, portalUMid1, portalVEn, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//2
-
-			CRRenderUtil.addVertexBlock(builderTrans, matrix, -octInLen, -octInWid, 0, portalUSt, portalVMid1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//4
-			CRRenderUtil.addVertexBlock(builderTrans, matrix, octInWid, octInLen, 0, portalUMid2, portalVEn, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//1
-			CRRenderUtil.addVertexBlock(builderTrans, matrix, octInLen, octInWid, 0, portalUEn, portalVMid2, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//8
-			CRRenderUtil.addVertexBlock(builderTrans, matrix, octInWid, -octInLen, 0, portalUSt, portalVSt, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//5
-
-			CRRenderUtil.addVertexBlock(builderTrans, matrix, octInWid, -octInLen, 0, portalUSt, portalVSt, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//5
-			CRRenderUtil.addVertexBlock(builderTrans, matrix, octInLen, octInWid, 0, portalUEn, portalVMid2, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//8
-			CRRenderUtil.addVertexBlock(builderTrans, matrix, octInLen, -octInWid, 0, portalUEn, portalVMid1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//7
-			CRRenderUtil.addVertexBlock(builderTrans, matrix, octInWid, -octInLen, 0, portalUMid1, portalVSt, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//6
-		}
-
-		matrix.pop();
-
+		//The outer edge of the render is aligned with the outside of the block frame. The inside is not aligned with anything
+		IVertexBuilder builder = buffer.getBuffer(RenderType.getCutout());
+		
 		//Fixed square ring
+		matrix.push();
 		Quaternion ringRotation = Vector3f.ZP.rotationDegrees(90);
 		for(int i = 0; i < 4; i++){
 			//Front
@@ -248,6 +150,7 @@ public class GatewayFrameRenderer extends LinkLineRenderer<GatewayFrameTileEntit
 
 			matrix.rotate(ringRotation);
 		}
+		matrix.pop();
 
 		//Triangular selector
 		//Triangles rendered by duplicating a vertex on the quad
@@ -348,6 +251,104 @@ public class GatewayFrameRenderer extends LinkLineRenderer<GatewayFrameTileEntit
 			}
 
 			matrix.pop();
+		}
+		
+		//Rotating octagonal ring
+		matrix.rotate(Vector3f.ZP.rotation(dialingWheelAngle));
+
+		Quaternion segmentRotation = Vector3f.ZP.rotationDegrees(-45);
+
+		for(int i = 0; i < 8; i++){
+
+			//Front
+			CRRenderUtil.addVertexBlock(builder, matrix, octOutWid, octOutLen, octDepth, polyUEn, octFrVSt, 0, 0, 1, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, -octOutWid, octOutLen, octDepth, polyUSt, octFrVSt, 0, 0, 1, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, -octInWid, octInLen, octDepth, octFrUSt, octFrVEn, 0, 0, 1, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, octInLen, octDepth, octFrUEn, octFrVEn, 0, 0, 1, combinedLight);
+
+			//Other front (in some bizarre cultures this is called the 'back'. However, I speak American)
+			CRRenderUtil.addVertexBlock(builder, matrix, octOutWid, octOutLen, -octDepth, polyUEn, octFrVSt, 0, 0, -1, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, octInLen, -octDepth, octFrUEn, octFrVEn, 0, 0, -1, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, -octInWid, octInLen, -octDepth, octFrUSt, octFrVEn, 0, 0, -1, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, -octOutWid, octOutLen, -octDepth, polyUSt, octFrVSt, 0, 0, -1, combinedLight);
+
+			//Outer edge
+			CRRenderUtil.addVertexBlock(builder, matrix, octOutWid, octOutLen, -octDepth, polyUEn, octOutVEn, 0, 1, 0, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, -octOutWid, octOutLen, -octDepth, polyUSt, octOutVEn, 0, 1, 0, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, -octOutWid, octOutLen, octDepth, polyUSt, octOutVSt, 0, 1, 0, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, octOutWid, octOutLen, octDepth, polyUEn, octOutVSt, 0, 1, 0, combinedLight);
+
+			//Inner edge
+			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, octInLen, -octDepth, polyUEn, octInVSt, 0, -1, 0, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, octInLen, octDepth, polyUEn, octInVEn, 0, -1, 0, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, -octInWid, octInLen, octDepth, polyUSt, octInVEn, 0, -1, 0, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, -octInWid, octInLen, -octDepth, polyUSt, octInVSt, 0, -1, 0, combinedLight);
+
+			//Inside icons
+			CRRenderUtil.addVertexBlock(builder, matrix, -iconEdgeXRad, octInLen - zFightingOffset, -iconEdgeZRad, symbolUEn, getIconVSt(sprite, i), 0, -1, 0, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, iconEdgeXRad, octInLen - zFightingOffset, -iconEdgeZRad, symbolUSt, getIconVSt(sprite, i), 0, -1, 0, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, iconEdgeXRad, octInLen - zFightingOffset, iconEdgeZRad, symbolUSt, getIconVEn(sprite, i), 0, -1, 0, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, -iconEdgeXRad, octInLen - zFightingOffset, iconEdgeZRad, symbolUEn, getIconVEn(sprite, i), 0, -1, 0, combinedLight);
+
+			//Front icons
+			CRRenderUtil.addVertexBlock(builder, matrix, iconEdgeRad, iconTop, octDepth + zFightingOffset, symbolUEn, getIconVSt(sprite, i), 0, 0, 1, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, -iconEdgeRad, iconTop, octDepth + zFightingOffset, symbolUSt, getIconVSt(sprite, i), 0, 0, 1, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, -iconEdgeRad, iconBottom, octDepth + zFightingOffset, symbolUSt, getIconVEn(sprite, i), 0, 0, 1, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, iconEdgeRad, iconBottom, octDepth + zFightingOffset, symbolUEn, getIconVEn(sprite, i), 0, 0, 1, combinedLight);
+
+			//Other front icons
+			CRRenderUtil.addVertexBlock(builder, matrix, iconEdgeRad, iconTop, -octDepth - zFightingOffset, symbolUSt, getIconVSt(sprite, i), 0, 0, -1, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, iconEdgeRad, iconBottom, -octDepth - zFightingOffset, symbolUSt, getIconVEn(sprite, i), 0, 0, -1, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, -iconEdgeRad, iconBottom, -octDepth - zFightingOffset, symbolUEn, getIconVEn(sprite, i), 0, 0, -1, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, -iconEdgeRad, iconTop, -octDepth - zFightingOffset, symbolUEn, getIconVSt(sprite, i), 0, 0, -1, combinedLight);
+
+			matrix.rotate(segmentRotation);
+		}
+
+		//Portal, rendered with translucent type
+		if(linked){
+
+			//Render a double sided octagonal portal
+			//Bright lighting, translucent
+			//Has to be done via 3 quadrilaterals for the octagon, all done twice for both sides
+			int[] col = {255, 255, 255, 200};
+
+			//Switch builder to translucent
+			builder = buffer.getBuffer(RenderType.getTranslucentNoCrumbling());
+			
+			//Vertices are commented with the number of the vertex on the final octagon
+
+			//Front
+			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, octInLen, 0, portalUMid2, portalVEn, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//1
+			CRRenderUtil.addVertexBlock(builder, matrix, -octInWid, octInLen, 0, portalUMid1, portalVEn, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//2
+			CRRenderUtil.addVertexBlock(builder, matrix, -octInLen, octInWid, 0, portalUMid1, portalVMid2, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//3
+			CRRenderUtil.addVertexBlock(builder, matrix, -octInLen, -octInWid, 0, portalUSt, portalVMid1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//4
+
+			CRRenderUtil.addVertexBlock(builder, matrix, -octInLen, -octInWid, 0, portalUSt, portalVMid1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//4
+			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, -octInLen, 0, portalUSt, portalVSt, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//5
+			CRRenderUtil.addVertexBlock(builder, matrix, octInLen, octInWid, 0, portalUEn, portalVMid2, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//8
+			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, octInLen, 0, portalUMid2, portalVEn, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//1
+
+			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, -octInLen, 0, portalUSt, portalVSt, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//5
+			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, -octInLen, 0, portalUMid1, portalVSt, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//6
+			CRRenderUtil.addVertexBlock(builder, matrix, octInLen, -octInWid, 0, portalUEn, portalVMid1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//7
+			CRRenderUtil.addVertexBlock(builder, matrix, octInLen, octInWid, 0, portalUEn, portalVMid2, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//8
+
+			//Other front
+			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, octInLen, 0, portalUMid2, portalVEn, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//1
+			CRRenderUtil.addVertexBlock(builder, matrix, -octInLen, -octInWid, 0, portalUSt, portalVMid1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//4
+			CRRenderUtil.addVertexBlock(builder, matrix, -octInLen, octInWid, 0, portalUMid1, portalVMid2, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//3
+			CRRenderUtil.addVertexBlock(builder, matrix, -octInWid, octInLen, 0, portalUMid1, portalVEn, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//2
+
+			CRRenderUtil.addVertexBlock(builder, matrix, -octInLen, -octInWid, 0, portalUSt, portalVMid1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//4
+			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, octInLen, 0, portalUMid2, portalVEn, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//1
+			CRRenderUtil.addVertexBlock(builder, matrix, octInLen, octInWid, 0, portalUEn, portalVMid2, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//8
+			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, -octInLen, 0, portalUSt, portalVSt, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//5
+
+			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, -octInLen, 0, portalUSt, portalVSt, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//5
+			CRRenderUtil.addVertexBlock(builder, matrix, octInLen, octInWid, 0, portalUEn, portalVMid2, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//8
+			CRRenderUtil.addVertexBlock(builder, matrix, octInLen, -octInWid, 0, portalUEn, portalVMid1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//7
+			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, -octInLen, 0, portalUMid1, portalVSt, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//6
 		}
 	}
 

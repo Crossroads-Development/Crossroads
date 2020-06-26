@@ -9,9 +9,13 @@ import com.Da_Technomancer.crossroads.blocks.fluid.*;
 import com.Da_Technomancer.crossroads.blocks.heat.*;
 import com.Da_Technomancer.crossroads.blocks.rotary.*;
 import com.Da_Technomancer.crossroads.blocks.technomancy.*;
+import com.Da_Technomancer.crossroads.fluids.CRFluids;
+import com.Da_Technomancer.crossroads.fluids.GenericFluid;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -19,6 +23,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -272,5 +278,28 @@ public class CRBlocks{
 		temporalAccelerator = new TemporalAccelerator();
 		chronoHarness = new ChronoHarness();
 		fluxSink = new FluxSink();
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public static void clientInit(){
+		setCutout(permeableGlass, rotaryPump, steamTurbine, alchemicalTubeGlass, alchemicalTubeCrystal, redsAlchemicalTubeGlass, redsAlchemicalTubeCrystal, fluidInjectorGlass, fluidInjectorCrystal, flowLimiterGlass, flowLimiterCrystal, heatedTubeGlass, heatedTubeCrystal, coolingCoilGlass, coolingCoilCrystal, reactionChamberGlass, reactionChamberCrystal, reagentTankGlass, reagentTankCrystal, reagentPumpGlass, reagentPumpCrystal, glasswareHolder);
+		setFluidTrans(CRFluids.distilledWater, CRFluids.steam);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private static void setCutout(Block... blocks){
+		RenderType cutout = RenderType.getCutout();
+		for(Block block : blocks){
+			RenderTypeLookup.setRenderLayer(block, cutout);
+		}
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private static void setFluidTrans(GenericFluid.FluidData...fluids){
+		RenderType type = RenderType.getTranslucent();
+		for(GenericFluid.FluidData f : fluids){
+			RenderTypeLookup.setRenderLayer(f.still, type);
+			RenderTypeLookup.setRenderLayer(f.flowing, type);
+		}
 	}
 }

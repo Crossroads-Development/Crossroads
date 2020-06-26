@@ -64,7 +64,7 @@ public final class EventHandlerClient{
 			matrix.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);//Translate to 0,0,0 world coords
 
 			ArrayList<IVisualEffect> toRemove = new ArrayList<>();
-			IRenderTypeBuffer buffer = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
+			IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
 			long worldTime = game.world.getGameTime();
 			float partialTicks = e.getPartialTicks();
 
@@ -80,6 +80,7 @@ public final class EventHandlerClient{
 
 			SafeCallable.effectsToRender.removeAll(toRemove);
 
+			buffer.finish();//Due to weirdness surrounding how this event is called, we need to force anything in the buffer to render immediately to prevent something else changing render system settings
 			matrix.pop();
 
 			game.getProfiler().endSection();

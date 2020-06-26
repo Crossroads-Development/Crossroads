@@ -18,7 +18,7 @@ public class SteamTurbineRenderer extends TileEntityRenderer<SteamTurbineTileEnt
 
 	@Override
 	public void render(SteamTurbineTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
-		matrix.translate(0.5D, 0.5D, 0.5D);
+		matrix.translate(0.5D, 0, 0.5D);
 		LazyOptional<IAxleHandler> opt = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
 		if(opt.isPresent()){
 			matrix.rotate(Vector3f.YP.rotationDegrees(opt.orElseThrow(NullPointerException::new).getAngle(partialTicks)));

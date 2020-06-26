@@ -45,12 +45,12 @@ public class FluxSinkRenderer extends TileEntityRenderer<FluxSinkTileEntity>{
 		for(int j = 0; j < 2; j++){
 			for(int i = 0; i < 8; i++){
 				float yOffset = 0.4F * (float) Math.sin(runtime / 100 + i * 5);
-				float textVSt = ((i + (int) (runtime / 5)) % 4) * 4F;//Animated texture
+				float textVSt = ((i + (int) (runtime / 8)) % 4) * 0.25F;//Animated texture
 
-				builder.pos(matrix.getLast().getMatrix(), len, yOffset - plateScale, -plateScale).color(255, 255, 255, 255).tex(12, textVSt).lightmap(medLight).endVertex();
-				builder.pos(matrix.getLast().getMatrix(), len, yOffset + plateScale, -plateScale).color(255, 255, 255, 255).tex(12, textVSt + 4).lightmap(medLight).endVertex();
-				builder.pos(matrix.getLast().getMatrix(), len, yOffset + plateScale, plateScale).color(255, 255, 255, 255).tex(16, textVSt + 4).lightmap(medLight).endVertex();
-				builder.pos(matrix.getLast().getMatrix(), len, yOffset - plateScale, plateScale).color(255, 255, 255, 255).tex(16, textVSt).lightmap(medLight).endVertex();
+				builder.pos(matrix.getLast().getMatrix(), len, yOffset - plateScale, -plateScale).color(255, 255, 255, 255).tex(0.75F, textVSt).lightmap(medLight).endVertex();
+				builder.pos(matrix.getLast().getMatrix(), len, yOffset + plateScale, -plateScale).color(255, 255, 255, 255).tex(0.75F, textVSt + 0.25F).lightmap(medLight).endVertex();
+				builder.pos(matrix.getLast().getMatrix(), len, yOffset + plateScale, plateScale).color(255, 255, 255, 255).tex(1, textVSt + 0.25F).lightmap(medLight).endVertex();
+				builder.pos(matrix.getLast().getMatrix(), len, yOffset - plateScale, plateScale).color(255, 255, 255, 255).tex(1, textVSt).lightmap(medLight).endVertex();
 
 				matrix.rotate(Vector3f.YP.rotationDegrees(360F / 8F));
 			}
@@ -67,7 +67,7 @@ public class FluxSinkRenderer extends TileEntityRenderer<FluxSinkTileEntity>{
 		drawIcos(builder, matrix, scale, 0, 0, new int[] {255, 255, 255, 230}, combinedLight);
 
 		//See-through outer shell
-		drawIcos(builder, matrix, scale + 0.2F + (float) Math.sin(runtime / 20D) * 0.08F, 4, 4, new int[] {255, 255, 255, 35}, medLight);
+		drawIcos(builder, matrix, scale + 0.2F + (float) Math.sin(runtime / 20D) * 0.08F, 0.25F, 0.25F, new int[] {255, 255, 255, 35}, medLight);
 	}
 
 	//Angle of the axis of symmetry that each segment of the icosahedron is rotated about to form the overall shape
@@ -81,6 +81,11 @@ public class FluxSinkRenderer extends TileEntityRenderer<FluxSinkTileEntity>{
 		final float smallLen = scale / 2;
 		final float largeLen = goldRatio * smallLen;
 
+		final float uSt = 0;
+		final float uEn = 0.25F;
+		final float vSt = 0;
+		final float vEn = 0.25F;
+
 		Vector3f rotationAxis = new Vector3f(symmetryAxisX, symmetryAxisY, 0);
 		Vector3f rotationCounterAxis = new Vector3f(-symmetryAxisY, symmetryAxisX, 0);
 
@@ -90,14 +95,14 @@ public class FluxSinkRenderer extends TileEntityRenderer<FluxSinkTileEntity>{
 				//We double one of the vertices
 
 				builder.pos(matrix.getLast().getMatrix(), 0, largeLen, smallLen).color(col[0], col[1], col[2], col[3]).tex(cornerU, cornerV).lightmap(light).endVertex();
-				builder.pos(matrix.getLast().getMatrix(), 0, largeLen, -smallLen).color(col[0], col[1], col[2], col[3]).tex(4, 0).lightmap(light).endVertex();
-				builder.pos(matrix.getLast().getMatrix(), largeLen, smallLen, 0).color(col[0], col[1], col[2], col[3]).tex(0, 4).lightmap(light).endVertex();
-				builder.pos(matrix.getLast().getMatrix(), largeLen, smallLen, 0).color(col[0], col[1], col[2], col[3]).tex(0, 4).lightmap(light).endVertex();//Repeat for triangle
+				builder.pos(matrix.getLast().getMatrix(), 0, largeLen, -smallLen).color(col[0], col[1], col[2], col[3]).tex(uEn, vSt).lightmap(light).endVertex();
+				builder.pos(matrix.getLast().getMatrix(), largeLen, smallLen, 0).color(col[0], col[1], col[2], col[3]).tex(uSt, vEn).lightmap(light).endVertex();
+				builder.pos(matrix.getLast().getMatrix(), largeLen, smallLen, 0).color(col[0], col[1], col[2], col[3]).tex(uSt, vEn).lightmap(light).endVertex();//Repeat for triangle
 
 				builder.pos(matrix.getLast().getMatrix(), 0, largeLen, smallLen).color(col[0], col[1], col[2], col[3]).tex(cornerU, cornerV).lightmap(light).endVertex();
-				builder.pos(matrix.getLast().getMatrix(), 0, largeLen, -smallLen).color(col[0], col[1], col[2], col[3]).tex(cornerU, cornerV).lightmap(light).endVertex();
-				builder.pos(matrix.getLast().getMatrix(), -largeLen, smallLen, 0).color(col[0], col[1], col[2], col[3]).tex(cornerU, cornerV).lightmap(light).endVertex();
-				builder.pos(matrix.getLast().getMatrix(), -largeLen, smallLen, 0).color(col[0], col[1], col[2], col[3]).tex(cornerU, cornerV).lightmap(light).endVertex();//Repeat for triangle
+				builder.pos(matrix.getLast().getMatrix(), 0, largeLen, -smallLen).color(col[0], col[1], col[2], col[3]).tex(uEn, vSt).lightmap(light).endVertex();
+				builder.pos(matrix.getLast().getMatrix(), -largeLen, smallLen, 0).color(col[0], col[1], col[2], col[3]).tex(uSt, vEn).lightmap(light).endVertex();
+				builder.pos(matrix.getLast().getMatrix(), -largeLen, smallLen, 0).color(col[0], col[1], col[2], col[3]).tex(uSt, vEn).lightmap(light).endVertex();//Repeat for triangle
 
 				matrix.rotate(rotationAxis.rotationDegrees(72));
 			}

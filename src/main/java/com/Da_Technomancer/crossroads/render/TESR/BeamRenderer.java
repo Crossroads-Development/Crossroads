@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamManager;
-import com.Da_Technomancer.crossroads.API.beams.BeamUtil;
 import com.Da_Technomancer.crossroads.API.templates.IBeamRenderTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
@@ -39,6 +38,10 @@ public class BeamRenderer<T extends TileEntity & IBeamRenderTE> extends TileEnti
 	 * @param color The beam color
 	 */
 	public static void drawBeam(MatrixStack matrix, IVertexBuilder builder, float length, float width, Color color){
+		final float BEAM_SIDE_U = 0;
+		final float BEAM_END_U = 0.5F;
+		final float BEAM_V_STOP = 0.5F;
+		
 		float halfWidth = width / 2F;
 		int[] col = {color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()};
 		float endV = length / 2;//V-coord for the far edge of the sides
@@ -47,36 +50,36 @@ public class BeamRenderer<T extends TileEntity & IBeamRenderTE> extends TileEnti
 
 		//Sides
 		//-X
-		builder.pos(lastMatrix, -halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BeamUtil.BEAM_SIDE_U, 0);
-		builder.pos(lastMatrix, -halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BeamUtil.BEAM_SIDE_U, endV);
-		builder.pos(lastMatrix, -halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BeamUtil.BEAM_END_U, endV);
-		builder.pos(lastMatrix, -halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BeamUtil.BEAM_END_U, 0);
+		builder.pos(lastMatrix, -halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_SIDE_U, 0).endVertex();
+		builder.pos(lastMatrix, -halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_SIDE_U, endV).endVertex();
+		builder.pos(lastMatrix, -halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_END_U, endV).endVertex();
+		builder.pos(lastMatrix, -halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_END_U, 0).endVertex();
 		//+X
-		builder.pos(lastMatrix, halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BeamUtil.BEAM_SIDE_U, 0);
-		builder.pos(lastMatrix, halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BeamUtil.BEAM_SIDE_U, endV);
-		builder.pos(lastMatrix, halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BeamUtil.BEAM_END_U, endV);
-		builder.pos(lastMatrix, halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BeamUtil.BEAM_END_U, 0);
+		builder.pos(lastMatrix, halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_SIDE_U, 0).endVertex();
+		builder.pos(lastMatrix, halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_SIDE_U, endV).endVertex();
+		builder.pos(lastMatrix, halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_END_U, endV).endVertex();
+		builder.pos(lastMatrix, halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_END_U, 0).endVertex();
 		//-Z
-		builder.pos(lastMatrix, -halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BeamUtil.BEAM_SIDE_U, 0);
-		builder.pos(lastMatrix, -halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BeamUtil.BEAM_SIDE_U, endV);
-		builder.pos(lastMatrix, halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BeamUtil.BEAM_END_U, endV);
-		builder.pos(lastMatrix, halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BeamUtil.BEAM_END_U, 0);
+		builder.pos(lastMatrix, -halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_SIDE_U, 0).endVertex();
+		builder.pos(lastMatrix, -halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_SIDE_U, endV).endVertex();
+		builder.pos(lastMatrix, halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_END_U, endV).endVertex();
+		builder.pos(lastMatrix, halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_END_U, 0).endVertex();
 		//+Z
-		builder.pos(lastMatrix, -halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BeamUtil.BEAM_SIDE_U, 0);
-		builder.pos(lastMatrix, -halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BeamUtil.BEAM_SIDE_U, endV);
-		builder.pos(lastMatrix, halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BeamUtil.BEAM_END_U, endV);
-		builder.pos(lastMatrix, halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BeamUtil.BEAM_END_U, 0);
+		builder.pos(lastMatrix, -halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_SIDE_U, 0).endVertex();
+		builder.pos(lastMatrix, -halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_SIDE_U, endV).endVertex();
+		builder.pos(lastMatrix, halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_END_U, endV).endVertex();
+		builder.pos(lastMatrix, halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_END_U, 0).endVertex();
 
 		//Near end
-		builder.pos(lastMatrix, -halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BeamUtil.BEAM_END_U, 0);
-		builder.pos(lastMatrix, -halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BeamUtil.BEAM_END_U, BeamUtil.BEAM_V_STOP);
-		builder.pos(lastMatrix, halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).tex(1, BeamUtil.BEAM_V_STOP);
-		builder.pos(lastMatrix, halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(1, 0);
+		builder.pos(lastMatrix, -halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_END_U, 0).endVertex();
+		builder.pos(lastMatrix, -halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_END_U, BEAM_V_STOP).endVertex();
+		builder.pos(lastMatrix, halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).tex(1, BEAM_V_STOP).endVertex();
+		builder.pos(lastMatrix, halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(1, 0).endVertex();
 		//Far end
-		builder.pos(lastMatrix, -halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BeamUtil.BEAM_END_U, 0);
-		builder.pos(lastMatrix, -halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BeamUtil.BEAM_END_U, BeamUtil.BEAM_V_STOP);
-		builder.pos(lastMatrix, halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).tex(1, BeamUtil.BEAM_V_STOP);
-		builder.pos(lastMatrix, halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(1, 0);
+		builder.pos(lastMatrix, -halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_END_U, 0).endVertex();
+		builder.pos(lastMatrix, -halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_END_U, BEAM_V_STOP).endVertex();
+		builder.pos(lastMatrix, halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).tex(1, BEAM_V_STOP).endVertex();
+		builder.pos(lastMatrix, halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(1, 0).endVertex();
 	}
 
 	@Override

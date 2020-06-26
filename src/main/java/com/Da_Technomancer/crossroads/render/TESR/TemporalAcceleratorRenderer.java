@@ -19,6 +19,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.world.IWorld;
 
 public class TemporalAcceleratorRenderer extends LinkLineRenderer<TemporalAcceleratorTileEntity>{
 
@@ -50,34 +51,34 @@ public class TemporalAcceleratorRenderer extends LinkLineRenderer<TemporalAccele
 			matrix.translate(0, radius + 0.5D - 0.001D, 0);
 
 			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, -radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 0).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, -radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(16, 0).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(16, 16).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 16).endVertex();
+			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, -radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(8, 0).endVertex();
+			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(8, 8).endVertex();
+			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 8).endVertex();
 
 			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 0).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(16, 0).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(16, 16).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 16).endVertex();
+			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(8, 0).endVertex();
+			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(8, 8).endVertex();
+			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 8).endVertex();
 
 			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, -radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 0).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(16, 0).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(16, 16).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 16).endVertex();
+			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(8, 0).endVertex();
+			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(8, 8).endVertex();
+			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 8).endVertex();
 
 			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, -radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 0).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(16, 0).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(16, 16).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 16).endVertex();
+			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(8, 0).endVertex();
+			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(8, 8).endVertex();
+			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 8).endVertex();
 
 			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, -radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 0).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, -radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(16, 0).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(16, 16).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 16).endVertex();
+			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, -radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(8, 0).endVertex();
+			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(8, 8).endVertex();
+			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 8).endVertex();
 
 			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 0).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(16, 0).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(16, 16).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 16).endVertex();
+			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(8, 0).endVertex();
+			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(8, 8).endVertex();
+			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 8).endVertex();
 
 			matrix.pop();
 		}
@@ -87,7 +88,7 @@ public class TemporalAcceleratorRenderer extends LinkLineRenderer<TemporalAccele
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_TEXTURE);
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
 		int[] col = CRRenderUtil.convertColor(GearFactory.findMaterial("copshowium").getColor());
-		float angle = te.getWorld().getGameTime() + partialTicks;
+		float angle = CRRenderUtil.getRenderTime(partialTicks, te.getWorld());
 		float lHalf = 7F / 16F;//Half the side length of the octagon
 		int medLight = CRRenderUtil.calcMediumLighting(combinedLight);
 

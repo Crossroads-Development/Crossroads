@@ -19,14 +19,14 @@ public final class CRFluids{
 	public static ArrayList<Fluid> toRegister = new ArrayList<>();
 
 	public static void init(){
-		distilledWater = GenericFluid.create("distilled_water", false);
-		dirtyWater = GenericFluid.create("dirty_water", false);
-		steam = GenericFluid.create("steam", false);
-		liquidFat = GenericFluid.create("liquid_fat", false);
-		moltenIron = GenericFluid.create("molten_iron", true);
-		moltenGold = GenericFluid.create("molten_gold", true);
-		moltenCopper = GenericFluid.create("molten_copper", true);
-		moltenTin = GenericFluid.create("molten_tin", true);
-		moltenCopshowium = GenericFluid.create("molten_copshowium", true);
+		distilledWater = GenericFluid.create("distilled_water", false, false);
+		dirtyWater = GenericFluid.create("dirty_water", false, false);
+		steam = GenericFluid.create("steam", false, true);
+		liquidFat = GenericFluid.create("liquid_fat", false, false);
+		moltenIron = GenericFluid.create("molten_iron", true, false);
+		moltenGold = GenericFluid.create("molten_gold", true, false);
+		moltenCopper = GenericFluid.create("molten_copper", true, false);
+		moltenTin = GenericFluid.create("molten_tin", true, false);
+		moltenCopshowium = GenericFluid.create("molten_copshowium", true, false);
 	}
 }

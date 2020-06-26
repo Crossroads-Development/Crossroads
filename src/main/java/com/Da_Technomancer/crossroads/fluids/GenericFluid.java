@@ -24,14 +24,14 @@ public class GenericFluid extends FlowingFluidBlock{
 	private static final Block.Properties BLOCK_PROP_HOT = Block.Properties.create(Material.LAVA).doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops().lightValue(15);
 	private static final Item.Properties BUCKET_PROP = new Item.Properties().containerItem(Items.BUCKET).maxStackSize(1).group(ItemGroup.MISC);
 
-	public static FluidData create(String name, boolean lavaLike){
+	public static FluidData create(String name, boolean lavaLike, boolean gaseous){
 		FluidData data = new FluidData();
 		Supplier<FlowingFluid> stillS = () -> data.still;
 		Supplier<FlowingFluid> flowS = () -> data.flowing;
 		Supplier<FlowingFluidBlock> blockS = () -> data.block;
 		Supplier<Item> itemS = () -> data.bucket;
-		data.still = new Still(name, stillS, flowS, blockS, itemS);
-		data.flowing = new Flowing(name, stillS, flowS, blockS, itemS);
+		data.still = new Still(name, stillS, flowS, blockS, itemS, lavaLike, gaseous);
+		data.flowing = new Flowing(name, stillS, flowS, blockS, itemS, lavaLike, gaseous);
 		data.bucket = new BucketItem(stillS, BUCKET_PROP).setRegistryName(name + "_bucket");
 		data.block = new GenericFluid(name, stillS, lavaLike ? BLOCK_PROP_HOT : BLOCK_PROP);
 
@@ -61,16 +61,16 @@ public class GenericFluid extends FlowingFluidBlock{
 
 	private static class Flowing extends ForgeFlowingFluid.Flowing{
 
-		private Flowing(String name, Supplier<? extends Fluid> stillSupplier, Supplier<? extends Fluid> flowSupplier, Supplier<FlowingFluidBlock> blockSupplier, Supplier<Item> bucketSupplier){
-			super(new Properties(stillSupplier, flowSupplier, FluidAttributes.builder(new ResourceLocation(Crossroads.MODID, "block/" + name + "_still"), new ResourceLocation(Crossroads.MODID, "block/" + name + "_flow"))).block(blockSupplier).bucket(bucketSupplier));
+		private Flowing(String name, Supplier<? extends Fluid> stillSupplier, Supplier<? extends Fluid> flowSupplier, Supplier<FlowingFluidBlock> blockSupplier, Supplier<Item> bucketSupplier, boolean hot, boolean gaseous){
+			super(new Properties(stillSupplier, flowSupplier, FluidAttributes.builder(new ResourceLocation(Crossroads.MODID, "block/" + name + "_still"), new ResourceLocation(Crossroads.MODID, "block/" + name + "_flow")).luminosity(hot ? 15 : 0).density(gaseous ? -100 : 1000).temperature(hot ? 3000 : 300).viscosity(gaseous ? 500 : hot ? 6000 : 1000)).block(blockSupplier).bucket(bucketSupplier));
 			setRegistryName("flowing_" + name);
 		}
 	}
 
 	private static class Still extends ForgeFlowingFluid.Source{
 
-		private Still(String name, Supplier<? extends Fluid> stillSupplier, Supplier<? extends Fluid> flowSupplier, Supplier<FlowingFluidBlock> blockSupplier, Supplier<Item> bucketSupplier){
-			super(new Properties(stillSupplier, flowSupplier, FluidAttributes.builder(new ResourceLocation(Crossroads.MODID, "block/" + name + "_still"), new ResourceLocation(Crossroads.MODID, "block/" + name + "_flow"))).block(blockSupplier).bucket(bucketSupplier));
+		private Still(String name, Supplier<? extends Fluid> stillSupplier, Supplier<? extends Fluid> flowSupplier, Supplier<FlowingFluidBlock> blockSupplier, Supplier<Item> bucketSupplier, boolean hot, boolean gaseous){
+			super(new Properties(stillSupplier, flowSupplier, FluidAttributes.builder(new ResourceLocation(Crossroads.MODID, "block/" + name + "_still"), new ResourceLocation(Crossroads.MODID, "block/" + name + "_flow")).luminosity(hot ? 15 : 0).density(gaseous ? -100 : 1000).temperature(hot ? 3000 : 300).viscosity(gaseous ? 500 : hot ? 6000 : 1000)).block(blockSupplier).bucket(bucketSupplier));
 			setRegistryName(name);
 		}
 	}

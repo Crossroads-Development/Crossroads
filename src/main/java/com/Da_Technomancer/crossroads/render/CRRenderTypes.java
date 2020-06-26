@@ -32,13 +32,13 @@ public class CRRenderTypes extends RenderType{
 	public static final ResourceLocation GATEWAY_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/gateway");
 
 	//Stitched to beam atlas
-	public static final ResourceLocation BEAM_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/beam");
+	public static final ResourceLocation BEAM_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/beam.png");
 
 	//Stitched to flux sink atlas
-	public static final ResourceLocation FLUX_SINK_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/flux_sink");
+	public static final ResourceLocation FLUX_SINK_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/flux_sink.png");
 
 	//Stitched to area-of-effect atlas
-	public static final ResourceLocation AREA_OVERLAY_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/field");
+	public static final ResourceLocation AREA_OVERLAY_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/field.png");
 
 	//Types
 	public static final RenderType BEAM_TYPE = RenderType.makeType("cr_beam", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, false, true, RenderType.State.getBuilder().cull(RenderState.CULL_DISABLED).texture(new RenderState.TextureState(BEAM_TEXTURE, false, false)).build(false));

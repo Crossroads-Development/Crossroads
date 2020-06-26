@@ -30,7 +30,7 @@ public class HeatingCrucibleRenderer extends TileEntityRenderer<HeatingCrucibleT
 			return;
 		}
 
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
+		IVertexBuilder builder = buffer.getBuffer(RenderType.getTranslucent());
 		TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(te.getActiveTexture());
 
 		int light = CRRenderUtil.calcMediumLighting(combinedLight);//We want the molten fluid to glow in the dark slightly

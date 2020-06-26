@@ -51,7 +51,7 @@ public class HamsterWheelRenderer extends TileEntityRenderer<HamsterWheelTileEnt
 		float xRad = .025F;
 		float yRad = .035F;
 		float zRad = .03125F;
-		float sideUEn = sprite.getInterpolatedU(2);
+		float sideUEn = sprite.getInterpolatedU(8);
 		int[] col = {255, 255, 255, 255};
 
 		for(int i = 0; i < 2; i++){

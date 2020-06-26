@@ -7,7 +7,9 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -20,7 +22,7 @@ import java.util.List;
 public class PermeableGlass extends Block{
 
 	public PermeableGlass(){
-		super(Properties.create(Material.GLASS).hardnessAndResistance(.5F).sound(SoundType.GLASS));
+		super(Properties.create(Material.GLASS).hardnessAndResistance(.5F).sound(SoundType.GLASS).notSolid());
 		String name = "permeable_glass";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
@@ -29,25 +31,34 @@ public class PermeableGlass extends Block{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public float getAmbientOcclusionLightValue(BlockState p_220080_1_, IBlockReader p_220080_2_, BlockPos p_220080_3_) {
+	public float getAmbientOcclusionLightValue(BlockState state, IBlockReader world, BlockPos pos){
 		return 1.0F;
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(BlockState p_200123_1_, IBlockReader p_200123_2_, BlockPos p_200123_3_) {
+	public boolean propagatesSkylightDown(BlockState state, IBlockReader world, BlockPos pos){
 		return true;
 	}
 
 	@Override
-	public boolean causesSuffocation(BlockState p_220060_1_, IBlockReader p_220060_2_, BlockPos p_220060_3_) {
+	public VoxelShape getRenderShape(BlockState p_196247_1_, IBlockReader p_196247_2_, BlockPos p_196247_3_){
+		return super.getRenderShape(p_196247_1_, p_196247_2_, p_196247_3_);
+	}
+
+	@Override
+	public boolean causesSuffocation(BlockState state, IBlockReader world, BlockPos pos){
 		return false;
 	}
 
-//	@OnlyIn(Dist.CLIENT)
-//	@Override
-//	public BlockRenderLayer getRenderLayer(){
-//		return BlockRenderLayer.CUTOUT;
-//	}
+	@Override
+	public boolean isNormalCube(BlockState p_220081_1_, IBlockReader p_220081_2_, BlockPos p_220081_3_){
+		return false;
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public boolean isSideInvisible(BlockState state, BlockState otherState, Direction dir) {
+		return otherState.getBlock() == this || super.isSideInvisible(state, otherState, dir);
+	}
 
 	@OnlyIn(Dist.CLIENT)
 	@Override

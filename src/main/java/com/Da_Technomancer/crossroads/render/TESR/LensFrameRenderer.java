@@ -23,12 +23,12 @@ public class LensFrameRenderer extends BeamRenderer<LensFrameTileEntity>{
 	private static final ResourceLocation[] LENS_FRAME_TEXTURES = new ResourceLocation[6];
 
 	static{
-		LENS_FRAME_TEXTURES[0] = new ResourceLocation(Crossroads.MODID, "textures/item/gem_ruby.png");
-		LENS_FRAME_TEXTURES[1] = new ResourceLocation("textures/item/emerald.png");
-		LENS_FRAME_TEXTURES[2] = new ResourceLocation("textures/item/diamond.png");
-		LENS_FRAME_TEXTURES[3] = new ResourceLocation(Crossroads.MODID, "textures/item/pure_quartz.png");
-		LENS_FRAME_TEXTURES[4] = new ResourceLocation(Crossroads.MODID, "textures/item/glow_quartz.png");
-		LENS_FRAME_TEXTURES[5] = new ResourceLocation(Crossroads.MODID, "textures/item/void_crystal.png");
+		LENS_FRAME_TEXTURES[0] = new ResourceLocation(Crossroads.MODID, "item/gem_ruby");
+		LENS_FRAME_TEXTURES[1] = new ResourceLocation("item/emerald");
+		LENS_FRAME_TEXTURES[2] = new ResourceLocation("item/diamond");
+		LENS_FRAME_TEXTURES[3] = new ResourceLocation(Crossroads.MODID, "item/pure_quartz");
+		LENS_FRAME_TEXTURES[4] = new ResourceLocation(Crossroads.MODID, "item/glow_quartz");
+		LENS_FRAME_TEXTURES[5] = new ResourceLocation(Crossroads.MODID, "item/void_crystal");
 	}
 
 	protected LensFrameRenderer(TileEntityRendererDispatcher dispatcher){
@@ -60,7 +60,7 @@ public class LensFrameRenderer extends BeamRenderer<LensFrameTileEntity>{
 			IVertexBuilder builder = buffer.getBuffer(RenderType.getCutout());
 			float scale = 0.5F;
 			float height = 0.1F;
-			TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(LENS_FRAME_TEXTURES[content]);
+			TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(LENS_FRAME_TEXTURES[content - 1]);
 
 			CRRenderUtil.addVertexBlock(builder, matrix, -scale, height, -scale, sprite.getMinU(), sprite.getMinV(), 0, 1, 0, combinedLight);
 			CRRenderUtil.addVertexBlock(builder, matrix, -scale, height, scale, sprite.getMinU(), sprite.getMaxV(), 0, 1, 0, combinedLight);

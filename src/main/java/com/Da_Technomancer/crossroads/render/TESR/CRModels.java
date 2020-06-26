@@ -4,8 +4,12 @@ import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Quaternion;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.util.math.Vec3d;
 
 import java.awt.*;
 
@@ -137,7 +141,7 @@ public class CRModels{
 		matrix.translate(0, top, 0);
 		draw24Polygon(matrix, builder, light, col, sprite);//Top
 		matrix.translate(0, bottom - top, 0);
-		matrix.scale(1, -1, 1);//Flip orientation
+		matrix.rotate(Vector3f.XP.rotationDegrees(180));//Flip orientation
 		draw24Polygon(matrix, builder, light, col, sprite);//Bottom
 		matrix.pop();
 
@@ -428,20 +432,8 @@ public class CRModels{
 	 * @param color The color to shade this by
 	 */
 	public static void drawAxle(MatrixStack matrix, IRenderTypeBuffer buffer, int light, Color color){
-		drawAxle(matrix, buffer, light, CRRenderUtil.getTextureSprite(CRRenderTypes.AXLE_SIDE_TEXTURE), CRRenderUtil.getTextureSprite(CRRenderTypes.AXLE_ENDS_TEXTURE), color);
-	}
-
-	/**
-	 * Switch to the other method if possible, otherwise stop using axles to draw arbitrary rectangular prisms
-	 * @param matrix The matrix to render relative to
-	 * @param buffer A generic buffer
-	 * @param light The combined light value
-	 * @param sides Side texture
-	 * @param ends End texture
-	 * @param color The color to shade this by
-	 */
-	@Deprecated
-	public static void drawAxle(MatrixStack matrix, IRenderTypeBuffer buffer, int light, TextureAtlasSprite sides, TextureAtlasSprite ends, Color color){
+		TextureAtlasSprite sides = CRRenderUtil.getTextureSprite(CRRenderTypes.AXLE_SIDE_TEXTURE);
+		TextureAtlasSprite ends = CRRenderUtil.getTextureSprite(CRRenderTypes.AXLE_ENDS_TEXTURE);
 		float radius = 1F / 16F;
 		float len = .4999F;
 		int[] col = {color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()};
@@ -527,62 +519,38 @@ public class CRModels{
 		final float vEnT = sprite.getInterpolatedV(4F);
 
 		final float vEnS = sprite.getInterpolatedV(2);
+		//Top and bottom have tilted normals
+		Vec3d normal = CRRenderUtil.findNormal(new Vec3d(-lenHalf, mid, edgeIn), new Vec3d(lenHalf, bottom, edgeIn), new Vec3d(-lenHalf, mid, edgeOut));
 
 		//Bottom
-		CRRenderUtil.addVertexBlock(builder, matrix, -lenHalf, mid, edgeIn, uStT, vStT, 0, -1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, lenHalf, bottom, edgeIn, uEnT, vStT, 0, -1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, lenHalf, bottom, edgeOut, uEnT, vEnT, 0, -1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -lenHalf, mid, edgeOut, uStT, vEnT, 0, -1, 0, light);
-//		vb.pos(-lenHalf, mid, edgeIn).tex(uStT, vStT).endVertex();
-//		vb.pos(lenHalf, bottom, edgeIn).tex(uEnT, vStT).endVertex();
-//		vb.pos(lenHalf, bottom, edgeOut).tex(uEnT, vEnT).endVertex();
-//		vb.pos(-lenHalf, mid, edgeOut).tex(uStT, vEnT).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, -lenHalf, mid, edgeIn, uStT, vStT, (float) normal.x, (float) normal.y, (float) normal.z, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, lenHalf, bottom, edgeIn, uEnT, vStT, (float) normal.x, (float) normal.y, (float) normal.z, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, lenHalf, bottom, edgeOut, uEnT, vEnT, (float) normal.x, (float) normal.y, (float) normal.z, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -lenHalf, mid, edgeOut, uStT, vEnT, (float) normal.x, (float) normal.y, (float) normal.z, light);
 		//Top
-		CRRenderUtil.addVertexBlock(builder, matrix, -lenHalf, top, edgeIn, uStT, vStT, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -lenHalf, top, edgeOut, uStT, vEnT, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -lenHalf, mid, edgeOut, uEnT, vEnT, 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -lenHalf, mid, edgeIn, uEnT, vStT, 0, 1, 0, light);
-//		vb.pos(-lenHalf, top, edgeIn).tex(uStT, vStT).endVertex();
-//		vb.pos(-lenHalf, top, edgeOut).tex(uStT, vEnT).endVertex();
-//		vb.pos(lenHalf, mid, edgeOut).tex(uEnT, vEnT).endVertex();
-//		vb.pos(lenHalf, mid, edgeIn).tex(uEnT, vStT).endVertex();
+		CRRenderUtil.addVertexBlock(builder, matrix, -lenHalf, top, edgeIn, uStT, vStT, (float) normal.x, (float) normal.y, (float) normal.z, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -lenHalf, top, edgeOut, uStT, vEnT, (float) normal.x, (float) normal.y, (float) normal.z, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, lenHalf, mid, edgeOut, uEnT, vEnT, (float) normal.x, (float) normal.y, (float) normal.z, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, lenHalf, mid, edgeIn, uEnT, vStT, (float) normal.x, (float) normal.y, (float) normal.z, light);
 		//Side
 		CRRenderUtil.addVertexBlock(builder, matrix, -lenHalf, mid, edgeOut, uStT, vStT, 0, 0, 1, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, lenHalf, bottom, edgeOut, uEnT, vStT, 0, 0, 1, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, lenHalf, mid, edgeOut, uEnT, vEnS, 0, 0, 1, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, -lenHalf, top, edgeOut, uStT, vEnS, 0, 0, 1, light);
-//		vb.pos(-lenHalf, mid, edgeOut).tex(uStT, vStT).endVertex();
-//		vb.pos(lenHalf, bottom, edgeOut).tex(uEnT, vStT).endVertex();
-//		vb.pos(lenHalf, mid, edgeOut).tex(uEnT, vEnS).endVertex();
-//		vb.pos(-lenHalf, top, edgeOut).tex(uStT, vEnS).endVertex();
 		//Side
 		CRRenderUtil.addVertexBlock(builder, matrix, -lenHalf, top, edgeIn, uStT, vStT, 0, 0, -1, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, lenHalf, mid, edgeIn, uEnT, vStT, 0, 0, -1, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, lenHalf, bottom, edgeIn, uEnT, vEnS, 0, 0, -1, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, -lenHalf, mid, edgeIn, uStT, vEnS, 0, 0, -1, light);
-//		vb.pos(-lenHalf, top, edgeIn).tex(uStT, vStT).endVertex();
-//		vb.pos(lenHalf, mid, edgeIn).tex(uEnT, vStT).endVertex();
-//		vb.pos(lenHalf, bottom, edgeIn).tex(uEnT, vEnS).endVertex();
-//		vb.pos(-lenHalf, mid, edgeIn).tex(uStT, vEnS).endVertex();
 		//End
 		CRRenderUtil.addVertexBlock(builder, matrix, -lenHalf, top, edgeIn, uStT, vStT, -1, 0, 0, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, -lenHalf, mid, edgeIn, uStT, vEnS, -1, 0, 0, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, -lenHalf, mid, edgeOut, uEnT, vEnS, -1, 0, 0, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, -lenHalf, top, edgeOut, uEnT, vStT, -1, 0, 0, light);
-//		vb.pos(-lenHalf, top, edgeIn).tex(uStT, vStT).endVertex();
-//		vb.pos(-lenHalf, mid, edgeIn).tex(uStT, vEnS).endVertex();
-//		vb.pos(-lenHalf, mid, edgeOut).tex(uEnT, vEnS).endVertex();
-//		vb.pos(-lenHalf, top, edgeOut).tex(uEnT, vStT).endVertex();
 		//End
 		CRRenderUtil.addVertexBlock(builder, matrix, lenHalf, mid, edgeIn, uStT, vStT, 1, 0, 0, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, lenHalf, mid, edgeOut, uEnT, vStT, 1, 0, 0, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, lenHalf, bottom, edgeOut, uEnT, vEnS, 1, 0, 0, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, lenHalf, bottom, edgeIn, uStT, vEnS, 1, 0, 0, light);
-//		vb.pos(lenHalf, mid, edgeIn).tex(uStT, vStT).endVertex();
-//		vb.pos(lenHalf, mid, edgeOut).tex(uEnT, vStT).endVertex();
-//		vb.pos(lenHalf, bottom, edgeOut).tex(uEnT, vEnS).endVertex();
-//		vb.pos(lenHalf, bottom, edgeIn).tex(uStT, vEnS).endVertex();
-
-		Tessellator.getInstance().draw();
 	}
 }
