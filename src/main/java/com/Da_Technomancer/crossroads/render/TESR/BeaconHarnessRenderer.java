@@ -93,7 +93,7 @@ public class BeaconHarnessRenderer extends LinkLineRenderer<BeaconHarnessTileEnt
 		float maxY = 15F / 16F;
 		float uEn = sprite.getInterpolatedU(2F * rad * 16F);
 		float vEn = sprite.getInterpolatedV(2F * rad * 16F);
-		//TODO
+
 		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, minY, z - rad, sprite.getMinU(), sprite.getMinV(), 0, 0, -1, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, maxY, z - rad, sprite.getMinU(), sprite.getMaxV(), 0, 0, -1, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, maxY, z - rad, uEn, sprite.getMaxV(), 0, 0, -1, light);
