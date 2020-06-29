@@ -246,6 +246,7 @@
 	"item.crossroads.molten_tin_bucket": "Molten Tin Bucket",
 	"item.crossroads.molten_copshowium_bucket": "Molten Copshowium Bucket",
 	"item.crossroads.recall_device": "Personal Time Rewinder",
+	"block.crossroads.steamer": "Steamer",
 
 	"item.crossroads.ore_gravel": "Raw %1$s Grit",
 	"item.crossroads.ore_clump": "%1$s Clump",
@@ -552,7 +553,9 @@
 	"tt.crossroads.recall_device.wrong_player": "You are not the player who stored this moment",
 	"tt.crossroads.recall_device.expired": "This saved moment is too old",
 	"tt.crossroads.recall_device.none": "No moment is saved",
-
+	"tt.crossroads.steamer.desc": "Cooks food quickly using steam (%1$d ticks/item)",
+	"tt.crossroads.steamer.water": "Produces: %1$dmB/t Distilled Water while running",
+	"tt.crossroads.steamer.steam": "Consumes: %1$dmB/t Steam while running",
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
 	"container.crossroads.boilerplate.speed": "%1$f rad/s",
@@ -582,6 +585,7 @@
 	"container.goggle_crafting": "Goggle Crafting",
 	"container.heat_limiter": "Temperature Regulator",
 	"container.rotary_pump": "Rotary Pump",
+	"container.steamer": "Steamer",
 
 
 	"material.iron": "Iron",

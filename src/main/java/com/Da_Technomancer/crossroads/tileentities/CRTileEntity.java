@@ -116,6 +116,7 @@ public class CRTileEntity{
 		register(ChronoHarnessTileEntity::new, "chrono_harness", reg, chronoHarness);
 		register(ReagentFilterTileEntity::new, "reagent_filter", reg, reagentFilterCrystal, reagentFilterGlass);
 		register(FluxSinkTileEntity::new, "flux_sink", reg, fluxSink);
+		register(SteamerTileEntity::new, "steamer", reg, steamer);
 	}
 
 	private static void register(Supplier<? extends TileEntity> cons, String id, IForgeRegistry<TileEntityType<?>> reg, Block... blocks){

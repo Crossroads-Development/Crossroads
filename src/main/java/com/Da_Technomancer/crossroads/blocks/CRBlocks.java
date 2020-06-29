@@ -140,6 +140,7 @@ public class CRBlocks{
 	public static TemporalAccelerator temporalAccelerator;
 	public static ChronoHarness chronoHarness;
 	public static FluxSink fluxSink;
+	public static Steamer steamer;
 
 	private static final Item.Properties itemBlockProp = new Item.Properties().group(CRItems.TAB_CROSSROADS);
 	public static final ArrayList<Block> toRegister = new ArrayList<>();
@@ -278,6 +279,7 @@ public class CRBlocks{
 		temporalAccelerator = new TemporalAccelerator();
 		chronoHarness = new ChronoHarness();
 		fluxSink = new FluxSink();
+		steamer = new Steamer();
 	}
 
 	@OnlyIn(Dist.CLIENT)

@@ -228,6 +228,7 @@ public final class Crossroads{
 		registerCon(DetailedCrafterContainer::new, DetailedCrafterScreen::new, "detailed_crafter", e);
 		registerCon(ReagentFilterContainer::new, ReagentFilterScreen::new, "reagent_filter", e);
 		registerCon(CopshowiumMakerContainer::new, CopshowiumMakerScreen::new, "copshowium_maker", e);
+		registerCon(SteamerContainer::new, SteamerScreen::new, "steamer", e);
 	}
 
 	@SuppressWarnings("unused")
@@ -258,6 +259,7 @@ public final class Crossroads{
 		registerConType(DetailedCrafterContainer::new, "detailed_crafter", e);
 		registerConType(ReagentFilterContainer::new, "reagent_filter", e);
 		registerConType(CopshowiumMakerContainer::new, "copshowium_maker", e);
+		registerConType(SteamerContainer::new, "steamer", e);
 	}
 
 	/**

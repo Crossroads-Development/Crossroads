@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"north": "crossroads:block/steamer_side",
+		"south": "crossroads:block/steamer_side",
+		"east": "crossroads:block/steamer_side",
+		"west": "crossroads:block/steamer_side",
+		"up": "crossroads:block/steamer_end",
+		"down": "crossroads:block/steamer_end",
+		"particle": "crossroads:block/steamer_side"
+	}
+}

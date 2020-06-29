@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:steamer",
+		"count": 1
+	},
+	"pattern": [
+		"*P*",
+		"*F*",
+		"*P*"
+	],
+	"key": {
+		"*": {
+			"tag": "forge:ingots/iron"
+		},
+		"P": {
+			"item": "crossroads:fluid_tube"
+		},
+		"F": {
+			"item": "minecraft:smoker"
+		}
+	}
+}
