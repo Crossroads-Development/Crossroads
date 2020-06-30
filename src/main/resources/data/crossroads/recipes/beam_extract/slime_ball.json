@@ -3,5 +3,6 @@
 	"input": {
 		"tag": "forge:slimeballs"
 	},
-	"potential": 24
+	"potential": 12,
+	"duration": 4
 }

@@ -202,7 +202,6 @@
 	"block.crossroads.atmos_charger": "Atmospheric Attenuator",
 	"block.crossroads.voltus_generator": "Voltus Generator",
 	"item.crossroads.flying_machine": "Flying Machine",
-	"entity.flying_machine": "Flying Machine",
 	"block.crossroads.reactive_spot": "Reactive Spot (Internal)",
 	"block.crossroads.clock_stabilizer": "Clockwork Stabilizer",
 	"item.crossroads.tesla_ray": "Tesla Death-Ray",
@@ -247,6 +246,8 @@
 	"item.crossroads.molten_copshowium_bucket": "Molten Copshowium Bucket",
 	"item.crossroads.recall_device": "Personal Time Rewinder",
 	"block.crossroads.steamer": "Steamer",
+	"block.crossroads.winding_table": "Spring Winding Stand",
+	"item.crossroads.spring_gun": "Spring-Loaded Crossbow",
 
 	"item.crossroads.ore_gravel": "Raw %1$s Grit",
 	"item.crossroads.ore_clump": "%1$s Clump",
@@ -276,6 +277,14 @@
 	"fluid.crossroads.flowing_molten_copper": "Molten Copper",
 	"fluid.crossroads.flowing_molten_tin": "Molten Tin",
 	"fluid.crossroads.flowing_molten_copshowium": "Molten Copshowium",
+
+
+	"entity.cr_bullet": "Bullet",
+	"entity.flame_core": "Alchemy Flame Cloud",
+	"entity.flying_machine": "Flying Machine",
+	"entity.ghost_marker": "Internal Position Anchor",
+	"entity.nitro": "Nitroglycerin Bottle",
+	"entity.shell": "Chemical Shell",
 
 
 	"tt.crossroads.salt_block": "Kills plants and slimes around it",
@@ -556,6 +565,21 @@
 	"tt.crossroads.steamer.desc": "Cooks food quickly using steam (%1$d ticks/item)",
 	"tt.crossroads.steamer.water": "Produces: %1$dmB/t Distilled Water while running",
 	"tt.crossroads.steamer.steam": "Consumes: %1$dmB/t Steam while running",
+	"tt.crossroads.winding_table.empty": "No item being wound",
+	"tt.crossroads.winding_table.winding": "Winding: %1$s/%2$s rad/s",
+	"tt.crossroads.winding_table.power": "Resistive Power: -%1$s J/t",
+	"tt.crossroads.spring_gun.state": "Spring Speed: %1$s; Damage: %2$s",
+	"tt.crossroads.spring_gun.desc": "Shoots metal nuggets for high damage, must be re-wound each shot",
+	"tt.crossroads.spring_gun.winding": "Wound in a Spring Winding Table. Does more damage when wound more, up to %2$s at %1$srad/s",
+	"tt.crossroads.spring_gun.quip": "A gun if gunpowder was made of springs",
+	"tt.crossroads.winding_table.desc": "Winds up certain items using rotary power; I: %1$s",
+	"tt.crossroads.winding_table.reds": "Increases the wound speed by %1$s with each redstone pulse",
+	"tt.crossroads.winding_table.counter": "Applies a resistive power loss of -%1$s J/t per rad/s of the item being wound",
+	"tt.crossroads.winding_table.destroy": "Destroys the item if the block's speed drops below the item's speed",
+	"tt.crossroads.winding_table.loss": "Loses all progress if the block's speed drops below the item's speed",
+	"tt.crossroads.winding_table.circuit": "Circuits read the speed of the item being wound, in rad/s",
+	"tt.crossroads.copshowium.quip": "Copper-Shiny-Orange-Weirdness-ium",
+
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
 	"container.crossroads.boilerplate.speed": "%1$f rad/s",
@@ -586,6 +610,7 @@
 	"container.heat_limiter": "Temperature Regulator",
 	"container.rotary_pump": "Rotary Pump",
 	"container.steamer": "Steamer",
+	"container.winding_table": "Spring Winder",
 
 
 	"material.iron": "Iron",
@@ -672,11 +697,13 @@
 	"death.attack.vodka": "%1$s dissolved their own liver",
 	"death.attack.vodka.player": "%1$s dissolved their own liver",
 	"death.attack.potentialvoid": "%1$s has no potential",
-	"death.attack.potentialvoid.player": "%2$s stole %1$s's potential",
+	"death.attack.potentialvoid.player": "%2$s destroyed %1$s's potential",
 	"death.attack.salt": "%1$s couldn't handle the salinity",
 	"death.attack.salt.player": "%1$s was seasoned to death by %2$s",
 	"death.attack.chemical": "%1$s died from a chemical spill",
 	"death.attack.chemical.player": "%2$s spilled chemicals on %1$s",
+	"death.attack.cr_bullet": "%1$s was shot",
+	"death.attack.cr_bullet.player": "%1$s was shot by %2$s",
 
 
 	"crossroads.command.discover.no_elem": "That alignment does not exist",

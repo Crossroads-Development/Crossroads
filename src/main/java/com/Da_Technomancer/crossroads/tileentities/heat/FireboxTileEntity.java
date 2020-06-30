@@ -1,8 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
-import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -15,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.IntReferenceHolder;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.ForgeHooks;
@@ -35,8 +33,6 @@ public class FireboxTileEntity extends InventoryTE{
 	public static final int POWER = 10;
 	private static final int MAX_TEMP = 15_000;
 
-	public IntReferenceHolder burnProg = IntReferenceHolder.single();
-
 	private int burnTime;
 	private int maxBurnTime = 0;
 
@@ -47,6 +43,10 @@ public class FireboxTileEntity extends InventoryTE{
 	@Override
 	protected boolean useHeat(){
 		return true;
+	}
+
+	public int getBurnProg(){
+		return maxBurnTime == 0 ? 0 : 100 * burnTime / maxBurnTime;
 	}
 
 	@Override
@@ -61,7 +61,6 @@ public class FireboxTileEntity extends InventoryTE{
 			if(--burnTime == 0){
 				world.setBlockState(pos, CRBlocks.firebox.getDefaultState(), 18);
 			}
-			burnProg.set(maxBurnTime == 0 ? 0 : 100 * burnTime / maxBurnTime);
 			markDirty();
 		}
 
@@ -69,7 +68,6 @@ public class FireboxTileEntity extends InventoryTE{
 		if(burnTime == 0 && (fuelBurn = ForgeHooks.getBurnTime(inventory[0])) != 0){
 			burnTime = fuelBurn;
 			maxBurnTime = burnTime;
-			burnProg.set(100 * burnTime / maxBurnTime);
 			Item item = inventory[0].getItem();
 			inventory[0].shrink(1);
 			if(inventory[0].isEmpty() && item.hasContainerItem(inventory[0])){
@@ -85,7 +83,6 @@ public class FireboxTileEntity extends InventoryTE{
 		super.read(nbt);
 		burnTime = nbt.getInt("burn");
 		maxBurnTime = nbt.getInt("max_burn");
-		burnProg.set(maxBurnTime == 0 ? 0 : 100 * burnTime / maxBurnTime);
 	}
 
 	@Override

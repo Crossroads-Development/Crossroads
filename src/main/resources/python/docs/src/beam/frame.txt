@@ -8,4 +8,4 @@ Using an emerald will delete anything from the beam that isn't <thing>potential/
 Using a diamond will delete anything from the beam that isn't <thing>stability/$.
 Using a <link:intro/ores>void crystal/$ will convert the entire beam to <thing><link:beam/void>void/$.
 Using <link:fluid/ingr>pure quartz/$ with a <thing>light alignment/$ beam will convert the <link:fluid/ingr>pure quartz/$ to bright quartz. This is a cheap way to make bright quartz, as it doesn't consume the beam.
-<thing><link:essentials/circuits>Circuits/$ will read the <thing>power/$ of the beam currently going through the <item>lens frame/$.
+<thing><link:essentials/circuits#reader>Circuits/$ will read the <thing>power/$ of the beam currently going through the <item>lens frame/$.

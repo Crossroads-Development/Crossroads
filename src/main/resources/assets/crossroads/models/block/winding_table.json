@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"north": "crossroads:block/winding_table_side",
+		"south": "crossroads:block/winding_table_side",
+		"east": "crossroads:block/winding_table_side",
+		"west": "crossroads:block/winding_table_side",
+		"up": "crossroads:block/winding_table_top",
+		"down": "crossroads:block/winding_table_down",
+		"particle": "crossroads:block/winding_table_side"
+	}
+}

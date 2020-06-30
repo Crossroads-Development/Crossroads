@@ -16,7 +16,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.IntReferenceHolder;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
@@ -39,7 +38,6 @@ public class OreCleanserTileEntity extends InventoryTE{
 
 	public static final int WATER_USE = 250;
 
-	public IntReferenceHolder progRef = IntReferenceHolder.single();
 	private int progress = 0;//Out of 50
 
 	public OreCleanserTileEntity(){
@@ -52,6 +50,10 @@ public class OreCleanserTileEntity extends InventoryTE{
 	@Override
 	public int fluidTanks(){
 		return 2;
+	}
+
+	public int getProgress(){
+		return Math.min(progress, 50);
 	}
 
 	@Override
@@ -80,12 +82,8 @@ public class OreCleanserTileEntity extends InventoryTE{
 			progress++;
 			markDirty();
 			if(progress < 50){
-				progRef.set(progress);
 				return;
 			}
-
-			progress = 0;
-			progRef.set(progress);
 
 			fluids[0].shrink(WATER_USE);
 
@@ -103,7 +101,6 @@ public class OreCleanserTileEntity extends InventoryTE{
 			}
 		}else{
 			progress = 0;
-			progRef.set(progress);
 		}
 	}
 
@@ -111,7 +108,6 @@ public class OreCleanserTileEntity extends InventoryTE{
 	public void read(CompoundNBT nbt){
 		super.read(nbt);
 		progress = nbt.getInt("prog");
-		progRef.set(progress);
 	}
 
 	@Override

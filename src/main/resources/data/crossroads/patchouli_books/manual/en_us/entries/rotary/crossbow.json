@@ -1,0 +1,24 @@
+{
+	"category": "rotary",
+	"name": "Spring-Loaded Crossbow",
+	"icon": "crossroads:spring_gun",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Spring-Loaded Crossbow",
+			"item": "crossroads:spring_gun",
+			"text": "The <item>Spring-Loaded Crossbow/$ is an unwieldy but powerful weapon that takes the Crossbow's high damage but long prep time to extremes. It is able to do up to 50 damage per shot, but has to be re-wound after each shot.$(br2)The <item>Spring-Loaded Crossbow/$ is wound in an "
+		},
+		{
+			"type": "text",
+			"text": "<item>$(l:rotary/winding_table)Spring Winding Stand/$ to increase the wound speed the <item>weapon/$, up to 10 rad/s. The higher the wound speed, the higher the damage done with each shot, with diminishing returns. The minimum speed to shoot is 1 rad/s and does 5 damage, while the maximum speed of 10 rad/s does 50 damage per shot.$(br2)Right-clicking with a <item>Spring-Loaded Crossbow/$ "
+		},
+		{
+			"type": "text",
+			"text": "wound to <em>at least/$ 1 rad/s will fire it, consuming any metal nugget as ammo. The entire wound speed is reset to 0 with each shot, requiring the weapon to be re-wound. The shot bullet travels faster and does more damage at higher wound speeds.$(br2)"
+		}
+	]
+}

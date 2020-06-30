@@ -15,7 +15,7 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.IntReferenceHolder;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
@@ -25,6 +25,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @ObjectHolder(Crossroads.MODID)
@@ -50,6 +51,12 @@ public class SmelterTileEntity extends InventoryTE{
 	@Override
 	protected boolean useHeat(){
 		return true;
+	}
+
+	@Override
+	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.progress", progress, REQUIRED));
+		super.addInfo(chat, player, hit);
 	}
 
 	@Override

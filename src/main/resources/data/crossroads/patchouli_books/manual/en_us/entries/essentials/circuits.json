@@ -2,23 +2,32 @@
 	"category": "essentials",
 	"name": "Circuitry",
 	"icon": "essentials:circuit_wrench",
+	"sortnum": 0,
+	"priority": false,
 	"read_by_default": "true",
 	"pages": [
 		{
-			"type": "text",
-			"text": "$(item)Circuits/$ are redstone devices like Repeaters or Comparators that are low-lag and can do advanced logic.$(br)Crossroads relies heavily on $(item)Circuits/$."
+			"type": "spotlight",
+			"title": "Circuitry",
+			"item": "essentials:circuit_wrench",
+			"text": "<item>Circuits/$ are redstone devices like Repeaters or Comparators that are low-lag and can do advanced logic.$(br2)Crossroads relies heavily on <item>Circuits/$ to automate several machines, but they are also very useful for vanilla redstone.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "Place $(item)Wire Plate/$, and use a $(item)Circuit Wrench/$ to convert the wire into the selected circuit (consumes Nether Quartz). Example circuits are $(item)AND/$, $(item)XOR/$, and $(item)Multiplication/$.$(br2)$(item)Circuits/$ that are either adjacent or connected with $(item)Wire Plate/$ can transfer redstone values other than the vanilla 0-15 integers, including values up to 1 billion and decimals."
+			"text": "Place <item>Wire Plate/$, and use a <item>Circuit Wrench/$ to convert the wire into the selected circuit (this consumes Nether Quartz). Shift-right-clicking with the <item>Circuit Wrench/$ opens a menu to choose which circuit to place, and which describes each circuit type. Example circuits are <item>AND/$, <item>XOR/$, and <item>Multiplication/$, which do what the names suggest.$(br2)<item>Circuits"
 		},
 		{
 			"type": "text",
-			"text": "$(item)Circuits/$ can connect directly to vanilla redstone, and a $(item)Wire Splice Plate/$ can connect $(item)Wire Plate/$ with vanilla redstone.$(br2)$(item)Circuits/$ allow compactly and easily making advanced redstone circuitry, and make doing actual math calculations with redstone easy."
+			"text": "<item>/$ that are either adjacent or connected with <item>Wire Plate/$ can transfer redstone values other than the vanilla 0-15 integers, including values up to 1 billion and decimals.$(br2)<item>Circuits/$ themselves can connect directly to vanilla redstone, and a <item>Wire Splice Plate/$ can connect <item>Wire Plate/$ with vanilla redstone. Each <item>Circuit/$ other than <item>Wire Plate/$ and "
 		},
 		{
 			"type": "text",
-			"text": "A very important circuit is the $(item)Reader Circuit/$, which is like a comparator, except it can measure larger values or with decimal points. A lot of Crossroads machines use this, so it's worth remembering!"
+			"text": "<item>Wire Splice Plate/$ has a two tick delay (1 redstone tick).$(br2)<item>Circuits/$ allow compactly and easily making advanced redstone circuitry, and make doing actual math calculations with redstone easy.$(br2)"
+		},
+		{
+			"type": "text",
+			"anchor": "reader",
+			"text": "A very important circuit is the <item>Reader Circuit/$, which is like a comparator, except it can measure larger values or with decimal points. A lot of Crossroads machines use this, so it's worth remembering!$(br2)"
 		}
 	]
 }

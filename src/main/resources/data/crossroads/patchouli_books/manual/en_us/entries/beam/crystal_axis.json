@@ -18,7 +18,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<thing>$(l:essentials/circuits)Circuits/$ measure the time remaining on the current <thing>$(l:intro/beam)alignment/$.$(br2)"
+			"text": "<thing>$(l:essentials/circuits#reader)Circuits/$ measure the time remaining on the current <thing>$(l:intro/beam)alignment/$.$(br2)"
 		},
 		{
 			"type": "text",

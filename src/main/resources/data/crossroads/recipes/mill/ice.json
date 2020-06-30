@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"item": "ice"
+	},
+	"output": {
+		"item": "snow",
+		"count": 1
+	}
+}

@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.rotary.BlastFurnaceTileEntity;
 import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
+import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
@@ -17,10 +18,15 @@ public class BlastFurnaceContainer extends MachineContainer<BlastFurnaceTileEnti
 	@ObjectHolder("ind_blast_furnace")
 	private static ContainerType<BlastFurnaceContainer> type = null;
 
+	public final IntDeferredRef carbRef;
+	public final IntDeferredRef progRef;
+
 	public BlastFurnaceContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
 		super(type, id, playerInv, buf);
-		trackInt(te.carbRef);
-		trackInt(te.progRef);
+		carbRef = new IntDeferredRef(te::getCarbon, te.getWorld().isRemote);
+		trackInt(carbRef);
+		progRef = new IntDeferredRef(te::getProgress, te.getWorld().isRemote);
+		trackInt(progRef);
 	}
 
 	@Override

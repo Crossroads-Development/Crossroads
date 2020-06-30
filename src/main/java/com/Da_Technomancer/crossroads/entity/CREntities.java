@@ -15,6 +15,7 @@ public final class CREntities{
 //		RenderingRegistry.registerEntityRenderingHandler(EntityArmRidable.class, RenderEmpty::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityShell.type, (EntityRendererManager manager) -> (new SpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer())));
 		RenderingRegistry.registerEntityRenderingHandler(EntityNitro.type, (EntityRendererManager manager) -> (new SpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer())));
+		RenderingRegistry.registerEntityRenderingHandler(EntityBullet.type, (EntityRendererManager manager) -> (new SpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer())));
 		RenderingRegistry.registerEntityRenderingHandler(EntityFlyingMachine.type, RenderFlyingMachine::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityFlameCore.type, RenderFlameCoreEntity::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityGhostMarker.type, RenderEmpty::new);

@@ -117,6 +117,7 @@ public class CRTileEntity{
 		register(ReagentFilterTileEntity::new, "reagent_filter", reg, reagentFilterCrystal, reagentFilterGlass);
 		register(FluxSinkTileEntity::new, "flux_sink", reg, fluxSink);
 		register(SteamerTileEntity::new, "steamer", reg, steamer);
+		register(WindingTableTileEntity::new, "winding_table", reg, windingTable);
 	}
 
 	private static void register(Supplier<? extends TileEntity> cons, String id, IForgeRegistry<TileEntityType<?>> reg, Block... blocks){

@@ -1,0 +1,26 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:winding_table",
+		"count": 1
+	},
+	"pattern": [
+		"CAC",
+		"CKC",
+		"III"
+	],
+	"key": {
+		"C": {
+			"tag": "forge:cobblestone"
+		},
+		"I": {
+			"tag": "forge:ingots/iron"
+		},
+		"A": {
+			"item": "crossroads:axle"
+		},
+		"K": {
+			"item": "crossroads:hand_crank"
+		}
+	}
+}

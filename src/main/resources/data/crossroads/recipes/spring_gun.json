@@ -1,0 +1,26 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:spring_gun",
+		"count": 1
+	},
+	"pattern": [
+		"TTT",
+		"ICI",
+		" S "
+	],
+	"key": {
+		"S": {
+			"tag": "forge:string"
+		},
+		"T": {
+			"tag": "forge:ingots/tin"
+		},
+		"I": {
+			"tag": "forge:ingots/iron"
+		},
+		"C": {
+			"item": "minecraft:crossbow"
+		}
+	}
+}

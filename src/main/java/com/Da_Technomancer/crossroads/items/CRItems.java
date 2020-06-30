@@ -104,6 +104,7 @@ public final class CRItems{
 	public static DampingPowder dampingPowder;
 	public static BoboRod boboRod;
 	public static RecallDevice recallDevice;
+	public static SpringGun springGun;
 
 	public static OreProfileItem oreGravel;
 	public static OreProfileItem oreClump;
@@ -186,15 +187,7 @@ public final class CRItems{
 		dampingPowder = new DampingPowder();
 		boboRod = new BoboRod();
 		recallDevice = new RecallDevice();
-
-		oreGravel = (OreProfileItem) new OreProfileItem(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("ore_gravel");
-		oreClump = (OreProfileItem) new OreProfileItem(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("ore_clump");
-
-		toRegister.add(ironDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_iron"));
-		toRegister.add(goldDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_gold"));
-		toRegister.add(copperDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_copper"));
-		toRegister.add(tinDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_tin"));
-
+		springGun = new SpringGun();
 		axle = new Axle();
 		clutch = new Clutch(false);
 		invClutch = new Clutch(true);
@@ -202,6 +195,12 @@ public final class CRItems{
 		toggleGear = new ToggleGear(false);
 		invToggleGear = new ToggleGear(true);
 		largeGear = new LargeGear();
+		oreGravel = (OreProfileItem) new OreProfileItem(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("ore_gravel");
+		oreClump = (OreProfileItem) new OreProfileItem(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("ore_clump");
+		toRegister.add(ironDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_iron"));
+		toRegister.add(goldDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_gold"));
+		toRegister.add(copperDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_copper"));
+		toRegister.add(tinDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_tin"));
 	}
 
 	@OnlyIn(Dist.CLIENT)

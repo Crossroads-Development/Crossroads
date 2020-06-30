@@ -7,8 +7,14 @@ import com.Da_Technomancer.crossroads.blocks.BasicBlock;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -92,7 +98,12 @@ public final class OreSetup{
 		blockRuby = new BasicBlock("block_ruby", Block.Properties.create(Material.ROCK).hardnessAndResistance(5));
 		oreRuby = new BasicBlock("ore_ruby", Block.Properties.create(Material.ROCK).hardnessAndResistance(3).harvestLevel(2));
 
-		ingotCopshowium = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("ingot_copshowium");
+		ingotCopshowium = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)){
+			@Override
+			public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+				tooltip.add(new TranslationTextComponent("tt.crossroads.copshowium.quip").setStyle(MiscUtil.TT_QUIP));
+			}
+		}.setRegistryName("ingot_copshowium");
 		CRItems.toRegister.add(ingotCopshowium);
 		blockCopshowium = new BasicBlock("block_copshowium", Block.Properties.create(Material.IRON).hardnessAndResistance(5));
 		nuggetCopshowium = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("nugget_copshowium");

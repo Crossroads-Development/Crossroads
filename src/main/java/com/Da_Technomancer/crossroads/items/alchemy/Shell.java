@@ -26,10 +26,10 @@ public class Shell extends AbstractGlassware{
 			if(contents.getTotalQty() != 0){
 				Direction dir = source.getBlockState().get(DispenserBlock.FACING);
 				World world = source.getWorld();
-				EntityShell entitysnowball = new EntityShell(world, contents, stack.getItem() == CRItems.shellCrystal);
-				entitysnowball.setPosition(source.getX() + dir.getXOffset() + 0.5D, source.getY() + dir.getYOffset() + 0.5D, source.getZ() + dir.getZOffset() + 0.5D);
-				entitysnowball.shoot(dir.getXOffset(), dir.getYOffset(), dir.getZOffset(), 1.5F, 1.0F);
-				world.addEntity(entitysnowball);
+				EntityShell shellEnt = new EntityShell(world, contents, stack.getItem() == CRItems.shellCrystal);
+				shellEnt.setPosition(source.getX() + dir.getXOffset() + 0.5D, source.getY() + dir.getYOffset() + 0.5D, source.getZ() + dir.getZOffset() + 0.5D);
+				shellEnt.shoot(dir.getXOffset(), dir.getYOffset(), dir.getZOffset(), 1.5F, 1.0F);
+				world.addEntity(shellEnt);
 				stack.shrink(1);
 				return stack;
 			}else{
@@ -66,9 +66,9 @@ public class Shell extends AbstractGlassware{
 			worldIn.playSound(null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
 
 			if(!worldIn.isRemote){
-				EntityShell entitysnowball = new EntityShell(worldIn, playerIn, contents, isCrystal);
-				entitysnowball.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
-				worldIn.addEntity(entitysnowball);
+				EntityShell shellEnt = new EntityShell(worldIn, playerIn, contents, isCrystal);
+				shellEnt.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
+				worldIn.addEntity(shellEnt);
 			}
 			return new ActionResult<>(ActionResultType.SUCCESS, held);
 		}

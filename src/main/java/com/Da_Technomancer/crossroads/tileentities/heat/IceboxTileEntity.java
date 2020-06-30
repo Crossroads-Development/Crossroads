@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
-import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -17,7 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.IntReferenceHolder;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
@@ -40,10 +39,13 @@ public class IceboxTileEntity extends InventoryTE{
 
 	private int burnTime;
 	private int maxBurnTime = 0;
-	public IntReferenceHolder coolProg = IntReferenceHolder.single();
 
 	public IceboxTileEntity(){
 		super(type, 1);
+	}
+
+	public int getCoolProg(){
+		return maxBurnTime == 0 ? 0 : 100 * burnTime / maxBurnTime;
 	}
 
 	@Override
@@ -63,7 +65,6 @@ public class IceboxTileEntity extends InventoryTE{
 			if(--burnTime == 0){
 				world.setBlockState(pos, CRBlocks.icebox.getDefaultState().with(CRProperties.ACTIVE, false), 18);
 			}
-			coolProg.set(maxBurnTime == 0 ? 0 : 100 * burnTime / maxBurnTime);
 			markDirty();
 		}
 
@@ -71,7 +72,6 @@ public class IceboxTileEntity extends InventoryTE{
 		if(burnTime == 0 && (rec = world.getRecipeManager().getRecipe(CRRecipes.COOLING_TYPE, this, world)).isPresent()){
 			burnTime = Math.round(rec.get().getCooling());
 			maxBurnTime = burnTime;
-			coolProg.set(100 * burnTime / maxBurnTime);
 			Item item = inventory[0].getItem();
 			inventory[0].shrink(1);
 			if(inventory[0].isEmpty() && item.hasContainerItem(inventory[0])){
@@ -87,7 +87,6 @@ public class IceboxTileEntity extends InventoryTE{
 		super.read(nbt);
 		burnTime = nbt.getInt("burn");
 		maxBurnTime = nbt.getInt("max_burn");
-		coolProg.set(maxBurnTime == 0 ? 0 : 100 * burnTime / maxBurnTime);
 	}
 
 	@Override

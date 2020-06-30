@@ -27,7 +27,7 @@
 		},
 		{
 			"type": "text",
-			"text": "If the recipe produces <thing>$(l:intro/technomancy)temporal entropy/$, it will produce 4 per ingot of <item>molten copshowium/$ made.$(br2)<item>$(l:essentials/circuits)Circuits/$ measure how full the <item>copshowium imbuer/$ is of the input fluid as a percentage, from 0 to 100.$(br2)"
+			"text": "If the recipe produces <thing>$(l:intro/technomancy)temporal entropy/$, it will produce 4 per ingot of <item>molten copshowium/$ made.$(br2)<item>$(l:essentials/circuits#reader)Circuits/$ measure how full the <item>copshowium imbuer/$ is of the input fluid as a percentage, from 0 to 100.$(br2)"
 		},
 		{
 			"type": "text",

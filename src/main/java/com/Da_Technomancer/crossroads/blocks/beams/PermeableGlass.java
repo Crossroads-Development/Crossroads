@@ -9,7 +9,6 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -38,11 +37,6 @@ public class PermeableGlass extends Block{
 	@Override
 	public boolean propagatesSkylightDown(BlockState state, IBlockReader world, BlockPos pos){
 		return true;
-	}
-
-	@Override
-	public VoxelShape getRenderShape(BlockState p_196247_1_, IBlockReader p_196247_2_, BlockPos p_196247_3_){
-		return super.getRenderShape(p_196247_1_, p_196247_2_, p_196247_3_);
 	}
 
 	@Override

@@ -1,0 +1,28 @@
+{
+	"category": "rotary",
+	"name": "Spring Winding Stand",
+	"icon": "crossroads:winding_table",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Spring Winding Stand",
+			"item": "crossroads:winding_table",
+			"text": "The <item>Spring Winding Stand/$- that's 'wind' as in winding a watch, not as in weather- allows winding up $(l:rotary/crossbow)certain items/$ to charge them.$(br2)In order to wind an item inside the <item>Stand/$, the <item>Spring Winding Stand/$ needs an <thing>$(l:intro/rotary)axle connection/$ on the top, and needs a redstone pulse. "
+		},
+		{
+			"type": "text",
+			"text": "Every time it receives a pulse, the <thing>$(l:intro/rotary)speed/$ on the item being wound will increase by 0.2rad/s. If the speed on the item is ever lower than the axle speed, <em>the item will break/$. Items can only ever be wound with positive speed.$(br2)While an item is being wound in the <item>Spring Winding Stand/$, the <item>Stand/$ will produce <thing>$(l:intro/rotary)rotary power/$ against the current "
+		},
+		{
+			"type": "text",
+			"text": "motion- actively slowing things down. It produces (or, if it makes more sense, loses) -20 * <thing>(speed of item being wound)/$ J/t. Be careful when winding an item that you don't wind it so hard that the resistive power brings the machine speed down and destroys it!$(br2)<thing>$(l:essentials/circuits#reader)Circuits/$ will read the current <thing>$(l:intro/rotary)speed/$ on the <em>item/$ being wound, not on the <item>Table"
+		},
+		{
+			"type": "text",
+			"text": "<item>/$ itself.$(br2)"
+		}
+	]
+}

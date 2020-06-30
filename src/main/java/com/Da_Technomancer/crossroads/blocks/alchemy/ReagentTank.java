@@ -39,7 +39,7 @@ public class ReagentTank extends ContainerBlock implements IReadable{
 	private final boolean crystal;
 
 	public ReagentTank(boolean crystal){
-		super(Properties.create(Material.GLASS).hardnessAndResistance(0.5F).sound(SoundType.GLASS));
+		super(Properties.create(Material.GLASS).hardnessAndResistance(0.5F).sound(SoundType.GLASS).notSolid());
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "reagent_tank";
 		setRegistryName(name);

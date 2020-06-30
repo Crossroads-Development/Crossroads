@@ -17,7 +17,6 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.IntReferenceHolder;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -46,13 +45,19 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 
 	private int carbon = 0;
 	private int progress = 0;
-	public IntReferenceHolder carbRef = IntReferenceHolder.single();
-	public IntReferenceHolder progRef = IntReferenceHolder.single();
 
 	public BlastFurnaceTileEntity(){
 		super(type, 3);//0: Input; 1: Carbon; 2: Slag
 		fluidProps[0] = new TankProperty(4_000, false, true);
 		initFluidManagers();
+	}
+
+	public int getCarbon(){
+		return carbon;
+	}
+
+	public int getProgress(){
+		return progress;
 	}
 
 	@Override
@@ -88,7 +93,6 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 		int carbonAvailable = getCarbonValue(inventory[1]);
 		if(carbon < CARBON_LIMIT && carbonAvailable != 0 && carbonAvailable + carbon <= CARBON_LIMIT){
 			carbon += carbonAvailable;
-			carbRef.set(carbon);
 			inventory[1].shrink(1);
 			markDirty();
 		}
@@ -119,7 +123,6 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 
 			inventory[0].shrink(1);
 			carbon -= recipe.getSlag();
-			carbRef.set(carbon);
 			if(inventory[2].isEmpty()){
 				inventory[2] = new ItemStack(CRItems.slag, recipe.getSlag());
 			}else{
@@ -131,7 +134,6 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 				fluids[0].grow(recipe.getOutput().getAmount());
 			}
 		}
-		progRef.set(progress);
 	}
 
 	private static int getCarbonValue(ItemStack stack){
@@ -165,8 +167,6 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 		super.read(nbt);
 		progress = nbt.getInt("prog");
 		carbon = nbt.getInt("carbon");
-		progRef.set(progress);
-		carbRef.set(carbon);
 	}
 
 	@Override

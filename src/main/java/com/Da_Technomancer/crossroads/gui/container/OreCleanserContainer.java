@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.fluid.OreCleanserTileEntity;
 import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
+import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
@@ -17,9 +18,12 @@ public class OreCleanserContainer extends MachineContainer<OreCleanserTileEntity
 	@ObjectHolder("ore_cleanser")
 	private static ContainerType<OreCleanserContainer> type = null;
 
+	public final IntDeferredRef progRef;
+
 	public OreCleanserContainer(int id, PlayerInventory playerInv, PacketBuffer data){
 		super(type, id, playerInv, data);
-		trackInt(te.progRef);
+		progRef = new IntDeferredRef(te::getProgress, te.getWorld().isRemote);
+		trackInt(progRef);
 	}
 
 	@Override

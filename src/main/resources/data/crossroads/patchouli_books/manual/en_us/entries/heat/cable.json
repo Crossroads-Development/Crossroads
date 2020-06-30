@@ -22,7 +22,7 @@
 		},
 		{
 			"type": "text",
-			"text": "There are also <item>Redstone Heat Cables/$. They only connect to other cables and machines when they have a redstone signal. $(l:essentials/circuits)Circuits/$ can read the temperature in Kelvin.$(br2)"
+			"text": "There are also <item>Redstone Heat Cables/$. They only connect to other cables and machines when they have a redstone signal. $(l:essentials/circuits#reader)Circuits/$ can read the temperature in Kelvin.$(br2)"
 		},
 		{
 			"type": "text",

@@ -46,7 +46,8 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 	//Used for multi-cycle output
 	//Will always be EMPTY and 0 for single cycle fuels
 	private BeamUnit output = BeamUnit.EMPTY;
-	private int timeRemaining = 0;
+	private int timeRemaining = 0;//Ticks remaining, including this one, to emit fuel
+	private int timeLimit = 0;//Used for UI, total number of cycles on fuel type
 
 	public BeamExtractorTileEntity(){
 		super(type);
@@ -54,7 +55,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 
 	private Direction getFacing(){
 		if(facing == null){
-			BlockState s = world.getBlockState(pos);
+			BlockState s = getBlockState();
 			if(s.has(ESProperties.FACING)){
 				facing = s.get(ESProperties.FACING);
 			}else{
@@ -65,6 +66,14 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 		return facing;
 	}
 
+	public int getProgress(){
+		//For UI, as a percentage
+		if(timeLimit == 0){
+			return 0;
+		}
+		return 100 * timeRemaining / timeLimit;
+	}
+
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
@@ -73,6 +82,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 		}
 		output.writeToNBT("output", nbt);
 		nbt.putInt("remain", timeRemaining);
+		nbt.putInt("time_limit", timeLimit);
 
 		return nbt;
 	}
@@ -83,6 +93,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 		inv = nbt.contains("inv") ? ItemStack.read(nbt.getCompound("inv")) : ItemStack.EMPTY;
 		output = BeamUnit.readFromNBT("output", nbt);
 		timeRemaining = nbt.getInt("remain");
+		timeLimit = nbt.getInt("time_limit");
 	}
 
 	@Override
@@ -155,11 +166,6 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 	}
 
 	@Override
-	public int getInventoryStackLimit(){
-		return 64;
-	}
-
-	@Override
 	public boolean isUsableByPlayer(PlayerEntity player){
 		return world.getTileEntity(pos) == this && player.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64;
 	}
@@ -189,37 +195,47 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 	@Override
 	protected void doEmit(BeamUnit toEmit){
 		Direction dir = getFacing();
-		BeamUnit mag = BeamUnit.EMPTY;
 
 		//If we have a multi-cycle fuel being used, continue to emit that rather than consuming more fuel
 		if(!output.isEmpty() && timeRemaining > 0){
-			mag = output;
 			if(--timeRemaining == 0){
 				output = BeamUnit.EMPTY;
+				timeLimit = 0;
+				timeRemaining = 0;
+				consumeFuel();
 			}
 			markDirty();
-		}else if(!inv.isEmpty() && !world.isBlockPowered(pos)){//Consume fuel; Can be disabled with a redstone signal
+		}else{
+			consumeFuel();
+		}
+
+		if(beamer[dir.getIndex()].emit(output, world)){
+			refreshBeam(dir.getIndex());
+		}
+	}
+
+	private void consumeFuel(){
+		if(!inv.isEmpty() && !world.isBlockPowered(pos)){//Consume fuel; Can be disabled with a redstone signal
 			Optional<BeamExtractRec> recOpt = world.getRecipeManager().getRecipe(CRRecipes.BEAM_EXTRACT_TYPE, this, world);
 			if(recOpt.isPresent()){
 				BeamExtractRec rec = recOpt.get();
-				mag = rec.getOutput();
+				output = rec.getOutput();
 				inv.shrink(1);
-				if(rec.getDuration() > 1){
-					//This is a multi-cycle fuel. Store this
-					timeRemaining = rec.getDuration() - 1;
-					output = rec.getOutput();
-				}
+				timeLimit = rec.getDuration();
+				timeRemaining = timeLimit;
+				output = rec.getOutput();
 				markDirty();
 			}else if(inv.getItem() == CRItems.beamCage){
 				//Beam cages are emitted in their entirety in one pulse
 				//The empty cage remains in the extractor
-				mag = BeamCage.getStored(inv);
+				output = BeamCage.getStored(inv);
 				BeamCage.storeBeam(inv, BeamUnit.EMPTY);
 				markDirty();
 			}
-		}
-		if(beamer[dir.getIndex()].emit(mag, world)){
-			refreshBeam(dir.getIndex());
+		}else{
+			timeRemaining = 0;
+			timeLimit = 0;
+			output = BeamUnit.EMPTY;
 		}
 	}
 

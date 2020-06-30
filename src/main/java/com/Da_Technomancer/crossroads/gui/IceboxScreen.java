@@ -30,11 +30,10 @@ public class IceboxScreen extends MachineGUI<IceboxContainer, IceboxTileEntity>{
 		int j = (height - ySize) / 2;
 		blit(i, j, 0, 0, xSize, ySize);
 
-		int burnTime = te.coolProg.get();
+		int burnTime = container.coolProg.get();
 		int k = burnTime == 0 ? 0 : 1 + (burnTime * 13 / 100);
 		if(k != 0){
 			blit(i + 81, j + 19 - k, 176, 13 - k, 14, k);
 		}
 	}
-
 }

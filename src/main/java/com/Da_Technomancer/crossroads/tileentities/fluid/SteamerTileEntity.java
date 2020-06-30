@@ -15,6 +15,7 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.SmokingRecipe;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
@@ -25,6 +26,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 @ObjectHolder(Crossroads.MODID)
 public class SteamerTileEntity extends InventoryTE{
@@ -47,6 +49,12 @@ public class SteamerTileEntity extends InventoryTE{
 	@Override
 	public int fluidTanks(){
 		return 2;
+	}
+
+	@Override
+	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.progress", progress, REQUIRED));
+		super.addInfo(chat, player, hit);
 	}
 
 	public int getProgress(){

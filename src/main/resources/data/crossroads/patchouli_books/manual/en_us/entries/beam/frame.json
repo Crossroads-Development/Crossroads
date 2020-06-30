@@ -22,7 +22,7 @@
 		},
 		{
 			"type": "text",
-			"text": "way to make bright quartz, as it doesn't consume the beam.$(br2)<thing>$(l:essentials/circuits)Circuits/$ will read the <thing>power/$ of the beam currently going through the <item>lens frame/$.$(br2)"
+			"text": "way to make bright quartz, as it doesn't consume the beam.$(br2)<thing>$(l:essentials/circuits#reader)Circuits/$ will read the <thing>power/$ of the beam currently going through the <item>lens frame/$.$(br2)"
 		}
 	]
 }

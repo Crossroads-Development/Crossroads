@@ -32,7 +32,7 @@ public class OreCleanserScreen extends MachineGUI<OreCleanserContainer, OreClean
 		int i = (width - xSize) / 2;
 		int j = (height - ySize) / 2;
 		blit(i, j, 0, 0, xSize, ySize);
-		blit(guiLeft + 25, guiTop + 21, 176, 0, 36 * te.progRef.get() / 50, 10);
+		blit(guiLeft + 25, guiTop + 21, 176, 0, 36 * container.progRef.get() / 50, 10);
 
 		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
 	}

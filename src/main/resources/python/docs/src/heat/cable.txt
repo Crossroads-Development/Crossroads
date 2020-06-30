@@ -4,7 +4,7 @@ crossroads:heat_cable_wool
 <item>Heat Cables/$ also have a <thing>loss/$, which is how much their temperature will move towards the <thing>biome temperature/$ each tick. There are many types of <item>heat cables/$ with different stats- different <thing>melting points/$ and <thing>loss rates/$. Ceramic and obsidian are usually best- but wool will do in a pinch! There are also ice cables that have extremely low <thing>heat loss/$, but melt at 0°C.
 Cables can be disconnected from each other via wrench. Cables can also be reskined by right clicking with iron, diamond, or nether quartz.
 
-There are also <item>Redstone Heat Cables/$. They only connect to other cables and machines when they have a redstone signal. <link:essentials/circuits>Circuits/$ can read the temperature in Kelvin.
+There are also <item>Redstone Heat Cables/$. They only connect to other cables and machines when they have a redstone signal. <link:essentials/circuits#reader>Circuits/$ can read the temperature in Kelvin.
 
 <bobo><link:intro/welcome#bobo>b0b0 hInT tIME!/$<bobo>
 w00l-shhmool! uSE dA l00tbok$ hoTPipe coAt!! MUD! dIRT! s0ILE! gROUND!
