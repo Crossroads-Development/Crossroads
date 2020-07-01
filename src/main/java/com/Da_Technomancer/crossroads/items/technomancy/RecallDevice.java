@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.items.technomancy;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.crossroads.tileentities.rotary.WindingTableTileEntity;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -24,7 +25,9 @@ import net.minecraftforge.common.DimensionManager;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class RecallDevice extends Item{
+public class RecallDevice extends Item implements WindingTableTileEntity.IWindableItem{
+
+	private static final double WIND_USE = 0.4;
 
 	public RecallDevice(){
 		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
@@ -35,6 +38,7 @@ public class RecallDevice extends Item{
 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(getWindLevel(stack)), CRConfig.formatVal(getMaxWind())));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.recall_device.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.recall_device.debuff"));
 		if(CRConfig.recallTimeLimit.get() == 0){
@@ -93,7 +97,7 @@ public class RecallDevice extends Item{
 		}
 	}
 
-	private static void recall(CompoundNBT data, PlayerEntity player){
+	private void recall(CompoundNBT data, PlayerEntity player, ItemStack held){
 		if(!data.contains("timestamp")){
 			player.sendMessage(new TranslationTextComponent("tt.crossroads.recall_device.none"));
 			return;//No data stored
@@ -105,6 +109,16 @@ public class RecallDevice extends Item{
 			player.sendMessage(new TranslationTextComponent("tt.crossroads.recall_device.expired"));
 			return;//Too old- do nothing
 		}
+
+		double wind = getWindLevel(held);
+
+		if(wind < WIND_USE){
+			player.sendMessage(new TranslationTextComponent("tt.crossroads.recall_device.not_wound"));
+			return;//Insufficiently wound
+		}else{
+			setWindLevel(held, wind - WIND_USE);
+		}
+
 		String playerName = player.getGameProfile().getName();
 		if(playerName == null || !playerName.equals(data.getString("username"))){
 			player.sendMessage(new TranslationTextComponent("tt.crossroads.recall_device.wrong_player"));
@@ -180,11 +194,16 @@ public class RecallDevice extends Item{
 			//World sound for recalling
 			//Played at source and destination
 			worldIn.playSound(null, playerIn.getPosition(), SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.PLAYERS, 1F, 1F);
-			recall(nbt, playerIn);//Will do nothing if over time limit, wrong player, or no data stored
+			recall(nbt, playerIn, held);//Will do nothing if over time limit, wrong player, or no data stored
 		}
 
 		held.getTag().put("recall_data", newStored);
 
 		return ActionResult.resultSuccess(held);
+	}
+
+	@Override
+	public double getMaxWind(){
+		return 10;
 	}
 }
