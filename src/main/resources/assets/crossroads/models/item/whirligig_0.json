@@ -1,0 +1,65 @@
+{
+	"ambientocclusion": false,
+	"textures": {
+		"iron": "crossroads:block/block_cast_iron",
+		"prop": "crossroads:item/whirligig_vert"
+	},
+	"elements": [
+		{
+			"from": [ 7.0, 0.0, 7.0 ],
+			"to": [ 9.0, 16.0, 9.0 ],
+			"faces": {
+				"north": { "texture": "#iron", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+				"east": { "texture": "#iron", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+				"south": { "texture": "#iron", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+				"west": { "texture": "#iron", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+				"down": { "texture": "#iron", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
+			}
+		},
+		{
+			"from": [ 0.0, 16.0, 0.0 ],
+			"to": [ 16.0, 16.01, 16.0 ],
+			"faces": {
+				"up": { "texture": "#prop", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+				"down": { "texture": "#prop", "uv": [ 16.0, 0.0, 0.0, 16.0 ] }
+			}
+		}
+	],
+	"display": {
+		"gui": {
+			"rotation": [ 40, 45, -30 ],
+			"translation": [ 0, 0, 0],
+			"scale":[ 0.8, 0.8, 0.8 ]
+		},
+		"fixed": {
+			"rotation": [ 40, 45, -30 ],
+			"translation": [ 0, 0, 0],
+			"scale":[ 0.8, 0.8, 0.8 ]
+		},
+		"ground": {
+			"rotation": [ 0, 0, 0 ],
+			"translation": [ 0, 3, 0],
+			"scale":[ 0.25, 0.5, 0.25 ]
+		},
+		"thirdperson_righthand": {
+			"translation": [ 0, 0, 4],
+			"rotation": [ 45, 0, 0 ],
+			"scale": [ 1, 2, 1 ]
+		},
+		"thirdperson_lefthand": {
+			"translation": [ 0, 0, 4],
+			"rotation": [ 45, 0, 0 ],
+			"scale": [ 1, 2, 1 ]
+		},
+		"firstperson_righthand": {
+			"rotation": [ 0, 0, 0 ],
+			"translation": [ 0, 4, 0 ],
+			"scale": [ 0.40, 1.20, 0.40 ]
+		},
+		"firstperson_lefthand": {
+			"rotation": [ 0, 0, 0 ],
+			"translation": [ 0, 4, 0 ],
+			"scale": [ 0.40, 1.20, 0.40 ]
+		}
+	}
+}

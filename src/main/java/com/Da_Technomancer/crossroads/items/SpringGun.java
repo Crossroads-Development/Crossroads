@@ -7,10 +7,7 @@ import com.Da_Technomancer.crossroads.entity.EntityBullet;
 import com.Da_Technomancer.crossroads.tileentities.rotary.WindingTableTileEntity;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ShootableItem;
-import net.minecraft.item.UseAction;
+import net.minecraft.item.*;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.*;
@@ -98,5 +95,15 @@ public class SpringGun extends ShootableItem implements WindingTableTileEntity.I
 	@Override
 	public UseAction getUseAction(ItemStack stack){
 		return UseAction.CROSSBOW;//Doesn't really have any effect as arm posing is hard coded for crossbows
+	}
+
+	@Override
+	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items){
+		if(isInGroup(group)){
+			items.add(new ItemStack(this, 1));
+			ItemStack stack = new ItemStack(this, 1);
+			setWindLevel(stack, getMaxWind());
+			items.add(stack);
+		}
 	}
 }

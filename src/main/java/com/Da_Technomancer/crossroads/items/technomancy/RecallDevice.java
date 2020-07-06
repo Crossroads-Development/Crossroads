@@ -8,6 +8,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
@@ -205,5 +206,15 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 	@Override
 	public double getMaxWind(){
 		return 10;
+	}
+
+	@Override
+	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items){
+		if(isInGroup(group)){
+			items.add(new ItemStack(this, 1));
+			ItemStack stack = new ItemStack(this, 1);
+			setWindLevel(stack, getMaxWind());
+			items.add(stack);
+		}
 	}
 }

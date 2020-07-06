@@ -69,6 +69,8 @@ public class CRConfig{
 	public static ForgeConfigSpec.BooleanValue windingDestroy;
 	public static ForgeConfigSpec.DoubleValue springGunCap;
 	public static ForgeConfigSpec.DoubleValue windingResist;
+	public static ForgeConfigSpec.DoubleValue whirligigHover;
+	public static ForgeConfigSpec.DoubleValue whirligigSafe;
 
 	private static final Tag<Block> destroyBlacklist = new BlockTags.Wrapper(new ResourceLocation(Crossroads.MODID, "destroy_blacklist"));
 
@@ -130,6 +132,8 @@ public class CRConfig{
 		serverBuilder.pop();
 		serverBuilder.push(CAT_MISC);
 		heatEffects = serverBuilder.comment("Enable overheat effects?", "If false, all heat cable overheating effects are replaced with burning").define("cable_effects", true);
+		whirligigHover = serverBuilder.comment("Minimum spring speed to hover with the Whirligig", "If set at or above 10, gaining elevation with a Whirligig is disabled").defineInRange("whirligig_hover", 6D, 1D, 100D);
+		whirligigSafe = serverBuilder.comment("Minimum spring speed to eliminate fall damage with the Whirligig", "If set at or above 10, gaining the Whirligig can not eliminate fall damage, but can reduce it").defineInRange("whirligig_safe", 4D, 1D, 100D);
 		serverBuilder.pop();
 
 		//Category includes overall path controls, and path specific categories

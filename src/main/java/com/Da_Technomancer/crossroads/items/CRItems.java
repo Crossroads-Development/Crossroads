@@ -105,6 +105,7 @@ public final class CRItems{
 	public static BoboRod boboRod;
 	public static RecallDevice recallDevice;
 	public static SpringGun springGun;
+	public static Whirligig whirligig;
 
 	public static OreProfileItem oreGravel;
 	public static OreProfileItem oreClump;
@@ -188,6 +189,7 @@ public final class CRItems{
 		boboRod = new BoboRod();
 		recallDevice = new RecallDevice();
 		springGun = new SpringGun();
+		whirligig = new Whirligig();
 		axle = new Axle();
 		clutch = new Clutch(false);
 		invClutch = new Clutch(true);

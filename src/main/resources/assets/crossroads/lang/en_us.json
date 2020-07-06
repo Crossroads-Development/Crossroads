@@ -248,6 +248,7 @@
 	"block.crossroads.steamer": "Steamer",
 	"block.crossroads.winding_table": "Spring Winding Stand",
 	"item.crossroads.spring_gun": "Spring-Loaded Crossbow",
+	"item.crossroads.whirligig": "Whirligig",
 
 	"item.crossroads.ore_gravel": "Raw %1$s Grit",
 	"item.crossroads.ore_clump": "%1$s Clump",
@@ -580,6 +581,9 @@
 	"tt.crossroads.winding_table.circuit": "Circuits read the spring speed of the item being wound, in rad/s",
 	"tt.crossroads.copshowium.quip": "Copper-Shiny-Orange-Weirdness-ium",
 	"tt.crossroads.boilerplate.spring_speed": "Spring Speed: %1$s/%2$s",
+	"tt.crossroads.whirligig.desc": "Provides slowfall and even flight if wound in a Spring Winding Table",
+	"tt.crossroads.whirligig.elevate": "Elevates the player when Spring Speed is above %1$frad/s",
+	"tt.crossroads.whirligig.quip": "Chim-Chim-iney",
 
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
