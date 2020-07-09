@@ -18,6 +18,10 @@
 		},
 		{
 			"type": "text",
+			"text": "<item>Permeable Obsidian/$ looks like a block of obsidian and is blast resistant, but allows beams to pass through.$(br2)"
+		},
+		{
+			"type": "text",
 			"text": "<item>Permeable Glass/$ allows light to pass through, and is transparent like normal glass. It does not look identical to normal glass, but allows beams to pass through.$(br2)"
 		},
 		{

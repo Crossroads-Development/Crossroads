@@ -136,6 +136,7 @@ public class CRBlocks{
 	public static BeamRedirector beamRedirector;
 	public static PermeableGlass permeableGlass;
 	public static PermeableQuartz permeableQuartz;
+	public static PermeableObsidian permeableObsidian;
 	public static FluxNode fluxNode;
 	public static TemporalAccelerator temporalAccelerator;
 	public static ChronoHarness chronoHarness;
@@ -276,6 +277,7 @@ public class CRBlocks{
 		beamRedirector = new BeamRedirector();
 		permeableGlass = new PermeableGlass();
 		permeableQuartz = new PermeableQuartz();
+		permeableObsidian = new PermeableObsidian();
 		fluxNode = new FluxNode();
 		temporalAccelerator = new TemporalAccelerator();
 		chronoHarness = new ChronoHarness();

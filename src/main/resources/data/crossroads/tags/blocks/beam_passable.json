@@ -3,6 +3,7 @@
 	"values": [
 		"crossroads:light_cluster",
 		"crossroads:permeable_glass",
-		"crossroads:permeable_quartz"
+		"crossroads:permeable_quartz",
+		"crossroads:permeable_obsidian"
 	]
 }
