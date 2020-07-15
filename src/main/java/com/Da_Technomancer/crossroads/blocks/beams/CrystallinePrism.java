@@ -38,7 +38,7 @@ public class CrystallinePrism extends BeamBlock{
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.cycle(ESProperties.HORIZ_FACING));
+				worldIn.setBlockState(pos, state.func_235896_a_(ESProperties.HORIZ_FACING));
 			}
 			return ActionResultType.SUCCESS;
 		}

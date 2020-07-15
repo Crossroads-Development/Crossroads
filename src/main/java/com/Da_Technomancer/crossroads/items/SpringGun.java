@@ -9,7 +9,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -23,7 +23,7 @@ import java.util.function.Predicate;
 
 public class SpringGun extends ShootableItem implements WindingTableTileEntity.IWindableItem{
 
-	private static final Tag<Item> AMMO_TAG = new ItemTags.Wrapper(new ResourceLocation(Crossroads.MODID, "spring_gun_ammo"));
+	private static final ITag<Item> AMMO_TAG = new ItemTags.Wrapper(new ResourceLocation(Crossroads.MODID, "spring_gun_ammo"));
 	private static final Predicate<ItemStack> AMMO_PREDICATE = s -> AMMO_TAG.contains(s.getItem());
 
 	private static final double MIN_SPEED = 1;
@@ -79,7 +79,7 @@ public class SpringGun extends ShootableItem implements WindingTableTileEntity.I
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(wind), CRConfig.formatVal(maxWind)));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.spring_gun.winding", CRConfig.formatVal(calcDamage(wind)), CRConfig.formatVal(calcDamage(maxWind))));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.spring_gun.desc"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.spring_gun.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.spring_gun.quip").func_230530_a_(MiscUtil.TT_QUIP));
 	}
 
 	@Override

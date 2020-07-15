@@ -35,7 +35,7 @@ public class BeaconHarness extends ContainerBlock{
 	private static final VoxelShape SHAPE = VoxelShapes.or(makeCuboidShape(0, 15, 0, 16, 16, 16), makeCuboidShape(2, 1, 2, 14, 15, 14));
 
 	public BeaconHarness(){
-		super(Properties.create(Material.GLASS).hardnessAndResistance(.5F).lightValue(15));
+		super(Properties.create(Material.GLASS).hardnessAndResistance(.5F).setLightLevel(state -> 15));
 		setRegistryName("beacon_harness");
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
@@ -65,7 +65,7 @@ public class BeaconHarness extends ContainerBlock{
 		tooltip.add(new TranslationTextComponent("tt.crossroads.beacon_harness.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.beacon_harness.buffer"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.beacon_harness.flux", BeaconHarnessTileEntity.FLUX_GEN));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.beacon_harness.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.beacon_harness.quip").func_230530_a_(MiscUtil.TT_QUIP));
 	}
 
 	@Override

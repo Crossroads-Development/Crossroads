@@ -2,8 +2,9 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.DimensionSavedDataManager;
 import net.minecraft.world.storage.WorldSavedData;
@@ -54,7 +55,7 @@ public class AtmosChargeSavedData extends WorldSavedData{
 	private int atmosCharge;
 
 	@Override
-	public void read(CompoundNBT nbt){
+	public void read(BlockState state, CompoundNBT nbt){
 		atmosCharge = nbt.getInt("atmos_charge");
 	}
 

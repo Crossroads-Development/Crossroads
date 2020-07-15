@@ -55,7 +55,7 @@ public class FluidTank extends ContainerBlock implements IReadable{
 		CompoundNBT nbt = stack.getTag();
 		if(nbt != null && nbt.contains("FluidName")){
 			FluidStack fStack = FluidStack.loadFluidStackFromNBT(stack.getTag());
-			tooltip.add(new TranslationTextComponent("tt.crossroads.fluid_tank", fStack.getAmount(), fStack.getDisplayName().getFormattedText()));
+			tooltip.add(new TranslationTextComponent("tt.crossroads.fluid_tank", fStack.getAmount(), fStack.getDisplayName().getString()));
 		}
 	}
 

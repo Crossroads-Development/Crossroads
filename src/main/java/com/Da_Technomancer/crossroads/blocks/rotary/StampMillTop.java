@@ -56,10 +56,10 @@ public class StampMillTop extends Block{
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.cycle(CRProperties.HORIZ_AXIS));
+				worldIn.setBlockState(pos, state.func_235896_a_(CRProperties.HORIZ_AXIS));
 				BlockState lowerState = worldIn.getBlockState(pos.down());
 				if(lowerState.getBlock() == CRBlocks.stampMill){
-					worldIn.setBlockState(pos.down(), lowerState.cycle(CRProperties.HORIZ_AXIS));
+					worldIn.setBlockState(pos.down(), lowerState.func_235896_a_(CRProperties.HORIZ_AXIS));
 				}
 			}
 			return ActionResultType.SUCCESS;

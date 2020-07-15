@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.gui.container.IceboxContainer;
 import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.IceboxRec;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -83,8 +84,8 @@ public class IceboxTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		burnTime = nbt.getInt("burn");
 		maxBurnTime = nbt.getInt("max_burn");
 	}

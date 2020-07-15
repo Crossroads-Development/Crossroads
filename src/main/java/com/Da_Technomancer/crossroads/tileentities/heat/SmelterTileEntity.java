@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.SmelterContainer;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -110,8 +111,8 @@ public class SmelterTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		progress = nbt.getInt("prog");
 	}
 

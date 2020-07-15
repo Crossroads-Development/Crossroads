@@ -12,10 +12,9 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -25,9 +24,9 @@ public class AcidAlchemyEffect implements IAlchEffect{
 
 	public static final DamageSource ACID_DAMAGE = new DamageSource("chemical");
 
-	private static final Tag<Block> copperBlock = new BlockTags.Wrapper(new ResourceLocation("forge", "storage_blocks/copper"));
-	private static final Tag<Block> tinBlock = new BlockTags.Wrapper(new ResourceLocation("forge", "storage_blocks/tin"));
-	private static final Tag<Block> bronzeBlock = new BlockTags.Wrapper(new ResourceLocation("forge", "storage_blocks/bronze"));
+	private static final ITag<Block> copperBlock = BlockTags.makeWrapperTag("forge:storage_blocks/copper");
+	private static final ITag<Block> tinBlock = BlockTags.makeWrapperTag("forge:storage_blocks/tin");
+	private static final ITag<Block> bronzeBlock = BlockTags.makeWrapperTag("forge:storage_blocks/bronze");
 
 	protected int getDamage(){
 		return 8;

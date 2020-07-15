@@ -13,13 +13,13 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.common.util.LazyOptional;
 
 public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntity>{
@@ -68,14 +68,14 @@ public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntit
 			CRRenderUtil.addVertexBlock(builder, matrix, -0.0625F, 2, 0.6F, sprite.getInterpolatedU(12), sprite.getInterpolatedV(1.5F), 0, 0, 1, light);
 
 			//Wool panel
-			Vec3d normal = CRRenderUtil.findNormal(new Vec3d(-0.0625D, 0.25D, 0.6D), new Vec3d(-.25D, 0.25D, 0.5D), new Vec3d(-0.0625D, 2, 0.6D));
+			Vector3d normal = CRRenderUtil.findNormal(new Vector3d(-0.0625D, 0.25D, 0.6D), new Vector3d(-.25D, 0.25D, 0.5D), new Vector3d(-0.0625D, 2, 0.6D));
 			CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, 0.25F, 0.5F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(0), (float) normal.x, (float) normal.y, (float) normal.z, light);
 			CRRenderUtil.addVertexBlock(builder, matrix, -0.0625F, 0.25F, 0.6F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(1.5D), (float) normal.x, (float) normal.y, (float) normal.z, light);
 			CRRenderUtil.addVertexBlock(builder, matrix, -0.0625F, 2, 0.6F, sprite.getInterpolatedU(12), sprite.getInterpolatedV(1.5D), (float) normal.x, (float) normal.y, (float) normal.z, light);
 			CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, 2, 0.5F, sprite.getInterpolatedU(12), sprite.getInterpolatedV(0), (float) normal.x, (float) normal.y, (float) normal.z, light);
 
 			//Wool panel
-			normal = CRRenderUtil.findNormal(new Vec3d(.25D, 0.25D, 0.5D), new Vec3d(0.0625D, 0.25D, 0.6D), new Vec3d(.25D, 2, 0.5D));
+			normal = CRRenderUtil.findNormal(new Vector3d(.25D, 0.25D, 0.5D), new Vector3d(0.0625D, 0.25D, 0.6D), new Vector3d(.25D, 2, 0.5D));
 			CRRenderUtil.addVertexBlock(builder, matrix, 0.0625F, 0.25F, 0.6F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(0), (float) normal.x, (float) normal.y, (float) normal.z, light);
 			CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 0.25F, 0.5F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(1.5D), (float) normal.x, (float) normal.y, (float) normal.z, light);
 			CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 2, 0.5F, sprite.getInterpolatedU(12), sprite.getInterpolatedV(1.5D), (float) normal.x, (float) normal.y, (float) normal.z, light);

@@ -44,7 +44,7 @@ public class MillstoneCategory implements IRecipeCategory<MillRec>{
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.millstone.getNameTextComponent().getFormattedText();
+		return CRBlocks.millstone.getNameTextComponent().getString();
 	}
 
 	@Override

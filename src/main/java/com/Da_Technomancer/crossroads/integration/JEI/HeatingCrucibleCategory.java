@@ -49,7 +49,7 @@ public class HeatingCrucibleCategory implements IRecipeCategory<CrucibleRec>{
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.heatingCrucible.getNameTextComponent().getFormattedText();
+		return CRBlocks.heatingCrucible.getNameTextComponent().getString();
 	}
 
 	@Override

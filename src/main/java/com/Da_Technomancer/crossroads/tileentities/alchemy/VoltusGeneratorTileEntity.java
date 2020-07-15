@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -70,8 +71,8 @@ public class VoltusGeneratorTileEntity extends TileEntity implements ITickableTi
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		voltusAmount = nbt.getInt("voltus");
 		fe = nbt.getInt("fe");
 	}

@@ -9,11 +9,11 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.vector.Vector3f;
 
 import java.awt.*;
 
@@ -25,7 +25,7 @@ public class HamsterWheelRenderer extends TileEntityRenderer<HamsterWheelTileEnt
 
 	@Override
 	public void render(HamsterWheelTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
-		if(!te.getBlockState().has(CRProperties.HORIZ_FACING)){
+		if(!te.getBlockState().func_235901_b_(CRProperties.HORIZ_FACING)){
 			return;
 		}
 		Direction facing = te.getBlockState().get(CRProperties.HORIZ_FACING);

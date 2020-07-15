@@ -275,8 +275,8 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		intensity = nbt.getInt("intensity");
 		lastRunTick = nbt.getLong("last_run");
 		flux = nbt.getInt("flux");

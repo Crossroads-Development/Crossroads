@@ -6,8 +6,7 @@ import com.electronwill.nightconfig.core.io.WritingMode;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -46,6 +45,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.IntValue atmosEffect;
 	public static ForgeConfigSpec.BooleanValue atmosLightningHorsemen;
 	public static ForgeConfigSpec.IntValue atmosCap;
+	public static ForgeConfigSpec.BooleanValue chargeSpawnLightning;
 	public static ForgeConfigSpec.BooleanValue allowOverflow;
 	public static ForgeConfigSpec.BooleanValue cccRequireTime;
 	public static ForgeConfigSpec.DoubleValue rotaryLoss;
@@ -72,7 +72,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.DoubleValue whirligigHover;
 	public static ForgeConfigSpec.DoubleValue whirligigSafe;
 
-	private static final Tag<Block> destroyBlacklist = new BlockTags.Wrapper(new ResourceLocation(Crossroads.MODID, "destroy_blacklist"));
+	private static final ITag<Block> destroyBlacklist = BlockTags.makeWrapperTag(Crossroads.MODID + ":destroy_blacklist");
 
 	private static ForgeConfigSpec clientSpec;
 	private static ForgeConfigSpec serverSpec;
@@ -134,6 +134,7 @@ public class CRConfig{
 		heatEffects = serverBuilder.comment("Enable overheat effects?", "If false, all heat cable overheating effects are replaced with burning").define("cable_effects", true);
 		whirligigHover = serverBuilder.comment("Minimum spring speed to hover with the Whirligig", "If set at or above 10, gaining elevation with a Whirligig is disabled").defineInRange("whirligig_hover", 6D, 1D, 100D);
 		whirligigSafe = serverBuilder.comment("Minimum spring speed to eliminate fall damage with the Whirligig", "If set at or above 10, gaining the Whirligig can not eliminate fall damage, but can reduce it").defineInRange("whirligig_safe", 4D, 1D, 100D);
+		chargeSpawnLightning = serverBuilder.comment("Whether the charge alignment can summon lightning").define("charge_lightning", true);
 		serverBuilder.pop();
 
 		//Category includes overall path controls, and path specific categories

@@ -18,7 +18,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -56,7 +56,7 @@ public class EntityShell extends ThrowableEntity implements IRendersAsItem{
 	protected void onImpact(RayTraceResult result){
 		if(!world.isRemote){
 			if(contents != null){
-				Vec3d hit = result.getHitVec();
+				Vector3d hit = result.getHitVec();
 				AlchemyUtil.releaseChemical(world, new BlockPos(hit.x, hit.y, hit.z), contents);
 			}
 			world.playSound(null, getPosX(), getPosY(), getPosZ(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.NEUTRAL, 0.5F, 0.4F / (rand.nextFloat() * 0.4F + 0.8F));

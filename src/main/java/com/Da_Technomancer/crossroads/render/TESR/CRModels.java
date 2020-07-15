@@ -5,11 +5,11 @@ import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Quaternion;
+import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
 
 import java.awt.*;
 
@@ -520,7 +520,7 @@ public class CRModels{
 
 		final float vEnS = sprite.getInterpolatedV(2);
 		//Top and bottom have tilted normals
-		Vec3d normal = CRRenderUtil.findNormal(new Vec3d(-lenHalf, mid, edgeIn), new Vec3d(lenHalf, bottom, edgeIn), new Vec3d(-lenHalf, mid, edgeOut));
+		Vector3d normal = CRRenderUtil.findNormal(new Vector3d(-lenHalf, mid, edgeIn), new Vector3d(lenHalf, bottom, edgeIn), new Vector3d(-lenHalf, mid, edgeOut));
 
 		//Bottom
 		CRRenderUtil.addVertexBlock(builder, matrix, -lenHalf, mid, edgeIn, uStT, vStT, (float) normal.x, (float) normal.y, (float) normal.z, light);

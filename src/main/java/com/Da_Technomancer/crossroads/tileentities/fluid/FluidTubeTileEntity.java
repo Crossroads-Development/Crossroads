@@ -324,8 +324,8 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		ConduitBlock.IConduitTE.readConduitNBT(nbt, this);
 		content = FluidStack.loadFluidStackFromNBT(nbt);
 	}

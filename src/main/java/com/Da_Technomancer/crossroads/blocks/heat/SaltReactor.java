@@ -70,6 +70,6 @@ public class SaltReactor extends ContainerBlock{
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.salt_reactor.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.salt_reactor.rate", SaltReactorTileEntity.COOLING));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.salt_reactor.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.salt_reactor.quip").func_230530_a_(MiscUtil.TT_QUIP));
 	}
 }

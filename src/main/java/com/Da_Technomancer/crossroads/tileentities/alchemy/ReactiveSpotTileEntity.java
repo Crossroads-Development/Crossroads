@@ -43,8 +43,8 @@ public class ReactiveSpotTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		lifespan = nbt.getInt("lif");
 		Block b = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(nbt.getString("tar")));
 		if(b == null){

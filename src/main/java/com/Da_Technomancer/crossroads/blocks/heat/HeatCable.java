@@ -17,7 +17,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -154,9 +154,9 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 		QUARTZ(Tags.Items.GEMS_QUARTZ),
 		DIAMOND(Tags.Items.GEMS_DIAMOND);
 
-		public final Tag<Item> tag;
+		public final ITag<Item> tag;
 
-		Conductors(Tag<Item> tag){
+		Conductors(ITag<Item> tag){
 			this.tag = tag;
 		}
 
@@ -166,7 +166,7 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 		}
 
 		@Override
-		public String getName(){
+		public String getString(){
 			return toString();
 		}
 	}

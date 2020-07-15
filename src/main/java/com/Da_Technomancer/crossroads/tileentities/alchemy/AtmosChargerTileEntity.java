@@ -14,7 +14,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -22,7 +22,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
@@ -40,7 +40,7 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 	@ObjectHolder("atmos_charger")
 	private static TileEntityType<AtmosChargerTileEntity> type = null;
 
-	private static final Tag<Block> ANTENNA_TAG = new BlockTags.Wrapper(new ResourceLocation(Crossroads.MODID, "atmos_antenna"));
+	private static final ITag<Block> ANTENNA_TAG = new BlockTags.Wrapper(new ResourceLocation(Crossroads.MODID, "atmos_antenna"));
 
 	private static final int FE_CAPACITY = 20_000;
 
@@ -151,7 +151,7 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 				startEn[1] = swap;
 			}
 
-			Vec3d arcVec = CRRenderUtil.VEC_K.scale(1.4D);
+			Vector3d arcVec = CRRenderUtil.VEC_K.scale(1.4D);
 			int color = TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)];
 			for(int i = 0; i < arcs; i++){
 				arcVec = arcVec.rotateYaw(angle);
@@ -161,8 +161,8 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		fe = nbt.getInt("fe");
 	}
 

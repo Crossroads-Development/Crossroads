@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.HeatLimiterContainer;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.packets.INBTReceiver;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -139,8 +140,8 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		init = nbt.getBoolean("init_heat");
 		heatIn = nbt.getDouble("heat_in");
 		heatOut = nbt.getDouble("heat_out");

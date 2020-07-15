@@ -48,7 +48,7 @@ public class CopshowiumCategory implements IRecipeCategory<CopshowiumRec>{
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.copshowiumCreationChamber.getNameTextComponent().getFormattedText();
+		return CRBlocks.copshowiumCreationChamber.getNameTextComponent().getString();
 	}
 
 	@Override

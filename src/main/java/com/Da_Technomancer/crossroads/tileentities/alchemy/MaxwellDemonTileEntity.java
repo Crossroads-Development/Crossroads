@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -109,8 +110,8 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		init = nbt.getBoolean("init_heat");
 		tempUp = nbt.getDouble("temp_u");
 		tempDown = nbt.getDouble("temp_d");

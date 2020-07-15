@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
@@ -64,8 +65,8 @@ public class HeatSinkTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		mode = nbt.getInt("mode");
 	}
 

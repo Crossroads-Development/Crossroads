@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -22,7 +22,7 @@ public class StaticReagent implements IReagent{
 	private final IAlchEffect effect;
 	private final String name;
 	private final Function<EnumMatterPhase, Color> color;
-	private final Tag<Item> itemTag;
+	private final ITag<Item> itemTag;
 //	private final Predicate<Item> isSolid;
 //	private final Supplier<Item> solid;
 
@@ -35,7 +35,7 @@ public class StaticReagent implements IReagent{
 	 * @param containType 0: Normal; 1: Vanishes in glass; 2: Destroys glass.
 	 * @param effect The effect this has when released. Null for none.
 	 */
-	public StaticReagent(String name, double meltingPoint, double boilingPoint, Function<EnumMatterPhase, Color> color, @Nullable Tag<Item> tag, int containType, @Nullable IAlchEffect effect){
+	public StaticReagent(String name, double meltingPoint, double boilingPoint, Function<EnumMatterPhase, Color> color, @Nullable ITag<Item> tag, int containType, @Nullable IAlchEffect effect){
 		this.name = name;
 		if(boilingPoint <= meltingPoint){
 			throw Crossroads.logger.throwing(new IllegalArgumentException("Boiling point must be greater than melting point. Material Type: " + name));

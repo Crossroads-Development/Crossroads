@@ -11,7 +11,7 @@ import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 
-public class ModWorldGen{
+public class CRWorldGen{
 
 	public static SingleGen GEM_FEATURE;
 
@@ -26,18 +26,18 @@ public class ModWorldGen{
 			}
 			//Tin ore gen, doesn't spawn in nether or end category biomes, spawns as single ores
 			if(CRConfig.genTinOre.get() && isOverworld(biome)){
-				biome.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, GEM_FEATURE.withConfiguration(new SingleGen.SingleOreConfig(SingleGen.SingleOreConfig.CRFillerType.NATURAL_STONE, OreSetup.oreTin.getDefaultState())).withPlacement(Placement.COUNT_RANGE.configure(new CountRangeConfig(20, 0, 0, 30))));
+				biome.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, GEM_FEATURE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NATURAL_STONE, OreSetup.oreTin.getDefaultState(), 1)).withPlacement(Placement.COUNT_RANGE.configure(new CountRangeConfig(20, 0, 0, 30))));
 			}
 			//Ruby ore gen, spawn in nether category biomes, in nether quartz ore
 			//The reason the spawn attempts is so high for rubies is that it can only generate in quartz ore.
 			//The average number of quartz ore per chunk divided by the number of blockspaces in the given height range (heights nether quartz spawns at) is about 1/350, so 25000 tries will give an average of about 25 rubies per chunk by default.
 			//Happy Mining!
 			if(CRConfig.genRubyOre.get() && biome.getCategory() == Biome.Category.NETHER){
-				biome.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, GEM_FEATURE.withConfiguration(new SingleGen.SingleOreConfig(SingleGen.SingleOreConfig.CRFillerType.QUARTZ, OreSetup.oreRuby.getDefaultState())).withPlacement(Placement.COUNT_RANGE.configure(new CountRangeConfig(CRConfig.rubyRarity.get(), 8, 8, 118))));
+				biome.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, GEM_FEATURE.withConfiguration(new OreFeatureConfig(SingleGen.NETHER_QUARTZ, OreSetup.oreRuby.getDefaultState(), 1)).withPlacement(Placement.COUNT_RANGE.configure(new CountRangeConfig(CRConfig.rubyRarity.get(), 8, 8, 118))));
 			}
 			//Void crystal gen, spawn in end category biomes, in endstone
 			if(CRConfig.genVoidOre.get() && biome.getCategory() == Biome.Category.THEEND){
-				biome.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, GEM_FEATURE.withConfiguration(new SingleGen.SingleOreConfig(SingleGen.SingleOreConfig.CRFillerType.END_STONE, OreSetup.oreVoid.getDefaultState())).withPlacement(Placement.COUNT_RANGE.configure(new CountRangeConfig(10, 5, 5, 80))));
+				biome.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, GEM_FEATURE.withConfiguration(new OreFeatureConfig(SingleGen.ENDSTONE, OreSetup.oreVoid.getDefaultState(), 1)).withPlacement(Placement.COUNT_RANGE.configure(new CountRangeConfig(10, 5, 5, 80))));
 			}
 		}
 	}

@@ -57,7 +57,7 @@ public class SendChatToClient extends ClientPacket{
 			if(nextInd == -1){
 				nextInd = active.length();
 			}
-			components.add(ITextComponent.Serializer.fromJson(active.substring(0, nextInd)));
+			components.add(ITextComponent.Serializer.func_240644_b_(active.substring(0, nextInd)));
 			if(nextInd + 1 < active.length()){
 				active = active.substring(nextInd);
 			}else{
@@ -68,7 +68,7 @@ public class SendChatToClient extends ClientPacket{
 		ITextComponent combined;
 		StringBuilder combo = new StringBuilder();
 		for(int i = 0; i < components.size(); i++){
-			combo.append(components.get(i).getFormattedText());
+			combo.append(components.get(i).getString());
 			if(i + 1 < components.size()){
 				combo.append("\n");
 			}

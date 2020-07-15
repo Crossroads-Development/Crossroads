@@ -17,7 +17,7 @@ public class LightEffect extends BeamEffect{
 			if(voi){
 				//Break light sources nearby
 				int range = (int) Math.sqrt(power) / 2;//0 to 4 radius
-				BlockPos.Mutable checkPos = new BlockPos.Mutable(pos);
+				BlockPos.Mutable checkPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ());
 				for(int i = -range; i <= range; i++){
 					for(int j = -range; j <= range; j++){
 						for(int k = -range; k <= range; k++){

@@ -91,6 +91,6 @@ public class PoisonVodka extends Item{
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.poison_vodka.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.poison_vodka.quip").func_230530_a_(MiscUtil.TT_QUIP));
 	}
 }

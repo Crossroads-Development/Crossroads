@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.DimensionSavedDataManager;
 import net.minecraft.world.storage.WorldSavedData;
@@ -120,7 +120,7 @@ public class GatewaySavedData extends WorldSavedData{
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
+	public void read(BlockState state, CompoundNBT nbt){
 		addressBook.clear();
 		int i = 0;
 		while(nbt.contains("key_" + i)){

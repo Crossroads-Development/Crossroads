@@ -215,8 +215,8 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		packetPos = nbt.getInt("beam_pos");
 		packetNeg = nbt.getInt("beam_neg");
 		lastRedstone = nbt.getInt("reds");

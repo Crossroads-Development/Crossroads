@@ -7,10 +7,13 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 
 public final class MiscUtil{
@@ -52,8 +55,8 @@ public final class MiscUtil{
 	 * A server-side friendly version of Entity.class' raytrace (currently called Entity#func_213324_a(double, float, boolean))
 	 */
 	public static BlockRayTraceResult rayTrace(Entity ent, double blockReachDistance){
-		Vec3d vec3d = ent.getPositionVector().add(0, ent.getEyeHeight(), 0);
-		Vec3d vec3d2 = vec3d.add(ent.getLook(1F).scale(blockReachDistance));
+		Vector3d vec3d = ent.getPositionVec().add(0, ent.getEyeHeight(), 0);
+		Vector3d vec3d2 = vec3d.add(ent.getLook(1F).scale(blockReachDistance));
 		return ent.world.rayTraceBlocks(new RayTraceContext(vec3d, vec3d2, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, ent));
 	}
 
@@ -73,7 +76,7 @@ public final class MiscUtil{
 	 * @return The localized and formatted string
 	 */
 	public static String localize(String input, Object... formatArgs){
-		return new TranslationTextComponent(input, formatArgs).getFormattedText();
+		return new TranslationTextComponent(input, formatArgs).getString();
 	}
 
 	public static String getLocalizedFluidName(String localizationKey){
@@ -178,5 +181,24 @@ public final class MiscUtil{
 		nbt.putInt("foodLevel", Math.min(hunger, 20));
 		nbt.putFloat("foodSaturationLevel", Math.min(20F, saturation));
 		stats.read(nbt);
+	}
+
+	/**
+	 * Adds a message to a player's chat
+	 * Works on both sides
+	 * @param player The player to add a message to
+	 * @param message The message to send
+	 */
+	public static void chatMessage(Entity player, ITextComponent message){
+		player.sendMessage(message, player.getUniqueID());
+	}
+
+	/**
+	 * Gets the name of a dimension, for logging purposes
+	 * @param world The world to get the dimension of
+	 * @return The name of the dimension, for logging purposes, unlocalized
+	 */
+	public static String getDimensionName(@Nonnull World world){
+		return world.func_234922_V_().func_240901_a_().toString();
 	}
 }

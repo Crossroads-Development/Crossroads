@@ -18,7 +18,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -209,7 +209,7 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 				IConduitTE<T> cte = (IConduitTE<T>) te;
 				int face;
 				final double margin = 0.005D;
-				Vec3d hitVec = hit.getHitVec().subtract(pos.getX(), pos.getY(), pos.getZ());
+				Vector3d hitVec = hit.getHitVec().subtract(pos.getX(), pos.getY(), pos.getZ());
 				if(hitVec.y < SIZE - margin){
 					face = 0;//Down
 				}else if(hitVec.y - margin > 1F - (float) SIZE){

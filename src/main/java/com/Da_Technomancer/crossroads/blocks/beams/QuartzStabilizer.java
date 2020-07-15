@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.templates.BeamBlock;
 import com.Da_Technomancer.crossroads.tileentities.beams.QuartzStabilizerTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
@@ -59,9 +60,9 @@ public class QuartzStabilizer extends BeamBlock{
 			if(!worldIn.isRemote){
 				TileEntity te = worldIn.getTileEntity(pos);
 				if(!playerIn.isSneaking()){
-					worldIn.setBlockState(pos, state.cycle(ESProperties.FACING));
+					worldIn.setBlockState(pos, state.func_235896_a_(ESProperties.FACING));
 				}else if(te instanceof QuartzStabilizerTileEntity){
-					playerIn.sendMessage(new TranslationTextComponent("tt.crossroads.quartz_stabilizer.setting", ((QuartzStabilizerTileEntity) te).adjustSetting()));
+					MiscUtil.chatMessage(playerIn, new TranslationTextComponent("tt.crossroads.quartz_stabilizer.setting", ((QuartzStabilizerTileEntity) te).adjustSetting()));
 				}
 			}
 			return ActionResultType.SUCCESS;

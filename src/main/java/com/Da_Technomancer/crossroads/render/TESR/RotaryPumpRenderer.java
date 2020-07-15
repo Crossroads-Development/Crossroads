@@ -8,14 +8,14 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.common.util.LazyOptional;
 
 import java.awt.*;
@@ -41,7 +41,7 @@ public class RotaryPumpRenderer extends TileEntityRenderer<RotaryPumpTileEntity>
 		//Render the liquid
 		if(te.getCompletion() != 0){
 			BlockPos fPos = te.getPos().offset(Direction.DOWN);
-			IFluidState state = te.getWorld().getFluidState(fPos);
+			FluidState state = te.getWorld().getFluidState(fPos);
 			TextureAtlasSprite lText;
 			Color fCol;
 			if(!state.isEmpty() && state.isSource()){

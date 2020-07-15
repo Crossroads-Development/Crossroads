@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -82,8 +83,8 @@ public class GatewayEdgeTileEntity extends TileEntity implements IInfoTE{
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 
 		//Generic
 		key = nbt.contains("key") ? BlockPos.fromLong(nbt.getLong("key")) : null;

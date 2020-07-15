@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -120,8 +121,8 @@ public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntit
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		angle = nbt.getFloat("angle");
 		entropy = nbt.getInt("entropy");
 		entropyClient = entropy;

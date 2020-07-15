@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.gui.container.MillstoneContainer;
 import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.MillRec;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -195,8 +196,8 @@ public class MillstoneTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		progress = nbt.getDouble("prog");
 	}
 

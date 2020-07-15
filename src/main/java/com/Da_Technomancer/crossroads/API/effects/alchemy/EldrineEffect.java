@@ -29,6 +29,6 @@ public class EldrineEffect extends AetherEffect{
 
 	@Override
 	protected Biome biome(){
-		return Biomes.NETHER;
+		return Biomes.field_235254_j_;//Nether wastes- the 'normal' nether biome pre-1.16
 	}
 }

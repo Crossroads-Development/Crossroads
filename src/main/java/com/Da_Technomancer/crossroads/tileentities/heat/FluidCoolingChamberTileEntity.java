@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.gui.container.FluidCoolerContainer;
 import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.FluidCoolingRec;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -93,8 +94,8 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		storedHeat = nbt.getDouble("heat_stored");
 	}
 

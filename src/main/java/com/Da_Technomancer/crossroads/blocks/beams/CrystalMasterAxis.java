@@ -48,7 +48,7 @@ public class CrystalMasterAxis extends ContainerBlock implements IReadable{
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.cycle(ESProperties.FACING));
+				worldIn.setBlockState(pos, state.func_235896_a_(ESProperties.FACING));
 			}
 			return ActionResultType.SUCCESS;
 		}

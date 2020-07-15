@@ -60,8 +60,8 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		setting = nbt.getInt("setting");
 		storage = BeamUnitStorage.readFromNBT("stab_mag", nbt);
 	}

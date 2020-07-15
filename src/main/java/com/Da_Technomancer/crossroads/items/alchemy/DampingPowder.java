@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -44,9 +44,9 @@ public class DampingPowder extends Item{
 			if(!ents.isEmpty()){
 				source.getWorld().playSound(null, source.getBlockPos(), SoundEvents.ITEM_TOTEM_USE, SoundCategory.BLOCKS, 1, 0);
 			}
-			Vec3d partPos = new Vec3d(source.getBlockPos()).add(0.5, 0.5, 0.5);
-			if(source.getBlockState().has(DispenserBlock.FACING)){
-				partPos = partPos.add(new Vec3d(source.getBlockState().get(DispenserBlock.FACING).getDirectionVec()));
+			Vector3d partPos = Vector3d.func_237489_a_(source.getBlockPos());
+			if(source.getBlockState().func_235901_b_(DispenserBlock.FACING)){
+				partPos = partPos.add(Vector3d.func_237491_b_(source.getBlockState().get(DispenserBlock.FACING).getDirectionVec()));
 			}
 			source.getWorld().addParticle(ParticleTypes.END_ROD, partPos.x, partPos.y, partPos.z, 0, 0, 0);
 			return stack;
@@ -73,11 +73,11 @@ public class DampingPowder extends Item{
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn){
 		ItemStack held = playerIn.getHeldItem(handIn);
 		held.shrink(1);
-		List<Entity> ents = worldIn.getEntitiesInAABBexcluding(playerIn, new AxisAlignedBB(playerIn.getPosition()).grow(RANGE), FLAME_PREDICATE);
+		List<Entity> ents = worldIn.getEntitiesInAABBexcluding(playerIn, new AxisAlignedBB(playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), playerIn.getPosX() + 1, playerIn.getPosY() + 1, playerIn.getPosZ() + 1).grow(RANGE), FLAME_PREDICATE);
 		for(Entity ent : ents){
 			ent.remove();
 		}
-		Vec3d partPos = playerIn.getEyePosition(1).add(playerIn.getLookVec().scale(0.5));
+		Vector3d partPos = playerIn.getEyePosition(1).add(playerIn.getLookVec().scale(0.5));
 		worldIn.addParticle(ParticleTypes.END_ROD, partPos.x, partPos.y, partPos.z, 0, 0, 0);
 		if(!ents.isEmpty()){
 			worldIn.playSound(null, playerIn.getPosX(), playerIn.getPosY() + playerIn.getEyeHeight(), playerIn.getPosZ(), SoundEvents.ITEM_TOTEM_USE, SoundCategory.PLAYERS, 1, 0);
@@ -88,6 +88,6 @@ public class DampingPowder extends Item{
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.damp_powder.desc"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.damp_powder.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.damp_powder.quip").func_230530_a_(MiscUtil.TT_QUIP));
 	}
 }

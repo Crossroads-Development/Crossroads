@@ -8,7 +8,7 @@ import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -71,8 +71,8 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 	}
 	
 	@Override
-	protected Vec3d getParticlePos(){
-		return new Vec3d(pos).add(0.5D, 0.3D, 0.5D);
+	protected Vector3d getParticlePos(){
+		return new Vector3d(pos).add(0.5D, 0.3D, 0.5D);
 		
 	}
 }

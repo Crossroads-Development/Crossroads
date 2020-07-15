@@ -33,7 +33,7 @@ public class LightCluster extends Block{
 	private static final VoxelShape SHAPE = makeCuboidShape(6.4, 6.4, 6.4, 9.6, 9.6, 9.6);
 
 	public LightCluster(){
-		super(Properties.create(Material.MISCELLANEOUS).hardnessAndResistance(0).sound(SoundType.GLASS).doesNotBlockMovement().noDrops().lightValue(15));
+		super(Properties.create(Material.MISCELLANEOUS).hardnessAndResistance(0).sound(SoundType.GLASS).doesNotBlockMovement().noDrops().setLightLevel(state -> 15));
 		String name = "light_cluster";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

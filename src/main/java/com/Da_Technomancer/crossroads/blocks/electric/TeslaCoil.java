@@ -101,7 +101,7 @@ public class TeslaCoil extends ContainerBlock{
 
 		if(ESConfig.isWrench(heldItem)){
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.cycle(ESProperties.HORIZ_FACING));
+				worldIn.setBlockState(pos, state.func_235896_a_(ESProperties.HORIZ_FACING));
 				TileEntity te = worldIn.getTileEntity(pos);
 				if(te instanceof TeslaCoilTileEntity){
 					((TeslaCoilTileEntity) te).rotate();
@@ -158,6 +158,6 @@ public class TeslaCoil extends ContainerBlock{
 		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_coil.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_coil.top"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_coil.leyden", LeydenJar.MAX_CHARGE));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_coil.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_coil.quip").func_230530_a_(MiscUtil.TT_QUIP));
 	}
 }

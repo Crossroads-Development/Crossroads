@@ -7,8 +7,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
-import top.theillusivec4.curios.api.CuriosAPI;
-import top.theillusivec4.curios.api.imc.CurioIMCMessage;
+import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.SlotTypeMessage;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -25,12 +25,12 @@ public final class CurioCRCore{
 	public static void requestSlots(InterModEnqueueEvent evt){
 		//This class is put on the FML bus in CurioHelper.java
 		//We request a charm slot
-		InterModComms.sendTo(CurioHelper.CURIOS_ID, CuriosAPI.IMC.REGISTER_TYPE, () -> new CurioIMCMessage("charm"));
+		InterModComms.sendTo(CurioHelper.CURIOS_ID, SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder("charm").build());
 	}
 
 	//Just calls the method in CuriosAPI.
 	//This exists to add an additional layer between the class which may not exist at runtime, and Crossroads
 	protected static Optional<ImmutableTriple<String, Integer, ItemStack>> getEquippedCurio(Item item, @Nonnull LivingEntity livingEntity){
-		return CuriosAPI.getCurioEquipped(item, livingEntity);
+		return CuriosApi.getCuriosHelper().findEquippedCurio(item, livingEntity);
 	}
 }

@@ -58,7 +58,7 @@ public class FatCongealerTileEntity extends InventoryTE{
 	private Direction getFacing(){
 		if(facing == null){
 			BlockState state = world.getBlockState(pos);
-			if(state.has(ESProperties.HORIZ_FACING)){
+			if(state.func_235901_b_(ESProperties.HORIZ_FACING)){
 				facing = state.get(ESProperties.HORIZ_FACING);
 			}else{
 				remove();

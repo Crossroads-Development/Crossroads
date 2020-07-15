@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.entity;
 
 import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRendersAsItem;
 import net.minecraft.entity.LivingEntity;
@@ -52,7 +53,7 @@ public class EntityBullet extends ThrowableEntity implements IRendersAsItem{
 	protected void onImpact(RayTraceResult result){
 		if(!world.isRemote && result.getType() == RayTraceResult.Type.ENTITY){
 			EntityRayTraceResult res = (EntityRayTraceResult) result;
-			LivingEntity attacker = getThrower();
+			Entity attacker = func_234616_v_();//getThrower
 			DamageSource source = new EntityDamageSource("cr_bullet", attacker).setProjectile();
 			res.getEntity().attackEntityFrom(source, dataManager.get(damagePar));
 		}

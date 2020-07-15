@@ -127,8 +127,8 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 
 		// motionData
 		for(int j = 0; j < 4; j++){

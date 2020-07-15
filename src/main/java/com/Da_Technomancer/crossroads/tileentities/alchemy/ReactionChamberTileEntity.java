@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.alchemy.ReactionChamber;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -122,8 +123,8 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		energy = nbt.getInt("ener");
 	}
 

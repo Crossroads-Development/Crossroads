@@ -13,6 +13,7 @@ import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IndirectEntityDamageSource;
@@ -176,14 +177,14 @@ public class EntityFlyingMachine extends Entity{
 		return false;
 	}
 
-	public boolean processInitialInteract(PlayerEntity player, Hand hand){
+	public ActionResultType processInitialInteract(PlayerEntity player, Hand hand){
 		if(!player.isSneaking()){
 			if(!world.isRemote){
 				player.startRiding(this);
 			}
-			return true;
+			return ActionResultType.SUCCESS;
 		}
-		return false;
+		return ActionResultType.PASS;
 	}
 
 	@Override

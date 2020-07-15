@@ -52,7 +52,7 @@ public class WaterCentrifuge extends ContainerBlock{
 		TileEntity te;
 		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.cycle(CRProperties.HORIZ_AXIS));
+				worldIn.setBlockState(pos, state.func_235896_a_(CRProperties.HORIZ_AXIS));
 			}
 		}else if(!worldIn.isRemote && (te = worldIn.getTileEntity(pos)) instanceof INamedContainerProvider){
 			NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);
@@ -103,6 +103,6 @@ public class WaterCentrifuge extends ContainerBlock{
 		tooltip.add(new TranslationTextComponent("tt.crossroads.water_centrifuge.spin", WaterCentrifugeTileEntity.TIP_POINT));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.water_centrifuge.reds"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", WaterCentrifugeTileEntity.INERTIA));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.water_centrifuge.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.water_centrifuge.quip").func_230530_a_(MiscUtil.TT_QUIP));
 	}
 }

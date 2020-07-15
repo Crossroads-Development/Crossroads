@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.essentials.packets.ILongReceiver;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluid;
@@ -168,8 +169,8 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		for(int i = 0; i < 4; i++){
 			motData[i] = nbt.getDouble("mot_" + i);
 		}

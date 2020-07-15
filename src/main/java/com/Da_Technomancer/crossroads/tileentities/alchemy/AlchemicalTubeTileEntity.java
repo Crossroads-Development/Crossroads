@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
 import com.Da_Technomancer.crossroads.API.templates.ConduitBlock;
 import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -115,8 +116,8 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements Condui
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		ConduitBlock.IConduitTE.readConduitNBT(nbt, this);
 	}
 

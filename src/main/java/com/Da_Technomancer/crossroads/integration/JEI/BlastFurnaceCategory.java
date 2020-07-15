@@ -50,7 +50,7 @@ public class BlastFurnaceCategory implements IRecipeCategory<BlastFurnaceRec>{
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.blastFurnace.getNameTextComponent().getFormattedText();
+		return CRBlocks.blastFurnace.getNameTextComponent().getString();
 	}
 
 	@Override

@@ -10,8 +10,10 @@ import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameters;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -19,14 +21,13 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootParameters;
+import net.minecraftforge.common.ForgeMod;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +58,7 @@ public class Mechanism extends ContainerBlock implements IReadable{
 			return ItemStack.EMPTY;
 		}
 		MechanismTileEntity mte = (MechanismTileEntity) te;
-		Vec3d relVec = target.getHitVec().subtract(pos.getX(), pos.getY(), pos.getZ());
+		Vector3d relVec = target.getHitVec().subtract(pos.getX(), pos.getY(), pos.getZ());
 
 		for(int i = 0; i < 7; i++){
 			if(mte.boundingBoxes[i] != null && voxelContains(mte.boundingBoxes[i], relVec)){
@@ -108,7 +109,7 @@ public class Mechanism extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public boolean removedByPlayer(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid){
+	public boolean removedByPlayer(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid){
 		RotaryUtil.increaseMasterKey(false);
 		return super.removedByPlayer(state, worldIn, pos, player, willHarvest, fluid);
 	}
@@ -135,7 +136,7 @@ public class Mechanism extends ContainerBlock implements IReadable{
 	 * @param end End vector, subtract position first
 	 * @return The index of the aimed component, -1 if none, 6 for axle
 	 */
-	private int getAimedSide(MechanismTileEntity te, Vec3d start, Vec3d end){
+	private int getAimedSide(MechanismTileEntity te, Vector3d start, Vector3d end){
 		double minDist = Float.MAX_VALUE;
 		int target = -1;
 		for(int i = 0; i < te.boundingBoxes.length; i++){
@@ -202,9 +203,9 @@ public class Mechanism extends ContainerBlock implements IReadable{
 			TileEntity te = worldIn.getTileEntity(pos);
 			if(te instanceof MechanismTileEntity){
 				MechanismTileEntity gear = (MechanismTileEntity) te;
-				double reDist = player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue();//Player reach distance
-				Vec3d start = new Vec3d(player.prevPosX, player.prevPosY + (double) player.getEyeHeight(), player.prevPosZ).subtract(pos.getX(), pos.getY(), pos.getZ());
-				Vec3d end = start.add(player.getLook(0F).x * reDist, player.getLook(0F).y * reDist, player.getLook(0F).z * reDist);
+				double reDist = player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();//Player reach distance
+				Vector3d start = new Vector3d(player.prevPosX, player.prevPosY + (double) player.getEyeHeight(), player.prevPosZ).subtract(pos.getX(), pos.getY(), pos.getZ());
+				Vector3d end = start.add(player.getLook(0F).x * reDist, player.getLook(0F).y * reDist, player.getLook(0F).z * reDist);
 
 				int out = getAimedSide(gear, start, end);
 
@@ -285,7 +286,7 @@ public class Mechanism extends ContainerBlock implements IReadable{
 	 * @param point The 3 dimensional point to check if is contained by the passed shape
 	 * @return Whether the passed VoxelShape contains the passed point
 	 */
-	public static boolean voxelContains(VoxelShape shape, Vec3d point){
+	public static boolean voxelContains(VoxelShape shape, Vector3d point){
 		//We use a size 1 array because lambdas aren't supposed to use non-final variables
 		final boolean[] contained = new boolean[1];
 		shape.forEachBox((double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) -> {

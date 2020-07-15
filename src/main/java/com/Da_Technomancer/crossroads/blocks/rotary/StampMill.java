@@ -64,10 +64,10 @@ public class StampMill extends ContainerBlock{
 		TileEntity te;
 		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.cycle(CRProperties.HORIZ_AXIS));
+				worldIn.setBlockState(pos, state.func_235896_a_(CRProperties.HORIZ_AXIS));
 				BlockState upState = worldIn.getBlockState(pos.up());
 				if(upState.getBlock() instanceof StampMillTop){
-					worldIn.setBlockState(pos.up(), upState.cycle(CRProperties.HORIZ_AXIS));
+					worldIn.setBlockState(pos.up(), upState.func_235896_a_(CRProperties.HORIZ_AXIS));
 				}
 			}
 		}else if(!worldIn.isRemote && (te = worldIn.getTileEntity(pos)) instanceof INamedContainerProvider){

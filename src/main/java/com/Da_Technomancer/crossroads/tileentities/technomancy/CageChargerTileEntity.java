@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -102,8 +103,8 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		cage = ItemStack.read(nbt.getCompound("inv"));
 	}
 

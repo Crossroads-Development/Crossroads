@@ -20,14 +20,14 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.Rarity;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -43,13 +43,13 @@ public class BoboRod extends Item{
 		@Override
 		public ItemStack dispenseStack(IBlockSource source, ItemStack stack){
 			//Able to do bobo crafting via dispenser
-			act(source.getWorld(), source.getBlockPos(), new Vec3d(source.getX(), source.getY(), source.getZ()), null);
+			act(source.getWorld(), source.getBlockPos(), new Vector3d(source.getX(), source.getY(), source.getZ()), null);
 			return stack;
 		}
 	};
 
 	//Items that are considered valid offerings
-	private static final Tag<Item> offering = new ItemTags.Wrapper(new ResourceLocation(Crossroads.MODID, "bobo_unlock_key"));
+	private static final ITag<Item> offering = new ItemTags.Wrapper(new ResourceLocation(Crossroads.MODID, "bobo_unlock_key"));
 
 	protected BoboRod(){
 		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
@@ -64,7 +64,7 @@ public class BoboRod extends Item{
 		return act(context.getWorld(), context.getPos(), context.getHitVec(), context.getPlayer()) ? ActionResultType.SUCCESS : ActionResultType.FAIL;
 	}
 	
-	private static boolean act(World world, BlockPos pos, Vec3d hitVec, @Nullable PlayerEntity player){
+	private static boolean act(World world, BlockPos pos, Vector3d hitVec, @Nullable PlayerEntity player){
 		List<ItemEntity> items = world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(hitVec.add(-1, -1, -1), hitVec.add(1, 1, 1)), Entity::isAlive);
 		if(items.size() == 4){
 			Inventory inv = new Inventory(3);
@@ -105,6 +105,6 @@ public class BoboRod extends Item{
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.bobo_rod.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.bobo_rod.use"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.bobo_rod.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.bobo_rod.quip").func_230530_a_(MiscUtil.TT_QUIP));
 	}
 }

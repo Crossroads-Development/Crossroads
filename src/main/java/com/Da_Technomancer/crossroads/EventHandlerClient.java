@@ -26,7 +26,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -60,7 +60,7 @@ public final class EventHandlerClient{
 			MatrixStack matrix = e.getMatrixStack();
 
 			matrix.push();
-			Vec3d cameraPos = CRRenderUtil.getCameraPos();
+			Vector3d cameraPos = CRRenderUtil.getCameraPos();
 			matrix.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);//Translate to 0,0,0 world coords
 
 			ArrayList<IVisualEffect> toRemove = new ArrayList<>();
@@ -166,7 +166,7 @@ public final class EventHandlerClient{
 				buf.pos(0, 60, -1).tex(0, 0).endVertex();
 				tes.draw();
 
-				Minecraft.getInstance().fontRenderer.drawString(cageStack.getDisplayName().getFormattedText(), 16, 65, Color.DARK_GRAY.getRGB());
+				Minecraft.getInstance().fontRenderer.drawString(cageStack.getDisplayName().getString(), 16, 65, Color.DARK_GRAY.getRGB());
 				RenderSystem.color4f(1, 1, 1, 1);
 				RenderSystem.disableAlphaTest();
 				RenderSystem.disableBlend();
@@ -213,7 +213,7 @@ public final class EventHandlerClient{
 				buf.pos(0, 0, -1).tex(0, 0).endVertex();
 				tes.draw();
 
-				Minecraft.getInstance().fontRenderer.drawString(mainStack.getDisplayName().getFormattedText(), 16, 5, Color.DARK_GRAY.getRGB());
+				Minecraft.getInstance().fontRenderer.drawString(mainStack.getDisplayName().getString(), 16, 5, Color.DARK_GRAY.getRGB());
 
 				RenderSystem.disableAlphaTest();
 				RenderSystem.color4f(1, 1, 1, 1);

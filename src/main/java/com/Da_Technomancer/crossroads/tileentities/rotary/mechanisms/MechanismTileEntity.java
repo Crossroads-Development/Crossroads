@@ -13,6 +13,7 @@ import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import com.Da_Technomancer.essentials.packets.ILongReceiver;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -21,7 +22,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.capabilities.Capability;
@@ -55,7 +56,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		int part = -1;
-		Vec3d hitVec = hit.getHitVec().subtract(pos.getX(), pos.getY(), pos.getZ());//Subtract position, as the VoxelShapes are defined relative to position
+		Vector3d hitVec = hit.getHitVec().subtract(pos.getX(), pos.getY(), pos.getZ());//Subtract position, as the VoxelShapes are defined relative to position
 		for(int i = 0; i < 7; i++){
 			if(boundingBoxes[i] != null && Mechanism.voxelContains(boundingBoxes[i], hitVec)){
 				part = i;
@@ -170,8 +171,8 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 
 		if(nbt.contains("[6]memb") && nbt.contains("[6]mat")){
 			axleAxis = Direction.Axis.values()[nbt.getInt("axis")];

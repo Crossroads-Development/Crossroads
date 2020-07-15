@@ -30,6 +30,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.*;
 import net.minecraft.util.math.*;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -120,7 +121,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			}
 
 			float prevHeadYaw = play.getRotationYawHead();
-			Vec3d prevVelocity = play.getMotion();
+			Vector3d prevVelocity = play.getMotion();
 			if(target == e.world){
 				play.connection.setPlayerLocation(posX, posY, posZ, play.getYaw(1) + yawRotation, play.getPitch(1));
 			}else{
@@ -129,7 +130,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			play.setRotationYawHead(prevHeadYaw + yawRotation);
 			play.setMotion(prevVelocity.rotateYaw(yawRotation));
 		}else{
-			Vec3d prevVelocity = e.getMotion();
+			Vector3d prevVelocity = e.getMotion();
 			if(target == e.world){
 				float prevHeadYaw = e.getRotationYawHead();
 				e.setLocationAndAngles(posX, posY, posZ, e.getYaw(1) + yawRotation, e.getPitch(1));
@@ -574,8 +575,8 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		//Active only
 		flux = nbt.getInt("flux");
 		fluxToTrans = nbt.getInt("flux_trans");

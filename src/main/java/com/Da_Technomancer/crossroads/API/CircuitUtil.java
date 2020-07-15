@@ -5,6 +5,7 @@ import com.Da_Technomancer.essentials.blocks.ESBlocks;
 import com.Da_Technomancer.essentials.blocks.redstone.IRedstoneHandler;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.RedstoneDiodeBlock;
 import net.minecraft.nbt.CompoundNBT;
@@ -85,7 +86,7 @@ public class CircuitUtil extends RedstoneUtil{
 		 * Loads from an NBT tag
 		 * @param nbt An NBT tag that this is saved to
 		 */
-		public void read(CompoundNBT nbt){
+		public void read(BlockState state, CompoundNBT nbt){
 			circRedstone = nbt.getFloat("circ_reds");
 			worldRedstone = nbt.getInt("reds");
 		}

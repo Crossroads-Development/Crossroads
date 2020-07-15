@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
@@ -108,8 +109,8 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		time = nbt.getInt("time");
 		currentElement = nbt.contains("elem") ? EnumBeamAlignments.valueOf(nbt.getString("elem")) : null;
 	}

@@ -5,6 +5,7 @@ import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.Da_Technomancer.essentials.blocks.ESBlocks;
 import com.Da_Technomancer.essentials.blocks.redstone.IRedstoneHandler;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -54,8 +55,8 @@ public class HeatLimiterRedstoneTileEntity extends HeatLimiterBasicTileEntity{
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		redstone = nbt.getInt("reds");
 		circRedstone = nbt.getFloat("circ_reds");
 	}

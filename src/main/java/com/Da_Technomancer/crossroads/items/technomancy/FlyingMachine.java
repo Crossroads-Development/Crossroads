@@ -16,7 +16,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class FlyingMachine extends Item{
@@ -42,7 +42,7 @@ public class FlyingMachine extends Item{
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn){
 		ItemStack itemstack = playerIn.getHeldItem(handIn);
-		Vec3d vec3d = new Vec3d(playerIn.getPosX(), playerIn.getPosY() + playerIn.getEyeHeight(), playerIn.getPosZ());
+		Vector3d vec3d = new Vector3d(playerIn.getPosX(), playerIn.getPosY() + playerIn.getEyeHeight(), playerIn.getPosZ());
 		RayTraceResult ray = worldIn.rayTraceBlocks(new RayTraceContext(vec3d, vec3d.add(playerIn.getLookVec().scale(5)), RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, playerIn));
 
 		if(ray.getType() != RayTraceResult.Type.BLOCK){

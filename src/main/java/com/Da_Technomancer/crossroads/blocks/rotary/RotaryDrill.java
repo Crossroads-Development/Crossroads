@@ -77,7 +77,7 @@ public class RotaryDrill extends ContainerBlock{
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.cycle(ESProperties.FACING));
+				worldIn.setBlockState(pos, state.func_235896_a_(ESProperties.FACING));
 			}
 			return ActionResultType.SUCCESS;
 		}
@@ -104,6 +104,6 @@ public class RotaryDrill extends ContainerBlock{
 		}
 		tooltip.add(new TranslationTextComponent("tt.crossroads.drill.power", RotaryDrillTileEntity.ENERGY_USE));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", RotaryDrillTileEntity.INERTIA[golden ? 1 : 0]));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.drill.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.drill.quip").func_230530_a_(MiscUtil.TT_QUIP));
 	}
 }

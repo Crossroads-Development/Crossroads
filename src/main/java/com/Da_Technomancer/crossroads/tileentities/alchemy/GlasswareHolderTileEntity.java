@@ -20,7 +20,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Explosion;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -47,7 +47,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	private AbstractGlassware.GlasswareTypes heldType(){
 		if(glassType == null){
 			BlockState state = getBlockState();
-			if(state.has(CRProperties.CONTAINER_TYPE)){
+			if(state.func_235901_b_(CRProperties.CONTAINER_TYPE)){
 				glassType = state.get(CRProperties.CONTAINER_TYPE);
 				return glassType;
 			}
@@ -173,8 +173,8 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	protected Vec3d getParticlePos(){
-		return new Vec3d(pos).add(0.5D, 0.25D, 0.5D);
+	protected Vector3d getParticlePos(){
+		return new Vector3d(pos).add(0.5D, 0.25D, 0.5D);
 	}
 
 	@Override
@@ -202,7 +202,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 				return;
 			}
 
-			if(otherHandler.insertReagents(contents, side.getOpposite(), handler, state.has(ESProperties.REDSTONE_BOOL) && state.get(ESProperties.REDSTONE_BOOL))){
+			if(otherHandler.insertReagents(contents, side.getOpposite(), handler, state.func_235901_b_(ESProperties.REDSTONE_BOOL) && state.get(ESProperties.REDSTONE_BOOL))){
 				correctReag();
 				markDirty();
 			}

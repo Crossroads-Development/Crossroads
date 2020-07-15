@@ -88,10 +88,10 @@ dependencies {
 	runtimeOnly(fg.deobf("mezz.jei:jei-$mc_version:$jei_version"))//JEI
 	runtimeOnly(fg.deobf("top.theillusivec4.curios:curios:$curios_version"))//Curios
 
-	compile(fg.deobf("vazkii.patchouli:Patchouli:$mc_version-$patchouli_version"))
+	compile(fg.deobf("vazkii.patchouli:Patchouli:$patchouli_version"))
 
 	//No special CR integration for hwayla- only used for testing, so no compile inclusion needed
-	runtimeOnly(fg.deobf("mcp.mobius.waila:Hwyla:$hwyla_version"))
+//	runtimeOnly(fg.deobf("mcp.mobius.waila:Hwyla:$hwyla_version"))
 
 	//When setting up a dev environment for Crossroads, make sure to have an essentials jar in a folder called "libs", in the same parent folder as "src"
 	implementation(fg.deobf("com.technomancer.essentials:essentials-$mc_version-$essentials_version:dev"))
@@ -129,12 +129,10 @@ processResources {
 	// Replace stuff in mods.toml and the patchouli book version, nothing else
 	from(sourceSets.main.resources.srcDirs) {
 		include 'META-INF/mods.toml'
-		include 'patchouli_books/manual/book.json'
 
 		//Copy the Crossroads and essentials version into the toml file
 		expand 'version':project.version
 		expand 'essentials_version':"$essentials_version"
-		expand 'book_version':"$book_version"
 
 		exclude 'patchouli_books/manual/book.json'
 		exclude 'META-INF/mods.toml'

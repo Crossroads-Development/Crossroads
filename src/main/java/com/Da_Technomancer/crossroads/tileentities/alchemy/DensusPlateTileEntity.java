@@ -8,7 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -26,7 +26,7 @@ public class DensusPlateTileEntity extends TileEntity implements ITickableTileEn
 	@ObjectHolder("densus_plate")
 	private static TileEntityType<DensusPlateTileEntity> type = null;
 
-	private static final Tag<Block> gravityBlocking = new BlockTags.Wrapper(new ResourceLocation(Crossroads.MODID, "gravity_blocking"));
+	private static final ITag<Block> gravityBlocking = new BlockTags.Wrapper(new ResourceLocation(Crossroads.MODID, "gravity_blocking"));
 
 	private static final int RANGE = CRConfig.gravRange.get();
 
@@ -36,7 +36,7 @@ public class DensusPlateTileEntity extends TileEntity implements ITickableTileEn
 
 	private Direction getFacing(){
 		BlockState state = getBlockState();
-		if(state.has(ESProperties.FACING)){
+		if(state.func_235901_b_(ESProperties.FACING)){
 			return state.get(ESProperties.FACING);
 		}
 		return Direction.DOWN;

@@ -15,11 +15,11 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.DimensionManager;
 
@@ -81,7 +81,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 		data.putDouble("pos_x", player.getPosX());
 		data.putDouble("pos_y", player.getPosY());
 		data.putDouble("pos_z", player.getPosZ());
-		data.putLong("position", player.getPosition().toLong());
+		data.putLong("position", player.func_233580_cy_().toLong());
 		data.putFloat("yaw", player.getYaw(1F));
 		data.putFloat("yaw_head", player.getRotationYawHead());
 		data.putFloat("pitch", player.getPitch(1F));
@@ -100,21 +100,21 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 
 	private void recall(CompoundNBT data, PlayerEntity player, ItemStack held){
 		if(!data.contains("timestamp")){
-			player.sendMessage(new TranslationTextComponent("tt.crossroads.recall_device.none"));
+			MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.recall_device.none"));
 			return;//No data stored
 		}
 		//Check time delay and that it's the same player
 		long delay = player.world.getGameTime() - data.getLong("timestamp");
 		int limit = CRConfig.recallTimeLimit.get() * 20;//In ticks
 		if(limit >= 0 && delay > limit){
-			player.sendMessage(new TranslationTextComponent("tt.crossroads.recall_device.expired"));
+			MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.recall_device.expired"));
 			return;//Too old- do nothing
 		}
 
 		double wind = getWindLevel(held);
 
 		if(wind < WIND_USE){
-			player.sendMessage(new TranslationTextComponent("tt.crossroads.recall_device.not_wound"));
+			MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.recall_device.not_wound"));
 			return;//Insufficiently wound
 		}else{
 			setWindLevel(held, wind - WIND_USE);
@@ -122,7 +122,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 
 		String playerName = player.getGameProfile().getName();
 		if(playerName == null || !playerName.equals(data.getString("username"))){
-			player.sendMessage(new TranslationTextComponent("tt.crossroads.recall_device.wrong_player"));
+			MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.recall_device.wrong_player"));
 			return;//Wrong player or null profile
 		}
 
@@ -158,7 +158,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 		}
 
 		player.setRotationYawHead(data.getFloat("yaw_head"));
-		player.setMotion(new Vec3d(data.getDouble("vel_x"), data.getDouble("vel_y"), data.getDouble("vel_z")));
+		player.setMotion(new Vector3d(data.getDouble("vel_x"), data.getDouble("vel_y"), data.getDouble("vel_z")));
 
 		applySickness(player, delay, limit);
 	}
@@ -175,7 +175,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 		}
 
 		//Also plays sound
-		player.world.playSound(null, player.getPosition(), SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.PLAYERS, 1F, 1F);
+		player.world.playSound(null, player.func_233580_cy_(), SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.PLAYERS, 1F, 1F);
 	}
 
 	@Override
@@ -194,7 +194,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 		if(!playerIn.isSneaking()){
 			//World sound for recalling
 			//Played at source and destination
-			worldIn.playSound(null, playerIn.getPosition(), SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.PLAYERS, 1F, 1F);
+			worldIn.playSound(null, playerIn.func_233580_cy_(), SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.PLAYERS, 1F, 1F);
 			recall(nbt, playerIn, held);//Will do nothing if over time limit, wrong player, or no data stored
 		}
 

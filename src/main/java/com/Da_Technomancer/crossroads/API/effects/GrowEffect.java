@@ -9,11 +9,10 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.IGrowable;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -25,7 +24,7 @@ import java.util.List;
 public class GrowEffect extends BeamEffect{
 
 	//Crop types can be blacklisted from growth through the beam using the grow_blacklist tag. Intended for things like magical crops
-	private static final Tag<Block> growBlacklist = new BlockTags.Wrapper(new ResourceLocation(Crossroads.MODID, "growth_blacklist"));
+	private static final ITag<Block> growBlacklist = BlockTags.makeWrapperTag(Crossroads.MODID + ":growth_blacklist");
 	private static final DamageSource POTENTIAL_VOID = new DamageSource("potentialvoid").setMagicDamage().setDamageBypassesArmor();
 
 	@Override

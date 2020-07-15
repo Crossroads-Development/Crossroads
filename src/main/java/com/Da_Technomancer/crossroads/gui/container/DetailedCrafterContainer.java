@@ -24,8 +24,8 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeItemHelper;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SSetSlotPacket;
+import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
@@ -49,8 +49,8 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 	private static ContainerType<DetailedCrafterContainer> type = null;
 
 	@SuppressWarnings("unchecked")
-	private static final Tag<Item>[] unlockKeys = new Tag[3];
-	private static final Tag<Item> fillerMats = new ItemTags.Wrapper(new ResourceLocation(Crossroads.MODID, "path_unlock_filler"));
+	private static final ITag<Item>[] unlockKeys = new ITag[3];
+	private static final ITag<Item> fillerMats = new ItemTags.Wrapper(new ResourceLocation(Crossroads.MODID, "path_unlock_filler"));
 
 	static{
 		unlockKeys[0] = new ItemTags.Wrapper(new ResourceLocation(Crossroads.MODID, "technomancy_unlock_key"));
@@ -278,7 +278,7 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 	}
 
 	private void playUnlockSound(){
-		world.playSound(player, player.getPosition(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 2, 0);
+		world.playSound(player, player.func_233580_cy_(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 2, 0);
 	}
 
 	private static class SlotCraftingFlexible extends CraftingResultSlot{

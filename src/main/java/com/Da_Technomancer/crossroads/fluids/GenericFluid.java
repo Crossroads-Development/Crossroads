@@ -21,7 +21,7 @@ import java.util.function.Supplier;
 public class GenericFluid extends FlowingFluidBlock{
 
 	private static final Block.Properties BLOCK_PROP = Block.Properties.create(Material.WATER).doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops();
-	private static final Block.Properties BLOCK_PROP_HOT = Block.Properties.create(Material.LAVA).doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops().lightValue(15);
+	private static final Block.Properties BLOCK_PROP_HOT = Block.Properties.create(Material.LAVA).doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops().setLightLevel(state -> 15);
 	private static final Item.Properties BUCKET_PROP = new Item.Properties().containerItem(Items.BUCKET).maxStackSize(1).group(ItemGroup.MISC);
 
 	public static FluidData create(String name, boolean lavaLike, boolean gaseous){

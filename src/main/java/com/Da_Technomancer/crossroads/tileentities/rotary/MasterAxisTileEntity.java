@@ -82,7 +82,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 	protected Direction getFacing(){
 		if(facing == null){
 			BlockState state = world.getBlockState(pos);
-			if(!state.has(ESProperties.FACING)){
+			if(!state.func_235901_b_(ESProperties.FACING)){
 				remove();
 				return Direction.DOWN;
 			}
@@ -294,8 +294,8 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		ticksExisted = nbt.getLong("life");
 		for(int i = 0; i < 4; i++){
 			prevAngles[i] = nbt.getFloat("prev_" + i);

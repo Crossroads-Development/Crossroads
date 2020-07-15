@@ -2,12 +2,13 @@ package com.Da_Technomancer.crossroads.API.effects;
 
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.CRConfig;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -32,8 +33,10 @@ public class ChargeEffect extends BeamEffect{
 					return;
 				}
 
-				if(power >= 16){
-					((ServerWorld) worldIn).addLightningBolt(new LightningBoltEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), false));
+				if(power >= 16 && CRConfig.chargeSpawnLightning.get()){
+					LightningBoltEntity lightning = EntityType.LIGHTNING_BOLT.create(worldIn);
+					lightning.func_233576_c_(Vector3d.func_237489_a_(pos));
+					worldIn.addEntity(lightning);
 				}
 			}
 		}

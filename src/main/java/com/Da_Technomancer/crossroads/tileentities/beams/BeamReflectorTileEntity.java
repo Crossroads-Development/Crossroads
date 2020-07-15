@@ -27,7 +27,7 @@ public class BeamReflectorTileEntity extends BeamRenderTE{
 	private int getFacing(){
 		if(facing == -1){
 			BlockState s = getBlockState();
-			if(s.has(ESProperties.FACING)){
+			if(s.func_235901_b_(ESProperties.FACING)){
 				facing = s.get(ESProperties.FACING).getIndex();
 			}else{
 				return 0;

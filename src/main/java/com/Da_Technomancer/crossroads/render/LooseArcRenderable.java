@@ -4,7 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 import java.awt.*;
 import java.util.Random;
@@ -26,7 +26,7 @@ public class LooseArcRenderable implements IVisualEffect{
 	private byte lifeTime;
 	private final byte lifeSpan;
 	private long lastTick = -1;
-	private final Vec3d[][] states;
+	private final Vector3d[][] states;
 
 	private LooseArcRenderable(float xSt, float ySt, float zSt, float xEn, float yEn, float zEn, float xStFin, float yStFin, float zStFin, int count, float diffusionRate, byte lifespan, int color){
 		this.xSt = xSt;
@@ -41,7 +41,7 @@ public class LooseArcRenderable implements IVisualEffect{
 		this.count = count;
 		this.diffusionRate = diffusionRate;
 		this.color = color;
-		states = new Vec3d[count][9];
+		states = new Vector3d[count][9];
 		this.lifeSpan = lifespan;
 		this.lifeTime = lifespan;
 	}
@@ -56,19 +56,19 @@ public class LooseArcRenderable implements IVisualEffect{
 		Color colorObj = new Color(color, true);
 		int[] col = {colorObj.getRed(), colorObj.getGreen(), colorObj.getBlue(), colorObj.getAlpha()};
 		float mult = ((float) (lifeSpan - lifeTime) + partialTicks) / (float) lifeSpan;
-		Vec3d start = new Vec3d(mult * (xStFin - xSt) + xSt, mult * (yStFin - ySt) + ySt, mult * (zStFin - zSt) + zSt);
+		Vector3d start = new Vector3d(mult * (xStFin - xSt) + xSt, mult * (yStFin - ySt) + ySt, mult * (zStFin - zSt) + zSt);
 		IVertexBuilder builder = buffer.getBuffer(CRRenderTypes.ELECTRIC_ARC_TYPE);
 
 		matrix.translate(start.x, start.y, start.z);
 
 		//If the arc is newly created, generate its path
 		if(lastTick != worldTime && lastTick < 0){
-			Vec3d lengthVec = new Vec3d(xEn - start.x, yEn - start.y, zEn - start.z);
+			Vector3d lengthVec = new Vector3d(xEn - start.x, yEn - start.y, zEn - start.z);
 			double length = lengthVec.length();
 			//lengthVec is a normalized vector pointing from the start to end point
 			lengthVec = lengthVec.normalize();
 			//crossVec is a normalized vector perpendicular to the lengthVec. Used to make bolts jut outwards from the center
-			Vec3d crossVec = lengthVec.crossProduct(CRRenderUtil.VEC_I);
+			Vector3d crossVec = lengthVec.crossProduct(CRRenderUtil.VEC_I);
 			//In the unlikely event that the I unit vector happens to be parallel to lengthVec, we use an a different arbitrary vector
 			if(crossVec.lengthSquared() == 0){
 				crossVec = lengthVec.crossProduct(CRRenderUtil.VEC_J);

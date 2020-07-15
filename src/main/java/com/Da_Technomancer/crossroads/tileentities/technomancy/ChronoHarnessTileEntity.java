@@ -191,8 +191,8 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		fe = nbt.getInt("fe");
 		flux = nbt.getInt("flux");
 		fluxToTrans = nbt.getInt("flux_trans");

@@ -79,22 +79,22 @@ public class TemporalAccelerator extends ContainerBlock{
 			if(playerIn.isSneaking()){
 				//Sneak clicking- change mode
 				TileEntity te = worldIn.getTileEntity(pos);
-				state = state.cycle(CRProperties.ACCELERATOR_TARGET);
+				state = state.func_235896_a_(CRProperties.ACCELERATOR_TARGET);
 				worldIn.setBlockState(pos, state);
 				if(te instanceof TemporalAcceleratorTileEntity){
 					((TemporalAcceleratorTileEntity) te).resetCache();
 				}
 				if(worldIn.isRemote){
 					Mode newMode = state.get(CRProperties.ACCELERATOR_TARGET);
-					playerIn.sendMessage(new TranslationTextComponent("tt.crossroads.time_accel.new_mode", MiscUtil.localize(newMode.getLocalizationName())));
+					MiscUtil.chatMessage(playerIn, new TranslationTextComponent("tt.crossroads.time_accel.new_mode", MiscUtil.localize(newMode.getLocalizationName())));
 					if(!CRConfig.teTimeAccel.get() && newMode.accelerateTileEntities){
-						playerIn.sendMessage(new TranslationTextComponent("tt.crossroads.time_accel.config").setStyle(new Style().setColor(TextFormatting.RED)));
+						MiscUtil.chatMessage(playerIn, new TranslationTextComponent("tt.crossroads.time_accel.config").func_230530_a_(Style.EMPTY.applyFormatting(TextFormatting.RED)));
 					}
 				}
 			}else{
 				//Rotate this machine
 				TileEntity te = worldIn.getTileEntity(pos);
-				worldIn.setBlockState(pos, state.cycle(ESProperties.FACING));
+				worldIn.setBlockState(pos, state.func_235896_a_(ESProperties.FACING));
 				if(te instanceof TemporalAcceleratorTileEntity){
 					((TemporalAcceleratorTileEntity) te).resetCache();
 				}
@@ -144,12 +144,12 @@ public class TemporalAccelerator extends ContainerBlock{
 		}
 
 		@Override
-		public String getName(){
+		public String getString(){
 			return toString();
 		}
 
 		public String getLocalizationName(){
-			return "tt.crossroads.time_accel.mode." + getName();
+			return "tt.crossroads.time_accel.mode." + toString();
 		}
 	}
 }

@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -47,9 +47,9 @@ public class BlockIngredient implements Predicate<BlockState>{
 		for(Object key : matched){
 			if(key instanceof IBlockList){
 				keys.add((IBlockList) key);
-			}else if(key instanceof Tag){
+			}else if(key instanceof ITag){
 				try{
-					Tag<Block> tag = (Tag<Block>) key;
+					ITag<Block> tag = (ITag<Block>) key;
 					keys.add(new TagList(tag));
 				}catch(ClassCastException e){
 					Crossroads.logger.error("An illegal tag type was added to a BlockIngredient. Report to mod author!", e);
@@ -126,7 +126,7 @@ public class BlockIngredient implements Predicate<BlockState>{
 
 	private static IBlockList readIngr(JsonObject o){
 		if(o.has("tag")){
-			return new TagList(new BlockTags.Wrapper(new ResourceLocation(JSONUtils.getString(o, "tag"))));
+			return new TagList(BlockTags.makeWrapperTag(JSONUtils.getString(o, "tag")));
 		}else if(o.has("block")){
 			return new SingleList(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(JSONUtils.getString(o, "block"))));
 		}else{
@@ -167,9 +167,9 @@ public class BlockIngredient implements Predicate<BlockState>{
 
 	private static class TagList implements IBlockList{
 
-		private final Tag<Block> tag;
+		private final ITag<Block> tag;
 
-		public TagList(Tag<Block> matched){
+		public TagList(ITag<Block> matched){
 			tag = matched;
 		}
 

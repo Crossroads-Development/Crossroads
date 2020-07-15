@@ -16,7 +16,7 @@ import com.Da_Technomancer.crossroads.particles.ColorParticleType;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.TESR.CRRendererRegistry;
 import com.Da_Technomancer.crossroads.tileentities.CRTileEntity;
-import com.Da_Technomancer.crossroads.world.ModWorldGen;
+import com.Da_Technomancer.crossroads.world.CRWorldGen;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -287,7 +287,7 @@ public final class Crossroads{
 	@SuppressWarnings("unused")
 	@SubscribeEvent
 	public static void registerWorldgen(RegistryEvent.Register<Feature<?>> e){
-		ModWorldGen.register(e.getRegistry());
+		CRWorldGen.register(e.getRegistry());
 	}
 
 	@SuppressWarnings("unused")

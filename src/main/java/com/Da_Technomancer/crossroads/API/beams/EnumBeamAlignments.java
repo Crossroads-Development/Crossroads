@@ -121,9 +121,9 @@ public enum EnumBeamAlignments{
 //			StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) player);
 //			//Doesn't use deletion-chat as the element discovery notification shouldn't be wiped away in 1 tick.
 //			if(discover){
-//				player.sendMessage(new TranslationTextComponent("tt.crossroads.element_discover", getLocalName(false)).applyTextStyle(TextFormatting.BOLD));
+//				MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.element_discover", getLocalName(false)).applyTextStyle(TextFormatting.BOLD));
 //			}else{
-//				player.sendMessage(new TranslationTextComponent("tt.crossroads.element_discover.undo", getLocalName(false)).applyTextStyle(TextFormatting.BOLD));
+//				MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.element_discover.undo", getLocalName(false)).applyTextStyle(TextFormatting.BOLD));
 //			}
 //		}
 	}

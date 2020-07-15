@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -49,8 +50,8 @@ public class ChargingStandTileEntity extends GlasswareHolderTileEntity{
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		fe = nbt.getInt("fe");
 	}
 

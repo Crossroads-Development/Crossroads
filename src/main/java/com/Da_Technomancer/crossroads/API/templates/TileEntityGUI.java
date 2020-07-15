@@ -47,8 +47,8 @@ public abstract class TileEntityGUI<T extends TileEntityContainer<U>, U extends 
 			}
 		}
 
-		font.drawString(title.getFormattedText(), 8, 6, 0x404040);
-		font.drawString(playerInv.getDisplayName().getFormattedText(), container.getInvStart()[0], container.getInvStart()[1] - 12, 0x404040);
+		font.drawString(title.getString(), 8, 6, 0x404040);
+		font.drawString(playerInv.getDisplayName().getString(), container.getInvStart()[0], container.getInvStart()[1] - 12, 0x404040);
 	}
 
 	@Override

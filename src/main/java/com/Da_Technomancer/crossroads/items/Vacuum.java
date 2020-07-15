@@ -9,7 +9,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -37,15 +37,15 @@ public class Vacuum extends Item{
 
 		//Affects a conical region
 		//Removes entities from the list if they aren't in the conical region in the direction the player is looking
-		Vec3d look = playerIn.getLookVec().scale(RANGE);
-		Vec3d playPos = playerIn.getPositionVector();
+		Vector3d look = playerIn.getLookVec().scale(RANGE);
+		Vector3d playPos = playerIn.getPositionVec();
 		entities.removeIf((Entity e) -> {
-			Vec3d ePos = e.getPositionVector().subtract(playPos);
+			Vector3d ePos = e.getPositionVec().subtract(playPos);
 			return ePos.length() >= RANGE || ePos.dotProduct(look) / (ePos.length() * look.length()) <= ANGLE;
 		});
 
 		for(Entity ent : entities){
-			Vec3d motVec = playerIn.getPositionVector().subtract(ent.getPositionVector()).scale(0.25D);
+			Vector3d motVec = playerIn.getPositionVec().subtract(ent.getPositionVec()).scale(0.25D);
 			ent.addVelocity(motVec.x, motVec.y, motVec.z);
 		}
 

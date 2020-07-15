@@ -70,7 +70,7 @@ public class ReagentFilter extends ContainerBlock{
 	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.reagent_filter.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.reagent_filter.filter"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.reagent_filter.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.reagent_filter.quip").func_230530_a_(MiscUtil.TT_QUIP));
 	}
 
 //	@Override
@@ -83,7 +83,7 @@ public class ReagentFilter extends ContainerBlock{
 		if(!worldIn.isRemote){
 			TileEntity te = worldIn.getTileEntity(pos);
 			if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
-				worldIn.setBlockState(pos, state.cycle(CRProperties.HORIZ_FACING));
+				worldIn.setBlockState(pos, state.func_235896_a_(CRProperties.HORIZ_FACING));
 				if(te instanceof ReagentFilterTileEntity){
 					((ReagentFilterTileEntity) te).clearCache();
 				}

@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.AlchemyRec;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.server.ServerWorld;
 
 /**
@@ -32,7 +32,7 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 	@Override
 	public <T extends IParticleData> void addVisualEffect(T particleType, double speedX, double speedY, double speedZ){
 		if(!world.isRemote){
-			Vec3d particlePos = getParticlePos();
+			Vector3d particlePos = getParticlePos();
 			((ServerWorld) world).spawnParticle(particleType, particlePos.x, particlePos.y, particlePos.z, 0, speedX, speedY, speedZ, 1F);
 		}
 	}

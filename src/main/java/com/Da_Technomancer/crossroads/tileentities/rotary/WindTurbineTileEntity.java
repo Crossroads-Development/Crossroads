@@ -171,8 +171,8 @@ public class WindTurbineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		level = nbt.getInt("level");
 		running = nbt.getBoolean("running");
 	}

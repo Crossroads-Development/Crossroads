@@ -9,6 +9,9 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -40,13 +43,8 @@ public class PermeableGlass extends Block{
 	}
 
 	@Override
-	public boolean causesSuffocation(BlockState state, IBlockReader world, BlockPos pos){
-		return false;
-	}
-
-	@Override
-	public boolean isNormalCube(BlockState p_220081_1_, IBlockReader p_220081_2_, BlockPos p_220081_3_){
-		return false;
+	public VoxelShape func_230322_a_(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext selection) {
+		return VoxelShapes.empty();
 	}
 
 	@OnlyIn(Dist.CLIENT)

@@ -6,7 +6,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.culling.ClippingHelperImpl;
+import net.minecraft.client.renderer.culling.ClippingHelper;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
@@ -69,7 +69,7 @@ public class RenderFlameCoreEntity extends EntityRenderer<EntityFlameCore>{
 	}
 
 	@Override
-	public boolean shouldRender(EntityFlameCore entity, ClippingHelperImpl helper, double camX, double camY, double camZ){
+	public boolean shouldRender(EntityFlameCore entity, ClippingHelper helper, double camX, double camY, double camZ){
 		return true;
 	}
 }

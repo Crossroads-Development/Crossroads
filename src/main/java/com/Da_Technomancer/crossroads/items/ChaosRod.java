@@ -9,7 +9,7 @@ import net.minecraft.item.Rarity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.*;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -34,7 +34,7 @@ public class ChaosRod extends Item{
 			playerIn.playSound(SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, 1, 1);
 			return ActionResult.resultSuccess(playerIn.getHeldItem(hand));
 		}
-		Vec3d change = playerIn.getLookVec().scale(8);
+		Vector3d change = playerIn.getLookVec().scale(8);
 		playerIn.setPositionAndUpdate(playerIn.getPosX() + change.x, playerIn.getPosY() + change.y, playerIn.getPosZ() + change.z);
 		//Long story short, Potus4mine is the username of the person who found an exploit, which I left in only for them. 
 		if(playerIn.getGameProfile().getName().equals("Potus4mine") ? playerIn.getActivePotionEffect(Effects.WEAKNESS) != null : playerIn.getActivePotionEffect(Effects.GLOWING) != null){
@@ -47,7 +47,7 @@ public class ChaosRod extends Item{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.chaos_rod.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.chaos_rod.quip").func_230530_a_(MiscUtil.TT_QUIP));
 	}
 
 	@Override

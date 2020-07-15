@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.API.templates.ConduitBlock;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -134,8 +135,8 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		ConduitBlock.IConduitTE.readConduitNBT(nbt, this);
 		insulator = nbt.contains("insul") ? HeatInsulators.valueOf(nbt.getString("insul")) : HeatInsulators.WOOL;
 	}

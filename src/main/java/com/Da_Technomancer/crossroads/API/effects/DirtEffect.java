@@ -9,10 +9,10 @@ import net.minecraft.entity.passive.SquidEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 
 import java.util.Random;
 
@@ -64,7 +64,9 @@ public class DirtEffect implements IEffect{
 				break;
 			case 7:
 				worldIn.destroyBlock(pos, false);
-				((ServerWorld) worldIn).addLightningBolt(new LightningBoltEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), false));
+				LightningBoltEntity lightning = EntityType.LIGHTNING_BOLT.create(worldIn);
+				lightning.func_233576_c_(Vector3d.func_237489_a_(pos));
+				worldIn.addEntity(lightning);
 				break;
 		}
 

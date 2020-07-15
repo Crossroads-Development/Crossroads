@@ -44,6 +44,6 @@ public class ChemicalVent extends ContainerBlock{
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.chemical_vent.desc"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.chemical_vent.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.chemical_vent.quip").func_230530_a_(MiscUtil.TT_QUIP));
 	}
 }

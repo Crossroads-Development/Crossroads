@@ -69,7 +69,7 @@ public class FlowLimiter extends ContainerBlock{
 						((FlowLimiterTileEntity) te).cycleLimit((ServerPlayerEntity) playerIn);
 					}
 				}else{
-					worldIn.setBlockState(pos, state.cycle(ESProperties.FACING));
+					worldIn.setBlockState(pos, state.func_235896_a_(ESProperties.FACING));
 					TileEntity te = worldIn.getTileEntity(pos);
 					if(te instanceof FlowLimiterTileEntity){
 						((FlowLimiterTileEntity) te).wrench();

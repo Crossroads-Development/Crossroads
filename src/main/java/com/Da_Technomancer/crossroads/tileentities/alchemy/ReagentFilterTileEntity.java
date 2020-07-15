@@ -67,8 +67,8 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements INamedC
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		inventory = nbt.contains("inv") ? ItemStack.read(nbt.getCompound("inv")) : ItemStack.EMPTY;
 	}
 

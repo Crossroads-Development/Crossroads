@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -64,8 +65,8 @@ public class SolarHeaterTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		running = nbt.getBoolean("running");
 	}
 

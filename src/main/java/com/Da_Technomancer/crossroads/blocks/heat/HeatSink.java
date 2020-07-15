@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatSinkTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
@@ -45,7 +46,7 @@ public class HeatSink extends ContainerBlock{
 				TileEntity te = worldIn.getTileEntity(pos);
 				if(te instanceof HeatSinkTileEntity){
 					int mode = ((HeatSinkTileEntity) te).cycleMode();
-					playerIn.sendMessage(new TranslationTextComponent("tt.crossroads.heat_sink.loss", HeatSinkTileEntity.MODES[mode]));
+					MiscUtil.chatMessage(playerIn, new TranslationTextComponent("tt.crossroads.heat_sink.loss", HeatSinkTileEntity.MODES[mode]));
 				}
 			}
 			return ActionResultType.SUCCESS;

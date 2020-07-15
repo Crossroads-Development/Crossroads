@@ -136,8 +136,8 @@ public class StampMillTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		progress = nbt.getDouble("prog");
 		timer = nbt.getInt("timer");
 	}

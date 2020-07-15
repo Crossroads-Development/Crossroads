@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.API.beams.*;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -164,8 +165,8 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		queued[0] = BeamUnitStorage.readFromNBT("queue0", nbt);
 		queued[1] = BeamUnitStorage.readFromNBT("queue1", nbt);
 		activeCycle = nbt.getLong("cyc");

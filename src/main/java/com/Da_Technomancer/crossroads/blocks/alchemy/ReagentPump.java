@@ -73,7 +73,7 @@ public class ReagentPump extends ContainerBlock{
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.cycle(CRProperties.ACTIVE));
+				worldIn.setBlockState(pos, state.func_235896_a_(CRProperties.ACTIVE));
 			}
 			return ActionResultType.SUCCESS;
 		}

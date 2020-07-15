@@ -50,7 +50,7 @@ public class OreCleanserCategory implements IRecipeCategory<OreCleanserRec>{
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.oreCleanser.getNameTextComponent().getFormattedText();
+		return CRBlocks.oreCleanser.getNameTextComponent().getString();
 	}
 
 	@Override

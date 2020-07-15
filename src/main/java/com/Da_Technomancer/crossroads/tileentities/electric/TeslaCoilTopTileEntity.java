@@ -17,7 +17,7 @@ import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ObjectHolder;
@@ -93,11 +93,11 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 				if(world.isRemote){
 					//Spawn the purely decorative bolts on the client side directly to reduce packet load
 					int count = world.rand.nextInt(5) + 1;
-					Vec3d start = new Vec3d(pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F);
+					Vector3d start = new Vector3d(pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F);
 					for(int i = 0; i < count; i++){
 						float angle = world.rand.nextFloat() * 2F * (float) Math.PI;
 						float rad = world.rand.nextFloat() * 2F + 3F;
-						Vec3d end = start.add(new Vec3d(rad * Math.cos(angle), world.rand.nextFloat() * 2F - 1F, rad * Math.sin(angle)));
+						Vector3d end = start.add(new Vector3d(rad * Math.cos(angle), world.rand.nextFloat() * 2F - 1F, rad * Math.sin(angle)));
 						CRRenderUtil.addArc(world, start, end, 6, 0.6F, COLOR_CODES[world.rand.nextInt(COLOR_CODES.length)]);
 					}
 				}else{
@@ -145,8 +145,8 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		int count = 0;
 		while(nbt.contains("link" + count)){
 			linked.add(BlockPos.fromLong(nbt.getLong("link" + count)));

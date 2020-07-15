@@ -56,7 +56,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 	private Direction getFacing(){
 		if(facing == null){
 			BlockState s = getBlockState();
-			if(s.has(ESProperties.FACING)){
+			if(s.func_235901_b_(ESProperties.FACING)){
 				facing = s.get(ESProperties.FACING);
 			}else{
 				return Direction.DOWN;
@@ -88,8 +88,8 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		inv = nbt.contains("inv") ? ItemStack.read(nbt.getCompound("inv")) : ItemStack.EMPTY;
 		output = BeamUnit.readFromNBT("output", nbt);
 		timeRemaining = nbt.getInt("remain");

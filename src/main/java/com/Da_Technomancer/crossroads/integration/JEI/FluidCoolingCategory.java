@@ -49,7 +49,7 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRec>{
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.fluidCoolingChamber.getNameTextComponent().getFormattedText();
+		return CRBlocks.fluidCoolingChamber.getNameTextComponent().getString();
 	}
 
 	@Override

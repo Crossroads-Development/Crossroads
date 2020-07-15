@@ -88,8 +88,8 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IInfoTE{
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		this.masterPos = BlockPos.fromLong(nbt.getLong("mast"));
 	}
 

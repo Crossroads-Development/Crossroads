@@ -41,7 +41,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 	public Direction getFacing(){
 		if(facing == null){
 			BlockState state = world.getBlockState(pos);
-			if(state.has(ESProperties.FACING)){
+			if(state.func_235901_b_(ESProperties.FACING)){
 				facing = state.get(ESProperties.FACING);
 				return facing;
 			}
@@ -109,8 +109,8 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		limitIndex = Math.min(nbt.getInt("limit"), LIMITS.length - 1);
 	}
 

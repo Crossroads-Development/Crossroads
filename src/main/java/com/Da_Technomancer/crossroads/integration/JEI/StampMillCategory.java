@@ -44,7 +44,7 @@ public class StampMillCategory implements IRecipeCategory<StampMillRec>{
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.stampMill.getNameTextComponent().getFormattedText();
+		return CRBlocks.stampMill.getNameTextComponent().getString();
 	}
 
 	@Override

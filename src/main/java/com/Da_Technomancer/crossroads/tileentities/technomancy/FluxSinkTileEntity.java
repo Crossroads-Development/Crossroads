@@ -125,8 +125,8 @@ public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickab
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		flux = nbt.getInt("flux");
 		running = nbt.getBoolean("running");
 		runningStartTime = nbt.getLong("run_time");

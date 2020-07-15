@@ -14,6 +14,7 @@ import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.CopshowiumMakerContainer;
 import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.CopshowiumRec;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -115,8 +116,8 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		flux = nbt.getInt("flux");
 		fluxToTrans = nbt.getInt("flux_trans");
 		if(nbt.contains("link")){

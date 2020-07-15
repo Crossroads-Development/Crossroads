@@ -4,6 +4,7 @@ import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
 import com.Da_Technomancer.essentials.gui.container.IFluidSlotTE;
 import io.netty.buffer.Unpooled;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.container.INamedContainerProvider;
@@ -88,8 +89,8 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		for(int i = 0; i < inventory.length; i++){
 			if(nbt.contains("inv_" + i)){
 				inventory[i] = ItemStack.read(nbt.getCompound("inv_" + i));

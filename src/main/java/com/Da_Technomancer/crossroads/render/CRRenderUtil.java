@@ -14,7 +14,7 @@ import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -26,9 +26,9 @@ import java.util.function.Function;
 
 public class CRRenderUtil extends RenderUtil{
 
-	public static final Vec3d VEC_I = new Vec3d(1, 0, 0);
-	public static final Vec3d VEC_J = new Vec3d(0, 1, 0);
-	public static final Vec3d VEC_K = new Vec3d(0, 0, 1);
+	public static final Vector3d VEC_I = new Vector3d(1, 0, 0);
+	public static final Vector3d VEC_J = new Vector3d(0, 1, 0);
+	public static final Vector3d VEC_K = new Vector3d(0, 0, 1);
 	private static final int[] WHITE_COLOR = {255, 255, 255, 255};
 
 	/**
@@ -58,7 +58,7 @@ public class CRRenderUtil extends RenderUtil{
 		CRPackets.sendPacketAround(world, new BlockPos(x, y, z), new AddVisualToClient(nbt));
 	}
 
-	public static void addArc(World world, Vec3d start, Vec3d end, int count, float diffusionRate, int color){
+	public static void addArc(World world, Vector3d start, Vector3d end, int count, float diffusionRate, int color){
 		addArc(world, (float) start.x, (float) start.y, (float) start.z, (float) end.x, (float) end.y, (float) end.z, count, diffusionRate, color);
 	}
 
@@ -195,7 +195,7 @@ public class CRRenderUtil extends RenderUtil{
 	 * @param point2 The position of the other adjacent vertex
 	 * @return The normal vector
 	 */
-	public static Vec3d findNormal(Vec3d point0, Vec3d point1, Vec3d point2){
+	public static Vector3d findNormal(Vector3d point0, Vector3d point1, Vector3d point2){
 		point1 = point1.subtract(point0);
 		point2 = point2.subtract(point0);
 		return point1.crossProduct(point2);
@@ -238,7 +238,7 @@ public class CRRenderUtil extends RenderUtil{
 	 * @return The camera position relative to the world
 	 */
 	@OnlyIn(Dist.CLIENT)
-	public static Vec3d getCameraPos(){
+	public static Vector3d getCameraPos(){
 		return Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
 	}
 
@@ -254,10 +254,10 @@ public class CRRenderUtil extends RenderUtil{
 	 * @param light The combined light coordinate to render with
 	 */
 	@OnlyIn(Dist.CLIENT)
-	public static void draw3dLine(IVertexBuilder builder, MatrixStack matrix, Vec3d start, Vec3d end, double width, int[] col, int light){
-		Vec3d lineVec = end.subtract(start);
+	public static void draw3dLine(IVertexBuilder builder, MatrixStack matrix, Vector3d start, Vector3d end, double width, int[] col, int light){
+		Vector3d lineVec = end.subtract(start);
 		//Find any perpendicular vector using a deterministic method
-		Vec3d[] perpVec = new Vec3d[3];
+		Vector3d[] perpVec = new Vector3d[3];
 		perpVec[0] = lineVec.crossProduct(VEC_I);
 		if(perpVec[0].lengthSquared() == 0){
 			perpVec[0] = lineVec.crossProduct(VEC_J);
@@ -265,15 +265,15 @@ public class CRRenderUtil extends RenderUtil{
 		//width * sqrt(3) / 4 is the length for center-to-tip distance of equilateral triangle that will be formed by the 3 quads
 		perpVec[0] = perpVec[0].scale(width * Math.sqrt(3) / 4 / perpVec[0].length());
 		//Rotate perVecA +-120deg about lineVec using a simplified form of Rodrigues' rotation formula
-		Vec3d compA = perpVec[0].scale(-.5D);//perpVecA * cos(120deg)
-		Vec3d compB = perpVec[0].crossProduct(lineVec.normalize()).scale(Math.sqrt(3) / 2D);//(perpVecA x unit vector of lineVec) * sin(120deg)
+		Vector3d compA = perpVec[0].scale(-.5D);//perpVecA * cos(120deg)
+		Vector3d compB = perpVec[0].crossProduct(lineVec.normalize()).scale(Math.sqrt(3) / 2D);//(perpVecA x unit vector of lineVec) * sin(120deg)
 		perpVec[1] = compA.add(compB);
 		perpVec[2] = compA.subtract(compB);
 		//perpVec 0, 1, & 2 represent the vertices of the triangular ends of the triangular prism formed, relative to start (or end)
 
 		for(int i = 0; i < 3; i++){
-			Vec3d offsetPrev = perpVec[i];
-			Vec3d offsetNext = perpVec[(i + 1) % perpVec.length];
+			Vector3d offsetPrev = perpVec[i];
+			Vector3d offsetNext = perpVec[(i + 1) % perpVec.length];
 			builder.pos(matrix.getLast().getMatrix(), (float) (start.getX() + offsetPrev.getX()), (float) (start.getY() + offsetPrev.getY()), (float) (start.getZ() + offsetPrev.getZ())).color(col[0], col[1], col[2], col[3]).lightmap(light).endVertex();
 			builder.pos(matrix.getLast().getMatrix(), (float) (end.getX() + offsetPrev.getX()), (float) (end.getY() + offsetPrev.getY()), (float) (end.getZ() + offsetPrev.getZ())).color(col[0], col[1], col[2], col[3]).lightmap(light).endVertex();
 			builder.pos(matrix.getLast().getMatrix(), (float) (end.getX() + offsetNext.getX()), (float) (end.getY() + offsetNext.getY()), (float) (end.getZ() + offsetNext.getZ())).color(col[0], col[1], col[2], col[3]).lightmap(light).endVertex();

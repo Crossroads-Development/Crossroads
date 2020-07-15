@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -19,7 +19,7 @@ public class BeamUtil{
 	public static final int MAX_DISTANCE = 16;
 	public static final int BEAM_TIME = 4;
 
-	private static final Tag<Block> PASSABLE = new BlockTags.Wrapper(new ResourceLocation(Crossroads.MODID, "beam_passable"));
+	private static final ITag<Block> PASSABLE = new BlockTags.Wrapper(new ResourceLocation(Crossroads.MODID, "beam_passable"));
 	private static final VoxelShape[] COLLISION_MASK = new VoxelShape[3];
 
 	static{

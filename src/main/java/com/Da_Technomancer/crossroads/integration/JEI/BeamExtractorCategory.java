@@ -45,7 +45,7 @@ public class BeamExtractorCategory implements IRecipeCategory<BeamExtractRec>{
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.beamExtractor.getNameTextComponent().getFormattedText();
+		return CRBlocks.beamExtractor.getNameTextComponent().getString();
 	}
 
 	@Override

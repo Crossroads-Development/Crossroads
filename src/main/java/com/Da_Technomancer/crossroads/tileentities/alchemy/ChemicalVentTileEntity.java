@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -46,8 +47,8 @@ public class ChemicalVentTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		lastInputTime = nbt.getLong("last_input");
 		reags = ReagentMap.readFromNBT(nbt);
 	}

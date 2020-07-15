@@ -132,8 +132,8 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink{
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		running = nbt.getBoolean("run");
 		cycles = nbt.getInt("cycle");
 		flux = nbt.getInt("flux");

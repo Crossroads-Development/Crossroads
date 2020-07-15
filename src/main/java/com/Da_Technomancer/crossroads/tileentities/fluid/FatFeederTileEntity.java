@@ -18,7 +18,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.Tags;
@@ -61,7 +61,7 @@ public class FatFeederTileEntity extends InventoryTE{
 		//Player feeding
 		float range = (float) Math.abs(fluids[0].getAmount() - fluidProps[0].capacity / 2) / (float) (fluidProps[0].capacity / 2);
 		range = (1F - range) * (MAX_RANGE - MIN_RANGE) + MIN_RANGE;
-		List<PlayerEntity> players = world.getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(pos.subtract(new Vec3i(range, range, range)), pos.add(new Vec3i(range, range, range))), EntityPredicates.IS_ALIVE);
+		List<PlayerEntity> players = world.getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(pos.subtract(new Vector3i(range, range, range)), pos.add(new Vector3i(range, range, range))), EntityPredicates.IS_ALIVE);
 		for(PlayerEntity play : players){
 			FoodStats food = play.getFoodStats();
 			int added = Math.min(fluids[0].getAmount() / EnergyConverters.FAT_PER_VALUE, 40 - (food.getFoodLevel() + (int) food.getSaturationLevel()));
@@ -85,7 +85,7 @@ public class FatFeederTileEntity extends InventoryTE{
 			return;
 		}
 
-		List<AgeableEntity> animals = world.getEntitiesWithinAABB(AgeableEntity.class, new AxisAlignedBB(pos.subtract(new Vec3i(range, range, range)), pos.add(new Vec3i(range, range, range))), EntityPredicates.IS_ALIVE);
+		List<AgeableEntity> animals = world.getEntitiesWithinAABB(AgeableEntity.class, new AxisAlignedBB(pos.subtract(new Vector3i(range, range, range)), pos.add(new Vector3i(range, range, range))), EntityPredicates.IS_ALIVE);
 
 		//Cap out animal feeding at 64, to prevent flooding the world with animals
 		if(animals.size() >= 64){

@@ -1,10 +1,12 @@
 package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.API.CRReflection;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.essentials.ReflectionUtil;
@@ -23,6 +25,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.GameRules;
@@ -64,7 +67,7 @@ public final class EventHandlerCommon{
 			for(Entity ent : entities.values()){
 				if(ent instanceof EntityGhostMarker){
 					EntityGhostMarker mark = (EntityGhostMarker) ent;
-					if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.BLOCK_SPAWNING && mark.data != null && mark.getPositionVector().subtract(e.getEntity().getPositionVector()).length() <= mark.data.getInt("range")){
+					if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.BLOCK_SPAWNING && mark.data != null && mark.getPositionVec().subtract(e.getEntity().getPositionVec()).length() <= mark.data.getInt("range")){
 						e.setResult(Event.Result.DENY);
 						return;
 					}
@@ -118,7 +121,7 @@ public final class EventHandlerCommon{
 //				}
 //
 //				for(TemporalAcceleratorTileEntity.Region region : timeStoppers){
-//					if(region.inRegion(ent.getPosition())){
+//					if(region.inRegion(ent.func_233580_cy_())){
 //						entNBT.putBoolean(MAIN_KEY, true);
 //						if(ent.updateBlocked){
 //							entNBT.putBoolean(SUB_KEY, true);
@@ -170,7 +173,9 @@ public final class EventHandlerCommon{
 										e.world.addEntity(skeletonHorse);
 									}
 
-									((ServerWorld) e.world).addLightningBolt(new LightningBoltEntity(e.world, (double) strikePos.getX() + 0.5D, strikePos.getY(), (double) strikePos.getZ() + 0.5D, spawnHorsemen));
+									LightningBoltEntity lightning = EntityType.LIGHTNING_BOLT.create(e.world);
+									lightning.func_233576_c_(Vector3d.func_237492_c_(strikePos));//Set strike position/set position
+									e.world.addEntity(lightning);
 								}
 							}
 						}
@@ -201,7 +206,7 @@ public final class EventHandlerCommon{
 //						ArrayList<LivingEntity> ents = new ArrayList<>();
 //						chunk.getEntitiesOfTypeWithinAABB(LivingEntity.class, new AxisAlignedBB(tarX - 3, tarY - 3, tarZ - 3, tarX + 3, e.world.getHeight() + 3, tarZ + 3), ents, new Predicate<LivingEntity>(){
 //							public boolean apply(@Nullable LivingEntity ent){
-//								return ent != null && ent.isEntityAlive() && e.world.canSeeSky(ent.getPosition());
+//								return ent != null && ent.isEntityAlive() && e.world.canSeeSky(ent.func_233580_cy_());
 //							}
 //						});
 //
@@ -211,7 +216,7 @@ public final class EventHandlerCommon{
 //							}
 //							tarPos = new BlockPos(tarX, tarY, tarZ);
 //						}else{
-//							tarPos = ents.get(e.world.rand.nextInt(ents.size())).getPosition();
+//							tarPos = ents.get(e.world.rand.nextInt(ents.size())).func_233580_cy_();
 //						}
 //						if(e.world.getGameRules().getBoolean("doMobSpawning") && e.world.rand.nextDouble() < e.world.getDifficultyForLocation(tarPos).getAdditionalDifficulty() * 0.01D){
 //							SkeletonHorseEntity entityskeletonhorse = new SkeletonHorseEntity(e.world);
@@ -281,8 +286,21 @@ public final class EventHandlerCommon{
 			}
 
 			if(ent instanceof PlayerEntity){
+				//Players who take damage with certain tag-defined items in their inventory explode
 				PlayerEntity player = (PlayerEntity) ent;
-				if(player.inventory.clearMatchingItems(s -> s.getItem() == CRItems.nitroglycerin, -1) > 0){
+				boolean foundExplosion = false;
+				if(player.inventory.offHandInventory.get(0).getItem().isIn(CRItemTags.EXPLODE_IF_KNOCKED)){
+					player.inventory.offHandInventory.set(0, ItemStack.EMPTY);
+					foundExplosion = true;
+				}
+
+				for(int i = 0; i < player.inventory.mainInventory.size(); i++){
+					if(player.inventory.mainInventory.get(i).getItem().isIn(CRItemTags.EXPLODE_IF_KNOCKED)){
+						player.inventory.mainInventory.set(i, ItemStack.EMPTY);
+						foundExplosion = true;
+					}
+				}
+				if(foundExplosion){
 					player.world.createExplosion(null, player.getPosX(), player.getPosY(), player.getPosZ(), 5F, Explosion.Mode.BREAK);
 				}
 			}
@@ -312,10 +330,10 @@ public final class EventHandlerCommon{
 		for(Entity ent : entities.values()){
 			if(ent instanceof EntityGhostMarker){
 				EntityGhostMarker mark = (EntityGhostMarker) ent;
-				if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.EQUILIBRIUM && mark.data != null && mark.getPositionVector().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInt("range")){
+				if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.EQUILIBRIUM && mark.data != null && mark.getPositionVec().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInt("range")){
 					e.setCanceled(true);//Equilibrium beams cancel explosions
 					return;
-				}else if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.VOID_EQUILIBRIUM && mark.data != null && mark.getPositionVector().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInt("range")){
+				}else if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.VOID_EQUILIBRIUM && mark.data != null && mark.getPositionVec().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInt("range")){
 					perpetuate = true;//Void-equilibrium beams cause explosions to repeat, by spawning a marker that recreates the explosion 5 ticks later
 				}
 			}
@@ -330,7 +348,7 @@ public final class EventHandlerCommon{
 				data.putBoolean("flaming", explosionSmoking.getBoolean(e.getExplosion()));
 				data.putString("blast_type", ((Explosion.Mode) explosionMode.get(e.getExplosion())).name());
 			}catch(IllegalAccessException ex){
-				Crossroads.logger.error("Failed to perpetuate explosion. Dim: " + e.getWorld().dimension + "; Pos: " + e.getExplosion().getPosition());
+				Crossroads.logger.error("Failed to perpetuate explosion. Dim: " + MiscUtil.getDimensionName(e.getWorld()) + "; Pos: " + e.getExplosion().getPosition());
 			}
 			marker.data = data;
 			e.getWorld().addEntity(marker);

@@ -13,7 +13,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -40,14 +40,14 @@ public class EntityNitro extends ThrowableEntity implements IRendersAsItem{
 	@Override
 	public void setFire(int seconds){
 		if(seconds > 0){
-			onImpact(new BlockRayTraceResult(new Vec3d(getPosX(), getPosY(), getPosZ()), Direction.UP, getPosition(), true));
+			onImpact(new BlockRayTraceResult(new Vector3d(getPosX(), getPosY(), getPosZ()), Direction.UP, func_233580_cy_(), true));
 		}
 	}
 
 	@Override
 	protected void onImpact(RayTraceResult result){
 		if(!world.isRemote){
-			Vec3d vec = result.getHitVec();
+			Vector3d vec = result.getHitVec();
 			world.createExplosion(null, vec.x, vec.y, vec.z, 5F, Explosion.Mode.BREAK);
 			world.playSound(null, getPosX(), getPosY(), getPosZ(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.NEUTRAL, 0.5F, 0.4F / (rand.nextFloat() * 0.4F + 0.8F));
 			world.playSound(null, getPosX(), getPosY(), getPosZ(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.NEUTRAL, 1F, 0.4F / (rand.nextFloat() * 0.4F + 0.8F));

@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.gui.container.OreCleanserContainer;
 import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.OreCleanserRec;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluid;
@@ -105,8 +106,8 @@ public class OreCleanserTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		progress = nbt.getInt("prog");
 	}
 

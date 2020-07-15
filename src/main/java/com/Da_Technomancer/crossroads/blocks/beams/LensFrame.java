@@ -85,7 +85,7 @@ public class LensFrame extends ContainerBlock implements IReadable{
 			ItemStack stack = playerIn.getHeldItem(hand);
 
 			if(ESConfig.isWrench(stack)){
-				worldIn.setBlockState(pos, state.cycle(ESProperties.AXIS));
+				worldIn.setBlockState(pos, state.func_235896_a_(ESProperties.AXIS));
 			}else{
 				TileEntity te = worldIn.getTileEntity(pos);
 				if(!(te instanceof LensFrameTileEntity)){

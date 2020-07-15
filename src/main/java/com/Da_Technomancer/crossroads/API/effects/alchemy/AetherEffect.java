@@ -14,9 +14,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -28,10 +27,10 @@ import java.lang.reflect.Field;
 
 public class AetherEffect implements IAlchEffect{
 
-	private static final Tag<Block> SOIL_GROUP = new BlockTags.Wrapper(new ResourceLocation(Crossroads.MODID, "alchemy_soil"));
-	private static final Tag<Block> ROCK_GROUP = new BlockTags.Wrapper(new ResourceLocation(Crossroads.MODID, "alchemy_rock"));
-	private static final Tag<Block> FLUD_GROUP = new BlockTags.Wrapper(new ResourceLocation(Crossroads.MODID, "alchemy_fluid"));//Was going to be named FLUID_GROUP, but the other two fields had the same name lengths and I couldn't resist
-	private static final Tag<Block> CRYS_GROUP = new BlockTags.Wrapper(new ResourceLocation(Crossroads.MODID, "alchemy_crystal"));
+	private static final ITag<Block> SOIL_GROUP = BlockTags.makeWrapperTag(Crossroads.MODID + ":alchemy_soil");
+	private static final ITag<Block> ROCK_GROUP = BlockTags.makeWrapperTag(Crossroads.MODID + ":alchemy_rock");
+	private static final ITag<Block> FLUD_GROUP = BlockTags.makeWrapperTag(Crossroads.MODID + ":alchemy_fluid");//Was going to be named FLUID_GROUP, but the other two fields had the same name lengths and I couldn't resist
+	private static final ITag<Block> CRYS_GROUP = BlockTags.makeWrapperTag(Crossroads.MODID + ":alchemy_crystal");
 	private static final Field biomeField = ReflectionUtil.reflectField(CRReflection.BIOME_ARRAY);
 
 	protected Block soilBlock(){

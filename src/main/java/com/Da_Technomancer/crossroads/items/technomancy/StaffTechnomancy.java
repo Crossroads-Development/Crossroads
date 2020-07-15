@@ -9,8 +9,9 @@ import com.google.common.collect.Multimap;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
@@ -19,7 +20,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
@@ -63,10 +64,10 @@ public class StaffTechnomancy extends BeamUsingItem{
 
 				//Calculate the start and end point of the fired beam
 				double heldOffset = .22D * (player.getActiveHand() == Hand.MAIN_HAND ^ player.getPrimaryHand() == HandSide.LEFT ? 1D : -1D);
-				Vec3d start = new Vec3d(player.getPosX() - (heldOffset * Math.cos(Math.toRadians(player.rotationYaw))), player.getPosY() + player.getEyeHeight() + 0.4D, player.getPosZ() - (heldOffset * Math.sin(Math.toRadians(player.rotationYaw))));
+				Vector3d start = new Vector3d(player.getPosX() - (heldOffset * Math.cos(Math.toRadians(player.rotationYaw))), player.getPosY() + player.getEyeHeight() + 0.4D, player.getPosZ() - (heldOffset * Math.sin(Math.toRadians(player.rotationYaw))));
 				double[] end = new double[] {player.getPosX(), player.getEyeHeight() + player.getPosY(), player.getPosZ()};
 				BlockPos endPos = null;
-				Vec3d look = player.getLookVec().scale(0.2D);
+				Vector3d look = player.getLookVec().scale(0.2D);
 				Direction collisionDir = Direction.getFacingFromVector(look.x, look.y, look.z);//Used for beam collision detection
 				Direction effectDir = null;
 				//Raytrace manually along the look direction
@@ -77,9 +78,9 @@ public class StaffTechnomancy extends BeamUsingItem{
 					//Look for entities along the firing path to collide with
 					List<Entity> ents = player.world.getEntitiesInAABBexcluding(player, new AxisAlignedBB(end[0] - 0.1D, end[1] - 0.1D, end[2] - 0.1D, end[0] + 0.1D, end[1] + 0.1D, end[2] + 0.1D), EntityPredicates.IS_ALIVE);
 					if(!ents.isEmpty()){
-						Optional<Vec3d> res = ents.get(0).getBoundingBox().rayTrace(start, new Vec3d(end[0], end[1], end[2]));
+						Optional<Vector3d> res = ents.get(0).getBoundingBox().rayTrace(start, new Vector3d(end[0], end[1], end[2]));
 						if(res.isPresent()){
-							Vec3d hitVec = res.get();
+							Vector3d hitVec = res.get();
 							end[0] = hitVec.x;
 							end[1] = hitVec.y;
 							end[2] = hitVec.z;
@@ -97,9 +98,9 @@ public class StaffTechnomancy extends BeamUsingItem{
 					if(BeamUtil.solidToBeams(state, player.world, endPos, collisionDir, mag.getPower())){
 						//Note: this VoxelShape has no offset
 						VoxelShape shape = state.getRenderShape(player.world, endPos);//.getBoundingBox(player.world, endPos).offset(endPos);
-						BlockRayTraceResult res = shape.rayTrace(start, new Vec3d(end[0] + look.x * 5D, end[1] + look.y * 5D, end[2] + look.z * 5D), endPos);//bb.calculateIntercept(start, new Vec3d(end[0] + look.x * 5D, end[1] + look.y * 5D, end[2] + look.z * 5D));
+						BlockRayTraceResult res = shape.rayTrace(start, new Vector3d(end[0] + look.x * 5D, end[1] + look.y * 5D, end[2] + look.z * 5D), endPos);//bb.calculateIntercept(start, new Vec3d(end[0] + look.x * 5D, end[1] + look.y * 5D, end[2] + look.z * 5D));
 						if(res != null){
-							Vec3d hitVec = res.getHitVec();
+							Vector3d hitVec = res.getHitVec();
 							end[0] = hitVec.x;
 							end[1] = hitVec.y;
 							end[2] = hitVec.z;
@@ -122,19 +123,19 @@ public class StaffTechnomancy extends BeamUsingItem{
 					}
 				}
 
-				Vec3d beamVec = new Vec3d(end[0] - start.x, end[1] - start.y, end[2] - start.z);
+				Vector3d beamVec = new Vector3d(end[0] - start.x, end[1] - start.y, end[2] - start.z);
 				CRRenderUtil.addBeam(player.world, start.x, start.y, start.z, beamVec.length(), (float) Math.toDegrees(Math.atan2(-beamVec.y, Math.sqrt(beamVec.x * beamVec.x + beamVec.z * beamVec.z))), (float) Math.toDegrees(Math.atan2(-beamVec.x, beamVec.z)), (byte) Math.round(Math.sqrt(mag.getPower())), mag.getRGB().getRGB());
 			}
 		}
 	}
 
 	@Override
-	public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack){
+	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack){
 		//Acts as a melee weapon; absolutely a DiscWorld reference
-		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
+		Multimap<Attribute, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
 		if (slot == EquipmentSlotType.MAINHAND){
-			multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 9, AttributeModifier.Operation.ADDITION));
-			multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -3.1D, AttributeModifier.Operation.ADDITION));
+			multimap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 9, AttributeModifier.Operation.ADDITION));
+			multimap.put(Attributes.ATTACK_SPEED, new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -3.1D, AttributeModifier.Operation.ADDITION));
 		}
 
 		return multimap;

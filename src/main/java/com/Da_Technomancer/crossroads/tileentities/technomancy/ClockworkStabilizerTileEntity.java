@@ -57,8 +57,8 @@ public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		storage = BeamUnitStorage.readFromNBT("stab_mag", nbt);
 	}
 

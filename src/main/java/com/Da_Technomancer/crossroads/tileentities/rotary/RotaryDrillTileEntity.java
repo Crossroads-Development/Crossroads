@@ -120,8 +120,8 @@ public class RotaryDrillTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		golden = nbt.getBoolean("gold");
 	}
 

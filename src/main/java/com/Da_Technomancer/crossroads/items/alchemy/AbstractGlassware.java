@@ -153,7 +153,7 @@ public abstract class AbstractGlassware extends Item{
 		}
 
 		@Override
-		public String getName(){
+		public String getString(){
 			return name().toLowerCase(Locale.US);
 		}
 	}

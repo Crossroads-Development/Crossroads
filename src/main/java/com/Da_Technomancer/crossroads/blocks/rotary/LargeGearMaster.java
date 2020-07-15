@@ -7,7 +7,7 @@ import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
@@ -18,8 +18,8 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootParameters;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +85,7 @@ public class LargeGearMaster extends ContainerBlock{
 	}
 
 	@Override
-	public boolean removedByPlayer(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid){
+	public boolean removedByPlayer(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid){
 		if(willHarvest && worldIn.getTileEntity(pos) instanceof LargeGearMasterTileEntity){
 			((LargeGearMasterTileEntity) worldIn.getTileEntity(pos)).breakGroup(state.get(ESProperties.FACING), true);
 		}

@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
 import com.Da_Technomancer.essentials.blocks.redstone.IRedstoneHandler;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -105,9 +106,9 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
-		redsHandler.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
+		redsHandler.read(state, nbt);
 	}
 
 	@Override

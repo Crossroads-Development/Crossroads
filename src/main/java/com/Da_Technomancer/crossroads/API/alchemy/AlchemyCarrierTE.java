@@ -23,7 +23,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.Explosion;
@@ -58,8 +58,8 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 	 * Position to spawn particles for contents
 	 * @return Position
 	 */
-	protected Vec3d getParticlePos(){
-		return new Vec3d(pos).add(0.5D, 0.5D, 0.5D);
+	protected Vector3d getParticlePos(){
+		return Vector3d.func_237489_a_(pos);
 	}
 
 	protected boolean useCableHeat(){
@@ -241,7 +241,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 			}
 		}
 
-		Vec3d particlePos = getParticlePos();
+		Vector3d particlePos = getParticlePos();
 
 		if(liqAmount > 0){
 			server.spawnParticle(new ColorParticleData(CRParticles.COLOR_LIQUID, new Color((int) (liqCol[0] / liqAmount), (int) (liqCol[1] / liqAmount), (int) (liqCol[2] / liqAmount), (int) (liqCol[3] / liqAmount))), particlePos.x, particlePos.y, particlePos.z, 0, (Math.random() * 2D - 1D) * 0.02D, (Math.random() - 1D) * 0.02D, (Math.random() * 2D - 1D) * 0.02D, 1F);
@@ -417,8 +417,8 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		glass = nbt.getBoolean("glass");
 		contents = ReagentMap.readFromNBT(nbt);
 		cableTemp = nbt.getDouble("temp");

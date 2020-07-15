@@ -54,8 +54,8 @@ public class BeamSplitterTileEntity extends BeamRenderTE{
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		redsHandler.read(nbt);
 	}
 

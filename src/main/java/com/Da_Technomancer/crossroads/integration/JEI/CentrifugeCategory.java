@@ -48,7 +48,7 @@ public class CentrifugeCategory implements IRecipeCategory<CentrifugeRec>{
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.waterCentrifuge.getNameTextComponent().getFormattedText();
+		return CRBlocks.waterCentrifuge.getNameTextComponent().getString();
 	}
 
 	@Override

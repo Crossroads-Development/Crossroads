@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -55,8 +56,8 @@ public class AtmosCharger extends ContainerBlock implements IReadable{
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
 			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.cycle(CRProperties.ACTIVE));
-				playerIn.sendMessage(new TranslationTextComponent(state.get(CRProperties.ACTIVE) ? "tt.crossroads.atmos_charger.charging" : "tt.crossroads.atmos_charger.draining"));
+				worldIn.setBlockState(pos, state.func_235896_a_(CRProperties.ACTIVE));
+				MiscUtil.chatMessage(playerIn, new TranslationTextComponent(state.get(CRProperties.ACTIVE) ? "tt.crossroads.atmos_charger.charging" : "tt.crossroads.atmos_charger.draining"));
 			}
 			return ActionResultType.SUCCESS;
 		}

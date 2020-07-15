@@ -131,8 +131,8 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		stored = nbt.getInt("stored");
 		redstone = nbt.getBoolean("reds");
 	}

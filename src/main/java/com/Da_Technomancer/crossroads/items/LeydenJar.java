@@ -53,7 +53,7 @@ public class LeydenJar extends Item{
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.leyden_jar.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.leyden_jar.stats", getCharge(stack), MAX_CHARGE));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.leyden_jar.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.leyden_jar.quip").func_230530_a_(MiscUtil.TT_QUIP));
 	}
 
 	@Override

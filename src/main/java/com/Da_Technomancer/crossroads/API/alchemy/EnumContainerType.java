@@ -9,7 +9,7 @@ public enum EnumContainerType implements IStringSerializable{
 	CRYSTAL();
 
 	@Override
-	public String getName(){
+	public String getString(){
 		return name().toLowerCase();
 	}
 

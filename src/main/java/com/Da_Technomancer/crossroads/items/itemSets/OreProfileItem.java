@@ -54,7 +54,7 @@ public class OreProfileItem extends Item{
 		//We 'cheat' here. Instead of returning the translation key, we return the translated text, w/ formatting applied.
 		//This is because most things calling this method don't know to pass the material name as a formatter argument (and most things use getDisplayName instead)
 		//This is mainly important for WAILA
-		return getDisplayName(stack).getFormattedText();
+		return getDisplayName(stack).getString();
 	}
 
 	@Override

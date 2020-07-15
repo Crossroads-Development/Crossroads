@@ -9,8 +9,9 @@ import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEnti
 import com.google.common.collect.Multimap;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -18,7 +19,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -43,11 +44,11 @@ public class TeslaRay extends Item{
 	}
 
 	@Override
-	public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack){
-		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
+	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack){
+		Multimap<Attribute, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
 
 		if(slot == EquipmentSlotType.MAINHAND){
-			multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -2D, AttributeModifier.Operation.ADDITION));
+			multimap.put(Attributes.ATTACK_SPEED, new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -2D, AttributeModifier.Operation.ADDITION));
 		}
 
 		return multimap;
@@ -57,7 +58,7 @@ public class TeslaRay extends Item{
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_ray.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_ray.leyden"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_ray.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_ray.quip").func_230530_a_(MiscUtil.TT_QUIP));
 	}
 
 	@Override
@@ -80,15 +81,15 @@ public class TeslaRay extends Item{
 			Predicate<LivingEntity> cannotTarget = (LivingEntity e) -> targets.contains(e) || e == playerIn || e instanceof ServerPlayerEntity && !playerIn.canAttackPlayer((PlayerEntity) e);
 
 			//Removes entities from the list if they aren't in the conical region in the direction the player is looking, and checks PVP rules
-			Vec3d look = playerIn.getLookVec();
-			Vec3d playPos = playerIn.getEyePosition(0);
-			entities.removeIf((LivingEntity e) -> {Vec3d ePos = e.getPositionVector().subtract(playPos); return ePos.crossProduct(look).lengthSquared() > RADIUS * RADIUS || ePos.dotProduct(look) > RANGE || ePos.dotProduct(look) < 0 || cannotTarget.test(e);});
+			Vector3d look = playerIn.getLookVec();
+			Vector3d playPos = playerIn.getEyePosition(0);
+			entities.removeIf((LivingEntity e) -> {Vector3d ePos = e.getPositionVec().subtract(playPos); return ePos.crossProduct(look).lengthSquared() > RADIUS * RADIUS || ePos.dotProduct(look) > RANGE || ePos.dotProduct(look) < 0 || cannotTarget.test(e);});
 
 			double minDist = Integer.MAX_VALUE;
 			LivingEntity closest = null;
 			for(LivingEntity e : entities){
-				if(e.getPositionVector().squareDistanceTo(playPos) < minDist){
-					minDist = e.getPositionVector().squareDistanceTo(playPos);
+				if(e.getPositionVec().squareDistanceTo(playPos) < minDist){
+					minDist = e.getPositionVec().squareDistanceTo(playPos);
 					closest = e;
 				}
 			}
@@ -122,12 +123,12 @@ public class TeslaRay extends Item{
 			//Render the electric arcs. The player is added to targets for simplification, despite not taking damage
 			targets.add(0, playerIn);
 			for(int i = 0; i < targets.size() - 1; i++){
-				Vec3d start = targets.get(i).getPositionVector();
+				Vector3d start = targets.get(i).getPositionVec();
 				if(i == 0){
 					double angleOffset = 30D * (playerIn.getPrimaryHand() == HandSide.LEFT ? -1D : 1D);
 					start = start.add(-Math.sin(Math.toRadians(playerIn.rotationYaw + angleOffset)) * 0.4F, 0.8D, Math.cos(Math.toRadians(playerIn.rotationYaw + angleOffset)) * 0.4F);
 				}
-				Vec3d end = targets.get(i + 1).getEyePosition(0);
+				Vector3d end = targets.get(i + 1).getEyePosition(0);
 
 				CRRenderUtil.addArc(playerIn.world, start, end, 1, 0, TeslaCoilTopTileEntity.COLOR_CODES[(int) (Math.random() * 3D)]);
 			}

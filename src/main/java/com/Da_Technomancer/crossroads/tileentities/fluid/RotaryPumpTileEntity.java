@@ -13,7 +13,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -78,7 +78,7 @@ public class RotaryPumpTileEntity extends InventoryTE{
 			return;
 		}
 
-		IFluidState fstate = world.getFluidState(pos.down());
+		FluidState fstate = world.getFluidState(pos.down());
 		if(fstate.isSource()){
 			//Only gain progress if spinning in positive direction
 			double holder = motData[1] < 0 ? 0 : Math.min(Math.min(MAX_POWER, motData[1]), REQUIRED - progress);
@@ -137,8 +137,8 @@ public class RotaryPumpTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		progress = nbt.getDouble("prog");
 	}
 

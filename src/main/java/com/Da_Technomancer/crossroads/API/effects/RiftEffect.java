@@ -50,7 +50,7 @@ public class RiftEffect extends BeamEffect{
 				ServerWorld worldServ = (ServerWorld) worldIn;
 				if(RAND.nextInt(256) < power){
 					try{
-						List<Biome.SpawnListEntry> list = worldServ.getChunkProvider().generator.getPossibleCreatures(EntityClassification.MONSTER, pos);
+						List<Biome.SpawnListEntry> list = worldServ.getChunkProvider().generator.func_230353_a_(worldIn.getBiome(pos), worldServ.func_241112_a_(), EntityClassification.MONSTER, pos);
 						list = ForgeEventFactory.getPotentialSpawns(worldServ, EntityClassification.MONSTER, pos, list);
 						if(list != null && list.size() != 0){
 							//Vanilla style spawning would spawn a group of mobs at a time (with group size defined by the SpawnListEntry). We only want to spawn 1 mob at a time

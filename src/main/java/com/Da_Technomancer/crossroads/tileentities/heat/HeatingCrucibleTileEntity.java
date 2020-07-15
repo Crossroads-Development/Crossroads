@@ -164,8 +164,8 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
 		String textStr = nbt.getString("act");
 		if(textStr.length() == 0){
 			activeText = null;

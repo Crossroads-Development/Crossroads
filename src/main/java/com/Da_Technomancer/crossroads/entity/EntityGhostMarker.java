@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.entity;
 
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.BeamUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.entity.Entity;
@@ -65,7 +66,7 @@ public class EntityGhostMarker extends Entity{
 		try{
 			markType = EnumMarkerType.valueOf(nbt.getString("type"));
 		}catch(IllegalArgumentException | NullPointerException e){
-			Crossroads.logger.error("Failed to load EntityGhostMarker at " + getPosition().toString() + "; dim: " + world.getDimension().getType().getId() + "; with type: " + nbt.getString("type") + ". Removing.");
+			Crossroads.logger.error("Failed to load EntityGhostMarker at " + getPositionVec().toString() + "; dim: " + MiscUtil.getDimensionName(world) + "; with type: " + nbt.getString("type") + ". Removing.");
 			remove();
 		}
 		lifespan = nbt.getInt("life");

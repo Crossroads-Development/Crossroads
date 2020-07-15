@@ -101,7 +101,7 @@ public final class OreSetup{
 		ingotCopshowium = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)){
 			@Override
 			public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-				tooltip.add(new TranslationTextComponent("tt.crossroads.copshowium.quip").setStyle(MiscUtil.TT_QUIP));
+				tooltip.add(new TranslationTextComponent("tt.crossroads.copshowium.quip").func_230530_a_(MiscUtil.TT_QUIP));
 			}
 		}.setRegistryName("ingot_copshowium");
 		CRItems.toRegister.add(ingotCopshowium);

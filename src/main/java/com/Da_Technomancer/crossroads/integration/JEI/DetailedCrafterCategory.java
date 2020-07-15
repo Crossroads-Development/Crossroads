@@ -49,7 +49,7 @@ public class DetailedCrafterCategory implements IRecipeCategory<DetailedCrafterR
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.detailedCrafter.getNameTextComponent().getFormattedText();
+		return CRBlocks.detailedCrafter.getNameTextComponent().getString();
 	}
 
 	@Override
