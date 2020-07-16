@@ -79,6 +79,7 @@ public class SendChatToClient extends ClientPacket{
 		if(SafeCallable.getPrintChatNoLog() == null){
 			chatGui.printChatMessageWithOptionalDeletion(combined, id);
 		}else{
+			//Print it to the chat without logging it, to avoid flooding the log
 			try{
 				SafeCallable.getPrintChatNoLog().invoke(chatGui, combined, id, Minecraft.getInstance().ingameGUI.getTicks(), false);
 			}catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e){
