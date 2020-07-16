@@ -78,11 +78,13 @@ public enum EnumBeamAlignments{
 	 * @return The localized name of this alignment
 	 */
 	public String getLocalName(boolean voi){
+		String result;
 		if(voi){
-			return MiscUtil.localize("alignment." + toString().toLowerCase() + ".void");
+			result = MiscUtil.localize("alignment." + toString().toLowerCase() + ".void");
 		}else{
-			return MiscUtil.localize("alignment." + toString().toLowerCase());
+			result = MiscUtil.localize("alignment." + toString().toLowerCase());
 		}
+		return result;
 	}
 
 	@Override

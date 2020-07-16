@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:beam_transmute",
+	"alignment": "fusion",
+	"void": "true",
+	"power": 8,
+	"input": [
+		{
+			"block": "minecraft:polished_blackstone_bricks"
+		}
+	],
+	"output": "minecraft:polished_blackstone"
+}

@@ -11,7 +11,7 @@
 	],
 	"key": {
 		"G": {
-			"tag": "forge:obsidian"
+			"item": "minecraft:crying_obsidian"
 		},
 		"Q": {
 			"tag": "crossroads:storage_blocks/pure_quartz"

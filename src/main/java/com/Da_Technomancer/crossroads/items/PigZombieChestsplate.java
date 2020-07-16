@@ -1,5 +1,8 @@
 package com.Da_Technomancer.crossroads.items;
 
+import com.Da_Technomancer.crossroads.API.MiscUtil;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
@@ -9,7 +12,12 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class PigZombieChestsplate extends ArmorItem{
 
@@ -23,6 +31,16 @@ public class PigZombieChestsplate extends ArmorItem{
 	@Override
 	public Rarity getRarity(ItemStack stack){
 		return CRItems.BOBO_RARITY;
+	}
+
+	@Override
+	public boolean makesPiglinsNeutral(ItemStack stack, LivingEntity wearer){
+		return true;
+	}
+
+	@Override
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+		tooltip.add(new TranslationTextComponent("tt.crossroads.pig_zombie_chestplate.quip").func_240703_c_(MiscUtil.TT_QUIP));
 	}
 
 	@Override

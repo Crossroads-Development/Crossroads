@@ -30,11 +30,11 @@
 		},
 		{
 			"type": "text",
-			"text": "Many <thing>beam alignments/$ will transmute blocks they hit in the world if they are high enough power.$(br2)<thing>Beams/$ are usually moved around with <item>$(l:beam/reflector)beam reflectors/$, and created with a <item>$(l:beam/extractor)Resonance Extractor/$. Every machine or block a <thing>beam/$ travels through adds a 4 tick (fifth second) delay (this is called 1 <thing>cycle/$), and beams have a 16 block range between machines "
+			"text": "Many <thing>beam alignments/$ will transmute blocks they hit in the world if they are high enough power. You can see these recipes by looking at recipes uses for <item>$(l:beam/reflector)beam reflectors/$ in JEI, if JEI is installed.$(br2)<thing>Beams/$ are usually moved around with <item>$(l:beam/reflector)beam reflectors/$, and created with a <item>$(l:beam/extractor)Resonance Extractor/$. Every machine or block a <thing>beam/$ travels through "
 		},
 		{
 			"type": "text",
-			"text": "for transmission. Beams have a <thing>power/$ cap of 64,000.$(br2)"
+			"text": "adds a 4 tick (fifth second) delay (this is called 1 <thing>cycle/$), and beams have a 16 block range between machines for transmission. Beams have a <thing>power/$ cap of 64,000.$(br2)"
 		}
 	]
 }

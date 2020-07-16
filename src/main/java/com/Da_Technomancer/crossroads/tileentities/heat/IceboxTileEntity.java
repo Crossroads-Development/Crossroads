@@ -61,7 +61,7 @@ public class IceboxTileEntity extends InventoryTE{
 			return;
 		}
 
-		if(burnTime != 0 && temp > MIN_TEMP){
+		if(burnTime != 0){
 			temp = Math.max(MIN_TEMP, temp - RATE);
 			if(--burnTime == 0){
 				world.setBlockState(pos, CRBlocks.icebox.getDefaultState().with(CRProperties.ACTIVE, false), 18);

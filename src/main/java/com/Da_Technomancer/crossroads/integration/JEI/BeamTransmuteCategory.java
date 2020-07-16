@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.BeamTransmuteRec;
@@ -15,6 +14,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class BeamTransmuteCategory implements IRecipeCategory<BeamTransmuteRec>{
 
@@ -64,8 +64,9 @@ public class BeamTransmuteCategory implements IRecipeCategory<BeamTransmuteRec>{
 		slot.draw(matrix, 40, 40);//Input
 		slot.draw(matrix, 120, 40);//Output
 		arrowStatic.draw(matrix, 78, 40);
-		Minecraft.getInstance().fontRenderer.drawString(matrix, MiscUtil.localize("crossroads.jei.beam_trans.align", recipe.getAlign().getLocalName(recipe.isVoid())), 50, 10, 0x404040);
-		Minecraft.getInstance().fontRenderer.drawString(matrix, MiscUtil.localize("crossroads.jei.beam_trans.power", recipe.getPower()), 50, 70, 0x404040);
+		//Render without shadow
+		Minecraft.getInstance().fontRenderer.func_238422_b_(matrix, new TranslationTextComponent("crossroads.jei.beam_trans.align", recipe.getAlign().getLocalName(recipe.isVoid())), 40, 10, 0x404040);
+		Minecraft.getInstance().fontRenderer.func_238422_b_(matrix, new TranslationTextComponent("crossroads.jei.beam_trans.power", recipe.getPower()), 40, 25, 0x404040);
 //		GlStateManager.disableBlend();
 //		GlStateManager.disableAlpha();
 	}

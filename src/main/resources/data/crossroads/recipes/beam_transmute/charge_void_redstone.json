@@ -2,10 +2,13 @@
 	"type": "crossroads:beam_transmute",
 	"alignment": "charge",
 	"void": "true",
-	"power": 1,
+	"power": 8,
 	"input": [
 		{
 			"block": "minecraft:redstone_block"
+		},
+		{
+			"block": "crossroads:redstone_crystal"
 		}
 	],
 	"output": "minecraft:cobblestone"

@@ -24,7 +24,7 @@ import java.util.List;
 public class GrowEffect extends BeamEffect{
 
 	//Crop types can be blacklisted from growth through the beam using the grow_blacklist tag. Intended for things like magical crops
-	private static final ITag<Block> growBlacklist = BlockTags.makeWrapperTag(Crossroads.MODID + ":growth_blacklist");
+	private static final ITag<Block> growBlacklist = BlockTags.makeWrapperTag(Crossroads.MODID + ":grow_blacklist");
 	private static final DamageSource POTENTIAL_VOID = new DamageSource("potentialvoid").setMagicDamage().setDamageBypassesArmor();
 
 	@Override

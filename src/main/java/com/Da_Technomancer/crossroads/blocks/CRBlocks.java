@@ -12,7 +12,10 @@ import com.Da_Technomancer.crossroads.blocks.technomancy.*;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.fluids.GenericFluid;
 import com.Da_Technomancer.crossroads.items.CRItems;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
@@ -20,6 +23,8 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -78,7 +83,7 @@ public class CRBlocks{
 	public static GatewayFrame gatewayFrame;
 	public static GatewayFrameEdge gatewayEdge;
 	public static DetailedCrafter detailedCrafter;
-//	public static PrototypingTable prototypingTable;
+	//	public static PrototypingTable prototypingTable;
 //	public static Prototype prototype;
 //	public static PrototypePort prototypePort;
 //	public static MechanicalArm mechanicalArm;
@@ -143,6 +148,7 @@ public class CRBlocks{
 	public static FluxSink fluxSink;
 	public static Steamer steamer;
 	public static WindingTable windingTable;
+	public static BasicBlock redstoneCrystal;
 
 	private static final Item.Properties itemBlockProp = new Item.Properties().group(CRItems.TAB_CROSSROADS);
 	public static final ArrayList<Block> toRegister = new ArrayList<>();
@@ -284,6 +290,23 @@ public class CRBlocks{
 		fluxSink = new FluxSink();
 		steamer = new Steamer();
 		windingTable = new WindingTable();
+		redstoneCrystal = new BasicBlock("redstone_crystal", AbstractBlock.Properties.create(Material.GLASS).hardnessAndResistance(0.3F).sound(SoundType.GLASS)){
+			@Override
+			public boolean canProvidePower(BlockState state){
+				return true;
+			}
+
+			@Override
+			public int getWeakPower(BlockState state, IBlockReader world, BlockPos pos, Direction side) {
+				return 15;
+			}
+
+			@Override
+			public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+				tooltip.add(new TranslationTextComponent("tt.crossroads.redstone_crystal.drops"));
+				tooltip.add(new TranslationTextComponent("tt.crossroads.redstone_crystal.power"));
+			}
+		};
 	}
 
 	@OnlyIn(Dist.CLIENT)

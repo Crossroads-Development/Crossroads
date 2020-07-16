@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.items.technomancy;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
@@ -27,12 +28,20 @@ import java.util.List;
 
 public class LiechWrench extends Item{
 
+	private final Multimap<Attribute, AttributeModifier> attributeModifiers;
+
 	public LiechWrench(){
 		super(new Properties().group(CRItems.TAB_CROSSROADS).addToolType(ToolType.PICKAXE, ItemTier.STONE.getHarvestLevel()).addToolType(ToolType.SHOVEL, ItemTier.STONE.getHarvestLevel()).addToolType(ToolType.AXE, ItemTier.STONE.getHarvestLevel()).addToolType(ToolType.get("wrench"), 0).maxStackSize(1));
 		String name = "liech_wrench";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
 		//This item is registered as a wrench in the wrench tag
+
+		//Attributes
+		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 4, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -2.4D, AttributeModifier.Operation.ADDITION));
+		attributeModifiers = builder.build();
 	}
 
 	@Override
@@ -80,13 +89,7 @@ public class LiechWrench extends Item{
 
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack){
-		Multimap<Attribute, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
-
-		if (slot == EquipmentSlotType.MAINHAND){
-			multimap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 4, AttributeModifier.Operation.ADDITION));
-			multimap.put(Attributes.ATTACK_SPEED, new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -2.4D, AttributeModifier.Operation.ADDITION));
-		}
-
-		return multimap;
+		//Acts as a stone sword tier melee weapon
+		return slot == EquipmentSlotType.MAINHAND ? attributeModifiers : super.getAttributeModifiers(slot, stack);
 	}
 }

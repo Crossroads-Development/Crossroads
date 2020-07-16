@@ -72,7 +72,7 @@ public final class MiscUtil{
 	 * @return The localized string
 	 */
 	public static String localize(String input){
-		return new TranslationTextComponent(input).getUnformattedComponentText();
+		return new TranslationTextComponent(input).getString();
 	}
 
 	/**

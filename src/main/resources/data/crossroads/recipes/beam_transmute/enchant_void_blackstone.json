@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:beam_transmute",
+	"alignment": "enchantment",
+	"void": "true",
+	"power": 16,
+	"input": [
+		{
+			"block": "minecraft:gilded_blackstone"
+		}
+	],
+	"output": "minecraft:polished_blackstone_bricks"
+}

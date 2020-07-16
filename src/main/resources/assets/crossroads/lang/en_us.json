@@ -250,6 +250,7 @@
 	"block.crossroads.winding_table": "Spring Winding Stand",
 	"item.crossroads.spring_gun": "Spring-Loaded Crossbow",
 	"item.crossroads.whirligig": "Whirligig",
+	"block.crossroads.redstone_crystal": "Crystallized Redstone",
 
 	"item.crossroads.ore_gravel": "Raw %1$s Grit",
 	"item.crossroads.ore_clump": "%1$s Clump",
@@ -589,6 +590,9 @@
 	"tt.crossroads.jei.reag.amount.single": "%1$d Part",
 	"tt.crossroads.jei.reag.amount.plural": "%1$d Parts",
 	"tt.crossroads.jei.reag.id": "ID: %1$s",
+	"tt.crossroads.pig_zombie_chestplate.quip": "We've got be in Cognito",
+	"tt.crossroads.redstone_crystal.drops": "Drops 1-4 redstone dust",
+	"tt.crossroads.redstone_crystal.power": "Emits a redstone signal",
 
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",

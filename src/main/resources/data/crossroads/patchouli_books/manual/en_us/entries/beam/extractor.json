@@ -14,7 +14,11 @@
 		},
 		{
 			"type": "text",
-			"text": "<thing>/$, and <thing>stability/$. No items produce <thing>$(l:beam/void)void/$.$(br2)Most fuels last for 1 cycle. Some will last for multiple cycles, and will be shown in JEI as lasting X cycles. They will continue to output constant power for X cycles for each item consumed.$(br2)The <item>resonance extractor/$ can be disabled with a redstone signal."
+			"text": "<thing>/$, and <thing>stability/$. No items produce <thing>$(l:beam/void)void/$.$(br2)Most fuels last for 1 cycle. Some will last for multiple cycles, and will be shown in JEI as lasting X cycles. They will continue to output constant power for X cycles for each item consume. These fuels can be considered 'better', as they produce far more beam <thing>$(l:intro/beam)power/$ per item.$(br2)"
+		},
+		{
+			"type": "text",
+			"text": "The <item>resonance extractor/$ can be disabled with a redstone signal.$(br2)Many fuels (such as glowstone dust or redstone dust) can be made using <thing>$(l:intro/beams)beams/$, making them easier to automate.$(br2)"
 		}
 	]
 }

@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.LeydenJar;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
@@ -36,22 +37,23 @@ public class TeslaRay extends Item{
 	private static final int RADIUS = 5;
 	private static final float DAMAGE = 7;
 
+	private final Multimap<Attribute, AttributeModifier> attributeModifiers;
+
 	public TeslaRay(){
 		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
 		String name = "tesla_ray";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
+
+		//Attributes
+		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -2D, AttributeModifier.Operation.ADDITION));
+		attributeModifiers = builder.build();
 	}
 
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack){
-		Multimap<Attribute, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
-
-		if(slot == EquipmentSlotType.MAINHAND){
-			multimap.put(Attributes.ATTACK_SPEED, new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -2D, AttributeModifier.Operation.ADDITION));
-		}
-
-		return multimap;
+		return slot == EquipmentSlotType.MAINHAND ? attributeModifiers : super.getAttributeModifiers(slot, stack);
 	}
 
 	@Override
