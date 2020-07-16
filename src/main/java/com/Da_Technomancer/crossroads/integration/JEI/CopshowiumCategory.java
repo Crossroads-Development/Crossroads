@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.CopshowiumRec;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -48,7 +49,7 @@ public class CopshowiumCategory implements IRecipeCategory<CopshowiumRec>{
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.copshowiumCreationChamber.getNameTextComponent().getString();
+		return CRBlocks.copshowiumCreationChamber.getTranslatedName().getString();
 	}
 
 	@Override
@@ -57,14 +58,14 @@ public class CopshowiumCategory implements IRecipeCategory<CopshowiumRec>{
 	}
 
 	@Override
-	public void draw(CopshowiumRec rec, double mouseX, double mouseY){
+	public void draw(CopshowiumRec rec, MatrixStack matrix, double mouseX, double mouseY){
 		if(rec.isFlux()){
-			Minecraft.getInstance().fontRenderer.drawString(MiscUtil.localize("crossroads.jei.copshowium.flux"), 10, 10, 4210752);
+			Minecraft.getInstance().fontRenderer.drawString(matrix, MiscUtil.localize("crossroads.jei.copshowium.flux"), 10, 10, 4210752);
 		}
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
-		arrowStatic.draw(75, 56);
-		arrow.draw(75, 56);
+		arrowStatic.draw(matrix, 75, 56);
+		arrow.draw(matrix, 75, 56);
 //		GlStateManager.disableBlend();
 //		GlStateManager.disableAlpha();
 	}

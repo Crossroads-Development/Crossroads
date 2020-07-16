@@ -4,6 +4,7 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.DetailedCrafterRec;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -49,7 +50,7 @@ public class DetailedCrafterCategory implements IRecipeCategory<DetailedCrafterR
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.detailedCrafter.getNameTextComponent().getString();
+		return CRBlocks.detailedCrafter.getTranslatedName().getString();
 	}
 
 	@Override
@@ -86,17 +87,17 @@ public class DetailedCrafterCategory implements IRecipeCategory<DetailedCrafterR
 	}
 
 	@Override
-	public void draw(DetailedCrafterRec recipe, double mouseX, double mouseY){
+	public void draw(DetailedCrafterRec recipe, MatrixStack matrix, double mouseX, double mouseY){
 		//Minecraft.getInstance().fontRenderer.drawString("Shapeless", 60, 5, 0x404040);
 		switch(recipe.getPath()){
 			case TECHNOMANCY:
-				gear.draw(95, 44);
+				gear.draw(matrix, 95, 44);
 				break;
 			case ALCHEMY:
-				flask.draw(79, 44);
+				flask.draw(matrix, 79, 44);
 				break;
 			case WITCHCRAFT:
-				leaf.draw(111, 44);
+				leaf.draw(matrix, 111, 44);
 				break;
 		}
 	}

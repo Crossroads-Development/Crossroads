@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoilTop;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -47,7 +48,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 
 	private TeslaCoilTop.TeslaCoilVariants getVariant(){
 		if(variant == null){
-			BlockState state = world.getBlockState(pos);
+			BlockState state = getBlockState();
 			if(state.getBlock() instanceof TeslaCoilTop){
 				variant = ((TeslaCoilTop) state.getBlock()).variant;
 			}else{
@@ -86,7 +87,9 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 				markDirty();
 
 				CRRenderUtil.addArc(world, pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F, (float) ent.getPosX(), (float) ent.getPosY(), (float) ent.getPosZ(), 5, 0.2F, ATTACK_COLOR_CODES[(int) (world.getGameTime() % 3)]);
-				ent.onStruckByLightning(new LightningBoltEntity(world, ent.getPosX(), ent.getPosY(), ent.getPosZ(), true));
+				LightningBoltEntity lightning = EntityType.LIGHTNING_BOLT.create(world);
+				lightning.setPosition(ent.getPosX(), ent.getPosY(), ent.getPosZ());
+				ent.onStruckByLightning(lightning);
 			}
 		}else if(variant == TeslaCoilTop.TeslaCoilVariants.DECORATIVE){
 			if(coilTE.getStored() >= TeslaCoilTop.TeslaCoilVariants.DECORATIVE.joltAmt){

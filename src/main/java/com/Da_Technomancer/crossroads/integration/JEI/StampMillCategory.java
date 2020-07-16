@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.StampMillRec;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -44,7 +45,7 @@ public class StampMillCategory implements IRecipeCategory<StampMillRec>{
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.stampMill.getNameTextComponent().getString();
+		return CRBlocks.stampMill.getTranslatedName().getString();
 	}
 
 	@Override
@@ -58,13 +59,13 @@ public class StampMillCategory implements IRecipeCategory<StampMillRec>{
 	}
 
 	@Override
-	public void draw(StampMillRec recipe, double mouseX, double mouseY){
+	public void draw(StampMillRec recipe, MatrixStack matrix, double mouseX, double mouseY){
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
-		slot.draw(54, 50);
-		slot.draw(110, 50);
-		arrowStatic.draw(78, 50);
-		arrow.draw(78, 50);
+		slot.draw(matrix, 54, 50);
+		slot.draw(matrix, 110, 50);
+		arrowStatic.draw(matrix, 78, 50);
+		arrow.draw(matrix, 78, 50);
 //		GlStateManager.disableBlend();
 //		GlStateManager.disableAlpha();
 	}

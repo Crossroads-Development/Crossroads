@@ -67,7 +67,7 @@ public class Shell extends AbstractGlassware{
 
 			if(!worldIn.isRemote){
 				EntityShell shellEnt = new EntityShell(worldIn, playerIn, contents, isCrystal);
-				shellEnt.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
+				shellEnt.shoot(playerIn.getPosX(), playerIn.getPosY() + 1.2F, playerIn.getPosZ(), 1.5F, 1.0F);
 				worldIn.addEntity(shellEnt);
 			}
 			return new ActionResult<>(ActionResultType.SUCCESS, held);

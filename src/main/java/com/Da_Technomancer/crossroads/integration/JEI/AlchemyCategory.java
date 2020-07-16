@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.AlchemyRec;
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
@@ -20,6 +21,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -81,11 +84,11 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 	}
 
 	@Override
-	public void draw(AlchemyRec recipe, double mouseX, double mouseY){
+	public void draw(AlchemyRec recipe, MatrixStack matrix, double mouseX, double mouseY){
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
-		arrowStatic.draw(78, 22);
-		arrow.draw(78, 22);
+		arrowStatic.draw(matrix, 78, 22);
+		arrow.draw(matrix, 78, 22);
 //		GlStateManager.disableBlend();
 //		GlStateManager.disableAlpha();
 
@@ -97,23 +100,23 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 		}else{
 			line = MiscUtil.localize("crossroads.jei.alchemy.temp", CRConfig.formatVal(Math.max(recipe.minTemp(), HeatUtil.ABSOLUTE_ZERO)));
 		}
-		fontRenderer.drawString(line, 90 - fontRenderer.getStringWidth(line) / 2F, 42, 0x404040);
+		fontRenderer.drawString(matrix, line, 90 - fontRenderer.getStringWidth(line) / 2F, 42, 0x404040);
 		line = recipe.deltaHeatPer() > 0 ? MiscUtil.localize("crossroads.jei.alchemy.cooling") : recipe.deltaHeatPer() < 0 ? MiscUtil.localize("crossroads.jei.alchemy.heating") : MiscUtil.localize("crossroads.jei.alchemy.no_temp_change");
-		fontRenderer.drawString(line, 90 - fontRenderer.getStringWidth(line) / 2F, 62, 4210752);
+		fontRenderer.drawString(matrix, line, 90 - fontRenderer.getStringWidth(line) / 2F, 62, 4210752);
 
 		if(recipe.charged()){
 //			GlStateManager.color(1, 1, 1);
-			bolt.draw(66, 2);
+			bolt.draw(matrix, 66, 2);
 		}
 
 		if(recipe.isDestructive()){
 //			GlStateManager.color(1, 1, 1);
-			blast.draw(98, 2);
+			blast.draw(matrix, 98, 2);
 		}
 
 		if(recipe.getCatalyst() != null){
 //			GlStateManager.color(1, 1, 1);
-			ReagentIngredientRenderer.RENDERER.render(82, 2, new ReagIngr(recipe.getCatalyst(), 0));
+			ReagentIngredientRenderer.RENDERER.render(matrix, 82, 2, new ReagIngr(recipe.getCatalyst(), 0));
 		}
 	}
 
@@ -144,9 +147,9 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 	}
 
 	@Override
-	public List<String> getTooltipStrings(AlchemyRec recipe, double mouseX, double mouseY){
+	public List<ITextComponent> getTooltipStrings(AlchemyRec recipe, double mouseX, double mouseY){
 		if(recipe.getCatalyst() != null && mouseX >= 82 && mouseX <= 98 && mouseY >= 2 && mouseY <= 18){
-			return ImmutableList.of(recipe.getCatalyst().getName());
+			return ImmutableList.of(new StringTextComponent(recipe.getCatalyst().getName()));
 		}
 		return Collections.emptyList();
 	}

@@ -1,18 +1,20 @@
 package com.Da_Technomancer.crossroads.API.templates;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.ITextProperties;
 
 import java.util.ArrayList;
 
 public abstract class TileEntityGUI<T extends TileEntityContainer<U>, U extends TileEntity & IInventory> extends ContainerScreen<T>{
 
 	protected PlayerInventory playerInv;
-	protected ArrayList<String> tooltip = new ArrayList<>();
+	protected ArrayList<ITextProperties> tooltip = new ArrayList<>();
 
 	protected TileEntityGUI(T container, PlayerInventory playerInventory, ITextComponent text){
 		super(container, playerInventory, text);
@@ -20,35 +22,51 @@ public abstract class TileEntityGUI<T extends TileEntityContainer<U>, U extends 
 	}
 
 	@Override
-	public void render(int mouseX, int mouseY, float partialTicks){
-		renderBackground();
-		super.render(mouseX, mouseY, partialTicks);
-		renderHoveredToolTip(mouseX, mouseY);
+	protected void init(){
+		super.init();
+		field_238744_r_ = container.getInvStart()[0];//MCP note: player inventory text overlay x position
+		field_238745_s_ = container.getInvStart()[1] - 12;//MCP note: player inventory text overlay y position
+	}
+
+	@Override
+	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTicks){
+		renderBackground(matrix);
+		super.render(matrix, mouseX, mouseY, partialTicks);
+		func_230459_a_(matrix, mouseX, mouseY);//render tooltip
 		if(getSlotUnderMouse() == null){
-			renderTooltip(tooltip, mouseX, mouseY);
+			renderTooltip(matrix, tooltip, mouseX, mouseY);
 		}
 		tooltip.clear();
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
-		for(IGuiEventListener gui : children){
-			if(gui instanceof IGuiObject){
-				((IGuiObject) gui).drawBack(partialTicks, mouseX, mouseY, font);
-			}
-		}
+	protected void func_230450_a_(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+		matrix.push();
+		drawGuiContainerBackgroundLayer(matrix, partialTicks, mouseX, mouseY);
+		matrix.translate(guiLeft, guiTop, 0);
+		drawGuiContainerForegroundLayer(matrix, mouseX, mouseY);
+		matrix.pop();
 	}
 
-	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
-		for(IGuiEventListener gui : children){
-			if(gui instanceof IGuiObject){
-				((IGuiObject) gui).drawFore(mouseX, mouseY, font);
-			}
-		}
+	/**
+	 * Draw the background layer of the UI. Called before drawGuiContainerForegroundLayer
+	 * @param matrix Matrix, relative to the top left of the screen
+	 * @param partialTicks Partial ticks
+	 * @param mouseX Mouse x coordinate, relative to UI start
+	 * @param mouseY Mouse y coordinate, relative to UI start
+	 */
+	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
 
-		font.drawString(title.getString(), 8, 6, 0x404040);
-		font.drawString(playerInv.getDisplayName().getString(), container.getInvStart()[0], container.getInvStart()[1] - 12, 0x404040);
+	}
+
+	/**
+	 * Draw the foreground layer of the UI. Called after drawGuiContainerBackgroundLayer
+	 * @param matrix Matrix, relative to the top left of the UI (not screen)
+	 * @param mouseX Mouse x coordinate, relative to UI start
+	 * @param mouseY Mouse y coordinate, relative to UI start
+	 */
+	protected void drawGuiContainerForegroundLayer(MatrixStack matrix, int mouseX, int mouseY){
+
 	}
 
 	@Override

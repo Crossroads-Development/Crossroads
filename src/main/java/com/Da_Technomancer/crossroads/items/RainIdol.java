@@ -13,6 +13,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.IServerWorldInfo;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -75,10 +76,11 @@ public class RainIdol extends Item{
 				}
 				if(count % 2 == 0){
 					if(++count >= 9){
-						worldIn.getWorldInfo().setRaining(true);
-						worldIn.getWorldInfo().setThundering(true);
-						worldIn.getWorldInfo().setClearWeatherTime(0);
-						worldIn.getWorldInfo().setRainTime(24000);
+						IServerWorldInfo worldInfo = (IServerWorldInfo) worldIn.getWorldInfo();
+						worldInfo.setRaining(true);
+						worldInfo.setThundering(true);
+						worldInfo.setRainTime(0);
+						worldInfo.setRainTime(24000);
 						worldIn.playSound(null, play.getPosX(), play.getPosY(), play.getPosZ(), SoundEvents.ITEM_TOTEM_USE, SoundCategory.PLAYERS, 1F, 1F);
 						play.setHeldItem(Hand.MAIN_HAND, ItemStack.EMPTY);
 						count = 0;
@@ -93,9 +95,10 @@ public class RainIdol extends Item{
 				}
 				if(count % 2 == 0){
 					if(--count <= -9){
-						worldIn.getWorldInfo().setRaining(false);
-						worldIn.getWorldInfo().setClearWeatherTime(24000);
-						worldIn.getWorldInfo().setRainTime(0);
+						IServerWorldInfo worldInfo = (IServerWorldInfo) worldIn.getWorldInfo();
+						worldInfo.setRaining(false);
+						worldInfo.setRainTime(24000);
+						worldInfo.setRainTime(0);
 						worldIn.playSound(null, play.getPosX(), play.getPosY(), play.getPosZ(), SoundEvents.ITEM_TOTEM_USE, SoundCategory.PLAYERS, 1F, 1F);
 						play.setHeldItem(Hand.MAIN_HAND, ItemStack.EMPTY);
 						count = 0;

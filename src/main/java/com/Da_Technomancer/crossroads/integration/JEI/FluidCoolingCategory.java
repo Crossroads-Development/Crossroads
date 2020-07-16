@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.FluidCoolingRec;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -49,7 +50,7 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRec>{
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.fluidCoolingChamber.getNameTextComponent().getString();
+		return CRBlocks.fluidCoolingChamber.getTranslatedName().getString();
 	}
 
 	@Override
@@ -58,14 +59,14 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRec>{
 	}
 
 	@Override
-	public void draw(FluidCoolingRec rec, double mouseX, double mouseY){
-		Minecraft.getInstance().fontRenderer.drawString(MiscUtil.localize("crossroads.jei.fluid_cooling.max", rec.getMaxTemp()), 10, 10, 4210752);
-		Minecraft.getInstance().fontRenderer.drawString(MiscUtil.localize("crossroads.jei.fluid_cooling.add", rec.getAddedHeat()), 10, 20, 4210752);
+	public void draw(FluidCoolingRec rec, MatrixStack matrix, double mouseX, double mouseY){
+		Minecraft.getInstance().fontRenderer.drawString(matrix, MiscUtil.localize("crossroads.jei.fluid_cooling.max", rec.getMaxTemp()), 10, 10, 4210752);
+		Minecraft.getInstance().fontRenderer.drawString(matrix, MiscUtil.localize("crossroads.jei.fluid_cooling.add", rec.getAddedHeat()), 10, 20, 4210752);
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
-		slot.draw(110, 55);
-		arrowStatic.draw(75, 56);
-		arrow.draw(75, 56);
+		slot.draw(matrix, 110, 55);
+		arrowStatic.draw(matrix, 75, 56);
+		arrow.draw(matrix, 75, 56);
 //		GlStateManager.disableBlend();
 //		GlStateManager.disableAlpha();
 	}

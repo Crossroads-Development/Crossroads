@@ -60,7 +60,7 @@ public class Nitroglycerin extends Item{
 
 		if(!worldIn.isRemote){
 			EntityNitro nitroEntity = new EntityNitro(worldIn, playerIn);
-			nitroEntity.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
+			nitroEntity.shoot(playerIn.getPosX(), playerIn.getPosY() + 1.2, playerIn.getPosZ(), 1.5F, 1.0F);
 			worldIn.addEntity(nitroEntity);
 		}
 		return new ActionResult<>(ActionResultType.SUCCESS, held);

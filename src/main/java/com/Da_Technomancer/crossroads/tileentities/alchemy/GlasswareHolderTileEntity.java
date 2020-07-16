@@ -174,7 +174,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 
 	@Override
 	protected Vector3d getParticlePos(){
-		return new Vector3d(pos).add(0.5D, 0.25D, 0.5D);
+		return Vector3d.func_237491_b_(pos).add(0.5D, 0.25D, 0.5D);
 	}
 
 	@Override

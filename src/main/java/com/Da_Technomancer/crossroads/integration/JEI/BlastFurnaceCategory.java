@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.BlastFurnaceRec;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -50,7 +51,7 @@ public class BlastFurnaceCategory implements IRecipeCategory<BlastFurnaceRec>{
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.blastFurnace.getNameTextComponent().getString();
+		return CRBlocks.blastFurnace.getTranslatedName().getString();
 	}
 
 	@Override
@@ -59,16 +60,16 @@ public class BlastFurnaceCategory implements IRecipeCategory<BlastFurnaceRec>{
 	}
 
 	@Override
-	public void draw(BlastFurnaceRec recipe, double mouseX, double mouseY){
+	public void draw(BlastFurnaceRec recipe, MatrixStack matrix, double mouseX, double mouseY){
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
-		slot.draw(54, 55);//Input
-		slot.draw(130, 55);//Slag
-		arrowStatic.draw(78, 55);
-		arrow.draw(78, 55);
+		slot.draw(matrix, 54, 55);//Input
+		slot.draw(matrix, 130, 55);//Slag
+		arrowStatic.draw(matrix, 78, 55);
+		arrow.draw(matrix, 78, 55);
 //		GlStateManager.disableBlend();
 //		GlStateManager.disableAlpha();
-		Minecraft.getInstance().fontRenderer.drawString(MiscUtil.localize("crossroads.jei.blast_furnace.carbon", recipe.getSlag()), 10, 10, 0x404040);
+		Minecraft.getInstance().fontRenderer.drawString(matrix, MiscUtil.localize("crossroads.jei.blast_furnace.carbon", recipe.getSlag()), 10, 10, 0x404040);
 	}
 
 	@Override

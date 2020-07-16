@@ -14,7 +14,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -26,7 +25,7 @@ public class DensusPlateTileEntity extends TileEntity implements ITickableTileEn
 	@ObjectHolder("densus_plate")
 	private static TileEntityType<DensusPlateTileEntity> type = null;
 
-	private static final ITag<Block> gravityBlocking = new BlockTags.Wrapper(new ResourceLocation(Crossroads.MODID, "gravity_blocking"));
+	private static final ITag<Block> gravityBlocking = BlockTags.makeWrapperTag(Crossroads.MODID + ":gravity_blocking");
 
 	private static final int RANGE = CRConfig.gravRange.get();
 

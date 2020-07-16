@@ -19,10 +19,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.Rarity;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.ITag;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -49,7 +48,7 @@ public class BoboRod extends Item{
 	};
 
 	//Items that are considered valid offerings
-	private static final ITag<Item> offering = new ItemTags.Wrapper(new ResourceLocation(Crossroads.MODID, "bobo_unlock_key"));
+	private static final ITag<Item> offering = ItemTags.makeWrapperTag(Crossroads.MODID + ":bobo_unlock_key");
 
 	protected BoboRod(){
 		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));

@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.FluidTankContainer;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidTankTileEntity;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
@@ -25,9 +26,9 @@ public class FluidTankScreen extends MachineGUI<FluidTankContainer, FluidTankTil
 
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
+	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
 		Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE);
-		blit((width - xSize) / 2, (height - ySize) / 2, 0, 0, xSize, ySize);
-		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+		blit(matrix, guiLeft, guiTop, 0, 0, xSize, ySize);
+		super.drawGuiContainerBackgroundLayer(matrix, partialTicks, mouseX, mouseY);
 	}
 }

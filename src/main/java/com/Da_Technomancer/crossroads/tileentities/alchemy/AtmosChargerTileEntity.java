@@ -19,7 +19,6 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
@@ -40,7 +39,7 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 	@ObjectHolder("atmos_charger")
 	private static TileEntityType<AtmosChargerTileEntity> type = null;
 
-	private static final ITag<Block> ANTENNA_TAG = new BlockTags.Wrapper(new ResourceLocation(Crossroads.MODID, "atmos_antenna"));
+	private static final ITag<Block> ANTENNA_TAG = BlockTags.makeWrapperTag(Crossroads.MODID + ":atmos_antenna");
 
 	private static final int FE_CAPACITY = 20_000;
 

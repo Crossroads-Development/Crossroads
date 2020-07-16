@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.particles;
 
 import net.minecraft.client.particle.*;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -14,14 +14,14 @@ public class ParticlePowderColor extends SpriteTexturedParticle{
 
 	private final IAnimatedSprite sprite;
 
-	private ParticlePowderColor(World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, Color c, IAnimatedSprite s){
+	private ParticlePowderColor(ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, Color c, IAnimatedSprite s){
 		super(worldIn, x, y, z);
 		setSize(0.02F, 0.02F);
 		setBoundingBox(new AxisAlignedBB(x, y, z, x + width, y + height, z + width));
 		canCollide = false;
 		sprite = s;
 //		setParticleTextureIndex(177);
-		multiplyParticleScaleBy(rand.nextFloat() * 0.6F + 0.6F);
+		multipleParticleScaleBy(rand.nextFloat() * 0.6F + 0.6F);
 		motionX = xSpeed;//Suggestion: 0
 		motionY = ySpeed;//Suggestion: 0
 		motionZ = zSpeed;//Suggestion: 0
@@ -54,7 +54,7 @@ public class ParticlePowderColor extends SpriteTexturedParticle{
 	@OnlyIn(Dist.CLIENT)
 	public static class Factory implements IParticleFactory<ColorParticleData>{
 
-		private IAnimatedSprite sprite;
+		private final IAnimatedSprite sprite;
 
 		protected Factory(IAnimatedSprite spriteIn){
 			sprite = spriteIn;
@@ -62,7 +62,7 @@ public class ParticlePowderColor extends SpriteTexturedParticle{
 
 		@Nullable
 		@Override
-		public Particle makeParticle(ColorParticleData typeIn, World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed){
+		public Particle makeParticle(ColorParticleData typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed){
 			return new ParticlePowderColor(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, typeIn.getColor(), sprite);
 		}
 	}

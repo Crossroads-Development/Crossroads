@@ -18,10 +18,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.DimensionManager;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -77,7 +75,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 		data.putLong("timestamp", player.world.getGameTime());
 		String playerName = player.getGameProfile().getName();
 		data.putString("username", playerName == null ? "NULL" : playerName);
-		data.putString("dimension", player.dimension.getRegistryName().toString());
+		data.putString("dimension", player.world.func_234923_W_().func_240901_a_().toString());//World registry key is used
 		data.putDouble("pos_x", player.getPosX());
 		data.putDouble("pos_y", player.getPosY());
 		data.putDouble("pos_z", player.getPosZ());
@@ -136,16 +134,11 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 			ServerPlayerEntity playerServ = (ServerPlayerEntity) player;
 			ResourceLocation targetDimension = new ResourceLocation(data.getString("dimension"));
 			ServerWorld targetWorld;//World we are recalling to. Almost always the same as current dimension. Null if something went wrong
-			if(targetDimension.equals(player.dimension.getRegistryName())){
+			if(targetDimension.equals(player.world.func_234923_W_().func_240901_a_())){
 				targetWorld = (ServerWorld) player.world;
 			}else{
 				try{
-					DimensionType dimType = DimensionType.byName(targetDimension);
-					if(dimType == null){
-						targetWorld = null;//Only happens if a dimension is unregistered
-					}else{
-						targetWorld = DimensionManager.getWorld(playerServ.server, dimType, true, true);
-					}
+					targetWorld = MiscUtil.getWorld(MiscUtil.getWorldKey(targetDimension, null), playerServ.server);
 				}catch(Exception e){
 					targetWorld = null;
 				}

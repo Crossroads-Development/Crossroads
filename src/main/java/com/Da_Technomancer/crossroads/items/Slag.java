@@ -25,9 +25,10 @@ public class Slag extends Item{
 				if(!world.isRemote){
 					world.playEvent(2005, blockpos, 0);
 				}
-				successful = true;
+
+				func_239796_a_(true);//Success
 			}else{
-				successful = false;
+				func_239796_a_(false);//Fail
 			}
 			return stack;
 		}

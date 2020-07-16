@@ -56,7 +56,7 @@ public class BeamSiphonTileEntity extends BeamRenderTE{
 	@Override
 	public void read(BlockState state, CompoundNBT nbt){
 		super.read(state, nbt);
-		redsHandler.read(nbt);
+		redsHandler.read(state, nbt);
 	}
 
 	@Override

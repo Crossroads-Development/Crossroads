@@ -4,16 +4,22 @@ import com.Da_Technomancer.essentials.ESConfig;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.FoodStats;
+import net.minecraft.util.RegistryKey;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Arrays;
 
 public final class MiscUtil{
@@ -148,15 +154,13 @@ public final class MiscUtil{
 				while(totalWithdrawn < toWithdraw){
 					int indexInSrc = sorted[indexInSorted];
 					if(src[indexInSrc] > withdrawn[indexInSrc]){//Make sure there is sufficient to withdraw from this pool, otherwise proceed to the next pool
-						//Withdraw one from the current pool, and move to the next pool in sorted
+						//Withdraw one from the current pool
 						withdrawn[indexInSrc]++;
 						totalWithdrawn++;
-						indexInSorted++;
-					}else{
-						//Proceed to next index without withdrawing
-						indexInSorted++;
-						indexInSorted %= sorted.length;
 					}
+					//Move to the next pool in sorted
+					indexInSorted++;
+					indexInSorted %= sorted.length;
 				}
 			}
 
@@ -199,6 +203,32 @@ public final class MiscUtil{
 	 * @return The name of the dimension, for logging purposes, unlocalized
 	 */
 	public static String getDimensionName(@Nonnull World world){
-		return world.func_234922_V_().func_240901_a_().toString();
+		return world.func_234923_W_().func_240901_a_().toString();//MCP: getRegistryKey<World>; get registry name
+	}
+
+	/**
+	 * Gets the registry key for a world with the given registry ID
+	 * @param registryID The world registry keyname
+	 * @param cache An optional cache parameter- will return this value if it matches the passed ID
+	 * @return The registry key in the World Key registry associated with a given registry keyname
+	 */
+	public static RegistryKey<World> getWorldKey(ResourceLocation registryID, @Nullable RegistryKey<World> cache){
+		if(cache != null && cache.func_240901_a_().equals(registryID)){
+			return cache;
+		}
+
+		return RegistryKey.func_240903_a_(Registry.WORLD_KEY, registryID);
+	}
+
+	/**
+	 * Gets the world associated with a given registry key, or null if it doesn't exist
+	 * Server side only
+	 * @param registryKey The registry key to search for
+	 * @param server The server instance
+	 * @return The world instance for the passed registry key
+	 */
+	@Nullable
+	public static ServerWorld getWorld(RegistryKey<World> registryKey, MinecraftServer server){
+		return server.getWorld(registryKey);
 	}
 }

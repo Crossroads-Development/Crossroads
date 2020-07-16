@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.rotary.RotaryDrill;
@@ -106,7 +107,7 @@ public class RotaryDrillTileEntity extends ModuleTE{
 
 				List<LivingEntity> ents = world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos.offset(facing)), EntityPredicates.IS_ALIVE);
 				for(LivingEntity ent : ents){
-					ent.attackEntityFrom(golden ? new EntityDamageSource("drill", FakePlayerFactory.get((ServerWorld) world, new GameProfile(null, "drill_player_" + world.getDimension().getType().getId()))) : DRILL, (float) Math.abs(motData[0]) * DAMAGE_PER_SPEED);
+					ent.attackEntityFrom(golden ? new EntityDamageSource("drill", FakePlayerFactory.get((ServerWorld) world, new GameProfile(null, "drill_player_" + MiscUtil.getDimensionName(world)))) : DRILL, (float) Math.abs(motData[0]) * DAMAGE_PER_SPEED);
 				}
 			}
 		}

@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.CentrifugeRec;
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -48,7 +49,7 @@ public class CentrifugeCategory implements IRecipeCategory<CentrifugeRec>{
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.waterCentrifuge.getNameTextComponent().getString();
+		return CRBlocks.waterCentrifuge.getTranslatedName().getString();
 	}
 
 	@Override
@@ -57,12 +58,12 @@ public class CentrifugeCategory implements IRecipeCategory<CentrifugeRec>{
 	}
 
 	@Override
-	public void draw(CentrifugeRec rec, double mouseX, double mouseY){
+	public void draw(CentrifugeRec rec, MatrixStack matrix, double mouseX, double mouseY){
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
-		arrowStatic.draw(75, 56);
-		arrow.draw(75, 56);
-		slot.draw(130, 30);
+		arrowStatic.draw(matrix, 75, 56);
+		arrow.draw(matrix, 75, 56);
+		slot.draw(matrix, 130, 30);
 //		GlStateManager.disableBlend();
 //		GlStateManager.disableAlpha();
 	}

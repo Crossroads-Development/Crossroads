@@ -8,13 +8,14 @@ import com.Da_Technomancer.crossroads.items.technomancy.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.*;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 public final class CRItems{
@@ -220,5 +221,23 @@ public final class CRItems{
 			return mat == null ? -1 : mat.getColor().getRGB();
 		};
 		itemColor.register(itemColoring, oreGravel, oreClump, axle, smallGear, largeGear, clutch, invClutch, toggleGear, invToggleGear);
+
+		//Item model properties
+		ItemModelsProperties.func_239418_a_(whirligig, new ResourceLocation("angle"), (ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) -> {
+			if(entity == null || entity.getActiveItemStack() != stack){
+				return 0;
+			}
+			//The following gets the angle in degrees of the blades based on:
+			//Ticks since started rotating
+			//Speed (wind level) at current time
+			//Assumption that speed decreased since start at -WIND_USE_RATE/tick
+			//Assumption that angle started at 0
+			int useTime = entity.getItemInUseMaxCount();//Method is poorly MCP mapped- actually gives number of ticks since started using
+			float currSpeed = (float) whirligig.getWindLevel(stack) / 20F;//Converted to rad/t
+			float deaccel = (float) Whirligig.WIND_USE_RATE / 20F;//Converted to rad/t/t
+			float angle = (currSpeed * useTime + deaccel * useTime * useTime / 2F) % (2F * (float) Math.PI);
+			angle = (float) Math.toDegrees(angle);
+			return angle;
+		});
 	}
 }

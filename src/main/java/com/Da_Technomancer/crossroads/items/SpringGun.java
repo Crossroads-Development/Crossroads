@@ -23,7 +23,7 @@ import java.util.function.Predicate;
 
 public class SpringGun extends ShootableItem implements WindingTableTileEntity.IWindableItem{
 
-	private static final ITag<Item> AMMO_TAG = new ItemTags.Wrapper(new ResourceLocation(Crossroads.MODID, "spring_gun_ammo"));
+	private static final ITag<Item> AMMO_TAG = ItemTags.makeWrapperTag(Crossroads.MODID + ":spring_gun_ammo");
 	private static final Predicate<ItemStack> AMMO_PREDICATE = s -> AMMO_TAG.contains(s.getItem());
 
 	private static final double MIN_SPEED = 1;
@@ -51,7 +51,7 @@ public class SpringGun extends ShootableItem implements WindingTableTileEntity.I
 				ItemStack bulletItem = ammo.copy();
 				bulletItem.setCount(1);
 				EntityBullet bullet = new EntityBullet(worldIn, playerIn, calcDamage(wind), bulletItem);
-				bullet.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, (float) wind * 2.5F, 0.2F);
+				bullet.shoot(playerIn.getPosX(), playerIn.getPosY() + 1.2, playerIn.getPosZ(), (float) wind * 2.5F, 0.2F);
 				worldIn.addEntity(bullet);
 
 				//Consume ammo
@@ -90,6 +90,11 @@ public class SpringGun extends ShootableItem implements WindingTableTileEntity.I
 	@Override
 	public Predicate<ItemStack> getInventoryAmmoPredicate(){
 		return AMMO_PREDICATE;
+	}
+
+	@Override
+	public int func_230305_d_(){
+		return 15;//Don't actually know what this does- looks mob AI related?
 	}
 
 	@Override

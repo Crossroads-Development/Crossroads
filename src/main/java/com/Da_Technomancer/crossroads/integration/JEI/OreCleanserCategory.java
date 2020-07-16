@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.OreCleanserRec;
 import com.Da_Technomancer.crossroads.tileentities.fluid.OreCleanserTileEntity;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -50,7 +51,7 @@ public class OreCleanserCategory implements IRecipeCategory<OreCleanserRec>{
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.oreCleanser.getNameTextComponent().getString();
+		return CRBlocks.oreCleanser.getTranslatedName().getString();
 	}
 
 	@Override
@@ -64,13 +65,13 @@ public class OreCleanserCategory implements IRecipeCategory<OreCleanserRec>{
 	}
 
 	@Override
-	public void draw(OreCleanserRec recipe, double mouseX, double mouseY){
+	public void draw(OreCleanserRec recipe, MatrixStack matrix, double mouseX, double mouseY){
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
-		slot.draw(54, 50);
-		slot.draw(110, 50);
-		arrowStatic.draw(78, 50);
-		arrow.draw(78, 50);
+		slot.draw(matrix, 54, 50);
+		slot.draw(matrix, 110, 50);
+		arrowStatic.draw(matrix, 78, 50);
+		arrow.draw(matrix, 78, 50);
 //		GlStateManager.disableBlend();
 //		GlStateManager.disableAlpha();
 	}

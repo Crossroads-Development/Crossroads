@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.particles;
 
 import net.minecraft.client.particle.*;
-import net.minecraft.world.World;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -13,13 +13,13 @@ public class ParticleSplashColor extends SpriteTexturedParticle{
 
 	private final IAnimatedSprite sprite;
 
-	protected ParticleSplashColor(World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, Color c, IAnimatedSprite s){
+	protected ParticleSplashColor(ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, Color c, IAnimatedSprite s){
 		super(worldIn, x, y, z);
 		setSize(0.02F, 0.02F);
 		canCollide = true;
 		sprite = s;
 //		setParticleTextureIndex(17);
-		multiplyParticleScaleBy(rand.nextFloat() * 0.6F + 0.6F);
+		multipleParticleScaleBy(rand.nextFloat() * 0.6F + 0.6F);
 		motionX = xSpeed;
 		motionY = ySpeed;
 		motionZ = zSpeed;
@@ -43,7 +43,7 @@ public class ParticleSplashColor extends SpriteTexturedParticle{
 	@OnlyIn(Dist.CLIENT)
 	public static class Factory implements IParticleFactory<ColorParticleData>{
 
-		private IAnimatedSprite sprite;
+		private final IAnimatedSprite sprite;
 
 		protected Factory(IAnimatedSprite spriteIn){
 			sprite = spriteIn;
@@ -51,7 +51,7 @@ public class ParticleSplashColor extends SpriteTexturedParticle{
 
 		@Nullable
 		@Override
-		public Particle makeParticle(ColorParticleData typeIn, World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed){
+		public Particle makeParticle(ColorParticleData typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed){
 			return new ParticleSplashColor(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, typeIn.getColor(), sprite);
 		}
 	}

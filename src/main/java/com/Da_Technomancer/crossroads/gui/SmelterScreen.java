@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.SmelterContainer;
 import com.Da_Technomancer.crossroads.tileentities.heat.SmelterTileEntity;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
@@ -20,14 +21,12 @@ public class SmelterScreen extends MachineGUI<SmelterContainer, SmelterTileEntit
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
+	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
 		RenderSystem.color4f(1, 1, 1, 1);
 		Minecraft.getInstance().getTextureManager().bindTexture(GUI_TEXTURES);
 
-		int i = (this.width - this.xSize) / 2;
-		int j = (this.height - this.ySize) / 2;
-		blit(i, j, 0, 0, xSize, ySize);
+		blit(matrix, (this.width - this.xSize) / 2, (this.height - this.ySize) / 2, 0, 0, xSize, ySize);
 
-		blit(i + 79, j + 34, 176, 0, container.cookProg.get() * 24 / SmelterTileEntity.REQUIRED, 17);
+		blit(matrix, (this.width - this.xSize) / 2 + 79, (this.height - this.ySize) / 2 + 34, 176, 0, container.cookProg.get() * 24 / SmelterTileEntity.REQUIRED, 17);
 	}
 }

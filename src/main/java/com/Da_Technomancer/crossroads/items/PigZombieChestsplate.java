@@ -30,7 +30,7 @@ public class PigZombieChestsplate extends ArmorItem{
 		//Believe it or not, it is possible to die of fire while in lava without burning (if it is raining on the player). There is an isInLava check for this reason.
 		if(player.getActivePotionEffect(Effects.FIRE_RESISTANCE) == null && (player.isBurning() || player.isInLava())){
 			player.addPotionEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 10, 0, false, false));
-			world.playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ENTITY_ZOMBIE_PIGMAN_HURT, SoundCategory.PLAYERS, 2.5F, 1F);
+			world.playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ENTITY_PIGLIN_HURT, SoundCategory.PLAYERS, 2.5F, 1F);
 		}
 	}
 }

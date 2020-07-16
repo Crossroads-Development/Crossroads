@@ -79,7 +79,7 @@ public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickab
 			boolean prevRunning = running;
 			running = false;
 			//expects a beacon below it, with any number of air gaps
-			BlockPos.Mutable mutPos = new BlockPos.Mutable(pos);
+			BlockPos.Mutable mutPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ());
 			do{
 				mutPos.move(Direction.DOWN);
 				BlockState state = world.getBlockState(mutPos);

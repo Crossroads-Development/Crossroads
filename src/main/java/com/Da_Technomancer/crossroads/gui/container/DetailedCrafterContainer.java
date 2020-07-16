@@ -27,7 +27,6 @@ import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -50,12 +49,12 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 
 	@SuppressWarnings("unchecked")
 	private static final ITag<Item>[] unlockKeys = new ITag[3];
-	private static final ITag<Item> fillerMats = new ItemTags.Wrapper(new ResourceLocation(Crossroads.MODID, "path_unlock_filler"));
+	private static final ITag<Item> fillerMats = ItemTags.makeWrapperTag(Crossroads.MODID + ":path_unlock_filler");
 
 	static{
-		unlockKeys[0] = new ItemTags.Wrapper(new ResourceLocation(Crossroads.MODID, "technomancy_unlock_key"));
-		unlockKeys[1] = new ItemTags.Wrapper(new ResourceLocation(Crossroads.MODID, "alchemy_unlock_key"));
-		unlockKeys[2] = new ItemTags.Wrapper(new ResourceLocation(Crossroads.MODID, "witchcraft_unlock_key"));
+		unlockKeys[0] = ItemTags.makeWrapperTag(Crossroads.MODID + ":technomancy_unlock_key");
+		unlockKeys[1] = ItemTags.makeWrapperTag(Crossroads.MODID + ":alchemy_unlock_key");
+		unlockKeys[2] = ItemTags.makeWrapperTag(Crossroads.MODID + ":witchcraft_unlock_key");
 	}
 
 	private final CraftingInventory inInv = new CraftingInventory(this, 3, 3);

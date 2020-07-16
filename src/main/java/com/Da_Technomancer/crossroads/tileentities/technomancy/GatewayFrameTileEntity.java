@@ -28,7 +28,10 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.*;
+import net.minecraft.util.Direction;
+import net.minecraft.util.EntityPredicates;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
@@ -62,9 +65,9 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	//They will not necessarily be null/empty/0 if this inactive- always check isActive()
 	private int flux = 0;
 	private int fluxToTrans = 0;
-	private HashSet<BlockPos> links = new HashSet<>(1);
+	private final HashSet<BlockPos> links = new HashSet<>(1);
 	private GatewayAddress address = null;//The address of THIS gateway
-	private double[] rotary = new double[4];//Rotary spin data (0: speed, 1: energy, 2: power, 3: last energy)
+	private final double[] rotary = new double[4];//Rotary spin data (0: speed, 1: energy, 2: power, 3: last energy)
 	private float angle = 0;//Used for rendering and dialing chevrons. Because it's used for logic, we don't use the master axis angle syncing, which is render-based
 	private float clientAngle = 0;//Angle on the client. On the server, acts as a record of value sent to client
 	private float clientW = 0;//Speed on the client (post adjustment). On the server, acts as a record of value sent to client
@@ -138,7 +141,6 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			}else{
 				//We clone the entity, and delete the original
 				e.detach();
-				e.dimension = target.dimension.getType();
 				Entity entity = e;
 				e = e.getType().create(target);
 				if(e == null){
@@ -303,7 +305,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			//Release our address back into the pool
 			GatewaySavedData.releaseAddress((ServerWorld) world, address);
 
-			BlockPos.Mutable mutPos = new BlockPos.Mutable(pos);
+			BlockPos.Mutable mutPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ());
 			Direction horiz = plane == Direction.Axis.X ? Direction.EAST : Direction.SOUTH;//horizontal direction
 			int preSize = size;//We have to store this, as the field will be modified in the loop
 			mutPos.move(horiz, -preSize / 2);
@@ -357,7 +359,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 
 		//First step is to determine the size
 		int newSize = 0;
-		BlockPos.Mutable mutPos = new BlockPos.Mutable(pos);
+		BlockPos.Mutable mutPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ());
 		//Maximum size is a 63x63, odd sized squares only
 		boolean foundAir = false;//Indicates we have passed the top section of the frame
 		int foundThickness = 1;

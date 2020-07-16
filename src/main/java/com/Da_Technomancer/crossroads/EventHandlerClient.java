@@ -166,7 +166,7 @@ public final class EventHandlerClient{
 				buf.pos(0, 60, -1).tex(0, 0).endVertex();
 				tes.draw();
 
-				Minecraft.getInstance().fontRenderer.drawString(cageStack.getDisplayName().getString(), 16, 65, Color.DARK_GRAY.getRGB());
+				Minecraft.getInstance().fontRenderer.drawString(e.getMatrixStack(), cageStack.getDisplayName().getString(), 16, 65, Color.DARK_GRAY.getRGB());
 				RenderSystem.color4f(1, 1, 1, 1);
 				RenderSystem.disableAlphaTest();
 				RenderSystem.disableBlend();
@@ -213,7 +213,7 @@ public final class EventHandlerClient{
 				buf.pos(0, 0, -1).tex(0, 0).endVertex();
 				tes.draw();
 
-				Minecraft.getInstance().fontRenderer.drawString(mainStack.getDisplayName().getString(), 16, 5, Color.DARK_GRAY.getRGB());
+				Minecraft.getInstance().fontRenderer.drawString(e.getMatrixStack(), mainStack.getDisplayName().getString(), 16, 5, Color.DARK_GRAY.getRGB());
 
 				RenderSystem.disableAlphaTest();
 				RenderSystem.color4f(1, 1, 1, 1);

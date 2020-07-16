@@ -2,20 +2,22 @@ package com.Da_Technomancer.crossroads.gui;
 
 import com.Da_Technomancer.crossroads.API.AdvancementTracker;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.API.templates.TextBarGuiObject;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.ColorChartContainer;
-import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class ColorChartScreen extends ContainerScreen<ColorChartContainer>{
@@ -28,7 +30,7 @@ public class ColorChartScreen extends ContainerScreen<ColorChartContainer>{
 	private static final int RADIUS = 138;
 //	private static final int[] RESOLUTIONS = {1, 2, 3, 6};//UI color vs B&W resolution options for config. Lower numbers are better. All values must be factors of RADIUS
 
-	private TextBarGuiObject searchBar;
+	private TextFieldWidget searchBar;
 
 	public ColorChartScreen(ColorChartContainer cont, PlayerInventory playerInv, ITextComponent name){
 		super(cont, playerInv, name);
@@ -41,8 +43,23 @@ public class ColorChartScreen extends ContainerScreen<ColorChartContainer>{
 		super.init();
 
 		AdvancementTracker.listen();//Used for beam alignments
-		searchBar = new TextBarGuiObject((width - xSize) / 2, (height - ySize) / 2, 0, 300, 300, 25, "Filter", Character::isAlphabetic);
+
+		searchBar = new TextFieldWidget(font, guiLeft, guiTop + ySize, xSize, 18, new TranslationTextComponent("container.search_bar"));
+		searchBar.setCanLoseFocus(false);
+		searchBar.setTextColor(-1);
+		searchBar.setDisabledTextColour(-1);
+		searchBar.setEnableBackgroundDrawing(false);
+		searchBar.setMaxStringLength(20);
+		searchBar.setValidator(s -> {
+			for(char c : s.toCharArray()){
+				if(!Character.isAlphabetic(c)){
+					return false;
+				}
+			}
+			return true;
+		});
 		children.add(searchBar);
+		setFocusedDefault(searchBar);
 	}
 
 	private static Color getColor(int x, int y){
@@ -50,33 +67,36 @@ public class ColorChartScreen extends ContainerScreen<ColorChartContainer>{
 	}
 
 	@Override
-	public void render(int mouseX, int mouseY, float partialTicks){
-		renderBackground();
-		super.render(mouseX, mouseY, partialTicks);
+	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTicks){
+		renderBackground(matrix);
+		super.render(matrix, mouseX, mouseY, partialTicks);
 
 		//Tooltip
 		if(Math.pow(xCENTER - mouseX + guiLeft, 2) + Math.pow(yCENTER - mouseY + guiTop, 2) <= RADIUS * RADIUS){
 			Color col = getColor(mouseX - guiLeft, mouseY - guiTop);
 			EnumBeamAlignments elem = EnumBeamAlignments.getAlignment(col);
-			renderTooltip(ImmutableList.of(elem.isDiscovered(playerInventory.player) ? elem.getLocalName(false) : "???", "R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue()), mouseX, mouseY, font);
+			ArrayList<ITextComponent> tooltip = new ArrayList<>(2);
+			if(elem.isDiscovered(playerInventory.player)){
+				tooltip.add(new StringTextComponent(elem.getLocalName(false)));
+			}else{
+				tooltip.add(new StringTextComponent("???"));
+			}
+			tooltip.add(new StringTextComponent("R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue()));
+			renderToolTip(matrix, tooltip, mouseX, mouseY, font);
 		}
+
+		searchBar.render(matrix, mouseX, mouseY, partialTicks);
 	}
-	
+
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
+	protected void func_230450_a_(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
 		RenderSystem.color4f(1, 1, 1, 1);
 		Minecraft.getInstance().getTextureManager().bindTexture(BACKGROUND);
-		int i = (width - xSize) / 2;
-		int j = (height - ySize) / 2;
-		blit(i, j, 300, 0, xSize, ySize, 1200, 1200);
+		int i = guiLeft;
+		int j = guiTop;
+		blit(matrix, i, j, 300, 0, xSize, ySize, 1200, 1200);
 
-		searchBar.drawBack(partialTicks, mouseX, mouseY, font);
-	}
-
-	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
 		String search = searchBar.getText().toUpperCase();
-		searchBar.drawFore(mouseX, mouseY, font);
 
 		Minecraft.getInstance().getTextureManager().bindTexture(BACKGROUND);
 //		final int spotLength = RESOLUTIONS[CRConfig.colorChartResolution.get() - 1];
@@ -85,7 +105,7 @@ public class ColorChartScreen extends ContainerScreen<ColorChartContainer>{
 			if(elem.isDiscovered(playerInventory.player) && (search.isEmpty() || elem.getLocalName(false).toLowerCase(Locale.US).startsWith(search.toLowerCase(Locale.US)))){
 				//Render the colored overlay that alignment over the B&W base
 				int imageIndex = elem.ordinal() + 2;
-				blit(0, 0, xSize * (imageIndex % 4), xSize * (int) (imageIndex / 4), xSize, ySize, 1200, 1200);
+				blit(matrix, guiLeft, guiTop, xSize * (imageIndex % 4), xSize * (int) (imageIndex / 4), xSize, ySize, 1200, 1200);
 			}
 		}
 	}
@@ -114,5 +134,11 @@ public class ColorChartScreen extends ContainerScreen<ColorChartContainer>{
 		}
 
 		return super.charTyped(key, keyCode);
+	}
+
+	@Override
+	protected void func_230451_b_(MatrixStack matrix, int p_230451_2_, int p_230451_3_){
+		font.func_238422_b_(matrix, title, field_238742_p_, field_238743_q_, 0x404040);
+		//Render no inventory label
 	}
 }

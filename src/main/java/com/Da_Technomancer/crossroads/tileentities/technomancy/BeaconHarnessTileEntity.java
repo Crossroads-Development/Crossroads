@@ -10,6 +10,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -88,14 +89,14 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink{
 
 	//Requires beneath a beacon, and all blocks between this and the beacon are legal beacon bases
 	private boolean positionInvalid(){
-		BlockPos.Mutable checkPos = new BlockPos.Mutable(pos);
+		BlockPos.Mutable checkPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ());
 		for(int y = 0; y < 5; y++){
 			checkPos.move(Direction.UP);
 			BlockState state = world.getBlockState(checkPos);
 			if(state.getBlock() == Blocks.BEACON){
 				return false;
 			}
-			if(!state.isBeaconBase(world, checkPos, checkPos)){//The position passed for beaconPos (third arg) will be most likely wrong, but the argument is currently unused by all known implementations
+			if(!state.getBlock().isIn(BlockTags.BEACON_BASE_BLOCKS)){
 				return true;
 			}
 		}

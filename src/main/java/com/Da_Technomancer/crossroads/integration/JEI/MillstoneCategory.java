@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.MillRec;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -44,7 +45,7 @@ public class MillstoneCategory implements IRecipeCategory<MillRec>{
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.millstone.getNameTextComponent().getString();
+		return CRBlocks.millstone.getTranslatedName().getString();
 	}
 
 	@Override
@@ -64,15 +65,15 @@ public class MillstoneCategory implements IRecipeCategory<MillRec>{
 	}
 
 	@Override
-	public void draw(MillRec recipe, double mouseX, double mouseY){
+	public void draw(MillRec recipe, MatrixStack matrix, double mouseX, double mouseY){
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
-		slot.draw(79, 16);
-		slot.draw(61, 52);
-		slot.draw(79, 52);
-		slot.draw(97, 52);
-		arrowStatic.draw(66, 35);
-		arrow.draw(66, 35);
+		slot.draw(matrix, 79, 16);
+		slot.draw(matrix, 61, 52);
+		slot.draw(matrix, 79, 52);
+		slot.draw(matrix, 97, 52);
+		arrowStatic.draw(matrix, 66, 35);
+		arrow.draw(matrix, 66, 35);
 //		GlStateManager.disableBlend();
 //		GlStateManager.disableAlpha();
 	}

@@ -59,5 +59,10 @@ public class ChickenBoots extends ArmorItem{
 		public float getToughness(){
 			return 0;
 		}
+
+		@Override
+		public float func_230304_f_(){
+			return 0;//Knockback resistance
+		}
 	}
 }

@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.BeamTransmuteRec;
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -57,14 +58,14 @@ public class BeamTransmuteCategory implements IRecipeCategory<BeamTransmuteRec>{
 	}
 
 	@Override
-	public void draw(BeamTransmuteRec recipe, double mouseX, double mouseY){
+	public void draw(BeamTransmuteRec recipe, MatrixStack matrix, double mouseX, double mouseY){
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
-		slot.draw(40, 40);//Input
-		slot.draw(120, 40);//Output
-		arrowStatic.draw(78, 40);
-		Minecraft.getInstance().fontRenderer.drawString(MiscUtil.localize("crossroads.jei.beam_trans.align", recipe.getAlign().getLocalName(recipe.isVoid())), 50, 10, 0x404040);
-		Minecraft.getInstance().fontRenderer.drawString(MiscUtil.localize("crossroads.jei.beam_trans.power", recipe.getPower()), 50, 70, 0x404040);
+		slot.draw(matrix, 40, 40);//Input
+		slot.draw(matrix, 120, 40);//Output
+		arrowStatic.draw(matrix, 78, 40);
+		Minecraft.getInstance().fontRenderer.drawString(matrix, MiscUtil.localize("crossroads.jei.beam_trans.align", recipe.getAlign().getLocalName(recipe.isVoid())), 50, 10, 0x404040);
+		Minecraft.getInstance().fontRenderer.drawString(matrix, MiscUtil.localize("crossroads.jei.beam_trans.power", recipe.getPower()), 50, 70, 0x404040);
 //		GlStateManager.disableBlend();
 //		GlStateManager.disableAlpha();
 	}

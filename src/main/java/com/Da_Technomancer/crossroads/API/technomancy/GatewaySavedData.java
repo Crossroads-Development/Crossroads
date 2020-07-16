@@ -52,13 +52,14 @@ public class GatewaySavedData extends WorldSavedData{
 
 		//Generate a unique new address
 		EnumBeamAlignments[] address = new EnumBeamAlignments[4];
+		GatewayAddress reserved = getReservedAddress(w);
 		GatewayAddress gateAdd;
 		do{
 			for(int i = 0; i < 4; i++){
 				address[i] = GatewayAddress.getLegalEntry(w.rand.nextInt(GatewayAddress.LEGAL_VALS.length));
 			}
 			gateAdd = new GatewayAddress(address);
-		}while(data.addressBook.containsKey(gateAdd) || gateAdd.equals(getReservedAddress(w)));//Generate a new address every time the generated address is already in use
+		}while(data.addressBook.containsKey(gateAdd) || gateAdd.equals(reserved));//Generate a new address every time the generated address is already in use
 
 		//Register this new address in the addressBook
 		data.addressBook.put(gateAdd, new GatewayAddress.Location(pos, w));
@@ -96,10 +97,10 @@ public class GatewaySavedData extends WorldSavedData{
 		//We want all dimensions to share the same saved data,
 		//So we always reference the overworld instance
 		DimensionSavedDataManager storage;
-		if(world.dimension.getType() == DimensionType.OVERWORLD){
+		if(world.func_234922_V_().func_240901_a_().equals(DimensionType.field_235999_c_.func_240901_a_())){
 			storage = world.getSavedData();
 		}else{
-			storage = world.getServer().getWorld(DimensionType.OVERWORLD).getSavedData();
+			storage = world.getServer().func_241755_D_().getSavedData();//MCP note: getOverworld
 		}
 		GatewaySavedData data;
 		try{
@@ -120,7 +121,7 @@ public class GatewaySavedData extends WorldSavedData{
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
+	public void read(CompoundNBT nbt){
 		addressBook.clear();
 		int i = 0;
 		while(nbt.contains("key_" + i)){

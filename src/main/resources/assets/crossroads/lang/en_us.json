@@ -92,7 +92,7 @@
 	"block.crossroads.color_chart": "Color Chart",
 	"technician_manual": "Technician's Manual",
 	"item.crossroads.squid_helmet": "Squid Helmet",
-	"item.crossroads.pig_zombie_chestplate": "Zombie Pigman Chestplate",
+	"item.crossroads.pig_zombie_chestplate": "Piglin Chestplate",
 	"item.crossroads.cow_leggings": "Cow Leggings",
 	"block.crossroads.master_axis_crystal": "Crystalline Master Axis",
 	"item.crossroads.chaos_rod": "Rod of Discord",
@@ -586,6 +586,9 @@
 	"tt.crossroads.whirligig.desc": "Provides slowfall and even flight if wound in a Spring Winding Table",
 	"tt.crossroads.whirligig.elevate": "Elevates the player when Spring Speed is above %1$frad/s",
 	"tt.crossroads.whirligig.quip": "Chim-Chim-iney",
+	"tt.crossroads.jei.reag.amount.single": "%1$d Part",
+	"tt.crossroads.jei.reag.amount.plural": "%1$d Parts",
+	"tt.crossroads.jei.reag.id": "ID: %1$s",
 
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",

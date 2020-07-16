@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.BeamExtractRec;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -45,7 +46,7 @@ public class BeamExtractorCategory implements IRecipeCategory<BeamExtractRec>{
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.beamExtractor.getNameTextComponent().getString();
+		return CRBlocks.beamExtractor.getTranslatedName().getString();
 	}
 
 	@Override
@@ -64,11 +65,11 @@ public class BeamExtractorCategory implements IRecipeCategory<BeamExtractRec>{
 	}
 
 	@Override
-	public void draw(BeamExtractRec rec, double mouseX, double mouseY){
+	public void draw(BeamExtractRec rec, MatrixStack matrix, double mouseX, double mouseY){
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
-		slot.draw(20, 50);
-		arrowStatic.draw(46, 50);
+		slot.draw(matrix, 20, 50);
+		arrowStatic.draw(matrix, 46, 50);
 //		GlStateManager.disableBlend();
 //		GlStateManager.disableAlpha();
 
@@ -95,7 +96,7 @@ public class BeamExtractorCategory implements IRecipeCategory<BeamExtractRec>{
 			tt.add(MiscUtil.localize("crossroads.jei.extract.duration.plural", rec.getDuration()));//Duration
 		}
 		for(int i = 0; i < tt.size(); i++){
-			minecraft.fontRenderer.drawString(tt.get(i), 80, 5 + 20 * i, 0x404040);
+			minecraft.fontRenderer.drawString(matrix, tt.get(i), 80, 5 + 20 * i, 0x404040);
 		}
 	}
 

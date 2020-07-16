@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.StampMillContainer;
 import com.Da_Technomancer.crossroads.tileentities.rotary.StampMillTileEntity;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
@@ -18,19 +19,17 @@ public class StampMillScreen extends MachineGUI<StampMillContainer, StampMillTil
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
+	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
 		Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE);
 
-		int i = (width - xSize) / 2;
-		int j = (height - ySize) / 2;
-		blit(i, j, 0, 0, xSize, ySize);
+		blit(matrix, guiLeft, guiTop, 0, 0, xSize, ySize);
 
 
 		//Time meter
-		blit(i + 55, j + 34, 176, 0, Math.min(66, container.timeRef.get() * 66 / StampMillTileEntity.TIME_LIMIT), 9);
+		blit(matrix, guiLeft + 55, guiTop + 34, 176, 0, Math.min(66, container.timeRef.get() * 66 / StampMillTileEntity.TIME_LIMIT), 9);
 		//Progress meter
-		blit(i + 55, j + 45, 176, 0, (int) Math.min(66, container.progRef.get() * 66 / StampMillTileEntity.REQUIRED), 9);
+		blit(matrix, guiLeft + 55, guiTop + 45, 176, 0, (int) Math.min(66, container.progRef.get() * 66 / StampMillTileEntity.REQUIRED), 9);
 
-		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+		super.drawGuiContainerBackgroundLayer(matrix, partialTicks, mouseX, mouseY);
 	}
 }

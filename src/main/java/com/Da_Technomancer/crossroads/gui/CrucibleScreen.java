@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.CrucibleContainer;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntity;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
@@ -24,14 +25,12 @@ public class CrucibleScreen extends MachineGUI<CrucibleContainer, HeatingCrucibl
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
+	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
 		Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE);
 
-		int i = (width - xSize) / 2;
-		int j = (height - ySize) / 2;
-		blit(i, j, 0, 0, xSize, ySize);
-		blit(i + 42, j + 35, 176, 0, te.progressRef.get() * 28 / HeatingCrucibleTileEntity.REQUIRED, 18);
+		blit(matrix, guiLeft, guiTop, 0, 0, xSize, ySize);
+		blit(matrix, guiLeft + 42, guiTop + 35, 176, 0, te.progressRef.get() * 28 / HeatingCrucibleTileEntity.REQUIRED, 18);
 
-		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+		super.drawGuiContainerBackgroundLayer(matrix, partialTicks, mouseX, mouseY);
 	}
 }

@@ -1,17 +1,17 @@
 package com.Da_Technomancer.crossroads.API.technomancy;
 
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.server.TicketType;
-import net.minecraftforge.common.DimensionManager;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -114,10 +114,12 @@ public class GatewayAddress{
 
 		public final BlockPos pos;
 		public final ResourceLocation dim;
+		private RegistryKey<World> cache;//Used to retrieve the associated world data more quickly
 
 		public Location(BlockPos pos, World world){
 			this.pos = pos.toImmutable();
-			this.dim = world.dimension.getType().getRegistryName();
+			cache = world.func_234923_W_();
+			this.dim = cache.func_240901_a_();
 		}
 
 		public Location(long posSerial, String dimSerial){
@@ -128,11 +130,8 @@ public class GatewayAddress{
 		@Nullable
 		public World evalDim(MinecraftServer server){
 			try{
-				DimensionType dimType = DimensionType.byName(dim);
-				if(dimType == null){
-					return null;//Only happens if a dimension is unregistered
-				}
-				return DimensionManager.getWorld(server, dimType, true, true);
+				cache = MiscUtil.getWorldKey(dim, cache);
+				return MiscUtil.getWorld(cache, server);
 			}catch(Exception e){
 				return null;
 			}
@@ -163,8 +162,7 @@ public class GatewayAddress{
 				return false;
 			}
 			Location location = (Location) o;
-			return dim == location.dim &&
-					pos.equals(location.pos);
+			return dim == location.dim && pos.equals(location.pos);
 		}
 
 		@Override

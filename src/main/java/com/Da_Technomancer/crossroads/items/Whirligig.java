@@ -4,12 +4,10 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.tileentities.rotary.WindingTableTileEntity;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.UseAction;
+import net.minecraft.item.*;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
@@ -23,26 +21,10 @@ import java.util.List;
 
 public class Whirligig extends Item implements WindingTableTileEntity.IWindableItem{
 
-	private static final double WIND_USE_RATE = 10D / (20 * 60 * 5);//Rate at which the charge is drained, rad/s /tick
+	public static final double WIND_USE_RATE = 10D / (20 * 60 * 5);//Rate at which the charge is drained, rad/s /tick
 
 	protected Whirligig(){
 		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
-		addPropertyOverride(new ResourceLocation("angle"), (ItemStack stack, @Nullable World world, @Nullable LivingEntity entity) -> {
-			if(entity == null || entity.getActiveItemStack() != stack){
-				return 0;
-			}
-			//The following gets the angle in degrees of the blades based on:
-			//Ticks since started rotating
-			//Speed (wind level) at current time
-			//Assumption that speed decreased since start at -WIND_USE_RATE/tick
-			//Assumption that angle started at 0
-			int useTime = entity.getItemInUseMaxCount();//Method is poorly MCP mapped- actually gives number of ticks since started using
-			float currSpeed = (float) getWindLevel(stack) / 20F;//Converted to rad/t
-			float deaccel = (float) WIND_USE_RATE / 20F;//Converted to rad/t/t
-			float angle = (currSpeed * useTime + deaccel * useTime * useTime / 2F) % (2F * (float) Math.PI);
-			angle = (float) Math.toDegrees(angle);
-			return angle;
-		});
 		String name = "whirligig";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);

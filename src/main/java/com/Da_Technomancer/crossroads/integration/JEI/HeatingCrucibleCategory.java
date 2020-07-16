@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.crafting.recipes.CrucibleRec;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntity;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -49,7 +50,7 @@ public class HeatingCrucibleCategory implements IRecipeCategory<CrucibleRec>{
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.heatingCrucible.getNameTextComponent().getString();
+		return CRBlocks.heatingCrucible.getTranslatedName().getString();
 	}
 
 	@Override
@@ -58,14 +59,14 @@ public class HeatingCrucibleCategory implements IRecipeCategory<CrucibleRec>{
 	}
 
 	@Override
-	public void draw(CrucibleRec recipe, double mouseX, double mouseY){
+	public void draw(CrucibleRec recipe, MatrixStack matrix, double mouseX, double mouseY){
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
-		Minecraft.getInstance().fontRenderer.drawString("When above 1000°C", 10, 10, 0x404040);
-		Minecraft.getInstance().fontRenderer.drawString(String.format("Total Heat Consumed: %1$d°C", HeatingCrucibleTileEntity.REQUIRED), 10, 20, 0x404040);
-		slot.draw(40, 50);
-		arrowStatic.draw(62, 50);
-		arrow.draw(62, 50);
+		Minecraft.getInstance().fontRenderer.drawString(matrix, "When above 1000°C", 10, 10, 0x404040);
+		Minecraft.getInstance().fontRenderer.drawString(matrix, String.format("Total Heat Consumed: %1$d°C", HeatingCrucibleTileEntity.REQUIRED), 10, 20, 0x404040);
+		slot.draw(matrix, 40, 50);
+		arrowStatic.draw(matrix, 62, 50);
+		arrow.draw(matrix, 62, 50);
 //		GlStateManager.disableBlend();
 //		GlStateManager.disableAlpha();
 	}

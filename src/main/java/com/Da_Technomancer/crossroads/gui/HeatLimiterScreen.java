@@ -5,21 +5,21 @@ import com.Da_Technomancer.essentials.Essentials;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import com.Da_Technomancer.essentials.packets.EssentialsPackets;
 import com.Da_Technomancer.essentials.packets.SendNBTToServer;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class HeatLimiterScreen extends ContainerScreen<HeatLimiterContainer>{
 
 	private static final ResourceLocation SEARCH_BAR_TEXTURE = new ResourceLocation(Essentials.MODID, "textures/gui/search_bar.png");
 	private TextFieldWidget searchBar;
-
 
 	public HeatLimiterScreen(HeatLimiterContainer cont, PlayerInventory playerInventory, ITextComponent text){
 		super(cont, playerInventory, text);
@@ -30,9 +30,8 @@ public class HeatLimiterScreen extends ContainerScreen<HeatLimiterContainer>{
 	@Override
 	protected void init(){
 		super.init();
-		searchBar = new TextFieldWidget(font, (width - xSize) / 2 + 4, (height - ySize) / 2 + 8, 144 - 4, 18, I18n.format("container.search_bar"));
+		searchBar = new TextFieldWidget(font, guiLeft + 4, guiTop + 8, 144 - 4, 18, new TranslationTextComponent("container.search_bar"));
 		searchBar.setCanLoseFocus(false);
-		searchBar.changeFocus(true);
 		searchBar.setTextColor(-1);
 		searchBar.setDisabledTextColour(-1);
 		searchBar.setEnableBackgroundDrawing(false);
@@ -71,20 +70,18 @@ public class HeatLimiterScreen extends ContainerScreen<HeatLimiterContainer>{
 	}
 
 	@Override
-	public void render(int mouseX, int mouseY, float partialTicks){
-		renderBackground();
-		super.render(mouseX, mouseY, partialTicks);
-		GlStateManager.disableLighting();
-		GlStateManager.disableBlend();
-		searchBar.render(mouseX, mouseY, partialTicks);
+	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTicks){
+		renderBackground(matrix);
+		super.render(matrix, mouseX, mouseY, partialTicks);
+		RenderSystem.disableLighting();
+		RenderSystem.disableBlend();
+		searchBar.render(matrix, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
-		//drawTexturedModelRectangle
-
+	protected void func_230450_a_(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
 		minecraft.getTextureManager().bindTexture(SEARCH_BAR_TEXTURE);
-		blit((width - xSize) / 2, (height - ySize) / 2, 0, 0, xSize, 18, xSize, 18);
+		blit(matrix, guiLeft, guiTop, 0, 0, xSize, 18, xSize, 18);
 	}
 
 	private void entryChanged(String newFilter){

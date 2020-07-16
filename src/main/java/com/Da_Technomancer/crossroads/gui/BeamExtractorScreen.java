@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.templates.TileEntityGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.BeamExtractorContainer;
 import com.Da_Technomancer.crossroads.tileentities.beams.BeamExtractorTileEntity;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerInventory;
@@ -19,20 +20,18 @@ public class BeamExtractorScreen extends TileEntityGUI<BeamExtractorContainer, B
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
-		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+		super.drawGuiContainerBackgroundLayer(matrix, partialTicks, mouseX, mouseY);
 
 		RenderSystem.color4f(1, 1, 1, 1);
 		Minecraft.getInstance().getTextureManager().bindTexture(GUI_TEXTURES);
 
-		int i = (width - xSize) / 2;
-		int j = (height - ySize) / 2;
-		blit(i, j, 0, 0, xSize, ySize);
+		blit(matrix, guiLeft, guiTop, 0, 0, xSize, ySize);
 
 		int prog = container.progRef.get();
 		int k = prog == 0 ? 0 : 1 + (prog * 13 / 100);
 		if(k != 0){
-			blit(i + 81, j + 43 - k, 176, 13 - k, 14, k);
+			blit(matrix, guiLeft + 81, guiTop + 43 - k, 176, 13 - k, 14, k);
 		}
 	}
 }

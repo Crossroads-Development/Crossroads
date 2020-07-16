@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.SteamerContainer;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamerTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.heat.SmelterTileEntity;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerInventory;
@@ -28,16 +28,14 @@ public class SteamerScreen extends MachineGUI<SteamerContainer, SteamerTileEntit
 
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
+	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
 		RenderSystem.color4f(1, 1, 1, 1);
 		Minecraft.getInstance().getTextureManager().bindTexture(GUI_TEXTURES);
 
-		int i = (this.width - this.xSize) / 2;
-		int j = (this.height - this.ySize) / 2;
-		blit(i, j, 0, 0, xSize, ySize);
+		blit(matrix, guiLeft, guiTop, 0, 0, xSize, ySize);
 
-		blit(i + 79, j + 34, 176, 0, container.cookProg.get() * 24 / SteamerTileEntity.REQUIRED, 17);
+		blit(matrix, guiLeft + 79, guiTop + 34, 176, 0, container.cookProg.get() * 24 / SteamerTileEntity.REQUIRED, 17);
 
-		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+		super.drawGuiContainerBackgroundLayer(matrix, partialTicks, mouseX, mouseY);
 	}
 }

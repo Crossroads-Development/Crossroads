@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.particles;
 
 import net.minecraft.client.particle.*;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -14,7 +14,7 @@ public class ParticleBubbleColor extends SpriteTexturedParticle{
 
 	private final IAnimatedSprite sprite;
 
-	protected ParticleBubbleColor(World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, Color c, IAnimatedSprite s){
+	protected ParticleBubbleColor(ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, Color c, IAnimatedSprite s){
 		super(worldIn, x, y, z);
 		this.sprite = s;
 		setSize(0.02F, 0.02F);
@@ -57,7 +57,7 @@ public class ParticleBubbleColor extends SpriteTexturedParticle{
 	@OnlyIn(Dist.CLIENT)
 	public static class Factory implements IParticleFactory<ColorParticleData>{
 
-		private IAnimatedSprite sprite;
+		private final IAnimatedSprite sprite;
 
 		protected Factory(IAnimatedSprite spriteIn){
 			sprite = spriteIn;
@@ -65,7 +65,7 @@ public class ParticleBubbleColor extends SpriteTexturedParticle{
 
 		@Nullable
 		@Override
-		public Particle makeParticle(ColorParticleData typeIn, World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed){
+		public Particle makeParticle(ColorParticleData typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed){
 			return new ParticleBubbleColor(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, typeIn.getColor(), sprite);
 		}
 	}

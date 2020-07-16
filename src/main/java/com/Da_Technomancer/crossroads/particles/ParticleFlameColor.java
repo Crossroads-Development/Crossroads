@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.particles;
 
 import net.minecraft.client.particle.*;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -15,7 +16,7 @@ public class ParticleFlameColor extends SpriteTexturedParticle{
 
 	private final IAnimatedSprite sprite;
 
-	private ParticleFlameColor(World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, Color c, IAnimatedSprite s){
+	private ParticleFlameColor(ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, Color c, IAnimatedSprite s){
 		super(worldIn, x, y, z);
 		setSize(0.02F, 0.02F);
 		setBoundingBox(new AxisAlignedBB(x, y, z, x + width, y + height, z + width));
@@ -70,7 +71,7 @@ public class ParticleFlameColor extends SpriteTexturedParticle{
 	@OnlyIn(Dist.CLIENT)
 	public static class Factory implements IParticleFactory<ColorParticleData>{
 
-		private IAnimatedSprite sprite;
+		private final IAnimatedSprite sprite;
 
 		protected Factory(IAnimatedSprite spriteIn){
 			sprite = spriteIn;
@@ -78,7 +79,7 @@ public class ParticleFlameColor extends SpriteTexturedParticle{
 
 		@Nullable
 		@Override
-		public Particle makeParticle(ColorParticleData typeIn, World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed){
+		public Particle makeParticle(ColorParticleData typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed){
 			return new ParticleFlameColor(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, typeIn.getColor(), sprite);
 		}
 	}
