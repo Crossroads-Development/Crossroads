@@ -22,7 +22,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeContainer;
 import net.minecraft.world.biome.Biomes;
-import net.minecraft.world.chunk.IChunk;
 
 import java.lang.reflect.Field;
 
@@ -64,14 +63,13 @@ public class AetherEffect implements IAlchEffect{
 			return;
 		}
 
-		IChunk c = world.getChunk(pos);
 		Biome biome = biome();
 		if(world.getBiome(pos) != biome){
 			setBiomeAtPos(world, pos, biome);
 			CRPackets.sendPacketToDimension(world, new SendBiomeUpdateToClient(pos, biome.getRegistryName()));
 		}
 
-		if(oldState.getBlock().isAir(oldState, world, pos) || oldState.getBlockHardness(world, pos) < 0){
+		if(oldState.isAir(world, pos) || oldState.getBlockHardness(world, pos) < 0){
 			return;
 		}
 

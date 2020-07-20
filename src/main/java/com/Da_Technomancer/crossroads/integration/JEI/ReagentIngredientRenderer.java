@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
 import mezz.jei.api.ingredients.IIngredientRenderer;
@@ -15,7 +16,6 @@ import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-import java.awt.*;
 import java.util.List;
 
 public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
@@ -26,37 +26,38 @@ public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 
 	@Override
 	public void render(int xPosition, int yPosition, ReagIngr ingredient){
-		RenderSystem.enableDepthTest();
-		RenderHelper.enableStandardItemLighting();
+		RenderSystem.enableBlend();
+		RenderSystem.enableAlphaTest();
+//		RenderHelper.enableStandardItemLighting();
+
 		RenderSystem.pushMatrix();
 		RenderSystem.translated(xPosition, yPosition, 0);
 
 		BufferBuilder buf = Tessellator.getInstance().getBuffer();
 
 		Minecraft.getInstance().textureManager.bindTexture(PHIAL_TEXTURE);
-		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		buf.pos(0, 16, 100).tex(0, 1).endVertex();
-		buf.pos(16, 16, 100).tex(1, 1).endVertex();
-		buf.pos(16, 0, 100).tex(1, 0).endVertex();
-		buf.pos(0, 0, 100).tex(0, 0).endVertex();
+		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
+		buf.pos(0, 16, 100).color(255, 255, 255, 255).tex(0, 1).endVertex();
+		buf.pos(16, 16, 100).color(255, 255, 255, 255).tex(1, 1).endVertex();
+		buf.pos(16, 0, 100).color(255, 255, 255, 255).tex(1, 0).endVertex();
+		buf.pos(0, 0, 100).color(255, 255, 255, 255).tex(0, 0).endVertex();
 		Tessellator.getInstance().draw();
 
-		Color col = ingredient.getReag().getColor(EnumMatterPhase.SOLID);
-		RenderSystem.color4f((float) col.getRed() / 255F, (float) col.getGreen() / 255F, (float) col.getBlue() / 255F, (float) col.getAlpha() / 255F);
+		int[] col = CRRenderUtil.convertColor(ingredient.getReag().getColor(EnumMatterPhase.SOLID));
 
 		Minecraft.getInstance().textureManager.bindTexture(INNER_TEXTURE);
-		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		buf.pos(0, 16, 200).tex(0, 1).endVertex();
-		buf.pos(16, 16, 200).tex(1, 1).endVertex();
-		buf.pos(16, 0, 200).tex(1, 0).endVertex();
-		buf.pos(0, 0, 200).tex(0, 0).endVertex();
+		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
+		buf.pos(0, 16, 200).color(col[0], col[1], col[2], col[3]).tex(0, 1).endVertex();
+		buf.pos(16, 16, 200).color(col[0], col[1], col[2], col[3]).tex(1, 1).endVertex();
+		buf.pos(16, 0, 200).color(col[0], col[1], col[2], col[3]).tex(1, 0).endVertex();
+		buf.pos(0, 0, 200).color(col[0], col[1], col[2], col[3]).tex(0, 0).endVertex();
 		Tessellator.getInstance().draw();
 
 		RenderSystem.popMatrix();
 
-		RenderSystem.color4f(1, 1, 1, 1);
+//		RenderHelper.disableStandardItemLighting();
+		RenderSystem.disableAlphaTest();
 		RenderSystem.disableBlend();
-		RenderHelper.disableStandardItemLighting();
 	}
 	
 	@Override

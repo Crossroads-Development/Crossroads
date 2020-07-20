@@ -5,10 +5,12 @@ import com.Da_Technomancer.essentials.packets.ClientPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
+import java.util.function.Supplier;
 
 @SuppressWarnings("serial")
 public class SendBiomeUpdateToClient extends ClientPacket{
@@ -41,6 +43,7 @@ public class SendBiomeUpdateToClient extends ClientPacket{
 
 	@Override
 	protected void run(){
-		AetherEffect.setBiomeAtPos(Minecraft.getInstance().world, pos, ForgeRegistries.BIOMES.getValue(new ResourceLocation(newBiome)));
+		//The .getWorld() call is needed to defer class loading and prevent this crashing on dedicated servers
+		AetherEffect.setBiomeAtPos(Minecraft.getInstance().world.getWorld(), pos, ForgeRegistries.BIOMES.getValue(new ResourceLocation(newBiome)));
 	}
 }
