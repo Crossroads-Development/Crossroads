@@ -172,7 +172,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 
 	@Override
 	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.blast_furnace");
+		return new TranslationTextComponent("container.ind_blast_furnace");
 	}
 
 	private final LazyOptional<IItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
