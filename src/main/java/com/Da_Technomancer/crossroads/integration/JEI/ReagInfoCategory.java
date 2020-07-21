@@ -91,8 +91,9 @@ public class ReagInfoCategory implements IRecipeCategory<IReagent>{
 		ingredients.setInput(ReagIngr.REAG, reagIngr);
 		ingredients.setOutput(ReagIngr.REAG, reagIngr);
 		List<ItemStack> solid = recipe.getJEISolids();
-		ingredients.setInputs(VanillaTypes.ITEM, solid);
-		ingredients.setOutputs(VanillaTypes.ITEM, solid);
+		List<List<ItemStack>> solidLists = ImmutableList.of(solid);
+		ingredients.setInputLists(VanillaTypes.ITEM, solidLists);
+		ingredients.setOutputLists(VanillaTypes.ITEM, solidLists);
 	}
 
 	@Override
