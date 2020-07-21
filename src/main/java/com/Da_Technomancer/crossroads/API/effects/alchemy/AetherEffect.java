@@ -17,7 +17,6 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.FastRandom;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -119,9 +118,9 @@ public class AetherEffect implements IAlchEffect{
 			try{
 				o = biomeField.get(bc);
 				Biome[] biomeArray = (Biome[]) o;
-				long seed = world.getSeed();
-
-				for(int y = 0; y < world.getMaxHeight(); y++){
+				long seed = 0L;//TODO don't know how to get seed on the client
+				int worldHeight = 256;//TODO find method when MCP updates world.getMaxHeight();
+				for(int y = 0; y < worldHeight; y++){
 					//We set the biome in a column from bedrock to world height
 					biomeArray[getBiomeIndex(pos.getX(), y, pos.getZ(), seed)] = biome;
 				}
