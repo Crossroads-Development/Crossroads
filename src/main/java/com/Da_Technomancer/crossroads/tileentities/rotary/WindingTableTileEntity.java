@@ -73,6 +73,7 @@ public class WindingTableTileEntity extends InventoryTE{
 				if(itemSpeed < item.getMaxWind()){
 					//Wind the item
 					itemSpeed += INCREMENT;
+					itemSpeed = Math.min(itemSpeed, item.getMaxWind());
 					item.setWindLevel(inventory[0], itemSpeed);
 					world.playSound(null, pos, SoundEvents.BLOCK_METAL_PRESSURE_PLATE_CLICK_ON, SoundCategory.BLOCKS, 1F, (float) Math.random());
 				}else{

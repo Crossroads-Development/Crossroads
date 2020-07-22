@@ -14,19 +14,23 @@
 		},
 		{
 			"type": "text",
-			"text": "The cheapest option is the <item>Beam Redirector/$, which is unable to split beams at all. It has two outputs and any received beams will be sent to one of the outputs. If it has a redstone signal, the input beam comes out the front, otherwise it comes out the front.$(br2)The <item>beam redirector/$ is the cheap and simple way to control the direction beams "
+			"text": "The cheapest option is the <item>Beam Redirector/$, which is unable to split beams at all. It has two outputs and any received beams will be sent to one of the outputs. If it has a redstone signal, the input beam comes out the front (the end the arrows on the sides point to), otherwise it comes out the back.$(br2)The <item>Beam rRedirector/$ is the cheap and "
 		},
 		{
 			"type": "text",
-			"text": "go with redstone.$(br2)"
+			"text": "simple way to control the direction beams go with redstone.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The <item>Beam Splitter/$ will split off a percentage of the incoming beam out the front, and send the remainder out the back. The portion sent out the front is (redstone signal in)/15. It can accept a <thing>$(l:essentials/circuits)circuit/$ input for more precision. It is a good way of splitting a large incoming beam between two directions.$(br2)"
+			"text": "The <item>Beam Splitter/$ will split off a percentage of the incoming beam out the front (the end the arrows on the sides point to), and send the remainder out the back. The portion sent out the front is (redstone signal in)/15. It can accept a <thing>$(l:essentials/circuits)circuit/$ input for more precision. It is a good way of splitting a large incoming beam between two directions.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The <item>Beam Siphon/$ will send a set power from the incoming beam out the front, and send the remainder out the back. The power of the beam siphoned off to the front is equal to the redstone signal received. It can accept a <thing>$(l:essentials/circuits)circuit/$ input for higher powers. It is a good way of supplying beams of a specific power to something, even if the input beam power is unknown.$(br2)"
+			"text": "The <item>Beam Siphon/$ will send a set power from the incoming beam out the front (the end the arrows on the sides point to), and send the remainder out the back. The power of the beam siphoned off to the front is equal to the redstone signal received. It can accept a <thing>$(l:essentials/circuits)circuit/$ input for higher powers. It is a good way of supplying beams of a specific power to something, even if the input "
+		},
+		{
+			"type": "text",
+			"text": "beam power is unknown.$(br2)"
 		}
 	]
 }
