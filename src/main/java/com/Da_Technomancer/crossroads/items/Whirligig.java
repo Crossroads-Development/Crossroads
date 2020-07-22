@@ -21,7 +21,7 @@ import java.util.List;
 
 public class Whirligig extends Item implements WindingTableTileEntity.IWindableItem{
 
-	public static final double WIND_USE_RATE = 10D / (20 * 60 * 5);//Rate at which the charge is drained, rad/s /tick
+	public static final double WIND_USE_RATE = 10D / (20 * 60 * 8);//Rate at which the charge is drained, rad/s /tick
 
 	protected Whirligig(){
 		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));

@@ -36,8 +36,7 @@ public class SteamerContainer extends MachineContainer<SteamerTileEntity>{
 
 		//Fluid slots
 		Pair<Slot, Slot> fSlots = FluidSlotManager.createFluidSlots(new FluidSlotManager.FakeInventory(this), 0, 9, 19, 9, 54, te, new int[] {0, 1});
-		addSlot(fSlots.getLeft());
-		addSlot(fSlots.getRight());
+		addFluidManagerSlots(fSlots);
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.network.PacketBuffer;
+import org.apache.commons.lang3.tuple.Pair;
 
 public abstract class MachineContainer<U extends InventoryTE> extends TileEntityContainer<U>{
 
@@ -16,7 +17,6 @@ public abstract class MachineContainer<U extends InventoryTE> extends TileEntity
 	public final IntDeferredRef[][] fluidManagerRefs;//Outer array is each fluid manager, inner array is size 2 {id, qty}
 
 	//The passed PacketBuffer must have the blockpos as the first encoded datum
-	@SuppressWarnings("unchecked")
 	public MachineContainer(ContainerType<? extends MachineContainer> type, int windowId, PlayerInventory playerInv, PacketBuffer data){
 		super(type, windowId, playerInv, data);
 
@@ -45,20 +45,18 @@ public abstract class MachineContainer<U extends InventoryTE> extends TileEntity
 			trackInt(fluidManagerRefs[i][0]);
 			trackInt(fluidManagerRefs[i][1]);
 		}
+	}
 
-		addSlots();
-		int[] invStart = getInvStart();
-
-		//Hotbar
-		for(int x = 0; x < 9; x++){
-			addSlot(new Slot(playerInv, x, invStart[0] + x * 18, invStart[1] + 58));
-		}
-
-		//Crossroads player inv
-		for(int y = 0; y < 3; y++){
-			for(int x = 0; x < 9; x++){
-				addSlot(new Slot(playerInv, x + y * 9 + 9, invStart[0] + x * 18, invStart[1] + y * 18));
-			}
+	/**
+	 * Helper method to add fluid manager slots and link the input slot to all fluid manager
+	 * @param fluidSlots The fluid manager slot pair returned by FluidManager::createFluidSlots, in order output, input
+	 */
+	protected void addFluidManagerSlots(Pair<Slot, Slot> fluidSlots){
+		addSlot(fluidSlots.getLeft());
+		Slot inputSlot = fluidSlots.getRight();
+		addSlot(inputSlot);
+		for(FluidSlotManager manager : te.fluidManagers){
+			manager.linkSlot(inputSlot);
 		}
 	}
 

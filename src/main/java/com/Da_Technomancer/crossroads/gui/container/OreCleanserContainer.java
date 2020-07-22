@@ -31,8 +31,7 @@ public class OreCleanserContainer extends MachineContainer<OreCleanserTileEntity
 		addSlot(new StrictSlot(te, 0, 26, 53));//Gravel
 		addSlot(new OutputSlot(te, 1, 44, 53));//Clumps
 		Pair<Slot, Slot> fSlots = FluidSlotManager.createFluidSlots(new FluidSlotManager.FakeInventory(this), 0, 98, 18, 98, 53, te, new int[] {0, 1});
-		addSlot(fSlots.getLeft());
-		addSlot(fSlots.getRight());
+		addFluidManagerSlots(fSlots);
 	}
 
 	@Override

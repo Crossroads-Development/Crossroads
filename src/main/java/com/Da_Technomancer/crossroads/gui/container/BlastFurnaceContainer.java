@@ -35,8 +35,7 @@ public class BlastFurnaceContainer extends MachineContainer<BlastFurnaceTileEnti
 		addSlot(new StrictSlot(te, 1, 29, 20));//Carbon
 		addSlot(new OutputSlot(te, 2, 44, 53));//Slag
 		Pair<Slot, Slot> fluidSlots = FluidSlotManager.createFluidSlots(new FluidSlotManager.FakeInventory(this), 0, 98, 18, 98, 53, te, new int[] {0});
-		addSlot(fluidSlots.getLeft());
-		addSlot(fluidSlots.getRight());
+		addFluidManagerSlots(fluidSlots);
 	}
 
 	@Override

@@ -574,7 +574,7 @@
 	"tt.crossroads.winding_table.winding": "Spring Winding: %1$s/%2$s rad/s",
 	"tt.crossroads.winding_table.power": "Resistive Power: -%1$s J/t",
 	"tt.crossroads.spring_gun.winding": "Damage: %1$s/%2$s; Wound in a Spring Winding Table.",
-	"tt.crossroads.spring_gun.desc": "Shoots metal nuggets for high damage, must be re-wound each shot. Does more damage when wound more",
+	"tt.crossroads.spring_gun.desc": "Shoots arrows for high damage, must be re-wound each shot. Does more damage when wound more",
 	"tt.crossroads.spring_gun.quip": "A gun if gunpowder was made of springs",
 	"tt.crossroads.winding_table.desc": "Winds up certain items using rotary power; I: %1$s",
 	"tt.crossroads.winding_table.reds": "Increases the spring speed by %1$s with each redstone pulse",

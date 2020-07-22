@@ -25,8 +25,7 @@ public class FatCongealerContainer extends MachineContainer<FatCongealerTileEnti
 	protected void addSlots(){
 		addSlot(new StrictSlot(te, 0, 71, 32));
 		Pair<Slot, Slot> fluidSlots = FluidSlotManager.createFluidSlots(new FluidSlotManager.FakeInventory(this), 0, 100, 19, 100, 54, te, new int[] {0});
-		addSlot(fluidSlots.getLeft());
-		addSlot(fluidSlots.getRight());
+		addFluidManagerSlots(fluidSlots);
 	}
 
 	@Override

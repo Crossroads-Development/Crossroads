@@ -25,8 +25,7 @@ public class FluidCoolerContainer extends MachineContainer<FluidCoolingChamberTi
 	protected void addSlots(){
 		addSlot(new OutputSlot(te, 0, 71, 32));
 		Pair<Slot, Slot> slots = FluidSlotManager.createFluidSlots(new FluidSlotManager.FakeInventory(this), 0, 100, 19, 100, 54, te, new int[] {0});
-		addSlot(slots.getLeft());
-		addSlot(slots.getRight());
+		addFluidManagerSlots(slots);
 	}
 
 	@Override

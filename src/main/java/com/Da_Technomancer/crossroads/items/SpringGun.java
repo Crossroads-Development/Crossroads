@@ -2,14 +2,11 @@ package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.entity.EntityBullet;
 import com.Da_Technomancer.crossroads.tileentities.rotary.WindingTableTileEntity;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.*;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.ITag;
 import net.minecraft.util.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -22,9 +19,6 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class SpringGun extends ShootableItem implements WindingTableTileEntity.IWindableItem{
-
-	private static final ITag<Item> AMMO_TAG = ItemTags.makeWrapperTag(Crossroads.MODID + ":spring_gun_ammo");
-	private static final Predicate<ItemStack> AMMO_PREDICATE = s -> AMMO_TAG.contains(s.getItem());
 
 	private static final double MIN_SPEED = 1;
 
@@ -45,14 +39,22 @@ public class SpringGun extends ShootableItem implements WindingTableTileEntity.I
 		ItemStack held = playerIn.getHeldItem(hand);
 		double wind = getWindLevel(held);
 		ItemStack ammo = playerIn.findAmmo(held);
-		if(wind > MIN_SPEED && !ammo.isEmpty()){
+		if(ammo.isEmpty() && playerIn.isCreative()){
+			ammo = new ItemStack(Items.ARROW, 1);
+		}
+		if(wind > MIN_SPEED && !ammo.isEmpty() && ammo.getItem() instanceof ArrowItem){
 			if(!worldIn.isRemote){
 				//Shoot
-				ItemStack bulletItem = ammo.copy();
-				bulletItem.setCount(1);
-				EntityBullet bullet = new EntityBullet(worldIn, playerIn, calcDamage(wind), bulletItem);
-				bullet.shoot(playerIn.getPosX(), playerIn.getPosY() + 1.2, playerIn.getPosZ(), (float) wind * 2.5F, 0.2F);
-				worldIn.addEntity(bullet);
+				AbstractArrowEntity arrow = ((ArrowItem) ammo.getItem()).createArrow(worldIn, ammo, playerIn);
+				arrow.func_234612_a_(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, (float) wind * 0.5F, 0.2F);
+				arrow.setDamage(calcDamage(wind));
+				arrow.setIsCritical(true);//Adds particle trail
+				arrow.setHitSound(SoundEvents.ITEM_CROSSBOW_HIT);
+				arrow.setShotFromCrossbow(true);
+				if(playerIn.isCreative()){
+					arrow.pickupStatus = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
+				}
+				worldIn.addEntity(arrow);
 
 				//Consume ammo
 				if(!playerIn.abilities.isCreativeMode){
@@ -89,7 +91,7 @@ public class SpringGun extends ShootableItem implements WindingTableTileEntity.I
 
 	@Override
 	public Predicate<ItemStack> getInventoryAmmoPredicate(){
-		return AMMO_PREDICATE;
+		return ARROWS;
 	}
 
 	@Override
