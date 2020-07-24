@@ -18,7 +18,11 @@
 		},
 		{
 			"type": "text",
-			"text": "<item>/$ wound to <em>at least/$ 1 rad/s will fire it, consuming any arrow as ammo. The entire spring speed is reset to 0 with each shot, requiring the weapon to be re-wound. The shot bullet travels faster and does more damage at higher spring speeds.$(br2)"
+			"text": "<item>/$ wound to <em>at least/$ 1 rad/s will fire it, consuming any arrow as ammo. The entire spring speed is reset to 0 with each shot, requiring the weapon to be re-wound. The shot bullet travels faster and does more damage at higher spring speeds.$(br2)It's worth noting that the damage listed in the tooltip of the <item>Spring-Loaded Crossbow/$ is the damage "
+		},
+		{
+			"type": "text",
+			"text": "at <em>point blank range/$. As with a normal crossbow, actual damage dealt drops as the arrow travels further.$(br2)"
 		}
 	]
 }

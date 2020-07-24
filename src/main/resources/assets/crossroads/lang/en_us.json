@@ -593,6 +593,7 @@
 	"tt.crossroads.pig_zombie_chestplate.quip": "We've got to be in Cognito",
 	"tt.crossroads.redstone_crystal.drops": "Drops 1-4 redstone dust",
 	"tt.crossroads.redstone_crystal.power": "Emits a redstone signal",
+	"tt.crossroads.vacuum.quip": "Were you expecting something else?",
 
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",

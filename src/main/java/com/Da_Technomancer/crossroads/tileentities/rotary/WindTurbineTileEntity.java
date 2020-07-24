@@ -24,7 +24,6 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 @ObjectHolder(Crossroads.MODID)
@@ -37,12 +36,9 @@ public class WindTurbineTileEntity extends ModuleTE{
 	public static final double INERTIA = 200;
 	public static final double POWER_PER_LEVEL = 10D;
 
-	//Undocumented 'easter egg'. All of these are the same person, who takes way more damage from windmills
+	//Undocumented 'easter egg'. This person takes way more damage from windmills
 	//Don't ask.
-	private static final HashSet<String> murderEasterEgg = new HashSet<>(12);
-	static{
-		murderEasterEgg.add("dinidini");
-	}
+	private static final String murderEasterEgg = "dinidini";
 
 	private boolean newlyPlaced = true;
 	private int level = 1;
@@ -144,6 +140,18 @@ public class WindTurbineTileEntity extends ModuleTE{
 				markDirty();
 			}
 
+			//Damage entities in the blades while spinning at high speed
+			if(Math.abs(motData[0]) >= 1.5D){
+				List<LivingEntity> ents = world.getEntitiesWithinAABB(LivingEntity.class, getTargetBB(), EntityPredicates.IS_LIVING_ALIVE);
+				for(LivingEntity ent : ents){
+					if(ent instanceof PlayerEntity && murderEasterEgg.equals(((PlayerEntity) ent).getGameProfile().getName())){
+						ent.attackEntityFrom(DamageSource.FLY_INTO_WALL, 100);//This seems fair
+					}else{
+						ent.attackEntityFrom(DamageSource.FLY_INTO_WALL, 1);
+					}
+				}
+			}
+
 			if(running && axleHandler.axis != null){
 				if(world.getGameTime() % 10 == 0 && world.rand.nextInt(240) == 0){
 					//Randomize output
@@ -152,17 +160,6 @@ public class WindTurbineTileEntity extends ModuleTE{
 
 				if(motData[0] * Math.signum(level) < MAX_SPEED){
 					motData[1] += (double) level * POWER_PER_LEVEL;
-				}
-
-				if(Math.abs(motData[0]) >= 1.5D){
-					List<LivingEntity> ents = world.getEntitiesWithinAABB(LivingEntity.class, getTargetBB(), EntityPredicates.IS_LIVING_ALIVE);
-					for(LivingEntity ent : ents){
-						if(ent instanceof PlayerEntity && murderEasterEgg.contains(((PlayerEntity) ent).getGameProfile().getName())){
-							ent.attackEntityFrom(DamageSource.FLY_INTO_WALL, 100);//This seems fair
-						}else{
-							ent.attackEntityFrom(DamageSource.FLY_INTO_WALL, 1);
-						}
-					}
 				}
 
 				markDirty();

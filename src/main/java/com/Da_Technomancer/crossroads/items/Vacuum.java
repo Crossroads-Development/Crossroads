@@ -1,5 +1,7 @@
 package com.Da_Technomancer.crossroads.items;
 
+import com.Da_Technomancer.crossroads.API.MiscUtil;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -10,9 +12,13 @@ import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Vacuum extends Item{
 
@@ -29,6 +35,11 @@ public class Vacuum extends Item{
 	@Override
 	public Rarity getRarity(ItemStack stack){
 		return CRItems.BOBO_RARITY;
+	}
+
+	@Override
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+		tooltip.add(new TranslationTextComponent("tt.crossroads.vacuum.quip").func_230530_a_(MiscUtil.TT_QUIP));
 	}
 
 	@Override

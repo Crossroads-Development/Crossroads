@@ -1,0 +1,21 @@
+{
+	"parent": "minecraft:recipes/root",
+	"rewards": {
+		"recipes": [
+			"crossroads:beam_transmute/enchant_blackstone"
+		]
+	},
+	"criteria": {
+		"has_recipe": {
+			"trigger": "minecraft:recipe_unlocked",
+			"conditions": {
+				"recipe": "crossroads:beam_transmute/enchant_blackstone"
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_recipe"
+		]
+	]
+}

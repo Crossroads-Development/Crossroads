@@ -18,7 +18,7 @@
 		},
 		{
 			"type": "text",
-			"text": "There is also a <item>golden rotary drill/$, which acts as a player kill when killing mobs, causing them to drop XP and player-only loot.$(br2)"
+			"text": "There is also a <item>golden rotary drill/$, which acts as a player kill when killing mobs, causing them to drop XP and player-only loot, but has a higher power drain.$(br2)"
 		}
 	]
 }

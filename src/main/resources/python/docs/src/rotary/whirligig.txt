@@ -1,5 +1,5 @@
 Whirligig
 crossroads:whirligig
 The <item>Whirligig/$ is a handheld device that provides slowfall or elevation when used (by holding down right-click). It has to be wound in a <item><link:rotary/winding_table>Spring Winding Table/$, up to 10rad/s.
-It provides better slowfall at higher <thing><link:rotary/winding_table>spring speeds/$, and will even lift the player upwards when wound above 6rad/s. While being used, it drains its <thing><link:rotary/winding_table>spring speed/$ at -0.0333rad/s every second, with a full wind lasting 5 minutes.
+It provides better slowfall at higher <thing><link:rotary/winding_table>spring speeds/$, and will even lift the player upwards when wound above 6rad/s. While being used, it drains its <thing><link:rotary/winding_table>spring speed/$ at -0.02rad/s every second, with a full wind lasting 8 minutes.
 The <item>whirligig/$ is handy for providing slowfall, or even floating up cliffs and onto buildings.

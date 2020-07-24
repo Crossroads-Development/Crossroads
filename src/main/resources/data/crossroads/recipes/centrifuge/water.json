@@ -2,11 +2,11 @@
 	"type": "crossroads:centrifuge",
 	"input": {
 		"fluid": "water",
-		"amount": 250
+		"amount": 500
 	},
 	"output_fluid": {
 		"fluid": "crossroads:distilled_water",
-		"amount": 250
+		"amount": 500
 	},
 	"output": [
 		{

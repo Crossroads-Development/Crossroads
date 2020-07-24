@@ -46,9 +46,13 @@ public class SpringGun extends ShootableItem implements WindingTableTileEntity.I
 			if(!worldIn.isRemote){
 				//Shoot
 				AbstractArrowEntity arrow = ((ArrowItem) ammo.getItem()).createArrow(worldIn, ammo, playerIn);
-				arrow.func_234612_a_(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, (float) wind * 0.5F, 0.2F);
-				arrow.setDamage(calcDamage(wind));
-				arrow.setIsCritical(true);//Adds particle trail
+				float speed = (float) wind * 0.5F;
+				arrow.func_234612_a_(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, speed, 0.2F);
+				//Despite the method being named setDamage, it actually sets a damage multiplier
+				//The actual damage dealt of an arrow is (damage * speed)
+				float damageMult = calcDamage(wind) / speed;
+				arrow.setDamage(damageMult);
+				//Don't set critical, as that changes the damage dealt
 				arrow.setHitSound(SoundEvents.ITEM_CROSSBOW_HIT);
 				arrow.setShotFromCrossbow(true);
 				if(playerIn.isCreative()){

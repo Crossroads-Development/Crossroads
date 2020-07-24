@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "when wound above 6rad/s. While being used, it drains its <thing>$(l:rotary/winding_table)spring speed/$ at -0.0333rad/s every second, with a full wind lasting 5 minutes.$(br2)The <item>whirligig/$ is handy for providing slowfall, or even floating up cliffs and onto buildings.$(br2)"
+			"text": "when wound above 6rad/s. While being used, it drains its <thing>$(l:rotary/winding_table)spring speed/$ at -0.02rad/s every second, with a full wind lasting 8 minutes.$(br2)The <item>whirligig/$ is handy for providing slowfall, or even floating up cliffs and onto buildings.$(br2)"
 		}
 	]
 }

@@ -44,7 +44,8 @@ public class RotaryDrillTileEntity extends ModuleTE{
 
 	private int ticksExisted = 0;
 	private boolean golden;
-	public static final double ENERGY_USE = 2D;
+	public static final double ENERGY_USE_IRON = 3D;
+	public static final double ENERGY_USE_GOLD = 5D;
 	private static final double SPEED_PER_HARDNESS = .2D;
 	private static final float DAMAGE_PER_SPEED = 5F;
 	public static final double[] INERTIA = {50, 100};
@@ -92,9 +93,10 @@ public class RotaryDrillTileEntity extends ModuleTE{
 			return;
 		}
 
-		if(Math.abs(motData[1]) >= ENERGY_USE && Math.abs(motData[0]) >= 0.05D){
-			axleHandler.addEnergy(-ENERGY_USE, false);
-			if(++ticksExisted % 8 == 0){
+		double powerDrain = golden ? ENERGY_USE_GOLD : ENERGY_USE_IRON;
+		if(Math.abs(motData[1]) >= powerDrain && Math.abs(motData[0]) >= 0.05D){
+			axleHandler.addEnergy(-powerDrain, false);
+			if(++ticksExisted % 2 == 0){//Activate once every redstone tick
 				Direction facing = getFacing();
 				BlockPos targetPos = pos.offset(facing);
 				BlockState targetState = world.getBlockState(targetPos);

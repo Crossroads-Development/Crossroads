@@ -102,7 +102,7 @@ public class RotaryDrill extends ContainerBlock{
 		}else{
 			tooltip.add(new TranslationTextComponent("tt.crossroads.drill.desc"));
 		}
-		tooltip.add(new TranslationTextComponent("tt.crossroads.drill.power", RotaryDrillTileEntity.ENERGY_USE));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.drill.power", golden ? RotaryDrillTileEntity.ENERGY_USE_GOLD : RotaryDrillTileEntity.ENERGY_USE_IRON));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", RotaryDrillTileEntity.INERTIA[golden ? 1 : 0]));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.drill.quip").func_230530_a_(MiscUtil.TT_QUIP));
 	}
