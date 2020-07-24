@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumReagents;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendBiomeUpdateToClient;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactiveSpotTileEntity;
@@ -120,9 +121,14 @@ public class AetherEffect implements IAlchEffect{
 				Biome[] biomeArray = (Biome[]) o;
 				long seed = 0L;//TODO don't know how to get seed on the client
 				int worldHeight = 256;//TODO find method when MCP updates world.getMaxHeight();
-				for(int y = 0; y < worldHeight; y++){
-					//We set the biome in a column from bedrock to world height
-					biomeArray[getBiomeIndex(pos.getX(), y, pos.getZ(), seed)] = biome;
+
+				if(CRConfig.verticalBiomes.get()){
+					for(int y = 0; y < worldHeight; y++){
+						//We set the biome in a column from bedrock to world height
+						biomeArray[getBiomeIndex(pos.getX(), y, pos.getZ(), seed)] = biome;
+					}
+				}else{
+					biomeArray[getBiomeIndex(pos.getX(), pos.getY(), pos.getZ(), seed)] = biome;
 				}
 			}catch(IllegalAccessException | NullPointerException | IndexOutOfBoundsException e){
 				e.printStackTrace();
