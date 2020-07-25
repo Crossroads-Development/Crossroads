@@ -41,8 +41,6 @@ public class FatCongealerTileEntity extends InventoryTE{
 	public static final double HUN_PER_SPD = 4D;
 	public static final double SAT_PER_SPD = 4D;
 
-	private Direction facing;
-
 	public FatCongealerTileEntity(){
 		super(type, 1);
 		fluidProps[0] = new TankProperty(10_000, true, false, (Fluid f) -> CRFluids.liquidFat.still == f);
@@ -56,16 +54,11 @@ public class FatCongealerTileEntity extends InventoryTE{
 
 	@Nonnull
 	private Direction getFacing(){
-		if(facing == null){
-			BlockState state = world.getBlockState(pos);
-			if(state.func_235901_b_(ESProperties.HORIZ_FACING)){
-				facing = state.get(ESProperties.HORIZ_FACING);
-			}else{
-				remove();
-				return Direction.NORTH;
-			}
+		BlockState state = getBlockState();
+		if(state.func_235901_b_(ESProperties.HORIZ_FACING)){
+			return state.get(ESProperties.HORIZ_FACING);
 		}
-		return facing;
+		return Direction.NORTH;
 	}
 
 	@Override
