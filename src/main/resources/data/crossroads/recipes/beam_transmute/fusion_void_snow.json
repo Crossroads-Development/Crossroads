@@ -8,5 +8,5 @@
 			"block": "minecraft:ice"
 		}
 	],
-	"output": "minecraft:snow"
+	"output": "minecraft:snow_block"
 }

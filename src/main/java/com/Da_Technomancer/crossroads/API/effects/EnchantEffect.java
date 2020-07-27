@@ -9,7 +9,6 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction;
 import net.minecraft.util.EntityPredicates;
@@ -36,11 +35,12 @@ public class EnchantEffect extends BeamEffect{
 			if(voi){
 				if(items.size() != 0){
 					for(ItemEntity ent : items){
-						if(ent.getItem().getTag() != null && ent.getItem().getTag().contains("ench")){
-							if(ent.getItem().getItem() == Items.ENCHANTED_BOOK){
-								ent.setItem(new ItemStack(Items.BOOK, ent.getItem().getCount()));
+						ItemStack stack = ent.getItem();
+						if(stack.getTag() != null && (stack.getItem() == Items.ENCHANTED_BOOK || stack.getTag().contains("Enchantments"))){
+							if(stack.getItem() == Items.ENCHANTED_BOOK){
+								ent.setItem(new ItemStack(Items.BOOK, stack.getCount()));
 							}else{
-								ent.getItem().getTag().remove("ench");
+								stack.getTag().remove("Enchantments");
 							}
 						}
 					}

@@ -4,14 +4,16 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.tileentities.rotary.WindingTableTileEntity;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.UseAction;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -62,24 +64,33 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 		return ActionResult.resultFail(held);
 	}
 
+	private static final String murderEasterEgg = "dinidini";
+
 	@Override
 	public void onUsingTick(ItemStack stack, LivingEntity player, int count){
 		//Called on both sides every tick while the item is being actively used
 		if(player.isServerWorld()){
 			double wind = getWindLevel(stack);
+
+			if(player instanceof PlayerEntity && murderEasterEgg.equals(((PlayerEntity) player).getGameProfile().getName()))
+				//Semi-apology for the easter egg that instakills a certain player if they touch a wind turbine where they still get windmill-murked, but also don't need to charge whirligigs
+				wind = Math.min(wind, 8);
 			if(wind > 0){
 
 				final double SLOWFALL_WIND = CRConfig.whirligigSafe.get();//Minimum charge level to eliminate fall damage
 				final double HOVER_WIND = CRConfig.whirligigHover.get();//Minimum charge level to hover
 
+				//Target the player's mount instead of the player if they have one
+				Entity targetEntity = player.getRidingEntity() == null ? player : player.getRidingEntity();
+
 				//Fall damage
 				if(wind >= SLOWFALL_WIND){
 					//Eliminate fall damage
-					player.fallDistance = 0;
+					targetEntity.fallDistance = 0;
 				}else{
 					//Reduce fall damage by a portion by slowing the accumulation of fall distance
 					//The coefficient used is in effect much higher than stated due to the 'compounding' effect of this being applied every tick
-					player.fallDistance *= 1D - 0.2D * (wind / SLOWFALL_WIND);
+					targetEntity.fallDistance *= 1D - 0.2D * (wind / SLOWFALL_WIND);
 				}
 
 				//Upward thrust
@@ -87,8 +98,8 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 					//Vanilla gravity is applied as constant change in y-velocity every tick
 					final double gravity = 0.08;
 					double thrust = gravity * (wind / HOVER_WIND);
-					player.addVelocity(0, thrust, 0);
-					player.velocityChanged = true;
+					targetEntity.addVelocity(0, thrust, 0);
+					targetEntity.velocityChanged = true;
 				}
 
 				//Consume charge

@@ -117,12 +117,11 @@ public class ColorChartScreen extends ContainerScreen<ColorChartContainer>{
 
 	@Override
 	public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_){
-		for(IGuiEventListener gui : children){
-			if(gui.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_)){
-				return true;
-			}
+		if(p_keyPressed_1_ == 256){
+			minecraft.player.closeScreen();
 		}
-		return super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
+
+		return searchBar.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_) || searchBar.canWrite() || super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
 	}
 
 	@Override

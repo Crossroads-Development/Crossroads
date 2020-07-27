@@ -5,7 +5,7 @@
 	"power": 1,
 	"input": [
 		{
-			"block": "minecraft:snow"
+			"block": "minecraft:snow_block"
 		}
 	],
 	"output": "minecraft:ice"

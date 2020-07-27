@@ -31,10 +31,8 @@ public class Shell extends AbstractGlassware{
 				shellEnt.shoot(dir.getXOffset(), dir.getYOffset(), dir.getZOffset(), 1.5F, 1.0F);
 				world.addEntity(shellEnt);
 				stack.shrink(1);
-				return stack;
-			}else{
-				return stack;
 			}
+			return stack;
 		}
 
 		/**
@@ -67,7 +65,7 @@ public class Shell extends AbstractGlassware{
 
 			if(!worldIn.isRemote){
 				EntityShell shellEnt = new EntityShell(worldIn, playerIn, contents, isCrystal);
-				shellEnt.shoot(playerIn.getPosX(), playerIn.getPosY() + 1.2F, playerIn.getPosZ(), 1.5F, 1.0F);
+				shellEnt.func_234612_a_(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0, 1.5F, 1.0F);
 				worldIn.addEntity(shellEnt);
 			}
 			return new ActionResult<>(ActionResultType.SUCCESS, held);

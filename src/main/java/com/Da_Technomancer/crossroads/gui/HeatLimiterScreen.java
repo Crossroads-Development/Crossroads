@@ -94,4 +94,10 @@ public class HeatLimiterScreen extends ContainerScreen<HeatLimiterContainer>{
 			EssentialsPackets.channel.sendToServer(new SendNBTToServer(nbt, container.pos));
 		}
 	}
+
+	//MCP note: draw tooltip/foreground
+	@Override
+	protected void func_230451_b_(MatrixStack matrix, int p_230451_2_, int p_230451_3_){
+		//Don't render text overlays
+	}
 }

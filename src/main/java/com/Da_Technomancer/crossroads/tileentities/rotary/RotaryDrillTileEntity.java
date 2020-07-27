@@ -7,8 +7,13 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.rotary.RotaryDrill;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.mojang.authlib.GameProfile;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.SnowBlock;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.DamageSource;
@@ -103,7 +108,13 @@ public class RotaryDrillTileEntity extends ModuleTE{
 				if(!targetState.isAir(world, targetPos)){
 					float hardness = targetState.getBlockHardness(world, targetPos);
 					if(hardness >= 0 && Math.abs(motData[0]) >= hardness * SPEED_PER_HARDNESS){
-						world.destroyBlock(targetPos, true);
+						boolean isSnow = targetState.getBlock() == Blocks.SNOW;
+						//Snow layers have an unusual loot table that requires it to be broken by an entity holding a shovel
+						//As we want snow layers to be able to drop items with a drill, we special case it
+						world.destroyBlock(targetPos, !isSnow);
+						if(isSnow){
+							Block.spawnAsEntity(world, targetPos, new ItemStack(Items.SNOWBALL, targetState.get(SnowBlock.LAYERS)));
+						}
 					}
 				}
 

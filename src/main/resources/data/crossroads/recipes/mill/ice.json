@@ -4,7 +4,7 @@
 		"item": "ice"
 	},
 	"output": {
-		"item": "snow",
+		"item": "snow_block",
 		"count": 1
 	}
 }
