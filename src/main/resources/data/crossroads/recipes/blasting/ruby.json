@@ -1,7 +1,6 @@
 {
 	"type": "minecraft:blasting",
 	"result": "crossroads:gem_ruby",
-	"count": 1,
 	"experience": 1.0,
 	"ingredient": [
 		{

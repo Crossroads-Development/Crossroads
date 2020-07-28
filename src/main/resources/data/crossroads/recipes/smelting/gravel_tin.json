@@ -1,7 +1,9 @@
 {
 	"type": "minecraft:smelting",
-	"result": "crossroads:nugget_tin",
-	"count": 6,
+	"result": {
+		"item": "crossroads:nugget_tin",
+		"count": 7
+	},
 	"experience": 0.7,
 	"ingredient": [
 		{

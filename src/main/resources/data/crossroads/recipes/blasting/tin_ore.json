@@ -1,7 +1,6 @@
 {
 	"type": "minecraft:blasting",
 	"result": "crossroads:ingot_tin",
-	"count": 1,
 	"experience": 0.7,
 	"ingredient": [
 		{

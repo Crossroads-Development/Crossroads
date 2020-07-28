@@ -1,7 +1,6 @@
 {
 	"type": "minecraft:blasting",
 	"result": "minecraft:iron_ingot",
-	"count": 1,
 	"experience": 0.7,
 	"ingredient": [
 		{

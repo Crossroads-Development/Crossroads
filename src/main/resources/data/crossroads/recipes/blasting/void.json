@@ -1,7 +1,6 @@
 {
 	"type": "minecraft:blasting",
 	"result": "crossroads:void_crystal",
-	"count": 1,
 	"experience": 1.0,
 	"ingredient": [
 		{

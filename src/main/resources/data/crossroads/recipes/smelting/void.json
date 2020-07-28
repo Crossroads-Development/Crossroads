@@ -1,7 +1,6 @@
 {
 	"type": "minecraft:smelting",
 	"result": "crossroads:void_crystal",
-	"count": 1,
 	"experience": 1.0,
 	"ingredient": [
 		{
