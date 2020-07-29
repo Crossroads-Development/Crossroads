@@ -42,6 +42,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.IContainerFactory;
@@ -63,6 +64,7 @@ public final class Crossroads{
 		final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		bus.addListener(this::commonInit);
 		bus.addListener(this::clientInit);
+		bus.addListener(this::serverStarted);
 
 		CRConfig.init();
 
@@ -98,6 +100,10 @@ public final class Crossroads{
 		CREntities.clientInit();
 //		CRParticles.clientInit();
 		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
+	}
+
+	private void serverStarted(FMLDedicatedServerSetupEvent e){
+		MinecraftForge.EVENT_BUS.register(new EventHandlerServer());
 	}
 
 	@SuppressWarnings("unused")
@@ -287,12 +293,6 @@ public final class Crossroads{
 	@SubscribeEvent
 	public static void registerWorldgen(RegistryEvent.Register<Feature<?>> e){
 		CRWorldGen.register(e.getRegistry());
-	}
-
-	@SuppressWarnings("unused")
-	@SubscribeEvent
-	public static void serverStarted(FMLServerStartedEvent e){
-		MinecraftForge.EVENT_BUS.register(new EventHandlerServer());
 	}
 
 	@SubscribeEvent
