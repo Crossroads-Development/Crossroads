@@ -106,11 +106,11 @@ public class GatewayFrameRenderer extends LinkLineRenderer<GatewayFrameTileEntit
 		final float triEdgeUEn = sprite.getInterpolatedU(7);
 		final float portalUSt = sprite.getInterpolatedU(12);
 		final float portalUEn = sprite.getMaxU();
-		final float portalTexRad = .051F * sprite.getWidth();//half the side length of the regular octagon
+		final float portalTexRad = .051F * (sprite.getMaxU() - sprite.getMinU());//half the side length of the regular octagon
 		final float portalUMid1 = (portalUSt + portalUEn) / 2F - portalTexRad;
 		final float portalUMid2 = portalUMid1 + 2F * portalTexRad;
 		final float portalVSt = sprite.getInterpolatedV(4 * ((int) (frame.getWorld().getGameTime() / 5L) % 4));
-		final float portalVEn = portalVSt + sprite.getHeight() * 0.25F;
+		final float portalVEn = portalVSt + (sprite.getMaxV() - sprite.getMinV()) * 0.25F;
 		final float portalVMid1 = (portalVSt + portalVEn) / 2F - portalTexRad;
 		final float portalVMid2 = portalVMid1 + 2F * portalTexRad;
 
@@ -319,36 +319,36 @@ public class GatewayFrameRenderer extends LinkLineRenderer<GatewayFrameTileEntit
 			//Vertices are commented with the number of the vertex on the final octagon
 
 			//Front
-			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, octInLen, 0, portalUMid2, portalVEn, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//1
-			CRRenderUtil.addVertexBlock(builder, matrix, -octInWid, octInLen, 0, portalUMid1, portalVEn, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//2
-			CRRenderUtil.addVertexBlock(builder, matrix, -octInLen, octInWid, 0, portalUMid1, portalVMid2, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//3
-			CRRenderUtil.addVertexBlock(builder, matrix, -octInLen, -octInWid, 0, portalUSt, portalVMid1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//4
+			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, -octInLen, 0, portalUMid2, portalVEn, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//1
+			CRRenderUtil.addVertexBlock(builder, matrix, -octInWid, -octInLen, 0, portalUMid1, portalVEn, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//2
+			CRRenderUtil.addVertexBlock(builder, matrix, -octInLen, -octInWid, 0, portalUSt, portalVMid2, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//3
+			CRRenderUtil.addVertexBlock(builder, matrix, -octInLen, octInWid, 0, portalUSt, portalVMid1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//4
 
-			CRRenderUtil.addVertexBlock(builder, matrix, -octInLen, -octInWid, 0, portalUSt, portalVMid1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//4
-			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, -octInLen, 0, portalUSt, portalVSt, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//5
-			CRRenderUtil.addVertexBlock(builder, matrix, octInLen, octInWid, 0, portalUEn, portalVMid2, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//8
-			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, octInLen, 0, portalUMid2, portalVEn, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//1
+			CRRenderUtil.addVertexBlock(builder, matrix, -octInLen, octInWid, 0, portalUSt, portalVMid1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//4
+			CRRenderUtil.addVertexBlock(builder, matrix, -octInWid, octInLen, 0, portalUMid1, portalVSt, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//5
+			CRRenderUtil.addVertexBlock(builder, matrix, octInLen, -octInWid, 0, portalUEn, portalVMid2, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//8
+			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, -octInLen, 0, portalUMid2, portalVEn, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//1
 
-			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, -octInLen, 0, portalUSt, portalVSt, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//5
-			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, -octInLen, 0, portalUMid1, portalVSt, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//6
-			CRRenderUtil.addVertexBlock(builder, matrix, octInLen, -octInWid, 0, portalUEn, portalVMid1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//7
-			CRRenderUtil.addVertexBlock(builder, matrix, octInLen, octInWid, 0, portalUEn, portalVMid2, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//8
+			CRRenderUtil.addVertexBlock(builder, matrix, -octInWid, octInLen, 0, portalUMid1, portalVSt, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//5
+			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, octInLen, 0, portalUMid2, portalVSt, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//6
+			CRRenderUtil.addVertexBlock(builder, matrix, octInLen, octInWid, 0, portalUEn, portalVMid1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//7
+			CRRenderUtil.addVertexBlock(builder, matrix, octInLen, -octInWid, 0, portalUEn, portalVMid2, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//8
 
 			//Other front
-			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, octInLen, 0, portalUMid2, portalVEn, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//1
-			CRRenderUtil.addVertexBlock(builder, matrix, -octInLen, -octInWid, 0, portalUSt, portalVMid1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//4
-			CRRenderUtil.addVertexBlock(builder, matrix, -octInLen, octInWid, 0, portalUMid1, portalVMid2, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//3
-			CRRenderUtil.addVertexBlock(builder, matrix, -octInWid, octInLen, 0, portalUMid1, portalVEn, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//2
+			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, -octInLen, 0, portalUMid2, portalVEn, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//1
+			CRRenderUtil.addVertexBlock(builder, matrix, -octInLen, octInWid, 0, portalUSt, portalVMid1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//4
+			CRRenderUtil.addVertexBlock(builder, matrix, -octInLen, -octInWid, 0, portalUSt, portalVMid2, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//3
+			CRRenderUtil.addVertexBlock(builder, matrix, -octInWid, -octInLen, 0, portalUMid1, portalVEn, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//2
 
-			CRRenderUtil.addVertexBlock(builder, matrix, -octInLen, -octInWid, 0, portalUSt, portalVMid1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//4
-			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, octInLen, 0, portalUMid2, portalVEn, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//1
-			CRRenderUtil.addVertexBlock(builder, matrix, octInLen, octInWid, 0, portalUEn, portalVMid2, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//8
-			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, -octInLen, 0, portalUSt, portalVSt, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//5
+			CRRenderUtil.addVertexBlock(builder, matrix, -octInLen, octInWid, 0, portalUSt, portalVMid1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//4
+			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, -octInLen, 0, portalUMid2, portalVEn, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//1
+			CRRenderUtil.addVertexBlock(builder, matrix, octInLen, -octInWid, 0, portalUEn, portalVMid2, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//8
+			CRRenderUtil.addVertexBlock(builder, matrix, -octInWid, octInLen, 0, portalUMid1, portalVSt, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//5
 
-			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, -octInLen, 0, portalUSt, portalVSt, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//5
-			CRRenderUtil.addVertexBlock(builder, matrix, octInLen, octInWid, 0, portalUEn, portalVMid2, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//8
-			CRRenderUtil.addVertexBlock(builder, matrix, octInLen, -octInWid, 0, portalUEn, portalVMid1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//7
-			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, -octInLen, 0, portalUMid1, portalVSt, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//6
+			CRRenderUtil.addVertexBlock(builder, matrix, -octInWid, octInLen, 0, portalUMid1, portalVSt, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//5
+			CRRenderUtil.addVertexBlock(builder, matrix, octInLen, -octInWid, 0, portalUEn, portalVMid2, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//8
+			CRRenderUtil.addVertexBlock(builder, matrix, octInLen, octInWid, 0, portalUEn, portalVMid1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//7
+			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, octInLen, 0, portalUMid2, portalVSt, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);//6
 		}
 	}
 
