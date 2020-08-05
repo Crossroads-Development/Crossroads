@@ -3,9 +3,9 @@ package com.Da_Technomancer.crossroads.API.effects;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.BlockSalt;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.IGrowable;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.tags.BlockTags;
@@ -32,13 +32,10 @@ public class GrowEffect extends BeamEffect{
 		if(!performTransmute(align, voi, power, worldIn, pos)){
 			double range = Math.sqrt(power) / 2D;
 			if(voi){
-				BlockState state = worldIn.getBlockState(pos);
-				if(state.getBlock() instanceof IGrowable && state.getBlock() != Blocks.DEAD_BUSH){
-					if(state.getBlock() == Blocks.GRASS_BLOCK){
-						worldIn.setBlockState(pos, Blocks.DIRT.getDefaultState());
-					}else{
-						worldIn.setBlockState(pos, Blocks.DEAD_BUSH.getDefaultState());
-					}
+				//Kill plants
+				if(!BlockSalt.salinate(worldIn, pos)){
+					//Also target the plant on this block so we can hit the soil and affect the plant on it
+					BlockSalt.salinate(worldIn, pos.up());
 				}
 
 				List<LivingEntity> ents = worldIn.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range + 1, pos.getY() + range + 1, pos.getZ() + range + 1), EntityPredicates.IS_ALIVE);
@@ -65,9 +62,14 @@ public class GrowEffect extends BeamEffect{
 					power = power / growMultiplier + ((worldIn.rand.nextInt(growMultiplier) < power % growMultiplier) ? 1 : 0);
 				}
 
+				BlockState state = worldIn.getBlockState(pos);
+				//We check above the hit block if it isn't growable, as that allows growing plants by hitting the soil
+				if(!(state.getBlock() instanceof IGrowable)){
+					pos = pos.up();
+					state = worldIn.getBlockState(pos);
+				}
+
 				for(int i = 0; i < power; i++){
-					//The state must be quarried every loop because some plants could break themselves upon growing
-					BlockState state = worldIn.getBlockState(pos);
 					if(!(state.getBlock() instanceof IGrowable)){
 						return;
 					}
@@ -79,6 +81,8 @@ public class GrowEffect extends BeamEffect{
 					if(growable.canGrow(worldIn, pos, state, false)){
 						growable.grow((ServerWorld) worldIn, worldIn.rand, pos, state);
 					}
+					//The state must be quarried every loop because some plants could break themselves upon growing
+					state = worldIn.getBlockState(pos);
 				}
 			}
 		}

@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.essentials.blocks.FertileSoil;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
@@ -8,6 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -17,6 +19,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
@@ -70,25 +73,36 @@ public class BlockSalt extends FallingBlock{
 		super.onEntityWalk(worldIn, pos, entityIn);
 	}
 	
-	public static void salinate(World worldIn, BlockPos pos){
+	public static boolean salinate(World worldIn, BlockPos pos){
 		BlockState killState = worldIn.getBlockState(pos);
-
-		if(killState.getBlock() == Blocks.DIRT){
-			//Make dirt infertile
-			worldIn.setBlockState(pos, Blocks.COARSE_DIRT.getDefaultState());
-		}else if(killState.getBlock() instanceof SpreadableSnowyDirtBlock){
-			//Kill grass and mycelium (podzol is already "dead")
-			worldIn.setBlockState(pos, Blocks.DIRT.getDefaultState());
-		}else if(killState.getBlock() instanceof BushBlock){
+		Block killBlock = killState.getBlock();
+		BlockState resultState = killState;
+		
+		if(killBlock.isIn(Tags.Blocks.DIRT) && killBlock != Blocks.COARSE_DIRT){
+			//Kill dirt, grass, etc
+			resultState = Blocks.COARSE_DIRT.getDefaultState();
+		}else if(killBlock instanceof BushBlock){
 			//Kill plant life
-			worldIn.setBlockState(pos, Blocks.DEAD_BUSH.getDefaultState());
-		}else if(killState.getBlock() == Blocks.FARMLAND){
+			resultState = Blocks.DEAD_BUSH.getDefaultState();
+		}else if(killBlock == Blocks.FARMLAND){
 			//Trample farmland
-			worldIn.setBlockState(pos, Blocks.DIRT.getDefaultState());
-		}else if(coralMap.containsKey(killState.getBlock())){
+			resultState = Blocks.COARSE_DIRT.getDefaultState();
+		}else if(killState.isIn(BlockTags.NYLIUM)){
+			//Kill nylium
+			resultState = Blocks.NETHERRACK.getDefaultState();
+		}else if(coralMap.containsKey(killBlock)){
 			//Kill coral
-			worldIn.setBlockState(pos, coralMap.get(killState.getBlock()).getDefaultState());
+			resultState = coralMap.get(killBlock).getDefaultState();
+		}else if(killBlock instanceof FertileSoil){
+			//Ruin fertile soil
+			resultState = Blocks.COARSE_DIRT.getDefaultState();
 		}
+		
+		if(killState != resultState){
+			worldIn.setBlockState(pos, resultState);
+			return true;
+		}
+		return false;
 	}
 
 	@Override

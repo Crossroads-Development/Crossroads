@@ -98,21 +98,27 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 
 	private void recall(CompoundNBT data, PlayerEntity player, ItemStack held){
 		if(!data.contains("timestamp")){
-			MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.recall_device.none"));
+			if(player.world.isRemote){
+				MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.recall_device.none"));
+			}
 			return;//No data stored
 		}
 		//Check time delay and that it's the same player
 		long delay = player.world.getGameTime() - data.getLong("timestamp");
 		int limit = CRConfig.recallTimeLimit.get() * 20;//In ticks
 		if(limit >= 0 && delay > limit){
-			MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.recall_device.expired"));
+			if(player.world.isRemote){
+				MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.recall_device.expired"));
+			}
 			return;//Too old- do nothing
 		}
 
 		double wind = getWindLevel(held);
 
 		if(wind < WIND_USE){
-			MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.recall_device.not_wound"));
+			if(player.world.isRemote){
+				MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.recall_device.not_wound"));
+			}
 			return;//Insufficiently wound
 		}else{
 			setWindLevel(held, wind - WIND_USE);
@@ -120,7 +126,9 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 
 		String playerName = player.getGameProfile().getName();
 		if(playerName == null || !playerName.equals(data.getString("username"))){
-			MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.recall_device.wrong_player"));
+			if(player.world.isRemote){
+				MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.recall_device.wrong_player"));
+			}
 			return;//Wrong player or null profile
 		}
 
@@ -159,8 +167,8 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 	private static void applySickness(PlayerEntity player, long delay, long delayLimit){
 		//Penalty of nausea (time scaling with delay), and poison for very long delays
 		//Durations are in ticks
-		int poisonStTime = 20 * 30;
-		player.addPotionEffect(new EffectInstance(Effects.NAUSEA, (int) MathHelper.clampedLerp(20 * 5, 20 * 30, (float) delay / poisonStTime), 0));
+		long poisonStTime = delayLimit / 2L;
+		player.addPotionEffect(new EffectInstance(Effects.NAUSEA, (int) MathHelper.clampedLerp(20 * 5, 20 * 15, (float) delay / poisonStTime), 0));
 		if(delay > poisonStTime){
 			//For unlimited delay config setting, a constant 10 second poison is applied instead of basing it on the portion of the delay limit expended
 			int poisonDuration = delayLimit < 0 ? 20 * 10 : (int) MathHelper.clampedLerp(20 * 5, 20 * 30, (float) (delay - poisonStTime) / (delayLimit - poisonStTime));
