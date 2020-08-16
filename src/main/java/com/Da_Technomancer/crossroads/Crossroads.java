@@ -33,6 +33,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -43,7 +44,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.IContainerFactory;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -93,17 +93,22 @@ public final class Crossroads{
 //		TESRRegistry.init();
 //		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
 //		ModelLoaderRegistry.registerLoader(new BakedModelLoader());
-		CRBlocks.clientInit();
 		CRItems.clientInit();
 		CRRendererRegistry.registerBlockRenderer();
 		Keys.init();
-		CREntities.clientInit();
 //		CRParticles.clientInit();
 		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
 	}
 
 	private void serverStarted(FMLDedicatedServerSetupEvent e){
 		MinecraftForge.EVENT_BUS.register(new EventHandlerServer());
+	}
+
+	@SuppressWarnings("unused")
+	@SubscribeEvent
+	public static void registerModels(ModelRegistryEvent e){
+		CRBlocks.clientInit();
+		CREntities.clientInit();
 	}
 
 	@SuppressWarnings("unused")

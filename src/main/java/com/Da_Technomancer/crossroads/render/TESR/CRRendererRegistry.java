@@ -15,7 +15,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 
-/** Before anyone asks, the AA at the beginning of the name is so I can easily find it in the list of classes.*/
 public class CRRendererRegistry{
 
 	public static void registerBlockRenderer(){
