@@ -1,9 +1,7 @@
 package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
-import com.Da_Technomancer.crossroads.API.packets.CRPackets;
-import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
-import com.Da_Technomancer.crossroads.API.packets.SendGoggleConfigureToServer;
+import com.Da_Technomancer.crossroads.API.packets.*;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.integration.curios.CurioHelper;
 import com.Da_Technomancer.crossroads.items.CRItems;
@@ -54,7 +52,7 @@ public final class EventHandlerClient{
 //		game.getProfiler().endSection();
 
 		//IVisualEffects
-		if(!SafeCallable.effectsToRender.isEmpty()){
+		if(!AddVisualToClient.effectsToRender.isEmpty()){
 			game.getProfiler().startSection(Crossroads.MODNAME + ": Visual Effects Draw");
 
 			MatrixStack matrix = e.getMatrixStack();
@@ -68,7 +66,7 @@ public final class EventHandlerClient{
 			long worldTime = game.world.getGameTime();
 			float partialTicks = e.getPartialTicks();
 
-			for(IVisualEffect effect : SafeCallable.effectsToRender){
+			for(IVisualEffect effect : AddVisualToClient.effectsToRender){
 				matrix.push();
 
 				if(effect.render(matrix, buffer, worldTime, partialTicks, RAND)){
@@ -78,7 +76,7 @@ public final class EventHandlerClient{
 				matrix.pop();
 			}
 
-			SafeCallable.effectsToRender.removeAll(toRemove);
+			AddVisualToClient.effectsToRender.removeAll(toRemove);
 
 			buffer.finish();//Due to weirdness surrounding how this event is called, we need to force anything in the buffer to render immediately to prevent something else changing render system settings
 			matrix.pop();
@@ -240,11 +238,11 @@ public final class EventHandlerClient{
 			game.getProfiler().endSection();
 
 			//Handle time dilation for players
-			if(SafeCallable.playerTickCount > 0){
-				for(int i = 0; i < SafeCallable.playerTickCount; i++){
+			if(SendPlayerTickCountToClient.playerTickCount > 0){
+				for(int i = 0; i < SendPlayerTickCountToClient.playerTickCount; i++){
 					player.tick();
 				}
-				SafeCallable.playerTickCount = 0;
+				SendPlayerTickCountToClient.playerTickCount = 0;
 			}
 		}
 	}

@@ -3,8 +3,10 @@ package com.Da_Technomancer.crossroads.API.packets;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.AetherEffect;
 import com.Da_Technomancer.essentials.packets.ClientPacket;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -44,6 +46,8 @@ public class SendBiomeUpdateToClient extends ClientPacket{
 	@Override
 	protected void run(){
 		//The .getWorld() call is needed to defer class loading and prevent this crashing on dedicated servers
-		AetherEffect.setBiomeAtPos(Minecraft.getInstance().world.getWorld(), pos, ForgeRegistries.BIOMES.getValue(new ResourceLocation(newBiome)));
+		//TODO Test in multiplayer
+		World world = SafeCallable.getClientWorld();
+		AetherEffect.setBiomeAtPos(world, pos, AetherEffect.lookupBiome(RegistryKey.func_240903_a_(Registry.BIOME_KEY, new ResourceLocation(newBiome)), world));
 	}
 }

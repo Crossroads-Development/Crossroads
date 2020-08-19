@@ -18,13 +18,17 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.FastRandom;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.world.IBiomeReader;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeContainer;
 import net.minecraft.world.biome.Biomes;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 
 public class AetherEffect implements IAlchEffect{
@@ -51,8 +55,14 @@ public class AetherEffect implements IAlchEffect{
 		return Blocks.GLASS;
 	}
 
-	protected Biome biome(){
+	protected RegistryKey<Biome> biome(){
 		return Biomes.PLAINS;
+	}
+
+	@Nullable
+	public static Biome lookupBiome(RegistryKey<Biome> biomeKey, IBiomeReader world){
+		//Gets the biome associated with a key
+		return world.func_241828_r().func_243612_b(Registry.BIOME_KEY).func_230516_a_(biomeKey);
 	}
 
 	@Override
@@ -65,10 +75,11 @@ public class AetherEffect implements IAlchEffect{
 			return;
 		}
 
-		Biome biome = biome();
-		if(world.getBiome(pos) != biome){
+		RegistryKey<Biome> biomeKey = biome();
+		Biome biome = lookupBiome(biomeKey, world);
+		if(biome != null && world.getBiome(pos) != biome){
 			setBiomeAtPos(world, pos, biome);
-			CRPackets.sendPacketToDimension(world, new SendBiomeUpdateToClient(pos, biome.getRegistryName()));
+			CRPackets.sendPacketToDimension(world, new SendBiomeUpdateToClient(pos, biomeKey.func_240901_a_()));
 		}
 
 		if(oldState.isAir(world, pos) || oldState.getBlockHardness(world, pos) < 0){
@@ -112,6 +123,10 @@ public class AetherEffect implements IAlchEffect{
 	 * @param biome The biome to set it to
 	 */
 	public static void setBiomeAtPos(World world, BlockPos pos, Biome biome){
+		if(biome == null){
+			return;
+		}
+
 		//As of MC1.15, we have to reflect in as the biome array is private and the int array won't save to disk
 		BiomeContainer bc = world.getChunk(pos).getBiomes();
 		if(biomeField != null && bc != null){

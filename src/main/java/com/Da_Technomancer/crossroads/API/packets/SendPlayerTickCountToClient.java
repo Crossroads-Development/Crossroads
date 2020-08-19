@@ -7,6 +7,8 @@ import java.lang.reflect.Field;
 
 public class SendPlayerTickCountToClient extends ClientPacket{
 
+	public static int playerTickCount = 0;//Only correct on the client side
+
 	public int tickCount;
 
 	private static final Field[] FIELDS = fetchFields(SendPlayerTickCountToClient.class, "tickCount");
@@ -28,6 +30,6 @@ public class SendPlayerTickCountToClient extends ClientPacket{
 
 	@Override
 	protected void run(){
-		SafeCallable.playerTickCount += tickCount;
+		playerTickCount += tickCount;
 	}
 }

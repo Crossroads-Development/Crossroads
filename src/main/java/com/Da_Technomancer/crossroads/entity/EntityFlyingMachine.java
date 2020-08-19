@@ -17,13 +17,11 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IndirectEntityDamageSource;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.registries.ObjectHolder;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 @ObjectHolder(Crossroads.MODID)
@@ -141,12 +139,6 @@ public class EntityFlyingMachine extends Entity{
 	}
 
 	@Override
-	@Nullable
-	public AxisAlignedBB getCollisionBox(Entity entityIn){
-		return entityIn.canBePushed() ? entityIn.getBoundingBox() : null;
-	}
-
-	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount){
 		//Boat/minecart style breaking
 
@@ -201,12 +193,6 @@ public class EntityFlyingMachine extends Entity{
 	@Override
 	public double getMountedYOffset(){
 		return 1.1D;
-	}
-
-	@Override
-	@Nullable
-	public AxisAlignedBB getCollisionBoundingBox(){
-		return getBoundingBox();
 	}
 
 	@Override

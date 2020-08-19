@@ -83,10 +83,10 @@ dependencies {
 
 	//Compile against APIs
 	compileOnly(fg.deobf("mezz.jei:jei-$mc_version:$jei_version:api"))//JEI
-	compileOnly(fg.deobf("top.theillusivec4.curios:curios:$curios_version:api"))//Curios
+	compileOnly(fg.deobf("top.theillusivec4.curios:curios-forge:$curios_version:api"))//Curios
 	//Run with the full versions
 	runtimeOnly(fg.deobf("mezz.jei:jei-$mc_version:$jei_version"))//JEI
-	runtimeOnly(fg.deobf("top.theillusivec4.curios:curios:$curios_version"))//Curios
+	runtimeOnly(fg.deobf("top.theillusivec4.curios:curios-forge:$curios_version"))//Curios
 
 	compile(fg.deobf("vazkii.patchouli:Patchouli:$patchouli_version"))
 

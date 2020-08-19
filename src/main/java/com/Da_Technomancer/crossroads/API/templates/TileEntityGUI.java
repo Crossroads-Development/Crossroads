@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public abstract class TileEntityGUI<T extends TileEntityContainer<U>, U extends TileEntity & IInventory> extends ContainerScreen<T>{
 
 	protected PlayerInventory playerInv;
-	protected ArrayList<ITextProperties> tooltip = new ArrayList<>();
+	protected ArrayList<ITextComponent> tooltip = new ArrayList<>();
 
 	protected TileEntityGUI(T container, PlayerInventory playerInventory, ITextComponent text){
 		super(container, playerInventory, text);
@@ -34,7 +34,7 @@ public abstract class TileEntityGUI<T extends TileEntityContainer<U>, U extends 
 		super.render(matrix, mouseX, mouseY, partialTicks);
 		func_230459_a_(matrix, mouseX, mouseY);//render tooltip
 		if(getSlotUnderMouse() == null){
-			renderTooltip(matrix, tooltip, mouseX, mouseY);
+			func_243308_b(matrix, tooltip, mouseX, mouseY);
 		}
 		tooltip.clear();
 	}

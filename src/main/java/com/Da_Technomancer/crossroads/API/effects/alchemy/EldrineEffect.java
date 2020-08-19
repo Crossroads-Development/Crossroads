@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.API.effects.alchemy;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 
@@ -28,7 +29,7 @@ public class EldrineEffect extends AetherEffect{
 	}
 
 	@Override
-	protected Biome biome(){
+	protected RegistryKey<Biome> biome(){
 		return Biomes.field_235254_j_;//Nether wastes- the 'normal' nether biome pre-1.16
 	}
 }

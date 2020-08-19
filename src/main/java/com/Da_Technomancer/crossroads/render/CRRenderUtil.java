@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.render;
 
 import com.Da_Technomancer.crossroads.API.packets.AddVisualToClient;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
-import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
 import com.Da_Technomancer.essentials.render.RenderUtil;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -87,7 +86,7 @@ public class CRRenderUtil extends RenderUtil{
 		nbt.putByte("lif", lifespan);
 
 		if(world.isRemote){
-			SafeCallable.effectsToRender.add(visualFactories[1].apply(nbt));
+			AddVisualToClient.effectsToRender.add(visualFactories[1].apply(nbt));
 		}else{
 			CRPackets.sendPacketAround(world, new BlockPos(xSt, ySt, zSt), new AddVisualToClient(nbt));
 		}

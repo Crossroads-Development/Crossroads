@@ -156,9 +156,9 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			e.setMotion(prevVelocity.rotateYaw(yawRotation));
 		}
 		//We use the timeUntilPortal field in Entity to add a cooldown between travelling
-		//That isn't really what it's for, but meh
-		//Measured in ticks
-		e.timeUntilPortal = 60;
+		//It was added for nether & end portals, but it works for this too
+		//Measured in ticks (15 seconds)
+		e.func_242279_ag();//MCP note: reset portal cooldown
 	}
 
 	public GatewayFrameTileEntity(){
@@ -499,7 +499,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 					AxisAlignedBB area = new AxisAlignedBB(pos.down(size).offset(horiz, -size / 2), pos.offset(horiz, size / 2 + 1));
 					//We use the timeUntilPortal field in Entity to not spam TP entities between two portals
 					//This is both not what it's for, and exactly what it's for
-					List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, area, EntityPredicates.IS_ALIVE.and(e -> e.timeUntilPortal <= 0));
+					List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, area, EntityPredicates.IS_ALIVE.and(e -> !e.func_242280_ah()));//MCP note: entity::(is still on portal cooldown/portal cooldown > 0)
 					if(!entities.isEmpty()){
 						GatewayAddress.Location loc = GatewaySavedData.lookupAddress((ServerWorld) world, new GatewayAddress(chevrons));
 						if(loc != null){

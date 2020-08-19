@@ -2,9 +2,13 @@ package com.Da_Technomancer.crossroads.API;
 
 import com.Da_Technomancer.essentials.ESConfig;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
@@ -230,5 +234,24 @@ public final class MiscUtil{
 	@Nullable
 	public static ServerWorld getWorld(RegistryKey<World> registryKey, MinecraftServer server){
 		return server.getWorld(registryKey);
+	}
+
+	/**
+	 * Damages an entity with lightning damage, and triggers any lightning effect on the mob. Does not summon a bolt of lightning
+	 * CALL ON THE VIRTUAL SERVER SIDE ONLY
+	 * @param ent The entity to strike with lightning
+	 * @param damage The damage to deal. Will deal a minimum of 5 damage, regardless of value; Passing 0 to do default lightning damage is acceptable
+	 * @param lightning The lightning entity doing the striking. Pass null if there is no lightning bolt entity
+	 */
+	public static void attackWithLightning(LivingEntity ent, float damage, @Nullable LightningBoltEntity lightning){
+		if(lightning == null){
+			//Create a generic lightning entity at the entity position, but don't add it to the world
+			lightning = EntityType.LIGHTNING_BOLT.create(ent.world);
+			lightning.func_233576_c_(ent.getPositionVec());
+		}
+		ent.func_241841_a((ServerWorld) ent.world, lightning);//Deals 5 lightning damage
+		if(damage > 5){
+			ent.attackEntityFrom(DamageSource.LIGHTNING_BOLT, damage - 5F);//Deal any additional damage
+		}
 	}
 }

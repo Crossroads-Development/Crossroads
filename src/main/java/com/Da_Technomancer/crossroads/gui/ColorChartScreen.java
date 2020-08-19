@@ -82,7 +82,7 @@ public class ColorChartScreen extends ContainerScreen<ColorChartContainer>{
 				tooltip.add(new StringTextComponent("???"));
 			}
 			tooltip.add(new StringTextComponent("R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue()));
-			renderToolTip(matrix, tooltip, mouseX, mouseY, font);
+			func_243308_b(matrix, tooltip, mouseX, mouseY);//MCP note: renderTooltip
 		}
 
 		searchBar.render(matrix, mouseX, mouseY, partialTicks);
@@ -137,7 +137,7 @@ public class ColorChartScreen extends ContainerScreen<ColorChartContainer>{
 
 	@Override
 	protected void func_230451_b_(MatrixStack matrix, int p_230451_2_, int p_230451_3_){
-		font.func_238422_b_(matrix, title, field_238742_p_, field_238743_q_, 0x404040);
+		font.func_243248_b(matrix, title, field_238742_p_, field_238743_q_, 0x404040);
 		//Render no inventory label
 	}
 }

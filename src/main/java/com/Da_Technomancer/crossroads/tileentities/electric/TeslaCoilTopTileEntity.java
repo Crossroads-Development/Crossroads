@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.electric;
 
 import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoilTop;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
@@ -87,9 +88,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 				markDirty();
 
 				CRRenderUtil.addArc(world, pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F, (float) ent.getPosX(), (float) ent.getPosY(), (float) ent.getPosZ(), 5, 0.2F, ATTACK_COLOR_CODES[(int) (world.getGameTime() % 3)]);
-				LightningBoltEntity lightning = EntityType.LIGHTNING_BOLT.create(world);
-				lightning.setPosition(ent.getPosX(), ent.getPosY(), ent.getPosZ());
-				ent.onStruckByLightning(lightning);
+				MiscUtil.attackWithLightning(ent, 0, null);
 			}
 		}else if(variant == TeslaCoilTop.TeslaCoilVariants.DECORATIVE){
 			if(coilTE.getStored() >= TeslaCoilTop.TeslaCoilVariants.DECORATIVE.joltAmt){

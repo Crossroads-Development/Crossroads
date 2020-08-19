@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.API.effects.alchemy;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 
@@ -29,7 +30,7 @@ public class FusasEffect extends AetherEffect{
 	}
 
 	@Override
-	protected Biome biome(){
+	protected RegistryKey<Biome> biome(){
 		return Biomes.DEEP_OCEAN;
 	}
 }

@@ -97,7 +97,7 @@ public class GatewaySavedData extends WorldSavedData{
 		//We want all dimensions to share the same saved data,
 		//So we always reference the overworld instance
 		DimensionSavedDataManager storage;
-		if(world.func_234922_V_().func_240901_a_().equals(DimensionType.field_235999_c_.func_240901_a_())){
+		if(world.func_234923_W_().func_240901_a_().equals(DimensionType.field_242710_a)){
 			storage = world.getSavedData();
 		}else{
 			storage = world.getServer().func_241755_D_().getSavedData();//MCP note: getOverworld

@@ -3,7 +3,9 @@ package com.Da_Technomancer.crossroads.API.packets;
 import com.Da_Technomancer.crossroads.API.CRReflection;
 import com.Da_Technomancer.crossroads.render.IVisualEffect;
 import com.Da_Technomancer.essentials.ReflectionUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.NewChatGui;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -19,8 +21,6 @@ import java.util.ArrayList;
  */	
 public class SafeCallable{
 
-	public static final ArrayList<IVisualEffect> effectsToRender = new ArrayList<>();
-
 	private static Method printChatNoLog;
 
 	@OnlyIn(Dist.CLIENT)
@@ -35,5 +35,7 @@ public class SafeCallable{
 		return NewChatGui.class;
 	}
 
-	public static int playerTickCount = 0;
+	public static World getClientWorld(){
+		return Minecraft.getInstance().world;
+	}
 }

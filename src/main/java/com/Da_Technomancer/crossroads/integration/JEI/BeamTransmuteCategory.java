@@ -65,8 +65,8 @@ public class BeamTransmuteCategory implements IRecipeCategory<BeamTransmuteRec>{
 		slot.draw(matrix, 120, 40);//Output
 		arrowStatic.draw(matrix, 78, 40);
 		//Render without shadow
-		Minecraft.getInstance().fontRenderer.func_238422_b_(matrix, new TranslationTextComponent("crossroads.jei.beam_trans.align", recipe.getAlign().getLocalName(recipe.isVoid())), 40, 10, 0x404040);
-		Minecraft.getInstance().fontRenderer.func_238422_b_(matrix, new TranslationTextComponent("crossroads.jei.beam_trans.power", recipe.getPower()), 40, 25, 0x404040);
+		Minecraft.getInstance().fontRenderer.func_243248_b(matrix, new TranslationTextComponent("crossroads.jei.beam_trans.align", recipe.getAlign().getLocalName(recipe.isVoid())), 40, 10, 0x404040);
+		Minecraft.getInstance().fontRenderer.func_243248_b(matrix, new TranslationTextComponent("crossroads.jei.beam_trans.power", recipe.getPower()), 40, 25, 0x404040);
 //		GlStateManager.disableBlend();
 //		GlStateManager.disableAlpha();
 	}

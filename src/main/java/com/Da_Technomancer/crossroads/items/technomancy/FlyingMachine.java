@@ -18,6 +18,7 @@ import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 public class FlyingMachine extends Item{
 
@@ -25,7 +26,7 @@ public class FlyingMachine extends Item{
 
 		@Override
 		public ItemStack dispenseStack(IBlockSource source, ItemStack stack){
-			World world = source.getWorld();
+			ServerWorld world = source.getWorld();
 			EntityFlyingMachine.type.spawn(world, stack, null, source.getBlockPos(), SpawnReason.SPAWN_EGG, true, false);			stack.shrink(1);
 			return stack;
 		}
@@ -48,8 +49,9 @@ public class FlyingMachine extends Item{
 		if(ray.getType() != RayTraceResult.Type.BLOCK){
 			return new ActionResult<>(ActionResultType.PASS, itemstack);
 		}else{
-			EntityFlyingMachine.type.spawn(worldIn, itemstack, playerIn, new BlockPos(ray.getHitVec()), SpawnReason.SPAWN_EGG, true, false);
-
+			if(!worldIn.isRemote){
+				EntityFlyingMachine.type.spawn((ServerWorld) worldIn, itemstack, playerIn, new BlockPos(ray.getHitVec()), SpawnReason.SPAWN_EGG, true, false);
+			}
 			if(!playerIn.isCreative()){
 				itemstack.shrink(1);
 			}
