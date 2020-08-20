@@ -31,7 +31,7 @@ public class LiechWrench extends Item{
 	private final Multimap<Attribute, AttributeModifier> attributeModifiers;
 
 	public LiechWrench(){
-		super(new Properties().group(CRItems.TAB_CROSSROADS).addToolType(ToolType.PICKAXE, ItemTier.STONE.getHarvestLevel()).addToolType(ToolType.SHOVEL, ItemTier.STONE.getHarvestLevel()).addToolType(ToolType.AXE, ItemTier.STONE.getHarvestLevel()).addToolType(ToolType.get("wrench"), 0).maxStackSize(1));
+		super(new Properties().group(CRItems.TAB_CROSSROADS).addToolType(ToolType.PICKAXE, ItemTier.STONE.getHarvestLevel()).addToolType(ToolType.SHOVEL, ItemTier.STONE.getHarvestLevel()).addToolType(ToolType.AXE, ItemTier.STONE.getHarvestLevel()).addToolType(ToolType.HOE, ItemTier.STONE.getHarvestLevel()).addToolType(ToolType.get("wrench"), 0).maxStackSize(1));
 		String name = "liech_wrench";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
