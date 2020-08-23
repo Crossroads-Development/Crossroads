@@ -14,8 +14,8 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -138,7 +138,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 	}
 
 	private static int getCarbonValue(ItemStack stack){
-		if(!stack.isEmpty() && stack.getItem() == Items.COAL){
+		if(!stack.isEmpty() && ItemTags.COALS.contains(stack.getItem())){
 			return 16;
 		}
 
