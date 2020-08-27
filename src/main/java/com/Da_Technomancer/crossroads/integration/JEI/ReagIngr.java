@@ -40,7 +40,7 @@ public class ReagIngr{
 	}
 	
 	protected static void populate(){
-		for(IReagent r : AlchemyCore.REAGENTS.values()){
+		for(IReagent r : AlchemyCore.getRegisteredReags()){
 			if(r != null){
 				REAG_TYPES.add(new ReagIngr(r, 1));
 			}

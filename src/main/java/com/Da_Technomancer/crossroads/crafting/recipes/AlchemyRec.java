@@ -35,7 +35,7 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 	private final double heatChange;
 	private final double minTemp;
 	private final double maxTemp;
-	private final IReagent cat;
+	private final String cat;
 	private final boolean charged;
 	private final ReagentStack[] reagents;
 	private final ReagentStack[] products;
@@ -43,7 +43,7 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 	private final float data;//What "data" means varies with reaction type. Currently, destructive measures it as blast strength per reaction
 	private final boolean real;//If false, disable this recipe. For datapacks
 
-	public AlchemyRec(ResourceLocation location, String name, Type type, ReagentStack[] reagents, ReagentStack[] products, @Nullable IReagent cat, double minTemp, double maxTemp, double heatChange, boolean charged, float data, boolean real){
+	public AlchemyRec(ResourceLocation location, String name, Type type, ReagentStack[] reagents, ReagentStack[] products, @Nullable String cat, double minTemp, double maxTemp, double heatChange, boolean charged, float data, boolean real){
 		id = location;
 		group = name;
 
@@ -70,7 +70,7 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Nullable
-	public IReagent getCatalyst(){
+	public String getCatalyst(){
 		return cat;
 	}
 
@@ -131,9 +131,9 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 					created += reags.getQty(EnumReagents.PHELOSTOGEN.id());
 					created += reags.getQty(EnumReagents.AETHER.id());
 					created += reags.getQty(EnumReagents.ADAMANT.id());
-					reags.remove(AlchemyCore.REAGENTS.get(EnumReagents.PHELOSTOGEN.id()));
-					reags.remove(AlchemyCore.REAGENTS.get(EnumReagents.AETHER.id()));
-					reags.remove(AlchemyCore.REAGENTS.get(EnumReagents.ADAMANT.id()));
+					reags.remove(EnumReagents.PHELOSTOGEN.id());
+					reags.remove(EnumReagents.AETHER.id());
+					reags.remove(EnumReagents.ADAMANT.id());
 					reags.addReagent(prod, created, reags.getTempC());
 					return created > 0;
 				}
@@ -308,7 +308,7 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 			//Normal specification of recipe group and output
 			String group = JSONUtils.getString(json, "group", "");
 
-			boolean real = CraftingUtil.isActiveJSON(json);//JSONUtils.getBoolean(json, "real", true);
+			boolean real = CraftingUtil.isActiveJSON(json);
 			if(real){
 				//Only bother reading the whole file if this is a real recipe
 				Type type = Type.getType(JSONUtils.getString(json, "category", "normal"));
@@ -316,7 +316,7 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 				double maxTemp = JSONUtils.getFloat(json, "max_temp", Short.MAX_VALUE);
 				double heatChange = JSONUtils.getFloat(json, "heat", 0);
 				String s = JSONUtils.getString(json, "catalyst", VOID_STR);
-				IReagent cat = s.equals(VOID_STR) ? null : AlchemyCore.REAGENTS.get(s);
+				String cat = s.equals(VOID_STR) ? null : s;
 				boolean charge = JSONUtils.getBoolean(json, "charged", false);
 				float data = JSONUtils.getFloat(json, "data", 0);
 
@@ -332,8 +332,7 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 					JsonElement elem = jsonR.get(i);
 					if(elem instanceof JsonObject){
 						JsonObject obj = (JsonObject) elem;
-						IReagent reagent = AlchemyCore.REAGENTS.get(JSONUtils.getString(obj, "type"));
-						assert reagent != null;
+						String reagent = JSONUtils.getString(obj, "type");
 						reags[i] = new ReagentStack(reagent, JSONUtils.getInt(obj, "qty", 1));
 					}
 				}
@@ -348,8 +347,7 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 					JsonElement elem = jsonR.get(i);
 					if(elem instanceof JsonObject){
 						JsonObject obj = (JsonObject) elem;
-						IReagent reagent = AlchemyCore.REAGENTS.get(JSONUtils.getString(obj, "type"));
-						assert reagent != null;
+						String reagent = JSONUtils.getString(obj, "type");
 						prods[i] = new ReagentStack(reagent, JSONUtils.getInt(obj, "qty", 1));
 					}
 				}
@@ -374,15 +372,15 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 				float minTemp = buffer.readFloat();
 				float maxTemp = buffer.readFloat();
 				String s = buffer.readString(Short.MAX_VALUE);
-				IReagent catalyst = s.equals(VOID_STR) ? null : AlchemyCore.REAGENTS.get(s);
+				String catalyst = s.equals(VOID_STR) ? null : s;
 				boolean charged = buffer.readBoolean();
 				ReagentStack[] reags = new ReagentStack[buffer.readByte()];
 				for(int i = 0; i < reags.length; i++){
-					reags[i] = new ReagentStack(AlchemyCore.REAGENTS.get(buffer.readString()), buffer.readByte());
+					reags[i] = new ReagentStack(buffer.readString(), buffer.readByte());
 				}
 				ReagentStack[] prod = new ReagentStack[buffer.readByte()];
 				for(int i = 0; i < prod.length; i++){
-					prod[i] = new ReagentStack(AlchemyCore.REAGENTS.get(buffer.readString()), buffer.readByte());
+					prod[i] = new ReagentStack(buffer.readString(), buffer.readByte());
 				}
 				float data = buffer.readFloat();
 
@@ -401,7 +399,7 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 				buffer.writeFloat((float) recipe.heatChange);//heat
 				buffer.writeFloat((float) recipe.minTemp);//min temp
 				buffer.writeFloat((float) recipe.maxTemp);//max temp
-				buffer.writeString(recipe.cat == null ? VOID_STR : recipe.cat.getId());//catalyst
+				buffer.writeString(recipe.cat == null ? VOID_STR : recipe.cat);//catalyst
 				buffer.writeBoolean(recipe.charged);//charged
 				int total = recipe.reagents.length;
 				buffer.writeByte(total);//Number of reagents

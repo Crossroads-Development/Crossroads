@@ -45,7 +45,7 @@ public class StaticReagent implements IReagent{
 //		this.isSolid = tag == null ? null : tag::contains;
 //		this.solid = null;
 		if(tag != null){
-			AlchemyCore.ITEM_TO_REAGENT.put(tag::contains, this);
+			AlchemyCore.getItemToReagent().put(tag::contains, this);
 		}
 		this.containType = containType;
 		this.effect = effect;

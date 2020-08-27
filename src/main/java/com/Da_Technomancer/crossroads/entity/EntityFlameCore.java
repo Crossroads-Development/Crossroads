@@ -127,7 +127,7 @@ public class EntityFlameCore extends Entity{
 			int a = 0;
 			int amount = 0;
 			double temp = reags.getTempC();
-			for(IReagent type : reags.keySet()){
+			for(IReagent type : reags.keySetReag()){
 				int qty = reags.getQty(type);
 				if(qty > 0){
 					Color color = type.getColor(type.getPhase(temp));

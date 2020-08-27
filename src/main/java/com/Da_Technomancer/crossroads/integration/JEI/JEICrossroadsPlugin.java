@@ -76,7 +76,7 @@ public class JEICrossroadsPlugin implements IModPlugin{
 		registration.addRecipes(getRecipes(recipeManager, CRRecipes.DETAILED_TYPE), DetailedCrafterCategory.ID);
 		registration.addRecipes(getRecipes(recipeManager, CRRecipes.ALCHEMY_TYPE), AlchemyCategory.ID);
 		registration.addRecipes(getRecipes(recipeManager, CRRecipes.COPSHOWIUM_TYPE), CopshowiumCategory.ID);
-		registration.addRecipes(AlchemyCore.REAGENTS.values(), ReagInfoCategory.ID);
+		registration.addRecipes(AlchemyCore.getRegisteredReags(), ReagInfoCategory.ID);
 	}
 
 	private static Collection<?> getRecipes(RecipeManager manage, IRecipeType<?> type){

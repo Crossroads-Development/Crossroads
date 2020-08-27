@@ -5,12 +5,12 @@ import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.*;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
+import com.Da_Technomancer.crossroads.crafting.CRRecipes;
+import com.Da_Technomancer.crossroads.crafting.PredicateMap;
+import com.Da_Technomancer.crossroads.crafting.recipes.AlchemyRec;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.crafting.CRItemTags;
-import com.Da_Technomancer.crossroads.crafting.PredicateMap;
-import com.Da_Technomancer.crossroads.crafting.CRRecipes;
-import com.Da_Technomancer.crossroads.crafting.recipes.AlchemyRec;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
@@ -20,8 +20,10 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.fluids.FluidStack;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
@@ -35,9 +37,20 @@ public final class AlchemyCore{
 
 //	public static final ArrayList<IReaction> REACTIONS = new ArrayList<>();
 
+	private static final HashMap<String, IReagent> REAGENTS = new HashMap<>(REAGENT_COUNT);
+	private static final PredicateMap<Item, IReagent> ITEM_TO_REAGENT = new PredicateMap<>();
+	private static final List<Pair<FluidStack, IReagent>> FLUID_TO_LIQREAGENT = new ArrayList<>(5);
 	private static final ArrayList<AlchemyRec> ELEM_REACTIONS = new ArrayList<>();
 
-	public static final PredicateMap<Item, IReagent> ITEM_TO_REAGENT = new PredicateMap<>();
+	@Nullable
+	public static IReagent getReagent(String id){
+		return REAGENTS.get(id);
+	}
+
+	public static Collection<IReagent> getRegisteredReags(){
+		return REAGENTS.values();
+	}
+
 	/**
 	 * For the liquid phase of select reagents
 	 * Do not add any reagent more than once, or any fluid more than once
@@ -45,9 +58,13 @@ public final class AlchemyCore{
 	 *
 	 * A list was used to maintain ordering
 	 */
-	public static final List<Pair<FluidStack, IReagent>> FLUID_TO_LIQREAGENT = new ArrayList<>(5);
+	public static List<Pair<FluidStack, IReagent>> getFluidToLiqreagent(){
+		return FLUID_TO_LIQREAGENT;
+	}
 
-	public static final HashMap<String, IReagent> REAGENTS = new HashMap<>(REAGENT_COUNT);
+	public static PredicateMap<Item, IReagent> getItemToReagent(){
+		return ITEM_TO_REAGENT;
+	}
 
 	/**
 	 * Stores a mapping between each flame-phase reagent and a function for determining flame burst radius from reagent quantity
@@ -130,25 +147,25 @@ public final class AlchemyCore{
 		});
 		FLAME_RANGES.put(hellfire, (Integer amount) -> CRConfig.allowHellfire.get() ? (int) Math.min(64, amount * 4D) : (int) Math.min(8, Math.round(amount / 2D)));
 
-		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CRFluids.distilledWater.still, 100), REAGENTS.get(WATER.id())));
-		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CRFluids.moltenIron.still, EnergyConverters.INGOT_MB / 9), REAGENTS.get(IRON.id())));
-		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CRFluids.moltenGold.still, EnergyConverters.INGOT_MB / 9), REAGENTS.get(GOLD.id())));
-		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CRFluids.moltenCopper.still, EnergyConverters.INGOT_MB / 9), REAGENTS.get(COPPER.id())));
-		FLUID_TO_LIQREAGENT.add(Pair.of(new FluidStack(CRFluids.moltenTin.still, EnergyConverters.INGOT_MB / 9), REAGENTS.get(TIN.id())));
+		getFluidToLiqreagent().add(Pair.of(new FluidStack(CRFluids.distilledWater.still, 100), REAGENTS.get(WATER.id())));
+		getFluidToLiqreagent().add(Pair.of(new FluidStack(CRFluids.moltenIron.still, EnergyConverters.INGOT_MB / 9), REAGENTS.get(IRON.id())));
+		getFluidToLiqreagent().add(Pair.of(new FluidStack(CRFluids.moltenGold.still, EnergyConverters.INGOT_MB / 9), REAGENTS.get(GOLD.id())));
+		getFluidToLiqreagent().add(Pair.of(new FluidStack(CRFluids.moltenCopper.still, EnergyConverters.INGOT_MB / 9), REAGENTS.get(COPPER.id())));
+		getFluidToLiqreagent().add(Pair.of(new FluidStack(CRFluids.moltenTin.still, EnergyConverters.INGOT_MB / 9), REAGENTS.get(TIN.id())));
 
 		// Reactions
 
 		ReagentStack[] mixElem = new ReagentStack[] {new ReagentStack(REAGENTS.get(PHELOSTOGEN.id()), 1), new ReagentStack(REAGENTS.get(AETHER.id()), 1), new ReagentStack(REAGENTS.get(ADAMANT.id()), 1)};
 		//Lumen production
-		ELEM_REACTIONS.add(new AlchemyRec(new ResourceLocation(Crossroads.MODID + ":lumen"), "", AlchemyRec.Type.ELEMENTAL, mixElem, new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_LIGHT.id()), 1)}, REAGENTS.get(PRACTITIONER.id()), -300, Short.MAX_VALUE, 0, true, 0, true));
+		ELEM_REACTIONS.add(new AlchemyRec(new ResourceLocation(Crossroads.MODID + ":lumen"), "", AlchemyRec.Type.ELEMENTAL, mixElem, new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_LIGHT.id()), 1)}, PRACTITIONER.id(), -300, Short.MAX_VALUE, 0, true, 0, true));
 		//Eldrine production
-		ELEM_REACTIONS.add(new AlchemyRec(new ResourceLocation(Crossroads.MODID + ":eldrine"), "", AlchemyRec.Type.ELEMENTAL, mixElem, new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_RIFT.id()), 1)}, REAGENTS.get(PRACTITIONER.id()), -300, Short.MAX_VALUE, 0, true, 0, true));
+		ELEM_REACTIONS.add(new AlchemyRec(new ResourceLocation(Crossroads.MODID + ":eldrine"), "", AlchemyRec.Type.ELEMENTAL, mixElem, new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_RIFT.id()), 1)}, PRACTITIONER.id(), -300, Short.MAX_VALUE, 0, true, 0, true));
 		//Stasisol production
-		ELEM_REACTIONS.add(new AlchemyRec(new ResourceLocation(Crossroads.MODID + ":stasisol"), "", AlchemyRec.Type.ELEMENTAL, mixElem, new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_EQUAL.id()), 1)}, REAGENTS.get(PRACTITIONER.id()), -300, Short.MAX_VALUE, 0, true, 0, true));
+		ELEM_REACTIONS.add(new AlchemyRec(new ResourceLocation(Crossroads.MODID + ":stasisol"), "", AlchemyRec.Type.ELEMENTAL, mixElem, new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_EQUAL.id()), 1)}, PRACTITIONER.id(), -300, Short.MAX_VALUE, 0, true, 0, true));
 		//Fusas production
-		ELEM_REACTIONS.add(new AlchemyRec(new ResourceLocation(Crossroads.MODID + ":fusas"), "", AlchemyRec.Type.ELEMENTAL, mixElem, new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_FUSION.id()), 1)}, REAGENTS.get(PRACTITIONER.id()), -300, Short.MAX_VALUE, 0, true, 0, true));
+		ELEM_REACTIONS.add(new AlchemyRec(new ResourceLocation(Crossroads.MODID + ":fusas"), "", AlchemyRec.Type.ELEMENTAL, mixElem, new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_FUSION.id()), 1)}, PRACTITIONER.id(), -300, Short.MAX_VALUE, 0, true, 0, true));
 		//Voltus production
-		ELEM_REACTIONS.add(new AlchemyRec(new ResourceLocation(Crossroads.MODID + ":voltus"), "", AlchemyRec.Type.ELEMENTAL, mixElem, new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_CHARGE.id()), 1)}, REAGENTS.get(PRACTITIONER.id()), -300, Short.MAX_VALUE, 0, true, 0, true));
+		ELEM_REACTIONS.add(new AlchemyRec(new ResourceLocation(Crossroads.MODID + ":voltus"), "", AlchemyRec.Type.ELEMENTAL, mixElem, new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_CHARGE.id()), 1)}, PRACTITIONER.id(), -300, Short.MAX_VALUE, 0, true, 0, true));
 		//Copshowium production intentionally NOT added. Copshowium production is Technomancy only
 		//ELEM_REACTIONS.add(new AlchemyRec(new ResourceLocation(Crossroads.MODID + ":copshowium"), "", AlchemyRec.Type.ELEMENTAL, mixElem, new ReagentStack[] {new ReagentStack(REAGENTS.get(ELEM_TIME.id()), 1)}, REAGENTS.get(PRACTITIONER.id()), -300, Short.MAX_VALUE, 0, true, 0));
 	}

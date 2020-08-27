@@ -16,6 +16,7 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Set;
 
 public class AlchemyUtil{
 
@@ -55,16 +56,15 @@ public class AlchemyUtil{
 		ArrayList<QueuedEffect> effectsGas = new ArrayList<>(reags.size());
 
 		double tempC = reags.getTempC();
-		for(Map.Entry<IReagent, Integer> reagEnt : reags.entrySet()){
-			IReagent reag = reagEnt.getKey();
+		for(IReagent reag : reags.keySetReag()){
 			if(reag != null){
 				EnumMatterPhase p = reag.getPhase(tempC);
-				int qty = reagEnt.getValue();
+				int qty = reags.getQty(reag);
 				Color c = reag.getColor(p);
 				switch(p){
 					case FLAME:
 						//The flame reagent with the largest radius dominates
-						flameRange = Math.max(flameRange, AlchemyCore.FLAME_RANGES.get(reag).apply(reagEnt.getValue()));
+						flameRange = Math.max(flameRange, AlchemyCore.FLAME_RANGES.get(reag).apply(qty));
 						break;
 					case GAS:
 						gasQty += qty;

@@ -119,7 +119,7 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 
 		ArrayList<IReagent> toRemove = new ArrayList<>(1);
 
-		for(IReagent type : contents.keySet()){
+		for(IReagent type : contents.keySetReag()){
 			ReagentStack reag = contents.getStack(type);
 			if(reag.isEmpty()){
 				continue;

@@ -36,6 +36,8 @@ public class CentrifugeRec implements IOptionalRecipe<IInventory>{
 	private final WeightOutput[] outputs;
 	private final boolean active;
 
+	private final int totalWeight;//Cached
+
 	public CentrifugeRec(ResourceLocation location, String name, FluidStack input, FluidStack fluidOutput, WeightOutput[] outputs, boolean active){
 		id = location;
 		group = name;
@@ -43,6 +45,12 @@ public class CentrifugeRec implements IOptionalRecipe<IInventory>{
 		this.fluidOutput = fluidOutput;
 		this.outputs = outputs;
 		this.active = active;
+
+		int weight = 0;
+		for(WeightOutput out : outputs){
+			weight += out.weight;
+		}
+		totalWeight = weight;
 	}
 
 	@Override
@@ -69,10 +77,6 @@ public class CentrifugeRec implements IOptionalRecipe<IInventory>{
 
 	@Override
 	public ItemStack getRecipeOutput(){
-		int totalWeight = 0;
-		for(WeightOutput out : outputs){
-			totalWeight += out.weight;
-		}
 		int selected = RAND.nextInt(totalWeight);
 		for(WeightOutput out : outputs){
 			selected -= out.weight;

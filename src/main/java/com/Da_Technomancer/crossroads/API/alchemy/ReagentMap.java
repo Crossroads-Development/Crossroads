@@ -4,65 +4,64 @@ import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import net.minecraft.nbt.CompoundNBT;
 
 import java.util.HashMap;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Stores Alchemy reagents, along with temperature. Avoid using HashMap methods that aren't overwritten to minimize unintended behaviour
  */
-public class ReagentMap extends HashMap<IReagent, Integer>{
+public class ReagentMap extends HashMap<String, Integer>{
+
+	private double heat;
+	private int totalQty;
 
 	public ReagentMap(){
 		super(AlchemyCore.REAGENT_COUNT);
 	}
 
-	private double heat;
-	private int totalQty;
-
 	public void transferReagent(String id, int amount, ReagentMap srcMap){
-		transferReagent(AlchemyCore.REAGENTS.get(id), amount, srcMap);
+		amount = Math.min(amount, srcMap.getQty(id));
+
+		addReagent(id, amount, srcMap.getTempC());
+		srcMap.removeReagent(id, amount);
 	}
 
 	public void transferReagent(IReagent reag, int amount, ReagentMap srcMap){
-		amount = Math.min(amount, srcMap.getQty(reag));
-
-		addReagent(reag, amount, srcMap.getTempC());
-		srcMap.removeReagent(reag, amount);
+		transferReagent(reag.getId(), amount, srcMap);
 	}
 
 	public int addReagent(String id, int amount, double srcTemp){
-		return addReagent(AlchemyCore.REAGENTS.get(id), amount, srcTemp);
-	}
-
-	public int addReagent(IReagent reag, int amount, double srcTemp){
-		if(reag == null){
+		if(id == null){
 			return 0;
 		}
 
-		int current = getQty(reag);
+		int current = getQty(id);
 		current += amount;
 		if(current < 0){
 			current = 0;
 		}
 		heat += HeatUtil.toKelvin(srcTemp) * amount;
-		put(reag, current);
+		put(id, current);
 		return current;
 	}
 
-	public int removeReagent(String id, int amount){
-		return removeReagent(AlchemyCore.REAGENTS.get(id), amount);
+	public int addReagent(IReagent reag, int amount, double srcTemp){
+		return addReagent(reag.getId(), amount, srcTemp);
 	}
 
-	public int removeReagent(IReagent reag, int amount){
-		if(reag == null){
+	public int removeReagent(String id, int amount){
+		if(id == null){
 			return 0;
 		}
 
-		int current = getQty(reag);
+		int current = getQty(id);
 		if(amount > current){
 			amount = current;
 		}
 		heat -= getTempK() * amount;
 		current -= amount;
-		put(reag, current);
+		put(id, current);
 		if(heat < 0){
 			heat = 0;
 		}
@@ -73,8 +72,16 @@ public class ReagentMap extends HashMap<IReagent, Integer>{
 		return current;
 	}
 
+	public int removeReagent(IReagent reag, int amount){
+		return removeReagent(reag.getId(), amount);
+	}
+
 	public ReagentStack getStack(String id){
-		return getStack(AlchemyCore.REAGENTS.get(id));
+		return new ReagentStack(id, getQty(id));
+	}
+
+	public ReagentStack getStack(IReagent reag){
+		return new ReagentStack(reag, getQty(reag));
 	}
 
 	public void setTemp(double tempC){
@@ -82,7 +89,15 @@ public class ReagentMap extends HashMap<IReagent, Integer>{
 	}
 
 	@Override
-	public Integer put(IReagent key, Integer value){
+	public Integer get(Object key){
+		if(key instanceof IReagent){
+			key = ((IReagent) key).getId();
+		}
+		return super.get(key);
+	}
+
+	@Override
+	public Integer put(String key, Integer value){
 		if(key == null || value == null || value < 0){
 			return 0;
 		}
@@ -91,8 +106,15 @@ public class ReagentMap extends HashMap<IReagent, Integer>{
 		return super.put(key, value);
 	}
 
+	public Integer put(IReagent key, Integer value){
+		return put(key.getId(), value);
+	}
+
 	@Override
 	public Integer remove(Object key){
+		if(key instanceof IReagent){
+			key = ((IReagent) key).getId();
+		}
 		Integer qty = super.remove(key);
 		if(qty != null){
 			heat -= getTempK() * qty;
@@ -113,17 +135,13 @@ public class ReagentMap extends HashMap<IReagent, Integer>{
 		return totalQty == 0;
 	}
 
-	public ReagentStack getStack(IReagent reag){
-		return new ReagentStack(reag, getQty(reag));
-	}
-
 	public int getQty(String id){
-		return getQty(AlchemyCore.REAGENTS.get(id));
+		Integer raw = get(id);
+		return raw == null ? 0 : raw;
 	}
 
 	public int getQty(IReagent reag){
-		Integer raw = get(reag);
-		return raw == null ? 0 : raw;
+		return getQty(reag.getId());
 	}
 
 	public int getTotalQty(){
@@ -151,10 +169,10 @@ public class ReagentMap extends HashMap<IReagent, Integer>{
 
 	public CompoundNBT write(CompoundNBT nbt){
 		nbt.putDouble("he", heat);
-		for(IReagent key : keySet()){
+		for(String key : keySet()){
 			int qty = get(key);
 			if(qty > 0){
-				nbt.putInt("qty_" + key.getId(), qty);
+				nbt.putInt("qty_" + key, qty);
 			}
 		}
 
@@ -168,9 +186,22 @@ public class ReagentMap extends HashMap<IReagent, Integer>{
 			if(!key.startsWith("qty_")){
 				continue;
 			}
-			map.put(AlchemyCore.REAGENTS.get(key.substring(4)), nbt.getInt(key));
+			map.put(key.substring(4), nbt.getInt(key));
 		}
 
 		return map;
+	}
+
+	@Override
+	public boolean containsKey(Object key){
+		if(key instanceof IReagent){
+			key = ((IReagent) key).getId();
+		}
+		return super.containsKey(key);
+	}
+
+	@Deprecated
+	public Set<IReagent> keySetReag(){
+		return keySet().stream().map(AlchemyCore::getReagent).filter(Objects::nonNull).collect(Collectors.toSet());
 	}
 }

@@ -106,7 +106,7 @@ public class ChemicalVentTileEntity extends TileEntity implements ITickableTileE
 
 			HashSet<String> validIds = new HashSet<>(4);
 
-			for(IReagent type : reag.keySet()){
+			for(IReagent type : reag.keySetReag()){
 				ReagentStack r = reag.getStack(type);
 				if(!r.isEmpty()){
 					EnumMatterPhase phase = type.getPhase(HeatUtil.toCelcius(callerTemp));

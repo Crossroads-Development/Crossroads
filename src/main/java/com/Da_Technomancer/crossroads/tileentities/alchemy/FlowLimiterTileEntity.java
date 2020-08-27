@@ -80,7 +80,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 
 		int limit = LIMITS[limitIndex];
 		ReagentMap transferReag = new ReagentMap();
-		for(IReagent type : contents.keySet()){
+		for(IReagent type : contents.keySetReag()){
 			int qty = contents.getQty(type);
 			int specificLimit = Math.min(qty, limit - otherHandler.getContent(type));
 			if(specificLimit > 0){
@@ -89,7 +89,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 		}
 
 		boolean changed = otherHandler.insertReagents(transferReag, side.getOpposite(), handler);
-		for(IReagent type : transferReag.keySet()){
+		for(IReagent type : transferReag.keySetReag()){
 			contents.transferReagent(type, transferReag.getQty(type), transferReag);
 		}
 

@@ -4,9 +4,9 @@ import com.Da_Technomancer.crossroads.API.CRReflection;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.essentials.ReflectionUtil;
@@ -19,6 +19,7 @@ import net.minecraft.entity.passive.horse.SkeletonHorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
@@ -53,7 +54,7 @@ public final class EventHandlerCommon{
 	private static final Field entityList = ReflectionUtil.reflectField(CRReflection.ENTITY_LIST);
 
 	@SubscribeEvent
-	@SuppressWarnings("unused")
+	@SuppressWarnings({"unused", "unchecked"})
 	public void onEntitySpawn(LivingSpawnEvent.CheckSpawn e){
 		if(entityList != null && e.getWorld() instanceof ServerWorld){
 			ServerWorld world = (ServerWorld) e.getWorld();
@@ -95,7 +96,7 @@ public final class EventHandlerCommon{
 	private static final Method adjustPosForLightning = ReflectionUtil.reflectMethod(CRReflection.LIGHTNING_POS);
 
 	@SubscribeEvent
-	@SuppressWarnings("unused")
+	@SuppressWarnings({"unused", "unchecked"})
 	public void worldTick(TickEvent.WorldTickEvent e){
 
 //		//Time Dilation
@@ -183,53 +184,6 @@ public final class EventHandlerCommon{
 				}catch(Exception ex){//I was going to itemize the exceptions, but there's three different reflection calls and a bunch of chunk level logic, so it got ridiculous
 					Crossroads.logger.catching(ex);
 				}
-
-
-				//1.12 implementation
-//				Iterator<Chunk> iterator = ((ServerChunkProvider) e.world.getChunkProvider()).chunkManager.getPersistentChunkIterable(((ServerWorld) (e.world)).getPlayerChunkMap().getChunkIterator());
-//				while(iterator.hasNext()){
-//					Chunk chunk = iterator.next();
-//					int j = chunk.getPos().x * 16;
-//					int k = chunk.getPos().z * 16;
-//					chunk.enqueueRelightChecks();
-//					chunk.onTick(false);
-//
-//					if(e.world.provider.canDoLightning(chunk) && e.world.rand.nextInt(350_000 - (int) (300_000 * chargeLevel)) == 0){
-//						//Determine the position of the lightning strike
-//						int tarX = j + e.world.rand.nextInt(16);
-//						int tarZ = k + e.world.rand.nextInt(16);
-//						int tarY = e.world.getPrecipitationHeight(new BlockPos(tarX, 0, tarZ)).getY();
-//						BlockPos tarPos;
-//
-//						//Lightning bolts are attracted by nearby entities
-//						//Uses a slightly different formula from vanilla for reasons of efficiency
-//						ArrayList<LivingEntity> ents = new ArrayList<>();
-//						chunk.getEntitiesOfTypeWithinAABB(LivingEntity.class, new AxisAlignedBB(tarX - 3, tarY - 3, tarZ - 3, tarX + 3, e.world.getHeight() + 3, tarZ + 3), ents, new Predicate<LivingEntity>(){
-//							public boolean apply(@Nullable LivingEntity ent){
-//								return ent != null && ent.isEntityAlive() && e.world.canSeeSky(ent.func_233580_cy_());
-//							}
-//						});
-//
-//						if(ents.isEmpty()){
-//							if(tarY == -1){
-//								tarY += 2;
-//							}
-//							tarPos = new BlockPos(tarX, tarY, tarZ);
-//						}else{
-//							tarPos = ents.get(e.world.rand.nextInt(ents.size())).func_233580_cy_();
-//						}
-//						if(e.world.getGameRules().getBoolean("doMobSpawning") && e.world.rand.nextDouble() < e.world.getDifficultyForLocation(tarPos).getAdditionalDifficulty() * 0.01D){
-//							SkeletonHorseEntity entityskeletonhorse = new SkeletonHorseEntity(e.world);
-//							entityskeletonhorse.setTrap(true);
-//							entityskeletonhorse.setGrowingAge(0);
-//							entityskeletonhorse.setPosition(tarX, tarY, tarZ);
-//							e.world.addEntity(entityskeletonhorse);
-//							((ServerWorld) e.world).addLightningBolt(new LightningBoltEntity(e.world, tarX, tarY, tarZ, true));
-//						}else{
-//							((ServerWorld) e.world).addLightningBolt(new LightningBoltEntity(e.world, tarX, tarY, tarZ, false));
-//						}
-//					}
-//				}
 			}
 			e.world.getProfiler().endSection();
 		}
@@ -362,5 +316,9 @@ public final class EventHandlerCommon{
 			GearFactory.init();
 			OreSetup.loadConfig();
 		}
+	}
+
+	public void rebuildAlchemy(Event e){
+		RecipeManager m;
 	}
 }

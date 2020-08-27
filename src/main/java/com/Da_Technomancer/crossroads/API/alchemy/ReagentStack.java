@@ -5,13 +5,18 @@ import javax.annotation.Nonnull;
 public class ReagentStack{
 
 	//The default reagent used for empty stacks in place of null
-	private static final IReagent DEFAULT = AlchemyCore.REAGENTS.get(EnumReagents.WATER.id());
+	private static final String DEFAULT = EnumReagents.WATER.id();
 
-	private final IReagent type;
+	private final String typeId;
 	private final int amount;
 
+	public ReagentStack(String type, int amount){
+		this.typeId = type == null ? DEFAULT : type;
+		this.amount = amount;
+	}
+
 	public ReagentStack(IReagent type, int amount){
-		this.type = type == null ? DEFAULT : type;
+		this.typeId = type.getId();
 		this.amount = amount;
 	}
 
@@ -21,7 +26,8 @@ public class ReagentStack{
 
 	@Nonnull
 	public IReagent getType(){
-		return type;
+		IReagent type = AlchemyCore.getReagent(typeId);
+		return type == null ? AlchemyCore.getReagent(DEFAULT) : type;
 	}
 
 	/**
@@ -33,6 +39,15 @@ public class ReagentStack{
 
 	@Override
 	public String toString(){
-		return isEmpty() ? "Empty Reagent" : (type.getName() + ", Amount: " + amount);
+		if(isEmpty()){
+			return "Empty Reagent";
+		}else{
+			IReagent reag = AlchemyCore.getReagent(typeId);
+			if(reag == null){
+				return "Unresolved: " + typeId + ", Qty: " + amount;
+			}else{
+				return reag.getName() + ", Qty: " + amount;
+			}
+		}
 	}
 }

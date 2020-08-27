@@ -31,7 +31,7 @@ public class ElementalReagent implements IElementReagent{
 		this.solidForm = solidForm;
 		this.color = color;
 		if(solidForm != null){
-			AlchemyCore.ITEM_TO_REAGENT.put((stack) -> stack.getItem() == solidForm, this);
+			AlchemyCore.getItemToReagent().put((stack) -> stack.getItem() == solidForm, this);
 		}
 	}
 	

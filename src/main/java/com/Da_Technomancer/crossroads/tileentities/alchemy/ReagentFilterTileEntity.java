@@ -89,7 +89,7 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements INamedC
 		//Separate reagents to be filtered
 		if(!contents.isEmpty() && !inventory.isEmpty() && inventory.getItem() instanceof AbstractGlassware && inventory.hasTag()){
 			ReagentMap filtered = ((AbstractGlassware) inventory.getItem()).getReagants(inventory);
-			for(IReagent filtReag : filtered.keySet()){
+			for(IReagent filtReag : filtered.keySetReag()){
 				if(filtered.getQty(filtReag) != 0){
 					filterMap.transferReagent(filtReag, contents.getQty(filtReag), contents);
 				}
@@ -102,7 +102,7 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements INamedC
 
 		if(!filterMap.isEmpty()){
 			//Move untransfered filtered reagents back into contents
-			for(IReagent filtReag : filterMap.keySet()){
+			for(IReagent filtReag : filterMap.keySetReag()){
 				int qty = filterMap.getQty(filtReag);
 				if(qty != 0){
 					contents.transferReagent(filtReag, qty, filterMap);

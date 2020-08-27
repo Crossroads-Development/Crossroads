@@ -130,7 +130,7 @@ public class ReactionChamber extends ContainerBlock{
 		}else{
 			HeatUtil.addHeatInfo(tooltip, temp, Short.MIN_VALUE);
 			int total = 0;
-			for(IReagent type : stored.keySet()){
+			for(IReagent type : stored.keySetReag()){
 				int qty = stored.getQty(type);
 				if(qty > 0){
 					total++;
