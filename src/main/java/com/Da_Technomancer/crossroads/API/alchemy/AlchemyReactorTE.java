@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
-import com.Da_Technomancer.crossroads.items.crafting.recipes.AlchemyRec;
+import com.Da_Technomancer.crossroads.crafting.recipes.AlchemyRec;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.vector.Vector3d;

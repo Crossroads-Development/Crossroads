@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.essentials.ReflectionUtil;

@@ -1,6 +1,6 @@
-package com.Da_Technomancer.crossroads.items.crafting;
+package com.Da_Technomancer.crossroads.crafting;
 
-import com.Da_Technomancer.crossroads.items.crafting.recipes.BlockIngredient;
+import com.Da_Technomancer.crossroads.crafting.recipes.BlockIngredient;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;

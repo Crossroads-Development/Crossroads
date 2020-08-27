@@ -3,13 +3,14 @@ package com.Da_Technomancer.crossroads;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.crafting.loot_modifiers.PiglinBarterLootModifier;
+import com.Da_Technomancer.crossroads.crafting.recipes.*;
 import com.Da_Technomancer.crossroads.entity.*;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.*;
 import com.Da_Technomancer.crossroads.gui.container.*;
 import com.Da_Technomancer.crossroads.integration.curios.CurioHelper;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.items.crafting.recipes.*;
 import com.Da_Technomancer.crossroads.items.itemSets.ItemSets;
 import com.Da_Technomancer.crossroads.particles.CRParticles;
 import com.Da_Technomancer.crossroads.particles.ColorParticleType;
@@ -37,6 +38,7 @@ import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -163,6 +165,11 @@ public final class Crossroads{
 		reg.register(new BeamTransmuteRec.Serializer().setRegistryName("beam_transmute"));
 		reg.register(new BoboRec.Serializer().setRegistryName("bobo"));
 		reg.register(new CopshowiumRec.Serializer().setRegistryName("copshowium"));
+	}
+
+	@SubscribeEvent
+	public static void registerLootModifierSerializers(RegistryEvent.Register<GlobalLootModifierSerializer<?>> e){
+		e.getRegistry().register(new PiglinBarterLootModifier.Serializer().setRegistryName(new ResourceLocation(MODID, "piglin_barter")));
 	}
 
 	@SuppressWarnings("unused")

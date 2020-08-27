@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.items.crafting.recipes.BeamExtractRec;
+import com.Da_Technomancer.crossroads.crafting.recipes.BeamExtractRec;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;

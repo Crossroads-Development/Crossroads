@@ -1,0 +1,15 @@
+{
+	"type": "crossroads:piglin_barter",
+	"conditions": [
+
+	],
+	"override_chance": 0.01077586206,
+	"results": [
+		{
+			"weight": 5,
+			"name": "crossroads:gem_ruby",
+			"min": 1,
+			"max": 2
+		}
+	]
+}

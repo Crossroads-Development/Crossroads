@@ -1,8 +1,8 @@
-package com.Da_Technomancer.crossroads.items.crafting.recipes;
+package com.Da_Technomancer.crossroads.crafting.recipes;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
-import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
+import com.Da_Technomancer.crossroads.crafting.CRRecipes;
+import com.Da_Technomancer.crossroads.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.tileentities.fluid.WaterCentrifugeTileEntity;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.google.gson.JsonArray;

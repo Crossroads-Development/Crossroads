@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 
 import com.Da_Technomancer.crossroads.API.effects.alchemy.IAlchEffect;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

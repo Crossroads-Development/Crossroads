@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.items.crafting;
+package com.Da_Technomancer.crossroads.crafting;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.Essentials;

@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.items.crafting;
+package com.Da_Technomancer.crossroads.crafting;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

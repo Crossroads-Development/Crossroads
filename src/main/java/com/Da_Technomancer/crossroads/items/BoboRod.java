@@ -2,8 +2,8 @@ package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
-import com.Da_Technomancer.crossroads.items.crafting.recipes.BoboRec;
+import com.Da_Technomancer.crossroads.crafting.CRRecipes;
+import com.Da_Technomancer.crossroads.crafting.recipes.BoboRec;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.dispenser.DefaultDispenseItemBehavior;

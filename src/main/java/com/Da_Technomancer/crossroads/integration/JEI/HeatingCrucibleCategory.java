@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.items.crafting.recipes.CrucibleRec;
+import com.Da_Technomancer.crossroads.crafting.recipes.CrucibleRec;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;

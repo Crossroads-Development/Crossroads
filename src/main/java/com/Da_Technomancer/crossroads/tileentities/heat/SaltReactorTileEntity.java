@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.SaltReactorContainer;
-import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluid;

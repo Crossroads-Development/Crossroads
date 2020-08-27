@@ -1,11 +1,7 @@
 package com.Da_Technomancer.crossroads.world;
 
-import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import net.minecraft.block.BlockState;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.OreFeatureConfig;
@@ -20,6 +16,8 @@ public class CRWorldGen{
 	public static SingleGen GEM_FEATURE;
 
 	public static void register(IForgeRegistry<Feature<?>> reg){
+		/* TODO disabled until Forge adds a hook
+
 		//Create a new feature type for placing single blocks of ore
 		reg.register((GEM_FEATURE = new SingleGen()).setRegistryName("single_gen"));
 
@@ -44,6 +42,7 @@ public class CRWorldGen{
 				biome.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, configuredFeature(GEM_FEATURE, SingleGen.ENDSTONE, OreSetup.oreVoid.getDefaultState(), 1, 5, 80, 10));
 			}
 		}
+		*/
 	}
 
 	private static ConfiguredFeature<?, ?> configuredFeature(Feature<OreFeatureConfig> feature, RuleTest canOverwrite, BlockState ore, int veinSize, int minHeight, int maxHeight, int attemptsPerChunk){

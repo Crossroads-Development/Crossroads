@@ -1,7 +1,7 @@
-package com.Da_Technomancer.crossroads.items.crafting.recipes;
+package com.Da_Technomancer.crossroads.crafting.recipes;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
+import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;

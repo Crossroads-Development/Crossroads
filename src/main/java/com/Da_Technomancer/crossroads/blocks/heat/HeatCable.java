@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.templates.ConduitBlock;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

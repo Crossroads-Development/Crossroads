@@ -1,7 +1,7 @@
-package com.Da_Technomancer.crossroads.items.crafting;
+package com.Da_Technomancer.crossroads.crafting;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.items.crafting.recipes.*;
+import com.Da_Technomancer.crossroads.crafting.recipes.*;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraftforge.registries.ObjectHolder;

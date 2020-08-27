@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.items.crafting.recipes;
+package com.Da_Technomancer.crossroads.crafting.recipes;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;

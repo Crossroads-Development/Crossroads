@@ -1,12 +1,12 @@
-package com.Da_Technomancer.crossroads.items.crafting.recipes;
+package com.Da_Technomancer.crossroads.crafting.recipes;
 
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
-import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
+import com.Da_Technomancer.crossroads.crafting.CRRecipes;
+import com.Da_Technomancer.crossroads.crafting.CraftingUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -267,7 +267,7 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 		 * 		"catalyst": <string reagent ID or "NONE">, //Optional, defaults to "NONE". Sets a required catalyst to reagent ID if set to something other than NONE.
 		 * 		"charged": <true or false>, //Optional, defaults to false. If true, the reaction chamber needs to be charged
 		 * 		"data": <number>, //Optional, defaults to 0. Only used by destructive type for controlling blast strength (see gunpowder for reference)
-		 *		"active": <true of false>, //Optional, defaults to true. If false, this recipe will not be added! This is for making it easier to remove reactions through datapacks (to remove a reaction, override it with a version with real=false)
+		 *		"active": <true of false>, //Optional, defaults to true. If false, this recipe will not be added! This is for making it easier to remove reactions through datapacks (to remove a reaction, override it with a version with active=false)
 		 *
 		 * 		//FOR ONE REAGENT
 		 * 		"reagents": {

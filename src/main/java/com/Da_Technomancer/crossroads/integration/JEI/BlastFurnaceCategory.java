@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.items.crafting.recipes.BlastFurnaceRec;
+import com.Da_Technomancer.crossroads.crafting.recipes.BlastFurnaceRec;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;

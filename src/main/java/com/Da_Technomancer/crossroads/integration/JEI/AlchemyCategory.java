@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.items.crafting.recipes.AlchemyRec;
+import com.Da_Technomancer.crossroads.crafting.recipes.AlchemyRec;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.gui.IRecipeLayout;

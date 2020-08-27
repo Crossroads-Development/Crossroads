@@ -12,7 +12,7 @@ import com.Da_Technomancer.crossroads.API.templates.IBeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.BlockState;

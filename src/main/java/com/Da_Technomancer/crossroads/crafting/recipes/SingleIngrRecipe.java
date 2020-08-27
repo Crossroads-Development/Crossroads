@@ -1,6 +1,6 @@
-package com.Da_Technomancer.crossroads.items.crafting.recipes;
+package com.Da_Technomancer.crossroads.crafting.recipes;
 
-import com.Da_Technomancer.crossroads.items.crafting.CraftingUtil;
+import com.Da_Technomancer.crossroads.crafting.CraftingUtil;
 import com.google.gson.JsonObject;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;

@@ -22,7 +22,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<item>Ruby ore/$ only spawns in the nether in veins of nether quartz ore. It is overall quite rare- but easy to find if you mine quartz ore veins. It drops <item>ruby/$ gems, which are used for <thing>$(l:intro/beam)beams/$.$(br2)"
+			"text": "<item>Ruby ore/$ only spawns in the nether in veins of nether quartz ore. It is overall quite rare- but easy to find if you mine quartz ore veins. It drops <item>ruby/$ gems, which are used for <thing>$(l:intro/beam)beams/$. <item>Rubies/$ can also be sold by piglins. $(br2)"
 		},
 		{
 			"type": "text",

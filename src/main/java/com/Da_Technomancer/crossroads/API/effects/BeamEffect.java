@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.items.crafting.CRRecipes;
-import com.Da_Technomancer.crossroads.items.crafting.recipes.BeamTransmuteRec;
+import com.Da_Technomancer.crossroads.crafting.CRRecipes;
+import com.Da_Technomancer.crossroads.crafting.recipes.BeamTransmuteRec;
 import net.minecraft.block.BlockState;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.util.Direction;

@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.API.technomancy;
 import com.Da_Technomancer.crossroads.API.effects.goggles.*;
 import com.Da_Technomancer.crossroads.Keys;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.items.crafting.CRItemTags;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.PlayerEntity;
