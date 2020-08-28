@@ -1,12 +1,15 @@
 package com.Da_Technomancer.crossroads.crafting.recipes;
 
-import com.Da_Technomancer.crossroads.API.alchemy.*;
+import com.Da_Technomancer.crossroads.API.alchemy.EnumReagents;
+import com.Da_Technomancer.crossroads.API.alchemy.IReactionChamber;
+import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
+import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.CraftingUtil;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -42,8 +45,9 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 	private final int amountChange;
 	private final float data;//What "data" means varies with reaction type. Currently, destructive measures it as blast strength per reaction
 	private final boolean real;//If false, disable this recipe. For datapacks
+	private final EnumBeamAlignments alignment;//Only used for ELEMENTAL type
 
-	public AlchemyRec(ResourceLocation location, String name, Type type, ReagentStack[] reagents, ReagentStack[] products, @Nullable String cat, double minTemp, double maxTemp, double heatChange, boolean charged, float data, boolean real){
+	public AlchemyRec(ResourceLocation location, String name, Type type, ReagentStack[] reagents, ReagentStack[] products, @Nullable String cat, double minTemp, double maxTemp, double heatChange, boolean charged, float data, boolean real, EnumBeamAlignments alignment){
 		id = location;
 		group = name;
 
@@ -57,6 +61,7 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 		this.charged = charged;
 		this.data = data;
 		this.real = real;
+		this.alignment = alignment;
 		int change = 0;
 
 		for(ReagentStack reag : reagents){
@@ -117,30 +122,6 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 			return false;//If this is not a real reaction, do nothing
 		}
 
-		if(type == Type.ELEMENTAL){
-			//Elemental type requires that product be length 1 and contain an elemental reagent
-
-			//Chamber must be charged to begin
-			if(chamb.isCharged()){
-				IElementReagent prod = (IElementReagent) products[0].getType();
-
-				//Requires practitioner's catalyst
-				ReagentMap reags = chamb.getReagants();
-				if(reags.getQty(EnumReagents.PRACTITIONER.id()) != 0 && prod.getAlignment() == EnumBeamAlignments.getAlignment(new BeamUnit(reags.getQty(EnumReagents.PHELOSTOGEN.id()), reags.getQty(EnumReagents.AETHER.id()), reags.getQty(EnumReagents.ADAMANT.id()), 0))){
-					int created = 0;
-					created += reags.getQty(EnumReagents.PHELOSTOGEN.id());
-					created += reags.getQty(EnumReagents.AETHER.id());
-					created += reags.getQty(EnumReagents.ADAMANT.id());
-					reags.remove(EnumReagents.PHELOSTOGEN.id());
-					reags.remove(EnumReagents.AETHER.id());
-					reags.remove(EnumReagents.ADAMANT.id());
-					reags.addReagent(prod, created, reags.getTempC());
-					return created > 0;
-				}
-			}
-			return false;
-		}
-
 		//Check charged, catalyst, temperature, and solvent requirements
 		if(charged() && !chamb.isCharged()){
 			return false;
@@ -157,15 +138,35 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 
 		int content = chamb.getContent();
 
+		//Elemental reactions have special handling
+		if(type == Type.ELEMENTAL){
+			if(alignment == EnumBeamAlignments.getAlignment(new BeamUnit(reags.getQty(EnumReagents.PHELOSTOGEN.id()), reags.getQty(EnumReagents.AETHER.id()), reags.getQty(EnumReagents.ADAMANT.id()), 0))){
+				int created = 0;
+				created += reags.getQty(EnumReagents.PHELOSTOGEN.id());
+				created += reags.getQty(EnumReagents.AETHER.id());
+				created += reags.getQty(EnumReagents.ADAMANT.id());
+				reags.remove(EnumReagents.PHELOSTOGEN.id());
+				reags.remove(EnumReagents.AETHER.id());
+				reags.remove(EnumReagents.ADAMANT.id());
+
+				for(ReagentStack reag : getProducts()){
+					reags.addReagent(reag.getType(), created * reag.getAmount(), reags.getTempC());
+				}
+
+				return created > 0;
+			}
+			return false;
+		}
+
 		int maxReactions = amountChange <= 0 ? 200 : (chamb.getReactionCapacity() - content) / amountChange;//200 chosen arbitrarily as a moderately large positive number
 
 		int prevMax = 0;
 		for(ReagentStack reag : reagents){
-			if(reags.getQty(reag.getType()) <= 0){
+			if(reags.getQty(reag.getId()) <= 0){
 				return false;
 			}
 
-			int maxFromReag = reags.getQty(reag.getType()) / reag.getAmount();
+			int maxFromReag = reags.getQty(reag.getId()) / reag.getAmount();
 			maxReactions = Math.min(maxReactions, maxFromReag);
 
 			//Destroy the chamber for precise type if the ratio isn't perfect for the input
@@ -260,13 +261,13 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 		 * {
 		 * 		"type": "crossroads:alchemy", //Tells Minecraft this is an alchemy recipe
 		 *		"group": <group>, //Optional, same purpose as vanilla
-		 * 		"category": <normal/precise/destructive>, //Optional, defaults to "normal". Destructive recipes explode (with strength controlled by data), and precise recipes break the chamber if the inputs weren't perfectly balanced
-		 *		"min_temp": <number>, //Optional, defaults to absolute zero. Sets a minimum temperature for this reaction (celsius)
+		 * 		"category": <normal/precise/destructive/elemental>, //Optional, defaults to "normal". Destructive recipes explode (with strength controlled by data), and precise recipes break the chamber if the inputs weren't perfectly balanced. Elemental recipes require specifying an alignment with "data", and will ignore reactants, occurring if the mix of phel., aeth., and adam. matches the alignment.
+		 * 		"min_temp": <number>, //Optional, defaults to absolute zero. Sets a minimum temperature for this reaction (celsius)
 		 * 		"max_temp": <number>, //Optional, defaults to an unreachable high value. Sets a maximum temperature for this reaction (celsius)
 		 *		"heat": <number>, //Optional, defaults to zero. Controls how much heat this reaction releases/absorbs. Negative numbers are exothermic, positive endothermic
 		 * 		"catalyst": <string reagent ID or "NONE">, //Optional, defaults to "NONE". Sets a required catalyst to reagent ID if set to something other than NONE.
 		 * 		"charged": <true or false>, //Optional, defaults to false. If true, the reaction chamber needs to be charged
-		 * 		"data": <number>, //Optional, defaults to 0. Only used by destructive type for controlling blast strength (see gunpowder for reference)
+		 * 		"data": <number/string alignment name>, //Optional, defaults to 0. Used by destructive type for controlling blast strength (see gunpowder for reference), expects a number. Elemental type reactions require this to be the string name of an alignment.
 		 *		"active": <true of false>, //Optional, defaults to true. If false, this recipe will not be added! This is for making it easier to remove reactions through datapacks (to remove a reaction, override it with a version with active=false)
 		 *
 		 * 		//FOR ONE REAGENT
@@ -318,7 +319,14 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 				String s = JSONUtils.getString(json, "catalyst", VOID_STR);
 				String cat = s.equals(VOID_STR) ? null : s;
 				boolean charge = JSONUtils.getBoolean(json, "charged", false);
-				float data = JSONUtils.getFloat(json, "data", 0);
+
+				float data = 0;
+				EnumBeamAlignments alignment = EnumBeamAlignments.NO_MATCH;
+				if(type == Type.DESTRUCTIVE){
+					data = JSONUtils.getFloat(json, "data", 0);
+				}else if(type == Type.ELEMENTAL){
+					alignment = EnumBeamAlignments.valueOf(JSONUtils.getString(json, "data", "no_match").toUpperCase(Locale.US));
+				}
 
 				JsonArray jsonR;
 				if(JSONUtils.isJsonArray(json, "reagents")){
@@ -352,9 +360,9 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 					}
 				}
 
-				return new AlchemyRec(recipeId, group, type, reags, prods, cat, minTemp, maxTemp, heatChange, charge, data, true);
+				return new AlchemyRec(recipeId, group, type, reags, prods, cat, minTemp, maxTemp, heatChange, charge, data, true, alignment);
 			}else{
-				return new AlchemyRec(recipeId, group, Type.NORMAL, new ReagentStack[0], new ReagentStack[0], null, HeatUtil.ABSOLUTE_ZERO, HeatUtil.ABSOLUTE_ZERO, 0, false, 0, false);
+				return new AlchemyRec(recipeId, group, Type.NORMAL, new ReagentStack[0], new ReagentStack[0], null, HeatUtil.ABSOLUTE_ZERO, HeatUtil.ABSOLUTE_ZERO, 0, false, 0, false, EnumBeamAlignments.NO_MATCH);
 			}
 		}
 
@@ -383,10 +391,11 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 					prod[i] = new ReagentStack(buffer.readString(), buffer.readByte());
 				}
 				float data = buffer.readFloat();
+				EnumBeamAlignments alignment = EnumBeamAlignments.values()[buffer.readVarInt()];
 
-				return new AlchemyRec(recipeId, group, type, reags, prod, catalyst, minTemp, maxTemp, heatChange, charged, data, true);
+				return new AlchemyRec(recipeId, group, type, reags, prod, catalyst, minTemp, maxTemp, heatChange, charged, data, true, alignment);
 			}else{
-				return new AlchemyRec(recipeId, group, Type.NORMAL, new ReagentStack[0], new ReagentStack[0], null, HeatUtil.ABSOLUTE_ZERO, HeatUtil.ABSOLUTE_ZERO, 0, false, 0, false);
+				return new AlchemyRec(recipeId, group, Type.NORMAL, new ReagentStack[0], new ReagentStack[0], null, HeatUtil.ABSOLUTE_ZERO, HeatUtil.ABSOLUTE_ZERO, 0, false, 0, false, EnumBeamAlignments.NO_MATCH);
 			}
 		}
 
@@ -404,25 +413,26 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 				int total = recipe.reagents.length;
 				buffer.writeByte(total);//Number of reagents
 				for(ReagentStack reag : recipe.reagents){
-					buffer.writeString(reag.getType().getId());//reag type
+					buffer.writeString(reag.getType().getID());//reag type
 					buffer.writeByte(reag.getAmount());//reag qty
 				}
 				total = recipe.products.length;
 				buffer.writeByte(total);//Number of products
 				for(ReagentStack reag : recipe.products){
-					buffer.writeString(reag.getType().getId());//prod type
+					buffer.writeString(reag.getType().getID());//prod type
 					buffer.writeByte(reag.getAmount());//prod qty
 				}
 				buffer.writeFloat(recipe.data);//data
+				buffer.writeVarInt(recipe.alignment.ordinal());
 			}
 		}
 	}
-	
+
 	public enum Type{
 		NORMAL(),
 		PRECISE(),//Destroys the chamber if proportions aren't exact
 		DESTRUCTIVE(),//Destroys the chamber
-		ELEMENTAL();//Hardcoded, not JSON-able
+		ELEMENTAL();//Practitioner stone tier elemental reagent
 
 		public static Type getType(String s){
 			s = s.toUpperCase(Locale.ENGLISH);

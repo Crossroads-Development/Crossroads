@@ -1,7 +1,11 @@
 package com.Da_Technomancer.crossroads;
 
+import com.Da_Technomancer.crossroads.API.alchemy.ReagentManager;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
-import com.Da_Technomancer.crossroads.API.packets.*;
+import com.Da_Technomancer.crossroads.API.packets.AddVisualToClient;
+import com.Da_Technomancer.crossroads.API.packets.CRPackets;
+import com.Da_Technomancer.crossroads.API.packets.SendGoggleConfigureToServer;
+import com.Da_Technomancer.crossroads.API.packets.SendPlayerTickCountToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.integration.curios.CurioHelper;
 import com.Da_Technomancer.crossroads.items.CRItems;
@@ -26,6 +30,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -272,5 +277,11 @@ public final class EventHandlerClient{
 				}
 			}
 		}
+	}
+
+	@SubscribeEvent
+	@SuppressWarnings("unused")
+	public void refreshAlchemy(RecipesUpdatedEvent e){
+		ReagentManager.updateFromServer(e.getRecipeManager());
 	}
 }

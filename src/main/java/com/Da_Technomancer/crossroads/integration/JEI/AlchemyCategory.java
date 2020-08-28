@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
 import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
+import com.Da_Technomancer.crossroads.API.alchemy.ReagentManager;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
@@ -118,7 +118,7 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 
 		if(recipe.getCatalyst() != null){
 //			GlStateManager.color(1, 1, 1);
-			ReagentIngredientRenderer.RENDERER.render(matrix, 82, 2, new ReagIngr(AlchemyCore.getReagent(recipe.getCatalyst()), 0));
+			ReagentIngredientRenderer.RENDERER.render(matrix, 82, 2, new ReagIngr(recipe.getCatalyst(), 0));
 		}
 	}
 
@@ -150,7 +150,7 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 
 	@Override
 	public List<ITextComponent> getTooltipStrings(AlchemyRec recipe, double mouseX, double mouseY){
-		IReagent catalyst = AlchemyCore.getReagent(recipe.getCatalyst());
+		IReagent catalyst = ReagentManager.getReagent(recipe.getCatalyst());
 		if(catalyst != null && mouseX >= 82 && mouseX <= 98 && mouseY >= 2 && mouseY <= 18){
 			return ImmutableList.of(new StringTextComponent(catalyst.getName()));
 		}

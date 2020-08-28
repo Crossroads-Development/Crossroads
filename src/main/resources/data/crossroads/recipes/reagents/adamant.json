@@ -1,0 +1,8 @@
+{
+	"type": "crossroads:reagents",
+	"id": "adamant",
+	"melting": "never",
+	"boiling": "never",
+	"item": "crossroads:dusts/adamant",
+	"color": "FF323264"
+}

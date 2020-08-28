@@ -16,7 +16,7 @@ public class ReagentStack{
 	}
 
 	public ReagentStack(IReagent type, int amount){
-		this.typeId = type.getId();
+		this.typeId = type.getID();
 		this.amount = amount;
 	}
 
@@ -24,10 +24,14 @@ public class ReagentStack{
 		return amount <= 0;
 	}
 
+	public String getId(){
+		return typeId;
+	}
+
 	@Nonnull
 	public IReagent getType(){
-		IReagent type = AlchemyCore.getReagent(typeId);
-		return type == null ? AlchemyCore.getReagent(DEFAULT) : type;
+		IReagent type = ReagentManager.getReagent(typeId);
+		return type == null ? ReagentManager.getReagent(DEFAULT) : type;
 	}
 
 	/**
@@ -42,7 +46,7 @@ public class ReagentStack{
 		if(isEmpty()){
 			return "Empty Reagent";
 		}else{
-			IReagent reag = AlchemyCore.getReagent(typeId);
+			IReagent reag = ReagentManager.getReagent(typeId);
 			if(reag == null){
 				return "Unresolved: " + typeId + ", Qty: " + amount;
 			}else{

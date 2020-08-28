@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:reagents",
+	"id": "gold",
+	"melting": 1100,
+	"boiling": 3000,
+	"item": "forge:nuggets/gold",
+	"fluid": {
+		"fluid": "crossroads:molten_gold",
+		"amount": 16
+	},
+	"color": "FFFF00"
+}

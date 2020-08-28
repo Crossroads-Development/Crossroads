@@ -111,7 +111,7 @@ public class ChemicalVentTileEntity extends TileEntity implements ITickableTileE
 				if(!r.isEmpty()){
 					EnumMatterPhase phase = type.getPhase(HeatUtil.toCelcius(callerTemp));
 					if(ignorePhase || (phase.flows() && (side != Direction.UP || phase.flowsDown()) && (side != Direction.DOWN || phase.flowsUp()))){
-						validIds.add(type.getId());
+						validIds.add(type.getID());
 					}
 				}
 			}

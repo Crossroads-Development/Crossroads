@@ -1,0 +1,9 @@
+{
+	"type": "crossroads:reagents",
+	"id": "sulfuric_acid",
+	"melting": 10,
+	"boiling": 340,
+	"item": "crossroads:dusts/sulfuric_acid",
+	"color": "823200",
+	"effect": "acid"
+}

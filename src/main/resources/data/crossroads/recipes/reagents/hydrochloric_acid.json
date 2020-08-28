@@ -1,0 +1,9 @@
+{
+	"type": "crossroads:reagents",
+	"id": "hydrochloric_acid",
+	"melting": -110,
+	"boiling": 90,
+	"item": "crossroads:dusts/hydrochloric_acid",
+	"color": "64FFFFFF",
+	"effect": "acid"
+}

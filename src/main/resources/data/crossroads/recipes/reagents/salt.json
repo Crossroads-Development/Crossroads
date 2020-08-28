@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:reagents",
+	"id": "salt",
+	"melting": 800,
+	"boiling": 1400,
+	"item": "forge:dusts/salt",
+	"color": {
+		"base": "FFFFFF",
+		"liquid": "FFC800"
+	},
+	"effect": "salt"
+}

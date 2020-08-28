@@ -15,8 +15,6 @@ import net.minecraft.world.server.ServerWorld;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
 
 public class AlchemyUtil{
 
@@ -64,7 +62,7 @@ public class AlchemyUtil{
 				switch(p){
 					case FLAME:
 						//The flame reagent with the largest radius dominates
-						flameRange = Math.max(flameRange, AlchemyCore.FLAME_RANGES.get(reag).apply(qty));
+						flameRange = Math.max(flameRange, reag.getFlameRadius(qty));
 						break;
 					case GAS:
 						gasQty += qty;

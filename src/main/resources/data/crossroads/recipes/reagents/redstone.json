@@ -1,0 +1,8 @@
+{
+	"type": "crossroads:reagents",
+	"id": "redstone",
+	"melting": 580,
+	"boiling": "never",
+	"item": "forge:dusts/redstone",
+	"color": "FF0000"
+}

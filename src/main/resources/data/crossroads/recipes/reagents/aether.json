@@ -1,0 +1,7 @@
+{
+	"type": "crossroads:reagents",
+	"id": "aether",
+	"vessel": "crystal",
+	"color": "9600FF00",
+	"effect": "terraform_plains"
+}

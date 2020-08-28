@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCore;
+import com.Da_Technomancer.crossroads.API.alchemy.ReagentManager;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
@@ -76,7 +76,7 @@ public class JEICrossroadsPlugin implements IModPlugin{
 		registration.addRecipes(getRecipes(recipeManager, CRRecipes.DETAILED_TYPE), DetailedCrafterCategory.ID);
 		registration.addRecipes(getRecipes(recipeManager, CRRecipes.ALCHEMY_TYPE), AlchemyCategory.ID);
 		registration.addRecipes(getRecipes(recipeManager, CRRecipes.COPSHOWIUM_TYPE), CopshowiumCategory.ID);
-		registration.addRecipes(AlchemyCore.getRegisteredReags(), ReagInfoCategory.ID);
+		registration.addRecipes(ReagentManager.getRegisteredReags(), ReagInfoCategory.ID);
 	}
 
 	private static Collection<?> getRecipes(RecipeManager manage, IRecipeType<?> type){

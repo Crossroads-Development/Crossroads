@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.IAlchEffect;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,7 +19,7 @@ public interface IReagent{
 	 * @return A human readable name
 	 */
 	default String getName(){
-		return MiscUtil.localize("reagent." + getId());
+		return MiscUtil.localize("reagent." + getID());
 	}
 	
 	/**
@@ -27,7 +28,7 @@ public interface IReagent{
 	double getMeltingPoint();
 	
 	/**
-	 * @return The boiling temperature in C. Must be greater than melting temperature. Setting below absolute-zero will disable condensing.
+	 * @return The boiling temperature in C. Must be greater than or equal to melting temperature. Setting below absolute-zero will disable condensing.
 	 */
 	double getBoilingPoint();
 	
@@ -39,8 +40,20 @@ public interface IReagent{
 		return false;
 	}
 	
-	String getId();
-	
+	String getID();
+
+	/**
+	 * Do not modify the returned value- it is unfortunately mutable
+	 * @return A fluidstack representing the fluid equivalent of 1 unit of this reagent. EMPTY means no equivalent.
+	 */
+	default FluidStack getFluid(){
+		return FluidStack.EMPTY;
+	}
+
+	default int getFlameRadius(int amount){
+		return 0;
+	}
+
 	/**
 	 * Gets the (purely visual) color. 
 	 * @param phase The current phase

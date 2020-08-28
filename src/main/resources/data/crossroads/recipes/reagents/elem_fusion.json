@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:reagents",
+	"id": "elem_fusion",
+	"melting": 1000,
+	"boiling": 2500,
+	"vessel": "crystal",
+	"item": "crossroads:dusts/fusas",
+	"color": "80FFFF",
+	"effect": "terraform_ocean"
+}

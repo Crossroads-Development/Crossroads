@@ -1,0 +1,8 @@
+{
+	"type": "crossroads:reagents",
+	"id": "diamond",
+	"melting": 3500,
+	"boiling": 4800,
+	"item": "forge:gems/diamond",
+	"color": "00FFFF"
+}

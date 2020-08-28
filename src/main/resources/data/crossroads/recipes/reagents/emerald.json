@@ -1,0 +1,8 @@
+{
+	"type": "crossroads:reagents",
+	"id": "emerald",
+	"melting": 1300,
+	"boiling": 3000,
+	"item": "forge:gems/emerald",
+	"color": "00FF00"
+}

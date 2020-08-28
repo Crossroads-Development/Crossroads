@@ -1,0 +1,8 @@
+{
+	"type": "crossroads:reagents",
+	"id": "slag",
+	"melting": 2000,
+	"boiling": 3000,
+	"item": "forge:dusts/slag",
+	"color": "404040"
+}

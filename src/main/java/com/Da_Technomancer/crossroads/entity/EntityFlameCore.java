@@ -137,7 +137,7 @@ public class EntityFlameCore extends Entity{
 					a += qty * color.getAlpha();
 					amount += qty;
 
-					if(!type.getId().equals(EnumReagents.PHELOSTOGEN.id()) && !type.getId().equals(EnumReagents.HELLFIRE.id())){
+					if(!type.getID().equals(EnumReagents.PHELOSTOGEN.id()) && !type.getID().equals(EnumReagents.HELLFIRE.id())){
 						reagList.add(reags.getStack(type));
 					}
 				}

@@ -1,0 +1,8 @@
+{
+	"type": "crossroads:reagents",
+	"id": "cavorite",
+	"melting": 1000,
+	"boiling": 1000,
+	"item": "crossroads:gems/cavorite",
+	"color": "FFFF00"
+}

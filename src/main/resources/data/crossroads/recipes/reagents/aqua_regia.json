@@ -1,0 +1,9 @@
+{
+	"type": "crossroads:reagents",
+	"id": "aqua_regia",
+	"melting": -40,
+	"boiling": 200,
+	"item": "crossroads:dusts/aqua_regia",
+	"color": "FFC800",
+	"effect": "acid_gold"
+}

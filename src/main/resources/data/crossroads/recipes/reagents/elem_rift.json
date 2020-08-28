@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:reagents",
+	"id": "elem_rift",
+	"melting": -100,
+	"boiling": 350,
+	"vessel": "destructive",
+	"item": "crossroads:dusts/eldrine",
+	"color": "FF00FF",
+	"effect": "terraform_nether"
+}

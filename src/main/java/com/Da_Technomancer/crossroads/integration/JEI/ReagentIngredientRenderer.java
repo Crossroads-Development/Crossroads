@@ -72,7 +72,7 @@ public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 			}
 		}
 		if(tooltipFlag.isAdvanced()){
-			tooltip.add(new TranslationTextComponent("tt.crossroads.jei.reag.id", ingredient.getReag().getId()));
+			tooltip.add(new TranslationTextComponent("tt.crossroads.jei.reag.id", ingredient.getReag().getID()));
 		}
 		return tooltip;
 	}

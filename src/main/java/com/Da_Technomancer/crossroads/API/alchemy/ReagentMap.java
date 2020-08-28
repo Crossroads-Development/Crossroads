@@ -17,7 +17,7 @@ public class ReagentMap extends HashMap<String, Integer>{
 	private int totalQty;
 
 	public ReagentMap(){
-		super(AlchemyCore.REAGENT_COUNT);
+		super(ReagentManager.getRegisteredReags().size());
 	}
 
 	public void transferReagent(String id, int amount, ReagentMap srcMap){
@@ -28,7 +28,7 @@ public class ReagentMap extends HashMap<String, Integer>{
 	}
 
 	public void transferReagent(IReagent reag, int amount, ReagentMap srcMap){
-		transferReagent(reag.getId(), amount, srcMap);
+		transferReagent(reag.getID(), amount, srcMap);
 	}
 
 	public int addReagent(String id, int amount, double srcTemp){
@@ -47,7 +47,7 @@ public class ReagentMap extends HashMap<String, Integer>{
 	}
 
 	public int addReagent(IReagent reag, int amount, double srcTemp){
-		return addReagent(reag.getId(), amount, srcTemp);
+		return addReagent(reag.getID(), amount, srcTemp);
 	}
 
 	public int removeReagent(String id, int amount){
@@ -73,7 +73,7 @@ public class ReagentMap extends HashMap<String, Integer>{
 	}
 
 	public int removeReagent(IReagent reag, int amount){
-		return removeReagent(reag.getId(), amount);
+		return removeReagent(reag.getID(), amount);
 	}
 
 	public ReagentStack getStack(String id){
@@ -91,7 +91,7 @@ public class ReagentMap extends HashMap<String, Integer>{
 	@Override
 	public Integer get(Object key){
 		if(key instanceof IReagent){
-			key = ((IReagent) key).getId();
+			key = ((IReagent) key).getID();
 		}
 		return super.get(key);
 	}
@@ -107,13 +107,13 @@ public class ReagentMap extends HashMap<String, Integer>{
 	}
 
 	public Integer put(IReagent key, Integer value){
-		return put(key.getId(), value);
+		return put(key.getID(), value);
 	}
 
 	@Override
 	public Integer remove(Object key){
 		if(key instanceof IReagent){
-			key = ((IReagent) key).getId();
+			key = ((IReagent) key).getID();
 		}
 		Integer qty = super.remove(key);
 		if(qty != null){
@@ -141,7 +141,7 @@ public class ReagentMap extends HashMap<String, Integer>{
 	}
 
 	public int getQty(IReagent reag){
-		return getQty(reag.getId());
+		return getQty(reag.getID());
 	}
 
 	public int getTotalQty(){
@@ -195,13 +195,13 @@ public class ReagentMap extends HashMap<String, Integer>{
 	@Override
 	public boolean containsKey(Object key){
 		if(key instanceof IReagent){
-			key = ((IReagent) key).getId();
+			key = ((IReagent) key).getID();
 		}
 		return super.containsKey(key);
 	}
 
 	@Deprecated
 	public Set<IReagent> keySetReag(){
-		return keySet().stream().map(AlchemyCore::getReagent).filter(Objects::nonNull).collect(Collectors.toSet());
+		return keySet().stream().map(ReagentManager::getReagent).filter(Objects::nonNull).collect(Collectors.toSet());
 	}
 }

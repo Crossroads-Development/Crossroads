@@ -1,0 +1,8 @@
+{
+	"type": "crossroads:reagents",
+	"id": "quicksilver",
+	"melting": -40,
+	"boiling": 560,
+	"item": "forge:gems/mercury",
+	"color": "C0C0C0"
+}

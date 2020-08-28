@@ -1,0 +1,8 @@
+{
+	"type": "crossroads:reagents",
+	"id": "ruby",
+	"melting": 2000,
+	"boiling": 3000,
+	"item": "forge:gems/ruby",
+	"color": "FF0000"
+}

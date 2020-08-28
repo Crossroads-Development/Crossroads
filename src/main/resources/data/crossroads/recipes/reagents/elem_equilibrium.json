@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:reagents",
+	"id": "elem_equilibrium",
+	"melting": 800,
+	"boiling": 1800,
+	"vessel": "crystal",
+	"item": "crossroads:dusts/stasisol",
+	"color": "FF80FF",
+	"effect": "terraform_ocean"
+}

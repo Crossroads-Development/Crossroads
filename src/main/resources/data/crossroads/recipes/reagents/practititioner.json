@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:reagents",
+	"id": "practitioner",
+	"melting": "never",
+	"boiling": "never",
+	"item": "crossroads:anti_alkahest",
+	"color": "64C81400",
+	"effect": "drop_prac_stone",
+	"vessel": "destructive"
+}

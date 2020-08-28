@@ -1,0 +1,8 @@
+{
+	"type": "crossroads:reagents",
+	"id": "anti_densus",
+	"melting": "never",
+	"boiling": "never",
+	"item": "crossroads:gems/anti_densus",
+	"color": "FFC800"
+}

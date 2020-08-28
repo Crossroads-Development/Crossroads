@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:reagents",
+	"id": "sulfur",
+	"melting": 115,
+	"boiling": 445,
+	"item": "forge:dusts/sulfur",
+	"color": {
+		"base": "FFFF00",
+		"gas": "C8FFFF00",
+		"liquid": "FF0000"
+	}
+}

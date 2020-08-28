@@ -14,6 +14,9 @@ import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nullable;
+import java.awt.*;
+
 public class CraftingUtil{
 
 	/**
@@ -119,5 +122,20 @@ public class CraftingUtil{
 
 	public static boolean isActiveJSON(JsonObject json){
 		return JSONUtils.getBoolean(json, "active", true);
+	}
+
+	public static Color getColor(JsonObject json, String memberName, @Nullable Color fallback){
+		if(!json.has(memberName)){
+			return fallback;
+		}
+		String colorCode = JSONUtils.getString(json, memberName);
+		if(colorCode.length() != 6 && colorCode.length() != 8){
+			return fallback;
+		}
+		try{
+			return new Color(Long.valueOf(colorCode, 16).intValue(), colorCode.length() == 8);
+		}catch(NumberFormatException e){
+			return fallback;
+		}
 	}
 }

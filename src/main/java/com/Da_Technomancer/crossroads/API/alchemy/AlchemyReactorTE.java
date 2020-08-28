@@ -64,7 +64,7 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 	}
 
 	protected void performReaction(){
-		for(AlchemyRec react : AlchemyCore.getReactions(world)){
+		for(AlchemyRec react : ReagentManager.getReactions(world)){
 			if(react.performReaction(this)){
 				correctReag();
 				break;

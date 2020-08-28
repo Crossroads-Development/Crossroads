@@ -33,7 +33,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nonnull;
@@ -353,7 +352,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 			out = player.getHeldItem(hand);
 		}else{
 			//Move solids from hand into carrier
-			IReagent typeProduced = AlchemyCore.getItemToReagent().get(stack.getItem());
+			IReagent typeProduced = ReagentManager.getItemToReagent().get(stack.getItem());
 			if(typeProduced != null && contents.getTotalQty() < transferCapacity()){
 				double itemTemp;
 				double biomeTemp = HeatUtil.convertBiomeTemp(world, pos);
@@ -535,9 +534,10 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 
 		private FluidStack simulateFluid(int tank){
 			if(tank >= 0 && tank < getTanks()){
-				IReagent r = AlchemyCore.getFluidToLiqreagent().get(tank).getRight();
-				FluidStack refStack = AlchemyCore.getFluidToLiqreagent().get(tank).getLeft();
-				int qty = contents.getQty(r);
+				String id = ReagentManager.getFluidReags().get(tank);
+				IReagent r = ReagentManager.getReagent(id);
+				FluidStack refStack = r.getFluid();
+				int qty = contents.getQty(id);
 				if(qty >= refStack.getAmount() && r.getPhase(contents.getTempC()) == EnumMatterPhase.LIQUID){
 					FluidStack out = refStack.copy();
 					out.setAmount(qty / refStack.getAmount());
@@ -549,7 +549,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 
 		@Override
 		public int getTanks(){
-			return AlchemyCore.getFluidToLiqreagent().size();
+			return ReagentManager.getFluidReags().size();
 		}
 
 		@Nonnull
@@ -560,8 +560,8 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 
 		@Override
 		public int getTankCapacity(int tank){
-			if(tank >= 0 && tank < AlchemyCore.getFluidToLiqreagent().size()){
-				return AlchemyCore.getFluidToLiqreagent().get(tank).getLeft().getAmount() * transferCapacity();
+			if(tank >= 0 && tank < ReagentManager.getFluidReags().size()){
+				return ReagentManager.getReagent(ReagentManager.getFluidReags().get(tank)).getFluid().getAmount() * transferCapacity();
 			}else{
 				return 0;
 			}
@@ -569,25 +569,26 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 
 		@Override
 		public boolean isFluidValid(int tank, @Nonnull FluidStack stack){
-			return tank >= 0 && tank < AlchemyCore.getFluidToLiqreagent().size() && BlockUtil.sameFluid(AlchemyCore.getFluidToLiqreagent().get(tank).getLeft(), stack);
+			return tank >= 0 && tank < ReagentManager.getFluidReags().size() && BlockUtil.sameFluid(ReagentManager.getReagent(ReagentManager.getFluidReags().get(tank)).getFluid(), stack);
 		}
 
 		@Override
 		public int fill(FluidStack resource, FluidAction action){
 			//The list is unsorted, so we need a sequential search to find the matching fluid type
-			for(int i = 0; i < AlchemyCore.getFluidToLiqreagent().size(); i++){
-				Pair<FluidStack, IReagent> mapping = AlchemyCore.getFluidToLiqreagent().get(i);
-				if(BlockUtil.sameFluid(mapping.getLeft(), resource)){
-					int toFillReag = Math.min(resource.getAmount() / mapping.getLeft().getAmount(), transferCapacity() - contents.getTotalQty());
+			for(int i = 0; i < ReagentManager.getFluidReags().size(); i++){
+				String id = ReagentManager.getFluidReags().get(i);
+				IReagent reag = ReagentManager.getReagent(id);
+				if(BlockUtil.sameFluid(reag.getFluid(), resource)){
+					int toFillReag = Math.min(resource.getAmount() / reag.getFluid().getAmount(), transferCapacity() - contents.getTotalQty());
 					//Note: toFillReag could be negative
 					if(toFillReag <= 0){
 						return 0;
 					}
 					if(action.execute()){
-						contents.addReagent(mapping.getRight(), toFillReag, calcInputTemp(mapping.getRight(), mapping.getLeft().getFluid()));
+						contents.addReagent(id, toFillReag, calcInputTemp(reag, reag.getFluid().getFluid()));
 						markDirty();
 					}
-					return toFillReag * mapping.getLeft().getAmount();
+					return toFillReag * reag.getFluid().getAmount();
 				}
 			}
 			return 0;
@@ -621,9 +622,10 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 		@Override
 		public FluidStack drain(FluidStack resource, FluidAction action){
 			//The list is unsorted, so we need a sequential search to find the matching fluid type
-			for(int i = 0; i < AlchemyCore.getFluidToLiqreagent().size(); i++){
-				Pair<FluidStack, IReagent> mapping = AlchemyCore.getFluidToLiqreagent().get(i);
-				if(BlockUtil.sameFluid(mapping.getLeft(), resource)){
+			for(int i = 0; i < ReagentManager.getFluidReags().size(); i++){
+				String id = ReagentManager.getFluidReags().get(i);
+				IReagent reag = ReagentManager.getReagent(id);
+				if(BlockUtil.sameFluid(reag.getFluid(), resource)){
 
 					FluidStack tank = simulateFluid(i);
 					if(!tank.isEmpty()){
@@ -632,7 +634,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 						//It isn't necessary to modify tank as we normally would, as it's only a conversion
 						tank.setAmount(drained);
 						if(action.execute()){
-							contents.removeReagent(mapping.getRight(), drained / mapping.getLeft().getAmount());
+							contents.removeReagent(id, drained / reag.getFluid().getAmount());
 							markDirty();
 						}
 						return tank;
@@ -648,7 +650,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 		@Nonnull
 		@Override
 		public FluidStack drain(int maxDrain, FluidAction action){
-			for(int i = 0; i < AlchemyCore.getFluidToLiqreagent().size(); i++){
+			for(int i = 0; i < ReagentManager.getFluidReags().size(); i++){
 				FluidStack tank = simulateFluid(i);
 				if(!tank.isEmpty()){
 					int drained = Math.min(tank.getAmount(), maxDrain);
@@ -656,8 +658,8 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 					//It isn't necessary to modify tank as we normally would, as it's only a conversion
 					tank.setAmount(drained);
 					if(action.execute()){
-						Pair<FluidStack, IReagent> mapping = AlchemyCore.getFluidToLiqreagent().get(i);
-						contents.removeReagent(mapping.getRight(), drained / mapping.getLeft().getAmount());
+						String id = ReagentManager.getFluidReags().get(i);
+						contents.removeReagent(id, drained / ReagentManager.getReagent(id).getFluid().getAmount());
 						markDirty();
 					}
 					return tank;
@@ -670,17 +672,17 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 
 	protected class ItemHandler implements IItemHandler{
 
-		private ItemStack[] fakeInventory = new ItemStack[AlchemyCore.getItemToReagent().size()];
+		private ItemStack[] fakeInventory = new ItemStack[ReagentManager.getItemToReagent().size()];
 
 		public ItemHandler(){
 
 		}
 
 		private void updateFakeInv(){
-			fakeInventory = new ItemStack[AlchemyCore.getItemToReagent().size()];
+			fakeInventory = new ItemStack[ReagentManager.getItemToReagent().size()];
 			int index = 0;
 			double endTemp = handler.getTemp();
-			for(IReagent reag : AlchemyCore.getItemToReagent().values()){
+			for(IReagent reag : ReagentManager.getItemToReagent().values()){
 				int qty = contents.getQty(reag);
 				ReagentStack rStack = contents.getStack(reag);
 				fakeInventory[index] = qty != 0 && reag.getPhase(endTemp) == EnumMatterPhase.SOLID ? reag.getStackFromReagent(rStack) : ItemStack.EMPTY;
@@ -690,7 +692,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 
 		@Override
 		public int getSlots(){
-			return AlchemyCore.getItemToReagent().size();
+			return ReagentManager.getItemToReagent().size();
 		}
 
 		@Override
@@ -702,7 +704,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
 			if(!stack.isEmpty()){
-				IReagent reag = AlchemyCore.getItemToReagent().get(stack.getItem());
+				IReagent reag = ReagentManager.getItemToReagent().get(stack.getItem());
 				if(reag != null){
 					if(dirtyReag){
 						correctReag();
@@ -735,7 +737,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 					ItemStack outStack = fakeInventory[slot].copy();
 					outStack.setCount(canExtract);
 					if(!simulate){
-						IReagent reag = AlchemyCore.getItemToReagent().get(fakeInventory[slot].getItem());
+						IReagent reag = ReagentManager.getItemToReagent().get(fakeInventory[slot].getItem());
 						contents.removeReagent(reag, canExtract);
 						dirtyReag = true;
 						markDirty();
@@ -756,7 +758,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 
 		@Override
 		public boolean isItemValid(int slot, @Nonnull ItemStack stack){
-			return AlchemyCore.getItemToReagent().get(stack.getItem()) != null;
+			return ReagentManager.getItemToReagent().get(stack.getItem()) != null;
 		}
 	}
 }

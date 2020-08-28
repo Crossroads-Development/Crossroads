@@ -1,0 +1,9 @@
+{
+	"type": "crossroads:reagents",
+	"id": "sulfur_dioxide",
+	"melting": -72,
+	"boiling": -10,
+	"item": "crossroads:dusts/sulfur_dioxide",
+	"color": "C8FFFFFF",
+	"effect": "disinfect"
+}

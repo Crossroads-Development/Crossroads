@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:reagents",
+	"id": "tin",
+	"melting": 230,
+	"boiling": 2560,
+	"item": "forge:nuggets/tin",
+	"fluid": {
+		"fluid": "crossroads:molten_tin",
+		"amount": 16
+	},
+	"color": "C0C0C0"
+}

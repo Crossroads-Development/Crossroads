@@ -1,0 +1,8 @@
+{
+	"type": "crossroads:reagents",
+	"id": "crystal",
+	"melting": "never",
+	"boiling": "never",
+	"item": "crossroads:gems/alch_cryst",
+	"color": "640064FF"
+}

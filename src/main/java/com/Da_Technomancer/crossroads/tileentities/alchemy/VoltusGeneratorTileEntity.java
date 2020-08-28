@@ -184,7 +184,7 @@ public class VoltusGeneratorTileEntity extends TileEntity implements ITickableTi
 
 		@Override
 		public int getContent(IReagent type){
-			return type.getId().equals(EnumReagents.ELEM_CHARGE.id()) ? voltusAmount : 0;
+			return type.getID().equals(EnumReagents.ELEM_CHARGE.id()) ? voltusAmount : 0;
 		}
 	}
 }

@@ -1,0 +1,13 @@
+{
+	"type": "crossroads:reagents",
+	"id": "elem_time",
+	"melting": 1500,
+	"boiling": 2500,
+	"vessel": "crystal",
+	"item": "crossroads:nuggets/copshowium",
+	"fluid": {
+		"fluid": "crossroads:molten_copshowium",
+		"amount": 16
+	},
+	"color": "FF8200"
+}

@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:reagents",
+	"id": "elem_charge",
+	"melting": -260,
+	"boiling": -100,
+	"vessel": "destructive",
+	"item": "crossroads:dusts/voltus",
+	"color": "FFFF40",
+	"effect": "electric"
+}

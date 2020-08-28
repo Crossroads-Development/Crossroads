@@ -1,0 +1,8 @@
+{
+	"type": "crossroads:reagents",
+	"id": "densus",
+	"melting": "never",
+	"boiling": "never",
+	"item": "crossroads:gems/densus",
+	"color": "0000FF"
+}

@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:alchemy",
+	"category": "elemental",
+	"data": "rift",
+	"catalyst": "practitioner",
+	"charged": true,
+	"reagents": [
+		{
+			"type": "phelostogen"
+		},
+		{
+			"type": "aether"
+		},
+		{
+			"type": "adamant"
+		}
+	],
+	"products": [
+		{
+			"type": "elem_rift",
+			"qty": 1
+		}
+	]
+}

@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:reagents",
+	"id": "copper",
+	"melting": 1000,
+	"boiling": 2560,
+	"item": "forge:nuggets/copper",
+	"fluid": {
+		"fluid": "crossroads:molten_copper",
+		"amount": 16
+	},
+	"color": "FFC800"
+}

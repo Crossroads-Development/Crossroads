@@ -1,0 +1,8 @@
+{
+	"type": "crossroads:reagents",
+	"id": "elem_light",
+	"boiling": -100,
+	"vessel": "crystal",
+	"color": "C8FFFF",
+	"effect": "terraform_desert"
+}

@@ -1,0 +1,8 @@
+{
+	"type": "crossroads:reagents",
+	"id": "quartz",
+	"melting": 1700,
+	"boiling": 2250,
+	"item": "forge:gems/quartz",
+	"color": "FFFFFF"
+}

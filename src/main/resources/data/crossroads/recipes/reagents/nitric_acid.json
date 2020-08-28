@@ -1,0 +1,9 @@
+{
+	"type": "crossroads:reagents",
+	"id": "nitric_acid",
+	"melting": -40,
+	"boiling": 80,
+	"item": "crossroads:dusts/nitric_acid",
+	"color": "FFFF00",
+	"effect": "acid"
+}

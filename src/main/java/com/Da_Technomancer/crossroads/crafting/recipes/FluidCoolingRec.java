@@ -67,11 +67,6 @@ public class FluidCoolingRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public ItemStack getCraftingResult(IInventory inv){
-		return getRecipeOutput().copy();
-	}
-
-	@Override
 	public boolean canFit(int width, int height){
 		return true;
 	}

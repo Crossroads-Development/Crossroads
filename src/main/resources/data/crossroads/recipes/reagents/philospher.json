@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:reagents",
+	"id": "philosopher",
+	"melting": "never",
+	"boiling": "never",
+	"item": "crossroads:alkahest",
+	"color": "640064FF",
+	"effect": "drop_phil_stone",
+	"vessel": "destructive"
+}

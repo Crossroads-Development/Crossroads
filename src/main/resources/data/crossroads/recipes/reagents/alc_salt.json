@@ -1,0 +1,9 @@
+{
+	"type": "crossroads:reagents",
+	"id": "alc_salt",
+	"melting": 900,
+	"boiling": 1400,
+	"item": "crossroads:dusts/alchemy_salt",
+	"color": "C8FFFFFF",
+	"effect": "salt_alc"
+}
