@@ -1,0 +1,21 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "alchemy",
+	"result": {
+		"item": "crossroads:sigil_alchemy",
+		"count": 1
+	},
+	"pattern": [
+		"FFF",
+		"FKF",
+		"FFF"
+	],
+	"key": {
+		"F": {
+			"tag": "crossroads:path_unlock_filler"
+		},
+		"K": {
+			"tag": "crossroads:alchemy_unlock_key"
+		}
+	}
+}

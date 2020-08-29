@@ -72,6 +72,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.DoubleValue whirligigHover;
 	public static ForgeConfigSpec.DoubleValue whirligigSafe;
 	public static ForgeConfigSpec.BooleanValue verticalBiomes;
+	public static ForgeConfigSpec.BooleanValue forgetPaths;
 
 	private static final ITag<Block> destroyBlacklist = BlockTags.makeWrapperTag(Crossroads.MODID + ":destroy_blacklist");
 
@@ -143,6 +144,7 @@ public class CRConfig{
 		serverBuilder.push(CAT_SPECIALIZATION);
 		allowAllSingle = serverBuilder.comment("Allow Multiple specializations per player in Singleplayer?").define("paths_single", true);
 		allowAllServer = serverBuilder.comment("Allow Multiple specializations per player in Multiplayer?").define("paths_multi", false);
+		forgetPaths = serverBuilder.comment("Allow forgetting paths using Path Sigils?").define("path_forget", true);
 		serverBuilder.push(CAT_TECHNOMANCY);
 		entropyDropBlock = serverBuilder.comment("Whether Technomancy machines should drop an item when overloaded").define("drop_machine", false);
 		fluxEvent = serverBuilder.comment("Allow Temporal Entropy disasters from Technomancy?", "If disabled, disasters create a small explosion instead").define("flux_disaster", true);

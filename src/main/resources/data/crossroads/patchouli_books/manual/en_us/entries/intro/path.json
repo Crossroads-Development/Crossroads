@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<em>can only pick one/$ <thing>path/$ in multiplayer.$(br2)If you can only take on <thing>path/$, pick carefully. A description of each <thing>path/$ is given below. When you unlock a <thing>path/$, you gain access to a huge number of new recipes, machines, and items. These recipes have to be made in a <item>Detailed Crafter/$, which is a special crafting table that can also craft <thing>path/$ specific "
+			"text": "<em>can only pick one/$ <thing>path/$ in multiplayer.$(br2)If you can only take one <thing>path/$, pick carefully. A description of each <thing>path/$ is given below. When you unlock a <thing>path/$, you gain access to a huge number of new recipes, machines, and items. These recipes have to be made in a <item>Detailed Crafter/$, which is a special crafting table that can also craft <thing>path/$ specific "
 		},
 		{
 			"type": "text",
@@ -43,6 +43,14 @@
 		{
 			"type": "text",
 			"text": "having discovered every non-<thing>$(l:beam/void)void/$ <thing>$(l:intro/beam)alignment/$. The items will be consumed.$(br2)"
+		},
+		{
+			"type": "text",
+			"text": "The <item>Path Sigils/$ (called the <item>Alchemy Sigil/$ and <item>Technomancy Sigil/$) are items that allow sharing <thing>paths/$. Any player can use one to instantly unlock a <thing>path/$, or shift-right click the <item>sigil/$ to forget a path. Unlocking a <thing>path/$ this way does not require discovering <thing>$(l:intro/beam)alignment/$ first.$(br2)They are single use, and can only be crafted by people who have "
+		},
+		{
+			"type": "text",
+			"text": "already unlocked the <thing>path/$.$(br2)"
 		}
 	]
 }

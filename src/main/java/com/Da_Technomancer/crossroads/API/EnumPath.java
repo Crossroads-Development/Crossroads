@@ -38,6 +38,10 @@ public enum EnumPath{
 		return name().toLowerCase(Locale.US);
 	}
 
+	public String getLocalName(){
+		return MiscUtil.localize("path." + toString());
+	}
+
 	@Nullable
 	public static EnumPath fromName(String name){
 		try{
@@ -71,13 +75,11 @@ public enum EnumPath{
 	}
 
 	/**
-	 * Tests whether a player has passed the gate to be allowed to unlock paths
-	 * Current requirement: Discover every alignment other than void and no_match
-	 *
+	 * Tests whether this player is allowed to unlock new paths based on the number of paths already taken
 	 * @param player The player to check
-	 * @return Whether this player should be allowed to unlock paths
+	 * @return Whether they are allowed to unlock new paths. Does not check path-specific requirements
 	 */
-	public boolean pathGatePassed(PlayerEntity player){
+	public static boolean canUnlockNewPath(PlayerEntity player){
 		boolean multiplayer;//We use a different config option depending on if this is multiplayer or singleplayer
 		if(player.world.isRemote){
 			multiplayer = !Minecraft.getInstance().isSingleplayer();
@@ -92,6 +94,22 @@ public enum EnumPath{
 				}
 			}
 		}
+
+		return true;
+	}
+
+	/**
+	 * Tests whether a player has passed the gate to be allowed to unlock paths
+	 * Current requirement: Discover every alignment other than void and no_match
+	 *
+	 * @param player The player to check
+	 * @return Whether this player should be allowed to unlock paths
+	 */
+	public boolean pathGatePassed(PlayerEntity player){
+		if(!canUnlockNewPath(player)){
+			return false;
+		}
+
 		for(EnumBeamAlignments align : EnumBeamAlignments.values()){
 			if(align != EnumBeamAlignments.VOID && align != EnumBeamAlignments.NO_MATCH && !align.isDiscovered(player)){
 				return false;

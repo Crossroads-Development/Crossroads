@@ -1,0 +1,21 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "witchcraft",
+	"result": {
+		"item": "crossroads:sigil_witchcraft",
+		"count": 1
+	},
+	"pattern": [
+		"FFF",
+		"FKF",
+		"FFF"
+	],
+	"key": {
+		"F": {
+			"tag": "crossroads:path_unlock_filler"
+		},
+		"K": {
+			"tag": "crossroads:witchcraft_unlock_key"
+		}
+	}
+}

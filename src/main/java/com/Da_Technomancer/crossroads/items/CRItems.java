@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.items;
 
+import com.Da_Technomancer.crossroads.API.EnumPath;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.alchemy.*;
@@ -107,6 +108,9 @@ public final class CRItems{
 	public static RecallDevice recallDevice;
 	public static SpringGun springGun;
 	public static Whirligig whirligig;
+	public static PathSigil sigilAlch;
+	public static PathSigil sigilTech;
+	public static PathSigil sigilWitch;
 
 	public static OreProfileItem oreGravel;
 	public static OreProfileItem oreClump;
@@ -204,6 +208,9 @@ public final class CRItems{
 		toRegister.add(goldDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_gold"));
 		toRegister.add(copperDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_copper"));
 		toRegister.add(tinDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_tin"));
+		sigilAlch = new PathSigil(EnumPath.ALCHEMY);
+		sigilTech = new PathSigil(EnumPath.TECHNOMANCY);
+		sigilWitch = new PathSigil(EnumPath.WITCHCRAFT);
 	}
 
 	@OnlyIn(Dist.CLIENT)

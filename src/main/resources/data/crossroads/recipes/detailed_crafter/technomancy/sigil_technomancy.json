@@ -1,0 +1,21 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"item": "crossroads:sigil_technomancy",
+		"count": 1
+	},
+	"pattern": [
+		"FFF",
+		"FKF",
+		"FFF"
+	],
+	"key": {
+		"F": {
+			"tag": "crossroads:path_unlock_filler"
+		},
+		"K": {
+			"tag": "crossroads:technomancy_unlock_key"
+		}
+	}
+}

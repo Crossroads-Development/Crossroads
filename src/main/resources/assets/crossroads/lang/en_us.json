@@ -251,6 +251,9 @@
 	"item.crossroads.spring_gun": "Spring-Loaded Crossbow",
 	"item.crossroads.whirligig": "Whirligig",
 	"block.crossroads.redstone_crystal": "Crystallized Redstone",
+	"item.crossroads.sigil_alchemy": "Alchemy Sigil",
+	"item.crossroads.sigil_technomancy": "Technomancy Sigil",
+	"item.crossroads.sigil_witchcraft": "Witchcraft Sigil",
 
 	"item.crossroads.ore_gravel": "Raw %1$s Grit",
 	"item.crossroads.ore_clump": "%1$s Clump",
@@ -594,6 +597,13 @@
 	"tt.crossroads.redstone_crystal.drops": "Drops 1-4 redstone dust",
 	"tt.crossroads.redstone_crystal.power": "Emits a redstone signal",
 	"tt.crossroads.vacuum.quip": "Were you expecting something else?",
+	"tt.crossroads.path_sigil.desc": "Unlocks a path when used. Single use",
+	"tt.crossroads.path_sigil.desc.forget": "Shift-right click to forget this path",
+	"tt.crossroads.path_sigil.forget": "%1$s forgotten",
+	"tt.crossroads.path_sigil.forget.fail": "Cannot forget %1$s; Path not known",
+	"tt.crossroads.path_sigil.forget.fail.config": "Cannot forget paths; Disabled in the config",
+	"tt.crossroads.path_sigil.fail": "Can not unlock path; Too many paths known",
+	"tt.crossroads.path_sigil.taken": "Can not unlock path; Path already known",
 
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
@@ -705,6 +715,11 @@
 	"reagent.elem_fusion": "Fusas",
 	"reagent.elem_charge": "Voltus",
 	"reagent.elem_time": "Copshowium",
+
+
+	"path.technomancy": "Technomancy",
+	"path.alchemy": "Alchemy",
+	"path.witchcraft": "Witchcraft",
 
 
 	"death.attack.drill": "%1$s had a terrible dentist",
