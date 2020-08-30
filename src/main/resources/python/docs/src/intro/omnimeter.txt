@@ -1,6 +1,6 @@
 Omnimeter
 crossroads:omnimeter
-The <item>Omnimeter/$ is an extremely important and useful tool. Right clicking with it on almost any Crossroads machine or block will provide a readout of important information, such as <thing><link:intro/heat>temperature/$, <thing><link:intro/rotary>speed, I value, energy/$, <thing><link:intro/fluid>fluid contents/$, and more.
+The <item>Omnimeter/$ is an extremely important and useful tool. Right clicking with it on almost any Crossroads machine or block will provide a readout of important information, such as <thing><link:crossroads:intro/heat>temperature/$, <thing><link:crossroads:intro/rotary>speed, I value, energy/$, <thing><link:crossroads:intro/fluid>fluid contents/$, and more.
 It is expected that the player has an <item>omnimeter/$ for Crossroads machines. WAILA is not a good substitute.
 
 Another basic tool that Crossroads uses a lot is the <item><link:essentials/wrench>wrench/$- though basically any mods' wrench will work.

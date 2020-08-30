@@ -5,7 +5,7 @@ Crossroads is a mod about automation. Almost everything in the mod can be automa
 Rube Goldberg machines will be the simplest way to do things.
 In this section of the book, you'll get a broad introduction to various systems in the mod- ideal for beginners. All the information in these entries are also in the respective guide categories, but it should be easiest to understand as a beginner from this section.
 If you have any questions or suggestions, feel free to join the <link:https://discord.gg/6g47knp>Discord/$, and if you find any bugs, please report them either on the <link:https://discord.gg/6g47knp>Discord/$ or <link:https://github.com/Da-Technomancer/Crossroads/>Github/$.
-Crossroads has a lot of different energy systems and mechanics, and more will unlock as you get farther in the mod. If you're just beginning, I suggest you start with <link:intro/heat>Heat/$.
+Crossroads has a lot of different energy systems and mechanics, and more will unlock as you get farther in the mod. If you're just beginning, I suggest you start with <link:crossroads:intro/heat>Heat/$.
 That concludes the introduct-
 <page|spotlight|bobo|crossroads:bobo_rod>
 <bobo>hOI!!! i'm bOBO!!   i n0 sTuf! mAnY stUph!   mAKE MY ROD! uSE WITH Ɛ tINGS! aND THE OfFeRiNg!! tO MAKE A SPECIAL TING!   uSE R0D oN TRHEE THINGS ON GROUND wih OFFERING!!¡  0nLY gud OFFERING ise POISONOUS POTATOE!!¡   BOBO AWAY!!/$

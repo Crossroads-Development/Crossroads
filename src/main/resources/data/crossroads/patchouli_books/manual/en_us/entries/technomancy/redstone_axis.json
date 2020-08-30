@@ -11,19 +11,19 @@
 			"type": "spotlight",
 			"title": "Redstone Master Axis",
 			"item": "crossroads:redstone_axis",
-			"text": "The <item>Redstone Master Axis/$ is a special <item>$(l:rotary/axis)master axis/$ where the <thing>$(l:intro/rotary)speed/$ of the controlled <thing>$(l:intro/rotary)rotary/$ is precisely controlled by a redstone signal.$(br2)The <item>redstone master axis/$ will hold the <thing>$(l:intro/rotary)speed/$ of <em>the attached gear/$ steady at a <thing>$(l:intro/rotary)speed/$ equal to the received redstone signal "
+			"text": "The <item>Redstone Master Axis/$ is a special <item>$(l:crossroads:rotary/axis)master axis/$ where the <thing>$(l:crossroads:intro/rotary)speed/$ of the controlled <thing>$(l:crossroads:intro/rotary)rotary/$ is precisely controlled by a redstone signal.$(br2)The <item>redstone master axis/$ will hold the <thing>$(l:crossroads:intro/rotary)speed/$ of <em>the attached gear/$ steady at a <thing>$(l:crossroads:intro/rotary)speed/$ equal to the received redstone signal "
 		},
 		{
 			"type": "text",
-			"text": "(including <item>$(l:essentials/circuits)circuit/$ input).$(br2)Any required <thing>$(l:intro/rotary)energy/$ to increase the <thing>$(l:intro/rotary)speed/$ will be drawn from a gear/axle attached to the back of the <item>redstone master axis/$, if possible. Any excess <thing>$(l:intro/rotary)energy/$ being removed from the system to decrease the <thing>$(l:intro/rotary)speed/$ will be added to an attached gear on the back, if available.$(br2)"
+			"text": "(including <item>$(l:essentials/circuits)circuit/$ input).$(br2)Any required <thing>$(l:crossroads:intro/rotary)energy/$ to increase the <thing>$(l:crossroads:intro/rotary)speed/$ will be drawn from a gear/axle attached to the back of the <item>redstone master axis/$, if possible. Any excess <thing>$(l:crossroads:intro/rotary)energy/$ being removed from the system to decrease the <thing>$(l:crossroads:intro/rotary)speed/$ will be added to an attached gear on the back, if available.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "It is generally better to use a larger (higher <thing>$(l:intro/rotary)I value/$) gear on the back as an <thing>$(l:intro/rotary)energy/$ source, as that allows the <item>redstone master axis/$ to draw <thing>$(l:intro/rotary)energy/$ more quickly.$(br2)"
+			"text": "It is generally better to use a larger (higher <thing>$(l:crossroads:intro/rotary)I value/$) gear on the back as an <thing>$(l:crossroads:intro/rotary)energy/$ source, as that allows the <item>redstone master axis/$ to draw <thing>$(l:crossroads:intro/rotary)energy/$ more quickly.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<bobo>limitted POWAH! uNLIMITID eNErGY! i AM THE $(l:intro/welcome#bobo)BOBO!/$<bobo>$(br2)<bobo>watz broun und schtick-y?$(br2)<bobo>oRANGE ti3m nUGG-NUGG!$(br2)<bobo>dA ME3NING uv lI3F! ThA MANY-VERSE! &nd EVERYTING! butte on MEET nUGG-nUGG!/$$(br2)"
+			"text": "<bobo>limitted POWAH! uNLIMITID eNErGY! i AM THE $(l:crossroads:intro/welcome#bobo)BOBO!/$<bobo>$(br2)<bobo>watz broun und schtick-y?$(br2)<bobo>oRANGE ti3m nUGG-NUGG!$(br2)<bobo>dA ME3NING uv lI3F! ThA MANY-VERSE! &nd EVERYTING! butte on MEET nUGG-nUGG!/$$(br2)"
 		}
 	]
 }

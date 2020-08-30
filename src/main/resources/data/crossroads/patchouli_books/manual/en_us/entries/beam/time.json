@@ -15,7 +15,7 @@
 		},
 		{
 			"type": "text",
-			"text": "random tick with a <thing>power/$ / 64 chance every 5 ticks.$(br2)This beam allows speeding up time by as much as double. While not very strong, there is a much stronger version later on in <thing>$(l:intro/technomancy)Technomancy/$...$(br2)"
+			"text": "random tick with a <thing>power/$ / 64 chance every 5 ticks.$(br2)This beam allows speeding up time by as much as double. While not very strong, there is a much stronger version later on in <thing>$(l:crossroads:intro/technomancy)Technomancy/$...$(br2)"
 		},
 		{
 			"type": "text",

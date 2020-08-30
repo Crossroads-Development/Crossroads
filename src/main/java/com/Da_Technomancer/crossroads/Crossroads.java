@@ -239,6 +239,7 @@ public final class Crossroads{
 		registerCon(CopshowiumMakerContainer::new, CopshowiumMakerScreen::new, "copshowium_maker", e);
 		registerCon(SteamerContainer::new, SteamerScreen::new, "steamer", e);
 		registerCon(WindingTableContainer::new, WindingTableScreen::new, "winding_table", e);
+		registerCon(DetailedAutoCrafterContainer::new, DetailedAutoCrafterScreen::new, "detailed_auto_crafter", e);
 	}
 
 	@SuppressWarnings("unused")
@@ -271,6 +272,7 @@ public final class Crossroads{
 		registerConType(CopshowiumMakerContainer::new, "copshowium_maker", e);
 		registerConType(SteamerContainer::new, "steamer", e);
 		registerConType(WindingTableContainer::new, "winding_table", e);
+		registerConType(DetailedAutoCrafterContainer::new, "detailed_auto_crafter", e);
 	}
 
 	/**

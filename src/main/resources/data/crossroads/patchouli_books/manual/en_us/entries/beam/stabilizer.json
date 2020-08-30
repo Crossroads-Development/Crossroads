@@ -10,7 +10,7 @@
 			"type": "spotlight",
 			"title": "Quartz Stabilizer",
 			"item": "crossroads:quartz_stabilizer",
-			"text": "The <item>Quartz Stabilizer/$ is a way of 'smoothing out' or 'spreading out' beam pulses. It accepts beams from all sides, and outputs on the front.$(br2)Unlike a <item>$(l:beam/reflector)beam reflector/$, instead of emitting the entire input all together, it stores any beams sent into it and emits "
+			"text": "The <item>Quartz Stabilizer/$ is a way of 'smoothing out' or 'spreading out' beam pulses. It accepts beams from all sides, and outputs on the front.$(br2)Unlike a <item>$(l:crossroads:beam/reflector)beam reflector/$, instead of emitting the entire input all together, it stores any beams sent into it and emits "
 		},
 		{
 			"type": "text",

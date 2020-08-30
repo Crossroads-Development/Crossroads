@@ -10,11 +10,11 @@
 			"type": "spotlight",
 			"title": "Salt Reactor",
 			"item": "crossroads:salt_reactor",
-			"text": "The <item>Salt Reactor/$ is a way of cooling, $(l:heat/icebox)even below -20°C/$. It consumes <thing>$(l:fluid/centrifuge)salt and distilled water/$ in a ratio of 200mB of distilled water per salt, while producing 200mB of normal water for every 200mB of distilled water.$(br2)The <item>Salt Reactor/$ can cool all the way down "
+			"text": "The <item>Salt Reactor/$ is a way of cooling, $(l:crossroads:heat/icebox)even below -20°C/$. It consumes <thing>$(l:crossroads:fluid/centrifuge)salt and distilled water/$ in a ratio of 200mB of distilled water per salt, while producing 200mB of normal water for every 200mB of distilled water.$(br2)The <item>Salt Reactor/$ can cool all the way down "
 		},
 		{
 			"type": "text",
-			"text": "to <thing>absolute zero/$. <item>$(l:heat/cable)Heat cables/$ connect to the bottom.$(br2)"
+			"text": "to <thing>absolute zero/$. <item>$(l:crossroads:heat/cable)Heat cables/$ connect to the bottom.$(br2)"
 		}
 	]
 }

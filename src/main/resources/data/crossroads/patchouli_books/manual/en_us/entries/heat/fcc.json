@@ -10,7 +10,7 @@
 			"type": "spotlight",
 			"title": "Fluid Cooling Chamber",
 			"item": "crossroads:fluid_cooling_chamber",
-			"text": "The <item>Fluid Cooling Chamber/$ is a crafting machine that converts liquids into items. It requires temperatures below a certain threshold.$(br2)A typical recipe takes liquid, has a maximum temperature to work, and produces an item alongside heat. There is a <item>$(l:heat/cable)cable/$ connection "
+			"text": "The <item>Fluid Cooling Chamber/$ is a crafting machine that converts liquids into items. It requires temperatures below a certain threshold.$(br2)A typical recipe takes liquid, has a maximum temperature to work, and produces an item alongside heat. There is a <item>$(l:crossroads:heat/cable)cable/$ connection "
 		},
 		{
 			"type": "text",
@@ -18,7 +18,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<em>There is a handy and powerful heat generation method using this machine!/$ When cooling lava into obsidian, more heat is produced than is required to melt the obsidian back into lava in an <item>$(l:heat/crucible)Industrial Crucible/$.$(br2)"
+			"text": "<em>There is a handy and powerful heat generation method using this machine!/$ When cooling lava into obsidian, more heat is produced than is required to melt the obsidian back into lava in an <item>$(l:crossroads:heat/crucible)Industrial Crucible/$.$(br2)"
 		},
 		{
 			"type": "text",

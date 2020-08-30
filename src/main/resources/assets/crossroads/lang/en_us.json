@@ -254,6 +254,7 @@
 	"item.crossroads.sigil_alchemy": "Alchemy Sigil",
 	"item.crossroads.sigil_technomancy": "Technomancy Sigil",
 	"item.crossroads.sigil_witchcraft": "Witchcraft Sigil",
+	"block.crossroads.detailed_auto_crafter": "Detailed Auto-Crafter",
 
 	"item.crossroads.ore_gravel": "Raw %1$s Grit",
 	"item.crossroads.ore_clump": "%1$s Clump",
@@ -604,6 +605,9 @@
 	"tt.crossroads.path_sigil.forget.fail.config": "Cannot forget paths; Disabled in the config",
 	"tt.crossroads.path_sigil.fail": "Can not unlock path; Too many paths known",
 	"tt.crossroads.path_sigil.taken": "Can not unlock path; Path already known",
+	"tt.crossroads.detailed_auto_crafter.basic": "Automatically crafts path-specific recipes when given a redstone pulse",
+	"tt.crossroads.detailed_auto_crafter.sigil": "Requires an installed sigil of the recipe's path",
+	"tt.crossroads.detailed_auto_crafter.quip": "Specialized in generic specialization",
 
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
@@ -636,6 +640,7 @@
 	"container.rotary_pump": "Rotary Pump",
 	"container.steamer": "Steamer",
 	"container.winding_table": "Spring Winder",
+	"container.detailed_auto_crafter": "Detailed Auto-Crafter",
 
 
 	"material.iron": "Iron",

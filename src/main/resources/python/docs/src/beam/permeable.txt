@@ -1,6 +1,6 @@
 Beam Permeable Blocks
 crossroads:permeable_quartz
-There are a few decorative blocks that are solid, but allow <thing><link:intro/beam>beams/$ to pass through them freely as if they were air.
+There are a few decorative blocks that are solid, but allow <thing><link:crossroads:intro/beam>beams/$ to pass through them freely as if they were air.
 
 <item>Permeable Quartz/$ looks like a block of pure quartz, but allows beams to pass through.
 

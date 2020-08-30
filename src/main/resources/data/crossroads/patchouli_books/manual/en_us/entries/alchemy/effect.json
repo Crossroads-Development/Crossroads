@@ -11,15 +11,15 @@
 			"type": "spotlight",
 			"title": "Reagent Effects",
 			"item": "crossroads:shell_glass",
-			"text": "Most <thing>reagents/$ (but not all) have an <thing>effect/$ when released into the world. Unlike <thing>$(l:intro/beams)beam effects/$ which get more powerful as power/quantity increases, all <thing>reagent effects/$ will stay the same strength at all quantities. Instead, as quantity increases, the distance the <thing>effect/$ spreads increases.$(br2)"
+			"text": "Most <thing>reagents/$ (but not all) have an <thing>effect/$ when released into the world. Unlike <thing>$(l:crossroads:intro/beams)beam effects/$ which get more powerful as power/quantity increases, all <thing>reagent effects/$ will stay the same strength at all quantities. Instead, as quantity increases, the distance the <thing>effect/$ spreads increases.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "Easy ways to release <thing>reagents/$ are by $(l:alchemy/glassware)pouring out a Phial, throwing a Shell/$, or $(l:alchemy/vent)piping out a Chemical Vent/$.$(br2)"
+			"text": "Easy ways to release <thing>reagents/$ are by $(l:crossroads:alchemy/glassware)pouring out a Phial, throwing a Shell/$, or $(l:crossroads:alchemy/vent)piping out a Chemical Vent/$.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "Different <thing>$(l:intro/alchemy)phases/$ of matter will make the <thing>effects/$ spread differently.$(br2)<thing>Solids/$ will apply only at the position they were released. If there is <em>any/$ <thing>liquid/$ being released, all <thing>solid reagents/$ will have their effects apply everywhere the <thing>liquids/$ spray- allowing even 1 unit of <thing>solid/$ reagent to apply over a large area if mixed with <thing>liquid/$, like "
+			"text": "Different <thing>$(l:crossroads:intro/alchemy)phases/$ of matter will make the <thing>effects/$ spread differently.$(br2)<thing>Solids/$ will apply only at the position they were released. If there is <em>any/$ <thing>liquid/$ being released, all <thing>solid reagents/$ will have their effects apply everywhere the <thing>liquids/$ spray- allowing even 1 unit of <thing>solid/$ reagent to apply over a large area if mixed with <thing>liquid/$, like "
 		},
 		{
 			"type": "text",
@@ -35,11 +35,11 @@
 		},
 		{
 			"type": "text",
-			"text": "<em>unless there is any <item>alchemical salt/$<em> in the mix/$. That means any <thing>effect/$ can be spread out over a massive area using 16 of a <thing>flame reagent/$, 1 unit of <item>alchemical salt/$ to prevent destroying blocks, and the <thing>reagents/$ you want applied. As flame clouds are extremely destructive, it is recommended to keep some <item>$(l:alchemy/damping)damping powder/$ on hand for accidents.$(br2)"
+			"text": "<em>unless there is any <item>alchemical salt/$<em> in the mix/$. That means any <thing>effect/$ can be spread out over a massive area using 16 of a <thing>flame reagent/$, 1 unit of <item>alchemical salt/$ to prevent destroying blocks, and the <thing>reagents/$ you want applied. As flame clouds are extremely destructive, it is recommended to keep some <item>$(l:crossroads:alchemy/damping)damping powder/$ on hand for accidents.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The following useful effects exist:$(br2)<item>Aqua Regia, Acids:/$ See the $(l:alchemy/acid)acids page/$. Allows getting <item>bedrock dust/$.$(br2)<item>Salt and Alchemical Salt:/$ Kill plants, creepers, and slimes like a <item>$(l:fluid/ingr)Salt Block/$ does.$(br2)<item>Chlorine:/$ Apply a massive number of crippling debuffs to any "
+			"text": "The following useful effects exist:$(br2)<item>Aqua Regia, Acids:/$ See the $(l:crossroads:alchemy/acid)acids page/$. Allows getting <item>bedrock dust/$.$(br2)<item>Salt and Alchemical Salt:/$ Kill plants, creepers, and slimes like a <item>$(l:crossroads:fluid/ingr)Salt Block/$ does.$(br2)<item>Chlorine:/$ Apply a massive number of crippling debuffs to any "
 		},
 		{
 			"type": "text",
@@ -47,7 +47,7 @@
 		},
 		{
 			"type": "text",
-			"text": "released. Locked to <thing>flame phase/$, spreading <thing>effects/$ over a massive area (see above).$(br2)<item>Aether, Lumen, Eldrine, Fusas, and Stasisol:/$ See the $(l:alchemy/terraforming)Terraforming entry/$.$(br2)<item>Voltus:/$ Electrocutes any nearby entities with lightning arcs (10 damage per hit, may hit several times). Can charge creepers/pigs/etc. Combine "
+			"text": "released. Locked to <thing>flame phase/$, spreading <thing>effects/$ over a massive area (see above).$(br2)<item>Aether, Lumen, Eldrine, Fusas, and Stasisol:/$ See the $(l:crossroads:alchemy/terraforming)Terraforming entry/$.$(br2)<item>Voltus:/$ Electrocutes any nearby entities with lightning arcs (10 damage per hit, may hit several times). Can charge creepers/pigs/etc. Combine "
 		},
 		{
 			"type": "text",

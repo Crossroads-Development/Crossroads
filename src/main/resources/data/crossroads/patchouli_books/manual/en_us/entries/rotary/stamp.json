@@ -10,11 +10,11 @@
 			"type": "spotlight",
 			"title": "Stamp Mill",
 			"item": "crossroads:stamp_mill",
-			"text": "The <item>Stamp Mill/$ is the first stage in <thing>ore tripling/$- being a larger version of the <item>$(l:rotary/millstone)millstone/$ that only handles ores. Axles & gears can connect to the sides of the base.$(br2)It takes in ores, and uses <thing>$(l:intro/rotary)rotary power/$ to produce 3 <item>metal gravel/$. <item>metal gravel/$ can either "
+			"text": "The <item>Stamp Mill/$ is the first stage in <thing>ore tripling/$- being a larger version of the <item>$(l:crossroads:rotary/millstone)millstone/$ that only handles ores. Axles & gears can connect to the sides of the base.$(br2)It takes in ores, and uses <thing>$(l:crossroads:intro/rotary)rotary power/$ to produce 3 <item>metal gravel/$. <item>metal gravel/$ can either "
 		},
 		{
 			"type": "text",
-			"text": "be processed further in an <item>$(l:rotary/blast)industrial blast furnace/$ or in an <item>$(l:fluid/cleanser)ore cleanser/$.$(br2)Unlike most other machines, the <item>stamp mill/$ <em>will sometimes output unprocessed ore/$ instead. The <item>stamp mill/$ has <em>two/$ progress bars- a time based one, and a <thing>speed/$ based one. If the timer runs out before the progress bar finishes, the machine spits out the unprocessed "
+			"text": "be processed further in an <item>$(l:crossroads:rotary/blast)industrial blast furnace/$ or in an <item>$(l:crossroads:fluid/cleanser)ore cleanser/$.$(br2)Unlike most other machines, the <item>stamp mill/$ <em>will sometimes output unprocessed ore/$ instead. The <item>stamp mill/$ has <em>two/$ progress bars- a time based one, and a <thing>speed/$ based one. If the timer runs out before the progress bar finishes, the machine spits out the unprocessed "
 		},
 		{
 			"type": "text",

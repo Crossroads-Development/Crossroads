@@ -22,7 +22,7 @@
 		},
 		{
 			"type": "text",
-			"text": "and more will unlock as you get farther in the mod. If you're just beginning, I suggest you start with $(l:intro/heat)Heat/$.$(br2)That concludes the introduct-$(br2)"
+			"text": "and more will unlock as you get farther in the mod. If you're just beginning, I suggest you start with $(l:crossroads:intro/heat)Heat/$.$(br2)That concludes the introduct-$(br2)"
 		},
 		{
 			"type": "spotlight",

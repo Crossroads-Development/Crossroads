@@ -1,8 +1,8 @@
 Large Gears
 crossroads:gear_base_large
-<item>Large Gears/$ are a way of moving <thing><link:intro/rotary>rotary energy/$ around, by connecting to form a system of gears and axles.
-Like <item><link:rotary/gear_base>small gears/$, <item>large gears/$ can connect around corners, on the sides, or on axles on the front or back. Unlike <item><link:rotary/gear_base>small gears/$, <item>large gears/$ can't share a blockspace with anything else, and are 3x3 in size instead of 1x1. <item>Large gears/$ also don't need a solid surface to be supported on.
-There are several materials for <item>large gears/$ (most of the metals) with different <thing><link:intro/rotary>I values/$.
-Because of their large radius, a <item>large gear/$ next to a <item><link:rotary/gear_base>small gear/$ will spin at a slower speed than the <item><link:rotary/gear_base>small gear/$.
+<item>Large Gears/$ are a way of moving <thing><link:crossroads:intro/rotary>rotary energy/$ around, by connecting to form a system of gears and axles.
+Like <item><link:crossroads:rotary/gear_base>small gears/$, <item>large gears/$ can connect around corners, on the sides, or on axles on the front or back. Unlike <item><link:crossroads:rotary/gear_base>small gears/$, <item>large gears/$ can't share a blockspace with anything else, and are 3x3 in size instead of 1x1. <item>Large gears/$ also don't need a solid surface to be supported on.
+There are several materials for <item>large gears/$ (most of the metals) with different <thing><link:crossroads:intro/rotary>I values/$.
+Because of their large radius, a <item>large gear/$ next to a <item><link:crossroads:rotary/gear_base>small gear/$ will spin at a slower speed than the <item><link:crossroads:rotary/gear_base>small gear/$.
 
-Remember, all gear networks need at least one <item><link:rotary/axis>master axis/$ to work.
+Remember, all gear networks need at least one <item><link:crossroads:rotary/axis>master axis/$ to work.

@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "The <item>hand crank/$ is meant for the <em>very/$ early game and for testing setups- if you're finding yourself relying on it, try something like a <item>$(l:rotary/wind)Wind Turbine/$ instead.$(br2)"
+			"text": "The <item>hand crank/$ is meant for the <em>very/$ early game and for testing setups- if you're finding yourself relying on it, try something like a <item>$(l:crossroads:rotary/wind)Wind Turbine/$ instead.$(br2)"
 		}
 	]
 }

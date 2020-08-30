@@ -10,7 +10,7 @@
 			"type": "spotlight",
 			"title": "Intro to Rotary",
 			"item": "crossroads:gear_base",
-			"text": "<thing>Rotary/$ is one of the basic energy systems in Crossroads, and usually the first or second one you'll use (alongside <thing>$(l:intro/heat)Heat/$) Rotary is the transfer of mechanical energy using <item>gears/$ and <item>axles/$.$(br2)Rotary can seem complicated at first when reading about it, but is actually "
+			"text": "<thing>Rotary/$ is one of the basic energy systems in Crossroads, and usually the first or second one you'll use (alongside <thing>$(l:crossroads:intro/heat)Heat/$) Rotary is the transfer of mechanical energy using <item>gears/$ and <item>axles/$.$(br2)Rotary can seem complicated at first when reading about it, but is actually "
 		},
 		{
 			"type": "text",
@@ -30,7 +30,7 @@
 		},
 		{
 			"type": "text",
-			"text": "Usually, a machine will consume a certain amount of <thing>energy/$ per operation, but have a minimum <thing>speed/$ to work. Most machines will work faster at higher <thing>speeds/$.$(br2)<item>$(l:rotary/gear_base)Gears and axles/$ can be connected together to transfer energy. Placing a <item>$(l:rotary/gear_base)small gear/$ next to a <item>$(l:rotary/gear_large)large gear/$ will cause the larger gear to spin slower than the small one- as you'ld expect."
+			"text": "Usually, a machine will consume a certain amount of <thing>energy/$ per operation, but have a minimum <thing>speed/$ to work. Most machines will work faster at higher <thing>speeds/$.$(br2)<item>$(l:crossroads:rotary/gear_base)Gears and axles/$ can be connected together to transfer energy. Placing a <item>$(l:crossroads:rotary/gear_base)small gear/$ next to a <item>$(l:crossroads:rotary/gear_large)large gear/$ will cause the larger gear to spin slower than the small one- as you'ld expect."
 		},
 		{
 			"type": "text",
@@ -38,7 +38,7 @@
 		},
 		{
 			"type": "text",
-			"text": "All networks of gears/axles/whatever <em>MUST HAVE/$ a <item>$(l:rotary/axis)Master Axis/$ connected somewhere in the network- otherwise nothing will work!$(br2)"
+			"text": "All networks of gears/axles/whatever <em>MUST HAVE/$ a <item>$(l:crossroads:rotary/axis)Master Axis/$ connected somewhere in the network- otherwise nothing will work!$(br2)"
 		}
 	]
 }

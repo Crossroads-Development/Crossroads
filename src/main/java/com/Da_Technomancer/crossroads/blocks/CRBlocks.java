@@ -149,6 +149,7 @@ public class CRBlocks{
 	public static Steamer steamer;
 	public static WindingTable windingTable;
 	public static BasicBlock redstoneCrystal;
+	public static DetailedAutoCrafter detailedAutoCrafter;
 
 	private static final Item.Properties itemBlockProp = new Item.Properties().group(CRItems.TAB_CROSSROADS);
 	public static final ArrayList<Block> toRegister = new ArrayList<>();
@@ -307,6 +308,7 @@ public class CRBlocks{
 				tooltip.add(new TranslationTextComponent("tt.crossroads.redstone_crystal.power"));
 			}
 		};
+		detailedAutoCrafter = new DetailedAutoCrafter();
 	}
 
 	@OnlyIn(Dist.CLIENT)

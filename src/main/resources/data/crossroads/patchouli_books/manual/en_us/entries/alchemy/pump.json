@@ -11,11 +11,11 @@
 			"type": "spotlight",
 			"title": "Reagent Pump",
 			"item": "crossroads:reagent_pump",
-			"text": "The <item>Reagent Pump/$ is the way to force <thing>$(l:intro/alchemy)reagents/$ to flow up/down in <item>$(l:alchemy/conduit)conduits/$. It does not require any power or fuel of any kind.$(br2)As <thing>$(l:intro/alchemy)gasses and flame phase/$ will not flow down on their own, and <thing>$(l:intro/alchemy)solids and liquids/$ will not flow up on their own, pumps are needed to "
+			"text": "The <item>Reagent Pump/$ is the way to force <thing>$(l:crossroads:intro/alchemy)reagents/$ to flow up/down in <item>$(l:crossroads:alchemy/conduit)conduits/$. It does not require any power or fuel of any kind.$(br2)As <thing>$(l:crossroads:intro/alchemy)gasses and flame phase/$ will not flow down on their own, and <thing>$(l:crossroads:intro/alchemy)solids and liquids/$ will not flow up on their own, pumps are needed to "
 		},
 		{
 			"type": "text",
-			"text": "force them up or down.$(br2)<thing>$(l:intro/alchemy)Reagents/$ get inserted into the sides by <item>$(l:alchemy/conduit)conduits/$, and will be pushed into the <item>$(l:alchemy/conduit)conduit/$/<item>reagent pump/$/other above/below them. For moving several blocks up/down, you will need a column of <item>reagent pumps/$.$(br2)A <item>$(l:essentials/wrench)wrench/$ is used to adjust whether the <item>reagent pump/$ pushes up or down. "
+			"text": "force them up or down.$(br2)<thing>$(l:crossroads:intro/alchemy)Reagents/$ get inserted into the sides by <item>$(l:crossroads:alchemy/conduit)conduits/$, and will be pushed into the <item>$(l:crossroads:alchemy/conduit)conduit/$/<item>reagent pump/$/other above/below them. For moving several blocks up/down, you will need a column of <item>reagent pumps/$.$(br2)A <item>$(l:essentials/wrench)wrench/$ is used to adjust whether the <item>reagent pump/$ pushes up or down. "
 		},
 		{
 			"type": "text",

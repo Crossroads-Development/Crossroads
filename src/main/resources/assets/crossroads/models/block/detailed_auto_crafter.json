@@ -1,0 +1,7 @@
+{
+	"parent": "block/cube_column",
+	"textures": {
+		"side": "crossroads:block/detailed_auto_crafter",
+		"end": "crossroads:block/detailed_auto_crafter_end"
+	}
+}

@@ -71,7 +71,7 @@ public class FatCongealerTileEntity extends InventoryTE{
 		//Eject inventory either into the world or into an inventory.
 		//Despite using the method from ItemShifters, this block can't go through transport chutes
 		int prevCount = inventory[0].getCount();
-		inventory[0] = AbstractShifterTileEntity.ejectItem(world, pos.offset(getFacing()), getFacing(), inventory[0]);
+		inventory[0] = AbstractShifterTileEntity.ejectItem(world, pos.offset(getFacing()), getFacing(), inventory[0], null);
 		if(prevCount != inventory[0].getCount()){
 			markDirty();
 		}

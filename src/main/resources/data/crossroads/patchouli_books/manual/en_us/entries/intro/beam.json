@@ -10,7 +10,7 @@
 			"type": "spotlight",
 			"title": "Intro to Beams",
 			"item": "crossroads:lens_array",
-			"text": "Wait! This is a mid-game feature. By this point, you should have <em>at least/$ $(l:rotary/millstone)ore doubling/$ (if not $(l:rotary/stamp)tripling/$), $(l:fluid/centrifuge)automated salt production/$, and probably a $(l:fluid/fat_collector)stable food source/$. If you don't, <thing>beams/$ are going to be too expensive to run.$(br2)<thing>Beams/$ are a powerful way of creating "
+			"text": "Wait! This is a mid-game feature. By this point, you should have <em>at least/$ $(l:crossroads:rotary/millstone)ore doubling/$ (if not $(l:crossroads:rotary/stamp)tripling/$), $(l:crossroads:fluid/centrifuge)automated salt production/$, and probably a $(l:crossroads:fluid/fat_collector)stable food source/$. If you don't, <thing>beams/$ are going to be too expensive to run.$(br2)<thing>Beams/$ are a powerful way of creating "
 		},
 		{
 			"type": "text",
@@ -18,19 +18,19 @@
 		},
 		{
 			"type": "text",
-			"text": "applied every 4 ticks (once per <thing>cycle/$) for a continuous beam.$(br2)Each beam is composed of four resources, each of which is a certain color: <thing>Energy/$- red, <thing>Potential/$- green, <thing>Stability/$- blue, and <thing>$(l:beam/void)Void/$- black. <thing>Void/$ is later game, and won't be used early on.$(br2)The <thing>power/$ of the beam is the total quantity "
+			"text": "applied every 4 ticks (once per <thing>cycle/$) for a continuous beam.$(br2)Each beam is composed of four resources, each of which is a certain color: <thing>Energy/$- red, <thing>Potential/$- green, <thing>Stability/$- blue, and <thing>$(l:crossroads:beam/void)Void/$- black. <thing>Void/$ is later game, and won't be used early on.$(br2)The <thing>power/$ of the beam is the total quantity "
 		},
 		{
 			"type": "text",
-			"text": "of the four resources (<thing>energy/$ + <thing>potential/$ + <thing>stability/$ + <thing>void/$).$(br2)The <thing>alignment/$ is based on the color of the overall beam- the four (early game just three) resources in the beam combine their colors like on a color wheel. Certain <thing>alignments/$ require more specific colors than others- making them harder to make. The <item>$(l:beam/chart)color chart/$ will help you "
+			"text": "of the four resources (<thing>energy/$ + <thing>potential/$ + <thing>stability/$ + <thing>void/$).$(br2)The <thing>alignment/$ is based on the color of the overall beam- the four (early game just three) resources in the beam combine their colors like on a color wheel. Certain <thing>alignments/$ require more specific colors than others- making them harder to make. The <item>$(l:crossroads:beam/chart)color chart/$ will help you "
 		},
 		{
 			"type": "text",
-			"text": "discover <thing>alignments/$ you're missing.$(br2)You also need to discover <thing>alignments/$- once you discover one, an entry will appear in this book. You can use an <item>$(l:intro/omnimeter)omnimeter/$ to measure <thing>beams/$, and discover the <thing>alignment/$ if you haven't discovered it yet.$(br2)"
+			"text": "discover <thing>alignments/$ you're missing.$(br2)You also need to discover <thing>alignments/$- once you discover one, an entry will appear in this book. You can use an <item>$(l:crossroads:intro/omnimeter)omnimeter/$ to measure <thing>beams/$, and discover the <thing>alignment/$ if you haven't discovered it yet.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "Many <thing>beam alignments/$ will transmute blocks they hit in the world if they are high enough power. You can see these recipes by looking at recipes uses for <item>$(l:beam/reflector)beam reflectors/$ in JEI, if JEI is installed.$(br2)<thing>Beams/$ are usually moved around with <item>$(l:beam/reflector)beam reflectors/$, and created with a <item>$(l:beam/extractor)Resonance Extractor/$. Every machine or block a <thing>beam/$ travels through "
+			"text": "Many <thing>beam alignments/$ will transmute blocks they hit in the world if they are high enough power. You can see these recipes by looking at recipes uses for <item>$(l:crossroads:beam/reflector)beam reflectors/$ in JEI, if JEI is installed.$(br2)<thing>Beams/$ are usually moved around with <item>$(l:crossroads:beam/reflector)beam reflectors/$, and created with a <item>$(l:crossroads:beam/extractor)Resonance Extractor/$. Every machine or block a <thing>beam/$ travels through "
 		},
 		{
 			"type": "text",

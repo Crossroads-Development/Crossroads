@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "Even at the lowest working temperature, it is faster than a furnace.$(br2)<item>$(l:heat/cable)Heat cables connect on the top/$$(br2)"
+			"text": "Even at the lowest working temperature, it is faster than a furnace.$(br2)<item>$(l:crossroads:heat/cable)Heat cables connect on the top/$$(br2)"
 		}
 	]
 }

@@ -26,7 +26,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<bobo>$(l:intro/welcome#bobo)b0b0 hInT tIME!/$<bobo>$(br2)<bobo>w00l-shhmool! uSE dA l00tbok$ hoTPipe coAt!! MUD! dIRT! s0ILE! gROUND!$(br2)<bobo>mEltY MellTY to wIN @ PRIZE!/$$(br2)"
+			"text": "<bobo>$(l:crossroads:intro/welcome#bobo)b0b0 hInT tIME!/$<bobo>$(br2)<bobo>w00l-shhmool! uSE dA l00tbok$ hoTPipe coAt!! MUD! dIRT! s0ILE! gROUND!$(br2)<bobo>mEltY MellTY to wIN @ PRIZE!/$$(br2)"
 		}
 	]
 }

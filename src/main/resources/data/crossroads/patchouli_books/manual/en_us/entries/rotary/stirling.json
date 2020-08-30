@@ -10,7 +10,7 @@
 			"type": "spotlight",
 			"title": "Stirling Engine",
 			"item": "crossroads:stirling_engine",
-			"text": "The <item>Stirling Engine/$ is a way of producing <thing>$(l:intro/rotary)rotary power/$ from <thing>$(l:intro/heat)heat/$. Or more specifically, from a temperature difference.$(br2)The <item>stirling engine/$ has two heat connections- one on top and one on the bottom. The greater the difference in temperature between the two "
+			"text": "The <item>Stirling Engine/$ is a way of producing <thing>$(l:crossroads:intro/rotary)rotary power/$ from <thing>$(l:crossroads:intro/heat)heat/$. Or more specifically, from a temperature difference.$(br2)The <item>stirling engine/$ has two heat connections- one on top and one on the bottom. The greater the difference in temperature between the two "
 		},
 		{
 			"type": "text",
@@ -22,7 +22,7 @@
 		},
 		{
 			"type": "text",
-			"text": "Compared to the <item>$(l:rotary/steam_turbine)steam turbine/$, the <item>stirling engine/$ can be much more efficient, and has no minimum temperature. However, it is harder to scale up <item>stirling engines/$ than <item>$(l:rotary/steam_turbine)steam turbines/$, and the low maximum speed of the <item>stirling engine/$ means it can't power most machines without <thing>$(l:rotary/gear_large)gearing to multiply the speed/$.$(br2)"
+			"text": "Compared to the <item>$(l:crossroads:rotary/steam_turbine)steam turbine/$, the <item>stirling engine/$ can be much more efficient, and has no minimum temperature. However, it is harder to scale up <item>stirling engines/$ than <item>$(l:crossroads:rotary/steam_turbine)steam turbines/$, and the low maximum speed of the <item>stirling engine/$ means it can't power most machines without <thing>$(l:crossroads:rotary/gear_large)gearing to multiply the speed/$.$(br2)"
 		}
 	]
 }

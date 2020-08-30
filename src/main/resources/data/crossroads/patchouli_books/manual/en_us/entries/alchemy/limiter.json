@@ -11,11 +11,11 @@
 			"type": "spotlight",
 			"title": "Limiter Conduit",
 			"item": "crossroads:flow_limiter",
-			"text": "The <item>Limiter Conduit/$ is used to limit the amount of <thing>$(l:intro/alchemy)reagents/$ flowing into a <item>$(l:alchemy/vessel)reaction vessel/$ from <item>$(l:alchemy/conduit)conduits/$- though they can be used with any <thing>$(l:intro/alchemy)alchemy/$ container.$(br2)They accept input from the back, and output through the front. A limit can be set by shift-right-clicking "
+			"text": "The <item>Limiter Conduit/$ is used to limit the amount of <thing>$(l:crossroads:intro/alchemy)reagents/$ flowing into a <item>$(l:crossroads:alchemy/vessel)reaction vessel/$ from <item>$(l:crossroads:alchemy/conduit)conduits/$- though they can be used with any <thing>$(l:crossroads:intro/alchemy)alchemy/$ container.$(br2)They accept input from the back, and output through the front. A limit can be set by shift-right-clicking "
 		},
 		{
 			"type": "text",
-			"text": "with a <item>$(l:essentials/wrench)wrench/$. They will not insert any <thing>$(l:intro/alchemy)reagent/$ into the container they are outputting to beyond the configured limit.$(br2)This is useful for both preventing completely filling a <item>$(l:alchemy/vessel)reaction vessel/$ with a <thing>$(l:intro/alchemy)reagent/$, and for controlling the ratio of reagents for certain $(l:intro/alchemy)dangerous reactions/$ or making <item>$(l:alchemy/stones)advanced elemental reagents/$.$(br2)"
+			"text": "with a <item>$(l:essentials/wrench)wrench/$. They will not insert any <thing>$(l:crossroads:intro/alchemy)reagent/$ into the container they are outputting to beyond the configured limit.$(br2)This is useful for both preventing completely filling a <item>$(l:crossroads:alchemy/vessel)reaction vessel/$ with a <thing>$(l:crossroads:intro/alchemy)reagent/$, and for controlling the ratio of reagents for certain $(l:crossroads:intro/alchemy)dangerous reactions/$ or making <item>$(l:crossroads:alchemy/stones)advanced elemental reagents/$.$(br2)"
 		},
 		{
 			"type": "text",

@@ -10,7 +10,7 @@
 			"type": "spotlight",
 			"title": "Wind Turbine",
 			"item": "crossroads:wind_turbine",
-			"text": "The <item>Wind Turbine/$ is a renewable way to generate <thing>$(l:intro/rotary)rotary power/$ at a low <thing>$(l:intro/rotary)speed/$.$(br2)The <item>wind turbine/$ requires a 5x5 empty space in front of it, and the ability for its blades to see the sky. As long as these conditions are met, it will produce a random amount of power "
+			"text": "The <item>Wind Turbine/$ is a renewable way to generate <thing>$(l:crossroads:intro/rotary)rotary power/$ at a low <thing>$(l:crossroads:intro/rotary)speed/$.$(br2)The <item>wind turbine/$ requires a 5x5 empty space in front of it, and the ability for its blades to see the sky. As long as these conditions are met, it will produce a random amount of power "
 		},
 		{
 			"type": "text",
@@ -26,7 +26,7 @@
 		},
 		{
 			"type": "text",
-			"text": "this with things like <item>$(l:rotary/gear_base)toggle gears & clutches/$ makes it possible to ensure your turbine is <em>never/$ fighting momentum. <em>This is probably a good idea!/$ Especially as otherwise, if you're using two <item>wind turbines/$, they might fight each other.$(br2)"
+			"text": "this with things like <item>$(l:crossroads:rotary/gear_base)toggle gears & clutches/$ makes it possible to ensure your turbine is <em>never/$ fighting momentum. <em>This is probably a good idea!/$ Especially as otherwise, if you're using two <item>wind turbines/$, they might fight each other.$(br2)"
 		}
 	]
 }

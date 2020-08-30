@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<item>$(l:rotary/winding_table)Spring Winding Stand/$ to increase the spring speed the <item>weapon/$, up to 10 rad/s. The higher the wound speed, the higher the damage done with each shot, with diminishing returns. The minimum spring speed to shoot is 1 rad/s and does 5 damage, while the maximum speed of 10 rad/s does 50 damage per shot.$(br2)Right-clicking with a <item>Spring-Loaded Crossbow"
+			"text": "<item>$(l:crossroads:rotary/winding_table)Spring Winding Stand/$ to increase the spring speed the <item>weapon/$, up to 10 rad/s. The higher the wound speed, the higher the damage done with each shot, with diminishing returns. The minimum spring speed to shoot is 1 rad/s and does 5 damage, while the maximum speed of 10 rad/s does 50 damage per shot.$(br2)Right-clicking with a <item>Spring-Loaded Crossbow"
 		},
 		{
 			"type": "text",

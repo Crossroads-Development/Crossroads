@@ -1,7 +1,7 @@
 Resonance Extractor
 crossroads:beam_extractor
-The <item>Resonance Extractor/$ is the main way of producing <thing><link:intro/beam>beams/$. It consumes items as fuel.
-It consumes one item every cycle (4 ticks or fifth second), producing a <thing><link:intro/beam>beam/$ out the front. Different items produce different <thing><link:intro/beam>beams/$- with different amounts of <thing>energy/$, <thing>potential/$, and <thing>stability/$. No items produce <thing><link:beam/void>void/$.
-Most fuels last for 1 cycle. Some will last for multiple cycles, and will be shown in JEI as lasting X cycles. They will continue to output constant power for X cycles for each item consume. These fuels can be considered 'better', as they produce far more beam <thing><link:intro/beam>power/$ per item.
+The <item>Resonance Extractor/$ is the main way of producing <thing><link:crossroads:intro/beam>beams/$. It consumes items as fuel.
+It consumes one item every cycle (4 ticks or fifth second), producing a <thing><link:crossroads:intro/beam>beam/$ out the front. Different items produce different <thing><link:crossroads:intro/beam>beams/$- with different amounts of <thing>energy/$, <thing>potential/$, and <thing>stability/$. No items produce <thing><link:crossroads:beam/void>void/$.
+Most fuels last for 1 cycle. Some will last for multiple cycles, and will be shown in JEI as lasting X cycles. They will continue to output constant power for X cycles for each item consume. These fuels can be considered 'better', as they produce far more beam <thing><link:crossroads:intro/beam>power/$ per item.
 The <item>resonance extractor/$ can be disabled with a redstone signal.
-Many fuels (such as glowstone dust or redstone dust) can be made using <thing><link:intro/beams>beams/$, making them easier to automate.
+Many fuels (such as glowstone dust or redstone dust) can be made using <thing><link:crossroads:intro/beams>beams/$, making them easier to automate.

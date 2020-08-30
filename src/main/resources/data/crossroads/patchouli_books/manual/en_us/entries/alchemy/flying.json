@@ -19,7 +19,7 @@
 		},
 		{
 			"type": "text",
-			"text": "Note that the <item>flying machine/$ requires ingredients from both $(l:intro/path)Alchemy & Technomancy/$ to craft by default.$(br2)"
+			"text": "Note that the <item>flying machine/$ requires ingredients from both $(l:crossroads:intro/path)Alchemy & Technomancy/$ to craft by default.$(br2)"
 		}
 	]
 }

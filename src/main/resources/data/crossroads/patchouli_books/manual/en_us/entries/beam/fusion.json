@@ -11,7 +11,7 @@
 			"type": "spotlight",
 			"title": "Alignment: Fusion",
 			"item": "crossroads:pure_quartz",
-			"text": "<thing>Fusion/$ (light teal) has no 'effect'- but there are several useful block conversions <thing>fusion/$ can do- such as making prismarine from gravel and <item>$(l:fluid/ingr)pure quartz blocks/$ from sand.$(br2)"
+			"text": "<thing>Fusion/$ (light teal) has no 'effect'- but there are several useful block conversions <thing>fusion/$ can do- such as making prismarine from gravel and <item>$(l:crossroads:fluid/ingr)pure quartz blocks/$ from sand.$(br2)"
 		},
 		{
 			"type": "text",

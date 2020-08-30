@@ -10,7 +10,7 @@
 			"type": "spotlight",
 			"title": "Fat Collector",
 			"item": "crossroads:fat_collector",
-			"text": "The <item>Fat Collector/$ makes <thing>liquid fat/$ using food. It only works in a certain <thing>$(l:intro/heat)temperature range/$. It has a <thing>$(l:intro/heat)heat/$ connection on the bottom and fluid connections on the sides.$(br2)Any food item (other than <item>$(l:fluid/fat_congealer)edible blobs/$) can be converted into <thing>liquid fat/$, which will consume "
+			"text": "The <item>Fat Collector/$ makes <thing>liquid fat/$ using food. It only works in a certain <thing>$(l:crossroads:intro/heat)temperature range/$. It has a <thing>$(l:crossroads:intro/heat)heat/$ connection on the bottom and fluid connections on the sides.$(br2)Any food item (other than <item>$(l:crossroads:fluid/fat_congealer)edible blobs/$) can be converted into <thing>liquid fat/$, which will consume "
 		},
 		{
 			"type": "text",
@@ -22,7 +22,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<thing>Liquid fat/$ can be made into custom food in a <item>$(l:fluid/fat_congealer)fat congealer/$, or used to feed nearby players and animals in a <item>$(l:fluid/fat_feeder)fat feeder/$.$(br2)"
+			"text": "<thing>Liquid fat/$ can be made into custom food in a <item>$(l:crossroads:fluid/fat_congealer)fat congealer/$, or used to feed nearby players and animals in a <item>$(l:crossroads:fluid/fat_feeder)fat feeder/$.$(br2)"
 		}
 	]
 }

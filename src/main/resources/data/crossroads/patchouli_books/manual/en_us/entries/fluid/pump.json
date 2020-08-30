@@ -10,7 +10,7 @@
 			"type": "spotlight",
 			"title": "Rotary Pump",
 			"item": "crossroads:rotary_pump",
-			"text": "The <item>Rotary Pump/$ is a <thing>$(l:intro/rotary)rotary/$ powered fluid pump. It collects fluid source blocks from the world, and allows it to be moved around in pipes.$(br2)It <em>only collects fluid sources directly underneath it/$. This means is it usually only useful for collecting water, and "
+			"text": "The <item>Rotary Pump/$ is a <thing>$(l:crossroads:intro/rotary)rotary/$ powered fluid pump. It collects fluid source blocks from the world, and allows it to be moved around in pipes.$(br2)It <em>only collects fluid sources directly underneath it/$. This means is it usually only useful for collecting water, and "
 		},
 		{
 			"type": "text",

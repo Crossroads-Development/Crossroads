@@ -19,7 +19,7 @@
 		},
 		{
 			"type": "text",
-			"text": "By default, saved moments will expire if not used within 5 minutes. The <item>Personal Time Rewinder/$ must be wound up in a <item>$(l:rotary/winding_table)Spring Winding Stand/$ in order to be used. It uses 0.4 $(l:rotary/winding_table)<thing>spring speed/$ each use, and can be wound to a maximum of 10.$(br2)"
+			"text": "By default, saved moments will expire if not used within 5 minutes. The <item>Personal Time Rewinder/$ must be wound up in a <item>$(l:crossroads:rotary/winding_table)Spring Winding Stand/$ in order to be used. It uses 0.4 $(l:crossroads:rotary/winding_table)<thing>spring speed/$ each use, and can be wound to a maximum of 10.$(br2)"
 		}
 	]
 }

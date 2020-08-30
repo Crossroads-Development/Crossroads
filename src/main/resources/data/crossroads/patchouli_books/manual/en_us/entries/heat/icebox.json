@@ -10,7 +10,7 @@
 			"type": "spotlight",
 			"title": "Icebox",
 			"item": "crossroads:icebox",
-			"text": "The <item>Icebox/$ is the simplest way to produce cold (aka remove heat). It's the cold equivalent of the <item>$(l:heat/firebox)firebox/$, burning cold items to cool at a constant rate. It can not cool below -20°C.$(br2)It connects to a <item>$(l:heat/cable)cable/$ on the top.$(br2)"
+			"text": "The <item>Icebox/$ is the simplest way to produce cold (aka remove heat). It's the cold equivalent of the <item>$(l:crossroads:heat/firebox)firebox/$, burning cold items to cool at a constant rate. It can not cool below -20°C.$(br2)It connects to a <item>$(l:crossroads:heat/cable)cable/$ on the top.$(br2)"
 		},
 		{
 			"type": "text",
@@ -18,7 +18,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<bobo>hEY! YOU! lUKE! lISTEN! iTS mE,, $(l:intro/welcome#bobo)BOBO/$<bobo>!$(br2)<bobo>sTEAL h(IS/ER/??/¿¿) LOOK! gET sPECIAL pROTECT! LETHER + too more things!$(br2)<bobo>4 wATER! sqUIb jUiCE + water meat!$(br2)<bobo>4 FYRE! BAKON~ fIRE DUST!$(br2)"
+			"text": "<bobo>hEY! YOU! lUKE! lISTEN! iTS mE,, $(l:crossroads:intro/welcome#bobo)BOBO/$<bobo>!$(br2)<bobo>sTEAL h(IS/ER/??/¿¿) LOOK! gET sPECIAL pROTECT! LETHER + too more things!$(br2)<bobo>4 wATER! sqUIb jUiCE + water meat!$(br2)<bobo>4 FYRE! BAKON~ fIRE DUST!$(br2)"
 		},
 		{
 			"type": "text",

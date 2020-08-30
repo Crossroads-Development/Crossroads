@@ -1,9 +1,9 @@
 Splitting Beams
 crossroads:beam_siphon
-There are three different blocks that can split or redirect <thing><link:intro/beam>beams/$: The <item>Beam Splitter/$, the <item>Beam Siphon/$, and the <item>Beam Redirector/$.
+There are three different blocks that can split or redirect <thing><link:crossroads:intro/beam>beams/$: The <item>Beam Splitter/$, the <item>Beam Siphon/$, and the <item>Beam Redirector/$.
 
 The cheapest option is the <item>Beam Redirector/$, which is unable to split beams at all. It has two outputs and any received beams will be sent to one of the outputs. If it has a redstone signal, the input beam comes out the front (the end the arrows on the sides point to), otherwise it comes out the back.
-The <item>Beam rRedirector/$ is the cheap and simple way to control the direction beams go with redstone.
+The <item>Beam Redirector/$ is the cheap and simple way to control the direction beams go with redstone.
 
 The <item>Beam Splitter/$ will split off a percentage of the incoming beam out the front (the end the arrows on the sides point to), and send the remainder out the back. The portion sent out the front is (redstone signal in)/15. It can accept a <thing><link:essentials/circuits>circuit/$ input for more precision. It is a good way of splitting a large incoming beam between two directions.
 

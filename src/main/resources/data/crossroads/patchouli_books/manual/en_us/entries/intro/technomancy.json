@@ -15,11 +15,11 @@
 		},
 		{
 			"type": "text",
-			"text": "with disastrous effects. <em>DO NOT LET ANYTHING FILL WITH <thing>TEMPORAL ENTROPY!/$$(br2)<thing>Temporal Entropy/$ can be easily destroyed in an <item>$(l:technomancy/sink)Entropy Sink/$, which requires being placed over a beacon. <thing>Temporal Entropy/$ can be transmitted using <item>$(l:technomancy/node)Entropy Nodes/$.$(br2)Most <thing>Technomancy/$ machines and items require a material called "
+			"text": "with disastrous effects. <em>DO NOT LET ANYTHING FILL WITH <thing>TEMPORAL ENTROPY!/$$(br2)<thing>Temporal Entropy/$ can be easily destroyed in an <item>$(l:crossroads:technomancy/sink)Entropy Sink/$, which requires being placed over a beacon. <thing>Temporal Entropy/$ can be transmitted using <item>$(l:crossroads:technomancy/node)Entropy Nodes/$.$(br2)Most <thing>Technomancy/$ machines and items require a material called "
 		},
 		{
 			"type": "text",
-			"text": "<item>$(l:technomancy/copshowium)Copshowium/$ to craft. It's worth getting a decent supply before starting.$(br2)A good first <thing>Technomancy/$ machine is the <item>$(l:technomancy/beacon_harness)Beacon Harness/$, which produces massive amounts of <thing>$(l:intro/beam)beams/$ cheaply.$(br2)"
+			"text": "<item>$(l:crossroads:technomancy/copshowium)Copshowium/$ to craft. It's worth getting a decent supply before starting.$(br2)A good first <thing>Technomancy/$ machine is the <item>$(l:crossroads:technomancy/beacon_harness)Beacon Harness/$, which produces massive amounts of <thing>$(l:crossroads:intro/beam)beams/$ cheaply.$(br2)"
 		}
 	]
 }

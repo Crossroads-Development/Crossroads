@@ -1,6 +1,6 @@
 Beam Reflector
 crossroads:beam_reflector
-The <item>Beam Reflector/$ is the normal way to move <thing><link:intro/beam>beams/$ around. They accept <thing><link:intro/beam>beams/$ in any side, and shoot them out the front.
-It should be noted that <thing><link:intro/beam>beams/$ move one way only- they go from->to; unlike <thing><link:intro/heat>heat/$ or <thing><link:intro/rotary>rotary/$ power which are shared over a network.
-If multiple <thing><link:intro/beam>beams/$ are going into the same <item>reflector/$ at once, they will be combined for the output. All <thing><link:intro/beam>beams/$ are emitted with a 4 tick (fifth second) delay, as usual.
+The <item>Beam Reflector/$ is the normal way to move <thing><link:crossroads:intro/beam>beams/$ around. They accept <thing><link:crossroads:intro/beam>beams/$ in any side, and shoot them out the front.
+It should be noted that <thing><link:crossroads:intro/beam>beams/$ move one way only- they go from->to; unlike <thing><link:crossroads:intro/heat>heat/$ or <thing><link:crossroads:intro/rotary>rotary/$ power which are shared over a network.
+If multiple <thing><link:crossroads:intro/beam>beams/$ are going into the same <item>reflector/$ at once, they will be combined for the output. All <thing><link:crossroads:intro/beam>beams/$ are emitted with a 4 tick (fifth second) delay, as usual.
 Loops of <item>beam reflectors/$ are totally legal, and are pretty good way to store beams losslessly.

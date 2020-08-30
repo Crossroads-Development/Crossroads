@@ -1,16 +1,16 @@
 Modular Goggles
 crossroads:module_goggles|crossroads:progress/path/technomancy
 The <item>Modular Goggles/$ are a helpful multitool worn as a helmet. They do not have durability or provide armor.
-Lenses- which provide abilities- are added to the goggles in an anvil. Each added lens increases XP cost. The four items that can be added as lenses are <link:intro/ores>rubies/$, emeralds, diamonds, and <link:fluid/ingr>pure quartz/$.
+Lenses- which provide abilities- are added to the goggles in an anvil. Each added lens increases XP cost. The four items that can be added as lenses are <link:crossroads:intro/ores>rubies/$, emeralds, diamonds, and <link:crossroads:fluid/ingr>pure quartz/$.
 Three of these lenses are actived using keybinds, which are unbound by default. To use them, make sure to go into the keybinds menu under 'Crossroads' and bind the item control keys.
 
-A <link:intro/ores>ruby/$ lens will add a toggle-able fire laser that shoots anything you look at, setting entities on fire and starting fire. It is toggled with the 'energy control key' with an empty hand.
+A <link:crossroads:intro/ores>ruby/$ lens will add a toggle-able fire laser that shoots anything you look at, setting entities on fire and starting fire. It is toggled with the 'energy control key' with an empty hand.
 
 An emerald lens will add toggle-able night vision for the wearer. It is toggled with the 'potential control key' with an empty hand.
 
-A diamond lens will allow opening a <item><link:intro/path>detailed crafter/$ crafting UI anywhere by pressing the 'stability control key' with an empty hand.
+A diamond lens will allow opening a <item><link:crossroads:intro/path>detailed crafter/$ crafting UI anywhere by pressing the 'stability control key' with an empty hand.
 
-A <link:fluid/ingr>pure quartz/$ lens will act as a permanent <item><link:intro/omnimeter>omnimeter/$ which provides full information on any machine you look at (with a large range). This is very handy to have.
+A <link:crossroads:fluid/ingr>pure quartz/$ lens will act as a permanent <item><link:crossroads:intro/omnimeter>omnimeter/$ which provides full information on any machine you look at (with a large range). This is very handy to have.
 
-<bobo>iT"S mEE! <link:intro/welcome#bobo>bOBO/$<bobo>!!
+<bobo>iT"S mEE! <link:crossroads:intro/welcome#bobo>bOBO/$<bobo>!!
 dEr iSS ANOHTER LENSE! lUk thRU darkNes!/$

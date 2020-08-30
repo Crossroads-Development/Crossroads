@@ -11,15 +11,15 @@
 			"type": "spotlight",
 			"title": "Alignment: Energy",
 			"item": "crossroads:gem_ruby",
-			"text": "<thing>Energy/$ (red) is one of the basic <thing>alignments/$- the <thing>alignment/$ of a pure <thing>energy/$ beam.$(br2)<thing>Energy/$ will add <thing>$(l:intro/heat)heat/$ to heat machines and cables, at a rate of 100°C/power every 5 ticks, or 20°C/power/tick.$(br2)If it hits anything other "
+			"text": "<thing>Energy/$ (red) is one of the basic <thing>alignments/$- the <thing>alignment/$ of a pure <thing>energy/$ beam.$(br2)<thing>Energy/$ will add <thing>$(l:crossroads:intro/heat)heat/$ to heat machines and cables, at a rate of 100°C/power every 5 ticks, or 20°C/power/tick.$(br2)If it hits anything other "
 		},
 		{
 			"type": "text",
-			"text": "than a <thing>$(l:intro/heat)heat/$ machine, it will start a fire.$(br2)"
+			"text": "than a <thing>$(l:crossroads:intro/heat)heat/$ machine, it will start a fire.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<thing>Void-Energy/$ AKA <thing>Cold/$ will remove <thing>$(l:intro/heat)heat/$ from heat machines and cables, at a rate of -100°C/power every 5 ticks, or -20°C/power/tick.$(br2)"
+			"text": "<thing>Void-Energy/$ AKA <thing>Cold/$ will remove <thing>$(l:crossroads:intro/heat)heat/$ from heat machines and cables, at a rate of -100°C/power every 5 ticks, or -20°C/power/tick.$(br2)"
 		}
 	]
 }

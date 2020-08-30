@@ -14,19 +14,19 @@
 		},
 		{
 			"type": "text",
-			"text": "<item>Salt/$: A crafting ingredient. Also $(l:fluid/centrifuge)produced/$ or $(l:heat/salt_reactor)consumed/$ by a few machines.$(br2)<item>Salt/$ can be made <item>Salt Blocks/$, which will kill plants around them, allowing you to literally salt the earth. They also kill any slimes or creepers that touch them.$(br2)"
+			"text": "<item>Salt/$: A crafting ingredient. Also $(l:crossroads:fluid/centrifuge)produced/$ or $(l:crossroads:heat/salt_reactor)consumed/$ by a few machines.$(br2)<item>Salt/$ can be made <item>Salt Blocks/$, which will kill plants around them, allowing you to literally salt the earth. They also kill any slimes or creepers that touch them.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<item>Slag/$: A byproduct of $(l:rotary/blast)ore tripling/$. It can be used as bonemeal, and has some crafting uses.$(br2)"
+			"text": "<item>Slag/$: A byproduct of $(l:crossroads:rotary/blast)ore tripling/$. It can be used as bonemeal, and has some crafting uses.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<item>Pure Quartz/$: Used as a crafting ingredient in everything <thing>$(l:intro/beam)beams/$.$(br2)"
+			"text": "<item>Pure Quartz/$: Used as a crafting ingredient in everything <thing>$(l:crossroads:intro/beam)beams/$.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<bobo>p0ISON POTATO!: mUCH iMPORTANT FOR $(l:intro/welcome#bobo)b0B0 tings!/$$(br2)"
+			"text": "<bobo>p0ISON POTATO!: mUCH iMPORTANT FOR $(l:crossroads:intro/welcome#bobo)b0B0 tings!/$$(br2)"
 		}
 	]
 }

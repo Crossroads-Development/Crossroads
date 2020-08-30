@@ -11,11 +11,11 @@
 			"type": "spotlight",
 			"title": "Entropy Sink",
 			"item": "crossroads:flux_sink",
-			"text": "The <item>Entropy Sink/$ is the main way of destroying <thing>$(l:intro/technomancy)temporal entropy/$. It can destroy a massive amount of <thing>$(l:intro/technomancy)temporal entropy/$ each tick (2,500; more than you are likely to ever produce).$(br2)In order to work, it must be placed directly over a (vanilla) beacon. It can be "
+			"text": "The <item>Entropy Sink/$ is the main way of destroying <thing>$(l:crossroads:intro/technomancy)temporal entropy/$. It can destroy a massive amount of <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ each tick (2,500; more than you are likely to ever produce).$(br2)In order to work, it must be placed directly over a (vanilla) beacon. It can be "
 		},
 		{
 			"type": "text",
-			"text": "placed floating in the air several blocks above. The beacon does not have to be active, but the <item>entropy sink/$ will not block the beacon beam.$(br2)Use <item>$(l:technomancy/node)Entropy Nodes/$ to get <thing>$(l:intro/technomancy)temporal entropy/$ from machines to the <item>entropy sink/$.$(br2)The <item>entropy sink/$ can share the beacon with a <item>$(l:technomancy/beacon_harness)Beacon Harness/$.$(br2)"
+			"text": "placed floating in the air several blocks above. The beacon does not have to be active, but the <item>entropy sink/$ will not block the beacon beam.$(br2)Use <item>$(l:crossroads:technomancy/node)Entropy Nodes/$ to get <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ from machines to the <item>entropy sink/$.$(br2)The <item>entropy sink/$ can share the beacon with a <item>$(l:crossroads:technomancy/beacon_harness)Beacon Harness/$.$(br2)"
 		}
 	]
 }

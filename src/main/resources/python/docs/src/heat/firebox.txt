@@ -1,4 +1,4 @@
 Firebox
 crossroads:firebox
 The <item>Firebox/$ is the simplest way to produce heat by burning fuel. Any furnace fuel can be used to produce heat at a constant rate.
-It connects to a <item><link:heat/cable>cable/$ on the top.
+It connects to a <item><link:crossroads:heat/cable>cable/$ on the top.

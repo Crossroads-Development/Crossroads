@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"item": "crossroads:detailed_auto_crafter",
+		"count": 1
+	},
+	"pattern": [
+		"BDB",
+		"B B",
+		"BAB"
+	],
+	"key": {
+		"B": {
+			"tag": "forge:ingots/bronze"
+		},
+		"D": {
+			"item": "crossroads:detailed_crafter"
+		},
+		"A": {
+			"item": "essentials:auto_crafter"
+		}
+	}
+}

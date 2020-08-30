@@ -11,39 +11,39 @@
 			"type": "spotlight",
 			"title": "Terraforming with Reagents",
 			"item": "minecraft:grass_block",
-			"text": "There are several <thing>$(l:intro/alchemy)reagents/$ which have <thing>$(l:alchemy/effect)effects/$ that change the biome and transmute blocks.$(br2)By combining one of these <thing>$(l:intro/alchemy)reagents/$ with $(l:alchemy/stones)<item>phelostogen/$ or $(l:alchemy/stones)<item>ignis infernum/$, the <thing>$(l:alchemy/effect)effect/$ can be spread over a large area by the <thing>$(l:alchemy/effect)flame cloud/$ for terraforming.$(br2)"
+			"text": "There are several <thing>$(l:crossroads:intro/alchemy)reagents/$ which have <thing>$(l:crossroads:alchemy/effect)effects/$ that change the biome and transmute blocks.$(br2)By combining one of these <thing>$(l:crossroads:intro/alchemy)reagents/$ with $(l:crossroads:alchemy/stones)<item>phelostogen/$ or $(l:crossroads:alchemy/stones)<item>ignis infernum/$, the <thing>$(l:crossroads:alchemy/effect)effect/$ can be spread over a large area by the <thing>$(l:crossroads:alchemy/effect)flame cloud/$ for terraforming.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "If any <item>quicksilver/$ is present in the released mix, then the <thing>$(l:alchemy/effect)effect/$ will be changed- in addition to changing the biome and transmuting blocks, air will be filled in with certain blocks- allowing filling in massive areas.$(br2)"
+			"text": "If any <item>quicksilver/$ is present in the released mix, then the <thing>$(l:crossroads:alchemy/effect)effect/$ will be changed- in addition to changing the biome and transmuting blocks, air will be filled in with certain blocks- allowing filling in massive areas.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<item>$(l:alchemy/stones)Aether:/$ will set the biome to plains, will turn soil materials to grass blocks, will turn rock materials to stone, will turn 'crystal' blocks to glass, and will turn liquids to water. <item>$(l:alchemy/stones)Aether/$ is basically an normal overworld-plains terraformer. When mixed with <item>quicksilver/$, it will fill empty space with dirt.$(br2)<item>$(l:alchemy/stones)Eldrine:/$ will set the biome "
+			"text": "<item>$(l:crossroads:alchemy/stones)Aether:/$ will set the biome to plains, will turn soil materials to grass blocks, will turn rock materials to stone, will turn 'crystal' blocks to glass, and will turn liquids to water. <item>$(l:crossroads:alchemy/stones)Aether/$ is basically an normal overworld-plains terraformer. When mixed with <item>quicksilver/$, it will fill empty space with dirt.$(br2)<item>$(l:crossroads:alchemy/stones)Eldrine:/$ will set the biome "
 		},
 		{
 			"type": "text",
-			"text": "to hell, will turn soil materials to soul sand, will turn rock materials to netherrack, will turn 'crystal' blocks to glowstone, and will turn liquids to lava. <item>$(l:alchemy/stones)Eldrine/$ is basically an nether terraformer. When mixed with <item>quicksilver/$, it will fill empty space with soulsand.$(br2)<item>$(l:alchemy/stones)Fusas:/$ will set the biome to deep ocean, will turn soil materials "
+			"text": "to hell, will turn soil materials to soul sand, will turn rock materials to netherrack, will turn 'crystal' blocks to glowstone, and will turn liquids to lava. <item>$(l:crossroads:alchemy/stones)Eldrine/$ is basically an nether terraformer. When mixed with <item>quicksilver/$, it will fill empty space with soulsand.$(br2)<item>$(l:crossroads:alchemy/stones)Fusas:/$ will set the biome to deep ocean, will turn soil materials "
 		},
 		{
 			"type": "text",
-			"text": "to clay, will turn rock materials to prismarine, will turn 'crystal' blocks to sea lanterns, and will turn liquids to distilled water. <item>$(l:alchemy/stones)Fusas/$ is basically a ocean-temple terraformer. When mixed with <item>quicksilver/$, it will fill empty space with clay.$(br2)<item>$(l:alchemy/stones)Lumen:/$ will set the biome to desert, will turn soil materials to sand, will turn rock materials "
+			"text": "to clay, will turn rock materials to prismarine, will turn 'crystal' blocks to sea lanterns, and will turn liquids to distilled water. <item>$(l:crossroads:alchemy/stones)Fusas/$ is basically a ocean-temple terraformer. When mixed with <item>quicksilver/$, it will fill empty space with clay.$(br2)<item>$(l:crossroads:alchemy/stones)Lumen:/$ will set the biome to desert, will turn soil materials to sand, will turn rock materials "
 		},
 		{
 			"type": "text",
-			"text": "to sandstone, will turn 'crystal' blocks to <item>$(l:fluid/ingr)salt blocks/$, and will remove liquids. <item>$(l:alchemy/stones)Lumen/$ is basically a desert terraformer. When mixed with <item>quicksilver/$, it will fill empty space with sand.$(br2)<item>$(l:alchemy/stones)Stasisol:/$ will set the biome to snowy tundra, will turn soil materials to snow, will turn rock materials to packed ice, will turn 'crystal' blocks to "
+			"text": "to sandstone, will turn 'crystal' blocks to <item>$(l:crossroads:fluid/ingr)salt blocks/$, and will remove liquids. <item>$(l:crossroads:alchemy/stones)Lumen/$ is basically a desert terraformer. When mixed with <item>quicksilver/$, it will fill empty space with sand.$(br2)<item>$(l:crossroads:alchemy/stones)Stasisol:/$ will set the biome to snowy tundra, will turn soil materials to snow, will turn rock materials to packed ice, will turn 'crystal' blocks to "
 		},
 		{
 			"type": "text",
-			"text": "blue ice, and will turn liquids to ice. <item>$(l:alchemy/stones)Stasisol/$ is basically a snow terraformer. When mixed with <item>quicksilver/$, it will fill empty space with snow.$(br2)"
+			"text": "blue ice, and will turn liquids to ice. <item>$(l:crossroads:alchemy/stones)Stasisol/$ is basically a snow terraformer. When mixed with <item>quicksilver/$, it will fill empty space with snow.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The 'ideal mix' for terraforming is 1 unit of the <thing>$(l:intro/alchemy)reagent/$ used for terraforming, 1 unit of <item>alchemical salt/$ to prevent <item>$(l:alchemy/stones)phelostogen/$/<item>$(l:alchemy/stones)ignis infernum/$ from destroying blocks, optionally 1 unit of <item>quicksilver/$ if you want to fill all empty space instead of just terraforming, and as much <item>$(l:alchemy/stones)phelostogen/$/<item>$(l:alchemy/stones)ignis infernum/$ as desired to make the effect apply over a large area.$(br2)"
+			"text": "The 'ideal mix' for terraforming is 1 unit of the <thing>$(l:crossroads:intro/alchemy)reagent/$ used for terraforming, 1 unit of <item>alchemical salt/$ to prevent <item>$(l:crossroads:alchemy/stones)phelostogen/$/<item>$(l:crossroads:alchemy/stones)ignis infernum/$ from destroying blocks, optionally 1 unit of <item>quicksilver/$ if you want to fill all empty space instead of just terraforming, and as much <item>$(l:crossroads:alchemy/stones)phelostogen/$/<item>$(l:crossroads:alchemy/stones)ignis infernum/$ as desired to make the effect apply over a large area.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "For such a large and complicated mix being released, it is suggested to release it using a <item>$(l:alchemy/glassware)shell/$ or <item>$(l:alchemy/glassware)phial/$.$(br2)"
+			"text": "For such a large and complicated mix being released, it is suggested to release it using a <item>$(l:crossroads:alchemy/glassware)shell/$ or <item>$(l:crossroads:alchemy/glassware)phial/$.$(br2)"
 		}
 	]
 }

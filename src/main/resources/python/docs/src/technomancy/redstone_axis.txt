@@ -1,11 +1,11 @@
 Redstone Master Axis
 crossroads:redstone_axis|crossroads:progress/path/technomancy
-The <item>Redstone Master Axis/$ is a special <item><link:rotary/axis>master axis/$ where the <thing><link:intro/rotary>speed/$ of the controlled <thing><link:intro/rotary>rotary/$ is precisely controlled by a redstone signal.
-The <item>redstone master axis/$ will hold the <thing><link:intro/rotary>speed/$ of <em>the attached gear/$ steady at a <thing><link:intro/rotary>speed/$ equal to the received redstone signal (including <item><link:essentials/circuits>circuit/$ input).
-Any required <thing><link:intro/rotary>energy/$ to increase the <thing><link:intro/rotary>speed/$ will be drawn from a gear/axle attached to the back of the <item>redstone master axis/$, if possible. Any excess <thing><link:intro/rotary>energy/$ being removed from the system to decrease the <thing><link:intro/rotary>speed/$ will be added to an attached gear on the back, if available.
-It is generally better to use a larger (higher <thing><link:intro/rotary>I value/$) gear on the back as an <thing><link:intro/rotary>energy/$ source, as that allows the <item>redstone master axis/$ to draw <thing><link:intro/rotary>energy/$ more quickly.
+The <item>Redstone Master Axis/$ is a special <item><link:crossroads:rotary/axis>master axis/$ where the <thing><link:crossroads:intro/rotary>speed/$ of the controlled <thing><link:crossroads:intro/rotary>rotary/$ is precisely controlled by a redstone signal.
+The <item>redstone master axis/$ will hold the <thing><link:crossroads:intro/rotary>speed/$ of <em>the attached gear/$ steady at a <thing><link:crossroads:intro/rotary>speed/$ equal to the received redstone signal (including <item><link:essentials/circuits>circuit/$ input).
+Any required <thing><link:crossroads:intro/rotary>energy/$ to increase the <thing><link:crossroads:intro/rotary>speed/$ will be drawn from a gear/axle attached to the back of the <item>redstone master axis/$, if possible. Any excess <thing><link:crossroads:intro/rotary>energy/$ being removed from the system to decrease the <thing><link:crossroads:intro/rotary>speed/$ will be added to an attached gear on the back, if available.
+It is generally better to use a larger (higher <thing><link:crossroads:intro/rotary>I value/$) gear on the back as an <thing><link:crossroads:intro/rotary>energy/$ source, as that allows the <item>redstone master axis/$ to draw <thing><link:crossroads:intro/rotary>energy/$ more quickly.
 
-<bobo>limitted POWAH! uNLIMITID eNErGY! i AM THE <link:intro/welcome#bobo>BOBO!/$<bobo>
+<bobo>limitted POWAH! uNLIMITID eNErGY! i AM THE <link:crossroads:intro/welcome#bobo>BOBO!/$<bobo>
 watz broun und schtick-y?
 oRANGE ti3m nUGG-NUGG!
 dA ME3NING uv lI3F! ThA MANY-VERSE! &nd EVERYTING! butte on MEET nUGG-nUGG!/$

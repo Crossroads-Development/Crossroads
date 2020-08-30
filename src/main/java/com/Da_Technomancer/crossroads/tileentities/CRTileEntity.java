@@ -118,6 +118,7 @@ public class CRTileEntity{
 		register(FluxSinkTileEntity::new, "flux_sink", reg, fluxSink);
 		register(SteamerTileEntity::new, "steamer", reg, steamer);
 		register(WindingTableTileEntity::new, "winding_table", reg, windingTable);
+		register(DetailedAutoCrafterTileEntity::new, "detailed_auto_crafter", reg, detailedAutoCrafter);
 	}
 
 	private static void register(Supplier<? extends TileEntity> cons, String id, IForgeRegistry<TileEntityType<?>> reg, Block... blocks){

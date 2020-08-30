@@ -11,7 +11,7 @@
 			"type": "spotlight",
 			"title": "Upgraded Tesla Coils",
 			"item": "crossroads:tesla_coil_top_efficiency",
-			"text": "<thing>$(l:intro/alchemy)Alchemy/$ unlocks several upgraded <item>$(l:fluid/tesla)tesla coil tops/$, which can be used on top of a <item>$(l:fluid/tesla)tesla coil/$.$(br2)There are 5 variants. Some have slightly different stats, while 2 do something completely different from transferring FE.$(br2)"
+			"text": "<thing>$(l:crossroads:intro/alchemy)Alchemy/$ unlocks several upgraded <item>$(l:crossroads:fluid/tesla)tesla coil tops/$, which can be used on top of a <item>$(l:crossroads:fluid/tesla)tesla coil/$.$(br2)There are 5 variants. Some have slightly different stats, while 2 do something completely different from transferring FE.$(br2)"
 		},
 		{
 			"type": "text",
@@ -31,7 +31,7 @@
 		},
 		{
 			"type": "text",
-			"text": "The <item>High-Intensity Tesla Coil Head/$ will transfer 10,000FE per jolt, effectively having 10x the normal FE transfer rate. It will not work without a <item>$(l:fluid/tesla)leyden jar/$ installed in the <item>$(l:fluid/tesla)tesla coil/$.$(br2)"
+			"text": "The <item>High-Intensity Tesla Coil Head/$ will transfer 10,000FE per jolt, effectively having 10x the normal FE transfer rate. It will not work without a <item>$(l:crossroads:fluid/tesla)leyden jar/$ installed in the <item>$(l:crossroads:fluid/tesla)tesla coil/$.$(br2)"
 		}
 	]
 }

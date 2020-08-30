@@ -10,7 +10,7 @@
 			"type": "spotlight",
 			"title": "Axles & Small Gears",
 			"item": "crossroads:gear_base",
-			"text": "The most basic components for moving <thing>$(l:intro/rotary)rotary energy/$ around are <item>small gears/$ and <item>axles/$.$(br2)Up to 6 <item>small/$ gears can be placed in one blockspace- one on each face. <item>Small gears/$ must be placed against a solid surface, and can be individually removed using a <item>$(l:essentials/wrench)wrench/$.$(br2)"
+			"text": "The most basic components for moving <thing>$(l:crossroads:intro/rotary)rotary energy/$ around are <item>small gears/$ and <item>axles/$.$(br2)Up to 6 <item>small/$ gears can be placed in one blockspace- one on each face. <item>Small gears/$ must be placed against a solid surface, and can be individually removed using a <item>$(l:essentials/wrench)wrench/$.$(br2)"
 		},
 		{
 			"type": "text",
@@ -22,7 +22,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<item>Axles/$ and <item>gears/$ come in several different materials (varying metals), which have different $(l:intro/rotary)'I' values/$ based on density. Axles tend to be extremely light-weight and cheap.$(br2)"
+			"text": "<item>Axles/$ and <item>gears/$ come in several different materials (varying metals), which have different $(l:crossroads:intro/rotary)'I' values/$ based on density. Axles tend to be extremely light-weight and cheap.$(br2)"
 		},
 		{
 			"type": "text",
@@ -38,7 +38,7 @@
 		},
 		{
 			"type": "text",
-			"text": "Remember, all gear networks need at least one <item>$(l:rotary/axis)master axis/$ to work.$(br2)"
+			"text": "Remember, all gear networks need at least one <item>$(l:crossroads:rotary/axis)master axis/$ to work.$(br2)"
 		}
 	]
 }
