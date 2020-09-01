@@ -20,6 +20,7 @@ public class LodestoneTurbineTileEntity extends ModuleTE{
 	private static TileEntityType<LodestoneTurbineTileEntity> type = null;
 
 	public static final double INERTIA = 300;
+	public static final double MAX_SPEED = 20;
 
 	public LodestoneTurbineTileEntity(){
 		super(type);
@@ -38,7 +39,7 @@ public class LodestoneTurbineTileEntity extends ModuleTE{
 	@Override
 	public void tick(){
 		super.tick();
-		if(!world.isRemote && axleHandler.axis != null && validDimension()){
+		if(!world.isRemote && axleHandler.axis != null && validDimension() && motData[0] < MAX_SPEED){
 			motData[1] += CRConfig.lodestoneTurbinePower.get();
 			markDirty();
 		}

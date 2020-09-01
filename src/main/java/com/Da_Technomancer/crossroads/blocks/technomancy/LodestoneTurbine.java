@@ -43,6 +43,7 @@ public class LodestoneTurbine extends ContainerBlock{
 	@Override
 	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.lodestone_turbine.desc", CRConfig.lodestoneTurbinePower.get()));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.lodestone_turbine.limit", LodestoneTurbineTileEntity.MAX_SPEED));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", LodestoneTurbineTileEntity.INERTIA));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.lodestone_turbine.quip").func_230530_a_(MiscUtil.TT_QUIP));
 	}

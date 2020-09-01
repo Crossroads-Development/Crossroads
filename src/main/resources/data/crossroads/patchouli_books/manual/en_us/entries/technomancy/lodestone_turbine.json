@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "on the top.$(br2)"
+			"text": "on the top, and can not raise the speed above 20rad/s.$(br2)"
 		},
 		{
 			"type": "text",
