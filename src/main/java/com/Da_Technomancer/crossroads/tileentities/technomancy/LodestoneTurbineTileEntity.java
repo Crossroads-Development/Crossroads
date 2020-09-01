@@ -20,7 +20,7 @@ public class LodestoneTurbineTileEntity extends ModuleTE{
 	private static TileEntityType<LodestoneTurbineTileEntity> type = null;
 
 	public static final double INERTIA = 300;
-	public static final double MAX_SPEED = 20;
+	public static final double MAX_SPEED = 10;
 
 	public LodestoneTurbineTileEntity(){
 		super(type);
