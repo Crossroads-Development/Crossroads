@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
@@ -254,7 +253,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 					}
 					if(rec.isFlux()){
 						//Create flux if applicable
-						addFlux(FLUX_PER_INGOT * created / EnergyConverters.INGOT_MB);
+						addFlux(FLUX_PER_INGOT * created / CRConfig.mbPerIngot.get());
 					}
 				}else{
 					//Wipe the contents- no matching recipe

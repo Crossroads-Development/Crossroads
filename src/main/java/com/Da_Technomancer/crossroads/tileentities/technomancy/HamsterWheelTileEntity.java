@@ -3,6 +3,8 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -16,8 +18,6 @@ public class HamsterWheelTileEntity extends TileEntity implements ITickableTileE
 
 	@ObjectHolder("hamster_wheel")
 	public static TileEntityType<HamsterWheelTileEntity> type = null;
-
-	public static final int POWER = 5;
 
 	public float angle = 0;
 	public float nextAngle = 0;
@@ -38,7 +38,7 @@ public class HamsterWheelTileEntity extends TileEntity implements ITickableTileE
 				nextAngle = axle.getAngle(1F);
 				return;
 			}
-			axle.addEnergy(POWER * facing.getAxisDirection().getOffset(), true);
+			axle.addEnergy(CRConfig.lodestoneTurbinePower.get() * RotaryUtil.getCCWSign(facing), true);
 		}else if(world.isRemote){
 			nextAngle = angle;
 		}

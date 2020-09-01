@@ -1,6 +1,6 @@
 {
 	"category": "alchemy",
-	"name": "Philosopher's & Practitioner's Stone",
+	"name": "Philosopher's & Practitioner's",
 	"icon": "crossroads:phil_stone",
 	"sortnum": 0,
 	"priority": false,
@@ -9,7 +9,7 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Philosopher's & Practitioner's Stone",
+			"title": "Philosopher's & Practitioner's",
 			"item": "crossroads:phil_stone",
 			"text": "The <item>Philosopher's Stone/$ and <item>Practitioner's Stone/$ are important items/<thing>reagents/$ which are used as <thing>$(l:crossroads:intro/alchemy)catalysts/$ in some important reactions.$(br2)The <item>philosopher's stone/$ can be considered to unlock 'tier 2 alchemy'. The <item>practitioner's stone/$ can be considered to unlock "
 		},

@@ -150,6 +150,8 @@ public class CRBlocks{
 	public static WindingTable windingTable;
 	public static BasicBlock redstoneCrystal;
 	public static DetailedAutoCrafter detailedAutoCrafter;
+	public static LodestoneTurbine lodestoneTurbine;
+	public static LodestoneDynamo lodestoneDynamo;
 
 	private static final Item.Properties itemBlockProp = new Item.Properties().group(CRItems.TAB_CROSSROADS);
 	public static final ArrayList<Block> toRegister = new ArrayList<>();
@@ -309,6 +311,8 @@ public class CRBlocks{
 			}
 		};
 		detailedAutoCrafter = new DetailedAutoCrafter();
+		lodestoneTurbine = new LodestoneTurbine();
+		lodestoneDynamo = new LodestoneDynamo();
 	}
 
 	@OnlyIn(Dist.CLIENT)

@@ -1,0 +1,23 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"item": "crossroads:lodestone_dynamo",
+		"count": 1
+	},
+	"pattern": [
+		" D ",
+		"CLC"
+	],
+	"key": {
+		"C": {
+			"tag": "forge:ingots/copper"
+		},
+		"D": {
+			"item": "crossroads:dynamo"
+		},
+		"L": {
+			"item": "lodestone"
+		}
+	}
+}

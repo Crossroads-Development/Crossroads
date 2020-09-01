@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
@@ -37,7 +38,7 @@ public class HamsterWheelRenderer extends TileEntityRenderer<HamsterWheelTileEnt
 		float angle = te.nextAngle - te.angle;
 		angle *= partialTicks;
 		angle += te.angle;
-		angle *= -facing.getAxisDirection().getOffset();
+		angle *= -RotaryUtil.getCCWSign(facing);
 
 		//Feet
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());

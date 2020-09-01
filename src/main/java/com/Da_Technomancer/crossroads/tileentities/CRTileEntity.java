@@ -119,6 +119,8 @@ public class CRTileEntity{
 		register(SteamerTileEntity::new, "steamer", reg, steamer);
 		register(WindingTableTileEntity::new, "winding_table", reg, windingTable);
 		register(DetailedAutoCrafterTileEntity::new, "detailed_auto_crafter", reg, detailedAutoCrafter);
+		register(LodestoneTurbineTileEntity::new, "lodestone_turbine", reg, lodestoneTurbine);
+		register(LodestoneDynamoTileEntity::new, "lodestone_dynamo", reg, lodestoneDynamo);
 	}
 
 	private static void register(Supplier<? extends TileEntity> cons, String id, IForgeRegistry<TileEntityType<?>> reg, Block... blocks){

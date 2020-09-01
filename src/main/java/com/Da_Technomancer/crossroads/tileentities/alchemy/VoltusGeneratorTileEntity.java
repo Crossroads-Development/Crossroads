@@ -50,7 +50,7 @@ public class VoltusGeneratorTileEntity extends TileEntity implements ITickableTi
 			return;
 		}
 
-		if(voltusAmount != 0 && FE_CAPACITY - fe <= CRConfig.voltusValue.get()){
+		if(voltusAmount != 0 && FE_CAPACITY - fe >= CRConfig.voltusValue.get()){
 			voltusAmount -= 1;
 			fe += CRConfig.voltusValue.get();
 			markDirty();

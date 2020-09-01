@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -39,13 +40,11 @@ public class HandCrank extends Item{
 		LazyOptional<IAxleHandler> axleOpt;
 		Direction side = context.getFace().getOpposite();
 		if(te != null && (axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, side)).isPresent()){
-			double signMult = 1;
+			double signMult = -1;
 			if(context.getPlayer() != null && context.getPlayer().isSneaking()){
 				signMult *= -1;
 			}
-			if(side.getAxisDirection() == Direction.AxisDirection.POSITIVE){
-				signMult *= -1;//Makes things seem consistent to the player
-			}
+			signMult *= RotaryUtil.getCCWSign(side);
 			axleOpt.orElseThrow(NullPointerException::new).addEnergy(getRate() * signMult, true);
 			return ActionResultType.SUCCESS;
 		}

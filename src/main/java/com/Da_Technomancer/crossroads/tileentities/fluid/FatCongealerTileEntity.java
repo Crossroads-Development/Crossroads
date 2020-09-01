@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.FatCongealerContainer;
@@ -96,7 +96,7 @@ public class FatCongealerTileEntity extends InventoryTE{
 			}
 
 			if(hun != 0 || sat != 0){
-				int fluidUse = EnergyConverters.FAT_PER_VALUE * (hun + sat);
+				int fluidUse = CRConfig.fatPerValue.get() * (hun + sat);
 				if(fluidUse > fluids[0].getAmount()){
 					return;
 				}

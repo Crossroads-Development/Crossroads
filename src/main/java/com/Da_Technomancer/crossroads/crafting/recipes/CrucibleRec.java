@@ -51,11 +51,6 @@ public class CrucibleRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public ItemStack getCraftingResult(IInventory inv){
-		return getRecipeOutput();
-	}
-
-	@Override
 	public boolean canFit(int width, int height){
 		return true;
 	}

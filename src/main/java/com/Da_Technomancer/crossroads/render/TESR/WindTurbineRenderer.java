@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.render.TESR;
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
@@ -45,7 +46,7 @@ public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntit
 		matrix.push();
 		matrix.translate(.5F, .5F, .5F);
 		matrix.rotate(Vector3f.YP.rotationDegrees(-facing.getHorizontalAngle()));
-		matrix.rotate(Vector3f.ZP.rotationDegrees(facing.getAxisDirection().getOffset() * axle.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
+		matrix.rotate(Vector3f.ZP.rotationDegrees((float) RotaryUtil.getCCWSign(facing) * axle.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
 
 		//Center piece
 		CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, -0.25F, 0.6F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(4), 0, 0, 1, light);

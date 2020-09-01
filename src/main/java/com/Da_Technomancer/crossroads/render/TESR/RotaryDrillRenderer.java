@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.blocks.rotary.RotaryDrill;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
@@ -41,7 +42,7 @@ public class RotaryDrillRenderer extends TileEntityRenderer<RotaryDrillTileEntit
 		matrix.rotate(dir.getRotation());
 
 		//Rotate w/ gear angle
-		matrix.rotate(Vector3f.YP.rotationDegrees(axle.orElseThrow(NullPointerException::new).getAngle(partialTicks) * dir.getAxisDirection().getOffset()));
+		matrix.rotate(Vector3f.YP.rotationDegrees(axle.orElseThrow(NullPointerException::new).getAngle(partialTicks) * (float) RotaryUtil.getCCWSign(dir)));
 
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.DRILL_TEXTURE);
 

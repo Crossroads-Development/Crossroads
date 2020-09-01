@@ -1,13 +1,14 @@
-package com.Da_Technomancer.crossroads.tileentities.electric;
+package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.tileentities.electric.DynamoTileEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
@@ -17,17 +18,17 @@ import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder(Crossroads.MODID)
-public class DynamoTileEntity extends ModuleTE{
+public class LodestoneDynamoTileEntity extends ModuleTE{
 
-	@ObjectHolder("dynamo")
-	public static TileEntityType<DynamoTileEntity> type = null;
+	@ObjectHolder("lodestone_dynamo")
+	public static TileEntityType<LodestoneDynamoTileEntity> type = null;
 
+	public static final double INERTIA = DynamoTileEntity.INERTIA;
 	private static final int CHARGE_CAPACITY = 8_000;
-	public static final int INERTIA = 200;
 
 	private int fe = 0;
 
-	public DynamoTileEntity(){
+	public LodestoneDynamoTileEntity(){
 		super(type);
 	}
 
@@ -37,7 +38,7 @@ public class DynamoTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public double getMoInertia(){
+	protected double getMoInertia(){
 		return INERTIA;
 	}
 
@@ -45,23 +46,12 @@ public class DynamoTileEntity extends ModuleTE{
 	public void tick(){
 		super.tick();
 
-		int operations = (int) Math.abs(motData[1]);
-		if(operations > 0){
-			motData[1] -= operations * Math.signum(motData[1]);
-			fe += operations * CRConfig.electPerJoule.get();
-			fe = Math.min(fe, CHARGE_CAPACITY);
+		int power = CRConfig.lodestoneDynamo.get();
+		int feCost = power * CRConfig.electPerJoule.get();
+		if(!world.isRemote && axleHandler.axis != null && power > 0 && fe >= feCost){
+			fe -= feCost;
+			motData[1] += power * RotaryUtil.getCCWSign(getBlockState().get(CRProperties.HORIZ_FACING));
 			markDirty();
-		}
-
-		Direction facing = getBlockState().get(CRProperties.HORIZ_FACING);
-		TileEntity neighbor = world.getTileEntity(pos.offset(facing.getOpposite()));
-		LazyOptional<IEnergyStorage> energyOpt;
-		if(neighbor != null && (energyOpt = neighbor.getCapability(CapabilityEnergy.ENERGY, facing)).isPresent()){
-			IEnergyStorage handler = energyOpt.orElseThrow(NullPointerException::new);
-			if(handler.canReceive()){
-				fe -= handler.receiveEnergy(fe, false);
-				markDirty();
-			}
 		}
 	}
 
@@ -76,7 +66,7 @@ public class DynamoTileEntity extends ModuleTE{
 		axleOpt.invalidate();
 		axleOpt = LazyOptional.of(this::createAxleHandler);
 		feOpt.invalidate();
-		feOpt = LazyOptional.of(DynamoEnergyHandler::new);
+		feOpt = LazyOptional.of(LodestoneDynamoEnergyHandler::new);
 	}
 
 	@Override
@@ -99,7 +89,7 @@ public class DynamoTileEntity extends ModuleTE{
 		feOpt.invalidate();
 	}
 
-	private LazyOptional<IEnergyStorage> feOpt = LazyOptional.of(DynamoEnergyHandler::new);
+	private LazyOptional<IEnergyStorage> feOpt = LazyOptional.of(LodestoneDynamoEnergyHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -113,22 +103,22 @@ public class DynamoTileEntity extends ModuleTE{
 		return super.getCapability(cap, side);
 	}
 
-	private class DynamoEnergyHandler implements IEnergyStorage{
+	private class LodestoneDynamoEnergyHandler implements IEnergyStorage{
 
 		@Override
 		public int receiveEnergy(int maxReceive, boolean simulate){
-			return 0;
+			maxReceive = Math.min(maxReceive, CHARGE_CAPACITY - fe);
+			if(!simulate){
+				fe += maxReceive;
+				markDirty();
+			}
+
+			return maxReceive;
 		}
 
 		@Override
 		public int extractEnergy(int maxExtract, boolean simulate){
-			if(simulate){
-				return Math.min(maxExtract, fe);
-			}
-			maxExtract = Math.min(maxExtract, fe);
-			fe -= maxExtract;
-			markDirty();
-			return maxExtract;
+			return 0;
 		}
 
 		@Override
@@ -143,12 +133,12 @@ public class DynamoTileEntity extends ModuleTE{
 
 		@Override
 		public boolean canExtract(){
-			return true;
+			return false;
 		}
 
 		@Override
 		public boolean canReceive(){
-			return false;
+			return true;
 		}
 	}
 }

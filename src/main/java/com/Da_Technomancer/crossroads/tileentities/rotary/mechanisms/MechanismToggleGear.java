@@ -155,7 +155,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 		matrix.rotate(side.getOpposite().getRotation());//Apply orientation
 		float angle = handler.getAngle(partialTicks);
 		matrix.translate(0, -0.4375D, 0);
-		matrix.rotate(Vector3f.YP.rotationDegrees(-side.getAxisDirection().getOffset() * angle));
+		matrix.rotate(Vector3f.YP.rotationDegrees(- (float) RotaryUtil.getCCWSign(side) * angle));
 
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_TEXTURE);
 		float top = 0.0625F;

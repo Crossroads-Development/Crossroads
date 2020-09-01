@@ -20,10 +20,6 @@
 		{
 			"type": "text",
 			"text": "It is generally better to use a larger (higher <thing>$(l:crossroads:intro/rotary)I value/$) gear on the back as an <thing>$(l:crossroads:intro/rotary)energy/$ source, as that allows the <item>redstone master axis/$ to draw <thing>$(l:crossroads:intro/rotary)energy/$ more quickly.$(br2)"
-		},
-		{
-			"type": "text",
-			"text": "<bobo>limitted POWAH! uNLIMITID eNErGY! i AM THE $(l:crossroads:intro/welcome#bobo)BOBO!/$<bobo>$(br2)<bobo>watz broun und schtick-y?$(br2)<bobo>oRANGE ti3m nUGG-NUGG!$(br2)<bobo>dA ME3NING uv lI3F! ThA MANY-VERSE! &nd EVERYTING! butte on MEET nUGG-nUGG!/$$(br2)"
 		}
 	]
 }

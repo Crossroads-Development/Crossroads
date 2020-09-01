@@ -3,28 +3,33 @@ package com.Da_Technomancer.crossroads.render.TESR;
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
+import com.Da_Technomancer.crossroads.blocks.electric.Dynamo;
+import com.Da_Technomancer.crossroads.blocks.technomancy.LodestoneDynamo;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
+import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
-import com.Da_Technomancer.crossroads.tileentities.electric.DynamoTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class DynamoRenderer extends TileEntityRenderer<DynamoTileEntity>{
+public class DynamoRenderer extends TileEntityRenderer<ModuleTE>{
 
 	protected DynamoRenderer(TileEntityRendererDispatcher dispatcher){
 		super(dispatcher);
 	}
 
 	@Override
-	public void render(DynamoTileEntity dynamo, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
-		if(dynamo.getBlockState().getBlock() != CRBlocks.dynamo){
+	public void render(ModuleTE dynamo, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
+		Block block = dynamo.getBlockState().getBlock();
+		if(!(block instanceof Dynamo) && !(block instanceof LodestoneDynamo)){
 			return;
 		}
 
@@ -42,6 +47,12 @@ public class DynamoRenderer extends TileEntityRenderer<DynamoTileEntity>{
 
 		matrix.translate(0, 0.45626D, 0);
 		matrix.scale(0.7F, 0.7F, 0.7F);
-		CRModels.draw8Gear(matrix, buffer.getBuffer(RenderType.getSolid()), CRRenderUtil.convertColor(GearFactory.findMaterial("copper").getColor()), combinedLight);
+
+		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_TEXTURE);
+		float lHalf = 7F / 16F;//Half the side length of the octagon
+
+		//Renders the core of the gear, leaving only the prongs
+		matrix.scale(2F * lHalf, 1, 2F * lHalf);
+		CRModels.draw8Core(buffer.getBuffer(RenderType.getSolid()), matrix, CRRenderUtil.convertColor(GearFactory.findMaterial("copper").getColor()), combinedLight, sprite);
 	}
 }

@@ -4,13 +4,14 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.blocks.heat.HeatCable;
 import com.Da_Technomancer.crossroads.blocks.technomancy.TemporalAccelerator;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.util.Direction;
 
-public class CRProperties{
+public class CRProperties extends ESProperties{
 
 	public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 	public static final IntegerProperty FULLNESS = IntegerProperty.create("fullness", 0, 3);

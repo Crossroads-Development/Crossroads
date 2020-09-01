@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.fluid;
 
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.FatFeederContainer;
@@ -64,11 +64,11 @@ public class FatFeederTileEntity extends InventoryTE{
 		List<PlayerEntity> players = world.getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(pos.subtract(new Vector3i(range, range, range)), pos.add(new Vector3i(range, range, range))), EntityPredicates.IS_ALIVE);
 		for(PlayerEntity play : players){
 			FoodStats food = play.getFoodStats();
-			int added = Math.min(fluids[0].getAmount() / EnergyConverters.FAT_PER_VALUE, 40 - (food.getFoodLevel() + (int) food.getSaturationLevel()));
+			int added = Math.min(fluids[0].getAmount() / CRConfig.fatPerValue.get(), 40 - (food.getFoodLevel() + (int) food.getSaturationLevel()));
 			if(added < 4){
 				continue;
 			}
-			fluids[0].shrink(added * EnergyConverters.FAT_PER_VALUE);
+			fluids[0].shrink(added * CRConfig.fatPerValue.get());
 			int hungerAdded = Math.min(20 - food.getFoodLevel(), added);
 			//The way saturation is coded is weird (defined relative to hunger), and the best way to do this is through nbt.
 			CompoundNBT nbt = new CompoundNBT();

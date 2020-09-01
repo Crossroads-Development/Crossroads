@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"item": "crossroads:lodestone_turbine",
+		"count": 1
+	},
+	"pattern": [
+		"BAB",
+		"LAL",
+		"BBB"
+	],
+	"key": {
+		"B": {
+			"item": "blackstone"
+		},
+		"A": {
+			"item": "crossroads:axle"
+		},
+		"L": {
+			"item": "lodestone"
+		}
+	}
+}

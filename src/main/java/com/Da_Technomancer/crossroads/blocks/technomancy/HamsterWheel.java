@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.HamsterWheelTileEntity;
@@ -90,7 +91,7 @@ public class HamsterWheel extends ContainerBlock{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.hamster_wheel.desc", HamsterWheelTileEntity.POWER));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.hamster_wheel.desc", CRConfig.lodestoneTurbinePower.get()));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.hamster_wheel.quip").func_230530_a_(MiscUtil.TT_QUIP));
 	}
 }

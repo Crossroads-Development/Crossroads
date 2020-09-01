@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"north": "crossroads:block/lodestone_turbine_side",
+		"south": "crossroads:block/lodestone_turbine_side",
+		"east": "crossroads:block/lodestone_turbine_side",
+		"west": "crossroads:block/lodestone_turbine_side",
+		"up": "crossroads:block/lodestone_turbine_top",
+		"down": "crossroads:block/lodestone_turbine_bottom",
+		"particle": "crossroads:block/lodestone_turbine_side"
+	}
+}

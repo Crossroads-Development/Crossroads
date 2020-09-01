@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.EnergyConverters;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.FatCollectorContainer;
@@ -64,7 +64,7 @@ public class FatCollectorTileEntity extends InventoryTE{
 			//I don't know why vanilla multiplies saturation by 2, but it does
 			int liqAm = Math.min(food.getHealing() + (int) (food.getHealing() * food.getSaturation() * 2F), fluidProps[0].capacity);
 			double heatUse = ((double) liqAm) * USE_PER_VALUE;
-			liqAm *= EnergyConverters.FAT_PER_VALUE;
+			liqAm *= CRConfig.fatPerValue.get();
 			liqAm *= EFFICIENCY[tier];
 			if(liqAm <= fluidProps[0].capacity - fluids[0].getAmount()){
 				temp -= heatUse;

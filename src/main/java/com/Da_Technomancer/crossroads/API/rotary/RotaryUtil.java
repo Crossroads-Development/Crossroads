@@ -51,7 +51,7 @@ public class RotaryUtil{
 	}
 
 	public static double getDirSign(Direction oldGearFacing, Direction newGearFacing){
-		return -oldGearFacing.getAxisDirection().getOffset() * newGearFacing.getAxisDirection().getOffset();
+		return -getCCWSign(oldGearFacing) * getCCWSign(newGearFacing);
 	}
 
 	public static double findEfficiency(double speedIn, double lowerLimit, double upperLimit){
@@ -145,5 +145,14 @@ public class RotaryUtil{
 
 	public static void setMasterKey(int masterKey){
 		RotaryUtil.masterKey = masterKey;
+	}
+
+	/**
+	 * Returns either 1 or -1, and represents the sign for rotation to be in the counter-clockwise direction
+	 * @param dir The direction along the axis of rotation, with the direction being the 'front' of the axis
+	 * @return The value to multiply the energy or speed by for CCW rotation
+	 */
+	public static double getCCWSign(Direction dir){
+		return dir.getAxisDirection().getOffset();
 	}
 }

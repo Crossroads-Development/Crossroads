@@ -156,7 +156,7 @@ public class MechanismSmallGear implements IMechanism{
 		matrix.rotate(side.getOpposite().getRotation());//Apply orientation
 		float angle = handler.getAngle(partialTicks);
 		matrix.translate(0, -0.4375D, 0);
-		matrix.rotate(Vector3f.YP.rotationDegrees(-side.getAxisDirection().getOffset() * angle));
+		matrix.rotate(Vector3f.YP.rotationDegrees(-(float) RotaryUtil.getCCWSign(side) * angle));
 		CRModels.draw8Gear(matrix, buffer.getBuffer(RenderType.getSolid()), CRRenderUtil.convertColor(mat.getColor()), combinedLight);
 	}
 }

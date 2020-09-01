@@ -1,9 +1,9 @@
-package com.Da_Technomancer.crossroads.blocks.electric;
+package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.electric.DynamoTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.LodestoneDynamoTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -31,7 +31,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class Dynamo extends ContainerBlock{
+public class LodestoneDynamo extends ContainerBlock{
 
 	private static final VoxelShape[] SHAPES = new VoxelShape[2];
 	static{
@@ -39,9 +39,9 @@ public class Dynamo extends ContainerBlock{
 		SHAPES[1] = VoxelShapes.or(makeCuboidShape(5, 0, 0, 11, 8, 16), makeCuboidShape(7, 7, 0, 9, 9, 16), makeCuboidShape(2, 0, 0, 14, 2, 16));
 	}
 
-	public Dynamo(){
+	public LodestoneDynamo(){
 		super(Properties.create(Material.IRON).hardnessAndResistance(2).sound(SoundType.METAL));
-		String name = "dynamo";
+		String name = "lodestone_dynamo";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
@@ -49,7 +49,7 @@ public class Dynamo extends ContainerBlock{
 
 	@Override
 	public TileEntity createNewTileEntity(IBlockReader worldIn){
-		return new DynamoTileEntity();
+		return new LodestoneDynamoTileEntity();
 	}
 
 	@Override
@@ -76,9 +76,9 @@ public class Dynamo extends ContainerBlock{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.dynamo.power", CRConfig.electPerJoule.get()));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.dynamo.usage", DynamoTileEntity.INERTIA / 2));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", DynamoTileEntity.INERTIA));
+		int power = CRConfig.lodestoneDynamo.get();
+		tooltip.add(new TranslationTextComponent("tt.crossroads.lodestone_dynamo.desc", power));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.lodestone_dynamo.fe", CRConfig.electPerJoule.get() * power));
 	}
 
 	@Nullable

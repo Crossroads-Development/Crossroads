@@ -40,6 +40,7 @@ public class CRRendererRegistry{
 //		ClientRegistry.bindTileEntityRenderer(MechanicalArmTileEntity.type, MechanicalArmRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(HeatingCrucibleTileEntity.type, HeatingCrucibleRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(DynamoTileEntity.type, DynamoRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(LodestoneDynamoTileEntity.type, DynamoRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(ClockworkStabilizerTileEntity.type, BeamRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(WindTurbineTileEntity.type, WindTurbineRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(StampMillTileEntity.type, StampMillRenderer::new);

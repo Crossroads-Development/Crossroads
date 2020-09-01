@@ -2,7 +2,7 @@
 	"ambientocclusion": false,
 	"textures": {
 		"particle": "crossroads:block/block_cast_iron",
-		"base": "block/stone_bricks",
+		"base": "block/lodestone_side",
 		"main": "crossroads:block/block_cast_iron",
 		"copper": "crossroads:block/block_copper"
 	},
