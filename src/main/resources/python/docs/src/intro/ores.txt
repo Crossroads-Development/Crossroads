@@ -2,9 +2,9 @@ Ores
 crossroads:gem_ruby
 Crossroads adds a few ores to world gen. Crossroads also adds several methods for <thing><link:crossroads:rotary/millstone>ore doubling/$ and a method of <thing><link:crossroads:rotary/stamp>ore tripling/$.
 
-<item>Copper/$ is quite common, spawning in large veins below y=30.
+<item>Copper/$ is quite common, spawning in large veins below y=32.
 
-<item>Tin/$ is about as rare as gold, spawning scattered as a single ore block below y=30. For an optional extra challenge, you can keep Crossroads tin separate from other mods' tin, and use only the Crossroads tin for Crossroads machines.
+<item>Tin/$ is about as rare as gold, spawning scattered as a single ore block below y=32. For an optional extra challenge, you can keep Crossroads tin separate from other mods' tin, and use only the Crossroads tin for Crossroads machines.
 
 <item>Ruby ore/$ only spawns in the nether in veins of nether quartz ore. It is overall quite rare- but easy to find if you mine quartz ore veins. It drops <item>ruby/$ gems, which are used for <thing><link:crossroads:intro/beam>beams/$. <item>Rubies/$ can also be sold by piglins.
 

@@ -26,7 +26,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.BooleanValue genTinOre;
 	public static ForgeConfigSpec.BooleanValue genRubyOre;
 	public static ForgeConfigSpec.BooleanValue genVoidOre;
-	public static ForgeConfigSpec.IntValue rubyRarity;
+	public static ForgeConfigSpec.DoubleValue rubyRarity;
 	public static ForgeConfigSpec.ConfigValue<List<? extends String>> processableOres;
 	public static ForgeConfigSpec.ConfigValue<List<? extends String>> gearTypes;
 	public static ForgeConfigSpec.DoubleValue speedPrecision;
@@ -116,7 +116,7 @@ public class CRConfig{
 		genTinOre = serverBuilder.comment("Generate Tin Ore?").define("tin", true);
 		genRubyOre = serverBuilder.comment("Generate Ruby Ore?").define("ruby", true);
 		genVoidOre = serverBuilder.comment("Generate Void Crystal Ore?").define("void", true);
-		rubyRarity = serverBuilder.comment("Ruby ore spawn frequency").defineInRange("ruby_common", 25_000, 1, 100_000);
+		rubyRarity = serverBuilder.comment("Ruby ore spawn frequency", "The chance that a nether quartz ore will generate as ruby instead").defineInRange("ruby_rate", 1D / 64D, 0F, 1D);
 //		retrogen = serverBuilder.comment("Retrogen Key", "Changing this value will cause retrogen. Leaving it blank disables retrogen", "Turn this off when you are done!").define("retrogen", "");
 		processableOres = serverBuilder.worldRestart().comment("Metal ore types that Crossroads should generate tripling items for", "Specify the metal then a space then a hexadecimal color, ex. \"copper FF4800\"", "Doesn't register a molten fluid, recipes, or localization", "Use a datapack to register any desired recipes or localization for new materials, Find a mod already adding the desired molten fluid for the fluid").define("process_ores", initList("copper FF7800", "tin C8C8C8", "iron A0A0A0", "gold FFFF00"), compileRegex("\\w++ [0-9A-Fa-f]{6}+"));
 		gearTypes = serverBuilder.worldRestart().comment("Metal types that Crossroads should add gears for", "Specify the metal then a space then a hexadecimal color then a space then a density in kg/m3", "Adding a new gear material requires adding localization and recipes via datapack", "Removing a default gear material is not recommended").define("gear_types", initList("copper FF783C 9000", "tin F0F0F0 7300", "iron A0A0A0 8000", "gold FFFF00 20000", "bronze FFA03C 8800", "copshowium FF8200 0"), compileRegex("\\w++ [0-9A-Fa-f]{6}+ [+]?\\d*\\.?[0-9]+"));

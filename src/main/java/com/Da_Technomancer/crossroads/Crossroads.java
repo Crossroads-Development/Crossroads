@@ -87,7 +87,6 @@ public final class Crossroads{
 //		ModIntegration.init();
 		CurioHelper.initIntegration();
 //		CrossroadsConfig.config.save();
-
 //		ModIntegration.preInit();
 	}
 

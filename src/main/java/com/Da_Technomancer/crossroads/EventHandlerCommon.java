@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
+import com.Da_Technomancer.crossroads.world.CRWorldGen;
 import com.Da_Technomancer.essentials.ReflectionUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -41,6 +42,7 @@ import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -315,5 +317,11 @@ public final class EventHandlerCommon{
 			GearFactory.init();
 			OreSetup.loadConfig();
 		}
+	}
+
+	@SubscribeEvent
+	@SuppressWarnings("unused")
+	public void serverStarting(FMLServerAboutToStartEvent e){
+		CRWorldGen.inject();
 	}
 }

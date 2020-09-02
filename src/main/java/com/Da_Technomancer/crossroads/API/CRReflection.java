@@ -28,6 +28,7 @@ public enum CRReflection implements ReflectionUtil.IReflectionKey{
 	BIOME_ARRAY(BiomeContainer.class, "biomes", "field_227054_f_", "Terraforming alchemy reagents changing the biome"),
 	BIOME_FEATURE_LIST(BiomeGenerationSettings.class, "NO_MCP_MAPPING", "field_242484_f", "Adding ore world generation");
 
+
 	private Class<?> clazz;
 	@Nullable
 	private final Supplier<Class<?>> clazzSupplier;
