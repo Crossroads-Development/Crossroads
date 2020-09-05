@@ -10,15 +10,15 @@
 			"type": "spotlight",
 			"title": "Stirling Engine",
 			"item": "crossroads:stirling_engine",
-			"text": "The <item>Stirling Engine/$ is a way of producing <thing>$(l:crossroads:intro/rotary)rotary power/$ from <thing>$(l:crossroads:intro/heat)heat/$. Or more specifically, from a temperature difference.$(br2)The <item>stirling engine/$ has two heat connections- one on top and one on the bottom. The greater the difference in temperature between the two "
+			"text": "The <item>Stirling Engine/$ is a way of producing <thing>$(l:crossroads:intro/rotary)rotary power/$ from <thing>$(l:crossroads:intro/heat)heat/$. Or more specifically, from a temperature difference.$(br2)The <item>stirling engine/$ has two heat connections- one on top and one on the sides. The greater the difference in temperature between the two inputs, "
 		},
 		{
 			"type": "text",
-			"text": "inputs, the more power is produced, and the more efficient the <item>stirling engine/$ is. There must be a minimum 100°C difference to produce any power. Heat will be exchanged between the two inputs- the higher the temperature difference, the faster this happens (5°C/t per 100°C difference).$(br2)The <item>stirling engine/$ will stop producing any power above "
+			"text": "the more power is produced, and the more efficient the <item>stirling engine/$ is. There must be a minimum 100°C difference to produce any power. Heat will be exchanged between the two inputs- the higher the temperature difference, the faster this happens (5°C/t per 100°C difference).$(br2)The <item>stirling engine/$ will stop producing any power above speeds "
 		},
 		{
 			"type": "text",
-			"text": "speeds of 1rad/s [config controlled- trust the tooltip]. The <item>stirling engine/$ also has <em>no minimum temperature/$, only a minimum temperature difference. If one side is room temperature, and the other side is extremely cold, this can also produce power. There is no limit on the maximum efficiency of the <item>stirling engine/$.$(br2)"
+			"text": "of 1rad/s [config controlled- trust the tooltip]. The <item>stirling engine/$ also has <em>no minimum temperature/$, only a minimum temperature difference. If one side is room temperature, and the other side is extremely cold, this can also produce power. There is no limit on the maximum efficiency of the <item>stirling engine/$.$(br2)"
 		},
 		{
 			"type": "text",
