@@ -1,5 +1,5 @@
 Lodestone Turbine
-crossroads:lodestone_turbine
+crossroads:lodestone_turbine|crossroads:progress/path/technomancy
 The <item>Lodestone Turbine/$ produces <thing><link:crossroads:intro/rotary>rotary power/$ for free constantly. It only works in dimensions where clocks and compasses spin uselessly (like the nether and end), by harnessing the large fluctuating magnetic fields that disrupt these devices.
 It connect axially on the top, and can not raise the speed above 10 rad/s.
 

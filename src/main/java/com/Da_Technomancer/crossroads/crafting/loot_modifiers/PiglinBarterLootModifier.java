@@ -4,11 +4,9 @@ import com.Da_Technomancer.crossroads.crafting.CraftingUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.entity.monster.piglin.PiglinEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.loot.ItemLootEntry;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootPool;
-import net.minecraft.loot.RandomValueRange;
+import net.minecraft.loot.*;
 import net.minecraft.loot.conditions.ILootCondition;
 import net.minecraft.loot.functions.SetCount;
 import net.minecraft.util.JSONUtils;
@@ -35,12 +33,16 @@ public class PiglinBarterLootModifier extends LootModifier{
 	@Nonnull
 	@Override
 	protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context){
-		if(active && context.getRandom().nextFloat() < overrideChance){
+		if(active && isPiglinBarter(context) && context.getRandom().nextFloat() < overrideChance){
 			generatedLoot.clear();
 			pool.generate(generatedLoot::add, context);
 		}
 
 		return generatedLoot;
+	}
+
+	private static boolean isPiglinBarter(LootContext context){
+		return context.get(LootParameters.THIS_ENTITY) instanceof PiglinEntity && !context.has(LootParameters.field_237457_g_);
 	}
 
 	public static class Serializer extends GlobalLootModifierSerializer<PiglinBarterLootModifier>{

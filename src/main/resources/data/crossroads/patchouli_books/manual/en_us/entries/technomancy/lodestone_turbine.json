@@ -4,6 +4,7 @@
 	"icon": "crossroads:lodestone_turbine",
 	"sortnum": 0,
 	"priority": false,
+	"advancement": "crossroads:progress/path/technomancy",
 	"read_by_default": "true",
 	"pages": [
 		{
