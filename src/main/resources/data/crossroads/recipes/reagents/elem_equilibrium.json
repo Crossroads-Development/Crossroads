@@ -6,5 +6,5 @@
 	"vessel": "crystal",
 	"item": "crossroads:dusts/stasisol",
 	"color": "FF80FF",
-	"effect": "terraform_ocean"
+	"effect": "terraform_snow"
 }
