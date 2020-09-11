@@ -6,6 +6,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 
 import java.util.List;
 
@@ -68,9 +69,14 @@ public class HeatUtil{
 		if(world == null || pos == null){
 			return ABSOLUTE_ZERO;
 		}
-		double rawTemp = world.getBiome(pos).getTemperature(pos);
+		Biome biome = world.getBiome(pos);
+		double rawTemp = biome.getTemperature(pos);
 		//This formula was derived with the power of wikipedia and excel spreadsheets to compare biome temperatures to actual real world temperatures.
 		//Most people probably wouldn't care if I'd just pulled it out of my *rse, but I made an effort and I want someone to know this. Appreciate it. Please?
-		return MiscUtil.preciseRound(rawTemp * 17.5D - 2.5D, 3);
+		double outTemp = rawTemp * 17.5D - 2.5D;
+		if(biome.getCategory() == Biome.Category.NETHER){
+			outTemp = Math.max(outTemp, CRConfig.hellTemperature.get());
+		}
+		return MiscUtil.preciseRound(outTemp, 3);
 	}
 }

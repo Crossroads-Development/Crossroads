@@ -77,6 +77,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.IntValue lodestoneDynamo;
 	public static ForgeConfigSpec.IntValue fatPerValue;
 	public static ForgeConfigSpec.IntValue mbPerIngot;
+	public static ForgeConfigSpec.DoubleValue hellTemperature;
 
 	private static final ITag<Block> destroyBlacklist = BlockTags.makeWrapperTag(Crossroads.MODID + ":destroy_blacklist");
 
@@ -145,6 +146,7 @@ public class CRConfig{
 		stampMillDamping = serverBuilder.comment("Percentage of Stamp Mill progress to be lost on failure", "Effectively nerfs ore-tripling").defineInRange("mill_damping", 0, 0, 100);
 		enchantDestruction = serverBuilder.comment("Whether Enchantment beams have a chance to destroy items").define("enchant_destroy", true);
 		fatPerValue = serverBuilder.comment("Amount of liquid fat equivalent to 1 hunger or saturation (in millibuckets)").defineInRange("fat_cost", 100, 1, 10_000);
+		hellTemperature = serverBuilder.comment("Minimum temperature of nether biomes (in degrees C)").defineInRange("nether_temp", 60, 0, 1_000D);
 		serverBuilder.pop();
 
 		//Category includes overall path controls, and path specific categories
