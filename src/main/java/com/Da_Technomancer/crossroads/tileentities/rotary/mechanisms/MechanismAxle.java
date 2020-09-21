@@ -4,18 +4,20 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IMechanismProperty;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
+import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.crossroads.render.TESR.CRModels;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -24,8 +26,9 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
 
-public class MechanismAxle implements IMechanism{
+public class MechanismAxle implements IMechanism<GearFactory.GearMaterial>{
 
 	protected static final VoxelShape[] SHAPES = new VoxelShape[3];
 	static{
@@ -35,17 +38,21 @@ public class MechanismAxle implements IMechanism{
 	}
 
 	@Override
-	public double getInertia(GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis){
-		return MiscUtil.preciseRound(mat.getDensity() / 32_000D, 3);
+	public double getInertia(IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis){
+		if(mat instanceof GearFactory.GearMaterial){
+			return MiscUtil.preciseRound(((GearFactory.GearMaterial) mat).getDensity() / 32_000D, 3);
+		}else{
+			return 0;
+		}
 	}
 
 	@Override
-	public boolean hasCap(Capability<?> cap, Direction capSide, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te){
+	public boolean hasCap(Capability<?> cap, Direction capSide, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te){
 		return cap == Capabilities.AXLE_CAPABILITY && side == null && capSide.getAxis() == axis;
 	}
 
 	@Override
-	public void propogate(GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te, MechanismTileEntity.SidedAxleHandler handler, IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
+	public void propagate(IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te, MechanismTileEntity.SidedAxleHandler handler, IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
 		//This mechanism should always be in the axle slot
 		if(side != null){
 			return;
@@ -80,7 +87,7 @@ public class MechanismAxle implements IMechanism{
 			if(te.members[endDir.getIndex()] != null){
 				//Do internal connection
 				if(te.members[endDir.getIndex()].hasCap(Capabilities.AXLE_CAPABILITY, endDir, te.mats[endDir.getIndex()], endDir, axis, te)){
-					te.axleHandlers[endDir.getIndex()].propogate(masterIn, key, rotRatioIn, 0, handler.renderOffset);
+					te.axleHandlers[endDir.getIndex()].propagate(masterIn, key, rotRatioIn, 0, handler.renderOffset);
 				}
 			}else{
 				//Connect externally
@@ -94,7 +101,7 @@ public class MechanismAxle implements IMechanism{
 
 					LazyOptional<IAxleHandler> axleOpt = endTE.getCapability(Capabilities.AXLE_CAPABILITY, oEndDir);
 					if(axleOpt.isPresent()){
-						axleOpt.orElseThrow(NullPointerException::new).propogate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
+						axleOpt.orElseThrow(NullPointerException::new).propagate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
 					}
 				}
 			}
@@ -103,8 +110,12 @@ public class MechanismAxle implements IMechanism{
 
 	@Nonnull
 	@Override
-	public ItemStack getDrop(GearFactory.GearMaterial mat){
-		return CRItems.axle.withMaterial(mat, 1);
+	public ItemStack getDrop(IMechanismProperty mat){
+		if(mat instanceof GearFactory.GearMaterial){
+			return CRItems.axle.withMaterial((OreSetup.OreProfile) mat, 1);
+		}else{
+			return ItemStack.EMPTY;
+		}
 	}
 
 	@Override
@@ -114,7 +125,7 @@ public class MechanismAxle implements IMechanism{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void doRender(MechanismTileEntity te, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, float partialTicks, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis){
+	public void doRender(MechanismTileEntity te, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, float partialTicks, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis){
 		if(axis == null){
 			return;
 		}
@@ -128,6 +139,16 @@ public class MechanismAxle implements IMechanism{
 
 		float angle = handler.getAngle(partialTicks);
 		matrix.rotate(Vector3f.YP.rotationDegrees(angle));
-		CRModels.drawAxle(matrix, buffer, combinedLight, mat.getColor());
+		CRModels.drawAxle(matrix, buffer, combinedLight, mat instanceof GearFactory.GearMaterial ? ((GearFactory.GearMaterial) mat).getColor() : Color.WHITE);
+	}
+
+	@Override
+	public GearFactory.GearMaterial deserializeProperty(int serial){
+		return GearFactory.GearMaterial.deserialize(serial);
+	}
+
+	@Override
+	public GearFactory.GearMaterial loadProperty(String name){
+		return GearFactory.findMaterial(name);
 	}
 }

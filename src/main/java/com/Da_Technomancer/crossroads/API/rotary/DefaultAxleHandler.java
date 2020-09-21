@@ -15,7 +15,7 @@ public class DefaultAxleHandler implements IAxleHandler{
 	}
 
 	@Override
-	public void propogate(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, boolean renderOffset){
+	public void propagate(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, boolean renderOffset){
 		
 	}
 

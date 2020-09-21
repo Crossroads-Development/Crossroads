@@ -218,7 +218,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 		}
 
 		@Override
-		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius, boolean renderOffset){
+		public void propagate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius, boolean renderOffset){
 			if(type == null){
 				return;
 			}
@@ -290,7 +290,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 					}
 					LazyOptional<IAxleHandler> axleOpt;
 					if((axleOpt = connectTE.getCapability(Capabilities.AXLE_CAPABILITY, axleDir.getOpposite())).isPresent()){
-						axleOpt.orElseThrow(NullPointerException::new).propogate(masterIn, key, rotRatio, 0, renderOffset);
+						axleOpt.orElseThrow(NullPointerException::new).propagate(masterIn, key, rotRatio, 0, renderOffset);
 					}
 				}
 			}

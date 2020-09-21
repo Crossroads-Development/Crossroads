@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:gear_facade_iron",
+		"count": 8
+	},
+	"pattern": [
+		"BBB",
+		" I "
+	],
+	"key": {
+		"B": {
+			"tag": "forge:storage_blocks/iron"
+		},
+		"I": {
+			"tag": "forge:ingots/iron"
+		}
+	}
+}

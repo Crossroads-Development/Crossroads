@@ -765,7 +765,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 		public IAxisHandler axis;
 
 		@Override
-		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius, boolean renderOffset){
+		public void propagate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius, boolean renderOffset){
 			//If true, this has already been checked.
 			if(key == updateKey || masterIn.addToList(this)){
 				return;

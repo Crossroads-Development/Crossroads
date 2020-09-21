@@ -378,7 +378,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 					keyNew = (byte) (RAND.nextInt(100) + 1);
 				}while(key == keyNew);
 				key = keyNew;
-				axleOpt.orElseThrow(NullPointerException::new).propogate(this, key, 1, 0, false);
+				axleOpt.orElseThrow(NullPointerException::new).propagate(this, key, 1, 0, false);
 			}
 
 			memberCopy.removeAll(rotaryMembers);

@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.IMechanism;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
@@ -180,8 +181,9 @@ public class Mechanism extends ContainerBlock implements IReadable{
 		MechanismTileEntity te = (MechanismTileEntity) rawTE;
 
 		for(Direction side : Direction.values()){
-			if(te.members[side.getIndex()] != null && !RotaryUtil.solidToGears(worldIn, pos.offset(side), side.getOpposite())){
-				spawnAsEntity(worldIn, pos, te.members[side.getIndex()].getDrop(te.mats[side.getIndex()]));
+			IMechanism<?> mechanism = te.members[side.getIndex()];
+			if(mechanism != null && mechanism.requiresSupport() && !RotaryUtil.solidToGears(worldIn, pos.offset(side), side.getOpposite())){
+				spawnAsEntity(worldIn, pos, mechanism.getDrop(te.mats[side.getIndex()]));
 				te.setMechanism(side.getIndex(), null, null, null, false);
 			}
 		}

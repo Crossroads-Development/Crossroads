@@ -38,11 +38,12 @@ import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -319,9 +320,9 @@ public final class EventHandlerCommon{
 		}
 	}
 
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.HIGH)
 	@SuppressWarnings("unused")
-	public void serverStarting(FMLServerAboutToStartEvent e){
-		CRWorldGen.inject();
+	public void addWorldgen(BiomeLoadingEvent e){
+		CRWorldGen.addWorldgen(e);
 	}
 }

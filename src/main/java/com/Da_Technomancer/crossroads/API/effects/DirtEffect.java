@@ -7,7 +7,6 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.passive.SquidEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
@@ -39,7 +38,7 @@ public class DirtEffect implements IEffect{
 				break;
 			case 2:
 				worldIn.destroyBlock(pos, false);
-				worldIn.addEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.PUFFERFISH, 1)));
+				worldIn.addEntity(EntityType.PUFFERFISH.create(worldIn));
 				break;
 			case 3:
 				worldIn.destroyBlock(pos, false);

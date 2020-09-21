@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:gear_facade_glass",
+		"count": 8
+	},
+	"pattern": [
+		"BBB",
+		" I "
+	],
+	"key": {
+		"B": {
+			"tag": "forge:glass/colorless"
+		},
+		"I": {
+			"tag": "forge:ingots/iron"
+		}
+	}
+}

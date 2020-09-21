@@ -3,9 +3,11 @@ package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IMechanismProperty;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
+import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.render.TESR.CRModels;
@@ -13,7 +15,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
@@ -23,6 +24,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -31,6 +33,7 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
 
 public class MechanismClutch extends MechanismAxle{
 	
@@ -48,7 +51,7 @@ public class MechanismClutch extends MechanismAxle{
 	}
 
 	@Override
-	public void onRedstoneChange(double prevValue, double newValue, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis, double[] motData, MechanismTileEntity te){
+	public void onRedstoneChange(double prevValue, double newValue, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, double[] motData, MechanismTileEntity te){
 		if((newValue == 0) ^ (prevValue == 0)){
 			te.getWorld().playSound(null, te.getPos(), SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, (newValue != 0) ^ inverted ? 0.6F : 0.5F);
 			RotaryUtil.increaseMasterKey(true);
@@ -56,17 +59,17 @@ public class MechanismClutch extends MechanismAxle{
 	}
 
 	@Override
-	public double getCircuitSignal(GearFactory.GearMaterial mat, Direction.Axis axis, double[] motData, MechanismTileEntity te){
+	public double getCircuitSignal(IMechanismProperty mat, Direction.Axis axis, double[] motData, MechanismTileEntity te){
 		return Math.abs(motData[0]);
 	}
 
 	@Override
-	public boolean hasCap(Capability<?> cap, Direction capSide, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te){
+	public boolean hasCap(Capability<?> cap, Direction capSide, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te){
 		return cap == Capabilities.AXLE_CAPABILITY && side == null && capSide.getAxis() == axis && (te.redstoneIn != 0 ^ inverted || capSide.getAxisDirection() == Direction.AxisDirection.NEGATIVE);
 	}
 
 	@Override
-	public void propogate(GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te, MechanismTileEntity.SidedAxleHandler handler, IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
+	public void propagate(IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te, MechanismTileEntity.SidedAxleHandler handler, IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
 		//This mechanism should always be in the axle slot
 		if(side != null){
 			return;
@@ -105,7 +108,7 @@ public class MechanismClutch extends MechanismAxle{
 			if(te.members[endDir.getIndex()] != null){
 				//Do internal connection
 				if(te.members[endDir.getIndex()].hasCap(Capabilities.AXLE_CAPABILITY, endDir, te.mats[endDir.getIndex()], endDir, axis, te)){
-					te.axleHandlers[endDir.getIndex()].propogate(masterIn, key, rotRatioIn, 0, handler.renderOffset);
+					te.axleHandlers[endDir.getIndex()].propagate(masterIn, key, rotRatioIn, 0, handler.renderOffset);
 				}
 			}else{
 				//Connect externally
@@ -119,7 +122,7 @@ public class MechanismClutch extends MechanismAxle{
 
 					LazyOptional<IAxleHandler> axleOpt = endTE.getCapability(Capabilities.AXLE_CAPABILITY, oEndDir);
 					if(axleOpt.isPresent()){
-						axleOpt.orElseThrow(NullPointerException::new).propogate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
+						axleOpt.orElseThrow(NullPointerException::new).propagate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
 					}
 				}
 			}
@@ -128,8 +131,12 @@ public class MechanismClutch extends MechanismAxle{
 
 	@Nonnull
 	@Override
-	public ItemStack getDrop(GearFactory.GearMaterial mat){
-		return inverted ? CRItems.invClutch.withMaterial(mat, 1) : CRItems.clutch.withMaterial(mat, 1);
+	public ItemStack getDrop(IMechanismProperty mat){
+		if(mat instanceof GearFactory.GearMaterial){
+			return inverted ? CRItems.invClutch.withMaterial((OreSetup.OreProfile) mat, 1) : CRItems.clutch.withMaterial((OreSetup.OreProfile) mat, 1);
+		}else{
+			return ItemStack.EMPTY;
+		}
 	}
 
 	@Override
@@ -139,7 +146,7 @@ public class MechanismClutch extends MechanismAxle{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void doRender(MechanismTileEntity te, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, float partialTicks, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis){
+	public void doRender(MechanismTileEntity te, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, float partialTicks, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis){
 		if(axis == null){
 			return;
 		}
@@ -194,6 +201,6 @@ public class MechanismClutch extends MechanismAxle{
 		//Axle
 		float angle = handler.getAngle(partialTicks);
 		matrix.rotate(Vector3f.YP.rotationDegrees(angle));
-		CRModels.drawAxle(matrix, buffer, combinedLight, mat.getColor());
+		CRModels.drawAxle(matrix, buffer, combinedLight, mat instanceof GearFactory.GearMaterial ? ((GearFactory.GearMaterial) mat).getColor() : Color.WHITE);
 	}
 }

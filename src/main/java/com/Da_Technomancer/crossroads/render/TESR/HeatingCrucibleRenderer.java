@@ -6,13 +6,11 @@ import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.inventory.container.PlayerContainer;
 
 public class HeatingCrucibleRenderer extends TileEntityRenderer<HeatingCrucibleTileEntity>{
 
@@ -31,7 +29,7 @@ public class HeatingCrucibleRenderer extends TileEntityRenderer<HeatingCrucibleT
 		}
 
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getTranslucent());
-		TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(te.getActiveTexture());
+		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(te.getActiveTexture());
 
 		int light = CRRenderUtil.calcMediumLighting(combinedLight);//We want the molten fluid to glow in the dark slightly
 		float xzStart = 2F / 16F;

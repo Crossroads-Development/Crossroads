@@ -26,7 +26,7 @@ public interface IAxleHandler{
 	 * @param lastRadius The radius of the previous connected device. 0 when connecting axially
 	 * @param renderOffset Whether to render this block at an offset angle. This value should ONLY be used for rendering.
 	 */
-	void propogate(@Nonnull IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, boolean renderOffset);
+	void propagate(@Nonnull IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, boolean renderOffset);
 
 	double getMoInertia();
 	

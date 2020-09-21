@@ -5,9 +5,9 @@ import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 
@@ -111,6 +111,70 @@ public class CRModels{
 		CRRenderUtil.addVertexBlock(builder, matrix, -sin24[1], 0, -sin24[4], uSt1, vEn4, 0, 1, 0, light, col);//14
 		CRRenderUtil.addVertexBlock(builder, matrix, -sin24[2], 0, -sin24[3], uSt2, vEn3, 0, 1, 0, light, col);//15
 		CRRenderUtil.addVertexBlock(builder, matrix, -sin24[3], 0, -sin24[2], uSt3, vEn2, 0, 1, 0, light, col);//16
+	}
+
+	/**
+	 * Draws a 6 sided rectangular prism, aligned with coordinate axes
+	 * Draws centered at the current position
+	 *
+	 * Use this method sparingly- it's often visually nicer to map textures on a per-side basis, and this method will render all 6 sides regardless of need
+	 *
+	 * @param matrix Matrix
+	 * @param builder Builder with a block format
+	 * @param light Light
+	 * @param col Color array (size 4, values [0,255])
+	 * @param xRad Half the edge length in x direction
+	 * @param yRad Half the edge length in y direction
+	 * @param zRad Half the edge length in z direction
+	 * @param uTopSt U start coordinate for the top and bottom
+	 * @param vTopSt V start coordinate for the top and bottom
+	 * @param uTopEn U end coordinate for the top and bottom
+	 * @param vTopEn V end coordinate for the top and bottom
+	 * @param uXSt U start coordinate for the x and -x faces
+	 * @param vXSt V start coordinate for the x and -x faces
+	 * @param uXEn U end coordinate for the x and -x faces
+	 * @param vXEn V end coordinate for the x and -x faces
+	 * @param uZSt U start coordinate for the z and -z faces
+	 * @param vZSt V start coordinate for the z and -z faces
+	 * @param uZEn U end coordinate for the z and -z faces
+	 * @param vZEn V end coordinate for the z and -z faces
+	 */
+	public static void drawBox(MatrixStack matrix, IVertexBuilder builder, int light, int[] col, float xRad, float yRad, float zRad, float uTopSt, float vTopSt, float uTopEn, float vTopEn, float uXSt, float vXSt, float uXEn, float vXEn, float uZSt, float vZSt, float uZEn, float vZEn){
+		//Top
+		CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, -zRad, uTopSt, vTopSt, 0, 1, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, zRad, uTopSt, vTopEn, 0, 1, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, zRad, uTopEn, vTopEn, 0, 1, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, -zRad, uTopEn, vTopSt, 0, 1, 0, light, col);
+
+		//Bottom
+		CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, -zRad, uTopEn, vTopEn, 0, -1, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, -zRad, uTopSt, vTopEn, 0, -1, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, zRad, uTopSt, vTopSt, 0, -1, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, zRad, uTopEn, vTopSt, 0, -1, 0, light, col);
+
+		//-X
+		CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, -zRad, uXSt, vXEn, -1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, zRad, uXEn, vXEn, -1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, zRad, uXEn, vXSt, -1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, -zRad, uXSt, vXSt, -1, 0, 0, light, col);
+
+		//X
+		CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, -zRad, uXEn, vXEn, 1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, -zRad, uXEn, vXSt, 1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, zRad, uXSt, vXSt, 1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, zRad, uXSt, vXEn, 1, 0, 0, light, col);
+
+		//-Z
+		CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, -zRad, uZSt, vZEn,  0, 0, -1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, -zRad, uZSt, vZSt,  0, 0, -1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, -zRad, uZEn, vZSt,  0, 0, -1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, -zRad, uZEn, vZEn,  0, 0, -1, light, col);
+
+		//Z
+		CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, zRad, uZEn, vZEn,  0, 0, -1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, zRad, uZSt, vZEn,  0, 0, -1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, zRad, uZSt, vZSt,  0, 0, -1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, zRad, uZEn, vZSt,  0, 0, -1, light, col);
 	}
 
 	/**
@@ -269,10 +333,11 @@ public class CRModels{
 	 * @param builder A vertex builder with BLOCK vertex buffer format
 	 * @param matrix The reference matrix, will not be modified
 	 * @param color The color to shade by, as a size 4 array
+	 * @param sideCol The color to shade the edges by, as a size 4 array
 	 * @param light The combined light value
 	 * @param sprite The sprite that will be mapped onto the octagon
 	 */
-	public static void draw8Core(IVertexBuilder builder, MatrixStack matrix, int[] color, int light, TextureAtlasSprite sprite){
+	public static void draw8Core(IVertexBuilder builder, MatrixStack matrix, int[] color, int[] sideCol, int light, TextureAtlasSprite sprite){
 		float top = 0.0625F;//Half of height
 		float lHalf = 0.5F;//Half the side length of the octagon
 		float sHalf8S = sHalf8;//Scaled version of sHalf8 for gears
@@ -293,8 +358,6 @@ public class CRModels{
 		drawOctagon(builder, matrix, color, light, sprite);
 		matrix.pop();
 
-		//The sides are darker than the prongs and top
-		int[] sideCol = new int[] {Math.max(color[0] - 130, 0), Math.max(color[1] - 130, 0), Math.max(color[2] - 130, 0), color[3]};
 		float tHeight = 1F / 16F;
 
 		//Texture coords
@@ -354,6 +417,20 @@ public class CRModels{
 		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, top, sHalf8S, uSt, vSSt, -1, 0, 1, light, sideCol);
 		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, -top, sHalf8S, uSt, vSSt, -1, 0, 1, light, sideCol);
 		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8S, -top, lHalf, uSSt, vSt, -1, 0, 1, light, sideCol);
+	}
+
+	/**
+	 * Draws an octagonal prism with side-to-side distance (center length) of 1 block and height of 2 pixels
+	 * Draws centered at the current position, oriented up
+	 * The edges will be drawn darker than the front and back faces
+	 * @param builder A vertex builder with BLOCK vertex buffer format
+	 * @param matrix The reference matrix, will not be modified
+	 * @param color The color to shade by, as a size 4 array
+	 * @param light The combined light value
+	 * @param sprite The sprite that will be mapped onto the octagon
+	 */
+	public static void draw8Core(IVertexBuilder builder, MatrixStack matrix, int[] color, int light, TextureAtlasSprite sprite){
+		draw8Core(builder, matrix, color, new int[] {Math.max(color[0] - 130, 0), Math.max(color[1] - 130, 0), Math.max(color[2] - 130, 0), color[3]}, light, sprite);
 	}
 
 	/**

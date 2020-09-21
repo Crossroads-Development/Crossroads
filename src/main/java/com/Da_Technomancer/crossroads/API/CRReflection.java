@@ -5,7 +5,6 @@ import com.Da_Technomancer.essentials.ReflectionUtil;
 import net.minecraft.entity.monster.ZombieVillagerEntity;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.biome.BiomeContainer;
-import net.minecraft.world.biome.BiomeGenerationSettings;
 import net.minecraft.world.server.ChunkManager;
 import net.minecraft.world.server.ServerWorld;
 
@@ -25,8 +24,7 @@ public enum CRReflection implements ReflectionUtil.IReflectionKey{
 	LOADED_CHUNKS(ChunkManager.class, "getLoadedChunksIterable", "func_223491_f ", "Spawn lightning at high atmospheric charge"),
 	LIGHTNING_POS(ServerWorld.class, "adjustPosToNearbyEntity", "func_175736_a", "Target lightning at high atmospheric charge"),
 	SPAWN_RADIUS(ChunkManager.class, "isOutsideSpawningRadius", "func_219243_d", "Spawn lightning at high atmospheric charge"),
-	BIOME_ARRAY(BiomeContainer.class, "biomes", "field_227054_f_", "Terraforming alchemy reagents changing the biome"),
-	BIOME_FEATURE_LIST(BiomeGenerationSettings.class, "NO_MCP_MAPPING", "field_242484_f", "Adding ore world generation");
+	BIOME_ARRAY(BiomeContainer.class, "biomes", "field_227054_f_", "Terraforming alchemy reagents changing the biome");
 
 
 	private Class<?> clazz;

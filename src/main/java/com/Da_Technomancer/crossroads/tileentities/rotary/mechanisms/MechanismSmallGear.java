@@ -2,12 +2,10 @@ package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
-import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
-import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
+import com.Da_Technomancer.crossroads.API.rotary.*;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
+import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.render.TESR.CRModels;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -27,8 +25,9 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
 
-public class MechanismSmallGear implements IMechanism{
+public class MechanismSmallGear implements IMechanism<GearFactory.GearMaterial>{
 
 	protected static final VoxelShape[] SHAPES = new VoxelShape[6];
 	static{
@@ -41,19 +40,23 @@ public class MechanismSmallGear implements IMechanism{
 	}
 
 	@Override
-	public double getInertia(GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis){
+	public double getInertia(IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis){
 		// assume each gear is 1/8 of a cubic meter and has a radius of 1/2 meter.
 		// mass is rounded to make things nicer for everyone
-		return MiscUtil.preciseRound(0.125D * mat.getDensity() / 8, 3);// .125 because r*r/2 so .5*.5/2
+		if(mat instanceof GearFactory.GearMaterial){
+			return MiscUtil.preciseRound(0.125D * ((GearFactory.GearMaterial) mat).getDensity() / 8, 3);// .125 because r*r/2 so .5*.5/2
+		}else{
+			return 0;
+		}
 	}
 
 	@Override
-	public boolean hasCap(Capability<?> cap, Direction capSide, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te){
+	public boolean hasCap(Capability<?> cap, Direction capSide, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te){
 		return (cap == Capabilities.COG_CAPABILITY || cap == Capabilities.AXLE_CAPABILITY) && side == capSide;
 	}
 
 	@Override
-	public void propogate(GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te, MechanismTileEntity.SidedAxleHandler handler, IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
+	public void propagate(IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te, MechanismTileEntity.SidedAxleHandler handler, IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
 		//This mechanism should never be in the axle slot
 		if(side == null){
 			return;
@@ -82,7 +85,7 @@ public class MechanismSmallGear implements IMechanism{
 		//Other internal gears
 		for(int i = 0; i < 6; i++){
 			if(i != side.getIndex() && i != side.getOpposite().getIndex() && te.members[i] != null && te.members[i].hasCap(Capabilities.COG_CAPABILITY, Direction.byIndex(i), te.mats[i], Direction.byIndex(i), te.getAxleAxis(), te)){
-				te.axleHandlers[i].propogate(masterIn, key, RotaryUtil.getDirSign(side, Direction.byIndex(i)) * handler.rotRatio, .5D, !handler.renderOffset);
+				te.axleHandlers[i].propagate(masterIn, key, RotaryUtil.getDirSign(side, Direction.byIndex(i)) * handler.rotRatio, .5D, !handler.renderOffset);
 			}
 		}
 
@@ -123,20 +126,24 @@ public class MechanismSmallGear implements IMechanism{
 			}
 			LazyOptional<IAxleHandler> axleOpt = sideTE.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite());
 			if(axleOpt.isPresent()){
-				axleOpt.orElseThrow(NullPointerException::new).propogate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
+				axleOpt.orElseThrow(NullPointerException::new).propagate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
 			}
 		}
 
 		//Axle slot
 		if(te.getAxleAxis() == side.getAxis() && te.members[6] != null && te.members[6].hasCap(Capabilities.AXLE_CAPABILITY, side, te.mats[6], null, te.getAxleAxis(), te)){
-			te.axleHandlers[6].propogate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
+			te.axleHandlers[6].propagate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
 		}
 	}
 
 	@Nonnull
 	@Override
-	public ItemStack getDrop(GearFactory.GearMaterial mat){
-		return CRItems.smallGear.withMaterial(mat, 1);
+	public ItemStack getDrop(IMechanismProperty mat){
+		if(mat instanceof GearFactory.GearMaterial){
+			return CRItems.smallGear.withMaterial((OreSetup.OreProfile) mat, 1);
+		}else{
+			return ItemStack.EMPTY;
+		}
 	}
 
 	@Override
@@ -146,7 +153,7 @@ public class MechanismSmallGear implements IMechanism{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void doRender(MechanismTileEntity te, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, float partialTicks, GearFactory.GearMaterial mat, @Nullable Direction side, @Nullable Direction.Axis axis){
+	public void doRender(MechanismTileEntity te, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, float partialTicks, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis){
 		if(side == null){
 			return;
 		}
@@ -157,6 +164,16 @@ public class MechanismSmallGear implements IMechanism{
 		float angle = handler.getAngle(partialTicks);
 		matrix.translate(0, -0.4375D, 0);
 		matrix.rotate(Vector3f.YP.rotationDegrees(-(float) RotaryUtil.getCCWSign(side) * angle));
-		CRModels.draw8Gear(matrix, buffer.getBuffer(RenderType.getSolid()), CRRenderUtil.convertColor(mat.getColor()), combinedLight);
+		CRModels.draw8Gear(matrix, buffer.getBuffer(RenderType.getSolid()), CRRenderUtil.convertColor(mat instanceof GearFactory.GearMaterial ? ((GearFactory.GearMaterial) mat).getColor() : Color.WHITE), combinedLight);
+	}
+
+	@Override
+	public GearFactory.GearMaterial deserializeProperty(int serial){
+		return GearFactory.GearMaterial.deserialize(serial);
+	}
+
+	@Override
+	public GearFactory.GearMaterial loadProperty(String name){
+		return GearFactory.findMaterial(name);
 	}
 }

@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
+import com.Da_Technomancer.crossroads.API.rotary.IMechanismProperty;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 
@@ -86,7 +87,7 @@ public class GearFactory{
 	}
 
 	//Despite this class extending OreProfile, registering a GearMaterial is completely independent of registering an OreProfile
-	public static class GearMaterial extends OreSetup.OreProfile{
+	public static class GearMaterial extends OreSetup.OreProfile implements IMechanismProperty{
 
 		// The densities for the materials used here are kg/cubic meter of the substance
 		private final double density;
@@ -105,12 +106,14 @@ public class GearFactory{
 			return density;
 		}
 
-		/**
-		 * For networking only! Not for saving/loading to disk
-		 * @return An int that identifies this material
-		 */
+		@Override
 		public int serialize(){
 			return pos;
+		}
+
+		@Override
+		public String getSaveName(){
+			return getId();
 		}
 
 		public static GearMaterial deserialize(int serial){

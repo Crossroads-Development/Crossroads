@@ -126,7 +126,10 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IInfoTE{
 		@Override
 		public void connect(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, Direction cogOrient, boolean renderOffset){
 			if(cogOrient == Direction.getFacingFromVector(-masterPos.getX(), -masterPos.getY(), -masterPos.getZ())){
-				getAxle().propogate(masterIn, key, rotationRatioIn, lastRadius, !renderOffset);
+				IAxleHandler axle = getAxle();
+				if(axle != null){
+					axle.propagate(masterIn, key, rotationRatioIn, lastRadius, !renderOffset);
+				}
 			}
 		}
 
@@ -135,7 +138,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IInfoTE{
 			TileEntity te = world.getTileEntity(pos.add(masterPos));
 			if(te instanceof LargeGearMasterTileEntity){
 				LazyOptional<IAxleHandler> axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, getFacing());
-				return axleOpt.isPresent() ?axleOpt.orElseThrow(NullPointerException::new) : null;
+				return axleOpt.isPresent() ? axleOpt.orElseThrow(NullPointerException::new) : null;
 			}
 			return null;
 		}

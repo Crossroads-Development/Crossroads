@@ -82,5 +82,10 @@ public class PiglinBarterLootModifier extends LootModifier{
 
 			return new PiglinBarterLootModifier(lootConditions, active, poolBuilder.build(), overrideChance);
 		}
+
+		@Override
+		public JsonObject write(PiglinBarterLootModifier instance){
+			return makeConditions(instance.conditions);
+		}
 	}
 }

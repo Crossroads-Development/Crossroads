@@ -181,7 +181,7 @@ public class StampMillTileEntity extends InventoryTE{
 	private class ThroughAxleHandler extends AngleAxleHandler{
 
 		@Override
-		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius, boolean renderOffset){
+		public void propagate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius, boolean renderOffset){
 			//If true, this has already been checked.
 			if(key == updateKey || masterIn.addToList(this)){
 				return;
@@ -206,7 +206,7 @@ public class StampMillTileEntity extends InventoryTE{
 					}
 					LazyOptional<IAxleHandler> oAxleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite());
 					if(oAxleOpt.isPresent()){
-						oAxleOpt.orElseThrow(NullPointerException::new).propogate(masterIn, key, rotRatioIn, lastRadius, renderOffset);
+						oAxleOpt.orElseThrow(NullPointerException::new).propagate(masterIn, key, rotRatioIn, lastRadius, renderOffset);
 					}
 				}
 			}

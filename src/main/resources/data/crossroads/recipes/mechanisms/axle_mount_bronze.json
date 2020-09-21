@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:axle_mount",
+		"count": 8,
+		"nbt": {
+			"material": "bronze"
+		}
+	},
+	"pattern": [
+		"###",
+		"* *",
+		" * "
+	],
+	"key": {
+		"#": {
+			"tag": "forge:ingots/bronze"
+		},
+		"*": {
+			"tag": "forge:nuggets/bronze"
+		}
+	}
+}

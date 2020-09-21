@@ -509,7 +509,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 		}
 
 		@Override
-		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius, boolean renderOffset){
+		public void propagate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius, boolean renderOffset){
 			//If true, this has already been checked.
 			if(key == updateKey || masterIn.addToList(this)){
 				return;

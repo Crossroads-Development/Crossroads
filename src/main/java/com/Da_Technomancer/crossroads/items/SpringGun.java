@@ -69,8 +69,10 @@ public class SpringGun extends ShootableItem implements WindingTableTileEntity.I
 			}
 
 			playerIn.playSound(SoundEvents.ITEM_CROSSBOW_SHOOT, SoundCategory.PLAYERS, 1F, 1F);//Play sound on the client
-			//Return the discharged weapon
-			setWindLevel(held, 0);
+			if(!playerIn.abilities.isCreativeMode){
+				//Return the discharged weapon
+				setWindLevel(held, 0);
+			}
 			return ActionResult.resultSuccess(held);
 		}
 

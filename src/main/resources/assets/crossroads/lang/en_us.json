@@ -257,6 +257,10 @@
 	"block.crossroads.detailed_auto_crafter": "Detailed Auto-Crafter",
 	"block.crossroads.lodestone_turbine": "Lodestone Turbine",
 	"block.crossroads.lodestone_dynamo": "Lodestone Dynamo",
+	"item.crossroads.gear_facade_stone_brick": "Stone Brick Facade",
+	"item.crossroads.gear_facade_cobble": "Cobblestone Facade",
+	"item.crossroads.gear_facade_iron": "Iron Block Facade",
+	"item.crossroads.gear_facade_glass": "Glass Facade",
 
 	"item.crossroads.ore_gravel": "Raw %1$s Grit",
 	"item.crossroads.ore_clump": "%1$s Clump",
@@ -267,6 +271,7 @@
 	"item.crossroads.axle": "%1$s Axle",
 	"item.crossroads.clutch": "%1$s Clutch",
 	"item.crossroads.clutch_inv": "Inverted %1$s Clutch",
+	"item.crossroads.axle_mount": "%1$s Axle Mount",
 
 	"fluid.crossroads.distilled_water": "Distilled Water",
 	"fluid.crossroads.dirty_water": "Dirty Water",
@@ -615,6 +620,7 @@
 	"tt.crossroads.lodestone_turbine.quip": "Frickin Magnets, How Do They Work?",
 	"tt.crossroads.lodestone_dynamo.desc": "Produces: %1$d J/t",
 	"tt.crossroads.lodestone_dynamo.fe": "Consumes: -%1$d FE/t",
+	"tt.crossroads.axle_mount.desc": "A decorative wall mount for axles",
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
 	"container.crossroads.boilerplate.speed": "%1$f rad/s",

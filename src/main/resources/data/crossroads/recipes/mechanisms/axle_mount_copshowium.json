@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:axle_mount",
+		"count": 8,
+		"nbt": {
+			"material": "copshowium"
+		}
+	},
+	"pattern": [
+		"###",
+		"* *",
+		" * "
+	],
+	"key": {
+		"#": {
+			"tag": "crossroads:ingots/copshowium"
+		},
+		"*": {
+			"tag": "crossroads:nuggets/copshowium"
+		}
+	}
+}

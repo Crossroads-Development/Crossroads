@@ -88,10 +88,10 @@ dependencies {
 	minecraft("net.minecraftforge:forge:$mc_version-$fg_version")
 
 	//Compile against APIs
-	compileOnly(fg.deobf("mezz.jei:jei-$mc_version:$jei_version:api"))//JEI
+	compileOnly(fg.deobf("mezz.jei:jei-$jei_mc_version:$jei_version:api"))//JEI
 	compileOnly(fg.deobf("top.theillusivec4.curios:curios-forge:$curios_version:api"))//Curios
 	//Run with the full versions
-	runtimeOnly(fg.deobf("mezz.jei:jei-$mc_version:$jei_version"))//JEI
+	runtimeOnly(fg.deobf("mezz.jei:jei-$jei_mc_version:$jei_version"))//JEI
 	runtimeOnly(fg.deobf("top.theillusivec4.curios:curios-forge:$curios_version"))//Curios
 
 	compile(fg.deobf("vazkii.patchouli:Patchouli:$patchouli_version"))
@@ -100,7 +100,7 @@ dependencies {
 //	runtimeOnly(fg.deobf("mcp.mobius.waila:Hwyla:$hwyla_version"))
 
 	//When setting up a dev environment for Crossroads, make sure to have an essentials jar in a folder called "libs", in the same parent folder as "src"
-	implementation(fg.deobf("com.technomancer.essentials:essentials-$mc_version-$essentials_version:dev"))
+	implementation(fg.deobf("com.technomancer.essentials:essentials-$essentials_version:dev"))
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

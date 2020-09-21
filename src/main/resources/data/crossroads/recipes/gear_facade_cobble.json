@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:gear_facade_cobble",
+		"count": 8
+	},
+	"pattern": [
+		"BBB",
+		" I "
+	],
+	"key": {
+		"B": {
+			"tag": "forge:cobblestone"
+		},
+		"I": {
+			"tag": "forge:ingots/iron"
+		}
+	}
+}

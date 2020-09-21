@@ -127,6 +127,11 @@ public final class CRItems{
 	public static ToggleGear toggleGear;
 	public static ToggleGear invToggleGear;
 	public static LargeGear largeGear;
+	public static AxleMount axleMount;
+	public static GearFacade gearFacadeStoneBrick;
+	public static GearFacade gearFacadeCobble;
+	public static GearFacade gearFacadeIron;
+	public static GearFacade gearFacadeGlass;
 
 	public static final ArrayList<Item> toRegister = new ArrayList<>();
 
@@ -202,6 +207,11 @@ public final class CRItems{
 		toggleGear = new ToggleGear(false);
 		invToggleGear = new ToggleGear(true);
 		largeGear = new LargeGear();
+		axleMount = new AxleMount();
+		gearFacadeStoneBrick = new GearFacade(GearFacade.FacadeBlock.STONE_BRICK);
+		gearFacadeCobble = new GearFacade(GearFacade.FacadeBlock.COBBLE);
+		gearFacadeIron = new GearFacade(GearFacade.FacadeBlock.IRON);
+		gearFacadeGlass = new GearFacade(GearFacade.FacadeBlock.GLASS);
 		oreGravel = (OreProfileItem) new OreProfileItem(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("ore_gravel");
 		oreClump = (OreProfileItem) new OreProfileItem(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("ore_clump");
 		toRegister.add(ironDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_iron"));
@@ -227,7 +237,7 @@ public final class CRItems{
 			OreSetup.OreProfile mat = OreProfileItem.getProfile(stack);
 			return mat == null ? -1 : mat.getColor().getRGB();
 		};
-		itemColor.register(itemColoring, oreGravel, oreClump, axle, smallGear, largeGear, clutch, invClutch, toggleGear, invToggleGear);
+		itemColor.register(itemColoring, oreGravel, oreClump, axle, smallGear, largeGear, clutch, invClutch, toggleGear, invToggleGear, axleMount);
 
 		//Item model properties
 		ItemModelsProperties.func_239418_a_(whirligig, new ResourceLocation("angle"), (ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) -> {

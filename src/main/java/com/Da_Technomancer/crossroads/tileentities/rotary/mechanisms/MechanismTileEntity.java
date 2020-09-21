@@ -3,13 +3,9 @@ package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
-import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
-import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
-import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
+import com.Da_Technomancer.crossroads.API.rotary.*;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.rotary.Mechanism;
-import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import com.Da_Technomancer.essentials.packets.ILongReceiver;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
@@ -38,7 +34,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	@ObjectHolder(Crossroads.MODID + ":mechanism")
 	public static TileEntityType<MechanismTileEntity> type = null;
 
-	public static final ArrayList<IMechanism> MECHANISMS = new ArrayList<>(6);//This is a list instead of an array to allow expansion by addons
+	public static final ArrayList<IMechanism<?>> MECHANISMS = new ArrayList<>(8);//This is a list instead of an array to allow expansion by addons
 
 	static{
 		MECHANISMS.add(new MechanismSmallGear());//Index 0, small gear
@@ -47,6 +43,8 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 		MECHANISMS.add(new MechanismClutch(true));//Index 3, inverted clutch
 		MECHANISMS.add(new MechanismToggleGear(false));//Index 4, normal toggle gear
 		MECHANISMS.add(new MechanismToggleGear(true));//Index 5, inverted toggle gear
+		MECHANISMS.add(new MechanismAxleMount());//Index 6, axle mount
+		MECHANISMS.add(new MechanismFacade());//Index 7, facades
 	}
 
 	public MechanismTileEntity(){
@@ -74,9 +72,9 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	// D-U-N-S-W-E-A
 
 	//Public for read-only
-	public final IMechanism[] members = new IMechanism[7];
+	public final IMechanism<?>[] members = new IMechanism[7];
 	//Public for read-only
-	public final GearFactory.GearMaterial[] mats = new GearFactory.GearMaterial[7];
+	public final IMechanismProperty[] mats = new IMechanismProperty[7];
 	// [0]=w, [1]=E, [2]=P, [3]=lastE
 	private final double[][] motionData = new double[7][4];
 	private final double[] inertia = new double[7];
@@ -98,7 +96,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	 * @param axis The new axle orientation, if index = 6. Should be null otherwise.
 	 * @param newTE Whether this TE is newly created this tick
 	 */
-	public void setMechanism(int index, @Nullable IMechanism mechanism, @Nullable GearFactory.GearMaterial mat, @Nullable Direction.Axis axis, boolean newTE){
+	public void setMechanism(int index, @Nullable IMechanism<?> mechanism, @Nullable IMechanismProperty mat, @Nullable Direction.Axis axis, boolean newTE){
 		members[index] = mechanism;
 		mats[index] = mat;
 		if(index == 6 && getAxleAxis() != axis){
@@ -136,7 +134,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 		for(int i = 0; i < 7; i++){
 			if(members[i] != null && mats[i] != null){//Sanity check. mats[i] should never be null if members[i] isn't
 				nbt.putInt("[" + i + "]memb", MECHANISMS.indexOf(members[i]));
-				nbt.putString("[" + i + "]mat", mats[i].getId());
+				nbt.putString("[" + i + "]mat", mats[i].getSaveName());
 			}
 		}
 
@@ -155,7 +153,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 		for(int i = 0; i < 7; i++){
 			if(members[i] != null && mats[i] != null){//Sanity check. mats[i] should never be null if members[i] isn't
 				nbt.putInt("[" + i + "]memb", MECHANISMS.indexOf(members[i]));
-				nbt.putString("[" + i + "]mat", mats[i].getId());
+				nbt.putString("[" + i + "]mat", mats[i].getSaveName());
 
 //				nbt.putFloat("[" + i + "]cl_w", clientW[i]);
 //				nbt.putFloat("[" + i + "]ang", angle[i]);
@@ -188,7 +186,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 					continue;//Sanity check in case a mechanism type gets removed in the future
 				}
 
-				mats[i] = GearFactory.findMaterial(nbt.getString("[" + i + "]mat"));
+				mats[i] = members[i].loadProperty(nbt.getString("[" + i + "]mat"));
 
 				// motionData
 //				clientW[i] = nbt.getFloat("[" + i + "]cl_w");
@@ -216,7 +214,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 				mats[identifier - 7] = null;
 			}else{
 				members[identifier - 7] = MECHANISMS.get((int) (message & 0xFFFFFFFFL));
-				mats[identifier - 7] = GearFactory.GearMaterial.deserialize((int) (message >>> 32L));
+				mats[identifier - 7] = members[identifier - 7].deserializeProperty((int) (message >>> 32L));
 			}
 			axleHandlers[identifier - 7].updateStates(false);
 		}else if(identifier == 14){
@@ -322,7 +320,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 
 		@Override
 		public void connect(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, Direction cogOrient, boolean renderOffset){
-			axleHandlers[side].propogate(masterIn, key, rotationRatioIn, lastRadius, !renderOffset);
+			axleHandlers[side].propagate(masterIn, key, rotationRatioIn, lastRadius, !renderOffset);
 		}
 
 		@Override
@@ -352,11 +350,11 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 		}
 
 		@Override
-		public void propogate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius, boolean renderOffset){
+		public void propagate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius, boolean renderOffset){
 			if(members[side] != null){
 				this.renderOffset = renderOffset;
 				axis = masterIn;
-				members[side].propogate(mats[side], side == 6 ? null : Direction.byIndex(side), getAxleAxis(), MechanismTileEntity.this, this, masterIn, key, rotRatioIn, lastRadius);
+				members[side].propagate(mats[side], side == 6 ? null : Direction.byIndex(side), getAxleAxis(), MechanismTileEntity.this, this, masterIn, key, rotRatioIn, lastRadius);
 			}
 		}
 

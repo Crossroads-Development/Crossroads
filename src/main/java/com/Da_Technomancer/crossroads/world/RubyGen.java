@@ -1,7 +1,5 @@
 package com.Da_Technomancer.crossroads.world;
 
-import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -19,7 +17,8 @@ public class RubyGen extends OreFeature{
 	}
 
 	private static BlockState getStateToPlace(Random random, OreFeatureConfig config){
-		return random.nextFloat() < CRConfig.rubyRarity.get() ? OreSetup.oreRuby.getDefaultState() : config.state;
+		return config.state;//TODO
+//		return random.nextFloat() < CRConfig.rubyRarity.get() ? OreSetup.oreRuby.getDefaultState() : config.state;
 	}
 
 	@Override

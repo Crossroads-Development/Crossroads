@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:gear_facade_stone_brick",
+		"count": 8
+	},
+	"pattern": [
+		"BBB",
+		" I "
+	],
+	"key": {
+		"B": {
+			"item": "stone_bricks"
+		},
+		"I": {
+			"tag": "forge:ingots/iron"
+		}
+	}
+}
