@@ -17,6 +17,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Tags;
 
@@ -81,5 +83,10 @@ public class AcidAlchemyEffect implements IAlchEffect{
 			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(OreSetup.ingotBronze, world.rand.nextInt(9) + 1));
 			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 		}
+	}
+
+	@Override
+	public ITextComponent getName(){
+		return new TranslationTextComponent("effect.acid");
 	}
 }

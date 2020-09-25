@@ -23,6 +23,7 @@ import net.minecraft.util.text.StringTextComponent;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ReagInfoCategory implements IRecipeCategory<IReagent>{
 
@@ -67,8 +68,10 @@ public class ReagInfoCategory implements IRecipeCategory<IReagent>{
 		fontRenderer.drawString(matrix, line, 2, 22, 0x404040);
 		line = boil >= Short.MAX_VALUE - 10 ? MiscUtil.localize("crossroads.jei.reagent.boiling.no") : boil <= HeatUtil.ABSOLUTE_ZERO ? MiscUtil.localize("crossroads.jei.reagent.boiling.yes") : MiscUtil.localize("crossroads.jei.reagent.boiling", Math.round(boil));
 		fontRenderer.drawString(matrix, line, 2, 42, 0x404040);
+		line = MiscUtil.localize("crossroads.jei.reagent.effect", recipe.getEffect().getName().getString());
+		fontRenderer.drawString(matrix, line, 2, 62, 0x404040);
 		if(recipe.requiresCrystal()){
-			fontRenderer.drawString(matrix, MiscUtil.localize("crossroads.jei.reagent.crystal"), 2, 62, 0x404040);
+			fontRenderer.drawString(matrix, MiscUtil.localize("crossroads.jei.reagent.crystal"), 2, 82, 0x404040);
 		}
 
 		//GlStateManager.color(1, 1, 1);
@@ -90,7 +93,8 @@ public class ReagInfoCategory implements IRecipeCategory<IReagent>{
 		ReagIngr reagIngr = new ReagIngr(recipe, 1);
 		ingredients.setInput(ReagIngr.REAG, reagIngr);
 		ingredients.setOutput(ReagIngr.REAG, reagIngr);
-		List<ItemStack> solid = recipe.getJEISolids();
+
+		List<ItemStack> solid = recipe.getJEISolids().getAllElements().stream().map(ItemStack::new).collect(Collectors.toList());
 		List<List<ItemStack>> solidLists = ImmutableList.of(solid);
 		ingredients.setInputLists(VanillaTypes.ITEM, solidLists);
 		ingredients.setOutputLists(VanillaTypes.ITEM, solidLists);

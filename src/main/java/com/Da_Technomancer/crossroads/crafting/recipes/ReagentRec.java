@@ -29,13 +29,12 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class ReagentRec implements IRecipe<IInventory>, IReagent{
 
@@ -45,18 +44,18 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 	private final double melting;
 	private final double boiling;
 	private final boolean flame;
-	private final ITag<Item> solid;
+	private final ITag.INamedTag<Item> solid;
 	private final FluidStack fluid;
 	private final ContainRequirements containment;
 	private final int[] colMap;//Used for serialization
 	private final Function<EnumMatterPhase, Color> colorFunc;
 	private final String effectName;//Used for serialization
-	@Nullable
+	@Nonnull
 	private final IAlchEffect effect;
 	private final String flameName;//Used for serialization
 	private final Function<Integer, Integer> flameFunction;
 
-	public ReagentRec(ResourceLocation location, String group, String id, double melting, double boiling, boolean flame, ITag<Item> solid, FluidStack fluid, ContainRequirements containment, int[] colMap, Function<EnumMatterPhase, Color> colorFunc, String effectName, @Nullable IAlchEffect effect, String flameName, Function<Integer, Integer> flameFunction){
+	public ReagentRec(ResourceLocation location, String group, String id, double melting, double boiling, boolean flame, ITag.INamedTag<Item> solid, FluidStack fluid, ContainRequirements containment, int[] colMap, Function<EnumMatterPhase, Color> colorFunc, String effectName, @Nonnull IAlchEffect effect, String flameName, Function<Integer, Integer> flameFunction){
 		this.location = location;
 		this.group = group;
 		this.id = id;
@@ -136,7 +135,7 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 	}
 
 	@Override
-	@Nullable
+	@Nonnull
 	public IAlchEffect getEffect(){
 		return effect;
 	}
@@ -172,8 +171,8 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 	}
 
 	@Override
-	public List<ItemStack> getJEISolids(){
-		return solid.getAllElements().parallelStream().unordered().map(ItemStack::new).distinct().collect(Collectors.toList());
+	public ITag<Item> getJEISolids(){
+		return solid;
 	}
 
 	@Override
@@ -238,7 +237,7 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 			if(melting > boiling){
 				boiling = melting;//Equal melting and boiling point would cause sublimation, skipping liquid
 			}
-			ITag<Item> item = ItemTags.makeWrapperTag(JSONUtils.getString(json, "item", "crossroads:empty"));
+			ITag.INamedTag<Item> item = ItemTags.makeWrapperTag(JSONUtils.getString(json, "item", "crossroads:empty"));
 			FluidStack fluid = CraftingUtil.getFluidStack(json, "fluid", FluidStack.EMPTY);
 			ContainRequirements vessel = containTypeMap.getOrDefault(JSONUtils.getString(json, "vessel", "none"), ContainRequirements.NONE);
 			String effectName = JSONUtils.getString(json, "effect", "none");
@@ -278,7 +277,7 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 			double melting = buffer.readDouble();
 			double boiling = buffer.readDouble();
 			boolean flame = buffer.readBoolean();
-			ITag<Item> solid = ItemTags.makeWrapperTag(buffer.readString());
+			ITag.INamedTag<Item> solid = ItemTags.makeWrapperTag(buffer.readString());
 			Fluid fl = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(buffer.readString()));
 			int flQty = buffer.readVarInt();
 			FluidStack fluid = fl == null || flQty == 0 ? FluidStack.EMPTY : new FluidStack(fl, flQty);
@@ -290,7 +289,7 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 			}
 			Function<EnumMatterPhase, Color> colFunc = phase -> colMap[phase.ordinal()];
 			String effectName = buffer.readString();
-			IAlchEffect effect = effectMap.getOrDefault(effectName, null);
+			IAlchEffect effect = effectMap.getOrDefault(effectName, effectMap.get("none"));
 			String flameName = buffer.readString();
 			Function<Integer, Integer> flameFunc = flameRadiusMap.getOrDefault(flameName, flameRadiusMap.get("none"));
 			return new ReagentRec(recipeId, group, id, melting, boiling, flame, solid, fluid, vessel, colMapInt, colFunc, effectName, effect, flameName, flameFunc);
@@ -303,7 +302,7 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 			buffer.writeDouble(recipe.melting);
 			buffer.writeDouble(recipe.boiling);
 			buffer.writeBoolean(recipe.flame);
-			buffer.writeString(recipe.solid.toString());
+			buffer.writeString(recipe.solid.getName().toString());
 			buffer.writeString(recipe.fluid.getFluid().getRegistryName().toString());
 			buffer.writeVarInt(recipe.fluid.getAmount());
 			buffer.writeVarInt(recipe.containment.ordinal());
@@ -328,7 +327,7 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 		flameRadiusMap.put("fixed_small", qty -> qty == 0 ? 0 : 8);//Constant 8 block range, regardless of quantity
 		flameRadiusMap.put("fixed_large", qty -> qty == 0 ? 0 : CRConfig.allowHellfire.get() ? 64 : 8);//Constant 64 block range, regardless of quantity
 
-		effectMap.put("none", null);
+		effectMap.put("none", new NoneEffect());
 		effectMap.put("acid", new AcidAlchemyEffect());
 		effectMap.put("acid_gold", new AquaRegiaAlchemyEffect());
 		effectMap.put("disinfect", new DisinfectAlchemyEffect());

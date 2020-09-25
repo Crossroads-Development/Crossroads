@@ -209,7 +209,8 @@ public class EntityFlameCore extends Entity{
 		for(ReagentStack r : reagList){
 			IAlchEffect effect;
 			//reagList should never contain null
-			if(r != null && (effect = r.getType().getEffect()) != null){
+			if(r != null){
+				effect = r.getType().getEffect();
 				effect.doEffect(world, pos, r.getAmount(), EnumMatterPhase.FLAME, reags);
 			}
 		}

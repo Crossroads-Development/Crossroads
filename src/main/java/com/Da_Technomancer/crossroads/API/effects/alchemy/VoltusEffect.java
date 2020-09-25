@@ -8,6 +8,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import java.awt.*;
@@ -27,5 +29,10 @@ public class VoltusEffect implements IAlchEffect{
 				CRRenderUtil.addArc(world, (float) pos.getX() + 0.5F, (float) pos.getY() + 0.5F, (float) pos.getZ() + 0.5F, (float) ent.getPosX(), (float) ent.getPosY(), (float) ent.getPosZ(), 1, 0F, BOLT_COLORS[(int) (world.getGameTime() % 3)].getRGB());
 			}
 		}
+	}
+
+	@Override
+	public ITextComponent getName(){
+		return new TranslationTextComponent("effect.electric");
 	}
 }

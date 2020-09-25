@@ -101,8 +101,16 @@ public abstract class TileEntityContainer<U extends TileEntity & IInventory> ext
 			previous = current.copy();
 
 			//fromSlot < slotCount means TE -> Player, else Player -> TE input slots
-			if(fromSlot < slotCount() ? !mergeItemStack(current, slotCount(), 36 + slotCount(), true) : !mergeItemStack(current, 0, slotCount(), false)){
-				return ItemStack.EMPTY;
+			if(fromSlot < slotCount()){
+				if(!mergeItemStack(current, slotCount(), 36 + slotCount(), true)){
+					return ItemStack.EMPTY;
+				}
+				slot.onSlotChange(current, previous);
+			}else{
+				if(!mergeItemStack(current, 0, slotCount(), false)){
+					return ItemStack.EMPTY;
+				}
+				slot.onSlotChange(current, previous);
 			}
 
 			if(current.isEmpty()){

@@ -10,6 +10,8 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 public class ChlorineAlchemyEffect implements IAlchEffect{
@@ -26,5 +28,10 @@ public class ChlorineAlchemyEffect implements IAlchEffect{
 			e.addPotionEffect(new EffectInstance(Effects.MINING_FATIGUE, 600, 3));
 			e.addPotionEffect(new EffectInstance(Effects.POISON, 1200, 0));
 		}
+	}
+
+	@Override
+	public ITextComponent getName(){
+		return new TranslationTextComponent("effect.poison");
 	}
 }

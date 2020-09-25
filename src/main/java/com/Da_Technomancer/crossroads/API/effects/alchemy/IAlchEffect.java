@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.API.effects.alchemy;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
 public interface IAlchEffect{
@@ -15,4 +16,6 @@ public interface IAlchEffect{
 	 * @param contents The full contents of the caller.
 	 */
 	void doEffect(World world, BlockPos pos, int amount, EnumMatterPhase phase, ReagentMap contents);
+
+	ITextComponent getName();
 }

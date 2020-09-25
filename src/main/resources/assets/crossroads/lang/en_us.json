@@ -734,6 +734,22 @@
 	"reagent.elem_time": "Copshowium",
 
 
+	"effect.none": "None",
+	"effect.acid": "Acid",
+	"effect.acid_gold": "Noble Acid",
+	"effect.disinfect": "Disinfect",
+	"effect.spawn_item": "Drop %1$s",
+	"effect.electric": "Electrocute",
+	"effect.poison": "Toxic",
+	"effect.salt": "Kill Plants",
+	"effect.salt_alc": "Kill Plants",
+	"effect.terraform_desert": "Create Desert",
+	"effect.terraform_nether": "Create Nether",
+	"effect.terraform_ocean": "Create Ocean",
+	"effect.terraform_plains": "Create Plains",
+	"effect.terraform_snow": "Create Tundra",
+
+
 	"path.technomancy": "Technomancy",
 	"path.alchemy": "Alchemy",
 	"path.witchcraft": "Witchcraft",
@@ -779,6 +795,7 @@
 	"crossroads.jei.reagent.boiling": "Boiling: %1$s°C",
 	"crossroads.jei.reagent.boiling.yes": "Boiling: Always",
 	"crossroads.jei.reagent.boiling.no": "Boiling: Never",
+	"crossroads.jei.reagent.effect": "Effect: %1$s",
 	"crossroads.jei.reagent.crystal": "Must be contained in crystal",
 	"crossroads.jei.copshowium.flux": "Produces Temporal Entropy",
 

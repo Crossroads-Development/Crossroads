@@ -15,6 +15,8 @@ import net.minecraft.item.Items;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import java.util.function.Predicate;
@@ -39,5 +41,10 @@ public class SaltAlchemyEffect implements IAlchEffect{
 
 		//Affect blocks
 		BlockSalt.salinate(world, pos);
+	}
+
+	@Override
+	public ITextComponent getName(){
+		return new TranslationTextComponent("effect.salt");
 	}
 }

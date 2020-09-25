@@ -22,6 +22,8 @@ import net.minecraft.util.RegistryKey;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBiomeReader;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -113,6 +115,11 @@ public class AetherEffect implements IAlchEffect{
 				world.setBlockState(pos, soilBlock().getDefaultState());
 			}
 		}
+	}
+
+	@Override
+	public ITextComponent getName(){
+		return new TranslationTextComponent("effect.terraform_plains");
 	}
 
 	/**

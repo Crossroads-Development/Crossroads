@@ -2,13 +2,13 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.IAlchEffect;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tags.ITag;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.awt.*;
-import java.util.List;
 
 public interface IReagent{
 
@@ -61,10 +61,8 @@ public interface IReagent{
 	 */
 	Color getColor(EnumMatterPhase phase);
 
-	@Nullable
-	default IAlchEffect getEffect(){
-		return null;
-	}
+	@Nonnull
+	IAlchEffect getEffect();
 	
 	/**
 	 * @param reag The reagent
@@ -80,9 +78,9 @@ public interface IReagent{
 
 	/**
 	 * Used for JEI support. Do not use this for game logic.
-	 * @return A list of all distinct items that are considered a solid form of this item
+	 * @return A tag containing all items that can be converted into the solid form of this reagent
 	 */
-	List<ItemStack> getJEISolids();
+	ITag<Item> getJEISolids();
 
 	/**
 	 * @param temp Current temperature in C. Optional, only used if phase hasn't been set yet to update the phase. If phase should already have been set, this can be left as 0.
