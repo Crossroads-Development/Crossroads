@@ -94,10 +94,16 @@ public class ReagInfoCategory implements IRecipeCategory<IReagent>{
 		ingredients.setInput(ReagIngr.REAG, reagIngr);
 		ingredients.setOutput(ReagIngr.REAG, reagIngr);
 
-		List<ItemStack> solid = recipe.getJEISolids().getAllElements().stream().map(ItemStack::new).collect(Collectors.toList());
-		List<List<ItemStack>> solidLists = ImmutableList.of(solid);
-		ingredients.setInputLists(VanillaTypes.ITEM, solidLists);
-		ingredients.setOutputLists(VanillaTypes.ITEM, solidLists);
+		//There is a known issue (github issue #119) where the items fail to load into JEI because the tag hasn't been initialized yet
+		//The try-catch lets the recipe load without the item form
+		try{
+			List<ItemStack> solid = recipe.getJEISolids().getAllElements().stream().map(ItemStack::new).collect(Collectors.toList());
+			List<List<ItemStack>> solidLists = ImmutableList.of(solid);
+			ingredients.setInputLists(VanillaTypes.ITEM, solidLists);
+			ingredients.setOutputLists(VanillaTypes.ITEM, solidLists);
+		}catch(Exception e){
+			Crossroads.logger.error(String.format("Failed to load item form of reagent %1$s for JEI integration", recipe.getName()));
+		}
 	}
 
 	@Override
