@@ -72,7 +72,7 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 	
 	@Override
 	protected Vector3d getParticlePos(){
-		return Vector3d.func_237491_b_(pos).add(0.5D, 0.3D, 0.5D);//We add the offset ourselves for finer precison
+		return Vector3d.copy(pos).add(0.5D, 0.3D, 0.5D);//We add the offset ourselves for finer precision
 		
 	}
 }

@@ -87,7 +87,7 @@ public class SpringGun extends ShootableItem implements WindingTableTileEntity.I
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(wind), CRConfig.formatVal(maxWind)));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.spring_gun.winding", CRConfig.formatVal(calcDamage(wind)), CRConfig.formatVal(calcDamage(maxWind))));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.spring_gun.desc"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.spring_gun.quip").func_230530_a_(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.spring_gun.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override

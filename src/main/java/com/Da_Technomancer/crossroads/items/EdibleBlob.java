@@ -57,7 +57,7 @@ public class EdibleBlob extends Item{
 		if(stack.hasTag()){
 			tooltip.add(new TranslationTextComponent("tt.crossroads.edible_blob.food", getHealAmount(stack)));
 			tooltip.add(new TranslationTextComponent("tt.crossroads.edible_blob.sat", getTrueSat(stack)));
-			tooltip.add(new TranslationTextComponent("tt.crossroads.edible_blob.quip").func_230530_a_(MiscUtil.TT_QUIP));
+			tooltip.add(new TranslationTextComponent("tt.crossroads.edible_blob.quip").setStyle(MiscUtil.TT_QUIP));
 		}else{
 			tooltip.add(new TranslationTextComponent("tt.crossroads.edible_blob.error"));
 		}

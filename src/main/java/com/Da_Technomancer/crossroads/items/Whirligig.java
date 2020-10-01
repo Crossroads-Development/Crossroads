@@ -39,7 +39,7 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(wind), CRConfig.formatVal(maxWind)));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.whirligig.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.whirligig.elevate", CRConfig.whirligigHover.get()));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.whirligig.quip").func_230530_a_(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.whirligig.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override

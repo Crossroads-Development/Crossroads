@@ -36,7 +36,7 @@ public class AtmosChargeSavedData extends WorldSavedData{
 		//We want all dimensions to share the same saved data,
 		//So we always reference the overworld instance
 		DimensionSavedDataManager storage;
-		if(world.func_234923_W_().func_240901_a_().equals(DimensionType.field_242710_a)){
+		if(world.getDimensionKey().getLocation().equals(DimensionType.OVERWORLD_ID)){
 			storage = world.getSavedData();
 		}else{
 			storage = world.getServer().func_241755_D_().getSavedData();

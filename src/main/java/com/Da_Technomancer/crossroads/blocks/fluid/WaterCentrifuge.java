@@ -103,6 +103,6 @@ public class WaterCentrifuge extends ContainerBlock{
 		tooltip.add(new TranslationTextComponent("tt.crossroads.water_centrifuge.spin", WaterCentrifugeTileEntity.TIP_POINT));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.water_centrifuge.reds"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", WaterCentrifugeTileEntity.INERTIA));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.water_centrifuge.quip").func_230530_a_(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.water_centrifuge.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

@@ -64,7 +64,7 @@ public class DirtEffect implements IEffect{
 			case 7:
 				worldIn.destroyBlock(pos, false);
 				LightningBoltEntity lightning = EntityType.LIGHTNING_BOLT.create(worldIn);
-				lightning.func_233576_c_(Vector3d.func_237489_a_(pos));
+				lightning.moveForced(Vector3d.copyCenteredHorizontally(pos));
 				worldIn.addEntity(lightning);
 				break;
 		}

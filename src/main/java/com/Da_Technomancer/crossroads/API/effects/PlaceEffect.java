@@ -45,12 +45,12 @@ public class PlaceEffect extends BeamEffect{
 					for(ItemEntity ent : items){
 						ItemStack stack = ent.getItem();
 						if(!stack.isEmpty() && stack.getItem() instanceof BlockItem){
-							BlockItemUseContext context = new BlockItemUseContext(new ItemUseContext(placer, Hand.MAIN_HAND, new BlockRayTraceResult(new Vector3d(ent.getPosX(), ent.getPosY(), ent.getPosZ()), Direction.DOWN, ent.func_233580_cy_(), false)));
+							BlockItemUseContext context = new BlockItemUseContext(new ItemUseContext(placer, Hand.MAIN_HAND, new BlockRayTraceResult(new Vector3d(ent.getPosX(), ent.getPosY(), ent.getPosZ()), Direction.DOWN, ent.getPosition(), false)));
 							BlockState state = ((BlockItem) stack.getItem()).getBlock().getStateForPlacement(context);
-							BlockState worldState = worldIn.getBlockState(ent.func_233580_cy_());
-							if(worldState.isReplaceable(context) && state.isValidPosition(worldIn, ent.func_233580_cy_())){
-								worldIn.setBlockState(ent.func_233580_cy_(), state);
-								state.getBlock().onBlockPlacedBy(worldIn, ent.func_233580_cy_(), worldIn.getBlockState(ent.func_233580_cy_()), placer, stack);
+							BlockState worldState = worldIn.getBlockState(ent.getPosition());
+							if(worldState.isReplaceable(context) && state.isValidPosition(worldIn, ent.getPosition())){
+								worldIn.setBlockState(ent.getPosition(), state);
+								state.getBlock().onBlockPlacedBy(worldIn, ent.getPosition(), worldIn.getBlockState(ent.getPosition()), placer, stack);
 								SoundType soundtype = state.getBlock().getSoundType(worldIn.getBlockState(pos), worldIn, pos, placer);
 								worldIn.playSound(null, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 								stack.shrink(1);

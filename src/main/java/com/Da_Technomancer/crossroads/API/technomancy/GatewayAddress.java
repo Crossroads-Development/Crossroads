@@ -118,8 +118,8 @@ public class GatewayAddress{
 
 		public Location(BlockPos pos, World world){
 			this.pos = pos.toImmutable();
-			cache = world.func_234923_W_();
-			this.dim = cache.func_240901_a_();
+			cache = world.getDimensionKey();
+			this.dim = cache.getLocation();
 		}
 
 		public Location(long posSerial, String dimSerial){

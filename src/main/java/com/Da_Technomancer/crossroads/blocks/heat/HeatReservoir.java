@@ -96,7 +96,7 @@ public class HeatReservoir extends ContainerBlock implements IReadable{
 		TileEntity te = worldIn.getTileEntity(pos);
 		LazyOptional<IHeatHandler> heatOpt;
 		if(te != null && (heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, null)).isPresent()){
-			return (int) Math.max(15, Math.round(HeatUtil.toKelvin(heatOpt.orElseThrow(NullPointerException::new).getTemp())));
+			return (int) Math.max(15, Math.round(heatOpt.orElseThrow(NullPointerException::new).getTemp()));
 		}
 		return 0;
 	}

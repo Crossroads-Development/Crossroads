@@ -7,7 +7,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.ITextProperties;
 
 import java.util.ArrayList;
 
@@ -24,15 +23,15 @@ public abstract class TileEntityGUI<T extends TileEntityContainer<U>, U extends 
 	@Override
 	protected void init(){
 		super.init();
-		field_238744_r_ = container.getInvStart()[0];//MCP note: player inventory text overlay x position
-		field_238745_s_ = container.getInvStart()[1] - 12;//MCP note: player inventory text overlay y position
+		playerInventoryTitleX = container.getInvStart()[0];
+		playerInventoryTitleY = container.getInvStart()[1] - 12;
 	}
 
 	@Override
 	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTicks){
 		renderBackground(matrix);
 		super.render(matrix, mouseX, mouseY, partialTicks);
-		func_230459_a_(matrix, mouseX, mouseY);//render tooltip
+		renderHoveredTooltip(matrix, mouseX, mouseY);
 		if(getSlotUnderMouse() == null){
 			func_243308_b(matrix, tooltip, mouseX, mouseY);
 		}
@@ -40,33 +39,10 @@ public abstract class TileEntityGUI<T extends TileEntityContainer<U>, U extends 
 	}
 
 	@Override
-	protected void func_230450_a_(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
-		matrix.push();
-		drawGuiContainerBackgroundLayer(matrix, partialTicks, mouseX, mouseY);
-		matrix.translate(guiLeft, guiTop, 0);
-		drawGuiContainerForegroundLayer(matrix, mouseX, mouseY);
-		matrix.pop();
-	}
-
-	/**
-	 * Draw the background layer of the UI. Called before drawGuiContainerForegroundLayer
-	 * @param matrix Matrix, relative to the top left of the screen
-	 * @param partialTicks Partial ticks
-	 * @param mouseX Mouse x coordinate, relative to UI start
-	 * @param mouseY Mouse y coordinate, relative to UI start
-	 */
 	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
-
-	}
-
-	/**
-	 * Draw the foreground layer of the UI. Called after drawGuiContainerBackgroundLayer
-	 * @param matrix Matrix, relative to the top left of the UI (not screen)
-	 * @param mouseX Mouse x coordinate, relative to UI start
-	 * @param mouseY Mouse y coordinate, relative to UI start
-	 */
-	protected void drawGuiContainerForegroundLayer(MatrixStack matrix, int mouseX, int mouseY){
-
+		//No-op
+		//Even though we don't need to implement this method, as this is an abstract class, having this here allows super calls in subclasses.
+		//While this currently does nothing, that could change, and allowing super calls in subclasses will make changes seamless
 	}
 
 	@Override

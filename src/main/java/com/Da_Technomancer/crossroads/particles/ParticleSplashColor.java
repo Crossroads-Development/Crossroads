@@ -19,7 +19,7 @@ public class ParticleSplashColor extends SpriteTexturedParticle{
 		canCollide = true;
 		sprite = s;
 //		setParticleTextureIndex(17);
-		multipleParticleScaleBy(rand.nextFloat() * 0.6F + 0.6F);
+		multiplyParticleScaleBy(rand.nextFloat() * 0.6F + 0.6F);
 		motionX = xSpeed;
 		motionY = ySpeed;
 		motionZ = zSpeed;

@@ -79,7 +79,7 @@ public class HeatLimiterScreen extends ContainerScreen<HeatLimiterContainer>{
 	}
 
 	@Override
-	protected void func_230450_a_(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
 		minecraft.getTextureManager().bindTexture(SEARCH_BAR_TEXTURE);
 		blit(matrix, guiLeft, guiTop, 0, 0, xSize, 18, xSize, 18);
 	}
@@ -97,7 +97,7 @@ public class HeatLimiterScreen extends ContainerScreen<HeatLimiterContainer>{
 
 	//MCP note: draw tooltip/foreground
 	@Override
-	protected void func_230451_b_(MatrixStack matrix, int p_230451_2_, int p_230451_3_){
+	protected void drawGuiContainerForegroundLayer(MatrixStack matrix, int p_230451_2_, int p_230451_3_){
 		//Don't render text overlays
 	}
 }

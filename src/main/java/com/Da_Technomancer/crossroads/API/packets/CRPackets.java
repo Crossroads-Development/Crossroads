@@ -57,7 +57,7 @@ public class CRPackets{
 		}
 		//Check if this packet is registered with CR. If not, send it via the Essentials packet channel; this is done to make this method correct for all CR usage
 		SimpleChannel messageChannel = registeredTypes.contains(packet.getClass()) ? channel : EssentialsPackets.channel;
-		messageChannel.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), 512.0D, world.func_234923_W_())), packet);
+		messageChannel.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), 512.0D, world.getDimensionKey())), packet);
 	}
 
 	public static void sendPacketToPlayer(ServerPlayerEntity player, ClientPacket packet){
@@ -81,6 +81,6 @@ public class CRPackets{
 	public static void sendPacketToDimension(World world, ClientPacket packet){
 		//Check if this packet is registered with CR. If not, send it via the Essentials packet channel; this is done to make this method correct for all CR usage
 		SimpleChannel messageChannel = registeredTypes.contains(packet.getClass()) ? channel : EssentialsPackets.channel;
-		messageChannel.send(PacketDistributor.DIMENSION.with(world::func_234923_W_), packet);
+		messageChannel.send(PacketDistributor.DIMENSION.with(world::getDimensionKey), packet);
 	}
 }

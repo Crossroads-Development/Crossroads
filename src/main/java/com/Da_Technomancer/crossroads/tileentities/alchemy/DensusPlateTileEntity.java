@@ -35,7 +35,7 @@ public class DensusPlateTileEntity extends TileEntity implements ITickableTileEn
 
 	private Direction getFacing(){
 		BlockState state = getBlockState();
-		if(state.func_235901_b_(ESProperties.FACING)){
+		if(state.hasProperty(ESProperties.FACING)){
 			return state.get(ESProperties.FACING);
 		}
 		return Direction.DOWN;

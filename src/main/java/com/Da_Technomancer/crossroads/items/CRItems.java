@@ -240,7 +240,7 @@ public final class CRItems{
 		itemColor.register(itemColoring, oreGravel, oreClump, axle, smallGear, largeGear, clutch, invClutch, toggleGear, invToggleGear, axleMount);
 
 		//Item model properties
-		ItemModelsProperties.func_239418_a_(whirligig, new ResourceLocation("angle"), (ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) -> {
+		ItemModelsProperties.registerProperty(whirligig, new ResourceLocation("angle"), (ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) -> {
 			if(entity == null || entity.getActiveItemStack() != stack){
 				return 0;
 			}

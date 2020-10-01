@@ -330,7 +330,7 @@
 	"tt.crossroads.crucible.info": "Melts down items. Uses %1$d°C per item",
 	"tt.crossroads.crucible.tier": "%1$dx speed: -%2$d°C/t when above %3$d°C",
 	"tt.crossroads.heat_battery.info": "Acts as a buffer to slow down temperature change",
-	"tt.crossroads.heat_battery.reds": "Circuits measure the temperature in Kelvin",
+	"tt.crossroads.heat_battery.reds": "Circuits measure the temperature",
 	"tt.crossroads.heat_battery.temp": "%1$s°C",
 	"tt.crossroads.heat_sink.desc": "Has a large configurable heat loss",
 	"tt.crossroads.heat_sink.rate": "Loss Rate: -%1$d, -%2$d, -%3$d, -%4$d, or -%5$d°C/t",

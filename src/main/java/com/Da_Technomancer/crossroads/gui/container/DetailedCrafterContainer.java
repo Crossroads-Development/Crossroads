@@ -279,7 +279,7 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 	}
 
 	private void playUnlockSound(){
-		world.playSound(player, player.func_233580_cy_(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 2, 0);
+		world.playSound(player, player.getPosition(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 2, 0);
 	}
 
 	private static class SlotCraftingFlexible extends CraftingResultSlot{

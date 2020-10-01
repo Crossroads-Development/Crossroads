@@ -41,7 +41,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 	public Direction getFacing(){
 		if(facing == null){
 			BlockState state = world.getBlockState(pos);
-			if(state.func_235901_b_(ESProperties.FACING)){
+			if(state.hasProperty(ESProperties.FACING)){
 				facing = state.get(ESProperties.FACING);
 				return facing;
 			}

@@ -57,7 +57,7 @@ public class SendChatToClient extends ClientPacket{
 			if(nextInd == -1){
 				nextInd = active.length();
 			}
-			components.add(ITextComponent.Serializer.func_240644_b_(active.substring(0, nextInd)));
+			components.add(ITextComponent.Serializer.getComponentFromJsonLenient(active.substring(0, nextInd)));
 			if(nextInd + 1 < active.length()){
 				active = active.substring(nextInd);
 			}else{

@@ -82,7 +82,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 	protected Direction getFacing(){
 		if(facing == null){
 			BlockState state = world.getBlockState(pos);
-			if(!state.func_235901_b_(ESProperties.FACING)){
+			if(!state.hasProperty(ESProperties.FACING)){
 				remove();
 				return Direction.DOWN;
 			}

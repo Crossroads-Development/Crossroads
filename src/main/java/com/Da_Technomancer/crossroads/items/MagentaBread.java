@@ -44,6 +44,6 @@ public class MagentaBread extends Item{
 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.mag_bread.quip").func_230530_a_(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.mag_bread.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

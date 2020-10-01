@@ -32,6 +32,6 @@ public class DetailedAutoCrafter extends AutoCrafter{
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.detailed_auto_crafter.basic"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.detailed_auto_crafter.sigil"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.detailed_auto_crafter.quip").func_240703_c_(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.detailed_auto_crafter.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

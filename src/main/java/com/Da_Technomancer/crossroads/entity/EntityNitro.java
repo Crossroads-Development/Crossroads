@@ -40,7 +40,7 @@ public class EntityNitro extends ThrowableEntity implements IRendersAsItem{
 	@Override
 	public void setFire(int seconds){
 		if(seconds > 0){
-			onImpact(new BlockRayTraceResult(new Vector3d(getPosX(), getPosY(), getPosZ()), Direction.UP, func_233580_cy_(), true));
+			onImpact(new BlockRayTraceResult(new Vector3d(getPosX(), getPosY(), getPosZ()), Direction.UP, getPosition(), true));
 		}
 	}
 

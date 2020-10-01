@@ -44,9 +44,9 @@ public class DampingPowder extends Item{
 			if(!ents.isEmpty()){
 				source.getWorld().playSound(null, source.getBlockPos(), SoundEvents.ITEM_TOTEM_USE, SoundCategory.BLOCKS, 1, 0);
 			}
-			Vector3d partPos = Vector3d.func_237489_a_(source.getBlockPos());
-			if(source.getBlockState().func_235901_b_(DispenserBlock.FACING)){
-				partPos = partPos.add(Vector3d.func_237491_b_(source.getBlockState().get(DispenserBlock.FACING).getDirectionVec()));
+			Vector3d partPos = Vector3d.copyCentered(source.getBlockPos());
+			if(source.getBlockState().hasProperty(DispenserBlock.FACING)){
+				partPos = partPos.add(Vector3d.copy(source.getBlockState().get(DispenserBlock.FACING).getDirectionVec()));
 			}
 			source.getWorld().addParticle(ParticleTypes.END_ROD, partPos.x, partPos.y, partPos.z, 0, 0, 0);
 			return stack;
@@ -88,6 +88,6 @@ public class DampingPowder extends Item{
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.damp_powder.desc"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.damp_powder.quip").func_230530_a_(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.damp_powder.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

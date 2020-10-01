@@ -58,7 +58,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 	 * @return Position
 	 */
 	protected Vector3d getParticlePos(){
-		return Vector3d.func_237489_a_(pos);
+		return Vector3d.copyCentered(pos);
 	}
 
 	protected boolean useCableHeat(){

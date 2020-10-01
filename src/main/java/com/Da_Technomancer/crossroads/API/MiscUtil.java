@@ -207,7 +207,7 @@ public final class MiscUtil{
 	 * @return The name of the dimension, for logging purposes, unlocalized
 	 */
 	public static String getDimensionName(@Nonnull World world){
-		return world.func_234923_W_().func_240901_a_().toString();//MCP: getRegistryKey<World>; get registry name
+		return world.getDimensionKey().getLocation().toString();
 	}
 
 	/**
@@ -217,11 +217,11 @@ public final class MiscUtil{
 	 * @return The registry key in the World Key registry associated with a given registry keyname
 	 */
 	public static RegistryKey<World> getWorldKey(ResourceLocation registryID, @Nullable RegistryKey<World> cache){
-		if(cache != null && cache.func_240901_a_().equals(registryID)){
+		if(cache != null && cache.getLocation().equals(registryID)){
 			return cache;
 		}
 
-		return RegistryKey.func_240903_a_(Registry.WORLD_KEY, registryID);
+		return RegistryKey.getOrCreateKey(Registry.WORLD_KEY, registryID);
 	}
 
 	/**
@@ -247,7 +247,7 @@ public final class MiscUtil{
 		if(lightning == null){
 			//Create a generic lightning entity at the entity position, but don't add it to the world
 			lightning = EntityType.LIGHTNING_BOLT.create(ent.world);
-			lightning.func_233576_c_(ent.getPositionVec());
+			lightning.moveForced(ent.getPositionVec());
 		}
 		ent.func_241841_a((ServerWorld) ent.world, lightning);//Deals 5 lightning damage
 		if(damage > 5){

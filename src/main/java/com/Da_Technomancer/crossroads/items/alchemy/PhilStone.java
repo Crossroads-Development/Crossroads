@@ -22,7 +22,7 @@ public class PhilStone extends Item{
 
 	@Override
 	public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity){
-		if(entity.func_233570_aj_()){//onGround
+		if(entity.isOnGround()){
 			AxisAlignedBB entityBox = entity.getBoundingBox();
 			clearBlock(entity.world, new BlockPos(entityBox.maxX, entityBox.minY - 0.05D, entityBox.maxZ));
 			clearBlock(entity.world, new BlockPos(entityBox.maxX, entityBox.minY - 0.05D, entityBox.minZ));

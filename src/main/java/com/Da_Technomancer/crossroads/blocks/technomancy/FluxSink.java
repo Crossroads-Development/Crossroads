@@ -52,7 +52,7 @@ public class FluxSink extends ContainerBlock{
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.flux_sink.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.flux_sink.beacon"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.flux_sink.quip").func_230530_a_(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.flux_sink.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override

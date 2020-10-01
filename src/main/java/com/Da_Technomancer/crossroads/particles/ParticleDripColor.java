@@ -19,7 +19,7 @@ public class ParticleDripColor extends SpriteTexturedParticle{
 		canCollide = false;
 		sprite = s;
 //		setParticleTextureIndex(17);
-		multipleParticleScaleBy(rand.nextFloat() * 0.6F + 0.6F);
+		multiplyParticleScaleBy(rand.nextFloat() * 0.6F + 0.6F);
 		motionX = xSpeed;//Suggestion: (Math.random() * 2D - 1D) * 0.02D
 		motionY = ySpeed;//Suggestion: (Math.random() - 1D) * 0.02D
 		motionZ = zSpeed;//Suggestion: (Math.random() * 2D - 1D) * 0.02D

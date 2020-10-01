@@ -43,7 +43,7 @@ public class PermeableGlass extends Block{
 	}
 
 	@Override
-	public VoxelShape func_230322_a_(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext selection) {
+	public VoxelShape getRayTraceShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext selection) {
 		return VoxelShapes.empty();
 	}
 

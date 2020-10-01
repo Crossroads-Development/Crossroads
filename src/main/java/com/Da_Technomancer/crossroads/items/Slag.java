@@ -26,9 +26,9 @@ public class Slag extends Item{
 					world.playEvent(2005, blockpos, 0);
 				}
 
-				func_239796_a_(true);//Success
+				setSuccessful(true);//Success
 			}else{
-				func_239796_a_(false);//Fail
+				setSuccessful(false);//Fail
 			}
 			return stack;
 		}

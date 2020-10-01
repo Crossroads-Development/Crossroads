@@ -42,7 +42,7 @@ public final class ReagentManager{
 	}
 
 	public static List<AlchemyRec> getReactions(World world){
-		return world.getRecipeManager().func_241447_a_(CRRecipes.ALCHEMY_TYPE);
+		return world.getRecipeManager().getRecipesForType(CRRecipes.ALCHEMY_TYPE);
 	}
 
 	public static void updateReagent(ReagentRec changedReag){
@@ -81,6 +81,6 @@ public final class ReagentManager{
 		//Called on client side when new recipe sets are received from the server
 		//This is necessary, because the client can have data packs change while running when connecting to different worlds or servers
 		//This removes any no-longer registered reagents (the recipe manager handles overwriting and adding new ones)
-		trimReagents(recManager.func_241447_a_(CRRecipes.REAGENT_TYPE).stream().map(ReagentRec::getID).collect(Collectors.toList()));
+		trimReagents(recManager.getRecipesForType(CRRecipes.REAGENT_TYPE).stream().map(ReagentRec::getID).collect(Collectors.toList()));
 	}
 }

@@ -47,7 +47,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	private AbstractGlassware.GlasswareTypes heldType(){
 		if(glassType == null){
 			BlockState state = getBlockState();
-			if(state.func_235901_b_(CRProperties.CONTAINER_TYPE)){
+			if(state.hasProperty(CRProperties.CONTAINER_TYPE)){
 				glassType = state.get(CRProperties.CONTAINER_TYPE);
 				return glassType;
 			}
@@ -174,7 +174,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 
 	@Override
 	protected Vector3d getParticlePos(){
-		return Vector3d.func_237491_b_(pos).add(0.5D, 0.25D, 0.5D);
+		return Vector3d.copy(pos).add(0.5D, 0.25D, 0.5D);
 	}
 
 	@Override
@@ -202,7 +202,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 				return;
 			}
 
-			if(otherHandler.insertReagents(contents, side.getOpposite(), handler, state.func_235901_b_(ESProperties.REDSTONE_BOOL) && state.get(ESProperties.REDSTONE_BOOL))){
+			if(otherHandler.insertReagents(contents, side.getOpposite(), handler, state.hasProperty(ESProperties.REDSTONE_BOOL) && state.get(ESProperties.REDSTONE_BOOL))){
 				correctReag();
 				markDirty();
 			}

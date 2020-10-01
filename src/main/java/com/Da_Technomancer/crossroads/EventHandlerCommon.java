@@ -124,7 +124,7 @@ public final class EventHandlerCommon{
 //				}
 //
 //				for(TemporalAcceleratorTileEntity.Region region : timeStoppers){
-//					if(region.inRegion(ent.func_233580_cy_())){
+//					if(region.inRegion(ent.getPosition())){
 //						entNBT.putBoolean(MAIN_KEY, true);
 //						if(ent.updateBlocked){
 //							entNBT.putBoolean(SUB_KEY, true);
@@ -177,7 +177,7 @@ public final class EventHandlerCommon{
 									}
 
 									LightningBoltEntity lightning = EntityType.LIGHTNING_BOLT.create(e.world);
-									lightning.func_233576_c_(Vector3d.func_237492_c_(strikePos));//Set strike position/set position
+									lightning.moveForced(Vector3d.copyCenteredHorizontally(strikePos));//Set strike position/set position
 									e.world.addEntity(lightning);
 								}
 							}

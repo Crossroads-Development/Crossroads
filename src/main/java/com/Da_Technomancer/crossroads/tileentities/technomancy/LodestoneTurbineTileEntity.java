@@ -46,7 +46,7 @@ public class LodestoneTurbineTileEntity extends ModuleTE{
 	}
 
 	private boolean validDimension(){
-		return !world.func_230315_m_().func_236043_f_();//MCP note: get dimension type from world, get clocks work property from dimensiontype. See clock item property for reference
+		return !world.getDimensionType().isNatural();//See clock item property for reference
 	}
 
 	@Nonnull

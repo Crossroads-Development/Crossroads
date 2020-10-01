@@ -32,11 +32,11 @@ public class DetailedCrafterScreen extends ContainerScreen<DetailedCrafterContai
 	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTicks){
 		renderBackground(matrix);
 		super.render(matrix, mouseX, mouseY, partialTicks);
-		func_230459_a_(matrix, mouseX, mouseY);
+		renderHoveredTooltip(matrix, mouseX, mouseY);
 	}
 
 	@Override
-	protected void func_230450_a_(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
 		//Background
 		RenderSystem.color4f(1, 1, 1, 1);
 		Minecraft.getInstance().getTextureManager().bindTexture(BACKGROUND);

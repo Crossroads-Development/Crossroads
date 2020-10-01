@@ -104,6 +104,6 @@ public class BoboRod extends Item{
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.bobo_rod.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.bobo_rod.use"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.bobo_rod.quip").func_230530_a_(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.bobo_rod.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

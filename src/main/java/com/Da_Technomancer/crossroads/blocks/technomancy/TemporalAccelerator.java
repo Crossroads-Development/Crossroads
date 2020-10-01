@@ -88,7 +88,7 @@ public class TemporalAccelerator extends ContainerBlock{
 					Mode newMode = state.get(CRProperties.ACCELERATOR_TARGET);
 					MiscUtil.chatMessage(playerIn, new TranslationTextComponent("tt.crossroads.time_accel.new_mode", MiscUtil.localize(newMode.getLocalizationName())));
 					if(!CRConfig.teTimeAccel.get() && newMode.accelerateTileEntities){
-						MiscUtil.chatMessage(playerIn, new TranslationTextComponent("tt.crossroads.time_accel.config").func_230530_a_(Style.EMPTY.applyFormatting(TextFormatting.RED)));
+						MiscUtil.chatMessage(playerIn, new TranslationTextComponent("tt.crossroads.time_accel.config").setStyle(Style.EMPTY.applyFormatting(TextFormatting.RED)));
 					}
 				}
 			}else{

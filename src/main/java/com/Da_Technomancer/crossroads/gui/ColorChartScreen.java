@@ -89,7 +89,7 @@ public class ColorChartScreen extends ContainerScreen<ColorChartContainer>{
 	}
 
 	@Override
-	protected void func_230450_a_(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
 		RenderSystem.color4f(1, 1, 1, 1);
 		Minecraft.getInstance().getTextureManager().bindTexture(BACKGROUND);
 		int i = guiLeft;
@@ -136,8 +136,8 @@ public class ColorChartScreen extends ContainerScreen<ColorChartContainer>{
 	}
 
 	@Override
-	protected void func_230451_b_(MatrixStack matrix, int p_230451_2_, int p_230451_3_){
-		font.func_243248_b(matrix, title, field_238742_p_, field_238743_q_, 0x404040);
+	protected void drawGuiContainerForegroundLayer(MatrixStack matrix, int p_230451_2_, int p_230451_3_){
+		font.func_243248_b(matrix, title, titleX, titleY, 0x404040);
 		//Render no inventory label
 	}
 }

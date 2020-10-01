@@ -37,26 +37,26 @@ public class CRWorldGen{
 		reg.register(GEM_FEATURE.setRegistryName("single_gen"));
 //		reg.register(RUBY_FEATURE.setRegistryName("ruby_gen"));
 
-		Registry.register(WorldGenRegistries.field_243653_e, new ResourceLocation(Crossroads.MODID, "ore_ruby_spot"), RUBY_ORE_SPOT);
-//		Registry.register(WorldGenRegistries.field_243653_e, new ResourceLocation(Crossroads.MODID, "ore_quartz_nether_ruby"), RUBY_ORE);
-//		Registry.register(WorldGenRegistries.field_243653_e, new ResourceLocation(Crossroads.MODID, "ore_quartz_deltas_ruby"), RUBY_ORE_BASALT);
-		Registry.register(WorldGenRegistries.field_243653_e, new ResourceLocation(Crossroads.MODID, "ore_copper"), COPPER_ORE);
-		Registry.register(WorldGenRegistries.field_243653_e, new ResourceLocation(Crossroads.MODID, "ore_tin"), TIN_ORE);
-		Registry.register(WorldGenRegistries.field_243653_e, new ResourceLocation(Crossroads.MODID, "ore_void"), VOID_ORE);
+		Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(Crossroads.MODID, "ore_ruby_spot"), RUBY_ORE_SPOT);
+//		Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(Crossroads.MODID, "ore_quartz_nether_ruby"), RUBY_ORE);
+//		Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(Crossroads.MODID, "ore_quartz_deltas_ruby"), RUBY_ORE_BASALT);
+		Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(Crossroads.MODID, "ore_copper"), COPPER_ORE);
+		Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(Crossroads.MODID, "ore_tin"), TIN_ORE);
+		Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(Crossroads.MODID, "ore_void"), VOID_ORE);
 	}
 
 	public static void addWorldgen(BiomeLoadingEvent event){
 		if(isOverworld(event.getCategory())){
 			if(CRConfig.genCopperOre.get()){
-				event.getGeneration().func_242513_a(GenerationStage.Decoration.UNDERGROUND_ORES, COPPER_ORE);
+				event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, COPPER_ORE);
 			}
 			if(CRConfig.genTinOre.get()){
-				event.getGeneration().func_242513_a(GenerationStage.Decoration.UNDERGROUND_ORES, TIN_ORE);
+				event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, TIN_ORE);
 			}
 		}else if(event.getCategory() == Biome.Category.THEEND){
-			event.getGeneration().func_242513_a(GenerationStage.Decoration.UNDERGROUND_ORES, VOID_ORE);
+			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, VOID_ORE);
 		}else if(event.getCategory() == Biome.Category.NETHER){
-			event.getGeneration().func_242513_a(GenerationStage.Decoration.UNDERGROUND_DECORATION, RUBY_ORE_SPOT);
+			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, RUBY_ORE_SPOT);
 		}
 	}
 

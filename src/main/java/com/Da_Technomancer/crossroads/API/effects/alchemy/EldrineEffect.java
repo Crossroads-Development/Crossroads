@@ -32,7 +32,7 @@ public class EldrineEffect extends AetherEffect{
 
 	@Override
 	protected RegistryKey<Biome> biome(){
-		return Biomes.field_235254_j_;//Nether wastes- the 'normal' nether biome pre-1.16
+		return Biomes.NETHER_WASTES;
 	}
 
 	@Override

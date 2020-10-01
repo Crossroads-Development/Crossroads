@@ -64,7 +64,7 @@ public class AetherEffect implements IAlchEffect{
 	@Nullable
 	public static Biome lookupBiome(RegistryKey<Biome> biomeKey, IBiomeReader world){
 		//Gets the biome associated with a key
-		return world.func_241828_r().func_243612_b(Registry.BIOME_KEY).func_230516_a_(biomeKey);
+		return world.func_241828_r().getRegistry(Registry.BIOME_KEY).getValueForKey(biomeKey);
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class AetherEffect implements IAlchEffect{
 		Biome biome = lookupBiome(biomeKey, world);
 		if(biome != null && world.getBiome(pos) != biome){
 			setBiomeAtPos(world, pos, biome);
-			CRPackets.sendPacketToDimension(world, new SendBiomeUpdateToClient(pos, biomeKey.func_240901_a_()));
+			CRPackets.sendPacketToDimension(world, new SendBiomeUpdateToClient(pos, biomeKey.getLocation()));
 		}
 
 		if(oldState.isAir(world, pos) || oldState.getBlockHardness(world, pos) < 0){
@@ -142,13 +142,12 @@ public class AetherEffect implements IAlchEffect{
 				o = biomeField.get(bc);
 				Biome[] biomeArray = (Biome[]) o;
 				long seed = 0L;//TODO don't know how to get seed on the client
-				int worldHeight = 256;//TODO find method when MCP updates world.getMaxHeight();
-
 				if(CRConfig.verticalBiomes.get()){
-					for(int y = 0; y < worldHeight; y++){
+					int y = 0;
+					do{
 						//We set the biome in a column from bedrock to world height
 						biomeArray[getBiomeIndex(pos.getX(), y, pos.getZ(), seed)] = biome;
-					}
+					}while(!World.isYOutOfBounds(++y));
 				}else{
 					biomeArray[getBiomeIndex(pos.getX(), pos.getY(), pos.getZ(), seed)] = biome;
 				}

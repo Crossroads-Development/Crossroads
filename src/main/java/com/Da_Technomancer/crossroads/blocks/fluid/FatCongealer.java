@@ -92,6 +92,6 @@ public class FatCongealer extends ContainerBlock{
 		tooltip.add(new TranslationTextComponent("tt.crossroads.fat_congealer.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.fat_congealer.hun", FatCongealerTileEntity.HUN_PER_SPD));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.fat_congealer.sat", FatCongealerTileEntity.SAT_PER_SPD));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.fat_congealer.quip").func_230530_a_(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.fat_congealer.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

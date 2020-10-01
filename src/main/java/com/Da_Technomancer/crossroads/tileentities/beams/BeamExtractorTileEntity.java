@@ -56,7 +56,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 	private Direction getFacing(){
 		if(facing == null){
 			BlockState s = getBlockState();
-			if(s.func_235901_b_(ESProperties.FACING)){
+			if(s.hasProperty(ESProperties.FACING)){
 				facing = s.get(ESProperties.FACING);
 			}else{
 				return Direction.DOWN;

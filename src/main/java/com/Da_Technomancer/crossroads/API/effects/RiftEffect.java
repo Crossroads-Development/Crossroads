@@ -10,7 +10,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -56,7 +55,7 @@ public class RiftEffect extends BeamEffect{
 						if(list != null && list.size() != 0){
 							//Vanilla style spawning would spawn a group of mobs at a time (with group size defined by the SpawnListEntry). We only want to spawn 1 mob at a time
 							MobSpawnInfo.Spawners entry = list.get(RAND.nextInt(list.size()));
-							Entity ent = entry.field_242588_c.create(worldIn);//MCP note: entity type
+							Entity ent = entry.type.create(worldIn);
 							ent.setPosition(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
 							Event.Result r = ent instanceof MobEntity ? ForgeEventFactory.canEntitySpawn((MobEntity) ent, worldServ, pos.getX(), pos.getY(), pos.getZ(), null, SpawnReason.SPAWNER) : Event.Result.DEFAULT;
 							if(r == Event.Result.ALLOW || r == Event.Result.DEFAULT){

@@ -75,11 +75,11 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 		data.putLong("timestamp", player.world.getGameTime());
 		String playerName = player.getGameProfile().getName();
 		data.putString("username", playerName == null ? "NULL" : playerName);
-		data.putString("dimension", player.world.func_234923_W_().func_240901_a_().toString());//World registry key is used
+		data.putString("dimension", player.world.getDimensionKey().getLocation().toString());//World registry key is used
 		data.putDouble("pos_x", player.getPosX());
 		data.putDouble("pos_y", player.getPosY());
 		data.putDouble("pos_z", player.getPosZ());
-		data.putLong("position", player.func_233580_cy_().toLong());
+		data.putLong("position", player.getPosition().toLong());
 		data.putFloat("yaw", player.getYaw(1F));
 		data.putFloat("yaw_head", player.getRotationYawHead());
 		data.putFloat("pitch", player.getPitch(1F));
@@ -142,7 +142,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 			ServerPlayerEntity playerServ = (ServerPlayerEntity) player;
 			ResourceLocation targetDimension = new ResourceLocation(data.getString("dimension"));
 			ServerWorld targetWorld;//World we are recalling to. Almost always the same as current dimension. Null if something went wrong
-			if(targetDimension.equals(player.world.func_234923_W_().func_240901_a_())){
+			if(targetDimension.equals(player.world.getDimensionKey().getLocation())){
 				targetWorld = (ServerWorld) player.world;
 			}else{
 				try{
@@ -176,7 +176,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 		}
 
 		//Also plays sound
-		player.world.playSound(null, player.func_233580_cy_(), SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.PLAYERS, 1F, 1F);
+		player.world.playSound(null, player.getPosition(), SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.PLAYERS, 1F, 1F);
 	}
 
 	@Override
@@ -195,7 +195,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 		if(!playerIn.isSneaking()){
 			//World sound for recalling
 			//Played at source and destination
-			worldIn.playSound(null, playerIn.func_233580_cy_(), SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.PLAYERS, 1F, 1F);
+			worldIn.playSound(null, playerIn.getPosition(), SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.PLAYERS, 1F, 1F);
 			recall(nbt, playerIn, held);//Will do nothing if over time limit, wrong player, or no data stored
 		}
 

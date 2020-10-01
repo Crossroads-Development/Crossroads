@@ -26,7 +26,7 @@ public class HamsterWheelRenderer extends TileEntityRenderer<HamsterWheelTileEnt
 
 	@Override
 	public void render(HamsterWheelTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
-		if(!te.getBlockState().func_235901_b_(CRProperties.HORIZ_FACING)){
+		if(!te.getBlockState().hasProperty(CRProperties.HORIZ_FACING)){
 			return;
 		}
 		Direction facing = te.getBlockState().get(CRProperties.HORIZ_FACING);
