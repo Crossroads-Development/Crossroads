@@ -71,6 +71,6 @@ public class RedstoneHeatCableTileEntity extends HeatCableTileEntity{
 	}
 
 	public float getTemp(){
-		return (float) HeatUtil.toKelvin(temp);
+		return (float) temp;
 	}
 }

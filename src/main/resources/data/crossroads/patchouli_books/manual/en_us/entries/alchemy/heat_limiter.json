@@ -27,7 +27,7 @@
 		},
 		{
 			"type": "text",
-			"text": "There are two variants of the <item>temperature regulator/$: The <item>Temperature Regulator/$ has the target <thing>$(l:crossroads:intro/heat)temperature/$ in Kelvin (Kelvin = 273 + Celcius) set via a UI, while the <item>Redstone Temperature Regulator/$ has the target <thing>$(l:crossroads:intro/heat)temperature/$ in Kelvin (Kelvin = 273 + Celcius) set to the current <thing>$(l:essentials/circuit)circuit/$ input.$(br2)"
+			"text": "There are two variants of the <item>temperature regulator/$: The <item>Temperature Regulator/$ has the target <thing>$(l:crossroads:intro/heat)temperature/$ in Celcius set via a UI, while the <item>Redstone Temperature Regulator/$ has the target <thing>$(l:crossroads:intro/heat)temperature/$ in Celcius set to the current <thing>$(l:essentials/circuit)circuit/$ input.$(br2)"
 		},
 		{
 			"type": "text",

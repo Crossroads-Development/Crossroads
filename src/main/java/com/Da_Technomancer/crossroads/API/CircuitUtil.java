@@ -26,7 +26,7 @@ public class CircuitUtil extends RedstoneUtil{
 		if(!handler.builtConnections){
 			handler.buildConnections();
 		}
-		return sanitize(Math.max(handler.getCircRedstone(), handler.getWorldRedstone()));
+		return sanitize(RedstoneUtil.chooseInput(handler.getCircRedstone(), handler.getWorldRedstone()));
 	}
 
 	public static LazyOptional<IRedstoneHandler> makeBaseCircuitOptional(TileEntity te, CircHandler handler, float startingRedstone){
@@ -205,7 +205,7 @@ public class CircuitUtil extends RedstoneUtil{
 				WeakReference<LazyOptional<IRedstoneHandler>> src = sources.get(i).getLeft();
 				LazyOptional<IRedstoneHandler> srcOpt;
 				if((srcOpt = src.get()) != null && srcOpt.isPresent()){
-					circRedstone = Math.max(circRedstone, RedstoneUtil.sanitize(srcOpt.orElseThrow(NullPointerException::new).getOutput()));
+					circRedstone = RedstoneUtil.chooseInput(circRedstone, RedstoneUtil.sanitize(srcOpt.orElseThrow(NullPointerException::new).getOutput()));
 				}else{
 					//Remove invalid entries to speed up future checks
 					sources.remove(i);

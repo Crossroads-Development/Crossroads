@@ -72,7 +72,7 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 			init();
 		}
 
-		double goalTemp = HeatUtil.toCelcius(getSetting());
+		double goalTemp = getSetting();
 		boolean blueMode = world.getBlockState(pos).get(CRProperties.ACTIVE);
 
 		if(blueMode){

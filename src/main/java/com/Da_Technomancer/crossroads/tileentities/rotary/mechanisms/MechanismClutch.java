@@ -60,7 +60,7 @@ public class MechanismClutch extends MechanismAxle{
 
 	@Override
 	public double getCircuitSignal(IMechanismProperty mat, Direction.Axis axis, double[] motData, MechanismTileEntity te){
-		return Math.abs(motData[0]);
+		return motData[0];
 	}
 
 	@Override

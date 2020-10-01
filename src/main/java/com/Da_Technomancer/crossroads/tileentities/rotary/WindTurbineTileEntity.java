@@ -108,7 +108,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 	}
 
 	public float getRedstoneOutput(){
-		return (float) (2 * POWER_PER_LEVEL + level * POWER_PER_LEVEL);
+		return (float) (level * POWER_PER_LEVEL);
 	}
 
 	@Override

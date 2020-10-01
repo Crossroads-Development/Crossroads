@@ -61,7 +61,7 @@ public class BeamSplitterTileEntity extends BeamRenderTE{
 
 	@Override
 	protected void doEmit(BeamUnit out){
-		int toFill = Math.round(out.getPower() * Math.min(1F, CircuitUtil.combineRedsSources(redsHandler) / 15F));
+		int toFill = Math.round(out.getPower() * Math.max(0, Math.min(1F, CircuitUtil.combineRedsSources(redsHandler) / 15F)));
 		Direction facing = getDir();
 		BeamUnit toDraw;
 		BeamUnit remain;

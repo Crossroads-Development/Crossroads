@@ -1,13 +1,12 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatReservoirTileEntity;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
+import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -93,12 +92,7 @@ public class HeatReservoir extends ContainerBlock implements IReadable{
 
 	@Override
 	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos){
-		TileEntity te = worldIn.getTileEntity(pos);
-		LazyOptional<IHeatHandler> heatOpt;
-		if(te != null && (heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, null)).isPresent()){
-			return (int) Math.max(15, Math.round(heatOpt.orElseThrow(NullPointerException::new).getTemp()));
-		}
-		return 0;
+		return RedstoneUtil.clampToVanilla(read(worldIn, pos, blockState));
 	}
 
 	@Override
@@ -106,7 +100,7 @@ public class HeatReservoir extends ContainerBlock implements IReadable{
 		TileEntity te = world.getTileEntity(pos);
 		LazyOptional<IHeatHandler> heatOpt;
 		if(te != null && (heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, null)).isPresent()){
-			return Math.round(HeatUtil.toKelvin(heatOpt.orElseThrow(NullPointerException::new).getTemp()));
+			return (float) heatOpt.orElseThrow(NullPointerException::new).getTemp();
 		}
 		return 0;
 	}

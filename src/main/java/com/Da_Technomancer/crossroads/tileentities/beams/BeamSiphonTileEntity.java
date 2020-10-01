@@ -61,7 +61,7 @@ public class BeamSiphonTileEntity extends BeamRenderTE{
 
 	@Override
 	protected void doEmit(BeamUnit out){
-		int toFill = Math.round(CircuitUtil.combineRedsSources(redsHandler));
+		int toFill = Math.max(0, Math.round(CircuitUtil.combineRedsSources(redsHandler)));
 		Direction facing = getDir();
 		BeamUnit toDraw;
 		BeamUnit remain;
@@ -139,7 +139,7 @@ public class BeamSiphonTileEntity extends BeamRenderTE{
 	}
 
 	public CircuitUtil.CircHandler redsHandler = new CircuitUtil.CircHandler();
-	private LazyOptional<IRedstoneHandler> redsOpt = CircuitUtil.makeBaseCircuitOptional(this, redsHandler, 0);
+	private final LazyOptional<IRedstoneHandler> redsOpt = CircuitUtil.makeBaseCircuitOptional(this, redsHandler, 0);
 
 	@Override
 	@SuppressWarnings("unchecked")

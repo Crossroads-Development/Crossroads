@@ -1,11 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.API.CircuitUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatLimiterRedstoneTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
@@ -57,11 +57,8 @@ public class HeatLimiterRedstone extends ContainerBlock{
 		TileEntity te = worldIn.getTileEntity(pos);
 
 		if(te instanceof HeatLimiterRedstoneTileEntity){
-			//Simple optimization- if the block update is just signal strength changing, we don't need to rebuild connections
-			if(blockIn != Blocks.REDSTONE_WIRE && !(blockIn instanceof RedstoneDiodeBlock)){
-				((HeatLimiterRedstoneTileEntity) te).buildConnections();
-			}
-			((HeatLimiterRedstoneTileEntity) te).setRedstone(Math.round(RedstoneUtil.getRedstoneAtPos(worldIn, pos)));
+			HeatLimiterRedstoneTileEntity bte = (HeatLimiterRedstoneTileEntity) te;
+			CircuitUtil.updateFromWorld(bte.redsHandler, blockIn);
 		}
 	}
 
