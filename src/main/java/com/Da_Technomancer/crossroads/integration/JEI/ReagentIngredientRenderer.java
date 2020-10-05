@@ -28,6 +28,10 @@ public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 
 	@Override
 	public void render(MatrixStack matrix, int xPosition, int yPosition, ReagIngr ingredient){
+		if(ingredient.getReag() == null){
+			return;
+		}
+
 		RenderSystem.enableBlend();
 		RenderSystem.enableAlphaTest();
 		matrix.push();
