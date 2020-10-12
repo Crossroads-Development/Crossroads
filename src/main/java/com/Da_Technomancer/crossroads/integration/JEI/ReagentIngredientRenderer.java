@@ -28,9 +28,11 @@ public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 
 	@Override
 	public void render(MatrixStack matrix, int xPosition, int yPosition, ReagIngr ingredient){
-		if(ingredient.getReag() == null){
+		if(ingredient == null || ingredient.getReag() == null){
 			return;
 		}
+
+		int[] col = CRRenderUtil.convertColor(ingredient.getReag().getColor(EnumMatterPhase.SOLID));
 
 		RenderSystem.enableBlend();
 		RenderSystem.enableAlphaTest();
@@ -46,8 +48,6 @@ public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 		buf.pos(matrix.getLast().getMatrix(), 16, 0, 100).color(255, 255, 255, 255).tex(1, 0).endVertex();
 		buf.pos(matrix.getLast().getMatrix(), 0, 0, 100).color(255, 255, 255, 255).tex(0, 0).endVertex();
 		Tessellator.getInstance().draw();
-
-		int[] col = CRRenderUtil.convertColor(ingredient.getReag().getColor(EnumMatterPhase.SOLID));
 
 		Minecraft.getInstance().textureManager.bindTexture(INNER_TEXTURE);
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
