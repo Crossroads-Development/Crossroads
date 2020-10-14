@@ -28,6 +28,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -49,12 +50,21 @@ public class WindTurbine extends ContainerBlock implements IReadable{
 
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
+		ItemStack heldItem = playerIn.getHeldItem(hand);
+		if(ESConfig.isWrench(heldItem)){
 			if(!worldIn.isRemote){
 				worldIn.setBlockState(pos, state.with(CRProperties.HORIZ_FACING, state.get(CRProperties.HORIZ_FACING).rotateY()));
 				RotaryUtil.increaseMasterKey(true);
 			}
 			return ActionResultType.SUCCESS;
+		}else if(Tags.Items.DYES.contains(heldItem.getItem())){
+			TileEntity te = worldIn.getTileEntity(pos);
+			if(te instanceof WindTurbineTileEntity){
+				if(!worldIn.isRemote){
+					((WindTurbineTileEntity) te).dyeBlade(heldItem);
+				}
+				return ActionResultType.SUCCESS;
+			}
 		}
 		return ActionResultType.PASS;
 	}

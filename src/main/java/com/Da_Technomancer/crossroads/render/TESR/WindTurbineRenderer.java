@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.item.DyeColor;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
@@ -36,17 +37,19 @@ public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntit
 			return;
 		}
 
+		int[] bladeCols = te.bladeColors;
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.WINDMILL_TEXTURE);
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getCutout());
 		Direction facing = state.get(CRProperties.HORIZ_FACING);
 		int light = CRRenderUtil.getLightAtPos(te.getWorld(), te.getPos().offset(facing));//Get light from the block in front
+		final float woolTextVOffset = 8;
 
 		matrix.push();
 		matrix.translate(.5F, .5F, .5F);
 		matrix.rotate(Vector3f.YP.rotationDegrees(-facing.getHorizontalAngle()));
 		matrix.rotate(Vector3f.ZP.rotationDegrees((float) RotaryUtil.getCCWSign(facing) * axle.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
 
-		//Center piece
+		//Center piece (wood)
 		CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, -0.25F, 0.6F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(4), 0, 0, 1, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, -0.25F, 0.6F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(8), 0, 0, 1, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 0.25F, 0.6F, sprite.getInterpolatedU(4), sprite.getInterpolatedV(8), 0, 0, 1, light);
@@ -54,11 +57,26 @@ public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntit
 
 		//Blades
 		for(int i = 0; i < 4; i++){
-			//Center cap
+			float[] rawCol = DyeColor.values()[bladeCols[i]].getColorComponentValues();
+			int[] col = {(int) (rawCol[0] * 255F), (int) (rawCol[1] * 255F), (int) (rawCol[2] * 255F), 255};
+
+			//Center piece (wool)
+			CRRenderUtil.addVertexBlock(builder, matrix, 0, 0, 0.6F, sprite.getInterpolatedU(2), sprite.getInterpolatedV(6 + woolTextVOffset), 0, 0, 1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 0, 0.6F, sprite.getInterpolatedU(2), sprite.getInterpolatedV(8 + woolTextVOffset), 0, 0, 1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 0.25F, 0.6F, sprite.getInterpolatedU(4), sprite.getInterpolatedV(8 + woolTextVOffset), 0, 0, 1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, 0, 0.25F, 0.6F, sprite.getInterpolatedU(4), sprite.getInterpolatedV(6 + woolTextVOffset), 0, 0, 1, light, col);
+
+			//Center cap (wood)
 			CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, 0.25F, 0.5F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(4), 0, 1, 0, light);
 			CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, 0.25F, 0.6F, sprite.getInterpolatedU(0.8D), sprite.getInterpolatedV(4), 0, 1, 0, light);
 			CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 0.25F, 0.6F, sprite.getInterpolatedU(0.8D), sprite.getInterpolatedV(8), 0, 1, 0, light);
 			CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 0.25F, 0.5F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(8), 0, 1, 0, light);
+
+			//Center cap (wool)
+			CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, 0.25F, 0.5F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(4 + woolTextVOffset), 0, 1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, 0.25F, 0.6F, sprite.getInterpolatedU(0.8D), sprite.getInterpolatedV(4 + woolTextVOffset), 0, 1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 0.25F, 0.6F, sprite.getInterpolatedU(0.8D), sprite.getInterpolatedV(8 + woolTextVOffset), 0, 1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 0.25F, 0.5F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(8 + woolTextVOffset), 0, 1, 0, light, col);
 
 			//Wood spoke
 			CRRenderUtil.addVertexBlock(builder, matrix, -0.0625F, 0.25F, 0.6F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(1.5F), 0, 0, 1, light);
@@ -68,29 +86,41 @@ public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntit
 
 			//Wool panel
 			Vector3d normal = CRRenderUtil.findNormal(new Vector3d(-0.0625D, 0.25D, 0.6D), new Vector3d(-.25D, 0.25D, 0.5D), new Vector3d(-0.0625D, 2, 0.6D));
-			CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, 0.25F, 0.5F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(0), (float) normal.x, (float) normal.y, (float) normal.z, light);
-			CRRenderUtil.addVertexBlock(builder, matrix, -0.0625F, 0.25F, 0.6F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(1.5D), (float) normal.x, (float) normal.y, (float) normal.z, light);
-			CRRenderUtil.addVertexBlock(builder, matrix, -0.0625F, 2, 0.6F, sprite.getInterpolatedU(12), sprite.getInterpolatedV(1.5D), (float) normal.x, (float) normal.y, (float) normal.z, light);
-			CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, 2, 0.5F, sprite.getInterpolatedU(12), sprite.getInterpolatedV(0), (float) normal.x, (float) normal.y, (float) normal.z, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, 0.25F, 0.5F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(0 + woolTextVOffset), (float) normal.x, (float) normal.y, (float) normal.z, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, -0.0625F, 0.25F, 0.6F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(1.5D + woolTextVOffset), (float) normal.x, (float) normal.y, (float) normal.z, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, -0.0625F, 2, 0.6F, sprite.getInterpolatedU(12), sprite.getInterpolatedV(1.5D + woolTextVOffset), (float) normal.x, (float) normal.y, (float) normal.z, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, 2, 0.5F, sprite.getInterpolatedU(12), sprite.getInterpolatedV(0 + woolTextVOffset), (float) normal.x, (float) normal.y, (float) normal.z, light, col);
 
 			//Wool panel
 			normal = CRRenderUtil.findNormal(new Vector3d(.25D, 0.25D, 0.5D), new Vector3d(0.0625D, 0.25D, 0.6D), new Vector3d(.25D, 2, 0.5D));
-			CRRenderUtil.addVertexBlock(builder, matrix, 0.0625F, 0.25F, 0.6F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(0), (float) normal.x, (float) normal.y, (float) normal.z, light);
-			CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 0.25F, 0.5F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(1.5D), (float) normal.x, (float) normal.y, (float) normal.z, light);
-			CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 2, 0.5F, sprite.getInterpolatedU(12), sprite.getInterpolatedV(1.5D), (float) normal.x, (float) normal.y, (float) normal.z, light);
-			CRRenderUtil.addVertexBlock(builder, matrix, 0.0625F, 2, 0.6F, sprite.getInterpolatedU(12), sprite.getInterpolatedV(0), (float) normal.x, (float) normal.y, (float) normal.z, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, 0.0625F, 0.25F, 0.6F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(0 + woolTextVOffset), (float) normal.x, (float) normal.y, (float) normal.z, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 0.25F, 0.5F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(1.5D + woolTextVOffset), (float) normal.x, (float) normal.y, (float) normal.z, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 2, 0.5F, sprite.getInterpolatedU(12), sprite.getInterpolatedV(1.5D + woolTextVOffset), (float) normal.x, (float) normal.y, (float) normal.z, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, 0.0625F, 2, 0.6F, sprite.getInterpolatedU(12), sprite.getInterpolatedV(0 + woolTextVOffset), (float) normal.x, (float) normal.y, (float) normal.z, light, col);
 
-			//Back
+			//Back (wood)
 			CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, 0.25F, 0.5F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(0), 0, 0, 1, light);
 			CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, 2, 0.5F, sprite.getInterpolatedU(12), sprite.getInterpolatedV(0), 0, 0, 1, light);
 			CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 2, 0.5F, sprite.getInterpolatedU(12), sprite.getInterpolatedV(4), 0, 0, 1, light);
 			CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 0.25F, 0.5F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(4), 0, 0, 1, light);
 
-			//End cap
+			//Back (wool)
+			CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, 0.25F, 0.5F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(0 + woolTextVOffset), 0, 0, 1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, 2, 0.5F, sprite.getInterpolatedU(12), sprite.getInterpolatedV(0 + woolTextVOffset), 0, 0, 1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 2, 0.5F, sprite.getInterpolatedU(12), sprite.getInterpolatedV(4 + woolTextVOffset), 0, 0, 1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 0.25F, 0.5F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(4 + woolTextVOffset), 0, 0, 1, light, col);
+
+			//End cap (wood)
 			CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, 2, 0.5F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(8), 0, 1, 0, light);
 			CRRenderUtil.addVertexBlock(builder, matrix, -0.0625F, 2, 0.6F, sprite.getInterpolatedU(0.8D), sprite.getInterpolatedV(6.5D), 0, 1, 0, light);
 			CRRenderUtil.addVertexBlock(builder, matrix, 0.0625F, 2, 0.6F, sprite.getInterpolatedU(0.8D), sprite.getInterpolatedV(5.5D), 0, 1, 0, light);
 			CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 2, 0.5F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(4), 0, 1, 0, light);
+
+			//End cap (wool)
+			CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, 2, 0.5F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(8 + woolTextVOffset), 0, 1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, -0.0625F, 2, 0.6F, sprite.getInterpolatedU(0.8D), sprite.getInterpolatedV(6.5D + woolTextVOffset), 0, 1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, 0.0625F, 2, 0.6F, sprite.getInterpolatedU(0.8D), sprite.getInterpolatedV(5.5D + woolTextVOffset), 0, 1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 2, 0.5F, sprite.getInterpolatedU(0), sprite.getInterpolatedV(4 + woolTextVOffset), 0, 1, 0, light, col);
 
 			matrix.rotate(Vector3f.ZP.rotationDegrees(90));
 		}

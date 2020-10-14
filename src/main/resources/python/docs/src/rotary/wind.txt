@@ -3,7 +3,7 @@ crossroads:wind_turbine
 The <item>Wind Turbine/$ is a renewable way to generate <thing><link:crossroads:intro/rotary>rotary power/$ at a low <thing><link:crossroads:intro/rotary>speed/$.
 The <item>wind turbine/$ requires a 5x5 empty space in front of it, and the ability for its blades to see the sky. As long as these conditions are met, it will produce a random amount of power based on the wind- either 10J/t or 20J/t. The only issue is that <em>the wind doesn't always blow the same direction/$. The direction the <item>wind turbine/$ tries to turn will randomly swap- which may mean it's fighting against energy stored in a rotary system due to momentum.
 The <item>wind turbine/$ will also stop producing power at speeds above 2rad/s- the wind is never that fast.
-The axle connection is on the back.
+The axle connection is on the back. The wool blades can be dyed individually by using dye on the <item>Wind Turbine/$ block. 
 
 <thing><link:essentials/circuits>Circuit Readers/$ will read the current power output; positive if the <item>wind turbine/$ is producing power in the positive direction (counter-clockwise), - if it is producing power in the negative direction (clockwise).
 That means if a <thing><link:essentials/circuits>Circuit Readers/$ reads below 0, the <item>wind turbine/$ is producing power in the negative direction. Combining this with things like <item><link:crossroads:rotary/gear_base>toggle gears & clutches/$ makes it possible to ensure your turbine is <em>never/$ fighting momentum. <em>This is probably a good idea!/$ Especially as otherwise, if you're using two <item>wind turbines/$, they might fight each other.

@@ -2,12 +2,17 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.essentials.packets.SendLongToClient;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.DyeColor;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.DamageSource;
@@ -35,6 +40,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 	public static final double MAX_SPEED = 2D;
 	public static final double INERTIA = 200;
 	public static final double POWER_PER_LEVEL = 10D;
+	private static final AxisAlignedBB RENDER_BOX = new AxisAlignedBB(-1, -1, -1, 2, 2, 2);
 
 	//Undocumented 'easter egg'. This person takes way more damage from windmills
 	//Don't ask.
@@ -43,8 +49,9 @@ public class WindTurbineTileEntity extends ModuleTE{
 	private boolean newlyPlaced = true;
 	private int level = 1;
 	private boolean running = false;
-
 	private AxisAlignedBB targetBB = null;
+	public int[] bladeColors = new int[4];
+	private int lastColoredBlade = 3;//Index of the last blade dyed
 
 	public WindTurbineTileEntity(){
 		super(type);
@@ -80,6 +87,26 @@ public class WindTurbineTileEntity extends ModuleTE{
 		}
 
 		return targetBB;
+	}
+
+	public void dyeBlade(ItemStack dye){
+		DyeColor newColor = DyeColor.getColor(dye);
+		if(newColor != null){
+			lastColoredBlade++;
+			lastColoredBlade %= bladeColors.length;
+			if(newColor.getId() != bladeColors[lastColoredBlade]){
+				bladeColors[lastColoredBlade] = newColor.getId();
+
+				//Send the blade colors to clients
+				long message = 0;
+				for(int i = 0; i < bladeColors.length; i++){
+					message |= bladeColors[i] << i * 4;
+				}
+				CRPackets.sendPacketAround(world, pos, new SendLongToClient(5, message, pos));
+
+				markDirty();
+			}
+		}
 	}
 
 	@Override
@@ -172,6 +199,9 @@ public class WindTurbineTileEntity extends ModuleTE{
 		super.read(state, nbt);
 		level = nbt.getInt("level");
 		running = nbt.getBoolean("running");
+		for(int i = 0; i < 4; i++){
+			bladeColors[i] = nbt.getByte("blade_col_" + i);
+		}
 	}
 
 	@Override
@@ -179,10 +209,30 @@ public class WindTurbineTileEntity extends ModuleTE{
 		super.write(nbt);
 		nbt.putInt("level", level);
 		nbt.putBoolean("running", running);
+		for(int i = 0; i < 4; i++){
+			nbt.putByte("blade_col_" + i, (byte) bladeColors[i]);
+		}
 		return nbt;
 	}
 
-	private static final AxisAlignedBB RENDER_BOX = new AxisAlignedBB(-1, -1, -1, 2, 2, 2);
+	@Override
+	public CompoundNBT getUpdateTag(){
+		CompoundNBT nbt = super.getUpdateTag();
+		for(int i = 0; i < 4; i++){
+			nbt.putByte("blade_col_" + i, (byte) bladeColors[i]);
+		}
+		return nbt;
+	}
+
+	@Override
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
+		super.receiveLong(identifier, message, sendingPlayer);
+		if(identifier == 5){
+			for(int i = 0; i < bladeColors.length; i++){
+				bladeColors[i] = (int) ((message >> (i * 4)) & 0xF);
+			}
+		}
+	}
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){

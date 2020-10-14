@@ -18,7 +18,7 @@
 		},
 		{
 			"type": "text",
-			"text": "the wind is never that fast.$(br2)The axle connection is on the back.$(br2)"
+			"text": "the wind is never that fast.$(br2)The axle connection is on the back. The wool blades can be dyed individually by using dye on the <item>Wind Turbine/$ block. $(br2)"
 		},
 		{
 			"type": "text",
