@@ -38,7 +38,7 @@ public class DensusPlate extends ContainerBlock{
 	}
 
 	public DensusPlate(boolean anti){
-		super(Properties.create(Material.ROCK).hardnessAndResistance(3));
+		super(CRBlocks.ROCK_PROPERTY);
 		String name = anti ? "anti_densus_plate" : "densus_plate";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

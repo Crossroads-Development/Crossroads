@@ -40,7 +40,7 @@ public class Dynamo extends ContainerBlock{
 	}
 
 	public Dynamo(){
-		super(Properties.create(Material.IRON).hardnessAndResistance(2).sound(SoundType.METAL));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "dynamo";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

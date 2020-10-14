@@ -35,7 +35,7 @@ import java.util.List;
 public class Icebox extends ContainerBlock{
 
 	public Icebox(){
-		super(Block.Properties.create(Material.ROCK).hardnessAndResistance(3));
+		super(CRBlocks.ROCK_PROPERTY);
 		String name = "icebox";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

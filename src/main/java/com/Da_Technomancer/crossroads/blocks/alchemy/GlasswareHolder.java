@@ -33,7 +33,7 @@ public class GlasswareHolder extends ContainerBlock{
 	}
 
 	protected GlasswareHolder(String name){
-		super(Properties.create(Material.IRON).hardnessAndResistance(2).sound(SoundType.METAL));
+		super(CRBlocks.METAL_PROPERTY);
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);

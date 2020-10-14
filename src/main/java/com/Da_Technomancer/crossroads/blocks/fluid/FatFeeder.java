@@ -29,7 +29,7 @@ import java.util.List;
 public class FatFeeder extends ContainerBlock{
 
 	public FatFeeder(){
-		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "fat_feeder";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

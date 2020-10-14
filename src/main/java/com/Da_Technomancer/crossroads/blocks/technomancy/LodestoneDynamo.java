@@ -40,7 +40,7 @@ public class LodestoneDynamo extends ContainerBlock{
 	}
 
 	public LodestoneDynamo(){
-		super(Properties.create(Material.IRON).hardnessAndResistance(2).sound(SoundType.METAL));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "lodestone_dynamo";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

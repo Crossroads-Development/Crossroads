@@ -34,7 +34,7 @@ import java.util.List;
 public class SteamBoiler extends ContainerBlock{
 
 	public SteamBoiler(){
-		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "steam_boiler";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

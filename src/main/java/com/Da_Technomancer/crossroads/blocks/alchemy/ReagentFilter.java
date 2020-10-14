@@ -37,7 +37,7 @@ public class ReagentFilter extends ContainerBlock{
 	private final boolean crystal;
 
 	public ReagentFilter(boolean crystal){
-		super(Properties.create(Material.GLASS).hardnessAndResistance(0.5F).sound(SoundType.GLASS));
+		super(CRBlocks.GLASS_PROPERTY);
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "reagent_filter";
 		setRegistryName(name);

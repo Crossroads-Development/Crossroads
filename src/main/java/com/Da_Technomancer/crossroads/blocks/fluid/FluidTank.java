@@ -37,7 +37,7 @@ import java.util.List;
 public class FluidTank extends ContainerBlock implements IReadable{
 
 	public FluidTank(){
-		super(Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(3));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "fluid_tank";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

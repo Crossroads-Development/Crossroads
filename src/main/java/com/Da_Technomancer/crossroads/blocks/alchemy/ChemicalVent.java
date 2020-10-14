@@ -23,7 +23,7 @@ import java.util.List;
 public class ChemicalVent extends ContainerBlock{
 
 	public ChemicalVent(){
-		super(Properties.create(Material.IRON).hardnessAndResistance(2).sound(SoundType.GLASS));
+		super(CRBlocks.GLASS_PROPERTY);
 		String name = "chemical_vent";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

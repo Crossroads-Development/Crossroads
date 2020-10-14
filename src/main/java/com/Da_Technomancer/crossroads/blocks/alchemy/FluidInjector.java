@@ -20,7 +20,7 @@ public class FluidInjector extends ContainerBlock{
 	private final boolean crystal;
 
 	public FluidInjector(boolean crystal){
-		super(Properties.create(Material.GLASS).hardnessAndResistance(0.5F).sound(SoundType.GLASS));
+		super(CRBlocks.GLASS_PROPERTY);
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "fluid_injector";
 		setRegistryName(name);

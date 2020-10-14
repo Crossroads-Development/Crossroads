@@ -37,7 +37,7 @@ public class RotaryPump extends ContainerBlock{
 	private static final VoxelShape SHAPE = VoxelShapes.or(VoxelShapes.combine(makeCuboidShape(2, 0, 2, 14, 15, 14), makeCuboidShape(3, 0, 3, 13, 7, 13), IBooleanFunction.ONLY_SECOND), makeCuboidShape(6, 15, 6, 10, 16, 10), makeCuboidShape(0, 5, 5, 16, 11, 11), makeCuboidShape(5, 5, 0, 11, 11, 16));
 
 	public RotaryPump(){
-		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "rotary_pump";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

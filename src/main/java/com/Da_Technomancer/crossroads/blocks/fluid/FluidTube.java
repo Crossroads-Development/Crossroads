@@ -28,7 +28,7 @@ public class FluidTube extends ConduitBlock<EnumTransferMode>{
 	}
 
 	protected FluidTube(String name){
-		super(Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(2));
+		super(CRBlocks.METAL_PROPERTY);
 		setRegistryName(name);
 		CRBlocks.blockAddQue(this);
 	}

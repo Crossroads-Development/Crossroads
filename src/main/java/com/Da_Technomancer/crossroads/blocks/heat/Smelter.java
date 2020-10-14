@@ -30,7 +30,7 @@ import java.util.List;
 public class Smelter extends ContainerBlock{
 
 	public Smelter(){
-		super(Block.Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "heating_chamber";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

@@ -39,7 +39,7 @@ public class SolarHeater extends ContainerBlock{
 	private static final VoxelShape Z_SHAPE = Block.makeCuboidShape(1, 0, 0, 15, 8, 16);
 
 	public SolarHeater(){
-		super(Block.Properties.create(Material.IRON).hardnessAndResistance(3));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "solar_heater";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

@@ -35,7 +35,7 @@ public class TeslaCoilTop extends ContainerBlock{
 	public final TeslaCoilVariants variant;
 
 	public TeslaCoilTop(TeslaCoilVariants variant){
-		super(Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(2));
+		super(CRBlocks.METAL_PROPERTY);
 		this.variant = variant;
 		String name = "tesla_coil_top_" + variant.toString();
 		setRegistryName(name);

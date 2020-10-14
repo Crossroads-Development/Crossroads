@@ -73,11 +73,30 @@ public class GearFacade extends Item{
 		World world = context.getWorld();
 		BlockPos pos = context.getPos();//The position of the block clicked
 		Direction side = context.getFace();
-		BlockPos placePos = pos.offset(side);//Where the gear will be placed
 		PlayerEntity playerIn = context.getPlayer();
-		BlockState stateAtPlacement = world.getBlockState(placePos);
+		BlockPos placePos = pos;//Where the gear will be placed
 		TileEntity teAtPlacement = world.getTileEntity(placePos);
 
+		if(teAtPlacement instanceof MechanismTileEntity){
+			//Try to place inside clicked mechanism
+			int mechInd = side.getIndex();
+			MechanismTileEntity mte = (MechanismTileEntity) teAtPlacement;
+			if(mte.members[mechInd] == null){
+				//This spot is not already taken
+				mte.setMechanism(mechInd, mechanismToPlace(), type, null, false);
+
+				//Consume an item
+				if(!world.isRemote && (playerIn == null || !playerIn.isCreative())){
+					context.getItem().shrink(1);
+				}
+				return ActionResultType.SUCCESS;
+			}
+		}
+
+		//Try to place in adjacent block
+		placePos = pos.offset(side);//Where the gear will be placed
+		BlockState stateAtPlacement = world.getBlockState(placePos);
+		teAtPlacement = world.getTileEntity(placePos);
 		int mechInd = side.getOpposite().getIndex();//Index this gear would be placed within the mechanism
 		if(teAtPlacement instanceof MechanismTileEntity){
 			//Existing mechanism TE to expand

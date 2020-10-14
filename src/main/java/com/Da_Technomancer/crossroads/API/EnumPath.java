@@ -86,7 +86,9 @@ public enum EnumPath{
 		}else{
 			multiplayer = player.world.getServer().isDedicatedServer();
 		}
-		if(multiplayer ? !CRConfig.allowAllServer.get() : !CRConfig.allowAllSingle.get()){
+		boolean multiAllow = CRConfig.allowAllServer.get();
+		boolean singleAllow = CRConfig.allowAllSingle.get();
+		if(multiplayer ? !multiAllow : !singleAllow){
 			//If only 1 path is allowed, deny if any other path is found
 			for(EnumPath path : values()){
 				if(path.isUnlocked(player)){

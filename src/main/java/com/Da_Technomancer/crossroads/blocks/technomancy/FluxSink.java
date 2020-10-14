@@ -35,7 +35,7 @@ public class FluxSink extends ContainerBlock{
 	private final VoxelShape SHAPE = makeCuboidShape(1, 1, 1, 15, 15, 15);
 
 	public FluxSink(){
-		super(Properties.create(Material.IRON).hardnessAndResistance(2.5F));
+		super(CRBlocks.METAL_PROPERTY);
 		setRegistryName("flux_sink");
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);

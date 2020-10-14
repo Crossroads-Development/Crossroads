@@ -35,7 +35,7 @@ public class BeaconHarness extends ContainerBlock{
 	private static final VoxelShape SHAPE = VoxelShapes.or(makeCuboidShape(0, 15, 0, 16, 16, 16), makeCuboidShape(2, 1, 2, 14, 15, 14));
 
 	public BeaconHarness(){
-		super(Properties.create(Material.GLASS).hardnessAndResistance(.5F).setLightLevel(state -> 15));
+		super(CRBlocks.GLASS_PROPERTY.setLightLevel(state -> 15));
 		setRegistryName("beacon_harness");
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);

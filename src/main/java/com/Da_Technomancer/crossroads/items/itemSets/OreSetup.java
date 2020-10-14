@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.BasicBlock;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -75,28 +76,28 @@ public final class OreSetup{
 		//Register CR metal ores, blocks, ingots, nuggets manually
 		ingotTin = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("ingot_tin");
 		CRItems.toRegister.add(ingotTin);
-		blockTin = new BasicBlock("block_tin", Block.Properties.create(Material.IRON).hardnessAndResistance(5));
+		blockTin = new BasicBlock("block_tin", CRBlocks.METAL_PROPERTY);
 		nuggetTin = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("nugget_tin");
 		CRItems.toRegister.add(nuggetTin);
-		oreTin = new BasicBlock("ore_tin", Block.Properties.create(Material.ROCK).hardnessAndResistance(3));
+		oreTin = new BasicBlock("ore_tin", CRBlocks.ROCK_PROPERTY.hardnessAndResistance(3));
 
 		ingotCopper = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("ingot_copper");
 		CRItems.toRegister.add(ingotCopper);
-		blockCopper = new BasicBlock("block_copper", Block.Properties.create(Material.IRON).hardnessAndResistance(5));
+		blockCopper = new BasicBlock("block_copper", CRBlocks.METAL_PROPERTY);
 		nuggetCopper = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("nugget_copper");
 		CRItems.toRegister.add(nuggetCopper);
-		oreCopper = new BasicBlock("ore_copper", Block.Properties.create(Material.ROCK).hardnessAndResistance(3));
+		oreCopper = new BasicBlock("ore_copper", CRBlocks.ROCK_PROPERTY.hardnessAndResistance(3));
 
 		ingotBronze = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("ingot_bronze");
 		CRItems.toRegister.add(ingotBronze);
-		blockBronze = new BasicBlock("block_bronze", Block.Properties.create(Material.IRON).hardnessAndResistance(5));
+		blockBronze = new BasicBlock("block_bronze", CRBlocks.METAL_PROPERTY);
 		nuggetBronze = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("nugget_bronze");
 		CRItems.toRegister.add(nuggetBronze);
 
 		gemRuby = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("gem_ruby");
 		CRItems.toRegister.add(gemRuby);
-		blockRuby = new BasicBlock("block_ruby", Block.Properties.create(Material.ROCK).hardnessAndResistance(5));
-		oreRuby = new BasicBlock("ore_ruby", Block.Properties.create(Material.ROCK).hardnessAndResistance(3).harvestLevel(2));
+		blockRuby = new BasicBlock("block_ruby", CRBlocks.ROCK_PROPERTY);
+		oreRuby = new BasicBlock("ore_ruby", CRBlocks.ROCK_PROPERTY.harvestLevel(2).hardnessAndResistance(3));
 
 		ingotCopshowium = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)){
 			@Override
@@ -105,13 +106,13 @@ public final class OreSetup{
 			}
 		}.setRegistryName("ingot_copshowium");
 		CRItems.toRegister.add(ingotCopshowium);
-		blockCopshowium = new BasicBlock("block_copshowium", Block.Properties.create(Material.IRON).hardnessAndResistance(5));
+		blockCopshowium = new BasicBlock("block_copshowium", CRBlocks.METAL_PROPERTY);
 		nuggetCopshowium = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("nugget_copshowium");
 		CRItems.toRegister.add(nuggetCopshowium);
 
 		voidCrystal = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("void_crystal");
 		CRItems.toRegister.add(voidCrystal);
-		oreVoid = new BasicBlock("ore_void", Block.Properties.create(Material.ROCK).hardnessAndResistance(3, 9).harvestLevel(2));
+		oreVoid = new BasicBlock("ore_void", CRBlocks.ROCK_PROPERTY.hardnessAndResistance(3, 9).harvestLevel(2));
 		
 		loadConfig();
 	}

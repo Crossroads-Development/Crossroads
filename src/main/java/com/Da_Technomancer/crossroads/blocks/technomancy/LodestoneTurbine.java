@@ -22,7 +22,7 @@ import java.util.List;
 public class LodestoneTurbine extends ContainerBlock{
 
 	public LodestoneTurbine(){
-		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "lodestone_turbine";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

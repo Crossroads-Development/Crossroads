@@ -35,7 +35,7 @@ import java.util.List;
 public class CopshowiumCreationChamber extends ContainerBlock implements IReadable{
 
 	public CopshowiumCreationChamber(){
-		super(Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(3));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "copshowium_creation_chamber";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

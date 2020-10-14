@@ -33,7 +33,7 @@ import java.util.List;
 public class BlastFurnace extends ContainerBlock{
 
 	public BlastFurnace(){
-		super(Block.Properties.create(Material.ROCK).hardnessAndResistance(3));
+		super(CRBlocks.ROCK_PROPERTY);
 		String name = "blast_furnace";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

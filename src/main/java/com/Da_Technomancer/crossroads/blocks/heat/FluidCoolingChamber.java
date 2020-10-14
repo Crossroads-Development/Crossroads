@@ -30,7 +30,7 @@ import java.util.List;
 public class FluidCoolingChamber extends ContainerBlock{
 
 	public FluidCoolingChamber(){
-		super(Block.Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(3));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "fluid_cooling_chamber";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

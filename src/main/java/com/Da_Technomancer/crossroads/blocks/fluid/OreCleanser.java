@@ -33,7 +33,7 @@ import java.util.List;
 public class OreCleanser extends ContainerBlock{
 
 	public OreCleanser(){
-		super(Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(3));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "ore_cleanser";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

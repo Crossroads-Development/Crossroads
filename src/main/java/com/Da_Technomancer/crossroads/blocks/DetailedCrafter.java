@@ -29,7 +29,7 @@ import java.util.List;
 public class DetailedCrafter extends Block{
 
 	public DetailedCrafter(){
-		super(Properties.create(Material.IRON).hardnessAndResistance(3));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "detailed_crafter";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

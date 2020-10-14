@@ -56,7 +56,7 @@ public class ReagentPump extends ContainerBlock{
 	private final boolean crystal;
 
 	public ReagentPump(boolean crystal){
-		super(Properties.create(Material.GLASS).sound(SoundType.GLASS).hardnessAndResistance(0.5F));
+		super(CRBlocks.GLASS_PROPERTY);
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "reagent_pump";
 		setRegistryName(name);

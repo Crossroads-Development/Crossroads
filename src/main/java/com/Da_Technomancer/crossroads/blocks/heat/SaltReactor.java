@@ -31,7 +31,7 @@ import java.util.List;
 public class SaltReactor extends ContainerBlock{
 
 	public SaltReactor(){
-		super(Block.Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "salt_reactor";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

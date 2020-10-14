@@ -29,7 +29,7 @@ public class SteamTurbine extends ContainerBlock{
 	private VoxelShape SHAPE = VoxelShapes.or(makeCuboidShape(2, 0, 2, 14, 16, 14), makeCuboidShape(0, 5, 5, 16, 11, 11), makeCuboidShape(5, 5, 0, 11, 11, 16));
 
 	public SteamTurbine(){
-		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "steam_turbine";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

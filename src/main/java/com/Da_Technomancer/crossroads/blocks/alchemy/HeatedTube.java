@@ -36,7 +36,7 @@ public class HeatedTube extends ContainerBlock{
 	}
 
 	public HeatedTube(boolean crystal){
-		super(Properties.create(Material.GLASS).sound(SoundType.GLASS).hardnessAndResistance(0.5F));
+		super(CRBlocks.GLASS_PROPERTY);
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_"  : "") + "heated_tube";
 		setRegistryName(name);

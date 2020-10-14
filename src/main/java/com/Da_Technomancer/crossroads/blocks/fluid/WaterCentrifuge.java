@@ -35,7 +35,7 @@ import java.util.List;
 public class WaterCentrifuge extends ContainerBlock{
 	
 	public WaterCentrifuge(){
-		super(Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(3));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "water_centrifuge";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

@@ -30,6 +30,11 @@ import java.util.List;
 
 public class PlaceEffect extends BeamEffect{
 
+	public static FakePlayer getBlockFakePlayer(ServerWorld world){
+		GameProfile fakePlayerProfile = new GameProfile(null, Crossroads.MODID + "-block-fake-player-" + MiscUtil.getDimensionName(world));
+		return FakePlayerFactory.get(world, fakePlayerProfile);
+	}
+
 	@Override
 	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, World worldIn, BlockPos pos, @Nullable Direction dir){
 		if(!performTransmute(align, voi, power, worldIn, pos)){
@@ -41,7 +46,7 @@ public class PlaceEffect extends BeamEffect{
 				int range = (int) Math.sqrt(power) / 2;
 				List<ItemEntity> items = worldIn.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos.add(-range, -range, -range), pos.add(range + 1, range + 1, range + 1)), EntityPredicates.IS_ALIVE);
 				if(items.size() != 0){
-					FakePlayer placer = FakePlayerFactory.get((ServerWorld) worldIn, new GameProfile(null, Crossroads.MODID + "-place_effect-" + MiscUtil.getDimensionName(worldIn)));
+					FakePlayer placer = getBlockFakePlayer((ServerWorld) worldIn);
 					for(ItemEntity ent : items){
 						ItemStack stack = ent.getItem();
 						if(!stack.isEmpty() && stack.getItem() instanceof BlockItem){

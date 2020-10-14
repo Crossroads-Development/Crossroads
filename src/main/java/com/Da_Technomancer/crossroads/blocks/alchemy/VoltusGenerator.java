@@ -23,7 +23,7 @@ import java.util.List;
 public class VoltusGenerator extends ContainerBlock{
 
 	public VoltusGenerator(){
-		super(Properties.create(Material.IRON).hardnessAndResistance(0.5F).sound(SoundType.METAL));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "voltus_generator";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

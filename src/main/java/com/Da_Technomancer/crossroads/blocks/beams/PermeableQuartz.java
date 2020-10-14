@@ -17,7 +17,7 @@ import java.util.List;
 public class PermeableQuartz extends Block{
 
 	public PermeableQuartz(){
-		super(Properties.create(Material.ROCK).hardnessAndResistance(4));
+		super(CRBlocks.ROCK_PROPERTY);
 		String name = "permeable_quartz";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

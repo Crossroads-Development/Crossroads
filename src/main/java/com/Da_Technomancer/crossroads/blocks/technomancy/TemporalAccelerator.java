@@ -45,7 +45,7 @@ public class TemporalAccelerator extends ContainerBlock{
 	}
 
 	public TemporalAccelerator(){
-		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "temporal_accelerator";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

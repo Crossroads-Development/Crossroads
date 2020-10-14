@@ -39,7 +39,7 @@ public class HeatingCrucible extends ContainerBlock{
 	private static final VoxelShape SHAPE = makeCuboidShape(0, 0, 0, 16, 14, 16);
 
 	public HeatingCrucible(){
-		super(Block.Properties.create(Material.ROCK).hardnessAndResistance(3));
+		super(CRBlocks.ROCK_PROPERTY);
 		String name = "heating_crucible";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

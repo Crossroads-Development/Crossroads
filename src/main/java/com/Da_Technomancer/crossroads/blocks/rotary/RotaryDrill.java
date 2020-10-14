@@ -49,7 +49,7 @@ public class RotaryDrill extends ContainerBlock{
 	private final boolean golden;
 
 	public RotaryDrill(boolean golden){
-		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
+		super(CRBlocks.METAL_PROPERTY);
 		this.golden = golden;
 		String name = "rotary_drill" + (golden ? "_gold" : "");
 		setRegistryName(name);

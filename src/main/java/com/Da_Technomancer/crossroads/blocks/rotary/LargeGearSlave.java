@@ -50,7 +50,7 @@ public class LargeGearSlave extends ContainerBlock{
 	}
 
 	public LargeGearSlave(){
-		super(Block.Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(3));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "large_gear_slave";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

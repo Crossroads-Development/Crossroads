@@ -30,7 +30,7 @@ import java.util.List;
 public class RedstoneAxis extends ContainerBlock implements IWireConnect{
 	
 	public RedstoneAxis(){
-		super(Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(3));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "redstone_axis";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

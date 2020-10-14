@@ -31,7 +31,7 @@ import java.util.List;
 public class CrystalMasterAxis extends ContainerBlock implements IReadable{
 	
 	public CrystalMasterAxis(){
-		super(Properties.create(Material.ROCK).hardnessAndResistance(3).sound(SoundType.STONE));
+		super(CRBlocks.ROCK_PROPERTY);
 		String name = "master_axis_crystal";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

@@ -27,7 +27,7 @@ import java.util.List;
 public class HeatSink extends ContainerBlock{
 
 	public HeatSink(){
-		super(Block.Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "heat_sink";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

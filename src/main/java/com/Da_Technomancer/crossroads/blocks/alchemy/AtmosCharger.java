@@ -34,7 +34,7 @@ import java.util.List;
 public class AtmosCharger extends ContainerBlock implements IReadable{
 
 	public AtmosCharger(){
-		super(Properties.create(Material.IRON).hardnessAndResistance(0.5F).sound(SoundType.METAL));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "atmos_charger";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

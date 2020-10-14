@@ -31,7 +31,7 @@ import java.util.List;
 public class GatewayFrame extends ContainerBlock implements IReadable{
 
 	public GatewayFrame(){
-		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "gateway_frame";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

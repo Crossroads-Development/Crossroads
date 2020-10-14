@@ -34,7 +34,7 @@ public class FluxNode extends ContainerBlock implements IReadable{
 	private static final VoxelShape SHAPE = makeCuboidShape(4, 4, 4, 12, 12, 12);
 
 	public FluxNode(){
-		super(Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(3));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "flux_node";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

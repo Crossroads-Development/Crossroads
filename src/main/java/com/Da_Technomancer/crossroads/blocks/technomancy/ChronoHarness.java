@@ -35,7 +35,7 @@ public class ChronoHarness extends ContainerBlock{
 	private static final VoxelShape SHAPE = VoxelShapes.or(makeCuboidShape(0, 0, 0, 16, 2, 16), makeCuboidShape(0, 14, 0, 16, 16, 16), makeCuboidShape(4, 2, 4, 12, 14, 12));
 
 	public ChronoHarness(){
-		super(Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(2));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "chrono_harness";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

@@ -29,7 +29,7 @@ public abstract class BeamBlock extends ContainerBlock{
 	}
 
 	public BeamBlock(String name){
-		this(name, Block.Properties.create(Material.ROCK).hardnessAndResistance(3));
+		this(name, CRBlocks.ROCK_PROPERTY);
 	}
 
 	@Override

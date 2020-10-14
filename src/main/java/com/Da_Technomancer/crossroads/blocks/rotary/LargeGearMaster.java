@@ -39,7 +39,7 @@ public class LargeGearMaster extends ContainerBlock{
 	}
 
 	public LargeGearMaster(){
-		super(Block.Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "large_gear_master";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

@@ -33,7 +33,7 @@ import java.util.List;
 public class HeatReservoir extends ContainerBlock implements IReadable{
 
 	public HeatReservoir(){
-		super(Block.Properties.create(Material.IRON).hardnessAndResistance(3));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "heat_reservoir";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

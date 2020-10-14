@@ -31,7 +31,7 @@ import java.util.List;
 public class HeatLimiterBasic extends ContainerBlock{
 
 	public HeatLimiterBasic(){
-		super(Properties.create(Material.IRON).hardnessAndResistance(0.5F).sound(SoundType.STONE));
+		super(CRBlocks.ROCK_PROPERTY);
 		String name = "heat_limiter_basic";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

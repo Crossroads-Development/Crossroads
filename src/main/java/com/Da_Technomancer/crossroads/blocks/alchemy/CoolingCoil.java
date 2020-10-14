@@ -30,7 +30,7 @@ public class CoolingCoil extends ContainerBlock{
 	private final boolean crystal;
 
 	public CoolingCoil(boolean crystal){
-		super(Properties.create(Material.GLASS).hardnessAndResistance(0.5F).sound(SoundType.GLASS).notSolid());
+		super(CRBlocks.GLASS_PROPERTY.notSolid());
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "cooling_coil";
 		setRegistryName(name);

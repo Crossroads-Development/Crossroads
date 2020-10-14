@@ -25,7 +25,7 @@ import java.util.List;
 public class MaxwellDemon extends ContainerBlock{
 
 	public MaxwellDemon(){
-		super(Properties.create(Material.IRON).sound(SoundType.STONE).hardnessAndResistance(3));
+		super(CRBlocks.ROCK_PROPERTY);
 		String name = "maxwell_demon";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

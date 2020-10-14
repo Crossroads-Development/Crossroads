@@ -29,7 +29,7 @@ import java.util.List;
 public class HeatLimiterRedstone extends ContainerBlock{
 
 	public HeatLimiterRedstone(){
-		super(Properties.create(Material.IRON).hardnessAndResistance(0.5F).sound(SoundType.STONE));
+		super(CRBlocks.ROCK_PROPERTY);
 		String name = "heat_limiter";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

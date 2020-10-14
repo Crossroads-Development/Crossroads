@@ -30,7 +30,7 @@ public class AlchemicalTube extends ConduitBlock<EnumTransferMode>{
 	}
 
 	protected AlchemicalTube(boolean crystal, String name){
-		super(Properties.create(Material.GLASS).hardnessAndResistance(0.5F).sound(SoundType.GLASS));
+		super(CRBlocks.GLASS_PROPERTY);
 		this.crystal = crystal;
 		setRegistryName(name);
 		CRBlocks.blockAddQue(this);

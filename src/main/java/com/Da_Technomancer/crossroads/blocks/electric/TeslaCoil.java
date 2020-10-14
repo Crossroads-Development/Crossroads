@@ -35,11 +35,11 @@ import java.util.List;
 
 public class TeslaCoil extends ContainerBlock{
 
-	private static VoxelShape SHAPE_EMPT = VoxelShapes.or(makeCuboidShape(0, 0, 0, 16, 2, 16), makeCuboidShape(0, 14, 0, 16, 16, 16), makeCuboidShape(5, 2, 0, 11, 14, 1), makeCuboidShape(5, 2, 15, 11, 14,16), makeCuboidShape(0, 2, 5, 1, 4, 11), makeCuboidShape(15, 2, 5, 16, 14, 11));
-	private static VoxelShape SHAPE_LEYD = VoxelShapes.or(SHAPE_EMPT, makeCuboidShape(5, 2, 5, 11, 14, 11));
+	private static final VoxelShape SHAPE_EMPT = VoxelShapes.or(makeCuboidShape(0, 0, 0, 16, 2, 16), makeCuboidShape(0, 14, 0, 16, 16, 16), makeCuboidShape(5, 2, 0, 11, 14, 1), makeCuboidShape(5, 2, 15, 11, 14,16), makeCuboidShape(0, 2, 5, 1, 4, 11), makeCuboidShape(15, 2, 5, 16, 14, 11));
+	private static final VoxelShape SHAPE_LEYD = VoxelShapes.or(SHAPE_EMPT, makeCuboidShape(5, 2, 5, 11, 14, 11));
 
 	public TeslaCoil(){
-		super(Properties.create(Material.IRON).hardnessAndResistance(2).sound(SoundType.METAL));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "tesla_coil";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

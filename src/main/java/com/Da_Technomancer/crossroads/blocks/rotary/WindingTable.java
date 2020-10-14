@@ -34,7 +34,7 @@ import java.util.List;
 public class WindingTable extends ContainerBlock implements IReadable{
 
 	public WindingTable(){
-		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "winding_table";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

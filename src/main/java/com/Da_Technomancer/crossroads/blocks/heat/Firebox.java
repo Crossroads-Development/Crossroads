@@ -35,7 +35,7 @@ import java.util.List;
 public class Firebox extends ContainerBlock{
 
 	public Firebox(){
-		super(Block.Properties.create(Material.ROCK).hardnessAndResistance(3));
+		super(CRBlocks.ROCK_PROPERTY);
 		String name = "firebox";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

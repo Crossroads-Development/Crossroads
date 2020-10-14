@@ -37,7 +37,7 @@ public class ReactionChamber extends ContainerBlock{
 	private final boolean crystal;
 
 	public ReactionChamber(boolean crystal){
-		super(Properties.create(Material.GLASS).hardnessAndResistance(0.5F).sound(SoundType.GLASS).notSolid());
+		super(CRBlocks.GLASS_PROPERTY.notSolid());
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "reaction_chamber";
 		setRegistryName(name);

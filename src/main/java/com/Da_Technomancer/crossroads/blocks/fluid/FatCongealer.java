@@ -36,7 +36,7 @@ import java.util.List;
 public class FatCongealer extends ContainerBlock{
 
 	public FatCongealer(){
-		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "fat_congealer";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

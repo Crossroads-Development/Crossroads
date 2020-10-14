@@ -38,7 +38,7 @@ public class Mechanism extends ContainerBlock implements IReadable{
 //	private static final VoxelShape BREAK_ALL_BB = Block.makeCuboidShape(5, 5, 5, 11, 11, 11);
 
 	public Mechanism(){
-		super(Block.Properties.create(Material.IRON).hardnessAndResistance(1).sound(SoundType.METAL).variableOpacity());
+		super(CRBlocks.METAL_PROPERTY.variableOpacity());
 		//The variableOpacity flag is important
 		//This trait name is poorly mapped by MCP- it controls whether BlockState instances are allowed to cache the results of several common methods
 		//Most importantly, the getShape() method (and its variants). As this block varies shape with TE data instead of state, we cannot use the cache

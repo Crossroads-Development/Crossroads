@@ -2,15 +2,13 @@ package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.API.effects.PlaceEffect;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.rotary.RotaryDrill;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SnowBlock;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -23,7 +21,9 @@ import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -108,13 +108,30 @@ public class RotaryDrillTileEntity extends ModuleTE{
 				if(!targetState.isAir(world, targetPos)){
 					float hardness = targetState.getBlockHardness(world, targetPos);
 					if(hardness >= 0 && Math.abs(motData[0]) >= hardness * SPEED_PER_HARDNESS){
-						boolean isSnow = targetState.getBlock() == Blocks.SNOW;
-						//Snow layers have an unusual loot table that requires it to be broken by an entity holding a shovel
-						//As we want snow layers to be able to drop items with a drill, we special case it
-						world.destroyBlock(targetPos, !isSnow);
-						if(isSnow){
-							Block.spawnAsEntity(world, targetPos, new ItemStack(Items.SNOWBALL, targetState.get(SnowBlock.LAYERS)));
+						FakePlayer fakePlayer = PlaceEffect.getBlockFakePlayer((ServerWorld) world);
+						ItemStack tool;
+						ToolType toolType = targetState.getHarvestTool();
+						if(toolType == ToolType.PICKAXE){
+							tool = new ItemStack(Items.DIAMOND_PICKAXE);
+						}else if(toolType == ToolType.SHOVEL){
+							tool = new ItemStack(Items.DIAMOND_SHOVEL);
+						}else if(toolType == ToolType.AXE){
+							tool = new ItemStack(Items.DIAMOND_AXE);
+						}else if(toolType == ToolType.HOE){
+							tool = new ItemStack(Items.DIAMOND_HOE);
+						}else{
+							tool = ItemStack.EMPTY;
 						}
+						world.destroyBlock(targetPos, false);//Don't drop items; we do that separately on the next line
+						targetState.getBlock().harvestBlock(world, fakePlayer, targetPos, targetState, null, tool);//Make sure to call harvestBlock so we can get tool-specific (like snow layers for shovels) and multiblock-specific drops
+
+//						boolean isSnow = targetState.getBlock() == Blocks.SNOW;
+//						//Snow layers have an unusual loot table that requires it to be broken by an entity holding a shovel
+//						//As we want snow layers to be able to drop items with a drill, we special case it
+//						world.destroyBlock(targetPos, !isSnow);
+//						if(isSnow){
+//							Block.spawnAsEntity(world, targetPos, new ItemStack(Items.SNOWBALL, targetState.get(SnowBlock.LAYERS)));
+//						}
 					}
 				}
 

@@ -33,7 +33,7 @@ import java.util.List;
 public class FatCollector extends ContainerBlock{
 
 	public FatCollector(){
-		super(Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(3));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "fat_collector";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

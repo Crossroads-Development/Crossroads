@@ -40,7 +40,7 @@ public class LensFrame extends ContainerBlock implements IReadable{
 	}
 
 	public LensFrame(){
-		super(Properties.create(Material.ROCK).hardnessAndResistance(3));
+		super(CRBlocks.ROCK_PROPERTY);
 		String name = "lens_frame";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

@@ -33,7 +33,7 @@ import java.util.List;
 public class Steamer extends ContainerBlock{
 
 	public Steamer(){
-		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "steamer";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

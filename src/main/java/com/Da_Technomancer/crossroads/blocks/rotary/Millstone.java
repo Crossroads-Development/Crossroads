@@ -33,7 +33,7 @@ import java.util.List;
 public class Millstone extends ContainerBlock{
 
 	public Millstone(){
-		super(Block.Properties.create(Material.ROCK).hardnessAndResistance(3));
+		super(CRBlocks.ROCK_PROPERTY);
 		String name = "millstone";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

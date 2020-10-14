@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 public class MasterAxis extends ContainerBlock{
 	
 	public MasterAxis(){
-		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "master_axis";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

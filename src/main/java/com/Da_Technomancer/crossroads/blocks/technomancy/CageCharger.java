@@ -35,7 +35,7 @@ public class CageCharger extends ContainerBlock implements IReadable{
 	private static final VoxelShape SHAPE = VoxelShapes.or(makeCuboidShape(0, 0, 0, 16, 4, 16), makeCuboidShape(4, 4, 4, 12, 8, 12));
 
 	public CageCharger(){
-		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "cage_charger";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

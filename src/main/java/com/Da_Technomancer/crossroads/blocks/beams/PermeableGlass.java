@@ -24,7 +24,7 @@ import java.util.List;
 public class PermeableGlass extends Block{
 
 	public PermeableGlass(){
-		super(Properties.create(Material.GLASS).hardnessAndResistance(.5F).sound(SoundType.GLASS).notSolid());
+		super(CRBlocks.GLASS_PROPERTY.notSolid());
 		String name = "permeable_glass";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

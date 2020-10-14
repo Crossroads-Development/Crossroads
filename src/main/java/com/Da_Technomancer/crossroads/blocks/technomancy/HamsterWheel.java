@@ -44,7 +44,7 @@ public class HamsterWheel extends ContainerBlock{
 	}
 
 	public HamsterWheel(){
-		super(Properties.create(Material.IRON).hardnessAndResistance(2).sound(SoundType.NETHER_WART));//Tried to find a fleshy sound
+		super(CRBlocks.METAL_PROPERTY.sound(SoundType.NETHER_WART));//Tried to find a fleshy sound
 		String name = "hamster_wheel";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

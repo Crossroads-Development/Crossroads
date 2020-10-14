@@ -23,7 +23,7 @@ import java.util.List;
 public class StirlingEngine extends ContainerBlock{
 
 	public StirlingEngine(){
-		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "stirling_engine";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

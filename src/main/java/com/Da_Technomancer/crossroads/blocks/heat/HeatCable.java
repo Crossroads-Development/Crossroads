@@ -50,7 +50,7 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 	}
 
 	protected HeatCable(HeatInsulators insulator, String name){
-		super(Block.Properties.create(Material.IRON).hardnessAndResistance(1));
+		super(CRBlocks.METAL_PROPERTY);
 		this.insulator = insulator;
 		setRegistryName(name);
 		CRBlocks.blockAddQue(this, itemProp);

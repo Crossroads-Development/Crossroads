@@ -32,7 +32,7 @@ import java.util.List;
 public class Radiator extends ContainerBlock{
 
 	public Radiator(){
-		super(Properties.create(Material.IRON).hardnessAndResistance(3).sound(SoundType.METAL));
+		super(CRBlocks.METAL_PROPERTY);
 		String name = "radiator";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
