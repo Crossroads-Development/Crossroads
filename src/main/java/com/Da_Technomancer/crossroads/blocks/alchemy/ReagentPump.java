@@ -8,7 +8,6 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReagentPumpTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
@@ -56,7 +55,7 @@ public class ReagentPump extends ContainerBlock{
 	private final boolean crystal;
 
 	public ReagentPump(boolean crystal){
-		super(CRBlocks.GLASS_PROPERTY);
+		super(CRBlocks.getGlassProperty());
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "reagent_pump";
 		setRegistryName(name);

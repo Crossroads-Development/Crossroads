@@ -7,8 +7,6 @@ import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -35,7 +33,7 @@ public class TeslaCoilTop extends ContainerBlock{
 	public final TeslaCoilVariants variant;
 
 	public TeslaCoilTop(TeslaCoilVariants variant){
-		super(CRBlocks.METAL_PROPERTY);
+		super(CRBlocks.getMetalProperty());
 		this.variant = variant;
 		String name = "tesla_coil_top_" + variant.toString();
 		setRegistryName(name);

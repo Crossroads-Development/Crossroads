@@ -6,8 +6,6 @@ import com.Da_Technomancer.crossroads.API.templates.ConduitBlock;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.AlchemicalTubeTileEntity;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.state.Property;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -30,7 +28,7 @@ public class AlchemicalTube extends ConduitBlock<EnumTransferMode>{
 	}
 
 	protected AlchemicalTube(boolean crystal, String name){
-		super(CRBlocks.GLASS_PROPERTY);
+		super(CRBlocks.getGlassProperty());
 		this.crystal = crystal;
 		setRegistryName(name);
 		CRBlocks.blockAddQue(this);

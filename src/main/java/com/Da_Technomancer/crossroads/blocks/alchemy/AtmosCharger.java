@@ -10,7 +10,6 @@ import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -34,7 +33,7 @@ import java.util.List;
 public class AtmosCharger extends ContainerBlock implements IReadable{
 
 	public AtmosCharger(){
-		super(CRBlocks.METAL_PROPERTY);
+		super(CRBlocks.getMetalProperty());
 		String name = "atmos_charger";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

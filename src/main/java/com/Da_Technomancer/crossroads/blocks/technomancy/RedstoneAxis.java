@@ -7,7 +7,6 @@ import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.blocks.redstone.IWireConnect;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -30,7 +29,7 @@ import java.util.List;
 public class RedstoneAxis extends ContainerBlock implements IWireConnect{
 	
 	public RedstoneAxis(){
-		super(CRBlocks.METAL_PROPERTY);
+		super(CRBlocks.getMetalProperty());
 		String name = "redstone_axis";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

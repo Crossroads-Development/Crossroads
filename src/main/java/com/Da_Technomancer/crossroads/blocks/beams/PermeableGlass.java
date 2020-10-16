@@ -3,8 +3,6 @@ package com.Da_Technomancer.crossroads.blocks.beams;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
@@ -24,7 +22,7 @@ import java.util.List;
 public class PermeableGlass extends Block{
 
 	public PermeableGlass(){
-		super(CRBlocks.GLASS_PROPERTY.notSolid());
+		super(CRBlocks.getGlassProperty().notSolid());
 		String name = "permeable_glass";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

@@ -8,7 +8,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -35,7 +34,7 @@ public class BeaconHarness extends ContainerBlock{
 	private static final VoxelShape SHAPE = VoxelShapes.or(makeCuboidShape(0, 15, 0, 16, 16, 16), makeCuboidShape(2, 1, 2, 14, 15, 14));
 
 	public BeaconHarness(){
-		super(CRBlocks.GLASS_PROPERTY.setLightLevel(state -> 15));
+		super(CRBlocks.getGlassProperty().setLightLevel(state -> 15));
 		setRegistryName("beacon_harness");
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);

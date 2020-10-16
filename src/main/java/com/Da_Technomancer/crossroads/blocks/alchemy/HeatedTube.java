@@ -5,7 +5,6 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatedTubeTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer;
@@ -36,7 +35,7 @@ public class HeatedTube extends ContainerBlock{
 	}
 
 	public HeatedTube(boolean crystal){
-		super(CRBlocks.GLASS_PROPERTY);
+		super(CRBlocks.getGlassProperty());
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_"  : "") + "heated_tube";
 		setRegistryName(name);

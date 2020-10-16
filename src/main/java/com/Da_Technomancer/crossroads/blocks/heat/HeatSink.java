@@ -5,7 +5,6 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatSinkTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -27,7 +26,7 @@ import java.util.List;
 public class HeatSink extends ContainerBlock{
 
 	public HeatSink(){
-		super(CRBlocks.METAL_PROPERTY);
+		super(CRBlocks.getMetalProperty());
 		String name = "heat_sink";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

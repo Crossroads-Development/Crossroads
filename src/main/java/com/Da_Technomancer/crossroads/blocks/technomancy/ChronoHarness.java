@@ -6,7 +6,6 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ChronoHarnessTileEntity;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -35,7 +34,7 @@ public class ChronoHarness extends ContainerBlock{
 	private static final VoxelShape SHAPE = VoxelShapes.or(makeCuboidShape(0, 0, 0, 16, 2, 16), makeCuboidShape(0, 14, 0, 16, 16, 16), makeCuboidShape(4, 2, 4, 12, 14, 12));
 
 	public ChronoHarness(){
-		super(CRBlocks.METAL_PROPERTY);
+		super(CRBlocks.getMetalProperty());
 		String name = "chrono_harness";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

@@ -5,7 +5,6 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer;
@@ -24,7 +23,7 @@ import javax.annotation.Nullable;
 public class MasterAxis extends ContainerBlock{
 	
 	public MasterAxis(){
-		super(CRBlocks.METAL_PROPERTY);
+		super(CRBlocks.getMetalProperty());
 		String name = "master_axis";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

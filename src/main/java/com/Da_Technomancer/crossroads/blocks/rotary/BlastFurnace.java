@@ -2,11 +2,9 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.BlastFurnaceTileEntity;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -33,7 +31,7 @@ import java.util.List;
 public class BlastFurnace extends ContainerBlock{
 
 	public BlastFurnace(){
-		super(CRBlocks.ROCK_PROPERTY);
+		super(CRBlocks.getRockProperty());
 		String name = "blast_furnace";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

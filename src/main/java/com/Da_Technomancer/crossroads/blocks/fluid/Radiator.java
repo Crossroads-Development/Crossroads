@@ -6,8 +6,6 @@ import com.Da_Technomancer.crossroads.tileentities.fluid.RadiatorTileEntity;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -32,7 +30,7 @@ import java.util.List;
 public class Radiator extends ContainerBlock{
 
 	public Radiator(){
-		super(CRBlocks.METAL_PROPERTY);
+		super(CRBlocks.getMetalProperty());
 		String name = "radiator";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

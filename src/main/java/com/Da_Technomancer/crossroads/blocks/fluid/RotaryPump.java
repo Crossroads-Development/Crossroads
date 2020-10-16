@@ -5,8 +5,6 @@ import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -37,7 +35,7 @@ public class RotaryPump extends ContainerBlock{
 	private static final VoxelShape SHAPE = VoxelShapes.or(VoxelShapes.combine(makeCuboidShape(2, 0, 2, 14, 15, 14), makeCuboidShape(3, 0, 3, 13, 7, 13), IBooleanFunction.ONLY_SECOND), makeCuboidShape(6, 15, 6, 10, 16, 10), makeCuboidShape(0, 5, 5, 16, 11, 11), makeCuboidShape(5, 5, 0, 11, 11, 16));
 
 	public RotaryPump(){
-		super(CRBlocks.METAL_PROPERTY);
+		super(CRBlocks.getMetalProperty());
 		String name = "rotary_pump";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

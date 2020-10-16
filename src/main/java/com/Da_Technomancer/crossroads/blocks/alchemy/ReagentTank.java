@@ -10,8 +10,6 @@ import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -39,7 +37,7 @@ public class ReagentTank extends ContainerBlock implements IReadable{
 	private final boolean crystal;
 
 	public ReagentTank(boolean crystal){
-		super(CRBlocks.GLASS_PROPERTY.notSolid());
+		super(CRBlocks.getGlassProperty().notSolid());
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "reagent_tank";
 		setRegistryName(name);

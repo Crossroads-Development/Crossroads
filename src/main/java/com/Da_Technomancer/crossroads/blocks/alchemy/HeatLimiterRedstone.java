@@ -7,7 +7,6 @@ import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatLimiterRedstoneTi
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -29,7 +28,7 @@ import java.util.List;
 public class HeatLimiterRedstone extends ContainerBlock{
 
 	public HeatLimiterRedstone(){
-		super(CRBlocks.ROCK_PROPERTY);
+		super(CRBlocks.getRockProperty());
 		String name = "heat_limiter";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

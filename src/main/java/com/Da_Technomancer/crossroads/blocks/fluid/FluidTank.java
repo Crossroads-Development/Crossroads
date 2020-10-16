@@ -7,8 +7,6 @@ import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -37,7 +35,7 @@ import java.util.List;
 public class FluidTank extends ContainerBlock implements IReadable{
 
 	public FluidTank(){
-		super(CRBlocks.METAL_PROPERTY);
+		super(CRBlocks.getMetalProperty());
 		String name = "fluid_tank";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

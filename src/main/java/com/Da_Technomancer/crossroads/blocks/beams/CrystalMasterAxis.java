@@ -7,7 +7,6 @@ import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -31,7 +30,7 @@ import java.util.List;
 public class CrystalMasterAxis extends ContainerBlock implements IReadable{
 	
 	public CrystalMasterAxis(){
-		super(CRBlocks.ROCK_PROPERTY);
+		super(CRBlocks.getRockProperty());
 		String name = "master_axis_crystal";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

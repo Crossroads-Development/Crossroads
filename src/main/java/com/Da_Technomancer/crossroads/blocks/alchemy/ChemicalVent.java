@@ -6,8 +6,6 @@ import com.Da_Technomancer.crossroads.tileentities.alchemy.ChemicalVentTileEntit
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -23,7 +21,7 @@ import java.util.List;
 public class ChemicalVent extends ContainerBlock{
 
 	public ChemicalVent(){
-		super(CRBlocks.GLASS_PROPERTY);
+		super(CRBlocks.getGlassProperty());
 		String name = "chemical_vent";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

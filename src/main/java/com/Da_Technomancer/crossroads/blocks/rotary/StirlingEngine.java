@@ -6,8 +6,6 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.StirlingEngineTileEnti
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -23,7 +21,7 @@ import java.util.List;
 public class StirlingEngine extends ContainerBlock{
 
 	public StirlingEngine(){
-		super(CRBlocks.METAL_PROPERTY);
+		super(CRBlocks.getMetalProperty());
 		String name = "stirling_engine";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

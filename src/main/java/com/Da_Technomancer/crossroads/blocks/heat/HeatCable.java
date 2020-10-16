@@ -10,7 +10,6 @@ import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -50,7 +49,7 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 	}
 
 	protected HeatCable(HeatInsulators insulator, String name){
-		super(CRBlocks.METAL_PROPERTY);
+		super(CRBlocks.getMetalProperty());
 		this.insulator = insulator;
 		setRegistryName(name);
 		CRBlocks.blockAddQue(this, itemProp);

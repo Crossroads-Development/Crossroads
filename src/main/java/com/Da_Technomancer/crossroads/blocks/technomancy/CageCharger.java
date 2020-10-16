@@ -8,7 +8,6 @@ import com.Da_Technomancer.crossroads.tileentities.technomancy.CageChargerTileEn
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
@@ -35,7 +34,7 @@ public class CageCharger extends ContainerBlock implements IReadable{
 	private static final VoxelShape SHAPE = VoxelShapes.or(makeCuboidShape(0, 0, 0, 16, 4, 16), makeCuboidShape(4, 4, 4, 12, 8, 12));
 
 	public CageCharger(){
-		super(CRBlocks.METAL_PROPERTY);
+		super(CRBlocks.getMetalProperty());
 		String name = "cage_charger";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

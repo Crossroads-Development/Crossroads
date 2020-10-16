@@ -6,7 +6,6 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReagentFilterTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -37,7 +36,7 @@ public class ReagentFilter extends ContainerBlock{
 	private final boolean crystal;
 
 	public ReagentFilter(boolean crystal){
-		super(CRBlocks.GLASS_PROPERTY);
+		super(CRBlocks.getGlassProperty());
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "reagent_filter";
 		setRegistryName(name);

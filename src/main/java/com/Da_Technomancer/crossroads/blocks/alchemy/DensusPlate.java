@@ -8,7 +8,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer;
@@ -38,7 +37,7 @@ public class DensusPlate extends ContainerBlock{
 	}
 
 	public DensusPlate(boolean anti){
-		super(CRBlocks.ROCK_PROPERTY);
+		super(CRBlocks.getRockProperty());
 		String name = anti ? "anti_densus_plate" : "densus_plate";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

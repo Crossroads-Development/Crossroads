@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.blocks.heat;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.heat.SmelterTileEntity;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -30,7 +29,7 @@ import java.util.List;
 public class Smelter extends ContainerBlock{
 
 	public Smelter(){
-		super(CRBlocks.METAL_PROPERTY);
+		super(CRBlocks.getMetalProperty());
 		String name = "heating_chamber";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

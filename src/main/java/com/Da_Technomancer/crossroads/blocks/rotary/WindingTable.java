@@ -6,7 +6,6 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.WindingTableTileEntity
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -34,7 +33,7 @@ import java.util.List;
 public class WindingTable extends ContainerBlock implements IReadable{
 
 	public WindingTable(){
-		super(CRBlocks.METAL_PROPERTY);
+		super(CRBlocks.getMetalProperty());
 		String name = "winding_table";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

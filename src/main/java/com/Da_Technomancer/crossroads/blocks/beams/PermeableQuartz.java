@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.blocks.beams;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
@@ -17,7 +16,7 @@ import java.util.List;
 public class PermeableQuartz extends Block{
 
 	public PermeableQuartz(){
-		super(CRBlocks.ROCK_PROPERTY);
+		super(CRBlocks.getRockProperty());
 		String name = "permeable_quartz";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

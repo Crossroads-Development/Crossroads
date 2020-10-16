@@ -4,7 +4,6 @@ import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -29,7 +28,7 @@ import java.util.List;
 public class DetailedCrafter extends Block{
 
 	public DetailedCrafter(){
-		super(CRBlocks.METAL_PROPERTY);
+		super(CRBlocks.getMetalProperty());
 		String name = "detailed_crafter";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

@@ -153,9 +153,17 @@ public class CRBlocks{
 	public static LodestoneTurbine lodestoneTurbine;
 	public static LodestoneDynamo lodestoneDynamo;
 
-	public static final AbstractBlock.Properties ROCK_PROPERTY = AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3).setRequiresTool().sound(SoundType.STONE);
-	public static final AbstractBlock.Properties METAL_PROPERTY = AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(3).setRequiresTool().sound(SoundType.METAL);
-	public static final AbstractBlock.Properties GLASS_PROPERTY = AbstractBlock.Properties.create(Material.GLASS).hardnessAndResistance(0.5F).sound(SoundType.GLASS);
+	public static AbstractBlock.Properties getRockProperty(){
+		return AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3).setRequiresTool().sound(SoundType.STONE);
+	}
+
+	public static AbstractBlock.Properties getMetalProperty(){
+		return AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(3).setRequiresTool().sound(SoundType.METAL);
+	}
+
+	public static AbstractBlock.Properties getGlassProperty(){
+		return AbstractBlock.Properties.create(Material.GLASS).hardnessAndResistance(0.5F).sound(SoundType.GLASS);
+	}
 
 	private static final Item.Properties itemBlockProp = new Item.Properties().group(CRItems.TAB_CROSSROADS);
 	public static final ArrayList<Block> toRegister = new ArrayList<>();
@@ -207,8 +215,8 @@ public class CRBlocks{
 		crystallinePrism = new CrystallinePrism();
 		beamReflector = new BeamReflector();
 		lensFrame = new LensFrame();
-		blockPureQuartz = new BasicBlock("block_pure_quartz", CRBlocks.ROCK_PROPERTY);
-		blockBrightQuartz = new BasicBlock("block_bright_quartz", CRBlocks.ROCK_PROPERTY.setLightLevel(state -> 15));
+		blockPureQuartz = new BasicBlock("block_pure_quartz", CRBlocks.getRockProperty());
+		blockBrightQuartz = new BasicBlock("block_bright_quartz", CRBlocks.getRockProperty().setLightLevel(state -> 15));
 		beamSiphon = new BeamSiphon();
 		beamSplitter = new BeamSplitter();
 		colorChart = new ColorChart();
@@ -266,7 +274,7 @@ public class CRBlocks{
 		glasswareHolder = new GlasswareHolder();
 		densusPlate = new DensusPlate(false);
 		antiDensusPlate = new DensusPlate(true);
-		cavorite = new BasicBlock("block_cavorite", CRBlocks.ROCK_PROPERTY){
+		cavorite = new BasicBlock("block_cavorite", CRBlocks.getRockProperty()){
 			@Override
 			public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 				tooltip.add(new TranslationTextComponent("tt.crossroads.cavorite"));
@@ -297,7 +305,7 @@ public class CRBlocks{
 		fluxSink = new FluxSink();
 		steamer = new Steamer();
 		windingTable = new WindingTable();
-		redstoneCrystal = new BasicBlock("redstone_crystal", CRBlocks.GLASS_PROPERTY.hardnessAndResistance(0.3F)){
+		redstoneCrystal = new BasicBlock("redstone_crystal", CRBlocks.getGlassProperty().hardnessAndResistance(0.3F)){
 			@Override
 			public boolean canProvidePower(BlockState state){
 				return true;

@@ -7,7 +7,6 @@ import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileE
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
@@ -25,7 +24,7 @@ import java.util.List;
 public class GatewayFrameEdge extends ContainerBlock implements IReadable{
 
 	public GatewayFrameEdge(){
-		super(CRBlocks.METAL_PROPERTY);
+		super(CRBlocks.getMetalProperty());
 		String name = "gateway_edge";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

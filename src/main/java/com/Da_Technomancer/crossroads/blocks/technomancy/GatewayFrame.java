@@ -9,7 +9,6 @@ import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
@@ -31,7 +30,7 @@ import java.util.List;
 public class GatewayFrame extends ContainerBlock implements IReadable{
 
 	public GatewayFrame(){
-		super(CRBlocks.METAL_PROPERTY);
+		super(CRBlocks.getMetalProperty());
 		String name = "gateway_frame";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

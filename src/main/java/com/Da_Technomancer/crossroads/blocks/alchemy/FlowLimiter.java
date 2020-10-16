@@ -5,7 +5,6 @@ import com.Da_Technomancer.crossroads.tileentities.alchemy.FlowLimiterTileEntity
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -35,7 +34,7 @@ public class FlowLimiter extends ContainerBlock{
 	private final boolean crystal;
 
 	public FlowLimiter(boolean crystal){
-		super(CRBlocks.GLASS_PROPERTY);
+		super(CRBlocks.getGlassProperty());
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "flow_limiter";
 		setRegistryName(name);

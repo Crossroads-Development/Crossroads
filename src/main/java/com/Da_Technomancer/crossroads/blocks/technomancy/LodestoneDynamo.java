@@ -6,7 +6,6 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.LodestoneDynamoTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -40,7 +39,7 @@ public class LodestoneDynamo extends ContainerBlock{
 	}
 
 	public LodestoneDynamo(){
-		super(CRBlocks.METAL_PROPERTY);
+		super(CRBlocks.getMetalProperty());
 		String name = "lodestone_dynamo";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

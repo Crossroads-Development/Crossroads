@@ -8,7 +8,6 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.HamsterWheelTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -44,7 +43,7 @@ public class HamsterWheel extends ContainerBlock{
 	}
 
 	public HamsterWheel(){
-		super(CRBlocks.METAL_PROPERTY.sound(SoundType.NETHER_WART));//Tried to find a fleshy sound
+		super(CRBlocks.getMetalProperty().sound(SoundType.NETHER_WART));//Tried to find a fleshy sound
 		String name = "hamster_wheel";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

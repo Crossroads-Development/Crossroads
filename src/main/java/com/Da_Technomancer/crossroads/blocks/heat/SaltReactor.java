@@ -5,7 +5,6 @@ import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.heat.SaltReactorTileEntity;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -31,7 +30,7 @@ import java.util.List;
 public class SaltReactor extends ContainerBlock{
 
 	public SaltReactor(){
-		super(CRBlocks.METAL_PROPERTY);
+		super(CRBlocks.getMetalProperty());
 		String name = "salt_reactor";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

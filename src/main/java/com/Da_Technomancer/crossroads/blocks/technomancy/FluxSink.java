@@ -7,7 +7,6 @@ import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -35,7 +34,7 @@ public class FluxSink extends ContainerBlock{
 	private final VoxelShape SHAPE = makeCuboidShape(1, 1, 1, 15, 15, 15);
 
 	public FluxSink(){
-		super(CRBlocks.METAL_PROPERTY);
+		super(CRBlocks.getMetalProperty());
 		setRegistryName("flux_sink");
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);

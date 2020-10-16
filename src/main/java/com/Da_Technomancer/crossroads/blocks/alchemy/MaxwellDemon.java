@@ -7,8 +7,6 @@ import com.Da_Technomancer.crossroads.tileentities.alchemy.MaxwellDemonTileEntit
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -25,7 +23,7 @@ import java.util.List;
 public class MaxwellDemon extends ContainerBlock{
 
 	public MaxwellDemon(){
-		super(CRBlocks.ROCK_PROPERTY);
+		super(CRBlocks.getRockProperty());
 		String name = "maxwell_demon";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

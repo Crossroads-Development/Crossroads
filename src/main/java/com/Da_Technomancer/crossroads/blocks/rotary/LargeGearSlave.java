@@ -7,7 +7,6 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEnt
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearSlaveTileEntity;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
@@ -50,7 +49,7 @@ public class LargeGearSlave extends ContainerBlock{
 	}
 
 	public LargeGearSlave(){
-		super(CRBlocks.METAL_PROPERTY);
+		super(CRBlocks.getMetalProperty());
 		String name = "large_gear_slave";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

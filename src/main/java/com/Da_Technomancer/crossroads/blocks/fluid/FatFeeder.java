@@ -5,8 +5,6 @@ import com.Da_Technomancer.crossroads.tileentities.fluid.FatFeederTileEntity;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -29,7 +27,7 @@ import java.util.List;
 public class FatFeeder extends ContainerBlock{
 
 	public FatFeeder(){
-		super(CRBlocks.METAL_PROPERTY);
+		super(CRBlocks.getMetalProperty());
 		String name = "fat_feeder";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

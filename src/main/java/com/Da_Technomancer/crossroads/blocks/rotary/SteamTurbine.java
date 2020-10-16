@@ -6,8 +6,6 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.SteamTurbineTileEntity
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -29,7 +27,7 @@ public class SteamTurbine extends ContainerBlock{
 	private VoxelShape SHAPE = VoxelShapes.or(makeCuboidShape(2, 0, 2, 14, 16, 14), makeCuboidShape(0, 5, 5, 16, 11, 11), makeCuboidShape(5, 5, 0, 11, 11, 16));
 
 	public SteamTurbine(){
-		super(CRBlocks.METAL_PROPERTY);
+		super(CRBlocks.getMetalProperty());
 		String name = "steam_turbine";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

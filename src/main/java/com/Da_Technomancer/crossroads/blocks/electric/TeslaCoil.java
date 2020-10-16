@@ -9,7 +9,6 @@ import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -39,7 +38,7 @@ public class TeslaCoil extends ContainerBlock{
 	private static final VoxelShape SHAPE_LEYD = VoxelShapes.or(SHAPE_EMPT, makeCuboidShape(5, 2, 5, 11, 14, 11));
 
 	public TeslaCoil(){
-		super(CRBlocks.METAL_PROPERTY);
+		super(CRBlocks.getMetalProperty());
 		String name = "tesla_coil";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

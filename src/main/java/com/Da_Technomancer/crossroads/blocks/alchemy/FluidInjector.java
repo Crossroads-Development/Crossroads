@@ -5,8 +5,6 @@ import com.Da_Technomancer.crossroads.tileentities.alchemy.FluidInjectorTileEnti
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -20,7 +18,7 @@ public class FluidInjector extends ContainerBlock{
 	private final boolean crystal;
 
 	public FluidInjector(boolean crystal){
-		super(CRBlocks.GLASS_PROPERTY);
+		super(CRBlocks.getGlassProperty());
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "fluid_injector";
 		setRegistryName(name);

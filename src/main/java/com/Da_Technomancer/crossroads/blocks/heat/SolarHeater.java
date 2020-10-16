@@ -8,7 +8,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -39,7 +38,7 @@ public class SolarHeater extends ContainerBlock{
 	private static final VoxelShape Z_SHAPE = Block.makeCuboidShape(1, 0, 0, 15, 8, 16);
 
 	public SolarHeater(){
-		super(CRBlocks.METAL_PROPERTY);
+		super(CRBlocks.getMetalProperty());
 		String name = "solar_heater";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

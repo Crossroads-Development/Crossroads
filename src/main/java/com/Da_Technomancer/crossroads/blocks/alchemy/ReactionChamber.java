@@ -8,8 +8,6 @@ import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactionChamberTileEn
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -37,7 +35,7 @@ public class ReactionChamber extends ContainerBlock{
 	private final boolean crystal;
 
 	public ReactionChamber(boolean crystal){
-		super(CRBlocks.GLASS_PROPERTY.notSolid());
+		super(CRBlocks.getGlassProperty().notSolid());
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "reaction_chamber";
 		setRegistryName(name);

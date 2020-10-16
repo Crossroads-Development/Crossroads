@@ -6,7 +6,6 @@ import com.Da_Technomancer.crossroads.tileentities.fluid.FatCongealerTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -36,7 +35,7 @@ import java.util.List;
 public class FatCongealer extends ContainerBlock{
 
 	public FatCongealer(){
-		super(CRBlocks.METAL_PROPERTY);
+		super(CRBlocks.getMetalProperty());
 		String name = "fat_congealer";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

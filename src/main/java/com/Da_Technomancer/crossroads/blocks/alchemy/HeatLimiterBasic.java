@@ -6,7 +6,6 @@ import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatLimiterBasicTileE
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -31,7 +30,7 @@ import java.util.List;
 public class HeatLimiterBasic extends ContainerBlock{
 
 	public HeatLimiterBasic(){
-		super(CRBlocks.ROCK_PROPERTY);
+		super(CRBlocks.getRockProperty());
 		String name = "heat_limiter_basic";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);

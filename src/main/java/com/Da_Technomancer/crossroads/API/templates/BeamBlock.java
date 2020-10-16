@@ -7,7 +7,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer;
@@ -29,7 +28,7 @@ public abstract class BeamBlock extends ContainerBlock{
 	}
 
 	public BeamBlock(String name){
-		this(name, CRBlocks.ROCK_PROPERTY);
+		this(name, CRBlocks.getRockProperty());
 	}
 
 	@Override

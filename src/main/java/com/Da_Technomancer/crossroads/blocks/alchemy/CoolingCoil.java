@@ -5,7 +5,6 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.CoolingCoilTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer;
@@ -30,7 +29,7 @@ public class CoolingCoil extends ContainerBlock{
 	private final boolean crystal;
 
 	public CoolingCoil(boolean crystal){
-		super(CRBlocks.GLASS_PROPERTY.notSolid());
+		super(CRBlocks.getGlassProperty().notSolid());
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "cooling_coil";
 		setRegistryName(name);
