@@ -1,8 +1,12 @@
 {
-	"parent": "block/cube_bottom_top",
+	"parent": "block/cube_all",
 	"textures": {
-		"side": "crossroads:block/steam_boiler_side",
-		"top": "crossroads:block/steam_boiler_top",
-		"bottom": "crossroads:block/bronze_heat"
+		"west": "crossroads:block/steam_boiler_side",
+		"east": "crossroads:block/steam_boiler_side",
+		"south": "crossroads:block/steam_boiler_side",
+		"north": "crossroads:block/steam_boiler_side",
+		"particle": "crossroads:block/steam_boiler_side",
+		"up": "crossroads:block/steam_boiler_top",
+		"down": "crossroads:block/steam_boiler_bottom"
 	}
 }

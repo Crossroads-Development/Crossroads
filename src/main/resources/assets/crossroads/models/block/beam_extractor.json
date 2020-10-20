@@ -5,8 +5,8 @@
 		"south": "crossroads:block/beam_extractor_side",
 		"east": "crossroads:block/beam_extractor_side",
 		"west": "crossroads:block/beam_extractor_side",
-		"up": "crossroads:block/beam_extractor_side",
-		"down": "crossroads:block/beam_extractor_side",
+		"up": "block/obsidian",
+		"down": "block/obsidian",
 		"particle": "crossroads:block/beam_extractor_side"
 	}
 }
