@@ -65,18 +65,10 @@ public class RedstoneHeatCable extends HeatCable implements IReadable{
 			if(!state.get(ESProperties.REDSTONE_BOOL)){
 				worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, true));
 				worldIn.updateComparatorOutputLevel(pos, this);
-				TileEntity te = worldIn.getTileEntity(pos);
-				if(te != null){
-					te.updateContainingBlockInfo();
-				}
 			}
 		}else if(state.get(ESProperties.REDSTONE_BOOL)){
 			worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, false));
 			worldIn.updateComparatorOutputLevel(pos, this);
-			TileEntity te = worldIn.getTileEntity(pos);
-			if(te != null){
-				te.updateContainingBlockInfo();
-			}
 		}
 	}
 

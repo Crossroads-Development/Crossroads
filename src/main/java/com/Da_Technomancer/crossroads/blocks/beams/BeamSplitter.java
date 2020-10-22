@@ -1,14 +1,18 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.CircuitUtil;
 import com.Da_Technomancer.crossroads.API.templates.BeamBlock;
 import com.Da_Technomancer.crossroads.tileentities.beams.BeamSplitterTileEntity;
 import com.Da_Technomancer.essentials.blocks.redstone.IWireConnect;
+import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -37,12 +41,33 @@ public class BeamSplitter extends BeamBlock implements IWireConnect{
 	}
 
 	@Override
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+		super.fillStateContainer(builder);
+		builder.add(CRProperties.POWER_LEVEL);
+	}
+
+	@Override
+	public BlockState getStateForPlacement(BlockItemUseContext context){
+		int power = RedstoneUtil.getRedstoneAtPos(context.getWorld(), context.getPos());
+		return super.getStateForPlacement(context).with(CRProperties.POWER_LEVEL, power >= 15 ? 2 : power == 0 ? 0 : 1);
+	}
+
+	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
 		TileEntity te = worldIn.getTileEntity(pos);
 
 		if(te instanceof BeamSplitterTileEntity){
 			BeamSplitterTileEntity bte = (BeamSplitterTileEntity) te;
 			CircuitUtil.updateFromWorld(bte.redsHandler, blockIn);
+			float powerLevel = bte.getPowerMultiplier();
+			int prevPowerLevel = state.get(CRProperties.POWER_LEVEL);
+			if(powerLevel <= 0 && prevPowerLevel != 0){
+				worldIn.setBlockState(pos, state.with(CRProperties.POWER_LEVEL, 0));
+			}else if(powerLevel >= 1F && prevPowerLevel != 2){
+				worldIn.setBlockState(pos, state.with(CRProperties.POWER_LEVEL, 2));
+			}else if(powerLevel > 0 && powerLevel < 1F && prevPowerLevel != 1){
+				worldIn.setBlockState(pos, state.with(CRProperties.POWER_LEVEL, 1));
+			}
 		}
 	}
 

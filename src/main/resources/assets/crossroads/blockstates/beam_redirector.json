@@ -1,10 +1,16 @@
 {
 	"variants": {
-		"facing=north": { "model": "crossroads:block/beam_redirector", "x": 90 },
-		"facing=south": { "model": "crossroads:block/beam_redirector", "x": 270 },
-		"facing=east": { "model": "crossroads:block/beam_redirector", "x": 90, "y": 90 },
-		"facing=west": { "model": "crossroads:block/beam_redirector", "x": 90, "y": 270 },
-		"facing=up": { "model": "crossroads:block/beam_redirector" },
-		"facing=down": { "model": "crossroads:block/beam_redirector", "x": 180 }
+		"redstone_bool=false,facing=north": { "model": "crossroads:block/beam_redirector", "x": 90 },
+		"redstone_bool=false,facing=south": { "model": "crossroads:block/beam_redirector", "x": 270 },
+		"redstone_bool=false,facing=east": { "model": "crossroads:block/beam_redirector", "x": 90, "y": 90 },
+		"redstone_bool=false,facing=west": { "model": "crossroads:block/beam_redirector", "x": 90, "y": 270 },
+		"redstone_bool=false,facing=up": { "model": "crossroads:block/beam_redirector" },
+		"redstone_bool=false,facing=down": { "model": "crossroads:block/beam_redirector", "x": 180 },
+		"redstone_bool=true,facing=north": { "model": "crossroads:block/beam_redirector_powered", "x": 90 },
+		"redstone_bool=true,facing=south": { "model": "crossroads:block/beam_redirector_powered", "x": 270 },
+		"redstone_bool=true,facing=east": { "model": "crossroads:block/beam_redirector_powered", "x": 90, "y": 90 },
+		"redstone_bool=true,facing=west": { "model": "crossroads:block/beam_redirector_powered", "x": 90, "y": 270 },
+		"redstone_bool=true,facing=up": { "model": "crossroads:block/beam_redirector_powered" },
+		"redstone_bool=true,facing=down": { "model": "crossroads:block/beam_redirector_powered", "x": 180 }
 	}
 }

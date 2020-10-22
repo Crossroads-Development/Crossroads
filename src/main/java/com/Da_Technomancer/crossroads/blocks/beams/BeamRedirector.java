@@ -1,12 +1,17 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.templates.BeamBlock;
 import com.Da_Technomancer.crossroads.tileentities.beams.BeamRedirectorTileEntity;
+import com.Da_Technomancer.essentials.blocks.ESProperties;
+import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -22,6 +27,7 @@ public class BeamRedirector extends BeamBlock{
 
 	public BeamRedirector(){
 		super("beam_redirector");
+		setDefaultState(getDefaultState().with(CRProperties.REDSTONE_BOOL, false));
 	}
 
 	@Override
@@ -30,16 +36,24 @@ public class BeamRedirector extends BeamBlock{
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
-		neighborChanged(state, world, pos, this, pos, false);
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+		super.fillStateContainer(builder);
+		builder.add(CRProperties.REDSTONE_BOOL);
+	}
+
+	@Override
+	public BlockState getStateForPlacement(BlockItemUseContext context){
+		return super.getStateForPlacement(context).with(ESProperties.REDSTONE_BOOL, context.getWorld().isBlockPowered(context.getPos()));
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
-		TileEntity te = worldIn.getTileEntity(pos);
-		if(te instanceof BeamRedirectorTileEntity){
-			boolean hasRedstone = worldIn.getRedstonePower(pos.east(), Direction.EAST) != 0 || worldIn.getRedstonePower(pos.west(), Direction.WEST) != 0 || worldIn.getRedstonePower(pos.north(), Direction.NORTH) != 0 || worldIn.getRedstonePower(pos.south(), Direction.SOUTH) != 0 || worldIn.getRedstonePower(pos.down(), Direction.DOWN) != 0 || worldIn.getRedstonePower(pos.up(), Direction.UP) != 0;
-			((BeamRedirectorTileEntity) te).setRedstone(hasRedstone);
+		if(worldIn.isBlockPowered(pos)){
+			if(!state.get(ESProperties.REDSTONE_BOOL)){
+				worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, true));
+			}
+		}else if(state.get(ESProperties.REDSTONE_BOOL)){
+			worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, false));
 		}
 	}
 

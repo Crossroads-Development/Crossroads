@@ -5,7 +5,7 @@
 		"south": "crossroads:block/beam_redirector_side",
 		"east": "crossroads:block/beam_redirector_side",
 		"west": "crossroads:block/beam_redirector_side",
-		"up": "crossroads:block/beam_splitter_out",
+		"up": "crossroads:block/beam_splitter_out_closed",
 		"down": "crossroads:block/beam_splitter_out",
 		"particle": "crossroads:block/beam_redirector_side"
 	}

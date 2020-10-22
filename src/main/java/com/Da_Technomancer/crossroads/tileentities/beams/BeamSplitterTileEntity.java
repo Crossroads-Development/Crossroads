@@ -42,8 +42,16 @@ public class BeamSplitterTileEntity extends BeamRenderTE{
 
 	@Override
 	public void updateContainingBlockInfo(){
-		super.updateContainingBlockInfo();
+		Direction prev = dir;
 		dir = null;
+		if(prev != getDir()){
+			//It's a waste to regenerate the beamers if it was only a redstone signal changing
+			super.updateContainingBlockInfo();
+		}
+	}
+
+	public float getPowerMultiplier(){
+		return Math.max(0, Math.min(1F, CircuitUtil.combineRedsSources(redsHandler) / 15F));
 	}
 
 	@Override
@@ -61,7 +69,7 @@ public class BeamSplitterTileEntity extends BeamRenderTE{
 
 	@Override
 	protected void doEmit(BeamUnit out){
-		int toFill = Math.round(out.getPower() * Math.max(0, Math.min(1F, CircuitUtil.combineRedsSources(redsHandler) / 15F)));
+		int toFill = Math.round(out.getPower() * getPowerMultiplier());
 		Direction facing = getDir();
 		BeamUnit toDraw;
 		BeamUnit remain;

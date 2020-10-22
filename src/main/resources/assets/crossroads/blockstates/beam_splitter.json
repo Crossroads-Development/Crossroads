@@ -1,10 +1,22 @@
 {
 	"variants": {
-		"facing=north": { "model": "crossroads:block/beam_splitter", "x": 90 },
-		"facing=south": { "model": "crossroads:block/beam_splitter", "x": 270 },
-		"facing=east": { "model": "crossroads:block/beam_splitter", "x": 90, "y": 90 },
-		"facing=west": { "model": "crossroads:block/beam_splitter", "x": 90, "y": 270 },
-		"facing=up": { "model": "crossroads:block/beam_splitter" },
-		"facing=down": { "model": "crossroads:block/beam_splitter", "x": 180 }
+		"power_level=0,facing=north": { "model": "crossroads:block/beam_splitter", "x": 90 },
+		"power_level=0,facing=south": { "model": "crossroads:block/beam_splitter", "x": 270 },
+		"power_level=0,facing=east": { "model": "crossroads:block/beam_splitter", "x": 90, "y": 90 },
+		"power_level=0,facing=west": { "model": "crossroads:block/beam_splitter", "x": 90, "y": 270 },
+		"power_level=0,facing=up": { "model": "crossroads:block/beam_splitter" },
+		"power_level=0,facing=down": { "model": "crossroads:block/beam_splitter", "x": 180 },
+		"power_level=1,facing=north": { "model": "crossroads:block/beam_splitter_split", "x": 90 },
+		"power_level=1,facing=south": { "model": "crossroads:block/beam_splitter_split", "x": 270 },
+		"power_level=1,facing=east": { "model": "crossroads:block/beam_splitter_split", "x": 90, "y": 90 },
+		"power_level=1,facing=west": { "model": "crossroads:block/beam_splitter_split", "x": 90, "y": 270 },
+		"power_level=1,facing=up": { "model": "crossroads:block/beam_splitter_split" },
+		"power_level=1,facing=down": { "model": "crossroads:block/beam_splitter_split", "x": 180 },
+		"power_level=2,facing=north": { "model": "crossroads:block/beam_splitter_full", "x": 90 },
+		"power_level=2,facing=south": { "model": "crossroads:block/beam_splitter_full", "x": 270 },
+		"power_level=2,facing=east": { "model": "crossroads:block/beam_splitter_full", "x": 90, "y": 90 },
+		"power_level=2,facing=west": { "model": "crossroads:block/beam_splitter_full", "x": 90, "y": 270 },
+		"power_level=2,facing=up": { "model": "crossroads:block/beam_splitter_full" },
+		"power_level=2,facing=down": { "model": "crossroads:block/beam_splitter_full", "x": 180 }
 	}
 }

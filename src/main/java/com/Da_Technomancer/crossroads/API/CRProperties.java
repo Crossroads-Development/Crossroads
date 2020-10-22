@@ -23,7 +23,8 @@ public class CRProperties extends ESProperties{
 	public static final EnumProperty<AbstractGlassware.GlasswareTypes> CONTAINER_TYPE = EnumProperty.create("container_type", AbstractGlassware.GlasswareTypes.class);
 //	public static final EnumProperty<MathAxisTileEntity.Arrangement> ARRANGEMENT = EnumProperty.create("arrangement", MathAxisTileEntity.Arrangement.class);
 	public static final EnumProperty<TemporalAccelerator.Mode> ACCELERATOR_TARGET = EnumProperty.create("accel_target", TemporalAccelerator.Mode.class);
-	public static final BooleanProperty TOP = BooleanProperty.create("top");
+//	public static final BooleanProperty TOP = BooleanProperty.create("top");
+	public static final IntegerProperty POWER_LEVEL = IntegerProperty.create("power_level", 0, 2);//Used for changing visual model on the beam splitter; 0 is no signal, 2 for signal >= 15, 1 for signal in (0, 15)
 
 	//Individual properties for each direction- for blocks with a conduit-like shape
 	public static final BooleanProperty[] HAS_MATCH_SIDES = new BooleanProperty[] {BooleanProperty.create("down_b"), BooleanProperty.create("up_b"), BooleanProperty.create("north_b"), BooleanProperty.create("south_b"), BooleanProperty.create("west_b"), BooleanProperty.create("east_b")};

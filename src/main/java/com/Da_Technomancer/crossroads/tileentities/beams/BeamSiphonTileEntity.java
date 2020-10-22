@@ -42,8 +42,12 @@ public class BeamSiphonTileEntity extends BeamRenderTE{
 
 	@Override
 	public void updateContainingBlockInfo(){
-		super.updateContainingBlockInfo();
+		Direction prev = dir;
 		dir = null;
+		if(prev != getDir()){
+			//It's a waste to regenerate the beamers if it was only a redstone signal changing
+			super.updateContainingBlockInfo();
+		}
 	}
 
 	@Override
@@ -59,9 +63,13 @@ public class BeamSiphonTileEntity extends BeamRenderTE{
 		redsHandler.read(state, nbt);
 	}
 
+	public int getPowerInput(){
+		return Math.max(0, Math.round(CircuitUtil.combineRedsSources(redsHandler)));
+	}
+
 	@Override
 	protected void doEmit(BeamUnit out){
-		int toFill = Math.max(0, Math.round(CircuitUtil.combineRedsSources(redsHandler)));
+		int toFill = getPowerInput();
 		Direction facing = getDir();
 		BeamUnit toDraw;
 		BeamUnit remain;
