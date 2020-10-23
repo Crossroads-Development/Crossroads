@@ -11,7 +11,8 @@ displayName="Crossroads" #mandatory
 # displayURL="http://example.com/" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
 # logoFile="examplemod.png" #optional
-credits='''Many textures were created by 5284973, Potus4mine, Unnamed1334, marbles-box. Translations by Луксиния Гримхольд.''' #optional
+credits='''Many textures were created by 5284973, Potus4mine, Unnamed1334, marbles-box, DA.
+Translations by Луксиния Гримхольд.''' #optional
 authors="Technomancer" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''

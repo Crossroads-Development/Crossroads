@@ -2,19 +2,18 @@
 	"type": "minecraft:crafting_shaped",
 	"result": {
 		"item": "crossroads:beam_reflector",
-		"count": 1
+		"count": 4
 	},
 	"pattern": [
-		"S",
-		"Q",
-		"S"
+		"QBQ",
+		"QQQ"
 	],
 	"key": {
 		"Q": {
 			"tag": "crossroads:gems/pure_quartz"
 		},
-		"S": {
-			"tag": "forge:stone"
+		"B": {
+			"tag": "forge:ingots/bronze"
 		}
 	}
 }

@@ -146,7 +146,7 @@ public class BeamSiphonTileEntity extends BeamRenderTE{
 		redsOpt.invalidate();
 	}
 
-	public CircuitUtil.CircHandler redsHandler = new CircuitUtil.CircHandler();
+	public CircuitUtil.InputCircHandler redsHandler = new CircuitUtil.InputCircHandler();
 	private final LazyOptional<IRedstoneHandler> redsOpt = CircuitUtil.makeBaseCircuitOptional(this, redsHandler, 0);
 
 	@Override

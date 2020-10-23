@@ -1,6 +1,6 @@
 {
 	"parent": "block/cube_all",
 	"textures": {
-		"all": "crossroads:block/block_bronze"
+		"all": "crossroads:block/wip"
 	}
 }

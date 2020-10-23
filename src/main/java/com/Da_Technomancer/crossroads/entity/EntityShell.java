@@ -31,25 +31,24 @@ public class EntityShell extends ThrowableEntity implements IRendersAsItem{
 
 	@ObjectHolder("shell")
 	public static EntityType<EntityShell> type = null;
-	private static final DataParameter<Boolean> crystal = EntityDataManager.createKey(EntityShell.class, DataSerializers.BOOLEAN);
-	private static final ItemStack[] RENDER_STACK = new ItemStack[] {new ItemStack(CRItems.shellGlass), new ItemStack(CRItems.shellCrystal)};
+	private static final DataParameter<ItemStack> item = EntityDataManager.createKey(EntityShell.class, DataSerializers.ITEMSTACK);
 
-	private ReagentMap contents;
+	private ReagentMap contents;//Technically redundant with the itemstack in data manager, but meh
 
 	public EntityShell(EntityType<EntityShell> type, World worldIn){
 		super(type, worldIn);
 	}
 
-	public EntityShell(World worldIn, ReagentMap contents, boolean isCrystal){
+	public EntityShell(World worldIn, ReagentMap contents, ItemStack stack){
 		this(type, worldIn);
 		this.contents = contents;
-		dataManager.set(crystal, isCrystal);
+		dataManager.set(item, stack);
 	}
 
-	public EntityShell(World worldIn, LivingEntity throwerIn, ReagentMap contents, boolean isCrystal){
+	public EntityShell(World worldIn, LivingEntity throwerIn, ReagentMap contents, ItemStack stack){
 		super(type, throwerIn, worldIn);
 		this.contents = contents;
-		dataManager.set(crystal, isCrystal);
+		dataManager.set(item, stack);
 	}
 
 	@Override
@@ -67,7 +66,7 @@ public class EntityShell extends ThrowableEntity implements IRendersAsItem{
 
 	@Override
 	protected void registerData(){
-		dataManager.register(crystal, false);
+		dataManager.register(item, new ItemStack(CRItems.shellGlass));
 	}
 
 	@Override
@@ -92,6 +91,6 @@ public class EntityShell extends ThrowableEntity implements IRendersAsItem{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public ItemStack getItem(){
-		return dataManager.get(crystal) ? RENDER_STACK[1] : RENDER_STACK[0];
+		return dataManager.get(item);
 	}
 }

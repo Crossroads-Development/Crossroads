@@ -121,6 +121,7 @@ public class CRTileEntity{
 		register(DetailedAutoCrafterTileEntity::new, "detailed_auto_crafter", reg, detailedAutoCrafter);
 		register(LodestoneTurbineTileEntity::new, "lodestone_turbine", reg, lodestoneTurbine);
 		register(LodestoneDynamoTileEntity::new, "lodestone_dynamo", reg, lodestoneDynamo);
+		register(SequenceBoxTileEntity::new, "sequence_box", reg, sequenceBox);
 	}
 
 	private static void register(Supplier<? extends TileEntity> cons, String id, IForgeRegistry<TileEntityType<?>> reg, Block... blocks){

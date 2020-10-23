@@ -117,7 +117,7 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 		redsOpt.invalidate();
 	}
 
-	public CircuitUtil.CircHandler redsHandler = new CircuitUtil.CircHandler();
+	public CircuitUtil.InputCircHandler redsHandler = new CircuitUtil.InputCircHandler();
 	private LazyOptional<IRedstoneHandler> redsOpt = CircuitUtil.makeBaseCircuitOptional(this, redsHandler, 0);
 
 	@Override

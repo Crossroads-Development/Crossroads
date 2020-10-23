@@ -19,23 +19,35 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.function.Supplier;
 
 public class CircuitUtil extends RedstoneUtil{
 
-	public static float combineRedsSources(CircHandler handler){
+	public static float combineRedsSources(InputCircHandler handler){
 		if(!handler.builtConnections){
 			handler.buildConnections();
 		}
 		return sanitize(RedstoneUtil.chooseInput(handler.getCircRedstone(), handler.getWorldRedstone()));
 	}
 
-	public static LazyOptional<IRedstoneHandler> makeBaseCircuitOptional(TileEntity te, CircHandler handler, float startingRedstone){
+	public static LazyOptional<IRedstoneHandler> makeBaseCircuitOptional(TileEntity te, InputCircHandler handler, float startingRedstone){
 		LazyOptional<IRedstoneHandler> optional = LazyOptional.of(() -> handler);
 		handler.setup(optional, te, startingRedstone);
 		return optional;
 	}
 
-	public static void updateFromWorld(CircHandler handler, Block updatingBlock){
+	public static LazyOptional<IRedstoneHandler> makeBaseCircuitOptional(TileEntity te, OutputCircHandler handler, Supplier<Float> outputSupplier){
+		LazyOptional<IRedstoneHandler> optional = LazyOptional.of(() -> handler);
+		handler.setup(optional, te, outputSupplier);
+		return optional;
+	}
+
+	/**
+	 * Should be called on block update
+	 * @param handler The handler being updated
+	 * @param updatingBlock The block that created the update
+	 */
+	public static void updateFromWorld(InputCircHandler handler, Block updatingBlock){
 		//Check for circuit input changes
 		//Simple optimization- if the block update is just signal strength changing, we don't need to rebuild connections
 		if(updatingBlock != Blocks.REDSTONE_WIRE && !(updatingBlock instanceof RedstoneDiodeBlock)){
@@ -47,10 +59,124 @@ public class CircuitUtil extends RedstoneUtil{
 	}
 
 	/**
+	 * Should be called on block update and block placement
+	 * @param handler The handler being updated
+	 * @param updatingBlock The block that created the update, or the block containing the handler if this was initial placement
+	 */
+	public static void updateFromWorld(OutputCircHandler handler, Block updatingBlock){
+		//Check for circuit configuration changes
+		//Simple optimization- if the block update is just signal strength changing, we don't need to rebuild connections
+		if(updatingBlock != Blocks.REDSTONE_WIRE && !(updatingBlock instanceof RedstoneDiodeBlock)){
+			handler.buildDependents();
+		}
+	}
+
+	/**
+	 * This is a useful bare-bones implementation of IRedstoneHandler that only outputs a circuit signal, and does not receive it
+	 * Does not handle outputting a world-redstone signal, but can be used in conjunction
+	 * It is strongly suggested to use this class- and associated helpers- when applicable
+	 */
+	public static class OutputCircHandler implements IRedstoneHandler{
+
+		private WeakReference<LazyOptional<IRedstoneHandler>> redsRef;
+		private final ArrayList<WeakReference<LazyOptional<IRedstoneHandler>>> dependents = new ArrayList<>(1);
+		private Supplier<Float> outputSupplier;
+		private TileEntity te;
+
+		private void setup(LazyOptional<IRedstoneHandler> circuitOpt, TileEntity te, Supplier<Float> outputSupplier){
+			redsRef = new WeakReference<>(circuitOpt);
+			this.te = te;
+			this.outputSupplier = outputSupplier;
+		}
+
+		/**
+		 * Called by the tile entity when the value returned by outputSupplier.get() changes
+		 * Note that if the tile entity also emits a vanilla redstone signal, it should call world::notifyNeighborsOfStateChange (for strong power) or world::neighborChanged (on the neighbor, for weak power)
+		 */
+		public void notifyOutputChange(){
+			//Notify dependents and/or neighbors that getPower output has changed
+			for(int i = 0; i < dependents.size(); i++){
+				WeakReference<LazyOptional<IRedstoneHandler>> depend = dependents.get(i);
+				LazyOptional<IRedstoneHandler> optional;
+				//Validate dependent
+				if(depend == null || (optional = depend.get()) == null || !optional.isPresent()){
+					dependents.remove(i);
+					i--;
+					continue;
+				}
+				//Notify the dependent of a change
+				optional.orElseThrow(NullPointerException::new).notifyInputChange(redsRef);
+			}
+		}
+
+		/**
+		 * Rebuilds the list of dependents
+		 * Should be called when the block is placed and onNeighborChanged
+		 */
+		private void buildDependents(){
+			dependents.clear();//Wipe the old dependents list
+
+			World world;
+			if(te != null && (world = te.getWorld()) != null && !world.isRemote){
+				BlockPos pos = te.getPos();
+
+				//Check in all 6 directions because this block outputs in every direction
+				for(Direction dir : Direction.values()){
+					TileEntity te = world.getTileEntity(pos.offset(dir));
+					LazyOptional<IRedstoneHandler> otherOpt;
+					if(te != null && (otherOpt = te.getCapability(RedstoneUtil.REDSTONE_CAPABILITY, dir.getOpposite())).isPresent()){
+						IRedstoneHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
+						otherHandler.findDependents(redsRef, 0, dir.getOpposite(), dir);
+					}
+				}
+			}
+		}
+
+		@Override
+		public float getOutput(){
+			return outputSupplier.get();
+		}
+
+		@Override
+		public void findDependents(WeakReference<LazyOptional<IRedstoneHandler>> src, int dist, Direction fromSide, Direction nominalSide){
+			//No-Op
+		}
+
+		@Override
+		public void requestSrc(WeakReference<LazyOptional<IRedstoneHandler>> dependency, int dist, Direction toSide, Direction nominalSide){
+			LazyOptional<IRedstoneHandler> depenOption;
+			if((depenOption = dependency.get()) != null && depenOption.isPresent()){
+				IRedstoneHandler depHandler = depenOption.orElseThrow(NullPointerException::new);
+				depHandler.addSrc(redsRef, nominalSide);
+				if(!dependents.contains(dependency)){
+					dependents.add(dependency);
+				}
+			}
+		}
+
+		@Override
+		public void addSrc(WeakReference<LazyOptional<IRedstoneHandler>> src, Direction fromSide){
+
+		}
+
+		@Override
+		public void addDependent(WeakReference<LazyOptional<IRedstoneHandler>> dependent, Direction toSide){
+			if(!dependents.contains(dependent)){
+				dependents.add(dependent);
+			}
+		}
+
+		@Override
+		public void notifyInputChange(WeakReference<LazyOptional<IRedstoneHandler>> src){
+
+		}
+	}
+
+	/**
 	 * This is a useful bare-bones implementation of IRedstoneHandler that only receives a circuit/redstone signal, and does not transmit it
 	 * It is strongly suggested to use this class- and associated helpers- when applicable
 	 */
-	public static class CircHandler implements IRedstoneHandler{
+	public static class InputCircHandler implements IRedstoneHandler{
 
 		/**
 		 * Stores all circuit sources
@@ -61,14 +187,14 @@ public class CircuitUtil extends RedstoneUtil{
 		 *
 		 * World redstone will not be checked in any direction with a valid source
 		 */
-		private ArrayList<Pair<WeakReference<LazyOptional<IRedstoneHandler>>, Direction>> sources = new ArrayList<>(1);
+		private final ArrayList<Pair<WeakReference<LazyOptional<IRedstoneHandler>>, Direction>> sources = new ArrayList<>(1);
 		private boolean builtConnections = false;
 		private WeakReference<LazyOptional<IRedstoneHandler>> redsRef;
 		private float circRedstone;
 		private int worldRedstone;
 		private TileEntity te;
 
-		public void setup(LazyOptional<IRedstoneHandler> circuitOpt, TileEntity te, float initCircRedstone){
+		private void setup(LazyOptional<IRedstoneHandler> circuitOpt, TileEntity te, float initCircRedstone){
 			redsRef = new WeakReference<>(circuitOpt);
 			circRedstone = initCircRedstone;
 			this.te = te;

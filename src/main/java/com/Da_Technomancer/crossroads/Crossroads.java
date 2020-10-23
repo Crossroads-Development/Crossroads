@@ -239,6 +239,7 @@ public final class Crossroads{
 		registerCon(SteamerContainer::new, SteamerScreen::new, "steamer", e);
 		registerCon(WindingTableContainer::new, WindingTableScreen::new, "winding_table", e);
 		registerCon(DetailedAutoCrafterContainer::new, DetailedAutoCrafterScreen::new, "detailed_auto_crafter", e);
+		registerCon(SequenceBoxContainer::new, SequenceBoxScreen::new, "sequence_box", e);
 	}
 
 	@SuppressWarnings("unused")
@@ -272,6 +273,7 @@ public final class Crossroads{
 		registerConType(SteamerContainer::new, "steamer", e);
 		registerConType(WindingTableContainer::new, "winding_table", e);
 		registerConType(DetailedAutoCrafterContainer::new, "detailed_auto_crafter", e);
+		registerConType(SequenceBoxContainer::new, "sequence_box", e);
 	}
 
 	/**
