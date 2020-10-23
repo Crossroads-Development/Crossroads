@@ -14,7 +14,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -30,6 +29,9 @@ public class StirlingEngineTileEntity extends ModuleTE{
 
 	public static final double INERTIA = 200;
 	public static final double RATE = 5;
+
+	private double tempSide;
+	private double tempBottom;
 
 	public StirlingEngineTileEntity(){
 		super(type);
@@ -52,13 +54,8 @@ public class StirlingEngineTileEntity extends ModuleTE{
 		return INERTIA;
 	}
 
-	private double tempSide;
-	private double tempBottom;
-	private boolean init = false;
-
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		init();
 		chat.add(new TranslationTextComponent("tt.crossroads.stirling_engine.side_temp", CRConfig.formatVal(tempSide)));
 		chat.add(new TranslationTextComponent("tt.crossroads.stirling_engine.bottom_temp", CRConfig.formatVal(tempBottom)));
 		//We have to add the biome temp manually because we don't use the ModuleTE heat template
@@ -76,32 +73,33 @@ public class StirlingEngineTileEntity extends ModuleTE{
 		init();
 
 		int level = (int) ((tempSide - tempBottom) / 100D);
-		tempSide -= RATE * level;
-		tempBottom += RATE * level;
 
-		if(axleHandler.axis != null && Math.signum(level) * motData[0] < CRConfig.stirlingSpeedLimit.get()){
-			motData[1] += CRConfig.stirlingMultiplier.get() * RATE * level * Math.abs(level);//5*stirlingMult*level^2 with sign of level
+		if(level != 0){
+			tempSide -= RATE * level;
+			tempBottom += RATE * level;
+
+			if(axleHandler.axis != null && Math.signum(level) * motData[0] < CRConfig.stirlingSpeedLimit.get()){
+				motData[1] += CRConfig.stirlingMultiplier.get() * RATE * level * Math.abs(level);//5*stirlingMult*level^2 with sign of level
+			}
+
+			markDirty();
 		}
-
-		markDirty();
 	}
 
 	@Override
 	public void read(BlockState state, CompoundNBT nbt){
 		super.read(state, nbt);
 
-		nbt.putBoolean("initHeat", init);
-		nbt.putDouble("temp_side", tempSide);
-		nbt.putDouble("temp_bottom", tempBottom);
+		tempSide = nbt.getDouble("temp_side");
+		tempBottom = nbt.getDouble("temp_bottom");
 	}
 
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
 
-		init = nbt.getBoolean("initHeat");
-		tempSide = nbt.getDouble("temp_side");
-		tempBottom = nbt.getDouble("temp_bottom");
+		nbt.putDouble("temp_side", tempSide);
+		nbt.putDouble("temp_bottom", tempBottom);
 
 		return nbt;
 	}
@@ -130,10 +128,10 @@ public class StirlingEngineTileEntity extends ModuleTE{
 	}
 
 	private void init(){
-		if(!init){
+		if(!initHeat){
 			tempSide = HeatUtil.convertBiomeTemp(world, pos);
 			tempBottom = tempSide;
-			init = true;
+			initHeat = true;
 		}
 	}
 
@@ -149,12 +147,14 @@ public class StirlingEngineTileEntity extends ModuleTE{
 		public void setTemp(double tempIn){
 			init();
 			tempSide = tempIn;
+			markDirty();
 		}
 
 		@Override
 		public void addHeat(double heat){
 			init();
 			tempSide += heat;
+			markDirty();
 		}
 	}
 
@@ -170,12 +170,14 @@ public class StirlingEngineTileEntity extends ModuleTE{
 		public void setTemp(double tempIn){
 			init();
 			tempBottom = tempIn;
+			markDirty();
 		}
 
 		@Override
 		public void addHeat(double heat){
 			init();
 			tempBottom += heat;
+			markDirty();
 		}
 	}
 }
