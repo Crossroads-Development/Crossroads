@@ -89,8 +89,8 @@ public class WindTurbine extends ContainerBlock implements IReadable{
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.wind_turbine.desc"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.wind_turbine.power", 2 * WindTurbineTileEntity.POWER_PER_LEVEL, WindTurbineTileEntity.POWER_PER_LEVEL));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.wind_turbine.limits", WindTurbineTileEntity.MAX_SPEED, 2 * WindTurbineTileEntity.POWER_PER_LEVEL));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.wind_turbine.power", WindTurbineTileEntity.LOW_POWER, WindTurbineTileEntity.HIGH_POWER, (WindTurbineTileEntity.LOW_POWER + WindTurbineTileEntity.HIGH_POWER) / 2D));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.wind_turbine.limits", WindTurbineTileEntity.MAX_SPEED));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.wind_turbine.env"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", WindTurbineTileEntity.INERTIA));
 	}

@@ -14,11 +14,11 @@
 		},
 		{
 			"type": "text",
-			"text": "based on the wind- either 10J/t or 20J/t. The only issue is that <em>the wind doesn't always blow the same direction/$. The direction the <item>wind turbine/$ tries to turn will randomly swap- which may mean it's fighting against energy stored in a rotary system due to momentum.$(br2)The <item>wind turbine/$ will also stop producing power at speeds above 2rad/s- "
+			"text": "based on the wind- anywhere between 5J/t and 25J/t, producing 15J/t on average. All wind turbines in the world produce the same power at any given moment. The only issue is that <em>the wind doesn't always blow the same direction/$. The direction the <item>wind turbine/$ tries to turn will randomly swap- which may mean it's fighting against energy stored in a rotary system due to momentum.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "the wind is never that fast.$(br2)The axle connection is on the back. The wool blades can be dyed individually by using dye on the <item>Wind Turbine/$ block. $(br2)"
+			"text": "The <item>wind turbine/$ will also stop producing power at speeds above 2rad/s- the wind is never that fast.$(br2)The axle connection is on the back. The wool blades can be dyed individually by using dye on the <item>Wind Turbine/$ block. $(br2)"
 		},
 		{
 			"type": "text",
@@ -26,7 +26,7 @@
 		},
 		{
 			"type": "text",
-			"text": "with things like <item>$(l:crossroads:rotary/gear_base)toggle gears & clutches/$ makes it possible to ensure your turbine is <em>never/$ fighting momentum. <em>This is probably a good idea!/$ Especially as otherwise, if you're using two <item>wind turbines/$, they might fight each other.$(br2)"
+			"text": "with things like <item>$(l:crossroads:rotary/gear_base)toggle gears & clutches/$ makes it possible to ensure your turbine is <em>never/$ fighting momentum. <em>This is probably a good idea!/$$(br2)"
 		}
 	]
 }

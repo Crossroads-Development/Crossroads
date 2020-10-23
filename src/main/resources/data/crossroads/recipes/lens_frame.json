@@ -5,13 +5,13 @@
 		"count": 1
 	},
 	"pattern": [
-		"SSS",
-		"SQS",
-		"SSS"
+		"BBB",
+		"BQB",
+		"BBB"
 	],
 	"key": {
-		"S": {
-			"tag": "forge:stone"
+		"B": {
+			"tag": "forge:nuggets/bronze"
 		},
 		"Q": {
 			"tag": "crossroads:gems/pure_quartz"

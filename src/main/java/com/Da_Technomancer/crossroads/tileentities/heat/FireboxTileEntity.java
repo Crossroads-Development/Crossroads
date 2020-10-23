@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.heat;
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.gui.container.FireboxContainer;
@@ -67,6 +68,10 @@ public class FireboxTileEntity extends InventoryTE{
 
 		int fuelBurn;
 		if(burnTime == 0 && (fuelBurn = ForgeHooks.getBurnTime(inventory[0])) != 0){
+			int configLimit = CRConfig.fireboxCap.get();
+			if(configLimit >= 0){
+				fuelBurn = Math.min(fuelBurn, configLimit);
+			}
 			burnTime = fuelBurn;
 			maxBurnTime = burnTime;
 			Item item = inventory[0].getItem();
@@ -121,7 +126,7 @@ public class FireboxTileEntity extends InventoryTE{
 
 	@Override
 	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
-		return false;
+		return index == 0 && !isItemValidForSlot(index, stack);//Allow removing empty buckets
 	}
 
 	@Override

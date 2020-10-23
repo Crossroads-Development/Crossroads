@@ -390,7 +390,7 @@
 	"tt.crossroads.wind_turbine.weather": "Power Gen: %1$d J/t",
 	"tt.crossroads.wind_turbine.desc": "Creates power from the wind; Power and direction change randomly",
 	"tt.crossroads.wind_turbine.env": "Requires a view of the sky and a 5x5 empty space",
-	"tt.crossroads.wind_turbine.power": "Produces: Up to ±%1$d J/t (avg ±%2$d J/t)",
+	"tt.crossroads.wind_turbine.power": "Produces: ±(%1$d-%2$d) J/t, (avg ±%3$d J/t)",
 	"tt.crossroads.wind_turbine.limits": "Useless above %1$frad/s; Comparators read power output",
 	"tt.crossroads.dynamo.power": "Produces: %1$fFE/J",
 	"tt.crossroads.dynamo.usage": "Consumes: All available energy each tick (AKA %1$dω² J/t)",

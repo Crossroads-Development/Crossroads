@@ -78,6 +78,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.IntValue fatPerValue;
 	public static ForgeConfigSpec.IntValue mbPerIngot;
 	public static ForgeConfigSpec.DoubleValue hellTemperature;
+	public static ForgeConfigSpec.IntValue fireboxCap;
 
 	private static final ITag<Block> destroyBlacklist = BlockTags.makeWrapperTag(Crossroads.MODID + ":destroy_blacklist");
 
@@ -137,6 +138,7 @@ public class CRConfig{
 		windingResist = serverBuilder.comment("Resistive power exerted by the Winding Table per speed of the wound item").defineInRange("winding_resist", 20D, 0D, 1_000D);
 		springGunCap = serverBuilder.comment("The maximum speed on a Spring Gun", "Higher maximum speeds increase maximum damage").defineInRange("spring_gun_cap", 10D, 1D, 100D);
 		lodestoneTurbinePower = serverBuilder.comment("The power produced by the Lodestone Turbine and Hamster Wheel (in J/t)").defineInRange("lodestone_power", 5D, 0D, 100D);
+		fireboxCap = serverBuilder.comment("Maximum fuel burn time in the Firebox. Set to -1 to remove the limit").defineInRange("firebox_cap", 4000, -1, Integer.MAX_VALUE);
 		serverBuilder.pop();
 		serverBuilder.push(CAT_MISC);
 		heatEffects = serverBuilder.comment("Enable overheat effects?", "If false, all heat cable overheating effects are replaced with burning").define("cable_effects", true);

@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
@@ -39,7 +40,8 @@ public class WindTurbineTileEntity extends ModuleTE{
 
 	public static final double MAX_SPEED = 2D;
 	public static final double INERTIA = 200;
-	public static final double POWER_PER_LEVEL = 10D;
+	public static final double LOW_POWER = 5D;
+	public static final double HIGH_POWER = 25D;
 	private static final AxisAlignedBB RENDER_BOX = new AxisAlignedBB(-1, -1, -1, 2, 2, 2);
 
 	//Undocumented 'easter egg'. This person takes way more damage from windmills
@@ -47,7 +49,6 @@ public class WindTurbineTileEntity extends ModuleTE{
 	private static final String murderEasterEgg = "dinidini";
 
 	private boolean newlyPlaced = true;
-	private int level = 1;
 	private boolean running = false;
 	private AxisAlignedBB targetBB = null;
 	public int[] bladeColors = new int[4];
@@ -130,12 +131,24 @@ public class WindTurbineTileEntity extends ModuleTE{
 
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		chat.add(new TranslationTextComponent("tt.crossroads.wind_turbine.weather", POWER_PER_LEVEL * (double) level));
+		chat.add(new TranslationTextComponent("tt.crossroads.wind_turbine.weather", CRConfig.formatVal(getPowerOutput())));
 		super.addInfo(chat, player, hit);
 	}
 
+	private static final long PERIOD = 18000;//Period of this cycle, in ticks; 15 minutes
+
+	private double getPowerOutput(){
+		long worldTime = world.getGameTime();
+		double triangleWave = ((double) worldTime / PERIOD) % 1D;//triangle wave with range [0, 1), period PERIOD
+		if(triangleWave > 0.5){
+			return 2D * (triangleWave - 0.5D) * (HIGH_POWER - LOW_POWER) + LOW_POWER;//LOW_POWER to HIGH_POWER, avg (HIGH_POWER - LOW_POWER) / 2
+		}else{
+			return -2D * triangleWave * (HIGH_POWER - LOW_POWER) - LOW_POWER;//-LOW_POWER to -HIGH_POWER, avg -(HIGH_POWER - LOW_POWER) / 2
+		}
+	}
+
 	public float getRedstoneOutput(){
-		return (float) (level * POWER_PER_LEVEL);
+		return (float) getPowerOutput();
 	}
 
 	@Override
@@ -180,13 +193,9 @@ public class WindTurbineTileEntity extends ModuleTE{
 			}
 
 			if(running && axleHandler.axis != null){
-				if(world.getGameTime() % 10 == 0 && world.rand.nextInt(240) == 0){
-					//Randomize output
-					level = (world.rand.nextInt(2) + 1) * (world.rand.nextBoolean() ? -1 : 1);//Gen a random number from -2 to 2, other than 0
-				}
-
-				if(motData[0] * Math.signum(level) < MAX_SPEED){
-					motData[1] += (double) level * POWER_PER_LEVEL;
+				double power = getPowerOutput();
+				if(motData[0] * Math.signum(power) < MAX_SPEED){//Stop producing power above MAX_SPEED
+					motData[1] += power;
 				}
 
 				markDirty();
@@ -197,7 +206,6 @@ public class WindTurbineTileEntity extends ModuleTE{
 	@Override
 	public void read(BlockState state, CompoundNBT nbt){
 		super.read(state, nbt);
-		level = nbt.getInt("level");
 		running = nbt.getBoolean("running");
 		for(int i = 0; i < 4; i++){
 			bladeColors[i] = nbt.getByte("blade_col_" + i);
@@ -207,7 +215,6 @@ public class WindTurbineTileEntity extends ModuleTE{
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
-		nbt.putInt("level", level);
 		nbt.putBoolean("running", running);
 		for(int i = 0; i < 4; i++){
 			nbt.putByte("blade_col_" + i, (byte) bladeColors[i]);
