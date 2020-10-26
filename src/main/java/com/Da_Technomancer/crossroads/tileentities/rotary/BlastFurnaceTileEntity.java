@@ -1,12 +1,14 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.gui.container.BlastFurnaceContainer;
-import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.BlastFurnaceRec;
+import com.Da_Technomancer.crossroads.gui.container.BlastFurnaceContainer;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -83,6 +85,15 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 		return INERTIA;
 	}
 
+	private void updateWorldState(boolean active){
+		BlockState worldState = getBlockState();
+		if(worldState.getBlock() == CRBlocks.blastFurnace){
+			if(worldState.get(CRProperties.ACTIVE) != active){
+				world.setBlockState(pos, worldState.with(CRProperties.ACTIVE, active));
+			}
+		}
+	}
+
 	@Override
 	public void tick(){
 		super.tick();
@@ -100,23 +111,27 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 
 		if(Math.abs(motData[0]) < REQUIRED_SPD){
 			progress = 0;
+			updateWorldState(false);
 			return;
 		}
 
 		Optional<BlastFurnaceRec> recOpt = world.getRecipeManager().getRecipe(CRRecipes.BLAST_FURNACE_TYPE, this, world);
 		if(!recOpt.isPresent()){
 			progress = 0;
+			updateWorldState(false);
 			return;
 		}
 		BlastFurnaceRec recipe = recOpt.get();
 		if(carbon < recipe.getSlag() || inventory[2].getCount() + recipe.getSlag() > CRItems.slag.getItemStackLimit(inventory[2]) || (!fluids[0].isEmpty() && (!BlockUtil.sameFluid(recipe.getOutput(), fluids[0]) || fluidProps[0].capacity < fluids[0].getAmount() + recipe.getOutput().getAmount()))){
 			//The fluid and slag outputs need to fit, and we need enough carbon
 			progress = 0;
+			updateWorldState(false);
 			return;
 		}
 
 		progress++;
 		axleHandler.addEnergy(-POWER, false);
+		updateWorldState(true);
 		markDirty();
 
 		if(progress >= REQUIRED_PRG){

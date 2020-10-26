@@ -1,0 +1,8 @@
+{
+	"parent": "block/cube_bottom_top",
+	"textures": {
+		"side": "crossroads:block/blast_furnace_side_active",
+		"top": "crossroads:block/blast_furnace_top",
+		"bottom": "crossroads:block/blast_furnace_bottom"
+	}
+}

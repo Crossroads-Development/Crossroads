@@ -1,7 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.BlastFurnaceTileEntity;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
@@ -12,6 +14,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -36,6 +39,7 @@ public class BlastFurnace extends ContainerBlock{
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
+		setDefaultState(getDefaultState().with(CRProperties.ACTIVE, false));
 	}
 
 	@Override
@@ -64,7 +68,12 @@ public class BlastFurnace extends ContainerBlock{
 		}
 		super.onReplaced(state, world, pos, newState, isMoving);
 	}
-	
+
+	@Override
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+		builder.add(CRProperties.ACTIVE);
+	}
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){

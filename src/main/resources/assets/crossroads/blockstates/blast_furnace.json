@@ -1,5 +1,6 @@
 {
 	"variants": {
-		"": { "model": "crossroads:block/blast_furnace" }
+		"active=false": { "model": "crossroads:block/blast_furnace" },
+		"active=true": { "model": "crossroads:block/blast_furnace_active" }
 	}
 }
