@@ -82,6 +82,7 @@ public class CircuitUtil extends RedstoneUtil{
 		private final ArrayList<WeakReference<LazyOptional<IRedstoneHandler>>> dependents = new ArrayList<>(1);
 		private Supplier<Float> outputSupplier;
 		private TileEntity te;
+		private boolean builtConnections = false;
 
 		private void setup(LazyOptional<IRedstoneHandler> circuitOpt, TileEntity te, Supplier<Float> outputSupplier){
 			redsRef = new WeakReference<>(circuitOpt);
@@ -107,6 +108,9 @@ public class CircuitUtil extends RedstoneUtil{
 				//Notify the dependent of a change
 				optional.orElseThrow(NullPointerException::new).notifyInputChange(redsRef);
 			}
+			if(!builtConnections){
+				buildDependents();
+			}
 		}
 
 		/**
@@ -114,6 +118,7 @@ public class CircuitUtil extends RedstoneUtil{
 		 * Should be called when the block is placed and onNeighborChanged
 		 */
 		private void buildDependents(){
+			builtConnections = true;
 			dependents.clear();//Wipe the old dependents list
 
 			World world;

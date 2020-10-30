@@ -19,18 +19,18 @@ public class SequenceBoxContainer extends Container{
 
 	public final BlockPos pos;
 	public final ArrayList<String> inputs;
-	public int index;
+	public int outputIndex;
 
 	public SequenceBoxContainer(int id, PlayerInventory playerInventory, PacketBuffer data){
 		super(type, id);
 		if(data == null){
 			pos = null;
-			index = 0;
+			outputIndex = 0;
 			inputs = new ArrayList<>(0);
 			inputs.add("0");
 		}else{
 			pos = data.readBlockPos();
-			index = data.readVarInt();
+			outputIndex = data.readVarInt();
 			int size = data.readVarInt();
 			inputs = new ArrayList<>(size);
 			for(int i = 0; i < size; i++){

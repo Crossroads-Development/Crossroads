@@ -261,6 +261,7 @@
 	"item.crossroads.gear_facade_cobble": "Cobblestone Facade",
 	"item.crossroads.gear_facade_iron": "Iron Block Facade",
 	"item.crossroads.gear_facade_glass": "Glass Facade",
+	"block.crossroads.sequence_box": "Sequencer",
 
 	"item.crossroads.ore_gravel": "Raw %1$s Grit",
 	"item.crossroads.ore_clump": "%1$s Clump",
@@ -621,6 +622,8 @@
 	"tt.crossroads.lodestone_dynamo.desc": "Produces: %1$d J/t",
 	"tt.crossroads.lodestone_dynamo.fe": "Consumes: -%1$d FE/t",
 	"tt.crossroads.axle_mount.desc": "A decorative wall mount for axles",
+	"tt.crossroads.sequence_box.desc": "Stores a sequence of redstone circuit values and outputs them in order",
+	"tt.crossroads.sequence_box.trigger": "Advances 1 step in the sequence with each strong redstone pulse",
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
 	"container.crossroads.boilerplate.speed": "%1$f rad/s",
@@ -653,6 +656,7 @@
 	"container.steamer": "Steamer",
 	"container.winding_table": "Spring Winder",
 	"container.detailed_auto_crafter": "Detailed Auto-Crafter",
+	"container.sequence_box": "Sequencer",
 
 
 	"material.iron": "Iron",

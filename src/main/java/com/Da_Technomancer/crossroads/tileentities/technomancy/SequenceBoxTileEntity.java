@@ -32,13 +32,15 @@ import java.util.ArrayList;
 @ObjectHolder(Crossroads.MODID)
 public class SequenceBoxTileEntity extends TileEntity implements INBTReceiver, INamedContainerProvider{
 
+	public static final int MAX_VALUES = 99;
+
+	@ObjectHolder("sequence_box")
+	private static TileEntityType<SequenceBoxTileEntity> type = null;
+
 	private final ArrayList<Float> sequenceVal = new ArrayList<>();
 	private final ArrayList<String> sequenceStr = new ArrayList<>();
 	private int index = 0;
 	private boolean hadRedstoneSignal = false;//Whether this block is currently receiving a redstone signal- used for differenting pulses
-
-	@ObjectHolder("sequence_box")
-	private static TileEntityType<SequenceBoxTileEntity> type = null;
 
 	public SequenceBoxTileEntity(){
 		super(type);
@@ -47,12 +49,13 @@ public class SequenceBoxTileEntity extends TileEntity implements INBTReceiver, I
 
 	private void sanitizeState(){
 		//These 2 while loops should never actually trigger (in theory)
-		while(sequenceStr.size() > sequenceVal.size()){
+		while(sequenceStr.size() > MAX_VALUES || sequenceStr.size() > sequenceVal.size()){
 			sequenceStr.remove(sequenceStr.size() - 1);
 		}
 		while(sequenceStr.size() < sequenceVal.size()){
 			sequenceVal.remove(sequenceVal.size() - 1);
 		}
+		//From this point, sequenceStr.size() == sequenceVal.size()
 
 		if(sequenceVal.size() == 0){
 			sequenceVal.add(0F);
@@ -163,6 +166,16 @@ public class SequenceBoxTileEntity extends TileEntity implements INBTReceiver, I
 
 	@Override
 	public void receiveNBT(CompoundNBT nbt, @Nullable ServerPlayerEntity sender){
-		//TODO
+		sequenceVal.clear();
+		sequenceStr.clear();
+		int i = 0;
+		while(nbt.contains(i + "_val")){
+			sequenceVal.add(nbt.getFloat(i + "_val"));
+			sequenceStr.add(nbt.getString(i + "_str"));
+			i++;
+		}
+		index = nbt.getInt("output_index");
+		sanitizeState();
+		circHandler.notifyOutputChange();
 	}
 }

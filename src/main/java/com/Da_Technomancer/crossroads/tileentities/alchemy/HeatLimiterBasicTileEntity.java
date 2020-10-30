@@ -82,31 +82,16 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 			goalTemp = -goalTemp;
 		}
 
-		if(heatOut > goalTemp){
-			if(heatIn < goalTemp){
-				double toTrans = goalTemp - heatOut;
-				toTrans = Math.max(toTrans, heatIn - goalTemp);
-				heatOut += toTrans;
-				heatIn -= toTrans;
-				markDirty();
+		if(heatOut < goalTemp){
+			double toTrans;
+			if(heatIn > goalTemp){
+				toTrans = goalTemp - heatOut;
+				toTrans = Math.min(toTrans, heatIn - goalTemp);
 			}else{
-				double toTrans = heatIn - heatOut;
+				toTrans = heatIn - heatOut;
 				toTrans /= 2D;
-				toTrans = Math.min(0, toTrans);
-				heatOut += toTrans;
-				heatIn -= toTrans;
-				markDirty();
+				toTrans = Math.max(0, toTrans);
 			}
-		}else if(heatIn > goalTemp){
-			double toTrans = goalTemp - heatOut;
-			toTrans = Math.min(toTrans, heatIn - goalTemp);
-			heatOut += toTrans;
-			heatIn -= toTrans;
-			markDirty();
-		}else{
-			double toTrans = heatIn - heatOut;
-			toTrans /= 2D;
-			toTrans = Math.max(0, toTrans);
 			heatOut += toTrans;
 			heatIn -= toTrans;
 			markDirty();

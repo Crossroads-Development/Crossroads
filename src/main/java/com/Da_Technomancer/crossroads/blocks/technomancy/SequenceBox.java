@@ -19,7 +19,10 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -28,6 +31,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class SequenceBox extends ContainerBlock implements IWireConnect{
+
+	private static final VoxelShape SHAPE = makeCuboidShape(0, 0, 0, 16, 8, 16);
 
 	public SequenceBox(){
 		super(CRBlocks.getMetalProperty());
@@ -43,11 +48,6 @@ public class SequenceBox extends ContainerBlock implements IWireConnect{
 
 	@Override
 	public boolean canConnect(Direction direction, BlockState blockState){
-		return true;
-	}
-
-	@Override
-	public boolean canConnectRedstone(BlockState state, IBlockReader world, BlockPos pos, @Nullable Direction side){
 		return true;
 	}
 
@@ -76,7 +76,8 @@ public class SequenceBox extends ContainerBlock implements IWireConnect{
 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-		//TODO
+		tooltip.add(new TranslationTextComponent("tt.crossroads.sequence_box.desc"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.sequence_box.trigger"));
 	}
 
 	@Override
@@ -88,5 +89,10 @@ public class SequenceBox extends ContainerBlock implements IWireConnect{
 		}
 
 		return ActionResultType.SUCCESS;
+	}
+
+	@Override
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+		return SHAPE;
 	}
 }
