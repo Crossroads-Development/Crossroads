@@ -14,6 +14,7 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.ItemSets;
 import com.Da_Technomancer.crossroads.particles.CRParticles;
 import com.Da_Technomancer.crossroads.particles.ColorParticleType;
+import com.Da_Technomancer.crossroads.particles.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.TESR.CRRendererRegistry;
 import com.Da_Technomancer.crossroads.tileentities.CRTileEntity;
@@ -31,6 +32,7 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -309,6 +311,12 @@ public final class Crossroads{
 	@SubscribeEvent
 	public static void registerWorldgen(RegistryEvent.Register<Feature<?>> e){
 		CRWorldGen.register(e.getRegistry());
+	}
+
+	@SuppressWarnings("unused")
+	@SubscribeEvent
+	public static void registerSounds(RegistryEvent.Register<SoundEvent> e){
+		CRSounds.register(e.getRegistry());
 	}
 
 	@SubscribeEvent

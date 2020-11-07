@@ -1,0 +1,7 @@
+{
+	"beam_passive": {
+		"category": "block",
+		"subtitle": "subtitle.crossroads.beam_passive",
+		"sounds": [ "crossroads:beam_passive" ]
+	}
+}

@@ -79,6 +79,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.IntValue mbPerIngot;
 	public static ForgeConfigSpec.DoubleValue hellTemperature;
 	public static ForgeConfigSpec.IntValue fireboxCap;
+	public static ForgeConfigSpec.BooleanValue beamSounds;
 
 	private static final ITag<Block> destroyBlacklist = BlockTags.makeWrapperTag(Crossroads.MODID + ":destroy_blacklist");
 
@@ -99,7 +100,7 @@ public class CRConfig{
 
 		rotateBeam = clientBuilder.comment("Should beams visually rotate?").define("rotate_beam", true);
 //		colorChartResolution = clientBuilder.comment("Pixel size on the color chart", "Higher values will reduce FPS lag in the color chart UI, but will make it less precise and 'smooth' looking").defineInRange("color_res", 1, 1, 4);
-
+		beamSounds = clientBuilder.comment("Should beams make sounds?").define("beam_sounds", true);
 		clientSpec = clientBuilder.build();
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, clientSpec);
 
