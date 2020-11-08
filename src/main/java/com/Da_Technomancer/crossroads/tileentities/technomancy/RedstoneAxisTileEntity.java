@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.CircuitUtil;
 import com.Da_Technomancer.crossroads.API.rotary.AxisTypes;
@@ -26,6 +27,21 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 
 	public RedstoneAxisTileEntity(){
 		super(type);
+	}
+
+	/**
+	 * Updates the blockstate in the world to render based on the target speed (not the actual induced speed).
+	 * Only effective on the virtual server side
+	 * @param targetSpeed The current target speed
+	 */
+	private void updateWorldState(double targetSpeed){
+		if(!world.isRemote){
+			BlockState state = getBlockState();
+			int targetProp = targetSpeed > 0 ? 1 : targetSpeed < 0 ? 2 : 0;
+			if(state.get(CRProperties.POWER_LEVEL) != targetProp){
+				world.setBlockState(pos, state.with(CRProperties.POWER_LEVEL, targetProp), 2);
+			}
+		}
 	}
 
 	@Override
@@ -89,6 +105,8 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 			sourceAxle.getMotionData()[1] = sourceAxle.getMotionData()[1] < 0 ? -availableEnergy : availableEnergy;
 			sourceAxle.markChanged();
 		}
+
+		updateWorldState(baseSpeed);
 
 		runAngleCalc();
 	}

@@ -1,0 +1,12 @@
+{
+	"parent": "minecraft:block/orientable",
+	"textures": {
+		"north": "crossroads:block/master_axis_front",
+		"south": "crossroads:block/master_axis_input",
+		"east": "crossroads:block/master_axis_redstone_high",
+		"west": "crossroads:block/master_axis_redstone_high",
+		"up": "crossroads:block/master_axis_redstone_high",
+		"down": "crossroads:block/master_axis_redstone_high",
+		"particle": "crossroads:block/master_axis_redstone_high"
+	}
+}

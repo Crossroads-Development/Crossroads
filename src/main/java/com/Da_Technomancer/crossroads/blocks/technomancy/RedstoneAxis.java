@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.CircuitUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneAxisTileEntity;
@@ -34,6 +35,7 @@ public class RedstoneAxis extends ContainerBlock implements IWireConnect{
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
+		setDefaultState(getDefaultState().with(CRProperties.POWER_LEVEL, 0));
 	}
 
 	@Override
@@ -56,7 +58,7 @@ public class RedstoneAxis extends ContainerBlock implements IWireConnect{
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
-		builder.add(ESProperties.FACING);
+		builder.add(ESProperties.FACING, CRProperties.POWER_LEVEL);
 	}
 
 	@Nullable

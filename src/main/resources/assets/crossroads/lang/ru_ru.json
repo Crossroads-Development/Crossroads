@@ -115,7 +115,7 @@
 	"block.crossroads.hamster_wheel": "Колесо для хомячка",
 	"block.crossroads.fluid_splitter": "Краснокаменный жидкостный разделитель",
 	"block.crossroads.basic_fluid_splitter": "Простой жидкостный разделитель",
-	"block.crossroads.copshowium_creation_chamber": "Наполнитель медяространниума Imbuer",
+	"block.crossroads.copshowium_creation_chamber": "Наполнитель медяространниума",
 	"block.crossroads.block_copshowium": "Блок медяространниума",
 	"item.crossroads.ingot_copshowium": "Медяространниумовый слиток",
 	"item.crossroads.nugget_copshowium": "кусочек медяространниума",
@@ -261,6 +261,7 @@
 	"item.crossroads.gear_facade_cobble": "Фасад из булыжника",
 	"item.crossroads.gear_facade_iron": "Фасад из железного блока",
 	"item.crossroads.gear_facade_glass": "Фасад из стекла",
+	"block.crossroads.sequence_box": "Программируемый автомат",
 
 	"item.crossroads.ore_gravel": "Сырой %1$s абразив",
 	"item.crossroads.ore_clump": "%1$s кусок",
@@ -621,6 +622,8 @@
 	"tt.crossroads.lodestone_dynamo.desc": "Вырабатывает: %1$d J/t",
 	"tt.crossroads.lodestone_dynamo.fe": "Потребляет: -%1$d FE/t",
 	"tt.crossroads.axle_mount.desc": "Декоративное настенное крепление для осей",
+	"tt.crossroads.sequence_box.desc": "Сохраняет значения сигнала красного камня, и выводит их в заданном порядке",
+	"tt.crossroads.sequence_box.trigger": "С каждым сильным сигналом, продвигается на один шаг",
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
 	"container.crossroads.boilerplate.speed": "%1$f rad/s",
@@ -653,6 +656,7 @@
 	"container.steamer": "Пароварка",
 	"container.winding_table": "Пружинный намоточный стол",
 	"container.detailed_auto_crafter": "Детализированный Авто-сборщик",
+	"container.sequence_box": "Программируемый автомат",
 
 
 	"material.iron": "Железная",
@@ -690,7 +694,7 @@
 	"alignment.enchantment.void": "Разочарование",
 	"alignment.none.void": "Не-Пустота (ERROR!)",
 
-	
+
 	"reagent.water": "Вода",
 	"reagent.phelostogen": "Флеогистон",
 	"reagent.aether": "Эфир",
