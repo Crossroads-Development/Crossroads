@@ -5,6 +5,8 @@ import com.Da_Technomancer.crossroads.API.beams.*;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
+import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.particles.sounds.CRSounds;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -12,6 +14,7 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -79,6 +82,21 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 		return beamPackets;
 	}
 
+	protected void playSounds(){
+		//Can be called on both the virtual server and client side, but only actually does anything on the server side as the passed player is null
+		if(CRConfig.beamSounds.get() && beamer != null && world.getGameTime() % 60 == 0){
+			//Play a sound if ANY side is outputting a beam
+			for(BeamManager beamManager : beamer){
+				if(beamManager != null && !beamManager.getLastSent().isEmpty()){
+					//The attenuation distance defined for this sound in sounds.json is significant, and makes the sound have a very short range
+					CRSounds.playSoundServer(world, pos, CRSounds.BEAM_PASSIVE, SoundCategory.BLOCKS, 1F, 0.3F);
+					//TODO
+					break;
+				}
+			}
+		}
+	}
+
 	@Override
 	public void tick(){
 		if(world.isRemote){
@@ -103,6 +121,8 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 			}
 			doEmit(out);
 		}
+
+		playSounds();
 	}
 
 	/**

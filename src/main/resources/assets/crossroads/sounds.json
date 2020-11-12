@@ -2,6 +2,20 @@
 	"beam_passive": {
 		"category": "block",
 		"subtitle": "subtitle.crossroads.beam_passive",
-		"sounds": [ "crossroads:beam_passive" ]
+		"sounds": [
+			{
+				"name": "crossroads:beam_passive",
+				"attenuation_distance": 7
+			}
+		]
+	},
+	"beam_transmute": {
+		"category": "block",
+		"subtitle": "subtitle.crossroads.beam_transmute",
+		"sounds": [
+			{
+				"name": "crossroads:beam_transmute"
+			}
+		]
 	}
 }
