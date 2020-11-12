@@ -35,7 +35,7 @@ public class BeamEffect{
 			worldIn.setBlockState(pos, recipe.get().getOutput().getDefaultState());
 			if(CRConfig.beamSounds.get()){
 				//Play a sound
-				CRSounds.playSoundServer(worldIn, pos, CRSounds.BEAM_TRANSMUTE, SoundCategory.BLOCKS, 0.5F, 1F);//TODO
+				CRSounds.playSoundServer(worldIn, pos, CRSounds.BEAM_TRANSMUTE, SoundCategory.BLOCKS, 0.5F, 1F);
 			}
 			return true;
 		}

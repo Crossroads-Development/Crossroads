@@ -89,8 +89,7 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 			for(BeamManager beamManager : beamer){
 				if(beamManager != null && !beamManager.getLastSent().isEmpty()){
 					//The attenuation distance defined for this sound in sounds.json is significant, and makes the sound have a very short range
-					CRSounds.playSoundServer(world, pos, CRSounds.BEAM_PASSIVE, SoundCategory.BLOCKS, 1F, 0.3F);
-					//TODO
+					CRSounds.playSoundServer(world, pos, CRSounds.BEAM_PASSIVE, SoundCategory.BLOCKS, 0.7F, 0.3F);
 					break;
 				}
 			}

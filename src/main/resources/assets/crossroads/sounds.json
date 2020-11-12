@@ -5,7 +5,7 @@
 		"sounds": [
 			{
 				"name": "crossroads:beam_passive",
-				"attenuation_distance": 7
+				"attenuation_distance": 4
 			}
 		]
 	},
