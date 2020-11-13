@@ -2,6 +2,8 @@ package com.Da_Technomancer.crossroads.render;
 
 import com.Da_Technomancer.crossroads.API.packets.AddVisualToClient;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
+import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.particles.sounds.CRSounds;
 import com.Da_Technomancer.essentials.render.RenderUtil;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -12,6 +14,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -62,13 +65,10 @@ public class CRRenderUtil extends RenderUtil{
 	}
 
 	public static void addArc(World world, float xSt, float ySt, float zSt, float xEn, float yEn, float zEn, int count, float diffusionRate, int color){
-		addArc(world, xSt, ySt, zSt, xEn, yEn, zEn, xSt, ySt, zSt, count, diffusionRate, (byte) 10, color);
+		addArc(world, xSt, ySt, zSt, xEn, yEn, zEn, xSt, ySt, zSt, count, diffusionRate, (byte) 5, color, true);
 	}
 
-	public static void addArc(World world, float xSt, float ySt, float zSt, float xEn, float yEn, float zEn, float xStFin, float yStFin, float zStFin, int count, float diffusionRate, byte lifespan, int color){
-		//I have decided I hate this sound on loop
-		//		world.playSound(null, xSt, ySt, zSt, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 1F, 1.6F);
-
+	public static void addArc(World world, float xSt, float ySt, float zSt, float xEn, float yEn, float zEn, float xStFin, float yStFin, float zStFin, int count, float diffusionRate, byte lifespan, int color, boolean playSound){
 		CompoundNBT nbt = new CompoundNBT();
 		nbt.putInt("id", 1);
 		nbt.putFloat("x", xSt);
@@ -85,10 +85,21 @@ public class CRRenderUtil extends RenderUtil{
 		nbt.putInt("color", color);
 		nbt.putByte("lif", lifespan);
 
+		//I have decided I hate this sound on loop
+		//world.playSound(null, xSt, ySt, zSt, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 1F, 1.6F);
+		BlockPos srcPos = new BlockPos(xSt, ySt, zSt);
+		float volume = Math.max((Math.abs(zEn - zSt) + Math.abs(yEn - ySt) + Math.abs(xEn - xSt)) / 20F, 0.05F);//Longer arcs are louder
+		boolean sound = playSound && CRConfig.electricSounds.get();
 		if(world.isRemote){
 			AddVisualToClient.effectsToRender.add(visualFactories[1].apply(nbt));
+			if(sound){
+				CRSounds.playSoundClient(world, srcPos, CRSounds.ELECTRIC_SPARK, SoundCategory.BLOCKS, volume, 1F);
+			}
 		}else{
-			CRPackets.sendPacketAround(world, new BlockPos(xSt, ySt, zSt), new AddVisualToClient(nbt));
+			CRPackets.sendPacketAround(world, srcPos, new AddVisualToClient(nbt));
+			if(sound){
+				CRSounds.playSoundServer(world, srcPos, CRSounds.ELECTRIC_SPARK, SoundCategory.BLOCKS, volume, 1F);
+			}
 		}
 	}
 

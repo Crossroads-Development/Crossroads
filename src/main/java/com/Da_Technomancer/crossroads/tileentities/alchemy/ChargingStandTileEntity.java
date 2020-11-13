@@ -9,6 +9,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -37,8 +38,14 @@ public class ChargingStandTileEntity extends GlasswareHolderTileEntity{
 		}
 		if(fe > 0){
 			fe = Math.max(0, fe - DRAIN);
-			if(world.getGameTime() % 10 == 0){
-				CRRenderUtil.addArc(world, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, pos.getX() + world.rand.nextFloat(), pos.getY() + world.rand.nextFloat(), pos.getZ() + world.rand.nextFloat(), 1, 0F, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)]);
+			if(world.rand.nextInt(10) == 0){
+				//Create an arc from one of the vertical metal pieces on the model to another, chosen at random
+				Vector3d startOffset = new Vector3d(-6.5D / 16D, world.rand.nextFloat() * 12D / 16D + 2D / 16D, world.rand.nextFloat() * 6D / 16D - 3D / 16D);
+				Vector3d endOffset = new Vector3d(6.5D / 16D, world.rand.nextFloat() * 12D / 16D + 2D / 16D, world.rand.nextFloat() * 6D / 16D - 3D / 16D);
+				Vector3d centeredPos = Vector3d.copyCenteredHorizontally(pos);
+				Vector3d arcStart = world.rand.nextBoolean() ? startOffset.add(centeredPos) : startOffset.rotateYaw((float) Math.PI / 2F).add(centeredPos);
+				Vector3d arcEnd = world.rand.nextBoolean() ? endOffset.add(centeredPos) : endOffset.rotateYaw((float) Math.PI / 2F).add(centeredPos);
+				CRRenderUtil.addArc(world, arcStart, arcEnd, 1, 0F, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)]);
 			}
 		}
 		super.tick();

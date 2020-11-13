@@ -104,8 +104,7 @@ public class TeslaRay extends Item{
 //			playerIn.setHeldItem(Hand.OFF_HAND, leydenStack);
 
 			targets.add(closest);
-			closest.attackEntityFrom(DamageSource.LIGHTNING_BOLT, DAMAGE * scale);
-
+			attackEntity(closest, scale);
 
 			//Only chains if attack is fully charged. Additional targets are found in a cubical area from previous ones
 			if(scale >= 0.99F){//Check attack meter is charged
@@ -118,7 +117,7 @@ public class TeslaRay extends Item{
 					}
 
 					targets.add(entities.get((int) (Math.random() * (double) entities.size())));
-					targets.get(i + 1).attackEntityFrom(DamageSource.LIGHTNING_BOLT, DAMAGE * scale);
+					attackEntity(targets.get(i + 1), scale);
 				}
 			}
 
@@ -138,6 +137,15 @@ public class TeslaRay extends Item{
 			return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(hand));
 		}else{
 			return new ActionResult<>(ActionResultType.FAIL, playerIn.getHeldItem(hand));
+		}
+	}
+
+	private void attackEntity(LivingEntity entity, float scale){
+		if(scale >= 0.99F){
+			//We want to apply lightning effects (ex. pig->pig zombie, creeper->charged creeper, etc) if this is fully charged
+			MiscUtil.attackWithLightning(entity, DAMAGE, null);
+		}else{
+			entity.attackEntityFrom(DamageSource.LIGHTNING_BOLT, DAMAGE * scale);
 		}
 	}
 }

@@ -154,7 +154,7 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 			int color = TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)];
 			for(int i = 0; i < arcs; i++){
 				arcVec = arcVec.rotateYaw(angle);
-				CRRenderUtil.addArc(world, start[0], start[1], start[2], start[0] + (float) arcVec.x, start[1] + (float) arcVec.y, start[2] + (float) arcVec.z, startEn[0], startEn[1], startEn[2], 1, 0F, (byte) 20, color);
+				CRRenderUtil.addArc(world, start[0], start[1], start[2], start[0] + (float) arcVec.x, start[1] + (float) arcVec.y, start[2] + (float) arcVec.z, startEn[0], startEn[1], startEn[2], 1, 0F, (byte) 20, color, true);
 			}
 		}
 	}

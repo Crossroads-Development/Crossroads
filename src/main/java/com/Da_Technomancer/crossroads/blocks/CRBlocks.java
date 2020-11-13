@@ -331,7 +331,7 @@ public class CRBlocks{
 
 	@OnlyIn(Dist.CLIENT)
 	public static void clientInit(){
-		setCutout(permeableGlass, rotaryPump, steamTurbine, alchemicalTubeGlass, alchemicalTubeCrystal, redsAlchemicalTubeGlass, redsAlchemicalTubeCrystal, fluidInjectorGlass, fluidInjectorCrystal, flowLimiterGlass, flowLimiterCrystal, heatedTubeGlass, heatedTubeCrystal, coolingCoilGlass, coolingCoilCrystal, reactionChamberGlass, reactionChamberCrystal, reagentTankGlass, reagentTankCrystal, reagentPumpGlass, reagentPumpCrystal, glasswareHolder, reagentFilterGlass, reagentFilterCrystal);
+		setCutout(permeableGlass, rotaryPump, steamTurbine, alchemicalTubeGlass, alchemicalTubeCrystal, redsAlchemicalTubeGlass, redsAlchemicalTubeCrystal, fluidInjectorGlass, fluidInjectorCrystal, flowLimiterGlass, flowLimiterCrystal, heatedTubeGlass, heatedTubeCrystal, coolingCoilGlass, coolingCoilCrystal, reactionChamberGlass, reactionChamberCrystal, reagentTankGlass, reagentTankCrystal, reagentPumpGlass, reagentPumpCrystal, glasswareHolder, reagentFilterGlass, reagentFilterCrystal, chargingStand);
 		setFluidTrans(CRFluids.distilledWater, CRFluids.steam);
 	}
 
