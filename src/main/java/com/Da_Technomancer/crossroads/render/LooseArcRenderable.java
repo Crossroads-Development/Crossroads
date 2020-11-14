@@ -17,9 +17,6 @@ public class LooseArcRenderable implements IVisualEffect{
 	private final float xEn;
 	private final float yEn;
 	private final float zEn;
-	private final float xStFin;
-	private final float yStFin;
-	private final float zStFin;
 	private final int count;
 	private final float diffusionRate;
 	private final int color;
@@ -28,16 +25,16 @@ public class LooseArcRenderable implements IVisualEffect{
 	private long lastTick = -1;
 	private final Vector3d[][] states;
 
-	private LooseArcRenderable(float xSt, float ySt, float zSt, float xEn, float yEn, float zEn, float xStFin, float yStFin, float zStFin, int count, float diffusionRate, byte lifespan, int color){
+	private LooseArcRenderable(float xSt, float ySt, float zSt, float xEn, float yEn, float zEn, int count, float diffusionRate, byte lifespan, int color){
 		this.xSt = xSt;
 		this.ySt = ySt;
 		this.zSt = zSt;
 		this.xEn = xEn;
 		this.yEn = yEn;
 		this.zEn = zEn;
-		this.xStFin = xStFin;
-		this.yStFin = yStFin;
-		this.zStFin = zStFin;
+//		this.xStFin = xStFin;
+//		this.yStFin = yStFin;
+//		this.zStFin = zStFin;
 		this.count = count;
 		this.diffusionRate = diffusionRate;
 		this.color = color;
@@ -47,7 +44,7 @@ public class LooseArcRenderable implements IVisualEffect{
 	}
 
 	public static LooseArcRenderable readFromNBT(CompoundNBT nbt){
-		return new LooseArcRenderable(nbt.getFloat("x"), nbt.getFloat("y"), nbt.getFloat("z"), nbt.getFloat("x_e"), nbt.getFloat("y_e"), nbt.getFloat("z_e"), nbt.getFloat("x_f"), nbt.getFloat("y_f"), nbt.getFloat("z_f"), nbt.getInt("count"), nbt.getFloat("diffu"), nbt.getByte("lif"), nbt.getInt("color"));
+		return new LooseArcRenderable(nbt.getFloat("x"), nbt.getFloat("y"), nbt.getFloat("z"), nbt.getFloat("x_e"), nbt.getFloat("y_e"), nbt.getFloat("z_e"), nbt.getInt("count"), nbt.getFloat("diffu"), nbt.getByte("lif"), nbt.getInt("color"));
 	}
 
 	@Override
@@ -55,8 +52,8 @@ public class LooseArcRenderable implements IVisualEffect{
 		final float arcWidth = 0.03F;
 		Color colorObj = new Color(color, true);
 		int[] col = {colorObj.getRed(), colorObj.getGreen(), colorObj.getBlue(), colorObj.getAlpha()};
-		float mult = ((float) (lifeSpan - lifeTime) + partialTicks) / (float) lifeSpan;
-		Vector3d start = new Vector3d(mult * (xStFin - xSt) + xSt, mult * (yStFin - ySt) + ySt, mult * (zStFin - zSt) + zSt);
+//		float mult = ((float) (lifeSpan - lifeTime) + partialTicks) / (float) lifeSpan;
+		Vector3d start = new Vector3d(xSt, ySt, zSt);
 		IVertexBuilder builder = buffer.getBuffer(CRRenderTypes.ELECTRIC_ARC_TYPE);
 
 		matrix.translate(start.x, start.y, start.z);

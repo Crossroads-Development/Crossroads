@@ -21,7 +21,6 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
@@ -91,7 +90,7 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 
 	@Override
 	public void tick(){
-		BlockState state = world.getBlockState(pos);
+		BlockState state = getBlockState();
 		if(world.isRemote || !(state.getBlock() instanceof AtmosCharger)){
 			return;
 		}
@@ -136,25 +135,28 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 		}
 	}
 
-	private void renderArc(boolean up){
+	private void renderArc(boolean charging){
 		if(renderTimer <= 0){
 			renderTimer = 10;
-			int arcs = world.rand.nextInt(4) + 2;
-			float angle = (float) Math.PI * 2F / arcs;
-			float[] start = new float[] {pos.getX() + 0.5F, pos.getY() + 1.1F, pos.getZ() + 0.5F};
-			float[] startEn = new float[] {start[0], pos.getY() + 4.75F, start[2]};
-			if(!up){
-				//Flip travel direction to go down
-				float swap = start[1];
-				start[1] = startEn[1];
-				startEn[1] = swap;
-			}
 
-			Vector3d arcVec = CRRenderUtil.VEC_K.scale(1.4D);
 			int color = TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)];
-			for(int i = 0; i < arcs; i++){
-				arcVec = arcVec.rotateYaw(angle);
-				CRRenderUtil.addArc(world, start[0], start[1], start[2], start[0] + (float) arcVec.x, start[1] + (float) arcVec.y, start[2] + (float) arcVec.z, startEn[0], startEn[1], startEn[2], 1, 0F, (byte) 20, color, true);
+			if(charging){
+				//Render electric arcs coming from the tip of the rod
+				int arcs = world.rand.nextInt(3) + 1;
+				float[] start = new float[] {pos.getX() + 0.5F, pos.getY() + 5, pos.getZ() + 0.5F};
+				for(int i = 0; i < arcs; i++){
+					float[] end = new float[] {start[0] + (world.rand.nextFloat() - 0.5F) * 6F, start[1] + 6F * world.rand.nextFloat(), start[2] + (world.rand.nextFloat() - 0.5F) * 6F};
+					CRRenderUtil.addArc(world, start[0], start[1], start[2], end[0], end[1], end[2], 1, 0F, (byte) 10, color, true);
+				}
+			}else{
+				//Render arcs striking from various points along the rod
+				int arcs = world.rand.nextInt(3) + 2;
+				float[] start = new float[] {pos.getX() + 0.5F, 0, pos.getZ() + 0.5F};
+				for(int i = 0; i < arcs; i++){
+					start[1] = pos.getY() + 1F + world.rand.nextFloat() * 4F;//Randomize start height along the rod
+					float[] end = new float[] {start[0] + (world.rand.nextFloat() - 0.5F) * 6F, start[1] + world.rand.nextFloat() * 1.5F, start[2] + (world.rand.nextFloat() - 0.5F) * 6F};
+					CRRenderUtil.addArc(world, start[0], start[1], start[2], end[0], end[1], end[2], world.rand.nextInt(3) / 2 + 1, 0.2F, (byte) 10, color, true);
+				}
 			}
 		}
 	}

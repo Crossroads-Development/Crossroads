@@ -1,8 +1,0 @@
-{
-	"parent": "block/cube_bottom_top",
-	"textures": {
-		"side": "crossroads:block/stirling_engine_side",
-		"top": "crossroads:block/stirling_engine_top",
-		"bottom": "crossroads:block/stirling_engine_bottom"
-	}
-}

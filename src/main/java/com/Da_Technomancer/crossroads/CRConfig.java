@@ -81,6 +81,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.IntValue fireboxCap;
 	public static ForgeConfigSpec.BooleanValue beamSounds;
 	public static ForgeConfigSpec.BooleanValue electricSounds;
+	public static ForgeConfigSpec.IntValue effectPacketDistance;
 
 	private static final ITag<Block> destroyBlacklist = BlockTags.makeWrapperTag(Crossroads.MODID + ":destroy_blacklist");
 
@@ -115,6 +116,7 @@ public class CRConfig{
 		gearResetTime = serverBuilder.comment("Interval in ticks between gear network checks").defineInRange("network_time", 300, 100, 2400);
 		wipeInvalidMappings = serverBuilder.worldRestart().comment("Wipe internal per player dimension mappings on failure?", "Only change this if you know what you're doing").define("wipe_dim_map", false);
 		mbPerIngot = serverBuilder.comment("Number of millibuckets of molten metal per ingot", "Does not change recipes").defineInRange("ingot_mb", 144, 1, 10_000);
+		effectPacketDistance = serverBuilder.comment("Distance in blocks that players can see various effects from (electric arcs, beams from staffs, etc)", "Lower values will decrease the amount of packets sent").defineInRange("effect_distance", 512, 1, 512);
 		serverBuilder.pop();
 		serverBuilder.push(CAT_ORES);
 		genCopperOre = serverBuilder.comment("Generate Copper Ore?").define("copper", true);

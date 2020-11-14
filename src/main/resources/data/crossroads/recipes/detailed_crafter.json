@@ -5,19 +5,22 @@
 		"count": 1
 	},
 	"pattern": [
-		"ITI",
-		"TCT",
-		"ITI"
+		"OCO",
+		"ODO",
+		"TTT"
 	],
 	"key": {
-		"I": {
-			"tag": "forge:ingots/iron"
-		},
 		"T": {
 			"tag": "forge:ingots/tin"
 		},
 		"C": {
 			"item": "minecraft:crafting_table"
+		},
+		"O": {
+			"tag": "forge:obsidian"
+		},
+		"D": {
+			"item": "crossroads:lens_array"
 		}
 	}
 }

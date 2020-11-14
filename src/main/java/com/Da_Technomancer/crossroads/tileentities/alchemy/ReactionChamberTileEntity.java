@@ -15,6 +15,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -66,8 +67,34 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 
 		if(energy >= DRAIN){
 			energy -= DRAIN;
-			if(world.getGameTime() % 10 == 0){
-				CRRenderUtil.addArc(world, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, pos.getX() + world.rand.nextFloat(), pos.getY() + world.rand.nextFloat(), pos.getZ() + world.rand.nextFloat(), 1, 0F, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)]);
+			//Spawn random electric arcs between the walls of the block
+			if(world.rand.nextInt(10) == 0){
+				Vector3d[] arcPos = new Vector3d[2];
+				for(int i = 0; i < 2; i++){
+					float u = world.rand.nextFloat() * 0.8F + 0.1F;
+					float v = world.rand.nextFloat() * 0.8F + 0.1F;
+					switch(world.rand.nextInt(6)){
+						case 0:
+							arcPos[i] = new Vector3d(u, v, 0.1);
+							break;
+						case 1:
+							arcPos[i] = new Vector3d(u, v, 0.9);
+							break;
+						case 2:
+							arcPos[i] = new Vector3d(u, 0.1, v);
+							break;
+						case 3:
+							arcPos[i] = new Vector3d(u, 0.9, v);
+							break;
+						case 4:
+							arcPos[i] = new Vector3d(0.1, u, v);
+							break;
+						case 5:
+							arcPos[i] = new Vector3d(0.9, u, v);
+							break;
+					}
+				}
+				CRRenderUtil.addArc(world, arcPos[0].add(pos.getX(), pos.getY(), pos.getZ()), arcPos[1].add(pos.getX(), pos.getY(), pos.getZ()), 1, 0F, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)]);
 			}
 		}
 

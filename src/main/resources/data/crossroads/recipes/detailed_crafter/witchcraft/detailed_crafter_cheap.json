@@ -6,19 +6,19 @@
 		"count": 1
 	},
 	"pattern": [
-		"iti",
-		"tCt",
-		"iti"
+		"C",
+		"O",
+		"T"
 	],
 	"key": {
 		"C": {
 			"item": "minecraft:crafting_table"
 		},
-		"i": {
-			"tag": "forge:nuggets/iron"
+		"O": {
+			"tag": "forge:obsidian"
 		},
-		"t": {
-			"tag": "forge:nuggets/tin"
+		"T": {
+			"tag": "forge:ingots/iron"
 		}
 	}
 }

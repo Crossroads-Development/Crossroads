@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.packets.*;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -58,6 +59,15 @@ public class CRPackets{
 		//Check if this packet is registered with CR. If not, send it via the Essentials packet channel; this is done to make this method correct for all CR usage
 		SimpleChannel messageChannel = registeredTypes.contains(packet.getClass()) ? channel : EssentialsPackets.channel;
 		messageChannel.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), 512.0D, world.getDimensionKey())), packet);
+	}
+
+	public static void sendEffectPacketAround(World world, BlockPos pos, AddVisualToClient packet){
+		if(world.isRemote){
+			throw new IllegalStateException("Packet to client sent from client!");
+		}
+		//Check if this packet is registered with CR. If not, send it via the Essentials packet channel; this is done to make this method correct for all CR usage
+		SimpleChannel messageChannel = registeredTypes.contains(packet.getClass()) ? channel : EssentialsPackets.channel;
+		messageChannel.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), CRConfig.effectPacketDistance.get(), world.getDimensionKey())), packet);
 	}
 
 	public static void sendPacketToPlayer(ServerPlayerEntity player, ClientPacket packet){

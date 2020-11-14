@@ -15,6 +15,7 @@ import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -57,7 +58,7 @@ public class CRRenderUtil extends RenderUtil{
 		nbt.putFloat("angle_y", angleY);
 		nbt.putByte("width", width);
 		nbt.putInt("color", color);
-		CRPackets.sendPacketAround(world, new BlockPos(x, y, z), new AddVisualToClient(nbt));
+		CRPackets.sendEffectPacketAround(world, new BlockPos(x, y, z), new AddVisualToClient(nbt));
 	}
 
 	public static void addArc(World world, Vector3d start, Vector3d end, int count, float diffusionRate, int color){
@@ -65,10 +66,10 @@ public class CRRenderUtil extends RenderUtil{
 	}
 
 	public static void addArc(World world, float xSt, float ySt, float zSt, float xEn, float yEn, float zEn, int count, float diffusionRate, int color){
-		addArc(world, xSt, ySt, zSt, xEn, yEn, zEn, xSt, ySt, zSt, count, diffusionRate, (byte) 5, color, true);
+		addArc(world, xSt, ySt, zSt, xEn, yEn, zEn, count, diffusionRate, (byte) 5, color, true);
 	}
 
-	public static void addArc(World world, float xSt, float ySt, float zSt, float xEn, float yEn, float zEn, float xStFin, float yStFin, float zStFin, int count, float diffusionRate, byte lifespan, int color, boolean playSound){
+	public static void addArc(World world, float xSt, float ySt, float zSt, float xEn, float yEn, float zEn, int count, float diffusionRate, byte lifespan, int color, boolean playSound){
 		CompoundNBT nbt = new CompoundNBT();
 		nbt.putInt("id", 1);
 		nbt.putFloat("x", xSt);
@@ -77,9 +78,9 @@ public class CRRenderUtil extends RenderUtil{
 		nbt.putFloat("x_e", xEn);
 		nbt.putFloat("y_e", yEn);
 		nbt.putFloat("z_e", zEn);
-		nbt.putFloat("x_f", xStFin);
-		nbt.putFloat("y_f", yStFin);
-		nbt.putFloat("z_f", zStFin);
+//		nbt.putFloat("x_f", xSt);
+//		nbt.putFloat("y_f", ySt);
+//		nbt.putFloat("z_f", zSt);
 		nbt.putInt("count", count);
 		nbt.putFloat("diffu", diffusionRate);
 		nbt.putInt("color", color);
@@ -88,17 +89,29 @@ public class CRRenderUtil extends RenderUtil{
 		//I have decided I hate this sound on loop
 		//world.playSound(null, xSt, ySt, zSt, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 1F, 1.6F);
 		BlockPos srcPos = new BlockPos(xSt, ySt, zSt);
-		float volume = Math.max((Math.abs(zEn - zSt) + Math.abs(yEn - ySt) + Math.abs(xEn - xSt)) / 20F, 0.05F);//Longer arcs are louder
 		boolean sound = playSound && CRConfig.electricSounds.get();
+		float arcLength = (Math.abs(zEn - zSt) + Math.abs(yEn - ySt) + Math.abs(xEn - xSt));//Done in taxicab distance, because it isn't that important
+		SoundEvent soundEvent;
+		float volume;
+		float pitch;
+		if(arcLength >= 1.1F){//Very short arcs use a sparking sound effect, longer arcs use a buzzing sound
+			soundEvent = CRSounds.ELECTRIC_ARC;
+			volume = Math.max(arcLength / 10F, 0.1F);//Longer arcs are louder
+			pitch = 1.5F;
+		}else{
+			soundEvent = CRSounds.ELECTRIC_SPARK;
+			volume = 0.2F;
+			pitch = 1F;
+		}
 		if(world.isRemote){
 			AddVisualToClient.effectsToRender.add(visualFactories[1].apply(nbt));
 			if(sound){
-				CRSounds.playSoundClient(world, srcPos, CRSounds.ELECTRIC_SPARK, SoundCategory.BLOCKS, volume, 1F);
+				CRSounds.playSoundClient(world, srcPos, soundEvent, SoundCategory.BLOCKS, volume, pitch);
 			}
 		}else{
-			CRPackets.sendPacketAround(world, srcPos, new AddVisualToClient(nbt));
+			CRPackets.sendEffectPacketAround(world, srcPos, new AddVisualToClient(nbt));
 			if(sound){
-				CRSounds.playSoundServer(world, srcPos, CRSounds.ELECTRIC_SPARK, SoundCategory.BLOCKS, volume, 1F);
+				CRSounds.playSoundServer(world, srcPos, soundEvent, SoundCategory.BLOCKS, volume, pitch);
 			}
 		}
 	}

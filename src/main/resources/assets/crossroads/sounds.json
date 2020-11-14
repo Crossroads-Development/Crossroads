@@ -18,12 +18,21 @@
 			}
 		]
 	},
-	"spark": {
+	"electric_spark": {
 		"category": "block",
 		"subtitle": "subtitle.crossroads.spark",
 		"sounds": [
 			{
-				"name": "crossroads:spark"
+				"name": "crossroads:electric_spark"
+			}
+		]
+	},
+	"electric_arc": {
+		"category": "block",
+		"subtitle": "subtitle.crossroads.arc",
+		"sounds": [
+			{
+				"name": "crossroads:electric_arc"
 			}
 		]
 	}

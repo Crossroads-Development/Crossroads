@@ -308,7 +308,7 @@
 	"tt.crossroads.meter.fluid_tank.plural": "%1$d internal tanks",
 	"tt.crossroads.meter.fluid_tank.info": "%2$s, %3$d/%1$s",
 	"tt.crossroads.meter.axis": "Total Energy: %1$s",
-	"tt.crossroads.meter.fe": "Charge: %1$d/%2$d",
+	"tt.crossroads.meter.fe": "Charge: %1$d/%2$dFE",
 	"tt.crossroads.meter.beam": "%1$s: %2$s",
 	"tt.crossroads.meter.beam.none": "Last Output: None",
 	"tt.crossroads.meter.circuit": "Circuit Output: %1$s",
@@ -661,8 +661,8 @@
 
 	"subtitle.crossroads.beam_passive": "Beam emitted",
 	"subtitle.crossroads.beam_transmute": "Beam transmuted block",
-	"subtitle.crossroads.spark": "Electrical discharge",
-
+	"subtitle.crossroads.spark": "Small electrical discharge",
+	"subtitle.crossroads.arc": "Electrical discharge",
 
 	"material.iron": "Iron",
 	"material.gold": "Gold",

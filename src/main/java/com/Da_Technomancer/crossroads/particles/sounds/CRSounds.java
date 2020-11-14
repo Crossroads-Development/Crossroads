@@ -13,11 +13,12 @@ import java.util.ArrayList;
 
 public class CRSounds{
 
-	private static final ArrayList<SoundEvent> soundsToRegister = new ArrayList<>(3);
+	private static final ArrayList<SoundEvent> soundsToRegister = new ArrayList<>(4);
 
 	public static final SoundEvent BEAM_PASSIVE = createEvent("beam_passive");
 	public static final SoundEvent BEAM_TRANSMUTE = createEvent("beam_transmute");
-	public static final SoundEvent ELECTRIC_SPARK = createEvent("spark");
+	public static final SoundEvent ELECTRIC_SPARK = createEvent("electric_spark");
+	public static final SoundEvent ELECTRIC_ARC = createEvent("electric_arc");
 
 	public static void register(IForgeRegistry<SoundEvent> reg){
 		for(SoundEvent e : soundsToRegister){

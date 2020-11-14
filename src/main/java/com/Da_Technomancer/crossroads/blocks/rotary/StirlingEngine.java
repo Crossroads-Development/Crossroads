@@ -1,13 +1,16 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.StirlingEngineTileEntity;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -26,6 +29,7 @@ public class StirlingEngine extends ContainerBlock{
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
+		setDefaultState(getDefaultState().with(CRProperties.RATE_SIGNED, 2));
 	}
 
 	@Override
@@ -37,7 +41,12 @@ public class StirlingEngine extends ContainerBlock{
 	public BlockRenderType getRenderType(BlockState state){
 		return BlockRenderType.MODEL;
 	}
-	
+
+	@Override
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+		builder.add(CRProperties.RATE_SIGNED);
+	}
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){

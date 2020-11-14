@@ -1,11 +1,13 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.rotary.StirlingEngine;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -63,6 +65,29 @@ public class StirlingEngineTileEntity extends ModuleTE{
 		super.addInfo(chat, player, hit);
 	}
 
+	private void updateWorldState(){
+		//Updates the (purely for rending) blockstate in the world to match the gear speed
+		BlockState worldState = getBlockState();
+		final double slowMin = 0.25D;
+		final double fastMin = 0.75D;
+		double speedMagnitude = Math.abs(motData[0]);
+		int target = 0;
+		if(speedMagnitude > slowMin){
+			if(speedMagnitude > fastMin){
+				target = 2;
+			}else{
+				target = 1;
+			}
+			if(motData[0] < 0){
+				target = -target;
+			}
+		}
+		target += 2;//Change from [-2, 2] to [0, 4]
+		if(worldState.getBlock() instanceof StirlingEngine && worldState.get(CRProperties.RATE_SIGNED) != target){
+			world.setBlockState(pos, worldState.with(CRProperties.RATE_SIGNED, target), 2);//Doesn't create block updates
+		}
+	}
+
 	@Override
 	public void tick(){
 		super.tick();
@@ -84,6 +109,7 @@ public class StirlingEngineTileEntity extends ModuleTE{
 
 			markDirty();
 		}
+		updateWorldState();
 	}
 
 	@Override
