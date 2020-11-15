@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "Every time it receives a pulse, the <thing>spring speed/$ on the item being wound will increase by 0.2rad/s. If the spring speed on the item is ever lower than the axle speed, <em>the item will break/$. Items can only ever be wound with positive speed.$(br2)While an item is being wound in the <item>Spring Winding Stand/$, the <item>Stand/$ will produce <thing>$(l:crossroads:intro/rotary)rotary power/$ against "
+			"text": "Every time it receives a pulse, the <thing>spring speed/$ on the item being wound will increase by 0.2rad/s. If the spring speed on the item is ever higher than the axle speed, <em>the item will break/$. Items can only ever be wound with positive speed.$(br2)While an item is being wound in the <item>Spring Winding Stand/$, the <item>Stand/$ will produce <thing>$(l:crossroads:intro/rotary)rotary power/$ against "
 		},
 		{
 			"type": "text",

@@ -35,5 +35,15 @@
 				"name": "crossroads:electric_arc"
 			}
 		]
+	},
+	"entropy_transfer": {
+		"category": "block",
+		"subtitle": "subtitle.crossroads.entropy_trans",
+		"sounds": [
+			{
+				"name": "crossroads:entropy_transfer",
+				"attenuation_distance": 10
+			}
+		]
 	}
 }

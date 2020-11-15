@@ -663,6 +663,7 @@
 	"subtitle.crossroads.beam_transmute": "Beam transmuted block",
 	"subtitle.crossroads.spark": "Small electrical discharge",
 	"subtitle.crossroads.arc": "Electrical discharge",
+	"subtitle.crossroads.entropy_trans": "Temporal entropy transfer",
 
 	"material.iron": "Iron",
 	"material.gold": "Gold",

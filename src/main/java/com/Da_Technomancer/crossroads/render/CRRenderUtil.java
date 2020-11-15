@@ -38,11 +38,12 @@ public class CRRenderUtil extends RenderUtil{
 	 * Used internally. Public only for packet use
 	 */
 	@SuppressWarnings("unchecked")
-	public static final Function<CompoundNBT, IVisualEffect>[] visualFactories = (Function<CompoundNBT, IVisualEffect>[]) new Function[2];
+	public static final Function<CompoundNBT, IVisualEffect>[] visualFactories = (Function<CompoundNBT, IVisualEffect>[]) new Function[3];
 
 	static{
 		visualFactories[0] = LooseBeamRenderable::readFromNBT;
 		visualFactories[1] = LooseArcRenderable::readFromNBT;
+		visualFactories[2] = LooseEntropyRenderable::readFromNBT;
 	}
 
 	//Pre-made render effects
@@ -112,6 +113,33 @@ public class CRRenderUtil extends RenderUtil{
 			CRPackets.sendEffectPacketAround(world, srcPos, new AddVisualToClient(nbt));
 			if(sound){
 				CRSounds.playSoundServer(world, srcPos, soundEvent, SoundCategory.BLOCKS, volume, pitch);
+			}
+		}
+	}
+
+	public static void addEntropyBeam(World world, float xSt, float ySt, float zSt, float xEn, float yEn, float zEn, int qty, byte lifespan, boolean playSound){
+		CompoundNBT nbt = new CompoundNBT();
+		nbt.putInt("id", 2);
+		nbt.putFloat("x_st", xSt);
+		nbt.putFloat("y_st", ySt);
+		nbt.putFloat("z_st", zSt);
+		nbt.putFloat("x_en", xEn);
+		nbt.putFloat("y_en", yEn);
+		nbt.putFloat("z_en", zEn);
+		nbt.putByte("lifespan", lifespan);
+		nbt.putInt("quantity", qty);
+
+		BlockPos srcPos = new BlockPos(xSt, ySt, zSt);
+		boolean sound = playSound && CRConfig.fluxSounds.get();
+		if(world.isRemote){
+			AddVisualToClient.effectsToRender.add(visualFactories[2].apply(nbt));
+			if(sound){
+				CRSounds.playSoundClient(world, srcPos, CRSounds.FLUX_TRANSFER, SoundCategory.BLOCKS, 0.6F, 1F);
+			}
+		}else{
+			CRPackets.sendEffectPacketAround(world, srcPos, new AddVisualToClient(nbt));
+			if(sound){
+				CRSounds.playSoundServer(world, srcPos, CRSounds.FLUX_TRANSFER, SoundCategory.BLOCKS, 0.6F, 1F);
 			}
 		}
 	}

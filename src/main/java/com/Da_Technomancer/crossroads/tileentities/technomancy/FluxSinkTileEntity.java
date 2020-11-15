@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -38,6 +39,7 @@ public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickab
 	private int prevFlux = 0;
 	private boolean running = false;
 	private long runningStartTime;//Used for rendering
+	public static final float STARTUP_TIME = 60;//Used for rendering
 
 	public FluxSinkTileEntity(){
 		super(type);
@@ -51,13 +53,49 @@ public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickab
 
 	@Override
 	public void tick(){
-		if(!world.isRemote && world.getGameTime() % FluxUtil.FLUX_TIME == 0){
-			prevFlux = flux;
-			if(isRunning() && flux != 0){
-				flux = 0;
-				markDirty();
+		if(world.getGameTime() % FluxUtil.FLUX_TIME == 0){
+			if(!world.isRemote){
+				prevFlux = flux;
+				if(isRunning() && flux != 0){
+					flux = 0;
+					markDirty();
+				}
+			}else if(world.getGameTime() % (FluxUtil.FLUX_TIME * 4) == 0){
+				//Create client-side entropy effects to the floating portals
+				//By doing this on the individual clients, we avoid needing extra packets
+				//This could have been done as part of the TESR instead of using loose renders, but this allows re-using the render code
+				float runtime = getRunDuration(0);
+				if(runtime > STARTUP_TIME){
+					int portalIndex0 = world.rand.nextInt(8);
+					int portalIndex1 = world.rand.nextInt(8);
+					if(portalIndex0 == portalIndex1){
+						portalIndex1 = (portalIndex1 + 1) % 8;
+					}
+					float[] srcPos = {pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F};
+					float[] end0 = getPortalCenterPos(portalIndex0, runtime);
+					float[] end1 = getPortalCenterPos(portalIndex1, runtime);
+					//Note that one of these has playSound true, and the rest false, as we only need the sound to play once
+					CRRenderUtil.addEntropyBeam(world, srcPos[0], srcPos[1], srcPos[2], end0[0] + srcPos[0], end0[1] + srcPos[1], end0[2] + srcPos[2], 1, (byte) (FluxUtil.FLUX_TIME * 4 + 1), true);
+					CRRenderUtil.addEntropyBeam(world, srcPos[0], srcPos[1], srcPos[2], end1[0] + srcPos[0], end1[1] + srcPos[1], end1[2] + srcPos[2], 1, (byte) (FluxUtil.FLUX_TIME * 4 + 1), false);
+				}
 			}
 		}
+	}
+
+	/**
+	 * Used for rendering
+	 * Gets the center position of the rendered 'portals', relative to the center of the blockpos
+	 * @param plateIndex An integer in [0, 7]
+	 * @param runtime Total time running
+	 * @return A size 3 float array of the relative position of the center of a portal, in [x, y, z] order
+	 */
+	private static float[] getPortalCenterPos(int plateIndex, float runtime){
+		float len = 3.65F;
+		float angle = (float) -(Math.toRadians(360 / 8F) * plateIndex + Math.toRadians(runtime / 10D));
+		float x = len * (float) Math.cos(angle);
+		float z = len * (float) Math.sin(angle);
+		float y = 0.4F * (float) Math.sin(runtime / 100 + plateIndex * 5);
+		return new float[] {x, y, z};
 	}
 
 	/**

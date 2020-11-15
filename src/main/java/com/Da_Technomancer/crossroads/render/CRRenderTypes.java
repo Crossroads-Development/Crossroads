@@ -42,11 +42,15 @@ public class CRRenderTypes extends RenderType{
 	//Stitched to area-of-effect atlas
 	public static final ResourceLocation AREA_OVERLAY_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/field.png");
 
+	//Stitched to flux transfer type
+	public static final ResourceLocation FLUX_EXTRUSION_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/flux_extrusion.png");
+
 	//Types
 	public static final RenderType BEAM_TYPE = RenderType.makeType("cr_beam", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, false, true, RenderType.State.getBuilder().cull(RenderState.CULL_DISABLED).texture(new RenderState.TextureState(BEAM_TEXTURE, false, false)).build(false));
 	public static final RenderType FLUX_SINK_TYPE = RenderType.makeType("cr_flux_sink", DefaultVertexFormats.POSITION_COLOR_TEX_LIGHTMAP, GL11.GL_QUADS, 256, false, true, RenderType.State.getBuilder().cull(RenderState.CULL_DISABLED).texture(new RenderState.TextureState(FLUX_SINK_TEXTURE, false, false)).lightmap(RenderState.LIGHTMAP_ENABLED).transparency(RenderState.TRANSLUCENT_TRANSPARENCY).build(false));
 	public static final RenderType AREA_OVERLAY_TYPE = RenderType.makeType("cr_area_overlay", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, false, true, RenderType.State.getBuilder().cull(RenderState.CULL_DISABLED).texture(new RenderState.TextureState(AREA_OVERLAY_TEXTURE, false, false)).transparency(RenderState.TRANSLUCENT_TRANSPARENCY).build(false));
 	public static final RenderType ELECTRIC_ARC_TYPE = RenderType.makeType("cr_electric_arc", DefaultVertexFormats.POSITION_COLOR_LIGHTMAP, GL11.GL_QUADS, 256, false, true, RenderType.State.getBuilder().cull(RenderState.CULL_DISABLED).lightmap(RenderState.LIGHTMAP_ENABLED).build(false));
+	public static final RenderType FLUX_TRANSFER_TYPE = RenderType.makeType("cr_flux_extrusion", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, false, true, RenderType.State.getBuilder().cull(RenderState.CULL_DISABLED).texture(new RenderState.TextureState(FLUX_EXTRUSION_TEXTURE, false, false)).transparency(RenderState.TRANSLUCENT_TRANSPARENCY).build(false));
 
 	public static void stitchTextures(TextureStitchEvent.Pre event){
 		//We only need to register textures which are not already part of a block model

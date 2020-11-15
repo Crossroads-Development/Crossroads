@@ -32,7 +32,7 @@ public class FluxSinkRenderer extends TileEntityRenderer<FluxSinkTileEntity>{
 
 		//Render an icosahedron
 
-		float scale = (float) Math.min(1D, runtime / 60D) * 2.5F;//Expand slowly to full size when starting up
+		float scale = (float) Math.min(1D, runtime / FluxSinkTileEntity.STARTUP_TIME) * 2.5F;//Expand slowly to full size when starting up
 
 		int medLight = CRRenderUtil.calcMediumLighting(combinedLight);
 
@@ -40,21 +40,18 @@ public class FluxSinkRenderer extends TileEntityRenderer<FluxSinkTileEntity>{
 		matrix.push();
 		matrix.rotate(Vector3f.YP.rotationDegrees(runtime / 10F));
 		final float len = 4;
-		final float plateScale = Math.min(runtime / 40, 1) * 0.5F;
+		final float plateScale = Math.min(runtime / (FluxSinkTileEntity.STARTUP_TIME * 2F / 3F), 1) * 0.5F;
 
-		for(int j = 0; j < 2; j++){
-			for(int i = 0; i < 8; i++){
-				float yOffset = 0.4F * (float) Math.sin(runtime / 100 + i * 5);
-				float textVSt = ((i + (int) (runtime / 8)) % 4) * 0.25F;//Animated texture
+		for(int i = 0; i < 8; i++){
+			float yOffset = 0.4F * (float) Math.sin(runtime / 100 + i * 5);
+			float textVSt = ((i + (int) (runtime / 8)) % 4) * 0.25F;//Animated texture
 
-				builder.pos(matrix.getLast().getMatrix(), len, yOffset - plateScale, -plateScale).color(255, 255, 255, 255).tex(0.75F, textVSt).lightmap(medLight).endVertex();
-				builder.pos(matrix.getLast().getMatrix(), len, yOffset + plateScale, -plateScale).color(255, 255, 255, 255).tex(0.75F, textVSt + 0.25F).lightmap(medLight).endVertex();
-				builder.pos(matrix.getLast().getMatrix(), len, yOffset + plateScale, plateScale).color(255, 255, 255, 255).tex(1, textVSt + 0.25F).lightmap(medLight).endVertex();
-				builder.pos(matrix.getLast().getMatrix(), len, yOffset - plateScale, plateScale).color(255, 255, 255, 255).tex(1, textVSt).lightmap(medLight).endVertex();
+			builder.pos(matrix.getLast().getMatrix(), len, yOffset - plateScale, -plateScale).color(255, 255, 255, 255).tex(0.75F, textVSt).lightmap(medLight).endVertex();
+			builder.pos(matrix.getLast().getMatrix(), len, yOffset + plateScale, -plateScale).color(255, 255, 255, 255).tex(0.75F, textVSt + 0.25F).lightmap(medLight).endVertex();
+			builder.pos(matrix.getLast().getMatrix(), len, yOffset + plateScale, plateScale).color(255, 255, 255, 255).tex(1, textVSt + 0.25F).lightmap(medLight).endVertex();
+			builder.pos(matrix.getLast().getMatrix(), len, yOffset - plateScale, plateScale).color(255, 255, 255, 255).tex(1, textVSt).lightmap(medLight).endVertex();
 
-				matrix.rotate(Vector3f.YP.rotationDegrees(360F / 8F));
-			}
-//			GlStateManager.rotated(90, 0, 0, 1);
+			matrix.rotate(Vector3f.YP.rotationDegrees(360F / 8F));
 		}
 
 		matrix.pop();

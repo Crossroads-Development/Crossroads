@@ -81,6 +81,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.IntValue fireboxCap;
 	public static ForgeConfigSpec.BooleanValue beamSounds;
 	public static ForgeConfigSpec.BooleanValue electricSounds;
+	public static ForgeConfigSpec.BooleanValue fluxSounds;
 	public static ForgeConfigSpec.IntValue effectPacketDistance;
 
 	private static final ITag<Block> destroyBlacklist = BlockTags.makeWrapperTag(Crossroads.MODID + ":destroy_blacklist");
@@ -104,6 +105,7 @@ public class CRConfig{
 //		colorChartResolution = clientBuilder.comment("Pixel size on the color chart", "Higher values will reduce FPS lag in the color chart UI, but will make it less precise and 'smooth' looking").defineInRange("color_res", 1, 1, 4);
 		beamSounds = clientBuilder.comment("Should beams make sounds?").define("beam_sounds", true);
 		electricSounds = clientBuilder.comment("Should electrical arcs make sounds?").define("electric_sounds", true);
+		fluxSounds = clientBuilder.comment("Should temporal entropy transfer make sounds?").define("entropy_sounds", true);
 		clientSpec = clientBuilder.build();
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, clientSpec);
 

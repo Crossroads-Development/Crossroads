@@ -21,7 +21,6 @@ public class LooseArcRenderable implements IVisualEffect{
 	private final float diffusionRate;
 	private final int color;
 	private byte lifeTime;
-	private final byte lifeSpan;
 	private long lastTick = -1;
 	private final Vector3d[][] states;
 
@@ -39,7 +38,6 @@ public class LooseArcRenderable implements IVisualEffect{
 		this.diffusionRate = diffusionRate;
 		this.color = color;
 		states = new Vector3d[count][9];
-		this.lifeSpan = lifespan;
 		this.lifeTime = lifespan;
 	}
 

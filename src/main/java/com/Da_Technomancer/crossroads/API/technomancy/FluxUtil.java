@@ -73,8 +73,7 @@ public class FluxUtil{
 
 	public static void renderFlux(World world, BlockPos src, BlockPos dest, int qty){
 		if(qty > 0){
-			//TODO: This is basically a carbon copy of the tesla coil render code- this should probably be tweaked to make it more thematic
-			CRRenderUtil.addArc(world, src.getX() + 0.5F, src.getY() + 0.5F, src.getZ() + 0.5F, dest.getX() + 0.5F, dest.getY() + 0.5F, dest.getZ() + 0.5F, 3, 0F, (byte) FLUX_TIME, COLOR_CODES[(int) (world.getGameTime() % 3)], false);
+			CRRenderUtil.addEntropyBeam(world, src.getX() + 0.5F, src.getY() + 0.5F, src.getZ() + 0.5F, dest.getX() + 0.5F, dest.getY() + 0.5F, dest.getZ() + 0.5F, qty, (byte) (FLUX_TIME + 1), true);
 		}
 	}
 
