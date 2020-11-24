@@ -1,7 +1,8 @@
 package com.Da_Technomancer.crossroads.particles.sounds;
 
+import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -51,6 +52,7 @@ public class CRSounds{
 	/**
 	 * Plays a sounds to the player when called on the virtual client
 	 * Does nothing when called on the virtual server
+	 * Only plays sounds for players within a certain distance- same distance used for sound packets from the server
 	 * @param world The world to play the sound in
 	 * @param pos The position to play the sound at. Plays from the center of the blockspace
 	 * @param sound Sound to play
@@ -58,9 +60,13 @@ public class CRSounds{
 	 * @param volume Volume multiplier, multiplied with event volume and clamped within [0, 1] after multiplying
 	 * @param pitch Pitch multiplier, multiplied with event pitch and clamped within [0.5, 2] after multiplying
 	 */
-	public static void playSoundClient(World world, BlockPos pos, SoundEvent sound, SoundCategory category, float volume, float pitch){
+	public static void playSoundClientLocal(World world, BlockPos pos, SoundEvent sound, SoundCategory category, float volume, float pitch){
 		if(world.isRemote){
-			world.playSound(Minecraft.getInstance().player, pos, sound, category, volume, pitch);
+			float distance = Math.max(1, volume) * 16F;
+			PlayerEntity player = SafeCallable.getClientPlayer();
+			if(player.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= distance * distance){
+				world.playSound(player, pos, sound, category, volume, pitch);
+			}
 		}
 	}
 }

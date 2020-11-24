@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.render;
 import com.Da_Technomancer.crossroads.API.packets.AddVisualToClient;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.particles.sounds.CRSounds;
 import com.Da_Technomancer.essentials.render.RenderUtil;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -14,8 +13,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -25,7 +22,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 public class CRRenderUtil extends RenderUtil{
 
@@ -38,7 +35,7 @@ public class CRRenderUtil extends RenderUtil{
 	 * Used internally. Public only for packet use
 	 */
 	@SuppressWarnings("unchecked")
-	public static final Function<CompoundNBT, IVisualEffect>[] visualFactories = (Function<CompoundNBT, IVisualEffect>[]) new Function[3];
+	public static final BiFunction<World, CompoundNBT, IVisualEffect>[] visualFactories = (BiFunction<World, CompoundNBT, IVisualEffect>[]) new BiFunction[3];
 
 	static{
 		visualFactories[0] = LooseBeamRenderable::readFromNBT;
@@ -71,6 +68,7 @@ public class CRRenderUtil extends RenderUtil{
 	}
 
 	public static void addArc(World world, float xSt, float ySt, float zSt, float xEn, float yEn, float zEn, int count, float diffusionRate, byte lifespan, int color, boolean playSound){
+		boolean sound = playSound && CRConfig.electricSounds.get();
 		CompoundNBT nbt = new CompoundNBT();
 		nbt.putInt("id", 1);
 		nbt.putFloat("x", xSt);
@@ -86,38 +84,19 @@ public class CRRenderUtil extends RenderUtil{
 		nbt.putFloat("diffu", diffusionRate);
 		nbt.putInt("color", color);
 		nbt.putByte("lif", lifespan);
+		nbt.putBoolean("sound", sound);
 
 		//I have decided I hate this sound on loop
 		//world.playSound(null, xSt, ySt, zSt, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 1F, 1.6F);
-		BlockPos srcPos = new BlockPos(xSt, ySt, zSt);
-		boolean sound = playSound && CRConfig.electricSounds.get();
-		float arcLength = (Math.abs(zEn - zSt) + Math.abs(yEn - ySt) + Math.abs(xEn - xSt));//Done in taxicab distance, because it isn't that important
-		SoundEvent soundEvent;
-		float volume;
-		float pitch;
-		if(arcLength >= 1.1F){//Very short arcs use a sparking sound effect, longer arcs use a buzzing sound
-			soundEvent = CRSounds.ELECTRIC_ARC;
-			volume = Math.max(arcLength / 10F, 0.1F);//Longer arcs are louder
-			pitch = 1.5F;
-		}else{
-			soundEvent = CRSounds.ELECTRIC_SPARK;
-			volume = 0.2F;
-			pitch = 1F;
-		}
 		if(world.isRemote){
-			AddVisualToClient.effectsToRender.add(visualFactories[1].apply(nbt));
-			if(sound){
-				CRSounds.playSoundClient(world, srcPos, soundEvent, SoundCategory.BLOCKS, volume, pitch);
-			}
+			AddVisualToClient.effectsToRender.add(visualFactories[1].apply(world, nbt));
 		}else{
-			CRPackets.sendEffectPacketAround(world, srcPos, new AddVisualToClient(nbt));
-			if(sound){
-				CRSounds.playSoundServer(world, srcPos, soundEvent, SoundCategory.BLOCKS, volume, pitch);
-			}
+			CRPackets.sendEffectPacketAround(world, new BlockPos((xSt + xEn) / 2F, (ySt + yEn) / 2F, (zSt + zEn) / 2F), new AddVisualToClient(nbt));
 		}
 	}
 
 	public static void addEntropyBeam(World world, float xSt, float ySt, float zSt, float xEn, float yEn, float zEn, int qty, byte lifespan, boolean playSound){
+		boolean sound = playSound && CRConfig.fluxSounds.get();
 		CompoundNBT nbt = new CompoundNBT();
 		nbt.putInt("id", 2);
 		nbt.putFloat("x_st", xSt);
@@ -128,19 +107,12 @@ public class CRRenderUtil extends RenderUtil{
 		nbt.putFloat("z_en", zEn);
 		nbt.putByte("lifespan", lifespan);
 		nbt.putInt("quantity", qty);
+		nbt.putBoolean("sound", sound);
 
-		BlockPos srcPos = new BlockPos(xSt, ySt, zSt);
-		boolean sound = playSound && CRConfig.fluxSounds.get();
 		if(world.isRemote){
-			AddVisualToClient.effectsToRender.add(visualFactories[2].apply(nbt));
-			if(sound){
-				CRSounds.playSoundClient(world, srcPos, CRSounds.FLUX_TRANSFER, SoundCategory.BLOCKS, 0.6F, 1F);
-			}
+			AddVisualToClient.effectsToRender.add(visualFactories[2].apply(world, nbt));
 		}else{
-			CRPackets.sendEffectPacketAround(world, srcPos, new AddVisualToClient(nbt));
-			if(sound){
-				CRSounds.playSoundServer(world, srcPos, CRSounds.FLUX_TRANSFER, SoundCategory.BLOCKS, 0.6F, 1F);
-			}
+			CRPackets.sendEffectPacketAround(world, new BlockPos((xSt + xEn) / 2F, (ySt + yEn) / 2F, (zSt + zEn) / 2F), new AddVisualToClient(nbt));
 		}
 	}
 

@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.particles.CRParticles;
 import com.Da_Technomancer.crossroads.particles.ColorParticleData;
+import com.Da_Technomancer.crossroads.particles.sounds.CRSounds;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -110,7 +111,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 			BlockState state = world.getBlockState(pos);
 			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 			SoundType sound = state.getBlock().getSoundType(state, world, pos, null);
-			world.playSound(null, pos, sound.getBreakSound(), SoundCategory.BLOCKS, sound.getVolume(), sound.getPitch());
+			CRSounds.playSoundServer(world, pos, sound.getBreakSound(), SoundCategory.BLOCKS, sound.getVolume(), sound.getPitch());
 			AlchemyUtil.releaseChemical(world, pos, contents);
 			if(strength > 0F){
 				world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), strength, Explosion.Mode.BREAK);//We will drop items, because an explosion in your lab is devastating enough without having to re-craft everything

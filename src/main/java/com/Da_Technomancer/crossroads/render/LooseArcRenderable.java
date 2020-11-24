@@ -1,10 +1,15 @@
 package com.Da_Technomancer.crossroads.render;
 
+import com.Da_Technomancer.crossroads.particles.sounds.CRSounds;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.World;
 
 import java.awt.*;
 import java.util.Random;
@@ -24,7 +29,7 @@ public class LooseArcRenderable implements IVisualEffect{
 	private long lastTick = -1;
 	private final Vector3d[][] states;
 
-	private LooseArcRenderable(float xSt, float ySt, float zSt, float xEn, float yEn, float zEn, int count, float diffusionRate, byte lifespan, int color){
+	private LooseArcRenderable(World world, float xSt, float ySt, float zSt, float xEn, float yEn, float zEn, int count, float diffusionRate, byte lifespan, int color, boolean sound){
 		this.xSt = xSt;
 		this.ySt = ySt;
 		this.zSt = zSt;
@@ -39,10 +44,26 @@ public class LooseArcRenderable implements IVisualEffect{
 		this.color = color;
 		states = new Vector3d[count][9];
 		this.lifeTime = lifespan;
+		if(sound){
+			SoundEvent soundEvent;
+			float volume;
+			float pitch;
+			float arcLength = (Math.abs(zEn - zSt) + Math.abs(yEn - ySt) + Math.abs(xEn - xSt));//Done in taxicab distance, because it isn't that important
+			if(arcLength >= 1.1F){//Very short arcs use a sparking sound effect, longer arcs use a buzzing sound
+				soundEvent = CRSounds.ELECTRIC_ARC;
+				volume = Math.max(arcLength / 10F, 0.1F);//Longer arcs are louder
+				pitch = 1.5F;
+			}else{
+				soundEvent = CRSounds.ELECTRIC_SPARK;
+				volume = 0.2F;
+				pitch = 1F;
+			}
+			CRSounds.playSoundClientLocal(world, new BlockPos((xSt + xEn) / 2F, (ySt + yEn) / 2F, (zSt + zEn) / 2F), soundEvent, SoundCategory.BLOCKS, volume, pitch);
+		}
 	}
 
-	public static LooseArcRenderable readFromNBT(CompoundNBT nbt){
-		return new LooseArcRenderable(nbt.getFloat("x"), nbt.getFloat("y"), nbt.getFloat("z"), nbt.getFloat("x_e"), nbt.getFloat("y_e"), nbt.getFloat("z_e"), nbt.getInt("count"), nbt.getFloat("diffu"), nbt.getByte("lif"), nbt.getInt("color"));
+	public static LooseArcRenderable readFromNBT(World world, CompoundNBT nbt){
+		return new LooseArcRenderable(world, nbt.getFloat("x"), nbt.getFloat("y"), nbt.getFloat("z"), nbt.getFloat("x_e"), nbt.getFloat("y_e"), nbt.getFloat("z_e"), nbt.getInt("count"), nbt.getFloat("diffu"), nbt.getByte("lif"), nbt.getInt("color"), nbt.getBoolean("sound"));
 	}
 
 	@Override

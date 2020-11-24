@@ -80,7 +80,7 @@ public class RotaryDrillRenderer extends TileEntityRenderer<RotaryDrillTileEntit
 		float uHe = sprite.getInterpolatedU(texHeight);
 		float vSt = sprite.getMinV();
 		float vEn = sprite.getInterpolatedV(texWidth);
-		float vHe = sprite.getInterpolatedV(texHeight);
+//		float vHe = sprite.getInterpolatedV(texHeight);
 
 		//Top
 		CRRenderUtil.addVertexBlock(builder, matrix, start, top, start, uSt, vSt, 0, 1, 0, light, color);
@@ -96,21 +96,21 @@ public class RotaryDrillRenderer extends TileEntityRenderer<RotaryDrillTileEntit
 		
 		//side
 		CRRenderUtil.addVertexBlock(builder, matrix, start, bottom, start, uSt, vSt, 0, 0, -1, light, color);
-		CRRenderUtil.addVertexBlock(builder, matrix, start, top, start, uSt, vHe, 0, 0, -1, light, color);
-		CRRenderUtil.addVertexBlock(builder, matrix, end, top, start, uEn, vHe, 0, 0, -1, light, color);
-		CRRenderUtil.addVertexBlock(builder, matrix, end, bottom, start, uEn, vSt, 0, 0, -1, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, start, top, start, uHe, vSt, 0, 0, -1, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, end, top, start, uHe, vEn, 0, 0, -1, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, end, bottom, start, uSt, vEn, 0, 0, -1, light, color);
 
 		//side
-		CRRenderUtil.addVertexBlock(builder, matrix, start, bottom, end, uSt, vSt, 0, 0, 1, light, color);
-		CRRenderUtil.addVertexBlock(builder, matrix, end, bottom, end, uHe, vSt, 0, 0, 1, light, color);
-		CRRenderUtil.addVertexBlock(builder, matrix, end, top, end, uHe, vEn, 0, 0, 1, light, color);
-		CRRenderUtil.addVertexBlock(builder, matrix, start, top, end, uSt, vEn, 0, 0, 1, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, start, bottom, end, uSt, vEn, 0, 0, 1, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, end, bottom, end, uSt, vSt, 0, 0, 1, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, end, top, end, uHe, vSt, 0, 0, 1, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, start, top, end, uHe, vEn, 0, 0, 1, light, color);
 
 		//side
-		CRRenderUtil.addVertexBlock(builder, matrix, start, bottom, end, uSt, vSt, -1, 0, 0, light, color);
-		CRRenderUtil.addVertexBlock(builder, matrix, start, top, end, uHe, vSt, -1, 0, 0, light, color);
-		CRRenderUtil.addVertexBlock(builder, matrix, start, top, start, uHe, vEn, -1, 0, 0, light, color);
-		CRRenderUtil.addVertexBlock(builder, matrix, start, bottom, start, uSt, vEn, -1, 0, 0, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, start, bottom, end, uSt, vEn, -1, 0, 0, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, start, top, end, uHe, vEn, -1, 0, 0, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, start, top, start, uHe, vSt, -1, 0, 0, light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, start, bottom, start, uSt, vSt, -1, 0, 0, light, color);
 
 		//side
 		CRRenderUtil.addVertexBlock(builder, matrix, end, bottom, end, uSt, vSt, 1, 0, 0, light, color);

@@ -1,16 +1,15 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
 import com.Da_Technomancer.crossroads.API.CRReflection;
-import com.Da_Technomancer.crossroads.render.IVisualEffect;
 import com.Da_Technomancer.essentials.ReflectionUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.NewChatGui;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 
 /**
  * Certain packets need to call or store code in render side only stuff, and can not do so without crashing due to (for example) WorldClient not existing on the server side.
@@ -37,5 +36,9 @@ public class SafeCallable{
 
 	public static World getClientWorld(){
 		return Minecraft.getInstance().world;
+	}
+
+	public static PlayerEntity getClientPlayer(){
+		return Minecraft.getInstance().player;
 	}
 }

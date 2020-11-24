@@ -1,11 +1,15 @@
 package com.Da_Technomancer.crossroads.render;
 
+import com.Da_Technomancer.crossroads.particles.sounds.CRSounds;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.World;
 
 import java.util.Random;
 
@@ -21,7 +25,7 @@ public class LooseEntropyRenderable implements IVisualEffect{
 	private byte lifeTime;
 	private long lastTick = 0;
 
-	public LooseEntropyRenderable(float xSt, float ySt, float zSt, float xEn, float yEn, float zEn, int qty, byte lifeTime){
+	public LooseEntropyRenderable(World world, float xSt, float ySt, float zSt, float xEn, float yEn, float zEn, int qty, byte lifeTime, boolean sound){
 		this.xSt = xSt;
 		this.ySt = ySt;
 		this.zSt = zSt;
@@ -30,10 +34,13 @@ public class LooseEntropyRenderable implements IVisualEffect{
 		this.angleY = (float) Math.atan2(-(xEn - xSt), zEn - zSt);
 		this.qty = qty;
 		this.lifeTime = lifeTime;
+		if(sound){
+			CRSounds.playSoundClientLocal(world, new BlockPos((xSt + xEn) / 2F, (ySt + yEn) / 2F, (zSt + zEn) / 2F), CRSounds.FLUX_TRANSFER, SoundCategory.BLOCKS, 0.4F, 1F);
+		}
 	}
 
-	public static LooseEntropyRenderable readFromNBT(CompoundNBT nbt){
-		return new LooseEntropyRenderable(nbt.getFloat("x_st"), nbt.getFloat("y_st"), nbt.getFloat("z_st"), nbt.getFloat("x_en"), nbt.getFloat("y_en"), nbt.getFloat("z_en"), nbt.getInt("quantity"), nbt.getByte("lifespan"));
+	public static LooseEntropyRenderable readFromNBT(World world, CompoundNBT nbt){
+		return new LooseEntropyRenderable(world, nbt.getFloat("x_st"), nbt.getFloat("y_st"), nbt.getFloat("z_st"), nbt.getFloat("x_en"), nbt.getFloat("y_en"), nbt.getFloat("z_en"), nbt.getInt("quantity"), nbt.getByte("lifespan"), nbt.getBoolean("sound"));
 	}
 
 	@Override

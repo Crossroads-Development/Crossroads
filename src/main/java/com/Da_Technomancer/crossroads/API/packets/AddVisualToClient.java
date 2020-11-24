@@ -35,6 +35,6 @@ public class AddVisualToClient extends ClientPacket{
 
 	@Override
 	protected void run(){
-		effectsToRender.add(CRRenderUtil.visualFactories[nbt.getInt("id")].apply(nbt));
+		effectsToRender.add(CRRenderUtil.visualFactories[nbt.getInt("id")].apply(SafeCallable.getClientWorld(), nbt));
 	}
 }
