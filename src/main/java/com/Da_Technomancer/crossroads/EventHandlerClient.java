@@ -244,10 +244,12 @@ public final class EventHandlerClient{
 
 			//Handle time dilation for players
 			if(SendPlayerTickCountToClient.playerTickCount > 0){
+				game.getProfiler().startSection(Crossroads.MODNAME + ": Player time dilation");
 				for(int i = 0; i < SendPlayerTickCountToClient.playerTickCount; i++){
 					player.tick();
 				}
 				SendPlayerTickCountToClient.playerTickCount = 0;
+				game.getProfiler().endSection();
 			}
 		}
 	}

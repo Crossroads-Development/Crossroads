@@ -60,11 +60,13 @@ public final class EventHandlerCommon{
 	public void onEntitySpawn(LivingSpawnEvent.CheckSpawn e){
 		if(entityList != null && e.getWorld() instanceof ServerWorld){
 			ServerWorld world = (ServerWorld) e.getWorld();
+			world.getProfiler().startSection(Crossroads.MODNAME + ": Ghost marker spawn prevention");
 			Map<UUID, Entity> entities;
 			try{
 				entities = (Map<UUID, Entity>) entityList.get(world);
 			}catch(IllegalAccessException | ClassCastException ex){
 				Crossroads.logger.error(ex);
+				world.getProfiler().endSection();
 				return;
 			}
 			for(Entity ent : entities.values()){
@@ -72,10 +74,12 @@ public final class EventHandlerCommon{
 					EntityGhostMarker mark = (EntityGhostMarker) ent;
 					if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.BLOCK_SPAWNING && mark.data != null && mark.getPositionVec().subtract(e.getEntity().getPositionVec()).length() <= mark.data.getInt("range")){
 						e.setResult(Event.Result.DENY);
+						world.getProfiler().endSection();
 						return;
 					}
 				}
 			}
+			world.getProfiler().endSection();
 		}
 	}
 	
@@ -275,11 +279,14 @@ public final class EventHandlerCommon{
 			return;
 		}
 
+		ServerWorld world = (ServerWorld) e.getWorld();
+		world.getProfiler().startSection(Crossroads.MODNAME + ": Explosion modification");
 		Map<UUID, Entity> entities;
 		try{
 			entities = (Map<UUID, Entity>) entityList.get(e.getWorld());
 		}catch(IllegalAccessException ex){
 			Crossroads.logger.error(ex);
+			world.getProfiler().endSection();
 			return;
 		}
 		boolean perpetuate = false;
@@ -288,6 +295,7 @@ public final class EventHandlerCommon{
 				EntityGhostMarker mark = (EntityGhostMarker) ent;
 				if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.EQUILIBRIUM && mark.data != null && mark.getPositionVec().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInt("range")){
 					e.setCanceled(true);//Equilibrium beams cancel explosions
+					world.getProfiler().endSection();
 					return;
 				}else if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.VOID_EQUILIBRIUM && mark.data != null && mark.getPositionVec().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInt("range")){
 					perpetuate = true;//Void-equilibrium beams cause explosions to repeat, by spawning a marker that recreates the explosion 5 ticks later
@@ -307,8 +315,9 @@ public final class EventHandlerCommon{
 				Crossroads.logger.error("Failed to perpetuate explosion. Dim: " + MiscUtil.getDimensionName(e.getWorld()) + "; Pos: " + e.getExplosion().getPosition());
 			}
 			marker.data = data;
-			e.getWorld().addEntity(marker);
+			world.addEntity(marker);
 		}
+		world.getProfiler().endSection();
 	}
 
 	@SubscribeEvent

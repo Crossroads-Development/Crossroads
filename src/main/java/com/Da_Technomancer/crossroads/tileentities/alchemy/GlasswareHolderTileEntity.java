@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.alchemy.GlasswareHolder;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
@@ -174,7 +175,12 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 
 	@Override
 	protected Vector3d getParticlePos(){
-		return Vector3d.copy(pos).add(0.5D, 0.25D, 0.5D);
+		BlockState state = getBlockState();
+		if(state.getBlock() == CRBlocks.glasswareHolder && state.get(CRProperties.CONTAINER_TYPE) == AbstractGlassware.GlasswareTypes.FLORENCE){
+			return Vector3d.copy(pos).add(0.5D, 0.7D, 0.5D);
+		}else{
+			return Vector3d.copy(pos).add(0.5D, 0.25D, 0.5D);
+		}
 	}
 
 	@Override
