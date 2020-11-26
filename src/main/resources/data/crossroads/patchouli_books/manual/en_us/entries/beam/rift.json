@@ -11,7 +11,11 @@
 			"type": "spotlight",
 			"title": "Alignment: Rift",
 			"item": "crossroads:pure_quartz",
-			"text": "<thing>Rift/$ (purple) will spawn hostile mobs native to the biome. It has a <thing>power/$ / 256 chance to spawn a mob, with the chance capped at 1/4.$(br2)It can spawn mobs in solid blocks, and ignores the mob spawning cap.$(br2)"
+			"text": "<thing>Rift/$ (purple) will spawn hostile mobs native to the biome. It has a <thing>power/$ / 256 chance to spawn a mob, with the chance capped at 1/4.$(br2)It can spawn mobs in solid blocks, and ignores the mob spawning cap.$(br2)In peaceful "
+		},
+		{
+			"type": "text",
+			"text": "mode, it will spawn the drops of the mobs it would have spawned instead of spawning mobs. $(br2)"
 		},
 		{
 			"type": "text",
