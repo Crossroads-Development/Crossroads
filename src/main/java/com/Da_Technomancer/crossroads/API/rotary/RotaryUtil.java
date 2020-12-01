@@ -62,27 +62,51 @@ public class RotaryUtil{
 	/**
 	 * Returns the total energy, adjusted for energy loss, of the passed IAxleHandlers
 	 * @param axles A list of IAxleHandlers to have their energies summed and adjusted
+	 * @param allowLoss Whether to perform energy loss
 	 * @return The total energy adjusted for energy loss
 	 */
-	public static double getTotalEnergy(List<IAxleHandler> axles){
+	public static double getTotalEnergy(List<IAxleHandler> axles, boolean allowLoss){
 		double sumEnergy  = 0;
 		double sumInertia = 0;
 		double sumIW = 0;
+		int lossMode = allowLoss ? CRConfig.rotaryLossMode.get() : 0;
+		double lossCoeff = CRConfig.rotaryLoss.get();
 
 		for(IAxleHandler axle : axles){
 			if(axle == null){
 				continue;
 			}
-			sumEnergy += axle.getMotionData()[1] * Math.signum(axle.getRotationRatio());
-			sumInertia += axle.getMoInertia();
-			sumIW += axle.getMoInertia() * Math.abs(axle.getMotionData()[0]);
+			//Adds energy of the gear
+			if(lossMode == 3){
+				//Lose -(a*w) of gear energy each tick
+				double adjustedGearEnergy = axle.getMotionData()[1];
+				adjustedGearEnergy -= axle.getMotionData()[0] * lossCoeff;
+				if(Math.signum(adjustedGearEnergy) != Math.signum(axle.getMotionData()[1])){
+					adjustedGearEnergy = 0;//Don't allow flipping sign from loss
+				}
+				sumEnergy += adjustedGearEnergy * Math.signum(axle.getRotationRatio());
+			}else{
+				sumEnergy += axle.getMotionData()[1] * Math.signum(axle.getRotationRatio());
+			}
+			//Tracks inertia of the system
+			double moIntertia = axle.getMoInertia();
+			sumInertia += moIntertia;
+			sumIW += moIntertia * Math.abs(axle.getMotionData()[0]);
 		}
 
 		if(sumInertia <= 0){
+			//Totally zero mass systems must have 0 energy by definition
 			return 0;
 		}
-		//Apply energy loss; based on average speed weighted by moment of inertia
-		sumEnergy = Math.signum(sumEnergy) * Math.max(0, Math.abs(sumEnergy) - CRConfig.rotaryLoss.get() * Math.pow(sumIW / sumInertia, 2));
+
+		if(lossMode == 2){
+			//Lose -(a%) of total energy each tick
+			sumEnergy = sumEnergy * Math.max((100D - lossCoeff) / 100D, 0D);
+		}else if(lossMode == 1){
+			//Lose -(a * w^2) of energy each tick, where w is the I-weighted average speed of the entire system
+			sumEnergy = Math.signum(sumEnergy) * Math.max(0, Math.abs(sumEnergy) - lossCoeff * Math.pow(sumIW / sumInertia, 2));
+		}
+
 		return sumEnergy;
 	}
 

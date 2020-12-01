@@ -18,15 +18,23 @@
 		},
 		{
 			"type": "text",
-			"text": "The <thing>Speed/$, usually written 'ω' and measured in 'rad/s' in tooltips, is how fast something is spinning. A normal speed might be 2-4rad/s, while 10rad/s is very fast. A negative speed means the gear is spinning clockwise (counter-clockwise is positive).$(br2)The <thing>Energy/$, usually written 'E' and measured in 'J', is the total energy in a spinning "
+			"text": "The <thing>Speed/$, usually written 'ω' and measured in 'rad/s' or 'radians/second' in tooltips, is how fast something is spinning. A normal speed might be 2-4rad/s, while 10rad/s is very fast. A negative speed means the gear is spinning clockwise (counter-clockwise is positive).$(br2)The <thing>Energy/$, usually written 'E' and measured in 'J' or 'Joules', "
 		},
 		{
 			"type": "text",
-			"text": "object. As you'ld expect, the faster somethings' speed, the more energy it has, and the higher the I, the more energy. There is actually a formula (E=Iω²/2), but it isn't useful or worth remembering.$(br2)The <thing>Power/$, measured in 'J/s', is the rate of change of the energy of a gear. No machines look at the power value at all- it only exists to "
+			"text": "is the total energy in a spinning object. As you'd expect, the faster somethings' speed, the more energy it has, and the higher the I, the more energy. There is actually a formula (E=Iω²/2), but it isn't useful or worth remembering.$(br2)The <thing>Power/$, measured in 'J/s' or 'Joules/second', is the rate of change of the energy of a gear. No machines "
 		},
 		{
 			"type": "text",
-			"text": "help show the player the change in energy.$(br2)Gears will also have a small amount of <thing>energy loss/$ proportional to the <thing>speed/$. This is a slow decrease in <thing>energy/$ over time unless power is supplied.$(br2)"
+			"text": "look at the power value at all- it only exists to help show the player the change in energy.$(br2)"
+		},
+		{
+			"type": "text",
+			"text": "Gears will also have a small amount of <thing>power loss/$ proportional to the <thing>speed/$. A system will lose <thing>energy/$ every tick- so you have to keep producing power. The amount of <thing>power loss/$ <em>does not/$ increase with the number of gears in a system. By default, a system loses -ω² J/tm where ω is the average gear <thing>speed/$. [Note: The formula, rate, and even whether it scales with number of gears might "
+		},
+		{
+			"type": "text",
+			"text": "be changed in the config]$(br2)"
 		},
 		{
 			"type": "text",

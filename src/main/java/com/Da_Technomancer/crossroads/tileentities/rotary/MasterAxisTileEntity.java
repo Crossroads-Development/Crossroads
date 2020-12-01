@@ -141,7 +141,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 			return;
 		}
 
-		sumEnergy = RotaryUtil.getTotalEnergy(rotaryMembers);
+		sumEnergy = RotaryUtil.getTotalEnergy(rotaryMembers, true);
 		if(sumEnergy < 1 && sumEnergy > -1 || Double.isNaN(sumEnergy)){
 			sumEnergy = 0;
 		}

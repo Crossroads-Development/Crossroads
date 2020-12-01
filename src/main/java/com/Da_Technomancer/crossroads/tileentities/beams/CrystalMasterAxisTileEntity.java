@@ -62,19 +62,13 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 			return;
 		}
 
-		if(currentElement == EnumBeamAlignments.STABILITY){
-			for(IAxleHandler gear : rotaryMembers){
-				sumEnergy += Math.signum(gear.getRotationRatio()) * gear.getMotionData()[1];
-			}
-		}else{
-			sumEnergy = RotaryUtil.getTotalEnergy(rotaryMembers);
-			if(currentElement == EnumBeamAlignments.ENERGY){
-				sumEnergy += CRConfig.crystalAxisMult.get() * (Math.signum(sumEnergy) == 0 ? 1 : Math.signum(sumEnergy));
-			}else if(currentElement == EnumBeamAlignments.CHARGE){
-				sumEnergy += CRConfig.crystalAxisMult.get();
-			}else if(currentElement == EnumBeamAlignments.EQUILIBRIUM){
-				sumEnergy = (sumEnergy + 9D * lastSumEnergy) / 10D;
-			}
+		sumEnergy = RotaryUtil.getTotalEnergy(rotaryMembers, currentElement != EnumBeamAlignments.STABILITY);
+		if(currentElement == EnumBeamAlignments.ENERGY){
+			sumEnergy += CRConfig.crystalAxisMult.get() * (Math.signum(sumEnergy) == 0 ? 1 : Math.signum(sumEnergy));
+		}else if(currentElement == EnumBeamAlignments.CHARGE){
+			sumEnergy += CRConfig.crystalAxisMult.get();
+		}else if(currentElement == EnumBeamAlignments.EQUILIBRIUM){
+			sumEnergy = (sumEnergy + 9D * lastSumEnergy) / 10D;
 		}
 
 		if(sumEnergy < 1 && sumEnergy > -1){

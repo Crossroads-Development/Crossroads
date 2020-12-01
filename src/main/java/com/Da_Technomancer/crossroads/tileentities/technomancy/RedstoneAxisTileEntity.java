@@ -50,7 +50,7 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 
 		double baseSpeed = CircuitUtil.combineRedsSources(redsHandler);
 		double sumIRot = 0;//Sum of every gear's moment of inertia time rotation ratio squared
-		sumEnergy = RotaryUtil.getTotalEnergy(rotaryMembers);
+		sumEnergy = RotaryUtil.getTotalEnergy(rotaryMembers, true);
 
 		for(IAxleHandler gear : rotaryMembers){
 			sumIRot += gear.getMoInertia() * Math.pow(gear.getRotationRatio(), 2);

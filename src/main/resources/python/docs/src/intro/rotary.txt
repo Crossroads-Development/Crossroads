@@ -4,10 +4,11 @@ crossroads:gear_base
 Rotary can seem complicated at first when reading about it, but is actually pretty simple in practice.
 Every gear, axle, or other spinning device has a few basic values.
 The <thing>Moment of Inertia/$ is written as 'I', usually in tooltips. The I value can be thought of as the 'weight' of the gear- things with higher I values are heavier and are harder to spin quickly.
-The <thing>Speed/$, usually written 'ω' and measured in 'rad/s' in tooltips, is how fast something is spinning. A normal speed might be 2-4rad/s, while 10rad/s is very fast. A negative speed means the gear is spinning clockwise (counter-clockwise is positive).
-The <thing>Energy/$, usually written 'E' and measured in 'J', is the total energy in a spinning object. As you'ld expect, the faster somethings' speed, the more energy it has, and the higher the I, the more energy. There is actually a formula (E=Iω²/2), but it isn't useful or worth remembering.
-The <thing>Power/$, measured in 'J/s', is the rate of change of the energy of a gear. No machines look at the power value at all- it only exists to help show the player the change in energy.
-Gears will also have a small amount of <thing>energy loss/$ proportional to the <thing>speed/$. This is a slow decrease in <thing>energy/$ over time unless power is supplied.
+The <thing>Speed/$, usually written 'ω' and measured in 'rad/s' or 'radians/second' in tooltips, is how fast something is spinning. A normal speed might be 2-4rad/s, while 10rad/s is very fast. A negative speed means the gear is spinning clockwise (counter-clockwise is positive).
+The <thing>Energy/$, usually written 'E' and measured in 'J' or 'Joules', is the total energy in a spinning object. As you'd expect, the faster somethings' speed, the more energy it has, and the higher the I, the more energy. There is actually a formula (E=Iω²/2), but it isn't useful or worth remembering.
+The <thing>Power/$, measured in 'J/s' or 'Joules/second', is the rate of change of the energy of a gear. No machines look at the power value at all- it only exists to help show the player the change in energy.
+
+Gears will also have a small amount of <thing>power loss/$ proportional to the <thing>speed/$. A system will lose <thing>energy/$ every tick- so you have to keep producing power. The amount of <thing>power loss/$ <em>does not/$ increase with the number of gears in a system. By default, a system loses -ω² J/tm where ω is the average gear <thing>speed/$. [Note: The formula, rate, and even whether it scales with number of gears might be changed in the config]
 
 Usually, a machine will consume a certain amount of <thing>energy/$ per operation, but have a minimum <thing>speed/$ to work. Most machines will work faster at higher <thing>speeds/$.
 <item><link:crossroads:rotary/gear_base>Gears and axles/$ can be connected together to transfer energy. Placing a <item><link:crossroads:rotary/gear_base>small gear/$ next to a <item><link:crossroads:rotary/gear_large>large gear/$ will cause the larger gear to spin slower than the small one- as you'ld expect.
