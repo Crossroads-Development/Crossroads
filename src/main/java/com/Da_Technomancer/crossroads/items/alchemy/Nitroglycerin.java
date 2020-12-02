@@ -35,7 +35,7 @@ public class Nitroglycerin extends Item{
 			World world = source.getWorld();
 			EntityNitro nitro = EntityNitro.type.create(world);
 			nitro.setPosition(source.getX() + dir.getXOffset() + 0.5D, source.getY() + dir.getYOffset() + 0.5D, source.getZ() + dir.getZOffset() + 0.5D);
-			nitro.shoot(dir.getXOffset(), dir.getYOffset(), dir.getZOffset(), 1.5F, 1.0F);
+			nitro.shoot(dir.getXOffset(), dir.getYOffset() + 0.1F, dir.getZOffset(), 1.5F, 1.0F);
 			world.addEntity(nitro);
 			stack.shrink(1);
 			return stack;
@@ -60,7 +60,8 @@ public class Nitroglycerin extends Item{
 
 		if(!worldIn.isRemote){
 			EntityNitro nitroEntity = new EntityNitro(worldIn, playerIn);
-			nitroEntity.shoot(playerIn.getPosX(), playerIn.getPosY() + 1.2, playerIn.getPosZ(), 1.5F, 1.0F);
+			//MCP note: Use the method in SnowballItem::onItemRightClick; it is NOT ProjectileEntity::shoot (currently)
+			nitroEntity.func_234612_a_(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0F, 1.5F, 1.0F);
 			worldIn.addEntity(nitroEntity);
 		}
 		return new ActionResult<>(ActionResultType.SUCCESS, held);
