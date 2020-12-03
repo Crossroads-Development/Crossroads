@@ -10,7 +10,11 @@
 			"type": "spotlight",
 			"title": "Radiator",
 			"item": "crossroads:radiator",
-			"text": "The <item>Radiator/$ is a way of producing heat using <thing>$(l:crossroads:fluid/steam)steam/$. <thing>$(l:crossroads:fluid/steam)Steam/$ goes in the bottom, <thing>distilled water/$ comes out the top, and <item>$(l:crossroads:heat/cable)cables/$ connect to the sides.$(br2)<thing>Distilled water/$ is produced in equal quantity of <thing>$(l:crossroads:fluid/steam)steam/$ consumed. The <thing>radiator/$ has no maximum temperature.$(br2)"
+			"text": "The <item>Radiator/$ is a way of producing heat using <thing>$(l:crossroads:fluid/steam)steam/$. <thing>$(l:crossroads:fluid/steam)Steam/$ can be input and <thing>distilled water/$ can be output on the top and bottom, and <item>$(l:crossroads:heat/cable)cables/$ connect to the sides.$(br2)<thing>Distilled water/$ is produced in equal quantity of <thing>$(l:crossroads:fluid/steam)steam/$ consumed. The <thing>radiator/$ has no maximum temperature."
+		},
+		{
+			"type": "text",
+			"text": ""
 		},
 		{
 			"type": "text",

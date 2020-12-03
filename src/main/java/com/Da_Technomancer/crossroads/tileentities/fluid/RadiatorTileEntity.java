@@ -19,7 +19,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
@@ -66,27 +65,13 @@ public class RadiatorTileEntity extends InventoryTE{
 		}
 	}
 
-	@Override
-	public void remove(){
-		super.remove();
-		steamOpt.invalidate();
-		waterOpt.invalidate();
-	}
-
-	private final LazyOptional<IFluidHandler> steamOpt = LazyOptional.of(() -> new FluidHandler(0));
-	private final LazyOptional<IFluidHandler> waterOpt = LazyOptional.of(() -> new FluidHandler(1));
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 
 		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
-			if(side == Direction.UP){
-				return (LazyOptional<T>) waterOpt;
-			}
-
-			if(side == Direction.DOWN){
-				return (LazyOptional<T>) steamOpt;
+			if(side == null || side.getAxis() == Direction.Axis.Y){
+				return (LazyOptional<T>) globalFluidOpt;
 			}
 		}
 

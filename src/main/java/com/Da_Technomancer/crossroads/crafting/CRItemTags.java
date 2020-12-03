@@ -49,6 +49,7 @@ public class CRItemTags{
 	public static final ITag<Item> GEMS_RUBY = ItemTags.makeWrapperTag(FORGE + ":gems/ruby");
 
 	public static final ITag<Item> EXPLODE_IF_KNOCKED = ItemTags.makeWrapperTag(CR + ":explode_on_hit");
+	public static final ITag<Item> SALT_REACTOR_COOLANT = ItemTags.makeWrapperTag(CR + ":salt_reactor_coolant");
 
 	/**
 	 * Returns an entry from the Tag
