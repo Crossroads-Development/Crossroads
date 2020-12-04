@@ -2,7 +2,9 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
+import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.RotaryPumpContainer;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
@@ -38,11 +40,12 @@ public class RotaryPumpTileEntity extends InventoryTE{
 
 	public static final int INERTIA = 80;
 	public static final double MAX_POWER = 5;
+	public static final double MAX_SPEED = 2.5;
 	private static final int CAPACITY = 4_000;
 	private static final double REQUIRED = 100;
 
 	private double progress = 0;
-	private int lastProgress = 0;
+	private float progChange = 0;//Last change in progress per tick sent to the client. On the client, used for animation
 
 	public RotaryPumpTileEntity(){
 		super(type, 0);
@@ -74,16 +77,23 @@ public class RotaryPumpTileEntity extends InventoryTE{
 	public void tick(){
 		super.tick();
 
-		if(world.isRemote || CAPACITY - fluids[0].getAmount() < FluidAttributes.BUCKET_VOLUME){
+		if(world.isRemote){
+			progress += progChange;
+			progress %= REQUIRED;
+			return;
+		}
+
+		if(CAPACITY - fluids[0].getAmount() < FluidAttributes.BUCKET_VOLUME){
 			return;
 		}
 
 		FluidState fstate = world.getFluidState(pos.down());
 		if(fstate.isSource()){
 			//Only gain progress if spinning in positive direction
-			double holder = motData[1] < 0 ? 0 : Math.min(Math.min(MAX_POWER, motData[1]), REQUIRED - progress);
-			motData[1] -= holder;
-			progress += holder;
+			double powerDrained = motData[1] < 0 ? 0 : MAX_POWER * RotaryUtil.findEfficiency(motData[0], 0, MAX_SPEED);
+			progress += powerDrained;
+			axleHandler.addEnergy(-powerDrained, false);
+			updateProgressToClients(powerDrained);
 
 			if(progress >= REQUIRED){
 				progress = 0;
@@ -97,6 +107,7 @@ public class RotaryPumpTileEntity extends InventoryTE{
 				}
 			}
 		}else{
+			updateProgressToClients(0);
 			progress = 0;
 		}
 
@@ -115,12 +126,14 @@ public class RotaryPumpTileEntity extends InventoryTE{
 			progress = 0;
 		}
 		*/
+	}
 
-		if(lastProgress != (int) progress){
-			//This is really bad- sending a packet every tick while running is inefficient
-			//Should be optimized
-			CRPackets.sendPacketAround(world, pos, new SendLongToClient(1, (long) progress, pos));
-			lastProgress = (int) progress;
+	private void updateProgressToClients(double progressChange){
+		if(((progChange == 0) != (progressChange == 0)) || Math.abs(progressChange - progChange) >= CRConfig.speedPrecision.get().floatValue() / 20F){
+			progChange = (float) progressChange;
+			long packet = Float.floatToIntBits(progChange);
+			packet |= (long) Float.floatToIntBits((float) progress) << 32L;
+			CRPackets.sendPacketAround(world, pos, new SendLongToClient(1, packet, pos));
 		}
 	}
 
@@ -132,7 +145,8 @@ public class RotaryPumpTileEntity extends InventoryTE{
 	public void receiveLong(byte identifier, long message, ServerPlayerEntity player){
 		super.receiveLong(identifier, message, player);
 		if(identifier == 1){
-			progress = message;
+			progChange = Float.intBitsToFloat((int) (message & 0xFFFFFFFFL));
+			progress = Float.intBitsToFloat((int) (message >>> 32L));
 		}
 	}
 
@@ -140,12 +154,22 @@ public class RotaryPumpTileEntity extends InventoryTE{
 	public void read(BlockState state, CompoundNBT nbt){
 		super.read(state, nbt);
 		progress = nbt.getDouble("prog");
+		progChange = nbt.getFloat("prog_change");
 	}
 
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
 		nbt.putDouble("prog", progress);
+		nbt.putFloat("prog_change", progChange);
+		return nbt;
+	}
+
+	@Override
+	public CompoundNBT getUpdateTag(){
+		CompoundNBT nbt =  super.getUpdateTag();
+		nbt.putDouble("prog", progress);
+		nbt.putFloat("prog_change", progChange);
 		return nbt;
 	}
 

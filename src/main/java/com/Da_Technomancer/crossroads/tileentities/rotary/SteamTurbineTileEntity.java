@@ -12,7 +12,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
@@ -79,29 +78,11 @@ public class SteamTurbineTileEntity extends ModuleTE{
 		}
 	}
 
-	@Override
-	public void remove(){
-		super.remove();
-		waterOpt.invalidate();
-		steamOpt.invalidate();
-	}
-
-	private final LazyOptional<IFluidHandler> waterOpt = LazyOptional.of(() -> new FluidHandler(0));
-	private final LazyOptional<IFluidHandler> steamOpt = LazyOptional.of(() -> new FluidHandler(1));
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
-			if(facing == null){
-				return (LazyOptional<T>) globalFluidOpt;
-			}
-
-			if(facing == Direction.DOWN){
-				return (LazyOptional<T>) steamOpt;
-			}else if(facing != Direction.UP){
-				return (LazyOptional<T>) waterOpt;
-			}
+			return (LazyOptional<T>) globalFluidOpt;
 		}
 		if(capability == Capabilities.AXLE_CAPABILITY && facing == Direction.UP){
 			return (LazyOptional<T>) axleOpt;

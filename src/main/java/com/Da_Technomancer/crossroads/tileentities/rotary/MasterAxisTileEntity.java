@@ -187,7 +187,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 
 
 			final float ADJUST_MARGIN = CRConfig.speedPrecision.get().floatValue() / 20F;
-			final float RESET_MARGIN = ADJUST_MARGIN * 2F;
+//			final float RESET_MARGIN = ADJUST_MARGIN * 2F;
 
 			float speedPred = runWSeries(ticksExisted);
 			float diff = Math.abs(speedPred - trueSpeed);

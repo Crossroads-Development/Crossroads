@@ -77,6 +77,7 @@ public class RotaryPump extends ContainerBlock{
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.pump.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.pump.power", RotaryPumpTileEntity.MAX_POWER));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.pump.speed", RotaryPumpTileEntity.MAX_SPEED));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", RotaryPumpTileEntity.INERTIA));
 	}
 }

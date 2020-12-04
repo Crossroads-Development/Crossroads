@@ -1,6 +1,6 @@
 Steam Turbine
 crossroads:steam_turbine
 The <item>Steam Turbine/$ is a way of making <thing><link:crossroads:intro/rotary>rotary power/$ using <thing><link:crossroads:intro/heat>heat/$. The other way to do this is with a <item><link:crossroads:heat/stirling>stirling engine/$.
-A <item>Steam Turbine/$ consumes <thing><link:crossroads:fluid/steam>steam/$ and makes <thing>distilled water/$ and power. <thing><link:crossroads:fluid/steam>Steam/$ goes in the bottom, <thing>distilled water/$ comes out the sides, and an axle or gear can be connected to the top. An equal amount of <thing>distilled water/$ is produced as <thing><link:crossroads:fluid/steam>steam/$ is consumed.
+A <item>Steam Turbine/$ consumes <thing><link:crossroads:fluid/steam>steam/$ and makes <thing>distilled water/$ and power. An axle or gear can be connected to the top. An equal amount of <thing>distilled water/$ is produced as <thing><link:crossroads:fluid/steam>steam/$ is consumed.
 
 Compared to the <item><link:crossroads:heat/stirling>stirling engine/$, the <item>steam turbine/$ has no maximum speed and is more scalable, but is less efficient and is bigger to set up. The <item>steam turbine/$ is usually better if a lot of power or high speeds are needed.

@@ -1,12 +1,11 @@
 package com.Da_Technomancer.crossroads.tileentities.fluid;
 
-import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.gui.container.WaterCentrifugeContainer;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.CentrifugeRec;
+import com.Da_Technomancer.crossroads.gui.container.WaterCentrifugeContainer;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,7 +22,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ObjectHolder;
@@ -120,32 +118,16 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 	@Override
 	public void remove(){
 		super.remove();
-		waterOpt.invalidate();
-		dWaterOpt.invalidate();
 		saltOpt.invalidate();
 	}
 
-	@Override
-	public void updateContainingBlockInfo(){
-		super.updateContainingBlockInfo();
-		waterOpt.invalidate();
-		dWaterOpt.invalidate();
-		waterOpt = LazyOptional.of(() -> new FluidHandler(0));
-		dWaterOpt = LazyOptional.of(() -> new FluidHandler(1));
-	}
-
-	private LazyOptional<IFluidHandler> waterOpt = LazyOptional.of(() -> new FluidHandler(0));
-	private LazyOptional<IFluidHandler> dWaterOpt = LazyOptional.of(() -> new FluidHandler(1));
 	private final LazyOptional<IItemHandler> saltOpt = LazyOptional.of(ItemHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction facing){
-		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != null && facing.getAxis() != getBlockState().get(CRProperties.HORIZ_AXIS)){
-			return (LazyOptional<T>) waterOpt;
-		}
-		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != null && facing.getAxis() == getBlockState().get(CRProperties.HORIZ_AXIS)){
-			return (LazyOptional<T>) dWaterOpt;
+		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+			return (LazyOptional<T>) globalFluidOpt;
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return (LazyOptional<T>) saltOpt;

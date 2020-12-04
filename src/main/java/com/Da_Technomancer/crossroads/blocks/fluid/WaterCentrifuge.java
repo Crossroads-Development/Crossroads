@@ -49,11 +49,7 @@ public class WaterCentrifuge extends ContainerBlock{
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		TileEntity te;
-		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
-			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.func_235896_a_(CRProperties.HORIZ_AXIS));
-			}
-		}else if(!worldIn.isRemote && (te = worldIn.getTileEntity(pos)) instanceof INamedContainerProvider){
+		if(!worldIn.isRemote && (te = worldIn.getTileEntity(pos)) instanceof INamedContainerProvider){
 			NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);
 		}
 		return ActionResultType.SUCCESS;
@@ -66,13 +62,8 @@ public class WaterCentrifuge extends ContainerBlock{
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+		//TODO remove, left in for backwards compatibility
 		builder.add(CRProperties.HORIZ_AXIS);
-	}
-
-	@Nullable
-	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return getDefaultState().with(CRProperties.HORIZ_AXIS, context.getPlacementHorizontalFacing().getAxis());
 	}
 
 	@Override

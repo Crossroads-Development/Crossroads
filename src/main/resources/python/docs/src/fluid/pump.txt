@@ -2,4 +2,4 @@ Rotary Pump
 crossroads:rotary_pump
 The <item>Rotary Pump/$ is a <thing><link:crossroads:intro/rotary>rotary/$ powered fluid pump. It collects fluid source blocks from the world, and allows it to be moved around in pipes.
 It <em>only collects fluid sources directly underneath it/$. This means is it usually only useful for collecting water, and not for draining lakes or ponds.
-It connects to a gear or axle on the top, and only works if the attached gear/axle is spinning in the <em>positive direction/$ (counter-clockwise). It runs faster at higher <thing>speeds/$.
+It connects to a gear or axle on the top, and only works if the attached gear/axle is spinning in the <em>positive direction/$ (counter-clockwise). It runs faster at higher <thing>speeds/$, capping out at 2.5rad/s and above. It takes a total of 100J of <link:crossroads:intro/rotary>energy/$ to pump 1 bucket of liquid. 

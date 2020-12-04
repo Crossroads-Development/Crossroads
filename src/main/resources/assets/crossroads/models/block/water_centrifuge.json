@@ -3,8 +3,8 @@
 	"textures": {
 		"north": "crossroads:block/bronze_fluid",
 		"south": "crossroads:block/bronze_fluid",
-		"east": "crossroads:block/bronze_fluid_red",
-		"west": "crossroads:block/bronze_fluid_red",
+		"east": "crossroads:block/bronze_fluid",
+		"west": "crossroads:block/bronze_fluid",
 		"up": "crossroads:block/bronze_axle",
 		"down": "crossroads:block/bronze_chute",
 		"particle": "crossroads:block/bronze_fluid"
