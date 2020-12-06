@@ -57,21 +57,21 @@ public class MechanismFacade implements IMechanism<GearFacade.FacadeBlock>{
 			return;//Only axial connections should ever occur for this mechanism
 		}
 
-//		//If true, this has already been checked.
-//		if(key == handler.updateKey){
+		//If true, this has already been checked.
+		if(key == handler.updateKey){
 //			//If true, there is rotation conflict.
 //			if(handler.rotRatio != rotRatioIn){
 //				masterIn.lock();
 //			}
-//			return;
-//		}
+			return;
+		}
 
 //		if(masterIn.addToList(handler)){
 //			return;
 //		}
 
 //		handler.rotRatio = rotRatioIn;
-//		handler.updateKey = key;
+		handler.updateKey = key;
 
 		TileEntity sideTE = te.getWorld().getTileEntity(te.getPos().offset(side));
 
