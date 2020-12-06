@@ -74,7 +74,7 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 
 			if(player instanceof PlayerEntity && murderEasterEgg.equals(((PlayerEntity) player).getGameProfile().getName()))
 				//Semi-apology for the easter egg that instakills a certain player if they touch a wind turbine where they still get windmill-murked, but also don't need to charge whirligigs
-				wind = Math.min(wind, 8);
+				wind = Math.max(wind, 8);
 			if(wind > 0){
 
 				final double SLOWFALL_WIND = CRConfig.whirligigSafe.get();//Minimum charge level to eliminate fall damage
