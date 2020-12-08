@@ -1,13 +1,20 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
+import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
+import com.Da_Technomancer.crossroads.gui.container.SteamTurbineContainer;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -17,7 +24,7 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nullable;
 
 @ObjectHolder(Crossroads.MODID)
-public class SteamTurbineTileEntity extends ModuleTE{
+public class SteamTurbineTileEntity extends InventoryTE{
 
 	@ObjectHolder("steam_turbine")
 	public static TileEntityType<SteamTurbineTileEntity> type = null;
@@ -27,9 +34,10 @@ public class SteamTurbineTileEntity extends ModuleTE{
 	public static final int LIMIT = 5;
 
 	public SteamTurbineTileEntity(){
-		super(type);
+		super(type, 0);
 		fluidProps[0] = new TankProperty(CAPACITY, false, true);
 		fluidProps[1] = new TankProperty(CAPACITY, true, false, (Fluid f) -> f == CRFluids.steam.still);
+		initFluidManagers();
 	}
 
 	@Override
@@ -89,5 +97,21 @@ public class SteamTurbineTileEntity extends ModuleTE{
 		}
 
 		return super.getCapability(capability, facing);
+	}
+
+	@Override
+	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
+		return false;
+	}
+
+	@Override
+	public ITextComponent getDisplayName(){
+		return new TranslationTextComponent("container.steam_turbine");
+	}
+
+	@Nullable
+	@Override
+	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
+		return new SteamTurbineContainer(id, playerInv, createContainerBuf());
 	}
 }
