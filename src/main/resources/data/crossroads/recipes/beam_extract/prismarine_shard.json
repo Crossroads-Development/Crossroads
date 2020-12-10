@@ -1,8 +1,9 @@
 {
 	"type": "crossroads:beam_extract",
 	"input": {
-		"tag": "crossroads:dusts/alchemy_salt"
+		"item": "prismarine_shard"
 	},
+	"potential": 16,
 	"stability": 16,
-	"duration": 5
+	"duration": 25
 }

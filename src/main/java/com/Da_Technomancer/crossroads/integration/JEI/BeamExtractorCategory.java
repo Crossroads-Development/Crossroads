@@ -77,18 +77,25 @@ public class BeamExtractorCategory implements IRecipeCategory<BeamExtractRec>{
 		ArrayList<String> tt = new ArrayList<>(4);
 		if(rec.getOutput().getEnergy() != 0){
 			tt.add(MiscUtil.localize("crossroads.jei.extract.energy", rec.getOutput().getEnergy()));
+		}else{
+			tt.add("");
 		}
 		if(rec.getOutput().getPotential() != 0){
 			tt.add(MiscUtil.localize("crossroads.jei.extract.potential", rec.getOutput().getPotential()));
+		}else{
+			tt.add("");
 		}
 		if(rec.getOutput().getStability() != 0){
 			tt.add(MiscUtil.localize("crossroads.jei.extract.stability", rec.getOutput().getStability()));
+		}else{
+			tt.add("");
 		}
 		if(rec.getOutput().getVoid() != 0){
 			tt.add(MiscUtil.localize("crossroads.jei.extract.void", rec.getOutput().getVoid()));
+		}else{
+			tt.add("");
 		}
 
-		tt.add("");//Newline
 		//Different localization based on singular or plural for english grammar
 		if(rec.getDuration() == 1){
 			tt.add(MiscUtil.localize("crossroads.jei.extract.duration.single", rec.getDuration()));//Duration
@@ -96,7 +103,7 @@ public class BeamExtractorCategory implements IRecipeCategory<BeamExtractRec>{
 			tt.add(MiscUtil.localize("crossroads.jei.extract.duration.plural", rec.getDuration()));//Duration
 		}
 		for(int i = 0; i < tt.size(); i++){
-			minecraft.fontRenderer.drawString(matrix, tt.get(i), 80, 5 + 20 * i, 0x404040);
+			minecraft.fontRenderer.drawString(matrix, tt.get(i), 74, 5 + 20 * i, 0x404040);
 		}
 	}
 
