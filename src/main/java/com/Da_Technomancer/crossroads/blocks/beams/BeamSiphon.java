@@ -58,14 +58,6 @@ public class BeamSiphon extends BeamBlock implements IWireConnect{
 		if(te instanceof BeamSiphonTileEntity){
 			BeamSiphonTileEntity bte = (BeamSiphonTileEntity) te;
 			CircuitUtil.updateFromWorld(bte.redsHandler, blockIn);
-			int powerLevel = bte.getPowerInput();
-			if(powerLevel > 0){
-				if(!state.get(ESProperties.REDSTONE_BOOL)){
-					worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, true));
-				}
-			}else if(state.get(ESProperties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, false));
-			}
 		}
 	}
 

@@ -59,15 +59,6 @@ public class BeamSplitter extends BeamBlock implements IWireConnect{
 		if(te instanceof BeamSplitterTileEntity){
 			BeamSplitterTileEntity bte = (BeamSplitterTileEntity) te;
 			CircuitUtil.updateFromWorld(bte.redsHandler, blockIn);
-			float powerLevel = bte.getPowerMultiplier();
-			int prevPowerLevel = state.get(CRProperties.POWER_LEVEL);
-			if(powerLevel <= 0 && prevPowerLevel != 0){
-				worldIn.setBlockState(pos, state.with(CRProperties.POWER_LEVEL, 0));
-			}else if(powerLevel >= 1F && prevPowerLevel != 2){
-				worldIn.setBlockState(pos, state.with(CRProperties.POWER_LEVEL, 2));
-			}else if(powerLevel > 0 && powerLevel < 1F && prevPowerLevel != 1){
-				worldIn.setBlockState(pos, state.with(CRProperties.POWER_LEVEL, 1));
-			}
 		}
 	}
 

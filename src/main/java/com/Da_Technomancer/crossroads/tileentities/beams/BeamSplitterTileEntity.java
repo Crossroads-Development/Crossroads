@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.beams;
 
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.CircuitUtil;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
@@ -42,12 +43,8 @@ public class BeamSplitterTileEntity extends BeamRenderTE{
 
 	@Override
 	public void updateContainingBlockInfo(){
-		Direction prev = dir;
 		dir = null;
-		if(prev != getDir()){
-			//It's a waste to regenerate the beamers if it was only a redstone signal changing
-			super.updateContainingBlockInfo();
-		}
+		super.updateContainingBlockInfo();
 	}
 
 	public float getPowerMultiplier(){
@@ -108,6 +105,19 @@ public class BeamSplitterTileEntity extends BeamRenderTE{
 		return output;
 	}
 
+	private void updateSignalState(){
+		markDirty();
+		BlockState state = getBlockState();
+		float powerLevel = getPowerMultiplier();
+		int prevPowerLevel = state.get(CRProperties.POWER_LEVEL);
+		if(powerLevel <= 0 && prevPowerLevel != 0){
+			world.setBlockState(pos, state.with(CRProperties.POWER_LEVEL, 0));
+		}else if(powerLevel >= 1F && prevPowerLevel != 2){
+			world.setBlockState(pos, state.with(CRProperties.POWER_LEVEL, 2));
+		}else if(powerLevel > 0 && powerLevel < 1F && prevPowerLevel != 1){
+			world.setBlockState(pos, state.with(CRProperties.POWER_LEVEL, 1));
+		}
+	}
 
 	@Override
 	public void remove(){
@@ -116,7 +126,7 @@ public class BeamSplitterTileEntity extends BeamRenderTE{
 	}
 
 	public CircuitUtil.InputCircHandler redsHandler = new CircuitUtil.InputCircHandler();
-	private LazyOptional<IRedstoneHandler> redsOpt = CircuitUtil.makeBaseCircuitOptional(this, redsHandler, 0);
+	private LazyOptional<IRedstoneHandler> redsOpt = CircuitUtil.makeBaseCircuitOptional(this, redsHandler, 0, this::updateSignalState);
 
 	@Override
 	@SuppressWarnings("unchecked")

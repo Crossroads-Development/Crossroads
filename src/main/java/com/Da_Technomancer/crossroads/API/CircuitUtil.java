@@ -17,6 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.function.Supplier;
@@ -31,8 +32,12 @@ public class CircuitUtil extends RedstoneUtil{
 	}
 
 	public static LazyOptional<IRedstoneHandler> makeBaseCircuitOptional(TileEntity te, InputCircHandler handler, float startingRedstone){
+		return makeBaseCircuitOptional(te, handler, startingRedstone, null);
+	}
+
+	public static LazyOptional<IRedstoneHandler> makeBaseCircuitOptional(TileEntity te, InputCircHandler handler, float startingRedstone, @Nullable Listener changeListener){
 		LazyOptional<IRedstoneHandler> optional = LazyOptional.of(() -> handler);
-		handler.setup(optional, te, startingRedstone);
+		handler.setup(optional, te, startingRedstone, changeListener == null ? te::markDirty : changeListener);
 		return optional;
 	}
 
@@ -198,11 +203,13 @@ public class CircuitUtil extends RedstoneUtil{
 		private float circRedstone;
 		private int worldRedstone;
 		private TileEntity te;
+		private Listener changeListener;
 
-		private void setup(LazyOptional<IRedstoneHandler> circuitOpt, TileEntity te, float initCircRedstone){
+		private void setup(LazyOptional<IRedstoneHandler> circuitOpt, TileEntity te, float initCircRedstone, Listener changeListener){
 			redsRef = new WeakReference<>(circuitOpt);
 			circRedstone = initCircRedstone;
 			this.te = te;
+			this.changeListener = changeListener;
 		}
 
 		public float getCircRedstone(){
@@ -256,7 +263,7 @@ public class CircuitUtil extends RedstoneUtil{
 			worldRedstone = CircuitUtil.clampToVanilla(worldRedstone);//Sanitize the input. Sometimes vanilla adds redstone sources that break the 15 power cap (they usually are fixed quickly)
 
 			if(prevWorldReds != worldRedstone){
-				te.markDirty();
+				changeListener.update();
 			}
 		}
 
@@ -281,7 +288,8 @@ public class CircuitUtil extends RedstoneUtil{
 
 				//if sources changed, schedule an update
 				if(sources.size() != preSrc.size() || !sources.containsAll(preSrc)){
-					world.getPendingBlockTicks().scheduleTick(pos, ESBlocks.redstoneTransmitter, RedstoneUtil.DELAY, TickPriority.NORMAL);
+					//world.getPendingBlockTicks().scheduleTick(pos, ESBlocks.redstoneTransmitter, RedstoneUtil.DELAY, TickPriority.NORMAL);
+					notifyInputChange(redsRef);//Normal circuits would impose a 2 tick delay. Because this is a 1-way input only circuit responding to signals, this is unneeded and undesirable
 				}
 			}
 
@@ -344,8 +352,13 @@ public class CircuitUtil extends RedstoneUtil{
 				}
 			}
 			if(CircuitUtil.didChange(prevCirc, circRedstone)){
-				te.markDirty();
+				changeListener.update();
 			}
 		}
+	}
+
+	public interface Listener{
+
+		void update();
 	}
 }

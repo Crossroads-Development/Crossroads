@@ -36,12 +36,8 @@ public class BeamRedirectorTileEntity extends BeamRenderTE{
 
 	@Override
 	public void updateContainingBlockInfo(){
-		Direction prev = dir;
 		dir = null;
-		if(prev != getDir()){
-			//It's a waste to regenerate the beamers if it was only a redstone signal changing
-			super.updateContainingBlockInfo();
-		}
+		super.updateContainingBlockInfo();
 	}
 
 	@Override

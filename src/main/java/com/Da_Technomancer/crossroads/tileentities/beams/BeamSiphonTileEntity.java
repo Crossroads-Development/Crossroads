@@ -42,12 +42,8 @@ public class BeamSiphonTileEntity extends BeamRenderTE{
 
 	@Override
 	public void updateContainingBlockInfo(){
-		Direction prev = dir;
 		dir = null;
-		if(prev != getDir()){
-			//It's a waste to regenerate the beamers if it was only a redstone signal changing
-			super.updateContainingBlockInfo();
-		}
+		super.updateContainingBlockInfo();
 	}
 
 	@Override
@@ -146,8 +142,21 @@ public class BeamSiphonTileEntity extends BeamRenderTE{
 		redsOpt.invalidate();
 	}
 
+	private void updateSignalState(){
+		markDirty();
+		BlockState state = getBlockState();
+		int powerLevel = getPowerInput();
+		if(powerLevel > 0){
+			if(!state.get(ESProperties.REDSTONE_BOOL)){
+				world.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, true));
+			}
+		}else if(state.get(ESProperties.REDSTONE_BOOL)){
+			world.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, false));
+		}
+	}
+
 	public CircuitUtil.InputCircHandler redsHandler = new CircuitUtil.InputCircHandler();
-	private final LazyOptional<IRedstoneHandler> redsOpt = CircuitUtil.makeBaseCircuitOptional(this, redsHandler, 0);
+	private final LazyOptional<IRedstoneHandler> redsOpt = CircuitUtil.makeBaseCircuitOptional(this, redsHandler, 0, this::updateSignalState);
 
 	@Override
 	@SuppressWarnings("unchecked")
