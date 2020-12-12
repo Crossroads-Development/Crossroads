@@ -32,7 +32,7 @@ import java.util.List;
 
 public class ReagentFilter extends ContainerBlock{
 
-	private static final VoxelShape SHAPE = makeCuboidShape(2, 2, 2, 14, 14, 14);
+	private static final VoxelShape SHAPE = makeCuboidShape(2, 0, 2, 14, 16, 14);
 	private final boolean crystal;
 
 	public ReagentFilter(boolean crystal){
@@ -83,9 +83,6 @@ public class ReagentFilter extends ContainerBlock{
 			TileEntity te = worldIn.getTileEntity(pos);
 			if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
 				worldIn.setBlockState(pos, state.func_235896_a_(CRProperties.HORIZ_FACING));
-				if(te instanceof ReagentFilterTileEntity){
-					((ReagentFilterTileEntity) te).clearCache();
-				}
 			}else{
 				if(te instanceof INamedContainerProvider){
 					NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);

@@ -51,7 +51,7 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements INamedC
 			return Direction.NORTH;
 		}
 		if(facing == null){
-			BlockState state = world.getBlockState(pos);
+			BlockState state = getBlockState();
 			if(!(state.getBlock() instanceof ReagentFilter)){
 				return Direction.NORTH;
 			}
@@ -60,7 +60,9 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements INamedC
 		return facing;
 	}
 
-	public void clearCache(){
+	@Override
+	public void updateContainingBlockInfo(){
+		super.updateContainingBlockInfo();
 		facing = null;
 		chemOpt.invalidate();
 		chemOpt = LazyOptional.of(() -> handler);
