@@ -14,7 +14,11 @@
 		},
 		{
 			"type": "text",
-			"text": "when wound above 6rad/s. While being used, it drains its <thing>$(l:crossroads:rotary/winding_table)spring speed/$ at -0.02rad/s every second, with a full wind lasting 8 minutes.$(br2)The <item>whirligig/$ is handy for providing slowfall, or even floating up cliffs and onto buildings.$(br2)"
+			"text": "when wound above 6rad/s. While being used, it drains its <thing>$(l:crossroads:rotary/winding_table)spring speed/$ at -0.02rad/s every second, with a full wind lasting 8 minutes.$(br2)The <item>whirligig/$ is handy for providing slowfall, or even floating up cliffs and onto buildings.$(br2)The <item>whirligig/$ is also a decent melee weapon- it is, after all- a "
+		},
+		{
+			"type": "text",
+			"text": "giant iron stick. $(br2)"
 		}
 	]
 }

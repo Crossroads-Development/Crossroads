@@ -73,7 +73,7 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 		}
 
 		double goalTemp = getSetting();
-		boolean blueMode = world.getBlockState(pos).get(CRProperties.ACTIVE);
+		boolean blueMode = getBlockState().get(CRProperties.ACTIVE);
 
 		if(blueMode){
 			//Trick to re-use the same logic; reverted at the end
@@ -135,16 +135,26 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 	}
 
 	@Override
+	public void updateContainingBlockInfo(){
+		super.updateContainingBlockInfo();
+		heatInOpt.invalidate();
+		heatOutOpt.invalidate();
+
+	}
+
+	@Override
 	public void remove(){
 		super.remove();
 		heatInOpt.invalidate();
 		heatOutOpt.invalidate();
+		heatInOpt = LazyOptional.of(() -> new HeatHandler(true));
+		heatOutOpt = LazyOptional.of(() -> new HeatHandler(false));
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
-		Direction facing = world.getBlockState(pos).get(ESProperties.FACING);
+		Direction facing = getBlockState().get(ESProperties.FACING);
 		if(cap == Capabilities.HEAT_CAPABILITY){
 			if(side == null || side == facing.getOpposite()){
 				return (LazyOptional<T>) heatInOpt;
@@ -155,8 +165,8 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 		return super.getCapability(cap, side);
 	}
 
-	private final LazyOptional<IHeatHandler> heatInOpt = LazyOptional.of(() -> new HeatHandler(true));
-	private final LazyOptional<IHeatHandler> heatOutOpt = LazyOptional.of(() -> new HeatHandler(false));
+	private LazyOptional<IHeatHandler> heatInOpt = LazyOptional.of(() -> new HeatHandler(true));
+	private LazyOptional<IHeatHandler> heatOutOpt = LazyOptional.of(() -> new HeatHandler(false));
 
 	@Override
 	public ITextComponent getDisplayName(){

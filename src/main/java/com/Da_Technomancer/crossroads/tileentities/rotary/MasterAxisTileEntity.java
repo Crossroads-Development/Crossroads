@@ -81,7 +81,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 
 	protected Direction getFacing(){
 		if(facing == null){
-			BlockState state = world.getBlockState(pos);
+			BlockState state = getBlockState();
 			if(!state.hasProperty(ESProperties.FACING)){
 				remove();
 				return Direction.DOWN;
@@ -163,6 +163,13 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 	}
 
 	protected void runAngleCalc(){
+		boolean timeReset = false;
+		if(ticksExisted > 86400){
+			//For very high ticksExisted, floating point errors become visually noticeable with 'choppy' angles
+			ticksExisted = 0;
+			timeReset = true;
+		}
+
 		if(rotaryMembers.isEmpty()){
 			//Clear all angle data
 			for(int i = 0; i < 4; i++){
@@ -195,7 +202,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 				diff = Float.MAX_VALUE;
 			}
 			boolean signChanged = Math.signum(speedPred) != Math.signum(trueSpeed);
-			if(diff >= ADJUST_MARGIN || signChanged){
+			if(diff >= ADJUST_MARGIN || signChanged || timeReset){
 				//Take the current simulated angle as the new "true" angle value, to prevent a "jerking" re-alignment of gear angles on the client side
 				float delta = runSeries(ticksExisted, 0) - prevAngles[3];
 				if(Float.isNaN(delta)){
@@ -424,6 +431,10 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 		@Override
 		public boolean addToList(IAxleHandler handler){
 			if(!locked){
+//				if(rotaryMembers.contains(handler)){
+//					Crossroads.logger.error("Handler attempted to add itself repeatedly to axis; Instance: " + handler.toString());
+//					return false;
+//				}
 				rotaryMembers.add(handler);
 				return false;
 			}else{

@@ -28,7 +28,7 @@ public class CRWorldGen{
 	private static final ConfiguredFeature<?, ?> COPPER_ORE = configuredFeature(Feature.ORE, OreFeatureConfig.FillerBlockType.field_241882_a, OreSetup.oreCopper.getDefaultState(), 13, 32, 3);
 	private static final ConfiguredFeature<?, ?> TIN_ORE = configuredFeature(GEM_FEATURE, OreFeatureConfig.FillerBlockType.field_241882_a, OreSetup.oreTin.getDefaultState(), 1, 32, 20);
 	private static final ConfiguredFeature<?, ?> VOID_ORE = configuredFeature(GEM_FEATURE, ENDSTONE, OreSetup.oreVoid.getDefaultState(), 1, 80, 10);
-	private static final ConfiguredFeature<?, ?> RUBY_ORE_SPOT = configuredFeature(GEM_FEATURE, OreFeatureConfig.FillerBlockType.field_241883_b, OreSetup.oreRuby.getDefaultState(), 1, 117, 4);
+	private static final ConfiguredFeature<?, ?> RUBY_ORE_SPOT = configuredFeature(GEM_FEATURE, OreFeatureConfig.FillerBlockType.field_241883_b, OreSetup.oreRuby.getDefaultState(), 1, 117, 20);
 //	private static final ConfiguredFeature<?, ?> RUBY_ORE = RUBY_FEATURE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.field_241883_b, Blocks.NETHER_QUARTZ_ORE.getDefaultState(), 14)).withPlacement(Features.Placements.field_243998_i).func_242728_a().func_242731_b(16);//Normal nether quartz vein version
 //	private static final ConfiguredFeature<?, ?> RUBY_ORE_BASALT = RUBY_FEATURE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.field_241883_b, Blocks.NETHER_QUARTZ_ORE.getDefaultState(), 14)).withPlacement(Features.Placements.field_243998_i).func_242728_a().func_242731_b(32);//Basalt delta vein version
 

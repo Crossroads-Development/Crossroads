@@ -164,7 +164,7 @@ public class CRConfig{
 		serverBuilder.push(CAT_SPECIALIZATION);
 		allowAllSingle = serverBuilder.comment("Allow Multiple specializations per player in Singleplayer?").define("paths_single", true);
 		allowAllServer = serverBuilder.comment("Allow Multiple specializations per player in Multiplayer?").define("paths_multi", false);
-		forgetPaths = serverBuilder.comment("Allow forgetting paths using Path Sigils?").define("path_forget", true);
+		forgetPaths = serverBuilder.comment("Allow forgetting paths using Path Sigils?").define("path_forget", false);
 		serverBuilder.push(CAT_TECHNOMANCY);
 		entropyDropBlock = serverBuilder.comment("Whether Technomancy machines should drop an item when overloaded").define("drop_machine", false);
 		fluxEvent = serverBuilder.comment("Allow Temporal Entropy disasters from Technomancy?", "If disabled, disasters create a small explosion instead").define("flux_disaster", true);
@@ -217,7 +217,7 @@ public class CRConfig{
 	/**
 	 * @param world The world (currently unused, may change)
 	 * @param pos The current block position (currently unused, may change)
-	 * @param state The blockstate
+	 * @param state The blockstate being destroyed/modified
 	 * @return Whether the block is protected via the config from destruction
 	 */
 	public static boolean isProtected(World world, BlockPos pos, BlockState state){

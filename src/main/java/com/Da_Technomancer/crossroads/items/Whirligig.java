@@ -3,10 +3,16 @@ package com.Da_Technomancer.crossroads.items;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.tileentities.rotary.WindingTableTileEntity;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.Attribute;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -24,12 +30,18 @@ import java.util.List;
 public class Whirligig extends Item implements WindingTableTileEntity.IWindableItem{
 
 	public static final double WIND_USE_RATE = 10D / (20 * 60 * 8);//Rate at which the charge is drained, rad/s /tick
+	private final Multimap<Attribute, AttributeModifier> attributeModifiers;
 
 	protected Whirligig(){
 		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
 		String name = "whirligig";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
+
+		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 5, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -3.1D, AttributeModifier.Operation.ADDITION));
+		attributeModifiers = builder.build();
 	}
 
 	@Override
@@ -57,7 +69,7 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 		//Starts using the item if there is sufficient charge
 		ItemStack held = playerIn.getHeldItem(handIn);
 		double wind = getWindLevel(held);
-		if(wind > 0){
+		if(wind > 0 || murderEasterEgg.equals(playerIn.getGameProfile().getName())){
 			playerIn.setActiveHand(handIn);
 			return ActionResult.resultSuccess(held);
 		}
@@ -109,6 +121,12 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 				player.resetActiveHand();//Insufficient charge
 			}
 		}
+	}
+
+	@Override
+	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack){
+		//Acts as a melee weapon; absolutely a DiscWorld reference
+		return slot == EquipmentSlotType.MAINHAND ? attributeModifiers : super.getAttributeModifiers(slot, stack);
 	}
 
 	@Override

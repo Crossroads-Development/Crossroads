@@ -23,7 +23,7 @@
 		},
 		{
 			"type": "text",
-			"text": "fired <thing>$(l:crossroads:intro/beam)beams/$ from a <item>$(l:crossroads:technomancy/cage)beam cage/$, which is required for the <item>staff/$ to work, and must be in either the offhand or a baubles slot (if Curios is installed).$(br2)"
+			"text": "fired <thing>$(l:crossroads:intro/beam)beams/$ from a <item>$(l:crossroads:technomancy/cage)beam cage/$, which is required for the <item>staff/$ to work, and must be in either the offhand or a baubles slot (if Curios is installed).$(br2)The <item>beam staff/$ is also a decent melee weapon- it is, after all- a giant iron stick.$(br2)"
 		},
 		{
 			"type": "text",

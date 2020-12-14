@@ -4,4 +4,4 @@ crossroads:pure_quartz|crossroads:progress/alignment/rift
 It can spawn mobs in solid blocks, and ignores the mob spawning cap.
 In peaceful mode, it will spawn the drops of the mobs it would have spawned instead of spawning mobs. 
 
-<thing>Void-Rift/$ AKA <thing>Isolation/$ will prevent any hostile mob spawning nearby as long as the beam maintained. The range of this effect is the beam <thing>power/$, and requires the beam to be continuously maintained. Mobs can spawn while the beam isn't running.
+<thing>Void-Rift/$ AKA <thing>Isolation/$ will prevent any hostile mob spawning nearby as long as the beam maintained. The range of this effect is the beam <thing>power/$ (spherical radius), and requires the beam to be continuously maintained. Mobs can spawn while the beam isn't running.

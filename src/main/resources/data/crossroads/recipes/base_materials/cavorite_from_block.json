@@ -2,7 +2,7 @@
 	"type": "minecraft:crafting_shaped",
 	"result": {
 		"item": "crossroads:solid_cavorite",
-		"count": 9
+		"count": 4
 	},
 	"pattern": [
 		"*"

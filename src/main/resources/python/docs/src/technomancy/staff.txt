@@ -5,6 +5,7 @@ The <item>beam staff/$ uses 4 hotkeys that are unbound by default. Make sure to 
 While holding the <item>beam staff/$, the currently setting for what <thing><link:crossroads:intro/beam>beam/$ it fires is shown in the top left of the screen. Pressing or holding any of the 4 <thing><link:crossroads:intro/beam>primary alignment/$ control keys will <em>increase/$ the setting for that <thing><link:crossroads:intro/beam>alignment/$, while holding shift while pressing the <thing><link:crossroads:intro/beam>primary alignment/$ control key will <em>decrease/$ the setting for that <thing><link:crossroads:intro/beam>alignment/$.
 Right-clicking with the <item>beam staff/$ will fire a <thing><link:crossroads:intro/beam>beam/$ of the set composition in the direction aimed. This beam has a range of 64 blocks. Holding down right-click will fire a continuous beam instead of a pulse.
 The <item>beam staff/$ drains the fired <thing><link:crossroads:intro/beam>beams/$ from a <item><link:crossroads:technomancy/cage>beam cage/$, which is required for the <item>staff/$ to work, and must be in either the offhand or a baubles slot (if Curios is installed).
+The <item>beam staff/$ is also a decent melee weapon- it is, after all- a giant iron stick.
 
 <bobo>hI hII hIII hIV;;;; iz ME! <link:crossroads:intro/welcome#bobo>b0Bo!/$<bobo>
 mE nO uther multi-mega-omni-all-tule!
