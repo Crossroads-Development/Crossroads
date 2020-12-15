@@ -63,25 +63,33 @@ public class BeamUnit{
 		return Arrays.copyOf(contents, 4);
 	}
 
-	/** Returns the RGB value when ignoring void*/
-	public Color getTrueRGB(){
+	/**
+	 * Returns the RGB value when ignoring void
+	 * @return The color of this beam if void were 0. Value of the returned color is 1 unless the beam is pure void or empty
+	 */
+	@Nonnull
+	public Color getValuedRGB(){
 		if(contents[0] == 0 && contents[1] == 0 && contents[2] == 0){
-			return null;
+			return Color.BLACK;
 		}
 		double top = Math.max(contents[0], Math.max(contents[1], contents[2]));
 
 		return new Color((int) Math.round(255D * ((double) contents[0]) / top), (int) Math.round(255D * ((double) contents[1]) / top), (int) Math.round(255D * ((double) contents[2]) / top));
 	}
 
-	/** Returns RGB with void.*/
+	/**
+	 * Returns RGB with void.
+	 * @return The color of this beam
+	 */
+	@Nonnull
 	public Color getRGB(){
-		if(getTrueRGB() == null){
+		if(contents[0] == 0 && contents[1] == 0 && contents[2] == 0){
 			return Color.BLACK;
 		}
 
 		double mult = ((double) (contents[0] + contents[1] + contents[2])) / (double) getPower();
 
-		Color col = getTrueRGB();
+		Color col = getValuedRGB();
 		return new Color((int) Math.round(((double) col.getRed()) * mult), (int) Math.round(((double) col.getGreen()) * mult), (int) Math.round(((double) col.getBlue()) * mult));
 	}
 

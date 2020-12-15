@@ -12,12 +12,10 @@ import java.util.ArrayList;
 
 public abstract class TileEntityGUI<T extends TileEntityContainer<U>, U extends TileEntity & IInventory> extends ContainerScreen<T>{
 
-	protected PlayerInventory playerInv;
 	protected ArrayList<ITextComponent> tooltip = new ArrayList<>();
 
 	protected TileEntityGUI(T container, PlayerInventory playerInventory, ITextComponent text){
 		super(container, playerInventory, text);
-		this.playerInv = playerInventory;
 	}
 
 	@Override

@@ -85,6 +85,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.BooleanValue electricSounds;
 	public static ForgeConfigSpec.BooleanValue fluxSounds;
 	public static ForgeConfigSpec.IntValue effectPacketDistance;
+	public static ForgeConfigSpec.IntValue beaconHarnessPower;
 
 	private static final ITag<Block> destroyBlacklist = BlockTags.makeWrapperTag(Crossroads.MODID + ":destroy_blacklist");
 
@@ -178,6 +179,7 @@ public class CRConfig{
 		allowStatRecall = serverBuilder.comment("Should recalling restore previous health and hunger?", "Recommended to disable this for PvP").define("stat_recall", true);
 		recallTimeLimit = serverBuilder.comment("Maximum time duration for recalling, in seconds. Set to -1 to disable limit, 0 to disable recalling").defineInRange("time_recall", 60*5, -1, 60*60*24);
 		lodestoneDynamo = serverBuilder.comment("Power output of the Lodestone Dynamo (in J/t)", "Set to 0 to disable the Lodestone Dynamo").defineInRange("lodestone_dynamo", 100, 0, 1_000);
+		beaconHarnessPower = serverBuilder.comment("Beam power output of the beacon harness").defineInRange("beacon_harness_power", 512, 8, 4096);
 		serverBuilder.pop();
 		serverBuilder.push(CAT_ALCHEMY);
 		phelEffect = serverBuilder.comment("Allow the full effect of Phelostogen?", "If disabled Phelostogen lights a single small fire instead").define("phel_effect", true);

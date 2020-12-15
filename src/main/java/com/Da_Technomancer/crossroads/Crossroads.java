@@ -243,6 +243,7 @@ public final class Crossroads{
 		registerCon(DetailedAutoCrafterContainer::new, DetailedAutoCrafterScreen::new, "detailed_auto_crafter", e);
 		registerCon(SequenceBoxContainer::new, SequenceBoxScreen::new, "sequence_box", e);
 		registerCon(SteamTurbineContainer::new, SteamTurbineScreen::new, "steam_turbine", e);
+		registerCon(BeaconHarnessContainer::new, BeaconHarnessScreen::new, "beacon_harness", e);
 	}
 
 	@SuppressWarnings("unused")
@@ -278,6 +279,7 @@ public final class Crossroads{
 		registerConType(DetailedAutoCrafterContainer::new, "detailed_auto_crafter", e);
 		registerConType(SequenceBoxContainer::new, "sequence_box", e);
 		registerConType(SteamTurbineContainer::new, "steam_turbine", e);
+		registerConType(BeaconHarnessContainer::new, "beacon_harness", e);
 	}
 
 	/**

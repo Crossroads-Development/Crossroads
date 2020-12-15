@@ -4,18 +4,28 @@ import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.gui.container.BeaconHarnessContainer;
+import io.netty.buffer.Unpooled;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
@@ -25,18 +35,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 @ObjectHolder(Crossroads.MODID)
-public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink{
+public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, IInventory, INamedContainerProvider{
 
 	@ObjectHolder("beacon_harness")
 	public static TileEntityType<BeaconHarnessTileEntity> type = null;
 
 	public static final int FLUX_GEN = 4;
-	private static final int LOOP_TIME = 120;//Time to make one full rotation around the color wheel in cycles. Must be a multiple of 3
+	public static final int LOOP_TIME = 120;//Time to make one full rotation around the color wheel in cycles. Must be a multiple of 3
 	private static final int SAFETY_BUFFER = 8;//Duration of the switchover period in cycles
-	private static final int POWER = 512;//Power of the created beam
 
 	private boolean running;
-	private int cycles;
+	private int cycles = -11;
+
 	//Flux related fields
 	private HashSet<BlockPos> links = new HashSet<>(1);
 	private int flux = 0;
@@ -49,6 +59,10 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink{
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		FluxUtil.addFluxInfo(chat, this, running ? FLUX_GEN : 0);
+	}
+
+	public int getCycles(){
+		return cycles;
 	}
 
 	@Override
@@ -146,16 +160,30 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink{
 		}
 	}
 
+	public static boolean isSafetyPeriod(int cycles){
+		return cycles % (LOOP_TIME / 3) < SAFETY_BUFFER;
+	}
+
+	public static BeamUnit getOutput(int cycles){
+		if(cycles < 0){
+			return BeamUnit.EMPTY;
+		}
+		//The color calculation takes advantage of the fact that the "color wheel" as most people know it is the slice of the HSB color cylinder with saturation=1. The outer rim is brightness=1. The angle is controlled by hue
+		Color outColor = Color.getHSBColor(((float) cycles) / LOOP_TIME, 1, 1);
+		BeamUnit out = new BeamUnit(outColor.getRed(), outColor.getGreen(), outColor.getBlue(), 0);
+		out = out.mult(CRConfig.beaconHarnessPower.get() / ((double) out.getPower()), false);
+		return out;
+	}
+
 	@Override
 	protected void doEmit(BeamUnit input){
 		if(running){
 			++cycles;
 			cycles %= LOOP_TIME;
-			//The color calculation takes advantage of the fact that the "color wheel" as most people know it is the slice of the HSB color cylinder with saturation=1. The outer rim is brightness=1. The angle is controlled by hue
-			Color outColor = Color.getHSBColor(((float) cycles) / LOOP_TIME, 1, 1);
+			BeamUnit out = getOutput(cycles);
 			if(cycles >= 0){
 				//Don't check color during a safety period
-				if(cycles % (LOOP_TIME / 3) >= SAFETY_BUFFER && invalid(outColor, input)){
+				if(!isSafetyPeriod(cycles) && invalid(out.getRGB(), input)){
 					//Wrong input- shut down
 					running = false;
 					cycles = -11;//Easy way of adding a startup cooldown- 10 cycles
@@ -164,9 +192,6 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink{
 						refreshBeam(0);
 					}
 				}else{
-					BeamUnit out = new BeamUnit(outColor.getRed(), outColor.getGreen(), outColor.getBlue(), 0);
-					out = out.mult(POWER / ((double) out.getPower()), false);
-
 					beamer[0].emit(out, world);
 					refreshBeam(0);//Assume the beam changed as the color constantly cycles
 					prevMag[0] = out;
@@ -214,5 +239,60 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink{
 			links.clear();
 			markDirty();
 		}
+	}
+
+
+	//IInventory methods, all no-op
+	@Override
+	public int getSizeInventory(){
+		return 0;
+	}
+
+	@Override
+	public boolean isEmpty(){
+		return true;
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int index){
+		return ItemStack.EMPTY;
+	}
+
+	@Override
+	public ItemStack decrStackSize(int index, int count){
+		return ItemStack.EMPTY;
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index){
+		return ItemStack.EMPTY;
+	}
+
+	@Override
+	public void setInventorySlotContents(int index, ItemStack stack){
+
+	}
+
+	@Override
+	public boolean isUsableByPlayer(PlayerEntity player){
+		return world.getTileEntity(pos) == this && player.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64;
+	}
+
+	@Override
+	public void clear(){
+
+	}
+
+	//INamedGuiProvides methods
+
+	@Override
+	public ITextComponent getDisplayName(){
+		return new TranslationTextComponent("container.beacon_harness");
+	}
+
+	@Nullable
+	@Override
+	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
+		return new BeaconHarnessContainer(id, playerInv, new PacketBuffer(Unpooled.buffer()).writeBlockPos(pos));
 	}
 }

@@ -87,7 +87,7 @@ public class FluxUtil{
 		if(fluxPerCycle < 0){
 			tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.flux_simple", te.getReadingFlux(), te.getMaxFlux(), CRConfig.formatVal(100F * te.getReadingFlux() / te.getMaxFlux())));
 		}else{
-			tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.flux", te.getReadingFlux(), te.getMaxFlux(), CRConfig.formatVal(100F * te.getReadingFlux() / te.getMaxFlux()), CRConfig.formatVal((float) fluxPerCycle / FLUX_TIME)));
+			tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.flux", te.getReadingFlux(), te.getMaxFlux(), CRConfig.formatVal(100F * te.getReadingFlux() / te.getMaxFlux()), CRConfig.formatVal(fluxPerCycle)));
 		}
 	}
 

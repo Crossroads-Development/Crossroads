@@ -527,7 +527,7 @@
 	"tt.crossroads.tesla_ray.desc": "An electric arc weapon",
 	"tt.crossroads.tesla_ray.leyden": "Powered by a Leyden Jar in the offhand",
 	"tt.crossroads.tesla_ray.quip": "Also known as the Teleforce",
-	"tt.crossroads.boilerplate.flux": "%1$d/%2$dTEn (%3$f%%) +%4$sTEn/t",
+	"tt.crossroads.boilerplate.flux": "%1$d/%2$dTEn (%3$f%%) +%4$sTEn/cycle",
 	"tt.crossroads.boilerplate.flux_simple": "%1$d/%2$dTEn (%3$f%%)",
 	"tt.crossroads.chrono_harness.fe": "%1$d/%2$dFE (%3$dFE/t)",
 	"tt.crossroads.flux_node.desc": "Transfers Temporal Entropy (capacity %1$d)",
@@ -629,6 +629,15 @@
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
 	"container.crossroads.boilerplate.speed": "%1$f rad/s",
+	"container.crossroads.beacon_harness.input.none": "Required Input: None/Any",
+	"container.crossroads.beacon_harness.input.energy": "Required Input: Energy",
+	"container.crossroads.beacon_harness.input.potential": "Required Input: Potential",
+	"container.crossroads.beacon_harness.input.stability": "Required Input: Stability",
+	"container.crossroads.beacon_harness.output.energy": "Energy Output: %1$d",
+	"container.crossroads.beacon_harness.output.potential": "Potential Output: %1$d",
+	"container.crossroads.beacon_harness.output.stability": "Stability Output: %1$d",
+	"container.crossroads.beacon_harness.cycle": "Cycle %1$d/%2$d",
+	"container.crossroads.beacon_harness.cooldown": "Cooldown: %1$d cycles",
 
 	"container.smelter": "Smelter",
 	"container.firebox": "Firebox",
@@ -660,6 +669,7 @@
 	"container.detailed_auto_crafter": "Detailed Auto-Crafter",
 	"container.sequence_box": "Sequencer",
 	"container.steam_turbine": "Steam Turbine",
+	"container.beacon_harness": "Beacon Harness",
 
 
 	"subtitle.crossroads.beam_passive": "Beam emitted",

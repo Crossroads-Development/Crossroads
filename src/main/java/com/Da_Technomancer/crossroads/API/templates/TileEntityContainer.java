@@ -57,7 +57,7 @@ public abstract class TileEntityContainer<U extends TileEntity & IInventory> ext
 			addSlot(new Slot(playerInv, x, invStart[0] + x * 18, invStart[1] + 58));
 		}
 
-		//Crossroads player inv
+		//player inv
 		for(int y = 0; y < 3; y++){
 			for(int x = 0; x < 9; x++){
 				addSlot(new Slot(playerInv, x + y * 9 + 9, invStart[0] + x * 18, invStart[1] + y * 18));
