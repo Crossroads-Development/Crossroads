@@ -109,7 +109,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 			markDirty();
 		}
 
-		if(Math.abs(motData[0]) < REQUIRED_SPD){
+		if(Math.abs(axleHandler.getSpeed()) < REQUIRED_SPD){
 			progress = 0;
 			updateWorldState(false);
 			return;

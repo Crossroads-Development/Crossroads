@@ -23,10 +23,11 @@ public interface IMechanism<T extends IMechanismProperty>{
 	 * @param mat The material of this mechanism
 	 * @param side The side this mechanism is on. If null, this is in the axle slot (center)
 	 * @param axis If side is null (axle slot), this is the orientation of this mechanism. If side is not null, this should be ignored, and may be null
-	 * @param motData The motion data of this mechanism, in order [0]=w, [1]=E, [2]=P, [3]=lastE
+	 * @param energy The energy of this mechanism
+	 * @param speed The speed of this mechanism
 	 * @param te The containing TileEntity
 	 */
-	default void onRedstoneChange(double prevValue, double newValue, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, double[] motData, MechanismTileEntity te){
+	default void onRedstoneChange(double prevValue, double newValue, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, double energy, double speed, MechanismTileEntity te){
 
 	}
 
@@ -34,11 +35,12 @@ public interface IMechanism<T extends IMechanismProperty>{
 	 * Gets the Circuit Reader (or comparator) read output signal for this mechanism. Will only be called if this mechanism is in the axle slot.
 	 * @param mat The material of this mechanism
 	 * @param axis The axle axis. Will not be null
-	 * @param motData The motionData of this mechanism
+	 * @param energy The energy of this mechanism
+	 * @param speed The speed of this mechanism
 	 * @param te The calling TE
 	 * @return The value a Circuit Reader should read. If a comparator is reading this, it will be rounded and bounded to [0, 15].
 	 */
-	default double getCircuitSignal(IMechanismProperty mat, @Nonnull Direction.Axis axis, double[] motData, MechanismTileEntity te){
+	default double getCircuitSignal(IMechanismProperty mat, @Nonnull Direction.Axis axis, double energy, double speed, MechanismTileEntity te){
 		return 0;
 	}
 

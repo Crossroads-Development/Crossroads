@@ -72,7 +72,8 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 			return;
 		}
 
-		if(Math.abs(motData[0]) >= TIP_POINT && (Math.signum(motData[0]) == -1) == neg){
+		double axleSpeed = axleHandler.getSpeed();
+		if(Math.abs(axleSpeed) >= TIP_POINT && (Math.signum(axleSpeed) == -1) == neg){
 			neg = !neg;
 			//Handle direction switching regardless of whether crafting occurred
 

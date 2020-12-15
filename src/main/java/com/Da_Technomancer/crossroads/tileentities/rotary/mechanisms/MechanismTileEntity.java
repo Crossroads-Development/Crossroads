@@ -18,8 +18,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -66,7 +66,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 			return;
 		}
 
-		RotaryUtil.addRotaryInfo(chat, motionData[part], inertia[part], axleHandlers[part].rotRatio, false);
+		RotaryUtil.addRotaryInfo(chat, axleHandlers[part], false);
 	}
 
 	// D-U-N-S-W-E-A
@@ -75,8 +75,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	public final IMechanism<?>[] members = new IMechanism[7];
 	//Public for read-only
 	public final IMechanismProperty[] mats = new IMechanismProperty[7];
-	// [0]=w, [1]=E, [2]=P, [3]=lastE
-	private final double[][] motionData = new double[7][4];
+	private final double[] energy = new double[7];
 	private final double[] inertia = new double[7];
 //	private final float[] angle = new float[7];
 //	private final float[] clientW = new float[7];
@@ -119,23 +118,13 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
 
-		// motionData
-		for(int i = 0; i < 7; i++){
-//			nbt.putFloat("[" + i + "]cl_w", clientW[i]);
-//			nbt.putFloat("[" + i + "]ang", angle[i]);
-			for(int j = 0; j < 4; j++){
-				if(motionData[i][j] != 0){
-					nbt.putDouble("[" + i + "," + j + "]mot", motionData[i][j]);
-				}
-			}
-		}
-
 		// members
 		for(int i = 0; i < 7; i++){
 			if(members[i] != null && mats[i] != null){//Sanity check. mats[i] should never be null if members[i] isn't
 				nbt.putInt("[" + i + "]memb", MECHANISMS.indexOf(members[i]));
 				nbt.putString("[" + i + "]mat", mats[i].getSaveName());
 			}
+			nbt.putDouble("[" + i + ",1]mot", energy[i]);
 		}
 
 		if(members[6] != null && mats[6] != null && getAxleAxis() != null){
@@ -187,13 +176,10 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 				}
 
 				mats[i] = members[i].loadProperty(nbt.getString("[" + i + "]mat"));
+				energy[i] = nbt.getDouble("[" + i + ",1]mot");
 
-				// motionData
 //				clientW[i] = nbt.getFloat("[" + i + "]cl_w");
 //				angle[i] = nbt.getFloat("[" + i + "]ang");
-				for(int j = 0; j < 4; j++){
-					motionData[i][j] = nbt.getDouble("[" + i + "," + j + "]mot");
-				}
 
 				axleHandlers[i].updateStates(false);
 			}
@@ -250,7 +236,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 			markDirty();
 			for(int i = 0; i < 7; i++){
 				if(members[i] != null){
-					members[i].onRedstoneChange(redstoneIn, reds, mats[i], i == 6 ? null : Direction.byIndex(i), getAxleAxis(), motionData[i], this);
+					members[i].onRedstoneChange(redstoneIn, reds, mats[i], i == 6 ? null : Direction.byIndex(i), getAxleAxis(), energy[i], axleHandlers[i].getSpeed(), this);
 				}
 			}
 			redstoneIn = reds;
@@ -259,7 +245,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	public float getRedstone(){
-		return members[6] != null && getAxleAxis() != null ? (float) members[6].getCircuitSignal(mats[6], getAxleAxis(), motionData[6], this) : 0;
+		return members[6] != null && getAxleAxis() != null ? (float) members[6].getCircuitSignal(mats[6], getAxleAxis(), energy[6], axleHandlers[6].getSpeed(), this) : 0;
 	}
 
 	//Direct access to the axle handlers is needed
@@ -345,8 +331,19 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 		}
 
 		@Override
-		public double[] getMotionData(){
-			return motionData[side];
+		public double getSpeed(){
+			return axis == null ? 0 : axis.getBaseSpeed() * rotRatio;
+		}
+
+		@Override
+		public double getEnergy(){
+			return energy[side];
+		}
+
+		@Override
+		public void setEnergy(double newEnergy){
+			energy[side] = newEnergy;
+			markDirty();
 		}
 
 		@Override
@@ -375,10 +372,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 		private void updateStates(boolean sendPacket){
 			if(members[side] == null || mats[side] == null){
 				inertia[side] = 0;
-				motionData[side][0] = 0;
-				motionData[side][1] = 0;
-				motionData[side][2] = 0;
-				motionData[side][3] = 0;
+				energy[side] = 0;
 				boundingBoxes[side] = null;
 			}else{
 				inertia[side] = members[side].getInertia(mats[side], side == 6 ? null : Direction.byIndex(side), getAxleAxis());
@@ -393,11 +387,6 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 		@Override
 		public double getRotationRatio(){
 			return rotRatio;
-		}
-
-		@Override
-		public void markChanged(){
-			markDirty();
 		}
 	}
 }

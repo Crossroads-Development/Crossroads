@@ -2,11 +2,19 @@ package com.Da_Technomancer.crossroads.API.rotary;
 
 public class DefaultAxleHandler implements IAxleHandler{
 
-	private double[] motionData = new double[4];
+	@Override
+	public double getSpeed(){
+		return 0;
+	}
 
 	@Override
-	public double[] getMotionData(){
-		return motionData;
+	public double getEnergy(){
+		return 0;
+	}
+
+	@Override
+	public void setEnergy(double newEnergy){
+
 	}
 
 	@Override
@@ -22,11 +30,6 @@ public class DefaultAxleHandler implements IAxleHandler{
 	@Override
 	public double getRotationRatio(){
 		return 0;
-	}
-	
-	@Override
-	public void markChanged(){
-		
 	}
 
 	@Override

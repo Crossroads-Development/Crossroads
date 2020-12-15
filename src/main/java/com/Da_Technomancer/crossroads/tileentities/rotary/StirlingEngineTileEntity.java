@@ -70,7 +70,7 @@ public class StirlingEngineTileEntity extends ModuleTE{
 		BlockState worldState = getBlockState();
 		final double slowMin = 0.25D;
 		final double fastMin = 0.75D;
-		double speedMagnitude = Math.abs(motData[0]);
+		double speedMagnitude = Math.abs(axleHandler.getSpeed());
 		int target = 0;
 		if(speedMagnitude > slowMin){
 			if(speedMagnitude > fastMin){
@@ -78,7 +78,7 @@ public class StirlingEngineTileEntity extends ModuleTE{
 			}else{
 				target = 1;
 			}
-			if(motData[0] < 0){
+			if(axleHandler.getSpeed() < 0){
 				target = -target;
 			}
 		}
@@ -103,8 +103,8 @@ public class StirlingEngineTileEntity extends ModuleTE{
 			tempSide -= RATE * level;
 			tempBottom += RATE * level;
 
-			if(axleHandler.axis != null && Math.signum(level) * motData[0] < CRConfig.stirlingSpeedLimit.get()){
-				motData[1] += CRConfig.stirlingMultiplier.get() * RATE * level * Math.abs(level);//5*stirlingMult*level^2 with sign of level
+			if(axleHandler.axis != null && Math.signum(level) * axleHandler.getSpeed() < CRConfig.stirlingSpeedLimit.get()){
+				energy += CRConfig.stirlingMultiplier.get() * RATE * level * Math.abs(level);//5*stirlingMult*level^2 with sign of level
 			}
 
 			markDirty();

@@ -30,15 +30,24 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 
 	@ObjectHolder("master_axis")
 	private static TileEntityType<MasterAxisTileEntity> type = null;
+
 	protected static final Random RAND = new Random();
 
-	protected boolean locked = false;
-	protected double sumEnergy = 0;
-	protected long ticksExisted = 0;
+	//Network building
+	protected boolean forceUpdate;
 	protected byte key;
 	protected int lastKey = 0;
-	protected boolean forceUpdate;
+	protected boolean locked = false;
+
+	//Network independent axis data
 	protected Direction facing;
+	protected long ticksExisted = 0;
+
+	//Motion data
+	protected double sumEnergy = 0;
+	protected double baseSpeed = 0;
+	protected double energyChange = 0;
+	protected double energyLossChange = 0;//Note that this is the wrong sign
 
 	protected ArrayList<IAxleHandler> rotaryMembers = new ArrayList<>();
 
@@ -109,10 +118,6 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 
 	public void disconnect(){
 		for(IAxleHandler axle : rotaryMembers){
-			//For 0-mass gears.
-			axle.getMotionData()[0] = 0;
-			axle.getMotionData()[2] = 0;
-			axle.getMotionData()[3] = 0;
 			axle.disconnect();
 		}
 		for(int i = 0; i < 4; i++){
@@ -128,37 +133,24 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 	}
 
 	protected void runCalc(){
-		double sumIRot = 0;
-		sumEnergy = 0;
-		// IRL you wouldn't say a gear spinning a different direction has
-		// negative energy, but it makes the code easier.
+		double prevSumEnergy = sumEnergy;
 
-		for(IAxleHandler gear : rotaryMembers){
-			sumIRot += gear.getMoInertia() * Math.pow(gear.getRotationRatio(), 2);
-		}
-
-		if(sumIRot == 0 || sumIRot != sumIRot){
-			return;
-		}
-
-		sumEnergy = RotaryUtil.getTotalEnergy(rotaryMembers, true);
+		double[] systemEnergyResult = RotaryUtil.getTotalEnergy(rotaryMembers, true);
+		sumEnergy = systemEnergyResult[0];
+		energyLossChange = systemEnergyResult[1];
+		baseSpeed = systemEnergyResult[2];
+		//For very low total system energy, we drain the remainder of the energy as 'loss'
 		if(sumEnergy < 1 && sumEnergy > -1 || Double.isNaN(sumEnergy)){
+			energyLossChange += sumEnergy;
 			sumEnergy = 0;
+			baseSpeed = 0;
 		}
+		energyChange = sumEnergy - prevSumEnergy;
 
 		for(IAxleHandler gear : rotaryMembers){
-			// set w
-			double newSpeed = Math.signum(sumEnergy * gear.getRotationRatio()) * Math.sqrt(Math.abs(sumEnergy) * 2D * Math.pow(gear.getRotationRatio(), 2) / sumIRot);
-			gear.getMotionData()[0] = newSpeed;
 			// set energy
-			double newEnergy = Math.signum(newSpeed) * Math.pow(newSpeed, 2) * gear.getMoInertia() / 2D;
-			gear.getMotionData()[1] = newEnergy;
-			// set power
-			gear.getMotionData()[2] = (newEnergy - gear.getMotionData()[3]) * 20D;
-			// set lastE
-			gear.getMotionData()[3] = newEnergy;
-
-			gear.markChanged();
+			double gearSpeed = baseSpeed * gear.getRotationRatio();
+			gear.setEnergy(Math.signum(gearSpeed) * Math.pow(gearSpeed, 2) * gear.getMoInertia() / 2D);
 		}
 	}
 
@@ -180,8 +172,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 				}
 			}
 		}else if(!world.isRemote){//Server side, has members
-			//Speed in rad/t
-			float trueSpeed = (float) (rotaryMembers.get(0).getMotionData()[0] / rotaryMembers.get(0).getRotationRatio()) / 20F;
+			float trueSpeed = (float) baseSpeed / 20F;//Speed in rad/t
 			if(Float.isNaN(trueSpeed)){
 				trueSpeed = 0;
 			}
@@ -315,6 +306,11 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 			}
 		}
 
+		sumEnergy = nbt.getDouble("sum_energy");
+		baseSpeed = nbt.getDouble("base_speed");
+		energyChange = nbt.getDouble("energy_change");
+		energyLossChange = nbt.getDouble("energy_change_loss");
+
 		regrTimestamp = nbt.getLong("timestamp");
 	}
 
@@ -330,6 +326,11 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 			}
 		}
 		nbt.putLong("timestamp", regrTimestamp);
+
+		nbt.putDouble("sum_energy", sumEnergy);
+		nbt.putDouble("base_speed", baseSpeed);
+		nbt.putDouble("energy_change", energyChange);
+		nbt.putDouble("energy_change_loss", energyLossChange);
 		return nbt;
 	}
 
@@ -390,8 +391,6 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 
 			memberCopy.removeAll(rotaryMembers);
 			for(IAxleHandler axle : memberCopy){
-				//For 0-mass gears.
-				axle.getMotionData()[0] = 0;
 				axle.disconnect();
 			}
 			memberCopy = null;
@@ -404,11 +403,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 				rotaryMembers.addAll(memberCopy);
 			}
 			for(IAxleHandler gear : rotaryMembers){
-				gear.getMotionData()[0] = 0;
-				gear.getMotionData()[1] = 0;
-				gear.getMotionData()[2] = 0;
-				gear.getMotionData()[3] = 0;
-				gear.markChanged();
+				gear.setEnergy(0);
 			}
 			for(int i = 0; i < 4; i++){
 				prevAngles[i] = 0;
@@ -445,6 +440,21 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 		@Override
 		public double getTotalEnergy(){
 			return sumEnergy;
+		}
+
+		@Override
+		public double getEnergyChange(){
+			return energyChange;
+		}
+
+		@Override
+		public double getEnergyLost(){
+			return -energyLossChange;
+		}
+
+		@Override
+		public double getBaseSpeed(){
+			return baseSpeed;
 		}
 
 		@Override

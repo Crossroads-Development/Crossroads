@@ -1,7 +1,7 @@
 Dynamo
 crossroads:dynamo
 The <item>Dynamo/$ produce <thing>Forge Energy (FE)/$ using <thing><link:crossroads:intro/rotary>rotary power/$.
-Higher <thing><link:crossroads:intro/rotary>speeds/$ will produce more power. FE is output on the side opposite the axle.
+Higher <thing><link:crossroads:intro/rotary>speeds/$ will produce more power, using more rotary power in the process (the conversion efficiency is constant). FE is output on the side opposite the axle.
 Crossroads itself has very few uses for FE. Crossroads adds a way of transmitting FE using <item><link:crossroads:fluid/tesla>tesla coils/$.
 
 <bobo>top O' da mourning 2 ya! <link:crossroads:intro/welcome#bobo>iTT"S ME, bOBO!/$<bobo>

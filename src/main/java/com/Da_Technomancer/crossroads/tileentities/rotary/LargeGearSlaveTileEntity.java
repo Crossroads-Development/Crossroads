@@ -58,7 +58,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IInfoTE{
 			return;
 		}
 
-		RotaryUtil.addRotaryInfo(chat, axle.getMotionData(), axle.getMoInertia(), axle.getRotationRatio(), false);
+		RotaryUtil.addRotaryInfo(chat, axle, false);
 	}
 
 	public void setInitial(BlockPos masPos){

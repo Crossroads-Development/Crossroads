@@ -40,7 +40,7 @@ import java.util.function.Predicate;
 public abstract class ModuleTE extends TileEntity implements ITickableTileEntity, IInfoTE, ILongReceiver{
 
 	//Rotary
-	protected final double[] motData = new double[4];
+	protected double energy = 0;
 	// 0: angle, 1: clientW
 	// Initialized by the constructor of AngleAxleHandler, making its use conditional upon the use of AngleAxleHandler
 	protected float[] angleW = null;
@@ -132,7 +132,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 			HeatUtil.addHeatInfo(chat, temp, HeatUtil.convertBiomeTemp(world, pos));
 		}
 		if(useRotary()){
-			RotaryUtil.addRotaryInfo(chat, motData, axleHandler.getMoInertia(), axleHandler.getRotationRatio(), true);
+			RotaryUtil.addRotaryInfo(chat, axleHandler, true);
 		}
 	}
 
@@ -147,9 +147,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
-		for(int i = 0; i < 4; i++){
-			nbt.putDouble("mot_" + i, motData[i]);
-		}
+		nbt.putDouble("mot_1", energy);
 		if(angleW != null){
 			nbt.putFloat("ang_w_0", angleW[0]);
 			nbt.putFloat("ang_w_1", angleW[1]);
@@ -171,9 +169,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	@Override
 	public void read(BlockState state, CompoundNBT nbt){
 		super.read(state, nbt);
-		for(int i = 0; i < 4; i++){
-			motData[i] = nbt.getDouble("mot_" + i);
-		}
+		energy = nbt.getDouble("mot_1");
 		if(angleW != null){
 			angleW[0] = nbt.getFloat("ang_w_0");
 			angleW[1] = nbt.getFloat("ang_w_1");
@@ -504,8 +500,19 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 		public IAxisHandler axis;
 
 		@Override
-		public double[] getMotionData(){
-			return motData;
+		public double getSpeed(){
+			return axis == null ? 0 : rotRatio * axis.getBaseSpeed();
+		}
+
+		@Override
+		public double getEnergy(){
+			return energy;
+		}
+
+		@Override
+		public void setEnergy(double newEnergy){
+			energy = newEnergy;
+			markDirty();
 		}
 
 		@Override
@@ -529,11 +536,6 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 		@Override
 		public double getRotationRatio(){
 			return rotRatio;
-		}
-
-		@Override
-		public void markChanged(){
-			markDirty();
 		}
 
 		@Override

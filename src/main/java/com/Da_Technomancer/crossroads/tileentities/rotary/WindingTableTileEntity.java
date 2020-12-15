@@ -118,10 +118,10 @@ public class WindingTableTileEntity extends InventoryTE{
 
 		IWindableItem item = (IWindableItem) inventory[0].getItem();
 		double itemSpeed = item.getWindLevel(inventory[0]);
-		if(itemSpeed > motData[0]){
+		if(itemSpeed > axleHandler.getSpeed()){
 			//Machine speed too slow
 			//Release all stored energy
-			motData[1] += INERTIA * itemSpeed * itemSpeed / 2D;
+			axleHandler.addEnergy(INERTIA * itemSpeed * itemSpeed / 2D, true);
 			world.playSound(null, pos, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 1F, 1F);
 			if(CRConfig.windingDestroy.get()){
 				//Break the item
@@ -133,7 +133,7 @@ public class WindingTableTileEntity extends InventoryTE{
 				item.setWindLevel(inventory[0], itemSpeed);
 			}
 		}else{
-			motData[1] = Math.max(motData[1] - CRConfig.windingResist.get() * itemSpeed, 0);//Apply resistance power
+			axleHandler.addEnergy(-CRConfig.windingResist.get() * itemSpeed, false);//Apply resistance power
 		}
 	}
 

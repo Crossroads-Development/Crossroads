@@ -49,46 +49,44 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 
 	@Override
 	protected void runCalc(){
-		double sumIRot = 0;
-		sumEnergy = 0;
-		// IRL you wouldn't say a gear spinning a different direction has
-		// negative energy, but it makes the code easier.
-
-		for(IAxleHandler gear : rotaryMembers){
-			sumIRot += gear.getMoInertia() * Math.pow(gear.getRotationRatio(), 2);
-		}
-
-		if(sumIRot == 0 || sumIRot != sumIRot){
-			return;
-		}
-
-		sumEnergy = RotaryUtil.getTotalEnergy(rotaryMembers, currentElement != EnumBeamAlignments.STABILITY);
+		double[] energyCalcResults = RotaryUtil.getTotalEnergy(rotaryMembers, currentElement != EnumBeamAlignments.STABILITY);
+		sumEnergy = energyCalcResults[0];
+		energyLossChange = energyCalcResults[1];
+		baseSpeed = energyCalcResults[2];
 		if(currentElement == EnumBeamAlignments.ENERGY){
 			sumEnergy += CRConfig.crystalAxisMult.get() * (Math.signum(sumEnergy) == 0 ? 1 : Math.signum(sumEnergy));
+			double sumIRot = 0;
+			for(IAxleHandler gear : rotaryMembers){
+				sumIRot += gear.getMoInertia() * Math.pow(gear.getRotationRatio(), 2);
+			}
+			baseSpeed = Math.signum(sumEnergy) * Math.sqrt(Math.abs(sumEnergy) * 2D / sumIRot);
 		}else if(currentElement == EnumBeamAlignments.CHARGE){
 			sumEnergy += CRConfig.crystalAxisMult.get();
+			double sumIRot = 0;
+			for(IAxleHandler gear : rotaryMembers){
+				sumIRot += gear.getMoInertia() * Math.pow(gear.getRotationRatio(), 2);
+			}
+			baseSpeed = Math.signum(sumEnergy) * Math.sqrt(Math.abs(sumEnergy) * 2D / sumIRot);
 		}else if(currentElement == EnumBeamAlignments.EQUILIBRIUM){
 			sumEnergy = (sumEnergy + 9D * lastSumEnergy) / 10D;
+			double sumIRot = 0;
+			for(IAxleHandler gear : rotaryMembers){
+				sumIRot += gear.getMoInertia() * Math.pow(gear.getRotationRatio(), 2);
+			}
+			baseSpeed = Math.signum(sumEnergy) * Math.sqrt(Math.abs(sumEnergy) * 2D / sumIRot);
 		}
 
 		if(sumEnergy < 1 && sumEnergy > -1){
+			energyLossChange += sumEnergy;
 			sumEnergy = 0;
+			baseSpeed = 0;
 		}
-
+		energyChange = sumEnergy - lastSumEnergy;
 		lastSumEnergy = sumEnergy;
 
 		for(IAxleHandler gear : rotaryMembers){
-			// set w
-			gear.getMotionData()[0] = Math.signum(sumEnergy) * Math.signum(gear.getRotationRatio()) * Math.sqrt(Math.abs(sumEnergy) * 2D * Math.pow(gear.getRotationRatio(), 2) / sumIRot);
-			// set energy
-			double newEnergy = Math.signum(gear.getMotionData()[0]) * Math.pow(gear.getMotionData()[0], 2) * gear.getMoInertia() / 2D;
-			gear.getMotionData()[1] = newEnergy;
-			// set power
-			gear.getMotionData()[2] = (newEnergy - gear.getMotionData()[3]) * 20;
-			// set lastE
-			gear.getMotionData()[3] = newEnergy;
-
-			gear.markChanged();
+			double gearSpeed = baseSpeed * gear.getRotationRatio();
+			gear.setEnergy(Math.signum(gearSpeed) * Math.pow(gearSpeed, 2) * gear.getMoInertia() / 2D);
 		}
 	}
 

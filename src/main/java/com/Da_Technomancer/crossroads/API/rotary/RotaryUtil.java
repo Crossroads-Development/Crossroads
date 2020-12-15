@@ -19,6 +19,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class RotaryUtil{
@@ -32,21 +33,22 @@ public class RotaryUtil{
 	/**
 	 * Adds information about an axle handler to chat/tooltip
 	 * @param chat The text list. One entry per line, will be modified
-	 * @param motData The motion data of the axle (speed, energy, power- any further args ignored)
-	 * @param inertia The moment of inertia
-	 * @param rotRatio The rotation ratio
+	 * @param axle The axle being added to the info chat. This method does nothing if null
 	 * @param compact Whether to compact the output into one line of chat
 	 */
-	public static void addRotaryInfo(List<ITextComponent> chat, double[] motData, double inertia, double rotRatio, boolean compact){
+	public static void addRotaryInfo(List<ITextComponent> chat, @Nullable IAxleHandler axle, boolean compact){
+		if(axle == null){
+			return;
+		}
 		if(compact){
 			//Print speed, energy, power, inertia, and rot ratio
-			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.compact", CRConfig.formatVal(motData[0]), CRConfig.formatVal(motData[1]), CRConfig.formatVal(motData[2]), CRConfig.formatVal(inertia), CRConfig.formatVal(rotRatio)));
+			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.compact", CRConfig.formatVal(axle.getSpeed()), CRConfig.formatVal(axle.getEnergy()), CRConfig.formatVal(axle.getMoInertia()), CRConfig.formatVal(axle.getRotationRatio())));
 		}else{
 			//Prints full data
-			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.speed", CRConfig.formatVal(motData[0])));
-			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.energy", CRConfig.formatVal(motData[1])));
-			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.power", CRConfig.formatVal(motData[2])));
-			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.setup", CRConfig.formatVal(inertia), CRConfig.formatVal(rotRatio)));
+			double axleSpeed = axle.getSpeed();
+			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.speed", CRConfig.formatVal(axleSpeed), CRConfig.formatVal(axleSpeed * 60D / (Math.PI * 2D))));
+			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.energy", CRConfig.formatVal(axle.getEnergy())));
+			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.setup", CRConfig.formatVal(axle.getMoInertia()), CRConfig.formatVal(axle.getRotationRatio())));
 		}
 	}
 
@@ -63,14 +65,16 @@ public class RotaryUtil{
 	 * Returns the total energy, adjusted for energy loss, of the passed IAxleHandlers
 	 * @param axles A list of IAxleHandlers to have their energies summed and adjusted
 	 * @param allowLoss Whether to perform energy loss
-	 * @return The total energy adjusted for energy loss
+	 * @return A size 2 array, containing the total energy adjusted for energy loss, total energy change due to loss (0 if !allowLoss), resulting base system speed
 	 */
-	public static double getTotalEnergy(List<IAxleHandler> axles, boolean allowLoss){
+	public static double[] getTotalEnergy(List<IAxleHandler> axles, boolean allowLoss){
 		double sumEnergy  = 0;
 		double sumInertia = 0;
 		double sumIW = 0;
+		double sumIRot = 0;//I * R^2
 		int lossMode = allowLoss ? CRConfig.rotaryLossMode.get() : 0;
 		double lossCoeff = CRConfig.rotaryLoss.get();
+		double lost = 0;
 
 		for(IAxleHandler axle : axles){
 			if(axle == null){
@@ -79,35 +83,39 @@ public class RotaryUtil{
 			//Adds energy of the gear
 			if(lossMode == 3){
 				//Lose -(a*w) of gear energy each tick
-				double adjustedGearEnergy = axle.getMotionData()[1];
-				adjustedGearEnergy -= axle.getMotionData()[0] * lossCoeff;
-				if(Math.signum(adjustedGearEnergy) != Math.signum(axle.getMotionData()[1])){
-					adjustedGearEnergy = 0;//Don't allow flipping sign from loss
-				}
-				sumEnergy += adjustedGearEnergy * Math.signum(axle.getRotationRatio());
-			}else{
-				sumEnergy += axle.getMotionData()[1] * Math.signum(axle.getRotationRatio());
+				lost += Math.signum(axle.getEnergy()) * axle.getSpeed() * lossCoeff;
 			}
 			//Tracks inertia of the system
 			double moIntertia = axle.getMoInertia();
+			double rotRatio = axle.getRotationRatio();
 			sumInertia += moIntertia;
-			sumIW += moIntertia * Math.abs(axle.getMotionData()[0]);
+			sumIW += moIntertia * Math.abs(axle.getSpeed());
+			sumIRot += moIntertia * Math.pow(rotRatio, 2);
+			sumEnergy += axle.getEnergy() * Math.signum(rotRatio);
 		}
 
 		if(sumInertia <= 0){
 			//Totally zero mass systems must have 0 energy by definition
-			return 0;
+			return new double[3];
 		}
 
 		if(lossMode == 2){
 			//Lose -(a%) of total energy each tick
-			sumEnergy = sumEnergy * Math.max((100D - lossCoeff) / 100D, 0D);
+			lost = sumEnergy * Math.max(lossCoeff / 100D, 0D);
 		}else if(lossMode == 1){
 			//Lose -(a * w^2) of energy each tick, where w is the I-weighted average speed of the entire system
-			sumEnergy = Math.signum(sumEnergy) * Math.max(0, Math.abs(sumEnergy) - lossCoeff * Math.pow(sumIW / sumInertia, 2));
+			lost = Math.signum(sumEnergy) * lossCoeff * Math.pow(sumIW / sumInertia, 2);
 		}
 
-		return sumEnergy;
+		if(Math.signum(sumEnergy) != Math.signum(sumEnergy - lost)){
+			lost = sumEnergy;//Don't allow flipping sign from loss
+		}
+
+		sumEnergy -= lost;//Apply the loss
+
+		double baseSpeed = Math.signum(sumEnergy) * Math.sqrt(Math.abs(sumEnergy) * 2D / sumIRot);
+
+		return new double[] {sumEnergy, lost, baseSpeed};
 	}
 
 	/**

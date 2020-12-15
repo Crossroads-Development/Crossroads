@@ -99,7 +99,7 @@ public class RotaryDrillTileEntity extends ModuleTE{
 		}
 
 		double powerDrain = golden ? ENERGY_USE_GOLD : ENERGY_USE_IRON;
-		if(Math.abs(motData[1]) >= powerDrain && Math.abs(motData[0]) >= 0.05D){
+		if(Math.abs(energy) >= powerDrain && Math.abs(axleHandler.getSpeed()) >= 0.05D){
 			axleHandler.addEnergy(-powerDrain, false);
 			if(++ticksExisted % 2 == 0){//Activate once every redstone tick
 				Direction facing = getFacing();
@@ -107,7 +107,7 @@ public class RotaryDrillTileEntity extends ModuleTE{
 				BlockState targetState = world.getBlockState(targetPos);
 				if(!targetState.isAir(world, targetPos)){
 					float hardness = targetState.getBlockHardness(world, targetPos);
-					if(hardness >= 0 && Math.abs(motData[0]) >= hardness * SPEED_PER_HARDNESS){
+					if(hardness >= 0 && Math.abs(axleHandler.getSpeed()) >= hardness * SPEED_PER_HARDNESS){
 						FakePlayer fakePlayer = PlaceEffect.getBlockFakePlayer((ServerWorld) world);
 						ItemStack tool;
 						ToolType toolType = targetState.getHarvestTool();
@@ -137,7 +137,7 @@ public class RotaryDrillTileEntity extends ModuleTE{
 
 				List<LivingEntity> ents = world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos.offset(facing)), EntityPredicates.IS_ALIVE);
 				for(LivingEntity ent : ents){
-					ent.attackEntityFrom(golden ? new EntityDamageSource("drill", FakePlayerFactory.get((ServerWorld) world, new GameProfile(null, "drill_player_" + MiscUtil.getDimensionName(world)))) : DRILL, (float) Math.abs(motData[0]) * DAMAGE_PER_SPEED);
+					ent.attackEntityFrom(golden ? new EntityDamageSource("drill", FakePlayerFactory.get((ServerWorld) world, new GameProfile(null, "drill_player_" + MiscUtil.getDimensionName(world)))) : DRILL, (float) Math.abs(axleHandler.getSpeed()) * DAMAGE_PER_SPEED);
 				}
 			}
 		}

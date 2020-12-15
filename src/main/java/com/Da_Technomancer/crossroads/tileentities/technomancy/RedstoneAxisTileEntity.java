@@ -47,22 +47,21 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 	@Override
 	protected void runCalc(){
 		Direction facing = getFacing();
-
-		double baseSpeed = CircuitUtil.combineRedsSources(redsHandler);
+		double targetBaseSpeed = CircuitUtil.combineRedsSources(redsHandler);
 		double sumIRot = 0;//Sum of every gear's moment of inertia time rotation ratio squared
-		sumEnergy = RotaryUtil.getTotalEnergy(rotaryMembers, true);
+		double[] energyCalcResults = RotaryUtil.getTotalEnergy(rotaryMembers, true);
 
 		for(IAxleHandler gear : rotaryMembers){
 			sumIRot += gear.getMoInertia() * Math.pow(gear.getRotationRatio(), 2);
 		}
 
-		double cost = sumIRot * Math.pow(baseSpeed, 2) / 2D;//Total energy required to hold the output at the requested base speed
+		double cost = sumIRot * Math.pow(targetBaseSpeed, 2) / 2D;//Total energy required to hold the output at the requested base speed
 		TileEntity backTE = world.getTileEntity(pos.offset(facing.getOpposite()));
 		LazyOptional<IAxleHandler> backOpt = backTE == null ? LazyOptional.empty() : backTE.getCapability(Capabilities.AXLE_CAPABILITY, facing);
 		IAxleHandler sourceAxle = backOpt.isPresent() ? backOpt.orElseThrow(NullPointerException::new) : null;
-		double availableEnergy = Math.abs(sumEnergy);
+		double availableEnergy = Math.abs(energyCalcResults[0]);
 		if(sourceAxle != null){
-			availableEnergy += Math.abs(sourceAxle.getMotionData()[1]);
+			availableEnergy += Math.abs(sourceAxle.getEnergy());
 		}
 		if(Double.isNaN(availableEnergy)){
 			availableEnergy = 0;//There's a NaN bug somewhere, and I can't find it. This should work
@@ -77,36 +76,25 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 		if(Double.isNaN(cost)){
 			cost = 0;//There's a NaN bug somewhere, and I can't find it. This should work
 		}
+
+		energyChange = cost - sumEnergy;
+		energyLossChange = energyCalcResults[1];
 		sumEnergy = cost;
 		availableEnergy -= cost;
+		//Note the sumIRot check; the normal formula doesn't work for 0 mass system, and we can assume we're on the target speed in that condition
+		//Re-calculated from the actual energy instead of using either the RotaryUtil calculated value or the targetBaseSpeed, neither of which recognize both energy changes and speed control
+		baseSpeed = sumIRot == 0 ? targetBaseSpeed : Math.signum(sumEnergy) * Math.sqrt(Math.abs(sumEnergy) * 2D / sumIRot);
 
 		for(IAxleHandler gear : rotaryMembers){
-			// set w
-			double newSpeed;
-			if(sumIRot <= 0 || Double.isNaN(sumIRot)){
-				newSpeed = baseSpeed * gear.getRotationRatio();
-			}else{
-				newSpeed = Math.signum(sumEnergy * gear.getRotationRatio()) * Math.sqrt(Math.abs(sumEnergy) * 2D * Math.pow(gear.getRotationRatio(), 2) / sumIRot);
-			}
-			gear.getMotionData()[0] = newSpeed;
-			// set energy
-			double newEnergy = Math.signum(newSpeed) * Math.pow(newSpeed, 2) * gear.getMoInertia() / 2D;
-			gear.getMotionData()[1] = newEnergy;
-			// set power
-			gear.getMotionData()[2] = (newEnergy - gear.getMotionData()[3]) * 20D;
-			// set lastE
-			gear.getMotionData()[3] = newEnergy;
-
-
-			gear.markChanged();
+			double gearSpeed = baseSpeed * gear.getRotationRatio();
+			gear.setEnergy(Math.signum(gearSpeed) * Math.pow(gearSpeed, 2) * gear.getMoInertia() / 2D);
 		}
 
 		if(sourceAxle != null){
-			sourceAxle.getMotionData()[1] = sourceAxle.getMotionData()[1] < 0 ? -availableEnergy : availableEnergy;
-			sourceAxle.markChanged();
+			sourceAxle.setEnergy(sourceAxle.getEnergy() < 0 ? -availableEnergy : availableEnergy);
 		}
 
-		updateWorldState(baseSpeed);
+		updateWorldState(targetBaseSpeed);
 
 		runAngleCalc();
 	}

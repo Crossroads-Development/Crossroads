@@ -33,6 +33,21 @@ public class DefaultAxisHandler implements IAxisHandler{
 	}
 
 	@Override
+	public double getEnergyChange(){
+		return 0;
+	}
+
+	@Override
+	public double getEnergyLost(){
+		return 0;
+	}
+
+	@Override
+	public double getBaseSpeed(){
+		return 0;
+	}
+
+	@Override
 	public float getAngle(double rotRatio, float partialTicks, boolean shouldOffset, float angleOffset){
 		return 0;
 	}

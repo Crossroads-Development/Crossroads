@@ -67,7 +67,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	private int fluxToTrans = 0;
 	private final HashSet<BlockPos> links = new HashSet<>(1);
 	private GatewayAddress address = null;//The address of THIS gateway
-	private final double[] rotary = new double[4];//Rotary spin data (0: speed, 1: energy, 2: power, 3: last energy)
+	private double rotaryEnergy = 0;//Rotary energy
 	private float angle = 0;//Used for rendering and dialing chevrons. Because it's used for logic, we don't use the master axis angle syncing, which is render-based
 	private float clientAngle = 0;//Angle on the client. On the server, acts as a record of value sent to client
 	private float clientW = 0;//Speed on the client (post adjustment). On the server, acts as a record of value sent to client
@@ -76,6 +76,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	public EnumBeamAlignments[] chevrons = new EnumBeamAlignments[4];//Current values locked into chevrons. Null for unset chevrons
 	private boolean origin = false;//Whether this gateway started the connection in dialed (determines which side has flux)
 
+	private IAxleHandler axleHandler = null;
 	private LazyOptional<IAxleHandler> axleOpt = null;
 	private LazyOptional<IBeamHandler> beamOpt = null;
 
@@ -204,7 +205,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			}
 			chat.add(new TranslationTextComponent("tt.crossroads.gateway.chevron.dialed", names[0], names[1], names[2], names[3]));
 			genOptionals();
-			RotaryUtil.addRotaryInfo(chat, rotary, INERTIA, axleOpt.orElseGet(AxleHandler::new).getRotationRatio(), true);
+			RotaryUtil.addRotaryInfo(chat, axleHandler, true);
 			FluxUtil.addFluxInfo(chat, this, chevrons[3] != null && origin ? FLUX_PER_CYCLE : 0);
 			FluxUtil.addLinkInfo(chat, this);
 		}
@@ -482,8 +483,9 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			clientAngle += calcAngleChange(clientW, clientAngle);
 
 			if(!world.isRemote){
+				genOptionals();
 				//Perform angle movement on the server
-				float angleTarget = (float) rotary[0] - referenceSpeed;
+				float angleTarget = (float) axleHandler.getSpeed() - referenceSpeed;
 				angle += calcAngleChange(angleTarget, angle);
 
 				//Check for resyncing angle data to client
@@ -588,11 +590,11 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			links.clear();
 		}
 		address = nbt.contains("address") ? GatewayAddress.deserialize(nbt.getInt("address")) : null;
+		clientW = nbt.getFloat("client_speed");
+		rotaryEnergy = nbt.getDouble("rot_1");
 		for(int i = 0; i < 4; i++){
-			rotary[i] = nbt.getDouble("rot_" + i);
 			chevrons[i] = nbt.contains("chev_" + i) ? EnumBeamAlignments.values()[nbt.getInt("chev_" + i)] : null;
 		}
-		clientW = (float) rotary[0];
 		angle = nbt.getFloat("angle");
 		clientAngle = angle;
 		referenceSpeed = nbt.getFloat("reference");
@@ -616,11 +618,12 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			nbt.putInt("address", address.serialize());
 		}
 		for(int i = 0; i < 4; i++){
-			nbt.putDouble("rot_" + i, rotary[i]);
 			if(chevrons[i] != null){
 				nbt.putInt("chev_" + i, chevrons[i].ordinal());
 			}
 		}
+		nbt.putFloat("client_speed", axleHandler == null ? clientW : (float) axleHandler.getSpeed());
+		nbt.putDouble("rot_1", rotaryEnergy);
 		nbt.putFloat("angle", angle);
 		nbt.putFloat("reference", referenceSpeed);
 		nbt.putBoolean("origin", origin);
@@ -641,11 +644,12 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			nbt.putLong("link", links.iterator().next().toLong());
 		}
 		for(int i = 0; i < 4; i++){
-			nbt.putDouble("rot_" + i, rotary[i]);//Strictly speaking, we only need rotary[0] on the client
 			if(chevrons[i] != null){
 				nbt.putInt("chev_" + i, chevrons[i].ordinal());
 			}
 		}
+		nbt.putFloat("client_speed", clientW);
+		nbt.putDouble("rot_1", rotaryEnergy);
 		nbt.putFloat("angle", angle);
 
 		nbt.putInt("size", size);
@@ -656,8 +660,9 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	private void resyncToClient(){
+		genOptionals();
 		clientAngle = angle;
-		clientW = (float) rotary[0] - referenceSpeed;
+		clientW = (float) axleHandler.getSpeed() - referenceSpeed;
 		long packet = (Integer.toUnsignedLong(Float.floatToRawIntBits(clientAngle)) << 32L) | Integer.toUnsignedLong(Float.floatToRawIntBits(clientW));
 		CRPackets.sendPacketAround(world, pos, new SendLongToClient(4, packet, pos));
 	}
@@ -685,7 +690,8 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	private void genOptionals(){
 		if(axleOpt == null){
 			if(isActive()){
-				axleOpt = LazyOptional.of(AxleHandler::new);
+				axleHandler = new AxleHandler();
+				axleOpt = LazyOptional.of(() -> axleHandler);
 				beamOpt = LazyOptional.of(BeamHandler::new);
 			}else{
 				axleOpt = LazyOptional.empty();
@@ -782,11 +788,6 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 		}
 
 		@Override
-		public void markChanged(){
-			markDirty();
-		}
-
-		@Override
 		public float getAngle(float partialTicks){
 			return clientAngle + partialTicks * clientW / 20F;
 		}
@@ -797,8 +798,19 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 		}
 
 		@Override
-		public double[] getMotionData(){
-			return rotary;
+		public double getSpeed(){
+			return axis == null ? 0 : rotRatio * axis.getBaseSpeed();
+		}
+
+		@Override
+		public double getEnergy(){
+			return rotaryEnergy;
+		}
+
+		@Override
+		public void setEnergy(double newEnergy){
+			rotaryEnergy = newEnergy;
+			markDirty();
 		}
 
 		@Override
@@ -838,7 +850,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 			}
 
 			chevrons[index] = alignment;//Dial in a new chevron
-			referenceSpeed = (float) rotary[0];//Re-define our reference to the current input speed
+			referenceSpeed = (float) axleHandler.getSpeed();//Re-define our reference to the current input speed
 			if(index == 3){
 				//If this is the final chevron, make the connection and reset the target
 				dial(new GatewayAddress(chevrons), true);

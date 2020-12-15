@@ -50,7 +50,7 @@ public class LodestoneDynamoTileEntity extends ModuleTE{
 		int feCost = power * CRConfig.electPerJoule.get();
 		if(!world.isRemote && axleHandler.axis != null && power > 0 && fe >= feCost){
 			fe -= feCost;
-			motData[1] += power * RotaryUtil.getCCWSign(getBlockState().get(CRProperties.HORIZ_FACING));
+			axleHandler.addEnergy(power * RotaryUtil.getCCWSign(getBlockState().get(CRProperties.HORIZ_FACING)), true);
 			markDirty();
 		}
 	}

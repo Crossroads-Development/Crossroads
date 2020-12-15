@@ -49,7 +49,7 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 	 * @return 100 * the speed that should be displayed in UIs
 	 */
 	public int getUISpeed(){
-		return (int) Math.round(motData[0] * 100D);
+		return (int) Math.round(axleHandler.getSpeed() * 100D);
 	}
 
 	/**

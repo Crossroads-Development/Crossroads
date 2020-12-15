@@ -24,6 +24,7 @@ public class DynamoTileEntity extends ModuleTE{
 
 	private static final int CHARGE_CAPACITY = 8_000;
 	public static final int INERTIA = 200;
+	public static final double POWER_MULT = 20;
 
 	private int fe = 0;
 
@@ -45,14 +46,15 @@ public class DynamoTileEntity extends ModuleTE{
 	public void tick(){
 		super.tick();
 
-		int operations = (int) Math.abs(motData[1]);
+		int operations = (int) Math.min(Math.abs(energy), POWER_MULT * axleHandler.getSpeed());
 		if(operations > 0){
-			motData[1] -= operations * Math.signum(motData[1]);
+			axleHandler.addEnergy(-operations, false);
 			fe += operations * CRConfig.electPerJoule.get();
 			fe = Math.min(fe, CHARGE_CAPACITY);
 			markDirty();
 		}
 
+		//Transfer FE
 		Direction facing = getBlockState().get(CRProperties.HORIZ_FACING);
 		TileEntity neighbor = world.getTileEntity(pos.offset(facing.getOpposite()));
 		LazyOptional<IEnergyStorage> energyOpt;

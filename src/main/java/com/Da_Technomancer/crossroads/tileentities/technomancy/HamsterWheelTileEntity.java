@@ -38,7 +38,7 @@ public class HamsterWheelTileEntity extends TileEntity implements ITickableTileE
 				nextAngle = axle.getAngle(1F);
 				return;
 			}
-			axle.addEnergy(CRConfig.lodestoneTurbinePower.get() * RotaryUtil.getCCWSign(facing), true);
+			axle.addEnergy(CRConfig.hamsterPower.get() * RotaryUtil.getCCWSign(facing), true);
 		}else if(world.isRemote){
 			nextAngle = angle;
 		}

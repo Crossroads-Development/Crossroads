@@ -90,7 +90,7 @@ public class RotaryPumpTileEntity extends InventoryTE{
 		FluidState fstate = world.getFluidState(pos.down());
 		if(fstate.isSource()){
 			//Only gain progress if spinning in positive direction
-			double powerDrained = motData[1] < 0 ? 0 : MAX_POWER * RotaryUtil.findEfficiency(motData[0], 0, MAX_SPEED);
+			double powerDrained = energy < 0 ? 0 : MAX_POWER * RotaryUtil.findEfficiency(axleHandler.getSpeed(), 0, MAX_SPEED);
 			progress += powerDrained;
 			axleHandler.addEnergy(-powerDrained, false);
 			updateProgressToClients(powerDrained);

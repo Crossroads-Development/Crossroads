@@ -94,8 +94,8 @@ public class StampMillTileEntity extends InventoryTE{
 				return;
 			}
 
-			double progChange = Math.min(Math.abs(motData[1]), Math.min(REQUIRED - progress, PROGRESS_PER_RADIAN * Math.abs(motData[0]) / 20D));
-			motData[1] -= Math.signum(motData[1]) * progChange;
+			double progChange = Math.min(Math.abs(energy), Math.min(REQUIRED - progress, PROGRESS_PER_RADIAN * Math.abs(axleHandler.getSpeed()) / 20D));
+			axleHandler.addEnergy(-progChange, false);
 			if(inventory[1].isEmpty() && !inventory[0].isEmpty()){
 				progress += progChange;
 				if(++timer >= TIME_LIMIT || progress >= REQUIRED){

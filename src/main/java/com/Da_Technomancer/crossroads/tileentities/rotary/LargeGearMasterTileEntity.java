@@ -44,14 +44,14 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 
 	private GearFactory.GearMaterial type;
 	private boolean newTE = false;//Used when placing the gear, to signify that the type data needs to be sent to clients. Sending immediately after placement can cause a packet race condition if the packet arrives before the TE exists
-	private double[] motionData = new double[4];
+	private double energy = 0;
 	private double inertia = 0;
 	private boolean borken = false;//Any PR which changes the spelling on this line will be rejected
 	private boolean renderOffset = false;
 	/**
 	 * 0: angle, 1: clientW
 	 */
-	private float[] angleW = new float[2];
+	private final float[] angleW = new float[2];
 	private Direction facing = null;
 
 	public LargeGearMasterTileEntity(){
@@ -60,7 +60,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	
 	public Direction getFacing(){
 		if(facing == null){
-			BlockState state = world.getBlockState(pos);
+			BlockState state = getBlockState();
 			if(state.getBlock() != CRBlocks.largeGearMaster){
 				return Direction.NORTH;
 			}
@@ -75,7 +75,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		RotaryUtil.addRotaryInfo(chat, motionData, inertia, mainOpt.orElseGet(AxleHandler::new).getRotationRatio(), false);
+		RotaryUtil.addRotaryInfo(chat, axleHandler, false);
 	}
 
 	public void initSetup(GearFactory.GearMaterial typ){
@@ -130,10 +130,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	public void read(BlockState state, CompoundNBT nbt){
 		super.read(state, nbt);
 
-		// motionData
-		for(int j = 0; j < 4; j++){
-			motionData[j] = nbt.getDouble("[" + j + "]mot");
-		}
+		energy = nbt.getDouble("[1]mot");
 		// member
 		type = GearFactory.findMaterial(nbt.getString("type"));
 		inertia = type == null ? 0 : MiscUtil.preciseRound(type.getDensity() * 1.125D * 9D / 8D, 3);
@@ -148,10 +145,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 		super.write(nbt);
 
 		// motionData
-		for(int j = 0; j < 3; j++){
-			if(motionData[j] != 0)
-				nbt.putDouble("[" + j + "]mot", motionData[j]);
-		}
+		nbt.putDouble("[1]mot", energy);
 
 		// member
 		if(type != null){
@@ -195,7 +189,8 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 		mainOpt.invalidate();
 	}
 
-	private final LazyOptional<IAxleHandler> mainOpt = LazyOptional.of(AxleHandler::new);
+	private final IAxleHandler axleHandler = new AxleHandler();
+	private final LazyOptional<IAxleHandler> mainOpt = LazyOptional.of(() -> axleHandler);
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -213,8 +208,19 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 		private IAxisHandler axis;
 
 		@Override
-		public double[] getMotionData(){
-			return motionData;
+		public double getEnergy(){
+			return energy;
+		}
+
+		@Override
+		public void setEnergy(double newEnergy){
+			energy = newEnergy;
+			markDirty();
+		}
+
+		@Override
+		public double getSpeed(){
+			return axis == null ? 0 : axis.getBaseSpeed() * rotRatio;
 		}
 
 		@Override
@@ -314,11 +320,6 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 		@Override
 		public double getRotationRatio(){
 			return rotRatio;
-		}
-
-		@Override
-		public void markChanged(){
-			markDirty();
 		}
 	}
 }

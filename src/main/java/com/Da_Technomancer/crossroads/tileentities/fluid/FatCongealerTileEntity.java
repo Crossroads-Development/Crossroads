@@ -88,11 +88,11 @@ public class FatCongealerTileEntity extends InventoryTE{
 
 			if((adjTE = world.getTileEntity(pos.offset(Direction.UP))) != null && (otherOpt = adjTE.getCapability(Capabilities.AXLE_CAPABILITY, Direction.DOWN)).isPresent()){
 				topHandler = otherOpt.orElseThrow(NullPointerException::new);
-				hun = (int) Math.min(Math.abs(topHandler.getMotionData()[0]) * HUN_PER_SPD, 20);
+				hun = (int) Math.min(Math.abs(topHandler.getSpeed()) * HUN_PER_SPD, 20);
 			}
 			if((adjTE = world.getTileEntity(pos.offset(Direction.DOWN))) != null && (otherOpt = adjTE.getCapability(Capabilities.AXLE_CAPABILITY, Direction.UP)).isPresent()){
 				bottomHandler = otherOpt.orElseThrow(NullPointerException::new);
-				sat = (int) Math.min(Math.abs(bottomHandler.getMotionData()[0]) * SAT_PER_SPD, 20);
+				sat = (int) Math.min(Math.abs(bottomHandler.getSpeed()) * SAT_PER_SPD, 20);
 			}
 
 			if(hun != 0 || sat != 0){

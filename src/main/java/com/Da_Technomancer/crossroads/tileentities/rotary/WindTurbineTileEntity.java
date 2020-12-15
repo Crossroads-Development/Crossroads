@@ -181,7 +181,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 			}
 
 			//Damage entities in the blades while spinning at high speed
-			if(Math.abs(motData[0]) >= 1.5D){
+			if(Math.abs(axleHandler.getSpeed()) >= 1.5D){
 				List<LivingEntity> ents = world.getEntitiesWithinAABB(LivingEntity.class, getTargetBB(), EntityPredicates.IS_LIVING_ALIVE);
 				for(LivingEntity ent : ents){
 					if(ent instanceof PlayerEntity && murderEasterEgg.equals(((PlayerEntity) ent).getGameProfile().getName())){
@@ -194,8 +194,8 @@ public class WindTurbineTileEntity extends ModuleTE{
 
 			if(running && axleHandler.axis != null){
 				double power = getPowerOutput();
-				if(motData[0] * Math.signum(power) < MAX_SPEED){//Stop producing power above MAX_SPEED
-					motData[1] += power;
+				if(axleHandler.getSpeed() * Math.signum(power) < MAX_SPEED){//Stop producing power above MAX_SPEED
+					axleHandler.addEnergy(power, true);
 				}
 
 				markDirty();

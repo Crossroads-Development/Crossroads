@@ -51,7 +51,7 @@ public class MechanismClutch extends MechanismAxle{
 	}
 
 	@Override
-	public void onRedstoneChange(double prevValue, double newValue, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, double[] motData, MechanismTileEntity te){
+	public void onRedstoneChange(double prevValue, double newValue, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, double energy, double speed, MechanismTileEntity te){
 		if((newValue == 0) ^ (prevValue == 0)){
 			te.getWorld().playSound(null, te.getPos(), SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, (newValue != 0) ^ inverted ? 0.6F : 0.5F);
 			RotaryUtil.increaseMasterKey(true);
@@ -59,8 +59,8 @@ public class MechanismClutch extends MechanismAxle{
 	}
 
 	@Override
-	public double getCircuitSignal(IMechanismProperty mat, Direction.Axis axis, double[] motData, MechanismTileEntity te){
-		return motData[0];
+	public double getCircuitSignal(IMechanismProperty mat, Direction.Axis axis, double energy, double speed, MechanismTileEntity te){
+		return speed;
 	}
 
 	@Override

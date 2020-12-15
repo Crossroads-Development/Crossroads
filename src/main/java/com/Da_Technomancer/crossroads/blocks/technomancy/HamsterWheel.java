@@ -90,7 +90,7 @@ public class HamsterWheel extends ContainerBlock{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.hamster_wheel.desc", CRConfig.lodestoneTurbinePower.get()));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.hamster_wheel.desc", CRConfig.hamsterPower.get()));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.hamster_wheel.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

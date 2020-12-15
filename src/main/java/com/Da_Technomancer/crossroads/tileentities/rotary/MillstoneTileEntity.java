@@ -137,7 +137,7 @@ public class MillstoneTileEntity extends InventoryTE{
 			}else{
 				Optional<MillRec> recOpt = world.getRecipeManager().getRecipe(CRRecipes.MILL_TYPE, this, world);
 				if(recOpt.isPresent()){
-					double used = POWER * RotaryUtil.findEfficiency(motData[0], 0.2D, PEAK_SPEED);
+					double used = POWER * RotaryUtil.findEfficiency(axleHandler.getSpeed(), 0.2D, PEAK_SPEED);
 					progress += used;
 					axleHandler.addEnergy(-used, false);
 

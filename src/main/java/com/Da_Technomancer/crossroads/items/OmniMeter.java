@@ -76,7 +76,9 @@ public class OmniMeter extends Item{
 
 			LazyOptional<IAxisHandler> axisOpt;
 			if((axisOpt = te.getCapability(Capabilities.AXIS_CAPABILITY, null)).isPresent()){
-				chat.add(new TranslationTextComponent("tt.crossroads.meter.axis", CRConfig.formatVal(axisOpt.orElseThrow(NullPointerException::new).getTotalEnergy())));
+				IAxisHandler axisHandler = axisOpt.orElseThrow(NullPointerException::new);
+				chat.add(new TranslationTextComponent("tt.crossroads.meter.axis.current", CRConfig.formatVal(axisHandler.getTotalEnergy()), CRConfig.formatVal(axisHandler.getBaseSpeed())));
+				chat.add(new TranslationTextComponent("tt.crossroads.meter.axis.change", CRConfig.formatVal(axisHandler.getEnergyChange()), CRConfig.formatVal(axisHandler.getEnergyLost())));
 			}
 
 			LazyOptional<IEnergyStorage> engOpt;
