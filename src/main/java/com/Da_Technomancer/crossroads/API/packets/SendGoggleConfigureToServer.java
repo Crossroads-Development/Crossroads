@@ -49,7 +49,7 @@ public class SendGoggleConfigureToServer extends ServerPacket{
 		if(player != null){
 			ItemStack stack = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
 			CompoundNBT nbt = stack.getTag();
-			if(stack.getItem() == CRItems.moduleGoggles && nbt != null && nbt.contains(lensName)){
+			if(stack.getItem() == CRItems.armorGoggles && nbt != null && nbt.contains(lensName)){
 				nbt.putBoolean(lensName, newSetting);
 
 				if(EnumGoggleLenses.DIAMOND.toString().equals(lensName)){

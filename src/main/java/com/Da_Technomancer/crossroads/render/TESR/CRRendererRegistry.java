@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.render.TechnomancyElytraRenderer;
 import com.Da_Technomancer.crossroads.tileentities.beams.*;
 import com.Da_Technomancer.crossroads.tileentities.electric.DynamoTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
@@ -12,6 +13,9 @@ import com.Da_Technomancer.crossroads.tileentities.technomancy.*;
 import com.Da_Technomancer.essentials.render.LinkLineRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
+import net.minecraft.client.renderer.entity.*;
+import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 
@@ -56,5 +60,21 @@ public class CRRendererRegistry{
 
 	private static void reg(Block block){
 		Minecraft.getInstance().getItemRenderer().getItemModelMesher().register(block.asItem(), new ModelResourceLocation(block.getRegistryName(), "inventory"));
+	}
+
+	public static void registerEntityLayerRenderers(){
+
+		//Add the technomancy armor elytra render layer to every entity that can render an elytra
+		EntityRendererManager manager = Minecraft.getInstance().getRenderManager();
+		for(EntityRenderer<?> entityRenderer : manager.renderers.values()){
+			if(entityRenderer instanceof BipedRenderer || entityRenderer instanceof ArmorStandRenderer){
+				LivingRenderer<?, ?> livingRenderer = (LivingRenderer<?, ?>) entityRenderer;
+				livingRenderer.addLayer(new TechnomancyElytraRenderer(livingRenderer));
+			}
+		}
+		//Player renderers are stored separately from the main renderer map
+		for(PlayerRenderer playerRenderer : manager.getSkinMap().values()){
+			playerRenderer.addLayer(new TechnomancyElytraRenderer<AbstractClientPlayerEntity, PlayerModel<AbstractClientPlayerEntity>>(playerRenderer));
+		}
 	}
 }

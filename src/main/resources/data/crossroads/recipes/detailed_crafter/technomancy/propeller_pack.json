@@ -1,0 +1,26 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"item": "crossroads:propeller_pack",
+		"count": 1
+	},
+	"pattern": [
+		"BCB",
+		"WEW"
+	],
+	"key": {
+		"B": {
+			"tag": "forge:ingots/bronze"
+		},
+		"W": {
+			"item": "crossroads:whirligig"
+		},
+		"C": {
+			"tag": "crossroads:ingots/copshowium"
+		},
+		"E": {
+			"item": "minecraft:elytra"
+		}
+	}
+}

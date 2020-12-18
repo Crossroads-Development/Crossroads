@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
+import com.Da_Technomancer.crossroads.items.technomancy.TechnomancyArmor;
 import com.Da_Technomancer.crossroads.world.CRWorldGen;
 import com.Da_Technomancer.essentials.ReflectionUtil;
 import net.minecraft.entity.Entity;
@@ -20,6 +21,7 @@ import net.minecraft.entity.passive.horse.SkeletonHorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
@@ -197,26 +199,40 @@ public final class EventHandlerCommon{
 
 	@SubscribeEvent
 	@SuppressWarnings("unused")
-	public void craftGoggles(AnvilUpdateEvent e){
-		if(e.getLeft().getItem() == CRItems.moduleGoggles){
-			if(!e.getLeft().hasTag()){
-				e.getLeft().setTag(new CompoundNBT());
-			}
-			CompoundNBT nbt = e.getLeft().getTag();
-			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
-				if(lens.matchesRecipe(e.getRight()) && !nbt.contains(lens.toString())){
-					ItemStack out = e.getLeft().copy();
-					int cost = 1;
-					for(EnumGoggleLenses otherLens : EnumGoggleLenses.values()){
-						if(nbt.contains(otherLens.toString())){
-							cost *= 2;
-						}
-					}
-					e.setCost(cost);
-					out.getTag().putBoolean(lens.toString(), false);
-					e.setOutput(out);
+	public void technoArmorCrafting(AnvilUpdateEvent e){
+		ItemStack inputLeft = e.getLeft();
+		if(inputLeft.getItem() instanceof TechnomancyArmor){
+			CompoundNBT nbt = e.getLeft().getOrCreateTag();
+
+			//Add netherite armor
+			if(!TechnomancyArmor.isReinforced(inputLeft) && CRConfig.technoArmorReinforce.get()){
+				ItemStack inputRight = e.getRight();
+				//TODO: Add the other techno armor items to the if statement
+				if(inputLeft.getItem() == CRItems.armorGoggles && inputRight.getItem() == Items.NETHERITE_HELMET || inputLeft.getItem() == CRItems.propellerPack && inputRight.getItem() == Items.NETHERITE_CHESTPLATE || inputLeft.getItem() == null && inputRight.getItem() == Items.NETHERITE_LEGGINGS || inputLeft.getItem() == null && inputRight.getItem() == Items.NETHERITE_BOOTS){
+					e.setOutput(TechnomancyArmor.setReinforced(inputLeft.copy(), true));
 					e.setMaterialCost(1);
-					break;
+					e.setCost(CRConfig.technoArmorCost.get() * 10);
+					return;
+				}
+			}
+
+			//Add lenses to goggles
+			if(inputLeft.getItem() == CRItems.armorGoggles){
+				for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
+					if(lens.matchesRecipe(e.getRight()) && !nbt.contains(lens.toString())){
+						ItemStack out = inputLeft.copy();
+						int cost = CRConfig.technoArmorCost.get();
+						for(EnumGoggleLenses otherLens : EnumGoggleLenses.values()){
+							if(nbt.contains(otherLens.toString())){
+								cost *= 2;
+							}
+						}
+						e.setCost(cost);
+						out.getOrCreateTag().putBoolean(lens.toString(), false);
+						e.setOutput(out);
+						e.setMaterialCost(1);
+						return;
+					}
 				}
 			}
 		}

@@ -233,6 +233,9 @@ public class SequenceBoxScreen extends ContainerScreen<SequenceBoxContainer>{
 	}
 
 	private void updateTEWithPacket(){
+		if(container.outputIndex < 0){
+			container.outputIndex = 0;
+		}
 		CompoundNBT nbt = new CompoundNBT();
 		nbt.putInt("output_index", container.outputIndex);
 		for(int i = 0; i < container.inputs.size(); i++){

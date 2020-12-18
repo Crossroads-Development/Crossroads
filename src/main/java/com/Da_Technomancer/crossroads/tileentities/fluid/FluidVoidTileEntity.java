@@ -40,7 +40,7 @@ public class FluidVoidTileEntity extends TileEntity{
 		mainOpt.invalidate();
 	}
 
-	private static final LazyOptional<IFluidHandler> mainOpt = LazyOptional.of(VoidHandler::new);
+	private final LazyOptional<IFluidHandler> mainOpt = LazyOptional.of(VoidHandler::new);
 
 	private static class VoidHandler implements IFluidHandler{
 

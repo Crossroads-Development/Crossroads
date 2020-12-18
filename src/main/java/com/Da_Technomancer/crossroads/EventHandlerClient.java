@@ -2,13 +2,11 @@ package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentManager;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
-import com.Da_Technomancer.crossroads.API.packets.AddVisualToClient;
-import com.Da_Technomancer.crossroads.API.packets.CRPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendGoggleConfigureToServer;
-import com.Da_Technomancer.crossroads.API.packets.SendPlayerTickCountToClient;
+import com.Da_Technomancer.crossroads.API.packets.*;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.integration.curios.CurioHelper;
 import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.crossroads.items.technomancy.ArmorPropellerPack;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamUsingItem;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
@@ -94,7 +92,7 @@ public final class EventHandlerClient{
 		//Handles glow in the dark entities when wearing goggles
 		if(game.world.getGameTime() % 5 == 0){
 			ItemStack helmet = Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD);
-			boolean doGlowing = helmet.getItem() == CRItems.moduleGoggles && helmet.hasTag() && helmet.getTag().getBoolean(EnumGoggleLenses.VOID.toString());
+			boolean doGlowing = helmet.getItem() == CRItems.armorGoggles && helmet.hasTag() && helmet.getTag().getBoolean(EnumGoggleLenses.VOID.toString());
 			for(Entity ent : game.world.getAllEntities()){
 				CompoundNBT entNBT = ent.getPersistentData();
 				if(entNBT == null){
@@ -256,11 +254,11 @@ public final class EventHandlerClient{
 
 	@SubscribeEvent
 	@SuppressWarnings("unused")
-	public void elementKeys(InputEvent.KeyInputEvent e){
-		PlayerEntity play = Minecraft.getInstance().player;
+	public void keyListener(InputEvent.KeyInputEvent e){
 		if(Minecraft.getInstance().currentScreen != null){
 			return;//Only accept key hits if the player isn't in a UI
 		}
+		PlayerEntity play = Minecraft.getInstance().player;
 
 		ItemStack helmet = play.getItemStackFromSlot(EquipmentSlotType.HEAD);
 		if(!play.getHeldItemMainhand().isEmpty()){
@@ -268,15 +266,25 @@ public final class EventHandlerClient{
 			ItemStack stack = play.getHeldItemMainhand();
 			if(key != -1 && stack.getItem() instanceof BeamUsingItem){
 				((BeamUsingItem) stack.getItem()).adjustSetting(Minecraft.getInstance().player, stack, key, !play.isSneaking());
+				return;
 			}
-		}else if(helmet.getItem() == CRItems.moduleGoggles && helmet.hasTag()){
+		}else if(helmet.getItem() == CRItems.armorGoggles && helmet.hasTag()){
 			CompoundNBT nbt = helmet.getTag();
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				KeyBinding key = lens.getKey();
 				if(key != null && key.isPressed() && key.isKeyDown() && nbt.contains(lens.toString())){
 					CRPackets.channel.sendToServer(new SendGoggleConfigureToServer(lens, !nbt.getBoolean(lens.toString())));
-					break;
+					return;
 				}
+			}
+		}
+
+		//Trigger propeller pack boost when jumping
+		if(Minecraft.getInstance().gameSettings.keyBindJump.isPressed()){
+			ItemStack chestplate = play.getItemStackFromSlot(EquipmentSlotType.CHEST);
+			if(play.isElytraFlying() && chestplate.getItem() == CRItems.propellerPack && CRItems.propellerPack.getWindLevel(chestplate) > 0){
+				CRPackets.sendPacketToServer(new SendElytraBoostToServer());
+				ArmorPropellerPack.applyMidairBoost(play);
 			}
 		}
 	}

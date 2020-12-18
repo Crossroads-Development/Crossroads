@@ -45,6 +45,7 @@ public class CRPackets{
 //		registerPacket(SendLongToClient.class); moved to Essentials
 		registerPacket(SendTaylorToClient.class);
 		registerPacket(SendMasterKeyToClient.class);
+		registerPacket(SendElytraBoostToServer.class);
 	}
 
 	private static <T extends Packet> void registerPacket(Class<T> clazz){

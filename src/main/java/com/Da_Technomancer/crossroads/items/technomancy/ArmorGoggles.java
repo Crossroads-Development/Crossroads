@@ -11,28 +11,25 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.IArmorMaterial;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ModuleGoggles extends ArmorItem{
+public class ArmorGoggles extends TechnomancyArmor{
 
-	private static final IArmorMaterial TECHNOMANCY_MAT = new TechnoMat();
-
-	public ModuleGoggles(){
-		super(TECHNOMANCY_MAT, EquipmentSlotType.HEAD, new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
+	public ArmorGoggles(){
+		super(EquipmentSlotType.HEAD);
 		String name = "module_goggles";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
@@ -63,9 +60,12 @@ public class ModuleGoggles extends ArmorItem{
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+		super.addInformation(stack, worldIn, tooltip, flagIn);
 		tooltip.add(new TranslationTextComponent("tt.crossroads.goggles.lenses"));
 		CompoundNBT nbt = stack.getTag();
+		boolean hasLens = false;
 		if(nbt != null && !nbt.isEmpty()){
 			String enabled = MiscUtil.localize("tt.crossroads.goggles.enabled");
 			String disabled = MiscUtil.localize("tt.crossroads.goggles.disabled");
@@ -73,16 +73,23 @@ public class ModuleGoggles extends ArmorItem{
 				if(nbt.contains(lens.toString())){
 					//Displaying the enabled/disabled parameter is optional. By default, diamond and quartz lenses don't
 					tooltip.add(new TranslationTextComponent("tt.crossroads.goggles." + lens.toString(), nbt.getBoolean(lens.toString()) ? enabled : disabled));
+					hasLens = true;
 				}
 			}
-		}else{
+		}
+		if(!hasLens){
 			tooltip.add(new TranslationTextComponent("tt.crossroads.goggles.none"));
 		}
 	}
 
 	@Override
 	public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type){
-		StringBuilder path = new StringBuilder(Crossroads.MODID + ":textures/models/armor/goggles/goggle");
+		StringBuilder path = new StringBuilder(Crossroads.MODID + ":textures/models/armor/goggles/");
+		if(isReinforced(stack)){
+			path.append("reinf_goggle");
+		}else{
+			path.append("goggle");
+		}
 		CompoundNBT nbt = stack.getTag();
 		if(nbt != null){
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
@@ -95,46 +102,20 @@ public class ModuleGoggles extends ArmorItem{
 		return path.toString();
 	}
 
-	private static class TechnoMat implements IArmorMaterial{
+	@Override
+	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items){
+		if(isInGroup(group)){
+			items.add(new ItemStack(this, 1));
+			items.add(setReinforced(new ItemStack(this, 1), true));
+			ItemStack unarmoredLenses = new ItemStack(this, 1);
+			ItemStack armoredLenses = new ItemStack(this, 1);
+			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
+				unarmoredLenses.getOrCreateTag().putBoolean(lens.toString(), false);
+				armoredLenses.getOrCreateTag().putBoolean(lens.toString(), false);
+			}
 
-		@Override
-		public int getDurability(EquipmentSlotType slotIn){
-			return 0;
-		}
-
-		@Override
-		public int getDamageReductionAmount(EquipmentSlotType slotIn){
-			return 0;
-		}
-
-		@Override
-		public int getEnchantability(){
-			return 0;
-		}
-
-		@Override
-		public SoundEvent getSoundEvent(){
-			return SoundEvents.ITEM_ARMOR_EQUIP_IRON;
-		}
-
-		@Override
-		public Ingredient getRepairMaterial(){
-			return Ingredient.EMPTY;
-		}
-
-		@Override
-		public String getName(){
-			return "technomancy";
-		}
-
-		@Override
-		public float getToughness(){
-			return 0;
-		}
-
-		@Override
-		public float getKnockbackResistance(){
-			return 0;
+			items.add(unarmoredLenses);
+			items.add(setReinforced(armoredLenses, true));
 		}
 	}
 }

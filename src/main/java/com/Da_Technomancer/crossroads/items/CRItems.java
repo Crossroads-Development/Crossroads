@@ -62,7 +62,8 @@ public final class CRItems{
 	public static CowLeggings cowLeggings;
 	public static ChickenBoots chickenBoots;
 	public static ChaosRod chaosRod;
-	public static ModuleGoggles moduleGoggles;
+	public static ArmorGoggles armorGoggles;
+	public static ArmorPropellerPack propellerPack;
 	public static StaffTechnomancy staffTechnomancy;
 	public static BeamCage beamCage;
 //	public static PrototypePistol pistol;
@@ -154,7 +155,7 @@ public final class CRItems{
 		cowLeggings = new CowLeggings();
 		chickenBoots = new ChickenBoots();
 		chaosRod = new ChaosRod();
-		moduleGoggles = new ModuleGoggles();
+		armorGoggles = new ArmorGoggles();
 		staffTechnomancy = new StaffTechnomancy();
 		beamCage = new BeamCage();
 //		pistol = new PrototypePistol();
@@ -221,6 +222,7 @@ public final class CRItems{
 		sigilAlch = new PathSigil(EnumPath.ALCHEMY);
 		sigilTech = new PathSigil(EnumPath.TECHNOMANCY);
 		sigilWitch = new PathSigil(EnumPath.WITCHCRAFT);
+		propellerPack = new ArmorPropellerPack();
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -249,6 +251,7 @@ public final class CRItems{
 			//Speed (wind level) at current time
 			//Assumption that speed decreased since start at -WIND_USE_RATE/tick
 			//Assumption that angle started at 0
+			//TODO re-work this formula, make it more reliable, cap at wind = 0
 			int useTime = entity.getItemInUseMaxCount();//Method is poorly MCP mapped- actually gives number of ticks since started using
 			float currSpeed = (float) whirligig.getWindLevel(stack) / 20F;//Converted to rad/t
 			float deaccel = (float) Whirligig.WIND_USE_RATE / 20F;//Converted to rad/t/t
@@ -256,5 +259,9 @@ public final class CRItems{
 			angle = (float) Math.toDegrees(angle);
 			return angle;
 		});
+		IItemPropertyGetter technoArmorPropertyGetter = (ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) -> TechnomancyArmor.isReinforced(stack) ? TechnomancyArmor.hasDurability(stack) ? 2F : 1F : 0F;
+		ItemModelsProperties.registerProperty(armorGoggles, new ResourceLocation("protection"), technoArmorPropertyGetter);
+		ItemModelsProperties.registerProperty(propellerPack, new ResourceLocation("protection"), technoArmorPropertyGetter);
+
 	}
 }

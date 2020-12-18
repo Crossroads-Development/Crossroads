@@ -292,6 +292,7 @@
 	"fluid.crossroads.flowing_molten_copper": "Molten Copper",
 	"fluid.crossroads.flowing_molten_tin": "Molten Tin",
 	"fluid.crossroads.flowing_molten_copshowium": "Molten Copshowium",
+	"item.crossroads.propeller_pack": "Propelled Wingpack",
 
 
 	"entity.cr_bullet": "Bullet",
@@ -626,6 +627,7 @@
 	"tt.crossroads.axle_mount.desc": "A decorative wall mount for axles",
 	"tt.crossroads.sequence_box.desc": "Stores a sequence of redstone circuit values and outputs them in order",
 	"tt.crossroads.sequence_box.trigger": "Advances 1 step in the sequence with each strong redstone pulse",
+	"tt.crossroads.technomancy_armor.reinforced": "Netherite Reinforced",
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
 	"container.crossroads.boilerplate.speed": "%1$f rad/s",

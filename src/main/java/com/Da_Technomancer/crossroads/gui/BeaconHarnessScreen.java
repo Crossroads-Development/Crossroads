@@ -69,7 +69,7 @@ public class BeaconHarnessScreen extends ContainerScreen<BeaconHarnessContainer>
 		}
 		font.drawString(matrix, s, 100, 110, 0x404040);
 
-		boolean safety = BeaconHarnessTileEntity.isSafetyPeriod(cycle);
+		boolean safety = container.te == null || container.te.isSafetyPeriod(cycle);
 		BeamUnit output = running ? BeaconHarnessTileEntity.getOutput(cycle) : BeamUnit.EMPTY;
 		String input;
 		if(safety){

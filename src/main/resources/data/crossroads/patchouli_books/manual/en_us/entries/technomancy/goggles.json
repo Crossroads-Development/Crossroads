@@ -1,6 +1,6 @@
 {
 	"category": "technomancy",
-	"name": "Modular Goggles",
+	"name": "Technomancy Armor",
 	"icon": "crossroads:module_goggles",
 	"sortnum": 0,
 	"priority": false,
@@ -9,33 +9,45 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Modular Goggles",
+			"title": "Technomancy Armor",
+			"item": "crossroads:module_goggles",
+			"text": "There is an augmented armor set with special abilities. Every part of the armor set has a utility ability, is unbreakable, is enchantable, and doesn't burn in fire/lava.$(br2)The armor set provides no protection normally, but can be combined with the corresponding "
+		},
+		{
+			"type": "text",
+			"text": "piece of netherite armor (not an ingot) in an anvil to provide netherite-tier armor protection.$(br2)If upgraded with netherite, the armor will have durability, but won't be destroyed when it runs out of durability, and will still provide the utility power (but won't provide armor until repaired with netherite).$(br2)"
+		},
+		{
+			"type": "spotlight",
+			"anchor": "goggles",
 			"item": "crossroads:module_goggles",
 			"text": "The <item>Modular Goggles/$ are a helpful multitool worn as a helmet. They do not have durability or provide armor.$(br2)Lenses- which provide abilities- are added to the goggles in an anvil. Each added lens increases XP cost. The four items that can be added as lenses "
 		},
 		{
 			"type": "text",
-			"text": "are $(l:crossroads:intro/ores)rubies/$, emeralds, diamonds, and $(l:crossroads:fluid/ingr)pure quartz/$.$(br2)Three of these lenses are actived using keybinds, which are unbound by default. To use them, make sure to go into the keybinds menu under 'Crossroads' and bind the item control keys.$(br2)"
+			"text": "are $(l:crossroads:intro/ores)rubies/$, emeralds, diamonds, and $(l:crossroads:fluid/ingr)pure quartz/$.$(br2)Three of these lenses are actived using keybinds, which are unbound by default. To use them, make sure to go into the keybinds menu under 'Crossroads' and bind the item control keys.$(br2)A $(l:crossroads:intro/ores)ruby/$ lens will add a toggle-able fire laser that shoots anything "
 		},
 		{
 			"type": "text",
-			"text": "A $(l:crossroads:intro/ores)ruby/$ lens will add a toggle-able fire laser that shoots anything you look at, setting entities on fire and starting fire. It is toggled with the 'energy control key' with an empty hand.$(br2)"
+			"text": "you look at, setting entities on fire and starting fire. It is toggled with the 'energy control key' with an empty hand.$(br2)An emerald lens will add toggle-able night vision for the wearer. It is toggled with the 'potential control key' with an empty hand.$(br2)A diamond lens will allow opening a <item>$(l:crossroads:intro/path)detailed "
 		},
 		{
 			"type": "text",
-			"text": "An emerald lens will add toggle-able night vision for the wearer. It is toggled with the 'potential control key' with an empty hand.$(br2)"
+			"text": "<item>$(l:crossroads:intro/path)crafter/$ crafting UI anywhere by pressing the 'stability control key' with an empty hand.$(br2)A $(l:crossroads:fluid/ingr)pure quartz/$ lens will act as a permanent <item>$(l:crossroads:intro/omnimeter)omnimeter/$ which provides full information on any machine you look at (with a large range). This is very handy to have.$(br2)"
+		},
+		{
+			"type": "spotlight",
+			"anchor": "propeller_plate",
+			"item": "crossroads:propeller_pack",
+			"text": "The <item>Propelled Wingpack/$ acts like an Elytra with a built-in rocket boost. To use the boost, it needs to be wound in a <item>$(l:crossroads:rotary/winding_table)Spring-Winding Stand/$.$(br2)While <em>holding/$ the jump key (default space), the wearer gets a speed boost in the direction they're looking and the <thing>$(l:crossroads:rotary/winding_table)spring "
 		},
 		{
 			"type": "text",
-			"text": "A diamond lens will allow opening a <item>$(l:crossroads:intro/path)detailed crafter/$ crafting UI anywhere by pressing the 'stability control key' with an empty hand.$(br2)"
+			"text": "<thing>$(l:crossroads:rotary/winding_table)speed/$ will be slowly drained.$(br2)It can be used as an unbreakable Elytra that provides netherite-tier armor protection and doesn't need fireworks for boosting.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "A $(l:crossroads:fluid/ingr)pure quartz/$ lens will act as a permanent <item>$(l:crossroads:intro/omnimeter)omnimeter/$ which provides full information on any machine you look at (with a large range). This is very handy to have.$(br2)"
-		},
-		{
-			"type": "text",
-			"text": "<bobo>iT\"S mEE! $(l:crossroads:intro/welcome#bobo)bOBO/$<bobo>!!$(br2)<bobo>dEr iSS ANOHTER LENSE! lUk thRU darkNes!/$$(br2)"
+			"text": "<bobo>iT\"S mEE! $(l:crossroads:intro/welcome#bobo)bOBO/$<bobo>!!$(br2)<bobo>dEr iSS ANOHTER google LENSE! lUk thRU darkNes!/$$(br2)"
 		}
 	]
 }

@@ -19,7 +19,7 @@ public class BeaconHarnessContainer extends Container{
 	private static ContainerType<BeaconHarnessContainer> type = null;
 
 	public final IntDeferredRef cycleRef;
-	private final BeaconHarnessTileEntity te;
+	public final BeaconHarnessTileEntity te;
 
 	public BeaconHarnessContainer(int id, PlayerInventory playerInv, PacketBuffer data){
 		super(type, id);

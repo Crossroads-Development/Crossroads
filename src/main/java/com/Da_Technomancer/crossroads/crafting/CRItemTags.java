@@ -17,10 +17,10 @@ public class CRItemTags{
 	private static final String FORGE = "forge";
 	private static final String CR = Crossroads.MODID;
 
-	public static final ITag<Item> SALT = ItemTags.makeWrapperTag(FORGE + ":dusts/salt");
+//	public static final ITag<Item> SALT = ItemTags.makeWrapperTag(FORGE + ":dusts/salt");
 //	public static final ITag<Item> SLAG = ItemTags.makeWrapperTag(FORGE + ":dusts/slag");
 //	public static final ITag<Item> SULFUR = ItemTags.makeWrapperTag(FORGE + ":dusts/sulfur");
-	public static final ITag<Item> ALC_SALT = ItemTags.makeWrapperTag(CR + ":dusts/alchemy_salt");
+//	public static final ITag<Item> ALC_SALT = ItemTags.makeWrapperTag(CR + ":dusts/alchemy_salt");
 //	public static final ITag<Item> VANADIUM = ItemTags.makeWrapperTag(CR + ":dusts/vanadium");
 //	public static final ITag<Item> MERCURY = ItemTags.makeWrapperTag(FORGE + ":gems/mercury");
 	public static final ITag<Item> DENSUS = ItemTags.makeWrapperTag(CR + ":gems/densus");
@@ -46,7 +46,9 @@ public class CRItemTags{
 //	public static final ITag<Item> NUGGETS_COPPER = ItemTags.makeWrapperTag(FORGE + ":nuggets/copper");
 //	public static final ITag<Item> NUGGETS_TIN = ItemTags.makeWrapperTag(FORGE + ":nuggets/tin");
 
+	public static final ITag<Item> GEMS_PURE_QUARTZ = ItemTags.makeWrapperTag(CR + ":gems/pure_quartz");
 	public static final ITag<Item> GEMS_RUBY = ItemTags.makeWrapperTag(FORGE + ":gems/ruby");
+	public static final ITag<Item> GEMS_VOID = ItemTags.makeWrapperTag(CR + ":gems/void");
 
 	public static final ITag<Item> EXPLODE_IF_KNOCKED = ItemTags.makeWrapperTag(CR + ":explode_on_hit");
 	public static final ITag<Item> SALT_REACTOR_COOLANT = ItemTags.makeWrapperTag(CR + ":salt_reactor_coolant");

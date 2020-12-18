@@ -46,6 +46,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 
 	private boolean running;
 	private int cycles = -11;
+	private int loadSafetyTime = 0;
 
 	//Flux related fields
 	private HashSet<BlockPos> links = new HashSet<>(1);
@@ -160,8 +161,16 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 		}
 	}
 
-	public static boolean isSafetyPeriod(int cycles){
-		return cycles % (LOOP_TIME / 3) < SAFETY_BUFFER;
+	@Override
+	public void onLoad(){
+		super.onLoad();
+		if(CRConfig.beaconHarnessLoadSafety.get()){
+			loadSafetyTime = LOOP_TIME;
+		}
+	}
+
+	public boolean isSafetyPeriod(int cycles){
+		return cycles % (LOOP_TIME / 3) < SAFETY_BUFFER || loadSafetyTime != 0;
 	}
 
 	public static BeamUnit getOutput(int cycles){
@@ -177,6 +186,9 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 
 	@Override
 	protected void doEmit(BeamUnit input){
+		if(--loadSafetyTime < 0){
+			loadSafetyTime = 0;
+		}
 		if(running){
 			++cycles;
 			cycles %= LOOP_TIME;

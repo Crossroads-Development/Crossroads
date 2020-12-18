@@ -98,6 +98,7 @@ public final class Crossroads{
 //		ModelLoaderRegistry.registerLoader(new BakedModelLoader());
 		CRItems.clientInit();
 		CRRendererRegistry.registerBlockRenderer();
+		CRRendererRegistry.registerEntityLayerRenderers();
 		Keys.init();
 //		CRParticles.clientInit();
 		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());

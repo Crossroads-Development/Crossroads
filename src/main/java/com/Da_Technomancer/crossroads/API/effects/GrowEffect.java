@@ -26,6 +26,8 @@ public class GrowEffect extends BeamEffect{
 	//Crop types can be blacklisted from growth through the beam using the grow_blacklist tag. Intended for things like magical crops
 	private static final ITag<Block> growBlacklist = BlockTags.makeWrapperTag(Crossroads.MODID + ":grow_blacklist");
 	protected static final DamageSource POTENTIAL_VOID = new DamageSource("potentialvoid").setMagicDamage().setDamageBypassesArmor();
+	protected static final DamageSource POTENTIAL_VOID_ABSOLUTE = new DamageSource("potentialvoid").setMagicDamage().setDamageBypassesArmor().setDamageIsAbsolute();
+
 
 	@Override
 	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, World worldIn, BlockPos pos, @Nullable Direction dir){
@@ -39,18 +41,20 @@ public class GrowEffect extends BeamEffect{
 				}
 
 				List<LivingEntity> ents = worldIn.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range + 1, pos.getY() + range + 1, pos.getZ() + range + 1), EntityPredicates.IS_ALIVE);
+				boolean absoluteDamage = CRConfig.beamDamageAbsolute.get();
 				for(LivingEntity ent : ents){
 					if(ent.isEntityUndead()){
 						ent.heal(power * 3F / 4F);
 					}else{
-						ent.attackEntityFrom(POTENTIAL_VOID, power * 3F / 4F);
+						ent.attackEntityFrom(absoluteDamage ? POTENTIAL_VOID_ABSOLUTE : POTENTIAL_VOID, power * 3F / 4F);
 					}
 				}
 			}else{
 				List<LivingEntity> ents = worldIn.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range, pos.getY() + range, pos.getZ() + range), EntityPredicates.IS_ALIVE);
+				boolean absoluteDamage = CRConfig.beamDamageAbsolute.get();
 				for(LivingEntity ent : ents){
 					if(ent.isEntityUndead()){
-						ent.attackEntityFrom(POTENTIAL_VOID, power / 2F);
+						ent.attackEntityFrom(absoluteDamage ? POTENTIAL_VOID_ABSOLUTE : POTENTIAL_VOID, power / 2F);
 					}else{
 						ent.heal(power / 2F);
 					}

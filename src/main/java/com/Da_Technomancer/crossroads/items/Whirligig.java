@@ -125,7 +125,7 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack){
-		//Acts as a melee weapon; absolutely a DiscWorld reference
+		//Acts as a melee weapon
 		return slot == EquipmentSlotType.MAINHAND ? attributeModifiers : super.getAttributeModifiers(slot, stack);
 	}
 

@@ -1,20 +1,20 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:item/module_goggles"
+		"layer0": "crossroads:item/propeller_pack"
 	},
 	"overrides": [
 		{
 			"predicate": {
 				"protection": 1
 			},
-			"model": "crossroads:item/module_goggles_broken"
+			"model": "crossroads:item/propeller_pack_broken"
 		},
 		{
 			"predicate": {
 				"protection": 2
 			},
-			"model": "crossroads:item/module_goggles_armor"
+			"model": "crossroads:item/propeller_pack_armor"
 		}
 	]
 }

@@ -195,7 +195,7 @@ public class WindingTableTileEntity extends InventoryTE{
 		double getMaxWind();
 
 		default void setWindLevel(ItemStack stack, double energy){
-			stack.getOrCreateTag().putDouble("winding_energy", energy);
+			stack.getOrCreateTag().putDouble("winding_energy", Math.max(0, energy));
 		}
 
 		default double getWindLevel(ItemStack stack){
