@@ -19,6 +19,7 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
+import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -48,7 +49,6 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -63,15 +63,14 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 
 	//These fields are only correct for the top center block of the multiblock (isActive() returns true)
 	//They will not necessarily be null/empty/0 if this inactive- always check isActive()
-	private int flux = 0;
-	private int fluxToTrans = 0;
-	private final HashSet<BlockPos> links = new HashSet<>(1);
+	private final FluxHelper fluxHelper = new FluxHelper(this, Behaviour.SOURCE);
 	private GatewayAddress address = null;//The address of THIS gateway
 	private double rotaryEnergy = 0;//Rotary energy
 	private float angle = 0;//Used for rendering and dialing chevrons. Because it's used for logic, we don't use the master axis angle syncing, which is render-based
 	private float clientAngle = 0;//Angle on the client. On the server, acts as a record of value sent to client
 	private float clientW = 0;//Speed on the client (post adjustment). On the server, acts as a record of value sent to client
 	private float referenceSpeed = 0;//Speed which angles will be defined relative to on the server
+	private long lastTick = 0;
 	//Visible for rendering
 	public EnumBeamAlignments[] chevrons = new EnumBeamAlignments[4];//Current values locked into chevrons. Null for unset chevrons
 	private boolean origin = false;//Whether this gateway started the connection in dialed (determines which side has flux)
@@ -470,11 +469,6 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public int getReadingFlux(){
-		return FluxUtil.findReadingFlux(this, flux, fluxToTrans);
-	}
-
-	@Override
 	public void tick(){
 		if(isActive()){
 			//This TE only ticks if it is active
@@ -528,20 +522,11 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 				}
 
 				//Handle flux
-				long stage = world.getGameTime() % FluxUtil.FLUX_TIME;
-				if(stage == 0){
-					if(origin){
-						flux += FLUX_PER_CYCLE;
-					}
-					if(flux != 0){
-						fluxToTrans += flux;
-						flux = 0;
-						markDirty();
-					}
-				}else if(stage == 1){
-					flux += FluxUtil.performTransfer(this, links, fluxToTrans);
-					fluxToTrans = 0;
-					FluxUtil.checkFluxOverload(this);
+				fluxHelper.tick();
+				long currTick = world.getGameTime();
+				if(currTick % FluxUtil.FLUX_TIME == 0 && origin && lastTick != currTick){
+					fluxHelper.addFlux(FLUX_PER_CYCLE);
+					lastTick = currTick;
 				}
 			}
 		}
@@ -582,13 +567,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	public void read(BlockState state, CompoundNBT nbt){
 		super.read(state, nbt);
 		//Active only
-		flux = nbt.getInt("flux");
-		fluxToTrans = nbt.getInt("flux_trans");
-		if(nbt.contains("link")){
-			links.add(BlockPos.fromLong(nbt.getLong("link")));
-		}else{
-			links.clear();
-		}
+		fluxHelper.read(nbt);
 		address = nbt.contains("address") ? GatewayAddress.deserialize(nbt.getInt("address")) : null;
 		clientW = nbt.getFloat("client_speed");
 		rotaryEnergy = nbt.getDouble("rot_1");
@@ -609,11 +588,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
 		//Active only
-		nbt.putInt("flux", flux);
-		nbt.putInt("flux_trans", fluxToTrans);
-		if(links.size() == 1){
-			nbt.putLong("link", links.iterator().next().toLong());
-		}
+		fluxHelper.write(nbt);
 		if(address != null){
 			nbt.putInt("address", address.serialize());
 		}
@@ -640,9 +615,7 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
-		if(links.size() == 1){
-			nbt.putLong("link", links.iterator().next().toLong());
-		}
+		fluxHelper.write(nbt);
 		for(int i = 0; i < 4; i++){
 			if(chevrons[i] != null){
 				nbt.putInt("chev_" + i, chevrons[i].ordinal());
@@ -671,18 +644,47 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 
 	@Override
 	public int getFlux(){
-		return flux;
+		return fluxHelper.getFlux();
 	}
 
 	@Override
-	public void setFlux(int newFlux){
-		flux = newFlux;
-		markDirty();
+	public boolean canBeginLinking(){
+		return fluxHelper.canBeginLinking();
+	}
+
+	@Override
+	public boolean canLink(ILinkTE otherTE){
+		return fluxHelper.canLink(otherTE);
 	}
 
 	@Override
 	public Set<BlockPos> getLinks(){
-		return links;
+		return fluxHelper.getLinks();
+	}
+
+	@Override
+	public boolean createLinkSource(ILinkTE endpoint, @Nullable PlayerEntity player){
+		return fluxHelper.createLinkSource(endpoint, player);
+	}
+
+	@Override
+	public void removeLinkSource(BlockPos end){
+		fluxHelper.removeLinkSource(end);
+	}
+
+	@Override
+	public int getReadingFlux(){
+		return fluxHelper.getReadingFlux();
+	}
+
+	@Override
+	public void addFlux(int deltaFlux){
+		fluxHelper.addFlux(deltaFlux);
+	}
+
+	@Override
+	public boolean canAcceptLinks(){
+		return fluxHelper.canAcceptLinks();
 	}
 
 	//Capabilities
@@ -729,15 +731,8 @@ public class GatewayFrameTileEntity extends TileEntity implements ITickableTileE
 
 	@Override
 	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity player){
+		fluxHelper.receiveLong(identifier, message, player);
 		switch(identifier){
-			case LINK_PACKET_ID:
-				links.add(BlockPos.fromLong(message));
-				markDirty();
-				break;
-			case CLEAR_PACKET_ID:
-				links.clear();
-				markDirty();
-				break;
 			case 3:
 				GatewayAddress add = GatewayAddress.deserialize((int) message);
 				for(int i = 0; i < 4; i++){

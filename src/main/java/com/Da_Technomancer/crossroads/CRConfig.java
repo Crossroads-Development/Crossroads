@@ -90,6 +90,8 @@ public class CRConfig{
 	public static ForgeConfigSpec.IntValue technoArmorCost;
 	public static ForgeConfigSpec.BooleanValue beamDamageAbsolute;
 	public static ForgeConfigSpec.BooleanValue beaconHarnessLoadSafety;
+	public static ForgeConfigSpec.IntValue fluxNodeGain;
+	public static ForgeConfigSpec.BooleanValue riftSpawnDrops;
 
 	private static final ITag<Block> destroyBlacklist = BlockTags.makeWrapperTag(Crossroads.MODID + ":destroy_blacklist");
 
@@ -188,6 +190,7 @@ public class CRConfig{
 		beaconHarnessPower = serverBuilder.comment("Beam power output of the beacon harness").defineInRange("beacon_harness_power", 512, 8, 4096);
 		technoArmorReinforce = serverBuilder.comment("Allow adding Netherite armor to Technomancy armor?").define("techno_armor_reinforce", true);
 		technoArmorCost = serverBuilder.comment("Multiplier for XP levels to upgrade Technomancy armor").defineInRange("techno_armor_xp", 1, 0, 100);
+		fluxNodeGain = serverBuilder.comment("Temporal Entropy gained per Entropy Node when transferring", "Higher values are more difficult, and encourage using fewer node chains").defineInRange("entropy_node_gain", 2, 0, 64);
 		serverBuilder.pop();
 		serverBuilder.push(CAT_ALCHEMY);
 		phelEffect = serverBuilder.comment("Allow the full effect of Phelostogen?", "If disabled Phelostogen lights a single small fire instead").define("phel_effect", true);
@@ -198,6 +201,7 @@ public class CRConfig{
 		voltusValue = serverBuilder.comment("FE produced by one Voltus").defineInRange("voltus_power", 2_000, 0, 100_000);
 		gravRange = serverBuilder.comment("Range of Density Plates").defineInRange("grav_range", 64, 0, 128);
 		verticalBiomes = serverBuilder.comment("Whether to change biomes in columns", "If true, biomes are transmuted in a column from bedrock to worldheight", "If false, biomes are transmitted only within the vertical bounds of the effect").define("vertical_biomes", true);
+		riftSpawnDrops = serverBuilder.comment("If true, rift beams will spawn mob drops instead of actual mobs", "Rift beams do this regardless of config setting in peaceful mode").define("rift_drops", false);
 		serverBuilder.pop();
 		serverBuilder.pop();
 

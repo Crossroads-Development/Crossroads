@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
+import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,7 +26,6 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Set;
 
 @ObjectHolder(Crossroads.MODID)
@@ -34,9 +34,9 @@ public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickab
 	@ObjectHolder("flux_sink")
 	public static TileEntityType<FluxSinkTileEntity> type = null;
 
-	private static final int CAPACITY = 10_000;
-	private int flux = 0;
-	private int prevFlux = 0;
+	private static final int CAPACITY = 256;
+
+	private final FluxHelper fluxHelper = new FluxHelper(this, Behaviour.SINK);
 	private boolean running = false;
 	private long runningStartTime;//Used for rendering
 	public static final float STARTUP_TIME = 60;//Used for rendering
@@ -53,17 +53,11 @@ public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickab
 
 	@Override
 	public void tick(){
-		if(world.getGameTime() % FluxUtil.FLUX_TIME == 0){
-			if(!world.isRemote){
-				prevFlux = flux;
-				if(isRunning() && flux != 0){
-					flux = 0;
-					markDirty();
-				}
-			}else if(world.getGameTime() % (FluxUtil.FLUX_TIME * 4) == 0){
-				//Create client-side entropy effects to the floating portals
-				//By doing this on the individual clients, we avoid needing extra packets
-				//This could have been done as part of the TESR instead of using loose renders, but this allows re-using the render code
+		if(world.isRemote){
+			//Create client-side entropy effects to the floating portals
+			//By doing this on the individual clients, we avoid needing extra packets
+			//This could have been done as part of the TESR instead of using loose renders, but this allows re-using the render code
+			if(world.getGameTime() % (FluxUtil.FLUX_TIME * 4) == 0){
 				float runtime = getRunDuration(0);
 				if(runtime > STARTUP_TIME){
 					int portalIndex0 = world.rand.nextInt(8);
@@ -77,6 +71,14 @@ public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickab
 					//Note that one of these has playSound true, and the rest false, as we only need the sound to play once
 					CRRenderUtil.addEntropyBeam(world, srcPos[0], srcPos[1], srcPos[2], end0[0] + srcPos[0], end0[1] + srcPos[1], end0[2] + srcPos[2], 1, (byte) (FluxUtil.FLUX_TIME * 4 + 1), true);
 					CRRenderUtil.addEntropyBeam(world, srcPos[0], srcPos[1], srcPos[2], end1[0] + srcPos[0], end1[1] + srcPos[1], end1[2] + srcPos[2], 1, (byte) (FluxUtil.FLUX_TIME * 4 + 1), false);
+				}
+			}
+		}else if(world.getGameTime() != fluxHelper.lastTick){
+			fluxHelper.tick();
+			if(world.getGameTime() % FluxUtil.FLUX_TIME == 0){
+				if(isRunning() && fluxHelper.flux != 0){
+					fluxHelper.flux = 0;
+					markDirty();
 				}
 			}
 		}
@@ -152,30 +154,19 @@ public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickab
 	}
 
 	@Override
-	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
-		//We don't start links, only receive them
-
-		//Receive running info
-		if(identifier == 1){
-			runningStartTime = message;
-			running = message != 0;
-		}
-	}
-
-	@Override
 	public void read(BlockState state, CompoundNBT nbt){
 		super.read(state, nbt);
-		flux = nbt.getInt("flux");
 		running = nbt.getBoolean("running");
 		runningStartTime = nbt.getLong("run_time");
+		fluxHelper.read(nbt);
 	}
 
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
-		nbt.putInt("flux", flux);
 		nbt.putBoolean("running", running);
 		nbt.putLong("run_time", runningStartTime);
+		fluxHelper.write(nbt);
 		return nbt;
 	}
 
@@ -184,23 +175,8 @@ public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickab
 		CompoundNBT nbt = super.getUpdateTag();
 		nbt.putBoolean("running", running);
 		nbt.putLong("run_time", runningStartTime);
+		fluxHelper.write(nbt);
 		return nbt;
-	}
-
-	@Override
-	public int getFlux(){
-		return flux;
-	}
-
-	@Override
-	public void setFlux(int newFlux){
-		flux = newFlux;
-		markDirty();
-	}
-
-	@Override
-	public Set<BlockPos> getLinks(){
-		return new HashSet<>(0);
 	}
 
 	@Override
@@ -209,12 +185,57 @@ public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickab
 	}
 
 	@Override
-	public int getReadingFlux(){
-		return FluxUtil.findReadingFlux(this, flux, prevFlux);
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
+		fluxHelper.receiveLong(identifier, message, sendingPlayer);
+		//Receive running info
+		if(identifier == 1){
+			runningStartTime = message;
+			running = message != 0;
+		}
 	}
 
 	@Override
-	public Behaviour getBehaviour(){
-		return Behaviour.SINK;//This will trigger almost all the behaviour changes we need without overriding
+	public int getReadingFlux(){
+		return fluxHelper.getReadingFlux();
+	}
+
+	@Override
+	public void addFlux(int deltaFlux){
+		fluxHelper.addFlux(deltaFlux);
+	}
+
+	@Override
+	public boolean canAcceptLinks(){
+		return fluxHelper.canAcceptLinks();
+	}
+
+	@Override
+	public int getFlux(){
+		return fluxHelper.getFlux();
+	}
+
+	@Override
+	public boolean canBeginLinking(){
+		return fluxHelper.canBeginLinking();
+	}
+
+	@Override
+	public boolean canLink(ILinkTE otherTE){
+		return fluxHelper.canLink(otherTE);
+	}
+
+	@Override
+	public Set<BlockPos> getLinks(){
+		return fluxHelper.getLinks();
+	}
+
+	@Override
+	public boolean createLinkSource(ILinkTE endpoint, @Nullable PlayerEntity player){
+		return fluxHelper.createLinkSource(endpoint, player);
+	}
+
+	@Override
+	public void removeLinkSource(BlockPos end){
+		fluxHelper.removeLinkSource(end);
 	}
 }

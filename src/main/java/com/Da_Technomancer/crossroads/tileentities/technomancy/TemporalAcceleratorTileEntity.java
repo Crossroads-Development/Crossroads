@@ -13,6 +13,7 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.technomancy.TemporalAccelerator;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
+import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -35,7 +36,6 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Set;
 
 @ObjectHolder(Crossroads.MODID)
@@ -47,10 +47,10 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 	public static final int FLUX_MULT = 2;
 	public static final int SIZE = 5;
 
-	private int flux = 0;
-	private int fluxToTrans = 0;
-	private final HashSet<BlockPos> linkPos = new HashSet<>(1);
+	private final FluxHelper fluxHelper = new FluxHelper(this, Behaviour.SOURCE);
+
 	private int intensity = 0;//Power of the incoming beam
+	private int infoIntensity = 0;
 	private long lastRunTick;//Used to prevent accelerators affecting each other
 	//BlockState cache
 	private Direction facing;
@@ -69,25 +69,27 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		chat.add(new TranslationTextComponent("tt.crossroads.time_accel.boost", 100 * extraTicks()));
-		FluxUtil.addFluxInfo(chat, this, producedFlux());
-		FluxUtil.addLinkInfo(chat, this);
+		chat.add(new TranslationTextComponent("tt.crossroads.time_accel.boost", 100 * extraTicks(infoIntensity)));
+		FluxUtil.addFluxInfo(chat, this, producedFlux(infoIntensity));
+		fluxHelper.addInfo(chat, player, hit);
 	}
 
 	/**
 	 * Calculates how many extra ticks to apply based on intensity
+	 * @param power Intensity to use
 	 * @return The number of extra ticks to apply
 	 */
-	private int extraTicks(){
-		return intensity / 4;
+	private int extraTicks(int power){
+		return power / 4;
 	}
 
 	/**
 	 * Calculates the current flux production based on intensity
+	 * @param power Intensity to use
 	 * @return The flux to be produced this cycle
 	 */
-	private int producedFlux(){
-		int boost = extraTicks();
+	private int producedFlux(int power){
+		int boost = extraTicks(power);
 		if(boost > 0){
 			return (int) Math.pow(2, boost) * FLUX_MULT;
 		}
@@ -100,20 +102,9 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 		return new AxisAlignedBB(pos).grow(getRange());
 	}
 
-	@Override
-	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
-		if(identifier == LINK_PACKET_ID){
-			linkPos.add(BlockPos.fromLong(message));
-			markDirty();
-		}else if(identifier == CLEAR_PACKET_ID){
-			linkPos.clear();
-			markDirty();
-		}
-	}
-
 	private Direction getFacing(){
 		if(facing == null){
-			BlockState state = world.getBlockState(pos);
+			BlockState state = getBlockState();
 			if(!(state.getBlock() instanceof TemporalAccelerator)){
 				remove();
 				return Direction.DOWN;
@@ -127,7 +118,7 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 
 	private TemporalAccelerator.Mode getMode(){
 		if(facing == null){
-			BlockState state = world.getBlockState(pos);
+			BlockState state = getBlockState();
 			if(!(state.getBlock() instanceof TemporalAccelerator)){
 				remove();
 				return TemporalAccelerator.Mode.ENTITIES;
@@ -142,20 +133,17 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 	@Override
 	public void tick(){
 		if(!world.isRemote && world.getGameTime() != lastRunTick){
+			//Prevent time acceleration of this block
 			lastRunTick = world.getGameTime();
-			int extraTicks = extraTicks();
+			int extraTicks = extraTicks(intensity);
+
 
 			//Handle flux
-			long stage = world.getGameTime() % FluxUtil.FLUX_TIME;
-			if(stage == 0){
-				addFlux(producedFlux());
+			fluxHelper.tick();
+			if(world.getGameTime() % FluxUtil.FLUX_TIME == 0){
+				addFlux(producedFlux(intensity));
+				infoIntensity = intensity;
 				intensity = 0;//Reset stored beam power
-				fluxToTrans += flux;
-				flux = 0;
-			}else if(stage == 1){
-				flux += FluxUtil.performTransfer(this, linkPos, fluxToTrans);
-				fluxToTrans = 0;
-				FluxUtil.checkFluxOverload(this);
 			}
 
 			TemporalAccelerator.Mode mode = getMode();
@@ -244,6 +232,56 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 	}
 
 	@Override
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
+		fluxHelper.receiveLong(identifier, message, sendingPlayer);
+	}
+
+	@Override
+	public int getReadingFlux(){
+		return fluxHelper.getReadingFlux();
+	}
+
+	@Override
+	public void addFlux(int deltaFlux){
+		fluxHelper.addFlux(deltaFlux);
+	}
+
+	@Override
+	public boolean canAcceptLinks(){
+		return fluxHelper.canAcceptLinks();
+	}
+
+	@Override
+	public int getFlux(){
+		return fluxHelper.getFlux();
+	}
+
+	@Override
+	public boolean canBeginLinking(){
+		return fluxHelper.canBeginLinking();
+	}
+
+	@Override
+	public boolean canLink(ILinkTE otherTE){
+		return fluxHelper.canLink(otherTE);
+	}
+
+	@Override
+	public Set<BlockPos> getLinks(){
+		return fluxHelper.getLinks();
+	}
+
+	@Override
+	public boolean createLinkSource(ILinkTE endpoint, @Nullable PlayerEntity player){
+		return fluxHelper.createLinkSource(endpoint, player);
+	}
+
+	@Override
+	public void removeLinkSource(BlockPos end){
+		fluxHelper.removeLinkSource(end);
+	}
+
+	@Override
 	public void remove(){
 		super.remove();
 		beamOpt.invalidate();
@@ -266,11 +304,7 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 		super.write(nbt);
 		nbt.putInt("intensity", intensity);
 		nbt.putLong("last_run", lastRunTick);
-		nbt.putInt("flux", flux);
-		nbt.putInt("flux_trans", fluxToTrans);
-		for(BlockPos linked : linkPos){//Size 0 or 1
-			nbt.putLong("link", linked.toLong());
-		}
+		fluxHelper.write(nbt);
 		return nbt;
 	}
 
@@ -279,38 +313,14 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 		super.read(state, nbt);
 		intensity = nbt.getInt("intensity");
 		lastRunTick = nbt.getLong("last_run");
-		flux = nbt.getInt("flux");
-		fluxToTrans = nbt.getInt("flux_trans");
-		if(nbt.contains("link")){
-			linkPos.add(BlockPos.fromLong(nbt.getLong("link")));
-		}else{
-			linkPos.clear();
-		}
+		fluxHelper.read(nbt);
 	}
 
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
-		for(BlockPos linked : linkPos){//Size 0 or 1
-			nbt.putLong("link", linked.toLong());
-		}
+		fluxHelper.write(nbt);
 		return nbt;
-	}
-
-	@Override
-	public int getFlux(){
-		return flux;
-	}
-
-	@Override
-	public void setFlux(int newFlux){
-		flux = newFlux;
-		markDirty();
-	}
-
-	@Override
-	public Set<BlockPos> getLinks(){
-		return linkPos;
 	}
 
 	private class BeamHandler implements IBeamHandler{
@@ -320,8 +330,6 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 			if(mag != null && EnumBeamAlignments.getAlignment(mag) == EnumBeamAlignments.TIME){
 				if(mag.getVoid() == 0){
 					intensity += mag.getPower();//Speed up time
-				}else{
-					intensity -= mag.getPower();//Slow down time
 				}
 				markDirty();
 			}

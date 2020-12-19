@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxNodeTileEntity;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
@@ -81,6 +82,7 @@ public class FluxNode extends ContainerBlock implements IReadable{
 	@Override
 	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.flux_node.desc", 64));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.flux_node.gain", CRConfig.fluxNodeGain.get()));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.flux_node.link"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.flux_node.circuit"));
 	}

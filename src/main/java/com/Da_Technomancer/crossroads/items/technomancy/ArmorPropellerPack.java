@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.WindingTableTileEntity;
@@ -62,6 +63,8 @@ public class ArmorPropellerPack extends TechnomancyArmor implements WindingTable
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(getWindLevel(stack)), CRConfig.formatVal(getMaxWind())));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.propeller_pack.desc"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.propeller_pack.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	public static void applyMidairBoost(PlayerEntity player){

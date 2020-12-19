@@ -9,10 +9,11 @@ import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.fluids.CRFluids;
-import com.Da_Technomancer.crossroads.gui.container.CopshowiumMakerContainer;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.CopshowiumRec;
+import com.Da_Technomancer.crossroads.fluids.CRFluids;
+import com.Da_Technomancer.crossroads.gui.container.CopshowiumMakerContainer;
+import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -36,7 +37,6 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -49,9 +49,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	public static final int CAPACITY = 1_440;
 	public static final int FLUX_PER_INGOT = 4;
 
-	private int flux = 0;
-	private int fluxToTrans = 0;
-	private final HashSet<BlockPos> link = new HashSet<>(1);
+	private final FluxHelper fluxHelper = new FluxHelper(this, Behaviour.SOURCE);
 
 	public CopshowiumCreationChamberTileEntity(){
 		super(type, 0);
@@ -64,7 +62,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		FluxUtil.addFluxInfo(chat, this, -1);
 		super.addInfo(chat, player, hit);
-		FluxUtil.addLinkInfo(chat, this);
+		fluxHelper.addInfo(chat, player, hit);
 	}
 
 	@Override
@@ -91,65 +89,99 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 		super.tick();
 
 		//Handle flux
-		long stage = world.getGameTime() % FluxUtil.FLUX_TIME;
-		if(stage == 0 && flux != 0){
-			fluxToTrans += flux;
-			flux = 0;
-			markDirty();
-		}else if(stage == 1){
-			flux += FluxUtil.performTransfer(this, link, fluxToTrans);
-			fluxToTrans = 0;
-			FluxUtil.checkFluxOverload(this);
-		}
+		fluxHelper.tick();
 	}
 
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
-		nbt.putInt("flux", flux);
-		nbt.putInt("flux_trans", fluxToTrans);
-		for(BlockPos linked : link){//Size 0 or 1
-			nbt.putLong("link", linked.toLong());
-		}
+		fluxHelper.write(nbt);
 		return nbt;
 	}
 
 	@Override
 	public void read(BlockState state, CompoundNBT nbt){
 		super.read(state, nbt);
-		flux = nbt.getInt("flux");
-		fluxToTrans = nbt.getInt("flux_trans");
-		if(nbt.contains("link")){
-			link.add(BlockPos.fromLong(nbt.getLong("link")));
-		}else{
-			link.clear();
-		}
+		fluxHelper.read(nbt);
 	}
 
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
-		for(BlockPos linked : link){//Size 0 or 1
-			nbt.putLong("link", linked.toLong());
-		}
+		fluxHelper.write(nbt);
 		return nbt;
 	}
 
 	@Override
 	public int getReadingFlux(){
-		return FluxUtil.findReadingFlux(this, flux, fluxToTrans);
+		return fluxHelper.getReadingFlux();
+	}
+
+	@Override
+	public void addFlux(int deltaFlux){
+		fluxHelper.addFlux(deltaFlux);
+	}
+
+	@Override
+	public boolean canAcceptLinks(){
+		return fluxHelper.canAcceptLinks();
 	}
 
 	@Override
 	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
 		super.receiveLong(identifier, message, sendingPlayer);
-		if(identifier == LINK_PACKET_ID){
-			link.add(BlockPos.fromLong(message));
-			markDirty();
-		}else if(identifier == CLEAR_PACKET_ID){
-			link.clear();
-			markDirty();
-		}
+		fluxHelper.receiveLong(identifier, message, sendingPlayer);
+	}
+
+	@Override
+	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
+		return false;
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int index, ItemStack stack){
+		return false;
+	}
+
+	@Override
+	public ITextComponent getDisplayName(){
+		return new TranslationTextComponent("container.copshowium_maker");
+	}
+
+	@Override
+	public int getFlux(){
+		return fluxHelper.getFlux();
+	}
+
+	@Override
+	public boolean canBeginLinking(){
+		return fluxHelper.canBeginLinking();
+	}
+
+	@Override
+	public boolean canLink(ILinkTE otherTE){
+		return fluxHelper.canLink(otherTE);
+	}
+
+	@Override
+	public Set<BlockPos> getLinks(){
+		return fluxHelper.getLinks();
+	}
+
+	@Override
+	public boolean createLinkSource(ILinkTE endpoint, @Nullable PlayerEntity player){
+		return fluxHelper.createLinkSource(endpoint, player);
+	}
+
+	@Override
+	public void removeLinkSource(BlockPos end){
+		fluxHelper.removeLinkSource(end);
+	}
+
+	@Nullable
+	@Override
+	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
+		return new CopshowiumMakerContainer(id, playerInv, createContainerBuf());
 	}
 
 	@Override
@@ -177,43 +209,6 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 		}
 
 		return super.getCapability(capability, facing);
-	}
-
-	@Override
-	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
-		return false;
-	}
-
-	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return false;
-	}
-
-	@Override
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.copshowium_maker");
-	}
-
-	@Override
-	public int getFlux(){
-		return flux;
-	}
-
-	@Override
-	public void setFlux(int newFlux){
-		flux = newFlux;
-		markDirty();
-	}
-
-	@Override
-	public Set<BlockPos> getLinks(){
-		return link;
-	}
-
-	@Nullable
-	@Override
-	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
-		return new CopshowiumMakerContainer(id, playerInv, createContainerBuf());
 	}
 
 	private class BeamHandler implements IBeamHandler{

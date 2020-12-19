@@ -1,11 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
+import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.CopshowiumCreationChamberTileEntity;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
@@ -52,13 +52,9 @@ public class CopshowiumCreationChamber extends ContainerBlock implements IReadab
 
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		ItemStack heldItem = playerIn.getHeldItem(hand);
 		TileEntity te;
-		if(ILinkTE.isLinkTool(heldItem)){
-			te = worldIn.getTileEntity(pos);
-			if(!worldIn.isRemote && te instanceof ILinkTE){
-				((ILinkTE) te).wrench(heldItem, playerIn);
-			}
+		if(FluxUtil.handleFluxLinking(worldIn, pos, playerIn.getHeldItem(hand), playerIn).isSuccess()){
+			return ActionResultType.SUCCESS;
 		}else if(!worldIn.isRemote && (te = worldIn.getTileEntity(pos)) instanceof INamedContainerProvider){
 			NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);
 		}

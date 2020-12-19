@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
 import com.Da_Technomancer.essentials.tileentities.ILinkTE;
+import com.Da_Technomancer.essentials.tileentities.LinkHelper;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
@@ -49,10 +50,10 @@ public class TeslaCoilTop extends ContainerBlock{
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		ItemStack heldItem = playerIn.getHeldItem(hand);
-		if(ILinkTE.isLinkTool(heldItem)){
+		if(LinkHelper.isLinkTool(heldItem)){
 			TileEntity te = worldIn.getTileEntity(pos);
 			if(!worldIn.isRemote && te instanceof TeslaCoilTopTileEntity){
-				((TeslaCoilTopTileEntity) te).wrench(heldItem, playerIn);
+				LinkHelper.wrench((ILinkTE) te, heldItem, playerIn);
 			}
 			return ActionResultType.SUCCESS;
 		}

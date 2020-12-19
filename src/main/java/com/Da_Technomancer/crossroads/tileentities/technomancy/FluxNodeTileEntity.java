@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
+import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -22,7 +23,6 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Set;
 
 @ObjectHolder(Crossroads.MODID)
@@ -33,20 +33,18 @@ public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntit
 
 	private static final float SPIN_RATE = 3.6F;//For rendering
 
-	private HashSet<BlockPos> links = new HashSet<>(16);
-	private int entropy;//On the client side, this is only occasionally updated
-	private int entropyClient;//records what was last send to the client. 0 on the client side
+	private final IFluxLink.FluxHelper fluxHelper = new FluxHelper(this, Behaviour.NODE);
+	private int entropyClient;//records what was last send to the client. Current value on the client side
 	private float angle;//for rendering
-	private int fluxToTrans = 0;
 
 	public FluxNodeTileEntity(){
 		super(type);
 	}
 
 	private void syncFlux(){
-		if((entropyClient == 0) ^ (entropy == 0) || Math.abs(entropyClient - entropy) >= 4){
-			entropyClient = entropy;
-			CRPackets.sendPacketAround(world, pos, new SendLongToClient((byte) 0, entropy, pos));
+		if((entropyClient == 0) ^ (fluxHelper.getReadingFlux() == 0) || Math.abs(entropyClient - fluxHelper.getReadingFlux()) >= 4){
+			entropyClient = fluxHelper.getReadingFlux();
+			CRPackets.sendPacketAround(world, pos, new SendLongToClient((byte) 0, fluxHelper.getReadingFlux(), pos));
 		}
 	}
 
@@ -56,7 +54,7 @@ public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntit
 	 * @return The angle to render
 	 */
 	public float getRenderAngle(float partialTicks){
-		return angle + partialTicks * entropy * SPIN_RATE / 20F;
+		return angle + partialTicks * entropyClient * SPIN_RATE / 20F;
 	}
 
 	@Override
@@ -70,27 +68,20 @@ public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntit
 	 * @return Whether this node should render effects for being near the failure point
 	 */
 	private boolean overSafeLimit(){
-		return entropy * 1.5F >= getMaxFlux();
+		return entropyClient * 1.5F >= getMaxFlux();
 	}
 
 	@Override
 	public void tick(){
 		if(world.isRemote){
-			angle += entropy * SPIN_RATE / 20F;
+			angle += entropyClient * SPIN_RATE / 20F;
 			//This 5 is the lifetime of the render
 			if(world.getGameTime() % 5 == 0 && overSafeLimit()){
 				CRRenderUtil.addArc(world, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, pos.getX() + 1.5F, pos.getY() + 1.5F, pos.getZ() + 1.5F, 3, 1F, FluxUtil.COLOR_CODES[(int) (world.getGameTime() % 3)]);
 			}
-		}else if(world.getGameTime() % FluxUtil.FLUX_TIME == 0){
+		}else{
+			fluxHelper.tick();
 			syncFlux();
-			fluxToTrans += entropy;//Save flux to a separate variable so tick order doesn't interfere with the amount transferred next tick
-			entropy = 0;
-			markDirty();
-		}else if(world.getGameTime() % FluxUtil.FLUX_TIME == 1){
-			//Perform transfer
-			entropy += FluxUtil.performTransfer(this, links, fluxToTrans);
-			fluxToTrans = 0;
-			FluxUtil.checkFluxOverload(this);
 			markDirty();
 		}
 	}
@@ -99,24 +90,15 @@ public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntit
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
 		nbt.putFloat("angle", angle);
-		nbt.putInt("entropy", entropy);
-		nbt.putInt("flux_trans", fluxToTrans);
-		int count = 0;
-		for(BlockPos relPos : links){
-			nbt.putLong("link_" + count++, relPos.toLong());
-		}
+		fluxHelper.write(nbt);
 		return nbt;
 	}
 
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
-		nbt.putInt("entropy", entropy);
 		nbt.putFloat("angle", angle);
-		int count = 0;
-		for(BlockPos relPos : links){
-			nbt.putLong("link_" + count++, relPos.toLong());
-		}
+		fluxHelper.write(nbt);
 		return nbt;
 	}
 
@@ -124,59 +106,56 @@ public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntit
 	public void read(BlockState state, CompoundNBT nbt){
 		super.read(state, nbt);
 		angle = nbt.getFloat("angle");
-		entropy = nbt.getInt("entropy");
-		entropyClient = entropy;
-		fluxToTrans = nbt.getInt("flux_trans");
-		int count = 0;
-		while(nbt.contains("link_" + count)){
-			links.add(BlockPos.fromLong(nbt.getLong("link_" + count)));
-			count++;
-		}
+		fluxHelper.read(nbt);
+		entropyClient = fluxHelper.getReadingFlux();
 	}
 
 	@Override
 	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity serverPlayerEntity){
+		fluxHelper.receiveLong(identifier, message, serverPlayerEntity);
 		if(identifier == 0){
-			entropy = (int) message;
-		}else if(identifier == LINK_PACKET_ID){
-			links.add(BlockPos.fromLong(message));
-			markDirty();
-		}else if(identifier == CLEAR_PACKET_ID){
-			links.clear();
-			markDirty();
+			entropyClient = (int) message;
 		}
 	}
 
 	@Override
 	public int getReadingFlux(){
-		return FluxUtil.findReadingFlux(this, entropy, fluxToTrans);
+		return fluxHelper.getReadingFlux();
 	}
 
 	@Override
 	public int getFlux(){
-		return entropy;
+		return fluxHelper.getFlux();
 	}
 
 	@Override
 	public void addFlux(int deltaFlux){
-		entropy += deltaFlux;
-		markDirty();
+		fluxHelper.addFlux(deltaFlux);
 	}
 
 	@Override
-	public void setFlux(int newFlux){
-		entropy = newFlux;
-		markDirty();
+	public boolean canBeginLinking(){
+		return fluxHelper.canBeginLinking();
+	}
+
+	@Override
+	public boolean canLink(ILinkTE otherTE){
+		return fluxHelper.canLink(otherTE);
 	}
 
 	@Override
 	public Set<BlockPos> getLinks(){
-		return links;
+		return fluxHelper.getLinks();
 	}
 
 	@Override
-	public Behaviour getBehaviour(){
-		return Behaviour.NODE;
+	public boolean createLinkSource(ILinkTE endpoint, @Nullable PlayerEntity player){
+		return fluxHelper.createLinkSource(endpoint, player);
+	}
+
+	@Override
+	public void removeLinkSource(BlockPos end){
+		fluxHelper.removeLinkSource(end);
 	}
 
 	@Override
@@ -186,8 +165,13 @@ public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntit
 	}
 
 	@Override
+	public boolean canAcceptLinks(){
+		return fluxHelper.canAcceptLinks();
+	}
+
+	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		FluxUtil.addFluxInfo(chat, this, -1);
-		FluxUtil.addLinkInfo(chat, this);
+		fluxHelper.addInfo(chat, player, hit);
 	}
 }

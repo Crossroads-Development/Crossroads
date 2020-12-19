@@ -122,6 +122,7 @@ public class CRTileEntity{
 		register(LodestoneTurbineTileEntity::new, "lodestone_turbine", reg, lodestoneTurbine);
 		register(LodestoneDynamoTileEntity::new, "lodestone_dynamo", reg, lodestoneDynamo);
 		register(SequenceBoxTileEntity::new, "sequence_box", reg, sequenceBox);
+		register(ChunkAcceleratorTileEntity::new, "chunk_accelerator", reg, chunkAccelerator);
 	}
 
 	private static void register(Supplier<? extends TileEntity> cons, String id, IForgeRegistry<TileEntityType<?>> reg, Block... blocks){

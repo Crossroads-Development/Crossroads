@@ -144,7 +144,7 @@ public class CRRenderUtil extends RenderUtil{
 	 */
 	@OnlyIn(Dist.CLIENT)
 	public static void addVertexBlock(IVertexBuilder builder, MatrixStack matrix, float x, float y, float z, float u, float v, float normalX, float normalY, float normalZ, int light, int[] col){
-		builder.pos(matrix.getLast().getMatrix(), x, y, z).color(col[0], col[1], col[2], col[3]).tex(u, v).lightmap(light).normal(normalX, normalY, normalZ).endVertex();
+		builder.pos(matrix.getLast().getMatrix(), x, y, z).color(col[0], col[1], col[2], col[3]).tex(u, v).lightmap(light).normal(matrix.getLast().getNormal(), normalX, normalY, normalZ).endVertex();
 	}
 
 	/**
@@ -164,7 +164,7 @@ public class CRRenderUtil extends RenderUtil{
 	 */
 	@OnlyIn(Dist.CLIENT)
 	public static void addVertexEntity(IVertexBuilder builder, MatrixStack matrix, float x, float y, float z, float u, float v, float normalX, float normalY, float normalZ, int light, int[] col){
-		builder.pos(matrix.getLast().getMatrix(), x, y, z).color(col[0], col[1], col[2], col[3]).tex(u, v).overlay(OverlayTexture.NO_OVERLAY).lightmap(light).normal(normalX, normalY, normalZ).endVertex();
+		builder.pos(matrix.getLast().getMatrix(), x, y, z).color(col[0], col[1], col[2], col[3]).tex(u, v).overlay(OverlayTexture.NO_OVERLAY).lightmap(light).normal(matrix.getLast().getNormal(), normalX, normalY, normalZ).endVertex();
 	}
 
 	/**
@@ -196,7 +196,8 @@ public class CRRenderUtil extends RenderUtil{
 		if(world == null){
 			return 0;//We really don't want to crash for this
 		}else{
-			return world.getGameTime() % Integer.MAX_VALUE + partialTicks;
+			//Caps the returned gametime at 1 real day, to reduce floating point error
+			return world.getGameTime() % (20 * 60 * 60 * 24) + partialTicks;
 		}
 	}
 

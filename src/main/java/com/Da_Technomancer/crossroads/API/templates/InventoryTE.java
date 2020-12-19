@@ -49,7 +49,8 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 	 * @return 100 * the speed that should be displayed in UIs
 	 */
 	public int getUISpeed(){
-		return (int) Math.round(axleHandler.getSpeed() * 100D);
+		//Capped as a short to prevent overflow with the UI packets
+		return (int) Math.min(Short.MAX_VALUE, Math.max(Short.MIN_VALUE, Math.round(axleHandler.getSpeed() * 100D)));
 	}
 
 	/**
@@ -59,7 +60,8 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 	 * @return The temperature
 	 */
 	public int getUITemp(){
-		return (int) temp;
+		//Capped as a short to prevent overflow with the UI packets
+		return (int) Math.min(temp, Short.MAX_VALUE);
 	}
 
 	@Override

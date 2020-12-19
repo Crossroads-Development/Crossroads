@@ -153,6 +153,7 @@ public class CRBlocks{
 	public static LodestoneTurbine lodestoneTurbine;
 	public static LodestoneDynamo lodestoneDynamo;
 	public static SequenceBox sequenceBox;
+	public static ChunkAccelerator chunkAccelerator;
 
 	public static AbstractBlock.Properties getRockProperty(){
 		return AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3).setRequiresTool().sound(SoundType.STONE);
@@ -327,6 +328,7 @@ public class CRBlocks{
 		lodestoneTurbine = new LodestoneTurbine();
 		lodestoneDynamo = new LodestoneDynamo();
 		sequenceBox = new SequenceBox();
+		chunkAccelerator = new ChunkAccelerator();
 	}
 
 	@OnlyIn(Dist.CLIENT)

@@ -19,7 +19,25 @@
 		},
 		{
 			"type": "text",
-			"text": "<thing>$(l:crossroads:intro/technomancy)/$ is produced- the amount produced grows exponentially with the applied boost- producing (2^(extra ticks))/2 <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ per tick (aka: +100% boost is 1TEn/tick, +200% boost is 2TEn/tick, +300% is 4TEn/tick, etc.).$(br2)Multiple overlapping <item>temporal accelerators/$ stack additively.$(br2)"
+			"text": "<thing>$(l:crossroads:intro/technomancy)/$ is produced- the amount produced grows exponentially with the applied boost- producing (2^(extra ticks)) * 2 <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ per cycle (aka: +100% boost is 4TEn/cycle, +200% boost is 8TEn/cycle, +300% is 16TEn/cycle, etc.).$(br2)Multiple overlapping <item>temporal accelerators/$ stack additively. The <item>temporal accelerator/$ itself can not be time-accelerated."
+		},
+		{
+			"type": "text",
+			"text": ""
+		},
+		{
+			"type": "spotlight",
+			"anchor": "chunk",
+			"item": "crossroads:chunk_accelerator",
+			"text": "The <item>Distributed Temporal Accelerator/$ is a larger-range version of the <item>Temporal Accelerator/$ that affects every tile entity in the entire chunk it is placed in. It <em>only affects tile entities/$, it does not apply to block ticks or entities.$(br2)It requires a stronger "
+		},
+		{
+			"type": "text",
+			"text": "<thing>$(l:crossroads:beam/time)time beam/$ and produces more <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ than the normal <item>temporal accelerator/$, but is more efficient in terms of beam usage/entropy creation per block affected.$(br2)It uses a <thing>$(l:crossroads:beam/time)time beam/$ to create (<thing>$(l:crossroads:intro/beam)beam power/$)/16 extra ticks per tick (or (<thing>$(l:crossroads:intro/beam)beam power/$)*25%). It produces (2^(extra ticks)) * 8 <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ per cycle (aka: +100% boost is "
+		},
+		{
+			"type": "text",
+			"text": "16TEn/cycle, +200% boost is 32TEn/cycle, +300% is 64TEn/cycle)$(br2)Multiple overlapping <item>distributed temporal accelerators/$ stack additively. The <item>distributed temporal accelerator/$ itself can not be time-accelerated.$(br2)"
 		}
 	]
 }

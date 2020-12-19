@@ -174,7 +174,7 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 		return out;
 	}
 
-	private BeamManager[] beamer = new BeamManager[2];//0: neg; 1: pos
+	private final BeamManager[] beamer = new BeamManager[2];//0: neg; 1: pos
 
 	@Override
 	public void receiveInt(byte identifier, int message, ServerPlayerEntity player){

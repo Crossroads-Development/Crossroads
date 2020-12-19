@@ -15,19 +15,19 @@
 		},
 		{
 			"type": "text",
-			"text": "produce <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ also have to be linked to the <item>node/$.$(br2)They transfer their entire storage of <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ every 4 ticks split between all available outputs, and <em>can overfill connected machines/$. Remember, if anything overfills, it explodes! <item>Entropy nodes/$ have a <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ capacity of 64. This leads to an overall average "
+			"text": "produce <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ also have to be linked to the <item>node/$.$(br2)They transfer their entire storage of <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ every cycle split between all available outputs, and <em>can overfill connected machines/$. Remember, if anything overfills, it explodes! <item>Entropy nodes/$ have a <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ capacity of 64. This leads to an overall average maximum "
 		},
 		{
 			"type": "text",
-			"text": "maximum transfer rate of 16TEn/tick.$(br2)<item>$(l:essentials/circuits#reader)Circuits/$ read the current stored <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ or <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ throughput of the <item>node/$.$(br2)If a <item>node/$ has a redstone signal, it will stop accepting <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ (any <item>nodes/$ outputting into it will send <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ to their other connected outputs "
+			"text": "transfer rate of 64TEn/cycle.$(br2)Every time an <item>Entropy Node/$ transfers <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ (once per cycle when they have any), they increase the amount of <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ by 2. This means a long chain of <item>Entropy Nodes/$ will have more <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ coming out than went in, and may overload the <item>Entropy Nodes/$ at the end.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "instead). They can still output <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ already in the <item>node/$ with a redstone signal, however.$(br2)<item>$(l:essentials/circuits#reader)Circuits/$ and redstone control allows making 'smart' routing systems for <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ that sends it along a different route- or stores it- when one <item>node/$ chain is almost full. For low overall <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ production, this isn't a "
+			"text": "<item>$(l:essentials/circuits#reader)Circuits/$ read the current stored <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ or <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ throughput of the <item>node/$.$(br2)If a <item>node/$ has a redstone signal, it will stop accepting <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ (any <item>nodes/$ outputting into it will send <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ to their other connected outputs instead). They can still output <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ already in the <item>node/$ with a redstone "
 		},
 		{
 			"type": "text",
-			"text": "concern- but for larger bases, this could be important.$(br2)"
+			"text": "signal, however.$(br2)<item>$(l:essentials/circuits#reader)Circuits/$ and redstone control allows making 'smart' routing systems for <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ that sends it along a different route- or stores it- when one <item>node/$ chain is almost full. For low overall <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ production, this isn't a concern- but for larger bases, this could be important.$(br2)"
 		}
 	]
 }

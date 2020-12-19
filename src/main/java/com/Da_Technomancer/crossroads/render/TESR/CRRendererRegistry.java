@@ -54,6 +54,7 @@ public class CRRendererRegistry{
 		//Flux machines (all have link lines)
 		ClientRegistry.bindTileEntityRenderer(ChronoHarnessTileEntity.type, ChronoHarnessRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(TemporalAcceleratorTileEntity.type, TemporalAcceleratorRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(ChunkAcceleratorTileEntity.type, ChunkAcceleratorRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(CopshowiumCreationChamberTileEntity.type, LinkLineRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(FluxSinkTileEntity.type, FluxSinkRenderer::new);
 	}

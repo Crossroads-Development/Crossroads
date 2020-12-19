@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.BeaconHarnessContainer;
+import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -31,7 +32,6 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Set;
 
 @ObjectHolder(Crossroads.MODID)
@@ -49,9 +49,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	private int loadSafetyTime = 0;
 
 	//Flux related fields
-	private HashSet<BlockPos> links = new HashSet<>(1);
-	private int flux = 0;
-	private int fluxToTrans = 0;
+	private final FluxHelper fluxHelper = new FluxHelper(this, Behaviour.SOURCE);
 
 	public BeaconHarnessTileEntity(){
 		super(type);
@@ -60,6 +58,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		FluxUtil.addFluxInfo(chat, this, running ? FLUX_GEN : 0);
+		fluxHelper.addInfo(chat, player, hit);
 	}
 
 	public int getCycles(){
@@ -72,26 +71,26 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 
 		// Actual beam production is in the emit() method
 
-		if(world.isRemote){
-			return;
+		if(!world.isRemote){
+			//Handle flux
+			fluxHelper.tick();
 		}
 
-		//Handle flux
-		long stage = world.getGameTime() % FluxUtil.FLUX_TIME;
-		if(stage == 0 && flux != 0){
-			fluxToTrans += flux;
-			flux = 0;
-			markDirty();
-		}else if(stage == 1){
-			flux += FluxUtil.performTransfer(this, links, fluxToTrans);
-			fluxToTrans = 0;
-			FluxUtil.checkFluxOverload(this);
-		}
 	}
 
 	@Override
 	public int getReadingFlux(){
-		return FluxUtil.findReadingFlux(this, flux, fluxToTrans);
+		return fluxHelper.getReadingFlux();
+	}
+
+	@Override
+	public void addFlux(int deltaFlux){
+		fluxHelper.addFlux(deltaFlux);
+	}
+
+	@Override
+	public boolean canAcceptLinks(){
+		return fluxHelper.canAcceptLinks();
 	}
 
 	private boolean invalid(Color col, BeamUnit last){
@@ -128,9 +127,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
 //		nbt.putBoolean("run", running);
-		for(BlockPos linked : links){
-			nbt.putLong("link", linked.toLong());
-		}
+		fluxHelper.write(nbt);
 		return nbt;
 	}
 
@@ -139,11 +136,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 		super.write(nbt);
 		nbt.putBoolean("run", running);
 		nbt.putInt("cycle", cycles);
-		nbt.putInt("flux", flux);
-		nbt.putInt("flux_trans", fluxToTrans);
-		for(BlockPos linked : links){
-			nbt.putLong("link", linked.toLong());
-		}
+		fluxHelper.write(nbt);
 		return nbt;
 	}
 
@@ -152,13 +145,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 		super.read(state, nbt);
 		running = nbt.getBoolean("run");
 		cycles = nbt.getInt("cycle");
-		flux = nbt.getInt("flux");
-		fluxToTrans = nbt.getInt("flux_trans");
-		if(nbt.contains("link")){
-			links.add(BlockPos.fromLong(nbt.getLong("link")));
-		}else{
-			links.clear();
-		}
+		fluxHelper.read(nbt);
 	}
 
 	@Override
@@ -225,32 +212,38 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	}
 
 	@Override
+	public boolean canBeginLinking(){
+		return fluxHelper.canBeginLinking();
+	}
+
+	@Override
+	public boolean canLink(ILinkTE otherTE){
+		return fluxHelper.canLink(otherTE);
+	}
+
+	@Override
 	public Set<BlockPos> getLinks(){
-		return links;
+		return fluxHelper.getLinks();
+	}
+
+	@Override
+	public boolean createLinkSource(ILinkTE endpoint, @Nullable PlayerEntity player){
+		return fluxHelper.createLinkSource(endpoint, player);
+	}
+
+	@Override
+	public void removeLinkSource(BlockPos end){
+		fluxHelper.removeLinkSource(end);
 	}
 
 	@Override
 	public int getFlux(){
-		return flux;
-	}
-
-	@Override
-	public void setFlux(int newFlux){
-		if(flux != newFlux){
-			flux = newFlux;
-			markDirty();
-		}
+		return fluxHelper.getFlux();
 	}
 
 	@Override
 	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity serverPlayerEntity){
-		if(identifier == LINK_PACKET_ID){
-			links.add(BlockPos.fromLong(message));
-			markDirty();
-		}else if(identifier == CLEAR_PACKET_ID){
-			links.clear();
-			markDirty();
-		}
+		fluxHelper.receiveLong(identifier, message, serverPlayerEntity);
 	}
 
 

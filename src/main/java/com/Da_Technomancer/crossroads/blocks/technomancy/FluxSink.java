@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxSinkTileEntity;
-import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
@@ -56,15 +56,7 @@ public class FluxSink extends ContainerBlock{
 
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		ItemStack heldItem = playerIn.getHeldItem(hand);
-		if(ILinkTE.isLinkTool(heldItem)){
-			TileEntity te = worldIn.getTileEntity(pos);
-			if(!worldIn.isRemote && te instanceof ILinkTE){
-				((ILinkTE) te).wrench(heldItem, playerIn);
-			}
-			return ActionResultType.SUCCESS;
-		}
-		return ActionResultType.PASS;
+		return FluxUtil.handleFluxLinking(worldIn, pos, playerIn.getHeldItem(hand), playerIn);
 	}
 
 	@Override

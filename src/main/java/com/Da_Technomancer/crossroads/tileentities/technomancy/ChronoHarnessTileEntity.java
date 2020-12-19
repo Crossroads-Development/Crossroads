@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
+import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -29,7 +30,6 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Set;
 
 @ObjectHolder(Crossroads.MODID)
@@ -41,13 +41,11 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 	private static final int FE_CAPACITY = 20_000;
 	private static final float SPEED = (float) Math.PI / 20F / 400F;//Used for rendering
 
-	private int flux = 0;//Stored flux
-	private int fluxToTrans = 0;
+	private final FluxHelper fluxHelper = new FluxHelper(this, Behaviour.SOURCE);
 	private int fe = FE_CAPACITY;//Stored FE. Placed with full FE
 	private int curPower = 0;//Current power generation (fe/t); used for readouts
 	private int clientCurPower = 0;//Current power gen on the client; used for rendering. On the server side, tracks last sent value
 	private float angle = 0;//Used for rendering. Client side only
-	private final HashSet<BlockPos> link = new HashSet<>(1);
 
 	public ChronoHarnessTileEntity(){
 		super(type);
@@ -57,7 +55,7 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		chat.add(new TranslationTextComponent("tt.crossroads.chrono_harness.fe", fe, FE_CAPACITY, curPower));
 		FluxUtil.addFluxInfo(chat, this, shouldRun() ? curPower / CRConfig.fePerEntropy.get() : 0);
-		FluxUtil.addLinkInfo(chat, this);
+		fluxHelper.addInfo(chat, player, hit);
 	}
 
 	public float getRenderAngle(float partialTicks){
@@ -71,26 +69,12 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 	}
 
 	private boolean hasRedstone(){
-		BlockState state = world.getBlockState(pos);
+		BlockState state = getBlockState();
 		if(state.getBlock() == CRBlocks.chronoHarness){
 			return state.get(ESProperties.REDSTONE_BOOL);
 		}
 		remove();
 		return true;
-	}
-
-	@Override
-	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
-		if(identifier == 4){
-			clientCurPower = (int) message;//Just used as a way of sending power gen
-		}
-		if(identifier == LINK_PACKET_ID){
-			link.add(BlockPos.fromLong(message));
-			markDirty();
-		}else if(identifier == CLEAR_PACKET_ID){
-			link.clear();
-			markDirty();
-		}
 	}
 
 	private boolean shouldRun(){
@@ -103,22 +87,13 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 			angle += clientCurPower * SPEED;
 		}else{
 			//Handle flux
-			long stage = world.getGameTime() % FluxUtil.FLUX_TIME;
-			if(stage == 0 && flux != 0){
-				fluxToTrans += flux;
-				flux = 0;
-				markDirty();
-			}else if(stage == 1){
-				flux += FluxUtil.performTransfer(this, link, fluxToTrans);
-				fluxToTrans = 0;
-				FluxUtil.checkFluxOverload(this);
-			}
+			fluxHelper.tick();
 
 			if(shouldRun()){
 				curPower = FE_CAPACITY - fe;
 				if(curPower > 0){
 					fe += curPower;
-					flux += Math.round((float) curPower / CRConfig.fePerEntropy.get());
+					fluxHelper.addFlux(Math.round((float) curPower / CRConfig.fePerEntropy.get()));
 					markDirty();
 					FluxUtil.checkFluxOverload(this);
 				}
@@ -154,8 +129,73 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 	}
 
 	@Override
+	public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
+		fe = nbt.getInt("fe");
+		curPower = nbt.getInt("pow");
+		clientCurPower = curPower;
+		fluxHelper.read(nbt);
+	}
+
+	@Override
+	public CompoundNBT getUpdateTag(){
+		CompoundNBT nbt = super.getUpdateTag();
+		nbt.putInt("pow", curPower);
+		fluxHelper.write(nbt);
+		return nbt;
+	}
+
+	@Override
 	public int getReadingFlux(){
-		return FluxUtil.findReadingFlux(this, flux, fluxToTrans);
+		return fluxHelper.getReadingFlux();
+	}
+
+	@Override
+	public void addFlux(int deltaFlux){
+		fluxHelper.addFlux(deltaFlux);
+	}
+
+	@Override
+	public boolean canAcceptLinks(){
+		return fluxHelper.canAcceptLinks();
+	}
+
+	@Override
+	public int getFlux(){
+		return fluxHelper.getFlux();
+	}
+
+	@Override
+	public boolean canBeginLinking(){
+		return fluxHelper.canBeginLinking();
+	}
+
+	@Override
+	public boolean canLink(ILinkTE otherTE){
+		return fluxHelper.canLink(otherTE);
+	}
+
+	@Override
+	public Set<BlockPos> getLinks(){
+		return fluxHelper.getLinks();
+	}
+
+	@Override
+	public boolean createLinkSource(ILinkTE endpoint, @Nullable PlayerEntity player){
+		return fluxHelper.createLinkSource(endpoint, player);
+	}
+
+	@Override
+	public void removeLinkSource(BlockPos end){
+		fluxHelper.removeLinkSource(end);
+	}
+
+	@Override
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
+		if(identifier == 4){
+			clientCurPower = (int) message;//Just used as a way of sending power gen
+		}
+		fluxHelper.receiveLong(identifier, message, sendingPlayer);
 	}
 
 	@Override
@@ -180,55 +220,10 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
 		nbt.putInt("fe", fe);
-		nbt.putInt("flux", flux);
-		nbt.putInt("flux_trans", fluxToTrans);
 		nbt.putInt("pow", curPower);
-		for(BlockPos linked : link){//Size 0 or 1
-			nbt.putLong("link", linked.toLong());
-		}
+		fluxHelper.write(nbt);
 
 		return nbt;
-	}
-
-	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
-		fe = nbt.getInt("fe");
-		flux = nbt.getInt("flux");
-		fluxToTrans = nbt.getInt("flux_trans");
-		curPower = nbt.getInt("pow");
-		clientCurPower = curPower;
-		if(nbt.contains("link")){
-			link.add(BlockPos.fromLong(nbt.getLong("link")));
-		}else{
-			link.clear();
-		}
-	}
-
-	@Override
-	public CompoundNBT getUpdateTag(){
-		CompoundNBT nbt = super.getUpdateTag();
-		nbt.putInt("pow", curPower);
-		for(BlockPos linked : link){//Size 0 or 1
-			nbt.putLong("link", linked.toLong());
-		}
-		return nbt;
-	}
-
-	@Override
-	public int getFlux(){
-		return flux;
-	}
-
-	@Override
-	public void setFlux(int newFlux){
-		flux = newFlux;
-		markDirty();
-	}
-
-	@Override
-	public Set<BlockPos> getLinks(){
-		return link;
 	}
 
 	private class EnergyHandler implements IEnergyStorage{

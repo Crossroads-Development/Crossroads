@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import net.minecraft.entity.*;
 import net.minecraft.loot.LootContext;
@@ -53,7 +54,7 @@ public class RiftEffect extends BeamEffect{
 				//Spawn mobs
 				ServerWorld worldServ = (ServerWorld) worldIn;
 				if(RAND.nextInt(256) < power){
-					boolean peaceful = worldServ.getDifficulty() == Difficulty.PEACEFUL;
+					boolean peaceful = worldServ.getDifficulty() == Difficulty.PEACEFUL || CRConfig.riftSpawnDrops.get();
 					try{
 						List<MobSpawnInfo.Spawners> list = worldServ.getChunkProvider().generator.func_230353_a_(worldIn.getBiome(pos), worldServ.func_241112_a_(), EntityClassification.MONSTER, pos);
 						list = ForgeEventFactory.getPotentialSpawns(worldServ, EntityClassification.MONSTER, pos, list);

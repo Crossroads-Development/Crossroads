@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.essentials.tileentities.ILinkTE;
+import com.Da_Technomancer.essentials.tileentities.LinkHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -36,17 +37,13 @@ public class FluxUtil{
 	//	public static final int[] COLOR_CODES = new int[] {new Color(67, 0, 49).getRGB(), new Color(255, 68, 0).getRGB(), new Color(220, 64, 0).getRGB()};//color codes for flux rendering
 	public static final int[] COLOR_CODES = new int[] {new Color(0, 0, 0).getRGB(), new Color(42, 0, 51).getRGB(), new Color(212, 192, 220).getRGB()};//color codes for flux rendering
 
-	public static int findReadingFlux(IFluxLink te, int flux, int fluxToTrans){
-		return Math.max(flux, fluxToTrans);
-	}
-
 	/**
 	 * Transfer a given amount of flux from the src, and return any remainder
-	 * Used for Flux Nodes
+	 * Does not modify the source in any way; the source is responsible for removing successfully transfered flux
 	 * @param src The source to transfer from
 	 * @param links The linked relative positions to transfer to (will be checked)
 	 * @param toTransfer The qty of flux to attempt to transfer
-	 * @return The amount of untransfered flux
+	 * @return The amount of untransferred flux
 	 */
 	public static int performTransfer(IFluxLink src, Set<BlockPos> links, int toTransfer){
 		if(toTransfer <= 0){
@@ -65,7 +62,7 @@ public class FluxUtil{
 		for(Object dest : dests){
 			IFluxLink linked = (IFluxLink) dest;
 			linked.addFlux(toTransPer);
-			src.addFlux(-toTransPer);
+//			src.addFlux(-toTransPer);
 			renderFlux(world, pos, linked.getTE().getPos(), toTransPer);
 		}
 		return toTransfer - toTransPer * dests.length;
@@ -134,10 +131,10 @@ public class FluxUtil{
 	}
 
 	public static ActionResultType handleFluxLinking(World world, BlockPos pos, ItemStack stack, PlayerEntity player){
-		if(ILinkTE.isLinkTool(stack)){
+		if(LinkHelper.isLinkTool(stack)){
 			TileEntity te = world.getTileEntity(pos);
 			if(!world.isRemote && te instanceof ILinkTE){
-				((ILinkTE) te).wrench(stack, player);
+				LinkHelper.wrench((ILinkTE) te, stack, player);
 			}
 			return ActionResultType.SUCCESS;
 		}

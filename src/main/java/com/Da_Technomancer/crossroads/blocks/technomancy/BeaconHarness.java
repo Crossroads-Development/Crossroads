@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.BeaconHarnessTileEntity;
-import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -73,11 +73,7 @@ public class BeaconHarness extends ContainerBlock{
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		ItemStack heldItem = playerIn.getHeldItem(hand);
-		if(ILinkTE.isLinkTool(heldItem)){
-			TileEntity te = worldIn.getTileEntity(pos);
-			if(!worldIn.isRemote && te instanceof ILinkTE){
-				((ILinkTE) te).wrench(heldItem, playerIn);
-			}
+		if(FluxUtil.handleFluxLinking(worldIn, pos, playerIn.getHeldItem(hand), playerIn).isSuccess()){
 			return ActionResultType.SUCCESS;
 		}else if(!worldIn.isRemote){
 			TileEntity te = worldIn.getTileEntity(pos);
