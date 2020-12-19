@@ -112,6 +112,7 @@ public final class CRItems{
 	public static PathSigil sigilAlch;
 	public static PathSigil sigilTech;
 	public static PathSigil sigilWitch;
+	public static ArmorEnviroBoots armorEnviroBoots;
 
 	public static OreProfileItem oreGravel;
 	public static OreProfileItem oreClump;
@@ -223,6 +224,7 @@ public final class CRItems{
 		sigilTech = new PathSigil(EnumPath.TECHNOMANCY);
 		sigilWitch = new PathSigil(EnumPath.WITCHCRAFT);
 		propellerPack = new ArmorPropellerPack();
+		armorEnviroBoots = new ArmorEnviroBoots();
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -262,6 +264,6 @@ public final class CRItems{
 		IItemPropertyGetter technoArmorPropertyGetter = (ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) -> TechnomancyArmor.isReinforced(stack) ? TechnomancyArmor.hasDurability(stack) ? 2F : 1F : 0F;
 		ItemModelsProperties.registerProperty(armorGoggles, new ResourceLocation("protection"), technoArmorPropertyGetter);
 		ItemModelsProperties.registerProperty(propellerPack, new ResourceLocation("protection"), technoArmorPropertyGetter);
-
+		ItemModelsProperties.registerProperty(armorEnviroBoots, new ResourceLocation("protection"), technoArmorPropertyGetter);
 	}
 }

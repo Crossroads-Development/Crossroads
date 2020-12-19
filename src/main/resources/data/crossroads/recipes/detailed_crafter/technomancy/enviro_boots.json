@@ -1,0 +1,23 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"item": "crossroads:enviro_boots",
+		"count": 1
+	},
+	"pattern": [
+		"BLB",
+		"BCB"
+	],
+	"key": {
+		"B": {
+			"tag": "forge:ingots/bronze"
+		},
+		"L": {
+			"tag": "forge:leather"
+		},
+		"C": {
+			"tag": "crossroads:ingots/copshowium"
+		}
+	}
+}

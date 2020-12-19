@@ -38,6 +38,7 @@ import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -208,7 +209,7 @@ public final class EventHandlerCommon{
 			if(!TechnomancyArmor.isReinforced(inputLeft) && CRConfig.technoArmorReinforce.get()){
 				ItemStack inputRight = e.getRight();
 				//TODO: Add the other techno armor items to the if statement
-				if(inputLeft.getItem() == CRItems.armorGoggles && inputRight.getItem() == Items.NETHERITE_HELMET || inputLeft.getItem() == CRItems.propellerPack && inputRight.getItem() == Items.NETHERITE_CHESTPLATE || inputLeft.getItem() == null && inputRight.getItem() == Items.NETHERITE_LEGGINGS || inputLeft.getItem() == null && inputRight.getItem() == Items.NETHERITE_BOOTS){
+				if(inputLeft.getItem() == CRItems.armorGoggles && inputRight.getItem() == Items.NETHERITE_HELMET || inputLeft.getItem() == CRItems.propellerPack && inputRight.getItem() == Items.NETHERITE_CHESTPLATE || inputLeft.getItem() == null && inputRight.getItem() == Items.NETHERITE_LEGGINGS || inputLeft.getItem() == CRItems.armorEnviroBoots && inputRight.getItem() == Items.NETHERITE_BOOTS){
 					e.setOutput(TechnomancyArmor.setReinforced(inputLeft.copy(), true));
 					e.setMaterialCost(1);
 					e.setCost(CRConfig.technoArmorCost.get() * 10);
@@ -280,6 +281,15 @@ public final class EventHandlerCommon{
 					player.world.createExplosion(null, player.getPosX(), player.getPosY(), player.getPosZ(), 5F, Explosion.Mode.BREAK);
 				}
 			}
+		}
+	}
+
+	@SubscribeEvent
+	@SuppressWarnings("unused")
+	public void enviroBootsProtect(LivingAttackEvent e){
+		//Provides immunity from magma block damage and fall damage when wearing enviro_boots
+		if(e.getSource() == DamageSource.HOT_FLOOR || e.getSource() == DamageSource.FALL && e.getEntityLiving().getItemStackFromSlot(EquipmentSlotType.FEET).getItem() == CRItems.armorEnviroBoots){
+			e.setCanceled(true);
 		}
 	}
 

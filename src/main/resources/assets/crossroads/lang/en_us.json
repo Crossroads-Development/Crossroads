@@ -263,6 +263,7 @@
 	"item.crossroads.gear_facade_glass": "Glass Facade",
 	"block.crossroads.sequence_box": "Sequencer",
 	"block.crossroads.chunk_accelerator": "Distributed Temporal Accelerator",
+	"item.crossroads.enviro_boots": "All-Terrain Boots",
 
 	"item.crossroads.ore_gravel": "Raw %1$s Grit",
 	"item.crossroads.ore_clump": "%1$s Clump",
@@ -635,6 +636,9 @@
 	"tt.crossroads.technomancy_armor.reinforced": "Netherite Reinforced",
 	"tt.crossroads.propeller_pack.desc": "Upgraded Elytra wings. Hold <jump> to boost when wound",
 	"tt.crossroads.propeller_pack.quip": "It's a bird! It's a plane! It's someone with a whirligig!",
+	"tt.crossroads.enviro_boots.desc": "Swim speed boost, frost walker, soul speed, and immunity to fall damage",
+	"tt.crossroads.enviro_boots.frost": "Hold <sneak> to freeze water",
+	"tt.crossroads.enviro_boots.quip": "These boots were made for falling off underwater cliffs onto soul sand",
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
 	"container.crossroads.boilerplate.speed": "%1$f rad/s",

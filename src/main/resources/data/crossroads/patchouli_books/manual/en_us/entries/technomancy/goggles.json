@@ -46,6 +46,16 @@
 			"text": "<thing>$(l:crossroads:rotary/winding_table)speed/$ will be slowly drained.$(br2)It can be used as an unbreakable Elytra that provides netherite-tier armor protection and doesn't need fireworks for boosting.$(br2)"
 		},
 		{
+			"type": "spotlight",
+			"anchor": "enviro_boots",
+			"item": "crossroads:enviro_boots",
+			"text": "All-Terrain Boots combine the Soul Speed, Feather Falling, Depth Strider, and Frost Walker enchantments into one item. None of the effects will consume durability, the depth strider effect is a general speed boost when swimming instead of only applying when walking, and the feather falling effect totally "
+		},
+		{
+			"type": "text",
+			"text": "eliminates fall damage. The frost walker effect of freezing water only applies while sneaking.$(br2)"
+		},
+		{
 			"type": "text",
 			"text": "<bobo>iT\"S mEE! $(l:crossroads:intro/welcome#bobo)bOBO/$<bobo>!!$(br2)<bobo>dEr iSS ANOHTER google LENSE! lUk thRU darkNes!/$$(br2)"
 		}

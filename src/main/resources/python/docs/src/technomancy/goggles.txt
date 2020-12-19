@@ -15,6 +15,8 @@ A <link:crossroads:fluid/ingr>pure quartz/$ lens will act as a permanent <item><
 The <item>Propelled Wingpack/$ acts like an Elytra with a built-in rocket boost. To use the boost, it needs to be wound in a <item><link:crossroads:rotary/winding_table>Spring-Winding Stand/$.
 While <em>holding/$ the jump key (default space), the wearer gets a speed boost in the direction they're looking and the <thing><link:crossroads:rotary/winding_table>spring speed/$ will be slowly drained.
 It can be used as an unbreakable Elytra that provides netherite-tier armor protection and doesn't need fireworks for boosting.
+<page|spotlight|enviro_boots|crossroads:enviro_boots>
+All-Terrain Boots combine the Soul Speed, Feather Falling, Depth Strider, and Frost Walker enchantments into one item. None of the effects will consume durability, the depth strider effect is a general speed boost when swimming instead of only applying when walking, and the feather falling effect totally eliminates fall damage. The frost walker effect of freezing water only applies while sneaking.
 
 <bobo>iT"S mEE! <link:crossroads:intro/welcome#bobo>bOBO/$<bobo>!!
 dEr iSS ANOHTER google LENSE! lUk thRU darkNes!/$

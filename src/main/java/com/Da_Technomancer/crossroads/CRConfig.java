@@ -92,6 +92,9 @@ public class CRConfig{
 	public static ForgeConfigSpec.BooleanValue beaconHarnessLoadSafety;
 	public static ForgeConfigSpec.IntValue fluxNodeGain;
 	public static ForgeConfigSpec.BooleanValue riftSpawnDrops;
+	public static ForgeConfigSpec.DoubleValue enviroBootDepth;
+	public static ForgeConfigSpec.IntValue enviroBootFrostWalk;
+	public static ForgeConfigSpec.IntValue enviroBootSoulSpeed;
 
 	private static final ITag<Block> destroyBlacklist = BlockTags.makeWrapperTag(Crossroads.MODID + ":destroy_blacklist");
 
@@ -191,6 +194,9 @@ public class CRConfig{
 		technoArmorReinforce = serverBuilder.comment("Allow adding Netherite armor to Technomancy armor?").define("techno_armor_reinforce", true);
 		technoArmorCost = serverBuilder.comment("Multiplier for XP levels to upgrade Technomancy armor").defineInRange("techno_armor_xp", 1, 0, 100);
 		fluxNodeGain = serverBuilder.comment("Temporal Entropy gained per Entropy Node when transferring", "Higher values are more difficult, and encourage using fewer node chains").defineInRange("entropy_node_gain", 2, 0, 64);
+		enviroBootDepth = serverBuilder.comment("Speed boost from All-Terrain Boots in water (swim speed boost)", "Set to 0 to disable").defineInRange("enviro_boot_depth", 3F, 0F, 100F);
+		enviroBootFrostWalk = serverBuilder.comment("Level of the All-Terrain Boots frost walker effect", "Higher levels increase freezing range", "Set to 0 to disable").defineInRange("enviro_boot_frost", 2, 0, 10);
+		enviroBootSoulSpeed = serverBuilder.comment("Level of the All-Terrain Boots soul speed effect", "Set to 0 to disable").defineInRange("enviro_boot_soul", 3, 0, 10);
 		serverBuilder.pop();
 		serverBuilder.push(CAT_ALCHEMY);
 		phelEffect = serverBuilder.comment("Allow the full effect of Phelostogen?", "If disabled Phelostogen lights a single small fire instead").define("phel_effect", true);
