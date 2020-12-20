@@ -132,7 +132,7 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements INamedC
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(facing == getFacing() || facing != null && facing.getAxis() == Direction.Axis.Y){
+		if(capability == Capabilities.CHEMICAL_CAPABILITY && (facing == getFacing() || facing != null && facing.getAxis() == Direction.Axis.Y)){
 			return (LazyOptional<T>) chemOpt;
 		}
 		return super.getCapability(capability, facing);

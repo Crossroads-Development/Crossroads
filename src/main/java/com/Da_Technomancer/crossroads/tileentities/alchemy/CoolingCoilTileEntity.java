@@ -55,7 +55,7 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).get(CRProperties.HORIZ_FACING).getAxis())){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == getBlockState().get(CRProperties.HORIZ_FACING).getAxis())){
 			return (LazyOptional<T>) chemOpt;
 		}
 		return super.getCapability(cap, side);

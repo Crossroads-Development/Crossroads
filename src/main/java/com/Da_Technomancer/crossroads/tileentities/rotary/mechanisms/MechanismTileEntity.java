@@ -315,6 +315,14 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 		}
 	}
 
+	/**
+	 * Optimization: Marks the block dirty without updating the blockstate cache
+	 * Careful when using this- any situation where the blockstate might change makes this unacceptable
+	 */
+	private void markDirtyLight(){
+		world.markChunkDirty(this.pos, this);
+	}
+
 	protected class SidedAxleHandler implements IAxleHandler{
 
 		private final int side;
@@ -343,7 +351,8 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 		@Override
 		public void setEnergy(double newEnergy){
 			energy[side] = newEnergy;
-			markDirty();
+//			markDirty();
+			markDirtyLight();
 		}
 
 		@Override

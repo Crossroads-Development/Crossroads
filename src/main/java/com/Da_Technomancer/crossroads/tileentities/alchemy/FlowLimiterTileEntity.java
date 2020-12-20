@@ -124,7 +124,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == world.getBlockState(pos).get(ESProperties.FACING).getAxis())){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == getBlockState().get(ESProperties.FACING).getAxis())){
 			return (LazyOptional<T>) chemOpt;
 		}
 		return super.getCapability(cap, side);
