@@ -98,7 +98,7 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 			if(otherOpt.isPresent()){
 				IHeatHandler handler = otherOpt.orElseThrow(NullPointerException::new);
 				temp += handler.getTemp();
-				handler.addHeat(-handler.getTemp());
+//				handler.addHeat(-handler.getTemp());
 				heatHandlers.add(handler);
 				setData(side.getIndex(), true, modes[side.getIndex()]);
 			}else{
@@ -109,7 +109,7 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 		temp /= heatHandlers.size() + 1;
 
 		for(IHeatHandler handler : heatHandlers){
-			handler.addHeat(temp);
+			handler.setTemp(temp);
 		}
 
 		temp = runLoss();

@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.render.IVisualEffect;
 import com.Da_Technomancer.essentials.packets.ClientPacket;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
@@ -35,6 +36,9 @@ public class AddVisualToClient extends ClientPacket{
 
 	@Override
 	protected void run(){
-		effectsToRender.add(CRRenderUtil.visualFactories[nbt.getInt("id")].apply(SafeCallable.getClientWorld(), nbt));
+		World world = SafeCallable.getClientWorld();
+		if(world != null){
+			effectsToRender.add(CRRenderUtil.visualFactories[nbt.getInt("id")].apply(SafeCallable.getClientWorld(), nbt));
+		}
 	}
 }

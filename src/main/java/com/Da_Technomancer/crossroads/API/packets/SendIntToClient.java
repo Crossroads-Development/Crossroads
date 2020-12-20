@@ -36,7 +36,11 @@ public class SendIntToClient extends ClientPacket{
 
 	@Override
 	protected void run(){
-		TileEntity te = Minecraft.getInstance().world.getTileEntity(pos);
+		World world = SafeCallable.getClientWorld();
+		if(world == null){
+			return;
+		}
+		TileEntity te = world.getTileEntity(pos);
 
 		if(te instanceof IIntReceiver){
 			((IIntReceiver) te).receiveInt(identifier, message, null);
