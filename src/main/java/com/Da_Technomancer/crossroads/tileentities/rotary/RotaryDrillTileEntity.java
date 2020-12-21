@@ -87,7 +87,7 @@ public class RotaryDrillTileEntity extends ModuleTE{
 	public void updateContainingBlockInfo(){
 		super.updateContainingBlockInfo();
 		axleOpt.invalidate();
-		axleOpt = LazyOptional.of(this::createAxleHandler);
+		axleOpt = LazyOptional.of(() -> axleHandler);
 	}
 
 	@Override
