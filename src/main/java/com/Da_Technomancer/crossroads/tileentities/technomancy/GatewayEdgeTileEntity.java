@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
+import com.Da_Technomancer.crossroads.API.technomancy.IGateway;
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -33,8 +33,8 @@ public class GatewayEdgeTileEntity extends TileEntity implements IInfoTE{
 		if(key != null){
 			//Non-top frames call the top for addInfo
 			TileEntity te = world.getTileEntity(pos.add(key));
-			if(te instanceof GatewayFrameTileEntity){
-				((GatewayFrameTileEntity) te).addInfo(chat, player, hit);
+			if(te instanceof IGateway){
+				((IGateway) te).addInfo(chat, player, hit);
 			}
 		}
 	}
@@ -45,42 +45,16 @@ public class GatewayEdgeTileEntity extends TileEntity implements IInfoTE{
 		updateContainingBlockInfo();
 	}
 
+	public BlockPos getKey(){
+		return key;
+	}
+
 	public void setKey(BlockPos newKey){
 		key = newKey;
 		markDirty();
 	}
 
-	public float getCircuitRead(){
-		if(key == null){
-			return 0;
-		}
-		TileEntity srcTE = world.getTileEntity(key);
-		if(srcTE instanceof GatewayFrameTileEntity){
-			EnumBeamAlignments[] chev = ((GatewayFrameTileEntity) srcTE).chevrons;
-			for(int i = 0; i < chev.length; i++){
-				if(chev[i] == null){
-					return i;
-				}
-			}
-			return chev.length;
-		}
-		return 0;
-	}
-
 	//Multiblock management
-
-	/**
-	 * Called when this block is broken. Disassembles the rest of the multiblock if formed
-	 */
-	public void dismantle(){
-		if(key != null){
-			//The rest of the multiblock asks the head to dismantle
-			TileEntity te = world.getTileEntity(pos.add(key));
-			if(te instanceof GatewayFrameTileEntity){
-				((GatewayFrameTileEntity) te).dismantle();
-			}
-		}
-	}
 
 	@Override
 	public void read(BlockState state, CompoundNBT nbt){

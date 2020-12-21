@@ -11,7 +11,11 @@
 			"type": "spotlight",
 			"title": "Gateway",
 			"item": "crossroads:gateway_frame",
-			"text": "<item>Gateway Edge/$ and a <item>Gateway Controller/$ can be built into a multiblock <item>Gateway/$. The <item>gateway/$ is a portal that can connect to any other <item>gateway/$, including between dimensions. In order to connect to another <item>gateway/$, one of the <item>gateways/$ has to be dialed, and will produce <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ as a byproduct.$(br2)"
+			"text": "<thing>Gateways/$ are multiblocks that allow creating a world-wide, interdimensional portal network, which players and other entities can teleport through. <item>Gateway Edge/$ and a <item>Gateway Controller/$ can be built into a multiblock <item>Gateway/$.$(br2)In order to connect to another <item>gateway"
+		},
+		{
+			"type": "text",
+			"text": "<item>/$, one of the <item>gateways/$ has to be dialed, and will produce <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ as a byproduct.$(br2)"
 		},
 		{
 			"type": "image",
@@ -57,6 +61,20 @@
 		{
 			"type": "text",
 			"text": "will measure the total number of locked in <thing>$(l:crossroads:intro/beam)alignments/$.$(br2)"
+		},
+		{
+			"type": "spotlight",
+			"anchor": "destination",
+			"item": "crossroads:gateway_controller_destination",
+			"text": "The <item>Endpoint Controller/$ can be used in place of a normal <item>gateway controller/$ as a cheaper, simpler alternative. A <item>gateway/$ created using the <item>endpoint gateway controller/$ doesn't produce <thing>$(l:crossroads:intro/technomancy)temporal entropy/$, doesn't need a <thing>$(l:crossroads:intro/rotary)rotary input/$, and doesn't need <thing>$(l:crossroads:intro/beam)beams/$.$(br2)However, "
+		},
+		{
+			"type": "text",
+			"text": "it can not dial to any <thing>gateway/$ but other <thing>gateways/$ can dial to it. The connection is still two-directional.$(br2)In addition, if the <item>endpoint gateway controller/$ is given a redstone signal, it will create a connection to the last <item>gateway/$ it was connected to (the other gateway will be the one that produces <thing>$(l:crossroads:intro/technomancy)temporal entropy/$).$(br2)"
+		},
+		{
+			"type": "text",
+			"text": "This means you can setup one normal <thing>gateway/$ with a full dialing system to act as a hub, that goes to many different simple <thing>endpoint gateways/$, all of which connect back to the hub.$(br2)"
 		}
 	]
 }

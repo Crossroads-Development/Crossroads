@@ -1,0 +1,6 @@
+{
+	"variants": {
+		"active=false": { "model": "crossroads:block/gateway_controller_destination" },
+		"active=true": { "model": "crossroads:block/gateway_frame_empty" }
+	}
+}

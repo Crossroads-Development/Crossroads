@@ -44,13 +44,14 @@ public class GatewaySavedData extends WorldSavedData{
 	@Nullable
 	public static GatewayAddress requestAddress(@Nonnull ServerWorld w, @Nonnull BlockPos pos){
 		GatewaySavedData data = get(w);
-		if(data.addressBook.size() >= (int) Math.pow(GatewayAddress.LEGAL_VALS.length, 4)){
+		if(data.addressBook.size() + 1 >= (int) Math.pow(GatewayAddress.LEGAL_VALS.length, 4)){
 			Crossroads.logger.warn("Ran out of Technomancy Gateway Addresses! No new gateways can be built");
 			Crossroads.logger.warn("Let the mod author know that someone managed to hit the limit :)");
 			return null;//Every single possible address has been assigned. Impressive?
 		}
 
 		//Generate a unique new address
+		//TODO: Optimize this for a large number of taken addresses
 		EnumBeamAlignments[] address = new EnumBeamAlignments[4];
 		GatewayAddress reserved = getReservedAddress(w);
 		GatewayAddress gateAdd;

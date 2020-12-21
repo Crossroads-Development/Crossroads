@@ -75,11 +75,9 @@ public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickab
 			}
 		}else if(world.getGameTime() != fluxHelper.lastTick){
 			fluxHelper.tick();
-			if(world.getGameTime() % FluxUtil.FLUX_TIME == 0){
-				if(isRunning() && fluxHelper.flux != 0){
-					fluxHelper.flux = 0;
-					markDirty();
-				}
+			if(world.getGameTime() % FluxUtil.FLUX_TIME == 0 && isRunning() && fluxHelper.flux != 0){
+				fluxHelper.flux = 0;
+				markDirty();
 			}
 		}
 	}

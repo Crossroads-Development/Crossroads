@@ -68,7 +68,7 @@ public class CRTileEntity{
 		register(CageChargerTileEntity::new, "cage_charger", reg, cageCharger);
 		register(HamsterWheelTileEntity::new, "hamster_wheel", reg, hamsterWheel);
 		register(CopshowiumCreationChamberTileEntity::new, "copshowium_creation_chamber", reg, copshowiumCreationChamber);
-		register(GatewayFrameTileEntity::new, "gateway_frame", reg, gatewayFrame);
+		register(GatewayControllerTileEntity::new, "gateway_frame", reg, gatewayController);
 		register(GatewayEdgeTileEntity::new, "gateway_edge", reg, gatewayEdge);
 //		register(RedstoneKeyboardTileEntity::new, "redstone_keyboard", reg, redstoneKeyboard);
 //		register(PrototypingTableTileEntity::new, "prototyping_table", reg, prototypingTable);
@@ -123,6 +123,7 @@ public class CRTileEntity{
 		register(LodestoneDynamoTileEntity::new, "lodestone_dynamo", reg, lodestoneDynamo);
 		register(SequenceBoxTileEntity::new, "sequence_box", reg, sequenceBox);
 		register(ChunkAcceleratorTileEntity::new, "chunk_accelerator", reg, chunkAccelerator);
+		register(GatewayControllerDestinationTileEntity::new, "gateway_controller_destination", reg, gatewayControllerDestination);
 	}
 
 	private static void register(Supplier<? extends TileEntity> cons, String id, IForgeRegistry<TileEntityType<?>> reg, Block... blocks){

@@ -1,9 +1,12 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
+import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.IGateway;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayEdgeTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayControllerTileEntity;
+import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.Block;
@@ -12,10 +15,14 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -24,11 +31,11 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class GatewayFrameEdge extends ContainerBlock implements IReadable{
+public class GatewayController extends ContainerBlock implements IReadable{
 
-	public GatewayFrameEdge(){
+	public GatewayController(){
 		super(CRBlocks.getMetalProperty());
-		String name = "gateway_edge";
+		String name = "gateway_frame";//This registry name is bad, but kept for backwards compatibility
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
@@ -38,12 +45,13 @@ public class GatewayFrameEdge extends ContainerBlock implements IReadable{
 	@Nullable
 	@Override
 	public TileEntity createNewTileEntity(IBlockReader worldIn){
-		return new GatewayEdgeTileEntity();
+		return new GatewayControllerTileEntity();
 	}
 
 	@Override
 	public BlockRenderType getRenderType(BlockState state){
-		return BlockRenderType.MODEL;
+		//If this is formed into a multiblock, we let the TESR on the top handle all rendering
+		return state.get(CRProperties.ACTIVE) ? BlockRenderType.ENTITYBLOCK_ANIMATED : BlockRenderType.MODEL;
 	}
 
 	@Override
@@ -52,25 +60,38 @@ public class GatewayFrameEdge extends ContainerBlock implements IReadable{
 	}
 
 	@Override
+	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult ray){
+		ItemStack held = player.getHeldItem(hand);
+		if(state.get(CRProperties.ACTIVE)){
+			//Handle linking if this is the top block
+			return FluxUtil.handleFluxLinking(world, pos, held, player);
+		}else if(ESConfig.isWrench(held)){
+			//Attempt to form the multiblock
+			TileEntity te = world.getTileEntity(pos);
+			if(te instanceof GatewayControllerTileEntity){
+				((GatewayControllerTileEntity) te).assemble(player);
+				return ActionResultType.SUCCESS;
+			}
+		}
+		return ActionResultType.PASS;
+	}
+
+	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
 		TileEntity te = world.getTileEntity(pos);
-		if(newState.getBlock() != state.getBlock() && te instanceof GatewayEdgeTileEntity){
-			//Shutdown the multiblock
-			BlockPos keyPos;
-			if((keyPos = ((GatewayEdgeTileEntity) te).getKey()) != null){
-				//The rest of the multiblock asks the head to dismantle
-				TileEntity controllerTe = world.getTileEntity(pos.add(keyPos));
-				if(controllerTe instanceof IGateway){
-					((IGateway) controllerTe).dismantle();
-				}
-			}
+		if(newState.getBlock() != state.getBlock() && te instanceof IGateway){
+			((IGateway) te).dismantle();//Shutdown the multiblock
 		}
 		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flag){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.gateway.frame"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.gateway.desc"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.gateway.dial"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.gateway.proc"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.gateway.flux", GatewayControllerTileEntity.FLUX_PER_CYCLE));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", GatewayControllerTileEntity.INERTIA));
 	}
 
 	@Override
@@ -85,18 +106,16 @@ public class GatewayFrameEdge extends ContainerBlock implements IReadable{
 
 	@Override
 	public float read(World world, BlockPos pos, BlockState state){
-		if(!state.get(CRProperties.ACTIVE)){
-			return 0;
-		}
 		//Read the number of entries in the dialed address [0-4]
 		TileEntity te = world.getTileEntity(pos);
-		BlockPos keyPos;
-		if(te instanceof GatewayEdgeTileEntity && (keyPos = ((GatewayEdgeTileEntity) te).getKey()) != null){
-			keyPos = pos.add(keyPos);
-			BlockState controllerState = world.getBlockState(keyPos);
-			if(controllerState.getBlock() instanceof IReadable){
-				return ((IReadable) controllerState.getBlock()).read(world, keyPos, controllerState);
+		if(te instanceof GatewayControllerTileEntity){
+			EnumBeamAlignments[] chev = ((GatewayControllerTileEntity) te).chevrons;
+			for(int i = 0; i < chev.length; i++){
+				if(chev[i] == null){
+					return i;
+				}
 			}
+			return chev.length;
 		}
 		return 0;
 	}

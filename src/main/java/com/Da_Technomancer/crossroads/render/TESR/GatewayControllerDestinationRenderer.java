@@ -3,37 +3,36 @@ package com.Da_Technomancer.crossroads.render.TESR;
 import com.Da_Technomancer.crossroads.API.technomancy.GatewayAddress;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileEntity;
-import com.Da_Technomancer.essentials.render.LinkLineRenderer;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayControllerDestinationTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 
-public class GatewayFrameRenderer extends LinkLineRenderer<GatewayFrameTileEntity>{
+public class GatewayControllerDestinationRenderer extends TileEntityRenderer<GatewayControllerDestinationTileEntity>{
 
-	protected GatewayFrameRenderer(TileEntityRendererDispatcher dispatcher){
+	protected GatewayControllerDestinationRenderer(TileEntityRendererDispatcher dispatcher){
 		super(dispatcher);
 	}
 
 	@Override
-	public void render(GatewayFrameTileEntity frame, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
+	public void render(GatewayControllerDestinationTileEntity frame, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
+		//Stripped-down version of the renderer in GatewayControllerRenderer, without the dialing wheel, triangular selector, or link lines
+
 		if(!frame.isActive()){
 			//Only do rendering if this is the top-center block of a formed multiblock (the core renders the entire gateway)
 			return;
 		}
-		super.render(frame, partialTicks, matrix, buffer, combinedLight, combinedOverlay);
 
 		float radius = frame.getSize() / 2F;
 		Direction.Axis plane = frame.getPlane();
 		boolean linked = frame.chevrons[frame.chevrons.length - 1] != null;//Whether this gateway is active and linked to another
-		float dialingWheelAngle = (float) frame.getAngle(partialTicks);
 
 		//Define lighting based on the interior of the frame, as the frame itself is solid blocks
 		combinedLight = CRRenderUtil.getLightAtPos(frame.getWorld(), frame.getPos().down(frame.getSize() / 5));
@@ -57,18 +56,11 @@ public class GatewayFrameRenderer extends LinkLineRenderer<GatewayFrameTileEntit
 		final float squareOut = 1;
 		final float squareIn = 3F / 5F;//At size = 5, width is 1
 		final float sqDepth = 0.5F;
-		final float octOutLen = squareOut * (float) Math.cos(Math.PI / 8);//Length of outer edge of octagon to align with outer square edge when rotated
 		final float octInLen = squareIn * (float) Math.cos(Math.PI / 8);
-		final float octOutWid = squareOut * (float) Math.sqrt(2D - Math.sqrt(2D)) / 2F;//Standard formula that relates diameter and side length of regular octagon
 		final float octInWid = squareIn * (float) Math.sqrt(2D - Math.sqrt(2D)) / 2F;
-		final float octDepth = 0.4F;
 		final float triLen = 1F / 5F;//Radius of the top of the triangle. At size 5, length = 1
 		final float triDepth = (1F / 40F) * radius + sqDepth;
 		final float iconEdgeRad = 5F / 64F;
-		final float iconBottom = octInLen + 1F / 32F;
-		final float iconTop = iconBottom + 2F * iconEdgeRad;
-		final float iconEdgeZRad = octDepth;//When icons are rendered in the x-z plane, this is used for z to keep the icon square with uneven scaling
-		final float iconEdgeXRad = iconEdgeZRad / radius;//When icons are rendered in the x-z plane, this is used for x to keep the icon square with uneven scaling
 		final float zFightingOffset = 0.003F;//Small offset used to prevent z-fighting
 		final float iconDialBottom = squareIn * ((float) Math.sqrt(2) + 0.25F);
 		final float iconDialTop = iconDialBottom + 2F * iconEdgeRad;
@@ -88,22 +80,6 @@ public class GatewayFrameRenderer extends LinkLineRenderer<GatewayFrameTileEntit
 		final float sqInVEn = sprite.getInterpolatedV(4);
 		final float sqOutVSt = sqInVEn;
 		final float sqOutVEn = sprite.getInterpolatedV(6);
-		final float octFrUSt = sprite.getInterpolatedU(3);
-		final float octFrUEn = sprite.getInterpolatedU(11);
-		final float octFrVSt = sqOutVEn;
-		final float octFrVEn = sprite.getInterpolatedV(8);
-		final float octInVSt = octFrVEn;
-		final float octInVEn = sprite.getInterpolatedV(10);
-		final float octOutVSt = octInVEn;
-		final float octOutVEn = sprite.getInterpolatedV(12);
-		final float triVSt = octOutVEn;
-		final float triVEn = sprite.getMaxV();
-		final float triFrUEn = sprite.getInterpolatedU(6);
-		final float triTopUSt = triFrUEn;
-		final float triTopUEn = sprite.getInterpolatedU(13F / 2F);//Free me from texture mapping purgatory
-		final float triFrUMid = (polyUSt + triTopUSt) / 2F;
-		final float triEdgeUSt = triTopUEn;
-		final float triEdgeUEn = sprite.getInterpolatedU(7);
 		final float portalUSt = sprite.getInterpolatedU(12);
 		final float portalUEn = sprite.getMaxU();
 		final float portalTexRad = .051F * (sprite.getMaxU() - sprite.getMinU());//half the side length of the regular octagon
@@ -152,62 +128,6 @@ public class GatewayFrameRenderer extends LinkLineRenderer<GatewayFrameTileEntit
 		}
 		matrix.pop();
 
-		//Triangular selector
-		//Triangles rendered by duplicating a vertex on the quad
-
-		//Front
-		CRRenderUtil.addVertexBlock(builder, matrix, triLen, squareOut, triDepth, polyUSt, triVEn, 0, 0, 1, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, triLen, squareOut, triDepth, polyUSt, triVEn, 0, 0, 1, combinedLight);//duplicate
-		CRRenderUtil.addVertexBlock(builder, matrix, -triLen, squareOut, triDepth, triFrUEn, triVEn, 0, 0, 1, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0, squareIn, triDepth, triFrUMid, triVSt, 0, 0, 1, combinedLight);
-
-		//Other front
-		CRRenderUtil.addVertexBlock(builder, matrix, triLen, squareOut, -triDepth, polyUSt, triVEn, 0, 0, -1, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, triLen, squareOut, -triDepth, polyUSt, triVEn, 0, 0, -1, combinedLight);//duplicate
-		CRRenderUtil.addVertexBlock(builder, matrix, 0, squareIn, -triDepth, triFrUMid, triVSt, 0, 0, -1, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, -triLen, squareOut, -triDepth, triFrUEn, triVEn, 0, 0, -1, combinedLight);
-
-		//Top
-		CRRenderUtil.addVertexBlock(builder, matrix, triLen, squareOut, triDepth, triTopUSt, triVSt, 0, 1, 0, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, triLen, squareOut, sqDepth, triTopUEn, triVSt, 0, 1, 0, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, -triLen, squareOut, sqDepth, triTopUEn, triVEn, 0, 1, 0, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, -triLen, squareOut, triDepth, triTopUSt, triVEn, 0, 1, 0, combinedLight);
-
-		//Other top
-		CRRenderUtil.addVertexBlock(builder, matrix, triLen, squareOut, -triDepth, triTopUSt, triVSt, 0, 1, 0, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, -triLen, squareOut, -triDepth, triTopUSt, triVEn, 0, 1, 0, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, -triLen, squareOut, -sqDepth, triTopUEn, triVEn, 0, 1, 0, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, triLen, squareOut, -sqDepth, triTopUEn, triVSt, 0, 1, 0, combinedLight);
-
-
-		//Triangular sides have non-trivial normals
-		Vector3d normalA = CRRenderUtil.findNormal(new Vector3d(triLen, squareOut, triDepth), new Vector3d(0, squareIn, triDepth), new Vector3d(triLen, squareOut, sqDepth));
-		Vector3d normalB = CRRenderUtil.findNormal(new Vector3d(-triLen, squareOut, triDepth), new Vector3d(-triLen, squareOut, sqDepth), new Vector3d(0, squareIn, triDepth));
-
-		//Side
-		CRRenderUtil.addVertexBlock(builder, matrix, triLen, squareOut, triDepth, triEdgeUSt, triVSt, (float) normalA.x, (float) normalA.y, (float) normalA.z, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0, squareIn, triDepth, triEdgeUSt, triVEn, (float) normalA.x, (float) normalA.y, (float) normalA.z, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0, squareIn, sqDepth, triEdgeUEn, triVEn, (float) normalA.x, (float) normalA.y, (float) normalA.z, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, triLen, squareOut, sqDepth, triEdgeUEn, triVSt, (float) normalA.x, (float) normalA.y, (float) normalA.z, combinedLight);
-
-		//Side
-		CRRenderUtil.addVertexBlock(builder, matrix, -triLen, squareOut, triDepth, triEdgeUSt, triVSt, (float) normalB.x, (float) normalB.y, (float) normalB.z, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, -triLen, squareOut, sqDepth, triEdgeUEn, triVSt, (float) normalB.x, (float) normalB.y, (float) normalB.z, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0, squareIn, sqDepth, triEdgeUEn, triVEn, (float) normalB.x, (float) normalB.y, (float) normalB.z, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0, squareIn, triDepth, triEdgeUSt, triVEn, (float) normalB.x, (float) normalB.y, (float) normalB.z, combinedLight);
-
-		//Side
-		CRRenderUtil.addVertexBlock(builder, matrix, triLen, squareOut, -triDepth, triEdgeUSt, triVSt, (float) normalA.x, (float) normalA.y, (float) normalA.z, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, triLen, squareOut, -sqDepth, triEdgeUEn, triVSt, (float) normalA.x, (float) normalA.y, (float) normalA.z, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0, squareIn, -sqDepth, triEdgeUEn, triVEn, (float) normalA.x, (float) normalA.y, (float) normalA.z, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0, squareIn, -triDepth, triEdgeUSt, triVEn, (float) normalA.x, (float) normalA.y, (float) normalA.z, combinedLight);
-
-		//Side
-		CRRenderUtil.addVertexBlock(builder, matrix, -triLen, squareOut, -triDepth, triEdgeUSt, triVSt, (float) normalB.x, (float) normalB.y, (float) normalB.z, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0, squareIn, -triDepth, triEdgeUSt, triVEn, (float) normalB.x, (float) normalB.y, (float) normalB.z, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, 0, squareIn, -sqDepth, triEdgeUEn, triVEn, (float) normalB.x, (float) normalB.y, (float) normalB.z, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, -triLen, squareOut, -sqDepth, triEdgeUEn, triVSt, (float) normalB.x, (float) normalB.y, (float) normalB.z, combinedLight);
-
 		//Dialed icons
 		if(frame.chevrons[0] != null){
 			//Front
@@ -251,58 +171,6 @@ public class GatewayFrameRenderer extends LinkLineRenderer<GatewayFrameTileEntit
 			}
 
 			matrix.pop();
-		}
-		
-		//Rotating octagonal ring
-		matrix.rotate(Vector3f.ZP.rotation(dialingWheelAngle));
-
-		Quaternion segmentRotation = Vector3f.ZP.rotationDegrees(-45);
-
-		for(int i = 0; i < 8; i++){
-
-			//Front
-			CRRenderUtil.addVertexBlock(builder, matrix, octOutWid, octOutLen, octDepth, polyUEn, octFrVSt, 0, 0, 1, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -octOutWid, octOutLen, octDepth, polyUSt, octFrVSt, 0, 0, 1, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -octInWid, octInLen, octDepth, octFrUSt, octFrVEn, 0, 0, 1, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, octInLen, octDepth, octFrUEn, octFrVEn, 0, 0, 1, combinedLight);
-
-			//Other front (in some bizarre cultures this is called the 'back'. However, I speak American)
-			CRRenderUtil.addVertexBlock(builder, matrix, octOutWid, octOutLen, -octDepth, polyUEn, octFrVSt, 0, 0, -1, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, octInLen, -octDepth, octFrUEn, octFrVEn, 0, 0, -1, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -octInWid, octInLen, -octDepth, octFrUSt, octFrVEn, 0, 0, -1, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -octOutWid, octOutLen, -octDepth, polyUSt, octFrVSt, 0, 0, -1, combinedLight);
-
-			//Outer edge
-			CRRenderUtil.addVertexBlock(builder, matrix, octOutWid, octOutLen, -octDepth, polyUEn, octOutVEn, 0, 1, 0, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -octOutWid, octOutLen, -octDepth, polyUSt, octOutVEn, 0, 1, 0, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -octOutWid, octOutLen, octDepth, polyUSt, octOutVSt, 0, 1, 0, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, octOutWid, octOutLen, octDepth, polyUEn, octOutVSt, 0, 1, 0, combinedLight);
-
-			//Inner edge
-			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, octInLen, -octDepth, polyUEn, octInVSt, 0, -1, 0, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, octInWid, octInLen, octDepth, polyUEn, octInVEn, 0, -1, 0, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -octInWid, octInLen, octDepth, polyUSt, octInVEn, 0, -1, 0, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -octInWid, octInLen, -octDepth, polyUSt, octInVSt, 0, -1, 0, combinedLight);
-
-			//Inside icons
-			CRRenderUtil.addVertexBlock(builder, matrix, -iconEdgeXRad, octInLen - zFightingOffset, -iconEdgeZRad, symbolUEn, getIconVSt(sprite, i), 0, -1, 0, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, iconEdgeXRad, octInLen - zFightingOffset, -iconEdgeZRad, symbolUSt, getIconVSt(sprite, i), 0, -1, 0, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, iconEdgeXRad, octInLen - zFightingOffset, iconEdgeZRad, symbolUSt, getIconVEn(sprite, i), 0, -1, 0, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -iconEdgeXRad, octInLen - zFightingOffset, iconEdgeZRad, symbolUEn, getIconVEn(sprite, i), 0, -1, 0, combinedLight);
-
-			//Front icons
-			CRRenderUtil.addVertexBlock(builder, matrix, iconEdgeRad, iconTop, octDepth + zFightingOffset, symbolUEn, getIconVSt(sprite, i), 0, 0, 1, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -iconEdgeRad, iconTop, octDepth + zFightingOffset, symbolUSt, getIconVSt(sprite, i), 0, 0, 1, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -iconEdgeRad, iconBottom, octDepth + zFightingOffset, symbolUSt, getIconVEn(sprite, i), 0, 0, 1, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, iconEdgeRad, iconBottom, octDepth + zFightingOffset, symbolUEn, getIconVEn(sprite, i), 0, 0, 1, combinedLight);
-
-			//Other front icons
-			CRRenderUtil.addVertexBlock(builder, matrix, iconEdgeRad, iconTop, -octDepth - zFightingOffset, symbolUSt, getIconVSt(sprite, i), 0, 0, -1, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, iconEdgeRad, iconBottom, -octDepth - zFightingOffset, symbolUSt, getIconVEn(sprite, i), 0, 0, -1, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -iconEdgeRad, iconBottom, -octDepth - zFightingOffset, symbolUEn, getIconVEn(sprite, i), 0, 0, -1, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -iconEdgeRad, iconTop, -octDepth - zFightingOffset, symbolUEn, getIconVSt(sprite, i), 0, 0, -1, combinedLight);
-
-			matrix.rotate(segmentRotation);
 		}
 
 		//Portal, rendered with translucent type
@@ -361,7 +229,7 @@ public class GatewayFrameRenderer extends LinkLineRenderer<GatewayFrameTileEntit
 	}
 
 	@Override
-	public boolean isGlobalRenderer(GatewayFrameTileEntity te){
+	public boolean isGlobalRenderer(GatewayControllerDestinationTileEntity te){
 		return te.isActive();
 	}
 }

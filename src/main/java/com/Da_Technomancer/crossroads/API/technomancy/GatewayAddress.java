@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.API.technomancy;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayFrameTileEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.RegistryKey;
@@ -138,7 +137,7 @@ public class GatewayAddress{
 		}
 
 		@Nullable
-		public GatewayFrameTileEntity evalTE(MinecraftServer server){
+		public IGateway evalTE(MinecraftServer server){
 			World w = evalDim(server);
 			if(w == null){
 				return null;
@@ -147,8 +146,8 @@ public class GatewayAddress{
 			ChunkPos chunkPos = new ChunkPos(pos);
 			((ServerChunkProvider) (w.getChunkProvider())).registerTicket(TicketType.PORTAL, chunkPos, 3, pos);
 			TileEntity te = w.getTileEntity(pos);
-			if(te instanceof GatewayFrameTileEntity){
-				return (GatewayFrameTileEntity) te;
+			if(te instanceof IGateway){
+				return (IGateway) te;
 			}
 			return null;
 		}

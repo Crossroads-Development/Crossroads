@@ -80,7 +80,7 @@ public class CRBlocks{
 	public static CageCharger cageCharger;
 	public static HamsterWheel hamsterWheel;
 	public static CopshowiumCreationChamber copshowiumCreationChamber;
-	public static GatewayFrame gatewayFrame;
+	public static GatewayController gatewayController;
 	public static GatewayFrameEdge gatewayEdge;
 	public static DetailedCrafter detailedCrafter;
 	//	public static PrototypingTable prototypingTable;
@@ -154,6 +154,7 @@ public class CRBlocks{
 	public static LodestoneDynamo lodestoneDynamo;
 	public static SequenceBox sequenceBox;
 	public static ChunkAccelerator chunkAccelerator;
+	public static GatewayControllerDestination gatewayControllerDestination;
 
 	public static AbstractBlock.Properties getRockProperty(){
 		return AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3).setRequiresTool().sound(SoundType.STONE);
@@ -232,7 +233,7 @@ public class CRBlocks{
 		hamsterWheel = new HamsterWheel();
 		copshowiumCreationChamber = new CopshowiumCreationChamber();
 //		mathAxis = new MathAxis();
-		gatewayFrame = new GatewayFrame();
+		gatewayController = new GatewayController();
 		gatewayEdge = new GatewayFrameEdge();
 //		redstoneKeyboard = new RedstoneKeyboard();
 		detailedCrafter = new DetailedCrafter();
@@ -329,6 +330,7 @@ public class CRBlocks{
 		lodestoneDynamo = new LodestoneDynamo();
 		sequenceBox = new SequenceBox();
 		chunkAccelerator = new ChunkAccelerator();
+		gatewayControllerDestination = new GatewayControllerDestination();
 	}
 
 	@OnlyIn(Dist.CLIENT)

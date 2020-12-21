@@ -40,7 +40,8 @@ public class CRRendererRegistry{
 		ClientRegistry.bindTileEntityRenderer(BeamSplitterTileEntity.type, BeamRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(BeaconHarnessTileEntity.type, BeaconHarnessRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(HamsterWheelTileEntity.type, HamsterWheelRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(GatewayFrameTileEntity.type, GatewayFrameRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(GatewayControllerTileEntity.type, GatewayControllerRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(GatewayControllerDestinationTileEntity.type, GatewayControllerDestinationRenderer::new);
 //		ClientRegistry.bindTileEntityRenderer(MechanicalArmTileEntity.type, MechanicalArmRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(HeatingCrucibleTileEntity.type, HeatingCrucibleRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(DynamoTileEntity.type, DynamoRenderer::new);

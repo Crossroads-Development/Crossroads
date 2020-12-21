@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"north": "crossroads:block/gateway_controller_destination_side",
+		"south": "crossroads:block/gateway_controller_destination_side",
+		"east": "crossroads:block/gateway_controller_destination_side",
+		"west": "crossroads:block/gateway_controller_destination_side",
+		"up": "crossroads:block/gateway_controller_destination_end",
+		"down": "crossroads:block/gateway_controller_destination_end",
+		"particle": "crossroads:block/gateway_controller_destination_side"
+	}
+}

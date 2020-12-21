@@ -76,9 +76,9 @@ public class DynamoTileEntity extends ModuleTE{
 	public void updateContainingBlockInfo(){
 		super.updateContainingBlockInfo();
 		axleOpt.invalidate();
-		axleOpt = LazyOptional.of(this::createAxleHandler);
+		axleOpt = LazyOptional.of(() -> axleHandler);
 		feOpt.invalidate();
-		feOpt = LazyOptional.of(DynamoEnergyHandler::new);
+		feOpt = LazyOptional.of(() -> energyHandler);
 	}
 
 	@Override
@@ -101,7 +101,8 @@ public class DynamoTileEntity extends ModuleTE{
 		feOpt.invalidate();
 	}
 
-	private LazyOptional<IEnergyStorage> feOpt = LazyOptional.of(DynamoEnergyHandler::new);
+	private final IEnergyStorage energyHandler = new DynamoEnergyHandler();
+	private LazyOptional<IEnergyStorage> feOpt = LazyOptional.of(() -> energyHandler);
 
 	@SuppressWarnings("unchecked")
 	@Override
