@@ -66,11 +66,11 @@
 			"type": "spotlight",
 			"anchor": "destination",
 			"item": "crossroads:gateway_controller_destination",
-			"text": "The <item>Endpoint Controller/$ can be used in place of a normal <item>gateway controller/$ as a cheaper, simpler alternative. A <item>gateway/$ created using the <item>endpoint gateway controller/$ doesn't produce <thing>$(l:crossroads:intro/technomancy)temporal entropy/$, doesn't need a <thing>$(l:crossroads:intro/rotary)rotary input/$, and doesn't need <thing>$(l:crossroads:intro/beam)beams/$.$(br2)However, "
+			"text": "The <item>Endpoint Controller/$ can be used in place of a normal <item>gateway controller/$ as a cheaper, simpler alternative. A <item>gateway/$ created using the <item>endpoint controller/$ doesn't produce <thing>$(l:crossroads:intro/technomancy)temporal entropy/$, doesn't need a <thing>$(l:crossroads:intro/rotary)rotary input/$, and doesn't need <thing>$(l:crossroads:intro/beam)beams/$.$(br2)However, it "
 		},
 		{
 			"type": "text",
-			"text": "it can not dial to any <thing>gateway/$ but other <thing>gateways/$ can dial to it. The connection is still two-directional.$(br2)In addition, if the <item>endpoint gateway controller/$ is given a redstone signal, it will create a connection to the last <item>gateway/$ it was connected to (the other gateway will be the one that produces <thing>$(l:crossroads:intro/technomancy)temporal entropy/$).$(br2)"
+			"text": "can not dial to any <thing>gateway/$ but other <thing>gateways/$ can dial to it. The connection is still two-directional.$(br2)In addition, if the <item>endpoint controller/$ is given a redstone signal, it will create a connection to the last <item>gateway/$ it was connected to (the other gateway will be the one that produces <thing>$(l:crossroads:intro/technomancy)temporal entropy/$).$(br2)"
 		},
 		{
 			"type": "text",

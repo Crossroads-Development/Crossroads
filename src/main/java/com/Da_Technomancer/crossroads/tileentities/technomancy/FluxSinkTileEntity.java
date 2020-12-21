@@ -36,7 +36,7 @@ public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickab
 
 	private static final int CAPACITY = 256;
 
-	private final FluxHelper fluxHelper = new FluxHelper(this, Behaviour.SINK);
+	private final FluxHelper fluxHelper = new FluxHelper(this, Behaviour.SINK, this::consumeFlux);
 	private boolean running = false;
 	private long runningStartTime;//Used for rendering
 	public static final float STARTUP_TIME = 60;//Used for rendering
@@ -73,12 +73,17 @@ public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickab
 					CRRenderUtil.addEntropyBeam(world, srcPos[0], srcPos[1], srcPos[2], end1[0] + srcPos[0], end1[1] + srcPos[1], end1[2] + srcPos[2], 1, (byte) (FluxUtil.FLUX_TIME * 4 + 1), false);
 				}
 			}
-		}else if(world.getGameTime() != fluxHelper.lastTick){
+		}else{
 			fluxHelper.tick();
-			if(world.getGameTime() % FluxUtil.FLUX_TIME == 0 && isRunning() && fluxHelper.flux != 0){
-				fluxHelper.flux = 0;
-				markDirty();
-			}
+		}
+	}
+
+	private void consumeFlux(int flux){
+		if(isRunning()){
+			int remainder = flux - Math.min(CAPACITY, flux);
+			fluxHelper.flux += remainder;
+		}else{
+			fluxHelper.flux += flux;
 		}
 	}
 

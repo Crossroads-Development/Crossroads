@@ -16,6 +16,7 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE{
 
@@ -89,11 +90,17 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE{
 		private int readingFlux = 0;
 		public int flux = 0;
 		public long lastTick = 0;
+		private final Consumer<Integer> fluxTransferHandler;
 
 		public FluxHelper(TileEntity owner, Behaviour behaviour){
+			this(owner, behaviour, null);
+		}
+
+		public FluxHelper(TileEntity owner, Behaviour behaviour, @Nullable Consumer<Integer> fluxTransferHandler){
 			this.owner = owner;
 			this.behaviour = behaviour;
 			linkHelper = new LinkHelper((ILinkTE) owner);
+			this.fluxTransferHandler = fluxTransferHandler;
 		}
 
 		public void read(CompoundNBT nbt){
@@ -126,7 +133,11 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE{
 					readingFlux = flux;
 					flux = queuedFlux;
 					queuedFlux = 0;
-					flux += FluxUtil.performTransfer(this, linkHelper.getLinksRelative(), toTransfer);
+					if(fluxTransferHandler == null){
+						flux += FluxUtil.performTransfer(this, linkHelper.getLinksRelative(), toTransfer);
+					}else{
+						fluxTransferHandler.accept(toTransfer);
+					}
 					FluxUtil.checkFluxOverload(this);
 					owner.markDirty();
 				}
