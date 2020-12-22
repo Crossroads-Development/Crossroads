@@ -60,6 +60,10 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 		LazyOptional<IAxleHandler> backOpt = backTE == null ? LazyOptional.empty() : backTE.getCapability(Capabilities.AXLE_CAPABILITY, facing);
 		IAxleHandler sourceAxle = backOpt.isPresent() ? backOpt.orElseThrow(NullPointerException::new) : null;
 		double availableEnergy = Math.abs(energyCalcResults[0]);
+		//Add energy from the gear on the back. Don't double count if it's in this gear network
+		if(rotaryMembers.contains(sourceAxle)){
+			sourceAxle = null;
+		}
 		if(sourceAxle != null){
 			availableEnergy += Math.abs(sourceAxle.getEnergy());
 		}
@@ -123,7 +127,7 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 		redsOpt.invalidate();
 	}
 
-	public CircuitUtil.InputCircHandler redsHandler = new CircuitUtil.InputCircHandler();
+	public final CircuitUtil.InputCircHandler redsHandler = new CircuitUtil.InputCircHandler();
 	private LazyOptional<IRedstoneHandler> redsOpt = CircuitUtil.makeBaseCircuitOptional(this, redsHandler, 0);
 
 	@Override

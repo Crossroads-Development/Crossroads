@@ -39,11 +39,11 @@
 			"type": "spotlight",
 			"anchor": "propeller_plate",
 			"item": "crossroads:propeller_pack",
-			"text": "The <item>Propelled Wingpack/$ acts like an Elytra with a built-in rocket boost. To use the boost, it needs to be wound in a <item>$(l:crossroads:rotary/winding_table)Spring-Winding Stand/$.$(br2)While <em>holding/$ the jump key (default space), the wearer gets a speed boost in the direction they're looking and the <thing>$(l:crossroads:rotary/winding_table)spring "
+			"text": "The <item>Propelled Wingpack/$ acts like an Elytra with a built-in rocket boost. To use the boost, it needs to be wound in a <item>$(l:crossroads:rotary/winding_table)Spring-Winding Stand/$.$(br2)While <em>holding/$ the boost key (default control), the wearer gets a speed boost in the direction they're looking and the "
 		},
 		{
 			"type": "text",
-			"text": "<thing>$(l:crossroads:rotary/winding_table)speed/$ will be slowly drained.$(br2)It can be used as an unbreakable Elytra that provides netherite-tier armor protection and doesn't need fireworks for boosting.$(br2)"
+			"text": "<thing>$(l:crossroads:rotary/winding_table)spring speed/$ will be slowly drained.$(br2)It can be used as an unbreakable Elytra that provides netherite-tier armor protection and doesn't need fireworks for boosting.$(br2)"
 		},
 		{
 			"type": "spotlight",

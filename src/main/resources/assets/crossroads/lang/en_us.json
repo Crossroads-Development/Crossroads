@@ -106,10 +106,6 @@
 	"block.crossroads.redstone_axis": "Redstone Master Axis",
 	"block.crossroads.mechanical_beam_splitter": "Mechanical Beam Splitter",
 	"crossroads": "Crossroads",
-	"control_energy.name": "Item Energy Control",
-	"control_potential.name": "Item Potential Control",
-	"control_stability.name": "Item Stability Control",
-	"control_void.name": "Item Void Control",
 	"item.crossroads.staff_technomancy": "Beam Staff",
 	"block.crossroads.cage_charger": "Cage Charger",
 	"block.crossroads.hamster_wheel": "Hamster Wheel",
@@ -639,7 +635,7 @@
 	"tt.crossroads.sequence_box.desc": "Stores a sequence of redstone circuit values and outputs them in order",
 	"tt.crossroads.sequence_box.trigger": "Advances 1 step in the sequence with each strong redstone pulse",
 	"tt.crossroads.technomancy_armor.reinforced": "Netherite Reinforced",
-	"tt.crossroads.propeller_pack.desc": "Upgraded Elytra wings. Hold <jump> to boost when wound",
+	"tt.crossroads.propeller_pack.desc": "Upgraded Elytra wings. Hold boost (ctrl) to boost when wound",
 	"tt.crossroads.propeller_pack.quip": "It's a bird! It's a plane! It's someone with a whirligig!",
 	"tt.crossroads.enviro_boots.desc": "Swim speed boost, frost walker, soul speed, and immunity to fall damage",
 	"tt.crossroads.enviro_boots.frost": "Hold <sneak> to freeze water",
@@ -864,6 +860,11 @@
 	"crossroads.advancement.align.rift.desc": "Discover the beam alignment: Rift",
 	"crossroads.advancement.align.stability.desc": "Discover the primary beam alignment: Stability",
 	"crossroads.advancement.align.time.desc": "Discover the beam alignment: Time",
-	"crossroads.advancement.align.void.desc": "Discover the primary beam alignment: Void"
+	"crossroads.advancement.align.void.desc": "Discover the primary beam alignment: Void",
 
+	"key.control_energy": "Item Energy Control",
+	"key.control_potential": "Item Potential Control",
+	"key.control_stability": "Item Stability Control",
+	"key.control_void": "Item Void Control",
+	"key.prop_pack_boost": "Boost"
 }

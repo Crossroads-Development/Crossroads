@@ -107,13 +107,15 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 		//It is important that disconnect is called when this TE is destroyed/removed/invalidated on both the server and client to both prevent memory leaks, and clear up minor rendering abnormalities
 		disconnect();
 		axisOpt.invalidate();
-		axisOpt = LazyOptional.of(() -> handler);
+//		axisOpt = LazyOptional.of(() -> handler);
 	}
 
 	@Override
 	public void updateContainingBlockInfo(){
 		super.updateContainingBlockInfo();
 		disconnect();
+		axisOpt.invalidate();
+		axisOpt = LazyOptional.of(() -> handler);
 	}
 
 	public void disconnect(){

@@ -280,7 +280,7 @@ public final class EventHandlerClient{
 		}
 
 		//Trigger propeller pack boost when jumping
-		if(Minecraft.getInstance().gameSettings.keyBindJump.isPressed()){
+		if(Keys.boost.isPressed()){
 			ItemStack chestplate = play.getItemStackFromSlot(EquipmentSlotType.CHEST);
 			if(play.isElytraFlying() && chestplate.getItem() == CRItems.propellerPack && CRItems.propellerPack.getWindLevel(chestplate) > 0){
 				CRPackets.sendPacketToServer(new SendElytraBoostToServer());

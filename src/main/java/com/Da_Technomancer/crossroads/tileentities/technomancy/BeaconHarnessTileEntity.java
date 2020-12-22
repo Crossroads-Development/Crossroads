@@ -74,8 +74,15 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 		if(!world.isRemote){
 			//Handle flux
 			fluxHelper.tick();
+		}else{
+			//For the server side,
+			//decreasing loadSafetyTime happens in emit(), which is a consistent and reliable way of doing this
+			//For the client side, emit() is never called, so we decrement it here
+			//On the client side, this is only used for the UI, and does not need to be perfectly accurate
+			if(--loadSafetyTime < 0){
+				loadSafetyTime = 0;
+			}
 		}
-
 	}
 
 	@Override

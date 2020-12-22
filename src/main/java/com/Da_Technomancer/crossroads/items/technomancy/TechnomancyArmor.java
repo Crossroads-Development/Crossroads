@@ -37,7 +37,7 @@ public abstract class TechnomancyArmor extends ArmorItem{
 	protected final Multimap<Attribute, AttributeModifier> reinforcedProperties;
 
 	public TechnomancyArmor(EquipmentSlotType slot){
-		super(TECHNOMANCY_MAT, slot, new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
+		super(TECHNOMANCY_MAT, slot, new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1).isImmuneToFire());
 
 		//Prepare reinforced properties map
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
@@ -82,6 +82,8 @@ public abstract class TechnomancyArmor extends ArmorItem{
 	public boolean isEnchantable(ItemStack stack){
 		return true;
 	}
+
+
 
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack){
