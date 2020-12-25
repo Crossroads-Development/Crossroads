@@ -87,7 +87,7 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 		availableEnergy -= cost;
 		//Note the sumIRot check; the normal formula doesn't work for 0 mass system, and we can assume we're on the target speed in that condition
 		//Re-calculated from the actual energy instead of using either the RotaryUtil calculated value or the targetBaseSpeed, neither of which recognize both energy changes and speed control
-		baseSpeed = sumIRot == 0 ? targetBaseSpeed : Math.signum(sumEnergy) * Math.sqrt(Math.abs(sumEnergy) * 2D / sumIRot);
+		baseSpeed = sumIRot == 0 ? targetBaseSpeed : Math.signum(targetBaseSpeed) * Math.sqrt(Math.abs(sumEnergy) * 2D / sumIRot);
 
 		for(IAxleHandler gear : rotaryMembers){
 			double gearSpeed = baseSpeed * gear.getRotationRatio();

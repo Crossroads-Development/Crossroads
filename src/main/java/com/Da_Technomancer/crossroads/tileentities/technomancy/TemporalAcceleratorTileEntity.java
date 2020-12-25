@@ -60,13 +60,6 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 		super(type);
 	}
 
-	public void resetCache(){
-		facing = null;
-		mode = null;
-		beamOpt.invalidate();
-		beamOpt = LazyOptional.of(BeamHandler::new);
-	}
-
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		chat.add(new TranslationTextComponent("tt.crossroads.time_accel.boost", 100 * extraTicks(infoIntensity)));
@@ -279,6 +272,15 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 	@Override
 	public void removeLinkSource(BlockPos end){
 		fluxHelper.removeLinkSource(end);
+	}
+
+	@Override
+	public void updateContainingBlockInfo(){
+		super.updateContainingBlockInfo();
+		facing = null;
+		mode = null;
+		beamOpt.invalidate();
+		beamOpt = LazyOptional.of(BeamHandler::new);
 	}
 
 	@Override

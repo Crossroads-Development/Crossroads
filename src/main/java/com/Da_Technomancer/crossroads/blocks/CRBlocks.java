@@ -155,6 +155,7 @@ public class CRBlocks{
 	public static SequenceBox sequenceBox;
 	public static ChunkAccelerator chunkAccelerator;
 	public static GatewayControllerDestination gatewayControllerDestination;
+	public static BeamCannon beamCannon;
 
 	public static AbstractBlock.Properties getRockProperty(){
 		return AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3).setRequiresTool().sound(SoundType.STONE);
@@ -331,6 +332,7 @@ public class CRBlocks{
 		sequenceBox = new SequenceBox();
 		chunkAccelerator = new ChunkAccelerator();
 		gatewayControllerDestination = new GatewayControllerDestination();
+		beamCannon = new BeamCannon();
 	}
 
 	@OnlyIn(Dist.CLIENT)

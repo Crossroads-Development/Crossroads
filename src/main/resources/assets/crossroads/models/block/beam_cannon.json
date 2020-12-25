@@ -1,0 +1,22 @@
+{
+    "textures": {
+		"top": "crossroads:block/beam_cannon_top",
+		"side": "crossroads:block/cast_iron_axle",
+		"base": "crossroads:block/cast_iron_axle",
+		"particle": "crossroads:block/beam_cannon_top"
+    },
+    "elements": [
+        {
+            "from": [ 0.0, 0.0, 0.0 ],
+            "to": [ 16.0, 9.0, 16.0 ],
+            "faces": {
+                "north": { "texture": "#side", "uv": [ 0.0, 7.0, 16.0, 16.0 ] },
+                "east": { "texture": "#side", "uv": [ 0.0, 7.0, 16.0, 16.0 ] },
+                "south": { "texture": "#side", "uv": [ 0.0, 7.0, 16.0, 16.0 ] },
+                "west": { "texture": "#side", "uv": [ 0.0, 7.0, 16.0, 16.0 ] },
+                "up": { "texture": "#top", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+                "down": { "texture": "#base", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
+            }
+        }
+    ]
+}

@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"item": "minecraft:red_sandstone"
+	},
+	"output": [
+		{
+			"item": "red_sand",
+			"count": 4
+		}
+	]
+}

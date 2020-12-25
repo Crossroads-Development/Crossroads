@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnitStorage;
+import com.Da_Technomancer.crossroads.API.beams.BeamUtil;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -29,7 +30,7 @@ public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 
 	@Override
 	protected int getLimit(){
-		return (int) (super.getLimit() / RATE);//This block can store 5 times as much so it emits a full power beam at capacity
+		return (int) (BeamUtil.POWER_LIMIT / RATE);//This block can store 5 times as much so it emits a full power beam at capacity
 	}
 
 	private Direction getDir(){

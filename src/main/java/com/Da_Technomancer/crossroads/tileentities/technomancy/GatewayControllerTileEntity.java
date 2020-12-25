@@ -483,7 +483,7 @@ public class GatewayControllerTileEntity extends TileEntity implements IGateway,
 	private static float calcAngleChange(float target, float current){
 		final float pi2 = (float) Math.PI * 2F;
 		//Due to circular path, the two routes to the target need to be compared, and the shortest taken
-		float angleChange = (target % pi2) - (current % pi2);
+		float angleChange = MiscUtil.clockModulus(target, pi2) - MiscUtil.clockModulus(current, pi2);
 		if(angleChange > Math.PI || angleChange < -Math.PI){
 			if(angleChange > 0){
 				angleChange -= pi2;

@@ -261,6 +261,7 @@
 	"block.crossroads.sequence_box": "Sequencer",
 	"block.crossroads.chunk_accelerator": "Distributed Temporal Accelerator",
 	"item.crossroads.enviro_boots": "All-Terrain Boots",
+	"block.crossroads.beam_cannon": "Beam Cannon",
 
 	"item.crossroads.ore_gravel": "Raw %1$s Grit",
 	"item.crossroads.ore_clump": "%1$s Clump",
@@ -643,6 +644,17 @@
 	"tt.crossroads.gateway.address_taken": "All possible addresses are taken (too many gateways)",
 	"tt.crossroads.gateway.size_wrong": "Even gateway sizes are not allowed, minimum size 5x5",
 	"tt.crossroads.gateway.thickness": "Frame must be %1$d blocks thick for this size",
+	"tt.crossroads.beam_cannon.lock": "Firing angle locked",
+	"tt.crossroads.beam_cannon.unlock": "Firing angle unlocked",
+	"tt.crossroads.beam_cannon.base.angle.lock": "Firing Yaw Angle: %1$frad - Target Yaw Angle: LOCKED",
+	"tt.crossroads.beam_cannon.side.angle.lock": "Firing Pitch Angle: %1$frad - Target Pitch Angle: LOCKED",
+	"tt.crossroads.beam_cannon.base.angle": "Firing Yaw Angle: %1$frad - Target Yaw Angle: %2$frad",
+	"tt.crossroads.beam_cannon.side.angle": "Firing Pitch Angle: %1$frad - Target Pitch Angle: %2$frad",
+	"tt.crossroads.beam_cannon.beam": "Beam: %1$s",
+	"tt.crossroads.beam_cannon.desc": "Fires a beam huge distances at any angle",
+	"tt.crossroads.beam_cannon.angle": "Pitch and yaw of the cannon are the speed of two rotary inputs",
+	"tt.crossroads.beam_cannon.lockable": "Firing angle can be locked by sneak-clicking with a wrench",
+	"tt.crossroads.beam_cannon.quip": "Canonically this cannon is an artillery",
 
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",

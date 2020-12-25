@@ -61,6 +61,11 @@ public class BeamManager{
 		return false;
 	}
 
+	@Nonnull
+	public BeamUnit getLastSent(){
+		return lastSent;
+	}
+
 	/**
 	 * Serializes information needed by this class on the client side into an integer
 	 * @param mag The beam unit to render
@@ -91,10 +96,5 @@ public class BeamManager{
 	 */
 	public static Triple<Color, Integer, Integer> getTriple(int packet){
 		return packet == 0 ? Triple.of(Color.BLACK, 0, 0) : Triple.of(Color.decode(Integer.toString(packet & 0xFFFFFF)), ((packet >>> 24) & 0xF) + 1, (packet >>> 28) + 1);
-	}
-
-	@Nonnull
-	public BeamUnit getLastSent(){
-		return lastSent;
 	}
 }

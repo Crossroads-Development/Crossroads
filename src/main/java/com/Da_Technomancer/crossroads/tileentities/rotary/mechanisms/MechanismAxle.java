@@ -3,8 +3,8 @@ package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
-import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IMechanismProperty;
+import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
@@ -13,7 +13,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -22,7 +21,6 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -91,19 +89,20 @@ public class MechanismAxle implements IMechanism<GearFactory.GearMaterial>{
 				}
 			}else{
 				//Connect externally
-				TileEntity endTE = te.getWorld().getTileEntity(te.getPos().offset(endDir));
 				Direction oEndDir = endDir.getOpposite();
-				if(endTE != null){
-					LazyOptional<IAxisHandler> axisOpt = endTE.getCapability(Capabilities.AXIS_CAPABILITY, oEndDir);
-					if(axisOpt.isPresent()){
-						axisOpt.orElseThrow(NullPointerException::new).trigger(masterIn, key);
-					}
-
-					LazyOptional<IAxleHandler> axleOpt = endTE.getCapability(Capabilities.AXLE_CAPABILITY, oEndDir);
-					if(axleOpt.isPresent()){
-						axleOpt.orElseThrow(NullPointerException::new).propagate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
-					}
-				}
+				RotaryUtil.propagateAxially(te.getWorld().getTileEntity(te.getPos().offset(endDir)), oEndDir, handler, masterIn, key, handler.renderOffset);
+//				TileEntity endTE = te.getWorld().getTileEntity(te.getPos().offset(endDir));
+//				if(endTE != null){
+//					LazyOptional<IAxisHandler> axisOpt = endTE.getCapability(Capabilities.AXIS_CAPABILITY, oEndDir);
+//					if(axisOpt.isPresent()){
+//						axisOpt.orElseThrow(NullPointerException::new).trigger(masterIn, key);
+//					}
+//
+//					LazyOptional<IAxleHandler> axleOpt = endTE.getCapability(Capabilities.AXLE_CAPABILITY, oEndDir);
+//					if(axleOpt.isPresent()){
+//						axleOpt.orElseThrow(NullPointerException::new).propagate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
+//					}
+//				}
 			}
 		}
 	}

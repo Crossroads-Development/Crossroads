@@ -44,7 +44,7 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 	protected abstract boolean[] outputSides();
 
 	protected int getLimit(){
-		return 64_000;
+		return BeamUtil.POWER_LIMIT;
 	}
 
 	@Override

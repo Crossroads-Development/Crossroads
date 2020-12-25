@@ -28,7 +28,9 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
+import org.apache.commons.lang3.tuple.Triple;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,50 +78,55 @@ public class StaffTechnomancy extends BeamUsingItem{
 				//Calculate the start and end point of the fired beam
 				double heldOffset = .22D * (player.getActiveHand() == Hand.MAIN_HAND ^ player.getPrimaryHand() == HandSide.LEFT ? 1D : -1D);
 				Vector3d start = new Vector3d(player.getPosX() - (heldOffset * Math.cos(Math.toRadians(player.rotationYaw))), player.getPosY() + player.getEyeHeight() + 0.4D, player.getPosZ() - (heldOffset * Math.sin(Math.toRadians(player.rotationYaw))));
-				double[] end = new double[] {player.getPosX(), player.getEyeHeight() + player.getPosY(), player.getPosZ()};
-				BlockPos endPos = null;
-				Vector3d look = player.getLookVec().scale(0.2D);
-				Direction collisionDir = Direction.getFacingFromVector(look.x, look.y, look.z);//Used for beam collision detection
-				Direction effectDir = null;
-				//Raytrace manually along the look direction
-				for(double d = 0; d < MAX_RANGE; d += 0.2D){
-					end[0] += look.x;
-					end[1] += look.y;
-					end[2] += look.z;
-					//Look for entities along the firing path to collide with
-					List<Entity> ents = player.world.getEntitiesInAABBexcluding(player, new AxisAlignedBB(end[0] - 0.1D, end[1] - 0.1D, end[2] - 0.1D, end[0] + 0.1D, end[1] + 0.1D, end[2] + 0.1D), EntityPredicates.IS_ALIVE);
-					if(!ents.isEmpty()){
-						Optional<Vector3d> res = ents.get(0).getBoundingBox().rayTrace(start, new Vector3d(end[0], end[1], end[2]));
-						if(res.isPresent()){
-							Vector3d hitVec = res.get();
-							end[0] = hitVec.x;
-							end[1] = hitVec.y;
-							end[2] = hitVec.z;
-						}
-						break;
-					}
 
-					BlockPos newEndPos = new BlockPos(end[0], end[1], end[2]);
-					//Speed things up a bit by not rechecking blocks
-					if(newEndPos.equals(endPos) || World.isOutsideBuildHeight(newEndPos)){
-						continue;
-					}
-					endPos = newEndPos;
-					BlockState state = player.world.getBlockState(endPos);
-					if(BeamUtil.solidToBeams(state, player.world, endPos, collisionDir, mag.getPower())){
-						//Note: this VoxelShape has no offset
-						VoxelShape shape = state.getRenderShape(player.world, endPos);//.getBoundingBox(player.world, endPos).offset(endPos);
-						BlockRayTraceResult res = shape.rayTrace(start, new Vector3d(end[0] + look.x * 5D, end[1] + look.y * 5D, end[2] + look.z * 5D), endPos);//bb.calculateIntercept(start, new Vec3d(end[0] + look.x * 5D, end[1] + look.y * 5D, end[2] + look.z * 5D));
-						if(res != null){
-							Vector3d hitVec = res.getHitVec();
-							end[0] = hitVec.x;
-							end[1] = hitVec.y;
-							end[2] = hitVec.z;
-							effectDir = res.getFace();
-							break;
-						}
-					}
-				}
+				Triple<BlockPos, Vector3d, Direction> beamHitResult = rayTraceBeams(mag, player.world, start, player.getEyePosition(1), player.getLookVec(), player, null, MAX_RANGE);
+				BlockPos endPos = beamHitResult.getLeft();
+				Direction effectDir = beamHitResult.getRight();
+
+//				double[] end = new double[] {player.getPosX(), player.getEyeHeight() + player.getPosY(), player.getPosZ()};
+//				BlockPos endPos = null;
+//				Vector3d look = player.getLookVec().scale(0.2D);
+//				Direction collisionDir = Direction.getFacingFromVector(look.x, look.y, look.z);//Used for beam collision detection
+//				Direction effectDir = null;
+//				//Raytrace manually along the look direction
+//				for(double d = 0; d < MAX_RANGE; d += 0.2D){
+//					end[0] += look.x;
+//					end[1] += look.y;
+//					end[2] += look.z;
+//					//Look for entities along the firing path to collide with
+//					List<Entity> ents = player.world.getEntitiesInAABBexcluding(player, new AxisAlignedBB(end[0] - 0.1D, end[1] - 0.1D, end[2] - 0.1D, end[0] + 0.1D, end[1] + 0.1D, end[2] + 0.1D), EntityPredicates.IS_ALIVE);
+//					if(!ents.isEmpty()){
+//						Optional<Vector3d> res = ents.get(0).getBoundingBox().rayTrace(start, new Vector3d(end[0], end[1], end[2]));
+//						if(res.isPresent()){
+//							Vector3d hitVec = res.get();
+//							end[0] = hitVec.x;
+//							end[1] = hitVec.y;
+//							end[2] = hitVec.z;
+//						}
+//						break;
+//					}
+//
+//					BlockPos newEndPos = new BlockPos(end[0], end[1], end[2]);
+//					//Speed things up a bit by not rechecking blocks
+//					if(newEndPos.equals(endPos) || World.isOutsideBuildHeight(newEndPos)){
+//						continue;
+//					}
+//					endPos = newEndPos;
+//					BlockState state = player.world.getBlockState(endPos);
+//					if(BeamUtil.solidToBeams(state, player.world, endPos, collisionDir, mag.getPower())){
+//						//Note: this VoxelShape has no offset
+//						VoxelShape shape = state.getRenderShape(player.world, endPos);//.getBoundingBox(player.world, endPos).offset(endPos);
+//						BlockRayTraceResult res = shape.rayTrace(start, new Vector3d(end[0] + look.x * 5D, end[1] + look.y * 5D, end[2] + look.z * 5D), endPos);//bb.calculateIntercept(start, new Vec3d(end[0] + look.x * 5D, end[1] + look.y * 5D, end[2] + look.z * 5D));
+//						if(res != null){
+//							Vector3d hitVec = res.getHitVec();
+//							end[0] = hitVec.x;
+//							end[1] = hitVec.y;
+//							end[2] = hitVec.z;
+//							effectDir = res.getFace();
+//							break;
+//						}
+//					}
+//				}
 
 				if(endPos != null){//Should always be true
 					TileEntity te = player.world.getTileEntity(endPos);
@@ -134,10 +141,59 @@ public class StaffTechnomancy extends BeamUsingItem{
 					}
 				}
 
-				Vector3d beamVec = new Vector3d(end[0] - start.x, end[1] - start.y, end[2] - start.z);
+				Vector3d beamVec = beamHitResult.getMiddle().subtract(start);
 				CRRenderUtil.addBeam(player.world, start.x, start.y, start.z, beamVec.length(), (float) Math.toDegrees(Math.atan2(-beamVec.y, Math.sqrt(beamVec.x * beamVec.x + beamVec.z * beamVec.z))), (float) Math.toDegrees(Math.atan2(-beamVec.x, beamVec.z)), (byte) Math.round(Math.sqrt(mag.getPower())), mag.getRGB().getRGB());
 			}
 		}
+	}
+
+	public static Triple<BlockPos, Vector3d, Direction> rayTraceBeams(BeamUnit beam, World world, Vector3d startPos, Vector3d endSourcePos, Vector3d ray, @Nullable Entity excludedEntity, @Nullable BlockPos ignorePos, double maxRange){
+		ray = ray.scale(0.2D);
+		Direction collisionDir = Direction.getFacingFromVector(ray.x, ray.y, ray.z);//Used for beam collision detection
+		Direction effectDir = null;
+		BlockPos endPos = null;
+		double[] end = new double[] {endSourcePos.x, endSourcePos.y, endSourcePos.z};
+		//Raytrace manually along the look direction
+		for(double d = 0; d < maxRange; d += 0.2D){
+			end[0] += ray.x;
+			end[1] += ray.y;
+			end[2] += ray.z;
+			//Look for entities along the firing path to collide with
+			List<Entity> ents = world.getEntitiesInAABBexcluding(excludedEntity, new AxisAlignedBB(end[0] - 0.1D, end[1] - 0.1D, end[2] - 0.1D, end[0] + 0.1D, end[1] + 0.1D, end[2] + 0.1D), EntityPredicates.IS_ALIVE);
+			if(!ents.isEmpty()){
+				Optional<Vector3d> res = ents.get(0).getBoundingBox().rayTrace(startPos, new Vector3d(end[0], end[1], end[2]));
+				if(res.isPresent()){
+					Vector3d hitVec = res.get();
+					end[0] = hitVec.x;
+					end[1] = hitVec.y;
+					end[2] = hitVec.z;
+				}
+				break;
+			}
+
+			BlockPos newEndPos = new BlockPos(end[0], end[1], end[2]);
+			//Speed things up a bit by not rechecking blocks
+			if(newEndPos.equals(endPos) || World.isOutsideBuildHeight(newEndPos) || newEndPos.equals(ignorePos)){
+				continue;
+			}
+			endPos = newEndPos;
+			BlockState state = world.getBlockState(endPos);
+			if(BeamUtil.solidToBeams(state, world, endPos, collisionDir, beam.getPower())){
+				//Note: this VoxelShape has no offset
+				VoxelShape shape = state.getRenderShape(world, endPos);//.getBoundingBox(player.world, endPos).offset(endPos);
+				BlockRayTraceResult res = shape.rayTrace(startPos, new Vector3d(end[0] + ray.x * 5D, end[1] + ray.y * 5D, end[2] + ray.z * 5D), endPos);
+				if(res != null){
+					Vector3d hitVec = res.getHitVec();
+					end[0] = hitVec.x;
+					end[1] = hitVec.y;
+					end[2] = hitVec.z;
+					effectDir = res.getFace();
+					break;
+				}
+			}
+		}
+
+		return Triple.of(endPos, new Vector3d(end[0], end[1], end[2]), effectDir);
 	}
 
 	@Override

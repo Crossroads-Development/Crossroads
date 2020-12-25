@@ -58,6 +58,7 @@ public class CRRendererRegistry{
 		ClientRegistry.bindTileEntityRenderer(ChunkAcceleratorTileEntity.type, ChunkAcceleratorRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(CopshowiumCreationChamberTileEntity.type, LinkLineRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(FluxSinkTileEntity.type, FluxSinkRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(BeamCannonTileEntity.type, BeamCannonRenderer::new);
 	}
 
 	private static void reg(Block block){

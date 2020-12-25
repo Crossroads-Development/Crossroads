@@ -124,6 +124,7 @@ public class CRTileEntity{
 		register(SequenceBoxTileEntity::new, "sequence_box", reg, sequenceBox);
 		register(ChunkAcceleratorTileEntity::new, "chunk_accelerator", reg, chunkAccelerator);
 		register(GatewayControllerDestinationTileEntity::new, "gateway_controller_destination", reg, gatewayControllerDestination);
+		register(BeamCannonTileEntity::new, "beam_cannon", reg, beamCannon);
 	}
 
 	private static void register(Supplier<? extends TileEntity> cons, String id, IForgeRegistry<TileEntityType<?>> reg, Block... blocks){

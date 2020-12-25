@@ -17,6 +17,7 @@ public class BeamUtil{
 
 	public static final int MAX_DISTANCE = 16;
 	public static final int BEAM_TIME = 4;
+	public static final int POWER_LIMIT = 64_000;
 
 	private static final ITag<Block> PASSABLE = BlockTags.makeWrapperTag(Crossroads.MODID + ":beam_passable");
 	private static final VoxelShape[] COLLISION_MASK = new VoxelShape[3];

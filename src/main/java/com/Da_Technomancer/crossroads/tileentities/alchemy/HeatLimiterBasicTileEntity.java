@@ -139,7 +139,8 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 		super.updateContainingBlockInfo();
 		heatInOpt.invalidate();
 		heatOutOpt.invalidate();
-
+		heatInOpt = LazyOptional.of(() -> new HeatHandler(true));
+		heatOutOpt = LazyOptional.of(() -> new HeatHandler(false));
 	}
 
 	@Override
@@ -147,8 +148,6 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 		super.remove();
 		heatInOpt.invalidate();
 		heatOutOpt.invalidate();
-		heatInOpt = LazyOptional.of(() -> new HeatHandler(true));
-		heatOutOpt = LazyOptional.of(() -> new HeatHandler(false));
 	}
 
 	@SuppressWarnings("unchecked")

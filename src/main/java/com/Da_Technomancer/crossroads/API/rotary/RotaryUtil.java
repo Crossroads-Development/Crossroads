@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.API.rotary;
 
+import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendMasterKeyToClient;
 import com.Da_Technomancer.crossroads.CRConfig;
@@ -10,6 +11,7 @@ import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.IBooleanFunction;
@@ -18,6 +20,7 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -186,5 +189,29 @@ public class RotaryUtil{
 	 */
 	public static double getCCWSign(Direction dir){
 		return dir.getAxisDirection().getOffset();
+	}
+
+	/**
+	 * Connect axially to a tile entity
+	 * Handles both IAxleHandler and IAxisHandler
+	 * Does not connect via cog capability
+	 * @param te The tile entity being connected to
+	 * @param direction The side of the tile entity being connected to
+	 * @param srcHandler The handler calling this
+	 * @param master The master axis being propagated
+	 * @param shouldRenderOffset Whether angles should be rendered with an offset
+	 */
+	public static void propagateAxially(@Nullable TileEntity te, Direction direction, IAxleHandler srcHandler, IAxisHandler master, byte key, boolean shouldRenderOffset){
+		if(te != null){
+			LazyOptional<IAxisHandler> axisOpt = te.getCapability(Capabilities.AXIS_CAPABILITY, direction);
+			if(axisOpt.isPresent()){
+				axisOpt.orElseThrow(NullPointerException::new).trigger(master, key);
+			}
+
+			LazyOptional<IAxleHandler> axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, direction);
+			if(axleOpt.isPresent()){
+				axleOpt.orElseThrow(NullPointerException::new).propagate(master, key, srcHandler.getRotationRatio(), 0, shouldRenderOffset);
+			}
+		}
 	}
 }

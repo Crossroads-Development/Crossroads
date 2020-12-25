@@ -32,6 +32,8 @@ public class CRRenderTypes extends RenderType{
 	public static final ResourceLocation GATEWAY_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/gateway");
 	public static final ResourceLocation AXLE_MOUNT_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/axle_mount");
 	public static final ResourceLocation AXLE_MOUNT_OCT_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/axle_mount_oct");
+	public static final ResourceLocation BRONZE_TEXTURE = new ResourceLocation(Crossroads.MODID, "block/block_bronze");
+	public static final ResourceLocation BEAM_CANNON_BARREL_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/beam_cannon");
 
 	//Stitched to beam atlas
 	public static final ResourceLocation BEAM_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/beam.png");
@@ -68,6 +70,7 @@ public class CRRenderTypes extends RenderType{
 			event.addSprite(GATEWAY_TEXTURE);
 			event.addSprite(AXLE_MOUNT_TEXTURE);
 			event.addSprite(AXLE_MOUNT_OCT_TEXTURE);
+			event.addSprite(BEAM_CANNON_BARREL_TEXTURE);
 		}
 	}
 

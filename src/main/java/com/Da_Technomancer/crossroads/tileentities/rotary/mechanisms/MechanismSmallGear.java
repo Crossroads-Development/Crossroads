@@ -2,7 +2,10 @@ package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.rotary.*;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
+import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IMechanismProperty;
+import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
@@ -119,16 +122,17 @@ public class MechanismSmallGear implements IMechanism<GearFactory.GearMaterial>{
 		}
 
 		//Connected block
-		if(sideTE != null){
-			LazyOptional<IAxisHandler> axisOpt = sideTE.getCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite());
-			if(axisOpt.isPresent()){
-				axisOpt.orElseThrow(NullPointerException::new).trigger(masterIn, key);
-			}
-			LazyOptional<IAxleHandler> axleOpt = sideTE.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite());
-			if(axleOpt.isPresent()){
-				axleOpt.orElseThrow(NullPointerException::new).propagate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
-			}
-		}
+		RotaryUtil.propagateAxially(sideTE, side.getOpposite(), handler, masterIn, key, handler.renderOffset);
+//		if(sideTE != null){
+//			LazyOptional<IAxisHandler> axisOpt = sideTE.getCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite());
+//			if(axisOpt.isPresent()){
+//				axisOpt.orElseThrow(NullPointerException::new).trigger(masterIn, key);
+//			}
+//			LazyOptional<IAxleHandler> axleOpt = sideTE.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite());
+//			if(axleOpt.isPresent()){
+//				axleOpt.orElseThrow(NullPointerException::new).propagate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
+//			}
+//		}
 
 		//Axle slot
 		if(te.getAxleAxis() == side.getAxis() && te.members[6] != null && te.members[6].hasCap(Capabilities.AXLE_CAPABILITY, side, te.mats[6], null, te.getAxleAxis(), te)){

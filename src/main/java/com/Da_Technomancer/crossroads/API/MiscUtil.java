@@ -61,6 +61,10 @@ public final class MiscUtil{
 		}
 	}
 
+	public static float clockModulus(float a, float b){
+		return ((a % b) + b) % b;
+	}
+
 	/**
 	 * A server-side friendly version of Entity.class' raytrace (currently called Entity#func_213324_a(double, float, boolean))
 	 */
