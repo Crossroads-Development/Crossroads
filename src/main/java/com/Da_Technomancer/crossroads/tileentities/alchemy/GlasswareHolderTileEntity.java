@@ -105,9 +105,11 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 
 	@Override
 	protected void destroyCarrier(float strength){
-		BlockState state = getBlockState();
-		world.setBlockState(pos, state.with(CRProperties.CRYSTAL, false).with(CRProperties.CONTAINER_TYPE, AbstractGlassware.GlasswareTypes.NONE));
+		world.setBlockState(pos, getBlockState().with(CRProperties.CRYSTAL, false).with(CRProperties.CONTAINER_TYPE, AbstractGlassware.GlasswareTypes.NONE));
 		world.playSound(null, pos, SoundType.GLASS.getBreakSound(), SoundCategory.BLOCKS, SoundType.GLASS.getVolume(), SoundType.GLASS.getPitch());
+		//Invalidate the heat capability, as if we went from florence -> non florence, we stopped allowing cable connections
+		heatOpt.invalidate();
+		heatOpt = LazyOptional.of(HeatHandler::new);
 		glassType = null;
 		dirtyReag = true;
 		AlchemyUtil.releaseChemical(world, pos, contents);
@@ -176,7 +178,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	@Override
 	protected Vector3d getParticlePos(){
 		BlockState state = getBlockState();
-		if(state.getBlock() == CRBlocks.glasswareHolder && state.get(CRProperties.CONTAINER_TYPE) == AbstractGlassware.GlasswareTypes.FLORENCE){
+		if(state.getBlock() == CRBlocks.glasswareHolder && state.get(CRProperties.CONTAINER_TYPE) == AbstractGlassware.GlasswareTypes.SHELL){
 			return Vector3d.copy(pos).add(0.5D, 0.7D, 0.5D);
 		}else{
 			return Vector3d.copy(pos).add(0.5D, 0.25D, 0.5D);
@@ -193,7 +195,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 
 	@Override
 	protected void performTransfer(){
-		BlockState state = world.getBlockState(pos);
+		BlockState state = getBlockState();
 		if(state.getBlock() instanceof GlasswareHolder && heldType() != AbstractGlassware.GlasswareTypes.NONE){
 			Direction side = Direction.UP;
 			TileEntity te = world.getTileEntity(pos.offset(side));

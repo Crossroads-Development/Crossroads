@@ -10,6 +10,9 @@
 		"#forge:sandstone",
 		"minecraft:packed_ice",
 		"minecraft:basalt",
-		"minecraft:blackstone"
+		"minecraft:blackstone",
+		"minecraft:prismarine",
+		"minecraft:prismarine_bricks",
+		"minecraft:dark_prismarine"
 	]
 }

@@ -4,7 +4,7 @@
 		"#forge:dirt",
 		"#forge:sand",
 		"minecraft:grass_block",
-		"minecraft:snow",
+		"minecraft:snow_block",
 		"minecraft:clay"
 	]
 }

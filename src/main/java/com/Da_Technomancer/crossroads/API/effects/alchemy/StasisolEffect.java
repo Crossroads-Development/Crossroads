@@ -12,7 +12,7 @@ public class StasisolEffect extends AetherEffect{
 
 	@Override
 	protected Block soilBlock(){
-		return Blocks.SNOW;
+		return Blocks.SNOW_BLOCK;
 	}
 
 	@Override

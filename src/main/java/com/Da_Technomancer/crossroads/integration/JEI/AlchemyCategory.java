@@ -1,15 +1,12 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
-import com.Da_Technomancer.crossroads.API.alchemy.ReagentManager;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.crafting.recipes.AlchemyRec;
-import com.google.common.collect.ImmutableList;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -23,11 +20,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
@@ -77,6 +71,11 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 		for(ReagentStack reag : recipe.getReagents()){
 			reagents.add(new ReagIngr(reag));
 		}
+
+		if(recipe.getCatalyst() != null){
+			reagents.add(new ReagIngr(recipe.getCatalyst(), 0));
+		}
+
 		List<ReagIngr> products = new ArrayList<>(recipe.getProducts().length);
 		for(ReagentStack prod : recipe.getProducts()){
 			products.add(new ReagIngr(prod));
@@ -116,10 +115,10 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 			blast.draw(matrix, 98, 2);
 		}
 
-		if(recipe.getCatalyst() != null){
+//		if(recipe.getCatalyst() != null){
 //			GlStateManager.color(1, 1, 1);
-			ReagentIngredientRenderer.RENDERER.render(matrix, 82, 2, new ReagIngr(recipe.getCatalyst(), 0));
-		}
+//			ReagentIngredientRenderer.RENDERER.render(matrix, 82, 2, new ReagIngr(recipe.getCatalyst(), 0));
+//		}
 	}
 
 	@Override
@@ -138,6 +137,13 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 			reagGroup.set(i, reags.get(i));
 		}
 
+		//Catalyst
+		if(recipe.getCatalyst() != null){//A catalyst was set in setIngredients
+			reagGroup.init(inCount, true, 82, 2);
+			reagGroup.set(inCount, reags.get(inCount));
+			inCount += 1;
+		}
+
 		int outCount = recipe.getProducts().length;
 		List<List<ReagIngr>> prods = ingredients.getOutputs(ReagIngr.REAG);
 		for(int i = 0; i < outCount; i++ ){
@@ -148,12 +154,12 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 		reagGroup.set(ingredients);
 	}
 
-	@Override
-	public List<ITextComponent> getTooltipStrings(AlchemyRec recipe, double mouseX, double mouseY){
-		IReagent catalyst = ReagentManager.getReagent(recipe.getCatalyst());
-		if(catalyst != null && mouseX >= 82 && mouseX <= 98 && mouseY >= 2 && mouseY <= 18){
-			return ImmutableList.of(new StringTextComponent(catalyst.getName()));
-		}
-		return Collections.emptyList();
-	}
+//	@Override
+//	public List<ITextComponent> getTooltipStrings(AlchemyRec recipe, double mouseX, double mouseY){
+//		IReagent catalyst = ReagentManager.getReagent(recipe.getCatalyst());
+//		if(catalyst != null && mouseX >= 82 && mouseX <= 98 && mouseY >= 2 && mouseY <= 18){
+//			return ImmutableList.of(new StringTextComponent(catalyst.getName()));
+//		}
+//		return Collections.emptyList();
+//	}
 }

@@ -5,9 +5,9 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.gui.container.IceboxContainer;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.IceboxRec;
+import com.Da_Technomancer.crossroads.gui.container.IceboxContainer;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -62,7 +62,9 @@ public class IceboxTileEntity extends InventoryTE{
 		}
 
 		if(burnTime != 0){
-			temp = Math.max(MIN_TEMP, temp - RATE);
+			if(temp > MIN_TEMP){
+				temp = Math.max(MIN_TEMP, temp - RATE);
+			}
 			if(--burnTime == 0){
 				world.setBlockState(pos, CRBlocks.icebox.getDefaultState().with(CRProperties.ACTIVE, false), 18);
 			}
