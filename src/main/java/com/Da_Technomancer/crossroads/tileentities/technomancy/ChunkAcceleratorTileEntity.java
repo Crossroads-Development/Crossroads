@@ -100,7 +100,7 @@ public class ChunkAcceleratorTileEntity extends TileEntity implements ITickableT
 			}
 
 			//Apply time acceleration
-			if(extraTicks > 0 && CRConfig.teTimeAccel.get()){
+			if(extraTicks > 0 && CRConfig.teTimeAccel.get() && !fluxHelper.isShutDown()){
 				ChunkPos chunkPos = new ChunkPos(pos);
 				//List of every tile entity in the chunk which is tickable
 				List<TileEntity> tickables = world.tickableTileEntities.stream().filter(te -> te instanceof ITickableTileEntity && te.getPos().getX() >> 4 == chunkPos.x && te.getPos().getZ() >> 4 == chunkPos.z).collect(Collectors.toList());

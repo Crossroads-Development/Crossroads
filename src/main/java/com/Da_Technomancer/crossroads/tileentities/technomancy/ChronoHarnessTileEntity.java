@@ -78,7 +78,7 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 	}
 
 	private boolean shouldRun(){
-		return !hasRedstone();
+		return !hasRedstone() && !fluxHelper.isShutDown();
 	}
 
 	@Override
@@ -95,7 +95,6 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 					fe += curPower;
 					fluxHelper.addFlux(Math.round((float) curPower / CRConfig.fePerEntropy.get()));
 					markDirty();
-					FluxUtil.checkFluxOverload(this);
 				}
 			}
 

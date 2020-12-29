@@ -261,6 +261,7 @@
 	"block.crossroads.sequence_box": "Sequencer",
 	"block.crossroads.chunk_accelerator": "Distributed Temporal Accelerator",
 	"item.crossroads.enviro_boots": "All-Terrain Boots",
+	"item.crossroads.toolbelt": "Toolbelt",
 	"block.crossroads.beam_cannon": "Beam Cannon",
 
 	"item.crossroads.ore_gravel": "Raw %1$s Grit",
@@ -655,6 +656,7 @@
 	"tt.crossroads.beam_cannon.angle": "Pitch and yaw of the cannon are the speed of two rotary inputs",
 	"tt.crossroads.beam_cannon.lockable": "Firing angle can be locked by sneak-clicking with a wrench",
 	"tt.crossroads.beam_cannon.quip": "Canonically this cannon is an artillery",
+	"tt.crossroads.toolbelt.desc": "Respawn with your hotbar and offhand on death",
 
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",

@@ -105,7 +105,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 			return true;
 		}
 
-		return positionInvalid();
+		return fluxHelper.isShutDown() || positionInvalid();
 	}
 
 	//Requires beneath a beacon, and all blocks between this and the beacon are legal beacon bases

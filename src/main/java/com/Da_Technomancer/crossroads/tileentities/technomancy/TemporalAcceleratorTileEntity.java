@@ -141,7 +141,7 @@ public class TemporalAcceleratorTileEntity extends TileEntity implements ITickab
 
 			TemporalAccelerator.Mode mode = getMode();
 
-			if(extraTicks > 0){
+			if(extraTicks > 0 && !fluxHelper.isShutDown()){
 				BlockPos startPos;//Inclusive
 				BlockPos endPos;//Exclusive
 				//Assumes SIZE is odd

@@ -91,6 +91,7 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE{
 		public int flux = 0;
 		public long lastTick = 0;
 		private final Consumer<Integer> fluxTransferHandler;
+		private boolean shutDown = false;//Only used if safe mode is enabled in the config
 
 		public FluxHelper(TileEntity owner, Behaviour behaviour){
 			this(owner, behaviour, null);
@@ -114,6 +115,7 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE{
 			flux = nbt.getInt("flux");
 			queuedFlux = nbt.getInt("queued_flux");
 			readingFlux = nbt.getInt("reading_flux");
+			shutDown = nbt.getBoolean("shutdown");
 		}
 
 		public void write(CompoundNBT nbt){
@@ -122,8 +124,13 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE{
 			nbt.putInt("flux", flux);
 			nbt.putInt("queued_flux", queuedFlux);
 			nbt.putInt("reading_flux", readingFlux);
+			nbt.putBoolean("shutdown", shutDown);
 		}
 
+		/**
+		 * Ticks the flux handler
+		 * Should be called every tick
+		 */
 		public void tick(){
 			long worldTime = owner.getWorld().getGameTime();
 			if(worldTime != lastTick){
@@ -138,10 +145,14 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE{
 					}else{
 						fluxTransferHandler.accept(toTransfer);
 					}
-					FluxUtil.checkFluxOverload(this);
 					owner.markDirty();
+					shutDown = FluxUtil.checkFluxOverload(this);
 				}
 			}
+		}
+
+		public boolean isShutDown(){
+			return shutDown;
 		}
 
 		@Override

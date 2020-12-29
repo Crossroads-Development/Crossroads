@@ -97,6 +97,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.IntValue enviroBootSoulSpeed;
 	public static ForgeConfigSpec.BooleanValue allowGateway;
 	public static ForgeConfigSpec.BooleanValue allowGatewayEntities;
+	public static ForgeConfigSpec.BooleanValue fluxSafeMode;
 
 	private static final ITag<Block> destroyBlacklist = BlockTags.makeWrapperTag(Crossroads.MODID + ":destroy_blacklist");
 
@@ -201,6 +202,7 @@ public class CRConfig{
 		enviroBootSoulSpeed = serverBuilder.comment("Level of the All-Terrain Boots soul speed effect", "Set to 0 to disable").defineInRange("enviro_boot_soul", 3, 0, 10);
 		allowGateway = serverBuilder.comment("Whether Gateways can teleport entities at all").define("allow_gateway", true);
 		allowGatewayEntities = serverBuilder.comment("Whether Gateways can teleport entities that aren't players", "If false, players can still use Gateways").define("allow_gateway_ent", true);
+		fluxSafeMode = serverBuilder.comment("If enabled, machines will NOT break/explode/cause damage when overfilling on Temporal Entropy", "Machines which overfill on Temporal Entropy will shut down instead").define("flux_safe", false);
 		serverBuilder.pop();
 		serverBuilder.push(CAT_ALCHEMY);
 		phelEffect = serverBuilder.comment("Allow the full effect of Phelostogen?", "If disabled Phelostogen lights a single small fire instead").define("phel_effect", true);

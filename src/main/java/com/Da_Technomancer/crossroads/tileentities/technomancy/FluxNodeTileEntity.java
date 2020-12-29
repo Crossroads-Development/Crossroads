@@ -160,8 +160,8 @@ public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntit
 
 	@Override
 	public boolean allowAccepting(){
-		//We accept flux as long as we don't have a redstone signal
-		return RedstoneUtil.getRedstoneAtPos(world, pos) == 0;
+		//We accept flux as long as we don't have a redstone signal and we aren't shut down
+		return RedstoneUtil.getRedstoneAtPos(world, pos) == 0 && !fluxHelper.isShutDown();
 	}
 
 	@Override

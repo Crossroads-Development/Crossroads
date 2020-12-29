@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.CRReflection;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
+import com.Da_Technomancer.crossroads.API.technomancy.RespawnInventorySavedData;
 import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import com.Da_Technomancer.crossroads.items.CRItems;
@@ -20,6 +21,7 @@ import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.passive.horse.SkeletonHorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
@@ -32,6 +34,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.server.ChunkHolder;
 import net.minecraft.world.server.ServerChunkProvider;
@@ -39,8 +42,10 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.Event;
@@ -50,6 +55,7 @@ import net.minecraftforge.fml.config.ModConfig;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -208,8 +214,7 @@ public final class EventHandlerCommon{
 			//Add netherite armor
 			if(!TechnomancyArmor.isReinforced(inputLeft) && CRConfig.technoArmorReinforce.get()){
 				ItemStack inputRight = e.getRight();
-				//TODO: Add the other techno armor items to the if statement
-				if(inputLeft.getItem() == CRItems.armorGoggles && inputRight.getItem() == Items.NETHERITE_HELMET || inputLeft.getItem() == CRItems.propellerPack && inputRight.getItem() == Items.NETHERITE_CHESTPLATE || inputLeft.getItem() == null && inputRight.getItem() == Items.NETHERITE_LEGGINGS || inputLeft.getItem() == CRItems.armorEnviroBoots && inputRight.getItem() == Items.NETHERITE_BOOTS){
+				if(inputLeft.getItem() == CRItems.armorGoggles && inputRight.getItem() == Items.NETHERITE_HELMET || inputLeft.getItem() == CRItems.propellerPack && inputRight.getItem() == Items.NETHERITE_CHESTPLATE || inputLeft.getItem() == CRItems.armorToolbelt && inputRight.getItem() == Items.NETHERITE_LEGGINGS || inputLeft.getItem() == CRItems.armorEnviroBoots && inputRight.getItem() == Items.NETHERITE_BOOTS){
 					e.setOutput(TechnomancyArmor.setReinforced(inputLeft.copy(), true));
 					e.setMaterialCost(1);
 					e.setCost(CRConfig.technoArmorCost.get() * 10);
@@ -359,5 +364,85 @@ public final class EventHandlerCommon{
 	@SuppressWarnings("unused")
 	public void addWorldgen(BiomeLoadingEvent e){
 		CRWorldGen.addWorldgen(e);
+	}
+
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	@SuppressWarnings("unused")
+	public void savePlayerHotbar(LivingDeathEvent e){
+		try{
+			LivingEntity ent = e.getEntityLiving();
+			if(ent instanceof PlayerEntity && !ent.getEntityWorld().isRemote && ent.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() == CRItems.armorToolbelt && !ent.getEntityWorld().getGameRules().getBoolean(GameRules.KEEP_INVENTORY)){
+				PlayerEntity player = (PlayerEntity) ent;
+				ItemStack[] savedInv = new ItemStack[10];
+				//Hotbar
+				for(int i = 0; i < 9; i++){
+					savedInv[i] = player.inventory.mainInventory.get(i);
+					player.inventory.mainInventory.set(i, ItemStack.EMPTY);
+				}
+				//Offhand
+				savedInv[9] = player.inventory.offHandInventory.get(0);
+				player.inventory.offHandInventory.set(0, ItemStack.EMPTY);
+
+				ServerWorld world = (ServerWorld) player.getEntityWorld();
+				HashMap<UUID, ItemStack[]> savedMap = RespawnInventorySavedData.getMap(world);
+				UUID playerId = player.getGameProfile().getId();
+				if(savedMap.containsKey(playerId)){
+					//There are already saved items for this player
+					//This shouldn't happen, but we drop any saved items in this case
+					for(ItemStack stack : savedMap.get(playerId)){
+						InventoryHelper.spawnItemStack(world, player.getPosX(), player.getPosY(), player.getPosZ(), stack);
+					}
+				}
+				savedMap.put(playerId, savedInv);
+				RespawnInventorySavedData.markDirty(world);
+			}
+		}catch(Exception ex){
+			Crossroads.logger.error("Error while saving player hotbar for toolbelt", ex);
+		}
+	}
+
+	@SubscribeEvent()
+	@SuppressWarnings("unused")
+	public void loadPlayerHotbar(PlayerEvent.PlayerRespawnEvent e){
+		try{
+			PlayerEntity player = e.getPlayer();
+			World world = player.getEntityWorld();
+			if(!e.isEndConquered() && !world.isRemote){
+				ServerWorld worldServ = (ServerWorld) world;
+				HashMap<UUID, ItemStack[]> savedMap = RespawnInventorySavedData.getMap(worldServ);
+				UUID playerId = player.getGameProfile().getId();
+				if(savedMap.containsKey(playerId)){
+					//Give the player the items stored in the map, and remove the map entry
+					ItemStack[] savedItems = savedMap.get(playerId);
+					savedMap.remove(playerId);
+					RespawnInventorySavedData.markDirty(worldServ);
+
+					//For each item, try to return it to the original slot, or add it generically otherwise
+					//Hotbar
+					for(int i = 0; i < 9; i++){
+						player.inventory.add(i, savedItems[i]);
+					}
+
+					//Offhand
+					if(!savedItems[9].isEmpty()){
+						if(player.inventory.offHandInventory.get(0).isEmpty()){
+							player.inventory.offHandInventory.set(0, savedItems[9]);
+						}else{
+							player.dropItem(savedItems[9], false);
+						}
+					}
+
+					//Add the items that didn't fit in the original slot to the inventory
+					//Hotbar
+					for(int i = 0; i < 9; i++){
+						if(!savedItems[i].isEmpty()){
+							player.dropItem(savedItems[i], false);
+						}
+					}
+				}
+			}
+		}catch(Exception ex){
+			Crossroads.logger.error("Error while restoring player hotbar for toolbelt", ex);
+		}
 	}
 }

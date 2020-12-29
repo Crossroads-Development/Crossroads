@@ -215,7 +215,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 
 		@Override
 		public void setBeam(BeamUnit mag){
-			if(mag.isEmpty()){
+			if(mag.isEmpty() || fluxHelper.isShutDown()){
 				return;
 			}
 

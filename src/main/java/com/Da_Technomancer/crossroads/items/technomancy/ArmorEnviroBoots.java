@@ -53,7 +53,6 @@ public class ArmorEnviroBoots extends TechnomancyArmor{
 		tooltip.add(new TranslationTextComponent("tt.crossroads.enviro_boots.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.enviro_boots.frost"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.enviro_boots.quip").setStyle(MiscUtil.TT_QUIP));
-		//TODO
 	}
 
 	@Override

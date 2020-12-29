@@ -241,4 +241,9 @@ public class FluxSinkTileEntity extends TileEntity implements IFluxLink, ITickab
 	public void removeLinkSource(BlockPos end){
 		fluxHelper.removeLinkSource(end);
 	}
+
+	@Override
+	public boolean allowAccepting(){
+		return !fluxHelper.isShutDown();
+	}
 }

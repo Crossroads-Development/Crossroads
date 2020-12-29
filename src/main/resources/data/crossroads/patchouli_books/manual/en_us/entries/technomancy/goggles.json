@@ -15,7 +15,11 @@
 		},
 		{
 			"type": "text",
-			"text": "piece of netherite armor (not an ingot) in an anvil to provide netherite-tier armor protection.$(br2)If upgraded with netherite, the armor will have durability, but won't be destroyed when it runs out of durability, and will still provide the utility power (but won't provide armor until repaired with netherite).$(br2)"
+			"text": "piece of netherite armor (not an ingot) in an anvil to provide netherite-tier armor protection. The enchantments of the armor itself (not the netherite armor) are kept when combining them in an anvil.$(br2)If upgraded with netherite, the armor will have durability, but won't be destroyed when it runs out of durability, and will still provide "
+		},
+		{
+			"type": "text",
+			"text": "the utility power (but won't provide armor until repaired with netherite).$(br2)"
 		},
 		{
 			"type": "spotlight",
@@ -47,9 +51,15 @@
 		},
 		{
 			"type": "spotlight",
+			"anchor": "toolbelt",
+			"item": "crossroads:toolbelt",
+			"text": "The <item>Toolbelt/$ protects your hotbar and offhand on death- you will respawn with your entire hotbar and offhand. The toolbelt itself still drops normally.$(br2)"
+		},
+		{
+			"type": "spotlight",
 			"anchor": "enviro_boots",
 			"item": "crossroads:enviro_boots",
-			"text": "All-Terrain Boots combine the Soul Speed, Feather Falling, Depth Strider, and Frost Walker enchantments into one item. None of the effects will consume durability, the depth strider effect is a general speed boost when swimming instead of only applying when walking, and the feather falling effect totally "
+			"text": "<item>All-Terrain Boots/$ combine the Soul Speed, Feather Falling, Depth Strider, and Frost Walker enchantments into one item. None of the effects will consume durability, the depth strider effect is a general speed boost when swimming instead of only applying when walking, and the feather falling effect totally "
 		},
 		{
 			"type": "text",

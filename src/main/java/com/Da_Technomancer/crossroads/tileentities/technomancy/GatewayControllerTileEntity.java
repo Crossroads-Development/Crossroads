@@ -440,7 +440,7 @@ public class GatewayControllerTileEntity extends TileEntity implements IGateway,
 				}
 
 				//Teleportation
-				if(chevrons[3] != null && plane != null){
+				if(chevrons[3] != null && plane != null && !fluxHelper.isShutDown()){
 					Direction horiz = Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, plane);
 					AxisAlignedBB area = new AxisAlignedBB(pos.down(size).offset(horiz, -size / 2), pos.offset(horiz, size / 2 + 1));
 					//We use the timeUntilPortal field in Entity to not spam TP entities between two portals

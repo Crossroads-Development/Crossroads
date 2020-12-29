@@ -117,15 +117,18 @@ public class FluxUtil{
 	/**
 	 * Checks whether flux is over the limit, and if so performs a flux event and destroys this block
 	 * @param te The machine to check
-	 * @return Whether this machine was destroyed (flux > fluxLimit)
+	 * @return Whether this machine should shut down (flux > fluxLimit && safe mode enabled)
 	 */
 	public static boolean checkFluxOverload(IFluxLink te){
 		if(te.getFlux() > te.getMaxFlux()){
-			World world = te.getTE().getWorld();
-			BlockPos pos = te.getTE().getPos();
+			if(CRConfig.fluxSafeMode.get()){
+				return true;
+			}
+			TileEntity tileEntity = te.getTE();
+			World world = tileEntity.getWorld();
+			BlockPos pos = tileEntity.getPos();
 			world.destroyBlock(pos, CRConfig.entropyDropBlock.get());
 			fluxEvent(world, pos);
-			return true;
 		}
 		return false;
 	}
