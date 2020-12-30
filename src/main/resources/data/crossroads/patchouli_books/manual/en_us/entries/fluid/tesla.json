@@ -18,7 +18,7 @@
 		},
 		{
 			"type": "text",
-			"text": "A redstone signal will stop it from outputting FE- either by transmitting from the top, or by outputting from the base.$(br2)"
+			"text": "A redstone signal will stop it from outputting FE- either by firing electric arcs from the top, or by outputting from the base. <thing>$(l:essentials/circuits#reader)Reader circuits/$ measure the total stored FE.$(br2)"
 		},
 		{
 			"type": "text",

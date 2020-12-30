@@ -15,7 +15,7 @@
 		},
 		{
 			"type": "text",
-			"text": "and can connect to <item>$(l:crossroads:alchemy/conduit)reagent conduits/$ on any side. Hoppers can insert or extract the solid form of <thing>$(l:crossroads:intro/alchemy)reagents/$ as items, which can also be added/removed by right clicking (with the item to add, empty hand to remove). Buckets of the liquid form can also be used.$(br2)"
+			"text": "and can connect to <item>$(l:crossroads:alchemy/conduit)reagent conduits/$ on any side. Hoppers can insert or extract the solid form of <thing>$(l:crossroads:intro/alchemy)reagents/$ as items, which can also be added/removed by right clicking (with the item to add, empty hand to remove). Buckets of the liquid form can also be used.$(br2)<thing>$(l:essentials/circuits)Reader circuits/$ will read the total <thing>$(l:crossroads:intro/alchemy)reagent/$ contents.$(br2)"
 		},
 		{
 			"type": "text",

@@ -5,6 +5,9 @@ import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactionChamberTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.alchemy.ReagentTankTileEntity;
+import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
+import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
@@ -29,7 +32,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ReactionChamber extends ContainerBlock{
+public class ReactionChamber extends ContainerBlock implements IReadable{
 
 	private static final String TAG_NAME = "reagents";
 	private final boolean crystal;
@@ -145,5 +148,25 @@ public class ReactionChamber extends ContainerBlock{
 		}
 
 		tooltip.add(new TranslationTextComponent("tt.crossroads.reaction_chamber.power", ReactionChamberTileEntity.DRAIN));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.reaction_chamber.redstone", ReactionChamberTileEntity.CAPACITY));
+	}
+
+	@Override
+	public boolean hasComparatorInputOverride(BlockState state){
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos){
+		return RedstoneUtil.clampToVanilla(read(worldIn, pos, blockState));
+	}
+
+	@Override
+	public float read(World world, BlockPos pos, BlockState blockState){
+		TileEntity te = world.getTileEntity(pos);
+		if(te instanceof ReactionChamberTileEntity){
+			return ((ReactionChamberTileEntity) te).getReds();
+		}
+		return 0;
 	}
 }

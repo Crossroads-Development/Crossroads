@@ -1,8 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.API.CircuitUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.heat.IceboxTileEntity;
+import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
+import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -31,7 +34,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class Icebox extends ContainerBlock{
+public class Icebox extends ContainerBlock implements IReadable{
 
 	public Icebox(){
 		super(CRBlocks.getRockProperty());
@@ -79,5 +82,25 @@ public class Icebox extends ContainerBlock{
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.icebox.desc", IceboxTileEntity.RATE));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.icebox.min", IceboxTileEntity.MIN_TEMP));
+	}
+
+	@Override
+	public boolean hasComparatorInputOverride(BlockState state){
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(BlockState state, World worldIn, BlockPos pos){
+		return RedstoneUtil.clampToVanilla(read(worldIn, pos, state));
+	}
+
+	@Override
+	public float read(World world, BlockPos pos, BlockState state){
+		TileEntity te = world.getTileEntity(pos);
+		if(te instanceof IInventory){
+			return CircuitUtil.getRedstoneFromSlots((IInventory) te, 0);
+		}else{
+			return 0;
+		}
 	}
 }

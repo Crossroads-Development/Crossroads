@@ -71,7 +71,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	}
 
 	public float getRedstone(){
-		return 100F * (float) fluids[0].getAmount() / CAPACITY;
+		return fluids[0].getAmount();
 	}
 
 	public FluidStack getInputFluid(){

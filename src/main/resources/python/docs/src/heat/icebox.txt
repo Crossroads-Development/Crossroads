@@ -4,6 +4,7 @@ The <item>Icebox/$ is the simplest way to produce cold (aka remove heat). It's t
 It connects to a <item><link:crossroads:heat/cable>cable/$ on the top.
 
 Typical fuels include (from worst to best): snowballs, snow, and ice. Better fuels last for longer.
+<thing><link:essentials/circuits#reader>Reader circuits/$ measure the fullness of the input.
 
 <bobo>hEY! YOU! lUKE! lISTEN! iTS mE,, <link:crossroads:intro/welcome#bobo>BOBO/$<bobo>!
 sTEAL h(IS/ER/??/¿¿) LOOK! gET sPECIAL pROTECT! LETHER + too more things!

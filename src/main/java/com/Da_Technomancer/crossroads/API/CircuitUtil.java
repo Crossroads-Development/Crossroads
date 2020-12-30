@@ -1,18 +1,18 @@
 package com.Da_Technomancer.crossroads.API;
 
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
-import com.Da_Technomancer.essentials.blocks.ESBlocks;
 import com.Da_Technomancer.essentials.blocks.redstone.IRedstoneHandler;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.RedstoneDiodeBlock;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 import org.apache.commons.lang3.tuple.Pair;
@@ -29,6 +29,30 @@ public class CircuitUtil extends RedstoneUtil{
 			handler.buildConnections();
 		}
 		return sanitize(RedstoneUtil.chooseInput(handler.getCircRedstone(), handler.getWorldRedstone()));
+	}
+
+	/**
+	 * Determines the measured circuit signal from an inventory; the circuit equivalent of Container::calcRedstoneFromInventory
+	 * @param inv The inventory to read from
+	 * @param slots The indices of the slots to take into account
+	 * @return A value in [0, 15], with decimals
+	 */
+	public static float getRedstoneFromSlots(@Nullable IInventory inv, int... slots){
+		if(inv == null){
+			return 0;
+		}
+		float f = 0.0F;
+
+		for(int slot : slots){
+			ItemStack stack = inv.getStackInSlot(slot);
+			if(!stack.isEmpty()){
+				f += (float) stack.getCount() / (float) Math.min(inv.getInventoryStackLimit(), stack.getMaxStackSize());
+			}
+		}
+
+		f = f / (float) slots.length;
+		f *= 15F;
+		return f;
 	}
 
 	public static LazyOptional<IRedstoneHandler> makeBaseCircuitOptional(TileEntity te, InputCircHandler handler, float startingRedstone){

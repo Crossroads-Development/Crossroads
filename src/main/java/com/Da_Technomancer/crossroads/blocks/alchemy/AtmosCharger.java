@@ -91,7 +91,7 @@ public class AtmosCharger extends ContainerBlock implements IReadable{
 	@Override
 	public float read(World world, BlockPos blockPos, BlockState blockState){
 		if(world instanceof ServerWorld){
-			return 100F * (float) AtmosChargeSavedData.getCharge((ServerWorld) world) / (float) AtmosChargeSavedData.getCapacity();
+			return (float) AtmosChargeSavedData.getCharge((ServerWorld) world);
 		}else{
 			Crossroads.logger.warn("Atmos Charger read on client side! Report to mod author");
 			return 0;

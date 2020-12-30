@@ -15,6 +15,10 @@
 		},
 		{
 			"type": "text",
+			"text": "<thing>$(l:essentials/circuits#reader)Reader circuits/$ measure the total stored <item>voltus/$ (capacity 100).$(br2)"
+		},
+		{
+			"type": "text",
 			"text": "A good way of transferring and storing the FE it makes is with an <item>$(l:crossroads:alchemy/atmos_fe)Atmospheric Attenuator/$.$(br2)"
 		}
 	]

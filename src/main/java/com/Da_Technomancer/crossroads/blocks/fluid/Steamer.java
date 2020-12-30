@@ -1,7 +1,10 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
+import com.Da_Technomancer.crossroads.API.CircuitUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.fluid.SteamerTileEntity;
+import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
+import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
@@ -28,7 +31,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class Steamer extends ContainerBlock{
+public class Steamer extends ContainerBlock implements IReadable{
 
 	public Steamer(){
 		super(CRBlocks.getMetalProperty());
@@ -69,5 +72,25 @@ public class Steamer extends ContainerBlock{
 		tooltip.add(new TranslationTextComponent("tt.crossroads.steamer.desc", SteamerTileEntity.REQUIRED));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.steamer.water", SteamerTileEntity.FLUID_USE));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.steamer.steam", SteamerTileEntity.FLUID_USE));
+	}
+
+	@Override
+	public boolean hasComparatorInputOverride(BlockState state){
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(BlockState state, World worldIn, BlockPos pos){
+		return RedstoneUtil.clampToVanilla(read(worldIn, pos, state));
+	}
+
+	@Override
+	public float read(World world, BlockPos pos, BlockState state){
+		TileEntity te = world.getTileEntity(pos);
+		if(te instanceof IInventory){
+			return CircuitUtil.getRedstoneFromSlots((IInventory) te, 0);
+		}else{
+			return 0;
+		}
 	}
 }

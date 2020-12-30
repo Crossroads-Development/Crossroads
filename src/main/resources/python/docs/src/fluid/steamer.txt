@@ -3,3 +3,4 @@ crossroads:steamer
 The <item>Steamer/$ is a fast <thing><link:crossroads:intro/fluid>steam/$ powered smoker. It can cook up to one food item per 50 ticks (4 items/second). While running, it consumes 200mB/t <thing><link:crossroads:intro/fluid>steam/$ and produces an equal amount of <thing><link:crossroads:intro/fluid>distilled water/$.
 <thing><link:crossroads:intro/fluid>Steam/$ is accepted in the sides and bottom, and <thing><link:crossroads:intro/fluid>distilled water/$ can be piped out the top or bottom.
 Overall, it is twice as efficient per degree of <thing><link:crossroads:intro/heat>heat/$ as the <link:crossroads:heat/smelter><item>smelter/$, and twice as fast as the <link:crossroads:heat/smelter><item>smelter/$ at maximum speed.
+<thing><link:essentials/circuits#reader>Reader circuits/$ measure the fullness of the input.

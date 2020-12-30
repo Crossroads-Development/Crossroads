@@ -1,8 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.API.CircuitUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.BlastFurnaceTileEntity;
+import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
+import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -31,7 +34,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BlastFurnace extends ContainerBlock{
+public class BlastFurnace extends ContainerBlock implements IReadable{
 
 	public BlastFurnace(){
 		super(CRBlocks.getRockProperty());
@@ -81,5 +84,25 @@ public class BlastFurnace extends ContainerBlock{
 		tooltip.add(new TranslationTextComponent("tt.crossroads.blast_furnace.speed", BlastFurnaceTileEntity.REQUIRED_SPD));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.blast_furnace.power", BlastFurnaceTileEntity.POWER));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", BlastFurnaceTileEntity.INERTIA));
+	}
+
+	@Override
+	public boolean hasComparatorInputOverride(BlockState state){
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(BlockState state, World worldIn, BlockPos pos){
+		return RedstoneUtil.clampToVanilla(read(worldIn, pos, state));
+	}
+
+	@Override
+	public float read(World world, BlockPos pos, BlockState state){
+		TileEntity te = world.getTileEntity(pos);
+		if(te instanceof IInventory){
+			return CircuitUtil.getRedstoneFromSlots((IInventory) te, 0);
+		}else{
+			return 0;
+		}
 	}
 }

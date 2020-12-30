@@ -22,7 +22,7 @@
 		},
 		{
 			"type": "text",
-			"text": "succeed about half the time, and fail the other half- and so on.$(br2)It's your choice if you want to filter out the unprocessed ore and run it through again for better yields- or if you decide to increase the <thing>speed/$ instead.$(br2)"
+			"text": "succeed about half the time, and fail the other half- and so on.$(br2)<thing>$(l:essentials/circuits)Reader circuits/$ measure the fullness of the input.$(br2)It's your choice if you want to filter out the unprocessed ore and run it through again for better yields- or if you decide to increase the <thing>speed/$ instead.$(br2)"
 		}
 	]
 }

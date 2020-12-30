@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "config controlled).$(br2)It connects to a <item>$(l:crossroads:heat/cable)cable/$ on the top.$(br2)"
+			"text": "config controlled).$(br2)It connects to a <item>$(l:crossroads:heat/cable)cable/$ on the top. <thing>$(l:essentials/circuits#reader)Reader circuits/$ measure the fullness of the input.$(br2)"
 		}
 	]
 }

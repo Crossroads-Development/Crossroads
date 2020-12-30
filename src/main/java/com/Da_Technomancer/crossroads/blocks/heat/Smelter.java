@@ -1,7 +1,10 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
+import com.Da_Technomancer.crossroads.API.CircuitUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.heat.SmelterTileEntity;
+import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
+import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.*;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,7 +29,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class Smelter extends ContainerBlock{
+public class Smelter extends ContainerBlock implements IReadable{
 
 	public Smelter(){
 		super(CRBlocks.getMetalProperty());
@@ -70,6 +73,26 @@ public class Smelter extends ContainerBlock{
 		tooltip.add(new TranslationTextComponent("tt.crossroads.smelter.desc"));
 		for(int i = 0; i < SmelterTileEntity.TEMP_TIERS.length; i++){
 			tooltip.add(new TranslationTextComponent("tt.crossroads.smelter.info", i + 1, SmelterTileEntity.USAGE * (i + 1), SmelterTileEntity.TEMP_TIERS[i]));
+		}
+	}
+
+	@Override
+	public boolean hasComparatorInputOverride(BlockState state){
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(BlockState state, World worldIn, BlockPos pos){
+		return RedstoneUtil.clampToVanilla(read(worldIn, pos, state));
+	}
+
+	@Override
+	public float read(World world, BlockPos pos, BlockState state){
+		TileEntity te = world.getTileEntity(pos);
+		if(te instanceof IInventory){
+			return CircuitUtil.getRedstoneFromSlots((IInventory) te, 0);
+		}else{
+			return 0;
 		}
 	}
 }

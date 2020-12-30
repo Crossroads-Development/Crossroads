@@ -110,7 +110,7 @@ public class FluidTank extends ContainerBlock implements IReadable{
 	public float read(World world, BlockPos pos, BlockState blockState){
 		TileEntity te = world.getTileEntity(pos);
 		if(te instanceof FluidTankTileEntity){
-			return 15F * (float) ((FluidTankTileEntity) te).getContent().getAmount() / FluidTankTileEntity.CAPACITY;
+			return ((FluidTankTileEntity) te).getContent().getAmount();
 		}
 		return 0;
 	}

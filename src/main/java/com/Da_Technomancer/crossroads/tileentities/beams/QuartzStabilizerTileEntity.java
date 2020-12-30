@@ -51,6 +51,10 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 		return RATES[setting];
 	}
 
+	public int getRedstone(){
+		return storage.getPower();
+	}
+
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);

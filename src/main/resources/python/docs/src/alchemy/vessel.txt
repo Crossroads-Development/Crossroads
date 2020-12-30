@@ -2,6 +2,7 @@ Reagent Vessels
 crossroads:reagent_tank|crossroads:progress/path/alchemy
 <item>Reagent Vessels/$ are the core machines for automating <thing><link:crossroads:intro/alchemy>reactions/$. There are two versions: The <item>Storage Vessel/$, for storing <thing><link:crossroads:intro/alchemy>reagents/$, and the <item>Reaction Vessel/$, for performing <thing><link:crossroads:intro/alchemy>reactions/$.
 Both will retain their contents when broken, have glass and crystal versions, and can connect to <item><link:crossroads:alchemy/conduit>reagent conduits/$ on any side. Hoppers can insert or extract the solid form of <thing><link:crossroads:intro/alchemy>reagents/$ as items, which can also be added/removed by right clicking (with the item to add, empty hand to remove). Buckets of the liquid form can also be used.
+<thing><link:essentials/circuits>Reader circuits/$ will read the total <thing><link:crossroads:intro/alchemy>reagent/$ contents.
 
 The <item>Storage Vessel/$ can store 1000 units of <thing><link:crossroads:intro/alchemy>reagents/$. They <em>will not/$ allow <thing><link:crossroads:intro/alchemy>reactions/$ to occur inside them. They are used for bulk storage of <thing><link:crossroads:intro/alchemy>reagents/$.
 

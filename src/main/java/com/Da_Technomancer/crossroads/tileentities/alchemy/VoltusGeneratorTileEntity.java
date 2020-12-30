@@ -44,6 +44,10 @@ public class VoltusGeneratorTileEntity extends TileEntity implements ITickableTi
 		chat.add(new TranslationTextComponent("tt.crossroads.voltus_generator.read", voltusAmount, VOLTUS_CAPACITY));
 	}
 
+	public int getRedstone(){
+		return voltusAmount;
+	}
+
 	@Override
 	public void tick(){
 		if(world.isRemote){

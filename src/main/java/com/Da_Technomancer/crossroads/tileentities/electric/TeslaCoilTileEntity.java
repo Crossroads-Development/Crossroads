@@ -42,6 +42,10 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEnti
 		super(type);
 	}
 
+	public float getRedstone(){
+		return stored;
+	}
+
 	public void syncState(){
 		int message = 0;
 		if(redstone){

@@ -3,8 +3,11 @@ package com.Da_Technomancer.crossroads.blocks.beams;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.templates.BeamBlock;
 import com.Da_Technomancer.crossroads.tileentities.beams.QuartzStabilizerTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.technomancy.ClockworkStabilizerTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
+import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
+import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,7 +29,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class QuartzStabilizer extends BeamBlock{
+public class QuartzStabilizer extends BeamBlock implements IReadable{
 
 	private static final VoxelShape[] SHAPE = new VoxelShape[6];
 
@@ -76,5 +79,21 @@ public class QuartzStabilizer extends BeamBlock{
 	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.quartz_stabilizer.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.quartz_stabilizer.wrench"));
+	}
+
+	@Override
+	public boolean hasComparatorInputOverride(BlockState state){
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos){
+		return RedstoneUtil.clampToVanilla(read(worldIn, pos, blockState));
+	}
+
+	@Override
+	public float read(World world, BlockPos pos, BlockState blockState){
+		TileEntity te = world.getTileEntity(pos);
+		return te instanceof QuartzStabilizerTileEntity ? ((QuartzStabilizerTileEntity) te).getRedstone() : 0;
 	}
 }

@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "Typical fuels include (from worst to best): snowballs, snow, and ice. Better fuels last for longer.$(br2)"
+			"text": "Typical fuels include (from worst to best): snowballs, snow, and ice. Better fuels last for longer.$(br2)<thing>$(l:essentials/circuits#reader)Reader circuits/$ measure the fullness of the input.$(br2)"
 		},
 		{
 			"type": "text",

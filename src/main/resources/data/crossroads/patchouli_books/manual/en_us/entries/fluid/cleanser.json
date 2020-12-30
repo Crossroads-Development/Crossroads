@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "There is a fluid output on the top, and fluid inputs on the sides. Each operation consumes 250mB of <thing>$(l:crossroads:intro/fluid)steam/$ and produces 250mB of <thing>$(l:crossroads:intro/fluid)dirty water/$. This <thing>$(l:crossroads:intro/fluid)dirty water/$ can be reprocessed in an <item>$(l:crossroads:fluid/centrifuge)water centrifuge/$.$(br2)"
+			"text": "There is a fluid output on the top, and fluid inputs on the sides. Each operation consumes 250mB of <thing>$(l:crossroads:intro/fluid)steam/$ and produces 250mB of <thing>$(l:crossroads:intro/fluid)dirty water/$. This <thing>$(l:crossroads:intro/fluid)dirty water/$ can be reprocessed in an <item>$(l:crossroads:fluid/centrifuge)water centrifuge/$.$(br2)<thing>$(l:essentials/circuits#reader)Reader circuits/$ measure the fullness of the input.$(br2)"
 		},
 		{
 			"type": "text",

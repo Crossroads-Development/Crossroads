@@ -8,7 +8,12 @@ import com.Da_Technomancer.crossroads.items.LeydenJar;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import net.minecraft.block.*;
+import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
+import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -32,7 +37,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class TeslaCoil extends ContainerBlock{
+public class TeslaCoil extends ContainerBlock implements IReadable{
 
 	private static final VoxelShape SHAPE_EMPT = VoxelShapes.or(makeCuboidShape(0, 0, 0, 16, 2, 16), makeCuboidShape(0, 14, 0, 16, 16, 16), makeCuboidShape(5, 2, 0, 11, 14, 1), makeCuboidShape(5, 2, 15, 11, 14,16), makeCuboidShape(0, 2, 5, 1, 4, 11), makeCuboidShape(15, 2, 5, 16, 14, 11));
 	private static final VoxelShape SHAPE_LEYD = VoxelShapes.or(SHAPE_EMPT, makeCuboidShape(5, 2, 5, 11, 14, 11));
@@ -158,5 +163,25 @@ public class TeslaCoil extends ContainerBlock{
 		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_coil.top"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_coil.leyden", LeydenJar.MAX_CHARGE));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_coil.quip").setStyle(MiscUtil.TT_QUIP));
+	}
+
+	@Override
+	public boolean hasComparatorInputOverride(BlockState state){
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(BlockState state, World worldIn, BlockPos pos){
+		return RedstoneUtil.clampToVanilla(read(worldIn, pos, state));
+	}
+
+	@Override
+	public float read(World world, BlockPos pos, BlockState state){
+		TileEntity te = world.getTileEntity(pos);
+		if(te instanceof TeslaCoilTileEntity){
+			return ((TeslaCoilTileEntity) te).getRedstone();
+		}else{
+			return 0;
+		}
 	}
 }

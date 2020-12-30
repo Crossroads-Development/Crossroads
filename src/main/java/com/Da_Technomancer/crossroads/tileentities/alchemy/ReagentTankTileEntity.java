@@ -36,7 +36,7 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 	}
 
 	public float getReds(){
-		return 100F * contents.getTotalQty() / transferCapacity();
+		return Math.min(CAPACITY, contents.getTotalQty());
 	}
 
 	@Override

@@ -33,6 +33,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	private int energy = 0;
 	private static final int ENERGY_CAPACITY = 20;
 	public static final int DRAIN = 10;
+	public static final int CAPACITY = 200;
 
 	public ReactionChamberTileEntity(){
 		super(type);
@@ -57,6 +58,10 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	public void writeContentNBT(ItemStack stack){
 		contents = ReactionChamber.getReagants(stack);
 		dirtyReag = true;
+	}
+
+	public float getReds(){
+		return Math.min(CAPACITY, contents.getTotalQty());
 	}
 
 	@Override
@@ -108,7 +113,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 
 	@Override
 	public int transferCapacity(){
-		return 200;
+		return CAPACITY;
 	}
 
 	@Override

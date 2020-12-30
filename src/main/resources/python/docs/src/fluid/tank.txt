@@ -1,4 +1,4 @@
 Fluid Tank
 crossroads:fluid_tank
 The <item>Fluid Tank/$ is a fairly normal tank. Fluids can be inserted/extracted from any side, it keeps its contents when broken, and it stores up to 16 buckets.
-Comparators and <thing><link:essentials/circuits>reader circuits/$ read how full the tank is, from 0 to 15.
+Comparators and <thing><link:essentials/circuits>reader circuits/$ read how full the tank is in mB. Total tank capacity is 16,000mB.
