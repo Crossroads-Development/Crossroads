@@ -102,7 +102,7 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 			return;
 		}
 		
-		if(world.getGameTime() % BeamUtil.BEAM_TIME == 0){
+		if(world.getGameTime() % BeamUtil.BEAM_TIME == 0 && activeCycle != world.getGameTime()){
 			if(beamer == null){
 				beamer = new BeamManager[6];
 				boolean[] outputs = outputSides();

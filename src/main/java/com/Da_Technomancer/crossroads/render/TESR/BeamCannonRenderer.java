@@ -180,7 +180,8 @@ public class BeamCannonRenderer extends TileEntityRenderer<BeamCannonTileEntity>
 		//Render the beam
 		if(te.beamLength > 0){
 			IVertexBuilder beamBuilder = buffer.getBuffer(CRRenderTypes.BEAM_TYPE);
-			BeamRenderer.drawBeam(matrix, beamBuilder, te.beamLength, te.beamSize / 8F / (float) Math.sqrt(2), te.beamCol);
+			matrix.translate(0, barrelTop, 0);
+			BeamRenderer.drawBeam(matrix, beamBuilder, 1 + Math.max(0, te.beamLength - (barrelTop + 3.5F / 16F)), te.beamSize / 8F / (float) Math.sqrt(2), te.beamCol);
 		}
 
 		matrix.pop();

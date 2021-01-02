@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
@@ -77,9 +78,14 @@ public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntit
 			angle += entropyClient * SPIN_RATE / 20F;
 			//This 5 is the lifetime of the render
 			if(world.getGameTime() % 5 == 0 && overSafeLimit()){
-				CRRenderUtil.addArc(world, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, pos.getX() + 1.5F, pos.getY() + 1.5F, pos.getZ() + 1.5F, 3, 1F, FluxUtil.COLOR_CODES[(int) (world.getGameTime() % 3)]);
+				CRRenderUtil.addArc(world, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F + (float) Math.random(), pos.getY() + 0.5F + (float) Math.random(), pos.getZ() + 0.5F + (float) Math.random(), 3, 1F, FluxUtil.COLOR_CODES[(int) (world.getGameTime() % 3)]);
 			}
 		}else{
+			if(fluxHelper.lastTick != world.getGameTime() && world.getGameTime() % FluxUtil.FLUX_TIME == 0){
+				if(fluxHelper.flux > 0){
+					fluxHelper.flux += CRConfig.fluxNodeGain.get();
+				}
+			}
 			fluxHelper.tick();
 			syncFlux();
 			markDirty();
