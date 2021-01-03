@@ -33,7 +33,7 @@ public class ChargeEffect extends BeamEffect{
 					return;
 				}
 
-				if(power >= 16 && CRConfig.chargeSpawnLightning.get() && worldIn.canSeeSky(pos.up())){
+				if(power >= 16 && CRConfig.chargeSpawnLightning.get() && (CRConfig.undergroundLightning.get() || worldIn.canSeeSky(pos.up()))){
 					LightningBoltEntity lightning = EntityType.LIGHTNING_BOLT.create(worldIn);
 					lightning.moveForced(Vector3d.copyCenteredHorizontally(pos));
 					worldIn.addEntity(lightning);

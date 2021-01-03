@@ -98,6 +98,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.BooleanValue allowGateway;
 	public static ForgeConfigSpec.BooleanValue allowGatewayEntities;
 	public static ForgeConfigSpec.BooleanValue fluxSafeMode;
+	public static ForgeConfigSpec.BooleanValue undergroundLightning;
 
 	private static final ITag<Block> destroyBlacklist = BlockTags.makeWrapperTag(Crossroads.MODID + ":destroy_blacklist");
 
@@ -175,6 +176,7 @@ public class CRConfig{
 		fatPerValue = serverBuilder.comment("Amount of liquid fat equivalent to 1 hunger or saturation (in millibuckets)").defineInRange("fat_cost", 100, 1, 10_000);
 		hellTemperature = serverBuilder.comment("Minimum temperature of nether biomes (in degrees C)").defineInRange("nether_temp", 60, 0, 1_000D);
 		beamDamageAbsolute = serverBuilder.comment("Whether void-potential (death) beams do absolute damage", "Absolute damage ignores potion effects and enchantments").define("beam_damage_absolute", false);
+		undergroundLightning = serverBuilder.comment("Whether Charge beams can summon lightning underground or under a roof").define("underground_lightning", false);
 		serverBuilder.pop();
 
 		//Category includes overall path controls, and path specific categories

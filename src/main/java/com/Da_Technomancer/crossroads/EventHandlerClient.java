@@ -255,14 +255,14 @@ public final class EventHandlerClient{
 	@SubscribeEvent
 	@SuppressWarnings("unused")
 	public void keyListener(InputEvent.KeyInputEvent e){
-		if(Minecraft.getInstance().currentScreen != null){
+		if(Minecraft.getInstance().currentScreen != null || !Keys.keysInitialized){
 			return;//Only accept key hits if the player isn't in a UI
 		}
 		PlayerEntity play = Minecraft.getInstance().player;
 
 		ItemStack helmet = play.getItemStackFromSlot(EquipmentSlotType.HEAD);
 		if(!play.getHeldItemMainhand().isEmpty()){
-			int key = Keys.controlEnergy.matchesKey(e.getKey(), e.getScanCode()) ? 0 : Keys.controlPotential.matchesKey(e.getKey(), e.getScanCode()) ? 1 : Keys.controlStability.matchesKey(e.getKey(), e.getScanCode()) ? 2 : Keys.controlVoid.matchesKey(e.getKey(), e.getScanCode()) ? 3 : -1;
+			int key = Keys.controlEnergy.getKeyBinding().matchesKey(e.getKey(), e.getScanCode()) ? 0 : Keys.controlPotential.getKeyBinding().matchesKey(e.getKey(), e.getScanCode()) ? 1 : Keys.controlStability.getKeyBinding().matchesKey(e.getKey(), e.getScanCode()) ? 2 : Keys.controlVoid.getKeyBinding().matchesKey(e.getKey(), e.getScanCode()) ? 3 : -1;
 			ItemStack stack = play.getHeldItemMainhand();
 			if(key != -1 && stack.getItem() instanceof BeamUsingItem){
 				((BeamUsingItem) stack.getItem()).adjustSetting(Minecraft.getInstance().player, stack, key, !play.isSneaking());
@@ -280,7 +280,7 @@ public final class EventHandlerClient{
 		}
 
 		//Trigger propeller pack boost when jumping
-		if(Keys.boost.isPressed()){
+		if(Keys.boost.getKeyBinding().isPressed()){
 			ItemStack chestplate = play.getItemStackFromSlot(EquipmentSlotType.CHEST);
 			if(play.isElytraFlying() && chestplate.getItem() == CRItems.propellerPack && CRItems.propellerPack.getWindLevel(chestplate) > 0){
 				CRPackets.sendPacketToServer(new SendElytraBoostToServer());
