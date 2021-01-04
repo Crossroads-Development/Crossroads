@@ -109,7 +109,7 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 		temp /= heatHandlers.size() + 1;
 
 		for(IHeatHandler handler : heatHandlers){
-			handler.setTemp(temp);
+			handler.addHeat(temp - handler.getTemp());
 		}
 
 		temp = runLoss();
