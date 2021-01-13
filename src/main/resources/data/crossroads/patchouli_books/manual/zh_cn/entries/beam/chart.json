@@ -1,0 +1,20 @@
+{
+	"category": "beam",
+	"name": "Color Chart",
+	"icon": "crossroads:color_chart",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Color Chart",
+			"item": "crossroads:color_chart",
+			"text": "The <item>Color Chart/$ keeps track of all <thing>$(l:crossroads:intro/beam)alignments/$ the player has discovered with an <item>$(l:crossroads:intro/omnimeter)omnimeter/$.$(br2)It has a UI with a color wheel, where any color associated with an undiscovered <thing>$(l:crossroads:intro/beam)alignment/$ will be grayed out. It also has a search bar where you can search an <thing>$(l:crossroads:intro/beam)alignment"
+		},
+		{
+			"type": "text",
+			"text": "<thing>$(l:crossroads:intro/beam)/$ to show all the colors that create that <thing>$(l:crossroads:intro/beam)alignment/$.$(br2)"
+		}
+	]
+}

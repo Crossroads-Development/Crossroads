@@ -1,0 +1,21 @@
+{
+	"category": "alchemy",
+	"name": "Damping Powder",
+	"icon": "crossroads:damping_powder",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/alchemy",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Damping Powder",
+			"item": "crossroads:damping_powder",
+			"text": "<item>Damping Powder/$ is an emergency way of stopping $(l:crossroads:alchemy/effect)flame clouds/$. When used (by right clicking with the item), it will consume a <item>powder/$ and stop any $(l:crossroads:alchemy/effect)flame clouds/$ within 32 blocks.$(br2)As $(l:crossroads:alchemy/effect)flame clouds/$ could be caused by a lab accident, and they have the capacity to destroy "
+		},
+		{
+			"type": "text",
+			"text": "a massive chunk of your base, it is <em>strongly recommended/$ to keep some on hand in your $(l:crossroads:intro/alchemy)alchemy/$ lab before getting a <item>$(l:crossroads:alchemy/stones)philosopher's stone/$.$(br2)<item>Damping Powder/$ can also be used by dispensers.$(br2)"
+		}
+	]
+}

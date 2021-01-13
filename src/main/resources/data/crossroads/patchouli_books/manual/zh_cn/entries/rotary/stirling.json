@@ -1,0 +1,32 @@
+{
+	"category": "rotary",
+	"name": "Stirling Engine",
+	"icon": "crossroads:stirling_engine",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Stirling Engine",
+			"item": "crossroads:stirling_engine",
+			"text": "The <item>Stirling Engine/$ is a way of producing <thing>$(l:crossroads:intro/rotary)rotary power/$ from <thing>$(l:crossroads:intro/heat)heat/$. Or more specifically, from a temperature difference.$(br2)The <item>stirling engine/$ has two heat connections- one on bottom and one on the sides. The greater the difference in temperature between the two "
+		},
+		{
+			"type": "text",
+			"text": "inputs, the more power is produced, and the more efficient the <item>stirling engine/$ is. There must be a minimum 100°C difference to produce any power. Heat will be exchanged between the two inputs- the higher the temperature difference, the faster this happens (5°C/t per 100°C difference).$(br2)The <item>stirling engine/$ will stop producing any power above "
+		},
+		{
+			"type": "text",
+			"text": "speeds of 1rad/s [config controlled- trust the tooltip]. The <item>stirling engine/$ also has <em>no minimum temperature/$, only a minimum temperature difference. If one side is room temperature, and the other side is extremely cold, this can also produce power. There is no limit on the maximum efficiency of the <item>stirling engine/$. As an increase in temperature difference increases both the rate "
+		},
+		{
+			"type": "text",
+			"text": "of heat movement AND the amount of rotary power produced per degree moved, the power output increases quadratically with the temperature difference.$(br2)"
+		},
+		{
+			"type": "text",
+			"text": "Compared to the <item>$(l:crossroads:rotary/steam_turbine)steam turbine/$, the <item>stirling engine/$ can be much more efficient, and has no minimum temperature. However, it is harder to scale up <item>stirling engines/$ than <item>$(l:crossroads:rotary/steam_turbine)steam turbines/$, and the low maximum speed of the <item>stirling engine/$ means it can't power most machines without <thing>$(l:crossroads:rotary/gear_large)gearing to multiply the speed/$.$(br2)"
+		}
+	]
+}

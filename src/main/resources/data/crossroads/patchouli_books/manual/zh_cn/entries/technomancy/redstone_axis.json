@@ -1,0 +1,25 @@
+{
+	"category": "technomancy",
+	"name": "Redstone Master Axis",
+	"icon": "crossroads:redstone_axis",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/technomancy",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Redstone Master Axis",
+			"item": "crossroads:redstone_axis",
+			"text": "The <item>Redstone Master Axis/$ is a special <item>$(l:crossroads:rotary/axis)master axis/$ where the <thing>$(l:crossroads:intro/rotary)speed/$ of the controlled <thing>$(l:crossroads:intro/rotary)rotary/$ is precisely controlled by a redstone signal.$(br2)The <item>redstone master axis/$ will hold the <thing>$(l:crossroads:intro/rotary)speed/$ of <em>the attached gear/$ steady at a <thing>$(l:crossroads:intro/rotary)speed/$ equal to the received redstone signal "
+		},
+		{
+			"type": "text",
+			"text": "(including <item>$(l:essentials/circuits)circuit/$ input).$(br2)Any required <thing>$(l:crossroads:intro/rotary)energy/$ to increase the <thing>$(l:crossroads:intro/rotary)speed/$ will be drawn from a gear/axle attached to the back of the <item>redstone master axis/$, if possible. Any excess <thing>$(l:crossroads:intro/rotary)energy/$ being removed from the system to decrease the <thing>$(l:crossroads:intro/rotary)speed/$ will be added to an attached gear on the back, if available.$(br2)"
+		},
+		{
+			"type": "text",
+			"text": "It is generally better to use a larger (higher <thing>$(l:crossroads:intro/rotary)I value/$) gear on the back as an <thing>$(l:crossroads:intro/rotary)energy/$ source, as that allows the <item>redstone master axis/$ to draw <thing>$(l:crossroads:intro/rotary)energy/$ more quickly.$(br2)"
+		}
+	]
+}
