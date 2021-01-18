@@ -46,7 +46,7 @@ public class DynamoTileEntity extends ModuleTE{
 	public void tick(){
 		super.tick();
 
-		int operations = (int) Math.min(Math.abs(energy), POWER_MULT * axleHandler.getSpeed());
+		int operations = (int) Math.min(Math.abs(energy), POWER_MULT * Math.abs(axleHandler.getSpeed()));
 		if(operations > 0){
 			axleHandler.addEnergy(-operations, false);
 			fe += operations * CRConfig.electPerJoule.get();
