@@ -1,6 +1,6 @@
 {
 	"category": "intro",
-	"name": "Intro to Fluids",
+	"name": "流体简介",
 	"icon": "crossroads:fluid_tube",
 	"sortnum": 3,
 	"priority": true,
@@ -8,21 +8,21 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Intro to Fluids",
+			"title": "流体简介",
 			"item": "crossroads:fluid_tube",
-			"text": "<thing>Fluids/$ in Crossroads act the same as in all other mods. They can be moved with <item>$(l:crossroads:fluid/pipe)pipes/$, stored in <item>$(l:crossroads:fluid/tank)tanks/$, and so on.$(br2)The typical fluids added by Crossroads are:$(br2)<thing>Distilled Water/$: This is usually used to produce <thing>$(l:crossroads:fluid/steam)steam/$, "
+			"text": "<thing>流体/$在交错道途中的作用和在其他模组里一样。它们能被<item>$(l:crossroads:fluid/pipe)管道/$移动，能被<item>$(l:crossroads:fluid/tank)储罐/$储存，等等。$(br2)交错道途添加的典型流体有：$(br2)<thing>蒸馏水/$：通常被用于产生<thing>$(l:crossroads:fluid/steam)蒸汽/$，"
 		},
 		{
 			"type": "text",
-			"text": "and is treated as \"pure\" water in the mod.$(br2)<thing>$(l:crossroads:fluid/steam)Steam/$: This is a way of moving energy around as a fluid, and can be readily converted into either <thing>$(l:crossroads:heat/radiator)heat/$ or <thing>$(l:crossroads:rotary/steam_turbine)rotary energy/$. It is produced in a <item>$(l:crossroads:fluid/boiler)steam boiler/$.$(br2)<thing>Dirty Water/$: This is usually a byproduct. It can be reprocessed into <thing>distilled water/$ and useful "
+			"text": "而且在模组内会被当作“纯净”水。$(br2)<thing>$(l:crossroads:fluid/steam)蒸汽/$：能以流体的形式转移能量，并能轻易转换为<thing>$(l:crossroads:heat/radiator)热能/$或者<thing>$(l:crossroads:rotary/steam_turbine)旋转能/$。蒸汽可从<item>$(l:crossroads:fluid/boiler)蒸汽锅炉/$中产生。$(br2)<thing>脏水/$：通常是反应的副产物。能够在<item>$(l:crossroads:fluid/centrifuge)水离心机/$中再处理成<thing>蒸馏水/$和有用的副产物。"
 		},
 		{
 			"type": "text",
-			"text": "byproducts in a <item>$(l:crossroads:fluid/centrifuge)water centrifuge/$.$(br2)<thing>Liquid Fat/$: This is food in liquid form. There are machines to <item>$(l:crossroads:fluid/fat_collector)produce it/$, <item>$(l:crossroads:fluid/fat_feeder)feed it to nearby players or animals/$, and <item>$(l:crossroads:fluid/fat_congealer)turn it into custom food/$.$(br2)<thing>Molten Metal/$: There is a molten metal for each of the basic metals (iron, gold, copper, tin- other mods may add more). "
+			"text": "$(br2)<thing>液态脂肪/$：液态的食物。有相关的机器用于液态脂肪的<item>$(l:crossroads:fluid/fat_collector)生产/$，<item>$(l:crossroads:fluid/fat_feeder)向附近玩家和动物喂食/$，和<item>$(l:crossroads:fluid/fat_congealer)将其变成自定义食物/$。$(br2)<thing>熔融金属/$：每种基础金属（铁、金、铜、锡——其他模组可能还会添加更多）都有对应的熔融金属。"
 		},
 		{
 			"type": "text",
-			"text": "It can be <item>$(l:crossroads:heat/fcc)cooled into ingots/$.$(br2)"
+			"text": "熔融金属能被<item>$(l:crossroads:heat/fcc)冷却成锭/$。$(br2)"
 		}
 	]
 }

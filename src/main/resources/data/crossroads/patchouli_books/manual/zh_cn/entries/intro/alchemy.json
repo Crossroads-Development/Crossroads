@@ -1,6 +1,6 @@
 {
 	"category": "intro",
-	"name": "Intro to Alchemy",
+	"name": "炼金术简介",
 	"icon": "crossroads:phial_glass",
 	"sortnum": 6,
 	"priority": true,
@@ -9,53 +9,53 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Intro to Alchemy",
+			"title": "炼金术简介",
 			"item": "crossroads:phial_glass",
-			"text": "<thing>Alchemy/$ adds a new crafting system based on <thing>reactions/$ which forms the core of <thing>alchemy/$. In this system, <thing>reagents/$ are ingredients that can react to make different <thing>reagents/$. There is a <thing>reagent/$ for distilled water, redstone dust, metals, salt, gems, and many other items. The item and <thing>reagent/$ forms can be "
+			"text": "<thing>炼金术/$添加了一个基于<thing>反应/$的合成系统，这个系统组成了<thing>炼金术/$的核心。在这个系统里，<thing>试剂/$是能够反应并产生不同<thing>试剂/$的原料。蒸馏水、红石粉、盐、各种宝石、还有很多其他物品都有对应的<thing>试剂/$。物品的物品形态和<thing>试剂/$形态"
 		},
 		{
 			"type": "text",
-			"text": "converted between in a 1:1 ratio. For some <thing>reagents/$, $(l:crossroads:alchemy/fluid_injector)certain fluids can also be converted/$. When crafting something in <thing>alchemy/$ that requires an <thing>alchemy/$ specific ingredient, you don't craft the ingredient directly- you make the <thing>reagent/$ using <thing>reactions/$ and convert it to item form.$(br2)A typical <thing>reagent/$ has three <thing>phases/$ they can be: <thing>Solid/$, <thing>Liquid"
+			"text": "能够1:1转换。某些<thing>试剂/$$(l:crossroads:alchemy/fluid_injector)能够从特定流体转换而来/$。当合成特定需要<thing>炼金术/$专属原料的<thing>炼金术/$物品时，你不能直接从原料合成——你需要用<thing>反应/$制作目标<thing>试剂/$并将其转换为物品形态。$(br2)一个典型的<thing>试剂/$有三种<thing>物态/$，它们可以是：<thing>固态/$、<thing>液态"
 		},
 		{
 			"type": "text",
-			"text": "<thing>/$, or <thing>Gas/$. Only the <thing>solid/$ form can be converted to an item. The $(l:crossroads:intro/heat)temperature/$ of a <thing>reagent/$ controls its <thing>phase/$. Above the <thing>reagent's boiling point/$ it will be a <thing>gas/$, below <thing>melting point/$ it will be <thing>solid/$, and between the two temperatures it will be <thing>liquid/$. The <thing>melting point/$, <thing>boiling point/$, and item form of any <thing>reagent/$ can be viewed via the Just Enough Items (JEI) support- assuming you "
+			"text": "<thing>/$、<thing>气态/$。只有<thing>固态/$能被转换为物品形态。<thing>试剂/$的$(l:crossroads:intro/heat)温度/$控制着它的<thing>物态/$。<thing>试剂/$的温度超过<thing>试剂的沸点/$会变成<thing>气体/$，低于<thing>熔点/$会变成<thing>固态/$，在两个温度之间会变成<thing>液态/$。<thing>试剂/$的<thing>熔点/$，<thing>沸点/$和物品形态能够通过Just Enough Items（JEI）的帮助查看——"
 		},
 		{
 			"type": "text",
-			"text": "have JEI installed.$(br2)Commonly used <thing>reagents/$ that you will want a large supply of are: Distilled Water (or Packed Ice), Salt, Redstone Dust, and either Gunpowder or $(l:crossroads:fluid/ingr)Slag/$.$(br2)"
+			"text": "如果你有安装的话。$(br2)你可能想要大规模生产的<thing>试剂/$有：蒸馏水（或者浮冰）、盐、红石粉、火药或$(l:crossroads:fluid/ingr)炉渣/$。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "A typical <thing>reaction/$- the recipes that use and make <thing>reagents/$- will have certain ingredients and products, which will be used/made in set ratios. There will be a temperature range that the ingredients need to be within for the <thing>reaction/$ to occur. Some <thing>reactions/$ will have a <thing>catalyst/$, which is a <thing>reagent/$ that needs to be present for the <thing>reaction/$ to occur, but <em>will not be consumed/$. Most "
+			"text": "一个典型的<thing>反应/$——使用和制作<thing>试剂/$的各种配方——会有数个特定的原料和产物，这些原料和产物会以特定比例被使用和制造。要使<thing>反应/$发生，原料必须处在一定温度范围内。一些<thing>反应/$会需要一个<thing>催化剂/$，这是一种发生<thing>反应/$时需要其出现，但<em>不会被消耗/$的<thing>试剂/$。大多数"
 		},
 		{
 			"type": "text",
-			"text": "<thing>reactions/$ will also either produce or consume heat (increase or decrease the temperature) when they occur- these are listed in the JEI are 'exothermic' or 'endothermic' respectively. 'Isothermic' means they do not affect the temperature at all.$(br2)Some <thing>reactions/$ will require a $(l:crossroads:alchemy/charger)charged environment/$ to occur. This will be shown by a 'lightning "
+			"text": "<thing>反应/$发生时要么产生要么消耗热量（增加或减少温度）——这一特性在JEI里会被分别列为“放热”或“吸热”。“等温”意味着反应不会影响温度。$(br2)一些<thing>反应/$的发生会需要一个$(l:crossroads:alchemy/charger)充能环境/$。这些反应在JEI里"
 		},
 		{
 			"type": "text",
-			"text": "bolt' symbol in JEI.$(br2)Some <thing>reactions/$ (specifically making a <item>$(l:crossroads:alchemy/stones)Philosopher's Stone/$ and <item>$(l:crossroads:alchemy/stones)Practitioner's Stone/$) will require exact proportions in the ingredients. Get the proportions wrong, and it will explode. These <thing>reactions/$ are shown by a 'bomb' symbol in JEI.$(br2)There are also a couple <thing>reactions/$ with "
+			"text": "会有一个“闪电”图标。$(br2)一些<thing>反应/$（特别是制作<item>$(l:crossroads:alchemy/stones)思索者之石/$和<item>$(l:crossroads:alchemy/stones)实践者之石/$的反应）会需要原料间有精确的比例。这一比例出错，反应就会变成爆炸。这些<thing>反应/$在JEI里有一个“炸弹”图标。$(br2)也有一些<thing>反应/$没有产物"
 		},
 		{
 			"type": "text",
-			"text": "no products that just explode. For example, gunpowder above its ignition temperature. These <thing>reactions/$ are shown by a 'bomb' symbol in JEI with no products.$(br2)"
+			"text": "只有爆炸。例如，火药超过其燃点的反应。这些<thing>反应/$在JEI里会有一个“炸弹”图标但没有产物。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<thing>Reagents/$ usually have to held in glassware- which will have two versions: Glass and Crystal. Most <thing>reagents/$ can be held in either, but a few (notably the <item>$(l:crossroads:alchemy/stones)Philosopher's Stone/$) must be held in a crystal container or they will destroy the container. The reagent JEI will note if a <thing>reagent/$ must be held in crystal.$(br2)Usual glassware used for early "
+			"text": "<thing>试剂/$通常需要存放在玻璃器皿里，而玻璃器皿有两个版本：玻璃和水晶。大多数<thing>试剂/$能够存放在二者中，但少数试剂（特别是<item>$(l:crossroads:alchemy/stones)思索者之石/$必须放在水晶容器中，否则会破坏容器。试剂的JEI说明会特别指出<thing>试剂/$是否必须存放在水晶中容器。$(br2)用于早期炼金和手动"
 		},
 		{
 			"type": "text",
-			"text": "alchemy and manual crafting are $(l:crossroads:alchemy/glassware)<item>phials and florence flasks/$. Glassware for automation in <thing>alchemy/$ are things like <item>$(l:crossroads:alchemy/conduit)conduits/$ and <item>$(l:crossroads:alchemy/vessel)reaction chambers/$. When automating <thing>reactions/$, it is important to know that solids and liquids will move down but not up, and gasses will move up but not down in <item>$(l:crossroads:alchemy/conduit)conduits/$.$(br2)When <thing>reagent/$ are released- either by being "
+			"text": "合成的玻璃器皿是$(l:crossroads:alchemy/glassware)<item>试管和平底烧瓶/$。<thing>炼金术/$中用于自动化的玻璃器皿有<item>$(l:crossroads:alchemy/conduit)导管/$和<item>$(l:crossroads:alchemy/vessel)反应釜/$。当进行<thing>反应/$自动化时，要留意在<item>$(l:crossroads:alchemy/conduit)导管/$中固体和液体会向下移动，气体会向上移动。$(br2)当<thing>试剂/$被释放——要么是"
 		},
 		{
 			"type": "text",
-			"text": "poured from <item>$(l:crossroads:alchemy/glassware)phials/$, being <item>$(l:crossroads:alchemy/vent)vented/$, or something else, they will perform an $(l:crossroads:alchemy/effect)effect/$. Several <thing>reagents/$ have $(l:crossroads:alchemy/effect)effects/$ more valuable than the <thing>reagent/$ itself as a crafting ingredient.$(br2)Remember, everything in <thing>Alchemy/$ can be automated. Even if you don't want to automate an entire <thing>reaction/$ chain, automating common steps (like making <item>quicksilver/$) "
+			"text": "从<item>$(l:crossroads:alchemy/glassware)试管/$里倒出，要么是被<item>$(l:crossroads:alchemy/vent)排放/$，或者被其他什么方法释放，试剂会产生$(l:crossroads:alchemy/effect)效果/$。在合成原料中，一些<thing>试剂/$的$(l:crossroads:alchemy/effect)效果/$比<thing>试剂/$本身更有价值。$(br2)记住，<thing>炼金术/$里的一切都是可以自动化的。即便你不想自动化整个<thing>反应/$链，自动化一些常见步骤（例如制造<item>汞/$）"
 		},
 		{
 			"type": "text",
-			"text": "will make things much easier. Your first goal if you want to progress should probably be to make <item>$(l:crossroads:alchemy/acid)Aqua Regia/$.$(br2)"
+			"text": "会让事情容易许多。炼金术初步发展的第一个目标也许是制作<item>$(l:crossroads:alchemy/acid)王水/$。$(br2)"
 		}
 	]
 }

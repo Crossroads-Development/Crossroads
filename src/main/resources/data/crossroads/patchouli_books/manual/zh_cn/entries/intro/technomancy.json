@@ -1,6 +1,6 @@
 {
 	"category": "intro",
-	"name": "Intro to Technomancy",
+	"name": "科技魔法简介",
 	"icon": "crossroads:module_goggles",
 	"sortnum": 6,
 	"priority": true,
@@ -9,21 +9,21 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Intro to Technomancy",
+			"title": "科技魔法简介",
 			"item": "crossroads:module_goggles",
-			"text": "Most <thing>Technomancy/$ machines produce <thing>Temporal Entropy/$ instead of using power. <thing>Temporal Entropy/$ is a <em>reverse power system/$- instead of generators making power and machines using it, machines make <thing>Temporal Entropy/$ and 'generators' destroy it. If anything fills with <thing>Temporal Entropy/$, the machine will explode "
+			"text": "大多数<thing>科技魔法/$机器会产生<thing>时间熵/$而不是消耗能量。<thing>时间熵/$是一种<em>反向能量系统/$——和发电机产能而机器耗能不同，机器制造<thing>时间熵/$而“发电机”会进行销毁。如果任何东西充满了<thing>时间熵/$，机器会"
 		},
 		{
 			"type": "text",
-			"text": "with disastrous effects. <em>DO NOT LET ANYTHING FILL WITH <thing>TEMPORAL ENTROPY!/$ There are several config options to make <thing>temporal entropy/$ less destructive or completely safe.$(br2)<thing>Temporal Entropy/$ can be easily destroyed in an <item>$(l:crossroads:technomancy/sink)Entropy Sink/$, which requires being placed over a beacon. <thing>Temporal Entropy/$ can be transmitted using <item>$(l:crossroads:technomancy/node)Entropy Nodes/$. <thing>Temporal "
+			"text": "爆炸并带来灾难性后果。<em>不要让任何东西充满<thing>时间熵！/$有数个配置选项可以让<thing>时间熵/$破坏性小一点或者完全安全。$(br2)<thing>时间熵/$可以在一个放在信标上的<item>$(l:crossroads:technomancy/sink)熵槽/$中安全销毁。<thing>时间熵/$可被<item>$(l:crossroads:technomancy/node)熵节点/$传输。<thing>时间 "
 		},
 		{
 			"type": "text",
-			"text": "<thing>Entropy/$ is produced, transferred, and destroyed on a per-cycle basis (one cycle=4 game ticks=2 redstone ticks=0.2 seconds). These are the same cycles that <thing>$(l:crossroads:intro/beam)beams/$ use.$(br2)Most <thing>Technomancy/$ machines and items require a material called <item>$(l:crossroads:technomancy/copshowium)Copshowium/$ to craft. It's worth getting a decent supply before starting.$(br2)"
+			"text": "<thing>熵/$的产生，传输和摧毁都是基于周期进行的（1周期=4游戏tick=2红石tick=0.2秒）。这个周期和<thing>$(l:crossroads:intro/beam)光束/$使用的周期是一样的。$(br2)大多数<thing>科技魔法/$的机器和物品都需要一种叫<item>$(l:crossroads:technomancy/copshowium)钶（Copshowium）/$的材料合成。在开始<thing>科技魔法/$前，最好先得到充足的<thing>钶/$供应。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "A good first <thing>Technomancy/$ machine is the <item>$(l:crossroads:technomancy/beacon_harness)Beacon Harness/$, which produces massive amounts of <thing>$(l:crossroads:intro/beam)beams/$ cheaply.$(br2)"
+			"text": "一个好的初始<thing>科技魔法/$机器是<item>$(l:crossroads:technomancy/beacon_harness)信标操纵器/$，它可以廉价地大量产出<thing>$(l:crossroads:intro/beam)光束/$。$(br2)"
 		}
 	]
 }
