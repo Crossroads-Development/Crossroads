@@ -81,7 +81,7 @@ public class FluxNodeTileEntity extends TileEntity implements ITickableTileEntit
 				CRRenderUtil.addArc(world, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F + (float) Math.random(), pos.getY() + 0.5F + (float) Math.random(), pos.getZ() + 0.5F + (float) Math.random(), 3, 1F, FluxUtil.COLOR_CODES[(int) (world.getGameTime() % 3)]);
 			}
 		}else{
-			if(fluxHelper.lastTick != world.getGameTime() && world.getGameTime() % FluxUtil.FLUX_TIME == 0){
+			if(fluxHelper.lastTick != world.getGameTime() && world.getGameTime() % FluxUtil.FLUX_TIME == 0 && !fluxHelper.isShutDown()){
 				if(fluxHelper.flux > 0){
 					fluxHelper.flux += CRConfig.fluxNodeGain.get();
 				}

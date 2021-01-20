@@ -68,7 +68,6 @@ public class GatewayControllerTileEntity extends TileEntity implements IGateway,
 	private float clientAngle = 0;//Angle on the client. On the server, acts as a record of value sent to client
 	private float clientW = 0;//Speed on the client (post adjustment). On the server, acts as a record of value sent to client
 	private float referenceSpeed = 0;//Speed which angles will be defined relative to on the server
-	private long lastTick = 0;
 	//Visible for rendering
 	public EnumBeamAlignments[] chevrons = new EnumBeamAlignments[4];//Current values locked into chevrons. Null for unset chevrons
 	private boolean origin = false;//Whether this gateway started the connection in dialed (determines which side has flux)
@@ -463,12 +462,10 @@ public class GatewayControllerTileEntity extends TileEntity implements IGateway,
 				}
 
 				//Handle flux
-				fluxHelper.tick();
-				long currTick = world.getGameTime();
-				if(currTick % FluxUtil.FLUX_TIME == 0 && origin && lastTick != currTick){
+				if(world.getGameTime() % FluxUtil.FLUX_TIME == 0 && origin && fluxHelper.lastTick != world.getGameTime() && !fluxHelper.isShutDown()){
 					fluxHelper.addFlux(FLUX_PER_CYCLE);
-					lastTick = currTick;
 				}
+				fluxHelper.tick();
 			}
 		}
 	}
