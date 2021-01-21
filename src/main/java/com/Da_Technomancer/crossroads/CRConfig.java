@@ -99,6 +99,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.BooleanValue allowGatewayEntities;
 	public static ForgeConfigSpec.BooleanValue fluxSafeMode;
 	public static ForgeConfigSpec.BooleanValue undergroundLightning;
+	public static ForgeConfigSpec.BooleanValue cageMeterOverlay;
 
 	private static final ITag<Block> destroyBlacklist = BlockTags.makeWrapperTag(Crossroads.MODID + ":destroy_blacklist");
 
@@ -122,6 +123,7 @@ public class CRConfig{
 		beamSounds = clientBuilder.comment("Should beams make sounds?").define("beam_sounds", true);
 		electricSounds = clientBuilder.comment("Should electrical arcs make sounds?").define("electric_sounds", true);
 		fluxSounds = clientBuilder.comment("Should temporal entropy transfer make sounds?").define("entropy_sounds", true);
+		cageMeterOverlay = clientBuilder.comment("Should the overlay for the beam cage render while not holding a beam staff?", "Regardless of setting, it only shows while a beam cage is equipped.").define("beam_cage_overlay", true);
 		clientSpec = clientBuilder.build();
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, clientSpec);
 
