@@ -1,0 +1,7 @@
+{
+	"replace": false,
+	"values": [
+		"#forge:storage_blocks/coal",
+		"#forge:storage_blocks/charcoal"
+	]
+}

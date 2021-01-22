@@ -1,10 +1,10 @@
 {
 	"type": "crossroads:mill",
 	"input": {
-		"tag": "forge:storage_blocks/coal"
+		"tag": "crossroads:storage_blocks/coal_lenient"
 	},
 	"output": {
 		"item": "gunpowder",
-		"count": 1
+		"count": 2
 	}
 }
