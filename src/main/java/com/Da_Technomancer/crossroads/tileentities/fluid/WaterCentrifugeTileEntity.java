@@ -78,7 +78,7 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 			//Handle direction switching regardless of whether crafting occurred
 
 			Optional<CentrifugeRec> recOpt = world.getRecipeManager().getRecipe(CRRecipes.CENTRIFUGE_TYPE, this, world);
-			if(recOpt.isPresent()){
+			if(recOpt.isPresent() && !fluids[0].isEmpty()){
 				CentrifugeRec rec = recOpt.get();
 				//The recipe matches() method checks inputs- those being valid is a given
 

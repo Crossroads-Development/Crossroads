@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.BeamUtil;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.integration.curios.CurioHelper;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
@@ -148,18 +149,20 @@ public class StaffTechnomancy extends BeamUsingItem{
 	}
 
 	public static Triple<BlockPos, Vector3d, Direction> rayTraceBeams(BeamUnit beam, World world, Vector3d startPos, Vector3d endSourcePos, Vector3d ray, @Nullable Entity excludedEntity, @Nullable BlockPos ignorePos, double maxRange){
-		ray = ray.scale(0.2D);
+		final double stepSize = CRConfig.beamRaytraceStep.get();
+		final double halfStep = stepSize / 2D;
+		ray = ray.scale(stepSize);
 		Direction collisionDir = Direction.getFacingFromVector(ray.x, ray.y, ray.z);//Used for beam collision detection
 		Direction effectDir = null;
 		BlockPos endPos = null;
 		double[] end = new double[] {endSourcePos.x, endSourcePos.y, endSourcePos.z};
 		//Raytrace manually along the look direction
-		for(double d = 0; d < maxRange; d += 0.2D){
+		for(double d = 0; d < maxRange; d += stepSize){
 			end[0] += ray.x;
 			end[1] += ray.y;
 			end[2] += ray.z;
 			//Look for entities along the firing path to collide with
-			List<Entity> ents = world.getEntitiesInAABBexcluding(excludedEntity, new AxisAlignedBB(end[0] - 0.1D, end[1] - 0.1D, end[2] - 0.1D, end[0] + 0.1D, end[1] + 0.1D, end[2] + 0.1D), EntityPredicates.IS_ALIVE);
+			List<Entity> ents = world.getEntitiesInAABBexcluding(excludedEntity, new AxisAlignedBB(end[0] - halfStep, end[1] - halfStep, end[2] - halfStep, end[0] + halfStep, end[1] + halfStep, end[2] + halfStep), EntityPredicates.IS_ALIVE);
 			if(!ents.isEmpty()){
 				Optional<Vector3d> res = ents.get(0).getBoundingBox().rayTrace(startPos, new Vector3d(end[0], end[1], end[2]));
 				if(res.isPresent()){
@@ -181,7 +184,7 @@ public class StaffTechnomancy extends BeamUsingItem{
 			if(BeamUtil.solidToBeams(state, world, endPos, collisionDir, beam.getPower())){
 				//Note: this VoxelShape has no offset
 				VoxelShape shape = state.getRenderShape(world, endPos);//.getBoundingBox(player.world, endPos).offset(endPos);
-				BlockRayTraceResult res = shape.rayTrace(startPos, new Vector3d(end[0] + ray.x * 5D, end[1] + ray.y * 5D, end[2] + ray.z * 5D), endPos);
+				BlockRayTraceResult res = shape.rayTrace(startPos, new Vector3d(end[0] + ray.x / stepSize, end[1] + ray.y / stepSize, end[2] + ray.z / stepSize), endPos);
 				if(res != null){
 					Vector3d hitVec = res.getHitVec();
 					end[0] = hitVec.x;
