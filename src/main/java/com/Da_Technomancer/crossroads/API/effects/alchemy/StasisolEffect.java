@@ -31,6 +31,16 @@ public class StasisolEffect extends AetherEffect{
 	}
 
 	@Override
+	protected Block woodBlock(){
+		return Blocks.SPRUCE_LOG;
+	}
+
+	@Override
+	protected Block foliageBlock(){
+		return Blocks.SPRUCE_LEAVES;
+	}
+
+	@Override
 	protected RegistryKey<Biome> biome(){
 		return Biomes.SNOWY_TUNDRA;
 	}

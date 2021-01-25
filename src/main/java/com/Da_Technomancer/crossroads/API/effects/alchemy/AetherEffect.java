@@ -39,6 +39,8 @@ public class AetherEffect implements IAlchEffect{
 	private static final ITag<Block> ROCK_GROUP = BlockTags.makeWrapperTag(Crossroads.MODID + ":alchemy_rock");
 	private static final ITag<Block> FLUD_GROUP = BlockTags.makeWrapperTag(Crossroads.MODID + ":alchemy_fluid");//Was going to be named FLUID_GROUP, but the other two fields had the same name lengths and I couldn't resist
 	private static final ITag<Block> CRYS_GROUP = BlockTags.makeWrapperTag(Crossroads.MODID + ":alchemy_crystal");
+	private static final ITag<Block> WOOD_GROUP = BlockTags.makeWrapperTag(Crossroads.MODID + ":alchemy_wood");
+	private static final ITag<Block> FOLI_GROUP = BlockTags.makeWrapperTag(Crossroads.MODID + ":alchemy_foliage");
 	private static final Field biomeField = ReflectionUtil.reflectField(CRReflection.BIOME_ARRAY);
 
 	protected Block soilBlock(){
@@ -55,6 +57,14 @@ public class AetherEffect implements IAlchEffect{
 
 	protected Block crystalBlock(){
 		return Blocks.GLASS;
+	}
+
+	protected Block woodBlock(){
+		return Blocks.OAK_LOG;
+	}
+
+	protected Block foliageBlock(){
+		return Blocks.OAK_LEAVES;
 	}
 
 	protected RegistryKey<Biome> biome(){
@@ -77,14 +87,18 @@ public class AetherEffect implements IAlchEffect{
 			return;
 		}
 
-		RegistryKey<Biome> biomeKey = biome();
-		Biome biome = lookupBiome(biomeKey, world);
-		if(biome != null && world.getBiome(pos) != biome){
-			setBiomeAtPos(world, pos, biome);
-			CRPackets.sendPacketToDimension(world, new SendBiomeUpdateToClient(pos, biomeKey.getLocation()));
+		//sulfur dioxide prevents biome changing
+		if(contents.getQty(EnumReagents.SULFUR_DIOXIDE.id()) == 0){
+			RegistryKey<Biome> biomeKey = biome();
+			Biome biome = lookupBiome(biomeKey, world);
+			if(biome != null && world.getBiome(pos) != biome){
+				setBiomeAtPos(world, pos, biome);
+				CRPackets.sendPacketToDimension(world, new SendBiomeUpdateToClient(pos, biomeKey.getLocation()));
+			}
 		}
 
-		if(oldState.isAir(world, pos) || oldState.getBlockHardness(world, pos) < 0){
+		//cavorite prevents block transmutation
+		if(oldState.isAir(world, pos) || oldState.getBlockHardness(world, pos) < 0 || contents.getQty(EnumReagents.CAVORITE.id()) != 0){
 			return;
 		}
 
@@ -113,6 +127,14 @@ public class AetherEffect implements IAlchEffect{
 				}
 			}else if(oldState != soilBlock().getDefaultState()){
 				world.setBlockState(pos, soilBlock().getDefaultState());
+			}
+		}else if(WOOD_GROUP.contains(oldState.getBlock())){
+			if(oldState != woodBlock().getDefaultState()){
+				world.setBlockState(pos, woodBlock().getDefaultState());
+			}
+		}else if(FOLI_GROUP.contains(oldState.getBlock())){
+			if(oldState != foliageBlock().getDefaultState()){
+				world.setBlockState(pos, foliageBlock().getDefaultState());
 			}
 		}
 	}

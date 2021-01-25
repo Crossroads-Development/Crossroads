@@ -12,7 +12,7 @@ public class EldrineEffect extends AetherEffect{
 
 	@Override
 	protected Block soilBlock(){
-		return Blocks.SOUL_SAND;
+		return Blocks.SOUL_SOIL;
 	}
 
 	@Override
@@ -28,6 +28,16 @@ public class EldrineEffect extends AetherEffect{
 	@Override
 	protected Block fluidBlock(){
 		return Blocks.LAVA;
+	}
+
+	@Override
+	protected Block woodBlock(){
+		return Blocks.CRIMSON_STEM;
+	}
+
+	@Override
+	protected Block foliageBlock(){
+		return Blocks.NETHER_WART_BLOCK;
 	}
 
 	@Override
