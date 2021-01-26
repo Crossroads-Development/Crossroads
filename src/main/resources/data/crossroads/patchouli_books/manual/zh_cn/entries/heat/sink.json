@@ -1,6 +1,6 @@
 {
 	"category": "heat",
-	"name": "Heat Sink",
+	"name": "换热器",
 	"icon": "crossroads:heat_sink",
 	"sortnum": 0,
 	"priority": false,
@@ -8,13 +8,13 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Heat Sink",
+			"title": "换热器",
 			"item": "crossroads:heat_sink",
-			"text": "The <item>Heat Sink/$ is a way of venting heat (or cold) rapidly.$(br2)They can be configured with a $(l:essentials/wrench)wrench/$ to adjust the loss rate.$(br2)"
+			"text": "<item>换热器/$是快速排放热（或冷）的一种方法。$(br2)可用$(l:essentials/wrench)扳手/$调节流失率。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "It will move the temperature towards the biome temperature at the set constant rate.$(br2)"
+			"text": "它会以设定的速度将自身温度改变至群系温度。$(br2)"
 		}
 	]
 }

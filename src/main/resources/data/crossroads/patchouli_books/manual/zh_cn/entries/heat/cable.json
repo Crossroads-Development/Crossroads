@@ -1,6 +1,6 @@
 {
 	"category": "heat",
-	"name": "Heat Cables",
+	"name": "热导管",
 	"icon": "crossroads:heat_cable_wool",
 	"sortnum": 0,
 	"priority": false,
@@ -8,25 +8,25 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Heat Cables",
+			"title": "热导管",
 			"item": "crossroads:heat_cable_wool",
-			"text": "<item>Heat Cables/$ transport heat by balancing their temperature with their neighbors. However, if a <item>heat cable/$ gets above its <thing>melting temperature/$, it will break. Make sure your heat networks are using at least as much heat as they make, or your cables will melt!$(br2)"
+			"text": "<item>热导管/$能通过相连导管间的温度平衡传输热量。然而，如果<item>热导管/$的温度超过了它的<thing>熔点/$，它会被摧毁。确保你的热网络使用的热量至少和它们产生的热量一样多，否则你的热导管就会融化！$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<item>Heat Cables/$ also have a <thing>loss/$, which is how much their temperature will move towards the <thing>biome temperature/$ each tick. There are many types of <item>heat cables/$ with different stats- different <thing>melting points/$ and <thing>loss rates/$. Ceramic and obsidian are usually best- but wool will do in a pinch! There are also ice cables that have extremely low <thing>heat loss/$, but melt at 0°C.$(br2)"
+			"text": "<item>热导管/$也有一个<thing>热流失率/$，代表了导管的温度每tick向<thing>群系温度/$变化的速率。有很多种<item>热导管/$，其性能各不相同——不同的<thing>熔点/$和<thing>流失率/$。陶瓷和黑曜石通常是最好的——但羊毛也能凑合一下！也有冰制的热导管，有着极低的<thing>热流失/$，但在0°C就会融化。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "Cables can be disconnected from each other via wrench. Cables can also be reskined by right clicking with iron, diamond, or nether quartz.$(br2)"
+			"text": "用扳手右击热导管可使其断开连接。另外，手持铁、钻石和下界石英右击热导管可改变导管的材质。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "There are also <item>Redstone Heat Cables/$. They only connect to other cables and machines when they have a redstone signal. $(l:essentials/circuits#reader)Circuits/$ can read the temperature in Celcius.$(br2)"
+			"text": "除此之外，还有一种<item>红石热导管/$。它们只在收到红石信号石连接到其他导管和机器。$(l:essentials/circuits#reader)电路/$可以读取导管的摄氏温度。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<bobo>$(l:crossroads:intro/welcome#bobo)b0b0 hInT tIME!/$<bobo>$(br2)<bobo>w00l-shhmool! uSE dA l00tbok$ hoTPipe coAt!! MUD! dIRT! s0ILE! gROUND!$(br2)<bobo>mEltY MellTY to wIN @ PRIZE!/$$(br2)"
+			"text": "<bobo>$(l:crossroads:intro/welcome#bobo)b0b0题示时尖！/$<bobo>$(br2)<bobo>羊毛卜行！用抽咔热导管！！泥！土！壤！地！$(br2)<bobo>容掉揪可以开桨！/$$(br2)"
 		}
 	]
 }

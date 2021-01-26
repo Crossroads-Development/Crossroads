@@ -18,7 +18,7 @@
 		},
 		{
 			"type": "text",
-			"text": "效果会每4 ticks发生一次（每<thing>周期/$一次）。$(br2)每个光束都是四种资源的混合，这四种资源分别代表了四种颜色：<thing>能量/$- 红，<thing>潜能/$- 绿，<thing>稳定/$- 蓝，和<thing>$(l:crossroads:beam/void)虚空/$- 黑。<thing>虚空/$是游戏后期的资源，而且在初期不会被使用。$(br2)光束的<thing>功率/$是"
+			"text": "效果会每4 ticks发生一次（每<thing>周期/$一次）。$(br2)每个光束都是四种资源的混合，这四种资源分别代表了四种颜色：<thing>能量/$- 红、<thing>潜能/$- 绿、<thing>稳定/$- 蓝和<thing>$(l:crossroads:beam/void)虚空/$- 黑。<thing>虚空/$是游戏后期的资源，而且在初期不会被使用。$(br2)光束的<thing>功率/$是"
 		},
 		{
 			"type": "text",

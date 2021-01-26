@@ -1,6 +1,6 @@
 {
 	"category": "heat",
-	"name": "Salt Reactor",
+	"name": "盐反应器",
 	"icon": "crossroads:salt_reactor",
 	"sortnum": 0,
 	"priority": false,
@@ -8,13 +8,13 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Salt Reactor",
+			"title": "盐反应器",
 			"item": "crossroads:salt_reactor",
-			"text": "The <item>Salt Reactor/$ is a way of cooling, $(l:crossroads:heat/icebox)even below -20°C/$. It consumes <thing>$(l:crossroads:fluid/centrifuge)salt and distilled water/$ in a ratio of 200mB of distilled water per salt, while producing 200mB of normal water for every 200mB of distilled water. Every salt lasts for 20 ticks (10 redstone ticks, 1 second) as fuel.$(br2)"
+			"text": "<item>盐反应器/$是一种产生$(l:crossroads:heat/icebox)超过-20°C/$低温的方法。它消耗<thing>$(l:crossroads:fluid/centrifuge)盐和蒸馏水/$。每次工作中，反应器会消耗200mB蒸馏水和一份盐，并产生200mB普通水。每份盐作为燃料可维持反应器工作20 tick（10红石tick，1秒）。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The <item>Salt Reactor/$ can cool all the way down to <thing>absolute zero/$. <item>$(l:crossroads:heat/cable)Heat cables/$ connect to the bottom, pipes can connect to any side both to input distilled water and output water.$(br2)"
+			"text": "<item>盐反应器/$制冷可一直降到<thing>绝对零度/$。<item>$(l:crossroads:heat/cable)热导管/$需要从底部连接，输入蒸馏水和输出普通水的管道可以连接到4个侧面。$(br2)"
 		}
 	]
 }

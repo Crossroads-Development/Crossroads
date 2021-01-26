@@ -1,6 +1,6 @@
 {
 	"category": "heat",
-	"name": "Solar Heater",
+	"name": "太阳能加热器",
 	"icon": "crossroads:solar_heater",
 	"sortnum": 0,
 	"priority": false,
@@ -8,17 +8,17 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Solar Heater",
+			"title": "太阳能加热器",
 			"item": "crossroads:solar_heater",
-			"text": "The <item>Solar Heater/$ is a solar panel that produces heat. When in direct sunlight during the day in clear weather, the <item>solar heat/$ will produce heat at a slow steady rate, up to a maximum temperature of 250°C.$(br2)This isn't hot enough to run advanced machines- but "
+			"text": "<item>太阳能加热器/$是产热的太阳能板。当白天天气晴朗并处于直接阳光照射下，<item>太阳能加热器/$会以缓慢且稳定地产出热能，最高温度250°C。$(br2)这个温度并不足以使高级机器运行——但"
 		},
 		{
 			"type": "text",
-			"text": "it could be used for $(l:crossroads:heat/smelter)smelting/$ or <thing>$(l:crossroads:fluid/steam)steam generation/$.$(br2)A line of <item>solar heaters/$ connected on their copper ends will share heat. The copper ends are also where <item>$(l:crossroads:heat/cable)cables/$ can be connected.$(br2)"
+			"text": "能用于$(l:crossroads:heat/smelter)冶炼/$或者<thing>$(l:crossroads:fluid/steam)产生蒸汽/$。$(br2)一列水平摆放并用带铜一端互相连接的<item>太阳能加热器/$会互相分享热能。带铜端也是<item>$(l:crossroads:heat/cable)热导管/$连接的地方。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "This block pairs well with the <item>$(l:crossroads:heat/reserve)Heat Reservoir/$ to store heat generated during the day for use at night.$(br2)"
+			"text": "该方块可与<item>$(l:crossroads:heat/reserve)储热器/$搭配，在白天储存热供在晚上使用。$(br2)"
 		}
 	]
 }
