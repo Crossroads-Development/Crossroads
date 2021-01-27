@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.packets.*;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -21,6 +22,8 @@ public class CRPackets{
 
 	public static void preInit(){
 		channel = NetworkRegistry.newSimpleChannel(new ResourceLocation(Crossroads.MODID, "channel"), () -> "1.0.0", (s) -> s.equals("1.0.0"), (s) -> s.equals("1.0.0"));
+		PacketManager.addCodec(int[].class, (val, buf) -> buf.writeVarIntArray((int[]) val), PacketBuffer::readVarIntArray);
+
 		registerPacket(SendIntToClient.class);
 		registerPacket(SendStringToClient.class);
 		registerPacket(SendDoubleToClient.class);
@@ -34,8 +37,8 @@ public class CRPackets{
 		registerPacket(SendStringToServer.class);
 //		registerPacket(SendNBTToClient.class);
 		registerPacket(SendPlayerTickCountToClient.class);
-		registerPacket(SendDoubleArrayToServer.class);
-		registerPacket(SendDoubleArrayToClient.class);
+//		registerPacket(SendDoubleArrayToServer.class);
+//		registerPacket(SendDoubleArrayToClient.class);
 //		registerPacket(SendSpinToClient.class);
 		registerPacket(AddVisualToClient.class);
 		registerPacket(NbtToEntityClient.class);
@@ -46,6 +49,7 @@ public class CRPackets{
 		registerPacket(SendTaylorToClient.class);
 		registerPacket(SendMasterKeyToClient.class);
 		registerPacket(SendElytraBoostToServer.class);
+		registerPacket(SendIntArrayToClient.class);
 	}
 
 	private static <T extends Packet> void registerPacket(Class<T> clazz){

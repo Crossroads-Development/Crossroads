@@ -8,17 +8,14 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
-import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -30,10 +27,9 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Set;
 
 @ObjectHolder(Crossroads.MODID)
-public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, ITickableTileEntity{
+public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 
 	@ObjectHolder("chrono_harness")
 	public static TileEntityType<ChronoHarnessTileEntity> type = null;
@@ -41,21 +37,20 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 	private static final int FE_CAPACITY = 20_000;
 	private static final float SPEED = (float) Math.PI / 20F / 400F;//Used for rendering
 
-	private final FluxHelper fluxHelper = new FluxHelper(this, Behaviour.SOURCE);
 	private int fe = FE_CAPACITY;//Stored FE. Placed with full FE
 	private int curPower = 0;//Current power generation (fe/t); used for readouts
 	private int clientCurPower = 0;//Current power gen on the client; used for rendering. On the server side, tracks last sent value
 	private float angle = 0;//Used for rendering. Client side only
 
 	public ChronoHarnessTileEntity(){
-		super(type);
+		super(type, null, Behaviour.SOURCE);
 	}
 
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		chat.add(new TranslationTextComponent("tt.crossroads.chrono_harness.fe", fe, FE_CAPACITY, curPower));
 		FluxUtil.addFluxInfo(chat, this, shouldRun() ? curPower / CRConfig.fePerEntropy.get() : 0);
-		fluxHelper.addInfo(chat, player, hit);
+		super.addInfo(chat, player, hit);
 	}
 
 	public float getRenderAngle(float partialTicks){
@@ -78,22 +73,21 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 	}
 
 	private boolean shouldRun(){
-		return !hasRedstone() && !fluxHelper.isShutDown();
+		return !hasRedstone() && !isShutDown();
 	}
 
 	@Override
 	public void tick(){
+		super.tick();//Handle flux
+
 		if(world.isRemote){
 			angle += clientCurPower * SPEED;
 		}else{
-			//Handle flux
-			fluxHelper.tick();
-
 			if(shouldRun()){
 				curPower = FE_CAPACITY - fe;
 				if(curPower > 0){
 					fe += curPower;
-					fluxHelper.addFlux(Math.round((float) curPower / CRConfig.fePerEntropy.get()));
+					addFlux(Math.round((float) curPower / CRConfig.fePerEntropy.get()));
 					markDirty();
 				}
 			}
@@ -133,60 +127,22 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 		fe = nbt.getInt("fe");
 		curPower = nbt.getInt("pow");
 		clientCurPower = curPower;
-		fluxHelper.read(nbt);
 	}
 
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
 		nbt.putInt("pow", curPower);
-		fluxHelper.write(nbt);
 		return nbt;
 	}
 
 	@Override
-	public int getReadingFlux(){
-		return fluxHelper.getReadingFlux();
-	}
+	public CompoundNBT write(CompoundNBT nbt){
+		super.write(nbt);
+		nbt.putInt("fe", fe);
+		nbt.putInt("pow", curPower);
 
-	@Override
-	public void addFlux(int deltaFlux){
-		fluxHelper.addFlux(deltaFlux);
-	}
-
-	@Override
-	public boolean canAcceptLinks(){
-		return fluxHelper.canAcceptLinks();
-	}
-
-	@Override
-	public int getFlux(){
-		return fluxHelper.getFlux();
-	}
-
-	@Override
-	public boolean canBeginLinking(){
-		return fluxHelper.canBeginLinking();
-	}
-
-	@Override
-	public boolean canLink(ILinkTE otherTE){
-		return fluxHelper.canLink(otherTE);
-	}
-
-	@Override
-	public Set<BlockPos> getLinks(){
-		return fluxHelper.getLinks();
-	}
-
-	@Override
-	public boolean createLinkSource(ILinkTE endpoint, @Nullable PlayerEntity player){
-		return fluxHelper.createLinkSource(endpoint, player);
-	}
-
-	@Override
-	public void removeLinkSource(BlockPos end){
-		fluxHelper.removeLinkSource(end);
+		return nbt;
 	}
 
 	@Override
@@ -194,7 +150,7 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 		if(identifier == 4){
 			clientCurPower = (int) message;//Just used as a way of sending power gen
 		}
-		fluxHelper.receiveLong(identifier, message, sendingPlayer);
+		super.receiveLong(identifier, message, sendingPlayer);
 	}
 
 	@Override
@@ -213,16 +169,6 @@ public class ChronoHarnessTileEntity extends TileEntity implements IFluxLink, IT
 		}
 
 		return super.getCapability(cap, side);
-	}
-
-	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
-		nbt.putInt("fe", fe);
-		nbt.putInt("pow", curPower);
-		fluxHelper.write(nbt);
-
-		return nbt;
 	}
 
 	private class EnergyHandler implements IEnergyStorage{

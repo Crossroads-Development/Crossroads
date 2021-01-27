@@ -7,7 +7,6 @@ import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.TemporalAcceleratorTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import com.Da_Technomancer.essentials.render.LinkLineRenderer;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.block.BlockState;
@@ -20,7 +19,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.vector.Vector3f;
 
-public class TemporalAcceleratorRenderer extends LinkLineRenderer<TemporalAcceleratorTileEntity>{
+public class TemporalAcceleratorRenderer extends EntropyRenderer<TemporalAcceleratorTileEntity>{
 
 
 	protected TemporalAcceleratorRenderer(TileEntityRendererDispatcher dispatcher){

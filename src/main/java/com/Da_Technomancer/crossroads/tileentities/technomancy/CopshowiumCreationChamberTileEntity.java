@@ -49,7 +49,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	public static final int CAPACITY = 1_440;
 	public static final int FLUX_PER_INGOT = 4;
 
-	private final FluxHelper fluxHelper = new FluxHelper(this, Behaviour.SOURCE);
+	private final FluxHelper fluxHelper = new FluxHelper(type, this, Behaviour.SOURCE);
 
 	public CopshowiumCreationChamberTileEntity(){
 		super(type, 0);
@@ -95,20 +95,20 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	@Override
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
-		fluxHelper.write(nbt);
+		fluxHelper.writeData(nbt);
 		return nbt;
 	}
 
 	@Override
 	public void read(BlockState state, CompoundNBT nbt){
 		super.read(state, nbt);
-		fluxHelper.read(nbt);
+		fluxHelper.readData(nbt);
 	}
 
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
-		fluxHelper.write(nbt);
+		fluxHelper.writeData(nbt);
 		return nbt;
 	}
 
@@ -209,6 +209,16 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 		}
 
 		return super.getCapability(capability, facing);
+	}
+
+	@Override
+	public void receiveInts(byte context, int[] message, @Nullable ServerPlayerEntity sendingPlayer){
+		fluxHelper.receiveInts(context, message, sendingPlayer);
+	}
+
+	@Override
+	public int[] getRenderedArcs(){
+		return fluxHelper.getRenderedArcs();
 	}
 
 	private class BeamHandler implements IBeamHandler{

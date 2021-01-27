@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.render.TESR;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxNodeTileEntity;
-import com.Da_Technomancer.essentials.render.LinkLineRenderer;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -12,7 +11,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.math.vector.Vector3f;
 
-public class FluxNodeRenderer extends LinkLineRenderer<FluxNodeTileEntity>{
+public class FluxNodeRenderer extends EntropyRenderer<FluxNodeTileEntity>{
 
 	protected FluxNodeRenderer(TileEntityRendererDispatcher dispatcher){
 		super(dispatcher);

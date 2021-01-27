@@ -15,14 +15,12 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
-import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -48,10 +46,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @ObjectHolder(Crossroads.MODID)
-public class GatewayControllerTileEntity extends TileEntity implements IGateway, ITickableTileEntity, IFluxLink{
+public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements IGateway{
 
 	@ObjectHolder("gateway_frame")
 	public static TileEntityType<GatewayControllerTileEntity> type = null;
@@ -61,7 +58,6 @@ public class GatewayControllerTileEntity extends TileEntity implements IGateway,
 
 	//These fields are only correct for the top center block of the multiblock (isActive() returns true)
 	//They will not necessarily be null/empty/0 if this inactive- always check isActive()
-	private final FluxHelper fluxHelper = new FluxHelper(this, Behaviour.SOURCE);
 	private GatewayAddress address = null;//The address of THIS gateway
 	private double rotaryEnergy = 0;//Rotary energy
 	private float angle = 0;//Used for rendering and dialing chevrons. Because it's used for logic, we don't use the master axis angle syncing, which is render-based
@@ -80,7 +76,7 @@ public class GatewayControllerTileEntity extends TileEntity implements IGateway,
 	private Direction.Axis plane = null;//Legal values are null (unformed), x (for structure in x-y plane), and z (for structure in y-z plane). This should never by y
 
 	public GatewayControllerTileEntity(){
-		super(type);
+		super(type, null, Behaviour.SOURCE);
 	}
 
 	@Override
@@ -115,7 +111,7 @@ public class GatewayControllerTileEntity extends TileEntity implements IGateway,
 			genOptionals();
 			RotaryUtil.addRotaryInfo(chat, axleHandler, true);
 			FluxUtil.addFluxInfo(chat, this, chevrons[3] != null && origin ? FLUX_PER_CYCLE : 0);
-			FluxUtil.addLinkInfo(chat, this);
+			super.addInfo(chat, player, hit);
 		}
 	}
 
@@ -425,6 +421,8 @@ public class GatewayControllerTileEntity extends TileEntity implements IGateway,
 			//Perform angle movement on the client, and track what the client is probably doing on the server
 			clientAngle += calcAngleChange(clientW, clientAngle);
 
+			super.tick();
+
 			if(!world.isRemote){
 				genOptionals();
 				//Perform angle movement on the server
@@ -439,7 +437,7 @@ public class GatewayControllerTileEntity extends TileEntity implements IGateway,
 				}
 
 				//Teleportation
-				if(chevrons[3] != null && plane != null && !fluxHelper.isShutDown()){
+				if(chevrons[3] != null && plane != null && !isShutDown()){
 					Direction horiz = Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, plane);
 					AxisAlignedBB area = new AxisAlignedBB(pos.down(size).offset(horiz, -size / 2), pos.offset(horiz, size / 2 + 1));
 					//We use the timeUntilPortal field in Entity to not spam TP entities between two portals
@@ -462,10 +460,9 @@ public class GatewayControllerTileEntity extends TileEntity implements IGateway,
 				}
 
 				//Handle flux
-				if(world.getGameTime() % FluxUtil.FLUX_TIME == 0 && origin && fluxHelper.lastTick != world.getGameTime() && !fluxHelper.isShutDown()){
-					fluxHelper.addFlux(FLUX_PER_CYCLE);
+				if(world.getGameTime() % FluxUtil.FLUX_TIME == 0 && origin && lastTick != world.getGameTime() && !isShutDown()){
+					addFlux(FLUX_PER_CYCLE);
 				}
-				fluxHelper.tick();
 			}
 		}
 	}
@@ -505,7 +502,6 @@ public class GatewayControllerTileEntity extends TileEntity implements IGateway,
 	public void read(BlockState state, CompoundNBT nbt){
 		super.read(state, nbt);
 		//Active only
-		fluxHelper.read(nbt);
 		address = nbt.contains("address") ? GatewayAddress.deserialize(nbt.getInt("address")) : null;
 		clientW = nbt.getFloat("client_speed");
 		rotaryEnergy = nbt.getDouble("rot_1");
@@ -526,7 +522,6 @@ public class GatewayControllerTileEntity extends TileEntity implements IGateway,
 	public CompoundNBT write(CompoundNBT nbt){
 		super.write(nbt);
 		//Active only
-		fluxHelper.write(nbt);
 		if(address != null){
 			nbt.putInt("address", address.serialize());
 		}
@@ -553,7 +548,6 @@ public class GatewayControllerTileEntity extends TileEntity implements IGateway,
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
-		fluxHelper.write(nbt);
 		for(int i = 0; i < 4; i++){
 			if(chevrons[i] != null){
 				nbt.putInt("chev_" + i, chevrons[i].ordinal());
@@ -576,53 +570,6 @@ public class GatewayControllerTileEntity extends TileEntity implements IGateway,
 		clientW = (float) axleHandler.getSpeed() - referenceSpeed;
 		long packet = (Integer.toUnsignedLong(Float.floatToRawIntBits(clientAngle)) << 32L) | Integer.toUnsignedLong(Float.floatToRawIntBits(clientW));
 		CRPackets.sendPacketAround(world, pos, new SendLongToClient(4, packet, pos));
-	}
-
-	//Flux boilerplate
-
-	@Override
-	public int getFlux(){
-		return fluxHelper.getFlux();
-	}
-
-	@Override
-	public boolean canBeginLinking(){
-		return fluxHelper.canBeginLinking();
-	}
-
-	@Override
-	public boolean canLink(ILinkTE otherTE){
-		return fluxHelper.canLink(otherTE);
-	}
-
-	@Override
-	public Set<BlockPos> getLinks(){
-		return fluxHelper.getLinks();
-	}
-
-	@Override
-	public boolean createLinkSource(ILinkTE endpoint, @Nullable PlayerEntity player){
-		return fluxHelper.createLinkSource(endpoint, player);
-	}
-
-	@Override
-	public void removeLinkSource(BlockPos end){
-		fluxHelper.removeLinkSource(end);
-	}
-
-	@Override
-	public int getReadingFlux(){
-		return fluxHelper.getReadingFlux();
-	}
-
-	@Override
-	public void addFlux(int deltaFlux){
-		fluxHelper.addFlux(deltaFlux);
-	}
-
-	@Override
-	public boolean canAcceptLinks(){
-		return fluxHelper.canAcceptLinks();
 	}
 
 	//Capabilities
@@ -669,7 +616,7 @@ public class GatewayControllerTileEntity extends TileEntity implements IGateway,
 
 	@Override
 	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity player){
-		fluxHelper.receiveLong(identifier, message, player);
+		super.receiveLong(identifier, message, player);
 		switch(identifier){
 			case 3:
 				GatewayAddress add = GatewayAddress.deserialize((int) message);

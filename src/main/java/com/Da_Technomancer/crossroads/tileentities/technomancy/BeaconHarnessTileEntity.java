@@ -49,7 +49,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	private int loadSafetyTime = 0;
 
 	//Flux related fields
-	private final FluxHelper fluxHelper = new FluxHelper(this, Behaviour.SOURCE);
+	private final FluxHelper fluxHelper = new FluxHelper(type, this, Behaviour.SOURCE);
 
 	public BeaconHarnessTileEntity(){
 		super(type);
@@ -68,13 +68,11 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	@Override
 	public void tick(){
 		super.tick();
+		fluxHelper.tick();
 
 		// Actual beam production is in the emit() method
 
-		if(!world.isRemote){
-			//Handle flux
-			fluxHelper.tick();
-		}else{
+		if(world.isRemote){
 			//For the server side,
 			//decreasing loadSafetyTime happens in emit(), which is a consistent and reliable way of doing this
 			//For the client side, emit() is never called, so we decrement it here
@@ -134,7 +132,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
 //		nbt.putBoolean("run", running);
-		fluxHelper.write(nbt);
+		fluxHelper.writeData(nbt);
 		return nbt;
 	}
 
@@ -143,7 +141,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 		super.write(nbt);
 		nbt.putBoolean("run", running);
 		nbt.putInt("cycle", cycles);
-		fluxHelper.write(nbt);
+		fluxHelper.writeData(nbt);
 		return nbt;
 	}
 
@@ -152,7 +150,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 		super.read(state, nbt);
 		running = nbt.getBoolean("run");
 		cycles = nbt.getInt("cycle");
-		fluxHelper.read(nbt);
+		fluxHelper.readData(nbt);
 	}
 
 	@Override
@@ -253,6 +251,15 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 		fluxHelper.receiveLong(identifier, message, serverPlayerEntity);
 	}
 
+	@Override
+	public void receiveInts(byte context, int[] message, @Nullable ServerPlayerEntity sendingPlayer){
+		fluxHelper.receiveInts(context, message, sendingPlayer);
+	}
+
+	@Override
+	public int[] getRenderedArcs(){
+		return fluxHelper.getRenderedArcs();
+	}
 
 	//IInventory methods, all no-op
 	@Override

@@ -95,6 +95,7 @@ public class CRRenderUtil extends RenderUtil{
 		}
 	}
 
+	@Deprecated
 	public static void addEntropyBeam(World world, float xSt, float ySt, float zSt, float xEn, float yEn, float zEn, int qty, byte lifespan, boolean playSound){
 		boolean sound = playSound && CRConfig.fluxSounds.get();
 		CompoundNBT nbt = new CompoundNBT();

@@ -6,7 +6,6 @@ import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.API.beams.BeamUtil;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import com.Da_Technomancer.essentials.tileentities.LinkHelper;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,10 +17,13 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class FluxUtil{
 
@@ -39,40 +41,66 @@ public class FluxUtil{
 
 	/**
 	 * Transfer a given amount of flux from the src, and return any remainder
-	 * Does not modify the source in any way; the source is responsible for removing successfully transfered flux
+	 * Does not modify the source in any way; the source is responsible for removing successfully transferred flux
 	 * @param src The source to transfer from
 	 * @param links The linked relative positions to transfer to (will be checked)
 	 * @param toTransfer The qty of flux to attempt to transfer
-	 * @return The amount of untransferred flux
+	 * @return A pair containing: The amount of untransferred flux, the rendered entropy array for syncing to the client
 	 */
-	public static int performTransfer(IFluxLink src, Set<BlockPos> links, int toTransfer){
+	public static Pair<Integer, int[]> performTransfer(IFluxLink src, Set<BlockPos> links, int toTransfer){
 		if(toTransfer <= 0){
-			return 0;
+			return Pair.of(0, new int[0]);
 		}
 		World world = src.getTE().getWorld();
 		BlockPos pos = src.getTE().getPos();
 		//Run through each link and collect all the valid IFluxLink links
-		//Each object is a TileEntity extending IFluxLink
-		Object[] dests = links.stream().map((linkPos) -> world.getTileEntity(pos.add(linkPos))).filter(te -> te instanceof IFluxLink && ((IFluxLink) te).allowAccepting()).toArray();
-		if(dests.length == 0){
-			return toTransfer;//no recipients
+		//We have special handling for outputs in unloaded chunks- we send flux in that direction, but delete the flux rather than actually transfer it or loading the chunk
+		//This is to prevent functional systems from having flux build up in unloaded chunk borders
+		//The left entry is the relative position of this output
+		//Each right entry is a TileEntity extending IFluxLink, or Boolean.TRUE to represent an output TE that is unloaded
+		List<Pair<BlockPos, IFluxLink>> dests = links.stream().map((BlockPos linkPos) -> {
+			BlockPos absPos = pos.add(linkPos);
+			if(world.isBlockLoaded(absPos)){
+				TileEntity te = world.getTileEntity(absPos);
+				if(te instanceof IFluxLink && ((IFluxLink) te).allowAccepting()){
+					return Pair.of(linkPos, (IFluxLink) te);
+				}else{
+					return null;//Invalid output, will be removed by the filter
+				}
+			}else{
+				//Known issue: Because we don't load the output, we can't verified that the output position is actually a valid accepting IFluxLink te
+				return Pair.of(linkPos, (IFluxLink) null);
+			}
+		}).filter(Objects::nonNull).collect(Collectors.toList());
+
+		if(dests.isEmpty()){
+			return Pair.of(toTransfer, new int[0]);//no recipients
 		}
 
-		int toTransPer = toTransfer / dests.length;//Due to integer division, the source may have a small amount of flux remaining at the end
-		for(Object dest : dests){
-			IFluxLink linked = (IFluxLink) dest;
-			linked.addFlux(toTransPer);
-//			src.addFlux(-toTransPer);
-			renderFlux(world, pos, linked.getTE().getPos(), toTransPer);
+		int toTransPer = toTransfer / dests.size();//Due to integer division, the source may have a small amount of flux remaining at the end
+		int[] renderOutput = new int[dests.size()];
+		for(int i = 0; i < dests.size(); i++){
+			Pair<BlockPos, ?> dest = dests.get(i);
+			//Skip transfer to unloaded outputs
+			if(dest.getRight() != null){
+				IFluxLink linked = (IFluxLink) dest.getRight();
+				linked.addFlux(toTransPer);
+//				src.addFlux(-toTransPer);
+//				renderFlux(world, pos, linked.getTE().getPos(), toTransPer);
+			}
+
+			BlockPos relPos = dest.getLeft();
+			renderOutput[i] = (relPos.getX() & 0xFF) | ((relPos.getY() & 0xFF) << 8) | ((relPos.getZ() & 0xFF) << 16);
 		}
-		return toTransfer - toTransPer * dests.length;
+		return Pair.of(toTransfer - toTransPer * dests.size(), renderOutput);
 	}
 
-	public static void renderFlux(World world, BlockPos src, BlockPos dest, int qty){
-		if(qty > 0){
-			CRRenderUtil.addEntropyBeam(world, src.getX() + 0.5F, src.getY() + 0.5F, src.getZ() + 0.5F, dest.getX() + 0.5F, dest.getY() + 0.5F, dest.getZ() + 0.5F, qty, (byte) (FLUX_TIME + 1), true);
-		}
-	}
+//	@Deprecated
+//	public static void renderFlux(World world, BlockPos src, BlockPos dest, int qty){
+//		if(qty > 0){
+//			CRRenderUtil.addEntropyBeam(world, src.getX() + 0.5F, src.getY() + 0.5F, src.getZ() + 0.5F, dest.getX() + 0.5F, dest.getY() + 0.5F, dest.getZ() + 0.5F, qty, (byte) (FLUX_TIME + 1), true);
+//		}
+//	}
 
 	/**
 	 * Adds information about the flux of this TE
