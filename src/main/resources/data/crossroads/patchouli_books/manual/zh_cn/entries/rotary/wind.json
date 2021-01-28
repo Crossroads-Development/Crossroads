@@ -1,6 +1,6 @@
 {
 	"category": "rotary",
-	"name": "Wind Turbine",
+	"name": "风力涡轮机",
 	"icon": "crossroads:wind_turbine",
 	"sortnum": 0,
 	"priority": false,
@@ -8,25 +8,25 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Wind Turbine",
+			"title": "风力涡轮机",
 			"item": "crossroads:wind_turbine",
-			"text": "The <item>Wind Turbine/$ is a renewable way to generate <thing>$(l:crossroads:intro/rotary)rotary power/$ at a low <thing>$(l:crossroads:intro/rotary)speed/$.$(br2)The <item>wind turbine/$ requires a 5x5 empty space in front of it, and the ability for its blades to see the sky. As long as these conditions are met, it will produce a random amount of power "
+			"text": "<item>风力涡轮机/$能够可再生地产生低<thing>$(l:crossroads:intro/rotary)转速/$<thing>$(l:crossroads:intro/rotary)旋转能/$。$(br2)<item>风力涡轮机/$需要正前方有5x5空间，而且从扇叶能看见天空。只要满足这些条件，"
 		},
 		{
 			"type": "text",
-			"text": "based on the wind- anywhere between 5J/t and 25J/t, producing 15J/t on average. All wind turbines in the world produce the same power at any given moment. The only issue is that <em>the wind doesn't always blow the same direction/$. The direction the <item>wind turbine/$ tries to turn will randomly swap- which may mean it's fighting against energy stored in a rotary system due to momentum.$(br2)"
+			"text": "涡轮机就会根据风速随机产出能量，速度范围在5J/t到25J/t，平均15J/t。是界内所有风力涡轮机同一时刻的产能速度总是相同。唯一的问题在于，<em>风不会只吹一个方向/$。<item>风力涡轮机/$旋转的方向不总是相同，导致它会和现有系统中的反向动量对抗。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The <item>wind turbine/$ will also stop producing power at speeds above 2rad/s- the wind is never that fast.$(br2)The axle connection is on the back. The wool blades can be dyed individually by using dye on the <item>Wind Turbine/$ block. $(br2)"
+			"text": "<item>风力涡轮机/$在转速超过2rad/s后就会停止输出能量——风速从来不会这么快。$(br2)轴需要在背面连接。羊毛扇叶可以通过对<item>风力涡轮机/$使用染料来分别染色。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<thing>$(l:essentials/circuits)Circuit Readers/$ will read the current power output; positive if the <item>wind turbine/$ is producing power in the positive direction (counter-clockwise), - if it is producing power in the negative direction (clockwise).$(br2)That means if a <thing>$(l:essentials/circuits)Circuit Readers/$ reads below 0, the <item>wind turbine/$ is producing power in the negative direction. Combining this "
+			"text": "<thing>$(l:essentials/circuits)读取器电路/$会测量当前能量输出；<item>风力涡轮机/$，逆时针则是负值。$(br2)这意味着，如果<thing>$(l:essentials/circuits)读取器电路/$读到的值小于0，<item>风力涡轮机/$在反向旋转。将这个特定"
 		},
 		{
 			"type": "text",
-			"text": "with things like <item>$(l:crossroads:rotary/gear_base)toggle gears & clutches/$ makes it possible to ensure your turbine is <em>never/$ fighting momentum. <em>This is probably a good idea!/$$(br2)"
+			"text": "和<item>$(l:crossroads:rotary/gear_base)可切换齿轮和离合器/$结合，将有可能保证涡轮机<em>永远不/$对抗动量。<em>这可能是个好主意！/$$(br2)"
 		}
 	]
 }

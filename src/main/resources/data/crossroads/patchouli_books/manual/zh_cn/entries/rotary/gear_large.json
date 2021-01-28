@@ -1,6 +1,6 @@
 {
 	"category": "rotary",
-	"name": "Large Gears",
+	"name": "大型齿轮",
 	"icon": "crossroads:gear_base_large",
 	"sortnum": 0,
 	"priority": false,
@@ -8,21 +8,21 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Large Gears",
+			"title": "大型齿轮",
 			"item": "crossroads:gear_base_large",
-			"text": "<item>Large Gears/$ are a way of moving <thing>$(l:crossroads:intro/rotary)rotary energy/$ around, by connecting to form a system of gears and axles.$(br2)Like <item>$(l:crossroads:rotary/gear_base)small gears/$, <item>large gears/$ can connect around corners, on the sides, or on axles on the front or back. Unlike <item>$(l:crossroads:rotary/gear_base)small gears/$, <item>large gears/$ can't share a "
+			"text": "<item>大型齿轮/$能通过连接齿轮和轴的网络转移转移<thing>$(l:crossroads:intro/rotary)旋转能/$。$(br2)和<item>$(l:crossroads:rotary/gear_base)小型齿轮/$一样，<item>大型齿轮/$能够在角落、同一平面或正面和背面的轴上连接。和<item>$(l:crossroads:rotary/gear_base)小型齿轮/$不同，<item>大型齿轮/$不能分享"
 		},
 		{
 			"type": "text",
-			"text": "blockspace with anything else, and are 3x3 in size instead of 1x1. <item>Large gears/$ also don't need a solid surface to be supported on.$(br2)There are several materials for <item>large gears/$ (most of the metals) with different <thing>$(l:crossroads:intro/rotary)I values/$.$(br2)Because of their large radius, a <item>large gear/$ next to a <item>$(l:crossroads:rotary/gear_base)small gear/$ will spin "
+			"text": "同一个方块空间，因为它们有3x3大小。<item大型齿轮/$放置时也不需要固体表面支撑。$(br2)有数种材料（主要是金属）可用于制作<item>大型齿轮/$，这些齿轮有着不同的<thing>$(l:crossroads:intro/rotary)I值/$。$(br2)因为这种齿轮半径较大，<item>$(l:crossroads:rotary/gear_base)小型齿轮/$旁的<item>大型齿轮/$"
 		},
 		{
 			"type": "text",
-			"text": "at a slower speed than the <item>$(l:crossroads:rotary/gear_base)small gear/$.$(br2)"
+			"text": "会转得比<item>$(l:crossroads:rotary/gear_base)小型齿轮/$慢。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "Remember, all gear networks need at least one <item>$(l:crossroads:rotary/axis)master axis/$ to work.$(br2)"
+			"text": "记住，所有齿轮网络需要最少一个<item>$(l:crossroads:rotary/axis)主轴/$来运作。$(br2)"
 		}
 	]
 }

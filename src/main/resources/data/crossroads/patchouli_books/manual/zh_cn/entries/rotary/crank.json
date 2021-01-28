@@ -1,6 +1,6 @@
 {
 	"category": "rotary",
-	"name": "Hand Crank",
+	"name": "手摇曲柄",
 	"icon": "crossroads:hand_crank",
 	"sortnum": 0,
 	"priority": false,
@@ -8,13 +8,13 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Hand Crank",
+			"title": "手摇曲柄",
 			"item": "crossroads:hand_crank",
-			"text": "The <item>Hand Crank/$ is a way of manually generating a small amount of <thing>rotary energy/$ early game.$(br2)Hold down right-click with a crank on any gear to slowly add energy at a constant rate. Hold shift while doing this to add energy in the opposite direction.$(br2)"
+			"text": "<item>手摇曲柄/$是一种早期手动产生少量<thing>旋转能/$的方法。$(br2)手持曲柄对任意齿轮长按右键可以恒定速度对其添加旋转能。同时按住shift则是反方向添加。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The <item>hand crank/$ is meant for the <em>very/$ early game and for testing setups- if you're finding yourself relying on it, try something like a <item>$(l:crossroads:rotary/wind)Wind Turbine/$ instead.$(br2)"
+			"text": "<item>手摇曲柄/$应该用于<em>非常/$早期游戏下进行测试——如果你发现你正靠这个来供能，请试试用<item>$(l:crossroads:rotary/wind)风力涡轮机/$之类的代替。$(br2)"
 		}
 	]
 }

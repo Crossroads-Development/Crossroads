@@ -1,6 +1,6 @@
 {
 	"category": "rotary",
-	"name": "Millstone",
+	"name": "磨石",
 	"icon": "crossroads:millstone",
 	"sortnum": 0,
 	"priority": false,
@@ -8,17 +8,17 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Millstone",
+			"title": "磨石",
 			"item": "crossroads:millstone",
-			"text": "The <item>Millstone/$ is a simple <thing>$(l:crossroads:intro/rotary)rotary powered/$ grinder. It can double ores, produce gravel and gunpowder, and improve bonemeal yields, among other things.$(br2)The <item>millstone/$ connects to an axle/gear on the top, and works faster at higher <thing>$(l:crossroads:intro/rotary)speeds/$- capping out at 5rad/s."
+			"text": "<item>磨石/$是一种简单的<thing>$(l:crossroads:intro/rotary)旋转能/$供能研磨机。它能使矿物产出翻倍，产出沙砾和火药，提高骨粉产出，等等。$(br2)<item>磨石/$需要在顶部连接到轴/齿轮，而且在更高<thing>$(l:crossroads:intro/rotary)转速/$下工作得更快——这一提升的上限是5rad/s。"
 		},
 		{
 			"type": "text",
-			"text": "<thing>$(l:essentials/circuits#reader)Reader circuits/$ measure the fullness of the input.$(br2)"
+			"text": "<thing>$(l:essentials/circuits#reader)读取器电路/$可测量输入槽的充满程度。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "For ore tripling, a heavier duty version called a <item>$(l:crossroads:rotary/stamp)stamp mill/$ is needed.$(br2)"
+			"text": "对于三倍矿物产出，你需要一个更重量级的磨石——<item>$(l:crossroads:rotary/stamp)捣磨机/$。$(br2)"
 		}
 	]
 }

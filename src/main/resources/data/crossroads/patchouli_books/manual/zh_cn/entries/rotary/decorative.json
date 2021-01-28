@@ -1,6 +1,6 @@
 {
 	"category": "rotary",
-	"name": "Aesthetic Mechanisms",
+	"name": "美观结构",
 	"icon": "crossroads:gear_facade_stone_brick",
 	"sortnum": 0,
 	"priority": false,
@@ -8,9 +8,9 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Aesthetic Mechanisms",
+			"title": "美观结构",
 			"item": "crossroads:gear_facade_stone_brick",
-			"text": "There are a few purely decorative <thing>$(l:crossroads:rotary/gear_base)mechanisms/$ that can be placed in the same blockspace as <item>$(l:crossroads:rotary/gear_base)gears, axles, etc/$.$(br2)"
+			"text": "有几种能和<item>$(l:crossroads:rotary/gear_base)齿轮、轴等/$放在同一方块空间内的装饰<thing>$(l:crossroads:rotary/gear_base)结构/$。$(br2)"
 		},
 		{
 			"type": "image",
@@ -19,24 +19,24 @@
 			"images": [
 				"crossroads:textures/book/axle_mount.png"
 			],
-			"text": "<item>Axle Mounts/$ are purely decorative 'clamps' that hold <item>$(l:crossroads:rotary/gear_base)axles/$ and attach to a solid "
+			"text": "<item>轴支架/$是一种连接墙、天花板和地面等固体表面并固定<item>$(l:crossroads:rotary/gear_base)轴/$的纯装饰的“夹”，"
 		},
 		{
 			"type": "text",
-			"text": "wall, ceiling or floor to make <item>$(l:crossroads:rotary/gear_base)axles/$ look supported instead of being free floating.$(br2)Several can be in the same blockspace, and they do not obstruct <item>$(l:crossroads:rotary/gear_base)gear/$ connections. <item>$(l:crossroads:rotary/gear_base)Axles/$ <em>can not/$ connect through them if they are placed <em>between/$ <item>$(l:crossroads:rotary/gear_base)axles/$, instead of alongside them. They come in every material that can be used to make gears.$(br2)"
+			"text": "这使得<item>$(l:crossroads:rotary/gear_base)轴/$看上去有被支撑，而不是浮在空中。$(br2)一个方块内可以有多个支架，而且它们不会阻挡<item>$(l:crossroads:rotary/gear_base)齿轮/$的连接。当<item>轴支架/$轴被放在<item>$(l:crossroads:rotary/gear_base)轴/$<em>之间/$时，两个轴<em>不能/$传动。可用于造齿轮的每种材料都可用于造轴支架。$(br2)"
 		},
 		{
 			"type": "image",
 			"border": "true",
-			"title": "Facades",
+			"title": "贴面",
 			"images": [
 				"crossroads:textures/book/gear_facades.png"
 			],
-			"text": "<item>Facades/$ are purely decorative panels that look like normal blocks and can cover up "
+			"text": "<item>贴面/$是一种装饰板，能使被覆盖的<item>$(l:crossroads:rotary/gear_base)齿轮和轴/$看上去像普通方块。"
 		},
 		{
 			"type": "text",
-			"text": "<item>$(l:crossroads:rotary/gear_base)gears & axles/$. Several can be in the same blockspace, they are solid to walk on, and they do not obstruct <item>$(l:crossroads:rotary/gear_base)gear & axle/$ connections at all. They do not need a solid supporting block, and come in four varieties: Stone Bricks, Cobblestone, Iron Blocks, and Glass.$(br2)"
+			"text": "一个方块内可以有多个<item>贴面/$，它们是固体方块所以能允许站立，而且它们不会阻挡<item>$(l:crossroads:rotary/gear_base)齿轮/$的连接。<item>贴面/$不需要固体方块支撑，而且有四种变体：石砖、圆石、铁块和玻璃。$(br2)"
 		}
 	]
 }

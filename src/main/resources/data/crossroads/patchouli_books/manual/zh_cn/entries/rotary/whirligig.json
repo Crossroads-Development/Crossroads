@@ -1,6 +1,6 @@
 {
 	"category": "rotary",
-	"name": "Whirligig",
+	"name": "竹蜻蜓",
 	"icon": "crossroads:whirligig",
 	"sortnum": 0,
 	"priority": false,
@@ -8,17 +8,13 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Whirligig",
+			"title": "竹蜻蜓",
 			"item": "crossroads:whirligig",
-			"text": "The <item>Whirligig/$ is a handheld device that provides slowfall or elevation when used (by holding down right-click). It has to be wound in a <item>$(l:crossroads:rotary/winding_table)Spring Winding Table/$, up to 10rad/s.$(br2)It provides better slowfall at higher <thing>$(l:crossroads:rotary/winding_table)spring speeds/$, and will even lift the player upwards "
+			"text": "<item>Whirligig/$是一种使用（长按右键）后提供缓降和提升的手持设备。它需要在<item>$(l:crossroads:rotary/winding_table)上发条架/$上发条，最高10rad/s。$(br2)<thing>$(l:crossroads:rotary/winding_table)发条转速/$越高，缓降效果更好，"
 		},
 		{
 			"type": "text",
-			"text": "when wound above 6rad/s. While being used, it drains its <thing>$(l:crossroads:rotary/winding_table)spring speed/$ at -0.02rad/s every second, with a full wind lasting 8 minutes.$(br2)The <item>whirligig/$ is handy for providing slowfall, or even floating up cliffs and onto buildings.$(br2)The <item>whirligig/$ is also a decent melee weapon- it is, after all- a "
-		},
-		{
-			"type": "text",
-			"text": "giant iron stick. $(br2)"
+			"text": "转速超过6rad/s甚至还会提升玩家。使用时，设备会以-0.02rad每秒吸取<thing>$(l:crossroads:rotary/winding_table)发条速度/$，上满发条可持续8分钟。$(br2)<item>竹蜻蜓/$能方便地提供缓降，也能用于飞上悬崖或进入建筑。$(br2)<item>竹蜻蜓/$也是合适的近战武器，毕竟是一根大铁棒。$(br2)"
 		}
 	]
 }

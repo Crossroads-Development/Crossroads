@@ -1,6 +1,6 @@
 {
 	"category": "rotary",
-	"name": "Spring Winding Stand",
+	"name": "上发条架",
 	"icon": "crossroads:winding_table",
 	"sortnum": 0,
 	"priority": false,
@@ -8,21 +8,17 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Spring Winding Stand",
+			"title": "上发条架",
 			"item": "crossroads:winding_table",
-			"text": "The <item>Spring Winding Stand/$- that's 'wind' as in winding a watch, not as in weather- allows winding up $(l:crossroads:rotary/crossbow)certain items/$ to charge them.$(br2)In order to wind an item inside the <item>Stand/$, the <item>Spring Winding Stand/$ needs an <thing>$(l:crossroads:intro/rotary)axle connection/$ on the top, and needs a redstone pulse. "
+			"text": "<item>上发条架/$能够给$(l:crossroads:rotary/crossbow)特定物品/$上发条。$(br2)要给<item>架/$内物品上发条，<item>上发条架/$需要在顶部连接到<thing>$(l:crossroads:intro/rotary)轴或齿轮/$，还需要一个红石脉冲。"
 		},
 		{
 			"type": "text",
-			"text": "Every time it receives a pulse, the <thing>spring speed/$ on the item being wound will increase by 0.2rad/s. If the spring speed on the item is ever higher than the axle speed, <em>the item will break/$. Items can only ever be wound with positive speed.$(br2)While an item is being wound in the <item>Spring Winding Stand/$, the <item>Stand/$ will produce <thing>$(l:crossroads:intro/rotary)rotary power/$ against "
+			"text": "每接受到一个脉冲，物品的<thing>发条转速/$会增加0.2rad/s。如果物品的发条转速超过上发条架的轴转速，<em>物品会被破坏/$。物品只能用正速度上发条。$(br2)当物品在<item>上发条架/$上发条，<item>架/$会产生反向的<thing>$(l:crossroads:intro/rotary)旋转能/$，"
 		},
 		{
 			"type": "text",
-			"text": "the current motion- actively slowing things down. It produces (or, if it makes more sense, loses) -20 * <thing>(spring speed of item)/$ J/t. Be careful when winding an item that you don't wind it so hard that the resistive power brings the machine speed down and destroys it!$(br2)<thing>$(l:essentials/circuits#reader)Circuits/$ will read the current <thing>spring speed/$ on the <em>item/$ being wound, not "
-		},
-		{
-			"type": "text",
-			"text": "on the <item>Table/$ itself.$(br2)"
+			"text": "并主动减慢转速。它会产生（或者说减少）-20 * <thing>(物品发条转速)/$ J/t。上发条时一定要小心，不要上过头，让阻力把速度降下来并把物品破坏掉！$(br2)<thing>$(l:essentials/circuits#reader)电路/$可读取正在上发条的<em>物品/$的<thing>发条转速/$，而不是<item>架/$的转速。$(br2)"
 		}
 	]
 }

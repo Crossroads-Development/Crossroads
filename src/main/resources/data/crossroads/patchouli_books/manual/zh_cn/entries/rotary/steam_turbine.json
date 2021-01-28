@@ -1,6 +1,6 @@
 {
 	"category": "rotary",
-	"name": "Steam Turbine",
+	"name": "蒸气轮机",
 	"icon": "crossroads:steam_turbine",
 	"sortnum": 0,
 	"priority": false,
@@ -8,17 +8,17 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Steam Turbine",
+			"title": "蒸气轮机",
 			"item": "crossroads:steam_turbine",
-			"text": "The <item>Steam Turbine/$ is a way of making <thing>$(l:crossroads:intro/rotary)rotary power/$ using <thing>$(l:crossroads:intro/heat)heat/$. The other way to do this is with a <item>$(l:crossroads:heat/stirling)stirling engine/$.$(br2)A <item>Steam Turbine/$ consumes <thing>$(l:crossroads:fluid/steam)steam/$ and makes <thing>distilled water/$ and power. An axle or gear can be connected to the top. An equal amount of <thing>distilled water"
+			"text": "<item>蒸气轮机/$可以使用<thing>$(l:crossroads:intro/heat)热能/$制造<thing>$(l:crossroads:intro/rotary)旋转能/$。另一种方法是使用<item>$(l:crossroads:heat/stirling)斯特林引擎/$。$(br2)<item>蒸气轮机/$消耗<thing>$(l:crossroads:fluid/steam)蒸汽/$并产生<thing>蒸馏水/$和能量。轴或齿轮可以连接到顶部。产生<thing>蒸馏水"
 		},
 		{
 			"type": "text",
-			"text": "<thing>/$ is produced as <thing>$(l:crossroads:fluid/steam)steam/$ is consumed.$(br2)"
+			"text": "<thing>/$的数量和消耗的<thing>$(l:crossroads:fluid/steam)蒸汽/$数量相同。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "Compared to the <item>$(l:crossroads:heat/stirling)stirling engine/$, the <item>steam turbine/$ has no maximum speed and is more scalable, but is less efficient and is bigger to set up. The <item>steam turbine/$ is usually better if a lot of power or high speeds are needed.$(br2)"
+			"text": "与<item>$(l:crossroads:heat/stirling)斯特林引擎/$相比，<item>蒸气轮机/$没有转速上限，更容易扩大规模，但其效率更低，需要的空间也比较大。如果需要很多能量或很高的转速，<item>蒸气轮机/$通常更好。$(br2)"
 		}
 	]
 }

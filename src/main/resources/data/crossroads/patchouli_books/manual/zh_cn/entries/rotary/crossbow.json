@@ -1,6 +1,6 @@
 {
 	"category": "rotary",
-	"name": "Spring-Loaded Crossbow",
+	"name": "弹簧加压十字弩",
 	"icon": "crossroads:spring_gun",
 	"sortnum": 0,
 	"priority": false,
@@ -8,21 +8,21 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Spring-Loaded Crossbow",
+			"title": "弹簧加压十字弩",
 			"item": "crossroads:spring_gun",
-			"text": "The <item>Spring-Loaded Crossbow/$ is an unwieldy but powerful weapon that takes the Crossbow's high damage but long prep time to extremes. It is able to do up to 50 damage per shot, but has to be re-wound after each shot.$(br2)The <item>Spring-Loaded Crossbow/$ is wound in an "
+			"text": "<item>弹簧加压十字弩/$是一种笨重但强大的武器，将十字弩长准备时间和高伤害的特点发展到了极致。它能够实现每发造成50点伤害，但每次射击后必须重上发条。$(br2)<item>弹簧加压十字弩/$需要在"
 		},
 		{
 			"type": "text",
-			"text": "<item>$(l:crossroads:rotary/winding_table)Spring Winding Stand/$ to increase the spring speed the <item>weapon/$, up to 10 rad/s. The higher the wound speed, the higher the damage done with each shot, with diminishing returns. The minimum spring speed to shoot is 1 rad/s and does 5 damage, while the maximum speed of 10 rad/s does 50 damage per shot.$(br2)Right-clicking with a <item>Spring-Loaded Crossbow"
+			"text": "<item>$(l:crossroads:rotary/winding_table)上发条架/$上发条，从而增加该<item>武器/$的发条速度，最高10rad/s。发条速度越高，每发的伤害就越高，但伤害会随着发射逐渐减少。可以发射的最小发条速度为1rad/s，此时一发会造成5点伤害，而最高的10rad/s一发会造成50伤害。$(br2)手持上到<em>至少/$1rad/s的<item>弹簧加压十字弩/$"
 		},
 		{
 			"type": "text",
-			"text": "<item>/$ wound to <em>at least/$ 1 rad/s will fire it, consuming any arrow as ammo. The entire spring speed is reset to 0 with each shot, requiring the weapon to be re-wound. The shot bullet travels faster and does more damage at higher spring speeds.$(br2)It's worth noting that the damage listed in the tooltip of the <item>Spring-Loaded Crossbow/$ is the damage "
+			"text": "<item>右键可进行发射，并消耗箭矢作为弹药。每发后整个发条速度会变成0，需要重新上发条。高速度下射出的箭矢不但会造成更多伤害，也会飞得更快。$(br2)值得一提的是提示文本中列出的<item>弹簧加压十字弩/$的伤害"
 		},
 		{
 			"type": "text",
-			"text": "at <em>point blank range/$. As with a normal crossbow, actual damage dealt drops as the arrow travels further.$(br2)"
+			"text": "是<em>近距离射程/$的伤害。就像普通十字弩一样，实际伤害会随着距离增加而衰减。$(br2)"
 		}
 	]
 }
