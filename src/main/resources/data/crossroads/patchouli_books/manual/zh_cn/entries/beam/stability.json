@@ -1,6 +1,6 @@
 {
 	"category": "beam",
-	"name": "Alignment: Stability",
+	"name": "色域：稳定",
 	"icon": "minecraft:diamond",
 	"sortnum": 1,
 	"priority": false,
@@ -9,13 +9,13 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Alignment: Stability",
+			"title": "色域：稳定",
 			"item": "minecraft:diamond",
-			"text": "<thing>Stability/$ (blue) is one of the basic <thing>alignments/$- the <thing>alignment/$ of a pure <thing>stability/$ beam.$(br2)Pure <thing>stability/$ does nothing, having no effect.$(br2)"
+			"text": "<thing>稳定/$（蓝色）是基础<thing>色域/$之一——纯<thing>稳定/$光束的<thing>色域/$。$(br2)纯<thing>稳定/$什么都不做，不会产生效果。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<thing>Void-Stability/$ AKA <thing>Chaos/$ will create explosions with a strength=<thing>power/$/4. These explosions will drop all items, similar to TNT explosions.$(br2)"
+			"text": "<thing>虚空-稳定/$，也就是<thing>混沌/$，会创造爆炸，强度=<thing>功率/$/4。这种爆炸必定掉落所有破坏的方块，类似于TNT爆炸。$(br2)"
 		}
 	]
 }

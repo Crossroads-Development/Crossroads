@@ -1,6 +1,6 @@
 {
 	"category": "beam",
-	"name": "Alignment: Potential",
+	"name": "色域：潜能",
 	"icon": "minecraft:emerald",
 	"sortnum": 1,
 	"priority": false,
@@ -9,17 +9,17 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Alignment: Potential",
+			"title": "色域：潜能",
 			"item": "minecraft:emerald",
-			"text": "<thing>Potential/$ (green) is one of the basic <thing>alignments/$- the <thing>alignment/$ of a pure <thing>potential/$ beam.$(br2)<thing>Potential/$ acts as bonemeal, applied a number of times equal to the <thing>power/$ of the beam. In addition, entities within range=sqrt(<thing>power/$) are healed by <thing>power/$/2. Undead are "
+			"text": "<thing>潜能/$（绿色）是基础<thing>色域/$之一——纯<thing>潜能/$光束的<thing>色域/$。$(br2)<thing>潜能/$充当骨粉的作用，产生效果时会相当于施放了<thing>功率/$次骨粉。除此之外，sqrt(<thing>功率/$) 范围内的生物会被治疗 <thing>功率/$/2 点生命。"
 		},
 		{
 			"type": "text",
-			"text": "harmed instead of healed.$(br2)"
+			"text": "不死生物会被伤害，而不是治疗。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<thing>Void-Potential/$ AKA <thing>Death/$ will kill plants, and harms living things within range=sqrt(<thing>power/$) by <thing>power/$/2. This ignores armor, and undead are healed instead of being harmed.$(br2)"
+			"text": "<thing>虚空-潜能/$，也就是<thing>死亡/$，会杀死植物，对 sqrt(<thing>功率/$) 范围内的生物造成 <thing>功率/$/2 点伤害。这种伤害无视护甲，而且不死生物会被治疗而不是伤害。$(br2)"
 		}
 	]
 }

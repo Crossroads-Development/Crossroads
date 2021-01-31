@@ -1,6 +1,6 @@
 {
 	"category": "beam",
-	"name": "Crystal Master Axis",
+	"name": "结晶主轴",
 	"icon": "crossroads:master_axis_crystal",
 	"sortnum": 0,
 	"priority": false,
@@ -8,29 +8,29 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Crystal Master Axis",
+			"title": "结晶主轴",
 			"item": "crossroads:master_axis_crystal",
-			"text": "The <item>Crystal Master Axis/$ is an alternative version of the normal <item>$(l:crossroads:rotary/axis)master axis/$ used for gears. It would be used in place of the normal <item>$(l:crossroads:rotary/axis)master axis/$ (do not place both on the same system).$(br2)It accepts <thing>$(l:crossroads:intro/beam)beams/$ from any side. The <thing>$(l:crossroads:intro/beam)alignment/$ of the beam adds a special "
+			"text": "<item>结晶主轴/$是普通<item>$(l:crossroads:rotary/axis)主轴/$的可选版本。它能用于普通<item>$(l:crossroads:rotary/axis)主轴/$可以使用的所有地方（不要放在同一个系统里）。$(br2)结晶主轴能从任一面接受<thing>$(l:crossroads:intro/beam)光束/$。根据<thing>$(l:crossroads:intro/beam)色域/$的不同，光束会"
 		},
 		{
 			"type": "text",
-			"text": "rule to the <item>crystal master axis/$ and all gears/axles it controls. The <thing>$(l:crossroads:intro/beam)beam/$ does not need to be continuously supplied- higher power beams will last for longer, with 1 point of power lasting 5 ticks (added every 5 ticks).$(br2)Only one <thing>$(l:crossroads:intro/beam)alignment/$ can be active at a time, and the <thing>$(l:crossroads:beam/void)void/$ versions of the <thing>$(l:crossroads:intro/beam)alignments/$ can not be used.$(br2)"
+			"text": "给<item>结晶主轴/$和所有相连的齿轮/轴加入新的规则。<thing>$(l:crossroads:intro/beam)光束/$不需要持续供应——因为高功率光束的效果持续时间更长，每1单位功率可持续5tick时间。$(br2)一次只有一个<thing>$(l:crossroads:intro/beam)色域/$可被激活，并且<thing>$(l:crossroads:beam/void)虚空/$版的<thing>$(l:crossroads:intro/beam)色域/不能在主轴上使用。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<thing>$(l:essentials/circuits#reader)Circuits/$ measure the time remaining on the current <thing>$(l:crossroads:intro/beam)alignment/$.$(br2)"
+			"text": "<thing>$(l:essentials/circuits#reader)电路/$可测量当前<thing>$(l:crossroads:intro/beam)色域/$效果的持续时间。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The following effects exist (not all <thing>$(l:crossroads:intro/beam)alignments/$ have an effect):$(br2)<thing>Stability/$ will make there be no energy loss at all.$(br2)<thing>Energy/$ will add energy to the system every tick, in the direction that the system is already moving. (Amount controlled by config, default 100J/t)$(br2)"
+			"text": "可能的效果有以下几种（不是所有<thing>$(l:crossroads:intro/beam)色域/$都有对应的效果）：$(br2)<thing>稳定/$会使系统内的能量流失为0。$(br2)<thing>能量/$会每tick往系统内当前旋转方向添加能量。（默认100J/t，可在配置文件更改）$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<thing>Charge/$ will add energy to the system every tick, in the positive direction (even if the system is moving in the negative direction). (Amount controlled by config, default 100J/t)$(br2)<thing>Equilibrium/$ will reduce the change in the system's total energy each tick by a factor of 10. If a machine was going to consume 100J in a tick, only 10J would "
+			"text": "<thing>充能/$会每tick往系统内正旋转方向添加能量，哪怕当前旋转方向相反。（默认100J/t，可在配置文件更改）$(br2)<thing>平衡/$会使系统内每tick能量变化减少至原来的1/10。如果一个机器原来每tick消耗100J，效果发生后只会消耗10J。"
 		},
 		{
 			"type": "text",
-			"text": "actually be consumed. On the other hand, if a turbine was going to make 100J, it would only make 10J. This has the effect of helping hold speeds steady and reducing fluctuations from the equilibrium speed.$(br2)"
+			"text": "另一方面，如果一个涡轮机要产生100J，旋现在也会变成10J。这有助于保持速度稳定，减少平衡速度的波动。$(br2)"
 		}
 	]
 }

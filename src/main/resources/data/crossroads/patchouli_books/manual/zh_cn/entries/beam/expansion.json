@@ -1,6 +1,6 @@
 {
 	"category": "beam",
-	"name": "Alignment: Expansion",
+	"name": "色域：膨胀",
 	"icon": "crossroads:pure_quartz",
 	"sortnum": 1,
 	"priority": false,
@@ -9,13 +9,13 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Alignment: Expansion",
+			"title": "色域：膨胀",
 			"item": "crossroads:pure_quartz",
-			"text": "<thing>Expansion/$ (teal) will place any items in the world in range as blocks- if they have a block form. The range is a radius of sqrt(<thing>power/$) / 2 (cap 4). This is one of the only ways in Crossroads to place blocks in the world.$(br2)"
+			"text": "<thing>膨胀/$（蓝绿色）会将世界中的掉落物作为方块放置——如果它们有方块形态的话。工作半径为 sqrt(<thing>功率/$) / 2 （最高4）这是交错道途中唯一一种放置方块的办法。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<thing>Void-Expansion/$ AKA <thing>Contraction/$ will break whatever block it hits and drop it as an item.$(br2)"
+			"text": "<thing>虚空-膨胀/$，也就是<thing>收缩/$，会破坏击中的方块并使其以物品形式掉落。$(br2)"
 		}
 	]
 }

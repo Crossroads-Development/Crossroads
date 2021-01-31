@@ -1,6 +1,6 @@
 {
 	"category": "beam",
-	"name": "Splitting Beams",
+	"name": "分离光束",
 	"icon": "crossroads:beam_siphon",
 	"sortnum": 0,
 	"priority": false,
@@ -8,29 +8,25 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Splitting Beams",
+			"title": "分离光束",
 			"item": "crossroads:beam_siphon",
-			"text": "There are three different blocks that can split or redirect <thing>$(l:crossroads:intro/beam)beams/$: The <item>Beam Splitter/$, the <item>Beam Siphon/$, and the <item>Beam Redirector/$.$(br2)"
+			"text": "有三种方块可以分离<thing>$(l:crossroads:intro/beam)光束/$或使其转向：<item>光束分路器/$、<item>光束虹吸器/$和<item>光束转向器/$。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The cheapest option is the <item>Beam Redirector/$, which is unable to split beams at all. It has two outputs and any received beams will be sent to one of the outputs. If it has a redstone signal, the input beam comes out the front (the end the arrows on the sides point to), otherwise it comes out the back.$(br2)The <item>Beam Redirector/$ is the cheap and "
+			"text": "最廉价的选项是不能分离光束的<item>光束转向器/$。它有两个输出，任何接收的光束都会前往两个输出之一。如果有收到红石信号，输入光束会从正面射出（侧面箭头指向的那一端），否则从背面射出。$(br2)使用<item>光束反射器/$是用红石"
 		},
 		{
 			"type": "text",
-			"text": "simple way to control the direction beams go with redstone.$(br2)"
+			"text": "控制光束去向的最廉价且简单的方法之一。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The <item>Beam Splitter/$ will split off a percentage of the incoming beam out the front (the end the arrows on the sides point to), and send the remainder out the back. The portion sent out the front is (redstone signal in)/15. It can accept a <thing>$(l:essentials/circuits)circuit/$ input for more precision. It is a good way of splitting a large incoming beam between two directions.$(br2)"
+			"text": "<item>光束分路器/$会将射入光束的一部分从正面射出（侧面箭头指向的那一端），剩余的从背面射出。分到正面的比例为 (红石信号)/15。它可以接受<thing>$(l:essentials/circuits)电路/$输入以使比例更精准。使用分路器是将入射光束分到两个方向的好方法。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The <item>Beam Siphon/$ will send a set power from the incoming beam out the front (the end the arrows on the sides point to), and send the remainder out the back. The power of the beam siphoned off to the front is equal to the redstone signal received. It can accept a <thing>$(l:essentials/circuits)circuit/$ input for higher powers. It is a good way of supplying beams of a specific power to something, even if the input "
-		},
-		{
-			"type": "text",
-			"text": "beam power is unknown.$(br2)"
+			"text": "<item>光束虹吸器/$会将射入光束分出指定功率大小的一部分并从正面射出（侧面箭头指向的那一端），剩余的从背面射出。从正面离开的光束功率等于方块收到的红石信号。它可接受<thing>$(l:essentials/circuits)电路/$输入以输出更高的功率。虹吸器是在输入功率未知的情况下制造特定功率光束的好办法。$(br2)"
 		}
 	]
 }

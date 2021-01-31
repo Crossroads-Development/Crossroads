@@ -1,6 +1,6 @@
 {
 	"category": "beam",
-	"name": "Alignment: Light",
+	"name": "色域：光",
 	"icon": "crossroads:pure_quartz",
 	"sortnum": 1,
 	"priority": false,
@@ -9,13 +9,13 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Alignment: Light",
+			"title": "色域：光",
 			"item": "crossroads:pure_quartz",
-			"text": "<thing>Light/$ (white) will create <item>$(l:crossroads:beam/permeable)light clusters/$ when it hits blocks. It also can convert (cobble)stone into glowstone.$(br2)"
+			"text": "<thing>光/$（白色）击中方块时会创造<item>$(l:crossroads:beam/permeable)光团簇/$。它也能将圆石或石头转换为荧石。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<thing>Void-Light/$ AKA <thing>Darkness/$ will break light sources within range- where the radius is sqrt(<thing>power/$) / 2 blocks (maximum 4 blocks).$(br2)"
+			"text": "<thing>虚空-光/$，也就是<thing>暗/$，会破坏工作范围内的光源，半径为 sqrt(<thing>功率/$) / 2 格（最多4格）。$(br2)"
 		}
 	]
 }

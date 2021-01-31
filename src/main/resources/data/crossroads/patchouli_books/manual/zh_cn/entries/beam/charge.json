@@ -1,6 +1,6 @@
 {
 	"category": "beam",
-	"name": "Alignment: Charge",
+	"name": "色域：充能",
 	"icon": "crossroads:pure_quartz",
 	"sortnum": 1,
 	"priority": false,
@@ -9,17 +9,13 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Alignment: Charge",
+			"title": "色域：充能",
 			"item": "crossroads:pure_quartz",
-			"text": "<thing>Charge/$ (yellow) will add FE to any machine it hits. By default, it adds 50FE per <thing>power/$.$(br2)<thing>Charge/$ beams with <thing>power/$ >= 16 will summon a lightning bolt if the sky is visible.$(br2)<thing>Charge/$ beams can transmute (cobble)stone into "
-		},
+			"text": "<thing>充能/$（黄色）会向击中的机器内添加FE。默认情况下，每<thing>功率/$会增加50FE。$(br2)当天空可见时，<thing>功率/$>=16的<thing>充能/$光束会在天空可见时召唤一道闪电。$(br2)<thing>充能/$光束能将圆石或石头嬗变为红石块。$(br2)"
+		}
 		{
 			"type": "text",
-			"text": "redstone blocks.$(br2)"
-		},
-		{
-			"type": "text",
-			"text": "<thing>Void-Charge/$ AKA <thing>Discharge/$ drain FE from any machine it hits. By default, it drains 50FE per <thing>power/$.$(br2)"
+			"text": "<thing>虚空-充能/$，也就是<thing>释能/$，会从击中的机器中吸取FE。默认情况下，每<thing>功率/$会吸取50FE。$(br2)"
 		}
 	]
 }
