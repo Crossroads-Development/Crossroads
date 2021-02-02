@@ -54,9 +54,13 @@ public class CRWorldGen{
 				event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, TIN_ORE);
 			}
 		}else if(event.getCategory() == Biome.Category.THEEND){
-			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, VOID_ORE);
+			if(CRConfig.genVoidOre.get()){
+				event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, VOID_ORE);
+			}
 		}else if(event.getCategory() == Biome.Category.NETHER){
-			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, RUBY_ORE_SPOT);
+			if(CRConfig.genRubyOre.get()){
+				event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, RUBY_ORE_SPOT);
+			}
 		}
 	}
 
