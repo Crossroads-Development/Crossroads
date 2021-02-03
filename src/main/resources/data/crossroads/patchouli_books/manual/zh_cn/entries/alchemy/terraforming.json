@@ -1,6 +1,6 @@
 {
 	"category": "alchemy",
-	"name": "Terraforming with Reagents",
+	"name": "用试剂进行环境改造",
 	"icon": "minecraft:grass_block",
 	"sortnum": 0,
 	"priority": false,
@@ -9,41 +9,41 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Terraforming with Reagents",
+			"title": "用试剂进行环境改造",
 			"item": "minecraft:grass_block",
-			"text": "There are several <thing>$(l:crossroads:intro/alchemy)reagents/$ which have <thing>$(l:crossroads:alchemy/effect)effects/$ that change the biome and transmute blocks.$(br2)By combining one of these <thing>$(l:crossroads:intro/alchemy)reagents/$ with $(l:crossroads:alchemy/stones)<item>phelostogen/$ or $(l:crossroads:alchemy/stones)<item>ignis infernum/$, the <thing>$(l:crossroads:alchemy/effect)effect/$ can be spread over a large area by the <thing>$(l:crossroads:alchemy/effect)flame cloud/$ for terraforming.$(br2)"
+			"text": "有几种<thing>$(l:crossroads:intro/alchemy)试剂/$的<thing>$(l:crossroads:alchemy/effect)效果/$是改变生物群系并嬗变方块。$(br2)通过将这些<thing>$(l:crossroads:intro/alchemy)试剂/$与$(l:crossroads:alchemy/stones)<item>燃素/$或$(l:crossroads:alchemy/stones)<item>狱火素/$混合，其<thing>$(l:crossroads:alchemy/effect)效果/$能通过<thing>$(l:crossroads:alchemy/effect)火焰云/$散布到广大区域以进行环境改造。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "If any <item>quicksilver/$ is present in the released mix, then the <thing>$(l:crossroads:alchemy/effect)effect/$ will be changed- in addition to changing the biome and transmuting blocks, air will be filled in with certain blocks- allowing filling in massive areas.$(br2)"
+			"text": "如果释放的混合物里有任何<item>汞/$，<thing>$(l:crossroads:alchemy/effect)效果/$会被改变——除了改变群系和嬗变方块，空气也会被特定方块填满——能够用大范围填充方块。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<item>$(l:crossroads:alchemy/stones)Aether:/$ will set the biome to plains, will turn soil materials to grass blocks, will turn rock materials to stone, will turn 'crystal' blocks to glass, and will turn liquids to water. <item>$(l:crossroads:alchemy/stones)Aether/$ is basically an normal overworld-plains terraformer. When mixed with <item>quicksilver/$, it will fill empty space with dirt.$(br2)<item>$(l:crossroads:alchemy/stones)Eldrine:/$ will set the biome "
+			"text": "<item>$(l:crossroads:alchemy/stones)以太：/$会把生物群系设为平原，把土壤类方块变成草方块，把石质方块变成石头，把“水晶”方块变成草，把流体变成水。<item>$(l:crossroads:alchemy/stones)以太/$基本是普通的主世界平原转换器。当与<item>汞/$混合，还会让空气填满泥土。$(br2)<item>$(l:crossroads:alchemy/stones)奥秘素：/$会把生物群系设为"
 		},
 		{
 			"type": "text",
-			"text": "to hell, will turn soil materials to soul sand, will turn rock materials to netherrack, will turn 'crystal' blocks to glowstone, and will turn liquids to lava. <item>$(l:crossroads:alchemy/stones)Eldrine/$ is basically an nether terraformer. When mixed with <item>quicksilver/$, it will fill empty space with soulsand.$(br2)<item>$(l:crossroads:alchemy/stones)Fusas:/$ will set the biome to deep ocean, will turn soil materials "
+			"text": "下界荒地，把土壤类方块变成灵魂沙，把石质方块变成下界岩，把“水晶”方块变成荧石，把流体变成熔岩。<item>$(l:crossroads:alchemy/stones)奥秘素/$基本是下界转换器。当与<item>汞/$混合，还会让空气填满灵魂沙。$(br2)<item>$(l:crossroads:alchemy/stones)融合素：/$会把生物群系设为深海，把土壤类方块变成"
 		},
 		{
 			"type": "text",
-			"text": "to clay, will turn rock materials to prismarine, will turn 'crystal' blocks to sea lanterns, and will turn liquids to distilled water. <item>$(l:crossroads:alchemy/stones)Fusas/$ is basically a ocean-temple terraformer. When mixed with <item>quicksilver/$, it will fill empty space with clay.$(br2)<item>$(l:crossroads:alchemy/stones)Lumen:/$ will set the biome to desert, will turn soil materials to sand, will turn rock materials "
+			"text": "黏土块，把石质方块变成海晶石，把“水晶”方块变成海晶灯，把流体变成蒸馏水。<item>$(l:crossroads:alchemy/stones)融合素/$基本是海底神殿转换器。当与<item>汞/$混合，还会让空气填满黏土。$(br2)<item>$(l:crossroads:alchemy/stones)流明：/$会把生物群系设为沙漠，把土壤类方块变成沙子，把石质方块变成"
 		},
 		{
 			"type": "text",
-			"text": "to sandstone, will turn 'crystal' blocks to <item>$(l:crossroads:fluid/ingr)salt blocks/$, and will remove liquids. <item>$(l:crossroads:alchemy/stones)Lumen/$ is basically a desert terraformer. When mixed with <item>quicksilver/$, it will fill empty space with sand.$(br2)<item>$(l:crossroads:alchemy/stones)Stasisol:/$ will set the biome to snowy tundra, will turn soil materials to snow, will turn rock materials to packed ice, will turn 'crystal' blocks to "
+			"text": "砂岩，把“水晶”方块变成<item>$(l:crossroads:fluid/ingr)盐块/$，并且移除液体。<item>$(l:crossroads:alchemy/stones)流明/$基本是沙漠转换器。当与<item>汞/$混合，还会让空气填满沙子。$(br2)<item>$(l:crossroads:alchemy/stones)静滞素：/$会把生物群系设为积雪的冻原，把土壤类方块变成雪，把石质方块变成浮冰，把“水晶”方块变成"
 		},
 		{
 			"type": "text",
-			"text": "blue ice, and will turn liquids to ice. <item>$(l:crossroads:alchemy/stones)Stasisol/$ is basically a snow terraformer. When mixed with <item>quicksilver/$, it will fill empty space with snow.$(br2)"
+			"text": "蓝冰，并把液体变成冰。<item>$(l:crossroads:alchemy/stones)静滞素/$基本是雪地转换器。当与<item>汞/$混合，还会让空气填满雪。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The 'ideal mix' for terraforming is 1 unit of the <thing>$(l:crossroads:intro/alchemy)reagent/$ used for terraforming, 1 unit of <item>alchemical salt/$ to prevent <item>$(l:crossroads:alchemy/stones)phelostogen/$/<item>$(l:crossroads:alchemy/stones)ignis infernum/$ from destroying blocks, optionally 1 unit of <item>quicksilver/$ if you want to fill all empty space instead of just terraforming, and as much <item>$(l:crossroads:alchemy/stones)phelostogen/$/<item>$(l:crossroads:alchemy/stones)ignis infernum/$ as desired to make the effect apply over a large area.$(br2)"
+			"text": "环境改造的“完美比例”是1单位用来环境改造的<thing>$(l:crossroads:intro/alchemy)试剂/$，1单位防止<item>$(l:crossroads:alchemy/stones)燃素/$/<item>$(l:crossroads:alchemy/stones)狱火素/$破坏方块的<item>炼金术盐/$，可选的1单位<item>汞/$用来填满空间，所需的足够多<item>$(l:crossroads:alchemy/stones)燃素/$/<item>$(l:crossroads:alchemy/stones)狱火素/$来使效应在大范围内发生。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "For such a large and complicated mix being released, it is suggested to release it using a <item>$(l:crossroads:alchemy/glassware)shell/$ or <item>$(l:crossroads:alchemy/glassware)phial/$.$(br2)"
+			"text": "对于这种大量复杂的混合物释放，建议使用<item>$(l:crossroads:alchemy/glassware)壳/$或者<item>$(l:crossroads:alchemy/glassware)试管/$进行。$(br2)"
 		}
 	]
 }

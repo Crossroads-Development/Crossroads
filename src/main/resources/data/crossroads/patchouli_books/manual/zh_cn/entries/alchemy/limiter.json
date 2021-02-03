@@ -1,6 +1,6 @@
 {
 	"category": "alchemy",
-	"name": "Limiter Conduit",
+	"name": "限流导管",
 	"icon": "crossroads:flow_limiter",
 	"sortnum": 0,
 	"priority": false,
@@ -9,17 +9,17 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Limiter Conduit",
+			"title": "限流导管",
 			"item": "crossroads:flow_limiter",
-			"text": "The <item>Limiter Conduit/$ is used to limit the amount of <thing>$(l:crossroads:intro/alchemy)reagents/$ flowing into a <item>$(l:crossroads:alchemy/vessel)reaction vessel/$ from <item>$(l:crossroads:alchemy/conduit)conduits/$- though they can be used with any <thing>$(l:crossroads:intro/alchemy)alchemy/$ container.$(br2)They accept input from the back, and output through the front. A limit can be set by shift-right-clicking "
+			"text": "<item>限流导管/$用于限制从<item>$(l:crossroads:alchemy/conduit)导管/$流入<item>$(l:crossroads:alchemy/vessel)反应容器/$的<thing>$(l:crossroads:intro/alchemy)试剂/$数量——不过这种导管也能用与其他任何<thing>$(l:crossroads:intro/alchemy)炼金术/$容器。$(br2)它们需要从背面输入，从正面输出。"
 		},
 		{
 			"type": "text",
-			"text": "with a <item>$(l:essentials/wrench)wrench/$. They will not insert any <thing>$(l:crossroads:intro/alchemy)reagent/$ into the container they are outputting to beyond the configured limit.$(br2)This is useful for both preventing completely filling a <item>$(l:crossroads:alchemy/vessel)reaction vessel/$ with a <thing>$(l:crossroads:intro/alchemy)reagent/$, and for controlling the ratio of reagents for certain $(l:crossroads:intro/alchemy)dangerous reactions/$ or making <item>$(l:crossroads:alchemy/stones)advanced elemental reagents/$.$(br2)"
+			"text": "手持<item>$(l:essentials/wrench)扳手/$shift右击可设置具体限制。导管不会往输出的容器内插入任何超过限制数量的<thing>$(l:crossroads:intro/alchemy)试剂/$。$(br2)可用于防止在<item>$(l:crossroads:alchemy/vessel)反应容器/$内填满单一<thing>$(l:crossroads:intro/alchemy)试剂/$，也能用于控制特定$(l:crossroads:intro/alchemy)危险反应/$的试剂比例或者制造<item>$(l:crossroads:alchemy/stones)高级元素试剂/$。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "There is both a crystal and glass variant.$(br2)"
+			"text": "<item>限流导管/$有水晶和玻璃两种变体。$(br2)"
 		}
 	]
 }

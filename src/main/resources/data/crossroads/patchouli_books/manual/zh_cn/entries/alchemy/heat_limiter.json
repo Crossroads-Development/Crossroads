@@ -1,6 +1,6 @@
 {
 	"category": "alchemy",
-	"name": "Temperature Regulator",
+	"name": "温度调节器",
 	"icon": "crossroads:heat_limiter_basic",
 	"sortnum": 0,
 	"priority": false,
@@ -9,33 +9,25 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Temperature Regulator",
+			"title": "温度调节器",
 			"item": "crossroads:heat_limiter_basic",
-			"text": "The <item>Temperature Regulator/$ is a powerful tool for controlling <thing>$(l:crossroads:intro/heat)temperature/$. It allows precisely controlling the <thing>$(l:crossroads:intro/heat)temperature/$ of a <item>$(l:crossroads:heat/cable)heat cable/$ and connected machines.$(br2)The <item>temperature regulator/$ connects to two <item>$(l:crossroads:heat/cable)heat cables/$- on the front and back- with the front being "
+			"text": "<item>温度调节器/$是控制<thing>$(l:crossroads:intro/heat)温度/$的强力工具。它能够精确控制<item>$(l:crossroads:heat/cable)热导管/$和相连机器的<thing>$(l:crossroads:intro/heat)温度/$。$(br2)<item>温度调节器/$可从正面和背面连接到<item>$(l:crossroads:heat/cable)热导管/$（正面是有红色圈的一面）。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "the side with the red 'ring'.$(br2)"
+			"text": "<item>温度调节器/$有两个模式：红模式和蓝模式，可以通过手持<item>$(l:essentials/wrench)扳手/$shift右击互相切换。$(br2)在红模式，热可从输入流到输出，直到输出面上升到目标<thing>$(l:crossroads:intro/heat)温度/$。该模式下正面不会比背面热。实际上，可以说该模式将输出面加热到指定<thing>$(l:crossroads:intro/heat)温度/$。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The <item>temperature regulator/$ has two modes: Red mode and blue mode, which can be toggled by shift-right-clicking with a <item>$(l:essentials/wrench)wrench/$.$(br2)In red mode, heat will be moved from the input to the output up to the target <thing>$(l:crossroads:intro/heat)temperature/$, but no hotter. It can not heat the front higher than the back. In effect, it heats the output up to a set <thing>$(l:crossroads:intro/heat)temperature/$.$(br2)"
+			"text": "在蓝模式，热可从输出流到输入，直到输出面下降到目标<thing>$(l:crossroads:intro/heat)温度/$。这种冷却效果不会将正面温度冷却到比背面低。实际上，可以说该模式将输出面冷却到指定<thing>$(l:crossroads:intro/heat)温度/$。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "In blue mode, heat will be moved from the output to the input down to the target <thing>$(l:crossroads:intro/heat)temperature/$, but no colder. It can not cool the front lower than the back. In effect, it cools the output down to a set <thing>$(l:crossroads:intro/heat)temperature/$.$(br2)"
+			"text": "<item>温度调节器/$有两种变体：普通<item>温度调节器/$，通过UI设置目标温度；<item>红石温度调节器/$，通过<thing>$(l:essentials/circuit)电路/$设置目标<thing>$(l:crossroads:intro/heat)温度/$。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "There are two variants of the <item>temperature regulator/$: The <item>Temperature Regulator/$ has the target <thing>$(l:crossroads:intro/heat)temperature/$ in Celcius set via a UI, while the <item>Redstone Temperature Regulator/$ has the target <thing>$(l:crossroads:intro/heat)temperature/$ in Celcius set to the current <thing>$(l:essentials/circuit)circuit/$ input.$(br2)"
-		},
-		{
-			"type": "text",
-			"text": "<bobo>$(l:crossroads:intro/welcome#bobo)eye IZ bOqr!!/$<bobo> me hAs !!!!iMPOrtANT tINg~~~! mUcH heAT! mUCH c01D! dEFY hot/cold-o-dyanmics! 4 FREEE!!!$(br2)<bobo>reD METAL baAR!$(br2)<bobo>uNBREAKABLE bloK DAT n0 li3k ACID!$(br2)<bobo>aND dA haRD BIT! yUM nuGGET sTACK iN ONE ITEM! dA STACK "
-		},
-		{
-			"type": "text",
-			"text": "<bobo>NUBMER oN 1 ITeM!/$$(br2)"
+			"text": "<bobo>$(l:crossroads:intro/welcome#bobo)渥肆bOqr！！/$<bobo>渥友！！！！重药咚西~~~！超热！钞冷！订义热/冷栋力学！免费费费费！！！$(br2)<bobo>红金属定！$(br2)<bobo>酸搞得打不坏芳快！$(br2)<bobo>燃后是坠难的！好次粒叠在1物品！1雾品堆叠数！/$$(br2)"
 		}
 	]
 }

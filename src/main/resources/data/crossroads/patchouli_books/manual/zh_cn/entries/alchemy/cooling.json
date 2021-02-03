@@ -1,6 +1,6 @@
 {
 	"category": "alchemy",
-	"name": "Cooling Coil Conduit",
+	"name": "冷却螺旋管",
 	"icon": "crossroads:cooling_coil",
 	"sortnum": 0,
 	"priority": false,
@@ -9,13 +9,9 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Cooling Coil Conduit",
+			"title": "冷却螺旋管",
 			"item": "crossroads:cooling_coil",
-			"text": "The <item>Cooling Coil Conduit/$ is a special <item>$(l:crossroads:alchemy/conduit)conduit/$ that sets the temperature of all <thing>$(l:crossroads:intro/alchemy)reagents/$ flowing through it to the <thing>$(l:crossroads:intro/heat)biome temperature/$.$(br2)They input <thing>$(l:crossroads:intro/alchemy)reagents/$ on one side, and output on the opposite side. They cannot face vertically, and have both a glass and crystal "
-		},
-		{
-			"type": "text",
-			"text": "variant.$(br2)"
+			"text": "<item>冷却螺旋管/$是一种特殊的<item>$(l:crossroads:alchemy/conduit)导管/$，能将经过的所有<thing>$(l:crossroads:intro/alchemy)试剂/$的温度设置为<thing>$(l:crossroads:intro/heat)群系温度/$。$(br2)<thing>$(l:crossroads:intro/alchemy)试剂/$在一端输入，另一端输出。螺旋管不能垂直放置，有玻璃和水晶两种变体。"
 		}
 	]
 }

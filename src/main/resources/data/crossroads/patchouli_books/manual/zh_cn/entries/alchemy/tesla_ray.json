@@ -1,6 +1,6 @@
 {
 	"category": "alchemy",
-	"name": "Tesla Ray",
+	"name": "特斯拉射线",
 	"icon": "crossroads:tesla_ray",
 	"sortnum": 0,
 	"priority": false,
@@ -9,13 +9,13 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Tesla Ray",
+			"title": "特斯拉射线",
 			"item": "crossroads:tesla_ray",
-			"text": "The <item>Tesla Ray/$ is an electrical AOE weapon. In order to fire, it requires a <item>$(l:crossroads:fluid/tesla)leyden jar/$ in the offhand as a power source.$(br2)When fired, it will use 1000FE per shot, and will chain between <em>unlimited targets/$ within 5 blocks of each other for 7 electric damage.$(br2)"
+			"text": "<item>特斯拉射线/$是一种电击AOE武器。开火需要在副手拿一个<item>$(l:crossroads:fluid/tesla)莱顿瓶/$作为能量源。$(br2)开火时，每发使用1000FE，而且会连锁攻击5格内<em>无限个数的目标/$，对所有目标造成7点电击伤害。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "It has an attack cooldown like a melee weapon, and will do less damage and <em>won't chain attacks unless fully cooled-down/$.$(br2)"
+			"text": "有一个类似近战武器的攻击冷却，冷却时会造成更少伤害而且<em>不会连锁攻击/$。$(br2)"
 		}
 	]
 }

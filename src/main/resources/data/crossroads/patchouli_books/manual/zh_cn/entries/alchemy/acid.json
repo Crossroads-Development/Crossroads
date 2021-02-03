@@ -1,6 +1,6 @@
 {
 	"category": "alchemy",
-	"name": "Acids & Aqua Regia",
+	"name": "酸和王水",
 	"icon": "crossroads:solid_regia",
 	"sortnum": 0,
 	"priority": false,
@@ -9,25 +9,25 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Acids & Aqua Regia",
+			"title": "酸和王水",
 			"item": "crossroads:solid_regia",
-			"text": "<thing>Alchemy/$ adds four different reagents that are acids: <item>Vitriol Salt (Sulfuric Acid)/$, <item>Muriatic Salt (Hydrochloric Acid)/$, <item>Aziotic Salt (Nitric Acid)/$, and <item>Regia Salt (Aqua Regia)/$. Three of these (Sulfuric, Muriatic, and Aziotic) act identically. <item>Aqua Regia/$ is more powerful than the other three, and allows "
+			"text": "<thing>炼金术/$加入了四种不同的酸试剂：<item>硫酸盐（硫酸）/$、<item>盐酸盐（盐酸）/$、<item>硝酸盐（硝酸）/$和<item>王水盐（王水）/$。其中三个（硫酸、盐酸、硝酸）的作用是相同的。<item>王水/$比其他三个酸性更强，能够"
 		},
 		{
 			"type": "text",
-			"text": "<em>breaking bedrock/$ and getting <item>Bedrock Dust/$.$(br2)The three normal acids have the same <thing>$(l:crossroads:alchemy/effect)effect/$: They deal 8 damage to any entity they hit, and will break metal blocks other than gold.$(br2)"
+			"text": "<em>破坏基岩/$并获得<item>基岩粉/$。$(br2)这三种普通酸有着相同的<thing>$(l:crossroads:alchemy/effect)效果/$：对被击中的生物造成8点伤害，击中方块则破坏除了金块外的金属方块。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<item>Aqua Regia/$ will do 12 damage to hit entities, and will break metal blocks (including gold). Much more importantly, any bedrock that <item>aqua regia/$ hits will be broken, dropping 1 <item>Bedrock Dust/$, an important reagent.$(br2)As <thing>aqua regia/$ can be expensive and you will need a lot of <item>bedrock dust/$, it suggested to mix it with a cheap liquid (like water) "
+			"text": "<item>王水/$会对实体造成12点伤害，能破坏金属方块（包括金块）。更重要的是，任何被<item>王水/$击中的基岩会被破坏，掉落一个<item>基岩粉/$，一种重要试剂。$(br2)由于<thing>王水/$可能很昂贵，而你会需要大量<item>基岩粉/$，最后将王水与廉价的液体（比如水）混合，"
 		},
 		{
 			"type": "text",
-			"text": "to splash the <thing>$(l:crossroads:alchemy/effect)effect/$ over a large area. See the <thing>$(l:crossroads:alchemy/effect)effects/$ page for full details.$(br2)"
+			"text": "来将<thing>$(l:crossroads:alchemy/effect)效果/$洒到更大的区域。详细信息可查看<thing>$(l:crossroads:alchemy/effect)效果/$页$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<bobo>$(l:crossroads:intro/welcome#bobo)iz BOBO!/$<bobo> KABANG! KABOOM! KABLOOEY! (bles U)$(br2)<bobo>I HAZ BANG BOTTEL! bUTtt b33 KaRE_UN_EMTPY!! eLES U g0->> bUUM!$(br2)<bobo>y3LLOW dUST! fRRRESH BAkCC0ON!! und bUTT:E for SHOP-AGGE!$(br2)<bobo>bOBO AWAY!/$$(br2)"
+			"text": "<bobo>$(l:crossroads:intro/welcome#bobo)寺BOBO！/$<bobo>KABANG！KABOOM！KABLOOEY！（祝福尼）$(br2)<bobo>窝有BANG瓶子！旦要小星！！布然尼->>bUUM！$(br2)<bobo>黄色粉！新新新鲜陪根根！！何用来放的平子！$(br2)<bobo>bOBO离开！/$$(br2)"
 		}
 	]
 }

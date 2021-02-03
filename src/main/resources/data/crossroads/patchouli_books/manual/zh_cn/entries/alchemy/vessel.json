@@ -1,6 +1,6 @@
 {
 	"category": "alchemy",
-	"name": "Reagent Vessels",
+	"name": "试剂容器",
 	"icon": "crossroads:reagent_tank",
 	"sortnum": 0,
 	"priority": false,
@@ -9,21 +9,21 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Reagent Vessels",
+			"title": "试剂容器",
 			"item": "crossroads:reagent_tank",
-			"text": "<item>Reagent Vessels/$ are the core machines for automating <thing>$(l:crossroads:intro/alchemy)reactions/$. There are two versions: The <item>Storage Vessel/$, for storing <thing>$(l:crossroads:intro/alchemy)reagents/$, and the <item>Reaction Vessel/$, for performing <thing>$(l:crossroads:intro/alchemy)reactions/$.$(br2)Both will retain their contents when broken, have glass and crystal versions, "
+			"text": "<item>试剂容器/$是自动化<thing>$(l:crossroads:intro/alchemy)反应/$的核心机器。有两个版本：<item>存储容器/$，用于存储<thing>$(l:crossroads:intro/alchemy)试剂/$；<item>反应容器/$，用于进行<thing>$(l:crossroads:intro/alchemy)反应/$。$(br2)二者都会在被破坏时保留内容物，有着保玻璃和水晶两个版本，"
 		},
 		{
 			"type": "text",
-			"text": "and can connect to <item>$(l:crossroads:alchemy/conduit)reagent conduits/$ on any side. Hoppers can insert or extract the solid form of <thing>$(l:crossroads:intro/alchemy)reagents/$ as items, which can also be added/removed by right clicking (with the item to add, empty hand to remove). Buckets of the liquid form can also be used.$(br2)<thing>$(l:essentials/circuits)Reader circuits/$ will read the total <thing>$(l:crossroads:intro/alchemy)reagent/$ contents.$(br2)"
+			"text": "可以从任一面连接到<item>$(l:crossroads:alchemy/conduit)试剂导管/$。漏斗可以以物品形态插入和取出固态<thing>$(l:crossroads:intro/alchemy)试剂/$，这类试剂也可以通过手持/空手来添加/移出。液态试剂和液体桶也能依此类推。$(br2)<thing>$(l:essentials/circuits)读取器电路/$可测量总<thing>$(l:crossroads:intro/alchemy)试剂/$数量。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The <item>Storage Vessel/$ can store 1000 units of <thing>$(l:crossroads:intro/alchemy)reagents/$. They <em>will not/$ allow <thing>$(l:crossroads:intro/alchemy)reactions/$ to occur inside them. They are used for bulk storage of <thing>$(l:crossroads:intro/alchemy)reagents/$.$(br2)"
+			"text": "<item>存储容器/$可存储1000单位<thing>$(l:crossroads:intro/alchemy)试剂/$。这种容器<em>不/$允许内部发生<thing>$(l:crossroads:intro/alchemy)反应/$。用于大量存储<thing>$(l:crossroads:intro/alchemy)试剂/$。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The <item>Reaction Vessel/$ can store 200 units of <thing>$(l:crossroads:intro/alchemy)reagents/$. They <em>will/$ allow <thing>$(l:crossroads:intro/alchemy)reactions/$ to occur inside them. They can optionally be provided with Forge Energy (FE), which they will drain at 10FE/t. If FE is provided, they will act as a <thing>charged environment/$ for <thing>$(l:crossroads:intro/alchemy)reactions/$. They are mainly used for performing <thing>$(l:crossroads:intro/alchemy)reactions/$ automatically.$(br2)"
+			"text": "<item>反应容器/$可存储200单位<thing>$(l:crossroads:intro/alchemy)试剂/$。这种容器<em>允许/$内部发生<thing>$(l:crossroads:intro/alchemy)反应/$。容器也可以使用FE，消耗速度为10FE/t。如果在消耗FE，容器可作为<thing>充能环境/$供<thing>$(l:crossroads:intro/alchemy)反应/$进行。<item>反应容器/$主要用于自动进行<thing>$(l:crossroads:intro/alchemy)反应/$。$(br2)"
 		}
 	]
 }

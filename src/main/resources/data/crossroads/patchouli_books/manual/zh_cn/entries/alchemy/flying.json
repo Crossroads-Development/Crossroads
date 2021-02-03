@@ -1,6 +1,6 @@
 {
 	"category": "alchemy",
-	"name": "Flying Machine",
+	"name": "飞行机器",
 	"icon": "crossroads:flying_machine",
 	"sortnum": 0,
 	"priority": false,
@@ -9,17 +9,17 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Flying Machine",
+			"title": "飞行机器",
 			"item": "crossroads:flying_machine",
-			"text": "The <item>Flying Machine/$ is a vehicle that flies. The item is placed down similarly to a boat or minecart, and mounted.$(br2)The <item>flying machine/$ will move in the horizontal direction the player is looking. The player can 'steer' by pressing the 'w' and 'a' keys to rotate "
+			"text": "<item>飞行机器/$是一种可飞行的载具。物品形态下可以像船或矿车那样放出来和乘坐。$(br2)<item>飞行机器/$会向玩家望向的水平方向前进。玩家可通过按下“s”或“w”键向前或向后旋转"
 		},
 		{
 			"type": "text",
-			"text": "the large wheel forward or back. The angle of the wheel controls the ratio of upwards/downwards vs horizontal acceleration.$(br2)As the <item>flying machine/$ has to fight gravity, the steering wheel has to be pointed partly upwards to stay level, and it is generally slower when ascending then descending.$(br2)"
+			"text": "载具下部的大轮来“驾驶”。大轮的角度控制着向上/向下加速度和水平加速度的比例。$(br2)由于<item>飞行机器/$飞行时不得不对抗重力，大轮必须倾斜以保持载具高度，而且上升通常比下降慢。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "Note that the <item>flying machine/$ requires ingredients from both $(l:crossroads:intro/path)Alchemy & Technomancy/$ to craft by default.$(br2)"
+			"text": "注意，默认情况下<item>飞行机器/$同时需要来自$(l:crossroads:intro/path)炼金术和科技魔法/$的原料合成。$(br2)"
 		}
 	]
 }

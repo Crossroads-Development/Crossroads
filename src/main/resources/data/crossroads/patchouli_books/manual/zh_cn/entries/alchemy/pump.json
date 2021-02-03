@@ -1,6 +1,6 @@
 {
 	"category": "alchemy",
-	"name": "Reagent Pump",
+	"name": "试剂泵",
 	"icon": "crossroads:reagent_pump",
 	"sortnum": 0,
 	"priority": false,
@@ -9,17 +9,17 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Reagent Pump",
+			"title": "试剂泵",
 			"item": "crossroads:reagent_pump",
-			"text": "The <item>Reagent Pump/$ is the way to force <thing>$(l:crossroads:intro/alchemy)reagents/$ to flow up/down in <item>$(l:crossroads:alchemy/conduit)conduits/$. It does not require any power or fuel of any kind.$(br2)As <thing>$(l:crossroads:intro/alchemy)gasses and flame phase/$ will not flow down on their own, and <thing>$(l:crossroads:intro/alchemy)solids and liquids/$ will not flow up on their own, pumps are needed to "
+			"text": "<item>试剂泵/$用于强制使<thing>$(l:crossroads:intro/alchemy)试剂/$在<item>$(l:crossroads:alchemy/conduit)导管/$中流上/流下。它不需要任何能量或燃料之类的东西来工作。$(br2)由于<thing>$(l:crossroads:intro/alchemy)气态和火焰态/$不会往下流，<thing>$(l:crossroads:intro/alchemy)固态和液态/$不会往上流，需要用泵来使其"
 		},
 		{
 			"type": "text",
-			"text": "force them up or down.$(br2)<thing>$(l:crossroads:intro/alchemy)Reagents/$ get inserted into the sides by <item>$(l:crossroads:alchemy/conduit)conduits/$, and will be pushed into the <item>$(l:crossroads:alchemy/conduit)conduit/$/<item>reagent pump/$/other above/below them. For moving several blocks up/down, you will need a column of <item>reagent pumps/$.$(br2)A <item>$(l:essentials/wrench)wrench/$ is used to adjust whether the <item>reagent pump/$ pushes up or down. "
+			"text": "流上或流下。$(br2)<thing>$(l:crossroads:intro/alchemy)试剂/$需从侧面通过<item>$(l:crossroads:alchemy/conduit)导管/$插入，然后会被推入泵上方或下方的<item>$(l:crossroads:alchemy/conduit)导管/$/<item>试剂泵/$/其他设备里。要移动多个方块，你会需要一列的<item>试剂泵/$。$(br2)<item>$(l:essentials/wrench)扳手/$可用于调整<item>试剂泵/$会把输入的试剂向上还是向下推。"
 		},
 		{
 			"type": "text",
-			"text": "There is both a glass and crystal version.$(br2)"
+			"text": "<item>试剂泵/$有玻璃和水晶两种变体。$(br2)"
 		}
 	]
 }

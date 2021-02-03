@@ -1,6 +1,6 @@
 {
 	"category": "alchemy",
-	"name": "Reagent Conduits",
+	"name": "试剂导管",
 	"icon": "crossroads:alch_tube",
 	"sortnum": 0,
 	"priority": false,
@@ -9,21 +9,17 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Reagent Conduits",
+			"title": "试剂导管",
 			"item": "crossroads:alch_tube",
-			"text": "<item>Alchemy Conduits/$ are the automated way of moving <thing>$(l:crossroads:intro/alchemy)reagents/$. They will move <thing>$(l:crossroads:intro/alchemy)reagents/$ like <item>$(l:crossroads:fluid/pipe)pipes/$, and can have connections adjusted with a <item>$(l:essentials/wrench)wrench/$.$(br2)<thing>$(l:crossroads:intro/alchemy)Solid and liquid reagents/$ <em>will not flow up/$, while <thing>$(l:crossroads:intro/alchemy)gas and flame reagents/$ will not flow down. This is useful for separating "
+			"text": "<item>炼金术导管/$能自动化地移动<thing>$(l:crossroads:intro/alchemy)试剂/$。导管能像<item>$(l:crossroads:fluid/pipe)流体管/$一样移动<thing>$(l:crossroads:intro/alchemy)试剂/$，并可通过<item>$(l:essentials/wrench)扳手/$调整管道连接。$(br2)<thing>$(l:crossroads:intro/alchemy)固态和液态试剂/$<em>不能往上流/$，<thing>$(l:crossroads:intro/alchemy)气态和火焰试剂/$不能往下流。这有助于通过<thing>$(l:crossroads:intro/alchemy)物态/$"
 		},
 		{
 			"type": "text",
-			"text": "<thing>$(l:crossroads:intro/alchemy)reagents/$ by <thing>$(l:crossroads:intro/alchemy)phase/$, or by type by taking advantage of different <thing><thing>$(l:crossroads:intro/alchemy)boiling/melting temperatures/$. <thing>$(l:crossroads:intro/alchemy)Reagents/$ can be forced to flow up/down using a <item>$(l:crossroads:alchemy/pump)reagent pump/$.$(br2)There are both crystal and glass versions of <item>alchemy conduits/$, and they will not connect. Some <thing>$(l:crossroads:intro/alchemy)reagents/$ can not be safely contained in glass. Up to 10 units of <thing>$(l:crossroads:intro/alchemy)reagent$ can be stored "
+			"text": "或利用不同<thing><thing>$(l:crossroads:intro/alchemy)沸点/熔点/$分离<thing>$(l:crossroads:intro/alchemy)试剂/$。使用<item>$(l:crossroads:alchemy/pump)试剂泵/$可强迫<thing>$(l:crossroads:intro/alchemy)试剂/$往上或往下流。$(br2)<item>炼金术导管/$有水晶和玻璃两个版本，它们不会连接。一些<thing>$(l:crossroads:intro/alchemy)试剂/$不能安全地用玻璃存放。一个<item>导管/$最多可容纳10单位的<thing>$(l:crossroads:intro/alchemy)试剂/$。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<thing>$(l:crossroads:intro/alchemy)in a <item>conduit/$.$(br2)"
-		},
-		{
-			"type": "text",
-			"text": "<item>Redstone Alchemy Conduits/$ are like normal <item>alchemy conduits/$, except they will only connect to their neighbors while they have a redstone signal.$(br2)"
+			"text": "<item>红石炼金术导管/$就像普通<item>炼金术导管/$，不过只在收到红石信号时连接到相邻导管和设备。$(br2)"
 		}
 	]
 }

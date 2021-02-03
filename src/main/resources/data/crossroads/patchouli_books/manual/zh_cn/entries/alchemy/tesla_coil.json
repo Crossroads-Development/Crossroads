@@ -1,6 +1,6 @@
 {
 	"category": "alchemy",
-	"name": "Upgraded Tesla Coils",
+	"name": "升级的特斯拉线圈",
 	"icon": "crossroads:tesla_coil_top_efficiency",
 	"sortnum": 0,
 	"priority": false,
@@ -9,29 +9,29 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Upgraded Tesla Coils",
+			"title": "升级的特斯拉线圈",
 			"item": "crossroads:tesla_coil_top_efficiency",
-			"text": "<thing>$(l:crossroads:intro/alchemy)Alchemy/$ unlocks several upgraded <item>$(l:crossroads:fluid/tesla)tesla coil tops/$, which can be used on top of a <item>$(l:crossroads:fluid/tesla)tesla coil/$.$(br2)There are 5 variants. Some have slightly different stats, while 2 do something completely different from transferring FE.$(br2)"
+			"text": "<thing>$(l:crossroads:intro/alchemy)炼金术/$解锁了几种升级的<item>$(l:crossroads:fluid/tesla)特斯拉线圈顶部/$，可放在<item>$(l:crossroads:fluid/tesla)特斯拉线圈/$的上面。$(br2)线圈顶部有5种变体。一些有着稍微不同的性能，其他两种则有着与传输FE完全不相干的功能。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The <item>Offensive Tesla Coil Head/$ does not transfer FE, and will instead attack entities within range with 5 electric damage. It will also attack players, including the owner.$(br2)"
+			"text": "<item>攻击性特斯拉线圈顶部/$不传输FE，而是攻击范围内的实体，一次造成5点电击伤害。它也会攻击玩家，包括拥有者。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The <item>Decorative Tesla Coil Head/$ does not transfer FE, and will instead drain FE to shoot decorative electric bolts around it.$(br2)"
+			"text": "<item>装饰性特斯拉线圈顶部/$不传输FE，而是吸取FE并在周围射出装饰性的电弧。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The <item>Long-Range Tesla Coil Head/$ has a transfer range of 32 blocks.$(br2)"
+			"text": "<item>长距离特斯拉线圈顶部/$传输距离为32格。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The <item>Efficient Tesla Coil Head/$ has no FE loss from transfer.$(br2)"
+			"text": "<item>高效率特斯拉线圈顶部/$传输时没有FE流失。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The <item>High-Intensity Tesla Coil Head/$ will transfer 10,000FE per jolt, effectively having 10x the normal FE transfer rate. It will not work without a <item>$(l:crossroads:fluid/tesla)leyden jar/$ installed in the <item>$(l:crossroads:fluid/tesla)tesla coil/$.$(br2)"
+			"text": "<item>高强度特斯拉线圈顶部/$一次传输10,000FE，FE传输效率是普通顶部的10倍。需要在<item>$(l:crossroads:fluid/tesla)特斯拉线圈/$内放一个<item>$(l:crossroads:fluid/tesla)莱顿瓶/$。$(br2)"
 		}
 	]
 }

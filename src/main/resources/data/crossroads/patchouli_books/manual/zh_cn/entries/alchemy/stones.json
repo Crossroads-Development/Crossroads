@@ -1,6 +1,6 @@
 {
 	"category": "alchemy",
-	"name": "Philosopher's & Practitioner's",
+	"name": "思索者之石和实践者之石",
 	"icon": "crossroads:phil_stone",
 	"sortnum": 0,
 	"priority": false,
@@ -9,37 +9,33 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Philosopher's & Practitioner's",
+			"title": "思索者之石和实践者之石",
 			"item": "crossroads:phil_stone",
-			"text": "The <item>Philosopher's Stone/$ and <item>Practitioner's Stone/$ are important items/<thing>reagents/$ which are used as <thing>$(l:crossroads:intro/alchemy)catalysts/$ in some important reactions.$(br2)The <item>philosopher's stone/$ can be considered to unlock 'tier 2 alchemy'. The <item>practitioner's stone/$ can be considered to unlock "
+			"text": "<item>思索者之石/$和<item>实践者之石/$是重要的物品/<thing>试剂/$，能用作某些重要反应的<thing>$(l:crossroads:intro/alchemy)催化剂/$。$(br2)得到<item>思索者之石/$可以看作解锁了“2级炼金术”。得到<item>实践者之石/$可以看作解锁了“3级炼金术”。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "'tier 3 alchemy'.$(br2)"
+			"text": "<item>思索者之石/$，又叫贤者之石、哲人之石，用于制作<item>燃素/$、<item>以太/$和<thing>精金/$这三种后面非常重要的<thing>试剂/$。<item>思索者之石/$、<item>燃素/$和<item>以太/$都需要用水晶器皿存放——它们都会破坏玻璃。在制作<item>思索者之石/$前，请确保<thing>$(l:crossroads:intro/alchemy)反应/$是在水晶器皿里发生的。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The <item>Philosopher's Stone/$ is used to make <item>Phelostogen/$, <item>Aether/$, and <thing>Adamant/$, which are three very important <thing>reagents/$ which many features are locked behind. The <item>philosopher's stone/$, <item>phelostogen/$, and <item>aether/$ need to be contained in crystal glassware- they will destroy glass. Before making the <item>stone/$, make sure to be doing the <thing>$(l:crossroads:intro/alchemy)reaction/$ in crystal glassware.$(br2)"
+			"text": "The <item>实践者之石/$用于制作几种特殊的<thing>元素试剂/$：<item>奥秘素/$、<item>融合素/$、<item>流明/$、<item>静滞素/$和<item>电压素/$。所有这些试剂必须用水晶存放（还有<item>实践者之石/$本身）。制作这些<thing>元素试剂/$的<thing>反应/$$(l)不/$在JEI，因为它们不是普通的<thing>反应/$。$(br2)要制作<thing>元素试剂/$必须要有"
 		},
 		{
 			"type": "text",
-			"text": "The <item>Practitioner's Stone/$ is used to make several special <thing>elemental reagents/$: <item>Eldrine/$, <item>Fusas/$, <item>Lumen/$, <item>Stasisol/$, and <item>Voltus/$. All of these must be contained in crystal (along with the <item>stone/$ itself). The <thing>reactions/$ to make these <thing>elemental reagents/$ are NOT in JEI, because they are not normal <thing>reactions/$.$(br2)To make an <thing>elemental reagent/$, there must "
+			"text": "<item>实践者之石/$作为<thing>催化剂/$，<thing>反应/$容器必须<thing>$(l:crossroads:intro/alchemy)充能/$，<item>燃素/$、<item>以太/$和<thing>精金/$必须以正确比例出现。制作出的<thing>元素试剂/$数量等于所使用原料的总数量。$(br2)正确的原料配比不是固定的——这和普通<thing>$(l:crossroads:intro/alchemy)反应/$不同。每个<thing>元素试剂"
 		},
 		{
 			"type": "text",
-			"text": "be a <item>practitioner's stone/$ as <thing>catalyst/$, the glassware must be <thing>$(l:crossroads:intro/alchemy)charged/$, and <item>phelostogen/$, <item>aether/$, and <item>adamant/$ must be present in the right proportions. The amount of <thing>elemental reagent/$ made is equal to the total qty of the ingredients used.$(br2)The correct proportions for the ingredients is not fixed- unlike a normal <thing>$(l:crossroads:intro/alchemy)reaction/$. Each <thing>elemental reagent"
+			"text": "<thing>/$都和一个<thing>$(l:crossroads:intro/beam)光束色域/$对应；<item>奥秘素/$是<thing>裂缝/$；<item>融合素/$是<thing>融合/$；<item>流明/$是<thing>光/$；<item>静滞素/$是<thing>平衡/$；<item>电压素/$是<thing>充能/$。$(br2)如果把<item>燃素/$看作<thing>能量/$，<item>以太/$看作<thing>潜能/$，<item>精金/$看作<thing>稳定/$，那么你想要的<thing>元素试剂/$的合成配比就是三者混合出<thing>光束色域/$的配比。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<thing>/$ is associated with a <thing>$(l:crossroads:intro/beam)beam alignment/$; <item>eldrine/$ is <thing>rift/$; <item>fusas/$ is <thing>fusion/$; <item>lumen/$ is <thing>light/$; <item>stasisol/$ is <thing>equilibrium/$; <item>voltus/$ is <thing>charge/$.$(br2)If <item>phelostogen/$ is considered <thing>energy/$, <item>aether/$ is considered <thing>potential/$, and <item>adamant/$ is <thing>stability/$, combine the three in a ratio such that it would make the <thing>beam alignment/$ that goes with the <thing>elemental reagent/$ you "
+			"text": "例如，1:1:0的<item>燃素/$:<item>以太/$:<item>精金/$可制作<item>电压素/$，但4:3:0也一样可以。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "want.$(br2)For example, 1:1:0 of <item>phelostogen/$:<item>aether/$:<item>adamant/$ will make <item>voltus/$, but so will 4:3:0.$(br2)"
-		},
-		{
-			"type": "text",
-			"text": "The main use of the <thing>elemental reagents/$ made with a <item>practitioner's stone/$ is their effects. See the $(l:crossroads:alchemy/terraforming)terraforming entry/$ for more.$(br2)<item>Voltus/$ can also be used as an FE source in a <item>$(l:crossroads:alchemy/generator)Voltus Generator/$, or used to deal damage (see the $(l:crossroads:alchemy/effect)effects page/$ for details).$(br2)"
+			"text": "用<item>实践者之石/$制造的<thing>元素试剂/$的主要用途是其效果。参见$(l:crossroads:alchemy/terraforming)环境改造条目/$获取更多信息。$(br2)<item>电压素也能通过<item>$(l:crossroads:alchemy/generator)电压素发电机/$作为FE源，或者用来造成伤害（更多细节参见$(l:crossroads:alchemy/effect)效果条目/$）。$(br2)"
 		}
 	]
 }

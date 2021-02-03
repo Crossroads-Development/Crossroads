@@ -1,6 +1,6 @@
 {
 	"category": "alchemy",
-	"name": "Damping Powder",
+	"name": "抑制粉",
 	"icon": "crossroads:damping_powder",
 	"sortnum": 0,
 	"priority": false,
@@ -9,13 +9,13 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Damping Powder",
+			"title": "抑制粉",
 			"item": "crossroads:damping_powder",
-			"text": "<item>Damping Powder/$ is an emergency way of stopping $(l:crossroads:alchemy/effect)flame clouds/$. When used (by right clicking with the item), it will consume a <item>powder/$ and stop any $(l:crossroads:alchemy/effect)flame clouds/$ within 32 blocks.$(br2)As $(l:crossroads:alchemy/effect)flame clouds/$ could be caused by a lab accident, and they have the capacity to destroy "
+			"text": "<item>抑制粉/$用于紧急停止$(l:crossroads:alchemy/effect)火焰云/$。当手持物品右击使用后，会消耗一份<item>粉末/$并停止32格内的任何$(l:crossroads:alchemy/effect)火焰云/$。$(br2)由于$(l:crossroads:alchemy/effect)火焰云/$能被实验室事故引发，而且它们有能力破坏"
 		},
 		{
 			"type": "text",
-			"text": "a massive chunk of your base, it is <em>strongly recommended/$ to keep some on hand in your $(l:crossroads:intro/alchemy)alchemy/$ lab before getting a <item>$(l:crossroads:alchemy/stones)philosopher's stone/$.$(br2)<item>Damping Powder/$ can also be used by dispensers.$(br2)"
+			"text": "你的一大块基地，<em>强烈推荐在得到/$<item>$(l:crossroads:alchemy/stones)思索者之石/$前在你的$(l:crossroads:intro/alchemy)炼金术/$实验室准备一些<item>抑制粉/$。$(br2)<item>抑制粉/$也能被发射器使用。$(br2)"
 		}
 	]
 }

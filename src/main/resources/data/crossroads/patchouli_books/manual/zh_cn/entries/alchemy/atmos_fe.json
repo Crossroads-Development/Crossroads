@@ -1,6 +1,6 @@
 {
 	"category": "alchemy",
-	"name": "Atmospheric Attenuator",
+	"name": "大气衰减器",
 	"icon": "crossroads:atmos_charger",
 	"sortnum": 0,
 	"priority": false,
@@ -9,21 +9,21 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Atmospheric Attenuator",
+			"title": "大气衰减器",
 			"item": "crossroads:atmos_charger",
-			"text": "The <item>Atmospheric Attenuator/$ is a way of wirelessly transmitting FE globally and sharing it with other players. There is no range limit or FE loss. In order to function, there must be a pillar of 4 iron bars (vanilla block) over the <item>atmospheric attenuator/$.$(br2)There "
+			"text": "<item>大气衰减器/$能远程无线传输并与其他玩家共享FE。该功能没有距离限制，传输中也没有FE损耗。要让机器运作，需要在<item>大气衰减器/$上放置4根铁栏杆（原版方块）。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "is a global shared <thing>'atmospheric' storage/$ of FE with a (default) capacity of 1,000,000,000FE (1 billion FE). All players share the <thing>atmospheric FE/$, and there is no way of 'cutting off' other players from the shared <thing>atmosphere pool/$.$(br2)The <item>atmospheric attenuator/$ has two modes (toggle by shift-right-clicking with a <item>$(l:essentials/wrench)wrench/$) to charge the <thing>atmosphere"
+			"text": "有一个全局共享的FE<thing>“大气”电荷存储/$，（默认）容量为1,000,000,000FE （十亿FE）。所有玩家都共享这个<thing>大气FE/$，而且没有办法把其他玩家从这个共享的<thing>大气电池/$中“切断”。$(br2)<item>大气衰减器/$有两个模式（手持<item>$(l:essentials/wrench)扳手/$shift右击切换）：向<thing>大气"
 		},
 		{
 			"type": "text",
-			"text": "<thing>/$ with FE or drain FE from the <thing>atmosphere/$. One <item>atmospheric attenuator/$ can drain/charge a maximum of 20,000FE/t.$(br2)However, if the <thing>atmospheric storage/$ gets too full, there will be global consequences. Above 50% full, lightning strikes will become more common, and can occur even during clear weather. Above 90% full, any creepers that spawn "
+			"text": "<thing>/$中存储FE或从<thing>大气/$中吸取FE。一个<item>大气衰减器/$最高能以20,000FE/t存取FE。$(br2)然而，如果<thing>大气存储/$变得太满，会产生世界级的后果。当充满了50%容量，闪电会变得更加频繁，甚至能在晴天发生。超过90%，任意生成的爬行者"
 		},
 		{
 			"type": "text",
-			"text": "will spawn as charged creepers. <em>It would be a good idea to setup a system to prevent the charge from getting too high!/$$(br2)<thing>$(l:essentials/circuits#reader)Circuits/$ will measure the percentage fullness of the shared <thing>atmospheric storage/$ in FE. As the total storage is 1 billion FE, 500,000,000 is 50% full.$(br2)"
+			"text": "都是闪电爬行者。<em>设置一个防止充得太满的系统会是个好主意！/$$(br2)<thing>$(l:essentials/circuits#reader)电路/$可以百分比值测量共享<thing>大气存储/$的FE充满程度。总存储为十亿FE，500,000,000就是50%充满。$(br2)"
 		}
 	]
 }
