@@ -121,7 +121,7 @@ public class AetherEffect implements IAlchEffect{
 		}else if(SOIL_GROUP.contains(oldState.getBlock())){
 			//Special case for grass vs dirt
 			BlockPos upPos = pos.up();
-			if(soilBlock() == Blocks.GRASS_BLOCK && !world.getBlockState(upPos).isAir(world, upPos)){
+			if((soilBlock() == Blocks.GRASS_BLOCK || soilBlock() == Blocks.MYCELIUM) && !world.getBlockState(upPos).isAir(world, upPos)){
 				if(oldState != Blocks.DIRT.getDefaultState()){
 					world.setBlockState(pos, Blocks.DIRT.getDefaultState());
 				}

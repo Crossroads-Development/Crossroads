@@ -11,6 +11,8 @@
 		"#forge:storage_blocks/diamond",
 		"#forge:storage_blocks/lapis",
 		"#forge:storage_blocks/salt",
-		"minecraft:blue_ice"
+		"minecraft:blue_ice",
+		"minecraft:purpur_block",
+		"minecraft:purpur_pillar"
 	]
 }

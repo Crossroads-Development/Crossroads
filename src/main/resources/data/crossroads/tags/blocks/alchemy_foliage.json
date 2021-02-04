@@ -2,6 +2,10 @@
 	"replace": false,
 	"values": [
 		"#minecraft:leaves",
-		"#minecraft:wart_blocks"
+		"#minecraft:wart_blocks",
+		"minecraft:chorus_flower",
+		"minecraft:red_mushroom_block",
+		"minecraft:brown_mushroom_block",
+		"minecraft:shroomlight"
 	]
 }

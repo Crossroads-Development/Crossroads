@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:reagents",
+	"id": "elem_enchantment",
+	"melting": -150,
+	"boiling": -145,
+	"vessel": "crystal",
+	"item": "crossroads:dusts/elem_enchantment",
+	"color": "F8F9BB",
+	"effect": "terraform_mushroom"
+}

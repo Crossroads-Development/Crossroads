@@ -17,6 +17,7 @@
 		"#crossroads:dusts/nitric_acid",
 		"#crossroads:dusts/sulfur_dioxide",
 		"#crossroads:dusts/sulfuric_acid",
-		"#crossroads:dusts/vanadium"
+		"#crossroads:dusts/vanadium",
+		"#crossroads:dusts/elem_enchantment"
 	]
 }

@@ -23,19 +23,19 @@
 		},
 		{
 			"type": "text",
-			"text": "The <item>Practitioner's Stone/$ is used to make several special <thing>elemental reagents/$: <item>Eldrine/$, <item>Fusas/$, <item>Lumen/$, <item>Stasisol/$, and <item>Voltus/$. All of these must be contained in crystal (along with the <item>stone/$ itself). The <thing>reactions/$ to make these <thing>elemental reagents/$ are NOT in JEI, because they are not normal <thing>reactions/$.$(br2)To make an <thing>elemental reagent/$, there must "
+			"text": "The <item>Practitioner's Stone/$ is used to make several special <thing>elemental reagents/$: <item>Eldrine/$, <item>Fusas/$, <item>Lumen/$, <item>Stasisol/$, <item>Magicae/$, and <item>Voltus/$. All of these must be contained in crystal (along with the <item>stone/$ itself). The <thing>reactions/$ to make these <thing>elemental reagents/$ are NOT in JEI, because they are not normal <thing>reactions/$.$(br2)To make an <thing>elemental reagent/$, there "
 		},
 		{
 			"type": "text",
-			"text": "be a <item>practitioner's stone/$ as <thing>catalyst/$, the glassware must be <thing>$(l:crossroads:intro/alchemy)charged/$, and <item>phelostogen/$, <item>aether/$, and <item>adamant/$ must be present in the right proportions. The amount of <thing>elemental reagent/$ made is equal to the total qty of the ingredients used.$(br2)The correct proportions for the ingredients is not fixed- unlike a normal <thing>$(l:crossroads:intro/alchemy)reaction/$. Each <thing>elemental reagent"
+			"text": "must be a <item>practitioner's stone/$ as <thing>catalyst/$, the glassware must be <thing>$(l:crossroads:intro/alchemy)charged/$, and <item>phelostogen/$, <item>aether/$, and <item>adamant/$ must be present in the right proportions. The amount of <thing>elemental reagent/$ made is equal to the total qty of the ingredients used.$(br2)The correct proportions for the ingredients is not fixed- unlike a normal <thing>$(l:crossroads:intro/alchemy)reaction/$. Each <thing>elemental "
 		},
 		{
 			"type": "text",
-			"text": "<thing>/$ is associated with a <thing>$(l:crossroads:intro/beam)beam alignment/$; <item>eldrine/$ is <thing>rift/$; <item>fusas/$ is <thing>fusion/$; <item>lumen/$ is <thing>light/$; <item>stasisol/$ is <thing>equilibrium/$; <item>voltus/$ is <thing>charge/$.$(br2)If <item>phelostogen/$ is considered <thing>energy/$, <item>aether/$ is considered <thing>potential/$, and <item>adamant/$ is <thing>stability/$, combine the three in a ratio such that it would make the <thing>beam alignment/$ that goes with the <thing>elemental reagent/$ you "
+			"text": "<thing>reagent/$ is associated with a <thing>$(l:crossroads:intro/beam)beam alignment/$; <item>eldrine/$ is <thing>rift/$; <item>fusas/$ is <thing>fusion/$; <item>lumen/$ is <thing>light/$; <item>stasisol/$ is <thing>equilibrium/$; <item>magicae/$ is enchantment; <item>voltus/$ is <thing>charge/$.$(br2)If <item>phelostogen/$ is considered <thing>energy/$, <item>aether/$ is considered <thing>potential/$, and <item>adamant/$ is <thing>stability/$, combine the three in a ratio such that it would make the <thing>beam alignment/$ that goes "
 		},
 		{
 			"type": "text",
-			"text": "want.$(br2)For example, 1:1:0 of <item>phelostogen/$:<item>aether/$:<item>adamant/$ will make <item>voltus/$, but so will 4:3:0.$(br2)"
+			"text": "with the <thing>elemental reagent/$ you want.$(br2)For example, 1:1:0 of <item>phelostogen/$:<item>aether/$:<item>adamant/$ will make <item>voltus/$, but so will 4:3:0.$(br2)"
 		},
 		{
 			"type": "text",

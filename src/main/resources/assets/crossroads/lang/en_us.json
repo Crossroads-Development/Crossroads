@@ -189,6 +189,7 @@
 	"item.crossroads.solid_stasisol": "Solidified Stasisol",
 	"item.crossroads.solid_fusas": "Solidified Fusas",
 	"item.crossroads.solid_voltus": "Solidified Voltus",
+	"item.crossroads.solid_elem_enchantment": "Solidified Magicae",
 	"item.crossroads.solid_densus": "Densus Chunk",
 	"item.crossroads.solid_anti_densus": "Anti-Densus Chunk",
 	"item.crossroads.solid_fortis": "Aziotic Salt",
@@ -786,6 +787,7 @@
 	"reagent.elem_equilibrium": "Stasisol",
 	"reagent.elem_fusion": "Fusas",
 	"reagent.elem_charge": "Voltus",
+	"reagent.elem_enchantment": "Magicae",
 	"reagent.elem_time": "Copshowium",
 
 
@@ -803,6 +805,9 @@
 	"effect.terraform_ocean": "Create Ocean",
 	"effect.terraform_plains": "Create Plains",
 	"effect.terraform_snow": "Create Tundra",
+	"effect.terraform_mushroom": "Create Mushroom Biome",
+	"effect.terraform_jungle": "Create Jungle",
+	"effect.terraform_end": "Create End",
 
 
 	"path.technomancy": "Technomancy",

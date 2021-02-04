@@ -15,7 +15,11 @@
 		},
 		{
 			"type": "text",
-			"text": "<item>$(l:crossroads:alchemy/stones)Aether:/$ will set the biome to plains, will turn soil materials to grass blocks, will turn rock materials to stone, will turn 'crystal' blocks to glass, turns trees to oak, and will turn liquids to water. <item>$(l:crossroads:alchemy/stones)Aether/$ is basically an normal overworld-plains terraformer. When mixed with <item>quicksilver/$, it will fill empty space with dirt.$(br2)<item>$(l:crossroads:alchemy/stones)Eldrine:"
+			"text": "<item>$(l:crossroads:alchemy/stones)Aether:/$ will set the biome to plains, will turn soil materials to grass blocks, will turn rock materials to stone, will turn 'crystal' blocks to glass, turns trees to oak, and will turn liquids to water. <item>$(l:crossroads:alchemy/stones)Aether/$ is basically an normal overworld-plains terraformer. When mixed with <item>quicksilver/$, it will fill empty space with dirt.$(br2)<item>$(l:crossroads:alchemy/stones)Magicae:"
+		},
+		{
+			"type": "text",
+			"text": "<item>$(l:crossroads:alchemy/stones)/$ will set the biome to mushroom island, will turn soil materials to mycelium, will turn rock materials to stone, will turn 'crystal' blocks to shroomlight, turns trees into giant mushrooms, and will turn liquids to water. <item>$(l:crossroads:alchemy/stones)Stasisol/$ is basically a mushroom terraformer. When mixed with <item>quicksilver/$, it will fill empty space with dirt.$(br2)<item>$(l:crossroads:alchemy/stones)Eldrine:"
 		},
 		{
 			"type": "text",
@@ -23,7 +27,7 @@
 		},
 		{
 			"type": "text",
-			"text": "the biome to deep ocean, will turn soil materials to clay, will turn rock materials to prismarine, will turn 'crystal' blocks to sea lanterns, turns trees into coral, and will turn liquids to distilled water. <item>$(l:crossroads:alchemy/stones)Fusas/$ is basically a ocean-temple terraformer. When mixed with <item>quicksilver/$, it will fill empty space with clay.$(br2)<item>$(l:crossroads:alchemy/stones)Lumen:/$ will set "
+			"text": "the biome to deep ocean, will turn soil materials to clay, will turn rock materials to prismarine, will turn 'crystal' blocks to sea lanterns, turns trees into coral, and will turn liquids to distilled water. <item>$(l:crossroads:alchemy/stones)Fusas/$ is basically an ocean-temple terraformer. When mixed with <item>quicksilver/$, it will fill empty space with clay.$(br2)<item>$(l:crossroads:alchemy/stones)Lumen:/$ will set "
 		},
 		{
 			"type": "text",
