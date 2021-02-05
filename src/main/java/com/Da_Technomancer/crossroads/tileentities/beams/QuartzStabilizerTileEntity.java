@@ -112,6 +112,7 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+		super.addInfo(chat, player, hit);
 		chat.add(new TranslationTextComponent("tt.crossroads.quartz_stabilizer.output", RATES[setting]));
 		chat.add(new TranslationTextComponent("tt.crossroads.quartz_stabilizer.storage", storage.getOutput().toString()));
 	}
