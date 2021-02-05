@@ -1,6 +1,6 @@
 {
 	"category": "technomancy",
-	"name": "Redstone Master Axis",
+	"name": "红石主轴",
 	"icon": "crossroads:redstone_axis",
 	"sortnum": 0,
 	"priority": false,
@@ -9,17 +9,17 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Redstone Master Axis",
+			"title": "红石主轴",
 			"item": "crossroads:redstone_axis",
-			"text": "The <item>Redstone Master Axis/$ is a special <item>$(l:crossroads:rotary/axis)master axis/$ where the <thing>$(l:crossroads:intro/rotary)speed/$ of the controlled <thing>$(l:crossroads:intro/rotary)rotary/$ is precisely controlled by a redstone signal.$(br2)The <item>redstone master axis/$ will hold the <thing>$(l:crossroads:intro/rotary)speed/$ of <em>the attached gear/$ steady at a <thing>$(l:crossroads:intro/rotary)speed/$ equal to the received redstone signal "
+			"text": "<item>红石主轴/$是一种特殊的<item>$(l:crossroads:rotary/axis)主轴/$，其控制的<thing>$(l:crossroads:intro/rotary)旋转系统/$<thing>$(l:crossroads:intro/rotary)转速/$是被红石信号精确控制的。$(br2)<item>红石主轴/$<em>相连的齿轮/$的<thing>$(l:crossroads:intro/rotary)转速/$会被稳定保持在与接收的红石信号相等"
 		},
 		{
 			"type": "text",
-			"text": "(including <item>$(l:essentials/circuits)circuit/$ input).$(br2)Any required <thing>$(l:crossroads:intro/rotary)energy/$ to increase the <thing>$(l:crossroads:intro/rotary)speed/$ will be drawn from a gear/axle attached to the back of the <item>redstone master axis/$, if possible. Any excess <thing>$(l:crossroads:intro/rotary)energy/$ being removed from the system to decrease the <thing>$(l:crossroads:intro/rotary)speed/$ will be added to an attached gear on the back, if available.$(br2)"
+			"text": "（包括<item>$(l:essentials/circuits)电路/$输入的红石信号）。$(br2)提升<thing>$(l:crossroads:intro/rotary)转速/$所需要的任何<thing>$(l:crossroads:intro/rotary)能量/$会从<item>红石主轴/$背面连接的齿轮/轴上吸取，如果可能的话。为了减小<thing>$(l:crossroads:intro/rotary)转速/$所需要从系统中移除的额外<thing>$(l:crossroads:intro/rotary)能量/$也会添加到背面的齿轮上，如果有的话。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "It is generally better to use a larger (higher <thing>$(l:crossroads:intro/rotary)I value/$) gear on the back as an <thing>$(l:crossroads:intro/rotary)energy/$ source, as that allows the <item>redstone master axis/$ to draw <thing>$(l:crossroads:intro/rotary)energy/$ more quickly.$(br2)"
+			"text": "通常使用一个更大（更高<thing>$(l:crossroads:intro/rotary)I值/$）的齿轮放在背面作为<thing>$(l:crossroads:intro/rotary)能量/$源更好，因为这允许<item>红石主轴/$更快地吸取<thing>$(l:crossroads:intro/rotary)能量/$。$(br2)"
 		}
 	]
 }

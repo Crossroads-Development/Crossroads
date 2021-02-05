@@ -1,6 +1,6 @@
 {
 	"category": "technomancy",
-	"name": "Beam Cannon",
+	"name": "光束加农炮",
 	"icon": "crossroads:beam_cannon",
 	"sortnum": 0,
 	"priority": false,
@@ -9,25 +9,25 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Beam Cannon",
+			"title": "光束加农炮",
 			"item": "crossroads:beam_cannon",
-			"text": "The <item>Beam Cannon/$ fires <thing>$(l:crossroads:intro/beam)beams/$ huge distances (256 block range) at almost any angle. The angle can be controlled and changed using <thing>$(l:crossroads:intro/rotary)rotary input/$.$(br2)There are two <thing>$(l:crossroads:intro/rotary)rotary inputs/$- one on the back, and one on the sides (any side other than the front or back). The back "
+			"text": "<item>光束加农炮/$能长距离（256格）以几乎任意角度发射<thing>$(l:crossroads:intro/beam)光束/$。具体角度可以通过使用<thing>$(l:crossroads:intro/rotary)旋转输入/$控制和改变。$(br2)有两个<thing>$(l:crossroads:intro/rotary)旋转输入/$面——一个在背面，一个在侧面（任一侧面）。"
 		},
 		{
 			"type": "text",
-			"text": "input controls the 'yaw' of the <item>beam cannon/$ (overall rotation firing angle), and the side input controls the 'pitch' of the <item>beam cannon/$ (firing angle from straight up/forward).$(br2)The pitch (firing angle from forward/up, in rad) will be the <thing>$(l:crossroads:intro/rotary)speed/$ (in rad/s) of the side $(l:crossroads:intro/rotary)<thing>rotary/$ input, with 0 being straight forward. The pitch is capped at ±π/2 "
+			"text": "背面输入控制着<item>光束加农炮/$的“偏”角（炮管以初始位置为轴旋转的角度），侧面输入控制着<item>光束加农炮/$的“仰”角（炮管与初始位置所夹的角度）。$(br2)仰角（单位为弧度）会等于侧面$(l:crossroads:intro/rotary)<thing>旋转/$输入的<thing>$(l:crossroads:intro/rotary)转速/$（rad/s），0就是直指向前。仰角的范围位于±π/2"
 		},
 		{
 			"type": "text",
-			"text": "rad (±90°) from straight. The yaw (overall rotation of the cannon in rad) will be the <thing>$(l:crossroads:intro/rotary)speed/$ (in rad/s) of the back $(l:crossroads:intro/rotary)<thing>rotary/$ input.$(br2)Any <thing>$(l:crossroads:intro/beam)beam/$ going into the <item>beam cannon/$ will be fired out in the direction aimed (and it won't be constrained by the normal grid orientation). It can travel up to 256 blocks from a <item>beam cannon/$, can hit either blocks "
+			"text": "（±90°）之间。偏角（单位弧度）会等于背面$(l:crossroads:intro/rotary)<thing>旋转/$输入的<thing>$(l:crossroads:intro/rotary)转速/$（rad/s）。$(br2)任何射入<item>光束加农炮/$的<thing>$(l:crossroads:intro/beam)光束/$会从炮管瞄准的方向射出（而不受普通网格方向的限制）。<item>光束加农炮/$射出的<thing>$(l:crossroads:intro/beam)光束/$最多可传播256格，可以击中路径上的方块和"
 		},
 		{
 			"type": "text",
-			"text": "or entities on its path (instead of only blocks), and <em>can/$ re-enter a <item>$(l:crossroads:beam/reflector)beam reflector/$ (or other <thing>$(l:crossroads:intro/beam)beam machine/$) if it hits one.$(br2)The pitch and yaw can be [un]locked by shift-right-clicking with a wrench, which will hold the pitch and yaw permanently constant at the current value, even if all the $(l:crossroads:intro/rotary)<thing>rotary/$ attachments are removed. The pitch and "
+			"text": "实体（而不是只能击中方块），命中时也<em>能/$重新进入<item>$(l:crossroads:beam/reflector)光束反射器/$（或者其他<thing>$(l:crossroads:intro/beam)光束机器/$）。$(br2)炮管的仰角和偏角可以通过用扳手shift右击锁定或解锁，锁定后的角度会永久维持在锁定时的值，哪怕所有相连$(l:crossroads:intro/rotary)<thing>旋转/$设备都已被移除。"
 		},
 		{
 			"type": "text",
-			"text": "yaw do not immediately change with the <thing>$(l:crossroads:intro/rotary)speed/$- they re-orient into the new position, fairly quickly but not instantly.$(br2)"
+			"text": "偏角和仰角不会随着<thing>$(l:crossroads:intro/rotary)转速/$改变而立即改变——炮管会指向新角度，相当快，但不是即时完成。$(br2)"
 		}
 	]
 }

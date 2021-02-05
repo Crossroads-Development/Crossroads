@@ -1,6 +1,6 @@
 {
 	"category": "technomancy",
-	"name": "Beacon Harness",
+	"name": "信标操纵器",
 	"icon": "crossroads:beacon_harness",
 	"sortnum": 0,
 	"priority": false,
@@ -9,29 +9,29 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Beacon Harness",
+			"title": "信标操纵器",
 			"item": "crossroads:beacon_harness",
-			"text": "The <item>Beacon Harness/$ is a powerful <thing>$(l:crossroads:intro/beam)beam/$ source, which produces <thing>$(l:crossroads:intro/beam)power/$ 512 <thing>$(l:crossroads:intro/beam)beams/$ of varying colors. It also produces <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ as a byproduct.$(br2)In order to work, the <item>beacon harness/$ must be placed <em>under/$ a beacon, with no air gap. It does not need to be touching "
+			"text": "<item>信标操纵器/$是一种强大的<thing>$(l:crossroads:intro/beam)光束/$源，能提供多种颜色的512<thing>$(l:crossroads:intro/beam)功率/$<thing>$(l:crossroads:intro/beam)光束/$。作为副产物，它也会产生<thing>$(l:crossroads:intro/technomancy)时间熵/$。$(br2)要使其工作，<item>信标操纵器/$必须放在信标<em>下方/$，中间没有空气。它不需要接触到"
 		},
 		{
 			"type": "text",
-			"text": "the beacon block itself- it can be under the beacon base, and it will not interfere with the beacon running. It can also share the beacon with an <item>$(l:crossroads:technomancy/sink)entropy sink/$.$(br2)While running, the <item>beacon harness/$ will produce a beam of <thing>$(l:crossroads:intro/beam)power/$ 512- however, the color of the beam will continuously change in a simple pattern. If you look at a <item>$(l:crossroads:beam/chart)color chart/$, the "
+			"text": "信标方块本身，只需要放在信标基座底下，而且不会干扰信标工作。它也能和<item>$(l:crossroads:technomancy/sink)熵槽/$共享同一个信标。$(br2)运行时，<item>信标操纵器/$会产生一束<thing>$(l:crossroads:intro/beam)功率/$512的光束——然而，光束的颜色会以一种简单的模式持续变化。如果你看向一张<item>$(l:crossroads:beam/chart)颜色图表/$，"
 		},
 		{
 			"type": "text",
-			"text": "color produced will follow the sequence of colors on the outer rim of the <item>$(l:crossroads:beam/chart)color chart/$, starting at red (pure $(l:crossroads:beam/energy)energy/$) rotating clockwise (towards green). The time to make one full loop is 24 seconds (120 <thing>$(l:crossroads:intro/beam)cycles/$).$(br2)This means that while running, the <item>beacon harness/$ will produce a mix of 2 <thing>$(l:crossroads:intro/beam)primary alignments/$ (2 of <thing>$(l:crossroads:beam/energy)energy/$, <thing>$(l:crossroads:beam/potential)potential/$, and <thing>$(l:crossroads:beam/stability)stability"
+			"text": "光束的颜色会沿着最外面一圈进行变化，从红色（纯$(l:crossroads:beam/energy)能量/$）开始顺时针（向绿色）旋转。旋转一周的时间是24秒（120<thing>$(l:crossroads:intro/beam)周期/$）。$(br2)这意味着<item>信标操纵器/$运行时会发出2种<thing>$(l:crossroads:intro/beam)主色域/$（<thing>$(l:crossroads:beam/energy)能量/$、<thing>$(l:crossroads:beam/potential)潜能/$和<thing>$(l:crossroads:beam/stability)稳定/$中的两个）"
 		},
 		{
 			"type": "text",
-			"text": "<thing>$(l:crossroads:beam/stability)/$). In order to run, the <item>beacon harness/$ <em>must be supplied with the <thing>$(l:crossroads:intro/beam)alignment/$<em> it isn't producing/$ (<thing>$(l:crossroads:intro/beam)power/$ doesn't matter). Giving it a mixed beam will shut it down. This means that while producing a mix of <thing>$(l:crossroads:beam/energy)energy/$ and <thing>$(l:crossroads:beam/energy)potential/$, you must supply a beam of pure <thing>$(l:crossroads:beam/stability)stability/$. There is a <em>grace period/$ where you can supply the <item>beacon harness/$ with anything- or nothing- without it shutting down. "
+			"text": "的混合。为了持续工作，<item>信标操纵器/$<em>必须被提供当前没有产生的<thing>$(l:crossroads:intro/beam)色域/$/$（<thing>$(l:crossroads:intro/beam)功率/$并不重要）。提供混合光束会使其立即关闭。举个例子，当操纵器正发出<thing>$(l:crossroads:beam/energy)能量/$和<thing>$(l:crossroads:beam/energy)潜能/$的混合光束，你必须提供一束纯<thing>$(l:crossroads:beam/stability)稳定/$光束。<item>信标操纵器/$存在一段<em>宽限期/$，这段时间你可以提供任何光束——或者不提供光束——而且操纵器不会关闭。"
 		},
 		{
 			"type": "text",
-			"text": "This grace period lasts 1.6 seconds (8 cycles) every time the required incoming <thing>$(l:crossroads:intro/beam)beam/$ changes. Use this grace period as the switchover time for automated systems.$(br2)While running, the <item>beacon harness/$ produces 1 <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ per tick.$(br2)The <item>beacon harness/$ is started (turned on) with a redstone signal "
+			"text": "宽限期会在每次需要改变入射<thing>$(l:crossroads:intro/beam)光束/$时出现，持续1.6秒（8个周期）。请把宽限期用作自动化系统的切换时间。$(br2)运行时，<item>信标操纵器/$每tick产生1单位<thing>$(l:crossroads:intro/technomancy)时间熵/$ 。$(br2)<item>信标操纵器/$需要通入红石信号启动"
 		},
 		{
 			"type": "text",
-			"text": "(this can be a pulse). It takes 2 seconds (10 <thing>$(l:crossroads:intro/beam)cycles/$) to startup.$(br2)"
+			"text": "(可以是脉冲)。启动需要2秒（10个<thing>$(l:crossroads:intro/beam)周期/$）。$(br2)"
 		}
 	]
 }

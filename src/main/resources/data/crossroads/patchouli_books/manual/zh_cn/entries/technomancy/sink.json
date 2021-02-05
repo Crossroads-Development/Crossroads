@@ -1,6 +1,6 @@
 {
 	"category": "technomancy",
-	"name": "Entropy Sink",
+	"name": "熵槽",
 	"icon": "crossroads:flux_sink",
 	"sortnum": 0,
 	"priority": false,
@@ -9,13 +9,13 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Entropy Sink",
+			"title": "熵槽",
 			"item": "crossroads:flux_sink",
-			"text": "The <item>Entropy Sink/$ is the main way of destroying <thing>$(l:crossroads:intro/technomancy)temporal entropy/$. It can destroy a massive amount of <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ each cycle (256).$(br2)In order to work, it must be placed directly over a (vanilla) beacon. It can be placed floating in the air several blocks "
+			"text": "<item>熵槽/$是销毁<thing>$(l:crossroads:intro/technomancy)时间熵/$的主要方式。它每周期可以销毁大量的<thing>$(l:crossroads:intro/technomancy)时间熵/$（256单位）。$(br2)要使其工作，必须将其直接放在一个（原版）信标上。它可以放在离信标几格的上方。"
 		},
 		{
 			"type": "text",
-			"text": "above. The beacon does not have to be active, but the <item>entropy sink/$ will not block the beacon beam.$(br2)Use <item>$(l:crossroads:technomancy/node)Entropy Nodes/$ to get <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ from machines to the <item>entropy sink/$.$(br2)The <item>entropy sink/$ can share the beacon with a <item>$(l:crossroads:technomancy/beacon_harness)Beacon Harness/$.$(br2)"
+			"text": "信标不一定需要激活，不过<item>熵槽/$也不会阻挡信标光束。$(br2)一般使用<item>$(l:crossroads:technomancy/node)熵结点/$将<thing>$(l:crossroads:intro/technomancy)时间熵/$从机器传输到<item>熵槽/$。$(br2)<item>熵槽/$可以和<item>$(l:crossroads:technomancy/beacon_harness)信标操纵器/$共享同一个信标。$(br2)"
 		}
 	]
 }

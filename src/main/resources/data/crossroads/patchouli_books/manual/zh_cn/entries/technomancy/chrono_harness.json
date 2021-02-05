@@ -1,6 +1,6 @@
 {
 	"category": "technomancy",
-	"name": "Chrono-Harness",
+	"name": "时空操纵器",
 	"icon": "crossroads:chrono_harness",
 	"sortnum": 0,
 	"priority": false,
@@ -9,13 +9,13 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Chrono-Harness",
+			"title": "时空操纵器",
 			"item": "crossroads:chrono_harness",
-			"text": "The <item>Chrono-Harness/$ is a way of producing Forge Energy that produce <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ as a byproduct.$(br2)It has no maximum FE power output, but produces 1 <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ for every 50FE produced (by default). As a result, producing more than 800FE/tick will create "
+			"text": "<item>时空操纵器/$能产生FE，作为副产物会产生<thing>$(l:crossroads:intro/technomancy)时间熵/$。$(br2)它的FE产生速度没有上限，但（默认配置）下每产生50FE就会产生1单位<thing>$(l:crossroads:intro/technomancy)时间熵/$。如果产能速度超过800FE/t，产生"
 		},
 		{
 			"type": "text",
-			"text": "<thing>$(l:crossroads:intro/technomancy)temporal entropy/$ faster than it can be drained by <thing>$(l:crossroads:technomancy/node)entropy nodes/$, causing it to inevitably explode.$(br2)It can be disabled by a redstone signal.$(br2)"
+			"text": "<thing>$(l:crossroads:intro/technomancy)时间熵/$的速度将大于<thing>$(l:crossroads:technomancy/node)熵结点/$吸收的速度，导致不可避免的爆炸。$(br2)通入红石信号可以停止<item>时空操纵器/$工作。$(br2)"
 		}
 	]
 }

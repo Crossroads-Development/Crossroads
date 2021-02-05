@@ -1,6 +1,6 @@
 {
 	"category": "technomancy",
-	"name": "Temporal Accelerator",
+	"name": "时间加速器",
 	"icon": "crossroads:temporal_accelerator",
 	"sortnum": 0,
 	"priority": false,
@@ -9,17 +9,17 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Temporal Accelerator",
+			"title": "时间加速器",
 			"item": "crossroads:temporal_accelerator",
-			"text": "The <item>Temporal Accelerator/$ is a machine that speeds up time in a 5x5x5 area. It can affect blocks, entities, or both. It consumes a <thing>$(l:crossroads:beam/time)time beam/$ and produces <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ as a byproduct.$(br2)While holding a <item>$(l:essentials/wrench)wrench/$, the affected 5x5x5 area will be highlighted. Right-clicking "
+			"text": "<item>时间加速器/$能在5x5x5区域内加速时间。它能控制影响方块或实体，还是一起影响。机器会消耗<thing>$(l:crossroads:beam/time)时间光束/$并产生副产物<thing>$(l:crossroads:intro/technomancy)时间熵/$。$(br2)手持<item>$(l:essentials/wrench)扳手/$时，受影响的5x5x5区域会被高亮，"
 		},
 		{
 			"type": "text",
-			"text": "the <item>temporal accelerator/$ will rotate it, and shift-right-clicking will change the mode between affecting only entities, only blocks, or both.$(br2)The <item>temporal accelerator/$ accepts a <thing>$(l:crossroads:beam/time)time beam/$ in the back. It will speed up time in the affected area by (<thing>$(l:crossroads:intro/beam)beam power/$)/4 extra ticks per tick (or (<thing>$(l:crossroads:intro/beam)beam power/$)*25%). While boosting time, <thing>$(l:crossroads:intro/technomancy)temporal entropy"
+			"text": "右击<item>时间加速器/$会使其转向，shift右击则会使影响模式在只有实体、只有方块和实体与方块间切换。$(br2)<item>时间加速器/$需要从背面射入<thing>$(l:crossroads:beam/time)时间光束/$。受影响区域的时间速度加值为每tick添加 (<thing>$(l:crossroads:intro/beam)光束功率/$)/4 个额外tick（或者 (<thing>$(l:crossroads:intro/beam)光束功率/$)*25%）。加速时间时，<thing>$(l:crossroads:intro/technomancy)时间熵"
 		},
 		{
 			"type": "text",
-			"text": "<thing>$(l:crossroads:intro/technomancy)/$ is produced- the amount produced grows exponentially with the applied boost- producing (2^(extra ticks)) * 2 <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ per cycle (aka: +100% boost is 4TEn/cycle, +200% boost is 8TEn/cycle, +300% is 16TEn/cycle, etc.).$(br2)Multiple overlapping <item>temporal accelerators/$ stack additively. The <item>temporal accelerator/$ itself can not be time-accelerated."
+			"text": "<thing>$(l:crossroads:intro/technomancy)/$会被产生，产生的数量随加速速度呈指数关系，每周期产生 (2^(额外tick)) * 2 单位<thing>$(l:crossroads:intro/technomancy)时间熵/$（也就是速度+100%时产生4时间熵/周期，+200%时产生8时间熵/周期，+300%时产生16时间熵/周期，等等）。$(br2)多个重叠的<item>时间加速器s/$的效果也会叠加。<item>时间加速器/$本身的时间不能被加速。"
 		},
 		{
 			"type": "text",
@@ -29,15 +29,15 @@
 			"type": "spotlight",
 			"anchor": "chunk",
 			"item": "crossroads:chunk_accelerator",
-			"text": "The <item>Distributed Temporal Accelerator/$ is a larger-range version of the <item>Temporal Accelerator/$ that affects every tile entity in the entire chunk it is placed in. It <em>only affects tile entities/$, it does not apply to block ticks or entities.$(br2)It requires a stronger "
+			"text": "<item>分布式时间加速器/$是<item>时间加速器/$的大范围版本，能够影响所在区块的每一个方块实体。它<em>只影响方块实体/$，不会影响方块tick或者实体。$(br2)它需要更强的"
 		},
 		{
 			"type": "text",
-			"text": "<thing>$(l:crossroads:beam/time)time beam/$ and produces more <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ than the normal <item>temporal accelerator/$, but is more efficient in terms of beam usage/entropy creation per block affected.$(br2)It uses a <thing>$(l:crossroads:beam/time)time beam/$ to create (<thing>$(l:crossroads:intro/beam)beam power/$)/16 extra ticks per tick (or (<thing>$(l:crossroads:intro/beam)beam power/$)*25%). It produces (2^(extra ticks)) * 8 <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ per cycle (aka: +100% boost is "
+			"text": "<thing>$(l:crossroads:beam/time)时间光束/$，而且比普通<item>时间加速器/$产生更多<thing>$(l:crossroads:intro/technomancy)时间熵/$，但在光束利用效率和受影响方块的平均产生熵量上更有优势。$(br2)它使用<thing>$(l:crossroads:beam/time)时间光束/$在每tick后创造 (<thing>$(l:crossroads:intro/beam)光束功率/$)/16 个额外tick（或者 (<thing>$(l:crossroads:intro/beam)光束功率/$)*6.25%）。它每周期产生 (2^(额外tick)) * 8 单位<thing>$(l:crossroads:intro/technomancy)时间熵/$（也就是速度+100%时"
 		},
 		{
 			"type": "text",
-			"text": "16TEn/cycle, +200% boost is 32TEn/cycle, +300% is 64TEn/cycle)$(br2)Multiple overlapping <item>distributed temporal accelerators/$ stack additively. The <item>distributed temporal accelerator/$ itself can not be time-accelerated.$(br2)"
+			"text": "产生16时间熵/周期，+200%时产生32时间熵/周期，+300%时产生64时间熵/周期）。$(br2)多个重叠的<item>分布式时间加速器/$的效果也会叠加。<item>分布式时间加速器/$本身的时间不能被加速。$(br2)"
 		}
 	]
 }

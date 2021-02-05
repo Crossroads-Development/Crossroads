@@ -1,6 +1,6 @@
 {
 	"category": "technomancy",
-	"name": "Copshowium",
+	"name": "钶",
 	"icon": "crossroads:ingot_copshowium",
 	"sortnum": 0,
 	"priority": false,
@@ -9,33 +9,33 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Copshowium",
+			"title": "钶",
 			"item": "crossroads:ingot_copshowium",
-			"text": "<item>Copshowium/$ is an important crafting ingredient in <thing>$(l:crossroads:intro/technomancy)Technomancy/$. Is is made using a <item>Copshowium Imbuer/$.$(br2)"
+			"text": "<item>钶/$是<thing>$(l:crossroads:intro/technomancy)科技魔法/$中的一种重要合成原料。它是使用<item>钶灌注器/$制造的。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The <item>Copshowium Imbuer/$ makes <item>molten copshowium/$ using liquids and a <thing>$(l:crossroads:beam/time)time beam/$. Some (not all!) inputs also produce <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ as a byproduct (check the JEI). The produced <item>molten copshowium/$ can be made into <item>copshowium ingots/$ <item>$(l:crossroads:heat/fcc)the normal way/$.$(br2)The <item>copshowium imbuer/$ has a capacity of 10 ingots, and unlike most machines, can have the <item>molten "
+			"text": "<item>钶灌注器/$使用液体和<thing>$(l:crossroads:beam/time)时间光束/$制造<item>熔融钶/$。一些（不是全部！）输入的液体也会产生<thing>$(l:crossroads:intro/technomancy)时间熵/$作为副产物（见JEI）。产生的<item>熔融钶/$可以通过<item>$(l:crossroads:heat/fcc)常规方式/$制造成<item>钶锭/$。$(br2)The <item>钶灌注器/$的容量为10个锭，而且和其他机器不同，其中的<item>熔融"
 		},
 		{
 			"type": "text",
-			"text": "<item>copshowium/$ output overfill. If it does, <em>the machine will break/$. This is a bad thing.$(br2)It has two <item>$(l:crossroads:fluid/pipe)fluid pipe/$ connections- on the top and bottom. The bottom connection is for outputting <item>molten copshowium/$, and is extract only as expected. The top output is unusual- it can accept <em>and extract/$, and can do a fluid-sharing connection with <item>$(l:crossroads:fluid/pipe)fluid "
+			"text": "<item>钶/$输出可以溢出。一旦溢出，<em>机器会被摧毁/$。这可不是什么好事。$(br2)机器有两个<item>$(l:crossroads:fluid/pipe)流体管/$连接口——分别位于顶部和底部。底部的连接用于输出<item>熔融钶/$，而且只能输出不能插入。顶部输出比较不寻常——可以接收<em>和输出/$流体，而且可以和<item>$(l:crossroads:fluid/pipe)流体"
 		},
 		{
 			"type": "text",
-			"text": "<item>$(l:crossroads:fluid/pipe)pipes/$. This allows regulating how full the input tank is, which is important for preventing the output from overflowing.$(br2)When hit by a <thing>$(l:crossroads:beam/time)time beam/$ (by default), any fluid in the input is converted into <item>molten copshowium/$ at the ratio set by the recipe for that fluid (check JEI for all the valid input fluids). This is when overflowing the "
+			"text": "<item>$(l:crossroads:fluid/pipe)管/$进行流体分享连接。这可以调节灌注器输入储罐的充满程度，对于防止输出储罐溢出非常重要。$(br2)当被<thing>$(l:crossroads:beam/time)时间光束/$击中（默认配置），输入储罐内的任何流体会被转换为<item>熔融钶/$，转换比例由该流体的配方决定（JEI可查看所有可用于转换的流体）。转换的这一刻就是输出溢出"
 		},
 		{
 			"type": "text",
-			"text": "output is possible.$(br2)If the recipe produces <thing>$(l:crossroads:intro/technomancy)temporal entropy/$, it will produce 4 per ingot of <item>molten copshowium/$ made.$(br2)<item>$(l:essentials/circuits#reader)Circuits/$ measure how full the <item>copshowium imbuer/$ is of the input fluid in total mB. Total capacity is 1440mB.$(br2)"
+			"text": "可能发生的时刻。$(br2)如果配方会产出<thing>$(l:crossroads:intro/technomancy)时间熵/$，每锭大小<item>熔融钶/$会产生4单位的<thing>$(l:crossroads:intro/technomancy)时间熵/$。$(br2)<item>$(l:essentials/circuits#reader)电路/$可测量<item>钶灌注器/$输入储罐的流体含量，单位mB。两个储罐的总容量分别为1440mB。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<item>Copshowium/$ can also be used to make <item>$(l:crossroads:rotary/gear_base)gears/$, like any other metal. <item>Copshowium Gears/$ are special in that their <thing>$(l:crossroads:intro/rotary)I value/$ <em>is zero/$.$(br2)This means that they do not require more <thing>$(l:crossroads:intro/rotary)energy/$ to spin at a higher speed. A normal gear network using a normal <item>$(l:crossroads:rotary/axis)master axis/$ can not have a network of entirely zero mass (<item>copshowium/$ gears)- but can have some or most "
+			"text": "<item>钶/$和其他金属一样能用来制作<item>$(l:crossroads:rotary/gear_base)齿轮/$。<item>钶齿轮/$的特殊之处在于其<thing>$(l:crossroads:intro/rotary)I值/$<em>为0/$。$(br2)这意味着它们以更高速度旋转而不需要<thing>$(l:crossroads:intro/rotary)能量/$。一个使用普通<item>$(l:crossroads:rotary/axis)主轴/$的普通齿轮网络的总质量不可能完全为0（即便用了<item>钶/$齿轮）——但可以让一些或大部分"
 		},
 		{
 			"type": "text",
-			"text": "of the gears be zero mass. There is a <item>$(l:crossroads:technomancy/redstone_axis)special master axis/$ that can have only copshowium gears.$(br2)"
+			"text": "齿轮质量为0。有一种<item>$(l:crossroads:technomancy/redstone_axis)特殊主轴/$只能使用钶齿轮。$(br2)"
 		}
 	]
 }
