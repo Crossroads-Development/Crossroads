@@ -130,7 +130,9 @@ public final class EventHandlerClient{
 
 			//Beam cage overlay
 			ItemStack cageStack = CurioHelper.getEquipped(CRItems.beamCage, player);
-			if(!cageStack.isEmpty()){
+			ItemStack mainStack = player.getHeldItem(Hand.MAIN_HAND);
+
+			if(!cageStack.isEmpty() && (CRConfig.cageMeterOverlay.get() || mainStack.getItem() instanceof BeamUsingItem)){
 				BeamUnit stored = BeamCage.getStored(cageStack);
 				RenderSystem.pushMatrix();
 				RenderSystem.pushLightingAttributes();
@@ -176,7 +178,6 @@ public final class EventHandlerClient{
 			}
 
 			//Beam using item overlay
-			ItemStack mainStack = player.getHeldItem(Hand.MAIN_HAND);
 			if(mainStack.getItem() instanceof BeamUsingItem){
 				RenderSystem.pushMatrix();
 				RenderSystem.pushLightingAttributes();

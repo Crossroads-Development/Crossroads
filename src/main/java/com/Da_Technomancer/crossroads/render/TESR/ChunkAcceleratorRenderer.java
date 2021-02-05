@@ -5,7 +5,6 @@ import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ChunkAcceleratorTileEntity;
-import com.Da_Technomancer.essentials.render.LinkLineRenderer;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.block.BlockState;
@@ -15,7 +14,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.math.vector.Vector3f;
 
-public class ChunkAcceleratorRenderer extends LinkLineRenderer<ChunkAcceleratorTileEntity>{
+public class ChunkAcceleratorRenderer extends EntropyRenderer<ChunkAcceleratorTileEntity>{
 
 
 	protected ChunkAcceleratorRenderer(TileEntityRendererDispatcher dispatcher){

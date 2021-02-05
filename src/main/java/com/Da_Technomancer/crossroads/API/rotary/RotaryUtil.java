@@ -68,7 +68,7 @@ public class RotaryUtil{
 	 * Returns the total energy, adjusted for energy loss, of the passed IAxleHandlers
 	 * @param axles A list of IAxleHandlers to have their energies summed and adjusted
 	 * @param allowLoss Whether to perform energy loss
-	 * @return A size 2 array, containing the total energy adjusted for energy loss, total energy change due to loss (0 if !allowLoss), resulting base system speed
+	 * @return A size 4 array, containing the total energy adjusted for energy loss, total energy change due to loss (0 if !allowLoss), resulting base system speed, and ΣI*R²
 	 */
 	public static double[] getTotalEnergy(List<IAxleHandler> axles, boolean allowLoss){
 		double sumEnergy  = 0;
@@ -83,23 +83,32 @@ public class RotaryUtil{
 			if(axle == null){
 				continue;
 			}
-			//Adds energy of the gear
-			if(lossMode == 3){
-				//Lose -(a*w) of gear energy each tick
-				lost += Math.signum(axle.getEnergy()) * axle.getSpeed() * lossCoeff;
-			}
+
 			//Tracks inertia of the system
 			double moIntertia = axle.getMoInertia();
 			double rotRatio = axle.getRotationRatio();
 			sumInertia += moIntertia;
-			sumIW += moIntertia * Math.abs(axle.getSpeed());
 			sumIRot += moIntertia * Math.pow(rotRatio, 2);
-			sumEnergy += axle.getEnergy() * Math.signum(rotRatio);
+
+			double axleEnergy = axle.getEnergy();
+			double axleSpeed = axle.getSpeed();
+			if(Double.isNaN(axleEnergy) || Double.isNaN(axleSpeed)){
+				//One NaN value can corrupt an entire network, so we skip reading NaN values
+				continue;
+			}
+			sumIW += moIntertia * Math.abs(axleSpeed);
+			sumEnergy += axleEnergy * Math.signum(rotRatio);
+
+			//Adds energy of the gear
+			if(lossMode == 3){
+				//Lose -(a*w) of gear energy each tick
+				lost += Math.signum(axleSpeed) * axleSpeed * lossCoeff;
+			}
 		}
 
 		if(sumInertia <= 0){
 			//Totally zero mass systems must have 0 energy by definition
-			return new double[3];
+			return new double[4];
 		}
 
 		if(lossMode == 2){
@@ -118,7 +127,7 @@ public class RotaryUtil{
 
 		double baseSpeed = Math.signum(sumEnergy) * Math.sqrt(Math.abs(sumEnergy) * 2D / sumIRot);
 
-		return new double[] {sumEnergy, lost, baseSpeed};
+		return new double[] {sumEnergy, lost, baseSpeed, sumIRot};
 	}
 
 	/**

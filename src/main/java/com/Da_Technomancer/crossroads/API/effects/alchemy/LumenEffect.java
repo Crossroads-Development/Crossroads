@@ -32,6 +32,16 @@ public class LumenEffect extends AetherEffect{
 	}
 
 	@Override
+	protected Block woodBlock(){
+		return Blocks.BONE_BLOCK;
+	}
+
+	@Override
+	protected Block foliageBlock(){
+		return Blocks.AIR;
+	}
+
+	@Override
 	protected RegistryKey<Biome> biome(){
 		return Biomes.DESERT;
 	}

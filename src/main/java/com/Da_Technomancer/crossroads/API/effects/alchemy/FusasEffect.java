@@ -32,6 +32,16 @@ public class FusasEffect extends AetherEffect{
 	}
 
 	@Override
+	protected Block woodBlock(){
+		return Blocks.BUBBLE_CORAL_BLOCK;
+	}
+
+	@Override
+	protected Block foliageBlock(){
+		return Blocks.AIR;
+	}
+
+	@Override
 	protected RegistryKey<Biome> biome(){
 		return Biomes.DEEP_OCEAN;
 	}

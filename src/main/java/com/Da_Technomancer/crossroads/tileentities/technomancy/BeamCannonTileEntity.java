@@ -1,9 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
-import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.IInfoTE;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.API.*;
 import com.Da_Technomancer.crossroads.API.beams.*;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
@@ -142,7 +139,7 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 					//Done via several multiplied rotation matrices simplified into a single multiplied quaternion for facing and a single vector
 					float sinPhi = (float) Math.sin(angle[1]);
 					Vector3f ray = new Vector3f(-(float) Math.sin(angle[0]) * sinPhi, (float) Math.cos(angle[1]), (float) Math.cos(angle[0]) * sinPhi);
-					Quaternion directionRotation = getRotationFromDirection(facing);
+					Quaternion directionRotation = getRotationFromDirection(facing).toQuaternion();
 					ray.transform(directionRotation);
 
 					//rayTraceSt is offset 'up' by 3.5/16 blocks to match the render, which has to be rotated by the facing
@@ -194,25 +191,25 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 		}
 	}
 
-	private Quaternion getRotationFromDirection(Direction dir){
+	private ServerQuaternion getRotationFromDirection(Direction dir){
 		//Reimplementation of Direction.getRotation(), as that method is client side only
-		Quaternion quaternion = Vector3f.XP.rotationDegrees(90.0F);
+		ServerQuaternion quaternion = new ServerQuaternion(Vector3f.XP, 90, true);//Quaternion for XP axis with 90 degree rotation
 		switch(dir) {
 			case DOWN:
-				return Vector3f.XP.rotationDegrees(180.0F);
+				return new ServerQuaternion(Vector3f.XP, 180, true);//XP axis, rotated 180 degrees
 			case UP:
-				return Quaternion.ONE.copy();
+				return ServerQuaternion.getOne();
 			case NORTH:
-				quaternion.multiply(Vector3f.ZP.rotationDegrees(180.0F));
+				quaternion.multiply(new ServerQuaternion(Vector3f.ZP, 180, true));//ZP, rotated 180 deg
 				return quaternion;
 			case SOUTH:
 				return quaternion;
 			case WEST:
-				quaternion.multiply(Vector3f.ZP.rotationDegrees(90.0F));
+				quaternion.multiply(new ServerQuaternion(Vector3f.ZP, 90, true));//ZP, rotated 90 deg
 				return quaternion;
 			case EAST:
 			default:
-				quaternion.multiply(Vector3f.ZP.rotationDegrees(-90.0F));
+				quaternion.multiply(new ServerQuaternion(Vector3f.ZP, -90.0F, true));//ZP, rotated -90 deg
 				return quaternion;
 		}
 	}

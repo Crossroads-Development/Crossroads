@@ -1,24 +1,36 @@
 package com.Da_Technomancer.crossroads.API.technomancy;
 
 import com.Da_Technomancer.crossroads.API.IInfoTE;
+import com.Da_Technomancer.crossroads.API.packets.CRPackets;
+import com.Da_Technomancer.crossroads.API.packets.IIntArrayReceiver;
+import com.Da_Technomancer.crossroads.API.packets.SendIntArrayToClient;
+import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.particles.sounds.CRSounds;
 import com.Da_Technomancer.essentials.packets.ILongReceiver;
 import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import com.Da_Technomancer.essentials.tileentities.LinkHelper;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE{
+public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayReceiver{
 
 	int getFlux();
 
@@ -66,6 +78,18 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE{
 		return Color.BLACK;
 	}
 
+	/**
+	 * Will only be called on the virtual client
+	 * Each int represents one entropy transfer arc
+	 * Format for each int:
+	 * bits[0,7]: relative x
+	 * bits[8,15]: relative y
+	 * bits[16,23]: relative z
+	 * bits[24,31]: Unused
+	 * @return An array of ints representing all transferred entropy to be rendered
+	 */
+	int[] getRenderedArcs();
+
 	enum Behaviour{
 
 		SOURCE(1, false),//Flux should be routed away from this TE
@@ -81,7 +105,14 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE{
 		}
 	}
 
-	class FluxHelper implements IFluxLink{
+	/**
+	 * A standard implementation of IFluxLink
+	 * Can be used as either a superclass (extenders should pass null/themselves and their type to the constructor), or as an instantiated helper (instantiators should pass any non-null type and themselves to the constructor)
+	 * When used as a helper, calls to the IFluxLink & tick methods should be passed to this class, and read() & write() should call readData() and writeData()
+	 */
+	class FluxHelper extends TileEntity implements ITickableTileEntity, IFluxLink{
+
+		private static final byte RENDER_ID = 6;
 
 		private final TileEntity owner;
 		private final Behaviour behaviour;
@@ -90,21 +121,43 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE{
 		private int readingFlux = 0;
 		public int flux = 0;
 		public long lastTick = 0;
-		private final Consumer<Integer> fluxTransferHandler;
+		protected Consumer<Integer> fluxTransferHandler;
 		private boolean shutDown = false;//Only used if safe mode is enabled in the config
+		private int[] rendered = new int[0];
 
-		public FluxHelper(TileEntity owner, Behaviour behaviour){
-			this(owner, behaviour, null);
+		public FluxHelper(TileEntityType<?> type, @Nullable TileEntity owner, Behaviour behaviour){
+			this(type, owner, behaviour, null);
 		}
 
-		public FluxHelper(TileEntity owner, Behaviour behaviour, @Nullable Consumer<Integer> fluxTransferHandler){
-			this.owner = owner;
+		public FluxHelper(TileEntityType<?> type, @Nullable TileEntity owner, Behaviour behaviour, @Nullable Consumer<Integer> fluxTransferHandler){
+			super(type);
+			this.owner = owner == null ? this : owner;
 			this.behaviour = behaviour;
-			linkHelper = new LinkHelper((ILinkTE) owner);
+			linkHelper = new LinkHelper((ILinkTE) this.owner);
 			this.fluxTransferHandler = fluxTransferHandler;
 		}
 
-		public void read(CompoundNBT nbt){
+		@Override
+		public void read(BlockState state, CompoundNBT nbt){
+			super.read(state, nbt);
+			readData(nbt);
+		}
+
+		@Override
+		public CompoundNBT write(CompoundNBT nbt){
+			nbt = super.write(nbt);
+			writeData(nbt);
+			return nbt;
+		}
+
+		@Override
+		public CompoundNBT getUpdateTag(){
+			CompoundNBT nbt = super.getUpdateTag();
+			nbt.putIntArray("rendered_arcs", rendered);
+			return nbt;
+		}
+
+		public void readData(CompoundNBT nbt){
 			if(nbt.contains("link")){
 				//TODO remove: backwards compatibility nbt format
 				//Convert from the pre-2.6.0 format used by several flux machines to the format used by LinkHelper
@@ -116,23 +169,34 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE{
 			queuedFlux = nbt.getInt("queued_flux");
 			readingFlux = nbt.getInt("reading_flux");
 			shutDown = nbt.getBoolean("shutdown");
+			rendered = nbt.getIntArray("rendered_arcs");
 		}
 
-		public void write(CompoundNBT nbt){
+		public void writeData(CompoundNBT nbt){
 			linkHelper.writeNBT(nbt);
 			nbt.putLong("last_tick", lastTick);
 			nbt.putInt("flux", flux);
 			nbt.putInt("queued_flux", queuedFlux);
 			nbt.putInt("reading_flux", readingFlux);
 			nbt.putBoolean("shutdown", shutDown);
+			nbt.putIntArray("rendered_arcs", rendered);
 		}
 
 		/**
 		 * Ticks the flux handler
 		 * Should be called every tick
 		 */
+		@Override
 		public void tick(){
-			long worldTime = owner.getWorld().getGameTime();
+			World world = owner.getWorld();
+			if(world.isRemote()){
+				//Play sounds
+				if(rendered.length != 0 && world.getGameTime() % FluxUtil.FLUX_TIME == 0 && CRConfig.fluxSounds.get()){
+					CRSounds.playSoundClientLocal(world, owner.getPos(), CRSounds.FLUX_TRANSFER, SoundCategory.BLOCKS, 0.4F, 1F);
+				}
+				return;
+			}
+			long worldTime = world.getGameTime();
 			if(worldTime != lastTick){
 				lastTick = worldTime;
 				if(lastTick % FluxUtil.FLUX_TIME == 0){
@@ -141,7 +205,12 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE{
 					flux = queuedFlux;
 					queuedFlux = 0;
 					if(fluxTransferHandler == null){
-						flux += FluxUtil.performTransfer(this, linkHelper.getLinksRelative(), toTransfer);
+						Pair<Integer, int[]> transferResult = FluxUtil.performTransfer(this, linkHelper.getLinksRelative(), toTransfer);
+						flux += transferResult.getLeft();
+						if(!Arrays.equals(transferResult.getRight(), rendered)){
+							rendered = transferResult.getRight();
+							CRPackets.sendPacketAround(world, owner.getPos(), new SendIntArrayToClient(RENDER_ID, rendered, owner.getPos()));
+						}
 					}else{
 						fluxTransferHandler.accept(toTransfer);
 					}
@@ -153,6 +222,11 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE{
 
 		public boolean isShutDown(){
 			return shutDown;
+		}
+
+		@Override
+		public boolean allowAccepting(){
+			return !isShutDown();
 		}
 
 		@Override
@@ -201,6 +275,13 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE{
 		}
 
 		@Override
+		public void receiveInts(byte context, int[] message, @Nullable ServerPlayerEntity sendingPlayer){
+			if(context == RENDER_ID){
+				rendered = message == null ? new int[0] : message;
+			}
+		}
+
+		@Override
 		public boolean canBeginLinking(){
 			return behaviour != Behaviour.SINK;
 		}
@@ -223,6 +304,11 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE{
 		@Override
 		public TileEntity getTE(){
 			return owner;
+		}
+
+		@Override
+		public int[] getRenderedArcs(){
+			return rendered;
 		}
 	}
 }

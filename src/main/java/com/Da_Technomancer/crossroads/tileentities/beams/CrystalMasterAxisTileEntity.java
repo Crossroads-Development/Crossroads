@@ -52,42 +52,41 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 
 	@Override
 	protected void runCalc(){
-		double[] energyCalcResults = RotaryUtil.getTotalEnergy(rotaryMembers, currentElement != EnumBeamAlignments.STABILITY);
-		sumEnergy = energyCalcResults[0];
-		energyLossChange = energyCalcResults[1];
-		baseSpeed = energyCalcResults[2];
+		double prevSumEnergy = sumEnergy;
+
+		double[] systemEnergyResult = RotaryUtil.getTotalEnergy(rotaryMembers, currentElement != EnumBeamAlignments.STABILITY);
+		sumEnergy = systemEnergyResult[0];
+		energyLossChange = systemEnergyResult[1];
+		baseSpeed = systemEnergyResult[2];
+		double sumIRot = systemEnergyResult[3];
+
 		if(currentElement == EnumBeamAlignments.ENERGY){
-			sumEnergy += CRConfig.crystalAxisMult.get() * (Math.signum(sumEnergy) == 0 ? 1 : Math.signum(sumEnergy));
-			double sumIRot = 0;
-			for(IAxleHandler gear : rotaryMembers){
-				sumIRot += gear.getMoInertia() * Math.pow(gear.getRotationRatio(), 2);
+			if(sumIRot > 0){
+				sumEnergy += CRConfig.crystalAxisMult.get() * (Math.signum(sumEnergy) == 0 ? 1 : Math.signum(sumEnergy));
+				baseSpeed = Math.signum(sumEnergy) * Math.sqrt(Math.abs(sumEnergy) * 2D / sumIRot);
 			}
-			baseSpeed = Math.signum(sumEnergy) * Math.sqrt(Math.abs(sumEnergy) * 2D / sumIRot);
 		}else if(currentElement == EnumBeamAlignments.CHARGE){
-			sumEnergy += CRConfig.crystalAxisMult.get();
-			double sumIRot = 0;
-			for(IAxleHandler gear : rotaryMembers){
-				sumIRot += gear.getMoInertia() * Math.pow(gear.getRotationRatio(), 2);
+			if(sumIRot > 0){
+				sumEnergy += CRConfig.crystalAxisMult.get();
+				baseSpeed = Math.signum(sumEnergy) * Math.sqrt(Math.abs(sumEnergy) * 2D / sumIRot);
 			}
-			baseSpeed = Math.signum(sumEnergy) * Math.sqrt(Math.abs(sumEnergy) * 2D / sumIRot);
 		}else if(currentElement == EnumBeamAlignments.EQUILIBRIUM){
-			sumEnergy = (sumEnergy + 9D * lastSumEnergy) / 10D;
-			double sumIRot = 0;
-			for(IAxleHandler gear : rotaryMembers){
-				sumIRot += gear.getMoInertia() * Math.pow(gear.getRotationRatio(), 2);
+			if(sumIRot > 0){
+				sumEnergy = (sumEnergy + 9D * lastSumEnergy) / 10D;
+				baseSpeed = Math.signum(sumEnergy) * Math.sqrt(Math.abs(sumEnergy) * 2D / sumIRot);
 			}
-			baseSpeed = Math.signum(sumEnergy) * Math.sqrt(Math.abs(sumEnergy) * 2D / sumIRot);
 		}
 
-		if(sumEnergy < 1 && sumEnergy > -1){
+		//For very low total system energy, we drain the remainder of the energy as 'loss'
+		if(sumEnergy < 1 && sumEnergy > -1 || Double.isNaN(sumEnergy)){
 			energyLossChange += sumEnergy;
 			sumEnergy = 0;
 			baseSpeed = 0;
 		}
-		energyChange = sumEnergy - lastSumEnergy;
-		lastSumEnergy = sumEnergy;
+		energyChange = sumEnergy - prevSumEnergy;
 
 		for(IAxleHandler gear : rotaryMembers){
+			// set energy
 			double gearSpeed = baseSpeed * gear.getRotationRatio();
 			gear.setEnergy(Math.signum(gearSpeed) * Math.pow(gearSpeed, 2) * gear.getMoInertia() / 2D);
 		}

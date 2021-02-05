@@ -56,7 +56,7 @@ public class CRRendererRegistry{
 		ClientRegistry.bindTileEntityRenderer(ChronoHarnessTileEntity.type, ChronoHarnessRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(TemporalAcceleratorTileEntity.type, TemporalAcceleratorRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(ChunkAcceleratorTileEntity.type, ChunkAcceleratorRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(CopshowiumCreationChamberTileEntity.type, LinkLineRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(CopshowiumCreationChamberTileEntity.type, EntropyRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(FluxSinkTileEntity.type, FluxSinkRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(BeamCannonTileEntity.type, BeamCannonRenderer::new);
 	}

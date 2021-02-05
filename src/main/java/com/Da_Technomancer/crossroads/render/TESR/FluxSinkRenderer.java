@@ -7,12 +7,11 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.math.vector.Vector3f;
 import org.lwjgl.opengl.GL11;
 
-public class FluxSinkRenderer extends TileEntityRenderer<FluxSinkTileEntity>{
+public class FluxSinkRenderer extends EntropyRenderer<FluxSinkTileEntity>{
 
 	protected FluxSinkRenderer(TileEntityRendererDispatcher dispatcher){
 		super(dispatcher);
@@ -20,15 +19,35 @@ public class FluxSinkRenderer extends TileEntityRenderer<FluxSinkTileEntity>{
 
 	@Override
 	public void render(FluxSinkTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
-		float runtime = te.getRunDuration(partialTicks);
+		super.render(te, partialTicks, matrix, buffer, combinedLight, combinedOverlay);
+
+		float runtime = te.getRunDuration() + partialTicks;
 		if(runtime <= 0){
 			return;
 		}
 
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		matrix.translate(0.5D, 0.5D, 0.5D);
 
+		//Render entropy arcs to the plates
+		if(te.renderPortals[0] != -1){
+			IVertexBuilder entropyBuilder = buffer.getBuffer(CRRenderTypes.FLUX_TRANSFER_TYPE);
+			long worldTime = te.getWorld().getGameTime();
+			for(int portalIndex : te.renderPortals){
+				if(portalIndex == -1){
+					continue;
+				}
+				matrix.push();
+				float[] portalPos = getPortalCenterPos(portalIndex, runtime);
+				matrix.rotate(Vector3f.YP.rotation((float) Math.atan2(portalPos[0], portalPos[2])));
+				matrix.rotate(Vector3f.XP.rotation((float) (Math.atan2(-portalPos[1], Math.sqrt(portalPos[0] * portalPos[0] + portalPos[2] * portalPos[2])) + Math.PI / 2F)));
+				EntropyRenderer.renderArc((float) Math.sqrt(portalPos[0] * portalPos[0] + portalPos[1] * portalPos[1] + portalPos[2] * portalPos[2]), matrix, entropyBuilder, worldTime, partialTicks);
+				matrix.pop();
+			}
+		}
+
 		IVertexBuilder builder = buffer.getBuffer(CRRenderTypes.FLUX_SINK_TYPE);
+
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 		//Render an icosahedron
 
@@ -106,5 +125,21 @@ public class FluxSinkRenderer extends TileEntityRenderer<FluxSinkTileEntity>{
 			matrix.rotate(rotationAxis.rotationDegrees(36));
 			matrix.rotate(rotationCounterAxis.rotationDegrees(180));
 		}
+	}
+
+	/**
+	 * Used for rendering
+	 * Gets the center position of the rendered 'portals', relative to the center of the blockpos
+	 * @param plateIndex An integer in [0, 7]
+	 * @param runtime Total time running
+	 * @return A size 3 float array of the relative position of the center of a portal, in [x, y, z] order
+	 */
+	private static float[] getPortalCenterPos(int plateIndex, float runtime){
+		float len = 3.65F;
+		float angle = (float) -(Math.toRadians(360 / 8F) * plateIndex + Math.toRadians(runtime / 10D));
+		float x = len * (float) Math.cos(angle);
+		float z = len * (float) Math.sin(angle);
+		float y = 0.4F * (float) Math.sin(runtime / 100 + plateIndex * 5);
+		return new float[] {x, y, z};
 	}
 }

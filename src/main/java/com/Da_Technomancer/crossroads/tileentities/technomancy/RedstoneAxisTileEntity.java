@@ -48,12 +48,8 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 	protected void runCalc(){
 		Direction facing = getFacing();
 		double targetBaseSpeed = CircuitUtil.combineRedsSources(redsHandler);
-		double sumIRot = 0;//Sum of every gear's moment of inertia time rotation ratio squared
 		double[] energyCalcResults = RotaryUtil.getTotalEnergy(rotaryMembers, true);
-
-		for(IAxleHandler gear : rotaryMembers){
-			sumIRot += gear.getMoInertia() * Math.pow(gear.getRotationRatio(), 2);
-		}
+		double sumIRot = energyCalcResults[3];//Sum of every gear's moment of inertia time rotation ratio squared
 
 		double cost = sumIRot * Math.pow(targetBaseSpeed, 2) / 2D;//Total energy required to hold the output at the requested base speed
 		TileEntity backTE = world.getTileEntity(pos.offset(facing.getOpposite()));

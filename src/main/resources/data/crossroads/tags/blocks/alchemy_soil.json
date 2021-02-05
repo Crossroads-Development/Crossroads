@@ -5,6 +5,8 @@
 		"#forge:sand",
 		"minecraft:grass_block",
 		"minecraft:snow_block",
-		"minecraft:clay"
+		"minecraft:clay",
+		"minecraft:soul_sand",
+		"minecraft:soul_soil"
 	]
 }

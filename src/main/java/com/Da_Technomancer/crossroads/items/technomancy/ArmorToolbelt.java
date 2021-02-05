@@ -22,6 +22,7 @@ public class ArmorToolbelt extends TechnomancyArmor{
 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+		super.addInformation(stack, worldIn, tooltip, flagIn);
 		tooltip.add(new TranslationTextComponent("tt.crossroads.toolbelt.desc"));
 	}
 

@@ -55,7 +55,8 @@ public class CentrifugeRec implements IOptionalRecipe<IInventory>{
 
 	@Override
 	public boolean matches(IInventory inv, World worldIn){
-		return active && inv instanceof WaterCentrifugeTileEntity && BlockUtil.sameFluid(((WaterCentrifugeTileEntity) inv).getInputFluid(), input) && ((WaterCentrifugeTileEntity) inv).getInputFluid().getAmount() >= input.getAmount();
+		FluidStack teInput;
+		return active && inv instanceof WaterCentrifugeTileEntity && BlockUtil.sameFluid(teInput = ((WaterCentrifugeTileEntity) inv).getInputFluid(), input) && teInput.getAmount() >= input.getAmount();
 	}
 
 	@Override
@@ -113,11 +114,11 @@ public class CentrifugeRec implements IOptionalRecipe<IInventory>{
 	}
 
 	public FluidStack getInput(){
-		return input;
+		return input.copy();
 	}
 
 	public FluidStack getFluidOutput(){
-		return fluidOutput;
+		return fluidOutput.copy();
 	}
 
 	@Override

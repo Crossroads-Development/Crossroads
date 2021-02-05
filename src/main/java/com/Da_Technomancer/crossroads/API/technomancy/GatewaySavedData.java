@@ -55,13 +55,14 @@ public class GatewaySavedData extends WorldSavedData{
 		EnumBeamAlignments[] address = new EnumBeamAlignments[4];
 		GatewayAddress reserved = getReservedAddress(w);
 		GatewayAddress gateAdd;
+		Random rand = new Random(pos.toLong());//We use the position as a seed, so that if a controller is broken and replaced/reformed at the same spot, it will have the same address unless it is already taken
 		do{
 			for(int i = 0; i < 4; i++){
-				address[i] = GatewayAddress.getLegalEntry(w.rand.nextInt(GatewayAddress.LEGAL_VALS.length));
+				address[i] = GatewayAddress.getLegalEntry(rand.nextInt(GatewayAddress.LEGAL_VALS.length));
 			}
 			gateAdd = new GatewayAddress(address);
 		}while(data.addressBook.containsKey(gateAdd) || gateAdd.equals(reserved));//Generate a new address every time the generated address is already in use
-
+		
 		//Register this new address in the addressBook
 		data.addressBook.put(gateAdd, new GatewayAddress.Location(pos, w));
 		data.markDirty();

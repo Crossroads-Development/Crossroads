@@ -342,6 +342,9 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 		effectMap.put("terraform_ocean", new FusasEffect());
 		effectMap.put("terraform_plains", new AetherEffect());
 		effectMap.put("terraform_snow", new StasisolEffect());
+		effectMap.put("terraform_mushroom", new MushroomTerraformEffect());
+		effectMap.put("terraform_jungle", new JungleTerraformEffect());
+		effectMap.put("terraform_end", new EndTerraformEffect());
 	}
 
 	private enum ContainRequirements{

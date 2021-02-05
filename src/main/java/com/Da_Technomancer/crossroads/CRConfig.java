@@ -99,6 +99,8 @@ public class CRConfig{
 	public static ForgeConfigSpec.BooleanValue allowGatewayEntities;
 	public static ForgeConfigSpec.BooleanValue fluxSafeMode;
 	public static ForgeConfigSpec.BooleanValue undergroundLightning;
+	public static ForgeConfigSpec.BooleanValue cageMeterOverlay;
+	public static ForgeConfigSpec.DoubleValue beamRaytraceStep;
 
 	private static final ITag<Block> destroyBlacklist = BlockTags.makeWrapperTag(Crossroads.MODID + ":destroy_blacklist");
 
@@ -122,6 +124,7 @@ public class CRConfig{
 		beamSounds = clientBuilder.comment("Should beams make sounds?").define("beam_sounds", true);
 		electricSounds = clientBuilder.comment("Should electrical arcs make sounds?").define("electric_sounds", true);
 		fluxSounds = clientBuilder.comment("Should temporal entropy transfer make sounds?").define("entropy_sounds", true);
+		cageMeterOverlay = clientBuilder.comment("Should the overlay for the beam cage render while not holding a beam staff?", "Regardless of setting, it only shows while a beam cage is equipped.").define("beam_cage_overlay", true);
 		clientSpec = clientBuilder.build();
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, clientSpec);
 
@@ -137,6 +140,7 @@ public class CRConfig{
 		effectPacketDistance = serverBuilder.comment("Distance in blocks that players can see various effects from (electric arcs, beams from staffs, etc)", "Lower values will decrease the amount of packets sent").defineInRange("effect_distance", 512, 1, 512);
 		beamPowerCollision = serverBuilder.comment("Whether beams decide what they can pass through based on beam power", "If true, low power beams require a smaller hole, and high power beams require a larger empty space in blocks to pass through").define("beam_collision_use_power", false);
 		beaconHarnessLoadSafety = serverBuilder.comment("If enabled, the beacon harness will have an extra 'safety period' for a full color loop when the chunk is loaded", "Used to stop beacon harnesses shutting off when loading across several chunks").define("beacon_harness_load_safety", false);
+		beamRaytraceStep = serverBuilder.comment("The size of the raytracing interval used by the beam staff and beam cannon", "Larger numbers cause less lag when using those devices, but are less precise").defineInRange("beam_raytrace_step", 0.25F, 0.1F, 1F);
 		serverBuilder.pop();
 		serverBuilder.push(CAT_ORES);
 		genCopperOre = serverBuilder.comment("Generate Copper Ore?").define("copper", true);

@@ -8,16 +8,13 @@ import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.ITextComponent;
@@ -26,27 +23,24 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @ObjectHolder(Crossroads.MODID)
-public class ChunkAcceleratorTileEntity extends TileEntity implements ITickableTileEntity, IFluxLink{
+public class ChunkAcceleratorTileEntity extends IFluxLink.FluxHelper{
 
 	@ObjectHolder("chunk_accelerator")
 	public static TileEntityType<ChunkAcceleratorTileEntity> type = null;
 
 	public static final int FLUX_MULT = 8;
 
-	private final FluxHelper fluxHelper = new FluxHelper(this, Behaviour.SOURCE);
 	private int intensity = 0;//Power of the incoming beam
 	private int infoIntensity = 0;
 	private long lastRunTick;//Used to prevent accelerators affecting each other
 
 	public ChunkAcceleratorTileEntity(){
-		super(type);
+		super(type, null, Behaviour.SOURCE);
 	}
 
 	public void resetCache(){
@@ -58,7 +52,7 @@ public class ChunkAcceleratorTileEntity extends TileEntity implements ITickableT
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		chat.add(new TranslationTextComponent("tt.crossroads.time_accel.boost", 100 * extraTicks(infoIntensity)));
 		FluxUtil.addFluxInfo(chat, this, producedFlux(infoIntensity));
-		fluxHelper.addInfo(chat, player, hit);
+		super.addInfo(chat, player, hit);
 	}
 
 	/**
@@ -85,14 +79,15 @@ public class ChunkAcceleratorTileEntity extends TileEntity implements ITickableT
 
 	@Override
 	public void tick(){
+		//Handle flux
+		super.tick();
+
 		if(!world.isRemote && world.getGameTime() != lastRunTick){
 			//Prevent time acceleration of this block
 			lastRunTick = world.getGameTime();
 			int extraTicks = extraTicks(intensity);
 
 
-			//Handle flux
-			fluxHelper.tick();
 			if(world.getGameTime() % FluxUtil.FLUX_TIME == 0){
 				addFlux(producedFlux(intensity));
 				infoIntensity = intensity;
@@ -100,7 +95,7 @@ public class ChunkAcceleratorTileEntity extends TileEntity implements ITickableT
 			}
 
 			//Apply time acceleration
-			if(extraTicks > 0 && CRConfig.teTimeAccel.get() && !fluxHelper.isShutDown()){
+			if(extraTicks > 0 && CRConfig.teTimeAccel.get() && !isShutDown()){
 				ChunkPos chunkPos = new ChunkPos(pos);
 				//List of every tile entity in the chunk which is tickable
 				List<TileEntity> tickables = world.tickableTileEntities.stream().filter(te -> te instanceof ITickableTileEntity && te.getPos().getX() >> 4 == chunkPos.x && te.getPos().getZ() >> 4 == chunkPos.z).collect(Collectors.toList());
@@ -119,7 +114,6 @@ public class ChunkAcceleratorTileEntity extends TileEntity implements ITickableT
 		super.write(nbt);
 		nbt.putInt("intensity", intensity);
 		nbt.putLong("last_run", lastRunTick);
-		fluxHelper.write(nbt);
 		return nbt;
 	}
 
@@ -128,64 +122,6 @@ public class ChunkAcceleratorTileEntity extends TileEntity implements ITickableT
 		super.read(state, nbt);
 		intensity = nbt.getInt("intensity");
 		lastRunTick = nbt.getLong("last_run");
-		fluxHelper.read(nbt);
-	}
-
-	@Override
-	public CompoundNBT getUpdateTag(){
-		CompoundNBT nbt = super.getUpdateTag();
-		fluxHelper.write(nbt);
-		return nbt;
-	}
-
-	@Override
-	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
-		fluxHelper.receiveLong(identifier, message, sendingPlayer);
-	}
-
-	@Override
-	public int getReadingFlux(){
-		return fluxHelper.getReadingFlux();
-	}
-
-	@Override
-	public void addFlux(int deltaFlux){
-		fluxHelper.addFlux(deltaFlux);
-	}
-
-	@Override
-	public boolean canAcceptLinks(){
-		return fluxHelper.canAcceptLinks();
-	}
-
-	@Override
-	public int getFlux(){
-		return fluxHelper.getFlux();
-	}
-
-	@Override
-	public boolean canBeginLinking(){
-		return fluxHelper.canBeginLinking();
-	}
-
-	@Override
-	public boolean canLink(ILinkTE otherTE){
-		return fluxHelper.canLink(otherTE);
-	}
-
-	@Override
-	public Set<BlockPos> getLinks(){
-		return fluxHelper.getLinks();
-	}
-
-	@Override
-	public boolean createLinkSource(ILinkTE endpoint, @Nullable PlayerEntity player){
-		return fluxHelper.createLinkSource(endpoint, player);
-	}
-
-	@Override
-	public void removeLinkSource(BlockPos end){
-		fluxHelper.removeLinkSource(end);
 	}
 
 	@Override
