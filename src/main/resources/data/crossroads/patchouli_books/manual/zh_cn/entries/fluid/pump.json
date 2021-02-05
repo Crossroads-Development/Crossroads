@@ -1,6 +1,6 @@
 {
 	"category": "fluid",
-	"name": "Rotary Pump",
+	"name": "旋转泵",
 	"icon": "crossroads:rotary_pump",
 	"sortnum": 0,
 	"priority": false,
@@ -8,13 +8,13 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Rotary Pump",
+			"title": "旋转泵",
 			"item": "crossroads:rotary_pump",
-			"text": "The <item>Rotary Pump/$ is a <thing>$(l:crossroads:intro/rotary)rotary/$ powered fluid pump. It collects fluid source blocks from the world, and allows it to be moved around in pipes.$(br2)It <em>only collects fluid sources directly underneath it/$. This means is it usually only useful for collecting water, and "
+			"text": "<item>旋转泵/$是一种<thing>$(l:crossroads:intro/rotary)旋转能/$供能的流体泵。它从世界中抽取流体源方块并使其能够在管道中移动。$(br2)它<em>只能抽取正下方的流体源/$。这意味着它通常只在抽水时有用，"
 		},
 		{
 			"type": "text",
-			"text": "not for draining lakes or ponds.$(br2)It connects to a gear or axle on the top, and only works if the attached gear/axle is spinning in the <em>positive direction/$ (counter-clockwise). It runs faster at higher <thing>speeds/$, capping out at 2.5rad/s and above. It takes a total of 100J of $(l:crossroads:intro/rotary)energy/$ to pump 1 bucket of liquid. $(br2)"
+			"text": "而且不能用来抽干湖泊或池塘。$(br2)它需要从顶部连接到轴或齿轮，而且只在相连轴/齿轮<em>正向旋转/$（顺时针）时工作。<thing>转速/$越高，抽取速度越快，但超过2.5rad/s后不再进一步提升。抽取一桶液体需要100J的$(l:crossroads:intro/rotary)能量/$。$(br2)"
 		}
 	]
 }

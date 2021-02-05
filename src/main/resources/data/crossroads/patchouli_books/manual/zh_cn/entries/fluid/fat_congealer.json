@@ -1,6 +1,6 @@
 {
 	"category": "fluid",
-	"name": "Fat Congealer",
+	"name": "脂肪冷却器",
 	"icon": "crossroads:fat_congealer",
 	"sortnum": 0,
 	"priority": false,
@@ -8,13 +8,13 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Fat Congealer",
+			"title": "脂肪冷却器",
 			"item": "crossroads:fat_congealer",
-			"text": "The <item>Fat Congealer/$ uses <thing>liquid fat/$ (from a <item>$(l:crossroads:fluid/fat_collector)fat collector/$) to produce <item>edible blobs/$, which are food with custom stats. The <item>fat congealer/$ has <em>two rotary connections/$ (top and bottom), instead of the usual one. It accepts <thing>liquid fat/$ in the sides, and has an output side where it will eject <item>edible blobs/$.$(br2)"
+			"text": "<item>脂肪冷却器/$消耗<thing>液态脂肪/$（来自<item>$(l:crossroads:fluid/fat_collector)脂肪收集器/$）来产出<item>食物团/$，一种有着自定义属性的食物。<item>脂肪冷却器/$有<em>两个旋转连接口/$（顶部和底部），而不是通常的一个。它从侧面接收<thing>液态脂肪/$输入，而且会从单独的输出面输出<item>食物团/$。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "The hunger value of the <item>edible blobs/$ is equal to 4 times the <thing>$(l:crossroads:intro/rotary)speed/$ of the top gear. The saturation value is 4 times the <thing>$(l:crossroads:intro/rotary)speed/$ of the bottom gear.$(br2)Each <item>edible blob/$ consumes 100mB of <thing>liquid fat/$ per point of hunger and saturation, and a small amount of <thing>$(l:crossroads:intro/rotary)rotary energy/$. A redstone signal will disable the machine.$(br2)"
+			"text": "<item>食物团/$回复的饥饿值等于4乘以顶部齿轮的<thing>$(l:crossroads:intro/rotary)转速/$。其饱和度等于4乘以底部齿轮的<thing>$(l:crossroads:intro/rotary)转速/$。$(br2)每个<item>食物团/$的每点饥饿值和饱和度之和消耗100mB的<thing>液态脂肪/$和少量的<thing>$(l:crossroads:intro/rotary)旋转能/$。通入红石信号会关闭该机器。$(br2)"
 		}
 	]
 }

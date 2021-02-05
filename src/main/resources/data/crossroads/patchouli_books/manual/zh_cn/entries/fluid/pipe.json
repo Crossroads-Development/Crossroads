@@ -1,6 +1,6 @@
 {
 	"category": "fluid",
-	"name": "Fluid Tube",
+	"name": "流体管",
 	"icon": "crossroads:fluid_tube",
 	"sortnum": 0,
 	"priority": false,
@@ -8,21 +8,21 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Fluid Tube",
+			"title": "流体管",
 			"item": "crossroads:fluid_tube",
-			"text": "<item>Fluid Tubes/$ are the normal way to move fluids around. They have a capacity (and maximum transfer rate) of 2 buckets. <item>Fluid tubes/$ connect to any adjacent fluid inventory/machine/pipe/tank, and can transfer fluids between them.$(br2)<item>Fluid tubes/$ can be adjusted with "
+			"text": "使用<item>流体管/$是移动流体的最普通的方法。它们的容量（和最大传输率）是2桶。<item>流体管/$会连接到任何相邻的容器/机器/管道/储罐，并在它们间传输流体。$(br2)<item>流体管/$可用"
 		},
 		{
 			"type": "text",
-			"text": "a <item>$(l:essentials/wrench)wrench/$ on their connections to adjust the mode. Each connection has 4 modes: Input, Output, Locked, and Share. Input or Output modes only input/output fluid with a neighbor, Locked will be disconnected, and Share only applies to other pipes and <item>$(l:crossroads:fluid/tank)tanks/$ (including tanks from other mods). In Share mode, pipes will balance their contents to be the same % fullness.$(br2)"
+			"text": "<item>$(l:essentials/wrench)扳手/$每个连接有4种模式：输入、输出、锁定和分享。输入或输出模式下管道只会进行输入/输出；锁定模式会断开连接；分享模式则可用于其他管道和<item>$(l:crossroads:fluid/tank)储罐/$（包括其他模组的储罐）。在分享模式下，管道之间会平衡它们内含的流体以使充满程度一致。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "There are also <item>redstone fluid tubes/$, which will only connect to/transfer with their neighbors at all while they have a redstone signal.$(br2)"
+			"text": "还有一种<item>红石流体管/$，只在收到红石信号时进行连接。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<bobo>hAPPY $(l:crossroads:intro/welcome#bobo)BOBO/$<bobo> dAY!$(br2)<bobo>u cAN usE a TUBE to MAKE a VACUUM HOPPPER! alSo da HOPPER &nd s0me cLOTH!$(br2)<bobo>bOBO AWAY!/$$(br2)"
+			"text": "<bobo>$(l:crossroads:intro/welcome#bobo)BOBO/$<bobo>节快乐！$(br2)<bobo>尼可以用管造真空漏斗！另歪还药漏斗何一些毛衣！$(br2)<bobo>bOBO离开！/$$(br2)"
 		}
 	]
 }

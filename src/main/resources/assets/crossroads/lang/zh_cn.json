@@ -51,7 +51,7 @@
 	"mysterious_journal": "神秘日志",
 	"block.crossroads.block_salt": "盐块",
 	"block.crossroads.steam_turbine": "蒸汽轮机",
-	"block.crossroads.fluid_void": "流体销毁器",
+	"block.crossroads.fluid_void": "流体虚空",
 	"block.crossroads.heat_sink": "换热器",
 	"item.crossroads.mashed_potato": "马铃薯泥",
 	"item.crossroads.thermometer": "温度计",
@@ -883,5 +883,5 @@
 	"key.control_void": "物品控制：虚空",
 	"key.prop_pack_boost": "推进"
 	
-	"book.crossroads_essentials.name": "交错道途与Essentials的指导手册"
+		"book.crossroads_essentials.name": "交错道途与Essentials的指导手册"
 }

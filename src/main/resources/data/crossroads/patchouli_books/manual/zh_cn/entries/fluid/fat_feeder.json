@@ -1,6 +1,6 @@
 {
 	"category": "fluid",
-	"name": "Fat Feeder",
+	"name": "脂肪喂食器",
 	"icon": "crossroads:fat_feeder",
 	"sortnum": 0,
 	"priority": false,
@@ -8,21 +8,21 @@
 	"pages": [
 		{
 			"type": "spotlight",
-			"title": "Fat Feeder",
+			"title": "脂肪喂食器",
 			"item": "crossroads:fat_feeder",
-			"text": "The <item>Fat Feeder/$ uses <thing>liquid fat/$ (produced in a <item>$(l:crossroads:fluid/fat_collector)fat collector/$) to feed nearby players and breed animals. It doesn't need any form of power.$(br2)Players in range will have their hunger and saturation restored to full (using 100mB of <thing>liquid fat/$ for one point of hunger "
+			"text": "<item>脂肪喂食器/$使用<thing>液态脂肪/$（来自<item>$(l:crossroads:fluid/fat_collector)脂肪收集器/$）来喂食附近的玩家并繁殖动物。它不需要任何种类的能源。$(br2)范围内玩家的饥饿值和饱和度会恢复到满（每点饥饿值或饱和度消耗100mB<thing>液态脂肪/$）。"
 		},
 		{
 			"type": "text",
-			"text": "or saturation). Nearby animals will be fed and put into breeding mode (using 200mB per animal). It will not breed animals if there are 64+ of them in range.$(br2)The range of the <item>fat feeder/$ goes up the closer it is to 50% full. The maximum range is 16 blocks, the minimum range (at 100% and 0% full) is 4 blocks. Unusually, <item>$(l:crossroads:fluid/pipe)crossroads pipes/$ can "
+			"text": "附近的动物会被喂食并进入繁殖模式（每动物200mB）如果范围内有超过64只动物，则会停止进行繁殖。$(br2)<item>脂肪喂食器/$的工作范围在内部储罐装满了50%时达到最大。最大距离是16格，最小距离（在100%或0%充满时）为4格。通常，<item>$(l:crossroads:fluid/pipe)交错道途管道/$可以"
 		},
 		{
 			"type": "text",
-			"text": "do Share (bi-directional) connections with this machine, as if it were a tank. <em>This should make is easier to keep it at 50% full./$$(br2)"
+			"text": "和机器进行分享连接（双向），好像它们是一个储罐一样。<em>这应该让它更容易维持在50%装满。/$$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<bobo>caAAAAnnnnn YOU HEAr dAAA LUV 2NITE~~~$(br2)<bobo>iIIII\"m bACK!!;! hI bACK, i\"m $(l:crossroads:intro/welcome#bobo)bobo/$<bobo>$(br2)<bobo>sPR3AD da luve t0 da biG-noSES wih A bIG SHInY mOn€¥ bl0ck under-knees dA fAT machine! kApEESH?/$$(br2)"
+			"text": "<bobo>caAAAAnnnnn YOU HEAr dAAA LUV 2NITE~~~$(br2)<bobo>窝我我回来了！！；！嗨，我四$(l:crossroads:intro/welcome#bobo)bobo/$<bobo>$(br2)<bobo>向哒鼻子船播爱，把大陕亮钱快放在脂肪机下面！kApEESH？/$$(br2)"
 		}
 	]
 }
