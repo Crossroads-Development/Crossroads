@@ -66,7 +66,7 @@
 	"item.crossroads.vacuum": "真空吸尘器",
 	"item.crossroads.magenta_bread": "品红色面包",
 	"item.crossroads.chicken_boots": "鸡靴子",
-	"block.crossroads.radiator": "散热器",
+	"block.crossroads.radiator": "蒸汽散热器",
 	"block.crossroads.rotary_drill": "机械钻头",
 	"block.crossroads.rotary_drill_gold": "黄金机械钻头",
 	"item.crossroads.edible_blob": "食物团",
@@ -684,7 +684,7 @@
 	"container.water_centrifuge": "水离心机",
 	"container.fat_collector": "脂肪收集器",
 	"container.salt_reactor": "盐反应器",
-	"container.radiator": "散热器",
+	"container.radiator": "蒸汽散热器",
 	"container.crucible": "工业坩埚",
 	"container.icebox": "冰箱",
 	"container.fluid_tank": "流体储罐",
@@ -885,7 +885,7 @@
 	"key.control_potential": "物品控制：潜能",
 	"key.control_stability": "物品控制：稳定",
 	"key.control_void": "物品控制：虚空",
-	"key.prop_pack_boost": "推进"
+	"key.prop_pack_boost": "推进",
 	
-		"book.crossroads_essentials.name": "交错道途与Essentials的指导手册"
+    "book.crossroads_essentials.name": "交错道途与Essentials的指导手册"
 }
