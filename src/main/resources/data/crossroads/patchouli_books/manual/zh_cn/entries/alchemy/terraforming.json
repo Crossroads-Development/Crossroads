@@ -19,23 +19,27 @@
 		},
 		{
 			"type": "text",
-			"text": "<item>$(l:crossroads:alchemy/stones)以太：/$会把生物群系设为平原，把土壤类方块变成草方块，把石质方块变成石头，把“水晶”方块变成草，把流体变成水。<item>$(l:crossroads:alchemy/stones)以太/$基本是普通的主世界平原转换器。当与<item>汞/$混合，还会让空气填满泥土。$(br2)<item>$(l:crossroads:alchemy/stones)奥秘素：/$会把生物群系设为"
+			"text": "<item>$(l:crossroads:alchemy/stones)以太：/$会把生物群系设为平原，把土壤类方块变成草方块，把石质方块变成石头，把“水晶”方块变成草，把树变成橡树，把流体变成水。<item>$(l:crossroads:alchemy/stones)以太/$基本是普通的主世界平原转换器。当与<item>汞/$混合，还会让空气填满泥土。$(br2)<item>$(l:crossroads:alchemy/stones)魔素：/$会把生物群系设为"
+		},
+		{
+            "type": "text",
+			"text": "蘑菇岛，把土壤类方块变成菌丝，把石质方块变成石头，把“水晶”方块变成菌光体，把树变成巨型蘑菇，把流体变成水。<item>$(l:crossroads:alchemy/stones)魔素/$基本是蘑菇岛转换器。当与<item>汞/$混合，还会让空气填满泥土。$(br2)<item>$(l:crossroads:alchemy/stones)奥秘素：/$会把生物群系设为"
 		},
 		{
 			"type": "text",
-			"text": "下界荒地，把土壤类方块变成灵魂沙，把石质方块变成下界岩，把“水晶”方块变成荧石，把流体变成熔岩。<item>$(l:crossroads:alchemy/stones)奥秘素/$基本是下界转换器。当与<item>汞/$混合，还会让空气填满灵魂沙。$(br2)<item>$(l:crossroads:alchemy/stones)融合素：/$会把生物群系设为深海，把土壤类方块变成"
+			"text": "下界荒地，把土壤类方块变成灵魂沙，把石质方块变成下界岩，把“水晶”方块变成荧石，把树变成绯红巨型菌，把流体变成熔岩。<item>$(l:crossroads:alchemy/stones)奥秘素/$基本是下界转换器。当与<item>汞/$混合，还会让空气填满灵魂沙。$(br2)<item>$(l:crossroads:alchemy/stones)融合素：/$会把生物群系设为深海，把土壤类方块变成"
 		},
 		{
 			"type": "text",
-			"text": "黏土块，把石质方块变成海晶石，把“水晶”方块变成海晶灯，把流体变成蒸馏水。<item>$(l:crossroads:alchemy/stones)融合素/$基本是海底神殿转换器。当与<item>汞/$混合，还会让空气填满黏土。$(br2)<item>$(l:crossroads:alchemy/stones)流明：/$会把生物群系设为沙漠，把土壤类方块变成沙子，把石质方块变成"
+			"text": "黏土块，把石质方块变成海晶石，把“水晶”方块变成海晶灯，把树变成珊瑚，把流体变成蒸馏水。<item>$(l:crossroads:alchemy/stones)融合素/$基本是海底神殿转换器。当与<item>汞/$混合，还会让空气填满黏土。$(br2)<item>$(l:crossroads:alchemy/stones)流明：/$会把生物群系设为沙漠，把土壤类方块变成沙子，把石质方块变成"
 		},
 		{
 			"type": "text",
-			"text": "砂岩，把“水晶”方块变成<item>$(l:crossroads:fluid/ingr)盐块/$，并且移除液体。<item>$(l:crossroads:alchemy/stones)流明/$基本是沙漠转换器。当与<item>汞/$混合，还会让空气填满沙子。$(br2)<item>$(l:crossroads:alchemy/stones)静滞素：/$会把生物群系设为积雪的冻原，把土壤类方块变成雪，把石质方块变成浮冰，把“水晶”方块变成"
+			"text": "砂岩，把“水晶”方块变成<item>$(l:crossroads:fluid/ingr)盐块/$，把树变成骨头，并且移除液体。<item>$(l:crossroads:alchemy/stones)流明/$基本是沙漠转换器。当与<item>汞/$混合，还会让空气填满沙子。$(br2)<item>$(l:crossroads:alchemy/stones)静滞素：/$会把生物群系设为积雪的冻原，把土壤类方块变成雪，把石质方块变成浮冰，把“水晶”方块变成"
 		},
 		{
 			"type": "text",
-			"text": "蓝冰，并把液体变成冰。<item>$(l:crossroads:alchemy/stones)静滞素/$基本是雪地转换器。当与<item>汞/$混合，还会让空气填满雪。$(br2)"
+			"text": "蓝冰，把树变成云杉树，并把液体变成冰。<item>$(l:crossroads:alchemy/stones)静滞素/$基本是雪地转换器。当与<item>汞/$混合，还会让空气填满雪。$(br2)"
 		},
 		{
 			"type": "text",

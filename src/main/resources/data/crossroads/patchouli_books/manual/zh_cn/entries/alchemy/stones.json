@@ -19,7 +19,7 @@
 		},
 		{
 			"type": "text",
-			"text": "The <item>实践者之石/$用于制作几种特殊的<thing>元素试剂/$：<item>奥秘素/$、<item>融合素/$、<item>流明/$、<item>静滞素/$和<item>电压素/$。所有这些试剂必须用水晶存放（还有<item>实践者之石/$本身）。制作这些<thing>元素试剂/$的<thing>反应/$$(l)不/$在JEI，因为它们不是普通的<thing>反应/$。$(br2)要制作<thing>元素试剂/$必须要有"
+			"text": "The <item>实践者之石/$用于制作几种特殊的<thing>元素试剂/$：<item>奥秘素/$、<item>融合素/$、<item>流明/$、<item>静滞素/$、<item>魔素/$和<item>电压素/$。所有这些试剂必须用水晶存放（还有<item>实践者之石/$本身）。制作这些<thing>元素试剂/$的<thing>反应/$$(l)不/$在JEI，因为它们不是普通的<thing>反应/$。$(br2)要制作<thing>元素试剂/$必须要有"
 		},
 		{
 			"type": "text",
@@ -27,7 +27,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<thing>/$都和一个<thing>$(l:crossroads:intro/beam)光束色域/$对应；<item>奥秘素/$是<thing>裂缝/$；<item>融合素/$是<thing>融合/$；<item>流明/$是<thing>光/$；<item>静滞素/$是<thing>平衡/$；<item>电压素/$是<thing>充能/$。$(br2)如果把<item>燃素/$看作<thing>能量/$，<item>以太/$看作<thing>潜能/$，<item>精金/$看作<thing>稳定/$，那么你想要的<thing>元素试剂/$的合成配比就是三者混合出<thing>光束色域/$的配比。$(br2)"
+			"text": "<thing>/$都和一个<thing>$(l:crossroads:intro/beam)光束色域/$对应；<item>奥秘素/$是<thing>裂缝/$；<item>融合素/$是<thing>融合/$；<item>流明/$是<thing>光/$；<item>静滞素/$是<thing>平衡/$；<item>魔素/$是<thing>附魔/$；<item>电压素/$是<thing>充能/$。$(br2)如果把<item>燃素/$看作<thing>能量/$，<item>以太/$看作<thing>潜能/$，<item>精金/$看作<thing>稳定/$，那么你想要的<thing>元素试剂/$的合成配比就是三者混合出<thing>光束色域/$的配比。$(br2)"
 		},
 		{
 			"type": "text",
