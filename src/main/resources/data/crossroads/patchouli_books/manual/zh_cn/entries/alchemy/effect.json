@@ -39,7 +39,7 @@
 		},
 		{
 			"type": "text",
-			"text": "以下是试剂的实用效果：$(br2)<item>王水、酸：/$参见$(l:crossroads:alchemy/acid)酸/$条目。能够获得<item>基岩粉/$。$(br2)<item>盐和炼金术盐：/$杀死植物、爬行者和史莱姆，就像<item>$(l:crossroads:fluid/ingr)盐块/$。$(br2)<item>氯：/$给予实体大量的削弱debuff。"
+			"text": "以下是试剂的实用效果：$(br2)<item>王水、酸：/$参见$(l:crossroads:alchemy/acid)酸/$条目。能够获得<item>基岩粉/$。$(br2)<item>盐和炼金术盐：/$杀死植物、苦力怕和史莱姆，就像<item>$(l:crossroads:fluid/ingr)盐块/$。$(br2)<item>氯：/$给予实体大量的削弱debuff。"
 		},
 		{
 			"type": "text",
@@ -47,7 +47,7 @@
 		},
 		{
 			"type": "text",
-			"text": "固定为<thing>火焰态/$，大范围散布<thing>效果/$。$(br2)<item>以太、流明、奥秘素、融合素和静滞素：/$参见$(l:crossroads:alchemy/terraforming)环境改造/$。$(br2)<item>电压素：/$用电弧电击邻近实体（每次10点伤害，可击中多次）。可对爬行者和猪之类的充能。"
+			"text": "固定为<thing>火焰态/$，大范围散布<thing>效果/$。$(br2)<item>以太、流明、奥秘素、融合素和静滞素：/$参见$(l:crossroads:alchemy/terraforming)环境改造/$。$(br2)<item>电压素：/$用电弧电击邻近实体（每次10点伤害，可击中多次）。可对苦力怕和猪之类的充能。"
 		},
 		{
 			"type": "text",
