@@ -14,11 +14,11 @@
 		},
 		{
 			"type": "text",
-			"text": "a small amount of heat. The total amount of <thing>liquid fat/$ produced from a food is based on the quality of the food- ((hunger restored) + (hunger restored)) is the <thing>value/$ of a food item. One <thing>value/$ is equivalent to 100mB of <thing>liquid fat/$ when consuming it.$(br2)The efficiency of the conversion from food into <thing>liquid fat/$ is based on the temperature of "
+			"text": "a small amount of heat. The total amount of <thing>liquid fat/$ produced from a food is based on the quality of the food- ((hunger restored) + (saturation restored)) is the <thing>value/$ of a food item. One <thing>value/$ is equivalent to 100mB of <thing>liquid fat/$ when consuming it.$(br2)The efficiency of the conversion from food into <thing>liquid fat/$ is based on the temperature "
 		},
 		{
 			"type": "text",
-			"text": "the <item>fat congealer/$. Between 100°C and 120°C, there is 80% efficiency (aka, 80% as much <thing>liquid fat/$ is produced as the food's <thing>value/$ is worth). 120°C-140°C is 100%, <em>140°C-160°C is 120%/$, 160°C-180°C is 100%, 180°C-200°C is 80%, and above 200°C no <thing>liquid fat/$ is produced, but the food is still consumed (0% yield).$(br2)"
+			"text": "of the <item>fat congealer/$. Between 100°C and 120°C, there is 80% efficiency (aka, 80% as much <thing>liquid fat/$ is produced as the food's <thing>value/$ is worth). 120°C-140°C is 100%, <em>140°C-160°C is 120%/$, 160°C-180°C is 100%, 180°C-200°C is 80%, and above 200°C no <thing>liquid fat/$ is produced, but the food is still consumed (0% yield).$(br2)"
 		},
 		{
 			"type": "text",

@@ -33,7 +33,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<thing>$(l:crossroads:beam/time)time beam/$ and produces more <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ than the normal <item>temporal accelerator/$, but is more efficient in terms of beam usage/entropy creation per block affected.$(br2)It uses a <thing>$(l:crossroads:beam/time)time beam/$ to create (<thing>$(l:crossroads:intro/beam)beam power/$)/16 extra ticks per tick (or (<thing>$(l:crossroads:intro/beam)beam power/$)*25%). It produces (2^(extra ticks)) * 8 <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ per cycle (aka: +100% boost is "
+			"text": "<thing>$(l:crossroads:beam/time)time beam/$ and produces more <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ than the normal <item>temporal accelerator/$, but is more efficient in terms of beam usage/entropy creation per block affected.$(br2)It uses a <thing>$(l:crossroads:beam/time)time beam/$ to create (<thing>$(l:crossroads:intro/beam)beam power/$)/16 extra ticks per tick (or (<thing>$(l:crossroads:intro/beam)beam power/$)*12.5%). It produces (2^(extra ticks)) * 8 <thing>$(l:crossroads:intro/technomancy)temporal entropy/$ per cycle (aka: +100% boost is "
 		},
 		{
 			"type": "text",

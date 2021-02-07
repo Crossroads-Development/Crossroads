@@ -19,7 +19,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<item>$(l:crossroads:alchemy/stones)/$ will set the biome to mushroom island, will turn soil materials to mycelium, will turn rock materials to stone, will turn 'crystal' blocks to shroomlight, turns trees into giant mushrooms, and will turn liquids to water. <item>$(l:crossroads:alchemy/stones)Stasisol/$ is basically a mushroom terraformer. When mixed with <item>quicksilver/$, it will fill empty space with dirt.$(br2)<item>$(l:crossroads:alchemy/stones)Eldrine:"
+			"text": "<item>$(l:crossroads:alchemy/stones)/$ will set the biome to mushroom island, will turn soil materials to mycelium, will turn rock materials to stone, will turn 'crystal' blocks to shroomlight, turns trees into giant mushrooms, and will turn liquids to water. <item>$(l:crossroads:alchemy/stones)Magicae/$ is basically a mushroom terraformer. When mixed with <item>quicksilver/$, it will fill empty space with dirt.$(br2)<item>$(l:crossroads:alchemy/stones)Eldrine:"
 		},
 		{
 			"type": "text",
