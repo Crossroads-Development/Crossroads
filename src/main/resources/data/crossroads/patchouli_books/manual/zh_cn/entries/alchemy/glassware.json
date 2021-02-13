@@ -31,11 +31,11 @@
 		},
 		{
 			"type": "text",
-			"text": "<item>试管/$可用于存储和转移<thing>$(l:crossroads:intro/alchemy)试剂/$。它们<em>不会/$允许内部发生<thing>$(l:crossroads:intro/alchemy)反应/$。试管容量为20单位，而且成本很低。手持试管在世界中右键可倒出内部<thing>$(l:crossroads:intro/alchemy)试剂/$并清空<item>试管/$，允许<thing>$(l:crossroads:intro/alchemy)试剂/$产生<thing>$(l:crossroads:alchemy/effect)效果/$。$(br2)"
+			"text": "<item>试管/$可用于存储和转移<thing>$(l:crossroads:intro/alchemy)试剂/$。它们<em>不会/$允许内部发生<thing>$(l:crossroads:intro/alchemy)反应/$。试管容量为 20 单位，而且成本很低。手持试管在世界中右键可倒出内部<thing>$(l:crossroads:intro/alchemy)试剂/$并清空<item>试管/$，允许<thing>$(l:crossroads:intro/alchemy)试剂/$产生<thing>$(l:crossroads:alchemy/effect)效果/$。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<item>平底烧瓶/$用于加热/冷却<thing>$(l:crossroads:intro/alchemy)试剂/$并进行<thing>$(l:crossroads:intro/alchemy)反应/$。当<item>平底烧瓶/$被放在<item>架子/$里，架子的底部会变得可以连接<item>$(l:crossroads:heat/cable)热导管/$。这样便可以用<item>$(l:crossroads:heat/cable)热导管/$控制<thing>$(l:crossroads:intro/alchemy)试剂/$的温度。<item>平底烧瓶/$内能够发生<thing>$(l:crossroads:intro/alchemy)反应/$。烧瓶容量为100单位。<item>平底烧瓶/$不能"
+			"text": "<item>平底烧瓶/$用于加热/冷却<thing>$(l:crossroads:intro/alchemy)试剂/$并进行<thing>$(l:crossroads:intro/alchemy)反应/$。当<item>平底烧瓶/$被放在<item>架子/$里，架子的底部会变得可以连接<item>$(l:crossroads:heat/cable)热导管/$。这样便可以用<item>$(l:crossroads:heat/cable)热导管/$控制<thing>$(l:crossroads:intro/alchemy)试剂/$的温度。<item>平底烧瓶/$内能够发生<thing>$(l:crossroads:intro/alchemy)反应/$。烧瓶容量为 100 单位。<item>平底烧瓶/$不能"
 		},
 		{
 			"type": "text",
@@ -43,7 +43,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<item>壳/$可用于扔出<thing>$(l:crossroads:intro/alchemy)试剂/$，从而使<thing>$(l:crossroads:alchemy/effect)效果/$在远离玩家的地方发生。在<item>架子/$中，它们能充当<item>试管/$（容量20单位，无反应），但可以通过右键扔出。落地时它们会破碎，释放<thing>$(l:crossroads:intro/alchemy)试剂/$并产生<thing>$(l:crossroads:alchemy/effect)效果/$。它们也能用发射器发射。$(br2)"
+			"text": "<item>壳/$可用于扔出<thing>$(l:crossroads:intro/alchemy)试剂/$，从而使<thing>$(l:crossroads:alchemy/effect)效果/$在远离玩家的地方发生。在<item>架子/$中，它们能充当<item>试管/$（容量 20 单位，无反应），但可以通过右键扔出。落地时它们会破碎，释放<thing>$(l:crossroads:intro/alchemy)试剂/$并产生<thing>$(l:crossroads:alchemy/effect)效果/$。它们也能用发射器发射。$(br2)"
 		}
 	]
 }

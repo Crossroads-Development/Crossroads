@@ -11,7 +11,7 @@
 			"type": "spotlight",
 			"title": "熵槽",
 			"item": "crossroads:flux_sink",
-			"text": "<item>熵槽/$是销毁<thing>$(l:crossroads:intro/technomancy)时间熵/$的主要方式。它每周期可以销毁大量的<thing>$(l:crossroads:intro/technomancy)时间熵/$（256单位）。$(br2)要使其工作，必须将其直接放在一个（原版）信标上。它可以放在离信标几格的上方。"
+			"text": "<item>熵槽/$是销毁<thing>$(l:crossroads:intro/technomancy)时间熵/$的主要方式。它每周期可以销毁大量的<thing>$(l:crossroads:intro/technomancy)时间熵/$（256 单位）。$(br2)要使其工作，必须将其直接放在一个（原版）信标上。它可以放在离信标几格的上方。"
 		},
 		{
 			"type": "text",

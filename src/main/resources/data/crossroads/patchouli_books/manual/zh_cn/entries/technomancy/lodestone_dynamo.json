@@ -11,7 +11,7 @@
 			"type": "spotlight",
 			"title": "天然磁石发动机",
 			"item": "crossroads:lodestone_dynamo",
-			"text": "<item>天然磁石发动机/$是普通<item>$(l:crossroads:fluid/dynamo)发电机/$的反向版本。和消耗<thing>$(l:crossroads:intro/rotary)旋转能/$（J）产出FE不同，它消耗FE并产出J，转换率与<item>$(l:crossroads:fluid/dynamo)发电机/$一样。$(br2)"
+			"text": "<item>天然磁石发动机/$是普通<item>$(l:crossroads:fluid/dynamo)发电机/$的反向版本。和消耗<thing>$(l:crossroads:intro/rotary)旋转能/$（J）产出 FE 不同，它消耗 FE 并产出 J，转换率与<item>$(l:crossroads:fluid/dynamo)发电机/$一样。$(br2)"
 		}
 	]
 }

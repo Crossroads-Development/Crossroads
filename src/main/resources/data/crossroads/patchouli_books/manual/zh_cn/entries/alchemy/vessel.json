@@ -19,11 +19,11 @@
 		},
 		{
 			"type": "text",
-			"text": "<item>存储容器/$可存储1000单位<thing>$(l:crossroads:intro/alchemy)试剂/$。这种容器<em>不/$允许内部发生<thing>$(l:crossroads:intro/alchemy)反应/$。用于大量存储<thing>$(l:crossroads:intro/alchemy)试剂/$。$(br2)"
+			"text": "<item>存储容器/$可存储 1000 单位<thing>$(l:crossroads:intro/alchemy)试剂/$。这种容器<em>不/$允许内部发生<thing>$(l:crossroads:intro/alchemy)反应/$。用于大量存储<thing>$(l:crossroads:intro/alchemy)试剂/$。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<item>反应容器/$可存储200单位<thing>$(l:crossroads:intro/alchemy)试剂/$。这种容器<em>允许/$内部发生<thing>$(l:crossroads:intro/alchemy)反应/$。容器也可以使用FE，消耗速度为10FE/t。如果在消耗FE，容器可作为<thing>充能环境/$供<thing>$(l:crossroads:intro/alchemy)反应/$进行。<item>反应容器/$主要用于自动进行<thing>$(l:crossroads:intro/alchemy)反应/$。$(br2)"
+			"text": "<item>反应容器/$可存储 200 单位<thing>$(l:crossroads:intro/alchemy)试剂/$。这种容器<em>允许/$内部发生<thing>$(l:crossroads:intro/alchemy)反应/$。容器也可以使用 FE，消耗速度为 10 FE/t。如果在消耗 FE，容器可作为<thing>充能环境/$供<thing>$(l:crossroads:intro/alchemy)反应/$进行。<item>反应容器/$主要用于自动进行<thing>$(l:crossroads:intro/alchemy)反应/$。$(br2)"
 		}
 	]
 }

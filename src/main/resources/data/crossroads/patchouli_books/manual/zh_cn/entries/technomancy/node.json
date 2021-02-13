@@ -11,7 +11,7 @@
 			"type": "spotlight",
 			"title": "熵结点",
 			"item": "crossroads:flux_node",
-			"text": "使用<item>熵结点/$是传输<thing>$(l:crossroads:intro/technomancy)时间熵/$的主要手段。它们能单向地无线传输<thing>$(l:crossroads:intro/technomancy)时间熵/$，而且能穿墙。$(br2)它们输出<thing>$(l:crossroads:intro/technomancy)时间熵/$的位置可使用<item>$(l:essentials/linking_tool)链接工具/$设置。结点工作范围为16格，每个结点最多可以有16个输出。产生"
+			"text": "使用<item>熵结点/$是传输<thing>$(l:crossroads:intro/technomancy)时间熵/$的主要手段。它们能单向地无线传输<thing>$(l:crossroads:intro/technomancy)时间熵/$，而且能穿墙。$(br2)它们输出<thing>$(l:crossroads:intro/technomancy)时间熵/$的位置可使用<item>$(l:essentials/linking_tool)链接工具/$设置。结点工作范围为16格，每个结点最多可以有 16 个输出。产生"
 		},
 		{
 			"type": "text",
@@ -19,7 +19,7 @@
 		},
 		{
 			"type": "text",
-			"text": "平均最大传输率为64时间熵/周期。$(br2)<item>熵结点/$每次传输了<thing>$(l:crossroads:intro/technomancy)时间熵/$（存储不为空时每周期一次）它们都会将<thing>$(l:crossroads:intro/technomancy)时间熵/$的数量增加2。这意味着一长串<item>熵结点/$会导致最后到达的<thing>$(l:crossroads:intro/technomancy)时间熵/$比开始要多，而且可能会导致末端<item>熵结点/$过载。$(br2)"
+			"text": "平均最大传输率为 64 时间熵/周期。$(br2)<item>熵结点/$每次传输了<thing>$(l:crossroads:intro/technomancy)时间熵/$（存储不为空时每周期一次）它们都会将<thing>$(l:crossroads:intro/technomancy)时间熵/$的数量增加 2。这意味着一长串<item>熵结点/$会导致最后到达的<thing>$(l:crossroads:intro/technomancy)时间熵/$比开始要多，而且可能会导致末端<item>熵结点/$过载。$(br2)"
 		},
 		{
 			"type": "text",

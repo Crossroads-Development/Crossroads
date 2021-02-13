@@ -11,7 +11,7 @@
 			"type": "spotlight",
 			"title": "时空操纵器",
 			"item": "crossroads:chrono_harness",
-			"text": "<item>时空操纵器/$能产生FE，作为副产物会产生<thing>$(l:crossroads:intro/technomancy)时间熵/$。$(br2)它的FE产生速度没有上限，但（默认配置）下每产生50FE就会产生1单位<thing>$(l:crossroads:intro/technomancy)时间熵/$。如果产能速度超过800FE/t，产生"
+			"text": "<item>时空操纵器/$能产生 FE，作为副产物会产生<thing>$(l:crossroads:intro/technomancy)时间熵/$。$(br2)它的 FE 产生速度没有上限，但（默认配置）下每产生 50 FE 就会产生 1 单位<thing>$(l:crossroads:intro/technomancy)时间熵/$。如果产能速度超过 800 FE/t，产生"
 		},
 		{
 			"type": "text",

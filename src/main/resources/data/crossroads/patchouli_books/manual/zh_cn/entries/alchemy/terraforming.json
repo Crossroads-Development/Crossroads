@@ -43,7 +43,7 @@
 		},
 		{
 			"type": "text",
-			"text": "环境改造的“完美比例”是1单位用来环境改造的<thing>$(l:crossroads:intro/alchemy)试剂/$，1单位防止<item>$(l:crossroads:alchemy/stones)燃素/$/<item>$(l:crossroads:alchemy/stones)狱火素/$破坏方块的<item>炼金术盐/$，可选的1单位<item>汞/$用来填满空间，所需的足够多<item>$(l:crossroads:alchemy/stones)燃素/$/<item>$(l:crossroads:alchemy/stones)狱火素/$来使效应在大范围内发生。$(br2)"
+			"text": "环境改造的“完美比例”是 1 单位用来环境改造的<thing>$(l:crossroads:intro/alchemy)试剂/$，1 单位防止<item>$(l:crossroads:alchemy/stones)燃素/$/<item>$(l:crossroads:alchemy/stones)狱火素/$破坏方块的<item>炼金术盐/$，可选的 1 单位<item>汞/$用来填满空间，所需的足够多<item>$(l:crossroads:alchemy/stones)燃素/$/<item>$(l:crossroads:alchemy/stones)狱火素/$来使效应在大范围内发生。$(br2)"
 		},
 		{
 			"type": "text",
