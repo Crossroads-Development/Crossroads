@@ -18,7 +18,7 @@
 		},
 		{
 			"type": "text",
-			"text": "因为制造<thing>$(l:crossroads:fluid/steam)蒸汽/$<em>消耗/$的<thing>热量/$和在<item>散热器/$产出的热量相等，<item>蒸汽散热器/$通常用于长距离传输热能，或者增加最高可达温度——鉴于<thing>$(l:crossroads:fluid/steam)蒸汽/$的产生只需要100°C，而<item>蒸汽散热器/$没有温度上限。$(br2)"
+			"text": "因为制造<thing>$(l:crossroads:fluid/steam)蒸汽/$<em>消耗/$的<thing>热量/$和在<item>散热器/$产出的热量相等，<item>蒸汽散热器/$通常用于长距离传输热能，或者增加最高可达温度——鉴于<thing>$(l:crossroads:fluid/steam)蒸汽/$的产生只需要 100 °C，而<item>蒸汽散热器/$没有温度上限。$(br2)"
 		}
 	]
 }

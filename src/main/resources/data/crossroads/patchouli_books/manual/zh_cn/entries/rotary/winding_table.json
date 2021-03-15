@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "每接受到一个脉冲，物品的<thing>发条转速/$会增加0.2rad/s。如果物品的发条转速超过上发条架的轴转速，<em>物品会被破坏/$。物品只能用正速度上发条。$(br2)当物品在<item>上发条架/$上发条，<item>架/$会产生反向的<thing>$(l:crossroads:intro/rotary)旋转能/$，"
+			"text": "每接受到一个脉冲，物品的<thing>发条转速/$会增加 0.2 rad/s。如果物品的发条转速超过上发条架的轴转速，<em>物品会被破坏/$。物品只能用正速度上发条。$(br2)当物品在<item>上发条架/$上发条，<item>架/$会产生反向的<thing>$(l:crossroads:intro/rotary)旋转能/$，"
 		},
 		{
 			"type": "text",

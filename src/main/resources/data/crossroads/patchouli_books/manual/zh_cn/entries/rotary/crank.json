@@ -10,7 +10,7 @@
 			"type": "spotlight",
 			"title": "手摇曲柄",
 			"item": "crossroads:hand_crank",
-			"text": "<item>手摇曲柄/$是一种早期手动产生少量<thing>旋转能/$的方法。$(br2)手持曲柄对任意齿轮长按右键可以恒定速度对其添加旋转能。同时按住shift则是反方向添加。$(br2)"
+			"text": "<item>手摇曲柄/$是一种早期手动产生少量<thing>旋转能/$的方法。$(br2)使用曲柄对任意齿轮长按右键可以恒定速度对其添加旋转能。同时按住 shift 则是反方向添加。$(br2)"
 		},
 		{
 			"type": "text",

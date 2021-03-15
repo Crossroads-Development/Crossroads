@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "同一个方块空间，因为它们有3x3大小。<item大型齿轮/$放置时也不需要固体表面支撑。$(br2)有数种材料（主要是金属）可用于制作<item>大型齿轮/$，这些齿轮有着不同的<thing>$(l:crossroads:intro/rotary)I值/$。$(br2)因为这种齿轮半径较大，<item>$(l:crossroads:rotary/gear_base)小型齿轮/$旁的<item>大型齿轮/$"
+			"text": "同一个方块空间，因为它们有 3x3 大小。<item大型齿轮/$放置时也不需要固体表面支撑。$(br2)有数种材料（主要是金属）可用于制作<item>大型齿轮/$，这些齿轮有着不同的<thing>$(l:crossroads:intro/rotary)I值/$。$(br2)因为这种齿轮半径较大，<item>$(l:crossroads:rotary/gear_base)小型齿轮/$旁的<item>大型齿轮/$"
 		},
 		{
 			"type": "text",

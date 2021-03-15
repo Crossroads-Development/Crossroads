@@ -11,7 +11,7 @@
 			"type": "spotlight",
 			"title": "抑制粉",
 			"item": "crossroads:damping_powder",
-			"text": "<item>抑制粉/$用于紧急停止$(l:crossroads:alchemy/effect)火焰云/$。当手持物品右击使用后，会消耗一份<item>粉末/$并停止32格内的任何$(l:crossroads:alchemy/effect)火焰云/$。$(br2)由于$(l:crossroads:alchemy/effect)火焰云/$能被实验室事故引发，而且它们有能力破坏"
+			"text": "<item>抑制粉/$用于紧急停止$(l:crossroads:alchemy/effect)火焰云/$。当手持物品右击使用后，会消耗一份<item>粉末/$并停止 32 格内的任何$(l:crossroads:alchemy/effect)火焰云/$。$(br2)由于$(l:crossroads:alchemy/effect)火焰云/$能被实验室事故引发，而且它们有能力破坏"
 		},
 		{
 			"type": "text",

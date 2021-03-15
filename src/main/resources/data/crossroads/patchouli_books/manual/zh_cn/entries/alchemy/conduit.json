@@ -15,7 +15,7 @@
 		},
 		{
 			"type": "text",
-			"text": "或利用不同<thing><thing>$(l:crossroads:intro/alchemy)沸点/熔点/$分离<thing>$(l:crossroads:intro/alchemy)试剂/$。使用<item>$(l:crossroads:alchemy/pump)试剂泵/$可强迫<thing>$(l:crossroads:intro/alchemy)试剂/$往上或往下流。$(br2)<item>炼金术导管/$有水晶和玻璃两个版本，它们不会连接。一些<thing>$(l:crossroads:intro/alchemy)试剂/$不能安全地用玻璃存放。一个<item>导管/$最多可容纳10单位的<thing>$(l:crossroads:intro/alchemy)试剂/$。$(br2)"
+			"text": "或利用不同<thing><thing>$(l:crossroads:intro/alchemy)沸点/熔点/$分离<thing>$(l:crossroads:intro/alchemy)试剂/$。使用<item>$(l:crossroads:alchemy/pump)试剂泵/$可强迫<thing>$(l:crossroads:intro/alchemy)试剂/$往上或往下流。$(br2)<item>炼金术导管/$有水晶和玻璃两个版本，它们不会连接。一些<thing>$(l:crossroads:intro/alchemy)试剂/$不能安全地用玻璃存放。一个<item>导管/$最多可容纳 10 单位的<thing>$(l:crossroads:intro/alchemy)试剂/$。$(br2)"
 		},
 		{
 			"type": "text",
