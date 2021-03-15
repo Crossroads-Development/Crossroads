@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReagentTankTileEntity;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
+import com.google.common.collect.Lists;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
@@ -14,6 +15,8 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameters;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -119,15 +122,14 @@ public class ReagentTank extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, TileEntity te, ItemStack stackIn){
-		if(!(te instanceof ReagentTankTileEntity)){
-			super.harvestBlock(worldIn, player, pos, state, te, stackIn);
-		}else{
-			player.addExhaustion(0.005F);
-			ItemStack stack = new ItemStack(this, 1);
-			setReagents(stack, ((ReagentTankTileEntity) te).getMap());
-			spawnAsEntity(worldIn, pos, stack);
+	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder){
+		TileEntity te = builder.get(LootParameters.BLOCK_ENTITY);
+		if(te instanceof ReagentTankTileEntity){
+			ItemStack drop = new ItemStack(this.asItem(), 1);
+			setReagents(drop, ((ReagentTankTileEntity) te).getMap());
+			return Lists.newArrayList(drop);
 		}
+		return super.getDrops(state, builder);
 	}
 
 	@Override
