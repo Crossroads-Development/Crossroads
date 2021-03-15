@@ -316,6 +316,7 @@ public final class Crossroads{
 	@SuppressWarnings("unused")
 	@SubscribeEvent
 	public static void registerWorldgen(RegistryEvent.Register<Feature<?>> e){
+		CRWorldGen.init();
 		CRWorldGen.register(e.getRegistry());
 	}
 

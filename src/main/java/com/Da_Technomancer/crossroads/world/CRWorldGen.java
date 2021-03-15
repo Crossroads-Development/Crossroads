@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import net.minecraft.block.BlockState;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
@@ -13,7 +14,6 @@ import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.OreFeatureConfig;
 import net.minecraft.world.gen.feature.template.RuleTest;
-import net.minecraft.world.gen.feature.template.TagMatchRuleTest;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -23,15 +23,32 @@ public class CRWorldGen{
 	private static final SingleGen GEM_FEATURE = new SingleGen();
 //	private static final RubyGen RUBY_FEATURE = new RubyGen();
 
-	private static final RuleTest ENDSTONE = new TagMatchRuleTest(Tags.Blocks.END_STONES);
-
-	private static final ConfiguredFeature<?, ?> COPPER_ORE = configuredFeature(Feature.ORE, OreFeatureConfig.FillerBlockType.field_241882_a, OreSetup.oreCopper.getDefaultState(), 13, 32, 3);
-	private static final ConfiguredFeature<?, ?> TIN_ORE = configuredFeature(GEM_FEATURE, OreFeatureConfig.FillerBlockType.field_241882_a, OreSetup.oreTin.getDefaultState(), 1, 32, 20);
-	private static final ConfiguredFeature<?, ?> VOID_ORE = configuredFeature(GEM_FEATURE, ENDSTONE, OreSetup.oreVoid.getDefaultState(), 1, 80, 10);
-	private static final ConfiguredFeature<?, ?> RUBY_ORE_SPOT = configuredFeature(GEM_FEATURE, OreFeatureConfig.FillerBlockType.field_241883_b, OreSetup.oreRuby.getDefaultState(), 1, 117, 20);
+	private static ConfiguredFeature<?, ?> COPPER_ORE;
+	private static ConfiguredFeature<?, ?> TIN_ORE;
+	private static ConfiguredFeature<?, ?> VOID_ORE;
+	private static ConfiguredFeature<?, ?> RUBY_ORE_SPOT;//Ruby is currently generating as single block ores scattered randomly in netherrack
 //	private static final ConfiguredFeature<?, ?> RUBY_ORE = RUBY_FEATURE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.field_241883_b, Blocks.NETHER_QUARTZ_ORE.getDefaultState(), 14)).withPlacement(Features.Placements.field_243998_i).func_242728_a().func_242731_b(16);//Normal nether quartz vein version
 //	private static final ConfiguredFeature<?, ?> RUBY_ORE_BASALT = RUBY_FEATURE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.field_241883_b, Blocks.NETHER_QUARTZ_ORE.getDefaultState(), 14)).withPlacement(Features.Placements.field_243998_i).func_242728_a().func_242731_b(32);//Basalt delta vein version
 
+	/**
+	 * Must be called before register(), on both sides
+	 */
+	public static void init(){
+		//Register the relevant config options to be used for worldgen with ConfigTagRuleTest
+		ConfigTagRuleTest.registerConfig("cr_copper", CRConfig.genCopperOre);
+		ConfigTagRuleTest.registerConfig("cr_tin", CRConfig.genTinOre);
+		ConfigTagRuleTest.registerConfig("cr_ruby", CRConfig.genRubyOre);
+		ConfigTagRuleTest.registerConfig("cr_void", CRConfig.genVoidOre);
+		//Construct our configured features
+		COPPER_ORE = configuredFeature(Feature.ORE, new ConfigTagRuleTest(BlockTags.BASE_STONE_OVERWORLD, "cr_copper"), OreSetup.oreCopper.getDefaultState(), 13, 32, 3);
+		TIN_ORE = configuredFeature(GEM_FEATURE, new ConfigTagRuleTest(BlockTags.BASE_STONE_OVERWORLD, "cr_tin"), OreSetup.oreTin.getDefaultState(), 1, 32, 20);
+		VOID_ORE = configuredFeature(GEM_FEATURE, new ConfigTagRuleTest(Tags.Blocks.END_STONES, "cr_void"), OreSetup.oreVoid.getDefaultState(), 1, 80, 10);
+		RUBY_ORE_SPOT = configuredFeature(GEM_FEATURE, new ConfigTagRuleTest(BlockTags.makeWrapperTag(Crossroads.MODID + ":netherrack"), "cr_ruby"), OreSetup.oreRuby.getDefaultState(), 1, 117, 20);
+	}
+
+	/**
+	 * Must be called after init() and before addWorldgen()
+	 */
 	public static void register(IForgeRegistry<Feature<?>> reg){
 		//Create a new feature type for placing single blocks of ore
 		reg.register(GEM_FEATURE.setRegistryName("single_gen"));
@@ -47,20 +64,12 @@ public class CRWorldGen{
 
 	public static void addWorldgen(BiomeLoadingEvent event){
 		if(isOverworld(event.getCategory())){
-			if(CRConfig.genCopperOre.get()){
-				event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, COPPER_ORE);
-			}
-			if(CRConfig.genTinOre.get()){
-				event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, TIN_ORE);
-			}
+			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, COPPER_ORE);
+			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, TIN_ORE);
 		}else if(event.getCategory() == Biome.Category.THEEND){
-			if(CRConfig.genVoidOre.get()){
-				event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, VOID_ORE);
-			}
+			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, VOID_ORE);
 		}else if(event.getCategory() == Biome.Category.NETHER){
-			if(CRConfig.genRubyOre.get()){
-				event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, RUBY_ORE_SPOT);
-			}
+			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, RUBY_ORE_SPOT);
 		}
 	}
 
