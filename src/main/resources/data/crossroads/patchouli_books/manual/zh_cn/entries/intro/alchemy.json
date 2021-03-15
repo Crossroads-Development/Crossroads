@@ -19,7 +19,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<thing>/$、<thing>气态/$。只有<thing>固态/$能被转换为物品形态。<thing>试剂/$的$(l:crossroads:intro/heat)温度/$控制着它的<thing>物态/$。<thing>试剂/$的温度超过<thing>试剂的沸点/$会变成<thing>气体/$，低于<thing>熔点/$会变成<thing>固态/$，在两个温度之间会变成<thing>液态/$。<thing>试剂/$的<thing>熔点/$，<thing>沸点/$和物品形态能够通过Just Enough Items（JEI）的帮助查看——"
+			"text": "<thing>/$、<thing>气态/$。只有<thing>固态/$能被转换为物品形态。<thing>试剂/$的$(l:crossroads:intro/heat)温度/$控制着它的<thing>物态/$。<thing>试剂/$的温度超过<thing>试剂的沸点/$会变成<thing>气体/$，低于<thing>熔点/$会变成<thing>固态/$，在两个温度之间会变成<thing>液态/$。<thing>试剂/$的<thing>熔点/$，<thing>沸点/$和物品形态能够通过 Just Enough Items（JEI）的帮助查看——"
 		},
 		{
 			"type": "text",
@@ -31,7 +31,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<thing>反应/$发生时要么产生要么消耗热量（增加或减少温度）——这一特性在JEI里会被分别列为“放热”或“吸热”。“等温”意味着反应不会影响温度。$(br2)一些<thing>反应/$的发生会需要一个$(l:crossroads:alchemy/charger)充能环境/$。这些反应在JEI里"
+			"text": "<thing>反应/$发生时要么产生要么消耗热量（增加或减少温度）——这一特性在 JEI 里会被分别列为“放热”或“吸热”。“等温”意味着反应不会影响温度。$(br2)一些<thing>反应/$的发生会需要一个$(l:crossroads:alchemy/charger)充能环境/$。这些反应在 JEI 里"
 		},
 		{
 			"type": "text",
@@ -43,7 +43,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<thing>试剂/$通常需要存放在玻璃器皿里，而玻璃器皿有两个版本：玻璃和水晶。大多数<thing>试剂/$能够存放在二者中，但少数试剂（特别是<item>$(l:crossroads:alchemy/stones)思索者之石/$必须放在水晶容器中，否则会破坏容器。试剂的JEI说明会特别指出<thing>试剂/$是否必须存放在水晶中容器。$(br2)用于早期炼金和手动"
+			"text": "<thing>试剂/$通常需要存放在玻璃器皿里，而玻璃器皿有两个版本：玻璃和水晶。大多数<thing>试剂/$能够存放在二者中，但少数试剂（特别是<item>$(l:crossroads:alchemy/stones)思索者之石/$必须放在水晶容器中，否则会破坏容器。试剂的 JEI 说明会特别指出<thing>试剂/$是否必须存放在水晶中容器。$(br2)用于早期炼金和手动"
 		},
 		{
 			"type": "text",

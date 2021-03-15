@@ -19,7 +19,7 @@
 		},
 		{
 			"type": "text",
-			"text": "通常使用一个更大（更高<thing>$(l:crossroads:intro/rotary)I值/$）的齿轮放在背面作为<thing>$(l:crossroads:intro/rotary)能量/$源更好，因为这允许<item>红石主轴/$更快地吸取<thing>$(l:crossroads:intro/rotary)能量/$。$(br2)"
+			"text": "通常使用一个更大（更高 <thing>$(l:crossroads:intro/rotary)I 值/$）的齿轮放在背面作为<thing>$(l:crossroads:intro/rotary)能量/$源更好，因为这允许<item>红石主轴/$更快地吸取<thing>$(l:crossroads:intro/rotary)能量/$。$(br2)"
 		}
 	]
 }

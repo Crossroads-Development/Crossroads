@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "流体在洗矿机顶部输出，流体则从侧面输入。每次操作都会消耗250mB的<thing>$(l:crossroads:intro/fluid)蒸汽/$并产出250mB的<thing>$(l:crossroads:intro/fluid)脏水/$。这些<thing>$(l:crossroads:intro/fluid)脏水/$可在<item>$(l:crossroads:fluid/centrifuge)水离心机/$中再处理。$(br2)<thing>$(l:essentials/circuits#reader)读取器电路/$可测量输入槽的充满程度。$(br2)"
+			"text": "流体在洗矿机顶部输出，流体则从侧面输入。每次操作都会消耗250mB的<thing>$(l:crossroads:intro/fluid)蒸汽/$并产出 250 mB 的<thing>$(l:crossroads:intro/fluid)脏水/$。这些<thing>$(l:crossroads:intro/fluid)脏水/$可在<item>$(l:crossroads:fluid/centrifuge)水离心机/$中再处理。$(br2)<thing>$(l:essentials/circuits#reader)读取器电路/$可测量输入槽的充满程度。$(br2)"
 		},
 		{
 			"type": "text",

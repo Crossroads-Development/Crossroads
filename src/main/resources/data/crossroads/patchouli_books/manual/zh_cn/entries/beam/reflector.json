@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "如果多个<thing>$(l:crossroads:intro/beam)光束/$同时进入了相同的<item>反射器/$，它们会混合在一起输出。和平时一样，所有<thing>$(l:crossroads:intro/beam)光束/$的发射都有一个4tick（0.2秒）的延迟。$(br2)<item>光束反射器/$组成的光束循环不但是可行的，而且是一种无损储存光束的好方法。$(br2)"
+			"text": "如果多个<thing>$(l:crossroads:intro/beam)光束/$同时进入了相同的<item>反射器/$，它们会混合在一起输出。和平时一样，所有<thing>$(l:crossroads:intro/beam)光束/$的发射都有一个 4 tick（0.2 秒）的延迟。$(br2)<item>光束反射器/$组成的光束循环不但是可行的，而且是一种无损储存光束的好方法。$(br2)"
 		}
 	]
 }

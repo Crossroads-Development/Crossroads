@@ -10,7 +10,7 @@
 			"type": "spotlight",
 			"title": "蒸柜",
 			"item": "crossroads:steamer",
-			"text": "<item>蒸柜/$是<thing>$(l:crossroads:intro/fluid)蒸汽/$供能的快速版烟熏炉。它每50tick能烹饪一个食物物品（每秒4个物品）。运行时，它以200mB/t消耗<thing>$(l:crossroads:intro/fluid)蒸汽/$并产出等量的<thing>$(l:crossroads:intro/fluid)蒸馏水/$。$(br2)<thing>$(l:crossroads:intro/fluid)蒸汽/$可以从底面或侧面输入，<thing>$(l:crossroads:intro/fluid)蒸馏水"
+			"text": "<item>蒸柜/$是<thing>$(l:crossroads:intro/fluid)蒸汽/$供能的快速版烟熏炉。它每 50 tick 能烹饪一个食物物品（每秒 4 个物品）。运行时，它以 200 mB/t 消耗<thing>$(l:crossroads:intro/fluid)蒸汽/$并产出等量的<thing>$(l:crossroads:intro/fluid)蒸馏水/$。$(br2)<thing>$(l:crossroads:intro/fluid)蒸汽/$可以从底面或侧面输入，<thing>$(l:crossroads:intro/fluid)蒸馏水"
 		},
 		{
 			"type": "text",

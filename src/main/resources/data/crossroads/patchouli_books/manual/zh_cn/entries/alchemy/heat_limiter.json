@@ -15,7 +15,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<item>温度调节器/$有两个模式：红模式和蓝模式，可以通过手持<item>$(l:essentials/wrench)扳手/$shift右击互相切换。$(br2)在红模式，热可从输入流到输出，直到输出面上升到目标<thing>$(l:crossroads:intro/heat)温度/$。该模式下正面不会比背面热。实际上，可以说该模式将输出面加热到指定<thing>$(l:crossroads:intro/heat)温度/$。$(br2)"
+			"text": "<item>温度调节器/$有两个模式：红模式和蓝模式，可以通过使用<item>$(l:essentials/wrench)扳手/$ shift 右击互相切换。$(br2)在红模式，热可从输入流到输出，直到输出面上升到目标<thing>$(l:crossroads:intro/heat)温度/$。该模式下正面不会比背面热。实际上，可以说该模式将输出面加热到指定<thing>$(l:crossroads:intro/heat)温度/$。$(br2)"
 		},
 		{
 			"type": "text",

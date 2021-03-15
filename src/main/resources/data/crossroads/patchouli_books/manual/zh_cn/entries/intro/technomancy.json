@@ -19,7 +19,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<thing>熵/$的产生，传输和摧毁都是基于周期进行的（1周期=4游戏tick=2红石tick=0.2秒）。这个周期和<thing>$(l:crossroads:intro/beam)光束/$使用的周期是一样的。$(br2)大多数<thing>科技魔法/$的机器和物品都需要一种叫<item>$(l:crossroads:technomancy/copshowium)钶（Copshowium）/$的材料合成。在开始<thing>科技魔法/$前，最好先得到充足的<thing>钶/$供应。$(br2)"
+			"text": "<thing>熵/$的产生，传输和摧毁都是基于周期进行的（1 周期 = 4 游戏tick = 2 红石tick = 0.2 秒）。这个周期和<thing>$(l:crossroads:intro/beam)光束/$使用的周期是一样的。$(br2)大多数<thing>科技魔法/$的机器和物品都需要一种叫<item>$(l:crossroads:technomancy/copshowium)钶（Copshowium）/$的材料合成。在开始<thing>科技魔法/$前，最好先得到充足的<thing>钶/$供应。$(br2)"
 		},
 		{
 			"type": "text",

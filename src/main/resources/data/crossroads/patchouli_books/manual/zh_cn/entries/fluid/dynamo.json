@@ -10,11 +10,11 @@
 			"type": "spotlight",
 			"title": "发电机",
 			"item": "crossroads:dynamo",
-			"text": "<item>发电机/$使用<thing>$(l:crossroads:intro/rotary)旋转能/$产出<thing>Forge能量（FE）/$。$(br2)更高的<thing>$(l:crossroads:intro/rotary)转速/$会产出更多能量，并消耗更多旋转能（转换率不变）。FE从与旋转连接相反的一面输出。$(br2)"
+			"text": "<item>发电机/$使用<thing>$(l:crossroads:intro/rotary)旋转能/$产出<thing>Forge能量（FE）/$。$(br2)更高的<thing>$(l:crossroads:intro/rotary)转速/$会产出更多能量，并消耗更多旋转能（转换率不变）。FE 从与旋转连接相反的一面输出。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "交错道途本身没有多少使用FE的地方。交错道途还添加了一种用于进行FE传输的<item>$(l:crossroads:fluid/tesla)特斯拉线圈/$$(br2)"
+			"text": "交错道途本身没有多少使用 FE 的地方。交错道途还添加了一种用于进行 FE 传输的<item>$(l:crossroads:fluid/tesla)特斯拉线圈/$$(br2)"
 		},
 		{
 			"type": "text",

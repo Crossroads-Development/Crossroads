@@ -10,7 +10,7 @@
 			"type": "spotlight",
 			"title": "轴和小型齿轮",
 			"item": "crossroads:gear_base",
-			"text": "传输<thing>$(l:crossroads:intro/rotary)旋转能/$的最基础部件是<item>小型齿轮/$和<item>轴/$。$(br2)一个方块空间内最多可以放6个<item>小型齿轮/$——每面一个。<item>小型齿轮/$必须放在固体表面上，并且可用<item>$(l:essentials/wrench)扳手/$单独破坏。$(br2)"
+			"text": "传输<thing>$(l:crossroads:intro/rotary)旋转能/$的最基础部件是<item>小型齿轮/$和<item>轴/$。$(br2)一个方块空间内最多可以放 6 个<item>小型齿轮/$——每面一个。<item>小型齿轮/$必须放在固体表面上，并且可用<item>$(l:essentials/wrench)扳手/$单独破坏。$(br2)"
 		},
 		{
 			"type": "text",

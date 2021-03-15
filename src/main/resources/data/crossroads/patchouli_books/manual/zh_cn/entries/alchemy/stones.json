@@ -11,7 +11,7 @@
 			"type": "spotlight",
 			"title": "思索者之石和实践者之石",
 			"item": "crossroads:phil_stone",
-			"text": "<item>思索者之石/$和<item>实践者之石/$是重要的物品/<thing>试剂/$，能用作某些重要反应的<thing>$(l:crossroads:intro/alchemy)催化剂/$。$(br2)得到<item>思索者之石/$可以看作解锁了“2级炼金术”。得到<item>实践者之石/$可以看作解锁了“3级炼金术”。$(br2)"
+			"text": "<item>思索者之石/$和<item>实践者之石/$是重要的物品/<thing>试剂/$，能用作某些重要反应的<thing>$(l:crossroads:intro/alchemy)催化剂/$。$(br2)得到<item>思索者之石/$可以看作解锁了“2 级炼金术”。得到<item>实践者之石/$可以看作解锁了“3 级炼金术”。$(br2)"
 		},
 		{
 			"type": "text",
@@ -19,7 +19,7 @@
 		},
 		{
 			"type": "text",
-			"text": "The <item>实践者之石/$用于制作几种特殊的<thing>元素试剂/$：<item>奥秘素/$、<item>融合素/$、<item>流明/$、<item>静滞素/$、<item>魔素/$和<item>电压素/$。所有这些试剂必须用水晶存放（还有<item>实践者之石/$本身）。制作这些<thing>元素试剂/$的<thing>反应/$$(l)不/$在JEI，因为它们不是普通的<thing>反应/$。$(br2)要制作<thing>元素试剂/$必须要有"
+			"text": "The <item>实践者之石/$用于制作几种特殊的<thing>元素试剂/$：<item>奥秘素/$、<item>融合素/$、<item>流明/$、<item>静滞素/$、<item>魔素/$和<item>电压素/$。所有这些试剂必须用水晶存放（还有<item>实践者之石/$本身）。制作这些<thing>元素试剂/$的<thing>反应/$$(l)不/$在 JEI，因为它们不是普通的<thing>反应/$。$(br2)要制作<thing>元素试剂/$必须要有"
 		},
 		{
 			"type": "text",
@@ -31,11 +31,11 @@
 		},
 		{
 			"type": "text",
-			"text": "例如，1:1:0的<item>燃素/$:<item>以太/$:<item>精金/$可制作<item>电压素/$，但4:3:0也一样可以。$(br2)"
+			"text": "例如，1:1:0 的<item>燃素/$:<item>以太/$:<item>精金/$可制作<item>电压素/$，但 4:3:0 也一样可以。$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "用<item>实践者之石/$制造的<thing>元素试剂/$的主要用途是其效果。参见$(l:crossroads:alchemy/terraforming)环境改造条目/$获取更多信息。$(br2)<item>电压素也能通过<item>$(l:crossroads:alchemy/generator)电压素发电机/$作为FE源，或者用来造成伤害（更多细节参见$(l:crossroads:alchemy/effect)效果条目/$）。$(br2)"
+			"text": "用<item>实践者之石/$制造的<thing>元素试剂/$的主要用途是其效果。参见$(l:crossroads:alchemy/terraforming)环境改造条目/$获取更多信息。$(br2)<item>电压素也能通过<item>$(l:crossroads:alchemy/generator)电压素发电机/$作为 FE 源，或者用来造成伤害（更多细节参见$(l:crossroads:alchemy/effect)效果条目/$）。$(br2)"
 		}
 	]
 }

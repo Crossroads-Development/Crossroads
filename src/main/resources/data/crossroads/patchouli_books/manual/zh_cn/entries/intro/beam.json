@@ -18,7 +18,7 @@
 		},
 		{
 			"type": "text",
-			"text": "效果会每4 ticks发生一次（每<thing>周期/$一次）。$(br2)每个光束都是四种资源的混合，这四种资源分别代表了四种颜色：<thing>能量/$- 红、<thing>潜能/$- 绿、<thing>稳定/$- 蓝和<thing>$(l:crossroads:beam/void)虚空/$- 黑。<thing>虚空/$是游戏后期的资源，而且在初期不会被使用。$(br2)光束的<thing>功率/$是"
+			"text": "效果会每 4 tick 发生一次（每<thing>周期/$一次）。$(br2)每个光束都是四种资源的混合，这四种资源分别代表了四种颜色：<thing>能量/$- 红、<thing>潜能/$- 绿、<thing>稳定/$- 蓝和<thing>$(l:crossroads:beam/void)虚空/$- 黑。<thing>虚空/$是游戏后期的资源，而且在初期不会被使用。$(br2)光束的<thing>功率/$是"
 		},
 		{
 			"type": "text",
@@ -30,11 +30,11 @@
 		},
 		{
 			"type": "text",
-			"text": "许多<thing>色域/$的光束在拥有足够功率的情况下会在击中方块时嬗变方块。如果你安装了JEI，你可以通过查看<item>$(l:crossroads:beam/reflector)光束发射器/$的使用在JEI中查看这类嬗变配方。$(br2)<thing>光束/$通常会在<item>$(l:crossroads:beam/reflector)光束发射器/$里来回绕圈，而且通过<item>$(l:crossroads:beam/extractor)共振提取器/$制造。每个<thing>光束/$穿过的机器或方块"
+			"text": "许多<thing>色域/$的光束在拥有足够功率的情况下会在击中方块时嬗变方块。如果你安装了 JEI，你可以通过查看<item>$(l:crossroads:beam/reflector)光束反射器/$的使用在 JEI 中查看这类嬗变配方。$(br2)<thing>光束/$通常会在<item>$(l:crossroads:beam/reflector)光束反射器/$里来回绕圈，而且通过<item>$(l:crossroads:beam/extractor)共振提取器/$制造。每个<thing>光束/$穿过的机器或方块"
 		},
 		{
 			"type": "text",
-			"text": "都会给光束添加一个4 tick（0.2秒）的延迟（这个长度被称为1个<thing>周期/$），光束在机器间则会最多传播16格。光束<thing>功率/$的上限为64,000。$(br2)"
+			"text": "都会给光束添加一个 4 tick（0.2 秒）的延迟（这个长度被称为 1 个<thing>周期/$），光束在机器间则会最多传播 16 格。光束<thing>功率/$的上限为 64,000。$(br2)"
 		}
 	]
 }
