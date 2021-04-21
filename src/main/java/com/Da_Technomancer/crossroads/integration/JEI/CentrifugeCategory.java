@@ -74,12 +74,15 @@ public class CentrifugeCategory implements IRecipeCategory<CentrifugeRec>{
 		IGuiFluidStackGroup fluidGroup = recipeLayout.getFluidStacks();
 
 		itemGroup.init(0, false, 130, 30);
-		itemGroup.set(0, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
+//		itemGroup.set(0, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
 
 		fluidGroup.init(0, true, 50, 30, 16, 64, 4000, true, fluidOverlay);
-		fluidGroup.set(0, recipe.getInput());
+//		fluidGroup.set(0, recipe.getInput());
 		fluidGroup.init(1, false, 110, 30, 16, 64, 4000, true, fluidOverlay);
-		fluidGroup.set(1, ingredients.getOutputs(VanillaTypes.FLUID).get(0));
+//		fluidGroup.set(1, ingredients.getOutputs(VanillaTypes.FLUID).get(0));
+
+		itemGroup.set(ingredients);
+		fluidGroup.set(ingredients);
 	}
 
 	@Override

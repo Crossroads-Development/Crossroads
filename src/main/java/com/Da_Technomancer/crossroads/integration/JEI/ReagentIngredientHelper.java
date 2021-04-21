@@ -76,11 +76,14 @@ public class ReagentIngredientHelper implements IIngredientHelper<ReagIngr>{
 
 	@Override
 	public ReagIngr normalizeIngredient(ReagIngr ingredient){
-		return ingredient.getParts() <= 1 ? ingredient : new ReagIngr(ingredient.getReag(), 1);
+		return ingredient.getParts() == 1 ? ingredient : new ReagIngr(ingredient.getReag(), 1);
 	}
 
 	@Override
 	public String getErrorInfo(ReagIngr ingredient){
+		if(ingredient == null){
+			return "NULL ingredient";
+		}
 		if(ingredient.getReag() == null){
 			return "ID: " + ingredient.getID() + "; Name: NULL; Parts: " + ingredient.getParts();
 		}

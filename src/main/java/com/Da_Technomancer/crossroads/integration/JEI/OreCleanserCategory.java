@@ -82,16 +82,16 @@ public class OreCleanserCategory implements IRecipeCategory<OreCleanserRec>{
 		IGuiFluidStackGroup fluidGroup = layout.getFluidStacks();
 
 		itemGroup.init(0, true, 54, 50);
-		itemGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
+//		itemGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
 
 		itemGroup.init(1, false, 110, 50);
-		itemGroup.set(1, recipe.getResultItem());
+//		itemGroup.set(1, recipe.getResultItem());
 
 		fluidGroup.init(0, true, 34, 30, 16, 64, 1_000, true, fluidOverlay);
-		fluidGroup.set(0, new FluidStack(CRFluids.steam.still, OreCleanserTileEntity.WATER_USE));
+//		fluidGroup.set(0, new FluidStack(CRFluids.steam.still, OreCleanserTileEntity.WATER_USE));
 
 		fluidGroup.init(1, false, 130, 30, 16, 64, 1_000, true, fluidOverlay);
-		fluidGroup.set(1, new FluidStack(CRFluids.dirtyWater.still, OreCleanserTileEntity.WATER_USE));
+//		fluidGroup.set(1, new FluidStack(CRFluids.dirtyWater.still, OreCleanserTileEntity.WATER_USE));
 
 		itemGroup.set(ingredients);
 		fluidGroup.set(ingredients);

@@ -23,7 +23,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.IntReferenceHolder;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -49,7 +48,6 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	public static final int USAGE = 20;
 	public static final int REQUIRED = 1000;
 	private int progress = 0;
-	public IntReferenceHolder progressRef = IntReferenceHolder.standalone();
 	/**
 	 * The texture to be displayed, if any.
 	 */
@@ -61,6 +59,10 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 		super(type, 1);
 		fluidProps[0] = new TankProperty(4_000, false, true);
 		initFluidManagers();
+	}
+
+	public int getProgress(){
+		return progress;
 	}
 
 	@Override
@@ -157,7 +159,6 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 					}
 				}
 			}
-			progressRef.set(progress);
 
 			setChanged();
 		}
@@ -174,7 +175,6 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 		}
 		col = nbt.contains("col") ? nbt.getInt("col") : null;
 		progress = nbt.getInt("prog");
-		progressRef.set(progress);
 	}
 
 	@Override

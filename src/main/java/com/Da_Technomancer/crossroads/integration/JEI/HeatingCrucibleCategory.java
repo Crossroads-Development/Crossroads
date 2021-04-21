@@ -78,9 +78,12 @@ public class HeatingCrucibleCategory implements IRecipeCategory<CrucibleRec>{
 
 //		List<FluidStack> fluids = ingredients.getOutputs(VanillaTypes.FLUID).get(0);
 		fluidGroup.init(0, false, 90, 30, 16, 64, 2_000, true, fluidOverlay);
-		fluidGroup.set(0, recipe.getOutput());
+//		fluidGroup.set(0, recipe.getOutput());
 		itemGroup.init(0, true, 40, 50);
-		itemGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
+//		itemGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
+
+		itemGroup.set(ingredients);
+		fluidGroup.set(ingredients);
 	}
 
 	@Override

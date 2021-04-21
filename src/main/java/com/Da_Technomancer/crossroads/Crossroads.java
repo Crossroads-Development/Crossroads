@@ -169,6 +169,7 @@ public final class Crossroads{
 		reg.register(new BoboRec.Serializer().setRegistryName("bobo"));
 		reg.register(new CopshowiumRec.Serializer().setRegistryName("copshowium"));
 		reg.register(new ReagentRec.Serializer().setRegistryName("reagents"));
+		reg.register(new FormulationVatRec.Serializer().setRegistryName("formulation_vat"));
 	}
 
 	@SubscribeEvent
@@ -246,6 +247,7 @@ public final class Crossroads{
 		registerCon(SequenceBoxContainer::new, SequenceBoxScreen::new, "sequence_box", e);
 		registerCon(SteamTurbineContainer::new, SteamTurbineScreen::new, "steam_turbine", e);
 		registerCon(BeaconHarnessContainer::new, BeaconHarnessScreen::new, "beacon_harness", e);
+		registerCon(FormulationVatContainer::new, FormulationVatScreen::new, "formulation_vat", e);
 	}
 
 	@SuppressWarnings("unused")
@@ -282,6 +284,7 @@ public final class Crossroads{
 		registerConType(SequenceBoxContainer::new, "sequence_box", e);
 		registerConType(SteamTurbineContainer::new, "steam_turbine", e);
 		registerConType(BeaconHarnessContainer::new, "beacon_harness", e);
+		registerConType(FormulationVatContainer::new, "formulation_vat", e);
 	}
 
 	/**

@@ -11,6 +11,7 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiIngredientGroup;
+import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
@@ -110,11 +111,15 @@ public class ReagInfoCategory implements IRecipeCategory<IReagent>{
 	public void setRecipe(IRecipeLayout layout, IReagent recipe, IIngredients ingredients){
 //		List<ReagIngr> reag = ingredients.getInputs(ReagIngr.REAG).get(0);
 		IGuiIngredientGroup<ReagIngr> reagGroup = layout.getIngredientsGroup(ReagIngr.REAG);
+		IGuiItemStackGroup itemGroup = layout.getItemStacks();
 
 		reagGroup.init(0, true, 2, 2);
-		reagGroup.set(0, ingredients.getInputs(ReagIngr.REAG).get(0));
+//		reagGroup.set(0, ingredients.getInputs(ReagIngr.REAG).get(0));
 
-		layout.getIngredientsGroup(VanillaTypes.ITEM).init(0, true, 20, 2);
-		layout.getIngredientsGroup(VanillaTypes.ITEM).set(0, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
+		itemGroup.init(0, true, 20, 2);
+//		itemGroup.set(0, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
+
+		reagGroup.set(ingredients);
+		itemGroup.set(ingredients);
 	}
 }

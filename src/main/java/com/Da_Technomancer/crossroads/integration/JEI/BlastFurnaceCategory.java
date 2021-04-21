@@ -78,11 +78,11 @@ public class BlastFurnaceCategory implements IRecipeCategory<BlastFurnaceRec>{
 		IGuiFluidStackGroup fluidGroup = layout.getFluidStacks();
 
 		itemGroup.init(0, true, 54, 55);
-		itemGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
+//		itemGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
 		itemGroup.init(1, false, 130, 55);
-		itemGroup.set(1, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
+//		itemGroup.set(1, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
 		fluidGroup.init(0, false, 110, 22, 16, 64, 1_000, true, fluidOverlay);
-		fluidGroup.set(0, ingredients.getOutputs(VanillaTypes.FLUID).get(0));
+//		fluidGroup.set(0, ingredients.getOutputs(VanillaTypes.FLUID).get(0));
 
 		itemGroup.set(ingredients);
 		fluidGroup.set(ingredients);

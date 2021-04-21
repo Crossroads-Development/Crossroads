@@ -1,0 +1,14 @@
+{
+	"type": "crossroads:formulation_vat",
+	"input_fluid": {
+		"fluid": "water",
+		"amount": 500
+	},
+	"input_item": {
+		"tag": "crossroads:dusts/nitric_acid"
+	},
+	"output": {
+		"fluid": "crossroads:fertilizer_solution",
+		"amount": 1000
+	}
+}

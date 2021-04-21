@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.blocks.fluid.*;
 import com.Da_Technomancer.crossroads.blocks.heat.*;
 import com.Da_Technomancer.crossroads.blocks.rotary.*;
 import com.Da_Technomancer.crossroads.blocks.technomancy.*;
+import com.Da_Technomancer.crossroads.blocks.witchcraft.FormulationVat;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.fluids.GenericFluid;
 import com.Da_Technomancer.crossroads.items.CRItems;
@@ -156,6 +157,7 @@ public class CRBlocks{
 	public static ChunkAccelerator chunkAccelerator;
 	public static GatewayControllerDestination gatewayControllerDestination;
 	public static BeamCannon beamCannon;
+	public static FormulationVat formulationVat;
 
 	public static AbstractBlock.Properties getRockProperty(){
 		return AbstractBlock.Properties.of(Material.STONE).strength(3).requiresCorrectToolForDrops().sound(SoundType.STONE);
@@ -333,6 +335,7 @@ public class CRBlocks{
 		chunkAccelerator = new ChunkAccelerator();
 		gatewayControllerDestination = new GatewayControllerDestination();
 		beamCannon = new BeamCannon();
+		formulationVat = new FormulationVat();
 	}
 
 	@OnlyIn(Dist.CLIENT)

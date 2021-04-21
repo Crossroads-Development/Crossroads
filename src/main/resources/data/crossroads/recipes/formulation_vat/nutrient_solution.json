@@ -1,0 +1,14 @@
+{
+	"type": "crossroads:formulation_vat",
+	"input_fluid": {
+		"fluid": "crossroads:liquid_fat",
+		"amount": 250
+	},
+	"input_item": {
+		"tag": "forge:dusts/salt"
+	},
+	"output": {
+		"fluid": "crossroads:nutrient_solution",
+		"amount": 250
+	}
+}

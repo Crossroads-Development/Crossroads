@@ -103,7 +103,7 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 		}
 		fontRenderer.draw(matrix, line, 90 - fontRenderer.width(line) / 2F, 42, 0x404040);
 		line = recipe.deltaHeatPer() > 0 ? MiscUtil.localize("crossroads.jei.alchemy.cooling") : recipe.deltaHeatPer() < 0 ? MiscUtil.localize("crossroads.jei.alchemy.heating") : MiscUtil.localize("crossroads.jei.alchemy.no_temp_change");
-		fontRenderer.draw(matrix, line, 90 - fontRenderer.width(line) / 2F, 62, 4210752);
+		fontRenderer.draw(matrix, line, 90 - fontRenderer.width(line) / 2F, 62, 0x404040);
 
 		if(recipe.charged()){
 //			GlStateManager.color(1, 1, 1);
@@ -131,24 +131,24 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 		IGuiIngredientGroup<ReagIngr> reagGroup = layout.getIngredientsGroup(ReagIngr.REAG);
 
 		int inCount = recipe.getReagents().length;
-		List<List<ReagIngr>> reags = ingredients.getInputs(ReagIngr.REAG);
+//		List<List<ReagIngr>> reags = ingredients.getInputs(ReagIngr.REAG);
 		for(int i = 0; i < inCount; i++){
 			reagGroup.init(i, true, 60 - i * 20, 20);
-			reagGroup.set(i, reags.get(i));
+//			reagGroup.set(i, reags.get(i));
 		}
 
 		//Catalyst
 		if(recipe.getCatalyst() != null){//A catalyst was set in setIngredients
 			reagGroup.init(inCount, true, 82, 2);
-			reagGroup.set(inCount, reags.get(inCount));
+//			reagGroup.set(inCount, reags.get(inCount));
 			inCount += 1;
 		}
 
 		int outCount = recipe.getProducts().length;
-		List<List<ReagIngr>> prods = ingredients.getOutputs(ReagIngr.REAG);
+//		List<List<ReagIngr>> prods = ingredients.getOutputs(ReagIngr.REAG);
 		for(int i = 0; i < outCount; i++ ){
 			reagGroup.init(i + inCount, false, 105 + i * 20, 20);
-			reagGroup.set(i + inCount, prods.get(i));
+//			reagGroup.set(i + inCount, prods.get(i));
 		}
 
 		reagGroup.set(ingredients);

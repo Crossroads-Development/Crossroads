@@ -5,7 +5,6 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.recipes.BeamExtractRec;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
@@ -111,6 +110,7 @@ public class BeamExtractorCategory implements IRecipeCategory<BeamExtractRec>{
 	public void setRecipe(IRecipeLayout layout, BeamExtractRec recipe, IIngredients ingredients){
 		IGuiItemStackGroup itemGroup = layout.getItemStacks();
 		itemGroup.init(0, true, 20, 50);
-		itemGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
+//		itemGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
+		itemGroup.set(ingredients);
 	}
 }

@@ -75,10 +75,10 @@ public class StampMillCategory implements IRecipeCategory<StampMillRec>{
 		IGuiItemStackGroup itemGroup = layout.getItemStacks();
 
 		itemGroup.init(0, true, 54, 50);
-		itemGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
+//		itemGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
 
 		itemGroup.init(1, false, 110, 50);
-		itemGroup.set(1, recipe.getResultItem());
+//		itemGroup.set(1, recipe.getResultItem());
 
 		itemGroup.set(ingredients);
 	}

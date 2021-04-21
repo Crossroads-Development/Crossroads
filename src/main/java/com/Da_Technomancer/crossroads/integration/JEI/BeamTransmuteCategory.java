@@ -74,9 +74,11 @@ public class BeamTransmuteCategory implements IRecipeCategory<BeamTransmuteRec>{
 	@Override
 	public void setRecipe(IRecipeLayout recipeLayout, BeamTransmuteRec recipe, IIngredients ingredients){
 		recipeLayout.getItemStacks().init(0, true, 40, 40);
-		recipeLayout.getItemStacks().set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
+//		recipeLayout.getItemStacks().set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
 		recipeLayout.getItemStacks().init(1, false, 120, 40);
-		recipeLayout.getItemStacks().set(1, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
+//		recipeLayout.getItemStacks().set(1, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
+
+		recipeLayout.getItemStacks().set(ingredients);
 	}
 
 	@Override

@@ -29,7 +29,7 @@ public class CrucibleScreen extends MachineGUI<CrucibleContainer, HeatingCrucibl
 		Minecraft.getInstance().getTextureManager().bind(TEXTURE);
 
 		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-		blit(matrix, leftPos + 42, topPos + 35, 176, 0, te.progressRef.get() * 28 / HeatingCrucibleTileEntity.REQUIRED, 18);
+		blit(matrix, leftPos + 42, topPos + 35, 176, 0, menu.meltProgress.get() * 28 / HeatingCrucibleTileEntity.REQUIRED, 18);
 
 		super.renderBg(matrix, partialTicks, mouseX, mouseY);
 	}

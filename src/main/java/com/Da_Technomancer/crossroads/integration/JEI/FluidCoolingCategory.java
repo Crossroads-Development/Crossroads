@@ -77,9 +77,9 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRec>{
 		IGuiFluidStackGroup fluidGroup = recipeLayout.getFluidStacks();
 
 		fluidGroup.init(0, true, 50, 30, 16, 64, 1000, true, fluidOverlay);
-		fluidGroup.set(0, recipe.getInput());
+//		fluidGroup.set(0, recipe.getInput());
 		itemGroup.init(0, false, 110, 55);
-		itemGroup.set(0, recipe.getResultItem());
+//		itemGroup.set(0, recipe.getResultItem());
 
 		itemGroup.set(ingredients);
 		fluidGroup.set(ingredients);

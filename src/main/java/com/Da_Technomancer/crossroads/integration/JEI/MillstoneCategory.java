@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.recipes.MillRec;
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -15,6 +16,8 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+
+import java.util.ArrayList;
 
 public class MillstoneCategory implements IRecipeCategory<MillRec>{
 
@@ -61,7 +64,7 @@ public class MillstoneCategory implements IRecipeCategory<MillRec>{
 	@Override
 	public void setIngredients(MillRec recipe, IIngredients ingredients){
 		ingredients.setInputIngredients(recipe.getIngredients());
-		ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
+		ingredients.setOutputs(VanillaTypes.ITEM, (ArrayList<ItemStack>) Lists.newArrayList(recipe.getOutputs()));
 	}
 
 	@Override
@@ -82,18 +85,18 @@ public class MillstoneCategory implements IRecipeCategory<MillRec>{
 	public void setRecipe(IRecipeLayout recipeLayout, MillRec recipe, IIngredients ingredients){
 		IGuiItemStackGroup itemStackGroup = recipeLayout.getItemStacks();
 		itemStackGroup.init(0, true, 79, 16);
-		itemStackGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
+//		itemStackGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
 
 		int length = recipe.getOutputs().length;
 		if(length >= 1){
 			itemStackGroup.init(1, false, 61, 52);
-			itemStackGroup.set(1, recipe.getOutputs()[0]);
+//			itemStackGroup.set(1, recipe.getOutputs()[0]);
 			if(length >= 2){
 				itemStackGroup.init(2, false, 79, 52);
-				itemStackGroup.set(2, recipe.getOutputs()[1]);
+//				itemStackGroup.set(2, recipe.getOutputs()[1]);
 				if(length >= 3){
 					itemStackGroup.init(3, false, 97, 52);
-					itemStackGroup.set(3, recipe.getOutputs()[2]);
+//					itemStackGroup.set(3, recipe.getOutputs()[2]);
 				}
 			}
 		}

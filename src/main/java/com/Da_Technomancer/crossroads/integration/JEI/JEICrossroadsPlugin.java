@@ -48,6 +48,7 @@ public class JEICrossroadsPlugin implements IModPlugin{
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.reactionChamberCrystal, 1), AlchemyCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.glasswareHolder, 1), AlchemyCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.copshowiumCreationChamber, 1), CopshowiumCategory.ID);
+		registry.addRecipeCatalyst(new ItemStack(CRBlocks.formulationVat, 1), FormulationVatCategory.ID);
 
 		//Add relevant crossroads machines to vanilla recipe types
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.smelter, 1), VanillaRecipeCategoryUid.FURNACE);
@@ -76,6 +77,7 @@ public class JEICrossroadsPlugin implements IModPlugin{
 		registration.addRecipes(getRecipes(recipeManager, CRRecipes.DETAILED_TYPE), DetailedCrafterCategory.ID);
 		registration.addRecipes(getRecipes(recipeManager, CRRecipes.ALCHEMY_TYPE), AlchemyCategory.ID);
 		registration.addRecipes(getRecipes(recipeManager, CRRecipes.COPSHOWIUM_TYPE), CopshowiumCategory.ID);
+		registration.addRecipes(getRecipes(recipeManager, CRRecipes.FORMULATION_VAT_TYPE), FormulationVatCategory.ID);
 		registration.addRecipes(ReagentManager.getRegisteredReags(), ReagInfoCategory.ID);
 	}
 
@@ -106,7 +108,9 @@ public class JEICrossroadsPlugin implements IModPlugin{
 				new BlastFurnaceCategory(guiHelper),
 				new BeamTransmuteCategory(guiHelper),
 				new CentrifugeCategory(guiHelper),
-				new CopshowiumCategory(guiHelper));
+				new CopshowiumCategory(guiHelper),
+				new FormulationVatCategory(guiHelper)
+		);
 	}
 
 	protected static IDrawableStatic createFluidOverlay(IGuiHelper helper){
