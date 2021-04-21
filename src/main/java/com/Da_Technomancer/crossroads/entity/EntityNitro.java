@@ -38,31 +38,31 @@ public class EntityNitro extends ThrowableEntity implements IRendersAsItem{
 	}
 
 	@Override
-	public void setFire(int seconds){
+	public void setSecondsOnFire(int seconds){
 		if(seconds > 0){
-			onImpact(new BlockRayTraceResult(new Vector3d(getPosX(), getPosY(), getPosZ()), Direction.UP, getPosition(), true));
+			onHit(new BlockRayTraceResult(new Vector3d(getX(), getY(), getZ()), Direction.UP, blockPosition(), true));
 		}
 	}
 
 	@Override
-	protected void onImpact(RayTraceResult result){
-		if(!world.isRemote){
-			Vector3d vec = result.getHitVec();
-			world.createExplosion(null, vec.x, vec.y, vec.z, 5F, Explosion.Mode.BREAK);
-			world.playSound(null, getPosX(), getPosY(), getPosZ(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.NEUTRAL, 0.5F, 0.4F / (rand.nextFloat() * 0.4F + 0.8F));
-			world.playSound(null, getPosX(), getPosY(), getPosZ(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.NEUTRAL, 1F, 0.4F / (rand.nextFloat() * 0.4F + 0.8F));
-			world.setEntityState(this, (byte) 3);
+	protected void onHit(RayTraceResult result){
+		if(!level.isClientSide){
+			Vector3d vec = result.getLocation();
+			level.explode(null, vec.x, vec.y, vec.z, 5F, Explosion.Mode.BREAK);
+			level.playSound(null, getX(), getY(), getZ(), SoundEvents.GLASS_BREAK, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+			level.playSound(null, getX(), getY(), getZ(), SoundEvents.GENERIC_EXPLODE, SoundCategory.NEUTRAL, 1F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+			level.broadcastEntityEvent(this, (byte) 3);
 			remove();
 		}
 	}
 
 	@Override
-	protected void registerData(){
+	protected void defineSynchedData(){
 
 	}
 
 	@Override
-	public IPacket<?> createSpawnPacket(){
+	public IPacket<?> getAddEntityPacket(){
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 

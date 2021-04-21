@@ -26,22 +26,22 @@ public class EntropyRenderer<T extends TileEntity & IFluxLink> extends LinkLineR
 			return;
 		}
 
-		matrix.push();
+		matrix.pushPose();
 		matrix.translate(0.5D, 0.5D, 0.5D);
 		IVertexBuilder entropyBuilder = buffer.getBuffer(CRRenderTypes.FLUX_TRANSFER_TYPE);
-		long gameTime = te.getWorld().getGameTime();
+		long gameTime = te.getLevel().getGameTime();
 		for(int arc : arcs){
 			byte relX = (byte) (arc & 0xFF);
 			byte relY = (byte) ((arc >> 8) & 0xFF);
 			byte relZ = (byte) ((arc >> 16) & 0xFF);
 			float length = (float) Math.sqrt(relX * relX + relY * relY + relZ * relZ);
-			matrix.push();
-			matrix.rotate(Vector3f.YP.rotation((float) Math.atan2(relX, relZ)));
-			matrix.rotate(Vector3f.XP.rotation((float) (Math.atan2(-relY, Math.sqrt(relX * relX + relZ * relZ)) + Math.PI / 2F)));
+			matrix.pushPose();
+			matrix.mulPose(Vector3f.YP.rotation((float) Math.atan2(relX, relZ)));
+			matrix.mulPose(Vector3f.XP.rotation((float) (Math.atan2(-relY, Math.sqrt(relX * relX + relZ * relZ)) + Math.PI / 2F)));
 			renderArc(length, matrix, entropyBuilder, gameTime, partialTicks);
-			matrix.pop();
+			matrix.popPose();
 		}
-		matrix.pop();
+		matrix.popPose();
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class EntropyRenderer<T extends TileEntity & IFluxLink> extends LinkLineR
 	 * @param partialTicks Partial ticks, [0, 1]
 	 */
 	public static void renderArc(float length, MatrixStack matrix, IVertexBuilder entropyBuilder, long worldTime, float partialTicks){
-		matrix.push();
+		matrix.pushPose();
 
 		final float unitLen = 0.5F;
 		int lenCount = (int) (length / unitLen);
@@ -62,7 +62,7 @@ public class EntropyRenderer<T extends TileEntity & IFluxLink> extends LinkLineR
 		matrix.scale(1, length / (unitLen * lenCount), 1);//As lenCount is an integer, this scale factor may slightly stretch the entire render to account for rounding error
 
 		for(int i = 0; i < 3; i++){
-			matrix.rotate(Vector3f.YP.rotationDegrees(12.5F + i * (i == 2 ? -1 : 1) * (worldTime + partialTicks) * 20F));
+			matrix.mulPose(Vector3f.YP.rotationDegrees(12.5F + i * (i == 2 ? -1 : 1) * (worldTime + partialTicks) * 20F));
 			float lenOffset = i * 0.2F;
 			float radius = i / 20F + 0.03F;
 			int circumCount = (int) (radius * 64F);
@@ -70,22 +70,22 @@ public class EntropyRenderer<T extends TileEntity & IFluxLink> extends LinkLineR
 			Quaternion stepRotation = Vector3f.YP.rotation(angle);
 			Quaternion lengthRotation = Vector3f.YP.rotation(angle / 3F);
 			for(int j = 0; j < circumCount; j++){
-				matrix.rotate(stepRotation);
-				matrix.push();
+				matrix.mulPose(stepRotation);
+				matrix.pushPose();
 				for(int k = 0; k < lenCount; k++){
-					matrix.rotate(lengthRotation);
+					matrix.mulPose(lengthRotation);
 					float sideRad = ((i + j + k) % 3) * 0.007F + 0.005F;
 					float pieceLen = 0.3F + ((i + j * 3 + k * 2) % 4) * 0.05F;
 					int[] color = ((i + j * 2 + k) % 7) == 0 ? new int[] {255, 255, 255, 64} : new int[] {0, 0, 0, 255};
-					entropyBuilder.pos(matrix.getLast().getMatrix(), radius, k * unitLen + lenOffset, -sideRad).color(color[0], color[1], color[2], color[3]).tex(0, 0).endVertex();
-					entropyBuilder.pos(matrix.getLast().getMatrix(), radius, k * unitLen + lenOffset, sideRad).color(color[0], color[1], color[2], color[3]).tex(0, 1).endVertex();
-					entropyBuilder.pos(matrix.getLast().getMatrix(), radius, k * unitLen + pieceLen + lenOffset, sideRad).color(color[0], color[1], color[2], color[3]).tex(1, 1).endVertex();
-					entropyBuilder.pos(matrix.getLast().getMatrix(), radius, k * unitLen + pieceLen + lenOffset, -sideRad).color(color[0], color[1], color[2], color[3]).tex(1, 0).endVertex();
+					entropyBuilder.vertex(matrix.last().pose(), radius, k * unitLen + lenOffset, -sideRad).color(color[0], color[1], color[2], color[3]).uv(0, 0).endVertex();
+					entropyBuilder.vertex(matrix.last().pose(), radius, k * unitLen + lenOffset, sideRad).color(color[0], color[1], color[2], color[3]).uv(0, 1).endVertex();
+					entropyBuilder.vertex(matrix.last().pose(), radius, k * unitLen + pieceLen + lenOffset, sideRad).color(color[0], color[1], color[2], color[3]).uv(1, 1).endVertex();
+					entropyBuilder.vertex(matrix.last().pose(), radius, k * unitLen + pieceLen + lenOffset, -sideRad).color(color[0], color[1], color[2], color[3]).uv(1, 0).endVertex();
 				}
-				matrix.pop();
+				matrix.popPose();
 			}
 		}
 
-		matrix.pop();
+		matrix.popPose();
 	}
 }

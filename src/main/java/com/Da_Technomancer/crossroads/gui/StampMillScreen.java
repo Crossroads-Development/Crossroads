@@ -19,17 +19,17 @@ public class StampMillScreen extends MachineGUI<StampMillContainer, StampMillTil
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
-		Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE);
+	protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+		Minecraft.getInstance().getTextureManager().bind(TEXTURE);
 
-		blit(matrix, guiLeft, guiTop, 0, 0, xSize, ySize);
+		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
 
 		//Time meter
-		blit(matrix, guiLeft + 55, guiTop + 34, 176, 0, Math.min(66, container.timeRef.get() * 66 / StampMillTileEntity.TIME_LIMIT), 9);
+		blit(matrix, leftPos + 55, topPos + 34, 176, 0, Math.min(66, menu.timeRef.get() * 66 / StampMillTileEntity.TIME_LIMIT), 9);
 		//Progress meter
-		blit(matrix, guiLeft + 55, guiTop + 45, 176, 0, (int) Math.min(66, container.progRef.get() * 66 / StampMillTileEntity.REQUIRED), 9);
+		blit(matrix, leftPos + 55, topPos + 45, 176, 0, (int) Math.min(66, menu.progRef.get() * 66 / StampMillTileEntity.REQUIRED), 9);
 
-		super.drawGuiContainerBackgroundLayer(matrix, partialTicks, mouseX, mouseY);
+		super.renderBg(matrix, partialTicks, mouseX, mouseY);
 	}
 }

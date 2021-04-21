@@ -18,8 +18,8 @@ public class DetailedCrafterScreen extends ContainerScreen<DetailedCrafterContai
 
 	public DetailedCrafterScreen(DetailedCrafterContainer cont, PlayerInventory playerInv, ITextComponent name){
 		super(cont, playerInv, name);
-		xSize = 176;
-		ySize = 166;
+		imageWidth = 176;
+		imageHeight = 166;
 	}
 
 	@Override
@@ -32,23 +32,23 @@ public class DetailedCrafterScreen extends ContainerScreen<DetailedCrafterContai
 	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTicks){
 		renderBackground(matrix);
 		super.render(matrix, mouseX, mouseY, partialTicks);
-		renderHoveredTooltip(matrix, mouseX, mouseY);
+		renderTooltip(matrix, mouseX, mouseY);
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+	protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
 		//Background
 		RenderSystem.color4f(1, 1, 1, 1);
-		Minecraft.getInstance().getTextureManager().bindTexture(BACKGROUND);
-		blit(matrix, guiLeft, guiTop, 0, 0, xSize, ySize);
-		if(EnumPath.TECHNOMANCY.isUnlocked(playerInventory.player)){
-			blit(matrix, guiLeft + 124, guiTop + 60, 176, 0, 16, 16);
+		Minecraft.getInstance().getTextureManager().bind(BACKGROUND);
+		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+		if(EnumPath.TECHNOMANCY.isUnlocked(inventory.player)){
+			blit(matrix, leftPos + 124, topPos + 60, 176, 0, 16, 16);
 		}
-		if(EnumPath.ALCHEMY.isUnlocked(playerInventory.player)){
-			blit(matrix, guiLeft + 108, guiTop + 60, 176, 16, 16, 16);
+		if(EnumPath.ALCHEMY.isUnlocked(inventory.player)){
+			blit(matrix, leftPos + 108, topPos + 60, 176, 16, 16, 16);
 		}
-		if(EnumPath.WITCHCRAFT.isUnlocked(playerInventory.player)){
-			blit(matrix, guiLeft + 140, guiTop + 60, 176, 32, 16, 16);
+		if(EnumPath.WITCHCRAFT.isUnlocked(inventory.player)){
+			blit(matrix, leftPos + 140, topPos + 60, 176, 32, 16, 16);
 		}
 	}
 }

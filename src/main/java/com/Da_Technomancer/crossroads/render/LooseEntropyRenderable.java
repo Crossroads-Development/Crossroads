@@ -47,8 +47,8 @@ public class LooseEntropyRenderable implements IVisualEffect{
 	@Override
 	public boolean render(MatrixStack matrix, IRenderTypeBuffer buffer, long worldTime, float partialTicks, Random rand){
 		matrix.translate(xSt, ySt, zSt);
-		matrix.rotate(Vector3f.YP.rotation(-angleY));
-		matrix.rotate(Vector3f.XP.rotation(angleX + (float) Math.PI / 2F));
+		matrix.mulPose(Vector3f.YP.rotation(-angleY));
+		matrix.mulPose(Vector3f.XP.rotation(angleX + (float) Math.PI / 2F));
 
 		IVertexBuilder builder = buffer.getBuffer(CRRenderTypes.FLUX_TRANSFER_TYPE);
 		EntropyRenderer.renderArc(length, matrix, builder, worldTime, partialTicks);

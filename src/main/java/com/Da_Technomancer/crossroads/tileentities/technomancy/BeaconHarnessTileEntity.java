@@ -73,7 +73,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 
 		// Actual beam production is in the emit() method
 
-		if(world.isRemote){
+		if(level.isClientSide){
 			//For the server side,
 			//decreasing loadSafetyTime happens in emit(), which is a consistent and reliable way of doing this
 			//For the client side, emit() is never called, so we decrement it here
@@ -109,14 +109,14 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 
 	//Requires beneath a beacon, and all blocks between this and the beacon are legal beacon bases
 	private boolean positionInvalid(){
-		BlockPos.Mutable checkPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ());
+		BlockPos.Mutable checkPos = new BlockPos.Mutable(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
 		for(int y = 0; y < 5; y++){
 			checkPos.move(Direction.UP);
-			BlockState state = world.getBlockState(checkPos);
+			BlockState state = level.getBlockState(checkPos);
 			if(state.getBlock() == Blocks.BEACON){
 				return false;
 			}
-			if(!state.getBlock().isIn(BlockTags.BEACON_BASE_BLOCKS)){
+			if(!state.getBlock().is(BlockTags.BEACON_BASE_BLOCKS)){
 				return true;
 			}
 		}
@@ -138,8 +138,8 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putBoolean("run", running);
 		nbt.putInt("cycle", cycles);
 		fluxHelper.writeData(nbt);
@@ -147,8 +147,8 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		running = nbt.getBoolean("run");
 		cycles = nbt.getInt("cycle");
 		fluxHelper.readData(nbt);
@@ -193,15 +193,15 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 					running = false;
 					cycles = -11;//Easy way of adding a startup cooldown- 10 cycles
 
-					if(beamer[0].emit(BeamUnit.EMPTY, world)){
+					if(beamer[0].emit(BeamUnit.EMPTY, level)){
 						refreshBeam(0);
 					}
 				}else{
-					beamer[0].emit(out, world);
+					beamer[0].emit(out, level);
 					refreshBeam(0);//Assume the beam changed as the color constantly cycles
 					prevMag[0] = out;
 					addFlux(FLUX_GEN);
-					markDirty();
+					setChanged();
 				}
 			}
 		}
@@ -264,7 +264,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 
 	//IInventory methods, all no-op
 	@Override
-	public int getSizeInventory(){
+	public int getContainerSize(){
 		return 0;
 	}
 
@@ -274,32 +274,32 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	}
 
 	@Override
-	public ItemStack getStackInSlot(int index){
+	public ItemStack getItem(int index){
 		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public ItemStack decrStackSize(int index, int count){
+	public ItemStack removeItem(int index, int count){
 		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public ItemStack removeStackFromSlot(int index){
+	public ItemStack removeItemNoUpdate(int index){
 		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public void setInventorySlotContents(int index, ItemStack stack){
+	public void setItem(int index, ItemStack stack){
 
 	}
 
 	@Override
-	public boolean isUsableByPlayer(PlayerEntity player){
-		return world.getTileEntity(pos) == this && player.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64;
+	public boolean stillValid(PlayerEntity player){
+		return level.getBlockEntity(worldPosition) == this && player.distanceToSqr(worldPosition.getX() + 0.5D, worldPosition.getY() + 0.5D, worldPosition.getZ() + 0.5D) <= 64;
 	}
 
 	@Override
-	public void clear(){
+	public void clearContent(){
 
 	}
 
@@ -313,6 +313,6 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	@Nullable
 	@Override
 	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
-		return new BeaconHarnessContainer(id, playerInv, new PacketBuffer(Unpooled.buffer()).writeBlockPos(pos));
+		return new BeaconHarnessContainer(id, playerInv, new PacketBuffer(Unpooled.buffer()).writeBlockPos(worldPosition));
 	}
 }

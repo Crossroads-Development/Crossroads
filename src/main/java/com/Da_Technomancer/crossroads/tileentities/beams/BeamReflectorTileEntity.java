@@ -19,8 +19,8 @@ public class BeamReflectorTileEntity extends BeamRenderTE{
 	}
 
 	@Override
-	public void updateContainingBlockInfo(){
-		super.updateContainingBlockInfo();
+	public void clearCache(){
+		super.clearCache();
 		facing = -1;
 	}
 
@@ -28,7 +28,7 @@ public class BeamReflectorTileEntity extends BeamRenderTE{
 		if(facing == -1){
 			BlockState s = getBlockState();
 			if(s.hasProperty(ESProperties.FACING)){
-				facing = s.get(ESProperties.FACING).getIndex();
+				facing = s.getValue(ESProperties.FACING).get3DDataValue();
 			}else{
 				return 0;
 			}
@@ -41,7 +41,7 @@ public class BeamReflectorTileEntity extends BeamRenderTE{
 	
 	@Override
 	protected void doEmit(BeamUnit toEmit){
-		if(beamer[facing].emit(toEmit, world)){
+		if(beamer[facing].emit(toEmit, level)){
 			refreshBeam(facing);
 		}
 		if(!toEmit.isEmpty()){

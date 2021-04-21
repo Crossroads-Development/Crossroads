@@ -31,12 +31,12 @@ public class RedstoneHeatCable extends HeatCable implements IReadable{
 
 	public RedstoneHeatCable(HeatInsulators insulator){
 		super(insulator, "redstone_heat_cable_" + insulator.toString().toLowerCase());
-		setDefaultState(getDefaultState().with(ESProperties.REDSTONE_BOOL, false));
+		registerDefaultState(defaultBlockState().setValue(ESProperties.REDSTONE_BOOL, false));
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
-		if(state.get(ESProperties.REDSTONE_BOOL)){
+		if(state.getValue(ESProperties.REDSTONE_BOOL)){
 			return super.getShape(state, worldIn, pos, context);
 		}else{
 			return SHAPES[0];//Core only
@@ -45,47 +45,47 @@ public class RedstoneHeatCable extends HeatCable implements IReadable{
 
 	@Override
 	protected boolean evaluate(EnumTransferMode value, BlockState state, @Nullable IConduitTE<EnumTransferMode> te){
-		return super.evaluate(value, state, te) && state.get(ESProperties.REDSTONE_BOOL);
+		return super.evaluate(value, state, te) && state.getValue(ESProperties.REDSTONE_BOOL);
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
+	public void setPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		neighborChanged(state, world, pos, this, pos, false);
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
-		super.fillStateContainer(builder);
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
+		super.createBlockStateDefinition(builder);
 		builder.add(ESProperties.REDSTONE_BOOL);
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
-		if(worldIn.isBlockPowered(pos)){
-			if(!state.get(ESProperties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, true));
-				worldIn.updateComparatorOutputLevel(pos, this);
+		if(worldIn.hasNeighborSignal(pos)){
+			if(!state.getValue(ESProperties.REDSTONE_BOOL)){
+				worldIn.setBlockAndUpdate(pos, state.setValue(ESProperties.REDSTONE_BOOL, true));
+				worldIn.updateNeighbourForOutputSignal(pos, this);
 			}
-		}else if(state.get(ESProperties.REDSTONE_BOOL)){
-			worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, false));
-			worldIn.updateComparatorOutputLevel(pos, this);
+		}else if(state.getValue(ESProperties.REDSTONE_BOOL)){
+			worldIn.setBlockAndUpdate(pos, state.setValue(ESProperties.REDSTONE_BOOL, false));
+			worldIn.updateNeighbourForOutputSignal(pos, this);
 		}
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new RedstoneHeatCableTileEntity(insulator);
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return super.getStateForPlacement(context).with(ESProperties.REDSTONE_BOOL, context.getWorld().isBlockPowered(context.getPos()));
+		return super.getStateForPlacement(context).setValue(ESProperties.REDSTONE_BOOL, context.getLevel().hasNeighborSignal(context.getClickedPos()));
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		super.addInformation(stack, world, tooltip, advanced);
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+		super.appendHoverText(stack, world, tooltip, advanced);
 
 		tooltip.add(new TranslationTextComponent("tt.crossroads.redstone_heat_cable.reader"));
 
@@ -104,18 +104,18 @@ public class RedstoneHeatCable extends HeatCable implements IReadable{
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState state){
+	public boolean hasAnalogOutputSignal(BlockState state){
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos){
+	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos){
 		return RedstoneUtil.clampToVanilla(read(worldIn, pos, blockState));//A rather pointless output- ranging from 0 to 15 degrees C
 	}
 
 	@Override
 	public float read(World world, BlockPos pos, BlockState blockState){
-		TileEntity te = world.getTileEntity(pos);
+		TileEntity te = world.getBlockEntity(pos);
 		if(te instanceof RedstoneHeatCableTileEntity){
 			return ((RedstoneHeatCableTileEntity) te).getTemp();
 		}

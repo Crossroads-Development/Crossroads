@@ -22,8 +22,8 @@ public class OreCleanserContainer extends MachineContainer<OreCleanserTileEntity
 
 	public OreCleanserContainer(int id, PlayerInventory playerInv, PacketBuffer data){
 		super(type, id, playerInv, data);
-		progRef = new IntDeferredRef(te::getProgress, te.getWorld().isRemote);
-		trackInt(progRef);
+		progRef = new IntDeferredRef(te::getProgress, te.getLevel().isClientSide);
+		addDataSlot(progRef);
 	}
 
 	@Override

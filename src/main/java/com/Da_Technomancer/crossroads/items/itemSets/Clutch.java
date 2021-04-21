@@ -21,8 +21,8 @@ public class Clutch extends Axle{
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		super.addInformation(stack, world, tooltip, advanced);
+	public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+		super.appendHoverText(stack, world, tooltip, advanced);
 		tooltip.add(new TranslationTextComponent("tt.crossroads.clutch.redstone"));
 	}
 

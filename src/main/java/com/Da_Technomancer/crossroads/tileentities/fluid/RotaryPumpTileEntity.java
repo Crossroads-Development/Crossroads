@@ -77,7 +77,7 @@ public class RotaryPumpTileEntity extends InventoryTE{
 	public void tick(){
 		super.tick();
 
-		if(world.isRemote){
+		if(level.isClientSide){
 			progress += progChange;
 			progress %= REQUIRED;
 			return;
@@ -87,7 +87,7 @@ public class RotaryPumpTileEntity extends InventoryTE{
 			return;
 		}
 
-		FluidState fstate = world.getFluidState(pos.down());
+		FluidState fstate = level.getFluidState(worldPosition.below());
 		if(fstate.isSource()){
 			//Only gain progress if spinning in positive direction
 			double powerDrained = energy < 0 ? 0 : MAX_POWER * RotaryUtil.findEfficiency(axleHandler.getSpeed(), 0, MAX_SPEED);
@@ -97,13 +97,13 @@ public class RotaryPumpTileEntity extends InventoryTE{
 
 			if(progress >= REQUIRED){
 				progress = 0;
-				BlockState state = world.getBlockState(pos.down());
+				BlockState state = level.getBlockState(worldPosition.below());
 				Block block = state.getBlock();
 				if(block instanceof IBucketPickupHandler){
-					Fluid fl = ((IBucketPickupHandler) block).pickupFluid(world, pos.down(), state);
+					Fluid fl = ((IBucketPickupHandler) block).takeLiquid(level, worldPosition.below(), state);
 					fluids[0] = new FluidStack(fl, 1000 + fluids[0].getAmount());
 				}else{
-					Crossroads.logger.info("Pump attempted to drain a non-traditional fluid at pos: " + pos.down().toString());
+					Crossroads.logger.info("Pump attempted to drain a non-traditional fluid at pos: " + worldPosition.below().toString());
 				}
 			}
 		}else{
@@ -133,7 +133,7 @@ public class RotaryPumpTileEntity extends InventoryTE{
 			progChange = (float) progressChange;
 			long packet = Float.floatToIntBits(progChange);
 			packet |= (long) Float.floatToIntBits((float) progress) << 32L;
-			CRPackets.sendPacketAround(world, pos, new SendLongToClient(1, packet, pos));
+			CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(1, packet, worldPosition));
 		}
 	}
 
@@ -151,15 +151,15 @@ public class RotaryPumpTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		progress = nbt.getDouble("prog");
 		progChange = nbt.getFloat("prog_change");
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putDouble("prog", progress);
 		nbt.putFloat("prog_change", progChange);
 		return nbt;
@@ -187,7 +187,7 @@ public class RotaryPumpTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
+	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction){
 		return false;
 	}
 

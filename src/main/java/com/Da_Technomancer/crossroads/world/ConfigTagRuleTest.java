@@ -20,8 +20,8 @@ import java.util.Random;
  */
 public class ConfigTagRuleTest extends TagMatchRuleTest{
 
-	public static final Codec<ConfigTagRuleTest> CODEC = RecordCodecBuilder.create((instance) -> instance.group(ITag.getTagCodec(() -> TagCollectionManager.getManager().getBlockTags()).fieldOf("tag").forGetter(ConfigTagRuleTest::getTag), Codec.STRING.fieldOf("config_name").forGetter(ConfigTagRuleTest::getConfigName)).apply(instance, ConfigTagRuleTest::new));
-	public static final IRuleTestType<ConfigTagRuleTest> TYPE = IRuleTestType.func_237129_a_("tag_and_config_match", CODEC);
+	public static final Codec<ConfigTagRuleTest> CODEC = RecordCodecBuilder.create((instance) -> instance.group(ITag.codec(() -> TagCollectionManager.getInstance().getBlocks()).fieldOf("tag").forGetter(ConfigTagRuleTest::getTag), Codec.STRING.fieldOf("config_name").forGetter(ConfigTagRuleTest::getConfigName)).apply(instance, ConfigTagRuleTest::new));
+	public static final IRuleTestType<ConfigTagRuleTest> TYPE = IRuleTestType.register("tag_and_config_match", CODEC);
 	public static final HashMap<String, ForgeConfigSpec.BooleanValue> configMap = new HashMap<>(4);
 
 	public static void registerConfig(String configName, ForgeConfigSpec.BooleanValue controllingConfig){

@@ -25,7 +25,7 @@ public class BlockEffect implements IEffect{
 		if(CRConfig.isProtected(worldIn, pos, worldIn.getBlockState(pos))){
 			return;
 		}
-		worldIn.setBlockState(pos, block, 3);
+		worldIn.setBlock(pos, block, 3);
 		SoundType soundtype = block.getBlock().getSoundType(block, worldIn, pos, null);
 		worldIn.playSound(null, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 	}

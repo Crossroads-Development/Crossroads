@@ -22,12 +22,12 @@ public abstract class MachineGUI<T extends MachineContainer<U>, U extends Invent
 	 * @param y The y position for it to start
 	 */
 	protected void initFluidManager(int index, int x, int y){
-		te.fluidManagers[index].initScreen(guiLeft, guiTop, x, y, container.fluidManagerRefs[index][0], container.fluidManagerRefs[index][1]);
+		te.fluidManagers[index].initScreen(leftPos, topPos, x, y, menu.fluidManagerRefs[index][0], menu.fluidManagerRefs[index][1]);
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
-		super.drawGuiContainerBackgroundLayer(matrix, partialTicks, mouseX, mouseY);
+	protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+		super.renderBg(matrix, partialTicks, mouseX, mouseY);
 
 		for(FluidSlotManager manager : te.fluidManagers){
 			manager.render(matrix, partialTicks, mouseX, mouseY, font, tooltip);
@@ -35,16 +35,16 @@ public abstract class MachineGUI<T extends MachineContainer<U>, U extends Invent
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(MatrixStack matrix, int mouseX, int mouseY){
-		super.drawGuiContainerForegroundLayer(matrix, mouseX, mouseY);
+	protected void renderLabels(MatrixStack matrix, int mouseX, int mouseY){
+		super.renderLabels(matrix, mouseX, mouseY);
 
-		if(container.heatRef != null){
-			String s = MiscUtil.localize("container.crossroads.boilerplate.temp", container.heatRef.get());
-			font.drawString(matrix, s, xSize - 8 - font.getStringWidth(s), 6, 0x404040);
+		if(menu.heatRef != null){
+			String s = MiscUtil.localize("container.crossroads.boilerplate.temp", menu.heatRef.get());
+			font.draw(matrix, s, imageWidth - 8 - font.width(s), 6, 0x404040);
 		}
-		if(container.rotRef != null){
-			String s = MiscUtil.localize("container.crossroads.boilerplate.speed", container.rotRef.get() / 100D);
-			font.drawString(matrix, s, xSize - 8 - font.getStringWidth(s), te.useHeat() ? 16 : 6, 0x404040);
+		if(menu.rotRef != null){
+			String s = MiscUtil.localize("container.crossroads.boilerplate.speed", menu.rotRef.get() / 100D);
+			font.draw(matrix, s, imageWidth - 8 - font.width(s), te.useHeat() ? 16 : 6, 0x404040);
 		}
 	}
 }

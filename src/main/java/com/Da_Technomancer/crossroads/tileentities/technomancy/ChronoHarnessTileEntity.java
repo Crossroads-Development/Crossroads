@@ -60,15 +60,15 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){
 		//Increase render BB to include links
-		return new AxisAlignedBB(pos).grow(getRange());
+		return new AxisAlignedBB(worldPosition).inflate(getRange());
 	}
 
 	private boolean hasRedstone(){
 		BlockState state = getBlockState();
 		if(state.getBlock() == CRBlocks.chronoHarness){
-			return state.get(ESProperties.REDSTONE_BOOL);
+			return state.getValue(ESProperties.REDSTONE_BOOL);
 		}
-		remove();
+		setRemoved();
 		return true;
 	}
 
@@ -80,7 +80,7 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 	public void tick(){
 		super.tick();//Handle flux
 
-		if(world.isRemote){
+		if(level.isClientSide){
 			angle += clientCurPower * SPEED;
 		}else{
 			if(shouldRun()){
@@ -88,33 +88,33 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 				if(curPower > 0){
 					fe += curPower;
 					addFlux(Math.round((float) curPower / CRConfig.fePerEntropy.get()));
-					markDirty();
+					setChanged();
 				}
 			}
 
 			if(((curPower == 0) ^ (clientCurPower == 0)) || Math.abs(curPower - clientCurPower) >= 10){
 				clientCurPower = curPower;
-				CRPackets.sendPacketAround(world, pos, new SendLongToClient((byte) 4, clientCurPower, pos));
+				CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient((byte) 4, clientCurPower, worldPosition));
 			}
 
 			if(fe != 0){
 				//Transfer FE to a machine above
-				TileEntity neighbor = world.getTileEntity(pos.offset(Direction.UP));
+				TileEntity neighbor = level.getBlockEntity(worldPosition.relative(Direction.UP));
 				LazyOptional<IEnergyStorage>  otherOpt;
 				if(neighbor != null && (otherOpt = neighbor.getCapability(CapabilityEnergy.ENERGY, Direction.DOWN)).isPresent()){
 					IEnergyStorage storage = otherOpt.orElseThrow(NullPointerException::new);
 					if(storage.canReceive()){
 						fe -= storage.receiveEnergy(fe, false);
-						markDirty();
+						setChanged();
 					}
 				}
 				//Transfer FE to a machine below
-				neighbor = world.getTileEntity(pos.offset(Direction.DOWN));
+				neighbor = level.getBlockEntity(worldPosition.relative(Direction.DOWN));
 				if(neighbor != null && (otherOpt = neighbor.getCapability(CapabilityEnergy.ENERGY, Direction.UP)).isPresent()){
 					IEnergyStorage storage = otherOpt.orElseThrow(NullPointerException::new);
 					if(storage.canReceive()){
 						fe -= storage.receiveEnergy(fe, false);
-						markDirty();
+						setChanged();
 					}
 				}
 			}
@@ -122,8 +122,8 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		fe = nbt.getInt("fe");
 		curPower = nbt.getInt("pow");
 		clientCurPower = curPower;
@@ -137,8 +137,8 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putInt("fe", fe);
 		nbt.putInt("pow", curPower);
 
@@ -154,8 +154,8 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		energyOpt.invalidate();
 	}
 
@@ -183,7 +183,7 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 			int extracted = Math.min(maxExtract, fe);
 			if(!simulate && extracted > 0){
 				fe -= extracted;
-				markDirty();
+				setChanged();
 			}
 			return extracted;
 		}

@@ -8,7 +8,10 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.TemporalAcceleratorTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -23,7 +26,10 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
@@ -35,12 +41,12 @@ public class TemporalAccelerator extends ContainerBlock{
 
 	private static final VoxelShape[] SHAPES = new VoxelShape[6];
 	static{
-		SHAPES[0] = VoxelShapes.or(makeCuboidShape(0, 0, 0, 16, 4, 16), makeCuboidShape(4, 4, 4, 12, 8, 12));
-		SHAPES[1] = VoxelShapes.or(makeCuboidShape(0, 12, 0, 16, 16, 16), makeCuboidShape(4, 8, 4, 12, 12, 12));
-		SHAPES[2] = VoxelShapes.or(makeCuboidShape(0, 0, 0, 16, 16, 4), makeCuboidShape(4, 4, 4, 12, 12, 8));
-		SHAPES[3] = VoxelShapes.or(makeCuboidShape(0, 0, 12, 16, 16, 16), makeCuboidShape(4, 4, 8, 12, 12, 12));
-		SHAPES[4] = VoxelShapes.or(makeCuboidShape(0, 0, 0, 4, 16, 16), makeCuboidShape(4, 4, 4, 8, 12, 12));
-		SHAPES[5] = VoxelShapes.or(makeCuboidShape(12, 0, 0, 16, 16, 16), makeCuboidShape(8, 4, 4, 12, 12, 12));
+		SHAPES[0] = VoxelShapes.or(box(0, 0, 0, 16, 4, 16), box(4, 4, 4, 12, 8, 12));
+		SHAPES[1] = VoxelShapes.or(box(0, 12, 0, 16, 16, 16), box(4, 8, 4, 12, 12, 12));
+		SHAPES[2] = VoxelShapes.or(box(0, 0, 0, 16, 16, 4), box(4, 4, 4, 12, 12, 8));
+		SHAPES[3] = VoxelShapes.or(box(0, 0, 12, 16, 16, 16), box(4, 4, 8, 12, 12, 12));
+		SHAPES[4] = VoxelShapes.or(box(0, 0, 0, 4, 16, 16), box(4, 4, 4, 8, 12, 12));
+		SHAPES[5] = VoxelShapes.or(box(12, 0, 0, 16, 16, 16), box(8, 4, 4, 12, 12, 12));
 	}
 
 	public TemporalAccelerator(){
@@ -49,46 +55,46 @@ public class TemporalAccelerator extends ContainerBlock{
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
-		setDefaultState(getDefaultState().with(CRProperties.ACCELERATOR_TARGET, Mode.BOTH));
+		registerDefaultState(defaultBlockState().setValue(CRProperties.ACCELERATOR_TARGET, Mode.BOTH));
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
 		builder.add(ESProperties.FACING, CRProperties.ACCELERATOR_TARGET);
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
-		return SHAPES[state.get(ESProperties.FACING).getIndex()];
+		return SHAPES[state.getValue(ESProperties.FACING).get3DDataValue()];
 	}
 
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return getDefaultState().with(ESProperties.FACING, context.getNearestLookingDirection().getOpposite());
+		return defaultBlockState().setValue(ESProperties.FACING, context.getNearestLookingDirection().getOpposite());
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		ItemStack held = playerIn.getHeldItem(hand);
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		ItemStack held = playerIn.getItemInHand(hand);
 		//Linking with a linking tool
-		if(FluxUtil.handleFluxLinking(worldIn, pos, held, playerIn).isSuccess()){
+		if(FluxUtil.handleFluxLinking(worldIn, pos, held, playerIn).shouldSwing()){
 			return ActionResultType.SUCCESS;
 		}else if(ESConfig.isWrench(held)){
-			if(playerIn.isSneaking()){
+			if(playerIn.isShiftKeyDown()){
 				//Sneak clicking- change mode
-				state = state.func_235896_a_(CRProperties.ACCELERATOR_TARGET);
-				worldIn.setBlockState(pos, state);
-				if(worldIn.isRemote){
-					Mode newMode = state.get(CRProperties.ACCELERATOR_TARGET);
+				state = state.cycle(CRProperties.ACCELERATOR_TARGET);
+				worldIn.setBlockAndUpdate(pos, state);
+				if(worldIn.isClientSide){
+					Mode newMode = state.getValue(CRProperties.ACCELERATOR_TARGET);
 					MiscUtil.chatMessage(playerIn, new TranslationTextComponent("tt.crossroads.time_accel.new_mode", MiscUtil.localize(newMode.getLocalizationName())));
 					if(!CRConfig.teTimeAccel.get() && newMode.accelerateTileEntities){
-						MiscUtil.chatMessage(playerIn, new TranslationTextComponent("tt.crossroads.time_accel.config").setStyle(Style.EMPTY.applyFormatting(TextFormatting.RED)));
+						MiscUtil.chatMessage(playerIn, new TranslationTextComponent("tt.crossroads.time_accel.config").setStyle(Style.EMPTY.applyFormat(TextFormatting.RED)));
 					}
 				}
 			}else{
 				//Rotate this machine
-				worldIn.setBlockState(pos, state.func_235896_a_(ESProperties.FACING));
+				worldIn.setBlockAndUpdate(pos, state.cycle(ESProperties.FACING));
 			}
 			return ActionResultType.SUCCESS;
 		}
@@ -96,17 +102,17 @@ public class TemporalAccelerator extends ContainerBlock{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new TemporalAcceleratorTileEntity();
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.time_accel.desc", TemporalAcceleratorTileEntity.SIZE));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.time_accel.beam"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.time_accel.wrench"));
@@ -135,7 +141,7 @@ public class TemporalAccelerator extends ContainerBlock{
 		}
 
 		@Override
-		public String getString(){
+		public String getSerializedName(){
 			return toString();
 		}
 

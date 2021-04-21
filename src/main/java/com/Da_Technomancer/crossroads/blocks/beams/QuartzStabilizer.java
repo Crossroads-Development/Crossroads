@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.blocks.beams;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.templates.BeamBlock;
 import com.Da_Technomancer.crossroads.tileentities.beams.QuartzStabilizerTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.ClockworkStabilizerTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
@@ -35,12 +34,12 @@ public class QuartzStabilizer extends BeamBlock implements IReadable{
 
 	static{
 		//Very crude shape to match the angled model- may be worth refining later
-		SHAPE[0] = makeCuboidShape(4, 0, 4, 12, 16, 12);
-		SHAPE[1] = makeCuboidShape(4, 0, 4, 12, 16, 12);
-		SHAPE[2] = makeCuboidShape(4, 4, 0, 12, 12, 16);
-		SHAPE[3] = makeCuboidShape(4, 4, 0, 12, 12, 16);
-		SHAPE[4] = makeCuboidShape(0, 4, 0, 16, 12, 12);
-		SHAPE[5] = makeCuboidShape(0, 4, 0, 16, 12, 12);
+		SHAPE[0] = box(4, 0, 4, 12, 16, 12);
+		SHAPE[1] = box(4, 0, 4, 12, 16, 12);
+		SHAPE[2] = box(4, 4, 0, 12, 12, 16);
+		SHAPE[3] = box(4, 4, 0, 12, 12, 16);
+		SHAPE[4] = box(0, 4, 0, 16, 12, 12);
+		SHAPE[5] = box(0, 4, 0, 16, 12, 12);
 	}
 
 	public QuartzStabilizer(){
@@ -48,22 +47,22 @@ public class QuartzStabilizer extends BeamBlock implements IReadable{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new QuartzStabilizerTileEntity();
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
-		return SHAPE[state.get(ESProperties.FACING).getIndex()];
+		return SHAPE[state.getValue(ESProperties.FACING).get3DDataValue()];
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
-			if(!worldIn.isRemote){
-				TileEntity te = worldIn.getTileEntity(pos);
-				if(!playerIn.isSneaking()){
-					worldIn.setBlockState(pos, state.func_235896_a_(ESProperties.FACING));
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
+			if(!worldIn.isClientSide){
+				TileEntity te = worldIn.getBlockEntity(pos);
+				if(!playerIn.isShiftKeyDown()){
+					worldIn.setBlockAndUpdate(pos, state.cycle(ESProperties.FACING));
 				}else if(te instanceof QuartzStabilizerTileEntity){
 					MiscUtil.chatMessage(playerIn, new TranslationTextComponent("tt.crossroads.quartz_stabilizer.setting", ((QuartzStabilizerTileEntity) te).adjustSetting()));
 				}
@@ -76,24 +75,24 @@ public class QuartzStabilizer extends BeamBlock implements IReadable{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.quartz_stabilizer.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.quartz_stabilizer.wrench"));
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState state){
+	public boolean hasAnalogOutputSignal(BlockState state){
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos){
+	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos){
 		return RedstoneUtil.clampToVanilla(read(worldIn, pos, blockState));
 	}
 
 	@Override
 	public float read(World world, BlockPos pos, BlockState blockState){
-		TileEntity te = world.getTileEntity(pos);
+		TileEntity te = world.getBlockEntity(pos);
 		return te instanceof QuartzStabilizerTileEntity ? ((QuartzStabilizerTileEntity) te).getRedstone() : 0;
 	}
 }

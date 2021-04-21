@@ -58,21 +58,21 @@ public class CRPackets{
 	}
 
 	public static void sendPacketAround(World world, BlockPos pos, ClientPacket packet){
-		if(world.isRemote){
+		if(world.isClientSide){
 			throw new IllegalStateException("Packet to client sent from client!");
 		}
 		//Check if this packet is registered with CR. If not, send it via the Essentials packet channel; this is done to make this method correct for all CR usage
 		SimpleChannel messageChannel = registeredTypes.contains(packet.getClass()) ? channel : EssentialsPackets.channel;
-		messageChannel.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), 512.0D, world.getDimensionKey())), packet);
+		messageChannel.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), 512.0D, world.dimension())), packet);
 	}
 
 	public static void sendEffectPacketAround(World world, BlockPos pos, AddVisualToClient packet){
-		if(world.isRemote){
+		if(world.isClientSide){
 			throw new IllegalStateException("Packet to client sent from client!");
 		}
 		//Check if this packet is registered with CR. If not, send it via the Essentials packet channel; this is done to make this method correct for all CR usage
 		SimpleChannel messageChannel = registeredTypes.contains(packet.getClass()) ? channel : EssentialsPackets.channel;
-		messageChannel.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), CRConfig.effectPacketDistance.get(), world.getDimensionKey())), packet);
+		messageChannel.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), CRConfig.effectPacketDistance.get(), world.dimension())), packet);
 	}
 
 	public static void sendPacketToPlayer(ServerPlayerEntity player, ClientPacket packet){
@@ -96,6 +96,6 @@ public class CRPackets{
 	public static void sendPacketToDimension(World world, ClientPacket packet){
 		//Check if this packet is registered with CR. If not, send it via the Essentials packet channel; this is done to make this method correct for all CR usage
 		SimpleChannel messageChannel = registeredTypes.contains(packet.getClass()) ? channel : EssentialsPackets.channel;
-		messageChannel.send(PacketDistributor.DIMENSION.with(world::getDimensionKey), packet);
+		messageChannel.send(PacketDistributor.DIMENSION.with(world::dimension), packet);
 	}
 }

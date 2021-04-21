@@ -33,9 +33,9 @@ public class LensFrame extends ContainerBlock implements IReadable{
 	private static final VoxelShape[] SHAPE = new VoxelShape[3];
 
 	static{
-		SHAPE[0] = makeCuboidShape(6, 0, 0, 10, 16, 16);
-		SHAPE[1] = makeCuboidShape(0, 6, 0, 16, 10, 16);
-		SHAPE[2] = makeCuboidShape(0, 0, 6, 16, 16, 10);
+		SHAPE[0] = box(6, 0, 0, 10, 16, 16);
+		SHAPE[1] = box(0, 6, 0, 16, 10, 16);
+		SHAPE[2] = box(0, 0, 6, 16, 16, 10);
 	}
 
 	public LensFrame(){
@@ -48,16 +48,16 @@ public class LensFrame extends ContainerBlock implements IReadable{
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
-		return SHAPE[state.get(ESProperties.AXIS).ordinal()];
+		return SHAPE[state.getValue(ESProperties.AXIS).ordinal()];
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new LensFrameTileEntity();
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
@@ -70,34 +70,34 @@ public class LensFrame extends ContainerBlock implements IReadable{
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return getDefaultState().with(ESProperties.AXIS, context.getNearestLookingDirection().getAxis());
+		return defaultBlockState().setValue(ESProperties.AXIS, context.getNearestLookingDirection().getAxis());
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
 		builder.add(ESProperties.AXIS);
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(!worldIn.isRemote){
-			ItemStack stack = playerIn.getHeldItem(hand);
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		if(!worldIn.isClientSide){
+			ItemStack stack = playerIn.getItemInHand(hand);
 
 			if(ESConfig.isWrench(stack)){
-				worldIn.setBlockState(pos, state.func_235896_a_(ESProperties.AXIS));
+				worldIn.setBlockAndUpdate(pos, state.cycle(ESProperties.AXIS));
 			}else{
-				TileEntity te = worldIn.getTileEntity(pos);
+				TileEntity te = worldIn.getBlockEntity(pos);
 				if(!(te instanceof LensFrameTileEntity)){
 					return ActionResultType.SUCCESS;
 				}
 				LensFrameTileEntity lens = (LensFrameTileEntity) te;
 				ItemStack held = lens.getItem();
 				if(!held.isEmpty()){
-					if(!playerIn.inventory.addItemStackToInventory(held)){
-						ItemEntity dropped = playerIn.dropItem(held, false);
+					if(!playerIn.inventory.add(held)){
+						ItemEntity dropped = playerIn.drop(held, false);
 						if(dropped != null){
-							dropped.setNoPickupDelay();
-							dropped.setOwnerId(playerIn.getUniqueID());
+							dropped.setNoPickUpDelay();
+							dropped.setOwner(playerIn.getUUID());
 						}
 					}
 					lens.setContents(0);
@@ -114,27 +114,27 @@ public class LensFrame extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
-		TileEntity te = world.getTileEntity(pos);
+	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
+		TileEntity te = world.getBlockEntity(pos);
 		if(newState.getBlock() != this && te instanceof LensFrameTileEntity){
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ((LensFrameTileEntity) te).getItem());
+			InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ((LensFrameTileEntity) te).getItem());
 		}
-		super.onReplaced(state, world, pos, newState, isMoving);
+		super.onRemove(state, world, pos, newState, isMoving);
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState state){
+	public boolean hasAnalogOutputSignal(BlockState state){
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState blockState, World world, BlockPos pos){
+	public int getAnalogOutputSignal(BlockState blockState, World world, BlockPos pos){
 		return RedstoneUtil.clampToVanilla(read(world, pos, blockState));
 	}
 
 	@Override
 	public float read(World world, BlockPos pos, BlockState blockState){
-		TileEntity te = world.getTileEntity(pos);
+		TileEntity te = world.getBlockEntity(pos);
 		if(te instanceof LensFrameTileEntity){
 			return ((LensFrameTileEntity) te).getRedstone();
 		}

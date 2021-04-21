@@ -12,7 +12,7 @@ public class BeamReflector extends BeamBlock{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new BeamReflectorTileEntity();
 	}
 }

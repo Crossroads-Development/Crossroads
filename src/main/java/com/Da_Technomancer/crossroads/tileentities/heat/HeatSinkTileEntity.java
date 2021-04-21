@@ -33,7 +33,7 @@ public class HeatSinkTileEntity extends ModuleTE{
 
 	public int cycleMode(){
 		mode = (mode + 1) % MODES.length;
-		markDirty();
+		setChanged();
 		return mode;
 	}
 
@@ -52,27 +52,27 @@ public class HeatSinkTileEntity extends ModuleTE{
 	public void tick(){
 		super.tick();
 
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 
 		double prevTemp = temp;
-		double biomeTemp = HeatUtil.convertBiomeTemp(world, pos);
+		double biomeTemp = HeatUtil.convertBiomeTemp(level, worldPosition);
 		temp += Math.min(MODES[mode], Math.abs(temp - biomeTemp)) * Math.signum(biomeTemp - temp);
 		if(temp != prevTemp){
-			markDirty();
+			setChanged();
 		}
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		mode = nbt.getInt("mode");
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putInt("mode", mode);
 		return nbt;
 	}

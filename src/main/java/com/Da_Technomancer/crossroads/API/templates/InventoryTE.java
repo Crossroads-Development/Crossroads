@@ -65,12 +65,12 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		for(int i = 0; i < inventory.length; i++){
 			if(!inventory[i].isEmpty()){
 				CompoundNBT stackTag = new CompoundNBT();
-				inventory[i].write(stackTag);
+				inventory[i].save(stackTag);
 				nbt.put("inv_" + i, stackTag);
 			}
 		}
@@ -79,9 +79,9 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 	}
 
 	@Override
-	public void markDirty(){
-		super.markDirty();
-		if(world != null && !world.isRemote){
+	public void setChanged(){
+		super.setChanged();
+		if(level != null && !level.isClientSide){
 			//We update our IntReferenceHolders that notify client side containers
 			//We only update them directly on the server side. Updating on the client is unneeded, and may cause things to get out of sync
 			for(int i = 0; i < fluidManagers.length; i++){
@@ -91,11 +91,11 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		for(int i = 0; i < inventory.length; i++){
 			if(nbt.contains("inv_" + i)){
-				inventory[i] = ItemStack.read(nbt.getCompound("inv_" + i));
+				inventory[i] = ItemStack.of(nbt.getCompound("inv_" + i));
 			}
 		}
 		if(nbt.getBoolean("server")){
@@ -106,12 +106,12 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 	}
 
 	@Override
-	public boolean isUsableByPlayer(PlayerEntity player){
-		return world.getTileEntity(pos) == this && player.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64;
+	public boolean stillValid(PlayerEntity player){
+		return level.getBlockEntity(worldPosition) == this && player.distanceToSqr(worldPosition.getX() + 0.5D, worldPosition.getY() + 0.5D, worldPosition.getZ() + 0.5D) <= 64;
 	}
 
 	@Override
-	public int getSizeInventory(){
+	public int getContainerSize(){
 		return inventory.length;
 	}
 
@@ -126,55 +126,55 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 	}
 
 	@Override
-	public ItemStack getStackInSlot(int index){
+	public ItemStack getItem(int index){
 		return index >= inventory.length ? ItemStack.EMPTY : inventory[index];
 	}
 
 	@Override
-	public ItemStack decrStackSize(int index, int count){
+	public ItemStack removeItem(int index, int count){
 		if(index >= inventory.length || inventory[index].isEmpty()){
 			return ItemStack.EMPTY;
 		}
-		markDirty();
+		setChanged();
 		return inventory[index].split(count);
 	}
 
 	@Override
-	public ItemStack removeStackFromSlot(int index){
+	public ItemStack removeItemNoUpdate(int index){
 		if(index >= inventory.length || inventory[index].isEmpty()){
 			return ItemStack.EMPTY;
 		}
-		markDirty();
+		setChanged();
 		ItemStack removed = inventory[index];
 		inventory[index]= ItemStack.EMPTY;
 		return removed;
 	}
 
 	@Override
-	public void setInventorySlotContents(int index, ItemStack stack){
+	public void setItem(int index, ItemStack stack){
 		if(index >= inventory.length){
 			return;
 		}
 		inventory[index] = stack;
-		markDirty();
+		setChanged();
 	}
 
 	@Override
-	public int getInventoryStackLimit(){
+	public int getMaxStackSize(){
 		return inventory.length == 0 ? 0 : 64;
 	}
 
 	@Override
-	public void clear(){
+	public void clearContent(){
 		Arrays.fill(inventory, ItemStack.EMPTY);
 		if(inventory.length != 0){
-			markDirty();
+			setChanged();
 		}
 	}
 
 	@Override
-	public boolean canInsertItem(int index, ItemStack stack, Direction direction){
-		return isItemValidForSlot(index, stack);
+	public boolean canPlaceItemThroughFace(int index, ItemStack stack, Direction direction){
+		return canPlaceItem(index, stack);
 	}
 
 	@Override
@@ -200,7 +200,7 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 	 * @return A new PacketBuffer pre-formatted with standard InventoryContainer info
 	 */
 	protected PacketBuffer createContainerBuf(){
-		return new PacketBuffer(Unpooled.buffer()).writeBlockPos(pos);
+		return new PacketBuffer(Unpooled.buffer()).writeBlockPos(worldPosition);
 	}
 
 	protected class ItemHandler implements IItemHandlerModifiable{
@@ -232,14 +232,14 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 		@Nonnull
 		@Override
 		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate){
-			if(isItemValidForSlot(slot, stack) && (inventory[slot].isEmpty() || BlockUtil.sameItem(stack, inventory[slot]))){
+			if(canPlaceItem(slot, stack) && (inventory[slot].isEmpty() || BlockUtil.sameItem(stack, inventory[slot]))){
 				int oldCount = inventory[slot].getCount();
 				int moved = Math.min(stack.getCount(), stack.getMaxStackSize() - oldCount);
 				ItemStack out = stack.copy();
 				out.setCount(stack.getCount() - moved);
 
 				if(!simulate){
-					markDirty();
+					setChanged();
 					inventory[slot] = stack.copy();
 					inventory[slot].setCount(moved + oldCount);
 				}
@@ -252,7 +252,7 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 		@Nonnull
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate){
-			if(slot >= inventory.length || !canExtractItem(slot, inventory[slot], dir)){
+			if(slot >= inventory.length || !canTakeItemThroughFace(slot, inventory[slot], dir)){
 				return ItemStack.EMPTY;
 			}
 
@@ -262,7 +262,7 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 				simOut.setCount(moved);
 				return simOut;
 			}
-			markDirty();
+			setChanged();
 			return inventory[slot].split(moved);
 		}
 
@@ -273,14 +273,14 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 
 		@Override
 		public boolean isItemValid(int slot, @Nonnull ItemStack stack){
-			return isItemValidForSlot(slot, stack);
+			return canPlaceItem(slot, stack);
 		}
 
 		@Override
 		public void setStackInSlot(int slot, @Nonnull ItemStack stack){
 			if(slot < inventory.length){
 				inventory[slot] = stack;
-				markDirty();
+				setChanged();
 			}
 		}
 	}

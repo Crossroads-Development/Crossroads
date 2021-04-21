@@ -20,7 +20,7 @@ public class HeatLimiterContainer extends Container{
 	private static ContainerType<HeatLimiterContainer> TYPE = null;
 
 	public HeatLimiterContainer(int id, PlayerInventory playerInventory, PacketBuffer data){
-		this(id, playerInventory, data == null ? 0 : data.readFloat(), data == null ? null : data.readString(), data == null ? null : data.readBlockPos());
+		this(id, playerInventory, data == null ? 0 : data.readFloat(), data == null ? null : data.readUtf(), data == null ? null : data.readBlockPos());
 	}
 
 	public HeatLimiterContainer(int id, PlayerInventory playerInventory, float output, String settingStr, BlockPos pos){
@@ -31,7 +31,7 @@ public class HeatLimiterContainer extends Container{
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity playerIn){
+	public boolean stillValid(PlayerEntity playerIn){
 		return true;
 	}
 }

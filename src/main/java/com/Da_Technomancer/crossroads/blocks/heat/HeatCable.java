@@ -5,8 +5,8 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.templates.ConduitBlock;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.crafting.CRItemTags;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -40,7 +40,7 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 
 	private static final double SIZE = 0.2D;
 	protected static final VoxelShape[] SHAPES = generateShapes(SIZE);
-	private static final Item.Properties itemProp = new Item.Properties().group(CRItems.TAB_HEAT_CABLE);
+	private static final Item.Properties itemProp = new Item.Properties().tab(CRItems.TAB_HEAT_CABLE);
 
 	protected final HeatInsulators insulator;
 
@@ -53,7 +53,7 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 		this.insulator = insulator;
 		setRegistryName(name);
 		CRBlocks.blockAddQue(this, itemProp);
-		setDefaultState(getDefaultState().with(CRProperties.CONDUCTOR, Conductors.COPPER));
+		registerDefaultState(defaultBlockState().setValue(CRProperties.CONDUCTOR, Conductors.COPPER));
 	}
 
 	@Override
@@ -87,8 +87,8 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
-		super.fillStateContainer(builder);
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
+		super.createBlockStateDefinition(builder);
 		builder.add(CRProperties.CONDUCTOR);
 	}
 
@@ -98,20 +98,20 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		if(playerIn != null && hand != null){
-			if(!super.onBlockActivated(state, worldIn, pos, playerIn, hand, hit).isSuccess()){
+			if(!super.use(state, worldIn, pos, playerIn, hand, hit).shouldSwing()){
 				Conductors match = null;
-				Item item = playerIn.getHeldItem(hand).getItem();
+				Item item = playerIn.getItemInHand(hand).getItem();
 				for(Conductors c : Conductors.values()){
 					if(c.tag.contains(item)){
 						match = c;
 						break;
 					}
 				}
-				if(match != null && state.get(CRProperties.CONDUCTOR) != match){
-					if(!worldIn.isRemote){
-						worldIn.setBlockState(pos, state.with(CRProperties.CONDUCTOR, match), 2);
+				if(match != null && state.getValue(CRProperties.CONDUCTOR) != match){
+					if(!worldIn.isClientSide){
+						worldIn.setBlock(pos, state.setValue(CRProperties.CONDUCTOR, match), 2);
 					}
 					return ActionResultType.SUCCESS;
 				}
@@ -127,21 +127,21 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 		super.onAdjusted(world, pos, newState, facing, newVal, te);
 
 		//(un)lock the neighboring heat cable with this once, if applicable
-		TileEntity neighTE = world.getTileEntity(pos.offset(facing));
+		TileEntity neighTE = world.getBlockEntity(pos.relative(facing));
 		if(neighTE instanceof HeatCableTileEntity){
 			//Adjust the neighboring pipe alongside this one to have the same data
-			((HeatCableTileEntity) neighTE).setData(facing.getOpposite().getIndex(), newVal.isConnection(), newVal);
+			((HeatCableTileEntity) neighTE).setData(facing.getOpposite().get3DDataValue(), newVal.isConnection(), newVal);
 		}
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new HeatCableTileEntity(insulator);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.heat_cable.loss", insulator.getRate()));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.heat_cable.melt", insulator.getLimit()));
 	}
@@ -165,7 +165,7 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 		}
 
 		@Override
-		public String getString(){
+		public String getSerializedName(){
 			return toString();
 		}
 	}

@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.API.effects.goggles;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 

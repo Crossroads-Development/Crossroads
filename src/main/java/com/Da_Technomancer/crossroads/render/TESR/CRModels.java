@@ -31,31 +31,31 @@ public class CRModels{
 	private static void draw24Polygon(MatrixStack matrix, IVertexBuilder builder, int light, int[] col, TextureAtlasSprite sprite){
 		//Commented numbers specify the order of vertices on the final polygon, increasing clockwise
 
-		float uSt0 = sprite.getInterpolatedU(8 - 16 * sin24[0]);
-		float uSt1 = sprite.getInterpolatedU(8 - 16 * sin24[1]);
-		float uSt2 = sprite.getInterpolatedU(8 - 16 * sin24[2]);
-		float uSt3 = sprite.getInterpolatedU(8 - 16 * sin24[3]);
-		float uSt4 = sprite.getInterpolatedU(8 - 16 * sin24[4]);
-		float uStR = sprite.getInterpolatedU(8 - 16 * radius_24);
-		float uEn0 = sprite.getInterpolatedU(8 + 16 * sin24[0]);
-		float uEn1 = sprite.getInterpolatedU(8 + 16 * sin24[1]);
-		float uEn2 = sprite.getInterpolatedU(8 + 16 * sin24[2]);
-		float uEn3 = sprite.getInterpolatedU(8 + 16 * sin24[3]);
-		float uEn4 = sprite.getInterpolatedU(8 + 16 * sin24[4]);
-		float uEnR = sprite.getInterpolatedU(8 + 16 * radius_24);
+		float uSt0 = sprite.getU(8 - 16 * sin24[0]);
+		float uSt1 = sprite.getU(8 - 16 * sin24[1]);
+		float uSt2 = sprite.getU(8 - 16 * sin24[2]);
+		float uSt3 = sprite.getU(8 - 16 * sin24[3]);
+		float uSt4 = sprite.getU(8 - 16 * sin24[4]);
+		float uStR = sprite.getU(8 - 16 * radius_24);
+		float uEn0 = sprite.getU(8 + 16 * sin24[0]);
+		float uEn1 = sprite.getU(8 + 16 * sin24[1]);
+		float uEn2 = sprite.getU(8 + 16 * sin24[2]);
+		float uEn3 = sprite.getU(8 + 16 * sin24[3]);
+		float uEn4 = sprite.getU(8 + 16 * sin24[4]);
+		float uEnR = sprite.getU(8 + 16 * radius_24);
 
-		float vSt0 = sprite.getInterpolatedV(8 - 16 * sin24[0]);
-		float vSt1 = sprite.getInterpolatedV(8 - 16 * sin24[1]);
-		float vSt2 = sprite.getInterpolatedV(8 - 16 * sin24[2]);
-		float vSt3 = sprite.getInterpolatedV(8 - 16 * sin24[3]);
-		float vSt4 = sprite.getInterpolatedV(8 - 16 * sin24[4]);
-		float vStR = sprite.getInterpolatedV(8 - 16 * radius_24);
-		float vEn0 = sprite.getInterpolatedV(8 + 16 * sin24[0]);
-		float vEn1 = sprite.getInterpolatedV(8 + 16 * sin24[1]);
-		float vEn2 = sprite.getInterpolatedV(8 + 16 * sin24[2]);
-		float vEn3 = sprite.getInterpolatedV(8 + 16 * sin24[3]);
-		float vEn4 = sprite.getInterpolatedV(8 + 16 * sin24[4]);
-		float vEnR = sprite.getInterpolatedV(8 + 16 * radius_24);
+		float vSt0 = sprite.getV(8 - 16 * sin24[0]);
+		float vSt1 = sprite.getV(8 - 16 * sin24[1]);
+		float vSt2 = sprite.getV(8 - 16 * sin24[2]);
+		float vSt3 = sprite.getV(8 - 16 * sin24[3]);
+		float vSt4 = sprite.getV(8 - 16 * sin24[4]);
+		float vStR = sprite.getV(8 - 16 * radius_24);
+		float vEn0 = sprite.getV(8 + 16 * sin24[0]);
+		float vEn1 = sprite.getV(8 + 16 * sin24[1]);
+		float vEn2 = sprite.getV(8 + 16 * sin24[2]);
+		float vEn3 = sprite.getV(8 + 16 * sin24[3]);
+		float vEn4 = sprite.getV(8 + 16 * sin24[4]);
+		float vEnR = sprite.getV(8 + 16 * radius_24);
 
 		CRRenderUtil.addVertexBlock(builder, matrix, sin24[0], 0, radius_24, uEn0, vStR, 0, 1, 0, light, col);//1
 		CRRenderUtil.addVertexBlock(builder, matrix, sin24[1], 0, sin24[4], uEn1, vSt4, 0, 1, 0, light, col);//2
@@ -197,33 +197,33 @@ public class CRModels{
 		float widthProng = 1F / 48F;
 
 		int[] col = CRRenderUtil.convertColor(color);
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
+		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_24_TEXTURE);
 
 		//Top and bottom (sprite)
-		matrix.push();
+		matrix.pushPose();
 		matrix.translate(0, top, 0);
 		draw24Polygon(matrix, builder, light, col, sprite);//Top
 		matrix.translate(0, bottom - top, 0);
-		matrix.rotate(Vector3f.XP.rotationDegrees(180));//Flip orientation
+		matrix.mulPose(Vector3f.XP.rotationDegrees(180));//Flip orientation
 		draw24Polygon(matrix, builder, light, col, sprite);//Bottom
-		matrix.pop();
+		matrix.popPose();
 
 		//Sides (spriteSide)
 		TextureAtlasSprite spriteSide = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_24_RIM_TEXTURE);
 		Quaternion rotation = Vector3f.YP.rotationDegrees(15);
 
-		float vSt = spriteSide.getMinV();
-		float vEn = spriteSide.getInterpolatedV(1);
+		float vSt = spriteSide.getV0();
+		float vEn = spriteSide.getV(1);
 
-		matrix.push();
+		matrix.pushPose();
 		for(float i = 0; i < 6; i++){
-			matrix.rotate(rotation);//15 deg
+			matrix.mulPose(rotation);//15 deg
 
-			float uSt = spriteSide.getInterpolatedU(i);
-			float uEn = spriteSide.getInterpolatedU(i + 1);
-			float u0St = spriteSide.getInterpolatedU(5 - i);
-			float u0En = spriteSide.getInterpolatedU(6 - i);
+			float uSt = spriteSide.getU(i);
+			float uEn = spriteSide.getU(i + 1);
+			float u0St = spriteSide.getU(5 - i);
+			float u0En = spriteSide.getU(6 - i);
 
 			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, bottom, sin24[0], uEn, vSt, 1, 0, 0, light, col);
 			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, bottom, -sin24[0], uEn, vSt, 1, 0, 0, light, col);
@@ -245,17 +245,17 @@ public class CRModels{
 			CRRenderUtil.addVertexBlock(builder, matrix, -sin24[0], top, -radius_24, u0St, vEn, 0, 0, -1, light, col);
 			CRRenderUtil.addVertexBlock(builder, matrix, sin24[0], top, -radius_24, u0St, vEn, 0, 0, -1, light, col);
 		}
-		matrix.pop();
+		matrix.popPose();
 
 		//Prongs (spriteSide)
 
-		float u1 = spriteSide.getInterpolatedU(1);
-		float u2 = spriteSide.getInterpolatedU(2);
-		float u3 = spriteSide.getInterpolatedU(3);
-		float u4 = spriteSide.getInterpolatedU(4);
-		float u5 = spriteSide.getInterpolatedU(5);
+		float u1 = spriteSide.getU(1);
+		float u2 = spriteSide.getU(2);
+		float u3 = spriteSide.getU(3);
+		float u4 = spriteSide.getU(4);
+		float u5 = spriteSide.getU(5);
 		for(int i = 0; i < 24; i++){
-			matrix.rotate(rotation);//15 deg
+			matrix.mulPose(rotation);//15 deg
 
 			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomProng, widthProng, u4, vSt, 1, 0, 0, light, col);
 			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomProng, -widthProng, u4, vSt, 1, 0, 0, light, col);
@@ -301,14 +301,14 @@ public class CRModels{
 		float lHalf = 0.5F;//Distance from center to side
 		//Texture coords
 		float lHalfT = 8F;
-		float uSSt = sprite.getInterpolatedU(8 - sHalfT8);
-		float uSEn = sprite.getInterpolatedU(8 + sHalfT8);
-		float uLSt = sprite.getInterpolatedU(8 - lHalfT);
-		float uLEn = sprite.getInterpolatedU(8 + lHalfT);
-		float vSSt = sprite.getInterpolatedV(8 - sHalfT8);
-		float vSEn = sprite.getInterpolatedV(8 + sHalfT8);
-		float vLSt = sprite.getInterpolatedV(8 - lHalfT);
-		float vLEn = sprite.getInterpolatedV(8 + lHalfT);
+		float uSSt = sprite.getU(8 - sHalfT8);
+		float uSEn = sprite.getU(8 + sHalfT8);
+		float uLSt = sprite.getU(8 - lHalfT);
+		float uLEn = sprite.getU(8 + lHalfT);
+		float vSSt = sprite.getV(8 - sHalfT8);
+		float vSEn = sprite.getV(8 + sHalfT8);
+		float vLSt = sprite.getV(8 - lHalfT);
+		float vLEn = sprite.getV(8 + lHalfT);
 
 		//Because we're in GL_QUADS draw mode, we split the octagon into 3 quadrilaterals
 		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8, 0, lHalf, uSSt, vLSt, 0, 1, 0, light, color);
@@ -344,36 +344,36 @@ public class CRModels{
 
 		//Draw 2 octagons
 		//Top
-		matrix.push();
+		matrix.pushPose();
 		matrix.scale(2F * lHalf, 1, 2F * lHalf);
 		matrix.translate(0, top, 0);
 		drawOctagon(builder, matrix, color, light, sprite);
-		matrix.pop();
+		matrix.popPose();
 
 		//Bottom
-		matrix.push();
+		matrix.pushPose();
 		matrix.translate(0, -top, 0);
-		matrix.rotate(Vector3f.XP.rotationDegrees(180));//Flip upside down
+		matrix.mulPose(Vector3f.XP.rotationDegrees(180));//Flip upside down
 		matrix.scale(2F * lHalf, 1, 2F * lHalf);
 		drawOctagon(builder, matrix, color, light, sprite);
-		matrix.pop();
+		matrix.popPose();
 
 		float tHeight = 1F / 16F;
 
 		//Texture coords
 		float tHeightT = tHeight * 16F;
-		float uSt = sprite.getMinU();
-		float uEn = sprite.getMaxU();
-		float uSSt = sprite.getInterpolatedU(8 - sHalfT8);
-		float uSEn = sprite.getInterpolatedU(8 + sHalfT8);
-		float uHSt = sprite.getInterpolatedU(tHeightT);
-		float uHEn = sprite.getInterpolatedU(16 - tHeightT);
-		float vSt = sprite.getMinV();
-		float vEn = sprite.getMaxV();
-		float vSSt = sprite.getInterpolatedV(8 - sHalfT8);
-		float vSEn = sprite.getInterpolatedV(8 + sHalfT8);
-		float vHSt = sprite.getInterpolatedV(tHeightT);
-		float vHEn = sprite.getInterpolatedV(16 - tHeightT);
+		float uSt = sprite.getU0();
+		float uEn = sprite.getU1();
+		float uSSt = sprite.getU(8 - sHalfT8);
+		float uSEn = sprite.getU(8 + sHalfT8);
+		float uHSt = sprite.getU(tHeightT);
+		float uHEn = sprite.getU(16 - tHeightT);
+		float vSt = sprite.getV0();
+		float vEn = sprite.getV1();
+		float vSSt = sprite.getV(8 - sHalfT8);
+		float vSEn = sprite.getV(8 + sHalfT8);
+		float vHSt = sprite.getV(tHeightT);
+		float vHEn = sprite.getV(16 - tHeightT);
 
 		//Sides
 		//Can't be done via loop due to distinct texture mapping
@@ -442,16 +442,16 @@ public class CRModels{
 	 * @param light The combined light value
 	 */
 	public static void draw8Gear(MatrixStack matrix, IVertexBuilder builder, int[] color, int light){
-		matrix.push();
+		matrix.pushPose();
 
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_TEXTURE);
 		float lHalf = 7F / 16F;//Half the side length of the octagon
 
 		//Renders the core of the gear, leaving only the prongs
-		matrix.push();
+		matrix.pushPose();
 		matrix.scale(2F * lHalf, 1, 2F * lHalf);
 		draw8Core(builder, matrix, color, light, sprite);
-		matrix.pop();
+		matrix.popPose();
 
 		//Prongs
 		//Given the option of hand coding 8 orientations for each 5 sided prong or using matrix transformations and a loop, I took the path of sanity retention
@@ -463,10 +463,10 @@ public class CRModels{
 
 		//Texture coords
 		float tHeightT = tHeight * 16F;
-		float uEn = sprite.getMaxU();
-		float uHEn = sprite.getInterpolatedU(16 - tHeightT);
-		float vHMSt = sprite.getInterpolatedV(8 - tHeightT);
-		float vHMEn = sprite.getInterpolatedV(8 + tHeightT);
+		float uEn = sprite.getU1();
+		float uHEn = sprite.getU(16 - tHeightT);
+		float vHMSt = sprite.getV(8 - tHeightT);
+		float vHMEn = sprite.getV(8 + tHeightT);
 
 		for(int i = 0; i < 8; i++){
 			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomP, tHeight, uEn, vHMSt, 1, 0, 0, light, color);
@@ -494,10 +494,10 @@ public class CRModels{
 			CRRenderUtil.addVertexBlock(builder, matrix, lHalf, bottomP, -tHeight, uHEn, vHMEn, 0, -1, 0, light, color);
 			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomP, -tHeight, uHEn, vHMSt, 0, -1, 0, light, color);
 
-			matrix.rotate(rotation);
+			matrix.mulPose(rotation);
 		}
 
-		matrix.pop();
+		matrix.popPose();
 	}
 
 	/**
@@ -514,41 +514,41 @@ public class CRModels{
 		float radius = 1F / 16F;
 		float len = .4999F;
 		int[] col = {color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()};
-		float sideUEn = sides.getInterpolatedU(2);
+		float sideUEn = sides.getU(2);
 
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
+		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
 
 		//Ends
-		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, -radius, ends.getMinU(), ends.getMinV(), 0, -1, 0, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, -radius, ends.getMaxU(), ends.getMinV(), 0, -1, 0, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, radius, ends.getMaxU(), ends.getMaxV(), 0, -1, 0, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, radius, ends.getMinU(), ends.getMaxV(), 0, -1, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, -radius, ends.getU0(), ends.getV0(), 0, -1, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, -radius, ends.getU1(), ends.getV0(), 0, -1, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, radius, ends.getU1(), ends.getV1(), 0, -1, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, radius, ends.getU0(), ends.getV1(), 0, -1, 0, light, col);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, radius, ends.getMinU(), ends.getMaxV(), 0, 1, 0, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, radius, ends.getMaxU(), ends.getMaxV(), 0, 1, 0, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, -radius, ends.getMaxU(), ends.getMinV(), 0, 1, 0, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, -radius, ends.getMinU(), ends.getMinV(), 0, 1, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, radius, ends.getU0(), ends.getV1(), 0, 1, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, radius, ends.getU1(), ends.getV1(), 0, 1, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, -radius, ends.getU1(), ends.getV0(), 0, 1, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, -radius, ends.getU0(), ends.getV0(), 0, 1, 0, light, col);
 
 		//Sides
-		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, -radius, sides.getMinU(), sides.getMaxV(), 0, 0, -1, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, -radius, sideUEn, sides.getMaxV(), 0, 0, -1, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, -radius, sideUEn, sides.getMinV(), 0, 0, -1, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, -radius, sides.getMinU(), sides.getMinV(), 0, 0, -1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, -radius, sides.getU0(), sides.getV1(), 0, 0, -1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, -radius, sideUEn, sides.getV1(), 0, 0, -1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, -radius, sideUEn, sides.getV0(), 0, 0, -1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, -radius, sides.getU0(), sides.getV0(), 0, 0, -1, light, col);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, radius, sideUEn, sides.getMinV(), 0, 0, 1, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, radius, sides.getMinU(), sides.getMinV(), 0, 0, 1, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, radius, sides.getMinU(), sides.getMaxV(), 0, 0, 1, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, radius, sideUEn, sides.getMaxV(), 0, 0, 1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, radius, sideUEn, sides.getV0(), 0, 0, 1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, radius, sides.getU0(), sides.getV0(), 0, 0, 1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, radius, sides.getU0(), sides.getV1(), 0, 0, 1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, radius, sideUEn, sides.getV1(), 0, 0, 1, light, col);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, radius, sides.getMinU(), sides.getMinV(), -1, 0, 0, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, radius, sides.getMinU(), sides.getMaxV(), -1, 0, 0, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, -radius, sideUEn, sides.getMaxV(), -1, 0, 0, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, -radius, sideUEn, sides.getMinV(), -1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, radius, sides.getU0(), sides.getV0(), -1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, radius, sides.getU0(), sides.getV1(), -1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, -radius, sideUEn, sides.getV1(), -1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, -radius, sideUEn, sides.getV0(), -1, 0, 0, light, col);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, -radius, sides.getMinU(), sides.getMaxV(), 1, 0, 0, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, radius, sideUEn, sides.getMaxV(), 1, 0, 0, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, radius, sideUEn, sides.getMinV(), 1, 0, 0, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, -radius, sides.getMinU(), sides.getMinV(), 1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, -radius, sides.getU0(), sides.getV1(), 1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, radius, sideUEn, sides.getV1(), 1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, radius, sideUEn, sides.getV0(), 1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, -radius, sides.getU0(), sides.getV0(), 1, 0, 0, light, col);
 	}
 
 	/**
@@ -556,19 +556,19 @@ public class CRModels{
 	 */
 	public static void renderScrew(MatrixStack matrix, IRenderTypeBuffer buffer, int light){
 		//Draw central axle
-		matrix.push();
+		matrix.pushPose();
 		matrix.translate(0, 0.5D, 0);
 		drawAxle(matrix, buffer, light, new Color(160, 160, 160));
-		matrix.pop();
+		matrix.popPose();
 
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.CAST_IRON_TEXTURE);
 
-		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
+		IVertexBuilder vb = buffer.getBuffer(RenderType.solid());
 
 		Quaternion rotation = Vector3f.YP.rotationDegrees(-90);
 		for(int i = 0; i < 8; i++){
 			drawTurbineBlade(vb, matrix, i / 16F, light, sprite);
-			matrix.rotate(rotation);
+			matrix.mulPose(rotation);
 		}
 	}
 
@@ -590,12 +590,12 @@ public class CRModels{
 		final float top = mid + 1F / 16F;
 		//Texture coords
 		//Top & bottom
-		final float uStT = sprite.getInterpolatedU(1F);
-		final float vStT = sprite.getInterpolatedV(1F);
-		final float uEnT = sprite.getInterpolatedU(7F);
-		final float vEnT = sprite.getInterpolatedV(4F);
+		final float uStT = sprite.getU(1F);
+		final float vStT = sprite.getV(1F);
+		final float uEnT = sprite.getU(7F);
+		final float vEnT = sprite.getV(4F);
 
-		final float vEnS = sprite.getInterpolatedV(2);
+		final float vEnS = sprite.getV(2);
 		//Top and bottom have tilted normals
 		Vector3d normal = CRRenderUtil.findNormal(new Vector3d(-lenHalf, mid, edgeIn), new Vector3d(lenHalf, bottom, edgeIn), new Vector3d(-lenHalf, mid, edgeOut));
 

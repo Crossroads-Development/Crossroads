@@ -50,7 +50,7 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRec>{
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.fluidCoolingChamber.getTranslatedName().getString();
+		return CRBlocks.fluidCoolingChamber.getName().getString();
 	}
 
 	@Override
@@ -60,8 +60,8 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRec>{
 
 	@Override
 	public void draw(FluidCoolingRec rec, MatrixStack matrix, double mouseX, double mouseY){
-		Minecraft.getInstance().fontRenderer.drawString(matrix, MiscUtil.localize("crossroads.jei.fluid_cooling.max", rec.getMaxTemp()), 10, 10, 4210752);
-		Minecraft.getInstance().fontRenderer.drawString(matrix, MiscUtil.localize("crossroads.jei.fluid_cooling.add", rec.getAddedHeat()), 10, 20, 4210752);
+		Minecraft.getInstance().font.draw(matrix, MiscUtil.localize("crossroads.jei.fluid_cooling.max", rec.getMaxTemp()), 10, 10, 4210752);
+		Minecraft.getInstance().font.draw(matrix, MiscUtil.localize("crossroads.jei.fluid_cooling.add", rec.getAddedHeat()), 10, 20, 4210752);
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
 		slot.draw(matrix, 110, 55);
@@ -79,7 +79,7 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRec>{
 		fluidGroup.init(0, true, 50, 30, 16, 64, 1000, true, fluidOverlay);
 		fluidGroup.set(0, recipe.getInput());
 		itemGroup.init(0, false, 110, 55);
-		itemGroup.set(0, recipe.getRecipeOutput());
+		itemGroup.set(0, recipe.getResultItem());
 
 		itemGroup.set(ingredients);
 		fluidGroup.set(ingredients);
@@ -93,6 +93,6 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRec>{
 	@Override
 	public void setIngredients(FluidCoolingRec fluidCoolingRecipe, IIngredients ingredients){
 		ingredients.setInput(VanillaTypes.FLUID, fluidCoolingRecipe.getInput());
-		ingredients.setOutput(VanillaTypes.ITEM, fluidCoolingRecipe.getRecipeOutput());
+		ingredients.setOutput(VanillaTypes.ITEM, fluidCoolingRecipe.getResultItem());
 	}
 }

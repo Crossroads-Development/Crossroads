@@ -69,26 +69,26 @@ public final class EventHandlerCommon{
 	public void onEntitySpawn(LivingSpawnEvent.CheckSpawn e){
 		if(entityList != null && e.getWorld() instanceof ServerWorld){
 			ServerWorld world = (ServerWorld) e.getWorld();
-			world.getProfiler().startSection(Crossroads.MODNAME + ": Ghost marker spawn prevention");
+			world.getProfiler().push(Crossroads.MODNAME + ": Ghost marker spawn prevention");
 			Map<UUID, Entity> entities;
 			try{
 				entities = (Map<UUID, Entity>) entityList.get(world);
 			}catch(IllegalAccessException | ClassCastException ex){
 				Crossroads.logger.error(ex);
-				world.getProfiler().endSection();
+				world.getProfiler().pop();
 				return;
 			}
 			for(Entity ent : entities.values()){
 				if(ent instanceof EntityGhostMarker){
 					EntityGhostMarker mark = (EntityGhostMarker) ent;
-					if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.BLOCK_SPAWNING && mark.data != null && mark.getPositionVec().subtract(e.getEntity().getPositionVec()).length() <= mark.data.getInt("range")){
+					if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.BLOCK_SPAWNING && mark.data != null && mark.position().subtract(e.getEntity().position()).length() <= mark.data.getInt("range")){
 						e.setResult(Event.Result.DENY);
-						world.getProfiler().endSection();
+						world.getProfiler().pop();
 						return;
 					}
 				}
 			}
-			world.getProfiler().endSection();
+			world.getProfiler().pop();
 		}
 	}
 	
@@ -97,9 +97,9 @@ public final class EventHandlerCommon{
 	public void chargeCreepers(LivingSpawnEvent.SpecialSpawn e){
 		if(e.getWorld() instanceof ServerWorld && e.getEntity() instanceof CreeperEntity && (CRConfig.atmosEffect.get() & 2) == 2 && (float) AtmosChargeSavedData.getCharge((ServerWorld) e.getWorld()) / (float) AtmosChargeSavedData.getCapacity() >= 0.9F){
 			CompoundNBT nbt = new CompoundNBT();
-			e.getEntityLiving().writeAdditional(nbt);
+			e.getEntityLiving().addAdditionalSaveData(nbt);
 			nbt.putBoolean("powered", true);
-			e.getEntityLiving().readAdditional(nbt);
+			e.getEntityLiving().readAdditionalSaveData(nbt);
 		}
 	}
 
@@ -156,42 +156,42 @@ public final class EventHandlerCommon{
 
 
 		//Atmospheric overcharge effect
-		if(!e.world.isRemote && (CRConfig.atmosEffect.get() & 1) == 1){
-			e.world.getProfiler().startSection(Crossroads.MODNAME + ": Overcharge lightning effects");
+		if(!e.world.isClientSide && (CRConfig.atmosEffect.get() & 1) == 1){
+			e.world.getProfiler().push(Crossroads.MODNAME + ": Overcharge lightning effects");
 			float chargeLevel = (float) AtmosChargeSavedData.getCharge((ServerWorld) e.world) / (float) AtmosChargeSavedData.getCapacity();
 			if(chargeLevel > 0.5F && getLoadedChunks != null && spawnRadius != null){
 				//1.14
 				//Very similar to vanilla logic in ServerWorld::tickEnvironment as called by ServerChunkProvider::tickChunks
 				//Re-implemented due to the vanilla methods doing far more than just lightning
 				try{
-					Iterable<ChunkHolder> iterable = (Iterable<ChunkHolder>) getLoadedChunks.invoke(((ServerChunkProvider) e.world.getChunkProvider()).chunkManager);
+					Iterable<ChunkHolder> iterable = (Iterable<ChunkHolder>) getLoadedChunks.invoke(((ServerChunkProvider) e.world.getChunkSource()).chunkMap);
 					for(ChunkHolder holder : iterable){
-						Optional<Chunk> opt = holder.getEntityTickingFuture().getNow(ChunkHolder.UNLOADED_CHUNK).left();
+						Optional<Chunk> opt = holder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left();
 						if(opt.isPresent()){
 							ChunkPos chunkPos = opt.get().getPos();
-							if(!(boolean) spawnRadius.invoke(((ServerChunkProvider) e.world.getChunkProvider()).chunkManager, chunkPos)){
-								int i = chunkPos.getXStart();
-								int j = chunkPos.getZStart();
-								if(e.world.rand.nextInt(350_000 - (int) (300_000F * chargeLevel)) == 0){//The vanilla default is 1/100_000; atmos charging ranges from 1/200_000 to 1/50_000
+							if(!(boolean) spawnRadius.invoke(((ServerChunkProvider) e.world.getChunkSource()).chunkMap, chunkPos)){
+								int i = chunkPos.getMinBlockX();
+								int j = chunkPos.getMinBlockZ();
+								if(e.world.random.nextInt(350_000 - (int) (300_000F * chargeLevel)) == 0){//The vanilla default is 1/100_000; atmos charging ranges from 1/200_000 to 1/50_000
 									BlockPos strikePos = e.world.getBlockRandomPos(i, 0, j, 15);
 									if(adjustPosForLightning != null){
 										//This is a minor detail of the implementation- we only do it if the reflection worked
 										strikePos = (BlockPos) adjustPosForLightning.invoke(e.world, strikePos);//Vanilla lightning logic is evil- if there's a nearby entity (including players), hit them instead of the random block
 									}
-									DifficultyInstance difficulty = e.world.getDifficultyForLocation(strikePos);
+									DifficultyInstance difficulty = e.world.getCurrentDifficultyAt(strikePos);
 									//There's a config for this because at high atmos levels, it can quickly get annoying to have a world flooded with skeleton horses
-									boolean spawnHorsemen = CRConfig.atmosLightningHorsemen.get() && e.world.getGameRules().getBoolean(GameRules.DO_MOB_SPAWNING) && e.world.rand.nextDouble() < difficulty.getAdditionalDifficulty() * 0.01D;
+									boolean spawnHorsemen = CRConfig.atmosLightningHorsemen.get() && e.world.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING) && e.world.random.nextDouble() < difficulty.getEffectiveDifficulty() * 0.01D;
 									if(spawnHorsemen){
 										SkeletonHorseEntity skeletonHorse = EntityType.SKELETON_HORSE.create(e.world);
 										skeletonHorse.setTrap(true);//It's a trap!
-										skeletonHorse.setGrowingAge(0);
-										skeletonHorse.setPosition(strikePos.getX(), strikePos.getY(), strikePos.getZ());
-										e.world.addEntity(skeletonHorse);
+										skeletonHorse.setAge(0);
+										skeletonHorse.setPos(strikePos.getX(), strikePos.getY(), strikePos.getZ());
+										e.world.addFreshEntity(skeletonHorse);
 									}
 
 									LightningBoltEntity lightning = EntityType.LIGHTNING_BOLT.create(e.world);
-									lightning.moveForced(Vector3d.copyCenteredHorizontally(strikePos));//Set strike position/set position
-									e.world.addEntity(lightning);
+									lightning.moveTo(Vector3d.atBottomCenterOf(strikePos));//Set strike position/set position
+									e.world.addFreshEntity(lightning);
 								}
 							}
 						}
@@ -200,7 +200,7 @@ public final class EventHandlerCommon{
 					Crossroads.logger.catching(ex);
 				}
 			}
-			e.world.getProfiler().endSection();
+			e.world.getProfiler().pop();
 		}
 	}
 
@@ -260,10 +260,10 @@ public final class EventHandlerCommon{
 		if(e.getSource() == DamageSource.FALL){
 			LivingEntity ent = e.getEntityLiving();
 
-			ItemStack boots = ent.getItemStackFromSlot(EquipmentSlotType.FEET);
+			ItemStack boots = ent.getItemBySlot(EquipmentSlotType.FEET);
 			if(boots.getItem() == CRItems.chickenBoots){
 				e.setCanceled(true);
-				ent.getEntityWorld().playSound(null, ent.getPosX(), ent.getPosY(), ent.getPosZ(), SoundEvents.ENTITY_CHICKEN_HURT, SoundCategory.PLAYERS, 2.5F, 1F);
+				ent.getCommandSenderWorld().playSound(null, ent.getX(), ent.getY(), ent.getZ(), SoundEvents.CHICKEN_HURT, SoundCategory.PLAYERS, 2.5F, 1F);
 				return;
 			}
 
@@ -271,19 +271,19 @@ public final class EventHandlerCommon{
 				//Players who take damage with certain tag-defined items in their inventory explode
 				PlayerEntity player = (PlayerEntity) ent;
 				boolean foundExplosion = false;
-				if(player.inventory.offHandInventory.get(0).getItem().isIn(CRItemTags.EXPLODE_IF_KNOCKED)){
-					player.inventory.offHandInventory.set(0, ItemStack.EMPTY);
+				if(player.inventory.offhand.get(0).getItem().is(CRItemTags.EXPLODE_IF_KNOCKED)){
+					player.inventory.offhand.set(0, ItemStack.EMPTY);
 					foundExplosion = true;
 				}
 
-				for(int i = 0; i < player.inventory.mainInventory.size(); i++){
-					if(player.inventory.mainInventory.get(i).getItem().isIn(CRItemTags.EXPLODE_IF_KNOCKED)){
-						player.inventory.mainInventory.set(i, ItemStack.EMPTY);
+				for(int i = 0; i < player.inventory.items.size(); i++){
+					if(player.inventory.items.get(i).getItem().is(CRItemTags.EXPLODE_IF_KNOCKED)){
+						player.inventory.items.set(i, ItemStack.EMPTY);
 						foundExplosion = true;
 					}
 				}
 				if(foundExplosion){
-					player.world.createExplosion(null, player.getPosX(), player.getPosY(), player.getPosZ(), 5F, Explosion.Mode.BREAK);
+					player.level.explode(null, player.getX(), player.getY(), player.getZ(), 5F, Explosion.Mode.BREAK);
 				}
 			}
 		}
@@ -293,7 +293,7 @@ public final class EventHandlerCommon{
 	@SuppressWarnings("unused")
 	public void enviroBootsProtect(LivingAttackEvent e){
 		//Provides immunity from magma block damage and fall damage when wearing enviro_boots
-		if(e.getSource() == DamageSource.HOT_FLOOR || e.getSource() == DamageSource.FALL && e.getEntityLiving().getItemStackFromSlot(EquipmentSlotType.FEET).getItem() == CRItems.armorEnviroBoots){
+		if(e.getSource() == DamageSource.HOT_FLOOR || e.getSource() == DamageSource.FALL && e.getEntityLiving().getItemBySlot(EquipmentSlotType.FEET).getItem() == CRItems.armorEnviroBoots){
 			e.setCanceled(true);
 		}
 	}
@@ -311,24 +311,24 @@ public final class EventHandlerCommon{
 		}
 
 		ServerWorld world = (ServerWorld) e.getWorld();
-		world.getProfiler().startSection(Crossroads.MODNAME + ": Explosion modification");
+		world.getProfiler().push(Crossroads.MODNAME + ": Explosion modification");
 		Map<UUID, Entity> entities;
 		try{
 			entities = (Map<UUID, Entity>) entityList.get(e.getWorld());
 		}catch(IllegalAccessException ex){
 			Crossroads.logger.error(ex);
-			world.getProfiler().endSection();
+			world.getProfiler().pop();
 			return;
 		}
 		boolean perpetuate = false;
 		for(Entity ent : entities.values()){
 			if(ent instanceof EntityGhostMarker){
 				EntityGhostMarker mark = (EntityGhostMarker) ent;
-				if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.EQUILIBRIUM && mark.data != null && mark.getPositionVec().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInt("range")){
+				if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.EQUILIBRIUM && mark.data != null && mark.position().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInt("range")){
 					e.setCanceled(true);//Equilibrium beams cancel explosions
-					world.getProfiler().endSection();
+					world.getProfiler().pop();
 					return;
-				}else if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.VOID_EQUILIBRIUM && mark.data != null && mark.getPositionVec().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInt("range")){
+				}else if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.VOID_EQUILIBRIUM && mark.data != null && mark.position().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInt("range")){
 					perpetuate = true;//Void-equilibrium beams cause explosions to repeat, by spawning a marker that recreates the explosion 5 ticks later
 				}
 			}
@@ -336,7 +336,7 @@ public final class EventHandlerCommon{
 
 		if(perpetuate && explosionPower != null && explosionSmoking != null && explosionMode != null){
 			EntityGhostMarker marker = new EntityGhostMarker(e.getWorld(), EntityGhostMarker.EnumMarkerType.DELAYED_EXPLOSION, 5);
-			marker.setPosition(e.getExplosion().getPosition().x, e.getExplosion().getPosition().y, e.getExplosion().getPosition().z);
+			marker.setPos(e.getExplosion().getPosition().x, e.getExplosion().getPosition().y, e.getExplosion().getPosition().z);
 			CompoundNBT data = new CompoundNBT();
 			try{
 				data.putFloat("power", explosionPower.getFloat(e.getExplosion()));
@@ -346,9 +346,9 @@ public final class EventHandlerCommon{
 				Crossroads.logger.error("Failed to perpetuate explosion. Dim: " + MiscUtil.getDimensionName(e.getWorld()) + "; Pos: " + e.getExplosion().getPosition());
 			}
 			marker.data = data;
-			world.addEntity(marker);
+			world.addFreshEntity(marker);
 		}
-		world.getProfiler().endSection();
+		world.getProfiler().pop();
 	}
 
 	@SubscribeEvent
@@ -371,26 +371,26 @@ public final class EventHandlerCommon{
 	public void savePlayerHotbar(LivingDeathEvent e){
 		try{
 			LivingEntity ent = e.getEntityLiving();
-			if(ent instanceof PlayerEntity && !ent.getEntityWorld().isRemote && ent.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() == CRItems.armorToolbelt && !ent.getEntityWorld().getGameRules().getBoolean(GameRules.KEEP_INVENTORY)){
+			if(ent instanceof PlayerEntity && !ent.getCommandSenderWorld().isClientSide && ent.getItemBySlot(EquipmentSlotType.LEGS).getItem() == CRItems.armorToolbelt && !ent.getCommandSenderWorld().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)){
 				PlayerEntity player = (PlayerEntity) ent;
 				ItemStack[] savedInv = new ItemStack[10];
 				//Hotbar
 				for(int i = 0; i < 9; i++){
-					savedInv[i] = player.inventory.mainInventory.get(i);
-					player.inventory.mainInventory.set(i, ItemStack.EMPTY);
+					savedInv[i] = player.inventory.items.get(i);
+					player.inventory.items.set(i, ItemStack.EMPTY);
 				}
 				//Offhand
-				savedInv[9] = player.inventory.offHandInventory.get(0);
-				player.inventory.offHandInventory.set(0, ItemStack.EMPTY);
+				savedInv[9] = player.inventory.offhand.get(0);
+				player.inventory.offhand.set(0, ItemStack.EMPTY);
 
-				ServerWorld world = (ServerWorld) player.getEntityWorld();
+				ServerWorld world = (ServerWorld) player.getCommandSenderWorld();
 				HashMap<UUID, ItemStack[]> savedMap = RespawnInventorySavedData.getMap(world);
 				UUID playerId = player.getGameProfile().getId();
 				if(savedMap.containsKey(playerId)){
 					//There are already saved items for this player
 					//This shouldn't happen, but we drop any saved items in this case
 					for(ItemStack stack : savedMap.get(playerId)){
-						InventoryHelper.spawnItemStack(world, player.getPosX(), player.getPosY(), player.getPosZ(), stack);
+						InventoryHelper.dropItemStack(world, player.getX(), player.getY(), player.getZ(), stack);
 					}
 				}
 				savedMap.put(playerId, savedInv);
@@ -406,8 +406,8 @@ public final class EventHandlerCommon{
 	public void loadPlayerHotbar(PlayerEvent.PlayerRespawnEvent e){
 		try{
 			PlayerEntity player = e.getPlayer();
-			World world = player.getEntityWorld();
-			if(!e.isEndConquered() && !world.isRemote){
+			World world = player.getCommandSenderWorld();
+			if(!e.isEndConquered() && !world.isClientSide){
 				ServerWorld worldServ = (ServerWorld) world;
 				HashMap<UUID, ItemStack[]> savedMap = RespawnInventorySavedData.getMap(worldServ);
 				UUID playerId = player.getGameProfile().getId();
@@ -425,10 +425,10 @@ public final class EventHandlerCommon{
 
 					//Offhand
 					if(!savedItems[9].isEmpty()){
-						if(player.inventory.offHandInventory.get(0).isEmpty()){
-							player.inventory.offHandInventory.set(0, savedItems[9]);
+						if(player.inventory.offhand.get(0).isEmpty()){
+							player.inventory.offhand.set(0, savedItems[9]);
 						}else{
-							player.dropItem(savedItems[9], false);
+							player.drop(savedItems[9], false);
 						}
 					}
 
@@ -436,7 +436,7 @@ public final class EventHandlerCommon{
 					//Hotbar
 					for(int i = 0; i < 9; i++){
 						if(!savedItems[i].isEmpty()){
-							player.dropItem(savedItems[i], false);
+							player.drop(savedItems[i], false);
 						}
 					}
 				}

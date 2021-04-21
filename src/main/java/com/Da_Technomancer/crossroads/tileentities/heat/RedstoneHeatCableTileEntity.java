@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.tileentities.heat;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
-import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
@@ -31,7 +30,7 @@ public class RedstoneHeatCableTileEntity extends HeatCableTileEntity{
 	}
 
 	private boolean isUnlocked(){
-		return getBlockState().get(ESProperties.REDSTONE_BOOL);
+		return getBlockState().getValue(ESProperties.REDSTONE_BOOL);
 	}
 
 	@Override
@@ -44,14 +43,14 @@ public class RedstoneHeatCableTileEntity extends HeatCableTileEntity{
 			temp = runLoss();
 
 			if(temp != prevTemp){
-				markDirty();
+				setChanged();
 			}
 
 			if(temp > insulator.getLimit()){
 				if(CRConfig.heatEffects.get()){
-					insulator.getEffect().doEffect(world, pos);
+					insulator.getEffect().doEffect(level, worldPosition);
 				}else{
-					world.setBlockState(pos, Blocks.FIRE.getDefaultState(), 3);
+					level.setBlock(worldPosition, Blocks.FIRE.defaultBlockState(), 3);
 				}
 			}
 		}
@@ -61,7 +60,7 @@ public class RedstoneHeatCableTileEntity extends HeatCableTileEntity{
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.HEAT_CAPABILITY){
-			if((facing == null || !locked(facing.getIndex())) && isUnlocked()){
+			if((facing == null || !locked(facing.get3DDataValue())) && isUnlocked()){
 				return (LazyOptional<T>) heatOpt;
 			}else{
 				return LazyOptional.empty();

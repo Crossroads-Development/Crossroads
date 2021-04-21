@@ -8,7 +8,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -22,31 +25,31 @@ import java.util.List;
 public class ChaosRod extends Item{
 	
 	protected ChaosRod(){
-		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
+		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "chaos_rod";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand){
-		if(worldIn.isRemote){
-			playerIn.playSound(SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, 1, 1);
-			return ActionResult.resultSuccess(playerIn.getHeldItem(hand));
+	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand hand){
+		if(worldIn.isClientSide){
+			playerIn.playSound(SoundEvents.CHORUS_FRUIT_TELEPORT, 1, 1);
+			return ActionResult.success(playerIn.getItemInHand(hand));
 		}
-		Vector3d change = playerIn.getLookVec().scale(8);
-		playerIn.setPositionAndUpdate(playerIn.getPosX() + change.x, playerIn.getPosY() + change.y, playerIn.getPosZ() + change.z);
+		Vector3d change = playerIn.getLookAngle().scale(8);
+		playerIn.teleportTo(playerIn.getX() + change.x, playerIn.getY() + change.y, playerIn.getZ() + change.z);
 		//Long story short, Potus4mine is the username of the person who found an exploit, which I left in only for them. 
-		if(playerIn.getGameProfile().getName().equals("Potus4mine") ? playerIn.getActivePotionEffect(Effects.WEAKNESS) != null : playerIn.getActivePotionEffect(Effects.GLOWING) != null){
-			playerIn.attackEntityFrom(DamageSource.DRAGON_BREATH, 5F);
+		if(playerIn.getGameProfile().getName().equals("Potus4mine") ? playerIn.getEffect(Effects.WEAKNESS) != null : playerIn.getEffect(Effects.GLOWING) != null){
+			playerIn.hurt(DamageSource.DRAGON_BREATH, 5F);
 		}
-		playerIn.addPotionEffect(new EffectInstance(playerIn.getGameProfile().getName().equals("Potus4mine") ? Effects.WEAKNESS : Effects.GLOWING, 100, 0));
-		return ActionResult.resultSuccess(playerIn.getHeldItem(hand));
+		playerIn.addEffect(new EffectInstance(playerIn.getGameProfile().getName().equals("Potus4mine") ? Effects.WEAKNESS : Effects.GLOWING, 100, 0));
+		return ActionResult.success(playerIn.getItemInHand(hand));
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.chaos_rod.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 

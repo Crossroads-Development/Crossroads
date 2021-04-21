@@ -47,7 +47,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	protected void initHeat(){
 		if(!init){
 			init = true;
-			cableTemp = HeatUtil.convertBiomeTemp(world, pos);
+			cableTemp = HeatUtil.convertBiomeTemp(level, worldPosition);
 		}
 	}
 
@@ -66,19 +66,19 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 
 	@Override
 	public void tick(){
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 
 		if(energy >= DRAIN){
 			energy -= DRAIN;
 			//Spawn random electric arcs between the walls of the block
-			if(world.rand.nextInt(10) == 0){
+			if(level.random.nextInt(10) == 0){
 				Vector3d[] arcPos = new Vector3d[2];
 				for(int i = 0; i < 2; i++){
-					float u = world.rand.nextFloat() * 0.8F + 0.1F;
-					float v = world.rand.nextFloat() * 0.8F + 0.1F;
-					switch(world.rand.nextInt(6)){
+					float u = level.random.nextFloat() * 0.8F + 0.1F;
+					float v = level.random.nextFloat() * 0.8F + 0.1F;
+					switch(level.random.nextInt(6)){
 						case 0:
 							arcPos[i] = new Vector3d(u, v, 0.1);
 							break;
@@ -99,7 +99,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 							break;
 					}
 				}
-				CRRenderUtil.addArc(world, arcPos[0].add(pos.getX(), pos.getY(), pos.getZ()), arcPos[1].add(pos.getX(), pos.getY(), pos.getZ()), 1, 0F, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)]);
+				CRRenderUtil.addArc(level, arcPos[0].add(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ()), arcPos[1].add(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ()), 1, 0F, TeslaCoilTopTileEntity.COLOR_CODES[(int) (level.getGameTime() % 3)]);
 			}
 		}
 
@@ -131,8 +131,8 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 		EnumTransferMode[] modes = getModes();
 		for(int i = 0; i < 6; i++){
 			if(modes[i].isOutput()){
-				Direction side = Direction.byIndex(i);
-				TileEntity te = world.getTileEntity(pos.offset(side));
+				Direction side = Direction.from3DDataValue(i);
+				TileEntity te = level.getBlockEntity(worldPosition.relative(side));
 				LazyOptional<IChemicalHandler> otherOpt;
 				if(contents.getTotalQty() <= 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
 					continue;
@@ -147,7 +147,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 				if(contents.getTotalQty() != 0){
 					if(otherHandler.insertReagents(contents, side.getOpposite(), handler)){
 						correctReag();
-						markDirty();
+						setChanged();
 					}
 				}
 			}
@@ -155,21 +155,21 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		energy = nbt.getInt("ener");
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putInt("ener", energy);
 		return nbt;
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		heatOpt.invalidate();
 		itemOpt.invalidate();
 		energyOpt.invalidate();
@@ -205,7 +205,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 
 			if(!simulate && toMove > 0){
 				energy += toMove;
-				markDirty();
+				setChanged();
 			}
 
 			return toMove;
@@ -250,7 +250,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 			init = true;
 			cableTemp = tempIn;
 			dirtyReag = true;
-			markDirty();
+			setChanged();
 		}
 
 		@Override
@@ -258,7 +258,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 			initHeat();
 			cableTemp += tempChange;
 			dirtyReag = true;
-			markDirty();
+			setChanged();
 		}
 	}
 }

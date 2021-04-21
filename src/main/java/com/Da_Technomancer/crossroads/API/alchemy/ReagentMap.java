@@ -182,7 +182,7 @@ public class ReagentMap extends HashMap<String, Integer>{
 	public static ReagentMap readFromNBT(CompoundNBT nbt){
 		ReagentMap map = new ReagentMap();
 		map.heat = nbt.getDouble("he");
-		for(String key : nbt.keySet()){
+		for(String key : nbt.getAllKeys()){
 			if(!key.startsWith("qty_")){
 				continue;
 			}

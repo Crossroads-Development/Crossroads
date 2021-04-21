@@ -54,7 +54,7 @@ public class FluidTankTileEntity extends InventoryTE{
 	 */
 	public void setContent(FluidStack contentsIn){
 		fluids[0] = contentsIn;
-		markDirty();
+		setChanged();
 	}
 
 	/**
@@ -76,12 +76,12 @@ public class FluidTankTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
+	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction){
 		return false;
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
+	public boolean canPlaceItem(int index, ItemStack stack){
 		return false;
 	}
 

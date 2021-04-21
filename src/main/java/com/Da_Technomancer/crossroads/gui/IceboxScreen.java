@@ -18,21 +18,21 @@ public class IceboxScreen extends MachineGUI<IceboxContainer, IceboxTileEntity>{
 	public IceboxScreen(IceboxContainer cont, PlayerInventory playerInv, ITextComponent name){
 		super(cont, playerInv, name);
 
-		xSize = 176;
-		ySize = 136;
+		imageWidth = 176;
+		imageHeight = 136;
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+	protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
 		RenderSystem.color4f(1, 1, 1, 1);
-		Minecraft.getInstance().getTextureManager().bindTexture(GUI_TEXTURES);
+		Minecraft.getInstance().getTextureManager().bind(GUI_TEXTURES);
 
-		blit(matrix, guiLeft, guiTop, 0, 0, xSize, ySize);
+		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
-		int burnTime = container.coolProg.get();
+		int burnTime = menu.coolProg.get();
 		int k = burnTime == 0 ? 0 : 1 + (burnTime * 13 / 100);
 		if(k != 0){
-			blit(matrix, guiLeft + 81, guiTop + 19 - k, 176, 13 - k, 14, k);
+			blit(matrix, leftPos + 81, topPos + 19 - k, 176, 13 - k, 14, k);
 		}
 	}
 }

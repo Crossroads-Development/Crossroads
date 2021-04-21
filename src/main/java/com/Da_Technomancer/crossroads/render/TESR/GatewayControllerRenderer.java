@@ -35,14 +35,14 @@ public class GatewayControllerRenderer extends EntropyRenderer<GatewayController
 		float dialingWheelAngle = (float) frame.getAngle(partialTicks);
 
 		//Define lighting based on the interior of the frame, as the frame itself is solid blocks
-		combinedLight = CRRenderUtil.getLightAtPos(frame.getWorld(), frame.getPos().down(frame.getSize() / 5));
+		combinedLight = CRRenderUtil.getLightAtPos(frame.getLevel(), frame.getBlockPos().below(frame.getSize() / 5));
 
 		//Render everything about the center of the multiblock, so we can rotate
 		matrix.translate(0.5D, 1 - radius, 0.5D);
 
 		//Rotate to align with the frame if applicable
 		if(plane == Direction.Axis.Z){
-			matrix.rotate(Vector3f.YP.rotationDegrees(90));
+			matrix.mulPose(Vector3f.YP.rotationDegrees(90));
 		}
 
 		//From this point, the frame is in the X-Y rendering plane
@@ -74,42 +74,42 @@ public class GatewayControllerRenderer extends EntropyRenderer<GatewayController
 
 		//Texture UV coords
 		//Symbols are the 8 alignment icons. They are arranged in a column on the texture
-		final float symbolUSt = sprite.getMinU();
-		final float symbolUEn = sprite.getInterpolatedU(2);
+		final float symbolUSt = sprite.getU0();
+		final float symbolUEn = sprite.getU(2);
 		//Poly used for square and octagon
 		final float polyUSt = symbolUEn;
-		final float polyUEn = sprite.getInterpolatedU(12);
-		final float sqFrUSt = sprite.getInterpolatedU(4);
-		final float sqFrUEn = sprite.getInterpolatedU(10);
-		final float sqFrVSt = sprite.getMinV();
-		final float sqFrVEn = sprite.getInterpolatedV(2);
+		final float polyUEn = sprite.getU(12);
+		final float sqFrUSt = sprite.getU(4);
+		final float sqFrUEn = sprite.getU(10);
+		final float sqFrVSt = sprite.getV0();
+		final float sqFrVEn = sprite.getV(2);
 		final float sqInVSt = sqFrVEn;
-		final float sqInVEn = sprite.getInterpolatedV(4);
+		final float sqInVEn = sprite.getV(4);
 		final float sqOutVSt = sqInVEn;
-		final float sqOutVEn = sprite.getInterpolatedV(6);
-		final float octFrUSt = sprite.getInterpolatedU(3);
-		final float octFrUEn = sprite.getInterpolatedU(11);
+		final float sqOutVEn = sprite.getV(6);
+		final float octFrUSt = sprite.getU(3);
+		final float octFrUEn = sprite.getU(11);
 		final float octFrVSt = sqOutVEn;
-		final float octFrVEn = sprite.getInterpolatedV(8);
+		final float octFrVEn = sprite.getV(8);
 		final float octInVSt = octFrVEn;
-		final float octInVEn = sprite.getInterpolatedV(10);
+		final float octInVEn = sprite.getV(10);
 		final float octOutVSt = octInVEn;
-		final float octOutVEn = sprite.getInterpolatedV(12);
+		final float octOutVEn = sprite.getV(12);
 		final float triVSt = octOutVEn;
-		final float triVEn = sprite.getMaxV();
-		final float triFrUEn = sprite.getInterpolatedU(6);
+		final float triVEn = sprite.getV1();
+		final float triFrUEn = sprite.getU(6);
 		final float triTopUSt = triFrUEn;
-		final float triTopUEn = sprite.getInterpolatedU(13F / 2F);//Free me from texture mapping purgatory
+		final float triTopUEn = sprite.getU(13F / 2F);//Free me from texture mapping purgatory
 		final float triFrUMid = (polyUSt + triTopUSt) / 2F;
 		final float triEdgeUSt = triTopUEn;
-		final float triEdgeUEn = sprite.getInterpolatedU(7);
-		final float portalUSt = sprite.getInterpolatedU(12);
-		final float portalUEn = sprite.getMaxU();
-		final float portalTexRad = .051F * (sprite.getMaxU() - sprite.getMinU());//half the side length of the regular octagon
+		final float triEdgeUEn = sprite.getU(7);
+		final float portalUSt = sprite.getU(12);
+		final float portalUEn = sprite.getU1();
+		final float portalTexRad = .051F * (sprite.getU1() - sprite.getU0());//half the side length of the regular octagon
 		final float portalUMid1 = (portalUSt + portalUEn) / 2F - portalTexRad;
 		final float portalUMid2 = portalUMid1 + 2F * portalTexRad;
-		final float portalVSt = sprite.getInterpolatedV(4 * ((int) (frame.getWorld().getGameTime() / 5L) % 4));
-		final float portalVEn = portalVSt + (sprite.getMaxV() - sprite.getMinV()) * 0.25F;
+		final float portalVSt = sprite.getV(4 * ((int) (frame.getLevel().getGameTime() / 5L) % 4));
+		final float portalVEn = portalVSt + (sprite.getV1() - sprite.getV0()) * 0.25F;
 		final float portalVMid1 = (portalVSt + portalVEn) / 2F - portalTexRad;
 		final float portalVMid2 = portalVMid1 + 2F * portalTexRad;
 
@@ -117,10 +117,10 @@ public class GatewayControllerRenderer extends EntropyRenderer<GatewayController
 		//Because I can't be bothered to math out all 32 distinct vertex positions on an octagon ring
 
 		//The outer edge of the render is aligned with the outside of the block frame. The inside is not aligned with anything
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getCutout());
+		IVertexBuilder builder = buffer.getBuffer(RenderType.cutout());
 		
 		//Fixed square ring
-		matrix.push();
+		matrix.pushPose();
 		Quaternion ringRotation = Vector3f.ZP.rotationDegrees(90);
 		for(int i = 0; i < 4; i++){
 			//Front
@@ -147,9 +147,9 @@ public class GatewayControllerRenderer extends EntropyRenderer<GatewayController
 			CRRenderUtil.addVertexBlock(builder, matrix, -squareIn, squareIn, sqDepth, polyUSt, sqInVEn, 0, 1, 0, combinedLight);
 			CRRenderUtil.addVertexBlock(builder, matrix, -squareIn, squareIn, -sqDepth, polyUSt, sqInVSt, 0, 1, 0, combinedLight);
 
-			matrix.rotate(ringRotation);
+			matrix.mulPose(ringRotation);
 		}
-		matrix.pop();
+		matrix.popPose();
 
 		//Triangular selector
 		//Triangles rendered by duplicating a vertex on the quad
@@ -210,8 +210,8 @@ public class GatewayControllerRenderer extends EntropyRenderer<GatewayController
 		//Dialed icons
 		if(frame.chevrons[0] != null){
 			//Front
-			matrix.push();
-			matrix.rotate(Vector3f.ZP.rotationDegrees(45));
+			matrix.pushPose();
+			matrix.mulPose(Vector3f.ZP.rotationDegrees(45));
 
 			//Draw each symbol individually
 			Quaternion chevronRotation = Vector3f.ZP.rotationDegrees(-90);
@@ -225,14 +225,14 @@ public class GatewayControllerRenderer extends EntropyRenderer<GatewayController
 				CRRenderUtil.addVertexBlock(builder, matrix, iconEdgeRad, iconDialBottom, sqDepth + zFightingOffset, symbolUEn, getIconVEn(sprite, entryId), 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT);
 				CRRenderUtil.addVertexBlock(builder, matrix, iconEdgeRad, iconDialTop, sqDepth + zFightingOffset, symbolUEn, getIconVSt(sprite, entryId), 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT);
 
-				matrix.rotate(chevronRotation);
+				matrix.mulPose(chevronRotation);
 			}
 
-			matrix.pop();
+			matrix.popPose();
 
 			//Other front
-			matrix.push();
-			matrix.rotate(Vector3f.ZP.rotationDegrees(-45));
+			matrix.pushPose();
+			matrix.mulPose(Vector3f.ZP.rotationDegrees(-45));
 
 			//Draw each symbol individually
 			for(int i = 0; i < frame.chevrons.length; i++){
@@ -246,14 +246,14 @@ public class GatewayControllerRenderer extends EntropyRenderer<GatewayController
 				CRRenderUtil.addVertexBlock(builder, matrix, iconEdgeRad, iconDialBottom, -sqDepth - zFightingOffset, symbolUSt, getIconVEn(sprite, entryId), 0, 0, -1, CRRenderUtil.BRIGHT_LIGHT);
 				CRRenderUtil.addVertexBlock(builder, matrix, -iconEdgeRad, iconDialBottom, -sqDepth - zFightingOffset, symbolUEn, getIconVEn(sprite, entryId), 0, 0, -1, CRRenderUtil.BRIGHT_LIGHT);
 
-				matrix.rotate(ringRotation);
+				matrix.mulPose(ringRotation);
 			}
 
-			matrix.pop();
+			matrix.popPose();
 		}
 		
 		//Rotating octagonal ring
-		matrix.rotate(Vector3f.ZP.rotation(dialingWheelAngle));
+		matrix.mulPose(Vector3f.ZP.rotation(dialingWheelAngle));
 
 		Quaternion segmentRotation = Vector3f.ZP.rotationDegrees(-45);
 
@@ -301,7 +301,7 @@ public class GatewayControllerRenderer extends EntropyRenderer<GatewayController
 			CRRenderUtil.addVertexBlock(builder, matrix, -iconEdgeRad, iconBottom, -octDepth - zFightingOffset, symbolUEn, getIconVEn(sprite, i), 0, 0, -1, combinedLight);
 			CRRenderUtil.addVertexBlock(builder, matrix, -iconEdgeRad, iconTop, -octDepth - zFightingOffset, symbolUEn, getIconVSt(sprite, i), 0, 0, -1, combinedLight);
 
-			matrix.rotate(segmentRotation);
+			matrix.mulPose(segmentRotation);
 		}
 
 		//Portal, rendered with translucent type
@@ -313,7 +313,7 @@ public class GatewayControllerRenderer extends EntropyRenderer<GatewayController
 			int[] col = {255, 255, 255, 200};
 
 			//Switch builder to translucent
-			builder = buffer.getBuffer(RenderType.getTranslucentNoCrumbling());
+			builder = buffer.getBuffer(RenderType.translucentNoCrumbling());
 			
 			//Vertices are commented with the number of the vertex on the final octagon
 
@@ -352,15 +352,15 @@ public class GatewayControllerRenderer extends EntropyRenderer<GatewayController
 	}
 
 	private float getIconVSt(TextureAtlasSprite sprite, int index){
-		return sprite.getInterpolatedV(index * 2);
+		return sprite.getV(index * 2);
 	}
 
 	private float getIconVEn(TextureAtlasSprite sprite, int index){
-		return sprite.getInterpolatedV((index + 1) * 2);
+		return sprite.getV((index + 1) * 2);
 	}
 
 	@Override
-	public boolean isGlobalRenderer(GatewayControllerTileEntity te){
+	public boolean shouldRenderOffScreen(GatewayControllerTileEntity te){
 		return te.isActive();
 	}
 }

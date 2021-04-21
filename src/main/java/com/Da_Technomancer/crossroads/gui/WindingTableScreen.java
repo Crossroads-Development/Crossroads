@@ -20,18 +20,18 @@ public class WindingTableScreen extends MachineGUI<WindingTableContainer, Windin
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
-		super.drawGuiContainerBackgroundLayer(matrix, partialTicks, mouseX, mouseY);
+	protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+		super.renderBg(matrix, partialTicks, mouseX, mouseY);
 
 		RenderSystem.color4f(1, 1, 1, 1);
-		Minecraft.getInstance().getTextureManager().bindTexture(GUI_TEXTURES);
+		Minecraft.getInstance().getTextureManager().bind(GUI_TEXTURES);
 
-		blit(matrix, guiLeft, guiTop, 0, 0, xSize, ySize);
+		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
-		int prog = container.progRef.get();
+		int prog = menu.progRef.get();
 		int k = prog == 0 ? 0 : 1 + (prog * 13 / 100);
 		if(k != 0){
-			blit(matrix, guiLeft + 81, guiTop + 44 - k, 176, 13 - k, 14, k);
+			blit(matrix, leftPos + 81, topPos + 44 - k, 176, 13 - k, 14, k);
 		}
 	}
 }

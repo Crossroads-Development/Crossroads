@@ -23,10 +23,10 @@ public class BlastFurnaceContainer extends MachineContainer<BlastFurnaceTileEnti
 
 	public BlastFurnaceContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
 		super(type, id, playerInv, buf);
-		carbRef = new IntDeferredRef(te::getCarbon, te.getWorld().isRemote);
-		trackInt(carbRef);
-		progRef = new IntDeferredRef(te::getProgress, te.getWorld().isRemote);
-		trackInt(progRef);
+		carbRef = new IntDeferredRef(te::getCarbon, te.getLevel().isClientSide);
+		addDataSlot(carbRef);
+		progRef = new IntDeferredRef(te::getProgress, te.getLevel().isClientSide);
+		addDataSlot(progRef);
 	}
 
 	@Override

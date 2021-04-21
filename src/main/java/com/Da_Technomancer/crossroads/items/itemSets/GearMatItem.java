@@ -17,7 +17,7 @@ import java.util.List;
 
 public abstract class GearMatItem extends OreProfileItem{
 
-	protected static final Properties itemProp = new Properties().group(CRItems.TAB_GEAR);
+	protected static final Properties itemProp = new Properties().tab(CRItems.TAB_GEAR);
 
 	protected GearMatItem(){
 		super(itemProp);
@@ -44,8 +44,8 @@ public abstract class GearMatItem extends OreProfileItem{
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items){
-		if(isInGroup(group)){
+	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items){
+		if(allowdedIn(group)){
 			//Add every material variant of this item
 			for(GearFactory.GearMaterial mat : GearFactory.getMaterials()){
 				items.add(withMaterial(mat, 1));
@@ -57,7 +57,7 @@ public abstract class GearMatItem extends OreProfileItem{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		GearFactory.GearMaterial mat = getMaterial(stack);
 		if(mat != null){
 			tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", MiscUtil.preciseRound(mat.getDensity() * shapeFactor(), 3)));

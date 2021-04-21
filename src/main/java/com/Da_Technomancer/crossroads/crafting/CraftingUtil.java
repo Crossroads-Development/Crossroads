@@ -37,10 +37,10 @@ public class CraftingUtil{
 	 * @return The defined fluidstack
 	 */
 	public static FluidStack getFluidStack(JsonObject json, String memberName){
-		JsonObject obj = JSONUtils.getJsonObject(json, memberName);
-		String name = JSONUtils.getString(obj, "fluid");
+		JsonObject obj = JSONUtils.getAsJsonObject(json, memberName);
+		String name = JSONUtils.getAsString(obj, "fluid");
 		Fluid f = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(name));
-		int qty = JSONUtils.getInt(obj, "amount");
+		int qty = JSONUtils.getAsInt(obj, "amount");
 		//Note: Does not currently support NBT
 		return f == null || qty <= 0 ? FluidStack.EMPTY : new FluidStack(f, qty);
 	}
@@ -98,11 +98,11 @@ public class CraftingUtil{
 		if(json.isJsonObject()){
 			JsonObject jsonO = (JsonObject) json;
 			if(jsonO.has(memberName)){
-				return Ingredient.deserialize(((JsonObject) json).get(memberName));
+				return Ingredient.fromJson(((JsonObject) json).get(memberName));
 			}
 		}
 		if(allowDirect){
-			return Ingredient.deserialize(json);
+			return Ingredient.fromJson(json);
 		}
 		throw new JsonParseException("Non-Ingredient passed as JSON ingredient");
 	}
@@ -121,14 +121,14 @@ public class CraftingUtil{
 	}
 
 	public static boolean isActiveJSON(JsonObject json){
-		return JSONUtils.getBoolean(json, "active", true);
+		return JSONUtils.getAsBoolean(json, "active", true);
 	}
 
 	public static Color getColor(JsonObject json, String memberName, @Nullable Color fallback){
 		if(!json.has(memberName)){
 			return fallback;
 		}
-		String colorCode = JSONUtils.getString(json, memberName);
+		String colorCode = JSONUtils.getAsString(json, memberName);
 		if(colorCode.length() != 6 && colorCode.length() != 8){
 			return fallback;
 		}

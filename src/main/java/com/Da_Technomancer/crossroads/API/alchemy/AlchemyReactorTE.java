@@ -31,9 +31,9 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 
 	@Override
 	public <T extends IParticleData> void addVisualEffect(T particleType, double speedX, double speedY, double speedZ){
-		if(!world.isRemote){
+		if(!level.isClientSide){
 			Vector3d particlePos = getParticlePos();
-			((ServerWorld) world).spawnParticle(particleType, particlePos.x, particlePos.y, particlePos.z, 0, speedX, speedY, speedZ, 1F);
+			((ServerWorld) level).sendParticles(particleType, particlePos.x, particlePos.y, particlePos.z, 0, speedX, speedY, speedZ, 1F);
 		}
 	}
 
@@ -44,14 +44,14 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 
 	@Override
 	public void tick(){
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 		if(dirtyReag){
 			correctReag();
 		}
 
-		if(world.getGameTime() % AlchemyUtil.ALCHEMY_TIME == 0){
+		if(level.getGameTime() % AlchemyUtil.ALCHEMY_TIME == 0){
 			spawnParticles();
 			performReaction();
 			performTransfer();
@@ -64,7 +64,7 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 	}
 
 	protected void performReaction(){
-		for(AlchemyRec react : ReagentManager.getReactions(world)){
+		for(AlchemyRec react : ReagentManager.getReactions(level)){
 			if(react.performReaction(this)){
 				correctReag();
 				break;

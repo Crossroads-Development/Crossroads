@@ -28,7 +28,7 @@ public class AtmosChargeSavedData extends WorldSavedData{
 		AtmosChargeSavedData data = get(w);
 		if(newCharge != data.atmosCharge){
 			data.atmosCharge = newCharge;
-			data.markDirty();
+			data.setDirty();
 		}
 	}
 
@@ -36,14 +36,14 @@ public class AtmosChargeSavedData extends WorldSavedData{
 		//We want all dimensions to share the same saved data,
 		//So we always reference the overworld instance
 		DimensionSavedDataManager storage;
-		if(world.getDimensionKey().getLocation().equals(DimensionType.OVERWORLD_ID)){
-			storage = world.getSavedData();
+		if(world.dimension().location().equals(DimensionType.OVERWORLD_EFFECTS)){
+			storage = world.getDataStorage();
 		}else{
-			storage = world.getServer().func_241755_D_().getSavedData();
+			storage = world.getServer().overworld().getDataStorage();
 		}
 		AtmosChargeSavedData data;
 		try{
-			data = storage.getOrCreate(AtmosChargeSavedData::new, ID);
+			data = storage.computeIfAbsent(AtmosChargeSavedData::new, ID);
 		}catch(NullPointerException e){
 			Crossroads.logger.error("Failed AtmosChargeSavedData get due to null DimensionSavedDataManager", e);
 			return new AtmosChargeSavedData();//Blank storage that prevents actual read/write, but avoids a crash
@@ -54,12 +54,12 @@ public class AtmosChargeSavedData extends WorldSavedData{
 	private int atmosCharge;
 
 	@Override
-	public void read(CompoundNBT nbt){
+	public void load(CompoundNBT nbt){
 		atmosCharge = nbt.getInt("atmos_charge");
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
+	public CompoundNBT save(CompoundNBT nbt){
 		nbt.putInt("atmos_charge", atmosCharge);
 		return nbt;
 	}

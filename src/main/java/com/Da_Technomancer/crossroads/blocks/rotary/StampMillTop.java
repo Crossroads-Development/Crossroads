@@ -35,12 +35,12 @@ public class StampMillTop extends Block{
 	private static final VoxelShape[] SHAPES = new VoxelShape[2];
 
 	static{
-		SHAPES[0] = VoxelShapes.or(makeCuboidShape(0, 15, 3, 16, 16, 11), makeCuboidShape(0, 0, 3, 1, 15, 11), makeCuboidShape(15, 0, 3, 16, 15, 11));
-		SHAPES[1] = VoxelShapes.or(makeCuboidShape(3, 15, 0, 11, 16, 16), makeCuboidShape(3, 0, 0, 11, 15, 1), makeCuboidShape(3, 0, 15, 11, 15, 16));
+		SHAPES[0] = VoxelShapes.or(box(0, 15, 3, 16, 16, 11), box(0, 0, 3, 1, 15, 11), box(15, 0, 3, 16, 15, 11));
+		SHAPES[1] = VoxelShapes.or(box(3, 15, 0, 11, 16, 16), box(3, 0, 0, 11, 15, 1), box(3, 0, 15, 11, 15, 16));
 	}
 
 	public StampMillTop(){
-		super(Properties.create(Material.WOOD).hardnessAndResistance(1).sound(SoundType.METAL));
+		super(Properties.of(Material.WOOD).strength(1).sound(SoundType.METAL));
 		String name = "stamp_mill_top";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
@@ -49,25 +49,25 @@ public class StampMillTop extends Block{
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
-		return SHAPES[state.get(CRProperties.HORIZ_AXIS) == Direction.Axis.X ? 0 : 1];
+		return SHAPES[state.getValue(CRProperties.HORIZ_AXIS) == Direction.Axis.X ? 0 : 1];
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
-			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.func_235896_a_(CRProperties.HORIZ_AXIS));
-				BlockState lowerState = worldIn.getBlockState(pos.down());
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
+			if(!worldIn.isClientSide){
+				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.HORIZ_AXIS));
+				BlockState lowerState = worldIn.getBlockState(pos.below());
 				if(lowerState.getBlock() == CRBlocks.stampMill){
-					worldIn.setBlockState(pos.down(), lowerState.func_235896_a_(CRProperties.HORIZ_AXIS));
+					worldIn.setBlockAndUpdate(pos.below(), lowerState.cycle(CRProperties.HORIZ_AXIS));
 				}
 			}
 			return ActionResultType.SUCCESS;
 		}
 
 		TileEntity te;
-		if(!worldIn.isRemote && (te = worldIn.getTileEntity(pos.down())) instanceof INamedContainerProvider){
-			NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos.down());
+		if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos.below())) instanceof INamedContainerProvider){
+			NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos.below());
 		}
 		return ActionResultType.SUCCESS;
 	}
@@ -80,18 +80,18 @@ public class StampMillTop extends Block{
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
-		if(!(worldIn.getBlockState(pos.offset(Direction.DOWN)).getBlock() instanceof StampMill)){
-			worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
+		if(!(worldIn.getBlockState(pos.relative(Direction.DOWN)).getBlock() instanceof StampMill)){
+			worldIn.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 		}
 	}
 	
 	@Override
-	public PushReaction getPushReaction(BlockState state){
+	public PushReaction getPistonPushReaction(BlockState state){
 		return PushReaction.BLOCK;
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
 		builder.add(CRProperties.HORIZ_AXIS);
 	}
 }

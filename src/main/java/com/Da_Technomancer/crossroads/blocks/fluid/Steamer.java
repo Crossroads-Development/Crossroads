@@ -42,25 +42,25 @@ public class Steamer extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new SteamerTileEntity();
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
-		InventoryHelper.dropInventoryItems(world, pos, (IInventory) world.getTileEntity(pos));
-		super.onReplaced(state, world, pos, newState, isMoving);
+	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
+		InventoryHelper.dropContents(world, pos, (IInventory) world.getBlockEntity(pos));
+		super.onRemove(state, world, pos, newState, isMoving);
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		TileEntity te;
-		if(!worldIn.isRemote && (te = worldIn.getTileEntity(pos)) instanceof INamedContainerProvider){
+		if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) instanceof INamedContainerProvider){
 			NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);
 		}
 		return ActionResultType.SUCCESS;
@@ -68,25 +68,25 @@ public class Steamer extends ContainerBlock implements IReadable{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.steamer.desc", SteamerTileEntity.REQUIRED));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.steamer.water", SteamerTileEntity.FLUID_USE));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.steamer.steam", SteamerTileEntity.FLUID_USE));
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState state){
+	public boolean hasAnalogOutputSignal(BlockState state){
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState state, World worldIn, BlockPos pos){
+	public int getAnalogOutputSignal(BlockState state, World worldIn, BlockPos pos){
 		return RedstoneUtil.clampToVanilla(read(worldIn, pos, state));
 	}
 
 	@Override
 	public float read(World world, BlockPos pos, BlockState state){
-		TileEntity te = world.getTileEntity(pos);
+		TileEntity te = world.getBlockEntity(pos);
 		if(te instanceof IInventory){
 			return CircuitUtil.getRedstoneFromSlots((IInventory) te, 0);
 		}else{

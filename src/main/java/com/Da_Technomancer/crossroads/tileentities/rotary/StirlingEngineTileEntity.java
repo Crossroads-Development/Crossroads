@@ -83,8 +83,8 @@ public class StirlingEngineTileEntity extends ModuleTE{
 			}
 		}
 		target += 2;//Change from [-2, 2] to [0, 4]
-		if(worldState.getBlock() instanceof StirlingEngine && worldState.get(CRProperties.RATE_SIGNED) != target){
-			world.setBlockState(pos, worldState.with(CRProperties.RATE_SIGNED, target), 2);//Doesn't create block updates
+		if(worldState.getBlock() instanceof StirlingEngine && worldState.getValue(CRProperties.RATE_SIGNED) != target){
+			level.setBlock(worldPosition, worldState.setValue(CRProperties.RATE_SIGNED, target), 2);//Doesn't create block updates
 		}
 	}
 
@@ -92,7 +92,7 @@ public class StirlingEngineTileEntity extends ModuleTE{
 	public void tick(){
 		super.tick();
 
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 		init();
@@ -107,22 +107,22 @@ public class StirlingEngineTileEntity extends ModuleTE{
 				energy += CRConfig.stirlingMultiplier.get() * RATE * level * Math.abs(level);//5*stirlingMult*level^2 with sign of level
 			}
 
-			markDirty();
+			setChanged();
 		}
 		updateWorldState();
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 
 		tempSide = nbt.getDouble("temp_side");
 		tempBottom = nbt.getDouble("temp_bottom");
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 
 		nbt.putDouble("temp_side", tempSide);
 		nbt.putDouble("temp_bottom", tempBottom);
@@ -131,8 +131,8 @@ public class StirlingEngineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		sideHeatOpt.invalidate();
 		bottomHeatOpt.invalidate();
 	}
@@ -155,7 +155,7 @@ public class StirlingEngineTileEntity extends ModuleTE{
 
 	private void init(){
 		if(!initHeat){
-			tempSide = HeatUtil.convertBiomeTemp(world, pos);
+			tempSide = HeatUtil.convertBiomeTemp(level, worldPosition);
 			tempBottom = tempSide;
 			initHeat = true;
 		}
@@ -173,14 +173,14 @@ public class StirlingEngineTileEntity extends ModuleTE{
 		public void setTemp(double tempIn){
 			init();
 			tempSide = tempIn;
-			markDirty();
+			setChanged();
 		}
 
 		@Override
 		public void addHeat(double heat){
 			init();
 			tempSide += heat;
-			markDirty();
+			setChanged();
 		}
 	}
 
@@ -196,14 +196,14 @@ public class StirlingEngineTileEntity extends ModuleTE{
 		public void setTemp(double tempIn){
 			init();
 			tempBottom = tempIn;
-			markDirty();
+			setChanged();
 		}
 
 		@Override
 		public void addHeat(double heat){
 			init();
 			tempBottom += heat;
-			markDirty();
+			setChanged();
 		}
 	}
 }

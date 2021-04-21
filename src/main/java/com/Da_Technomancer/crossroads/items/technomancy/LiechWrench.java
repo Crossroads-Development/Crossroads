@@ -31,7 +31,7 @@ public class LiechWrench extends Item{
 	private final Multimap<Attribute, AttributeModifier> attributeModifiers;
 
 	public LiechWrench(){
-		super(new Properties().group(CRItems.TAB_CROSSROADS).addToolType(ToolType.PICKAXE, ItemTier.STONE.getHarvestLevel()).addToolType(ToolType.SHOVEL, ItemTier.STONE.getHarvestLevel()).addToolType(ToolType.AXE, ItemTier.STONE.getHarvestLevel()).addToolType(ToolType.HOE, ItemTier.STONE.getHarvestLevel()).addToolType(ToolType.get("wrench"), 0).maxStackSize(1));
+		super(new Properties().tab(CRItems.TAB_CROSSROADS).addToolType(ToolType.PICKAXE, ItemTier.STONE.getLevel()).addToolType(ToolType.SHOVEL, ItemTier.STONE.getLevel()).addToolType(ToolType.AXE, ItemTier.STONE.getLevel()).addToolType(ToolType.HOE, ItemTier.STONE.getLevel()).addToolType(ToolType.get("wrench"), 0).stacksTo(1));
 		String name = "liech_wrench";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
@@ -39,8 +39,8 @@ public class LiechWrench extends Item{
 
 		//Attributes
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 4, AttributeModifier.Operation.ADDITION));
-		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -2.4D, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 4, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -2.4D, AttributeModifier.Operation.ADDITION));
 		attributeModifiers = builder.build();
 	}
 
@@ -55,14 +55,14 @@ public class LiechWrench extends Item{
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.liech_wrench.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override
 	public float getDestroySpeed(ItemStack stack, BlockState state){
 		Material mat = state.getMaterial();
-		if(mat == Material.WOOD || mat == Material.PLANTS || mat == Material.TALL_PLANTS){
+		if(mat == Material.WOOD || mat == Material.PLANT || mat == Material.REPLACEABLE_PLANT){
 			return 4F;
 		}
 
@@ -71,20 +71,20 @@ public class LiechWrench extends Item{
 				return 4F;
 			}
 		}
-		if(mat == Material.IRON || mat == Material.ANVIL || mat == Material.ROCK){
+		if(mat == Material.METAL || mat == Material.HEAVY_METAL || mat == Material.STONE){
 			return 4F;
 		}
 		return 1.0F;
 	}
 
 	@Override
-	public boolean canHarvestBlock(BlockState blockIn){
-		int i = ItemTier.STONE.getHarvestLevel();
+	public boolean isCorrectToolForDrops(BlockState blockIn){
+		int i = ItemTier.STONE.getLevel();
 		if (blockIn.getHarvestTool() == ToolType.PICKAXE) {
 			return i >= blockIn.getHarvestLevel();
 		}
 		Material material = blockIn.getMaterial();
-		return material == Material.ROCK || material == Material.IRON || material == Material.ANVIL;
+		return material == Material.STONE || material == Material.METAL || material == Material.HEAVY_METAL;
 	}
 
 	@Override

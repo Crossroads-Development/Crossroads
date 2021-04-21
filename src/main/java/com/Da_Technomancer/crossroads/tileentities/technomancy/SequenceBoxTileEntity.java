@@ -69,10 +69,10 @@ public class SequenceBoxTileEntity extends TileEntity implements INBTReceiver, I
 
 	public void worldUpdate(Block blockIn){
 		CircuitUtil.updateFromWorld(circHandler, blockIn);
-		boolean hasRedstone = world.isBlockPowered(pos);
+		boolean hasRedstone = level.hasNeighborSignal(worldPosition);
 		if(hasRedstone != hadRedstoneSignal){
 			hadRedstoneSignal = hasRedstone;
-			markDirty();
+			setChanged();
 			if(hasRedstone){
 				//advance the sequence
 				index++;
@@ -83,8 +83,8 @@ public class SequenceBoxTileEntity extends TileEntity implements INBTReceiver, I
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putBoolean("redstone", hadRedstoneSignal);
 		nbt.putInt("index", index);
 		for(int i = 0; i < sequenceVal.size(); i++){
@@ -95,8 +95,8 @@ public class SequenceBoxTileEntity extends TileEntity implements INBTReceiver, I
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		hadRedstoneSignal = nbt.getBoolean("redstone");
 		index = nbt.getInt("index");
 		sequenceVal.clear();
@@ -122,8 +122,8 @@ public class SequenceBoxTileEntity extends TileEntity implements INBTReceiver, I
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		circOpt.invalidate();
 	}
 
@@ -143,11 +143,11 @@ public class SequenceBoxTileEntity extends TileEntity implements INBTReceiver, I
 	//UI stuff below
 
 	public void encodeBuf(PacketBuffer buf){
-		buf.writeBlockPos(pos);
+		buf.writeBlockPos(worldPosition);
 		buf.writeVarInt(index);
 		buf.writeVarInt(sequenceStr.size());
 		for(String input : sequenceStr){
-			buf.writeString(input);
+			buf.writeUtf(input);
 		}
 	}
 

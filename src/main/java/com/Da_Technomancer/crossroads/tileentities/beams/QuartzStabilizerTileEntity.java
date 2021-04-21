@@ -41,13 +41,13 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 		if(state.getBlock() != CRBlocks.quartzStabilizer){
 			return Direction.NORTH;
 		}
-		return state.get(ESProperties.FACING);
+		return state.getValue(ESProperties.FACING);
 	}
 
 	public int adjustSetting(){
 		setting += 1;
 		setting %= RATES.length;
-		markDirty();
+		setChanged();
 		return RATES[setting];
 	}
 
@@ -56,16 +56,16 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putInt("setting", setting);
 		storage.writeToNBT("stab_mag", nbt);
 		return nbt;
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		setting = nbt.getInt("setting");
 		storage = BeamUnitStorage.readFromNBT("stab_mag", nbt);
 	}
@@ -88,25 +88,25 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 			BeamUnit toDraw = new BeamUnit(MiscUtil.withdrawExact(storage.getOutput().getValues(), toFill));
 			storage.subtractBeam(toDraw);
 
-			if(beamer[dir.getIndex()].emit(toDraw, world)){
-				refreshBeam(dir.getIndex());
+			if(beamer[dir.get3DDataValue()].emit(toDraw, level)){
+				refreshBeam(dir.get3DDataValue());
 			}
-		}else if(beamer[dir.getIndex()].emit(BeamUnit.EMPTY, world)){
-			refreshBeam(dir.getIndex());
+		}else if(beamer[dir.get3DDataValue()].emit(BeamUnit.EMPTY, level)){
+			refreshBeam(dir.get3DDataValue());
 		}
 	}
 
 	@Override
 	protected boolean[] inputSides(){
 		boolean[] out = {true, true, true, true, true, true};
-		out[getDir().getIndex()] = false;
+		out[getDir().get3DDataValue()] = false;
 		return out;
 	}
 
 	@Override
 	protected boolean[] outputSides(){
 		boolean[] out = new boolean[6];
-		out[getDir().getIndex()] = true;
+		out[getDir().get3DDataValue()] = true;
 		return out;
 	}
 

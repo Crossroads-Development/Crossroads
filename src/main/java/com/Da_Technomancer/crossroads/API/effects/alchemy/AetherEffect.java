@@ -35,12 +35,12 @@ import java.lang.reflect.Field;
 
 public class AetherEffect implements IAlchEffect{
 
-	private static final ITag<Block> SOIL_GROUP = BlockTags.makeWrapperTag(Crossroads.MODID + ":alchemy_soil");
-	private static final ITag<Block> ROCK_GROUP = BlockTags.makeWrapperTag(Crossroads.MODID + ":alchemy_rock");
-	private static final ITag<Block> FLUD_GROUP = BlockTags.makeWrapperTag(Crossroads.MODID + ":alchemy_fluid");//Was going to be named FLUID_GROUP, but the other two fields had the same name lengths and I couldn't resist
-	private static final ITag<Block> CRYS_GROUP = BlockTags.makeWrapperTag(Crossroads.MODID + ":alchemy_crystal");
-	private static final ITag<Block> WOOD_GROUP = BlockTags.makeWrapperTag(Crossroads.MODID + ":alchemy_wood");
-	private static final ITag<Block> FOLI_GROUP = BlockTags.makeWrapperTag(Crossroads.MODID + ":alchemy_foliage");
+	private static final ITag<Block> SOIL_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_soil");
+	private static final ITag<Block> ROCK_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_rock");
+	private static final ITag<Block> FLUD_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_fluid");//Was going to be named FLUID_GROUP, but the other two fields had the same name lengths and I couldn't resist
+	private static final ITag<Block> CRYS_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_crystal");
+	private static final ITag<Block> WOOD_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_wood");
+	private static final ITag<Block> FOLI_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_foliage");
 	private static final Field biomeField = ReflectionUtil.reflectField(CRReflection.BIOME_ARRAY);
 
 	protected Block soilBlock(){
@@ -74,7 +74,7 @@ public class AetherEffect implements IAlchEffect{
 	@Nullable
 	public static Biome lookupBiome(RegistryKey<Biome> biomeKey, IBiomeReader world){
 		//Gets the biome associated with a key
-		return world.func_241828_r().getRegistry(Registry.BIOME_KEY).getValueForKey(biomeKey);
+		return world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).get(biomeKey);
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class AetherEffect implements IAlchEffect{
 
 		//quicksilver makes it create a block instead of transmuting blocks
 		if(contents.getQty(EnumReagents.QUICKSILVER.id()) != 0 && oldState.getBlock().isAir(oldState, world, pos)){
-			world.setBlockState(pos, soilBlock().getDefaultState());
+			world.setBlockAndUpdate(pos, soilBlock().defaultBlockState());
 			return;
 		}
 
@@ -93,48 +93,48 @@ public class AetherEffect implements IAlchEffect{
 			Biome biome = lookupBiome(biomeKey, world);
 			if(biome != null && world.getBiome(pos) != biome){
 				setBiomeAtPos(world, pos, biome);
-				CRPackets.sendPacketToDimension(world, new SendBiomeUpdateToClient(pos, biomeKey.getLocation()));
+				CRPackets.sendPacketToDimension(world, new SendBiomeUpdateToClient(pos, biomeKey.location()));
 			}
 		}
 
 		//cavorite prevents block transmutation
-		if(oldState.isAir(world, pos) || oldState.getBlockHardness(world, pos) < 0 || contents.getQty(EnumReagents.CAVORITE.id()) != 0){
+		if(oldState.isAir(world, pos) || oldState.getDestroySpeed(world, pos) < 0 || contents.getQty(EnumReagents.CAVORITE.id()) != 0){
 			return;
 		}
 
 		if(CRYS_GROUP.contains(oldState.getBlock())){
-			if(oldState != crystalBlock().getDefaultState()){
-				world.setBlockState(pos, crystalBlock().getDefaultState());
+			if(oldState != crystalBlock().defaultBlockState()){
+				world.setBlockAndUpdate(pos, crystalBlock().defaultBlockState());
 			}
 		}else if(FLUD_GROUP.contains(oldState.getBlock())){
-			if(oldState != fluidBlock().getDefaultState() && oldState.getBlock() != CRBlocks.reactiveSpot){
-				world.setBlockState(pos, CRBlocks.reactiveSpot.getDefaultState());
-				TileEntity te = world.getTileEntity(pos);
+			if(oldState != fluidBlock().defaultBlockState() && oldState.getBlock() != CRBlocks.reactiveSpot){
+				world.setBlockAndUpdate(pos, CRBlocks.reactiveSpot.defaultBlockState());
+				TileEntity te = world.getBlockEntity(pos);
 				if(te instanceof ReactiveSpotTileEntity){
-					((ReactiveSpotTileEntity) te).setTarget(fluidBlock().getDefaultState());
+					((ReactiveSpotTileEntity) te).setTarget(fluidBlock().defaultBlockState());
 				}
 			}
 		}else if(ROCK_GROUP.contains(oldState.getBlock())){
-			if(oldState != rockBlock().getDefaultState()){
-				world.setBlockState(pos, rockBlock().getDefaultState());
+			if(oldState != rockBlock().defaultBlockState()){
+				world.setBlockAndUpdate(pos, rockBlock().defaultBlockState());
 			}
 		}else if(SOIL_GROUP.contains(oldState.getBlock())){
 			//Special case for grass vs dirt
-			BlockPos upPos = pos.up();
+			BlockPos upPos = pos.above();
 			if((soilBlock() == Blocks.GRASS_BLOCK || soilBlock() == Blocks.MYCELIUM) && !world.getBlockState(upPos).isAir(world, upPos)){
-				if(oldState != Blocks.DIRT.getDefaultState()){
-					world.setBlockState(pos, Blocks.DIRT.getDefaultState());
+				if(oldState != Blocks.DIRT.defaultBlockState()){
+					world.setBlockAndUpdate(pos, Blocks.DIRT.defaultBlockState());
 				}
-			}else if(oldState != soilBlock().getDefaultState()){
-				world.setBlockState(pos, soilBlock().getDefaultState());
+			}else if(oldState != soilBlock().defaultBlockState()){
+				world.setBlockAndUpdate(pos, soilBlock().defaultBlockState());
 			}
 		}else if(WOOD_GROUP.contains(oldState.getBlock())){
-			if(oldState != woodBlock().getDefaultState()){
-				world.setBlockState(pos, woodBlock().getDefaultState());
+			if(oldState != woodBlock().defaultBlockState()){
+				world.setBlockAndUpdate(pos, woodBlock().defaultBlockState());
 			}
 		}else if(FOLI_GROUP.contains(oldState.getBlock())){
-			if(oldState != foliageBlock().getDefaultState()){
-				world.setBlockState(pos, foliageBlock().getDefaultState());
+			if(oldState != foliageBlock().defaultBlockState()){
+				world.setBlockAndUpdate(pos, foliageBlock().defaultBlockState());
 			}
 		}
 	}
@@ -169,7 +169,7 @@ public class AetherEffect implements IAlchEffect{
 					do{
 						//We set the biome in a column from bedrock to world height
 						biomeArray[getBiomeIndex(pos.getX(), y, pos.getZ(), seed)] = biome;
-					}while(!World.isYOutOfBounds(++y));
+					}while(!World.isOutsideBuildHeight(++y));
 				}else{
 					biomeArray[getBiomeIndex(pos.getX(), pos.getY(), pos.getZ(), seed)] = biome;
 				}
@@ -217,7 +217,7 @@ public class AetherEffect implements IAlchEffect{
 			double d3 = flag ? d0 : d0 - 1.0D;
 			double d4 = flag1 ? d1 : d1 - 1.0D;
 			double d5 = flag2 ? d2 : d2 - 1.0D;
-			adouble[k1] = func_226845_a_(seed, l1, i2, j2, d3, d4, d5);
+			adouble[k1] = getFiddledDistance(seed, l1, i2, j2, d3, d4, d5);
 		}
 
 		int k2 = 0;
@@ -240,27 +240,27 @@ public class AetherEffect implements IAlchEffect{
 		return arrayIndex | MathHelper.clamp(j3, 0, BiomeContainer.VERTICAL_MASK) << WIDTH_BITS + WIDTH_BITS;//Y
 	}
 
-	private static double func_226845_a_(long p_226845_0_, int p_226845_2_, int p_226845_3_, int p_226845_4_, double p_226845_5_, double p_226845_7_, double p_226845_9_) {
-		long lvt_11_1_ = FastRandom.mix(p_226845_0_, (long)p_226845_2_);
-		lvt_11_1_ = FastRandom.mix(lvt_11_1_, (long)p_226845_3_);
-		lvt_11_1_ = FastRandom.mix(lvt_11_1_, (long)p_226845_4_);
-		lvt_11_1_ = FastRandom.mix(lvt_11_1_, (long)p_226845_2_);
-		lvt_11_1_ = FastRandom.mix(lvt_11_1_, (long)p_226845_3_);
-		lvt_11_1_ = FastRandom.mix(lvt_11_1_, (long)p_226845_4_);
-		double d0 = func_226844_a_(lvt_11_1_);
-		lvt_11_1_ = FastRandom.mix(lvt_11_1_, p_226845_0_);
-		double d1 = func_226844_a_(lvt_11_1_);
-		lvt_11_1_ = FastRandom.mix(lvt_11_1_, p_226845_0_);
-		double d2 = func_226844_a_(lvt_11_1_);
-		return func_226843_a_(p_226845_9_ + d2) + func_226843_a_(p_226845_7_ + d1) + func_226843_a_(p_226845_5_ + d0);
+	private static double getFiddledDistance(long p_226845_0_, int p_226845_2_, int p_226845_3_, int p_226845_4_, double p_226845_5_, double p_226845_7_, double p_226845_9_) {
+		long lvt_11_1_ = FastRandom.next(p_226845_0_, (long)p_226845_2_);
+		lvt_11_1_ = FastRandom.next(lvt_11_1_, (long)p_226845_3_);
+		lvt_11_1_ = FastRandom.next(lvt_11_1_, (long)p_226845_4_);
+		lvt_11_1_ = FastRandom.next(lvt_11_1_, (long)p_226845_2_);
+		lvt_11_1_ = FastRandom.next(lvt_11_1_, (long)p_226845_3_);
+		lvt_11_1_ = FastRandom.next(lvt_11_1_, (long)p_226845_4_);
+		double d0 = getFiddle(lvt_11_1_);
+		lvt_11_1_ = FastRandom.next(lvt_11_1_, p_226845_0_);
+		double d1 = getFiddle(lvt_11_1_);
+		lvt_11_1_ = FastRandom.next(lvt_11_1_, p_226845_0_);
+		double d2 = getFiddle(lvt_11_1_);
+		return sqr(p_226845_9_ + d2) + sqr(p_226845_7_ + d1) + sqr(p_226845_5_ + d0);
 	}
 
-	private static double func_226844_a_(long p_226844_0_) {
+	private static double getFiddle(long p_226844_0_) {
 		double d0 = (double)((int)Math.floorMod(p_226844_0_ >> 24, 1024L)) / 1024.0D;
 		return (d0 - 0.5D) * 0.9D;
 	}
 
-	private static double func_226843_a_(double p_226843_0_) {
+	private static double sqr(double p_226843_0_) {
 		return p_226843_0_ * p_226843_0_;
 	}
 }

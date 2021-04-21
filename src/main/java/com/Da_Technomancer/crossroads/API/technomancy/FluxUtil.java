@@ -51,17 +51,17 @@ public class FluxUtil{
 		if(toTransfer <= 0){
 			return Pair.of(0, new int[0]);
 		}
-		World world = src.getTE().getWorld();
-		BlockPos pos = src.getTE().getPos();
+		World world = src.getTE().getLevel();
+		BlockPos pos = src.getTE().getBlockPos();
 		//Run through each link and collect all the valid IFluxLink links
 		//We have special handling for outputs in unloaded chunks- we send flux in that direction, but delete the flux rather than actually transfer it or loading the chunk
 		//This is to prevent functional systems from having flux build up in unloaded chunk borders
 		//The left entry is the relative position of this output
 		//Each right entry is a TileEntity extending IFluxLink, or Boolean.TRUE to represent an output TE that is unloaded
 		List<Pair<BlockPos, IFluxLink>> dests = links.stream().map((BlockPos linkPos) -> {
-			BlockPos absPos = pos.add(linkPos);
-			if(world.isBlockLoaded(absPos)){
-				TileEntity te = world.getTileEntity(absPos);
+			BlockPos absPos = pos.offset(linkPos);
+			if(world.hasChunkAt(absPos)){
+				TileEntity te = world.getBlockEntity(absPos);
 				if(te instanceof IFluxLink && ((IFluxLink) te).allowAccepting()){
 					return Pair.of(linkPos, (IFluxLink) te);
 				}else{
@@ -121,17 +121,17 @@ public class FluxUtil{
 		if(links.size() == 0){
 			tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.link.none"));
 		}else{
-			BlockPos tePos = te.getTE().getPos();
+			BlockPos tePos = te.getTE().getBlockPos();
 			int totalLinked = links.size();
 			if(totalLinked <= 4){
 				for(BlockPos relPos : links){
-					BlockPos linkPos = tePos.add(relPos);
+					BlockPos linkPos = tePos.offset(relPos);
 					tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.link", linkPos.getX(), linkPos.getY(), linkPos.getZ()));
 				}
 			}else{
 				int printed = 0;
 				for(BlockPos relPos : links){
-					BlockPos linkPos = tePos.add(relPos);
+					BlockPos linkPos = tePos.offset(relPos);
 					tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.link", linkPos.getX(), linkPos.getY(), linkPos.getZ()));
 					if(++printed == 4){
 						break;
@@ -153,8 +153,8 @@ public class FluxUtil{
 				return true;
 			}
 			TileEntity tileEntity = te.getTE();
-			World world = tileEntity.getWorld();
-			BlockPos pos = tileEntity.getPos();
+			World world = tileEntity.getLevel();
+			BlockPos pos = tileEntity.getBlockPos();
 			world.destroyBlock(pos, CRConfig.entropyDropBlock.get());
 			fluxEvent(world, pos);
 		}
@@ -163,8 +163,8 @@ public class FluxUtil{
 
 	public static ActionResultType handleFluxLinking(World world, BlockPos pos, ItemStack stack, PlayerEntity player){
 		if(LinkHelper.isLinkTool(stack)){
-			TileEntity te = world.getTileEntity(pos);
-			if(!world.isRemote && te instanceof ILinkTE){
+			TileEntity te = world.getBlockEntity(pos);
+			if(!world.isClientSide && te instanceof ILinkTE){
 				LinkHelper.wrench((ILinkTE) te, stack, player);
 			}
 			return ActionResultType.SUCCESS;
@@ -179,7 +179,7 @@ public class FluxUtil{
 			if(selector < 50){
 				//Explode
 				//Equivalent to charged creeper explosion
-				worldIn.createExplosion(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 5, CRConfig.entropyDropBlock.get() ? Explosion.Mode.BREAK : Explosion.Mode.DESTROY);
+				worldIn.explode(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 5, CRConfig.entropyDropBlock.get() ? Explosion.Mode.BREAK : Explosion.Mode.DESTROY);
 			}else if(selector < 65){
 				//Alchemy phelostogen/voltus/salt cloud
 				ReagentMap map = new ReagentMap();
@@ -206,7 +206,7 @@ public class FluxUtil{
 		}else{
 			//small explode (everything else disabled in config)
 			//equivalent to TNT explosion
-			worldIn.createExplosion(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 4, Explosion.Mode.BREAK);
+			worldIn.explode(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 4, Explosion.Mode.BREAK);
 		}
 	}
 }

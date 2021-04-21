@@ -4,7 +4,10 @@ import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatedTubeTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer;
@@ -29,9 +32,9 @@ public class HeatedTube extends ContainerBlock{
 	private final boolean crystal;
 
 	static{
-		VoxelShape vertical = makeCuboidShape(3, 0, 3, 13, 16, 13);
-		SHAPE_X = VoxelShapes.or(vertical, makeCuboidShape(0, 4, 4, 16, 12, 12));
-		SHAPE_Z = VoxelShapes.or(vertical, makeCuboidShape(4, 4, 0, 12, 12, 16));
+		VoxelShape vertical = box(3, 0, 3, 13, 16, 13);
+		SHAPE_X = VoxelShapes.or(vertical, box(0, 4, 4, 16, 12, 12));
+		SHAPE_Z = VoxelShapes.or(vertical, box(4, 4, 0, 12, 12, 16));
 	}
 
 	public HeatedTube(boolean crystal){
@@ -44,12 +47,12 @@ public class HeatedTube extends ContainerBlock{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new HeatedTubeTileEntity(!crystal);
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
@@ -61,19 +64,19 @@ public class HeatedTube extends ContainerBlock{
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
-		return state.get(CRProperties.HORIZ_FACING).getAxis() == Direction.Axis.X ? SHAPE_X : SHAPE_Z;
+		return state.getValue(CRProperties.HORIZ_FACING).getAxis() == Direction.Axis.X ? SHAPE_X : SHAPE_Z;
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
 		builder.add(CRProperties.HORIZ_FACING);
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
-			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.func_235896_a_(CRProperties.HORIZ_FACING));
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
+			if(!worldIn.isClientSide){
+				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.HORIZ_FACING));
 			}
 			return ActionResultType.SUCCESS;
 		}
@@ -83,6 +86,6 @@ public class HeatedTube extends ContainerBlock{
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return getDefaultState().with(CRProperties.HORIZ_FACING, context.getPlacementHorizontalFacing());
+		return defaultBlockState().setValue(CRProperties.HORIZ_FACING, context.getHorizontalDirection());
 	}
 }

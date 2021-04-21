@@ -49,7 +49,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 		if(glassType == null){
 			BlockState state = getBlockState();
 			if(state.hasProperty(CRProperties.CONTAINER_TYPE)){
-				glassType = state.get(CRProperties.CONTAINER_TYPE);
+				glassType = state.getValue(CRProperties.CONTAINER_TYPE);
 				return glassType;
 			}
 
@@ -67,7 +67,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	protected void initHeat(){
 		if(!init){
 			init = true;
-			cableTemp = HeatUtil.convertBiomeTemp(world, pos);
+			cableTemp = HeatUtil.convertBiomeTemp(level, worldPosition);
 		}
 	}
 
@@ -78,11 +78,11 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 
 
 	private ItemStack getStoredItem(BlockState state){
-		AbstractGlassware.GlasswareTypes heldType = state.get(CRProperties.CONTAINER_TYPE);
+		AbstractGlassware.GlasswareTypes heldType = state.getValue(CRProperties.CONTAINER_TYPE);
 		if(heldType == AbstractGlassware.GlasswareTypes.NONE){
 			return ItemStack.EMPTY;
 		}
-		boolean crystal = state.get(CRProperties.CRYSTAL);
+		boolean crystal = state.getValue(CRProperties.CRYSTAL);
 		ItemStack out;
 		//This feels like a really bad way of doing this
 		switch(heldType){
@@ -105,29 +105,29 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 
 	@Override
 	protected void destroyCarrier(float strength){
-		world.setBlockState(pos, getBlockState().with(CRProperties.CRYSTAL, false).with(CRProperties.CONTAINER_TYPE, AbstractGlassware.GlasswareTypes.NONE));
-		world.playSound(null, pos, SoundType.GLASS.getBreakSound(), SoundCategory.BLOCKS, SoundType.GLASS.getVolume(), SoundType.GLASS.getPitch());
+		level.setBlockAndUpdate(worldPosition, getBlockState().setValue(CRProperties.CRYSTAL, false).setValue(CRProperties.CONTAINER_TYPE, AbstractGlassware.GlasswareTypes.NONE));
+		level.playSound(null, worldPosition, SoundType.GLASS.getBreakSound(), SoundCategory.BLOCKS, SoundType.GLASS.getVolume(), SoundType.GLASS.getPitch());
 		//Invalidate the heat capability, as if we went from florence -> non florence, we stopped allowing cable connections
 		heatOpt.invalidate();
 		heatOpt = LazyOptional.of(HeatHandler::new);
 		glassType = null;
 		dirtyReag = true;
-		AlchemyUtil.releaseChemical(world, pos, contents);
+		AlchemyUtil.releaseChemical(level, worldPosition, contents);
 		contents = new ReagentMap();
 		if(strength > 0){
-			world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), strength, Explosion.Mode.BREAK);
+			level.explode(null, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), strength, Explosion.Mode.BREAK);
 		}
 	}
 
 
 	public void onBlockDestroyed(BlockState state){
-		if(state.get(CRProperties.CONTAINER_TYPE) != AbstractGlassware.GlasswareTypes.NONE){
+		if(state.getValue(CRProperties.CONTAINER_TYPE) != AbstractGlassware.GlasswareTypes.NONE){
 			ItemStack out = getStoredItem(state);
 			this.contents = new ReagentMap();
 			dirtyReag = true;
 			glassType = AbstractGlassware.GlasswareTypes.NONE;
-			markDirty();
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), out);
+			setChanged();
+			InventoryHelper.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), out);
 		}
 	}
 
@@ -149,8 +149,8 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 				glassType = null;
 				this.contents.clear();
 				dirtyReag = true;
-				markDirty();
-				world.setBlockState(pos, state.with(CRProperties.CRYSTAL, false).with(CRProperties.CONTAINER_TYPE, AbstractGlassware.GlasswareTypes.NONE));
+				setChanged();
+				level.setBlockAndUpdate(worldPosition, state.setValue(CRProperties.CRYSTAL, false).setValue(CRProperties.CONTAINER_TYPE, AbstractGlassware.GlasswareTypes.NONE));
 				//Invalidate the heat capability, as if we went from florence -> non florence, we stopped allowing cable connections
 				heatOpt.invalidate();
 				heatOpt = LazyOptional.of(HeatHandler::new);
@@ -162,9 +162,9 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 			this.contents = ((AbstractGlassware) stack.getItem()).getReagants(stack);
 			glass = !((AbstractGlassware) stack.getItem()).isCrystal();
 			dirtyReag = true;
-			markDirty();
+			setChanged();
 			glassType = null;
-			world.setBlockState(pos, state.with(CRProperties.CRYSTAL, !glass).with(CRProperties.CONTAINER_TYPE, ((AbstractGlassware) stack.getItem()).containerType()));
+			level.setBlockAndUpdate(worldPosition, state.setValue(CRProperties.CRYSTAL, !glass).setValue(CRProperties.CONTAINER_TYPE, ((AbstractGlassware) stack.getItem()).containerType()));
 			if(contents.getTotalQty() > 0){
 				//Force cable temperature to bottle temperature, prevents averaging with previous temperature
 				cableTemp = contents.getTempC();
@@ -178,10 +178,10 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	@Override
 	protected Vector3d getParticlePos(){
 		BlockState state = getBlockState();
-		if(state.getBlock() == CRBlocks.glasswareHolder && state.get(CRProperties.CONTAINER_TYPE) == AbstractGlassware.GlasswareTypes.SHELL){
-			return Vector3d.copy(pos).add(0.5D, 0.7D, 0.5D);
+		if(state.getBlock() == CRBlocks.glasswareHolder && state.getValue(CRProperties.CONTAINER_TYPE) == AbstractGlassware.GlasswareTypes.SHELL){
+			return Vector3d.atLowerCornerOf(worldPosition).add(0.5D, 0.7D, 0.5D);
 		}else{
-			return Vector3d.copy(pos).add(0.5D, 0.25D, 0.5D);
+			return Vector3d.atLowerCornerOf(worldPosition).add(0.5D, 0.25D, 0.5D);
 		}
 	}
 
@@ -198,7 +198,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 		BlockState state = getBlockState();
 		if(state.getBlock() instanceof GlasswareHolder && heldType() != AbstractGlassware.GlasswareTypes.NONE){
 			Direction side = Direction.UP;
-			TileEntity te = world.getTileEntity(pos.offset(side));
+			TileEntity te = level.getBlockEntity(worldPosition.relative(side));
 			LazyOptional<IChemicalHandler> otherOpt;
 			if(contents.getTotalQty() == 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
 				return;
@@ -210,9 +210,9 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 				return;
 			}
 
-			if(otherHandler.insertReagents(contents, side.getOpposite(), handler, state.hasProperty(ESProperties.REDSTONE_BOOL) && state.get(ESProperties.REDSTONE_BOOL))){
+			if(otherHandler.insertReagents(contents, side.getOpposite(), handler, state.hasProperty(ESProperties.REDSTONE_BOOL) && state.getValue(ESProperties.REDSTONE_BOOL))){
 				correctReag();
-				markDirty();
+				setChanged();
 			}
 		}
 	}
@@ -227,8 +227,8 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		heatOpt.invalidate();
 	}
 
@@ -260,7 +260,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 			cableTemp = tempIn;
 			//Shares heat between internal cable & contents
 			dirtyReag = true;
-			markDirty();
+			setChanged();
 		}
 
 		@Override
@@ -269,7 +269,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 			cableTemp += tempChange;
 			//Shares heat between internal cable & contents
 			dirtyReag = true;
-			markDirty();
+			setChanged();
 		}
 	}
 }

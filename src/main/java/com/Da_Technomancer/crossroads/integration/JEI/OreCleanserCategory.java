@@ -2,8 +2,8 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.crafting.recipes.OreCleanserRec;
+import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.tileentities.fluid.OreCleanserTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
@@ -51,7 +51,7 @@ public class OreCleanserCategory implements IRecipeCategory<OreCleanserRec>{
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.oreCleanser.getTranslatedName().getString();
+		return CRBlocks.oreCleanser.getName().getString();
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public class OreCleanserCategory implements IRecipeCategory<OreCleanserRec>{
 		itemGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
 
 		itemGroup.init(1, false, 110, 50);
-		itemGroup.set(1, recipe.getRecipeOutput());
+		itemGroup.set(1, recipe.getResultItem());
 
 		fluidGroup.init(0, true, 34, 30, 16, 64, 1_000, true, fluidOverlay);
 		fluidGroup.set(0, new FluidStack(CRFluids.steam.still, OreCleanserTileEntity.WATER_USE));
@@ -100,7 +100,7 @@ public class OreCleanserCategory implements IRecipeCategory<OreCleanserRec>{
 	@Override
 	public void setIngredients(OreCleanserRec recipe, IIngredients ingredients){
 		ingredients.setInputIngredients(recipe.getIngredients());
-		ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
+		ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
 		ingredients.setInput(VanillaTypes.FLUID, new FluidStack(CRFluids.steam.still, OreCleanserTileEntity.WATER_USE));
 		ingredients.setOutput(VanillaTypes.FLUID, new FluidStack(CRFluids.dirtyWater.still, OreCleanserTileEntity.WATER_USE));
 	}

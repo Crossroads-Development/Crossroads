@@ -45,7 +45,7 @@ public class StampMillCategory implements IRecipeCategory<StampMillRec>{
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.stampMill.getTranslatedName().getString();
+		return CRBlocks.stampMill.getName().getString();
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class StampMillCategory implements IRecipeCategory<StampMillRec>{
 		itemGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
 
 		itemGroup.init(1, false, 110, 50);
-		itemGroup.set(1, recipe.getRecipeOutput());
+		itemGroup.set(1, recipe.getResultItem());
 
 		itemGroup.set(ingredients);
 	}
@@ -86,6 +86,6 @@ public class StampMillCategory implements IRecipeCategory<StampMillRec>{
 	@Override
 	public void setIngredients(StampMillRec recipe, IIngredients ingredients){
 		ingredients.setInputIngredients(recipe.getIngredients());
-		ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
+		ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
 	}
 }

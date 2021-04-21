@@ -35,14 +35,14 @@ public class PiglinBarterLootModifier extends LootModifier{
 	protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context){
 		if(active && isPiglinBarter(context) && context.getRandom().nextFloat() < overrideChance){
 			generatedLoot.clear();
-			pool.generate(generatedLoot::add, context);
+			pool.addRandomItems(generatedLoot::add, context);
 		}
 
 		return generatedLoot;
 	}
 
 	private static boolean isPiglinBarter(LootContext context){
-		return context.get(LootParameters.THIS_ENTITY) instanceof PiglinEntity && !context.has(LootParameters.field_237457_g_);
+		return context.getParamOrNull(LootParameters.THIS_ENTITY) instanceof PiglinEntity && !context.hasParam(LootParameters.ORIGIN);
 	}
 
 	public static class Serializer extends GlobalLootModifierSerializer<PiglinBarterLootModifier>{
@@ -72,12 +72,12 @@ public class PiglinBarterLootModifier extends LootModifier{
 			if(!active){
 				return new PiglinBarterLootModifier(lootConditions, false, null, 0);
 			}
-			float overrideChance = JSONUtils.getFloat(json, "override_chance");//The chance [0-1] that this loot pool is used instead of the default piglin loot pool/previous pools
+			float overrideChance = JSONUtils.getAsFloat(json, "override_chance");//The chance [0-1] that this loot pool is used instead of the default piglin loot pool/previous pools
 			LootPool.Builder poolBuilder = new LootPool.Builder();
-			JsonArray entryArray = JSONUtils.getJsonArray(json, "results");
+			JsonArray entryArray = JSONUtils.getAsJsonArray(json, "results");
 			for(JsonElement o : entryArray){
 				JsonObject entry = o.getAsJsonObject();
-				poolBuilder.addEntry(ItemLootEntry.builder(JSONUtils.getItem(entry, "name")).weight(JSONUtils.getInt(entry, "weight", 1)).acceptFunction(SetCount.builder(RandomValueRange.of(JSONUtils.getInt(entry, "min", 1), JSONUtils.getInt(entry, "max", 1)))));
+				poolBuilder.add(ItemLootEntry.lootTableItem(JSONUtils.getAsItem(entry, "name")).setWeight(JSONUtils.getAsInt(entry, "weight", 1)).apply(SetCount.setCount(RandomValueRange.between(JSONUtils.getAsInt(entry, "min", 1), JSONUtils.getAsInt(entry, "max", 1)))));
 			}
 
 			return new PiglinBarterLootModifier(lootConditions, active, poolBuilder.build(), overrideChance);

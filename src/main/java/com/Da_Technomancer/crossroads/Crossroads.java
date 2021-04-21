@@ -181,11 +181,11 @@ public final class Crossroads{
 	public static void registerEnts(RegistryEvent.Register<EntityType<?>> e){
 		IForgeRegistry<EntityType<?>> reg = e.getRegistry();
 
-		reg.register(EntityType.Builder.create(EntityFlameCore::new, EntityClassification.MISC).immuneToFire().disableSummoning().setShouldReceiveVelocityUpdates(false).size(1, 1).build("flame_core").setRegistryName("flame_core"));
-		reg.register(EntityType.Builder.<EntityShell>create(EntityShell::new, EntityClassification.MISC).immuneToFire().setTrackingRange(64).setUpdateInterval(5).size(.25F, .25F).build("shell").setRegistryName("shell"));
-		reg.register(EntityType.Builder.<EntityNitro>create(EntityNitro::new, EntityClassification.MISC).setTrackingRange(64).setUpdateInterval(5).build("nitro").setRegistryName("nitro"));
-		reg.register(EntityType.Builder.<EntityGhostMarker>create(EntityGhostMarker::new, EntityClassification.MISC).disableSummoning().setTrackingRange(64).setUpdateInterval(20).immuneToFire().setShouldReceiveVelocityUpdates(false).build("ghost_marker").setRegistryName("ghost_marker"));
-		reg.register(EntityType.Builder.create(EntityFlyingMachine::new, EntityClassification.MISC).size(1F, 1.3F).setTrackingRange(64).setUpdateInterval(1).build("flying_machine").setRegistryName("flying_machine"));
+		reg.register(EntityType.Builder.of(EntityFlameCore::new, EntityClassification.MISC).fireImmune().noSummon().setShouldReceiveVelocityUpdates(false).sized(1, 1).build("flame_core").setRegistryName("flame_core"));
+		reg.register(EntityType.Builder.<EntityShell>of(EntityShell::new, EntityClassification.MISC).fireImmune().setTrackingRange(64).setUpdateInterval(5).sized(.25F, .25F).build("shell").setRegistryName("shell"));
+		reg.register(EntityType.Builder.<EntityNitro>of(EntityNitro::new, EntityClassification.MISC).setTrackingRange(64).setUpdateInterval(5).build("nitro").setRegistryName("nitro"));
+		reg.register(EntityType.Builder.<EntityGhostMarker>of(EntityGhostMarker::new, EntityClassification.MISC).noSummon().setTrackingRange(64).setUpdateInterval(20).fireImmune().setShouldReceiveVelocityUpdates(false).build("ghost_marker").setRegistryName("ghost_marker"));
+		reg.register(EntityType.Builder.of(EntityFlyingMachine::new, EntityClassification.MISC).sized(1F, 1.3F).setTrackingRange(64).setUpdateInterval(1).build("flying_machine").setRegistryName("flying_machine"));
 	}
 
 	@SuppressWarnings("unused")
@@ -310,7 +310,7 @@ public final class Crossroads{
 	@OnlyIn(Dist.CLIENT)
 	private static <T extends Container> void registerCon(IContainerFactory<T> cons, ScreenManager.IScreenFactory<T, ContainerScreen<T>> screenFactory, String id, RegistryEvent.Register<ContainerType<?>> reg){
 		ContainerType<T> contType = registerConType(cons, id, reg);
-		ScreenManager.registerFactory(contType, screenFactory);
+		ScreenManager.register(contType, screenFactory);
 	}
 
 	@SuppressWarnings("unused")

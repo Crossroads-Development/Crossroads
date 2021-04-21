@@ -63,7 +63,7 @@ public class SteamBoilerTileEntity extends InventoryTE{
 	@Override
 	public void tick(){
 		super.tick();
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 
@@ -97,13 +97,13 @@ public class SteamBoilerTileEntity extends InventoryTE{
 					}
 				}
 			}
-			markDirty();
+			setChanged();
 		}
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		waterOpt.invalidate();
 		steamOpt.invalidate();
 	}
@@ -133,12 +133,12 @@ public class SteamBoilerTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
+	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction){
 		return false;//Automation is not allowed to interact with the salt slot
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
+	public boolean canPlaceItem(int index, ItemStack stack){
 		return false;//Automation is not allowed to interact with the salt slot
 	}
 

@@ -22,26 +22,26 @@ import java.util.List;
 public class FluidVoid extends ContainerBlock{
 
 	public FluidVoid(){
-		super(Block.Properties.create(Material.SPONGE).hardnessAndResistance(0.6F).sound(SoundType.PLANT));
+		super(AbstractBlock.Properties.of(Material.SPONGE).strength(0.6F).sound(SoundType.GRASS));
 		String name = "fluid_void";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this, new Item.Properties().group(CRItems.TAB_CROSSROADS).rarity(CRItems.BOBO_RARITY));
+		CRBlocks.blockAddQue(this, new Item.Properties().tab(CRItems.TAB_CROSSROADS).rarity(CRItems.BOBO_RARITY));
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new FluidVoidTileEntity();
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 	
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.fluid_void.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

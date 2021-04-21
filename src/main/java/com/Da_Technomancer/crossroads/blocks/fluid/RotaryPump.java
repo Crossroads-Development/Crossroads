@@ -32,7 +32,7 @@ import java.util.List;
 
 public class RotaryPump extends ContainerBlock{
 
-	private static final VoxelShape SHAPE = VoxelShapes.or(VoxelShapes.combine(makeCuboidShape(2, 0, 2, 14, 15, 14), makeCuboidShape(3, 0, 3, 13, 7, 13), IBooleanFunction.ONLY_SECOND), makeCuboidShape(6, 15, 6, 10, 16, 10), makeCuboidShape(0, 5, 5, 16, 11, 11), makeCuboidShape(5, 5, 0, 11, 11, 16));
+	private static final VoxelShape SHAPE = VoxelShapes.or(VoxelShapes.joinUnoptimized(box(2, 0, 2, 14, 15, 14), box(3, 0, 3, 13, 7, 13), IBooleanFunction.ONLY_SECOND), box(6, 15, 6, 10, 16, 10), box(0, 5, 5, 16, 11, 11), box(5, 5, 0, 11, 11, 16));
 
 	public RotaryPump(){
 		super(CRBlocks.getMetalProperty());
@@ -43,21 +43,21 @@ public class RotaryPump extends ContainerBlock{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new RotaryPumpTileEntity();
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		TileEntity te;
-		if(!worldIn.isRemote && (te = worldIn.getTileEntity(pos)) instanceof INamedContainerProvider){
+		if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) instanceof INamedContainerProvider){
 			NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);
 		}
 		return ActionResultType.SUCCESS;
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
@@ -74,7 +74,7 @@ public class RotaryPump extends ContainerBlock{
 	
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.pump.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.pump.power", RotaryPumpTileEntity.MAX_POWER));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.pump.speed", RotaryPumpTileEntity.MAX_SPEED));

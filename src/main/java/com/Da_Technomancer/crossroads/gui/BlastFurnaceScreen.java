@@ -25,13 +25,13 @@ public class BlastFurnaceScreen extends MachineGUI<BlastFurnaceContainer, BlastF
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
-		Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE);
+	protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+		Minecraft.getInstance().getTextureManager().bind(TEXTURE);
 
-		blit(matrix, guiLeft, guiTop, 0, 0, xSize, ySize);
-		blit(matrix, guiLeft + 25, guiTop + 38, 176, 0, 38 * container.progRef.get() / BlastFurnaceTileEntity.REQUIRED_PRG, 14);
-		fill(matrix, guiLeft + 50, guiTop + 36 - container.carbRef.get() * 16 / BlastFurnaceTileEntity.CARBON_LIMIT, guiLeft + 52, guiTop + 36, 0xFF000000);
+		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+		blit(matrix, leftPos + 25, topPos + 38, 176, 0, 38 * menu.progRef.get() / BlastFurnaceTileEntity.REQUIRED_PRG, 14);
+		fill(matrix, leftPos + 50, topPos + 36 - menu.carbRef.get() * 16 / BlastFurnaceTileEntity.CARBON_LIMIT, leftPos + 52, topPos + 36, 0xFF000000);
 
-		super.drawGuiContainerBackgroundLayer(matrix, partialTicks, mouseX, mouseY);
+		super.renderBg(matrix, partialTicks, mouseX, mouseY);
 	}
 }

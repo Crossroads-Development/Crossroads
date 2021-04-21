@@ -5,7 +5,10 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatLimiterBasicTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -35,36 +38,36 @@ public class HeatLimiterBasic extends ContainerBlock{
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
-		setDefaultState(getDefaultState().with(CRProperties.ACTIVE, false));
+		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false));
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new HeatLimiterBasicTileEntity();
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
 		builder.add(CRProperties.ACTIVE, ESProperties.FACING);
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(!worldIn.isRemote){
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		if(!worldIn.isClientSide){
 			TileEntity te;
-			if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
-				if(playerIn.isSneaking()){
-					worldIn.setBlockState(pos, state.func_235896_a_(CRProperties.ACTIVE));
+			if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
+				if(playerIn.isShiftKeyDown()){
+					worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.ACTIVE));
 				}else{
-					worldIn.setBlockState(pos, state.func_235896_a_(ESProperties.FACING));
+					worldIn.setBlockAndUpdate(pos, state.cycle(ESProperties.FACING));
 				}
-			}else if((te = worldIn.getTileEntity(pos)) instanceof HeatLimiterBasicTileEntity){
-				NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, buf -> {buf.writeFloat(((HeatLimiterBasicTileEntity) te).setting); buf.writeString(((HeatLimiterBasicTileEntity) te).expression); buf.writeBlockPos(pos);});
+			}else if((te = worldIn.getBlockEntity(pos)) instanceof HeatLimiterBasicTileEntity){
+				NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, buf -> {buf.writeFloat(((HeatLimiterBasicTileEntity) te).setting); buf.writeUtf(((HeatLimiterBasicTileEntity) te).expression); buf.writeBlockPos(pos);});
 			}
 		}
 		return ActionResultType.SUCCESS;
@@ -73,11 +76,11 @@ public class HeatLimiterBasic extends ContainerBlock{
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return getDefaultState().with(ESProperties.FACING, context.getNearestLookingDirection());
+		return defaultBlockState().setValue(ESProperties.FACING, context.getNearestLookingDirection());
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.heat_limiter.desc_cable"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.heat_limiter.desc_purpose"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.heat_limiter.desc_mode"));

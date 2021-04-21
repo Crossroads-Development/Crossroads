@@ -97,7 +97,7 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 		clientAngle[0] += calcAngleChange(clientW[0], clientAngle[0], true);
 		clientAngle[1] += calcAngleChange(clientW[1], clientAngle[1], false);
 
-		if(!world.isRemote){
+		if(!level.isClientSide){
 			//Perform angle movement on the server
 			if(!locked){
 				float angleTarget0 = (float) baseAxleHandler.getSpeed();
@@ -115,14 +115,14 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 			}
 
 			//Output beam
-			if(world.getGameTime() % BeamUtil.BEAM_TIME == 0){
+			if(level.getGameTime() % BeamUtil.BEAM_TIME == 0){
 				BeamUnit out = queued[0].getOutput();
 				queued[0].clear();
 				queued[0].addBeam(queued[1]);
 				queued[1].clear();
-				activeCycle = world.getGameTime();
+				activeCycle = level.getGameTime();
 				readingBeam = out;
-				markDirty();
+				setChanged();
 				if(out.getPower() > BeamUtil.POWER_LIMIT){
 					out = out.mult((float) BeamUtil.POWER_LIMIT / (float) out.getPower(), true);
 				}
@@ -132,8 +132,8 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 				float outLength = 0;
 
 				if(!out.isEmpty()){
-					Vector3d rayTraceSt = Vector3d.copyCentered(pos);
-					Direction facing = getBlockState().get(CRProperties.FACING);
+					Vector3d rayTraceSt = Vector3d.atCenterOf(worldPosition);
+					Direction facing = getBlockState().getValue(CRProperties.FACING);
 
 					//ray is a unit vector pointing in the aimed direction
 					//Done via several multiplied rotation matrices simplified into a single multiplied quaternion for facing and a single vector
@@ -145,21 +145,21 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 					//rayTraceSt is offset 'up' by 3.5/16 blocks to match the render, which has to be rotated by the facing
 					Vector3f upShift = new Vector3f(0, 3.5F / 16F, 0);
 					upShift.transform(directionRotation);
-					rayTraceSt = rayTraceSt.add(upShift.getX(), upShift.getY(), upShift.getZ());
+					rayTraceSt = rayTraceSt.add(upShift.x(), upShift.y(), upShift.z());
 
-					Triple<BlockPos, Vector3d, Direction> beamHitResult = StaffTechnomancy.rayTraceBeams(out, world, rayTraceSt, rayTraceSt, new Vector3d(ray), null, pos, RANGE);
+					Triple<BlockPos, Vector3d, Direction> beamHitResult = StaffTechnomancy.rayTraceBeams(out, level, rayTraceSt, rayTraceSt, new Vector3d(ray), null, worldPosition, RANGE);
 					BlockPos endPos = beamHitResult.getLeft();
 					if(endPos != null){//Should always be true
 						outLength = (float) beamHitResult.getMiddle().distanceTo(rayTraceSt);
 						Direction effectDir = beamHitResult.getRight();
-						TileEntity te = world.getTileEntity(endPos);
+						TileEntity te = level.getBlockEntity(endPos);
 						LazyOptional<IBeamHandler> opt;
 						if(te != null && (opt = te.getCapability(Capabilities.BEAM_CAPABILITY, effectDir)).isPresent()){
 							opt.orElseThrow(NullPointerException::new).setBeam(out);
 						}else{
 							EnumBeamAlignments align = EnumBeamAlignments.getAlignment(out);
 							if(!World.isOutsideBuildHeight(endPos)){
-								align.getEffect().doBeamEffect(align, out.getVoid() != 0, Math.min(64, outPower), world, endPos, effectDir);
+								align.getEffect().doBeamEffect(align, out.getVoid() != 0, Math.min(64, outPower), level, endPos, effectDir);
 							}
 						}
 					}
@@ -175,16 +175,16 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 						packet |= ((beamSize - 1) & 0xF) << 24;//Encode beam radius
 						packet |= ((beamLength - 1) & 0xFFL) << 28L;
 					}
-					CRPackets.sendPacketAround(world, pos, new SendLongToClient(3, packet, pos));
+					CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(3, packet, worldPosition));
 				}
 
 				//Play sounds
 				//Can be called on both the virtual server and client side, but only actually does anything on the server side as the passed player is null
-				if(CRConfig.beamSounds.get() && world.getGameTime() % 60 == 0){
+				if(CRConfig.beamSounds.get() && level.getGameTime() % 60 == 0){
 					//Play a sound if ANY side is outputting a beam
 					if(beamSize > 0){
 						//The attenuation distance defined for this sound in sounds.json is significant, and makes the sound have a very short range
-						CRSounds.playSoundServer(world, pos, CRSounds.BEAM_PASSIVE, SoundCategory.BLOCKS, 0.7F, 0.3F);
+						CRSounds.playSoundServer(level, worldPosition, CRSounds.BEAM_PASSIVE, SoundCategory.BLOCKS, 0.7F, 0.3F);
 					}
 				}
 			}
@@ -225,9 +225,9 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 			clientW[1] = (float) sideAxleHandler.getSpeed();
 		}
 		long packet0 = (Integer.toUnsignedLong(Float.floatToRawIntBits(clientAngle[0])) << 32L) | Integer.toUnsignedLong(Float.floatToRawIntBits(clientW[0]));
-		CRPackets.sendPacketAround(world, pos, new SendLongToClient(0, packet0, pos));
+		CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(0, packet0, worldPosition));
 		long packet1 = (Integer.toUnsignedLong(Float.floatToRawIntBits(clientAngle[1])) << 32L) | Integer.toUnsignedLong(Float.floatToRawIntBits(clientW[1]));
-		CRPackets.sendPacketAround(world, pos, new SendLongToClient(1, packet1, pos));
+		CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(1, packet1, worldPosition));
 	}
 
 	private static float calcAngleChange(float target, float current, boolean allowLooping){
@@ -254,8 +254,8 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 
 	public void updateLock(PlayerEntity player){
 		locked = !locked;
-		markDirty();
-		if(world.isRemote){
+		setChanged();
+		if(level.isClientSide){
 			if(locked){
 				MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.beam_cannon.lock"));
 			}else{
@@ -263,14 +263,14 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 			}
 		}else{
 			//Send update packet to ensure this reaches all client
-			CRPackets.sendPacketAround(world, pos, new SendLongToClient(4, locked ? 1 : 0, pos));
+			CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(4, locked ? 1 : 0, worldPosition));
 		}
 	}
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){
 		//Expand the render box to include all possible beams from this block
-		return new AxisAlignedBB(pos.add(-RANGE, -RANGE, -RANGE), pos.add(1 + RANGE, 1 + RANGE, 1 + RANGE));
+		return new AxisAlignedBB(worldPosition.offset(-RANGE, -RANGE, -RANGE), worldPosition.offset(1 + RANGE, 1 + RANGE, 1 + RANGE));
 	}
 
 	@Override
@@ -296,8 +296,8 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		for(int i = 0; i < 2; i++){
 			energy[i] = nbt.getDouble("energy_" + i);
 			angle[i] = nbt.getFloat("angle_" + i);
@@ -314,8 +314,8 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		nbt = super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		nbt = super.save(nbt);
 		for(int i = 0; i < 2; i++){
 			nbt.putDouble("energy_" + i, energy[i]);
 			nbt.putFloat("angle_" + i, angle[i]);
@@ -333,12 +333,12 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 
 	@Override
 	public CompoundNBT getUpdateTag(){
-		return write(super.getUpdateTag());
+		return save(super.getUpdateTag());
 	}
 
 	@Override
-	public void updateContainingBlockInfo(){
-		super.updateContainingBlockInfo();
+	public void clearCache(){
+		super.clearCache();
 		baseAxleOpt.invalidate();
 		sideAxleOpt.invalidate();
 		sideAxleAltOpt.invalidate();
@@ -350,8 +350,8 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		baseAxleOpt.invalidate();
 		sideAxleOpt.invalidate();
 		sideAxleAltOpt.invalidate();
@@ -374,7 +374,7 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 		if(cap == Capabilities.BEAM_CAPABILITY){
 			return (LazyOptional<T>) beamOpt;
 		}
-		Direction blockFacing = getBlockState().get(CRProperties.FACING);
+		Direction blockFacing = getBlockState().getValue(CRProperties.FACING);
 		if(cap == Capabilities.AXLE_CAPABILITY && blockFacing != side){
 			if(side == null || side == blockFacing.getOpposite()){
 				return (LazyOptional<T>) baseAxleOpt;
@@ -392,8 +392,8 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 		@Override
 		public void setBeam(@Nonnull BeamUnit mag){
 			if(!mag.isEmpty()){
-				queued[world.getGameTime() == activeCycle ? 0 : 1].addBeam(mag);
-				markDirty();
+				queued[level.getGameTime() == activeCycle ? 0 : 1].addBeam(mag);
+				setChanged();
 			}
 		}
 	}
@@ -431,13 +431,13 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 			}
 
 			if(index == 1){
-				Direction.Axis blockAxis = getBlockState().get(CRProperties.FACING).getAxis();
+				Direction.Axis blockAxis = getBlockState().getValue(CRProperties.FACING).getAxis();
 				Direction.Axis handlerAxis = (altAxis == (blockAxis == Direction.Axis.X)) ? Direction.Axis.Z : Direction.Axis.Y;
 				for(Direction dir : Direction.values()){
 					Direction.Axis dirAxis = dir.getAxis();
 					if(dirAxis != blockAxis){
 						//Invert renderOffset if switching axis from the handler axis
-						RotaryUtil.propagateAxially(world.getTileEntity(pos.offset(dir)), dir.getOpposite(), this, masterIn, key, (dirAxis == handlerAxis) == renderOffset);
+						RotaryUtil.propagateAxially(level.getBlockEntity(worldPosition.relative(dir)), dir.getOpposite(), this, masterIn, key, (dirAxis == handlerAxis) == renderOffset);
 					}
 				}
 			}
@@ -479,7 +479,7 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 		@Override
 		public void setEnergy(double newEnergy){
 			energy[index] = newEnergy;
-			markDirty();
+			setChanged();
 		}
 
 		@Override

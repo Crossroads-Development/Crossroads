@@ -16,17 +16,17 @@ public class ParticleSplashColor extends SpriteTexturedParticle{
 	protected ParticleSplashColor(ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, Color c, IAnimatedSprite s){
 		super(worldIn, x, y, z);
 		setSize(0.02F, 0.02F);
-		canCollide = true;
+		hasPhysics = true;
 		sprite = s;
 //		setParticleTextureIndex(17);
-		multiplyParticleScaleBy(rand.nextFloat() * 0.6F + 0.6F);
-		motionX = xSpeed;
-		motionY = ySpeed;
-		motionZ = zSpeed;
-		setMaxAge(20);
+		scale(random.nextFloat() * 0.6F + 0.6F);
+		xd = xSpeed;
+		yd = ySpeed;
+		zd = zSpeed;
+		setLifetime(20);
 		setColor(c.getRed() / 255F, c.getGreen() / 255F, c.getBlue() / 255F);
-		setAlphaF(c.getAlpha() / 255F);
-		selectSpriteWithAge(sprite);
+		setAlpha(c.getAlpha() / 255F);
+		setSpriteFromAge(sprite);
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class ParticleSplashColor extends SpriteTexturedParticle{
 	@Override
 	public void tick(){
 		super.tick();
-		selectSpriteWithAge(sprite);
+		setSpriteFromAge(sprite);
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -51,7 +51,7 @@ public class ParticleSplashColor extends SpriteTexturedParticle{
 
 		@Nullable
 		@Override
-		public Particle makeParticle(ColorParticleData typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed){
+		public Particle createParticle(ColorParticleData typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed){
 			return new ParticleSplashColor(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, typeIn.getColor(), sprite);
 		}
 	}

@@ -42,7 +42,7 @@ public final class ReagentManager{
 	}
 
 	public static List<AlchemyRec> getReactions(World world){
-		return world.getRecipeManager().getRecipesForType(CRRecipes.ALCHEMY_TYPE);
+		return world.getRecipeManager().getAllRecipesFor(CRRecipes.ALCHEMY_TYPE);
 	}
 
 	public static void updateReagent(ReagentRec changedReag){
@@ -74,13 +74,13 @@ public final class ReagentManager{
 			}
 		}
 		//Now that everything is loaded and the tags are bound, we remove any reagent that no longer exists, and remove any mapping with an empty tag to speed things up in future
-		ITEM_TO_REAGENT.entrySet().removeIf(entry -> toRemove.contains(entry.getValue().getID()) || entry.getKey() instanceof ITag && ((ITag<?>) entry.getKey()).getAllElements().isEmpty());
+		ITEM_TO_REAGENT.entrySet().removeIf(entry -> toRemove.contains(entry.getValue().getID()) || entry.getKey() instanceof ITag && ((ITag<?>) entry.getKey()).getValues().isEmpty());
 	}
 
 	public static void updateFromServer(RecipeManager recManager){
 		//Called on client side when new recipe sets are received from the server
 		//This is necessary, because the client can have data packs change while running when connecting to different worlds or servers
 		//This removes any no-longer registered reagents (the recipe manager handles overwriting and adding new ones)
-		trimReagents(recManager.getRecipesForType(CRRecipes.REAGENT_TYPE).stream().map(ReagentRec::getID).collect(Collectors.toList()));
+		trimReagents(recManager.getAllRecipesFor(CRRecipes.REAGENT_TYPE).stream().map(ReagentRec::getID).collect(Collectors.toList()));
 	}
 }

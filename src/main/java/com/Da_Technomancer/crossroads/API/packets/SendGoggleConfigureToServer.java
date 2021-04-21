@@ -47,7 +47,7 @@ public class SendGoggleConfigureToServer extends ServerPacket{
 	@Override
 	protected void run(@Nullable ServerPlayerEntity player){
 		if(player != null){
-			ItemStack stack = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
+			ItemStack stack = player.getItemBySlot(EquipmentSlotType.HEAD);
 			CompoundNBT nbt = stack.getTag();
 			if(stack.getItem() == CRItems.armorGoggles && nbt != null && nbt.contains(lensName)){
 				nbt.putBoolean(lensName, newSetting);

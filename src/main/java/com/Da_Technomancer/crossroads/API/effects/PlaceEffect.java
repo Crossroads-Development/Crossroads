@@ -44,18 +44,18 @@ public class PlaceEffect extends BeamEffect{
 				}
 			}else{
 				int range = (int) Math.sqrt(power) / 2;
-				List<ItemEntity> items = worldIn.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos.add(-range, -range, -range), pos.add(range + 1, range + 1, range + 1)), EntityPredicates.IS_ALIVE);
+				List<ItemEntity> items = worldIn.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(pos.offset(-range, -range, -range), pos.offset(range + 1, range + 1, range + 1)), EntityPredicates.ENTITY_STILL_ALIVE);
 				if(items.size() != 0){
 					FakePlayer placer = getBlockFakePlayer((ServerWorld) worldIn);
 					for(ItemEntity ent : items){
 						ItemStack stack = ent.getItem();
 						if(!stack.isEmpty() && stack.getItem() instanceof BlockItem){
-							BlockItemUseContext context = new BlockItemUseContext(new ItemUseContext(placer, Hand.MAIN_HAND, new BlockRayTraceResult(new Vector3d(ent.getPosX(), ent.getPosY(), ent.getPosZ()), Direction.DOWN, ent.getPosition(), false)));
+							BlockItemUseContext context = new BlockItemUseContext(new ItemUseContext(placer, Hand.MAIN_HAND, new BlockRayTraceResult(new Vector3d(ent.getX(), ent.getY(), ent.getZ()), Direction.DOWN, ent.blockPosition(), false)));
 							BlockState state = ((BlockItem) stack.getItem()).getBlock().getStateForPlacement(context);
-							BlockState worldState = worldIn.getBlockState(ent.getPosition());
-							if(worldState.isReplaceable(context) && state.isValidPosition(worldIn, ent.getPosition())){
-								worldIn.setBlockState(ent.getPosition(), state);
-								state.getBlock().onBlockPlacedBy(worldIn, ent.getPosition(), worldIn.getBlockState(ent.getPosition()), placer, stack);
+							BlockState worldState = worldIn.getBlockState(ent.blockPosition());
+							if(worldState.canBeReplaced(context) && state.canSurvive(worldIn, ent.blockPosition())){
+								worldIn.setBlockAndUpdate(ent.blockPosition(), state);
+								state.getBlock().setPlacedBy(worldIn, ent.blockPosition(), worldIn.getBlockState(ent.blockPosition()), placer, stack);
 								SoundType soundtype = state.getBlock().getSoundType(worldIn.getBlockState(pos), worldIn, pos, placer);
 								worldIn.playSound(null, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 								stack.shrink(1);

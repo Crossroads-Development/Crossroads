@@ -21,7 +21,7 @@ public class LeydenJar extends Item{
 	public static final int MAX_CHARGE = 100_000;
 	
 	protected LeydenJar(){
-		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
+		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "leyden_jar";
 //		hasSubtypes = true;
 		setRegistryName(name);
@@ -50,15 +50,15 @@ public class LeydenJar extends Item{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.leyden_jar.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.leyden_jar.stats", getCharge(stack), MAX_CHARGE));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.leyden_jar.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items){
-		if(isInGroup(group)){
+	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items){
+		if(allowdedIn(group)){
 			items.add(new ItemStack(this, 1));
 			ItemStack stack = new ItemStack(this, 1);
 			setCharge(stack, MAX_CHARGE);

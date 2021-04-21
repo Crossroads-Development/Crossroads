@@ -18,10 +18,10 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -44,14 +44,14 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 		final double size16N = 16D - size16;
 		//There are 64 (2^6) possible states for this block, and each one has a different shape
 		//This... is gonna take a while
-		VoxelShape core = makeCuboidShape(size16, size16, size16, size16N, size16N, size16N);
+		VoxelShape core = box(size16, size16, size16, size16N, size16N, size16N);
 		VoxelShape[] pieces = new VoxelShape[6];
-		pieces[0] = makeCuboidShape(size16, 0, size16, size16N, size16, size16N);
-		pieces[1] = makeCuboidShape(size16, 16, size16, size16N, size16N, size16N);
-		pieces[2] = makeCuboidShape(size16, size16, 0, size16N, size16N, size16);
-		pieces[3] = makeCuboidShape(size16, size16, 16, size16N, size16N, size16N);
-		pieces[4] = makeCuboidShape(0, size16, size16, size16, size16N, size16N);
-		pieces[5] = makeCuboidShape(16, size16, size16, size16N, size16N, size16N);
+		pieces[0] = box(size16, 0, size16, size16N, size16, size16N);
+		pieces[1] = box(size16, 16, size16, size16N, size16N, size16N);
+		pieces[2] = box(size16, size16, 0, size16N, size16N, size16);
+		pieces[3] = box(size16, size16, 16, size16N, size16N, size16N);
+		pieces[4] = box(0, size16, size16, size16, size16N, size16N);
+		pieces[5] = box(16, size16, size16, size16N, size16N, size16N);
 		for(int i = 0; i < 64; i++){
 			VoxelShape comp = core;
 			for(int j = 0; j < 6; j++){
@@ -66,12 +66,12 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 
 	protected ConduitBlock(Properties builder){
 		super(builder);
-		BlockState defaultState = getDefaultState();
+		BlockState defaultState = defaultBlockState();
 		Property<T>[] sideProp = getSideProp();
 		for(int i = 0; i < 6; i++){
-			defaultState = defaultState.with(sideProp[i], getDefaultValue());
+			defaultState = defaultState.setValue(sideProp[i], getDefaultValue());
 		}
-		setDefaultState(defaultState);
+		registerDefaultState(defaultState);
 		CRBlocks.toRegister.add(this);
 	}
 
@@ -119,7 +119,7 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 	protected abstract boolean evaluate(T value, BlockState state, @Nullable IConduitTE<T> te);
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
 		builder.add(getSideProp());
 	}
 
@@ -133,20 +133,20 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos pos, BlockPos facingPos){
-		if(worldIn.isRemote()){
+	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos pos, BlockPos facingPos){
+		if(worldIn.isClientSide()){
 			return stateIn;
 		}
-		TileEntity te = worldIn.getTileEntity(pos);
+		TileEntity te = worldIn.getBlockEntity(pos);
 		try{
 			if(te instanceof IConduitTE){
-				int side = facing.getIndex();
+				int side = facing.get3DDataValue();
 				IConduitTE<T> cTE = (IConduitTE<T>) te;
 				T mode = cTE.getModes()[side];
 				boolean hasMatch = cTE.hasMatch(side, cTE.getModes()[side]);
 				cTE.getHasMatch()[side] = hasMatch;
-				cTE.getTE().markDirty();
-				return stateIn.with(getSideProp()[side], hasMatch ? mode : getDefaultValue());
+				cTE.getTE().setChanged();
+				return stateIn.setValue(getSideProp()[side], hasMatch ? mode : getDefaultValue());
 			}
 		}catch(ClassCastException ignored){
 
@@ -155,18 +155,18 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving){
-		if(oldState.getBlock() == state.getBlock() || worldIn.isRemote){
+	public void onPlace(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving){
+		if(oldState.getBlock() == state.getBlock() || worldIn.isClientSide){
 			return;
 		}
 
 		//We want to allow conduits to choose their starting states based on surroundings
-		TileEntity te = worldIn.getTileEntity(pos);
+		TileEntity te = worldIn.getBlockEntity(pos);
 		if(te instanceof IConduitTE){
 			IConduitTE<T> cte = (IConduitTE<T>) te;
 			for(int i = 0; i < 6; i++){
-				Direction side = Direction.byIndex(i);
-				T mode = getValueForPlacement(worldIn, pos, side, worldIn.getTileEntity(pos.offset(side)));
+				Direction side = Direction.from3DDataValue(i);
+				T mode = getValueForPlacement(worldIn, pos, side, worldIn.getBlockEntity(pos.relative(side)));
 				cte.setData(i, cte.hasMatch(i, mode), mode);
 			}
 		}
@@ -175,11 +175,11 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
 		int index = 0;
-		TileEntity te = worldIn.getTileEntity(pos);
+		TileEntity te = worldIn.getBlockEntity(pos);
 		if(te instanceof IConduitTE){
 			IConduitTE<T> cte = (IConduitTE<T>) te;
 			for(int i = 0; i < 6; i++){
-				index |= evaluate(state.get(getSideProp()[i]), state, cte) ? 1 << i : 0;
+				index |= evaluate(state.getValue(getSideProp()[i]), state, cte) ? 1 << i : 0;
 			}
 			return getShapes()[index];
 		}
@@ -187,21 +187,21 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		//Handle wrenching
 		if(playerIn != null && hand != null){
-			ItemStack held = playerIn.getHeldItem(hand);
+			ItemStack held = playerIn.getItemInHand(hand);
 			if(held.isEmpty()){
 				return ActionResultType.PASS;
 			}
-			TileEntity te = worldIn.getTileEntity(pos);
+			TileEntity te = worldIn.getBlockEntity(pos);
 			if(ESConfig.isWrench(held) && te instanceof IConduitTE){
-				if(worldIn.isRemote){
+				if(worldIn.isClientSide){
 					return ActionResultType.SUCCESS;
 				}
 
@@ -209,7 +209,7 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 				IConduitTE<T> cte = (IConduitTE<T>) te;
 				int face;
 				final double margin = 0.005D;
-				Vector3d hitVec = hit.getHitVec().subtract(pos.getX(), pos.getY(), pos.getZ());
+				Vector3d hitVec = hit.getLocation().subtract(pos.getX(), pos.getY(), pos.getZ());
 				if(hitVec.y < SIZE - margin){
 					face = 0;//Down
 				}else if(hitVec.y - margin > 1F - (float) SIZE){
@@ -223,13 +223,13 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 				}else if(hitVec.z - margin > 1F - (float) SIZE){
 					face = 3;//South
 				}else{
-					face = hit.getFace().getIndex();
+					face = hit.getDirection().get3DDataValue();
 				}
 
 //				Property<T> prop = getSideProp()[face];
 				T newVal = cycleMode(cte.getModes()[face]);
 				cte.setData(face, cte.hasMatch(face, newVal), newVal);
-				onAdjusted(worldIn, pos, state, Direction.byIndex(face), newVal, cte);
+				onAdjusted(worldIn, pos, state, Direction.from3DDataValue(face), newVal, cte);
 				return ActionResultType.SUCCESS;
 			}
 		}
@@ -298,12 +298,12 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 			//Update values
 			matches[side] = newMatch;
 			modes[side] = mode;
-			te.markDirty();
+			te.setChanged();
 			//Check for updating blockstate in world
 			T curr = matches[side] ? modes[side] : defaul;
 			if(!curr.equals(prev)){
 				//Update the state in world without block update
-				te.getWorld().setBlockState(te.getPos(), prevState.with(block.getSideProp()[side], curr), 2);
+				te.getLevel().setBlock(te.getBlockPos(), prevState.setValue(block.getSideProp()[side], curr), 2);
 			}
 		}
 

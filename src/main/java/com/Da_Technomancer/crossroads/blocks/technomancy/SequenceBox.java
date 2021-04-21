@@ -32,7 +32,7 @@ import java.util.List;
 
 public class SequenceBox extends ContainerBlock implements IWireConnect{
 
-	private static final VoxelShape SHAPE = makeCuboidShape(0, 0, 0, 16, 8, 16);
+	private static final VoxelShape SHAPE = box(0, 0, 0, 16, 8, 16);
 
 	public SequenceBox(){
 		super(CRBlocks.getMetalProperty());
@@ -42,7 +42,7 @@ public class SequenceBox extends ContainerBlock implements IWireConnect{
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
@@ -54,15 +54,15 @@ public class SequenceBox extends ContainerBlock implements IWireConnect{
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
 		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
-		TileEntity te = worldIn.getTileEntity(pos);
-		if(!worldIn.isRemote && te instanceof SequenceBoxTileEntity){
+		TileEntity te = worldIn.getBlockEntity(pos);
+		if(!worldIn.isClientSide && te instanceof SequenceBoxTileEntity){
 			((SequenceBoxTileEntity) te).worldUpdate(blockIn);
 		}
 	}
 
 	@Override
-	public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-		TileEntity te = worldIn.getTileEntity(pos);
+	public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+		TileEntity te = worldIn.getBlockEntity(pos);
 		if (te instanceof SequenceBoxTileEntity) {
 			CircuitUtil.updateFromWorld(((SequenceBoxTileEntity) te).circHandler, this);
 		}
@@ -70,20 +70,20 @@ public class SequenceBox extends ContainerBlock implements IWireConnect{
 
 	@Nullable
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new SequenceBoxTileEntity();
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.sequence_box.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.sequence_box.trigger"));
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit){
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit){
 		TileEntity te;
-		if(!worldIn.isRemote && (te = worldIn.getTileEntity(pos)) instanceof SequenceBoxTileEntity){
+		if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) instanceof SequenceBoxTileEntity){
 			SequenceBoxTileEntity cte = (SequenceBoxTileEntity) te;
 			NetworkHooks.openGui((ServerPlayerEntity) player, cte, cte::encodeBuf);
 		}

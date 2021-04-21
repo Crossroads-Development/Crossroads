@@ -18,10 +18,10 @@ public class Keys{
 
 	protected static void init(){
 		try{
-			controlEnergy = new KeyBinding("key.control_energy", InputMappings.INPUT_INVALID.getKeyCode(), Crossroads.MODID);
-			controlPotential = new KeyBinding("key.control_potential", InputMappings.INPUT_INVALID.getKeyCode(), Crossroads.MODID);
-			controlStability = new KeyBinding("key.control_stability", InputMappings.INPUT_INVALID.getKeyCode(), Crossroads.MODID);
-			controlVoid = new KeyBinding("key.control_void", InputMappings.INPUT_INVALID.getKeyCode(), Crossroads.MODID);
+			controlEnergy = new KeyBinding("key.control_energy", InputMappings.UNKNOWN.getValue(), Crossroads.MODID);
+			controlPotential = new KeyBinding("key.control_potential", InputMappings.UNKNOWN.getValue(), Crossroads.MODID);
+			controlStability = new KeyBinding("key.control_stability", InputMappings.UNKNOWN.getValue(), Crossroads.MODID);
+			controlVoid = new KeyBinding("key.control_void", InputMappings.UNKNOWN.getValue(), Crossroads.MODID);
 			boost = new KeyBinding("key.prop_pack_boost", 341, Crossroads.MODID);//341 is Control
 			keysInitialized = true;
 		}catch(RuntimeException e){

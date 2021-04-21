@@ -47,7 +47,7 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements INamedC
 	}
 
 	private Direction getFacing(){
-		if(world == null){
+		if(level == null){
 			return Direction.NORTH;
 		}
 		if(facing == null){
@@ -55,30 +55,30 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements INamedC
 			if(!(state.getBlock() instanceof ReagentFilter)){
 				return Direction.NORTH;
 			}
-			facing = state.get(CRProperties.HORIZ_FACING);
+			facing = state.getValue(CRProperties.HORIZ_FACING);
 		}
 		return facing;
 	}
 
 	@Override
-	public void updateContainingBlockInfo(){
-		super.updateContainingBlockInfo();
+	public void clearCache(){
+		super.clearCache();
 		facing = null;
 		chemOpt.invalidate();
 		chemOpt = LazyOptional.of(() -> handler);
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
-		inventory = nbt.contains("inv") ? ItemStack.read(nbt.getCompound("inv")) : ItemStack.EMPTY;
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
+		inventory = nbt.contains("inv") ? ItemStack.of(nbt.getCompound("inv")) : ItemStack.EMPTY;
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		if(!inventory.isEmpty()){
-			nbt.put("inv", inventory.write(new CompoundNBT()));
+			nbt.put("inv", inventory.save(new CompoundNBT()));
 		}
 		return nbt;
 	}
@@ -116,7 +116,7 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements INamedC
 	}
 
 	private boolean transfer(ReagentMap toTrans, Direction side){
-		TileEntity te = world.getTileEntity(pos.offset(side));
+		TileEntity te = level.getBlockEntity(worldPosition.relative(side));
 		LazyOptional<IChemicalHandler> chemOpt;
 		if(toTrans.getTotalQty() <= 0 || te == null || !(chemOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
 			return false;
@@ -142,12 +142,12 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements INamedC
 	@Override
 	protected EnumTransferMode[] getModes(){
 		EnumTransferMode[] modes = {EnumTransferMode.OUTPUT, EnumTransferMode.INPUT, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE};
-		modes[getFacing().getIndex()] = EnumTransferMode.OUTPUT;
+		modes[getFacing().get3DDataValue()] = EnumTransferMode.OUTPUT;
 		return modes;
 	}
 
 	@Override
-	public int getSizeInventory(){
+	public int getContainerSize(){
 		return 1;
 	}
 
@@ -157,25 +157,25 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements INamedC
 	}
 
 	@Override
-	public ItemStack getStackInSlot(int index){
+	public ItemStack getItem(int index){
 		return inventory;
 	}
 
 	@Override
-	public ItemStack decrStackSize(int index, int count){
+	public ItemStack removeItem(int index, int count){
 		if(count >= 1){
-			return removeStackFromSlot(index);
+			return removeItemNoUpdate(index);
 		}else{
 			return ItemStack.EMPTY;
 		}
 	}
 
 	@Override
-	public ItemStack removeStackFromSlot(int index){
+	public ItemStack removeItemNoUpdate(int index){
 		if(index == 0){
 			ItemStack removed = inventory;
 			inventory = ItemStack.EMPTY;
-			markDirty();
+			setChanged();
 			return removed;
 		}else{
 			return ItemStack.EMPTY;
@@ -183,32 +183,32 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements INamedC
 	}
 
 	@Override
-	public void setInventorySlotContents(int index, ItemStack stack){
+	public void setItem(int index, ItemStack stack){
 		if(index == 0){
 			inventory = stack;
-			markDirty();
+			setChanged();
 		}
 	}
 
 	@Override
-	public int getInventoryStackLimit(){
+	public int getMaxStackSize(){
 		return 1;
 	}
 
 	@Override
-	public boolean isUsableByPlayer(PlayerEntity player){
-		return world.getTileEntity(pos) == this && player.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5F) <= 64;
+	public boolean stillValid(PlayerEntity player){
+		return level.getBlockEntity(worldPosition) == this && player.distanceToSqr(worldPosition.getX() + 0.5D, worldPosition.getY() + 0.5D, worldPosition.getZ() + 0.5F) <= 64;
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
+	public boolean canPlaceItem(int index, ItemStack stack){
 		return index == 0 && stack.getItem() instanceof AbstractGlassware;
 	}
 
 	@Override
-	public void clear(){
+	public void clearContent(){
 		inventory = ItemStack.EMPTY;
-		markDirty();
+		setChanged();
 	}
 
 	@Override
@@ -219,6 +219,6 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements INamedC
 	@Nullable
 	@Override
 	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
-		return new ReagentFilterContainer(id, playerInv, new PacketBuffer(Unpooled.buffer()).writeBlockPos(pos));
+		return new ReagentFilterContainer(id, playerInv, new PacketBuffer(Unpooled.buffer()).writeBlockPos(worldPosition));
 	}
 }

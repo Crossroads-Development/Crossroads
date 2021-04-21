@@ -57,7 +57,7 @@ public class BlockSalt extends FallingBlock{
 	}
 	
 	protected BlockSalt(){
-		super(Properties.create(Material.SAND).harvestTool(ToolType.SHOVEL).harvestLevel(0).hardnessAndResistance(.5F).sound(SoundType.SAND).tickRandomly());
+		super(Properties.of(Material.SAND).harvestTool(ToolType.SHOVEL).harvestLevel(0).strength(.5F).sound(SoundType.SAND).randomTicks());
 		String name = "block_salt";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
@@ -65,12 +65,12 @@ public class BlockSalt extends FallingBlock{
 	}
 
 	@Override
-	public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn){
-		if(!worldIn.isRemote && (entityIn instanceof SlimeEntity || entityIn instanceof CreeperEntity)){
-			entityIn.attackEntityFrom(SALT_DAMAGE, 20);
+	public void stepOn(World worldIn, BlockPos pos, Entity entityIn){
+		if(!worldIn.isClientSide && (entityIn instanceof SlimeEntity || entityIn instanceof CreeperEntity)){
+			entityIn.hurt(SALT_DAMAGE, 20);
 		}
 
-		super.onEntityWalk(worldIn, pos, entityIn);
+		super.stepOn(worldIn, pos, entityIn);
 	}
 	
 	public static boolean salinate(World worldIn, BlockPos pos){
@@ -78,28 +78,28 @@ public class BlockSalt extends FallingBlock{
 		Block killBlock = killState.getBlock();
 		BlockState resultState = killState;
 		
-		if(killBlock.isIn(Tags.Blocks.DIRT) && killBlock != Blocks.COARSE_DIRT){
+		if(killBlock.is(Tags.Blocks.DIRT) && killBlock != Blocks.COARSE_DIRT){
 			//Kill dirt, grass, etc
-			resultState = Blocks.COARSE_DIRT.getDefaultState();
+			resultState = Blocks.COARSE_DIRT.defaultBlockState();
 		}else if(killBlock instanceof BushBlock){
 			//Kill plant life
-			resultState = Blocks.DEAD_BUSH.getDefaultState();
+			resultState = Blocks.DEAD_BUSH.defaultBlockState();
 		}else if(killBlock == Blocks.FARMLAND){
 			//Trample farmland
-			resultState = Blocks.COARSE_DIRT.getDefaultState();
-		}else if(killState.isIn(BlockTags.NYLIUM)){
+			resultState = Blocks.COARSE_DIRT.defaultBlockState();
+		}else if(killState.is(BlockTags.NYLIUM)){
 			//Kill nylium
-			resultState = Blocks.NETHERRACK.getDefaultState();
+			resultState = Blocks.NETHERRACK.defaultBlockState();
 		}else if(coralMap.containsKey(killBlock)){
 			//Kill coral
-			resultState = coralMap.get(killBlock).getDefaultState();
+			resultState = coralMap.get(killBlock).defaultBlockState();
 		}else if(killBlock instanceof FertileSoil){
 			//Ruin fertile soil
-			resultState = Blocks.COARSE_DIRT.getDefaultState();
+			resultState = Blocks.COARSE_DIRT.defaultBlockState();
 		}
 		
 		if(killState != resultState){
-			worldIn.setBlockState(pos, resultState);
+			worldIn.setBlockAndUpdate(pos, resultState);
 			return true;
 		}
 		return false;
@@ -107,13 +107,13 @@ public class BlockSalt extends FallingBlock{
 
 	@Override
 	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand){
-		if(worldIn.isRemote){
+		if(worldIn.isClientSide){
 			return;
 		}
 		super.tick(state, worldIn, pos, rand);
 		
 		for(int i = 0; i < 10; ++i){
-			BlockPos killPos = pos.add(rand.nextInt(5) - 2, rand.nextInt(3) - 1, rand.nextInt(5) - 2);
+			BlockPos killPos = pos.offset(rand.nextInt(5) - 2, rand.nextInt(3) - 1, rand.nextInt(5) - 2);
 			salinate(worldIn, killPos);
 		}
 	}
@@ -126,7 +126,7 @@ public class BlockSalt extends FallingBlock{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.salt_block"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.salt_block.quip").setStyle(MiscUtil.TT_QUIP));
 	}

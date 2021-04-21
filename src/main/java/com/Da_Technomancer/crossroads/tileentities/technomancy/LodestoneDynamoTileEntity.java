@@ -48,10 +48,10 @@ public class LodestoneDynamoTileEntity extends ModuleTE{
 
 		int power = CRConfig.lodestoneDynamo.get();
 		int feCost = power * CRConfig.electPerJoule.get();
-		if(!world.isRemote && axleHandler.axis != null && power > 0 && fe >= feCost){
+		if(!level.isClientSide && axleHandler.axis != null && power > 0 && fe >= feCost){
 			fe -= feCost;
-			axleHandler.addEnergy(power * RotaryUtil.getCCWSign(getBlockState().get(CRProperties.HORIZ_FACING)), true);
-			markDirty();
+			axleHandler.addEnergy(power * RotaryUtil.getCCWSign(getBlockState().getValue(CRProperties.HORIZ_FACING)), true);
+			setChanged();
 		}
 	}
 
@@ -61,8 +61,8 @@ public class LodestoneDynamoTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void updateContainingBlockInfo(){
-		super.updateContainingBlockInfo();
+	public void clearCache(){
+		super.clearCache();
 		axleOpt.invalidate();
 		axleOpt = LazyOptional.of(this::createAxleHandler);
 		feOpt.invalidate();
@@ -70,22 +70,22 @@ public class LodestoneDynamoTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		fe = nbt.getInt("charge");
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putInt("charge", fe);
 
 		return nbt;
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		feOpt.invalidate();
 	}
 
@@ -94,10 +94,10 @@ public class LodestoneDynamoTileEntity extends ModuleTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.AXLE_CAPABILITY && (side == null || side == getBlockState().get(CRProperties.HORIZ_FACING))){
+		if(cap == Capabilities.AXLE_CAPABILITY && (side == null || side == getBlockState().getValue(CRProperties.HORIZ_FACING))){
 			return (LazyOptional<T>) axleOpt;
 		}
-		if(cap == CapabilityEnergy.ENERGY && (side == null || side == getBlockState().get(CRProperties.HORIZ_FACING).getOpposite())){
+		if(cap == CapabilityEnergy.ENERGY && (side == null || side == getBlockState().getValue(CRProperties.HORIZ_FACING).getOpposite())){
 			return (LazyOptional<T>) feOpt;
 		}
 		return super.getCapability(cap, side);
@@ -110,7 +110,7 @@ public class LodestoneDynamoTileEntity extends ModuleTE{
 			maxReceive = Math.min(maxReceive, CHARGE_CAPACITY - fe);
 			if(!simulate){
 				fe += maxReceive;
-				markDirty();
+				setChanged();
 			}
 
 			return maxReceive;

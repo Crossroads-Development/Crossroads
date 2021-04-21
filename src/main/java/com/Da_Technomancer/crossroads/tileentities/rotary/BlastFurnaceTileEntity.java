@@ -88,8 +88,8 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 	private void updateWorldState(boolean active){
 		BlockState worldState = getBlockState();
 		if(worldState.getBlock() == CRBlocks.blastFurnace){
-			if(worldState.get(CRProperties.ACTIVE) != active){
-				world.setBlockState(pos, worldState.with(CRProperties.ACTIVE, active));
+			if(worldState.getValue(CRProperties.ACTIVE) != active){
+				level.setBlockAndUpdate(worldPosition, worldState.setValue(CRProperties.ACTIVE, active));
 			}
 		}
 	}
@@ -98,7 +98,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 	public void tick(){
 		super.tick();
 
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 
@@ -106,7 +106,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 		if(carbon < CARBON_LIMIT && carbonAvailable != 0 && carbonAvailable + carbon <= CARBON_LIMIT){
 			carbon += carbonAvailable;
 			inventory[1].shrink(1);
-			markDirty();
+			setChanged();
 		}
 
 		if(Math.abs(axleHandler.getSpeed()) < REQUIRED_SPD){
@@ -115,7 +115,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 			return;
 		}
 
-		Optional<BlastFurnaceRec> recOpt = world.getRecipeManager().getRecipe(CRRecipes.BLAST_FURNACE_TYPE, this, world);
+		Optional<BlastFurnaceRec> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.BLAST_FURNACE_TYPE, this, level);
 		if(!recOpt.isPresent()){
 			progress = 0;
 			updateWorldState(false);
@@ -132,7 +132,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 		progress++;
 		axleHandler.addEnergy(-POWER, false);
 		updateWorldState(true);
-		markDirty();
+		setChanged();
 
 		if(progress >= REQUIRED_PRG){
 			progress = 0;
@@ -161,26 +161,26 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
+	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction){
 		return index == 2;
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return (index == 0 && world.getRecipeManager().getRecipe(CRRecipes.BLAST_FURNACE_TYPE, new Inventory(stack), world).isPresent()) || (index == 1 && getCarbonValue(stack) != 0);
+	public boolean canPlaceItem(int index, ItemStack stack){
+		return (index == 0 && level.getRecipeManager().getRecipeFor(CRRecipes.BLAST_FURNACE_TYPE, new Inventory(stack), level).isPresent()) || (index == 1 && getCarbonValue(stack) != 0);
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putInt("prog", progress);
 		nbt.putInt("carbon", carbon);
 		return nbt;
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		progress = nbt.getInt("prog");
 		carbon = nbt.getInt("carbon");
 	}

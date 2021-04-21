@@ -138,14 +138,14 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 		}
 
 		@Override
-		public void read(BlockState state, CompoundNBT nbt){
-			super.read(state, nbt);
+		public void load(BlockState state, CompoundNBT nbt){
+			super.load(state, nbt);
 			readData(nbt);
 		}
 
 		@Override
-		public CompoundNBT write(CompoundNBT nbt){
-			nbt = super.write(nbt);
+		public CompoundNBT save(CompoundNBT nbt){
+			nbt = super.save(nbt);
 			writeData(nbt);
 			return nbt;
 		}
@@ -188,11 +188,11 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 		 */
 		@Override
 		public void tick(){
-			World world = owner.getWorld();
-			if(world.isRemote()){
+			World world = owner.getLevel();
+			if(world.isClientSide()){
 				//Play sounds
 				if(rendered.length != 0 && world.getGameTime() % FluxUtil.FLUX_TIME == 0 && CRConfig.fluxSounds.get()){
-					CRSounds.playSoundClientLocal(world, owner.getPos(), CRSounds.FLUX_TRANSFER, SoundCategory.BLOCKS, 0.4F, 1F);
+					CRSounds.playSoundClientLocal(world, owner.getBlockPos(), CRSounds.FLUX_TRANSFER, SoundCategory.BLOCKS, 0.4F, 1F);
 				}
 				return;
 			}
@@ -209,12 +209,12 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 						flux += transferResult.getLeft();
 						if(!Arrays.equals(transferResult.getRight(), rendered)){
 							rendered = transferResult.getRight();
-							CRPackets.sendPacketAround(world, owner.getPos(), new SendIntArrayToClient(RENDER_ID, rendered, owner.getPos()));
+							CRPackets.sendPacketAround(world, owner.getBlockPos(), new SendIntArrayToClient(RENDER_ID, rendered, owner.getBlockPos()));
 						}
 					}else{
 						fluxTransferHandler.accept(toTransfer);
 					}
-					owner.markDirty();
+					owner.setChanged();
 					shutDown = FluxUtil.checkFluxOverload(this);
 				}
 			}
@@ -241,12 +241,12 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 
 		@Override
 		public void addFlux(int deltaFlux){
-			if(owner.getWorld().getGameTime() == lastTick){
+			if(owner.getLevel().getGameTime() == lastTick){
 				flux += deltaFlux;
 			}else{
 				queuedFlux += deltaFlux;
 			}
-			owner.markDirty();
+			owner.setChanged();
 		}
 
 		@Override

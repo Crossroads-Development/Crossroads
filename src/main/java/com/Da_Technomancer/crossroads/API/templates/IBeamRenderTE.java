@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.API.templates;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.CRConfig;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -25,7 +24,7 @@ public interface IBeamRenderTE extends IInfoTE{
 				if(!check.isEmpty()){
 					output = true;
 					EnumBeamAlignments.getAlignment(check).discover(player, true);
-					String dir = Direction.byIndex(i).toString();
+					String dir = Direction.from3DDataValue(i).toString();
 					dir = Character.toUpperCase(dir.charAt(0)) + dir.substring(1);
 					Color col = check.getRGB();
 					chat.add(new TranslationTextComponent("tt.crossroads.meter.beam", dir, check.toString(), EnumBeamAlignments.getAlignment(check).getLocalName(check.getVoid() != 0), col.getRed(), col.getGreen(), col.getBlue(), check.getEnergy(), check.getPotential(), check.getStability(), check.getVoid(), check.getPower()));

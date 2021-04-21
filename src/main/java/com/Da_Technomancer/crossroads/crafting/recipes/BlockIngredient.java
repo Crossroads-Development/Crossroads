@@ -126,9 +126,9 @@ public class BlockIngredient implements Predicate<BlockState>{
 
 	private static IBlockList readIngr(JsonObject o){
 		if(o.has("tag")){
-			return new TagList(BlockTags.makeWrapperTag(JSONUtils.getString(o, "tag")));
+			return new TagList(BlockTags.bind(JSONUtils.getAsString(o, "tag")));
 		}else if(o.has("block")){
-			return new SingleList(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(JSONUtils.getString(o, "block"))));
+			return new SingleList(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(JSONUtils.getAsString(o, "block"))));
 		}else{
 			throw new JsonParseException("No value defined in BlockIngredient");
 		}
@@ -175,7 +175,7 @@ public class BlockIngredient implements Predicate<BlockState>{
 
 		@Override
 		public Collection<Block> getMatched(){
-			return tag.getAllElements();
+			return tag.getValues();
 		}
 	}
 

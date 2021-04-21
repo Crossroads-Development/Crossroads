@@ -52,17 +52,17 @@ public class FluxSinkTileEntity extends IFluxLink.FluxHelper{
 	@Override
 	public void tick(){
 		super.tick();
-		if(world.isRemote){
+		if(level.isClientSide){
 			//Create client-side entropy effects
 			//By doing this on the individual clients, we avoid needing extra packets
-			if(world.getGameTime() % FluxUtil.FLUX_TIME == 0){
+			if(level.getGameTime() % FluxUtil.FLUX_TIME == 0){
 				//Sound
-				CRSounds.playSoundClientLocal(world, pos, CRSounds.FLUX_TRANSFER, SoundCategory.BLOCKS, 0.4F, 1F);
+				CRSounds.playSoundClientLocal(level, worldPosition, CRSounds.FLUX_TRANSFER, SoundCategory.BLOCKS, 0.4F, 1F);
 				//Rendered arcs
-				if(world.getGameTime() % (FluxUtil.FLUX_TIME * 4) == 0){
+				if(level.getGameTime() % (FluxUtil.FLUX_TIME * 4) == 0){
 					if(getRunDuration() > STARTUP_TIME){
-						renderPortals[0] = world.rand.nextInt(8);
-						renderPortals[1] = world.rand.nextInt(8);
+						renderPortals[0] = level.random.nextInt(8);
+						renderPortals[1] = level.random.nextInt(8);
 						if(renderPortals[0] == renderPortals[1]){
 							renderPortals[1] = (renderPortals[0] + 1) % 8;
 						}
@@ -88,34 +88,34 @@ public class FluxSinkTileEntity extends IFluxLink.FluxHelper{
 	 * @return Gets the time since this started running, or -1 if this is not running
 	 */
 	public float getRunDuration(){
-		return running ? world.getGameTime() - runningStartTime : -1;
+		return running ? level.getGameTime() - runningStartTime : -1;
 	}
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){
-		return new AxisAlignedBB(pos.add(-3, -3, -3), pos.add(4, 4, 4));
+		return new AxisAlignedBB(worldPosition.offset(-3, -3, -3), worldPosition.offset(4, 4, 4));
 	}
 
 	private boolean isRunning(){
 		//We cache the value of whether this is running, and only recheck once every 5 seconds
-		if(world.getGameTime() % 100 == 0){
+		if(level.getGameTime() % 100 == 0){
 			boolean prevRunning = running;
 			running = false;
 			//expects a beacon below it, with any number of air gaps
-			BlockPos.Mutable mutPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ());
+			BlockPos.Mutable mutPos = new BlockPos.Mutable(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
 			do{
 				mutPos.move(Direction.DOWN);
-				BlockState state = world.getBlockState(mutPos);
+				BlockState state = level.getBlockState(mutPos);
 				if(state.getBlock() == Blocks.BEACON){
 					running = true;
-				}else if(!canBeaconBeamPass(state, world, mutPos)){
+				}else if(!canBeaconBeamPass(state, level, mutPos)){
 					return false;
 				}
 			}while(!running && mutPos.getY() > 1);
 			if(prevRunning != running){
 				//Notify the clients
-				CRPackets.sendPacketAround(world, pos, new SendLongToClient(1, running ? world.getGameTime() : 0, pos));
-				markDirty();
+				CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(1, running ? level.getGameTime() : 0, worldPosition));
+				setChanged();
 			}
 		}
 		return running;
@@ -132,20 +132,20 @@ public class FluxSinkTileEntity extends IFluxLink.FluxHelper{
 	private static boolean canBeaconBeamPass(BlockState state, World world, BlockPos pos){
 		//We don't actually know where the beacon is.
 		//pos.down() is an incorrect value, but all current implementations ignore it (and should have sanity checking anyway)
-		float[] colMult = state.getBeaconColorMultiplier(world, pos, pos.down());
-		return colMult != null || state.getOpacity(world, pos) < 15 || state.getBlock() == Blocks.BEDROCK;
+		float[] colMult = state.getBeaconColorMultiplier(world, pos, pos.below());
+		return colMult != null || state.getLightBlock(world, pos) < 15 || state.getBlock() == Blocks.BEDROCK;
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		running = nbt.getBoolean("running");
 		runningStartTime = nbt.getLong("run_time");
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putBoolean("running", running);
 		nbt.putLong("run_time", runningStartTime);
 		return nbt;

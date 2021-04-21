@@ -38,11 +38,11 @@ public class RotaryDrillRenderer extends TileEntityRenderer<RotaryDrillTileEntit
 		matrix.translate(0.5D, 0.5D, 0.5D);
 
 		//Rotate to face dir
-		Direction dir = state.get(ESProperties.FACING);
-		matrix.rotate(dir.getRotation());
+		Direction dir = state.getValue(ESProperties.FACING);
+		matrix.mulPose(dir.getRotation());
 
 		//Rotate w/ gear angle
-		matrix.rotate(Vector3f.YP.rotationDegrees(axle.orElseThrow(NullPointerException::new).getAngle(partialTicks) * (float) RotaryUtil.getCCWSign(dir)));
+		matrix.mulPose(Vector3f.YP.rotationDegrees(axle.orElseThrow(NullPointerException::new).getAngle(partialTicks) * (float) RotaryUtil.getCCWSign(dir)));
 
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.DRILL_TEXTURE);
 
@@ -50,7 +50,7 @@ public class RotaryDrillRenderer extends TileEntityRenderer<RotaryDrillTileEntit
 		int[] col = {255, 255, te.isGolden() ? 38 : 255, 255};
 
 		//Render the te
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
+		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
 
 		//Grid aligned layers
 		renderLayer(builder, matrix, -8, 10, sprite, col, combinedLight);
@@ -58,7 +58,7 @@ public class RotaryDrillRenderer extends TileEntityRenderer<RotaryDrillTileEntit
 		renderLayer(builder, matrix, 4, 2, sprite, col, combinedLight);
 
 		//45* aligned layers
-		matrix.rotate(Vector3f.YP.rotationDegrees(45));
+		matrix.mulPose(Vector3f.YP.rotationDegrees(45));
 		renderLayer(builder, matrix, -5, 8, sprite, col, combinedLight);
 		renderLayer(builder, matrix, 1, 4, sprite, col, combinedLight);
 	}
@@ -75,11 +75,11 @@ public class RotaryDrillRenderer extends TileEntityRenderer<RotaryDrillTileEntit
 		float start = -width / 2;
 		float end = width / 2;
 
-		float uSt = sprite.getMinU();
-		float uEn = sprite.getInterpolatedU(texWidth);
-		float uHe = sprite.getInterpolatedU(texHeight);
-		float vSt = sprite.getMinV();
-		float vEn = sprite.getInterpolatedV(texWidth);
+		float uSt = sprite.getU0();
+		float uEn = sprite.getU(texWidth);
+		float uHe = sprite.getU(texHeight);
+		float vSt = sprite.getV0();
+		float vEn = sprite.getV(texWidth);
 //		float vHe = sprite.getInterpolatedV(texHeight);
 
 		//Top

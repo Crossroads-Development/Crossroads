@@ -29,14 +29,14 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 	private static final double WIND_USE = 0.4;
 
 	public RecallDevice(){
-		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
+		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "recall_device";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(getWindLevel(stack)), CRConfig.formatVal(getMaxWind())));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.recall_device.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.recall_device.debuff"));
@@ -51,7 +51,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 			}else{
 				tooltip.add(new TranslationTextComponent("tt.crossroads.recall_device.config", limit));
 			}
-			CompoundNBT nbt = stack.getOrCreateChildTag("recall_data");
+			CompoundNBT nbt = stack.getOrCreateTagElement("recall_data");
 			long timeElapsed;
 			if(nbt.contains("timestamp") && (timeElapsed = worldIn.getGameTime() - nbt.getLong("timestamp")) < limit * 20){
 				tooltip.add(new TranslationTextComponent("tt.crossroads.recall_device.current", (int) (timeElapsed / 20)));
@@ -72,42 +72,42 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 		//Hunger
 		//Velocity
 
-		data.putLong("timestamp", player.world.getGameTime());
+		data.putLong("timestamp", player.level.getGameTime());
 		String playerName = player.getGameProfile().getName();
 		data.putString("username", playerName == null ? "NULL" : playerName);
-		data.putString("dimension", player.world.getDimensionKey().getLocation().toString());//World registry key is used
-		data.putDouble("pos_x", player.getPosX());
-		data.putDouble("pos_y", player.getPosY());
-		data.putDouble("pos_z", player.getPosZ());
-		data.putLong("position", player.getPosition().toLong());
-		data.putFloat("yaw", player.getYaw(1F));
-		data.putFloat("yaw_head", player.getRotationYawHead());
-		data.putFloat("pitch", player.getPitch(1F));
+		data.putString("dimension", player.level.dimension().location().toString());//World registry key is used
+		data.putDouble("pos_x", player.getX());
+		data.putDouble("pos_y", player.getY());
+		data.putDouble("pos_z", player.getZ());
+		data.putLong("position", player.blockPosition().asLong());
+		data.putFloat("yaw", player.getViewYRot(1F));
+		data.putFloat("yaw_head", player.getYHeadRot());
+		data.putFloat("pitch", player.getViewXRot(1F));
 		data.putFloat("health", player.getHealth());
-		data.putInt("hunger", player.getFoodStats().getFoodLevel());
-		data.putFloat("saturation", player.getFoodStats().getSaturationLevel());
-		data.putDouble("vel_x", player.getMotion().getX());
-		data.putDouble("vel_y", player.getMotion().getY());
-		data.putDouble("vel_z", player.getMotion().getZ());
+		data.putInt("hunger", player.getFoodData().getFoodLevel());
+		data.putFloat("saturation", player.getFoodData().getSaturationLevel());
+		data.putDouble("vel_x", player.getDeltaMovement().x());
+		data.putDouble("vel_y", player.getDeltaMovement().y());
+		data.putDouble("vel_z", player.getDeltaMovement().z());
 
-		if(player.world.isRemote()){
+		if(player.level.isClientSide()){
 			//Player only sound for setting a position
-			player.playSound(SoundEvents.BLOCK_BELL_USE, 2F, 1F);
+			player.playSound(SoundEvents.BELL_BLOCK, 2F, 1F);
 		}
 	}
 
 	private void recall(CompoundNBT data, PlayerEntity player, ItemStack held){
 		if(!data.contains("timestamp")){
-			if(player.world.isRemote){
+			if(player.level.isClientSide){
 				MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.recall_device.none"));
 			}
 			return;//No data stored
 		}
 		//Check time delay and that it's the same player
-		long delay = player.world.getGameTime() - data.getLong("timestamp");
+		long delay = player.level.getGameTime() - data.getLong("timestamp");
 		int limit = CRConfig.recallTimeLimit.get() * 20;//In ticks
 		if(limit >= 0 && delay > limit){
-			if(player.world.isRemote){
+			if(player.level.isClientSide){
 				MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.recall_device.expired"));
 			}
 			return;//Too old- do nothing
@@ -116,7 +116,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 		double wind = getWindLevel(held);
 
 		if(wind < WIND_USE){
-			if(player.world.isRemote){
+			if(player.level.isClientSide){
 				MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.recall_device.not_wound"));
 			}
 			return;//Insufficiently wound
@@ -126,7 +126,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 
 		String playerName = player.getGameProfile().getName();
 		if(playerName == null || !playerName.equals(data.getString("username"))){
-			if(player.world.isRemote){
+			if(player.level.isClientSide){
 				MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.recall_device.wrong_player"));
 			}
 			return;//Wrong player or null profile
@@ -138,12 +138,12 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 			MiscUtil.setPlayerFood(player, data.getInt("hunger"), data.getFloat("saturation"));
 		}
 
-		if(!player.world.isRemote){
+		if(!player.level.isClientSide){
 			ServerPlayerEntity playerServ = (ServerPlayerEntity) player;
 			ResourceLocation targetDimension = new ResourceLocation(data.getString("dimension"));
 			ServerWorld targetWorld;//World we are recalling to. Almost always the same as current dimension. Null if something went wrong
-			if(targetDimension.equals(player.world.getDimensionKey().getLocation())){
-				targetWorld = (ServerWorld) player.world;
+			if(targetDimension.equals(player.level.dimension().location())){
+				targetWorld = (ServerWorld) player.level;
 			}else{
 				try{
 					targetWorld = MiscUtil.getWorld(MiscUtil.getWorldKey(targetDimension, null), playerServ.server);
@@ -151,15 +151,15 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 					targetWorld = null;
 				}
 			}
-			if(targetWorld == player.world){
-				playerServ.connection.setPlayerLocation(data.getDouble("pos_x"), data.getDouble("pos_y"), data.getDouble("pos_z"), data.getFloat("yaw"), data.getFloat("pitch"));
+			if(targetWorld == player.level){
+				playerServ.connection.teleport(data.getDouble("pos_x"), data.getDouble("pos_y"), data.getDouble("pos_z"), data.getFloat("yaw"), data.getFloat("pitch"));
 			}else if(targetWorld != null){
-				playerServ.teleport(targetWorld, data.getDouble("pos_x"), data.getDouble("pos_y"), data.getDouble("pos_z"), data.getFloat("yaw"), data.getFloat("pitch"));
+				playerServ.teleportTo(targetWorld, data.getDouble("pos_x"), data.getDouble("pos_y"), data.getDouble("pos_z"), data.getFloat("yaw"), data.getFloat("pitch"));
 			}
 		}
 
-		player.setRotationYawHead(data.getFloat("yaw_head"));
-		player.setMotion(new Vector3d(data.getDouble("vel_x"), data.getDouble("vel_y"), data.getDouble("vel_z")));
+		player.setYHeadRot(data.getFloat("yaw_head"));
+		player.setDeltaMovement(new Vector3d(data.getDouble("vel_x"), data.getDouble("vel_y"), data.getDouble("vel_z")));
 
 		applySickness(player, delay, limit);
 	}
@@ -168,40 +168,40 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 		//Penalty of nausea (time scaling with delay), and poison for very long delays
 		//Durations are in ticks
 		long poisonStTime = delayLimit / 2L;
-		player.addPotionEffect(new EffectInstance(Effects.NAUSEA, (int) MathHelper.clampedLerp(20 * 5, 20 * 15, (float) delay / poisonStTime), 0));
+		player.addEffect(new EffectInstance(Effects.CONFUSION, (int) MathHelper.clampedLerp(20 * 5, 20 * 15, (float) delay / poisonStTime), 0));
 		if(delay > poisonStTime){
 			//For unlimited delay config setting, a constant 10 second poison is applied instead of basing it on the portion of the delay limit expended
 			int poisonDuration = delayLimit < 0 ? 20 * 10 : (int) MathHelper.clampedLerp(20 * 5, 20 * 30, (float) (delay - poisonStTime) / (delayLimit - poisonStTime));
-			player.addPotionEffect(new EffectInstance(Effects.POISON, poisonDuration, 0));
+			player.addEffect(new EffectInstance(Effects.POISON, poisonDuration, 0));
 		}
 
 		//Also plays sound
-		player.world.playSound(null, player.getPosition(), SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.PLAYERS, 1F, 1F);
+		player.level.playSound(null, player.blockPosition(), SoundEvents.BELL_RESONATE, SoundCategory.PLAYERS, 1F, 1F);
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand){
+	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand hand){
 
 		//If shift right clicking, set current data
 		//If normal right clicking, revert to last save and set current position as data
 		//Apply sickness based on time between uses
 
-		ItemStack held = playerIn.getHeldItem(hand);
-		CompoundNBT nbt = held.getOrCreateChildTag("recall_data");
+		ItemStack held = playerIn.getItemInHand(hand);
+		CompoundNBT nbt = held.getOrCreateTagElement("recall_data");
 
 		CompoundNBT newStored = new CompoundNBT();
 		storeData(newStored, playerIn);
 
-		if(!playerIn.isSneaking()){
+		if(!playerIn.isShiftKeyDown()){
 			//World sound for recalling
 			//Played at source and destination
-			worldIn.playSound(null, playerIn.getPosition(), SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.PLAYERS, 1F, 1F);
+			worldIn.playSound(null, playerIn.blockPosition(), SoundEvents.BELL_RESONATE, SoundCategory.PLAYERS, 1F, 1F);
 			recall(nbt, playerIn, held);//Will do nothing if over time limit, wrong player, or no data stored
 		}
 
 		held.getTag().put("recall_data", newStored);
 
-		return ActionResult.resultSuccess(held);
+		return ActionResult.success(held);
 	}
 
 	@Override
@@ -210,8 +210,8 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items){
-		if(isInGroup(group)){
+	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items){
+		if(allowdedIn(group)){
 			items.add(new ItemStack(this, 1));
 			ItemStack stack = new ItemStack(this, 1);
 			setWindLevel(stack, getMaxWind());

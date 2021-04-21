@@ -38,8 +38,8 @@ public class SendStringToServer extends ServerPacket{
 
 	@Override
 	protected void run(@Nullable ServerPlayerEntity serverPlayerEntity){
-		if(serverPlayerEntity != null && serverPlayerEntity.world != null){
-			TileEntity te = serverPlayerEntity.world.getTileEntity(pos);
+		if(serverPlayerEntity != null && serverPlayerEntity.level != null){
+			TileEntity te = serverPlayerEntity.level.getBlockEntity(pos);
 
 			if(te instanceof IStringReceiver){
 				((IStringReceiver) te).receiveString(id, message, serverPlayerEntity);

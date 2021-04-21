@@ -23,7 +23,7 @@ public class SpringGun extends ShootableItem implements WindingTableTileEntity.I
 	private static final double MIN_SPEED = 1;
 
 	protected SpringGun(){
-		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
+		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "spring_gun";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
@@ -35,53 +35,53 @@ public class SpringGun extends ShootableItem implements WindingTableTileEntity.I
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand){
-		ItemStack held = playerIn.getHeldItem(hand);
+	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand hand){
+		ItemStack held = playerIn.getItemInHand(hand);
 		double wind = getWindLevel(held);
-		ItemStack ammo = playerIn.findAmmo(held);
+		ItemStack ammo = playerIn.getProjectile(held);
 		if(ammo.isEmpty() && playerIn.isCreative()){
 			ammo = new ItemStack(Items.ARROW, 1);
 		}
 		if(wind > MIN_SPEED && !ammo.isEmpty() && ammo.getItem() instanceof ArrowItem){
-			if(!worldIn.isRemote){
+			if(!worldIn.isClientSide){
 				//Shoot
 				AbstractArrowEntity arrow = ((ArrowItem) ammo.getItem()).createArrow(worldIn, ammo, playerIn);
 				float speed = (float) wind * 0.5F;
-				arrow.func_234612_a_(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, speed, 0.2F);
+				arrow.shootFromRotation(playerIn, playerIn.xRot, playerIn.yRot, 0.0F, speed, 0.2F);
 				//Despite the method being named setDamage, it actually sets a damage multiplier
 				//The actual damage dealt of an arrow is (damage * speed)
 				float damageMult = calcDamage(wind) / speed;
-				arrow.setDamage(damageMult);
+				arrow.setBaseDamage(damageMult);
 				//Don't set critical, as that changes the damage dealt
-				arrow.setHitSound(SoundEvents.ITEM_CROSSBOW_HIT);
+				arrow.setSoundEvent(SoundEvents.CROSSBOW_HIT);
 				arrow.setShotFromCrossbow(true);
 				if(playerIn.isCreative()){
-					arrow.pickupStatus = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
+					arrow.pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
 				}
-				worldIn.addEntity(arrow);
+				worldIn.addFreshEntity(arrow);
 
 				//Consume ammo
-				if(!playerIn.abilities.isCreativeMode){
+				if(!playerIn.abilities.instabuild){
 					ammo.shrink(1);
 				}
 
-				worldIn.playSound(playerIn, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.ITEM_CROSSBOW_SHOOT, SoundCategory.PLAYERS, 1F, 1F);//Play sound for other players
+				worldIn.playSound(playerIn, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.CROSSBOW_SHOOT, SoundCategory.PLAYERS, 1F, 1F);//Play sound for other players
 			}
 
-			playerIn.playSound(SoundEvents.ITEM_CROSSBOW_SHOOT, SoundCategory.PLAYERS, 1F, 1F);//Play sound on the client
-			if(!playerIn.abilities.isCreativeMode){
+			playerIn.playNotifySound(SoundEvents.CROSSBOW_SHOOT, SoundCategory.PLAYERS, 1F, 1F);//Play sound on the client
+			if(!playerIn.abilities.instabuild){
 				//Return the discharged weapon
 				setWindLevel(held, 0);
 			}
-			return ActionResult.resultSuccess(held);
+			return ActionResult.success(held);
 		}
 
-		return ActionResult.resultFail(held);
+		return ActionResult.fail(held);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		double wind = getWindLevel(stack);
 		double maxWind = getMaxWind();
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(wind), CRConfig.formatVal(maxWind)));
@@ -96,23 +96,23 @@ public class SpringGun extends ShootableItem implements WindingTableTileEntity.I
 	}
 
 	@Override
-	public Predicate<ItemStack> getInventoryAmmoPredicate(){
-		return ARROWS;
+	public Predicate<ItemStack> getAllSupportedProjectiles(){
+		return ARROW_ONLY;
 	}
 
 	@Override
-	public int func_230305_d_(){
+	public int getDefaultProjectileRange(){
 		return 15;//Don't actually know what this does- looks mob AI related?
 	}
 
 	@Override
-	public UseAction getUseAction(ItemStack stack){
+	public UseAction getUseAnimation(ItemStack stack){
 		return UseAction.CROSSBOW;//Doesn't really have any effect as arm posing is hard coded for crossbows
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items){
-		if(isInGroup(group)){
+	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items){
+		if(allowdedIn(group)){
 			items.add(new ItemStack(this, 1));
 			ItemStack stack = new ItemStack(this, 1);
 			setWindLevel(stack, getMaxWind());

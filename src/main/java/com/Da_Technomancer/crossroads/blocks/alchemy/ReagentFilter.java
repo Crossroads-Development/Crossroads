@@ -5,7 +5,10 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReagentFilterTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -32,7 +35,7 @@ import java.util.List;
 
 public class ReagentFilter extends ContainerBlock{
 
-	private static final VoxelShape SHAPE = makeCuboidShape(2, 0, 2, 14, 16, 14);
+	private static final VoxelShape SHAPE = box(2, 0, 2, 14, 16, 14);
 	private final boolean crystal;
 
 	public ReagentFilter(boolean crystal){
@@ -45,18 +48,18 @@ public class ReagentFilter extends ContainerBlock{
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
 		builder.add(CRProperties.HORIZ_FACING);
 	}
 
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return getDefaultState().with(CRProperties.HORIZ_FACING, context.getPlacementHorizontalFacing().getOpposite());
+		return defaultBlockState().setValue(CRProperties.HORIZ_FACING, context.getHorizontalDirection().getOpposite());
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new ReagentFilterTileEntity(crystal);
 	}
 
@@ -66,7 +69,7 @@ public class ReagentFilter extends ContainerBlock{
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.reagent_filter.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.reagent_filter.filter"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.reagent_filter.quip").setStyle(MiscUtil.TT_QUIP));
@@ -78,11 +81,11 @@ public class ReagentFilter extends ContainerBlock{
 //	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(!worldIn.isRemote){
-			TileEntity te = worldIn.getTileEntity(pos);
-			if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
-				worldIn.setBlockState(pos, state.func_235896_a_(CRProperties.HORIZ_FACING));
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		if(!worldIn.isClientSide){
+			TileEntity te = worldIn.getBlockEntity(pos);
+			if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
+				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.HORIZ_FACING));
 			}else{
 				if(te instanceof INamedContainerProvider){
 					NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);
@@ -93,16 +96,16 @@ public class ReagentFilter extends ContainerBlock{
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving){
-		TileEntity te = worldIn.getTileEntity(pos);
+	public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving){
+		TileEntity te = worldIn.getBlockEntity(pos);
 		if(te instanceof ReagentFilterTileEntity){
-			InventoryHelper.dropInventoryItems(worldIn, pos, (ReagentFilterTileEntity) te);
+			InventoryHelper.dropContents(worldIn, pos, (ReagentFilterTileEntity) te);
 		}
-		super.onReplaced(state, worldIn, pos, newState, isMoving);
+		super.onRemove(state, worldIn, pos, newState, isMoving);
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 }

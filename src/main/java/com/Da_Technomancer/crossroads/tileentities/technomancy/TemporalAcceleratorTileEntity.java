@@ -87,18 +87,18 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){
 		//Increase render BB to include links
-		return new AxisAlignedBB(pos).grow(getRange());
+		return new AxisAlignedBB(worldPosition).inflate(getRange());
 	}
 
 	private Direction getFacing(){
 		if(facing == null){
 			BlockState state = getBlockState();
 			if(!(state.getBlock() instanceof TemporalAccelerator)){
-				remove();
+				setRemoved();
 				return Direction.DOWN;
 			}
-			facing = state.get(ESProperties.FACING);
-			mode = state.get(CRProperties.ACCELERATOR_TARGET);
+			facing = state.getValue(ESProperties.FACING);
+			mode = state.getValue(CRProperties.ACCELERATOR_TARGET);
 		}
 
 		return facing;
@@ -108,11 +108,11 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 		if(facing == null){
 			BlockState state = getBlockState();
 			if(!(state.getBlock() instanceof TemporalAccelerator)){
-				remove();
+				setRemoved();
 				return TemporalAccelerator.Mode.ENTITIES;
 			}
-			facing = state.get(ESProperties.FACING);
-			mode = state.get(CRProperties.ACCELERATOR_TARGET);
+			facing = state.getValue(ESProperties.FACING);
+			mode = state.getValue(CRProperties.ACCELERATOR_TARGET);
 		}
 
 		return mode;
@@ -123,12 +123,12 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 		//Handle flux
 		super.tick();
 
-		if(!world.isRemote && world.getGameTime() != lastRunTick){
+		if(!level.isClientSide && level.getGameTime() != lastRunTick){
 			//Prevent time acceleration of this block
-			lastRunTick = world.getGameTime();
+			lastRunTick = level.getGameTime();
 			int extraTicks = extraTicks(intensity);
 
-			if(world.getGameTime() % FluxUtil.FLUX_TIME == 0){
+			if(level.getGameTime() % FluxUtil.FLUX_TIME == 0){
 				addFlux(producedFlux(intensity));
 				infoIntensity = intensity;
 				intensity = 0;//Reset stored beam power
@@ -143,36 +143,36 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 				switch(getFacing()){
 					//I'm sure there's a clever formula for this, but I don't see it
 					case DOWN:
-						startPos = pos.add(-SIZE / 2, -SIZE, -SIZE / 2);
-						endPos = pos.add(SIZE / 2 + 1, 0, SIZE / 2 + 1);
+						startPos = worldPosition.offset(-SIZE / 2, -SIZE, -SIZE / 2);
+						endPos = worldPosition.offset(SIZE / 2 + 1, 0, SIZE / 2 + 1);
 						break;
 					case UP:
-						startPos = pos.add(-SIZE / 2, 1, -SIZE / 2);
-						endPos = pos.add(SIZE / 2 + 1, 1 + SIZE, SIZE / 2 + 1);
+						startPos = worldPosition.offset(-SIZE / 2, 1, -SIZE / 2);
+						endPos = worldPosition.offset(SIZE / 2 + 1, 1 + SIZE, SIZE / 2 + 1);
 						break;
 					case NORTH:
-						startPos = pos.add(-SIZE / 2, -SIZE / 2, -SIZE);
-						endPos = pos.add(SIZE / 2 + 1, SIZE / 2 + 1, 0);
+						startPos = worldPosition.offset(-SIZE / 2, -SIZE / 2, -SIZE);
+						endPos = worldPosition.offset(SIZE / 2 + 1, SIZE / 2 + 1, 0);
 						break;
 					case SOUTH:
-						startPos = pos.add(-SIZE / 2, -SIZE / 2, 1);
-						endPos = pos.add(SIZE / 2 + 1, SIZE / 2 + 1, 1 + SIZE);
+						startPos = worldPosition.offset(-SIZE / 2, -SIZE / 2, 1);
+						endPos = worldPosition.offset(SIZE / 2 + 1, SIZE / 2 + 1, 1 + SIZE);
 						break;
 					case WEST:
-						startPos = pos.add(-SIZE, -SIZE / 2, -SIZE / 2);
-						endPos = pos.add(0, SIZE / 2 + 1, SIZE / 2 + 1);
+						startPos = worldPosition.offset(-SIZE, -SIZE / 2, -SIZE / 2);
+						endPos = worldPosition.offset(0, SIZE / 2 + 1, SIZE / 2 + 1);
 						break;
 					case EAST:
 					default://Should not occur
-						startPos = pos.add(1, -SIZE / 2, -SIZE / 2);
-						endPos = pos.add(1 + SIZE, SIZE / 2 + 1, SIZE / 2 + 1);
+						startPos = worldPosition.offset(1, -SIZE / 2, -SIZE / 2);
+						endPos = worldPosition.offset(1 + SIZE, SIZE / 2 + 1, SIZE / 2 + 1);
 						break;
 				}
 
 				if(mode.accelerateEntities){
 					AxisAlignedBB bb = new AxisAlignedBB(startPos, endPos);
 					//Perform entity effect
-					ArrayList<Entity> ents = (ArrayList<Entity>) world.getEntitiesWithinAABB(Entity.class, bb);
+					ArrayList<Entity> ents = (ArrayList<Entity>) level.getEntitiesOfClass(Entity.class, bb);
 
 					for(Entity ent : ents){
 						if(ent instanceof ServerPlayerEntity){
@@ -195,7 +195,7 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 
 								//Perform tile entity effect
 								if(actOnTe){
-									TileEntity te = world.getTileEntity(effectPos);
+									TileEntity te = level.getBlockEntity(effectPos);
 									if(te instanceof ITickableTileEntity){
 										for(int run = 0; run < extraTicks; run++){
 											((ITickableTileEntity) te).tick();
@@ -205,10 +205,10 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 
 								//Perform block tick effect
 								if(mode.accelerateBlockTicks){
-									BlockState state = world.getBlockState(effectPos);
+									BlockState state = level.getBlockState(effectPos);
 									//Blocks have a 16^3/randomTickSpeed chance of a random tick each game tick in vanilla
-									if(state.ticksRandomly() && world.rand.nextInt(16 * 16 * 16 / world.getGameRules().getInt(GameRules.RANDOM_TICK_SPEED)) < extraTicks){
-										state.randomTick((ServerWorld) world, effectPos, world.rand);
+									if(state.isRandomlyTicking() && level.random.nextInt(16 * 16 * 16 / level.getGameRules().getInt(GameRules.RULE_RANDOMTICKING)) < extraTicks){
+										state.randomTick((ServerWorld) level, effectPos, level.random);
 									}
 								}
 							}
@@ -220,8 +220,8 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void updateContainingBlockInfo(){
-		super.updateContainingBlockInfo();
+	public void clearCache(){
+		super.clearCache();
 		facing = null;
 		mode = null;
 		beamOpt.invalidate();
@@ -229,8 +229,8 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		beamOpt.invalidate();
 	}
 
@@ -247,16 +247,16 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putInt("intensity", intensity);
 		nbt.putLong("last_run", lastRunTick);
 		return nbt;
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		intensity = nbt.getInt("intensity");
 		lastRunTick = nbt.getLong("last_run");
 	}
@@ -269,7 +269,7 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 				if(mag.getVoid() == 0){
 					intensity += mag.getPower();//Speed up time
 				}
-				markDirty();
+				setChanged();
 			}
 		}
 	}

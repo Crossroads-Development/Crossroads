@@ -29,27 +29,27 @@ public class StirlingEngine extends ContainerBlock{
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
-		setDefaultState(getDefaultState().with(CRProperties.RATE_SIGNED, 2));
+		registerDefaultState(defaultBlockState().setValue(CRProperties.RATE_SIGNED, 2));
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new StirlingEngineTileEntity();
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
 		builder.add(CRProperties.RATE_SIGNED);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.stirling_engine.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.stirling_engine.rate", StirlingEngineTileEntity.RATE));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.stirling_engine.power", CRConfig.formatVal(CRConfig.stirlingMultiplier.get())));

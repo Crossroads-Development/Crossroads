@@ -29,26 +29,26 @@ public class BeamRedirectorTileEntity extends BeamRenderTE{
 			if(state.getBlock() != CRBlocks.beamRedirector){
 				return Direction.NORTH;
 			}
-			dir = state.get(ESProperties.FACING);
+			dir = state.getValue(ESProperties.FACING);
 		}
 		return dir;
 	}
 
 	@Override
-	public void updateContainingBlockInfo(){
+	public void clearCache(){
 		dir = null;
-		super.updateContainingBlockInfo();
+		super.clearCache();
 	}
 
 	@Override
 	protected void doEmit(BeamUnit out){
 		Direction facing = getDir();
-		boolean reds = getBlockState().get(CRProperties.REDSTONE_BOOL);//Store this before emitting, as the redstone field can be modified during execution
-		if(beamer[facing.getIndex()].emit(reds ? out : BeamUnit.EMPTY, world)){
-			refreshBeam(facing.getIndex());
+		boolean reds = getBlockState().getValue(CRProperties.REDSTONE_BOOL);//Store this before emitting, as the redstone field can be modified during execution
+		if(beamer[facing.get3DDataValue()].emit(reds ? out : BeamUnit.EMPTY, level)){
+			refreshBeam(facing.get3DDataValue());
 		}
-		if(beamer[facing.getOpposite().getIndex()].emit(reds ? BeamUnit.EMPTY : out, world)){
-			refreshBeam(facing.getOpposite().getIndex());
+		if(beamer[facing.getOpposite().get3DDataValue()].emit(reds ? BeamUnit.EMPTY : out, level)){
+			refreshBeam(facing.getOpposite().get3DDataValue());
 		}
 	}
 
@@ -56,8 +56,8 @@ public class BeamRedirectorTileEntity extends BeamRenderTE{
 	protected boolean[] inputSides(){
 		boolean[] input = new boolean[] {true, true, true, true, true, true};
 		Direction facing = getDir();
-		input[facing.getIndex()] = false;
-		input[facing.getOpposite().getIndex()] = false;
+		input[facing.get3DDataValue()] = false;
+		input[facing.getOpposite().get3DDataValue()] = false;
 		return input;
 	}
 
@@ -65,8 +65,8 @@ public class BeamRedirectorTileEntity extends BeamRenderTE{
 	protected boolean[] outputSides(){
 		boolean[] output = new boolean[6];
 		Direction facing = getDir();
-		output[facing.getIndex()] = true;
-		output[facing.getOpposite().getIndex()] = true;
+		output[facing.get3DDataValue()] = true;
+		output[facing.getOpposite().get3DDataValue()] = true;
 		return output;
 	}
 } 

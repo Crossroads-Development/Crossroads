@@ -61,17 +61,17 @@ public class ReagInfoCategory implements IRecipeCategory<IReagent>{
 
 	@Override
 	public void draw(IReagent recipe, MatrixStack matrix, double mouseX, double mouseY){
-		FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
+		FontRenderer fontRenderer = Minecraft.getInstance().font;
 		double melt = recipe.getMeltingPoint();
 		double boil = recipe.getBoilingPoint();
 		String line = melt >= Short.MAX_VALUE - 10 ? MiscUtil.localize("crossroads.jei.reagent.melting.no") : melt <= HeatUtil.ABSOLUTE_ZERO ? MiscUtil.localize("crossroads.jei.reagent.melting.yes") : MiscUtil.localize("crossroads.jei.reagent.melting", Math.round(melt));
-		fontRenderer.drawString(matrix, line, 2, 22, 0x404040);
+		fontRenderer.draw(matrix, line, 2, 22, 0x404040);
 		line = boil >= Short.MAX_VALUE - 10 ? MiscUtil.localize("crossroads.jei.reagent.boiling.no") : boil <= HeatUtil.ABSOLUTE_ZERO ? MiscUtil.localize("crossroads.jei.reagent.boiling.yes") : MiscUtil.localize("crossroads.jei.reagent.boiling", Math.round(boil));
-		fontRenderer.drawString(matrix, line, 2, 42, 0x404040);
+		fontRenderer.draw(matrix, line, 2, 42, 0x404040);
 		line = MiscUtil.localize("crossroads.jei.reagent.effect", recipe.getEffect().getName().getString());
-		fontRenderer.drawString(matrix, line, 2, 62, 0x404040);
+		fontRenderer.draw(matrix, line, 2, 62, 0x404040);
 		if(recipe.requiresCrystal()){
-			fontRenderer.drawString(matrix, MiscUtil.localize("crossroads.jei.reagent.crystal"), 2, 82, 0x404040);
+			fontRenderer.draw(matrix, MiscUtil.localize("crossroads.jei.reagent.crystal"), 2, 82, 0x404040);
 		}
 
 		//GlStateManager.color(1, 1, 1);
@@ -97,7 +97,7 @@ public class ReagInfoCategory implements IRecipeCategory<IReagent>{
 		//There is a known issue (github issue #119) where the items fail to load into JEI because the tag hasn't been initialized yet
 		//The try-catch lets the recipe load without the item form
 		try{
-			List<ItemStack> solid = recipe.getJEISolids().getAllElements().stream().map(ItemStack::new).collect(Collectors.toList());
+			List<ItemStack> solid = recipe.getJEISolids().getValues().stream().map(ItemStack::new).collect(Collectors.toList());
 			List<List<ItemStack>> solidLists = ImmutableList.of(solid);
 			ingredients.setInputLists(VanillaTypes.ITEM, solidLists);
 			ingredients.setOutputLists(VanillaTypes.ITEM, solidLists);

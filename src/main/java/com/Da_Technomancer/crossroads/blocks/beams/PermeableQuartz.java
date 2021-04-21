@@ -25,7 +25,7 @@ public class PermeableQuartz extends Block{
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void addInformation(ItemStack stack, @Nullable IBlockReader player, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader player, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.beam_permeable"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.decor"));
 	}

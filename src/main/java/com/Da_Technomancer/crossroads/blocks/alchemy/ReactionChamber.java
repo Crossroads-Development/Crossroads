@@ -40,7 +40,7 @@ public class ReactionChamber extends ContainerBlock implements IReadable{
 	private final boolean crystal;
 
 	public ReactionChamber(boolean crystal){
-		super(CRBlocks.getGlassProperty().notSolid());
+		super(CRBlocks.getGlassProperty().noOcclusion());
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "reaction_chamber";
 		setRegistryName(name);
@@ -49,13 +49,13 @@ public class ReactionChamber extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new ReactionChamberTileEntity(!crystal);
 	}
 
 	@Override
 	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder){
-		TileEntity te = builder.get(LootParameters.BLOCK_ENTITY);
+		TileEntity te = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
 		if(te instanceof ReactionChamberTileEntity){
 			ItemStack drop = new ItemStack(this.asItem(), 1);
 			setReagents(drop, ((ReactionChamberTileEntity) te).getMap());
@@ -65,15 +65,15 @@ public class ReactionChamber extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
+	public void setPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		if(stack.hasTag()){
-			ReactionChamberTileEntity te = (ReactionChamberTileEntity) world.getTileEntity(pos);
+			ReactionChamberTileEntity te = (ReactionChamberTileEntity) world.getBlockEntity(pos);
 			te.writeContentNBT(stack);
 		}
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
@@ -84,11 +84,11 @@ public class ReactionChamber extends ContainerBlock implements IReadable{
 //	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(!worldIn.isRemote){
-			TileEntity te = worldIn.getTileEntity(pos);
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		if(!worldIn.isClientSide){
+			TileEntity te = worldIn.getBlockEntity(pos);
 			if(te instanceof ReactionChamberTileEntity){
-				playerIn.setHeldItem(hand, ((ReactionChamberTileEntity) te).rightClickWithItem(playerIn.getHeldItem(hand), playerIn.isSneaking(), playerIn, hand));
+				playerIn.setItemInHand(hand, ((ReactionChamberTileEntity) te).rightClickWithItem(playerIn.getItemInHand(hand), playerIn.isShiftKeyDown(), playerIn, hand));
 			}
 		}
 		return ActionResultType.SUCCESS;
@@ -122,7 +122,7 @@ public class ReactionChamber extends ContainerBlock implements IReadable{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		ReagentMap stored = getReagants(stack);
 
 		double temp = stored.getTempC();
@@ -153,18 +153,18 @@ public class ReactionChamber extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState state){
+	public boolean hasAnalogOutputSignal(BlockState state){
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos){
+	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos){
 		return RedstoneUtil.clampToVanilla(read(worldIn, pos, blockState));
 	}
 
 	@Override
 	public float read(World world, BlockPos pos, BlockState blockState){
-		TileEntity te = world.getTileEntity(pos);
+		TileEntity te = world.getBlockEntity(pos);
 		if(te instanceof ReactionChamberTileEntity){
 			return ((ReactionChamberTileEntity) te).getReds();
 		}

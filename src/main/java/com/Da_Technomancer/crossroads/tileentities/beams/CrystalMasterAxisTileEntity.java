@@ -93,8 +93,8 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putInt("time", time);
 		if(currentElement != null){
 			nbt.putString("elem", currentElement.name());
@@ -103,8 +103,8 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		time = nbt.getInt("time");
 		currentElement = nbt.contains("elem") ? EnumBeamAlignments.valueOf(nbt.getString("elem")) : null;
 	}
@@ -113,15 +113,15 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 	public void tick(){
 		super.tick();
 
-		if(!world.isRemote && currentElement != null && time-- <= 0){
+		if(!level.isClientSide && currentElement != null && time-- <= 0){
 			currentElement = null;
 			time = 0;
 		}
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		magicOpt.invalidate();
 	}
 

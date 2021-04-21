@@ -46,12 +46,12 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 
 	@SuppressWarnings("unchecked")
 	private static final ITag<Item>[] unlockKeys = new ITag[3];
-	private static final ITag<Item> fillerMats = ItemTags.makeWrapperTag(Crossroads.MODID + ":path_unlock_filler");
+	private static final ITag<Item> fillerMats = ItemTags.bind(Crossroads.MODID + ":path_unlock_filler");
 
 	static{
-		unlockKeys[0] = ItemTags.makeWrapperTag(Crossroads.MODID + ":technomancy_unlock_key");
-		unlockKeys[1] = ItemTags.makeWrapperTag(Crossroads.MODID + ":alchemy_unlock_key");
-		unlockKeys[2] = ItemTags.makeWrapperTag(Crossroads.MODID + ":witchcraft_unlock_key");
+		unlockKeys[0] = ItemTags.bind(Crossroads.MODID + ":technomancy_unlock_key");
+		unlockKeys[1] = ItemTags.bind(Crossroads.MODID + ":alchemy_unlock_key");
+		unlockKeys[2] = ItemTags.bind(Crossroads.MODID + ":witchcraft_unlock_key");
 	}
 
 	private final CraftingInventory inInv = new CraftingInventory(this, 3, 3);
@@ -66,7 +66,7 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 	public DetailedCrafterContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
 		super(type, id);
 		player = playerInv.player;
-		world = player.world;
+		world = player.level;
 
 		fake = buf.readBoolean();
 		if(fake){
@@ -100,22 +100,22 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 	}
 
 	@Override
-	public void fillStackedContents(RecipeItemHelper helper){
+	public void fillCraftSlotsStackedContents(RecipeItemHelper helper){
 		inInv.fillStackedContents(helper);
 	}
 
 	@Override
-	public void clear(){
-		inInv.clear();
-		outInv.clear();
+	public void clearCraftingContent(){
+		inInv.clearContent();
+		outInv.clearContent();
 	}
 
 	@Override
-	public boolean matches(IRecipe<? super CraftingInventory> recipeIn){
+	public boolean recipeMatches(IRecipe<? super CraftingInventory> recipeIn){
 		if(recipeIn instanceof DetailedCrafterRec){
-			return ((DetailedCrafterRec) recipeIn).getPath().isUnlocked(player) && recipeIn.matches(inInv, player.world);
+			return ((DetailedCrafterRec) recipeIn).getPath().isUnlocked(player) && recipeIn.matches(inInv, player.level);
 		}else{
-			return recipeIn.matches(inInv, player.world);
+			return recipeIn.matches(inInv, player.level);
 		}
 	}
 
@@ -123,14 +123,14 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 	 * Called when the container is closed.
 	 */
 	@Override
-	public void onContainerClosed(PlayerEntity playerIn){
-		super.onContainerClosed(playerIn);
+	public void removed(PlayerEntity playerIn){
+		super.removed(playerIn);
 		clearContainer(playerIn, world, inInv);
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity playerIn){
-		return fake || pos == null || playerIn.world.getBlockState(pos).getBlock() == CRBlocks.detailedCrafter && playerIn.getDistanceSq((pos.getX()) + .5D, (pos.getY()) + .5D, (pos.getZ()) + .5D) <= 64;
+	public boolean stillValid(PlayerEntity playerIn){
+		return fake || pos == null || playerIn.level.getBlockState(pos).getBlock() == CRBlocks.detailedCrafter && playerIn.distanceToSqr((pos.getX()) + .5D, (pos.getY()) + .5D, (pos.getZ()) + .5D) <= 64;
 	}
 
 	/**
@@ -138,35 +138,35 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 	 * inventory and the other inventory(s).
 	 */
 	@Override
-	public ItemStack transferStackInSlot(PlayerEntity playerIn, int index){
+	public ItemStack quickMoveStack(PlayerEntity playerIn, int index){
 		ItemStack itemstack = ItemStack.EMPTY;
-		Slot slot = inventorySlots.get(index);
-		if(slot != null && slot.getHasStack()){
-			ItemStack itemstack1 = slot.getStack();
+		Slot slot = slots.get(index);
+		if(slot != null && slot.hasItem()){
+			ItemStack itemstack1 = slot.getItem();
 			itemstack = itemstack1.copy();
 			if(index == 0){
-				itemstack1.getItem().onCreated(itemstack1, world, playerIn);
-				if(!mergeItemStack(itemstack1, 10, 46, true)){
+				itemstack1.getItem().onCraftedBy(itemstack1, world, playerIn);
+				if(!moveItemStackTo(itemstack1, 10, 46, true)){
 					return ItemStack.EMPTY;
 				}
 
-				slot.onSlotChange(itemstack1, itemstack);
+				slot.onQuickCraft(itemstack1, itemstack);
 			}else if(index >= 10 && index < 37){
-				if(!mergeItemStack(itemstack1, 37, 46, false)){
+				if(!moveItemStackTo(itemstack1, 37, 46, false)){
 					return ItemStack.EMPTY;
 				}
 			}else if(index >= 37 && index < 46){
-				if(!mergeItemStack(itemstack1, 10, 37, false)){
+				if(!moveItemStackTo(itemstack1, 10, 37, false)){
 					return ItemStack.EMPTY;
 				}
-			}else if(!mergeItemStack(itemstack1, 10, 46, false)){
+			}else if(!moveItemStackTo(itemstack1, 10, 46, false)){
 				return ItemStack.EMPTY;
 			}
 
 			if(itemstack1.isEmpty()){
-				slot.putStack(ItemStack.EMPTY);
+				slot.set(ItemStack.EMPTY);
 			}else{
-				slot.onSlotChanged();
+				slot.setChanged();
 			}
 
 			if(itemstack1.getCount() == itemstack.getCount()){
@@ -175,7 +175,7 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 
 			ItemStack itemstack2 = slot.onTake(playerIn, itemstack1);
 			if(index == 0){
-				playerIn.dropItem(itemstack2, false);
+				playerIn.drop(itemstack2, false);
 			}
 		}
 
@@ -187,22 +187,22 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 	 * null for the initial slot that was double-clicked.
 	 */
 	@Override
-	public boolean canMergeSlot(ItemStack stack, Slot slotIn){
-		return slotIn.inventory != outInv && super.canMergeSlot(stack, slotIn);
+	public boolean canTakeItemForPickAll(ItemStack stack, Slot slotIn){
+		return slotIn.container != outInv && super.canTakeItemForPickAll(stack, slotIn);
 	}
 
 	@Override
-	public int getOutputSlot(){
+	public int getResultSlotIndex(){
 		return 0;
 	}
 
 	@Override
-	public int getWidth(){
+	public int getGridWidth(){
 		return inInv.getWidth();
 	}
 
 	@Override
-	public int getHeight(){
+	public int getGridHeight(){
 		return inInv.getHeight();
 	}
 
@@ -213,7 +213,7 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 	}
 
 	@Override
-	public RecipeBookCategory func_241850_m(){
+	public RecipeBookCategory getRecipeBookType(){
 		return RecipeBookCategory.CRAFTING;
 	}
 
@@ -225,42 +225,42 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 	private byte lastUnlock = -1;
 
 	@Override
-	public void onCraftMatrixChanged(IInventory inventoryIn){
+	public void slotsChanged(IInventory inventoryIn){
 		for(EnumPath path : EnumPath.values()){
 			//Check for path unlocking
-			if(!path.isUnlocked(player) && path.pathGatePassed(player) && unlockRecipe(path) && (!world.isRemote || lastUnlock != path.getIndex())){
-				if(world.isRemote){
+			if(!path.isUnlocked(player) && path.pathGatePassed(player) && unlockRecipe(path) && (!world.isClientSide || lastUnlock != path.getIndex())){
+				if(world.isClientSide){
 					lastUnlock = path.getIndex();
 					playUnlockSound();
 				}else{
 					path.setUnlocked(player, true);
 				}
 				for(int i = 0; i < 9; i++){
-					inInv.decrStackSize(i, 1);
+					inInv.removeItem(i, 1);
 				}
 				return;
 			}
 		}
 
-		if(!world.isRemote){
+		if(!world.isClientSide){
 			ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) player;
 			ItemStack itemstack = ItemStack.EMPTY;
-			List<DetailedCrafterRec> recipes = world.getRecipeManager().getRecipes(CRRecipes.DETAILED_TYPE, inInv, world);
+			List<DetailedCrafterRec> recipes = world.getRecipeManager().getRecipesFor(CRRecipes.DETAILED_TYPE, inInv, world);
 			//Find a detailed crafter specific recipe first
 			Optional<? extends ICraftingRecipe> recipeOpt = recipes.stream().filter(rec -> rec.getPath().isUnlocked(player)).findFirst();
 			//If there is no valid detailed crafter recipe, try vanilla crafting
 			if(!recipeOpt.isPresent()){
-				recipeOpt = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, inInv, world);
+				recipeOpt = world.getRecipeManager().getRecipeFor(IRecipeType.CRAFTING, inInv, world);
 			}
 
 			if(recipeOpt.isPresent()){
 				ICraftingRecipe recipe = recipeOpt.get();
-				if(outInv.canUseRecipe(world, serverplayerentity, recipe)){
-					itemstack = recipe.getCraftingResult(inInv);
+				if(outInv.setRecipeUsed(world, serverplayerentity, recipe)){
+					itemstack = recipe.assemble(inInv);
 				}
 			}
-			outInv.setInventorySlotContents(0, itemstack);
-			serverplayerentity.connection.sendPacket(new SSetSlotPacket(windowId, 0, itemstack));
+			outInv.setItem(0, itemstack);
+			serverplayerentity.connection.send(new SSetSlotPacket(containerId, 0, itemstack));
 		}
 	}
 
@@ -271,15 +271,15 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 	 */
 	private boolean unlockRecipe(EnumPath path){
 		for(int i = 0; i < 9; i++){
-			if(i != 4 && !fillerMats.contains(inInv.getStackInSlot(i).getItem())){
+			if(i != 4 && !fillerMats.contains(inInv.getItem(i).getItem())){
 				return false;
 			}
 		}
-		return unlockKeys[path.getIndex()].contains(inInv.getStackInSlot(4).getItem());
+		return unlockKeys[path.getIndex()].contains(inInv.getItem(4).getItem());
 	}
 
 	private void playUnlockSound(){
-		world.playSound(player, player.getPosition(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 2, 0);
+		world.playSound(player, player.blockPosition(), SoundEvents.PLAYER_LEVELUP, SoundCategory.PLAYERS, 2, 0);
 	}
 
 	private static class SlotCraftingFlexible extends CraftingResultSlot{
@@ -294,30 +294,30 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 
 		@Override
 		public ItemStack onTake(PlayerEntity thePlayer, ItemStack stack){
-			onCrafting(stack);
+			checkTakeAchievements(stack);
 			setCraftingPlayer(thePlayer);
-			List<DetailedCrafterRec> recipes = thePlayer.world.getRecipeManager().getRecipes(CRRecipes.DETAILED_TYPE, craftMatrix, thePlayer.world);
+			List<DetailedCrafterRec> recipes = thePlayer.level.getRecipeManager().getRecipesFor(CRRecipes.DETAILED_TYPE, craftMatrix, thePlayer.level);
 			Optional<? extends ICraftingRecipe> recipeOpt = recipes.stream().filter(rec -> rec.getPath().isUnlocked(thePlayer)).findFirst();
 			if(!recipeOpt.isPresent()){
-				recipeOpt = thePlayer.world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, craftMatrix, thePlayer.world);
+				recipeOpt = thePlayer.level.getRecipeManager().getRecipeFor(IRecipeType.CRAFTING, craftMatrix, thePlayer.level);
 			}
 			if(recipeOpt.isPresent()){
 				//Remove items if there is a matching recipe
 				NonNullList<ItemStack> remaining = recipeOpt.get().getRemainingItems(craftMatrix);
 				for(int i = 0; i < remaining.size(); i++){
-					craftMatrix.decrStackSize(i, 1);//Consume crafting ingredients
+					craftMatrix.removeItem(i, 1);//Consume crafting ingredients
 
 					ItemStack remainStack = remaining.get(i);
-					ItemStack invStack = craftMatrix.getStackInSlot(i);
+					ItemStack invStack = craftMatrix.getItem(i);
 					//Return any remaining items (ex. empty buckets)
 					if(!remainStack.isEmpty()){
 						if(invStack.isEmpty()){
-							craftMatrix.setInventorySlotContents(i, remaining.get(i));//Put it back into the crafting slot if it's empty
+							craftMatrix.setItem(i, remaining.get(i));//Put it back into the crafting slot if it's empty
 						}else if(BlockUtil.sameItem(invStack, remainStack)){
 							invStack.grow(remainStack.getCount());//Try stacking it into the crafting slot
-							craftMatrix.setInventorySlotContents(i, invStack);
-						}else if(!thePlayer.inventory.addItemStackToInventory(remainStack)){//Try returning it to the player inventory
-							thePlayer.dropItem(remainStack, false);//Drop it as an item into the world
+							craftMatrix.setItem(i, invStack);
+						}else if(!thePlayer.inventory.add(remainStack)){//Try returning it to the player inventory
+							thePlayer.drop(remainStack, false);//Drop it as an item into the world
 						}
 					}
 				}

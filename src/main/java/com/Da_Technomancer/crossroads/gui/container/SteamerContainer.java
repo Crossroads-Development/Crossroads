@@ -22,8 +22,8 @@ public class SteamerContainer extends MachineContainer<SteamerTileEntity>{
 
 	public SteamerContainer(int id, PlayerInventory playerInv, PacketBuffer data){
 		super(type, id, playerInv, data);
-		cookProg = new IntDeferredRef(te::getProgress, te.getWorld().isRemote);
-		trackInt(cookProg);
+		cookProg = new IntDeferredRef(te::getProgress, te.getLevel().isClientSide);
+		addDataSlot(cookProg);
 	}
 
 	@Override

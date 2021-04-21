@@ -35,7 +35,7 @@ import java.util.List;
 
 public class HeatingCrucible extends ContainerBlock{
 
-	private static final VoxelShape SHAPE = makeCuboidShape(0, 0, 0, 16, 14, 16);
+	private static final VoxelShape SHAPE = box(0, 0, 0, 16, 14, 16);
 
 	public HeatingCrucible(){
 		super(CRBlocks.getRockProperty());
@@ -43,11 +43,11 @@ public class HeatingCrucible extends ContainerBlock{
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
-		setDefaultState(getDefaultState().with(CRProperties.FULLNESS, 0));
+		registerDefaultState(defaultBlockState().setValue(CRProperties.FULLNESS, 0));
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> container){
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> container){
 		container.add(CRProperties.FULLNESS);
 	}
 
@@ -57,27 +57,27 @@ public class HeatingCrucible extends ContainerBlock{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new HeatingCrucibleTileEntity();
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
+	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
 		if(newState.getBlock() != this){
-			InventoryHelper.dropInventoryItems(world, pos, (IInventory) world.getTileEntity(pos));
+			InventoryHelper.dropContents(world, pos, (IInventory) world.getBlockEntity(pos));
 		}
-		super.onReplaced(state, world, pos, newState, isMoving);
+		super.onRemove(state, world, pos, newState, isMoving);
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		TileEntity te;
-		if(!worldIn.isRemote && (te = worldIn.getTileEntity(pos)) instanceof INamedContainerProvider){
+		if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) instanceof INamedContainerProvider){
 			NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);
 		}
 		return ActionResultType.SUCCESS;
@@ -85,7 +85,7 @@ public class HeatingCrucible extends ContainerBlock{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.crucible.info", HeatingCrucibleTileEntity.REQUIRED));
 		for(int i = 0; i < HeatingCrucibleTileEntity.TEMP_TIERS.length; i++){
 			tooltip.add(new TranslationTextComponent("tt.crossroads.crucible.tier", i + 1, HeatingCrucibleTileEntity.USAGE * (i + 1), HeatingCrucibleTileEntity.TEMP_TIERS[i]));

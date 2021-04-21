@@ -45,15 +45,15 @@ public class MechanismClutch extends MechanismAxle{
 
 	private static final VoxelShape[] SHAPES_CLUTCH = new VoxelShape[3];
 	static{
-		SHAPES_CLUTCH[0] = VoxelShapes.or(SHAPES[0], Block.makeCuboidShape(8, 4, 4, 16, 12, 12));
-		SHAPES_CLUTCH[1] = VoxelShapes.or(SHAPES[1], Block.makeCuboidShape(4, 8, 4, 12, 16, 4));
-		SHAPES_CLUTCH[2] = VoxelShapes.or(SHAPES[2], Block.makeCuboidShape(4, 4, 8, 12, 12, 16));
+		SHAPES_CLUTCH[0] = VoxelShapes.or(SHAPES[0], Block.box(8, 4, 4, 16, 12, 12));
+		SHAPES_CLUTCH[1] = VoxelShapes.or(SHAPES[1], Block.box(4, 8, 4, 12, 16, 4));
+		SHAPES_CLUTCH[2] = VoxelShapes.or(SHAPES[2], Block.box(4, 4, 8, 12, 12, 16));
 	}
 
 	@Override
 	public void onRedstoneChange(double prevValue, double newValue, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, double energy, double speed, MechanismTileEntity te){
 		if((newValue == 0) ^ (prevValue == 0)){
-			te.getWorld().playSound(null, te.getPos(), SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, (newValue != 0) ^ inverted ? 0.6F : 0.5F);
+			te.getLevel().playSound(null, te.getBlockPos(), SoundEvents.LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, (newValue != 0) ^ inverted ? 0.6F : 0.5F);
 			RotaryUtil.increaseMasterKey(true);
 		}
 	}
@@ -103,16 +103,16 @@ public class MechanismClutch extends MechanismAxle{
 				continue;
 			}
 
-			Direction endDir = Direction.getFacingFromAxis(direct, axis);
+			Direction endDir = Direction.get(direct, axis);
 			
-			if(te.members[endDir.getIndex()] != null){
+			if(te.members[endDir.get3DDataValue()] != null){
 				//Do internal connection
-				if(te.members[endDir.getIndex()].hasCap(Capabilities.AXLE_CAPABILITY, endDir, te.mats[endDir.getIndex()], endDir, axis, te)){
-					te.axleHandlers[endDir.getIndex()].propagate(masterIn, key, rotRatioIn, 0, handler.renderOffset);
+				if(te.members[endDir.get3DDataValue()].hasCap(Capabilities.AXLE_CAPABILITY, endDir, te.mats[endDir.get3DDataValue()], endDir, axis, te)){
+					te.axleHandlers[endDir.get3DDataValue()].propagate(masterIn, key, rotRatioIn, 0, handler.renderOffset);
 				}
 			}else{
 				//Connect externally
-				TileEntity endTE = te.getWorld().getTileEntity(te.getPos().offset(endDir));
+				TileEntity endTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(endDir));
 				Direction oEndDir = endDir.getOpposite();
 				if(endTE != null){
 					LazyOptional<IAxisHandler> axisOpt = endTE.getCapability(Capabilities.AXIS_CAPABILITY, oEndDir);
@@ -156,51 +156,51 @@ public class MechanismClutch extends MechanismAxle{
 		//Orientation
 		if(axis != Direction.Axis.Y){
 			Quaternion rotation = (axis == Direction.Axis.X ? Vector3f.ZN : Vector3f.XP).rotationDegrees(90);
-			matrix.rotate(rotation);
+			matrix.mulPose(rotation);
 		}
 		
 		//Clutch mechanism
 		TextureAtlasSprite endSprite = CRRenderUtil.getTextureSprite(CRRenderTypes.AXLE_ENDS_TEXTURE);
 		TextureAtlasSprite sideSprite = CRRenderUtil.getTextureSprite(inverted ? CRRenderTypes.CLUTCH_SIDE_INVERTED_TEXTURE : CRRenderTypes.CLUTCH_SIDE_TEXTURE);
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
+		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
 		float size = 0.25F;
 		float height = 0.5001F;
 
 		//Ends
-		CRRenderUtil.addVertexBlock(builder, matrix, -size, 0, -size, endSprite.getMinU(), endSprite.getMinV(), 0, -1, 0, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, size, 0, -size, endSprite.getMaxU(), endSprite.getMinV(), 0, -1, 0, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, size, 0, size, endSprite.getMaxU(), endSprite.getMaxV(), 0, -1, 0, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, -size, 0, size, endSprite.getMinU(), endSprite.getMaxV(), 0, -1, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, -size, 0, -size, endSprite.getU0(), endSprite.getV0(), 0, -1, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, size, 0, -size, endSprite.getU1(), endSprite.getV0(), 0, -1, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, size, 0, size, endSprite.getU1(), endSprite.getV1(), 0, -1, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, -size, 0, size, endSprite.getU0(), endSprite.getV1(), 0, -1, 0, combinedLight);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -size, height, size, endSprite.getMinU(), endSprite.getMaxV(), 0, 1, 0, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, size, height, size, endSprite.getMaxU(), endSprite.getMaxV(), 0, 1, 0, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, size, height, -size, endSprite.getMaxU(), endSprite.getMinV(), 0, 1, 0, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, -size, height, -size, endSprite.getMinU(), endSprite.getMinV(), 0, 1, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, -size, height, size, endSprite.getU0(), endSprite.getV1(), 0, 1, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, size, height, size, endSprite.getU1(), endSprite.getV1(), 0, 1, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, size, height, -size, endSprite.getU1(), endSprite.getV0(), 0, 1, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, -size, height, -size, endSprite.getU0(), endSprite.getV0(), 0, 1, 0, combinedLight);
 
 		//Sides
-		CRRenderUtil.addVertexBlock(builder, matrix, -size, height, -size, sideSprite.getMinU(), sideSprite.getMaxV(), 0, 0, -1, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, size, height, -size, sideSprite.getMaxU(), sideSprite.getMaxV(), 0, 0, -1, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, size, 0, -size, sideSprite.getMaxU(), sideSprite.getMinV(), 0, 0, -1, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, -size, 0, -size, sideSprite.getMinU(), sideSprite.getMinV(), 0, 0, -1, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, -size, height, -size, sideSprite.getU0(), sideSprite.getV1(), 0, 0, -1, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, size, height, -size, sideSprite.getU1(), sideSprite.getV1(), 0, 0, -1, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, size, 0, -size, sideSprite.getU1(), sideSprite.getV0(), 0, 0, -1, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, -size, 0, -size, sideSprite.getU0(), sideSprite.getV0(), 0, 0, -1, combinedLight);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -size, 0, size, sideSprite.getMaxU(), sideSprite.getMinV(), 0, 0, 1, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, size, 0, size, sideSprite.getMinU(), sideSprite.getMinV(), 0, 0, 1, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, size, height, size, sideSprite.getMinU(), sideSprite.getMaxV(), 0, 0, 1, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, -size, height, size, sideSprite.getMaxU(), sideSprite.getMaxV(), 0, 0, 1, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, -size, 0, size, sideSprite.getU1(), sideSprite.getV0(), 0, 0, 1, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, size, 0, size, sideSprite.getU0(), sideSprite.getV0(), 0, 0, 1, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, size, height, size, sideSprite.getU0(), sideSprite.getV1(), 0, 0, 1, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, -size, height, size, sideSprite.getU1(), sideSprite.getV1(), 0, 0, 1, combinedLight);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -size, 0, size, sideSprite.getMinU(), sideSprite.getMinV(), -1, 0, 0, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, -size, height, size, sideSprite.getMinU(), sideSprite.getMaxV(), -1, 0, 0, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, -size, height, -size, sideSprite.getMaxU(), sideSprite.getMaxV(), -1, 0, 0, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, -size, 0, -size, sideSprite.getMaxU(), sideSprite.getMinV(), -1, 0, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, -size, 0, size, sideSprite.getU0(), sideSprite.getV0(), -1, 0, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, -size, height, size, sideSprite.getU0(), sideSprite.getV1(), -1, 0, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, -size, height, -size, sideSprite.getU1(), sideSprite.getV1(), -1, 0, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, -size, 0, -size, sideSprite.getU1(), sideSprite.getV0(), -1, 0, 0, combinedLight);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, size, height, -size, sideSprite.getMinU(), sideSprite.getMaxV(), 1, 0, 0, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, size, height, size, sideSprite.getMaxU(), sideSprite.getMaxV(), 1, 0, 0, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, size, 0, size, sideSprite.getMaxU(), sideSprite.getMinV(), 1, 0, 0, combinedLight);
-		CRRenderUtil.addVertexBlock(builder, matrix, size, 0, -size, sideSprite.getMinU(), sideSprite.getMinV(), 1, 0, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, size, height, -size, sideSprite.getU0(), sideSprite.getV1(), 1, 0, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, size, height, size, sideSprite.getU1(), sideSprite.getV1(), 1, 0, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, size, 0, size, sideSprite.getU1(), sideSprite.getV0(), 1, 0, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, size, 0, -size, sideSprite.getU0(), sideSprite.getV0(), 1, 0, 0, combinedLight);
 
 		//Axle
 		float angle = handler.getAngle(partialTicks);
-		matrix.rotate(Vector3f.YP.rotationDegrees(angle));
+		matrix.mulPose(Vector3f.YP.rotationDegrees(angle));
 		CRModels.drawAxle(matrix, buffer, combinedLight, mat instanceof GearFactory.GearMaterial ? ((GearFactory.GearMaterial) mat).getColor() : Color.WHITE);
 	}
 }

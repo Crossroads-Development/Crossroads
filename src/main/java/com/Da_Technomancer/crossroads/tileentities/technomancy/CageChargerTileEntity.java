@@ -55,7 +55,7 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 	
 	public void setCage(ItemStack cage){
 		this.cage = cage;
-		markDirty();
+		setChanged();
 	}
 	
 	public ItemStack getCage(){
@@ -71,8 +71,8 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		beamOpt.invalidate();
 		itemOpt.invalidate();
 	}
@@ -94,18 +94,18 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		if(!cage.isEmpty()){
-			nbt.put("inv", cage.write(new CompoundNBT()));
+			nbt.put("inv", cage.save(new CompoundNBT()));
 		}
 		return nbt;
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
-		cage = ItemStack.read(nbt.getCompound("inv"));
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
+		cage = ItemStack.of(nbt.getCompound("inv"));
 	}
 
 	private class ItemHandler implements IItemHandler{
@@ -127,8 +127,8 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 			if(isItemValid(slot, stack) && cage.isEmpty()){
 				if(!simulate){
 					cage = stack;
-					markDirty();
-					world.setBlockState(pos, CRBlocks.cageCharger.getDefaultState().with(CRProperties.ACTIVE, true), 2);
+					setChanged();
+					level.setBlock(worldPosition, CRBlocks.cageCharger.defaultBlockState().setValue(CRProperties.ACTIVE, true), 2);
 				}
 				return ItemStack.EMPTY;
 			}
@@ -143,8 +143,8 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 				if(!simulate){
 					ItemStack out = cage;
 					cage = ItemStack.EMPTY;
-					markDirty();
-					world.setBlockState(pos, CRBlocks.cageCharger.getDefaultState().with(CRProperties.ACTIVE, false), 2);
+					setChanged();
+					level.setBlock(worldPosition, CRBlocks.cageCharger.defaultBlockState().setValue(CRProperties.ACTIVE, false), 2);
 					return out;
 				}
 
@@ -182,7 +182,7 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 				voi += mag.getVoid();
 				cageBeam = new BeamUnit(energy, potential, stability, voi);
 				BeamCage.storeBeam(cage, cageBeam);
-				markDirty();
+				setChanged();
 			}
 		}
 	}

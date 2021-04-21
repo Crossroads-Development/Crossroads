@@ -158,18 +158,18 @@ public class CRBlocks{
 	public static BeamCannon beamCannon;
 
 	public static AbstractBlock.Properties getRockProperty(){
-		return AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3).setRequiresTool().sound(SoundType.STONE);
+		return AbstractBlock.Properties.of(Material.STONE).strength(3).requiresCorrectToolForDrops().sound(SoundType.STONE);
 	}
 
 	public static AbstractBlock.Properties getMetalProperty(){
-		return AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(3).setRequiresTool().sound(SoundType.METAL);
+		return AbstractBlock.Properties.of(Material.METAL).strength(3).requiresCorrectToolForDrops().sound(SoundType.METAL);
 	}
 
 	public static AbstractBlock.Properties getGlassProperty(){
-		return AbstractBlock.Properties.create(Material.GLASS).hardnessAndResistance(0.5F).sound(SoundType.GLASS);
+		return AbstractBlock.Properties.of(Material.GLASS).strength(0.5F).sound(SoundType.GLASS);
 	}
 
-	private static final Item.Properties itemBlockProp = new Item.Properties().group(CRItems.TAB_CROSSROADS);
+	private static final Item.Properties itemBlockProp = new Item.Properties().tab(CRItems.TAB_CROSSROADS);
 	public static final ArrayList<Block> toRegister = new ArrayList<>();
 
 	/**
@@ -220,7 +220,7 @@ public class CRBlocks{
 		beamReflector = new BeamReflector();
 		lensFrame = new LensFrame();
 		blockPureQuartz = new BasicBlock("block_pure_quartz", CRBlocks.getRockProperty());
-		blockBrightQuartz = new BasicBlock("block_bright_quartz", CRBlocks.getRockProperty().setLightLevel(state -> 15));
+		blockBrightQuartz = new BasicBlock("block_bright_quartz", CRBlocks.getRockProperty().lightLevel(state -> 15));
 		beamSiphon = new BeamSiphon();
 		beamSplitter = new BeamSplitter();
 		colorChart = new ColorChart();
@@ -280,7 +280,7 @@ public class CRBlocks{
 		antiDensusPlate = new DensusPlate(true);
 		cavorite = new BasicBlock("block_cavorite", CRBlocks.getRockProperty()){
 			@Override
-			public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+			public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 				tooltip.add(new TranslationTextComponent("tt.crossroads.cavorite"));
 				tooltip.add(new TranslationTextComponent("tt.crossroads.decoration"));
 			}
@@ -309,19 +309,19 @@ public class CRBlocks{
 		fluxSink = new FluxSink();
 		steamer = new Steamer();
 		windingTable = new WindingTable();
-		redstoneCrystal = new BasicBlock("redstone_crystal", CRBlocks.getGlassProperty().hardnessAndResistance(0.3F)){
+		redstoneCrystal = new BasicBlock("redstone_crystal", CRBlocks.getGlassProperty().strength(0.3F)){
 			@Override
-			public boolean canProvidePower(BlockState state){
+			public boolean isSignalSource(BlockState state){
 				return true;
 			}
 
 			@Override
-			public int getWeakPower(BlockState state, IBlockReader world, BlockPos pos, Direction side) {
+			public int getSignal(BlockState state, IBlockReader world, BlockPos pos, Direction side) {
 				return 15;
 			}
 
 			@Override
-			public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+			public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 				tooltip.add(new TranslationTextComponent("tt.crossroads.redstone_crystal.drops"));
 				tooltip.add(new TranslationTextComponent("tt.crossroads.redstone_crystal.power"));
 			}
@@ -343,7 +343,7 @@ public class CRBlocks{
 
 	@OnlyIn(Dist.CLIENT)
 	private static void setCutout(Block... blocks){
-		RenderType cutout = RenderType.getCutout();
+		RenderType cutout = RenderType.cutout();
 		for(Block block : blocks){
 			RenderTypeLookup.setRenderLayer(block, cutout);
 		}
@@ -351,7 +351,7 @@ public class CRBlocks{
 
 	@OnlyIn(Dist.CLIENT)
 	private static void setFluidTrans(GenericFluid.FluidData...fluids){
-		RenderType type = RenderType.getTranslucent();
+		RenderType type = RenderType.translucent();
 		for(GenericFluid.FluidData f : fluids){
 			RenderTypeLookup.setRenderLayer(f.still, type);
 			RenderTypeLookup.setRenderLayer(f.flowing, type);

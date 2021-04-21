@@ -3,9 +3,9 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentManager;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.IOptionalRecipe;
+import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
@@ -62,7 +62,7 @@ public class JEICrossroadsPlugin implements IModPlugin{
 
 	@Override
 	public void registerRecipes(IRecipeRegistration registration){
-		RecipeManager recipeManager = Minecraft.getInstance().world.getRecipeManager();
+		RecipeManager recipeManager = Minecraft.getInstance().level.getRecipeManager();
 
 		registration.addRecipes(getRecipes(recipeManager, CRRecipes.MILL_TYPE), MillstoneCategory.ID);
 		registration.addRecipes(getRecipes(recipeManager, CRRecipes.STAMP_MILL_TYPE), StampMillCategory.ID);

@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
 import com.Da_Technomancer.essentials.packets.ClientPacket;
-import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -40,7 +39,7 @@ public class SendIntToClient extends ClientPacket{
 		if(world == null){
 			return;
 		}
-		TileEntity te = world.getTileEntity(pos);
+		TileEntity te = world.getBlockEntity(pos);
 
 		if(te instanceof IIntReceiver){
 			((IIntReceiver) te).receiveInt(identifier, message, null);

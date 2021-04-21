@@ -21,7 +21,7 @@ public class SteamTurbineRenderer extends TileEntityRenderer<SteamTurbineTileEnt
 		matrix.translate(0.5D, 0, 0.5D);
 		LazyOptional<IAxleHandler> opt = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
 		if(opt.isPresent()){
-			matrix.rotate(Vector3f.YP.rotationDegrees(opt.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
+			matrix.mulPose(Vector3f.YP.rotationDegrees(opt.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
 		}
 		CRModels.renderScrew(matrix, buffer, combinedLight);
 	}

@@ -29,11 +29,11 @@ public class HamsterWheelRenderer extends TileEntityRenderer<HamsterWheelTileEnt
 		if(!te.getBlockState().hasProperty(CRProperties.HORIZ_FACING)){
 			return;
 		}
-		Direction facing = te.getBlockState().get(CRProperties.HORIZ_FACING);
+		Direction facing = te.getBlockState().getValue(CRProperties.HORIZ_FACING);
 
 		matrix.translate(0.5D, 0.5D, 0.5D);
-		matrix.rotate(Vector3f.YP.rotationDegrees(-facing.getHorizontalAngle() + 180));
-		matrix.rotate(Vector3f.XP.rotationDegrees(90));
+		matrix.mulPose(Vector3f.YP.rotationDegrees(-facing.toYRot() + 180));
+		matrix.mulPose(Vector3f.XP.rotationDegrees(90));
 
 		float angle = te.nextAngle - te.angle;
 		angle *= partialTicks;
@@ -41,10 +41,10 @@ public class HamsterWheelRenderer extends TileEntityRenderer<HamsterWheelTileEnt
 		angle *= -RotaryUtil.getCCWSign(facing);
 
 		//Feet
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
+		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.HAMSTER_TEXTURE);
 
-		matrix.push();
+		matrix.pushPose();
 		matrix.translate(-.2D, -.25D, .30D);
 		float peakAngle = 60;
 		float degreesPerCycle = 50;
@@ -52,73 +52,73 @@ public class HamsterWheelRenderer extends TileEntityRenderer<HamsterWheelTileEnt
 		float xRad = .025F;
 		float yRad = .035F;
 		float zRad = .03125F;
-		float sideUEn = sprite.getInterpolatedU(8);
+		float sideUEn = sprite.getU(8);
 		int[] col = {255, 255, 255, 255};
 
 		for(int i = 0; i < 2; i++){
 			for(int j = 0; j < 2; j++){
-				matrix.push();
+				matrix.pushPose();
 				matrix.translate(j == 0 ? 0 : .4D, i == 0 ? -.065D : .065D, 0);
-				matrix.rotate(Vector3f.YP.rotationDegrees(i + j % 2 == 0 ? feetAngle : -feetAngle));
+				matrix.mulPose(Vector3f.YP.rotationDegrees(i + j % 2 == 0 ? feetAngle : -feetAngle));
 				
 				//Ends
-				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, -zRad, sprite.getMinU(), sprite.getMinV(), 0, -1, 0, combinedLight, col);
-				CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, -zRad, sprite.getMaxU(), sprite.getMinV(), 0, -1, 0, combinedLight, col);
-				CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, zRad, sprite.getMaxU(), sprite.getMaxV(), 0, -1, 0, combinedLight, col);
-				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, zRad, sprite.getMinU(), sprite.getMaxV(), 0, -1, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, -zRad, sprite.getU0(), sprite.getV0(), 0, -1, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, -zRad, sprite.getU1(), sprite.getV0(), 0, -1, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, zRad, sprite.getU1(), sprite.getV1(), 0, -1, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, zRad, sprite.getU0(), sprite.getV1(), 0, -1, 0, combinedLight, col);
 
-				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, zRad, sprite.getMinU(), sprite.getMaxV(), 0, 1, 0, combinedLight, col);
-				CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, zRad, sprite.getMaxU(), sprite.getMaxV(), 0, 1, 0, combinedLight, col);
-				CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, -zRad, sprite.getMaxU(), sprite.getMinV(), 0, 1, 0, combinedLight, col);
-				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, -zRad, sprite.getMinU(), sprite.getMinV(), 0, 1, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, zRad, sprite.getU0(), sprite.getV1(), 0, 1, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, zRad, sprite.getU1(), sprite.getV1(), 0, 1, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, -zRad, sprite.getU1(), sprite.getV0(), 0, 1, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, -zRad, sprite.getU0(), sprite.getV0(), 0, 1, 0, combinedLight, col);
 
 				//Sides
-				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, -zRad, sprite.getMinU(), sprite.getMaxV(), 0, 0, -1, combinedLight, col);
-				CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, -zRad, sideUEn, sprite.getMaxV(), 0, 0, -1, combinedLight, col);
-				CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, -zRad, sideUEn, sprite.getMinV(), 0, 0, -1, combinedLight, col);
-				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, -zRad, sprite.getMinU(), sprite.getMinV(), 0, 0, -1, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, -zRad, sprite.getU0(), sprite.getV1(), 0, 0, -1, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, -zRad, sideUEn, sprite.getV1(), 0, 0, -1, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, -zRad, sideUEn, sprite.getV0(), 0, 0, -1, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, -zRad, sprite.getU0(), sprite.getV0(), 0, 0, -1, combinedLight, col);
 
-				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, zRad, sideUEn, sprite.getMinV(), 0, 0, 1, combinedLight, col);
-				CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, zRad, sprite.getMinU(), sprite.getMinV(), 0, 0, 1, combinedLight, col);
-				CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, zRad, sprite.getMinU(), sprite.getMaxV(), 0, 0, 1, combinedLight, col);
-				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, zRad, sideUEn, sprite.getMaxV(), 0, 0, 1, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, zRad, sideUEn, sprite.getV0(), 0, 0, 1, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, zRad, sprite.getU0(), sprite.getV0(), 0, 0, 1, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, zRad, sprite.getU0(), sprite.getV1(), 0, 0, 1, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, zRad, sideUEn, sprite.getV1(), 0, 0, 1, combinedLight, col);
 
-				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, zRad, sprite.getMinU(), sprite.getMinV(), -1, 0, 0, combinedLight, col);
-				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, zRad, sprite.getMinU(), sprite.getMaxV(), -1, 0, 0, combinedLight, col);
-				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, -zRad, sideUEn, sprite.getMaxV(), -1, 0, 0, combinedLight, col);
-				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, -zRad, sideUEn, sprite.getMinV(), -1, 0, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, zRad, sprite.getU0(), sprite.getV0(), -1, 0, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, zRad, sprite.getU0(), sprite.getV1(), -1, 0, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, -zRad, sideUEn, sprite.getV1(), -1, 0, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, -zRad, sideUEn, sprite.getV0(), -1, 0, 0, combinedLight, col);
 
-				CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, -zRad, sprite.getMinU(), sprite.getMaxV(), 1, 0, 0, combinedLight, col);
-				CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, zRad, sideUEn, sprite.getMaxV(), 1, 0, 0, combinedLight, col);
-				CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, zRad, sideUEn, sprite.getMinV(), 1, 0, 0, combinedLight, col);
-				CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, -zRad, sprite.getMinU(), sprite.getMinV(), 1, 0, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, -zRad, sprite.getU0(), sprite.getV1(), 1, 0, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, zRad, sideUEn, sprite.getV1(), 1, 0, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, zRad, sideUEn, sprite.getV0(), 1, 0, 0, combinedLight, col);
+				CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, -zRad, sprite.getU0(), sprite.getV0(), 1, 0, 0, combinedLight, col);
 				
-				matrix.pop();
+				matrix.popPose();
 			}
 		}
-		matrix.pop();
+		matrix.popPose();
 
 		//Wheel
-		matrix.rotate(Vector3f.YP.rotationDegrees(angle));
+		matrix.mulPose(Vector3f.YP.rotationDegrees(angle));
 
 		//Axle Support
-		matrix.push();
+		matrix.pushPose();
 		matrix.translate(0, -.4375D, 0);
 		matrix.scale(1, .8F, 1);
-		matrix.rotate(Vector3f.XP.rotationDegrees(90));
+		matrix.mulPose(Vector3f.XP.rotationDegrees(90));
 		CRModels.drawAxle(matrix, buffer, combinedLight, GearFactory.findMaterial("iron").getColor());
-		matrix.pop();
+		matrix.popPose();
 
 		float lHalf = .375F;
 
 		for(int i = 0; i < 8; i++){
-			matrix.push();
-			matrix.rotate(Vector3f.YP.rotationDegrees(45F * (float) i));
+			matrix.pushPose();
+			matrix.mulPose(Vector3f.YP.rotationDegrees(45F * (float) i));
 			matrix.translate(lHalf, -.25F, 0);
 			matrix.scale(.41F, i % 2 == 0 ? .5F : .45F, 7.5F * lHalf);
 
 			CRModels.drawAxle(matrix, buffer, combinedLight, Color.GRAY);
-			matrix.pop();
+			matrix.popPose();
 		}
 	}
 }

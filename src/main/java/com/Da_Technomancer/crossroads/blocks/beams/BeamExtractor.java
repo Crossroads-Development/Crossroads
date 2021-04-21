@@ -34,22 +34,22 @@ public class BeamExtractor extends BeamBlock{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new BeamExtractorTileEntity();
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
+	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
 		if(newState.getBlock() != this){
-			InventoryHelper.dropInventoryItems(world, pos, (IInventory) world.getTileEntity(pos));
+			InventoryHelper.dropContents(world, pos, (IInventory) world.getBlockEntity(pos));
 		}
-		super.onReplaced(state, world, pos, newState, isMoving);
+		super.onRemove(state, world, pos, newState, isMoving);
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(!super.onBlockActivated(state, worldIn, pos, playerIn, hand, hit).isSuccess() && !worldIn.isRemote){
-			TileEntity te = worldIn.getTileEntity(pos);
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		if(!super.use(state, worldIn, pos, playerIn, hand, hit).shouldSwing() && !worldIn.isClientSide){
+			TileEntity te = worldIn.getBlockEntity(pos);
 			if(te instanceof INamedContainerProvider){
 				NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);
 			}
@@ -60,7 +60,7 @@ public class BeamExtractor extends BeamBlock{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_extractor.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_extractor.quip").setStyle(MiscUtil.TT_QUIP));
 	}

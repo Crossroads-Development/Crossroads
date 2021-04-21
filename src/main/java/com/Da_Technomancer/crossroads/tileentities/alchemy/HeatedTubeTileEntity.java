@@ -36,22 +36,22 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 	protected void initHeat(){
 		if(!init){
 			init = true;
-			cableTemp = HeatUtil.convertBiomeTemp(world, pos);
+			cableTemp = HeatUtil.convertBiomeTemp(level, worldPosition);
 		}
 	}
 
 	@Override
 	protected EnumTransferMode[] getModes(){
 		EnumTransferMode[] output = {EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE};
-		Direction outSide = world.getBlockState(pos).get(CRProperties.HORIZ_FACING);
-		output[outSide.getIndex()] = EnumTransferMode.OUTPUT;
-		output[outSide.getOpposite().getIndex()] = EnumTransferMode.INPUT;
+		Direction outSide = level.getBlockState(worldPosition).getValue(CRProperties.HORIZ_FACING);
+		output[outSide.get3DDataValue()] = EnumTransferMode.OUTPUT;
+		output[outSide.getOpposite().get3DDataValue()] = EnumTransferMode.INPUT;
 		return output;
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		heatOpt.invalidate();
 	}
 
@@ -60,7 +60,7 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == getBlockState().get(CRProperties.HORIZ_FACING).getAxis())){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == getBlockState().getValue(CRProperties.HORIZ_FACING).getAxis())){
 			return (LazyOptional<T>) chemOpt;
 		}
 		if(cap == Capabilities.HEAT_CAPABILITY && (side == null || side.getAxis() == Direction.Axis.Y)){
@@ -83,7 +83,7 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 			cableTemp = tempIn;
 			//Shares heat between internal cable & contents
 			dirtyReag = true;
-			markDirty();
+			setChanged();
 		}
 
 		@Override
@@ -92,7 +92,7 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 			cableTemp += tempChange;
 			//Shares heat between internal cable & contents
 			dirtyReag = true;
-			markDirty();
+			setChanged();
 		}
 	}
 }

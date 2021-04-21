@@ -29,25 +29,25 @@ public class RotaryPumpRenderer extends TileEntityRenderer<RotaryPumpTileEntity>
 	@Override
 	public void render(RotaryPumpTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
 		//Render the screw
-		matrix.push();
+		matrix.pushPose();
 		matrix.translate(0.5D, 0, 0.5D);
 		LazyOptional<IAxleHandler> opt = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
 		if(opt.isPresent()){
-			matrix.rotate(Vector3f.YP.rotationDegrees(opt.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
+			matrix.mulPose(Vector3f.YP.rotationDegrees(opt.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
 		}
 		CRModels.renderScrew(matrix, buffer, combinedLight);
-		matrix.pop();
+		matrix.popPose();
 
 		//Render the liquid
 		if(te.getCompletion() != 0){
-			BlockPos fPos = te.getPos().offset(Direction.DOWN);
-			FluidState state = te.getWorld().getFluidState(fPos);
+			BlockPos fPos = te.getBlockPos().relative(Direction.DOWN);
+			FluidState state = te.getLevel().getFluidState(fPos);
 			TextureAtlasSprite lText;
 			Color fCol;
 			if(!state.isEmpty() && state.isSource()){
-				ResourceLocation textLoc = state.getFluid().getAttributes().getStillTexture();
+				ResourceLocation textLoc = state.getType().getAttributes().getStillTexture();
 				lText = CRRenderUtil.getTextureSprite(textLoc);
-				fCol = new Color(state.getFluid().getAttributes().getColor(te.getWorld(), fPos));
+				fCol = new Color(state.getType().getAttributes().getColor(te.getLevel(), fPos));
 			}else{
 				return;
 			}
@@ -60,13 +60,13 @@ public class RotaryPumpRenderer extends TileEntityRenderer<RotaryPumpTileEntity>
 			float xEn = 13F / 16F;
 			float yEn = 7F / 16F * te.getCompletion();
 			float zEn = 13F / 16F;
-			float uSt = lText.getInterpolatedU(xSt * 16);
-			float uEn = lText.getInterpolatedU(xEn * 16);
-			float vSt = lText.getInterpolatedV(16 - (ySt * 16));
-			float vEn = lText.getInterpolatedV(16 - (yEn * 16));
+			float uSt = lText.getU(xSt * 16);
+			float uEn = lText.getU(xEn * 16);
+			float vSt = lText.getV(16 - (ySt * 16));
+			float vEn = lText.getV(16 - (yEn * 16));
 
 			//Draw liquid layer
-			IVertexBuilder builder = buffer.getBuffer(RenderType.getTranslucentNoCrumbling());
+			IVertexBuilder builder = buffer.getBuffer(RenderType.translucentNoCrumbling());
 
 			CRRenderUtil.addVertexBlock(builder, matrix, xEn, ySt, zSt, uEn, vSt, 0, 0, -1, combinedLight, cols);
 			CRRenderUtil.addVertexBlock(builder, matrix, xSt, ySt, zSt, uSt, vSt, 0, 0, -1, combinedLight, cols);
@@ -88,10 +88,10 @@ public class RotaryPumpRenderer extends TileEntityRenderer<RotaryPumpTileEntity>
 			CRRenderUtil.addVertexBlock(builder, matrix, xEn, ySt, zEn, uSt, vEn, 1, 0, 0, combinedLight, cols);
 			CRRenderUtil.addVertexBlock(builder, matrix, xEn, ySt, zSt, uSt, vSt, 1, 0, 0, combinedLight, cols);
 
-			CRRenderUtil.addVertexBlock(builder, matrix, xSt, yEn, zSt, lText.getMinU(), lText.getMinV(), 0, 1, 0, combinedLight, cols);
-			CRRenderUtil.addVertexBlock(builder, matrix, xSt, yEn, zEn, lText.getMinU(), lText.getMaxV(), 0, 1, 0, combinedLight, cols);
-			CRRenderUtil.addVertexBlock(builder, matrix, xEn, yEn, zEn, lText.getMaxU(), lText.getMaxV(), 0, 1, 0, combinedLight, cols);
-			CRRenderUtil.addVertexBlock(builder, matrix, xEn, yEn, zSt, lText.getMaxU(), lText.getMinV(), 0, 1, 0, combinedLight, cols);
+			CRRenderUtil.addVertexBlock(builder, matrix, xSt, yEn, zSt, lText.getU0(), lText.getV0(), 0, 1, 0, combinedLight, cols);
+			CRRenderUtil.addVertexBlock(builder, matrix, xSt, yEn, zEn, lText.getU0(), lText.getV1(), 0, 1, 0, combinedLight, cols);
+			CRRenderUtil.addVertexBlock(builder, matrix, xEn, yEn, zEn, lText.getU1(), lText.getV1(), 0, 1, 0, combinedLight, cols);
+			CRRenderUtil.addVertexBlock(builder, matrix, xEn, yEn, zSt, lText.getU1(), lText.getV0(), 0, 1, 0, combinedLight, cols);
 		}
 	}
 }

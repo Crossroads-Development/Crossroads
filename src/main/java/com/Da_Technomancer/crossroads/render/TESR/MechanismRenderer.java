@@ -19,9 +19,9 @@ public class MechanismRenderer extends TileEntityRenderer<MechanismTileEntity>{
 
 		for(int i = 0; i < 7; i++){
 			if(te.members[i] != null){
-				matrix.push();
-				te.members[i].doRender(te, matrix, buffer, combinedLight, partialTicks, te.mats[i], i == 6 ? null : Direction.byIndex(i), te.getAxleAxis());
-				matrix.pop();
+				matrix.pushPose();
+				te.members[i].doRender(te, matrix, buffer, combinedLight, partialTicks, te.mats[i], i == 6 ? null : Direction.from3DDataValue(i), te.getAxleAxis());
+				matrix.popPose();
 			}
 		}
 	}

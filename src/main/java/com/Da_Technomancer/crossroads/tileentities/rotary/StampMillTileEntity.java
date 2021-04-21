@@ -8,9 +8,9 @@ import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.gui.container.StampMillContainer;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.StampMillRec;
+import com.Da_Technomancer.crossroads.gui.container.StampMillContainer;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -87,7 +87,7 @@ public class StampMillTileEntity extends InventoryTE{
 	@Override
 	public void tick(){
 		super.tick();
-		if(!world.isRemote){
+		if(!level.isClientSide){
 			BlockState state = getBlockState();
 
 			if(state.getBlock() != CRBlocks.stampMill){
@@ -102,11 +102,11 @@ public class StampMillTileEntity extends InventoryTE{
 					timer = 0;
 					if(progress >= REQUIRED){
 						progress = 0;
-						world.playSound(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.BLOCKS, 1, world.rand.nextFloat(), true);
-						Optional<StampMillRec> recOpt = world.getRecipeManager().getRecipe(CRRecipes.STAMP_MILL_TYPE, this, world);
+						level.playLocalSound(worldPosition.getX() + 0.5, worldPosition.getY() + 1, worldPosition.getZ() + 0.5, SoundEvents.ANVIL_PLACE, SoundCategory.BLOCKS, 1, level.random.nextFloat(), true);
+						Optional<StampMillRec> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.STAMP_MILL_TYPE, this, level);
 						ItemStack produced;
 						if(recOpt.isPresent()){
-							produced = recOpt.get().getRecipeOutput();
+							produced = recOpt.get().getResultItem();
 							produced = produced.copy();
 						}else{
 							produced = inventory[0].copy();
@@ -122,35 +122,35 @@ public class StampMillTileEntity extends InventoryTE{
 						}
 					}
 				}
-				markDirty();
+				setChanged();
 			}
 		}
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putDouble("prog", progress);
 		nbt.putInt("timer", timer);
 		return nbt;
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		progress = nbt.getDouble("prog");
 		timer = nbt.getInt("timer");
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		itemOpt.invalidate();
 	}
 
 	@Override
-	public void updateContainingBlockInfo(){
-		super.updateContainingBlockInfo();
+	public void clearCache(){
+		super.clearCache();
 		axleOpt.invalidate();
 		axleOpt = LazyOptional.of(() -> axleHandler);
 	}
@@ -165,7 +165,7 @@ public class StampMillTileEntity extends InventoryTE{
 		}
 
 		BlockState state = getBlockState();
-		if(state.getBlock() == CRBlocks.stampMill && cap == Capabilities.AXLE_CAPABILITY && (side == null || side.getAxis() == state.get(CRProperties.HORIZ_AXIS))){
+		if(state.getBlock() == CRBlocks.stampMill && cap == Capabilities.AXLE_CAPABILITY && (side == null || side.getAxis() == state.getValue(CRProperties.HORIZ_AXIS))){
 			return (LazyOptional<T>) axleOpt;
 		}
 
@@ -195,10 +195,10 @@ public class StampMillTileEntity extends InventoryTE{
 			if(state.getBlock() != CRBlocks.stampMill){
 				return;
 			}
-			Direction.Axis ax = state.get(CRProperties.HORIZ_AXIS);
+			Direction.Axis ax = state.getValue(CRProperties.HORIZ_AXIS);
 			for(Direction.AxisDirection dir : Direction.AxisDirection.values()){
-				Direction side = Direction.getFacingFromAxis(dir, ax);
-				TileEntity te = world.getTileEntity(pos.offset(side));
+				Direction side = Direction.get(dir, ax);
+				TileEntity te = level.getBlockEntity(worldPosition.relative(side));
 				if(te != null){
 					LazyOptional<IAxisHandler> axisOpt = te.getCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite());
 					if(axisOpt.isPresent()){
@@ -214,13 +214,13 @@ public class StampMillTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
+	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction){
 		return index == 1;
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && world.getRecipeManager().getRecipe(CRRecipes.STAMP_MILL_TYPE, new Inventory(stack), world).isPresent();
+	public boolean canPlaceItem(int index, ItemStack stack){
+		return index == 0 && level.getRecipeManager().getRecipeFor(CRRecipes.STAMP_MILL_TYPE, new Inventory(stack), level).isPresent();
 	}
 
 	@Override
@@ -237,6 +237,6 @@ public class StampMillTileEntity extends InventoryTE{
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){
-		return RENDER_BOX.offset(pos);
+		return RENDER_BOX.move(worldPosition);
 	}
 }

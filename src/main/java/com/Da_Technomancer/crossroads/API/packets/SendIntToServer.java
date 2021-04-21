@@ -39,7 +39,7 @@ public class SendIntToServer extends ServerPacket{
 	@Override
 	protected void run(@Nullable ServerPlayerEntity serverPlayerEntity){
 		if(serverPlayerEntity != null){
-			TileEntity te = serverPlayerEntity.world.getTileEntity(pos);
+			TileEntity te = serverPlayerEntity.level.getBlockEntity(pos);
 
 			if(te instanceof IDoubleReceiver){
 				((IIntReceiver) te).receiveInt(identifier, message, serverPlayerEntity);

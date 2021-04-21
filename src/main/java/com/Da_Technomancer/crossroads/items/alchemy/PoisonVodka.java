@@ -26,7 +26,7 @@ public class PoisonVodka extends Item{
 	private static final int DURATION = 3600;
 
 	public PoisonVodka(){
-		super(new Properties().group(CRItems.TAB_CROSSROADS));
+		super(new Properties().tab(CRItems.TAB_CROSSROADS));
 		String name = "poison_vodka";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
@@ -38,24 +38,24 @@ public class PoisonVodka extends Item{
 	}
 
 	@Override
-	public UseAction getUseAction(ItemStack stack){
+	public UseAction getUseAnimation(ItemStack stack){
 		return UseAction.DRINK;
 	}
 
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn){
-		playerIn.setActiveHand(handIn);
-		return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
+	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn){
+		playerIn.startUsingItem(handIn);
+		return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getItemInHand(handIn));
 	}
 
-	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving){
+	public ItemStack finishUsingItem(ItemStack stack, World worldIn, LivingEntity entityLiving){
 		PlayerEntity player = entityLiving instanceof PlayerEntity ? (PlayerEntity) entityLiving : null;
 
-		if(!worldIn.isRemote){
-			entityLiving.addPotionEffect(new EffectInstance(Effects.WITHER, DURATION, 0));
-			entityLiving.addPotionEffect(new EffectInstance(Effects.NAUSEA, DURATION, 0));
-			entityLiving.addPotionEffect(new EffectInstance(Effects.SLOWNESS, DURATION, 3));
-			entityLiving.addPotionEffect(new EffectInstance(Effects.STRENGTH, DURATION, 2));
-			entityLiving.addPotionEffect(new EffectInstance(Effects.RESISTANCE, DURATION, 2));
+		if(!worldIn.isClientSide){
+			entityLiving.addEffect(new EffectInstance(Effects.WITHER, DURATION, 0));
+			entityLiving.addEffect(new EffectInstance(Effects.CONFUSION, DURATION, 0));
+			entityLiving.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, DURATION, 3));
+			entityLiving.addEffect(new EffectInstance(Effects.DAMAGE_BOOST, DURATION, 2));
+			entityLiving.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, DURATION, 2));
 		}
 
 		if(player == null){
@@ -64,14 +64,14 @@ public class PoisonVodka extends Item{
 				return new ItemStack(Items.GLASS_BOTTLE);
 			}
 		}else{
-			player.addStat(Stats.ITEM_USED.get(this));
+			player.awardStat(Stats.ITEM_USED.get(this));
 
 			if(!player.isCreative()){
 				stack.shrink(1);
 				if(stack.isEmpty()){
 					return new ItemStack(Items.GLASS_BOTTLE);
 				}
-				player.inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
+				player.inventory.add(new ItemStack(Items.GLASS_BOTTLE));
 			}
 		}
 
@@ -90,7 +90,7 @@ public class PoisonVodka extends Item{
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.poison_vodka.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

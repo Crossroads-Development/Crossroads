@@ -4,9 +4,9 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.gui.container.MillstoneContainer;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.MillRec;
+import com.Da_Technomancer.crossroads.gui.container.MillstoneContainer;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -85,7 +85,7 @@ public class MillstoneTileEntity extends InventoryTE{
 					}
 				}
 			}
-			markDirty();
+			setChanged();
 		}
 	}
 
@@ -131,11 +131,11 @@ public class MillstoneTileEntity extends InventoryTE{
 	@Override
 	public void tick(){
 		super.tick();
-		if(!world.isRemote){
+		if(!level.isClientSide){
 			if(inventory[0].isEmpty()){
 				progress = 0;
 			}else{
-				Optional<MillRec> recOpt = world.getRecipeManager().getRecipe(CRRecipes.MILL_TYPE, this, world);
+				Optional<MillRec> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.MILL_TYPE, this, level);
 				if(recOpt.isPresent()){
 					double used = POWER * RotaryUtil.findEfficiency(axleHandler.getSpeed(), 0.2D, PEAK_SPEED);
 					progress += used;
@@ -155,8 +155,8 @@ public class MillstoneTileEntity extends InventoryTE{
 	private final LazyOptional<IItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		itemOpt.invalidate();
 	}
 
@@ -174,13 +174,13 @@ public class MillstoneTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
+	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction){
 		return index > 0 && index < 4;
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && world.getRecipeManager().getRecipe(CRRecipes.MILL_TYPE, new Inventory(stack), world).isPresent();
+	public boolean canPlaceItem(int index, ItemStack stack){
+		return index == 0 && level.getRecipeManager().getRecipeFor(CRRecipes.MILL_TYPE, new Inventory(stack), level).isPresent();
 	}
 
 	@Override
@@ -189,15 +189,15 @@ public class MillstoneTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putDouble("prog", progress);
 		return nbt;
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		progress = nbt.getDouble("prog");
 	}
 

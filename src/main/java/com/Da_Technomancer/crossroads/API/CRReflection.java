@@ -14,27 +14,27 @@ import java.util.function.Supplier;
 
 public enum CRReflection implements ReflectionUtil.IReflectionKey{
 
-	SET_CHAT(CRReflection::getChatClass, "NO_MCP_MAPPING", "func_238493_a_", "Update the chat log without spamming it"),
-	CURE_ZOMBIE(ZombieVillagerEntity.class, "startConverting", "func_191991_a", "Cure zombie villagers with SO2"),
-	EXPLOSION_POWER(Explosion.class, "size", "field_77280_f", "Perpetuate explosions with Collapse beams (1)"),
-	EXPLOSION_SMOKE(Explosion.class, "causesFire", "field_77286_a", "Perpetuate explosions with Collapse beams (2)"),
-	EXPLOSION_MODE(Explosion.class, "mode", "field_222260_b", "Perpetuate explosions with Collapse beams (3)"),
-//	SWING_TIME(LivingEntity.class, "ticksSinceLastSwing", "field_184617_aD", "Mechanical Arm attacking"),
-	ENTITY_LIST(ServerWorld.class, "entitiesByUuid", "field_175741_N", "Prevent mob spawning with Closure beams, modify explosions with Collapse/Equilibrium beams"),
-	LOADED_CHUNKS(ChunkManager.class, "getLoadedChunksIterable", "func_223491_f ", "Spawn lightning at high atmospheric charge"),
-	LIGHTNING_POS(ServerWorld.class, "adjustPosToNearbyEntity", "func_175736_a", "Target lightning at high atmospheric charge"),
-	SPAWN_RADIUS(ChunkManager.class, "isOutsideSpawningRadius", "func_219243_d", "Spawn lightning at high atmospheric charge"),
-	BIOME_ARRAY(BiomeContainer.class, "biomes", "field_227054_f_", "Terraforming alchemy reagents changing the biome");
+	SET_CHAT(CRReflection::getChatClass, "func_238493_a_", "addMessage", "Update the chat log without spamming it"),
+	CURE_ZOMBIE(ZombieVillagerEntity.class, "func_191991_a", "startConverting", "Cure zombie villagers with SO2"),
+	EXPLOSION_POWER(Explosion.class, "field_77280_f", "radius", "Perpetuate explosions with Collapse beams (1)"),
+	EXPLOSION_SMOKE(Explosion.class, "field_77286_a", "fire", "Perpetuate explosions with Collapse beams (2)"),
+	EXPLOSION_MODE(Explosion.class, "field_222260_b", "blockInteraction", "Perpetuate explosions with Collapse beams (3)"),
+//	SWING_TIME(LivingEntity.class, "field_184617_aD", "attackStrengthTicker", "Mechanical Arm attacking"),
+	ENTITY_LIST(ServerWorld.class, "field_175741_N", "entitiesByUuid", "Prevent mob spawning with Closure beams, modify explosions with Collapse/Equilibrium beams"),
+	LOADED_CHUNKS(ChunkManager.class, "func_223491_f ", "getChunks ", "Spawn lightning at high atmospheric charge"),
+	LIGHTNING_POS(ServerWorld.class, "func_175736_a", "findLightingTargetAround", "Target lightning at high atmospheric charge"),
+	SPAWN_RADIUS(ChunkManager.class, "func_219243_d", "noPlayersCloseForSpawning", "Spawn lightning at high atmospheric charge"),
+	BIOME_ARRAY(BiomeContainer.class, "field_227054_f_", "biomes", "Terraforming alchemy reagents changing the biome");
 
 
 	private Class<?> clazz;
 	@Nullable
 	private final Supplier<Class<?>> clazzSupplier;
 	public final String obf;//Obfuscated name
-	public final String mcp;//Human readable MCP name
+	public final String mcp;//Human readable mapped name
 	private final String purpose;
 
-	CRReflection(@Nonnull Supplier<Class<?>> clazz, String mcp, String obf, String purpose){
+	CRReflection(@Nonnull Supplier<Class<?>> clazz, String obf, String mcp, String purpose){
 		//The supplier is for loading classes which are only in the client dist; This handles the exception and allows servers to start
 		this.clazzSupplier = clazz;
 		this.obf = obf;

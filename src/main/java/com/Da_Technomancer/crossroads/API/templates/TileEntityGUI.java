@@ -21,23 +21,23 @@ public abstract class TileEntityGUI<T extends TileEntityContainer<U>, U extends 
 	@Override
 	protected void init(){
 		super.init();
-		playerInventoryTitleX = container.getInvStart()[0];
-		playerInventoryTitleY = container.getInvStart()[1] - 12;
+		inventoryLabelX = menu.getInvStart()[0];
+		inventoryLabelY = menu.getInvStart()[1] - 12;
 	}
 
 	@Override
 	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTicks){
 		renderBackground(matrix);
 		super.render(matrix, mouseX, mouseY, partialTicks);
-		renderHoveredTooltip(matrix, mouseX, mouseY);
+		renderTooltip(matrix, mouseX, mouseY);
 		if(getSlotUnderMouse() == null){
-			func_243308_b(matrix, tooltip, mouseX, mouseY);
+			renderComponentTooltip(matrix, tooltip, mouseX, mouseY);
 		}
 		tooltip.clear();
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+	protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
 		//No-op
 		//Even though we don't need to implement this method, as this is an abstract class, having this here allows super calls in subclasses.
 		//While this currently does nothing, that could change, and allowing super calls in subclasses will make changes seamless

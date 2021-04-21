@@ -115,7 +115,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 
 	@Override
 	public void tick(){
-		if(world.isRemote){
+		if(level.isClientSide){
 			if(useRotary() && angleW != null){
 				angleW[0] += angleW[1] * 9D / Math.PI;
 			}
@@ -129,7 +129,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		if(useHeat()){
-			HeatUtil.addHeatInfo(chat, temp, HeatUtil.convertBiomeTemp(world, pos));
+			HeatUtil.addHeatInfo(chat, temp, HeatUtil.convertBiomeTemp(level, worldPosition));
 		}
 		if(useRotary()){
 			RotaryUtil.addRotaryInfo(chat, axleHandler, true);
@@ -145,8 +145,8 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putDouble("mot_1", energy);
 		if(angleW != null){
 			nbt.putFloat("ang_w_0", angleW[0]);
@@ -167,8 +167,8 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		energy = nbt.getDouble("mot_1");
 		if(angleW != null){
 			angleW[0] = nbt.getFloat("ang_w_0");
@@ -196,8 +196,8 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		if(heatOpt != null){
 			heatOpt.invalidate();
 		}
@@ -264,7 +264,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 							int prevAmount = fluids[i].getAmount();
 							fluids[i] = resource.copy();
 							fluids[i].setAmount(prevAmount + change);
-							markDirty();
+							setChanged();
 						}
 						return change;
 					}
@@ -276,7 +276,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 						int prevAmount = fluids[tank].getAmount();
 						fluids[tank] = resource.copy();
 						fluids[tank].setAmount(prevAmount + change);
-						markDirty();
+						setChanged();
 					}
 					return change;
 				}
@@ -300,7 +300,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 
 						if(action == FluidAction.EXECUTE && change >= 0){
 							fluids[i].shrink(change);
-							markDirty();
+							setChanged();
 						}
 						FluidStack out = resource.copy();
 						out.setAmount(change);
@@ -314,7 +314,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 
 				if(action == FluidAction.EXECUTE){
 					fluids[tank].shrink(change);
-					markDirty();
+					setChanged();
 				}
 				FluidStack out = resource.copy();
 				out.setAmount(change);
@@ -341,7 +341,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 
 						if(action == FluidAction.EXECUTE){
 							fluids[i].shrink(change);
-							markDirty();
+							setChanged();
 						}
 
 						return content;
@@ -356,7 +356,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 
 				if(action == FluidAction.EXECUTE){
 					fluids[tank].shrink(change);
-					markDirty();
+					setChanged();
 				}
 
 				return content;
@@ -465,9 +465,9 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 
 		public void init(){
 			if(!initHeat){
-				temp = HeatUtil.convertBiomeTemp(world, pos);
+				temp = HeatUtil.convertBiomeTemp(level, worldPosition);
 				initHeat = true;
-				markDirty();
+				setChanged();
 			}
 		}
 
@@ -481,14 +481,14 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 		public void setTemp(double tempIn){
 			initHeat = true;
 			temp = tempIn;
-			markDirty();
+			setChanged();
 		}
 
 		@Override
 		public void addHeat(double heat){
 			init();
 			temp += heat;
-			markDirty();
+			setChanged();
 		}
 	}
 
@@ -512,7 +512,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 		@Override
 		public void setEnergy(double newEnergy){
 			energy = newEnergy;
-			markDirty();
+			setChanged();
 		}
 
 		@Override

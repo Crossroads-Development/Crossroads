@@ -57,7 +57,7 @@ public class IceboxTileEntity extends InventoryTE{
 	@Override
 	public void tick(){
 		super.tick();
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 
@@ -66,13 +66,13 @@ public class IceboxTileEntity extends InventoryTE{
 				temp = Math.max(MIN_TEMP, temp - RATE);
 			}
 			if(--burnTime == 0){
-				world.setBlockState(pos, CRBlocks.icebox.getDefaultState().with(CRProperties.ACTIVE, false), 18);
+				level.setBlock(worldPosition, CRBlocks.icebox.defaultBlockState().setValue(CRProperties.ACTIVE, false), 18);
 			}
-			markDirty();
+			setChanged();
 		}
 
 		Optional<IceboxRec> rec;
-		if(burnTime == 0 && (rec = world.getRecipeManager().getRecipe(CRRecipes.COOLING_TYPE, this, world)).isPresent()){
+		if(burnTime == 0 && (rec = level.getRecipeManager().getRecipeFor(CRRecipes.COOLING_TYPE, this, level)).isPresent()){
 			burnTime = Math.round(rec.get().getCooling());
 			maxBurnTime = burnTime;
 			Item item = inventory[0].getItem();
@@ -80,29 +80,29 @@ public class IceboxTileEntity extends InventoryTE{
 			if(inventory[0].isEmpty() && item.hasContainerItem(inventory[0])){
 				inventory[0] = item.getContainerItem(inventory[0]);
 			}
-			world.setBlockState(pos, CRBlocks.icebox.getDefaultState().with(CRProperties.ACTIVE, true), 18);
-			markDirty();
+			level.setBlock(worldPosition, CRBlocks.icebox.defaultBlockState().setValue(CRProperties.ACTIVE, true), 18);
+			setChanged();
 		}
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		burnTime = nbt.getInt("burn");
 		maxBurnTime = nbt.getInt("max_burn");
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putInt("burn", burnTime);
 		nbt.putInt("max_burn", maxBurnTime);
 		return nbt;
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		itemOpt.invalidate();
 	}
 
@@ -121,12 +121,12 @@ public class IceboxTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && world.getRecipeManager().getRecipe(CRRecipes.COOLING_TYPE, new Inventory(stack), world).isPresent();
+	public boolean canPlaceItem(int index, ItemStack stack){
+		return index == 0 && level.getRecipeManager().getRecipeFor(CRRecipes.COOLING_TYPE, new Inventory(stack), level).isPresent();
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
+	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction){
 		return false;
 	}
 

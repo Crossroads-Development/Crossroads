@@ -28,18 +28,18 @@ public class HamsterWheelTileEntity extends TileEntity implements ITickableTileE
 
 	@Override
 	public void tick(){
-		Direction facing = getBlockState().get(CRProperties.HORIZ_FACING);
-		TileEntity te = world.getTileEntity(pos.offset(facing));
+		Direction facing = getBlockState().getValue(CRProperties.HORIZ_FACING);
+		TileEntity te = level.getBlockEntity(worldPosition.relative(facing));
 		LazyOptional<IAxleHandler> axleOpt;
 		if(te != null && (axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, facing.getOpposite())).isPresent()){
 			IAxleHandler axle = axleOpt.orElseThrow(NullPointerException::new);
-			if(world.isRemote){
+			if(level.isClientSide){
 				angle = axle.getAngle(0);
 				nextAngle = axle.getAngle(1F);
 				return;
 			}
 			axle.addEnergy(CRConfig.hamsterPower.get() * RotaryUtil.getCCWSign(facing), true);
-		}else if(world.isRemote){
+		}else if(level.isClientSide){
 			nextAngle = angle;
 		}
 	}

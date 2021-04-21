@@ -72,45 +72,45 @@ public final class OreSetup{
 
 	protected static void init(){
 		//Register CR metal ores, blocks, ingots, nuggets manually
-		ingotTin = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("ingot_tin");
+		ingotTin = new Item(new Item.Properties().tab(CRItems.TAB_CROSSROADS)).setRegistryName("ingot_tin");
 		CRItems.toRegister.add(ingotTin);
 		blockTin = new BasicBlock("block_tin", CRBlocks.getMetalProperty());
-		nuggetTin = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("nugget_tin");
+		nuggetTin = new Item(new Item.Properties().tab(CRItems.TAB_CROSSROADS)).setRegistryName("nugget_tin");
 		CRItems.toRegister.add(nuggetTin);
-		oreTin = new BasicBlock("ore_tin", CRBlocks.getRockProperty().hardnessAndResistance(3));
+		oreTin = new BasicBlock("ore_tin", CRBlocks.getRockProperty().strength(3));
 
-		ingotCopper = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("ingot_copper");
+		ingotCopper = new Item(new Item.Properties().tab(CRItems.TAB_CROSSROADS)).setRegistryName("ingot_copper");
 		CRItems.toRegister.add(ingotCopper);
 		blockCopper = new BasicBlock("block_copper", CRBlocks.getMetalProperty());
-		nuggetCopper = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("nugget_copper");
+		nuggetCopper = new Item(new Item.Properties().tab(CRItems.TAB_CROSSROADS)).setRegistryName("nugget_copper");
 		CRItems.toRegister.add(nuggetCopper);
-		oreCopper = new BasicBlock("ore_copper", CRBlocks.getRockProperty().hardnessAndResistance(3));
+		oreCopper = new BasicBlock("ore_copper", CRBlocks.getRockProperty().strength(3));
 
-		ingotBronze = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("ingot_bronze");
+		ingotBronze = new Item(new Item.Properties().tab(CRItems.TAB_CROSSROADS)).setRegistryName("ingot_bronze");
 		CRItems.toRegister.add(ingotBronze);
 		blockBronze = new BasicBlock("block_bronze", CRBlocks.getMetalProperty());
-		nuggetBronze = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("nugget_bronze");
+		nuggetBronze = new Item(new Item.Properties().tab(CRItems.TAB_CROSSROADS)).setRegistryName("nugget_bronze");
 		CRItems.toRegister.add(nuggetBronze);
 
-		gemRuby = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("gem_ruby");
+		gemRuby = new Item(new Item.Properties().tab(CRItems.TAB_CROSSROADS)).setRegistryName("gem_ruby");
 		CRItems.toRegister.add(gemRuby);
 		blockRuby = new BasicBlock("block_ruby", CRBlocks.getRockProperty());
-		oreRuby = new BasicBlock("ore_ruby", CRBlocks.getRockProperty().harvestLevel(2).hardnessAndResistance(3));
+		oreRuby = new BasicBlock("ore_ruby", CRBlocks.getRockProperty().harvestLevel(2).strength(3));
 
-		ingotCopshowium = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)){
+		ingotCopshowium = new Item(new Item.Properties().tab(CRItems.TAB_CROSSROADS)){
 			@Override
-			public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+			public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 				tooltip.add(new TranslationTextComponent("tt.crossroads.copshowium.quip").setStyle(MiscUtil.TT_QUIP));
 			}
 		}.setRegistryName("ingot_copshowium");
 		CRItems.toRegister.add(ingotCopshowium);
 		blockCopshowium = new BasicBlock("block_copshowium", CRBlocks.getMetalProperty());
-		nuggetCopshowium = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("nugget_copshowium");
+		nuggetCopshowium = new Item(new Item.Properties().tab(CRItems.TAB_CROSSROADS)).setRegistryName("nugget_copshowium");
 		CRItems.toRegister.add(nuggetCopshowium);
 
-		voidCrystal = new Item(new Item.Properties().group(CRItems.TAB_CROSSROADS)).setRegistryName("void_crystal");
+		voidCrystal = new Item(new Item.Properties().tab(CRItems.TAB_CROSSROADS)).setRegistryName("void_crystal");
 		CRItems.toRegister.add(voidCrystal);
-		oreVoid = new BasicBlock("ore_void", CRBlocks.getRockProperty().hardnessAndResistance(3, 9).harvestLevel(2));
+		oreVoid = new BasicBlock("ore_void", CRBlocks.getRockProperty().strength(3, 9).harvestLevel(2));
 		
 		loadConfig();
 	}

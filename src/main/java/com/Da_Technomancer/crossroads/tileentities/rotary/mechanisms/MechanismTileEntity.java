@@ -54,7 +54,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		int part = -1;
-		Vector3d hitVec = hit.getHitVec().subtract(pos.getX(), pos.getY(), pos.getZ());//Subtract position, as the VoxelShapes are defined relative to position
+		Vector3d hitVec = hit.getLocation().subtract(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());//Subtract position, as the VoxelShapes are defined relative to position
 		for(int i = 0; i < 7; i++){
 			if(boundingBoxes[i] != null && Mechanism.voxelContains(boundingBoxes[i], hitVec)){
 				part = i;
@@ -100,8 +100,8 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 		mats[index] = mat;
 		if(index == 6 && getAxleAxis() != axis){
 			axleAxis = axis;
-			if(!newTE && !world.isRemote){
-				CRPackets.sendPacketAround(world, pos, new SendLongToClient(14, axis == null ? -1 : axis.ordinal(), pos));
+			if(!newTE && !level.isClientSide){
+				CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(14, axis == null ? -1 : axis.ordinal(), worldPosition));
 			}
 		}
 
@@ -111,12 +111,12 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 			axleHandlers[index].updateStates(true);
 		}
 
-		markDirty();
+		setChanged();
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 
 		// members
 		for(int i = 0; i < 7; i++){
@@ -158,8 +158,8 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 
 		if(nbt.contains("[6]memb") && nbt.contains("[6]mat")){
 			axleAxis = Direction.Axis.values()[nbt.getInt("axis")];
@@ -221,8 +221,8 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 //			}
 //		}
 
-		if(updateMembers && !world.isRemote){
-			CRPackets.sendPacketAround(world, pos, new SendLongToClient(14, getAxleAxis() == null ? -1 : getAxleAxis().ordinal(), pos));
+		if(updateMembers && !level.isClientSide){
+			CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(14, getAxleAxis() == null ? -1 : getAxleAxis().ordinal(), worldPosition));
 			for(int i = 0; i < 7; i++){
 				axleHandlers[i].updateStates(true);
 			}
@@ -231,16 +231,16 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	public void updateRedstone(){
-		int reds = RedstoneUtil.getRedstoneAtPos(world, pos);
+		int reds = RedstoneUtil.getRedstoneAtPos(level, worldPosition);
 		if(reds != redstoneIn){
-			markDirty();
+			setChanged();
 			for(int i = 0; i < 7; i++){
 				if(members[i] != null){
-					members[i].onRedstoneChange(redstoneIn, reds, mats[i], i == 6 ? null : Direction.byIndex(i), getAxleAxis(), energy[i], axleHandlers[i].getSpeed(), this);
+					members[i].onRedstoneChange(redstoneIn, reds, mats[i], i == 6 ? null : Direction.from3DDataValue(i), getAxleAxis(), energy[i], axleHandlers[i].getSpeed(), this);
 				}
 			}
 			redstoneIn = reds;
-			CRPackets.sendPacketAround(world, pos, new SendLongToClient(15, (long) redstoneIn, pos));
+			CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(15, (long) redstoneIn, worldPosition));
 		}
 	}
 
@@ -257,8 +257,8 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	private final LazyOptional<ICogHandler>[] cogOpts = new LazyOptional[] {LazyOptional.of(() -> new SidedCogHandler(0)), LazyOptional.of(() -> new SidedCogHandler(1)), LazyOptional.of(() -> new SidedCogHandler(2)), LazyOptional.of(() -> new SidedCogHandler(3)), LazyOptional.of(() -> new SidedCogHandler(4)), LazyOptional.of(() -> new SidedCogHandler(5))};
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		for(int i = 0; i < 6; i++){
 			cogOpts[i].invalidate();
 			axleOpts[i].invalidate();
@@ -270,19 +270,19 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.COG_CAPABILITY && facing != null){
-			if(members[facing.getIndex()] != null && members[facing.getIndex()].hasCap(capability, facing, mats[facing.getIndex()], facing, getAxleAxis(), this)){
-				return (LazyOptional<T>) cogOpts[facing.getIndex()];
+			if(members[facing.get3DDataValue()] != null && members[facing.get3DDataValue()].hasCap(capability, facing, mats[facing.get3DDataValue()], facing, getAxleAxis(), this)){
+				return (LazyOptional<T>) cogOpts[facing.get3DDataValue()];
 			}else{
 				return LazyOptional.empty();
 			}
 		}
 		if(capability == Capabilities.AXLE_CAPABILITY && facing != null){
-			if(members[facing.getIndex()] == null && getAxleAxis() == facing.getAxis() && members[6] != null){
+			if(members[facing.get3DDataValue()] == null && getAxleAxis() == facing.getAxis() && members[6] != null){
 				//Connect to axle
 				return members[6].hasCap(capability, facing, mats[6], null, getAxleAxis(), this) ? (LazyOptional<T>) axleOpts[6] : LazyOptional.empty();
 			}else{
 				//Connect to gear on that side
-				return members[facing.getIndex()] != null && members[facing.getIndex()].hasCap(capability, facing, mats[facing.getIndex()], facing, getAxleAxis(), this) ? (LazyOptional<T>) axleOpts[facing.getIndex()] : LazyOptional.empty();
+				return members[facing.get3DDataValue()] != null && members[facing.get3DDataValue()].hasCap(capability, facing, mats[facing.get3DDataValue()], facing, getAxleAxis(), this) ? (LazyOptional<T>) axleOpts[facing.get3DDataValue()] : LazyOptional.empty();
 			}
 		}
 
@@ -320,7 +320,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	 * Careful when using this- any situation where the blockstate might change makes this unacceptable
 	 */
 	private void markDirtyLight(){
-		world.markChunkDirty(this.pos, this);
+		level.blockEntityChanged(this.worldPosition, this);
 	}
 
 	protected class SidedAxleHandler implements IAxleHandler{
@@ -360,7 +360,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 			if(members[side] != null){
 				this.renderOffset = renderOffset;
 				axis = masterIn;
-				members[side].propagate(mats[side], side == 6 ? null : Direction.byIndex(side), getAxleAxis(), MechanismTileEntity.this, this, masterIn, key, rotRatioIn, lastRadius);
+				members[side].propagate(mats[side], side == 6 ? null : Direction.from3DDataValue(side), getAxleAxis(), MechanismTileEntity.this, this, masterIn, key, rotRatioIn, lastRadius);
 			}
 		}
 
@@ -384,12 +384,12 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 				energy[side] = 0;
 				boundingBoxes[side] = null;
 			}else{
-				inertia[side] = members[side].getInertia(mats[side], side == 6 ? null : Direction.byIndex(side), getAxleAxis());
-				boundingBoxes[side] = members[side].getBoundingBox(side == 6 ? null : Direction.byIndex(side), getAxleAxis());
+				inertia[side] = members[side].getInertia(mats[side], side == 6 ? null : Direction.from3DDataValue(side), getAxleAxis());
+				boundingBoxes[side] = members[side].getBoundingBox(side == 6 ? null : Direction.from3DDataValue(side), getAxleAxis());
 			}
 
-			if(sendPacket && !world.isRemote){
-				CRPackets.sendPacketAround(world, pos, new SendLongToClient(side + 7, members[side] == null ? -1L : (MECHANISMS.indexOf(members[side]) & 0xFFFFFFFFL) | (long) (mats[side].serialize()) << 32L, pos));
+			if(sendPacket && !level.isClientSide){
+				CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(side + 7, members[side] == null ? -1L : (MECHANISMS.indexOf(members[side]) & 0xFFFFFFFFL) | (long) (mats[side].serialize()) << 32L, worldPosition));
 			}
 		}
 

@@ -27,7 +27,7 @@ public class GearFacade extends Item{
 	private final FacadeBlock block;
 
 	public GearFacade(FacadeBlock block){
-		super(new Item.Properties().group(CRItems.TAB_CROSSROADS));
+		super(new Item.Properties().tab(CRItems.TAB_CROSSROADS));
 		this.block = block;
 		setRegistryName("gear_facade_" + block.getSaveName());
 		CRItems.toRegister.add(this);
@@ -65,39 +65,39 @@ public class GearFacade extends Item{
 	}
 
 	@Override
-	public ActionResultType onItemUse(ItemUseContext context){
+	public ActionResultType useOn(ItemUseContext context){
 		FacadeBlock type = getMaterial();
 		if(type == null){
 			return ActionResultType.SUCCESS;
 		}
-		World world = context.getWorld();
-		BlockPos pos = context.getPos();//The position of the block clicked
-		Direction side = context.getFace();
+		World world = context.getLevel();
+		BlockPos pos = context.getClickedPos();//The position of the block clicked
+		Direction side = context.getClickedFace();
 		PlayerEntity playerIn = context.getPlayer();
 		BlockPos placePos = pos;//Where the gear will be placed
-		TileEntity teAtPlacement = world.getTileEntity(placePos);
+		TileEntity teAtPlacement = world.getBlockEntity(placePos);
 
 		if(teAtPlacement instanceof MechanismTileEntity){
 			//Try to place inside clicked mechanism
-			int mechInd = side.getIndex();
+			int mechInd = side.get3DDataValue();
 			MechanismTileEntity mte = (MechanismTileEntity) teAtPlacement;
 			if(mte.members[mechInd] == null){
 				//This spot is not already taken
 				mte.setMechanism(mechInd, mechanismToPlace(), type, null, false);
 
 				//Consume an item
-				if(!world.isRemote && (playerIn == null || !playerIn.isCreative())){
-					context.getItem().shrink(1);
+				if(!world.isClientSide && (playerIn == null || !playerIn.isCreative())){
+					context.getItemInHand().shrink(1);
 				}
 				return ActionResultType.SUCCESS;
 			}
 		}
 
 		//Try to place in adjacent block
-		placePos = pos.offset(side);//Where the gear will be placed
+		placePos = pos.relative(side);//Where the gear will be placed
 		BlockState stateAtPlacement = world.getBlockState(placePos);
-		teAtPlacement = world.getTileEntity(placePos);
-		int mechInd = side.getOpposite().getIndex();//Index this gear would be placed within the mechanism
+		teAtPlacement = world.getBlockEntity(placePos);
+		int mechInd = side.getOpposite().get3DDataValue();//Index this gear would be placed within the mechanism
 		if(teAtPlacement instanceof MechanismTileEntity){
 			//Existing mechanism TE to expand
 			MechanismTileEntity mte = (MechanismTileEntity) teAtPlacement;
@@ -109,14 +109,14 @@ public class GearFacade extends Item{
 			mte.setMechanism(mechInd, mechanismToPlace(), type, null, false);
 
 			//Consume an item
-			if(!world.isRemote && (playerIn == null || !playerIn.isCreative())){
-				context.getItem().shrink(1);
+			if(!world.isClientSide && (playerIn == null || !playerIn.isCreative())){
+				context.getItemInHand().shrink(1);
 			}
-		}else if(stateAtPlacement.isReplaceable(new BlockItemUseContext(context))){
+		}else if(stateAtPlacement.canBeReplaced(new BlockItemUseContext(context))){
 			//No existing mechanism- we will create a new one
-			world.setBlockState(placePos, CRBlocks.mechanism.getDefaultState(), 3);
+			world.setBlock(placePos, CRBlocks.mechanism.defaultBlockState(), 3);
 
-			teAtPlacement = world.getTileEntity(placePos);
+			teAtPlacement = world.getBlockEntity(placePos);
 			if(teAtPlacement instanceof MechanismTileEntity){
 				((MechanismTileEntity) teAtPlacement).setMechanism(mechInd, mechanismToPlace(), type, null, true);
 			}else{
@@ -125,8 +125,8 @@ public class GearFacade extends Item{
 			}
 
 			//Consume an item
-			if(!world.isRemote && (playerIn == null || !playerIn.isCreative())){
-				context.getItem().shrink(1);
+			if(!world.isClientSide && (playerIn == null || !playerIn.isCreative())){
+				context.getItemInHand().shrink(1);
 			}
 		}
 

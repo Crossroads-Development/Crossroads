@@ -44,9 +44,9 @@ public class CircuitUtil extends RedstoneUtil{
 		float f = 0.0F;
 
 		for(int slot : slots){
-			ItemStack stack = inv.getStackInSlot(slot);
+			ItemStack stack = inv.getItem(slot);
 			if(!stack.isEmpty()){
-				f += (float) stack.getCount() / (float) Math.min(inv.getInventoryStackLimit(), stack.getMaxStackSize());
+				f += (float) stack.getCount() / (float) Math.min(inv.getMaxStackSize(), stack.getMaxStackSize());
 			}
 		}
 
@@ -61,7 +61,7 @@ public class CircuitUtil extends RedstoneUtil{
 
 	public static LazyOptional<IRedstoneHandler> makeBaseCircuitOptional(TileEntity te, InputCircHandler handler, float startingRedstone, @Nullable Listener changeListener){
 		LazyOptional<IRedstoneHandler> optional = LazyOptional.of(() -> handler);
-		handler.setup(optional, te, startingRedstone, changeListener == null ? te::markDirty : changeListener);
+		handler.setup(optional, te, startingRedstone, changeListener == null ? te::setChanged : changeListener);
 		return optional;
 	}
 
@@ -151,12 +151,12 @@ public class CircuitUtil extends RedstoneUtil{
 			dependents.clear();//Wipe the old dependents list
 
 			World world;
-			if(te != null && (world = te.getWorld()) != null && !world.isRemote){
-				BlockPos pos = te.getPos();
+			if(te != null && (world = te.getLevel()) != null && !world.isClientSide){
+				BlockPos pos = te.getBlockPos();
 
 				//Check in all 6 directions because this block outputs in every direction
 				for(Direction dir : Direction.values()){
-					TileEntity te = world.getTileEntity(pos.offset(dir));
+					TileEntity te = world.getBlockEntity(pos.relative(dir));
 					LazyOptional<IRedstoneHandler> otherOpt;
 					if(te != null && (otherOpt = te.getCapability(RedstoneUtil.REDSTONE_CAPABILITY, dir.getOpposite())).isPresent()){
 						IRedstoneHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
@@ -273,12 +273,12 @@ public class CircuitUtil extends RedstoneUtil{
 			for(Pair<WeakReference<LazyOptional<IRedstoneHandler>>, Direction> src : sources){
 				LazyOptional<IRedstoneHandler> srcOpt;
 				if((srcOpt = src.getLeft().get()) != null && srcOpt.isPresent()){
-					dirsToCheck[src.getRight().getIndex()] = null;//Mark any direction with a circuit input as not to be checked
+					dirsToCheck[src.getRight().get3DDataValue()] = null;//Mark any direction with a circuit input as not to be checked
 				}
 			}
 
-			World world = te.getWorld();
-			BlockPos pos = te.getPos();
+			World world = te.getLevel();
+			BlockPos pos = te.getBlockPos();
 			for(Direction dir : dirsToCheck){
 				if(dir != null && world != null){
 					worldRedstone = Math.max(worldRedstone, CircuitUtil.getRedstoneOnSide(world, pos, dir));
@@ -294,8 +294,8 @@ public class CircuitUtil extends RedstoneUtil{
 		private void buildConnections() {
 			//Rebuild the sources list
 			World world;
-			if(te != null && (world = te.getWorld()) != null && !world.isRemote){
-				BlockPos pos = te.getPos();
+			if(te != null && (world = te.getLevel()) != null && !world.isClientSide){
+				BlockPos pos = te.getBlockPos();
 				builtConnections = true;
 				ArrayList<Pair<WeakReference<LazyOptional<IRedstoneHandler>>, Direction>> preSrc = new ArrayList<>(sources.size());
 				preSrc.addAll(sources);
@@ -303,7 +303,7 @@ public class CircuitUtil extends RedstoneUtil{
 				sources.clear();
 
 				for(Direction checkDir : Direction.values()){
-					TileEntity checkTE = world.getTileEntity(pos.offset(checkDir));
+					TileEntity checkTE = world.getBlockEntity(pos.relative(checkDir));
 					IRedstoneHandler otherHandler;
 					if(checkTE != null && (otherHandler = BlockUtil.get(checkTE.getCapability(RedstoneUtil.REDSTONE_CAPABILITY, checkDir.getOpposite()))) != null){
 						otherHandler.requestSrc(redsRef, 0, checkDir.getOpposite(), checkDir);

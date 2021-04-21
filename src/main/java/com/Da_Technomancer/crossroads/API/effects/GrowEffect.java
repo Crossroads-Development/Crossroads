@@ -24,9 +24,9 @@ import java.util.List;
 public class GrowEffect extends BeamEffect{
 
 	//Crop types can be blacklisted from growth through the beam using the grow_blacklist tag. Intended for things like magical crops
-	private static final ITag<Block> growBlacklist = BlockTags.makeWrapperTag(Crossroads.MODID + ":grow_blacklist");
-	protected static final DamageSource POTENTIAL_VOID = new DamageSource("potentialvoid").setMagicDamage().setDamageBypassesArmor();
-	protected static final DamageSource POTENTIAL_VOID_ABSOLUTE = new DamageSource("potentialvoid").setMagicDamage().setDamageBypassesArmor().setDamageIsAbsolute();
+	private static final ITag<Block> growBlacklist = BlockTags.bind(Crossroads.MODID + ":grow_blacklist");
+	protected static final DamageSource POTENTIAL_VOID = new DamageSource("potentialvoid").setMagic().bypassArmor();
+	protected static final DamageSource POTENTIAL_VOID_ABSOLUTE = new DamageSource("potentialvoid").setMagic().bypassArmor().bypassMagic();
 
 
 	@Override
@@ -37,24 +37,24 @@ public class GrowEffect extends BeamEffect{
 				//Kill plants
 				if(!BlockSalt.salinate(worldIn, pos)){
 					//Also target the plant on this block so we can hit the soil and affect the plant on it
-					BlockSalt.salinate(worldIn, pos.up());
+					BlockSalt.salinate(worldIn, pos.above());
 				}
 
-				List<LivingEntity> ents = worldIn.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range + 1, pos.getY() + range + 1, pos.getZ() + range + 1), EntityPredicates.IS_ALIVE);
+				List<LivingEntity> ents = worldIn.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range + 1, pos.getY() + range + 1, pos.getZ() + range + 1), EntityPredicates.ENTITY_STILL_ALIVE);
 				boolean absoluteDamage = CRConfig.beamDamageAbsolute.get();
 				for(LivingEntity ent : ents){
-					if(ent.isEntityUndead()){
+					if(ent.isInvertedHealAndHarm()){
 						ent.heal(power * 3F / 4F);
 					}else{
-						ent.attackEntityFrom(absoluteDamage ? POTENTIAL_VOID_ABSOLUTE : POTENTIAL_VOID, power * 3F / 4F);
+						ent.hurt(absoluteDamage ? POTENTIAL_VOID_ABSOLUTE : POTENTIAL_VOID, power * 3F / 4F);
 					}
 				}
 			}else{
-				List<LivingEntity> ents = worldIn.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range, pos.getY() + range, pos.getZ() + range), EntityPredicates.IS_ALIVE);
+				List<LivingEntity> ents = worldIn.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range, pos.getY() + range, pos.getZ() + range), EntityPredicates.ENTITY_STILL_ALIVE);
 				boolean absoluteDamage = CRConfig.beamDamageAbsolute.get();
 				for(LivingEntity ent : ents){
-					if(ent.isEntityUndead()){
-						ent.attackEntityFrom(absoluteDamage ? POTENTIAL_VOID_ABSOLUTE : POTENTIAL_VOID, power / 2F);
+					if(ent.isInvertedHealAndHarm()){
+						ent.hurt(absoluteDamage ? POTENTIAL_VOID_ABSOLUTE : POTENTIAL_VOID, power / 2F);
 					}else{
 						ent.heal(power / 2F);
 					}
@@ -63,13 +63,13 @@ public class GrowEffect extends BeamEffect{
 				//Optional config option to nerf the bonemeal effect
 				int growMultiplier = CRConfig.growMultiplier.get();
 				if(growMultiplier > 1){
-					power = power / growMultiplier + ((worldIn.rand.nextInt(growMultiplier) < power % growMultiplier) ? 1 : 0);
+					power = power / growMultiplier + ((worldIn.random.nextInt(growMultiplier) < power % growMultiplier) ? 1 : 0);
 				}
 
 				BlockState state = worldIn.getBlockState(pos);
 				//We check above the hit block if it isn't growable, as that allows growing plants by hitting the soil
 				if(!(state.getBlock() instanceof IGrowable)){
-					pos = pos.up();
+					pos = pos.above();
 					state = worldIn.getBlockState(pos);
 				}
 
@@ -82,8 +82,8 @@ public class GrowEffect extends BeamEffect{
 						return;
 					}
 					IGrowable growable = (IGrowable) state.getBlock();
-					if(growable.canGrow(worldIn, pos, state, false)){
-						growable.grow((ServerWorld) worldIn, worldIn.rand, pos, state);
+					if(growable.isValidBonemealTarget(worldIn, pos, state, false)){
+						growable.performBonemeal((ServerWorld) worldIn, worldIn.random, pos, state);
 					}
 					//The state must be quarried every loop because some plants could break themselves upon growing
 					state = worldIn.getBlockState(pos);

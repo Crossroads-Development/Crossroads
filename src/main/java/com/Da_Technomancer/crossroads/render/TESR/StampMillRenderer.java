@@ -31,35 +31,35 @@ public class StampMillRenderer extends TileEntityRenderer<StampMillTileEntity>{
 
 		float prog = te.renderAngle(partialTicks);
 		matrix.translate(0.5D, 1.5D, 0.5D);
-		if(state.get(CRProperties.HORIZ_AXIS) == Direction.Axis.Z){
-			matrix.rotate(Vector3f.YP.rotationDegrees(90));
+		if(state.getValue(CRProperties.HORIZ_AXIS) == Direction.Axis.Z){
+			matrix.mulPose(Vector3f.YP.rotationDegrees(90));
 		}
 
 		//Axle
-		matrix.push();
-		matrix.rotate(Vector3f.ZP.rotationDegrees(90));
-		matrix.rotate(Vector3f.YP.rotationDegrees(-prog));
+		matrix.pushPose();
+		matrix.mulPose(Vector3f.ZP.rotationDegrees(90));
+		matrix.mulPose(Vector3f.YP.rotationDegrees(-prog));
 		CRModels.drawAxle(matrix, buffer, combinedLight, ironColor);
 
 		//Teeth
 		for(int i = 0; i < 3; i++){
-			matrix.push();
+			matrix.pushPose();
 			matrix.translate(0, -13F / 32F + 5F * i / 16F, 0);
-			matrix.rotate(Vector3f.YP.rotationDegrees(i * 90 + 90));
-			matrix.rotate(Vector3f.ZP.rotationDegrees(90));
+			matrix.mulPose(Vector3f.YP.rotationDegrees(i * 90 + 90));
+			matrix.mulPose(Vector3f.ZP.rotationDegrees(90));
 			matrix.scale(0.4F, 0.5F, 0.4F);
 			CRModels.drawAxle(matrix, buffer, combinedLight, ironColor);
-			matrix.pop();
+			matrix.popPose();
 		}
 
-		matrix.pop();
+		matrix.popPose();
 
 		double offset0 = (Math.sin(2D * Math.toRadians(prog)) + 1D) / 2D * 9D / 32D;
 		double offset1 = (Math.sin(2D * Math.toRadians(prog - 90D)) + 1D) / 2D * 9D / 32D;
 		matrix.translate(-5F/ 16F, offset1, -2F / 8F);
 
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.CAST_IRON_TEXTURE);
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
+		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
 
 		//Stamps
 		for(int i = 0; i < 3; i++){
@@ -70,14 +70,14 @@ public class StampMillRenderer extends TileEntityRenderer<StampMillTileEntity>{
 			float rodLen = 14F / 16F;
 
 			//Texture coors
-			float uRad = sprite.getInterpolatedU(rodRad * 16);
-			float u2Rad = sprite.getInterpolatedU(rodRad * 2 * 16);
-			float u3Rad = sprite.getInterpolatedU(rodRad * 3 * 16);
+			float uRad = sprite.getU(rodRad * 16);
+			float u2Rad = sprite.getU(rodRad * 2 * 16);
+			float u3Rad = sprite.getU(rodRad * 3 * 16);
 
-			float v0 = sprite.getMinV();
-			float vLen = sprite.getInterpolatedV(rodLen * 16);
-			float vRad = sprite.getInterpolatedV(rodRad * 16);
-			float v3Rad = sprite.getInterpolatedV(rodRad * 3 * 16);
+			float v0 = sprite.getV0();
+			float vLen = sprite.getV(rodLen * 16);
+			float vRad = sprite.getV(rodRad * 16);
+			float v3Rad = sprite.getV(rodRad * 3 * 16);
 
 			CRRenderUtil.addVertexBlock(builder, matrix, -rodRad, 0, -rodRad, uRad, v0, 0, 0, -1, combinedLight);
 			CRRenderUtil.addVertexBlock(builder, matrix, rodRad, 0, -rodRad, u3Rad, v0, 0, 0, -1, combinedLight);
@@ -133,7 +133,7 @@ public class StampMillRenderer extends TileEntityRenderer<StampMillTileEntity>{
 			//Stamp Head
 			rodRad = 1F / 8F;
 			float bottom = 1.25F;
-			float vDiff = sprite.getInterpolatedV((bottom - rodLen) * 16D);
+			float vDiff = sprite.getV((bottom - rodLen) * 16D);
 
 			CRRenderUtil.addVertexBlock(builder, matrix, -rodRad, -rodLen, -rodRad, uRad, v0, 0, 0, -1, combinedLight);
 			CRRenderUtil.addVertexBlock(builder, matrix, rodRad, -rodLen, -rodRad, u3Rad, v0, 0, 0, -1, combinedLight);

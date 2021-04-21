@@ -34,13 +34,13 @@ public class SequenceBoxContainer extends Container{
 			int size = data.readVarInt();
 			inputs = new ArrayList<>(size);
 			for(int i = 0; i < size; i++){
-				inputs.add(data.readString(Short.MAX_VALUE));
+				inputs.add(data.readUtf(Short.MAX_VALUE));
 			}
 		}
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity playerIn){
-		return pos != null && pos.distanceSq(playerIn.getPositionVec(), true) <= 64;
+	public boolean stillValid(PlayerEntity playerIn){
+		return pos != null && pos.distSqr(playerIn.position(), true) <= 64;
 	}
 }

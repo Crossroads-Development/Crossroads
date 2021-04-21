@@ -35,40 +35,40 @@ public class GatewayControllerDestination extends ContainerBlock{
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
-		setDefaultState(getDefaultState().with(CRProperties.ACTIVE, false));
+		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false));
 	}
 
 	@Nullable
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new GatewayControllerDestinationTileEntity();
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
 		TileEntity te;
-		if(!worldIn.isRemote && worldIn.isBlockPowered(pos) && (te = worldIn.getTileEntity(pos)) instanceof GatewayControllerDestinationTileEntity){
+		if(!worldIn.isClientSide && worldIn.hasNeighborSignal(pos) && (te = worldIn.getBlockEntity(pos)) instanceof GatewayControllerDestinationTileEntity){
 			((GatewayControllerDestinationTileEntity) te).redstoneInput();
 		}
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		//If this is formed into a multiblock, we let the TESR on the top handle all rendering
-		return state.get(CRProperties.ACTIVE) ? BlockRenderType.ENTITYBLOCK_ANIMATED : BlockRenderType.MODEL;
+		return state.getValue(CRProperties.ACTIVE) ? BlockRenderType.ENTITYBLOCK_ANIMATED : BlockRenderType.MODEL;
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
 		builder.add(CRProperties.ACTIVE);//ACTIVE is whether this is formed into a multiblock
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult ray){
-		ItemStack held = player.getHeldItem(hand);
-		if(!state.get(CRProperties.ACTIVE) && ESConfig.isWrench(held)){
+	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult ray){
+		ItemStack held = player.getItemInHand(hand);
+		if(!state.getValue(CRProperties.ACTIVE) && ESConfig.isWrench(held)){
 			//Attempt to form the multiblock
-			TileEntity te = world.getTileEntity(pos);
+			TileEntity te = world.getBlockEntity(pos);
 			if(te instanceof GatewayControllerDestinationTileEntity){
 				((GatewayControllerDestinationTileEntity) te).assemble(player);
 				return ActionResultType.SUCCESS;
@@ -78,23 +78,23 @@ public class GatewayControllerDestination extends ContainerBlock{
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
-		TileEntity te = world.getTileEntity(pos);
+	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
+		TileEntity te = world.getBlockEntity(pos);
 		if(newState.getBlock() != state.getBlock() && te instanceof IGateway){
 			((IGateway) te).dismantle();//Shutdown the multiblock
 		}
-		super.onReplaced(state, world, pos, newState, isMoving);
+		super.onRemove(state, world, pos, newState, isMoving);
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flag){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flag){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.gateway.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.gateway.destination"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.gateway.destination.redial"));
 	}
 
 	@Override
-	public PushReaction getPushReaction(BlockState state){
+	public PushReaction getPistonPushReaction(BlockState state){
 		return PushReaction.BLOCK;//Some mods make TileEntities piston moveable. That would be really bad for this block
 	}
 }

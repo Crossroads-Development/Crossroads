@@ -18,7 +18,7 @@ import java.util.List;
 public class PermeableObsidian extends Block{
 
 	public PermeableObsidian(){
-		super(Properties.create(Material.ROCK, MaterialColor.BLACK).hardnessAndResistance(50, 1200));
+		super(Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).strength(50, 1200));
 		String name = "permeable_obsidian";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
@@ -27,7 +27,7 @@ public class PermeableObsidian extends Block{
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void addInformation(ItemStack stack, @Nullable IBlockReader player, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader player, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.beam_permeable"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.blast_resist"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.decor"));

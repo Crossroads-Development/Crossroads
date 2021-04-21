@@ -67,7 +67,7 @@ public abstract class SingleIngrRecipe implements IOptionalRecipe<IInventory>{
 	 * possible result (e.g. it's dynamic and depends on its inputs), then return an empty stack.
 	 */
 	@Override
-	public ItemStack getRecipeOutput() {
+	public ItemStack getResultItem() {
 		return result;
 	}
 
@@ -80,14 +80,14 @@ public abstract class SingleIngrRecipe implements IOptionalRecipe<IInventory>{
 
 	@Override
 	public boolean matches(IInventory inv, World worldIn){
-		return isEnabled() && ingredient.test(inv.getStackInSlot(0));
+		return isEnabled() && ingredient.test(inv.getItem(0));
 	}
 
 	/**
 	 * Used to determine if this recipe can fit in a grid of the given width/height
 	 */
 	@Override
-	public boolean canFit(int width, int height) {
+	public boolean canCraftInDimensions(int width, int height) {
 		return width != 0 && height != 0;
 	}
 
@@ -100,8 +100,8 @@ public abstract class SingleIngrRecipe implements IOptionalRecipe<IInventory>{
 		}
 
 		@Override
-		public T read(ResourceLocation recipeId, JsonObject json){
-			String s = JSONUtils.getString(json, "group", "");
+		public T fromJson(ResourceLocation recipeId, JsonObject json){
+			String s = JSONUtils.getAsString(json, "group", "");
 			if(!CraftingUtil.isActiveJSON(json)){
 				return factory.create(recipeId, s, Ingredient.EMPTY, ItemStack.EMPTY, false);
 			}
@@ -112,22 +112,22 @@ public abstract class SingleIngrRecipe implements IOptionalRecipe<IInventory>{
 		}
 
 		@Override
-		public T read(ResourceLocation recipeId, PacketBuffer buffer){
-			String s = buffer.readString(Short.MAX_VALUE);
+		public T fromNetwork(ResourceLocation recipeId, PacketBuffer buffer){
+			String s = buffer.readUtf(Short.MAX_VALUE);
 			if(!buffer.readBoolean()){
 				return factory.create(recipeId, s, Ingredient.EMPTY, ItemStack.EMPTY, false);
 			}
-			Ingredient ingredient = Ingredient.read(buffer);
-			ItemStack itemstack = buffer.readItemStack();
+			Ingredient ingredient = Ingredient.fromNetwork(buffer);
+			ItemStack itemstack = buffer.readItem();
 			return factory.create(recipeId, s, ingredient, itemstack, true);
 		}
 
 		@Override
-		public void write(PacketBuffer buffer, T recipe){
-			buffer.writeString(recipe.getGroup());
+		public void toNetwork(PacketBuffer buffer, T recipe){
+			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.isEnabled());
-			recipe.getIngredients().get(0).write(buffer);
-			buffer.writeItemStack(recipe.getRecipeOutput());
+			recipe.getIngredients().get(0).toNetwork(buffer);
+			buffer.writeItem(recipe.getResultItem());
 		}
 
 		public interface IRecipeFactory<T extends SingleIngrRecipe>{

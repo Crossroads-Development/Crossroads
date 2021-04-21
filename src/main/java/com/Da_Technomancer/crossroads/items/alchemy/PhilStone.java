@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 public class PhilStone extends Item{
 
 	public PhilStone(boolean pracStone){
-		super(new Properties().group(CRItems.TAB_CROSSROADS));
+		super(new Properties().tab(CRItems.TAB_CROSSROADS));
 		String name = pracStone ? "prac_stone" : "phil_stone";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
@@ -24,10 +24,10 @@ public class PhilStone extends Item{
 	public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity){
 		if(entity.isOnGround()){
 			AxisAlignedBB entityBox = entity.getBoundingBox();
-			clearBlock(entity.world, new BlockPos(entityBox.maxX, entityBox.minY - 0.05D, entityBox.maxZ));
-			clearBlock(entity.world, new BlockPos(entityBox.maxX, entityBox.minY - 0.05D, entityBox.minZ));
-			clearBlock(entity.world, new BlockPos(entityBox.minX, entityBox.minY - 0.05D, entityBox.maxZ));
-			clearBlock(entity.world, new BlockPos(entityBox.minX, entityBox.minY - 0.05D, entityBox.minZ));
+			clearBlock(entity.level, new BlockPos(entityBox.maxX, entityBox.minY - 0.05D, entityBox.maxZ));
+			clearBlock(entity.level, new BlockPos(entityBox.maxX, entityBox.minY - 0.05D, entityBox.minZ));
+			clearBlock(entity.level, new BlockPos(entityBox.minX, entityBox.minY - 0.05D, entityBox.maxZ));
+			clearBlock(entity.level, new BlockPos(entityBox.minX, entityBox.minY - 0.05D, entityBox.minZ));
 		}
 		return false;
 	}
@@ -35,9 +35,9 @@ public class PhilStone extends Item{
 	private static void clearBlock(World world, BlockPos pos){
 		BlockState state = world.getBlockState(pos);
 		//Able to break any non-indestructible block, and also bedrock
-		if(!state.getBlock().isAir(state, world, pos) && (state.getBlockHardness(world, pos) >= 0 || state.getBlock() == Blocks.BEDROCK)){
-			world.setBlockState(pos, Blocks.AIR.getDefaultState());
-			world.addParticle(ParticleTypes.SMOKE, pos.getX() + world.rand.nextDouble(), pos.getY() + world.rand.nextDouble(), pos.getZ() + world.rand.nextDouble(), 0, 0, 0);
+		if(!state.getBlock().isAir(state, world, pos) && (state.getDestroySpeed(world, pos) >= 0 || state.getBlock() == Blocks.BEDROCK)){
+			world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+			world.addParticle(ParticleTypes.SMOKE, pos.getX() + world.random.nextDouble(), pos.getY() + world.random.nextDouble(), pos.getZ() + world.random.nextDouble(), 0, 0, 0);
 		}
 	}
 }

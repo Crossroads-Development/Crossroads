@@ -20,8 +20,8 @@ public class IceboxContainer extends MachineContainer<IceboxTileEntity>{
 	public IceboxContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
 		super(type, id, playerInv, buf);
 
-		coolProg = new IntDeferredRef(te::getCoolProg, te.getWorld().isRemote);
-		trackInt(coolProg);
+		coolProg = new IntDeferredRef(te::getCoolProg, te.getLevel().isClientSide);
+		addDataSlot(coolProg);
 	}
 
 	@Override

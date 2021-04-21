@@ -31,30 +31,30 @@ public class BeamSplitter extends BeamBlock implements IWireConnect{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new BeamSplitterTileEntity();
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
+	public void setPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		neighborChanged(state, world, pos, this, pos, false);
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
-		super.fillStateContainer(builder);
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
+		super.createBlockStateDefinition(builder);
 		builder.add(CRProperties.POWER_LEVEL);
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		int power = RedstoneUtil.getRedstoneAtPos(context.getWorld(), context.getPos());
-		return super.getStateForPlacement(context).with(CRProperties.POWER_LEVEL, power >= 15 ? 2 : power == 0 ? 0 : 1);
+		int power = RedstoneUtil.getRedstoneAtPos(context.getLevel(), context.getClickedPos());
+		return super.getStateForPlacement(context).setValue(CRProperties.POWER_LEVEL, power >= 15 ? 2 : power == 0 ? 0 : 1);
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
-		TileEntity te = worldIn.getTileEntity(pos);
+		TileEntity te = worldIn.getBlockEntity(pos);
 
 		if(te instanceof BeamSplitterTileEntity){
 			BeamSplitterTileEntity bte = (BeamSplitterTileEntity) te;
@@ -63,7 +63,7 @@ public class BeamSplitter extends BeamBlock implements IWireConnect{
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_splitter.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.circuit"));
 	}

@@ -45,13 +45,13 @@ public class StampMill extends ContainerBlock implements IReadable{
 	private static final VoxelShape[] SHAPES = new VoxelShape[2];
 
 	static{
-		VoxelShape base = makeCuboidShape(0, 0, 0, 16, 4, 16);
-		SHAPES[0] = VoxelShapes.or(base, makeCuboidShape(0, 4, 3, 1, 16, 11), makeCuboidShape(15, 4, 3, 16, 16, 11));
-		SHAPES[1] = VoxelShapes.or(base, makeCuboidShape(3, 4, 0, 11, 16, 1), makeCuboidShape(3, 4, 15, 11, 16, 16));
+		VoxelShape base = box(0, 0, 0, 16, 4, 16);
+		SHAPES[0] = VoxelShapes.or(base, box(0, 4, 3, 1, 16, 11), box(15, 4, 3, 16, 16, 11));
+		SHAPES[1] = VoxelShapes.or(base, box(3, 4, 0, 11, 16, 1), box(3, 4, 15, 11, 16, 16));
 	}
 
 	public StampMill(){
-		super(Properties.create(Material.WOOD).hardnessAndResistance(1).sound(SoundType.METAL));
+		super(Properties.of(Material.WOOD).strength(1).sound(SoundType.METAL));
 		String name = "stamp_mill";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
@@ -60,91 +60,91 @@ public class StampMill extends ContainerBlock implements IReadable{
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
-		return SHAPES[state.get(CRProperties.HORIZ_AXIS) == Direction.Axis.X ? 0 : 1];
+		return SHAPES[state.getValue(CRProperties.HORIZ_AXIS) == Direction.Axis.X ? 0 : 1];
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		TileEntity te;
-		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
-			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.func_235896_a_(CRProperties.HORIZ_AXIS));
-				BlockState upState = worldIn.getBlockState(pos.up());
+		if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
+			if(!worldIn.isClientSide){
+				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.HORIZ_AXIS));
+				BlockState upState = worldIn.getBlockState(pos.above());
 				if(upState.getBlock() instanceof StampMillTop){
-					worldIn.setBlockState(pos.up(), upState.func_235896_a_(CRProperties.HORIZ_AXIS));
+					worldIn.setBlockAndUpdate(pos.above(), upState.cycle(CRProperties.HORIZ_AXIS));
 				}
 			}
-		}else if(!worldIn.isRemote && (te = worldIn.getTileEntity(pos)) instanceof INamedContainerProvider){
+		}else if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) instanceof INamedContainerProvider){
 			NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);
 		}
 		return ActionResultType.SUCCESS;
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new StampMillTileEntity();
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
-		InventoryHelper.dropInventoryItems(world, pos, (StampMillTileEntity) world.getTileEntity(pos));
-		super.onReplaced(state, world, pos, newState, isMoving);
+	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
+		InventoryHelper.dropContents(world, pos, (StampMillTileEntity) world.getBlockEntity(pos));
+		super.onRemove(state, world, pos, newState, isMoving);
 	}
 
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return getDefaultState().with(CRProperties.HORIZ_AXIS, context.getPlacementHorizontalFacing().rotateY().getAxis());
+		return defaultBlockState().setValue(CRProperties.HORIZ_AXIS, context.getHorizontalDirection().getClockWise().getAxis());
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
 		builder.add(CRProperties.HORIZ_AXIS);
 	}
 	
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.stamp_mill.desc", StampMillTileEntity.REQUIRED / StampMillTileEntity.TIME_LIMIT / StampMillTileEntity.PROGRESS_PER_RADIAN * 20));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.stamp_mill.power", StampMillTileEntity.PROGRESS_PER_RADIAN));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", StampMillTileEntity.INERTIA));
 	}
 
 	@Override
-	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos){
-		return super.isValidPosition(state, worldIn, pos) && worldIn.getBlockState(pos.up()).isAir(worldIn, pos.up());
+	public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos){
+		return super.canSurvive(state, worldIn, pos) && worldIn.getBlockState(pos.above()).isAir(worldIn, pos.above());
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
-		if(!worldIn.isRemote && !(worldIn.getBlockState(pos.offset(Direction.UP)).getBlock() instanceof StampMillTop)){
+		if(!worldIn.isClientSide && !(worldIn.getBlockState(pos.relative(Direction.UP)).getBlock() instanceof StampMillTop)){
 			worldIn.destroyBlock(pos, true);
 		}
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
-		world.setBlockState(pos.offset(Direction.UP), CRBlocks.stampMillTop.getDefaultState().with(CRProperties.HORIZ_AXIS, state.get(CRProperties.HORIZ_AXIS)));
+	public void setPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
+		world.setBlockAndUpdate(pos.relative(Direction.UP), CRBlocks.stampMillTop.defaultBlockState().setValue(CRProperties.HORIZ_AXIS, state.getValue(CRProperties.HORIZ_AXIS)));
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState state){
+	public boolean hasAnalogOutputSignal(BlockState state){
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState state, World worldIn, BlockPos pos){
+	public int getAnalogOutputSignal(BlockState state, World worldIn, BlockPos pos){
 		return RedstoneUtil.clampToVanilla(read(worldIn, pos, state));
 	}
 
 	@Override
 	public float read(World world, BlockPos pos, BlockState state){
-		TileEntity te = world.getTileEntity(pos);
+		TileEntity te = world.getBlockEntity(pos);
 		if(te instanceof IInventory){
 			return CircuitUtil.getRedstoneFromSlots((IInventory) te, 0);
 		}else{

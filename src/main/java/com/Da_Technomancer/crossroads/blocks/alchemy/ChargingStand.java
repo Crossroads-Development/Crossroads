@@ -24,14 +24,14 @@ import java.util.List;
 
 public class ChargingStand extends GlasswareHolder{
 
-	private static final VoxelShape SHAPE = VoxelShapes.or(makeCuboidShape(0, 0, 0, 16, 2, 16), makeCuboidShape(0, 14, 0, 16, 16, 16), makeCuboidShape(5, 2, 0, 11, 14, 1), makeCuboidShape(5, 2, 15, 11, 14,16), makeCuboidShape(0, 2, 5, 1, 4, 11), makeCuboidShape(15, 2, 5, 16, 14, 11), makeCuboidShape(5, 2, 5, 11, 14, 11));
+	private static final VoxelShape SHAPE = VoxelShapes.or(box(0, 0, 0, 16, 2, 16), box(0, 14, 0, 16, 16, 16), box(5, 2, 0, 11, 14, 1), box(5, 2, 15, 11, 14,16), box(0, 2, 5, 1, 4, 11), box(15, 2, 5, 16, 14, 11), box(5, 2, 5, 11, 14, 11));
 
 	public ChargingStand(){
 		super("charging_stand");
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new ChargingStandTileEntity();
 	}
 
@@ -41,7 +41,7 @@ public class ChargingStand extends GlasswareHolder{
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
 		builder.add(CRProperties.CRYSTAL, CRProperties.CONTAINER_TYPE);//No redstone_bool property, unlike superclass
 	}
 
@@ -52,7 +52,7 @@ public class ChargingStand extends GlasswareHolder{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.charging_stand.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.charging_stand.power", ChargingStandTileEntity.DRAIN));
 	}

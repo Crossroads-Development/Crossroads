@@ -34,17 +34,17 @@ import java.util.List;
 
 public class BeaconHarness extends ContainerBlock{
 
-	private static final VoxelShape SHAPE = VoxelShapes.or(makeCuboidShape(0, 15, 0, 16, 16, 16), makeCuboidShape(2, 1, 2, 14, 15, 14));
+	private static final VoxelShape SHAPE = VoxelShapes.or(box(0, 15, 0, 16, 16, 16), box(2, 1, 2, 14, 15, 14));
 
 	public BeaconHarness(){
-		super(CRBlocks.getGlassProperty().setLightLevel(state -> 15));
+		super(CRBlocks.getGlassProperty().lightLevel(state -> 15));
 		setRegistryName("beacon_harness");
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new BeaconHarnessTileEntity();
 	}
 
@@ -56,14 +56,14 @@ public class BeaconHarness extends ContainerBlock{
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
 		TileEntity te;
-		if(worldIn.isBlockPowered(pos) && (te = worldIn.getTileEntity(pos)) instanceof BeaconHarnessTileEntity){
+		if(worldIn.hasNeighborSignal(pos) && (te = worldIn.getBlockEntity(pos)) instanceof BeaconHarnessTileEntity){
 			((BeaconHarnessTileEntity) te).trigger();
 		}
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.beacon_harness.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.beacon_harness.buffer"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.beacon_harness.flux", BeaconHarnessTileEntity.FLUX_GEN));
@@ -71,12 +71,12 @@ public class BeaconHarness extends ContainerBlock{
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		ItemStack heldItem = playerIn.getHeldItem(hand);
-		if(FluxUtil.handleFluxLinking(worldIn, pos, playerIn.getHeldItem(hand), playerIn).isSuccess()){
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		ItemStack heldItem = playerIn.getItemInHand(hand);
+		if(FluxUtil.handleFluxLinking(worldIn, pos, playerIn.getItemInHand(hand), playerIn).shouldSwing()){
 			return ActionResultType.SUCCESS;
-		}else if(!worldIn.isRemote){
-			TileEntity te = worldIn.getTileEntity(pos);
+		}else if(!worldIn.isClientSide){
+			TileEntity te = worldIn.getBlockEntity(pos);
 			if(te instanceof INamedContainerProvider){
 				NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);
 			}
@@ -85,7 +85,7 @@ public class BeaconHarness extends ContainerBlock{
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 }

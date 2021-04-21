@@ -65,8 +65,8 @@ public class BeamTransmuteCategory implements IRecipeCategory<BeamTransmuteRec>{
 		slot.draw(matrix, 120, 40);//Output
 		arrowStatic.draw(matrix, 78, 40);
 		//Render without shadow
-		Minecraft.getInstance().fontRenderer.func_243248_b(matrix, new TranslationTextComponent("crossroads.jei.beam_trans.align", recipe.getAlign().getLocalName(recipe.isVoid())), 40, 10, 0x404040);
-		Minecraft.getInstance().fontRenderer.func_243248_b(matrix, new TranslationTextComponent("crossroads.jei.beam_trans.power", recipe.getPower()), 40, 25, 0x404040);
+		Minecraft.getInstance().font.draw(matrix, new TranslationTextComponent("crossroads.jei.beam_trans.align", recipe.getAlign().getLocalName(recipe.isVoid())), 40, 10, 0x404040);
+		Minecraft.getInstance().font.draw(matrix, new TranslationTextComponent("crossroads.jei.beam_trans.power", recipe.getPower()), 40, 25, 0x404040);
 //		GlStateManager.disableBlend();
 //		GlStateManager.disableAlpha();
 	}
@@ -84,6 +84,6 @@ public class BeamTransmuteCategory implements IRecipeCategory<BeamTransmuteRec>{
 		//Strictly speaking, the 'correct' way to do this is to register a new ingredient type of block, but meh
 		//TODO this really should be done the correct way- lots of blocks don't map to items cleanly
 		ingredients.setInputLists(VanillaTypes.ITEM, ImmutableList.of(recipe.getIngr().getMatchedItemForm()));
-		ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
+		ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
 	}
 }

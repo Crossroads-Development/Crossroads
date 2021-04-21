@@ -30,7 +30,7 @@ public class EntityGhostMarker extends Entity{
 	public EntityGhostMarker(EntityType<EntityGhostMarker> type, World worldIn){
 		super(type, worldIn);
 		setNoGravity(true);
-		noClip = true;
+		noPhysics = true;
 	}
 
 	public EntityGhostMarker(World worldIn, @Nonnull EnumMarkerType markerType){
@@ -43,11 +43,11 @@ public class EntityGhostMarker extends Entity{
 		this.lifespan = lifespan;
 		time = worldIn.getGameTime();
 		setNoGravity(true);
-		noClip = true;
+		noPhysics = true;
 	}
 
 	@Override
-	protected void readAdditional(CompoundNBT nbt){
+	protected void readAdditionalSaveData(CompoundNBT nbt){
 		nbt.putString("type", markType.name());
 		nbt.putInt("life", lifespan);
 		nbt.putLong("time", time);
@@ -62,11 +62,11 @@ public class EntityGhostMarker extends Entity{
 	}
 
 	@Override
-	protected void writeAdditional(CompoundNBT nbt){
+	protected void addAdditionalSaveData(CompoundNBT nbt){
 		try{
 			markType = EnumMarkerType.valueOf(nbt.getString("type"));
 		}catch(IllegalArgumentException | NullPointerException e){
-			Crossroads.logger.error("Failed to load EntityGhostMarker at " + getPositionVec().toString() + "; dim: " + MiscUtil.getDimensionName(world) + "; with type: " + nbt.getString("type") + ". Removing.");
+			Crossroads.logger.error("Failed to load EntityGhostMarker at " + position().toString() + "; dim: " + MiscUtil.getDimensionName(level) + "; with type: " + nbt.getString("type") + ". Removing.");
 			remove();
 		}
 		lifespan = nbt.getInt("life");
@@ -77,20 +77,20 @@ public class EntityGhostMarker extends Entity{
 	}
 
 	@Override
-	public IPacket<?> createSpawnPacket(){
+	public IPacket<?> getAddEntityPacket(){
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
 	@Override
-	protected void registerData(){
+	protected void defineSynchedData(){
 		//
 	}
 
 	@Override
 	public void tick(){
 		super.tick();
-		if(!world.isRemote && lifespan >= 0 && time != world.getGameTime()){
-			time = world.getGameTime();//World time check to avoid tick-acceleration
+		if(!level.isClientSide && lifespan >= 0 && time != level.getGameTime()){
+			time = level.getGameTime();//World time check to avoid tick-acceleration
 			if(--lifespan == 0){
 				if(markType != null && markType.expireEffect != null){
 					markType.expireEffect.accept(this);
@@ -104,7 +104,7 @@ public class EntityGhostMarker extends Entity{
 
 		EQUILIBRIUM(BeamUtil.BEAM_TIME + 1, null),
 		VOID_EQUILIBRIUM(BeamUtil.BEAM_TIME + 1, null),
-		DELAYED_EXPLOSION(BeamUtil.BEAM_TIME, (EntityGhostMarker marker) -> {if(marker.data != null && marker.data.contains("power")) marker.world.createExplosion(marker, marker.getPosX(), marker.getPosY(), marker.getPosZ(), marker.data.getFloat("power"), marker.data.getBoolean("flaming"), Explosion.Mode.valueOf(marker.data.getString("blast_type")));}),
+		DELAYED_EXPLOSION(BeamUtil.BEAM_TIME, (EntityGhostMarker marker) -> {if(marker.data != null && marker.data.contains("power")) marker.level.explode(marker, marker.getX(), marker.getY(), marker.getZ(), marker.data.getFloat("power"), marker.data.getBoolean("flaming"), Explosion.Mode.valueOf(marker.data.getString("blast_type")));}),
 		BLOCK_SPAWNING(BeamUtil.BEAM_TIME + 1, null);
 
 		private final int defaultLifespan;

@@ -147,7 +147,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 	 */
 	public boolean isActive(){
 		BlockState state = getBlockState();
-		return state.getBlock() == CRBlocks.gatewayController && getBlockState().get(CRProperties.ACTIVE);
+		return state.getBlock() == CRBlocks.gatewayController && getBlockState().getValue(CRProperties.ACTIVE);
 	}
 
 	//Gateway connection management
@@ -160,9 +160,9 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 
 	private void undialLinkedGateway(){
 		GatewayAddress prevDialed = new GatewayAddress(chevrons);
-		GatewayAddress.Location prevLinkLocation = GatewaySavedData.lookupAddress((ServerWorld) world, prevDialed);
+		GatewayAddress.Location prevLinkLocation = GatewaySavedData.lookupAddress((ServerWorld) level, prevDialed);
 		if(prevLinkLocation != null){
-			IGateway prevLink = prevLinkLocation.evalTE(world.getServer());
+			IGateway prevLink = prevLinkLocation.evalTE(level.getServer());
 			if(prevLink != null){
 				prevLink.undial(address);
 			}
@@ -180,8 +180,8 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 			origin = false;
 			referenceSpeed = 0;
 			resyncToClient();
-			markDirty();
-			CRPackets.sendPacketAround(world, pos, new SendLongToClient(3, 0L, pos));
+			setChanged();
+			CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(3, 0L, worldPosition));
 		}
 	}
 
@@ -204,25 +204,25 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 		origin = cost;
 		playEffects(true);
 		//Send chevrons to client
-		CRPackets.sendPacketAround(world, pos, new SendLongToClient(3, new GatewayAddress(chevrons).serialize(), pos));
+		CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(3, new GatewayAddress(chevrons).serialize(), worldPosition));
 	}
 
 	@Override
 	public void teleportEntity(Entity entity, float horizontalRelPos, float verticalRelPos, Direction.Axis sourceAxis){
-		Vector3d centerPos = new Vector3d(pos.getX() + 0.5D, pos.getY() - size / 2D + 0.5D, pos.getZ() + 0.5D);
+		Vector3d centerPos = new Vector3d(worldPosition.getX() + 0.5D, worldPosition.getY() - size / 2D + 0.5D, worldPosition.getZ() + 0.5D);
 		float scalingRadius = (size - 2) / 2F;
 		if(plane == Direction.Axis.X){
-			IGateway.teleportEntityTo(entity, (ServerWorld) world, centerPos.x + scalingRadius * horizontalRelPos, centerPos.y + scalingRadius * verticalRelPos, centerPos.z, sourceAxis == plane ? 0 : 90);
+			IGateway.teleportEntityTo(entity, (ServerWorld) level, centerPos.x + scalingRadius * horizontalRelPos, centerPos.y + scalingRadius * verticalRelPos, centerPos.z, sourceAxis == plane ? 0 : 90);
 		}else{
-			IGateway.teleportEntityTo(entity, (ServerWorld) world, centerPos.x, centerPos.y + scalingRadius * verticalRelPos, centerPos.z + scalingRadius * horizontalRelPos, sourceAxis == plane ? 0 : -90);
+			IGateway.teleportEntityTo(entity, (ServerWorld) level, centerPos.x, centerPos.y + scalingRadius * verticalRelPos, centerPos.z + scalingRadius * horizontalRelPos, sourceAxis == plane ? 0 : -90);
 		}
-		playTPEffect(world, entity.getPosX(), entity.getPosY(), entity.getPosZ());
+		playTPEffect(level, entity.getX(), entity.getY(), entity.getZ());
 	}
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){
 		//Increase render BB to include links and the entire formed frame
-		return new AxisAlignedBB(pos).grow(Math.max(getRange(), isActive() ? size : 0));
+		return new AxisAlignedBB(worldPosition).inflate(Math.max(getRange(), isActive() ? size : 0));
 	}
 
 	/**
@@ -231,14 +231,14 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 	 * @param success Whether this is for a successful action (like connecting) or an unsucessful action (like dialing a fake address)
 	 */
 	private void playEffects(boolean success){
-		world.playSound(pos.getX() + 0.5F, pos.getY() - 1.5F, pos.getZ() + 0.5F, success ? SoundEvents.BLOCK_END_PORTAL_FRAME_FILL : SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 1F, world.rand.nextFloat(), true);
+		level.playLocalSound(worldPosition.getX() + 0.5F, worldPosition.getY() - 1.5F, worldPosition.getZ() + 0.5F, success ? SoundEvents.END_PORTAL_FRAME_FILL : SoundEvents.GLASS_BREAK, SoundCategory.BLOCKS, 1F, level.random.nextFloat(), true);
 	}
 
 	//Multiblock management
 
 	@Override
 	public void dismantle(){
-		if(!world.isRemote && isActive()){
+		if(!level.isClientSide && isActive()){
 			//The head dismantles the entire multiblock, restoring inactive states
 
 			//Cancel our connection
@@ -246,20 +246,20 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 			undial(new GatewayAddress(chevrons));
 
 			//Release our address back into the pool
-			GatewaySavedData.releaseAddress((ServerWorld) world, address);
+			GatewaySavedData.releaseAddress((ServerWorld) level, address);
 
-			BlockPos.Mutable mutPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ());
+			BlockPos.Mutable mutPos = new BlockPos.Mutable(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
 			Direction horiz = plane == Direction.Axis.X ? Direction.EAST : Direction.SOUTH;//horizontal direction
 			int preSize = size;//We have to store this, as the field will be modified in the loop
 			mutPos.move(horiz, -preSize / 2);
 			for(int i = 0; i < preSize; i++){
 				for(int j = 0; j < preSize; j++){
 					//Iterate over a size-by-size square (technically excessive as the multiblock is hollow) and disable each individually (including this)
-					BlockState otherState = world.getBlockState(mutPos);
+					BlockState otherState = level.getBlockState(mutPos);
 					if(otherState.getBlock() == CRBlocks.gatewayEdge){
-						world.setBlockState(mutPos, otherState.with(CRProperties.ACTIVE, false));
+						level.setBlockAndUpdate(mutPos, otherState.setValue(CRProperties.ACTIVE, false));
 					}
-					TileEntity te = world.getTileEntity(mutPos);
+					TileEntity te = level.getBlockEntity(mutPos);
 					if(te instanceof GatewayEdgeTileEntity){
 						GatewayEdgeTileEntity otherTE = (GatewayEdgeTileEntity) te;
 						otherTE.reset();
@@ -273,7 +273,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 			//Reset this block
 			BlockState state = getBlockState();
 			if(state.getBlock() == CRBlocks.gatewayController){
-				world.setBlockState(pos, getBlockState().with(CRProperties.ACTIVE, false));
+				level.setBlockAndUpdate(worldPosition, getBlockState().setValue(CRProperties.ACTIVE, false));
 			}
 			size = 0;
 			plane = null;
@@ -281,8 +281,8 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 			beamOpt = null;
 			address = null;
 			origin = false;
-			markDirty();
-			updateContainingBlockInfo();
+			setChanged();
+			clearCache();
 		}
 	}
 
@@ -292,22 +292,22 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 	 * @return Whether this succeeded at forming the multiblock
 	 */
 	public boolean assemble(PlayerEntity player){
-		if(world.isRemote){
+		if(level.isClientSide){
 			return false;//Server side only
 		}
-		if(getBlockState().get(CRProperties.ACTIVE)){
+		if(getBlockState().getValue(CRProperties.ACTIVE)){
 			return false;//This is already part of a multiblock
 		}
 
 		//First step is to determine the size
 		int newSize = 0;
-		BlockPos.Mutable mutPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ());
+		BlockPos.Mutable mutPos = new BlockPos.Mutable(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
 		//Maximum size is a 63x63, odd sized squares only
 		boolean foundAir = false;//Indicates we have passed the top section of the frame
 		int foundThickness = 1;
 		for(int i = 1; i < 63; i++){
 			mutPos.move(Direction.DOWN);
-			BlockState state = world.getBlockState(mutPos);
+			BlockState state = level.getBlockState(mutPos);
 			if(legalForGateway(state)){
 				if(foundAir){
 					newSize = i + foundThickness;
@@ -327,9 +327,9 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 		}
 
 		Direction.Axis axis;
-		if(legalForGateway(world.getBlockState(pos.east())) && legalForGateway(world.getBlockState(pos.west()))){
+		if(legalForGateway(level.getBlockState(worldPosition.east())) && legalForGateway(level.getBlockState(worldPosition.west()))){
 			axis = Direction.Axis.X;
-		}else if(legalForGateway(world.getBlockState(pos.south())) && legalForGateway(world.getBlockState(pos.north()))){
+		}else if(legalForGateway(level.getBlockState(worldPosition.south())) && legalForGateway(level.getBlockState(worldPosition.north()))){
 			axis = Direction.Axis.Z;
 		}else{
 			return false;//There wasn't even enough of the structure to determine what orientation it's supposed to have
@@ -340,12 +340,12 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 		int thickness = Math.max(1, size / 5);//required thickness of frame blocks
 
 		//First pass over the area is to confirm this is a legal structure
-		Direction horiz = Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis);
-		mutPos.setPos(pos).move(horiz, -size / 2);
+		Direction horiz = Direction.get(Direction.AxisDirection.POSITIVE, axis);
+		mutPos.set(worldPosition).move(horiz, -size / 2);
 		for(int i = 0; i < size; i++){
 			for(int j = 0; j < size; j++){
 				//Iterate over a size-by-size square and check each pos
-				BlockState otherState = world.getBlockState(mutPos);
+				BlockState otherState = level.getBlockState(mutPos);
 
 				if(i < thickness || size - i <= thickness || j < thickness || size - j <= thickness){
 					//We are on the edges, and expect a frame block
@@ -367,7 +367,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 
 		//Configure this TE
 		//Request an address- fail if we can't get one
-		address = GatewaySavedData.requestAddress((ServerWorld) world, pos);
+		address = GatewaySavedData.requestAddress((ServerWorld) level, worldPosition);
 		if(address == null){
 			MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.gateway.address_taken"));
 			return false;
@@ -377,19 +377,19 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 		beamOpt = null;
 
 		//Second pass is to actually assemble the structure
-		mutPos.setPos(pos).move(horiz, -size / 2);
+		mutPos.set(worldPosition).move(horiz, -size / 2);
 		for(int i = 0; i < size; i++){
 			for(int j = 0; j < size; j++){
 				//Iterate over a size-by-size square and modify each edge
-				BlockState otherState = world.getBlockState(mutPos);
+				BlockState otherState = level.getBlockState(mutPos);
 				if(i < thickness || size - i <= thickness || j < thickness || size - j <= thickness){
 					//We are on the edges
-					world.setBlockState(mutPos, otherState.with(CRProperties.ACTIVE, true));
-					TileEntity te = world.getTileEntity(mutPos);
+					level.setBlockAndUpdate(mutPos, otherState.setValue(CRProperties.ACTIVE, true));
+					TileEntity te = level.getBlockEntity(mutPos);
 					if(te instanceof GatewayEdgeTileEntity){
 						GatewayEdgeTileEntity otherTE = (GatewayEdgeTileEntity) te;
-						otherTE.setKey(pos.subtract(mutPos));
-						otherTE.updateContainingBlockInfo();
+						otherTE.setKey(worldPosition.subtract(mutPos));
+						otherTE.clearCache();
 					}
 				}
 
@@ -400,17 +400,17 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 		}
 
 		//Update this block
-		world.setBlockState(pos, getBlockState().with(CRProperties.ACTIVE, true));
-		updateContainingBlockInfo();
+		level.setBlockAndUpdate(worldPosition, getBlockState().setValue(CRProperties.ACTIVE, true));
+		clearCache();
 
 		//Send a packet to the client with the size and orientation info
-		CRPackets.sendPacketAround(world, pos, new SendLongToClient(5, plane.ordinal() | (size << 2), pos));
+		CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(5, plane.ordinal() | (size << 2), worldPosition));
 
 		return true;
 	}
 
 	private static boolean legalForGateway(BlockState state){
-		return state.getBlock() == CRBlocks.gatewayEdge && !state.get(CRProperties.ACTIVE);
+		return state.getBlock() == CRBlocks.gatewayEdge && !state.getValue(CRProperties.ACTIVE);
 	}
 
 	@Override
@@ -421,7 +421,9 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 			//Perform angle movement on the client, and track what the client is probably doing on the server
 			clientAngle += calcAngleChange(clientW, clientAngle);
 
-			if(!world.isRemote){
+			super.tick();
+
+			if(!level.isClientSide){
 				genOptionals();
 				//Perform angle movement on the server
 				float angleTarget = (float) axleHandler.getSpeed() - referenceSpeed;
@@ -436,21 +438,21 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 
 				//Teleportation
 				if(chevrons[3] != null && plane != null && !isShutDown()){
-					Direction horiz = Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, plane);
-					AxisAlignedBB area = new AxisAlignedBB(pos.down(size).offset(horiz, -size / 2), pos.offset(horiz, size / 2 + 1));
+					Direction horiz = Direction.get(Direction.AxisDirection.POSITIVE, plane);
+					AxisAlignedBB area = new AxisAlignedBB(worldPosition.below(size).relative(horiz, -size / 2), worldPosition.relative(horiz, size / 2 + 1));
 					//We use the timeUntilPortal field in Entity to not spam TP entities between two portals
 					//This is both not what it's for, and exactly what it's for
-					List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, area, EntityPredicates.IS_ALIVE.and(e -> IGateway.isAllowedToTeleport(e, world)));
+					List<Entity> entities = level.getEntitiesOfClass(Entity.class, area, EntityPredicates.ENTITY_STILL_ALIVE.and(e -> IGateway.isAllowedToTeleport(e, level)));
 					if(!entities.isEmpty()){
-						GatewayAddress.Location loc = GatewaySavedData.lookupAddress((ServerWorld) world, new GatewayAddress(chevrons));
+						GatewayAddress.Location loc = GatewaySavedData.lookupAddress((ServerWorld) level, new GatewayAddress(chevrons));
 						IGateway otherTE;
-						if(loc != null && (otherTE = loc.evalTE(world.getServer())) != null){
-							Vector3d centerPos = new Vector3d(pos.getX() + 0.5D, pos.getY() - size / 2D + 0.5D, pos.getZ() + 0.5D);
+						if(loc != null && (otherTE = loc.evalTE(level.getServer())) != null){
+							Vector3d centerPos = new Vector3d(worldPosition.getX() + 0.5D, worldPosition.getY() - size / 2D + 0.5D, worldPosition.getZ() + 0.5D);
 							float scalingRadius = (size - 2) / 2F;
 							for(Entity e : entities){
-								float relPosH = MathHelper.clamp(plane == Direction.Axis.X ? ((float) (e.getPosX() - centerPos.x) / scalingRadius) : ((float) (e.getPosZ() - centerPos.z) / scalingRadius), -1, 1);
-								float relPosV = MathHelper.clamp((float) (e.getPosY() - centerPos.y) / scalingRadius, -1, 1);
-								playTPEffect(world, e.getPosX(), e.getPosY(), e.getPosZ());//Play effects at the start position
+								float relPosH = MathHelper.clamp(plane == Direction.Axis.X ? ((float) (e.getX() - centerPos.x) / scalingRadius) : ((float) (e.getZ() - centerPos.z) / scalingRadius), -1, 1);
+								float relPosV = MathHelper.clamp((float) (e.getY() - centerPos.y) / scalingRadius, -1, 1);
+								playTPEffect(level, e.getX(), e.getY(), e.getZ());//Play effects at the start position
 								otherTE.teleportEntity(e, relPosH, relPosV, plane);
 							}
 						}
@@ -458,7 +460,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 				}
 
 				//Handle flux
-				if(world.getGameTime() % FluxUtil.FLUX_TIME == 0 && origin && lastTick != world.getGameTime() && !isShutDown()){
+				if(level.getGameTime() % FluxUtil.FLUX_TIME == 0 && origin && lastTick != level.getGameTime() && !isShutDown()){
 					addFlux(FLUX_PER_CYCLE);
 				}
 			}
@@ -492,15 +494,15 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 	private static void playTPEffect(World world, double xPos, double yPos, double zPos){
 		//Spawn smoke particles
 		for(int i = 0; i < 10; i++){
-			world.addOptionalParticle(ParticleTypes.SMOKE, xPos + Math.random() - 0.5D, yPos + Math.random() - 0.5D, zPos + Math.random() - 0.5D, Math.random() - 0.5F, Math.random() - 0.5F, Math.random() - 0.5F);
+			world.addAlwaysVisibleParticle(ParticleTypes.SMOKE, xPos + Math.random() - 0.5D, yPos + Math.random() - 0.5D, zPos + Math.random() - 0.5D, Math.random() - 0.5F, Math.random() - 0.5F, Math.random() - 0.5F);
 		}
 		//play a sound
-		world.playSound(xPos, yPos, zPos, SoundEvents.BLOCK_PORTAL_TRAVEL, SoundCategory.BLOCKS, 1, (float) Math.random(), true);
+		world.playLocalSound(xPos, yPos, zPos, SoundEvents.PORTAL_TRAVEL, SoundCategory.BLOCKS, 1, (float) Math.random(), true);
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		//Active only
 		address = nbt.contains("address") ? GatewayAddress.deserialize(nbt.getInt("address")) : null;
 		clientW = nbt.getFloat("client_speed");
@@ -519,8 +521,8 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		//Active only
 		if(address != null){
 			nbt.putInt("address", address.serialize());
@@ -569,7 +571,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 		clientAngle = angle;
 		clientW = (float) axleHandler.getSpeed() - referenceSpeed;
 		long packet = (Integer.toUnsignedLong(Float.floatToRawIntBits(clientAngle)) << 32L) | Integer.toUnsignedLong(Float.floatToRawIntBits(clientW));
-		CRPackets.sendPacketAround(world, pos, new SendLongToClient(4, packet, pos));
+		CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(4, packet, worldPosition));
 	}
 
 	//Capabilities
@@ -588,8 +590,8 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		if(axleOpt != null){
 			axleOpt.invalidate();
 		}
@@ -638,7 +640,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public double getMaxRenderDistanceSquared(){
+	public double getViewDistance(){
 		return 65536;//Same as beacon
 	}
 
@@ -690,7 +692,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 		@Override
 		public void setEnergy(double newEnergy){
 			rotaryEnergy = newEnergy;
-			markDirty();
+			setChanged();
 		}
 
 		@Override
@@ -735,9 +737,9 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 			if(index == 3){
 				//If this is the final chevron, make the connection and reset the target
 				GatewayAddress targetAddress = new GatewayAddress(chevrons);
-				GatewayAddress.Location location = GatewaySavedData.lookupAddress((ServerWorld) world, targetAddress);
+				GatewayAddress.Location location = GatewaySavedData.lookupAddress((ServerWorld) level, targetAddress);
 				IGateway otherGateway;
-				if(location != null && (otherGateway = location.evalTE(world.getServer())) != null){
+				if(location != null && (otherGateway = location.evalTE(level.getServer())) != null){
 					otherGateway.dialTo(address, false);
 					dialTo(targetAddress, true);
 				}else{
@@ -749,8 +751,8 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 				referenceSpeed = 0;
 			}
 			resyncToClient();//Force a resync of the speed and angle to the client
-			CRPackets.sendPacketAround(world, pos, new SendLongToClient(3, new GatewayAddress(chevrons).serialize(), pos));
-			markDirty();
+			CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(3, new GatewayAddress(chevrons).serialize(), worldPosition));
+			setChanged();
 		}
 	}
 }

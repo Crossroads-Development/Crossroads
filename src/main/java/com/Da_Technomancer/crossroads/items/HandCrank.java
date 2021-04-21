@@ -25,7 +25,7 @@ public class HandCrank extends Item{
 	}
 
 	protected HandCrank(String name){
-		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
+		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
 	}
@@ -35,13 +35,13 @@ public class HandCrank extends Item{
 	}
 
 	@Override
-	public ActionResultType onItemUse(ItemUseContext context){
-		TileEntity te = context.getWorld().getTileEntity(context.getPos());
+	public ActionResultType useOn(ItemUseContext context){
+		TileEntity te = context.getLevel().getBlockEntity(context.getClickedPos());
 		LazyOptional<IAxleHandler> axleOpt;
-		Direction side = context.getFace().getOpposite();
+		Direction side = context.getClickedFace().getOpposite();
 		if(te != null && (axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, side)).isPresent()){
 			double signMult = -1;
-			if(context.getPlayer() != null && context.getPlayer().isSneaking()){
+			if(context.getPlayer() != null && context.getPlayer().isShiftKeyDown()){
 				signMult *= -1;
 			}
 			signMult *= RotaryUtil.getCCWSign(side);
@@ -52,7 +52,7 @@ public class HandCrank extends Item{
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.crank.desc", getRate()));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.crank.back", getRate()));
 	}

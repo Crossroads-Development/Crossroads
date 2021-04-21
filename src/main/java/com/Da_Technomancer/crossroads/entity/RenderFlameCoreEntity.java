@@ -22,18 +22,18 @@ public class RenderFlameCoreEntity extends EntityRenderer<EntityFlameCore>{
 	}
 
 	@Override
-	public ResourceLocation getEntityTexture(EntityFlameCore entity){
+	public ResourceLocation getTextureLocation(EntityFlameCore entity){
 		return TEXTURE;
 	}
 
 	@Override
 	public void render(EntityFlameCore entity, float entityYaw, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int packedLight){
 
-		Color color = new Color(entity.getDataManager().get(EntityFlameCore.COLOR), true);
+		Color color = new Color(entity.getEntityData().get(EntityFlameCore.COLOR), true);
 		int[] col = new int[] {color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()};
-		float scale = EntityFlameCore.FLAME_VEL * (float) entity.getDataManager().get(EntityFlameCore.TIME_EXISTED);
+		float scale = EntityFlameCore.FLAME_VEL * (float) entity.getEntityData().get(EntityFlameCore.TIME_EXISTED);
 
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getEntityTranslucent(getEntityTexture(entity)));
+		IVertexBuilder builder = buffer.getBuffer(RenderType.entityTranslucent(getTextureLocation(entity)));
 
 		CRRenderUtil.addVertexEntity(builder, matrix, -scale, -scale, -scale, 0, 0, 0, 0, -1, CRRenderUtil.BRIGHT_LIGHT, col);
 		CRRenderUtil.addVertexEntity(builder, matrix, scale, -scale, -scale, 1, 0, 0, 0, -1, CRRenderUtil.BRIGHT_LIGHT, col);

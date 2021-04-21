@@ -66,12 +66,12 @@ public final class MiscUtil{
 	}
 
 	/**
-	 * A server-side friendly version of Entity.class' raytrace (currently called Entity#func_213324_a(double, float, boolean))
+	 * A server-side friendly version of Entity.class' raytrace (currently called Entity#pick(double, float, boolean))
 	 */
 	public static BlockRayTraceResult rayTrace(Entity ent, double blockReachDistance){
-		Vector3d vec3d = ent.getPositionVec().add(0, ent.getEyeHeight(), 0);
-		Vector3d vec3d2 = vec3d.add(ent.getLook(1F).scale(blockReachDistance));
-		return ent.world.rayTraceBlocks(new RayTraceContext(vec3d, vec3d2, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, ent));
+		Vector3d vec3d = ent.position().add(0, ent.getEyeHeight(), 0);
+		Vector3d vec3d2 = vec3d.add(ent.getViewVector(1F).scale(blockReachDistance));
+		return ent.level.clip(new RayTraceContext(vec3d, vec3d2, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, ent));
 	}
 
 	/**
@@ -188,11 +188,11 @@ public final class MiscUtil{
 	public static void setPlayerFood(PlayerEntity player, int hunger, float saturation){
 		// The way saturation is coded is weird, and the best way to do this is through nbt.
 		CompoundNBT nbt = new CompoundNBT();
-		FoodStats stats = player.getFoodStats();
-		stats.write(nbt);
+		FoodStats stats = player.getFoodData();
+		stats.addAdditionalSaveData(nbt);
 		nbt.putInt("foodLevel", Math.min(hunger, 20));
 		nbt.putFloat("foodSaturationLevel", Math.min(20F, saturation));
-		stats.read(nbt);
+		stats.readAdditionalSaveData(nbt);
 	}
 
 	/**
@@ -202,7 +202,7 @@ public final class MiscUtil{
 	 * @param message The message to send
 	 */
 	public static void chatMessage(Entity player, ITextComponent message){
-		player.sendMessage(message, player.getUniqueID());
+		player.sendMessage(message, player.getUUID());
 	}
 
 	/**
@@ -211,7 +211,7 @@ public final class MiscUtil{
 	 * @return The name of the dimension, for logging purposes, unlocalized
 	 */
 	public static String getDimensionName(@Nonnull World world){
-		return world.getDimensionKey().getLocation().toString();
+		return world.dimension().location().toString();
 	}
 
 	/**
@@ -221,11 +221,11 @@ public final class MiscUtil{
 	 * @return The registry key in the World Key registry associated with a given registry keyname
 	 */
 	public static RegistryKey<World> getWorldKey(ResourceLocation registryID, @Nullable RegistryKey<World> cache){
-		if(cache != null && cache.getLocation().equals(registryID)){
+		if(cache != null && cache.location().equals(registryID)){
 			return cache;
 		}
 
-		return RegistryKey.getOrCreateKey(Registry.WORLD_KEY, registryID);
+		return RegistryKey.create(Registry.DIMENSION_REGISTRY, registryID);
 	}
 
 	/**
@@ -237,7 +237,7 @@ public final class MiscUtil{
 	 */
 	@Nullable
 	public static ServerWorld getWorld(RegistryKey<World> registryKey, MinecraftServer server){
-		return server.getWorld(registryKey);
+		return server.getLevel(registryKey);
 	}
 
 	/**
@@ -250,12 +250,12 @@ public final class MiscUtil{
 	public static void attackWithLightning(LivingEntity ent, float damage, @Nullable LightningBoltEntity lightning){
 		if(lightning == null){
 			//Create a generic lightning entity at the entity position, but don't add it to the world
-			lightning = EntityType.LIGHTNING_BOLT.create(ent.world);
-			lightning.moveForced(ent.getPositionVec());
+			lightning = EntityType.LIGHTNING_BOLT.create(ent.level);
+			lightning.moveTo(ent.position());
 		}
-		ent.func_241841_a((ServerWorld) ent.world, lightning);//Deals 5 lightning damage
+		ent.thunderHit((ServerWorld) ent.level, lightning);//Deals 5 lightning damage
 		if(damage > 5){
-			ent.attackEntityFrom(DamageSource.LIGHTNING_BOLT, damage - 5F);//Deal any additional damage
+			ent.hurt(DamageSource.LIGHTNING_BOLT, damage - 5F);//Deal any additional damage
 		}
 	}
 }

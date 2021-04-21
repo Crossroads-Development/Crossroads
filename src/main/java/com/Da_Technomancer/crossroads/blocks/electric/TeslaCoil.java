@@ -39,8 +39,8 @@ import java.util.List;
 
 public class TeslaCoil extends ContainerBlock implements IReadable{
 
-	private static final VoxelShape SHAPE_EMPT = VoxelShapes.or(makeCuboidShape(0, 0, 0, 16, 2, 16), makeCuboidShape(0, 14, 0, 16, 16, 16), makeCuboidShape(5, 2, 0, 11, 14, 1), makeCuboidShape(5, 2, 15, 11, 14,16), makeCuboidShape(0, 2, 5, 1, 4, 11), makeCuboidShape(15, 2, 5, 16, 14, 11));
-	private static final VoxelShape SHAPE_LEYD = VoxelShapes.or(SHAPE_EMPT, makeCuboidShape(5, 2, 5, 11, 14, 11));
+	private static final VoxelShape SHAPE_EMPT = VoxelShapes.or(box(0, 0, 0, 16, 2, 16), box(0, 14, 0, 16, 16, 16), box(5, 2, 0, 11, 14, 1), box(5, 2, 15, 11, 14,16), box(0, 2, 5, 1, 4, 11), box(15, 2, 5, 16, 14, 11));
+	private static final VoxelShape SHAPE_LEYD = VoxelShapes.or(SHAPE_EMPT, box(5, 2, 5, 11, 14, 11));
 
 	public TeslaCoil(){
 		super(CRBlocks.getMetalProperty());
@@ -48,65 +48,65 @@ public class TeslaCoil extends ContainerBlock implements IReadable{
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
-		setDefaultState(getDefaultState().with(CRProperties.ACTIVE, false));
+		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false));
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new TeslaCoilTileEntity();
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
-		return state.get(CRProperties.ACTIVE) ? SHAPE_LEYD : SHAPE_EMPT;
+		return state.getValue(CRProperties.ACTIVE) ? SHAPE_LEYD : SHAPE_EMPT;
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return getDefaultState().with(ESProperties.HORIZ_FACING, context.getPlacementHorizontalFacing().getOpposite());
+		return defaultBlockState().setValue(ESProperties.HORIZ_FACING, context.getHorizontalDirection().getOpposite());
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
+	public void setPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		neighborChanged(state, world, pos, this, pos, false);
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos prevPos, boolean isMoving){
-		if(worldIn.isRemote){
+		if(worldIn.isClientSide){
 			return;
 		}
-		TileEntity te = worldIn.getTileEntity(pos);
+		TileEntity te = worldIn.getBlockEntity(pos);
 		if(te instanceof TeslaCoilTileEntity){
 			TeslaCoilTileEntity ts = (TeslaCoilTileEntity) te;
-			if(worldIn.isBlockPowered(pos)){
+			if(worldIn.hasNeighborSignal(pos)){
 				if(!ts.redstone){
 					ts.redstone = true;
 					ts.syncState();
-					ts.markDirty();
+					ts.setChanged();
 				}
 			}else if(ts.redstone){
 				ts.redstone = false;
 				ts.syncState();
-				ts.markDirty();
+				ts.setChanged();
 			}
 		}
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		ItemStack heldItem = playerIn.getHeldItem(hand);
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		ItemStack heldItem = playerIn.getItemInHand(hand);
 
 		if(ESConfig.isWrench(heldItem)){
-			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.func_235896_a_(ESProperties.HORIZ_FACING));
-				TileEntity te = worldIn.getTileEntity(pos);
+			if(!worldIn.isClientSide){
+				worldIn.setBlockAndUpdate(pos, state.cycle(ESProperties.HORIZ_FACING));
+				TileEntity te = worldIn.getBlockEntity(pos);
 				if(te instanceof TeslaCoilTileEntity){
 					((TeslaCoilTileEntity) te).rotate();
 				}
@@ -115,24 +115,24 @@ public class TeslaCoil extends ContainerBlock implements IReadable{
 		}
 
 		if(heldItem.getItem() == CRItems.leydenJar){
-			if(!state.get(CRProperties.ACTIVE)){
-				TileEntity te = worldIn.getTileEntity(pos);
+			if(!state.getValue(CRProperties.ACTIVE)){
+				TileEntity te = worldIn.getBlockEntity(pos);
 				if(te instanceof TeslaCoilTileEntity){
-					if(!worldIn.isRemote){
+					if(!worldIn.isClientSide){
 						((TeslaCoilTileEntity) te).addJar(heldItem);
-						playerIn.setHeldItem(hand, ItemStack.EMPTY);
-						worldIn.setBlockState(pos, state.with(CRProperties.ACTIVE, true));
+						playerIn.setItemInHand(hand, ItemStack.EMPTY);
+						worldIn.setBlockAndUpdate(pos, state.setValue(CRProperties.ACTIVE, true));
 					}
 					return ActionResultType.SUCCESS;
 				}
 			}
 		}else if(heldItem.isEmpty()){
-			if(state.get(CRProperties.ACTIVE)){
-				TileEntity te = worldIn.getTileEntity(pos);
+			if(state.getValue(CRProperties.ACTIVE)){
+				TileEntity te = worldIn.getBlockEntity(pos);
 				if(te instanceof TeslaCoilTileEntity){
-					if(!worldIn.isRemote){
-						playerIn.setHeldItem(hand, ((TeslaCoilTileEntity) te).removeJar());
-						worldIn.setBlockState(pos, state.with(CRProperties.ACTIVE, false));
+					if(!worldIn.isClientSide){
+						playerIn.setItemInHand(hand, ((TeslaCoilTileEntity) te).removeJar());
+						worldIn.setBlockAndUpdate(pos, state.setValue(CRProperties.ACTIVE, false));
 					}
 					return ActionResultType.SUCCESS;
 				}
@@ -142,23 +142,23 @@ public class TeslaCoil extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
-		if(state.get(CRProperties.ACTIVE) && newState.getBlock() != this){
-			TileEntity te = world.getTileEntity(pos);
+	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
+		if(state.getValue(CRProperties.ACTIVE) && newState.getBlock() != this){
+			TileEntity te = world.getBlockEntity(pos);
 			if(te instanceof TeslaCoilTileEntity){
-				InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ((TeslaCoilTileEntity) te).removeJar());
+				InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ((TeslaCoilTileEntity) te).removeJar());
 			}
 		}
-		super.onReplaced(state, world, pos, newState, isMoving);
+		super.onRemove(state, world, pos, newState, isMoving);
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
 		builder.add(CRProperties.ACTIVE, ESProperties.HORIZ_FACING);
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_coil.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_coil.top"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_coil.leyden", LeydenJar.MAX_CHARGE));
@@ -166,18 +166,18 @@ public class TeslaCoil extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState state){
+	public boolean hasAnalogOutputSignal(BlockState state){
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState state, World worldIn, BlockPos pos){
+	public int getAnalogOutputSignal(BlockState state, World worldIn, BlockPos pos){
 		return RedstoneUtil.clampToVanilla(read(worldIn, pos, state));
 	}
 
 	@Override
 	public float read(World world, BlockPos pos, BlockState state){
-		TileEntity te = world.getTileEntity(pos);
+		TileEntity te = world.getBlockEntity(pos);
 		if(te instanceof TeslaCoilTileEntity){
 			return ((TeslaCoilTileEntity) te).getRedstone();
 		}else{

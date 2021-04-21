@@ -35,14 +35,14 @@ public class ReagentPumpTileEntity extends AlchemyCarrierTE{
 	protected void performTransfer(){
 		EnumTransferMode[] modes = getModes();
 		for(int i = 0; i < 6; i++){
-			Direction side = Direction.byIndex(i);
+			Direction side = Direction.from3DDataValue(i);
 
-			LazyOptional<IChemicalHandler> otherOpt = neighCache[side.getIndex()];
-			if(!neighCache[side.getIndex()].isPresent()){
-				TileEntity te = world.getTileEntity(pos.offset(side));
+			LazyOptional<IChemicalHandler> otherOpt = neighCache[side.get3DDataValue()];
+			if(!neighCache[side.get3DDataValue()].isPresent()){
+				TileEntity te = level.getBlockEntity(worldPosition.relative(side));
 				if(te != null){
 					otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite());
-					neighCache[side.getIndex()] = otherOpt;
+					neighCache[side.get3DDataValue()] = otherOpt;
 				}
 			}
 			if(otherOpt.isPresent()){
@@ -57,7 +57,7 @@ public class ReagentPumpTileEntity extends AlchemyCarrierTE{
 				if(modes[i].isOutput() && contents.getTotalQty() != 0){
 					if(otherHandler.insertReagents(contents, side.getOpposite(), handler, true)){
 						correctReag();
-						markDirty();
+						setChanged();
 					}
 				}
 			}
@@ -76,13 +76,13 @@ public class ReagentPumpTileEntity extends AlchemyCarrierTE{
 	@Override
 	protected EnumTransferMode[] getModes(){
 		EnumTransferMode[] output = {EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.INPUT, EnumTransferMode.INPUT, EnumTransferMode.INPUT, EnumTransferMode.INPUT};
-		boolean outUp = world.getBlockState(pos).get(CRProperties.ACTIVE);
+		boolean outUp = level.getBlockState(worldPosition).getValue(CRProperties.ACTIVE);
 		if(outUp){
-			output[Direction.UP.getIndex()] = EnumTransferMode.OUTPUT;
-			output[Direction.DOWN.getIndex()] = EnumTransferMode.INPUT;
+			output[Direction.UP.get3DDataValue()] = EnumTransferMode.OUTPUT;
+			output[Direction.DOWN.get3DDataValue()] = EnumTransferMode.INPUT;
 		}else{
-			output[Direction.UP.getIndex()] = EnumTransferMode.INPUT;
-			output[Direction.DOWN.getIndex()] = EnumTransferMode.OUTPUT;
+			output[Direction.UP.get3DDataValue()] = EnumTransferMode.INPUT;
+			output[Direction.DOWN.get3DDataValue()] = EnumTransferMode.OUTPUT;
 		}
 		return output;
 	}

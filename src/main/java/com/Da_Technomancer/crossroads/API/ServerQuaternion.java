@@ -33,9 +33,9 @@ public class ServerQuaternion{
 		}
 
 		float f = sin(angle / 2.0F);
-		this.x = axis.getX() * f;
-		this.y = axis.getY() * f;
-		this.z = axis.getZ() * f;
+		this.x = axis.x() * f;
+		this.y = axis.y() * f;
+		this.z = axis.z() * f;
 		this.w = cos(angle / 2.0F);
 	}
 
@@ -59,10 +59,10 @@ public class ServerQuaternion{
 	}
 
 	public ServerQuaternion(Quaternion quaternionIn){
-		this.x = quaternionIn.getX();
-		this.y = quaternionIn.getY();
-		this.z = quaternionIn.getZ();
-		this.w = quaternionIn.getW();
+		this.x = quaternionIn.i();
+		this.y = quaternionIn.j();
+		this.z = quaternionIn.k();
+		this.w = quaternionIn.r();
 	}
 
 	public float getX(){

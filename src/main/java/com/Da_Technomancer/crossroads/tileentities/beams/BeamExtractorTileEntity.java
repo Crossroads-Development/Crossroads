@@ -3,10 +3,10 @@ package com.Da_Technomancer.crossroads.tileentities.beams;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.gui.container.BeamExtractorContainer;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.BeamExtractRec;
+import com.Da_Technomancer.crossroads.gui.container.BeamExtractorContainer;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import io.netty.buffer.Unpooled;
@@ -57,7 +57,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 		if(facing == null){
 			BlockState s = getBlockState();
 			if(s.hasProperty(ESProperties.FACING)){
-				facing = s.get(ESProperties.FACING);
+				facing = s.getValue(ESProperties.FACING);
 			}else{
 				return Direction.DOWN;
 			}
@@ -75,10 +75,10 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		if(!inv.isEmpty()){
-			nbt.put("inv", inv.write(new CompoundNBT()));
+			nbt.put("inv", inv.save(new CompoundNBT()));
 		}
 		output.writeToNBT("output", nbt);
 		nbt.putInt("remain", timeRemaining);
@@ -88,23 +88,23 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
-		inv = nbt.contains("inv") ? ItemStack.read(nbt.getCompound("inv")) : ItemStack.EMPTY;
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
+		inv = nbt.contains("inv") ? ItemStack.of(nbt.getCompound("inv")) : ItemStack.EMPTY;
 		output = BeamUnit.readFromNBT("output", nbt);
 		timeRemaining = nbt.getInt("remain");
 		timeLimit = nbt.getInt("time_limit");
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		itemOpt.invalidate();
 	}
 
 	@Override
-	public void updateContainingBlockInfo(){
-		super.updateContainingBlockInfo();
+	public void clearCache(){
+		super.clearCache();
 		facing = null;
 		itemOpt.invalidate();
 		itemOpt = LazyOptional.of(ItemHandler::new);
@@ -123,7 +123,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 	}
 
 	@Override
-	public int getSizeInventory(){
+	public int getContainerSize(){
 		return 1;
 	}
 
@@ -133,52 +133,52 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 	}
 
 	@Override
-	public ItemStack getStackInSlot(int index){
+	public ItemStack getItem(int index){
 		return index == 0 ? inv : ItemStack.EMPTY;
 	}
 
 	@Override
-	public ItemStack decrStackSize(int index, int count){
+	public ItemStack removeItem(int index, int count){
 		if(index == 0){
-			markDirty();
+			setChanged();
 			return inv.split(count);
 		}
 		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public ItemStack removeStackFromSlot(int index){
+	public ItemStack removeItemNoUpdate(int index){
 		if(index != 0){
 			return ItemStack.EMPTY;
 		}
-		markDirty();
+		setChanged();
 		ItemStack held = inv;
 		inv = ItemStack.EMPTY;
 		return held;
 	}
 
 	@Override
-	public void setInventorySlotContents(int index, ItemStack stack){
+	public void setItem(int index, ItemStack stack){
 		if(index == 0){
 			inv = stack;
-			markDirty();
+			setChanged();
 		}
 	}
 
 	@Override
-	public boolean isUsableByPlayer(PlayerEntity player){
-		return world.getTileEntity(pos) == this && player.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64;
+	public boolean stillValid(PlayerEntity player){
+		return level.getBlockEntity(worldPosition) == this && player.distanceToSqr(worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5) <= 64;
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && (world.getRecipeManager().getRecipe(CRRecipes.BEAM_EXTRACT_TYPE, new Inventory(stack), world).isPresent() || stack.getItem() == CRItems.beamCage);
+	public boolean canPlaceItem(int index, ItemStack stack){
+		return index == 0 && (level.getRecipeManager().getRecipeFor(CRRecipes.BEAM_EXTRACT_TYPE, new Inventory(stack), level).isPresent() || stack.getItem() == CRItems.beamCage);
 	}
 
 	@Override
-	public void clear(){
+	public void clearContent(){
 		inv = ItemStack.EMPTY;
-		markDirty();
+		setChanged();
 	}
 
 	@Override
@@ -189,7 +189,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 	@Nullable
 	@Override
 	public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity){
-		return new BeamExtractorContainer(i, playerInventory, new PacketBuffer(Unpooled.buffer()).writeBlockPos(pos));
+		return new BeamExtractorContainer(i, playerInventory, new PacketBuffer(Unpooled.buffer()).writeBlockPos(worldPosition));
 	}
 
 	@Override
@@ -204,19 +204,19 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 				timeRemaining = 0;
 				consumeFuel();
 			}
-			markDirty();
+			setChanged();
 		}else{
 			consumeFuel();
 		}
 
-		if(beamer[dir.getIndex()].emit(output, world)){
-			refreshBeam(dir.getIndex());
+		if(beamer[dir.get3DDataValue()].emit(output, level)){
+			refreshBeam(dir.get3DDataValue());
 		}
 	}
 
 	private void consumeFuel(){
-		if(!inv.isEmpty() && !world.isBlockPowered(pos)){//Consume fuel; Can be disabled with a redstone signal
-			Optional<BeamExtractRec> recOpt = world.getRecipeManager().getRecipe(CRRecipes.BEAM_EXTRACT_TYPE, this, world);
+		if(!inv.isEmpty() && !level.hasNeighborSignal(worldPosition)){//Consume fuel; Can be disabled with a redstone signal
+			Optional<BeamExtractRec> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.BEAM_EXTRACT_TYPE, this, level);
 			if(recOpt.isPresent()){
 				BeamExtractRec rec = recOpt.get();
 				output = rec.getOutput();
@@ -224,13 +224,13 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 				timeLimit = rec.getDuration();
 				timeRemaining = timeLimit;
 				output = rec.getOutput();
-				markDirty();
+				setChanged();
 			}else if(inv.getItem() == CRItems.beamCage){
 				//Beam cages are emitted in their entirety in one pulse
 				//The empty cage remains in the extractor
 				output = BeamCage.getStored(inv);
 				BeamCage.storeBeam(inv, BeamUnit.EMPTY);
-				markDirty();
+				setChanged();
 			}
 		}else{
 			timeRemaining = 0;
@@ -247,7 +247,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 	@Override
 	protected boolean[] outputSides(){
 		boolean[] out = new boolean[6];
-		out[getFacing().getIndex()] = true;
+		out[getFacing().get3DDataValue()] = true;
 		return out;
 	}
 
@@ -265,7 +265,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
-			if(!isItemValidForSlot(0, stack) || stack.isEmpty() || inv.getCount() >= getSlotLimit(0) || !inv.isEmpty() && !inv.isItemEqual(stack)){
+			if(!canPlaceItem(0, stack) || stack.isEmpty() || inv.getCount() >= getSlotLimit(0) || !inv.isEmpty() && !inv.sameItem(stack)){
 				return stack;
 			}
 
@@ -278,7 +278,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 				}else{
 					inv.grow(moved);
 				}
-				markDirty();
+				setChanged();
 			}
 
 			ItemStack output = stack.copy();
@@ -296,7 +296,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 					out.setCount(moved);
 					return out;
 				}
-				markDirty();
+				setChanged();
 				return inv.split(moved);
 			}
 			return ItemStack.EMPTY;
@@ -309,7 +309,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 
 		@Override
 		public boolean isItemValid(int slot, @Nonnull ItemStack stack){
-			return isItemValidForSlot(slot, stack);
+			return canPlaceItem(slot, stack);
 		}
 	}
 }

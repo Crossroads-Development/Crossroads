@@ -8,12 +8,12 @@ import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -46,53 +46,53 @@ public class BeamRenderer<T extends TileEntity & IBeamRenderTE> extends TileEnti
 		int[] col = {color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()};
 		float endV = length / 2;//V-coord for the far edge of the sides
 
-		Matrix4f lastMatrix = matrix.getLast().getMatrix();
+		Matrix4f lastMatrix = matrix.last().pose();
 
 		//Sides
 		//-X
-		builder.pos(lastMatrix, -halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_SIDE_U, 0).endVertex();
-		builder.pos(lastMatrix, -halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_SIDE_U, endV).endVertex();
-		builder.pos(lastMatrix, -halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_END_U, endV).endVertex();
-		builder.pos(lastMatrix, -halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_END_U, 0).endVertex();
+		builder.vertex(lastMatrix, -halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, 0).endVertex();
+		builder.vertex(lastMatrix, -halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, endV).endVertex();
+		builder.vertex(lastMatrix, -halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, endV).endVertex();
+		builder.vertex(lastMatrix, -halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, 0).endVertex();
 		//+X
-		builder.pos(lastMatrix, halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_SIDE_U, 0).endVertex();
-		builder.pos(lastMatrix, halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_SIDE_U, endV).endVertex();
-		builder.pos(lastMatrix, halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_END_U, endV).endVertex();
-		builder.pos(lastMatrix, halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_END_U, 0).endVertex();
+		builder.vertex(lastMatrix, halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, 0).endVertex();
+		builder.vertex(lastMatrix, halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, endV).endVertex();
+		builder.vertex(lastMatrix, halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, endV).endVertex();
+		builder.vertex(lastMatrix, halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, 0).endVertex();
 		//-Z
-		builder.pos(lastMatrix, -halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_SIDE_U, 0).endVertex();
-		builder.pos(lastMatrix, -halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_SIDE_U, endV).endVertex();
-		builder.pos(lastMatrix, halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_END_U, endV).endVertex();
-		builder.pos(lastMatrix, halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_END_U, 0).endVertex();
+		builder.vertex(lastMatrix, -halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, 0).endVertex();
+		builder.vertex(lastMatrix, -halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, endV).endVertex();
+		builder.vertex(lastMatrix, halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, endV).endVertex();
+		builder.vertex(lastMatrix, halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, 0).endVertex();
 		//+Z
-		builder.pos(lastMatrix, -halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_SIDE_U, 0).endVertex();
-		builder.pos(lastMatrix, -halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_SIDE_U, endV).endVertex();
-		builder.pos(lastMatrix, halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_END_U, endV).endVertex();
-		builder.pos(lastMatrix, halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_END_U, 0).endVertex();
+		builder.vertex(lastMatrix, -halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, 0).endVertex();
+		builder.vertex(lastMatrix, -halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, endV).endVertex();
+		builder.vertex(lastMatrix, halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, endV).endVertex();
+		builder.vertex(lastMatrix, halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, 0).endVertex();
 
 		//Near end
-		builder.pos(lastMatrix, -halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_END_U, 0).endVertex();
-		builder.pos(lastMatrix, -halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_END_U, BEAM_V_STOP).endVertex();
-		builder.pos(lastMatrix, halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).tex(1, BEAM_V_STOP).endVertex();
-		builder.pos(lastMatrix, halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(1, 0).endVertex();
+		builder.vertex(lastMatrix, -halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, 0).endVertex();
+		builder.vertex(lastMatrix, -halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, BEAM_V_STOP).endVertex();
+		builder.vertex(lastMatrix, halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).uv(1, BEAM_V_STOP).endVertex();
+		builder.vertex(lastMatrix, halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(1, 0).endVertex();
 		//Far end
-		builder.pos(lastMatrix, -halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_END_U, 0).endVertex();
-		builder.pos(lastMatrix, -halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).tex(BEAM_END_U, BEAM_V_STOP).endVertex();
-		builder.pos(lastMatrix, halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).tex(1, BEAM_V_STOP).endVertex();
-		builder.pos(lastMatrix, halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).tex(1, 0).endVertex();
+		builder.vertex(lastMatrix, -halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, 0).endVertex();
+		builder.vertex(lastMatrix, -halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, BEAM_V_STOP).endVertex();
+		builder.vertex(lastMatrix, halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).uv(1, BEAM_V_STOP).endVertex();
+		builder.vertex(lastMatrix, halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(1, 0).endVertex();
 	}
 
 	@Override
 	public void render(T beam, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
 		int[] packets = beam.getRenderedBeams();
 
-		matrix.push();
+		matrix.pushPose();
 		matrix.translate(0.5, 0.5, 0.5);
 
 		boolean doRotation = CRConfig.rotateBeam.get();
 		Quaternion verticalRot;
 		if(doRotation){
-			verticalRot = Vector3f.YP.rotationDegrees(CRRenderUtil.getRenderTime(partialTicks, beam.getWorld()) * 2F);
+			verticalRot = Vector3f.YP.rotationDegrees(CRRenderUtil.getRenderTime(partialTicks, beam.getLevel()) * 2F);
 		}else{
 			verticalRot = Vector3f.YP.rotationDegrees(45);//Constant 45 degree angle
 		}
@@ -104,20 +104,20 @@ public class BeamRenderer<T extends TileEntity & IBeamRenderTE> extends TileEnti
 				float width = trip.getRight().floatValue() / 8F / (float) Math.sqrt(2);//Convert diagonal radius to side length
 				int length = trip.getMiddle();
 
-				matrix.push();
-				matrix.rotate(Direction.byIndex(dir).getRotation());
-				matrix.rotate(verticalRot);
+				matrix.pushPose();
+				matrix.mulPose(Direction.from3DDataValue(dir).getRotation());
+				matrix.mulPose(verticalRot);
 				drawBeam(matrix, builder, length, width, trip.getLeft());
 
-				matrix.pop();
+				matrix.popPose();
 			}
 		}
 
-		matrix.pop();
+		matrix.popPose();
 	}
 
 	@Override
-	public boolean isGlobalRenderer(T te){
+	public boolean shouldRenderOffScreen(T te){
 		return true;
 	}
 }

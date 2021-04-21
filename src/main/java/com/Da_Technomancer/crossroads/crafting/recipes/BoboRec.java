@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.crafting.recipes;
 
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.CraftingUtil;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.gson.JsonObject;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -36,7 +36,7 @@ public class BoboRec implements IOptionalRecipe<IInventory>{
 
 	@Override
 	public boolean matches(IInventory inv, World worldIn){
-		if(!isEnabled() || inv.getSizeInventory() != 3){
+		if(!isEnabled() || inv.getContainerSize() != 3){
 			return false;
 		}
 		//Known issue: this will pass if one input meets 2+ ingredients, even if the third input is irrelevant
@@ -44,7 +44,7 @@ public class BoboRec implements IOptionalRecipe<IInventory>{
 		for(Ingredient input : ingr){
 			boolean pass = false;
 			for(int i = 0; i < 3; i++){
-				if(input.test(inv.getStackInSlot(i))){
+				if(input.test(inv.getItem(i))){
 					pass = true;
 					break;
 				}
@@ -71,22 +71,22 @@ public class BoboRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public ItemStack getCraftingResult(IInventory inv){
-		return getRecipeOutput().copy();
+	public ItemStack assemble(IInventory inv){
+		return getResultItem().copy();
 	}
 
 	@Override
-	public boolean canFit(int width, int height){
+	public boolean canCraftInDimensions(int width, int height){
 		return true;
 	}
 
 	@Override
-	public ItemStack getRecipeOutput(){
+	public ItemStack getResultItem(){
 		return output;
 	}
 
 	@Override
-	public ItemStack getIcon(){
+	public ItemStack getToastSymbol(){
 		return new ItemStack(CRItems.boboRod);
 	}
 
@@ -113,9 +113,9 @@ public class BoboRec implements IOptionalRecipe<IInventory>{
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<BoboRec>{
 
 		@Override
-		public BoboRec read(ResourceLocation recipeId, JsonObject json){
+		public BoboRec fromJson(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and ingredient
-			String s = JSONUtils.getString(json, "group", "");
+			String s = JSONUtils.getAsString(json, "group", "");
 
 			if(!CraftingUtil.isActiveJSON(json)){
 				return new BoboRec(recipeId, s, new Ingredient[] {Ingredient.EMPTY, Ingredient.EMPTY, Ingredient.EMPTY}, ItemStack.EMPTY, false);
@@ -133,14 +133,14 @@ public class BoboRec implements IOptionalRecipe<IInventory>{
 
 		@Nullable
 		@Override
-		public BoboRec read(ResourceLocation recipeId, PacketBuffer buffer){
-			String s = buffer.readString(Short.MAX_VALUE);
+		public BoboRec fromNetwork(ResourceLocation recipeId, PacketBuffer buffer){
+			String s = buffer.readUtf(Short.MAX_VALUE);
 			if(buffer.readBoolean()){
 				Ingredient[] inputs = new Ingredient[3];
 				for(int i = 0; i < 3; i++){
-					inputs[i] = Ingredient.read(buffer);
+					inputs[i] = Ingredient.fromNetwork(buffer);
 				}
-				ItemStack output = buffer.readItemStack();
+				ItemStack output = buffer.readItem();
 				return new BoboRec(recipeId, s, inputs, output, true);
 			}else{
 				return new BoboRec(recipeId, s, new Ingredient[] {Ingredient.EMPTY, Ingredient.EMPTY, Ingredient.EMPTY}, ItemStack.EMPTY, false);
@@ -148,13 +148,13 @@ public class BoboRec implements IOptionalRecipe<IInventory>{
 		}
 
 		@Override
-		public void write(PacketBuffer buffer, BoboRec recipe){
-			buffer.writeString(recipe.getGroup());
+		public void toNetwork(PacketBuffer buffer, BoboRec recipe){
+			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
 			for(Ingredient ingr : recipe.ingr){
-				ingr.write(buffer);
+				ingr.toNetwork(buffer);
 			}
-			buffer.writeItemStack(recipe.output);
+			buffer.writeItem(recipe.output);
 		}
 	}
 }

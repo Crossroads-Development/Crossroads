@@ -29,10 +29,10 @@ public class BeamEffect{
 
 	protected boolean performTransmute(EnumBeamAlignments align, boolean voi, int power, World worldIn, BlockPos pos){
 		BlockState state = worldIn.getBlockState(pos);
-		List<BeamTransmuteRec> recipes = worldIn.getRecipeManager().getRecipes(CRRecipes.BEAM_TRANSMUTE_TYPE, new Inventory(0), worldIn);
+		List<BeamTransmuteRec> recipes = worldIn.getRecipeManager().getRecipesFor(CRRecipes.BEAM_TRANSMUTE_TYPE, new Inventory(0), worldIn);
 		Optional<BeamTransmuteRec> recipe = recipes.parallelStream().filter(rec -> rec.canApply(align, voi, power, state)).findAny();
 		if(recipe.isPresent()){
-			worldIn.setBlockState(pos, recipe.get().getOutput().getDefaultState());
+			worldIn.setBlockAndUpdate(pos, recipe.get().getOutput().defaultBlockState());
 			if(CRConfig.beamSounds.get()){
 				//Play a sound
 				CRSounds.playSoundServer(worldIn, pos, CRSounds.BEAM_TRANSMUTE, SoundCategory.BLOCKS, 0.5F, 1F);

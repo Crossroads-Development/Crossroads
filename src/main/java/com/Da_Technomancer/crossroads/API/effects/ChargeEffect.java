@@ -20,7 +20,7 @@ public class ChargeEffect extends BeamEffect{
 	@Override
 	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, World worldIn, BlockPos pos, @Nullable Direction dir){
 		if(!performTransmute(align, voi, power, worldIn, pos)){
-			TileEntity te = worldIn.getTileEntity(pos);
+			TileEntity te = worldIn.getBlockEntity(pos);
 			if(voi){
 				LazyOptional<IEnergyStorage> energy;
 				if(te != null && (energy = te.getCapability(CapabilityEnergy.ENERGY, dir)).isPresent()){
@@ -33,10 +33,10 @@ public class ChargeEffect extends BeamEffect{
 					return;
 				}
 
-				if(power >= 16 && CRConfig.chargeSpawnLightning.get() && (CRConfig.undergroundLightning.get() || worldIn.canSeeSky(pos.up()))){
+				if(power >= 16 && CRConfig.chargeSpawnLightning.get() && (CRConfig.undergroundLightning.get() || worldIn.canSeeSky(pos.above()))){
 					LightningBoltEntity lightning = EntityType.LIGHTNING_BOLT.create(worldIn);
-					lightning.moveForced(Vector3d.copyCenteredHorizontally(pos));
-					worldIn.addEntity(lightning);
+					lightning.moveTo(Vector3d.atBottomCenterOf(pos));
+					worldIn.addFreshEntity(lightning);
 				}
 			}
 		}

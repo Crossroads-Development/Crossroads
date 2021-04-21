@@ -64,8 +64,8 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	@Override
-	public void updateContainingBlockInfo(){
-		super.updateContainingBlockInfo();
+	public void clearCache(){
+		super.clearCache();
 		//Invalidate and regenerate all the optionals
 		for(LazyOptional<IFluidHandler> internalOpt : internalOpts){
 			internalOpt.invalidate();
@@ -92,7 +92,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 
 	@Override
 	public void tick(){
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 
@@ -122,7 +122,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 
 		//Collect all handlers, using or updating cache, and build fluid total data
 		for(int i = 0; i < 6; i++){
-			EnumTransferMode mode = state.get(CRProperties.CONDUIT_SIDES_FULL[i]);//Set mode in this direction on the blockstate
+			EnumTransferMode mode = state.getValue(CRProperties.CONDUIT_SIDES_FULL[i]);//Set mode in this direction on the blockstate
 			boolean hasMatch;//Whether there is a valid connection direction
 			//Skip disabled directions
 			if(!mode.isConnection()){
@@ -135,8 +135,8 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 				otherHandler = otherOpts[i].orElseThrow(NullPointerException::new);
 			}else{
 				//Cache is invalid- get from world
-				Direction dir = Direction.byIndex(i);
-				TileEntity otherTe = world.getTileEntity(pos.offset(dir));
+				Direction dir = Direction.from3DDataValue(i);
+				TileEntity otherTe = level.getBlockEntity(worldPosition.relative(dir));
 				//Update cache
 				if(otherTe != null && (otherOpts[i] = otherTe.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite())).isPresent()){
 					otherHandler = otherOpts[i].orElseThrow(NullPointerException::new);
@@ -319,20 +319,20 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 			content.setAmount(availableFluid);
 		}
 		if(!BlockUtil.sameFluid(content, prevStack)){
-			markDirty();
+			setChanged();
 		}
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		ConduitBlock.IConduitTE.readConduitNBT(nbt, this);
 		content = FluidStack.loadFluidStackFromNBT(nbt);
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		ConduitBlock.IConduitTE.writeConduitNBT(nbt, this);
 		if(!content.isEmpty()){
 			content.writeToNBT(nbt);
@@ -342,8 +342,8 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		for(LazyOptional<?> opt : internalOpts){
 			opt.invalidate();
 		}
@@ -355,7 +355,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 
 	protected boolean canConnect(Direction side){
 		//Clooge so redstone tubes work
-		return side == null || modes[side.getIndex()].isConnection();
+		return side == null || modes[side.get3DDataValue()].isConnection();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -365,7 +365,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 			if(side == null){
 				return (LazyOptional<T>) internalOpts[3];//Inner handler
 			}else if(canConnect(side)){
-				switch(modes[side.getIndex()]){
+				switch(modes[side.get3DDataValue()]){
 					case INPUT:
 						return (LazyOptional<T>) internalOpts[1];
 					case OUTPUT:
@@ -401,8 +401,8 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 
 	@Override
 	public boolean hasMatch(int side, EnumTransferMode mode){
-		Direction face = Direction.byIndex(side);
-		TileEntity neighTE = world.getTileEntity(pos.offset(face));
+		Direction face = Direction.from3DDataValue(side);
+		TileEntity neighTE = level.getBlockEntity(worldPosition.relative(face));
 		if(neighTE != null){
 			LazyOptional<IFluidHandler> opt = neighTE.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, face.getOpposite());
 			return opt.isPresent();
@@ -610,7 +610,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 				}else{
 					content.grow(filled);
 				}
-				markDirty();
+				setChanged();
 			}
 			return filled;
 		}
@@ -626,7 +626,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 			removed.setAmount(drained);
 			if(action.execute()){
 				content.shrink(drained);
-				markDirty();
+				setChanged();
 			}
 			return removed;
 		}
@@ -642,7 +642,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 			removed.setAmount(drained);
 			if(action.execute()){
 				content.shrink(drained);
-				markDirty();
+				setChanged();
 			}
 			return removed;
 		}

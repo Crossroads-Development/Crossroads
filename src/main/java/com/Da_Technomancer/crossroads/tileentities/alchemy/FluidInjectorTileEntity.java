@@ -32,8 +32,8 @@ public class FluidInjectorTileEntity extends AlchemyCarrierTE{
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		fluidOpt.invalidate();
 	}
 

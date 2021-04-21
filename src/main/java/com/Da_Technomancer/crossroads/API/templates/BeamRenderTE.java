@@ -50,12 +50,12 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){
 		//Expand the render box to include all possible beams from this block
-		return new AxisAlignedBB(pos.add(-BeamUtil.MAX_DISTANCE, -BeamUtil.MAX_DISTANCE, -BeamUtil.MAX_DISTANCE), pos.add(1 + BeamUtil.MAX_DISTANCE, 1 + BeamUtil.MAX_DISTANCE, 1 + BeamUtil.MAX_DISTANCE));
+		return new AxisAlignedBB(worldPosition.offset(-BeamUtil.MAX_DISTANCE, -BeamUtil.MAX_DISTANCE, -BeamUtil.MAX_DISTANCE), worldPosition.offset(1 + BeamUtil.MAX_DISTANCE, 1 + BeamUtil.MAX_DISTANCE, 1 + BeamUtil.MAX_DISTANCE));
 	}
 
 	@Override
-	public void updateContainingBlockInfo(){
-		super.updateContainingBlockInfo();
+	public void clearCache(){
+		super.clearCache();
 		beamer = null;
 		beamPackets = new int[6];
 		for(int i = 0; i < 6; i++){
@@ -69,8 +69,8 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 	protected void refreshBeam(int index){
 		int packet = beamer == null || beamer[index] == null ? 0 : beamer[index].genPacket();
 		beamPackets[index] = packet;
-		if(!world.isRemote){
-			CRPackets.sendPacketAround(world, pos, new SendIntToClient((byte) index, packet, pos));
+		if(!level.isClientSide){
+			CRPackets.sendPacketAround(level, worldPosition, new SendIntToClient((byte) index, packet, worldPosition));
 		}
 		if(beamer != null && beamer[index] != null && !beamer[index].getLastSent().isEmpty()){
 			prevMag[index] = beamer[index].getLastSent();
@@ -84,12 +84,12 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 
 	protected void playSounds(){
 		//Can be called on both the virtual server and client side, but only actually does anything on the server side as the passed player is null
-		if(CRConfig.beamSounds.get() && beamer != null && world.getGameTime() % 60 == 0){
+		if(CRConfig.beamSounds.get() && beamer != null && level.getGameTime() % 60 == 0){
 			//Play a sound if ANY side is outputting a beam
 			for(BeamManager beamManager : beamer){
 				if(beamManager != null && !beamManager.getLastSent().isEmpty()){
 					//The attenuation distance defined for this sound in sounds.json is significant, and makes the sound have a very short range
-					CRSounds.playSoundServer(world, pos, CRSounds.BEAM_PASSIVE, SoundCategory.BLOCKS, 0.7F, 0.3F);
+					CRSounds.playSoundServer(level, worldPosition, CRSounds.BEAM_PASSIVE, SoundCategory.BLOCKS, 0.7F, 0.3F);
 					break;
 				}
 			}
@@ -98,23 +98,23 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 
 	@Override
 	public void tick(){
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 		
-		if(world.getGameTime() % BeamUtil.BEAM_TIME == 0 && activeCycle != world.getGameTime()){
+		if(level.getGameTime() % BeamUtil.BEAM_TIME == 0 && activeCycle != level.getGameTime()){
 			if(beamer == null){
 				beamer = new BeamManager[6];
 				boolean[] outputs = outputSides();
 				for(int i = 0; i < 6; i++){
 					if(outputs[i]){
-						beamer[i] = new BeamManager(Direction.byIndex(i), pos);
+						beamer[i] = new BeamManager(Direction.from3DDataValue(i), worldPosition);
 					}
 				}
 			}
 
 			BeamUnit out = shiftStorage();
-			activeCycle = world.getGameTime();
+			activeCycle = level.getGameTime();
 			if(out.getPower() > getLimit()){
 				out = out.mult((float) getLimit() / (float) out.getPower(), true);
 			}
@@ -134,7 +134,7 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 		queued[0].clear();
 		queued[0].addBeam(queued[1]);
 		queued[1].clear();
-		markDirty();
+		setChanged();
 		return out;
 	}
 
@@ -167,8 +167,8 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 
 		queued[0].writeToNBT("queue0", nbt);
 		queued[1].writeToNBT("queue1", nbt);
@@ -184,8 +184,8 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		queued[0] = BeamUnitStorage.readFromNBT("queue0", nbt);
 		queued[1] = BeamUnitStorage.readFromNBT("queue1", nbt);
 		activeCycle = nbt.getLong("cyc");
@@ -198,13 +198,13 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 	protected LazyOptional<IBeamHandler> lazyOptional = LazyOptional.of(BeamHandler::new);
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		lazyOptional.invalidate();
-		if(beamer != null && world != null){
+		if(beamer != null && level != null){
 			for(BeamManager manager : beamer){
 				if(manager != null){
-					manager.emit(BeamUnit.EMPTY, world);
+					manager.emit(BeamUnit.EMPTY, level);
 				}
 			}
 		}
@@ -215,7 +215,7 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction dir){
-		if(cap == Capabilities.BEAM_CAPABILITY && (dir == null || inputSides()[dir.getIndex()])){
+		if(cap == Capabilities.BEAM_CAPABILITY && (dir == null || inputSides()[dir.get3DDataValue()])){
 			return (LazyOptional<T>) lazyOptional;
 		}
 		return super.getCapability(cap, dir);
@@ -226,8 +226,8 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 		@Override
 		public void setBeam(@Nonnull BeamUnit mag){
 			if(!mag.isEmpty()){
-				queued[world.getGameTime() == activeCycle ? 0 : 1].addBeam(mag);
-				markDirty();
+				queued[level.getGameTime() == activeCycle ? 0 : 1].addBeam(mag);
+				setChanged();
 			}
 		}
 	}

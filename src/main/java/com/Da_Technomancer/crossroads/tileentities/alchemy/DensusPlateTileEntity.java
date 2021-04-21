@@ -25,7 +25,7 @@ public class DensusPlateTileEntity extends TileEntity implements ITickableTileEn
 	@ObjectHolder("densus_plate")
 	private static TileEntityType<DensusPlateTileEntity> type = null;
 
-	private static final ITag<Block> gravityBlocking = BlockTags.makeWrapperTag(Crossroads.MODID + ":gravity_blocking");
+	private static final ITag<Block> gravityBlocking = BlockTags.bind(Crossroads.MODID + ":gravity_blocking");
 
 	private static final int RANGE = CRConfig.gravRange.get();
 
@@ -36,7 +36,7 @@ public class DensusPlateTileEntity extends TileEntity implements ITickableTileEn
 	private Direction getFacing(){
 		BlockState state = getBlockState();
 		if(state.hasProperty(ESProperties.FACING)){
-			return state.get(ESProperties.FACING);
+			return state.getValue(ESProperties.FACING);
 		}
 		return Direction.DOWN;
 	}
@@ -48,7 +48,7 @@ public class DensusPlateTileEntity extends TileEntity implements ITickableTileEn
 	
 	@Override
 	public void tick(){
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 		
@@ -58,33 +58,33 @@ public class DensusPlateTileEntity extends TileEntity implements ITickableTileEn
 
 		//Check for cavorite shortening the range
 		for(int i = 1; i <= RANGE; i++){
-			BlockState state = world.getBlockState(pos.offset(dir, i));
+			BlockState state = level.getBlockState(worldPosition.relative(dir, i));
 			if(gravityBlocking.contains(state.getBlock())){
 				effectiveRange = i;
 				break;
 			}
 		}
 
-		List<Entity> ents = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.getX() + (dir.getXOffset() == 1 ? 1 : 0), pos.getY() + (dir.getYOffset() == 1 ? 1 : 0), pos.getZ() + (dir.getZOffset() == 1 ? 1 : 0), pos.getX() + (dir.getXOffset() == -1 ? 0 : 1) + effectiveRange * dir.getXOffset(), pos.getY() + (dir.getYOffset() == -1 ? 0 : 1) + effectiveRange * dir.getYOffset(), pos.getZ() + (dir.getZOffset() == -1 ? 0 : 1) + effectiveRange * dir.getZOffset()), EntityPredicates.IS_STANDALONE);
+		List<Entity> ents = level.getEntitiesOfClass(Entity.class, new AxisAlignedBB(worldPosition.getX() + (dir.getStepX() == 1 ? 1 : 0), worldPosition.getY() + (dir.getStepY() == 1 ? 1 : 0), worldPosition.getZ() + (dir.getStepZ() == 1 ? 1 : 0), worldPosition.getX() + (dir.getStepX() == -1 ? 0 : 1) + effectiveRange * dir.getStepX(), worldPosition.getY() + (dir.getStepY() == -1 ? 0 : 1) + effectiveRange * dir.getStepY(), worldPosition.getZ() + (dir.getStepZ() == -1 ? 0 : 1) + effectiveRange * dir.getStepZ()), EntityPredicates.ENTITY_NOT_BEING_RIDDEN);
 		for(Entity ent : ents){
-			if(ent.isSneaking() || ent.isSpectator()){
+			if(ent.isShiftKeyDown() || ent.isSpectator()){
 				continue;
 			}
 			switch(dir.getAxis()){
 				case X:
-					ent.addVelocity(0.6D * (ent.getPosX() < pos.getX() ^ inverse ? 1D : -1D), 0, 0);
-					ent.velocityChanged = true;
+					ent.push(0.6D * (ent.getX() < worldPosition.getX() ^ inverse ? 1D : -1D), 0, 0);
+					ent.hurtMarked = true;
 					break;
 				case Y:
-					ent.addVelocity(0, 0.6D * (ent.getPosY() < pos.getY() ^ inverse ? 1D : -1D), 0);
-					ent.velocityChanged = true;
+					ent.push(0, 0.6D * (ent.getY() < worldPosition.getY() ^ inverse ? 1D : -1D), 0);
+					ent.hurtMarked = true;
 					if(inverse && dir == Direction.UP || !inverse && dir == Direction.DOWN){
 						ent.fallDistance = 0;
 					}
 					break;
 				case Z:
-					ent.addVelocity(0, 0, 0.6D * (ent.getPosZ() < pos.getZ() ^ inverse ? 1D : -1D));
-					ent.velocityChanged = true;
+					ent.push(0, 0, 0.6D * (ent.getZ() < worldPosition.getZ() ^ inverse ? 1D : -1D));
+					ent.hurtMarked = true;
 					break;
 				default:
 					break;

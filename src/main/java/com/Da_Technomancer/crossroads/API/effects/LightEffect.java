@@ -21,9 +21,9 @@ public class LightEffect extends BeamEffect{
 				for(int i = -range; i <= range; i++){
 					for(int j = -range; j <= range; j++){
 						for(int k = -range; k <= range; k++){
-							checkPos.setPos(pos.getX() + i, pos.getY() + j, pos.getZ() + k);
+							checkPos.set(pos.getX() + i, pos.getY() + j, pos.getZ() + k);
 							BlockState state = worldIn.getBlockState(checkPos);
-							if(state.getLightValue() > 0 && state.getBlockHardness(worldIn, checkPos) < 0.5F){
+							if(state.getLightEmission() > 0 && state.getDestroySpeed(worldIn, checkPos) < 0.5F){
 								worldIn.destroyBlock(checkPos, true);
 							}
 						}
@@ -33,12 +33,12 @@ public class LightEffect extends BeamEffect{
 				//Spawn light clusters
 				BlockState state = worldIn.getBlockState(pos);
 				if(state.isAir(worldIn, pos)){
-					worldIn.setBlockState(pos, CRBlocks.lightCluster.getDefaultState());
-				}else if(dir != null && state.getBlock() != CRBlocks.lightCluster && state.getLightValue() == 0 && state.isOpaqueCube(worldIn, pos)){//Don't spawn clusters against other light sources
-					BlockPos offsetPos = pos.offset(dir);
+					worldIn.setBlockAndUpdate(pos, CRBlocks.lightCluster.defaultBlockState());
+				}else if(dir != null && state.getBlock() != CRBlocks.lightCluster && state.getLightEmission() == 0 && state.isSolidRender(worldIn, pos)){//Don't spawn clusters against other light sources
+					BlockPos offsetPos = pos.relative(dir);
 					state = worldIn.getBlockState(offsetPos);
 					if(state.isAir(worldIn, offsetPos)){
-						worldIn.setBlockState(offsetPos, CRBlocks.lightCluster.getDefaultState());
+						worldIn.setBlockAndUpdate(offsetPos, CRBlocks.lightCluster.defaultBlockState());
 					}
 				}
 			}

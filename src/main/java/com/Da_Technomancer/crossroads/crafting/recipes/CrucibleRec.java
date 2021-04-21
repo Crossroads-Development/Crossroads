@@ -47,21 +47,21 @@ public class CrucibleRec implements IOptionalRecipe<IInventory>{
 
 	@Override
 	public boolean matches(IInventory inv, World worldIn){
-		return active && input.test(inv.getStackInSlot(0));
+		return active && input.test(inv.getItem(0));
 	}
 
 	@Override
-	public boolean canFit(int width, int height){
+	public boolean canCraftInDimensions(int width, int height){
 		return true;
 	}
 
 	@Override
-	public ItemStack getRecipeOutput(){
+	public ItemStack getResultItem(){
 		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public ItemStack getIcon(){
+	public ItemStack getToastSymbol(){
 		return new ItemStack(CRBlocks.heatingCrucible);
 	}
 
@@ -95,9 +95,9 @@ public class CrucibleRec implements IOptionalRecipe<IInventory>{
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CrucibleRec>{
 
 		@Override
-		public CrucibleRec read(ResourceLocation recipeId, JsonObject json){
+		public CrucibleRec fromJson(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and ingredient
-			String s = JSONUtils.getString(json, "group", "");
+			String s = JSONUtils.getAsString(json, "group", "");
 
 			if(!CraftingUtil.isActiveJSON(json)){
 				return new CrucibleRec(recipeId, s, Ingredient.EMPTY, FluidStack.EMPTY, false);
@@ -110,21 +110,21 @@ public class CrucibleRec implements IOptionalRecipe<IInventory>{
 
 		@Nullable
 		@Override
-		public CrucibleRec read(ResourceLocation recipeId, PacketBuffer buffer){
-			String s = buffer.readString(Short.MAX_VALUE);
+		public CrucibleRec fromNetwork(ResourceLocation recipeId, PacketBuffer buffer){
+			String s = buffer.readUtf(Short.MAX_VALUE);
 			if(!buffer.readBoolean()){
 				return new CrucibleRec(recipeId, s, Ingredient.EMPTY, FluidStack.EMPTY, false);
 			}
-			Ingredient input = Ingredient.read(buffer);
+			Ingredient input = Ingredient.fromNetwork(buffer);
 			FluidStack output = FluidStack.readFromPacket(buffer);
 			return new CrucibleRec(recipeId, s, input, output, true);
 		}
 
 		@Override
-		public void write(PacketBuffer buffer, CrucibleRec recipe){
-			buffer.writeString(recipe.getGroup());
+		public void toNetwork(PacketBuffer buffer, CrucibleRec recipe){
+			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
-			recipe.input.write(buffer);
+			recipe.input.toNetwork(buffer);
 			recipe.output.writeToPacket(buffer);
 		}
 	}

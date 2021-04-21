@@ -28,7 +28,7 @@ public class DetailedAutoCrafterContainer extends AutoCrafterContainer{
 		//Sigil slot, ID 55
 		addSlot(new Slot(inv, 19, 106, 51){
 			@Override
-			public boolean isItemValid(ItemStack stack){
+			public boolean mayPlace(ItemStack stack){
 				return stack.getItem() instanceof PathSigil;
 			}
 		});

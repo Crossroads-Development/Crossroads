@@ -20,8 +20,8 @@ public class BeamExtractorContainer extends TileEntityContainer<BeamExtractorTil
 	public BeamExtractorContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
 		super(type, id, playerInv, buf);
 
-		progRef = new IntDeferredRef(te::getProgress, te.getWorld().isRemote);
-		trackInt(progRef);
+		progRef = new IntDeferredRef(te::getProgress, te.getLevel().isClientSide);
+		addDataSlot(progRef);
 	}
 
 	@Override

@@ -13,7 +13,7 @@ public class ColorParticleType extends ParticleType<ColorParticleData>{
 	}
 
 	@Override
-	public Codec<ColorParticleData> func_230522_e_(){
+	public Codec<ColorParticleData> codec(){
 		return ColorParticleData.codec;
 	}
 }

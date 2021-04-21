@@ -9,9 +9,9 @@ import com.Da_Technomancer.crossroads.API.packets.SendStringToClient;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.gui.container.CrucibleContainer;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.CrucibleRec;
+import com.Da_Technomancer.crossroads.gui.container.CrucibleContainer;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -49,7 +49,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	public static final int USAGE = 20;
 	public static final int REQUIRED = 1000;
 	private int progress = 0;
-	public IntReferenceHolder progressRef = IntReferenceHolder.single();
+	public IntReferenceHolder progressRef = IntReferenceHolder.standalone();
 	/**
 	 * The texture to be displayed, if any.
 	 */
@@ -75,7 +75,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 
 	@Override
 	public void receiveString(byte context, String message, @Nullable ServerPlayerEntity sender){
-		if(world.isRemote){
+		if(level.isClientSide){
 			if(context == 0){
 				activeText = message.length() == 0 ? null : new ResourceLocation(message);
 			}else if(context == 1){
@@ -100,20 +100,20 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	public void tick(){
 		super.tick();
 
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 
-		if(world.getGameTime() % 2 == 0){
+		if(level.getGameTime() % 2 == 0){
 			int fullness = Math.min(3, (int) Math.ceil((float) fluids[0].getAmount() * 3F / (float) fluidProps[0].capacity));
-			BlockState state = world.getBlockState(pos);
+			BlockState state = level.getBlockState(worldPosition);
 			if(state.getBlock() != CRBlocks.heatingCrucible){
-				remove();
+				setRemoved();
 				return;
 			}
 
-			if(state.get(CRProperties.FULLNESS) != fullness){
-				world.setBlockState(pos, state.with(CRProperties.FULLNESS, fullness), 18);
+			if(state.getValue(CRProperties.FULLNESS) != fullness){
+				level.setBlock(worldPosition, state.setValue(CRProperties.FULLNESS, fullness), 18);
 			}
 
 			if(fullness != 0 && !fluids[0].isEmpty()){
@@ -121,12 +121,12 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 				if(!goal.equals(activeText)){
 					activeText = goal;
 					col = fluids[0].getFluid().getAttributes().getColor(fluids[0]);
-					CRPackets.sendPacketAround(world, pos, new SendStringToClient(0, activeText.toString(), pos));
-					CRPackets.sendPacketAround(world, pos, new SendStringToClient(1, Integer.toString(col), pos));
+					CRPackets.sendPacketAround(level, worldPosition, new SendStringToClient(0, activeText.toString(), worldPosition));
+					CRPackets.sendPacketAround(level, worldPosition, new SendStringToClient(1, Integer.toString(col), worldPosition));
 				}
 			}else if(activeText != null){
 				activeText = null;
-				CRPackets.sendPacketAround(world, pos, new SendStringToClient(0, "", pos));
+				CRPackets.sendPacketAround(level, worldPosition, new SendStringToClient(0, "", worldPosition));
 			}
 		}
 
@@ -139,7 +139,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 			}else{
 				progress = Math.min(REQUIRED, progress + USAGE * (tier + 1));
 				if(progress >= REQUIRED){
-					Optional<CrucibleRec> recOpt = world.getRecipeManager().getRecipe(CRRecipes.CRUCIBLE_TYPE, this, world);
+					Optional<CrucibleRec> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.CRUCIBLE_TYPE, this, level);
 					if(recOpt.isPresent()){
 						FluidStack created = recOpt.get().getOutput();
 						if(fluidProps[0].capacity - fluids[0].getAmount() >= created.getAmount() && (fluids[0].isEmpty() || BlockUtil.sameFluid(fluids[0], created))){
@@ -150,7 +150,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 								fluids[0].grow(created.getAmount());
 							}
 							inventory[0].shrink(1);
-							markDirty();
+							setChanged();
 						}
 					}else{
 						inventory[0] = ItemStack.EMPTY;
@@ -159,13 +159,13 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 			}
 			progressRef.set(progress);
 
-			markDirty();
+			setChanged();
 		}
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		String textStr = nbt.getString("act");
 		if(textStr.length() == 0){
 			activeText = null;
@@ -178,8 +178,8 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putString("act", activeText == null ? "" : activeText.toString());
 		if(col != null){
 			nbt.putInt("col", col);
@@ -200,8 +200,8 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		itemOpt.invalidate();
 	}
 
@@ -226,13 +226,13 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
+	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction){
 		return false;
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && world.getRecipeManager().getRecipe(CRRecipes.CRUCIBLE_TYPE, new Inventory(stack), world).isPresent();
+	public boolean canPlaceItem(int index, ItemStack stack){
+		return index == 0 && level.getRecipeManager().getRecipeFor(CRRecipes.CRUCIBLE_TYPE, new Inventory(stack), level).isPresent();
 	}
 
 	@Override

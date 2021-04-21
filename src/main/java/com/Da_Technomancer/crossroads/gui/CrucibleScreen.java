@@ -25,12 +25,12 @@ public class CrucibleScreen extends MachineGUI<CrucibleContainer, HeatingCrucibl
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
-		Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE);
+	protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+		Minecraft.getInstance().getTextureManager().bind(TEXTURE);
 
-		blit(matrix, guiLeft, guiTop, 0, 0, xSize, ySize);
-		blit(matrix, guiLeft + 42, guiTop + 35, 176, 0, te.progressRef.get() * 28 / HeatingCrucibleTileEntity.REQUIRED, 18);
+		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+		blit(matrix, leftPos + 42, topPos + 35, 176, 0, te.progressRef.get() * 28 / HeatingCrucibleTileEntity.REQUIRED, 18);
 
-		super.drawGuiContainerBackgroundLayer(matrix, partialTicks, mouseX, mouseY);
+		super.renderBg(matrix, partialTicks, mouseX, mouseY);
 	}
 }

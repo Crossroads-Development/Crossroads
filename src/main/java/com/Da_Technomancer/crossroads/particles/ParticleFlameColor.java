@@ -18,25 +18,25 @@ public class ParticleFlameColor extends SpriteTexturedParticle{
 	private ParticleFlameColor(ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, Color c, IAnimatedSprite s){
 		super(worldIn, x, y, z);
 		setSize(0.02F, 0.02F);
-		setBoundingBox(new AxisAlignedBB(x, y, z, x + width, y + height, z + width));
-		canCollide = false;
+		setBoundingBox(new AxisAlignedBB(x, y, z, x + bbWidth, y + bbHeight, z + bbWidth));
+		hasPhysics = false;
 		sprite = s;
 //		setParticleTextureIndex(48);
-		particleScale *= rand.nextFloat() * 0.6F + 0.2F;
-		motionX = xSpeed;//Suggestion: (Math.random() * 2D - 1D) * 0.015D
-		motionY = ySpeed;//Suggestion: Math.random() * 0.015D
-		motionZ = zSpeed;//Suggestion: (Math.random() * 2D - 1D) * 0.015D
+		quadSize *= random.nextFloat() * 0.6F + 0.2F;
+		xd = xSpeed;//Suggestion: (Math.random() * 2D - 1D) * 0.015D
+		yd = ySpeed;//Suggestion: Math.random() * 0.015D
+		zd = zSpeed;//Suggestion: (Math.random() * 2D - 1D) * 0.015D
 		setColor(c.getRed() / 255F, c.getGreen() / 255F, c.getBlue() / 255F);
-		setAlphaF(c.getAlpha() / 255F);
-		setMaxAge((int) (7.0D / (Math.random() * 0.8D + 0.2D)));
-		selectSpriteWithAge(sprite);
+		setAlpha(c.getAlpha() / 255F);
+		setLifetime((int) (7.0D / (Math.random() * 0.8D + 0.2D)));
+		setSpriteFromAge(sprite);
 	}
 
 	@Override
-	public int getBrightnessForRender(float partialTick){
-		float f = (age + partialTick) / (float) maxAge;
+	public int getLightColor(float partialTick){
+		float f = (age + partialTick) / (float) lifetime;
 		f = MathHelper.clamp(f, 0.0F, 1.0F);
-		int i = super.getBrightnessForRender(partialTick);
+		int i = super.getLightColor(partialTick);
 		int j = i & 255;
 		int k = i >> 16 & 255;
 		j += (int) (f * 15.0F * 16.0F);
@@ -49,16 +49,16 @@ public class ParticleFlameColor extends SpriteTexturedParticle{
 
 	@Override
 	public void tick(){
-		prevPosX = posX;
-		prevPosY = posY;
-		prevPosZ = posZ;
-		move(motionX, motionY, motionZ);
-		motionX *= 0.85D;
-		motionY *= 0.85D;
-		motionZ *= 0.85D;
-		selectSpriteWithAge(sprite);
-		if(age++ >= maxAge){
-			setExpired();
+		xo = x;
+		yo = y;
+		zo = z;
+		move(xd, yd, zd);
+		xd *= 0.85D;
+		yd *= 0.85D;
+		zd *= 0.85D;
+		setSpriteFromAge(sprite);
+		if(age++ >= lifetime){
+			remove();
 		}
 	}
 
@@ -78,7 +78,7 @@ public class ParticleFlameColor extends SpriteTexturedParticle{
 
 		@Nullable
 		@Override
-		public Particle makeParticle(ColorParticleData typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed){
+		public Particle createParticle(ColorParticleData typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed){
 			return new ParticleFlameColor(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, typeIn.getColor(), sprite);
 		}
 	}

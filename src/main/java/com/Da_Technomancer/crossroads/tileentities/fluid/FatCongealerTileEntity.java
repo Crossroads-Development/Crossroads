@@ -56,7 +56,7 @@ public class FatCongealerTileEntity extends InventoryTE{
 	private Direction getFacing(){
 		BlockState state = getBlockState();
 		if(state.hasProperty(ESProperties.HORIZ_FACING)){
-			return state.get(ESProperties.HORIZ_FACING);
+			return state.getValue(ESProperties.HORIZ_FACING);
 		}
 		return Direction.NORTH;
 	}
@@ -64,20 +64,20 @@ public class FatCongealerTileEntity extends InventoryTE{
 	@Override
 	public void tick(){
 		super.tick();
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 
 		//Eject inventory either into the world or into an inventory.
 		//Despite using the method from ItemShifters, this block can't go through transport chutes
 		int prevCount = inventory[0].getCount();
-		inventory[0] = AbstractShifterTileEntity.ejectItem(world, pos.offset(getFacing()), getFacing(), inventory[0], null);
+		inventory[0] = AbstractShifterTileEntity.ejectItem(level, worldPosition.relative(getFacing()), getFacing(), inventory[0], null);
 		if(prevCount != inventory[0].getCount()){
-			markDirty();
+			setChanged();
 		}
 
 		//This machine can be disabled by a redstone signal
-		if(!world.isBlockPowered(pos)){
+		if(!level.hasNeighborSignal(worldPosition)){
 			TileEntity adjTE;
 			LazyOptional<IAxleHandler> otherOpt;
 			IAxleHandler topHandler = null;
@@ -86,11 +86,11 @@ public class FatCongealerTileEntity extends InventoryTE{
 			int hun = 0;
 			int sat = 0;
 
-			if((adjTE = world.getTileEntity(pos.offset(Direction.UP))) != null && (otherOpt = adjTE.getCapability(Capabilities.AXLE_CAPABILITY, Direction.DOWN)).isPresent()){
+			if((adjTE = level.getBlockEntity(worldPosition.relative(Direction.UP))) != null && (otherOpt = adjTE.getCapability(Capabilities.AXLE_CAPABILITY, Direction.DOWN)).isPresent()){
 				topHandler = otherOpt.orElseThrow(NullPointerException::new);
 				hun = (int) Math.min(Math.abs(topHandler.getSpeed()) * HUN_PER_SPD, 20);
 			}
-			if((adjTE = world.getTileEntity(pos.offset(Direction.DOWN))) != null && (otherOpt = adjTE.getCapability(Capabilities.AXLE_CAPABILITY, Direction.UP)).isPresent()){
+			if((adjTE = level.getBlockEntity(worldPosition.relative(Direction.DOWN))) != null && (otherOpt = adjTE.getCapability(Capabilities.AXLE_CAPABILITY, Direction.UP)).isPresent()){
 				bottomHandler = otherOpt.orElseThrow(NullPointerException::new);
 				sat = (int) Math.min(Math.abs(bottomHandler.getSpeed()) * SAT_PER_SPD, 20);
 			}
@@ -119,20 +119,20 @@ public class FatCongealerTileEntity extends InventoryTE{
 				}else{
 					inventory[0].grow(1);
 				}
-				markDirty();
+				setChanged();
 			}
 		}
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		itemOpt.invalidate();
 	}
 
 	@Override
-	public void updateContainingBlockInfo(){
-		super.updateContainingBlockInfo();
+	public void clearCache(){
+		super.clearCache();
 		itemOpt.invalidate();
 		itemOpt = LazyOptional.of(ItemHandler::new);
 	}
@@ -153,12 +153,12 @@ public class FatCongealerTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
+	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction){
 		return true;
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
+	public boolean canPlaceItem(int index, ItemStack stack){
 		return false;
 	}
 

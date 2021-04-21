@@ -26,9 +26,9 @@ public class AcidAlchemyEffect implements IAlchEffect{
 
 	public static final DamageSource ACID_DAMAGE = new DamageSource("chemical");
 
-	private static final ITag<Block> copperBlock = BlockTags.makeWrapperTag("forge:storage_blocks/copper");
-	private static final ITag<Block> tinBlock = BlockTags.makeWrapperTag("forge:storage_blocks/tin");
-	private static final ITag<Block> bronzeBlock = BlockTags.makeWrapperTag("forge:storage_blocks/bronze");
+	private static final ITag<Block> copperBlock = BlockTags.bind("forge:storage_blocks/copper");
+	private static final ITag<Block> tinBlock = BlockTags.bind("forge:storage_blocks/tin");
+	private static final ITag<Block> bronzeBlock = BlockTags.bind("forge:storage_blocks/bronze");
 
 	protected int getDamage(){
 		return 8;
@@ -40,14 +40,14 @@ public class AcidAlchemyEffect implements IAlchEffect{
 
 	@Override
 	public void doEffect(World world, BlockPos pos, int amount, EnumMatterPhase phase, ReagentMap reags){
-		for(LivingEntity e : world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1F, pos.getY() + 1F, pos.getZ() + 1F), EntityPredicates.IS_ALIVE)){
-			e.attackEntityFrom(ACID_DAMAGE, getDamage());
+		for(LivingEntity e : world.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1F, pos.getY() + 1F, pos.getZ() + 1F), EntityPredicates.ENTITY_STILL_ALIVE)){
+			e.hurt(ACID_DAMAGE, getDamage());
 		}
 
 		BlockState state = world.getBlockState(pos);
 		if(state.getBlock() == Blocks.BEDROCK && isRegia()){
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(CRItems.bedrockDust, 1));
-			world.setBlockState(pos, Blocks.AIR.getDefaultState());
+			InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(CRItems.bedrockDust, 1));
+			world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 			return;
 		}
 
@@ -58,30 +58,30 @@ public class AcidAlchemyEffect implements IAlchEffect{
 
 		Block block = state.getBlock();
 		if(Tags.Blocks.STORAGE_BLOCKS_IRON.contains(block)){
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.IRON_INGOT, world.rand.nextInt(9) + 1));
-			world.setBlockState(pos, Blocks.AIR.getDefaultState());
+			InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.IRON_INGOT, world.random.nextInt(9) + 1));
+			world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 			return;
 		}
 		if(Tags.Blocks.STORAGE_BLOCKS_GOLD.contains(block)){
 			if(isRegia()){
-				InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.GOLD_INGOT, world.rand.nextInt(9) + 1));
-				world.setBlockState(pos, Blocks.AIR.getDefaultState());
+				InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.GOLD_INGOT, world.random.nextInt(9) + 1));
+				world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 			}
 			return;
 		}
 		if(copperBlock.contains(block)){
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(OreSetup.ingotCopper, world.rand.nextInt(9) + 1));
-			world.setBlockState(pos, Blocks.AIR.getDefaultState());
+			InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(OreSetup.ingotCopper, world.random.nextInt(9) + 1));
+			world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 			return;
 		}
 		if(tinBlock.contains(block)){
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(OreSetup.ingotTin, world.rand.nextInt(9) + 1));
-			world.setBlockState(pos, Blocks.AIR.getDefaultState());
+			InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(OreSetup.ingotTin, world.random.nextInt(9) + 1));
+			world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 			return;
 		}
 		if(bronzeBlock.contains(block)){
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(OreSetup.ingotBronze, world.rand.nextInt(9) + 1));
-			world.setBlockState(pos, Blocks.AIR.getDefaultState());
+			InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(OreSetup.ingotBronze, world.random.nextInt(9) + 1));
+			world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 		}
 	}
 

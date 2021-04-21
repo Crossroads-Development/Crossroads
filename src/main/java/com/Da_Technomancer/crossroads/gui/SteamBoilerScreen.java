@@ -27,12 +27,12 @@ public class SteamBoilerScreen extends MachineGUI<SteamBoilerContainer, SteamBoi
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
-		Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE);
+	protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+		Minecraft.getInstance().getTextureManager().bind(TEXTURE);
 
-		blit(matrix, guiLeft, guiTop, 0, 0, xSize, ySize);
+		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
 
-		super.drawGuiContainerBackgroundLayer(matrix, partialTicks, mouseX, mouseY);
+		super.renderBg(matrix, partialTicks, mouseX, mouseY);
 	}
 }

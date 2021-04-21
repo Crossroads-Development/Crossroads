@@ -22,12 +22,12 @@ public class ColorChartContainer extends Container{
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity playerIn){
+	public boolean stillValid(PlayerEntity playerIn){
 		return true;
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(PlayerEntity playerIn, int fromSlot){
+	public ItemStack quickMoveStack(PlayerEntity playerIn, int fromSlot){
 		return ItemStack.EMPTY;
 	}
 }

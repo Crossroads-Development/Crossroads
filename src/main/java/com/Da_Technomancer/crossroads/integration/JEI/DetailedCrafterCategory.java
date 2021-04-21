@@ -50,7 +50,7 @@ public class DetailedCrafterCategory implements IRecipeCategory<DetailedCrafterR
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.detailedCrafter.getTranslatedName().getString();
+		return CRBlocks.detailedCrafter.getName().getString();
 	}
 
 	@Override
@@ -110,6 +110,6 @@ public class DetailedCrafterCategory implements IRecipeCategory<DetailedCrafterR
 	@Override
 	public void setIngredients(DetailedCrafterRec recipe, IIngredients ingredients){
 		ingredients.setInputIngredients(recipe.getIngredients());
-		ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
+		ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
 	}
 }

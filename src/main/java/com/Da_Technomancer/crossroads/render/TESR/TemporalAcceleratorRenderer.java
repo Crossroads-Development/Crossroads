@@ -34,68 +34,68 @@ public class TemporalAcceleratorRenderer extends EntropyRenderer<TemporalAcceler
 		}
 		super.render(te, partialTicks, matrix, buffer, combinedLight, combinedOverlay);
 
-		Direction dir = state.get(ESProperties.FACING);
+		Direction dir = state.getValue(ESProperties.FACING);
 
 		matrix.translate(0.5D, 0.5D, 0.5D);
-		matrix.rotate(dir.getRotation());
+		matrix.mulPose(dir.getRotation());
 
 		//Area of effect overlay when holding wrench
-		if(ESConfig.isWrench(Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND)) || ESConfig.isWrench(Minecraft.getInstance().player.getHeldItem(Hand.OFF_HAND))){
+		if(ESConfig.isWrench(Minecraft.getInstance().player.getItemInHand(Hand.MAIN_HAND)) || ESConfig.isWrench(Minecraft.getInstance().player.getItemInHand(Hand.OFF_HAND))){
 			float radius = TemporalAcceleratorTileEntity.SIZE / 2F + 0.01F;
 			int[] overlayCol = {255, 100, 0, 60};
 			IVertexBuilder overlayBuilder = buffer.getBuffer(CRRenderTypes.AREA_OVERLAY_TYPE);
 
-			matrix.push();
+			matrix.pushPose();
 			matrix.translate(0, radius + 0.5D - 0.001D, 0);
 
-			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, -radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 0).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, -radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(8, 0).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(8, 8).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 8).endVertex();
+			overlayBuilder.vertex(matrix.last().pose(), -radius, -radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(0, 0).endVertex();
+			overlayBuilder.vertex(matrix.last().pose(), radius, -radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(8, 0).endVertex();
+			overlayBuilder.vertex(matrix.last().pose(), radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(8, 8).endVertex();
+			overlayBuilder.vertex(matrix.last().pose(), -radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(0, 8).endVertex();
 
-			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 0).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(8, 0).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(8, 8).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 8).endVertex();
+			overlayBuilder.vertex(matrix.last().pose(), -radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(0, 0).endVertex();
+			overlayBuilder.vertex(matrix.last().pose(), radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(8, 0).endVertex();
+			overlayBuilder.vertex(matrix.last().pose(), radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(8, 8).endVertex();
+			overlayBuilder.vertex(matrix.last().pose(), -radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(0, 8).endVertex();
 
-			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, -radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 0).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(8, 0).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(8, 8).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 8).endVertex();
+			overlayBuilder.vertex(matrix.last().pose(), radius, -radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(0, 0).endVertex();
+			overlayBuilder.vertex(matrix.last().pose(), radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(8, 0).endVertex();
+			overlayBuilder.vertex(matrix.last().pose(), radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(8, 8).endVertex();
+			overlayBuilder.vertex(matrix.last().pose(), radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(0, 8).endVertex();
 
-			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, -radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 0).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(8, 0).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(8, 8).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 8).endVertex();
+			overlayBuilder.vertex(matrix.last().pose(), -radius, -radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(0, 0).endVertex();
+			overlayBuilder.vertex(matrix.last().pose(), -radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(8, 0).endVertex();
+			overlayBuilder.vertex(matrix.last().pose(), -radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(8, 8).endVertex();
+			overlayBuilder.vertex(matrix.last().pose(), -radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(0, 8).endVertex();
 
-			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, -radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 0).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, -radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(8, 0).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(8, 8).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 8).endVertex();
+			overlayBuilder.vertex(matrix.last().pose(), -radius, -radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(0, 0).endVertex();
+			overlayBuilder.vertex(matrix.last().pose(), radius, -radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(8, 0).endVertex();
+			overlayBuilder.vertex(matrix.last().pose(), radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(8, 8).endVertex();
+			overlayBuilder.vertex(matrix.last().pose(), -radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(0, 8).endVertex();
 
-			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 0).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(8, 0).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(8, 8).endVertex();
-			overlayBuilder.pos(matrix.getLast().getMatrix(), -radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).tex(0, 8).endVertex();
+			overlayBuilder.vertex(matrix.last().pose(), -radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(0, 0).endVertex();
+			overlayBuilder.vertex(matrix.last().pose(), radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(8, 0).endVertex();
+			overlayBuilder.vertex(matrix.last().pose(), radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(8, 8).endVertex();
+			overlayBuilder.vertex(matrix.last().pose(), -radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(0, 8).endVertex();
 
-			matrix.pop();
+			matrix.popPose();
 		}
 
 		//Render the two rotating octagons
 
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_TEXTURE);
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
+		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
 		int[] col = CRRenderUtil.convertColor(GearFactory.findMaterial("copshowium").getColor());
-		float angle = CRRenderUtil.getRenderTime(partialTicks, te.getWorld());
+		float angle = CRRenderUtil.getRenderTime(partialTicks, te.getLevel());
 		float lHalf = 7F / 16F;//Half the side length of the octagon
 		int medLight = CRRenderUtil.calcMediumLighting(combinedLight);
 
-		matrix.rotate(Vector3f.YP.rotationDegrees(angle));
+		matrix.mulPose(Vector3f.YP.rotationDegrees(angle));
 		matrix.translate(0, 5F / 16F, 0);
 		matrix.scale(2F * lHalf, 1, 2F * lHalf);
 		CRModels.draw8Core(builder, matrix, col, medLight, sprite);
 
-		matrix.rotate(Vector3f.YP.rotationDegrees(-2F * angle));
+		matrix.mulPose(Vector3f.YP.rotationDegrees(-2F * angle));
 		matrix.translate(0, -4F / 16F, 0);
 		matrix.scale(0.8F, 1, 0.8F);
 		CRModels.draw8Core(builder, matrix, col, medLight, sprite);

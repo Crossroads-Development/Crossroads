@@ -25,7 +25,7 @@ public class VoidEffect extends BeamEffect{
 			if(CRConfig.isProtected(worldIn, pos, worldIn.getBlockState(pos))){
 				return;
 			}
-			worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
+			worldIn.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 			SoundType soundtype = prev.getSoundType(worldIn, pos, null);
 			worldIn.playSound(null, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 		}

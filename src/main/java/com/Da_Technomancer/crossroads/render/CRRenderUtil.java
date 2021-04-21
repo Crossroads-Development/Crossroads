@@ -88,7 +88,7 @@ public class CRRenderUtil extends RenderUtil{
 
 		//I have decided I hate this sound on loop
 		//world.playSound(null, xSt, ySt, zSt, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 1F, 1.6F);
-		if(world.isRemote){
+		if(world.isClientSide){
 			AddVisualToClient.effectsToRender.add(visualFactories[1].apply(world, nbt));
 		}else{
 			CRPackets.sendEffectPacketAround(world, new BlockPos((xSt + xEn) / 2F, (ySt + yEn) / 2F, (zSt + zEn) / 2F), new AddVisualToClient(nbt));
@@ -110,7 +110,7 @@ public class CRRenderUtil extends RenderUtil{
 		nbt.putInt("quantity", qty);
 		nbt.putBoolean("sound", sound);
 
-		if(world.isRemote){
+		if(world.isClientSide){
 			AddVisualToClient.effectsToRender.add(visualFactories[2].apply(world, nbt));
 		}else{
 			CRPackets.sendEffectPacketAround(world, new BlockPos((xSt + xEn) / 2F, (ySt + yEn) / 2F, (zSt + zEn) / 2F), new AddVisualToClient(nbt));
@@ -125,7 +125,7 @@ public class CRRenderUtil extends RenderUtil{
 	 * @return The corresponding texture atlas sprite
 	 */
 	public static TextureAtlasSprite getTextureSprite(ResourceLocation location){
-		return Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(location);
+		return Minecraft.getInstance().getTextureAtlas(PlayerContainer.BLOCK_ATLAS).apply(location);
 	}
 
 	/**
@@ -145,7 +145,7 @@ public class CRRenderUtil extends RenderUtil{
 	 */
 	@OnlyIn(Dist.CLIENT)
 	public static void addVertexBlock(IVertexBuilder builder, MatrixStack matrix, float x, float y, float z, float u, float v, float normalX, float normalY, float normalZ, int light, int[] col){
-		builder.pos(matrix.getLast().getMatrix(), x, y, z).color(col[0], col[1], col[2], col[3]).tex(u, v).lightmap(light).normal(matrix.getLast().getNormal(), normalX, normalY, normalZ).endVertex();
+		builder.vertex(matrix.last().pose(), x, y, z).color(col[0], col[1], col[2], col[3]).uv(u, v).uv2(light).normal(matrix.last().normal(), normalX, normalY, normalZ).endVertex();
 	}
 
 	/**
@@ -165,7 +165,7 @@ public class CRRenderUtil extends RenderUtil{
 	 */
 	@OnlyIn(Dist.CLIENT)
 	public static void addVertexEntity(IVertexBuilder builder, MatrixStack matrix, float x, float y, float z, float u, float v, float normalX, float normalY, float normalZ, int light, int[] col){
-		builder.pos(matrix.getLast().getMatrix(), x, y, z).color(col[0], col[1], col[2], col[3]).tex(u, v).overlay(OverlayTexture.NO_OVERLAY).lightmap(light).normal(matrix.getLast().getNormal(), normalX, normalY, normalZ).endVertex();
+		builder.vertex(matrix.last().pose(), x, y, z).color(col[0], col[1], col[2], col[3]).uv(u, v).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix.last().normal(), normalX, normalY, normalZ).endVertex();
 	}
 
 	/**
@@ -223,7 +223,7 @@ public class CRRenderUtil extends RenderUtil{
 	public static Vector3d findNormal(Vector3d point0, Vector3d point1, Vector3d point2){
 		point1 = point1.subtract(point0);
 		point2 = point2.subtract(point0);
-		return point1.crossProduct(point2);
+		return point1.cross(point2);
 	}
 
 	/**
@@ -234,7 +234,7 @@ public class CRRenderUtil extends RenderUtil{
 	 */
 	public static int getLightAtPos(World world, BlockPos pos){
 		if(world != null){
-			return WorldRenderer.getCombinedLight(world, pos);
+			return WorldRenderer.getLightColor(world, pos);
 		}else{
 			return BRIGHT_LIGHT;
 		}
@@ -264,7 +264,7 @@ public class CRRenderUtil extends RenderUtil{
 	 */
 	@OnlyIn(Dist.CLIENT)
 	public static Vector3d getCameraPos(){
-		return Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
+		return Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
 	}
 
 	/**
@@ -283,15 +283,15 @@ public class CRRenderUtil extends RenderUtil{
 		Vector3d lineVec = end.subtract(start);
 		//Find any perpendicular vector using a deterministic method
 		Vector3d[] perpVec = new Vector3d[3];
-		perpVec[0] = lineVec.crossProduct(VEC_I);
-		if(perpVec[0].lengthSquared() == 0){
-			perpVec[0] = lineVec.crossProduct(VEC_J);
+		perpVec[0] = lineVec.cross(VEC_I);
+		if(perpVec[0].lengthSqr() == 0){
+			perpVec[0] = lineVec.cross(VEC_J);
 		}
 		//width * sqrt(3) / 4 is the length for center-to-tip distance of equilateral triangle that will be formed by the 3 quads
 		perpVec[0] = perpVec[0].scale(width * Math.sqrt(3) / 4 / perpVec[0].length());
 		//Rotate perVecA +-120deg about lineVec using a simplified form of Rodrigues' rotation formula
 		Vector3d compA = perpVec[0].scale(-.5D);//perpVecA * cos(120deg)
-		Vector3d compB = perpVec[0].crossProduct(lineVec.normalize()).scale(Math.sqrt(3) / 2D);//(perpVecA x unit vector of lineVec) * sin(120deg)
+		Vector3d compB = perpVec[0].cross(lineVec.normalize()).scale(Math.sqrt(3) / 2D);//(perpVecA x unit vector of lineVec) * sin(120deg)
 		perpVec[1] = compA.add(compB);
 		perpVec[2] = compA.subtract(compB);
 		//perpVec 0, 1, & 2 represent the vertices of the triangular ends of the triangular prism formed, relative to start (or end)
@@ -299,10 +299,10 @@ public class CRRenderUtil extends RenderUtil{
 		for(int i = 0; i < 3; i++){
 			Vector3d offsetPrev = perpVec[i];
 			Vector3d offsetNext = perpVec[(i + 1) % perpVec.length];
-			builder.pos(matrix.getLast().getMatrix(), (float) (start.getX() + offsetPrev.getX()), (float) (start.getY() + offsetPrev.getY()), (float) (start.getZ() + offsetPrev.getZ())).color(col[0], col[1], col[2], col[3]).lightmap(light).endVertex();
-			builder.pos(matrix.getLast().getMatrix(), (float) (end.getX() + offsetPrev.getX()), (float) (end.getY() + offsetPrev.getY()), (float) (end.getZ() + offsetPrev.getZ())).color(col[0], col[1], col[2], col[3]).lightmap(light).endVertex();
-			builder.pos(matrix.getLast().getMatrix(), (float) (end.getX() + offsetNext.getX()), (float) (end.getY() + offsetNext.getY()), (float) (end.getZ() + offsetNext.getZ())).color(col[0], col[1], col[2], col[3]).lightmap(light).endVertex();
-			builder.pos(matrix.getLast().getMatrix(), (float) (start.getX() + offsetNext.getX()), (float) (start.getY() + offsetNext.getY()), (float) (start.getZ() + offsetNext.getZ())).color(col[0], col[1], col[2], col[3]).lightmap(light).endVertex();
+			builder.vertex(matrix.last().pose(), (float) (start.x() + offsetPrev.x()), (float) (start.y() + offsetPrev.y()), (float) (start.z() + offsetPrev.z())).color(col[0], col[1], col[2], col[3]).uv2(light).endVertex();
+			builder.vertex(matrix.last().pose(), (float) (end.x() + offsetPrev.x()), (float) (end.y() + offsetPrev.y()), (float) (end.z() + offsetPrev.z())).color(col[0], col[1], col[2], col[3]).uv2(light).endVertex();
+			builder.vertex(matrix.last().pose(), (float) (end.x() + offsetNext.x()), (float) (end.y() + offsetNext.y()), (float) (end.z() + offsetNext.z())).color(col[0], col[1], col[2], col[3]).uv2(light).endVertex();
+			builder.vertex(matrix.last().pose(), (float) (start.x() + offsetNext.x()), (float) (start.y() + offsetNext.y()), (float) (start.z() + offsetNext.z())).color(col[0], col[1], col[2], col[3]).uv2(light).endVertex();
 		}
 	}
 }

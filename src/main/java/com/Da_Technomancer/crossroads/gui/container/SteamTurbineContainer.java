@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.gui.container;
 
 import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.tileentities.fluid.RadiatorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SteamTurbineTileEntity;
 import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
 import net.minecraft.entity.player.PlayerInventory;

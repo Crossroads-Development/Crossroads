@@ -49,31 +49,31 @@ public class OreProfileItem extends Item{
 	}
 
 	@Override
-	public String getTranslationKey(ItemStack stack){
+	public String getDescriptionId(ItemStack stack){
 //		return super.getTranslationKey(stack);
 		//We 'cheat' here. Instead of returning the translation key, we return the translated text, w/ formatting applied.
 		//This is because most things calling this method don't know to pass the material name as a formatter argument (and most things use getDisplayName instead)
 		//This is mainly important for WAILA
-		return getDisplayName(stack).getString();
+		return getName(stack).getString();
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public ITextComponent getName(){
+	public ITextComponent getDescription(){
 		//Incorrectly displays the default material for all variants- we don't have access to an itemstack/nbt to differentiate
-		return getDisplayName(withMaterial(null, 1));
+		return getName(withMaterial(null, 1));
 	}
 
 	@Override
-	public ITextComponent getDisplayName(ItemStack stack){
+	public ITextComponent getName(ItemStack stack){
 		OreSetup.OreProfile mat = getProfile(stack);
 		//Note that we use the super of getTranslationKey to prevent an infinite loop
-		return new TranslationTextComponent(super.getTranslationKey(stack), mat == null ? "INVALID" : mat.getName());
+		return new TranslationTextComponent(super.getDescriptionId(stack), mat == null ? "INVALID" : mat.getName());
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items){
-		if(isInGroup(group)){
+	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items){
+		if(allowdedIn(group)){
 			//Add every material variant of this item
 			for(OreSetup.OreProfile mat : OreSetup.getMaterials()){
 				items.add(withMaterial(mat, 1));

@@ -84,10 +84,10 @@ public class LooseArcRenderable implements IVisualEffect{
 			//lengthVec is a normalized vector pointing from the start to end point
 			lengthVec = lengthVec.normalize();
 			//crossVec is a normalized vector perpendicular to the lengthVec. Used to make bolts jut outwards from the center
-			Vector3d crossVec = lengthVec.crossProduct(CRRenderUtil.VEC_I);
+			Vector3d crossVec = lengthVec.cross(CRRenderUtil.VEC_I);
 			//In the unlikely event that the I unit vector happens to be parallel to lengthVec, we use an a different arbitrary vector
-			if(crossVec.lengthSquared() == 0){
-				crossVec = lengthVec.crossProduct(CRRenderUtil.VEC_J);
+			if(crossVec.lengthSqr() == 0){
+				crossVec = lengthVec.cross(CRRenderUtil.VEC_J);
 			}
 			crossVec = crossVec.normalize();
 
@@ -114,7 +114,7 @@ public class LooseArcRenderable implements IVisualEffect{
 				
 				//Rotates crossVec angle radians about lengthVec
 				//This formula is only valid because crossVec and lengthVec are perpendicular
-				crossVec = crossVec.scale(Math.cos(angle)).add(crossVec.crossProduct(lengthVec).scale(Math.sin(angle)));
+				crossVec = crossVec.scale(Math.cos(angle)).add(crossVec.cross(lengthVec).scale(Math.sin(angle)));
 			}
 		}
 

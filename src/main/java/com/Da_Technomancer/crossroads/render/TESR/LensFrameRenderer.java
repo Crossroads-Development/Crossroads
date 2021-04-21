@@ -42,35 +42,35 @@ public class LensFrameRenderer extends BeamRenderer<LensFrameTileEntity>{
 		int content = beam.getContents();
 
 		if(content != 0 && state.getBlock() == CRBlocks.lensFrame){
-			Direction.Axis axis = state.get(ESProperties.AXIS);
+			Direction.Axis axis = state.getValue(ESProperties.AXIS);
 
-			matrix.push();
+			matrix.pushPose();
 			matrix.translate(0.5F, 0.5F, 0.5F);
 			switch(axis){
 				case X:
-					matrix.rotate(Direction.WEST.getRotation());
+					matrix.mulPose(Direction.WEST.getRotation());
 					break;
 				case Z:
-					matrix.rotate(Direction.NORTH.getRotation());
+					matrix.mulPose(Direction.NORTH.getRotation());
 					break;
 			}
 
-			IVertexBuilder builder = buffer.getBuffer(RenderType.getCutout());
+			IVertexBuilder builder = buffer.getBuffer(RenderType.cutout());
 			float scale = 0.5F;
 			float height = 0.1F;
 			TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(LENS_FRAME_TEXTURES[content - 1]);
 
-			CRRenderUtil.addVertexBlock(builder, matrix, -scale, height, -scale, sprite.getMinU(), sprite.getMinV(), 0, 1, 0, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -scale, height, scale, sprite.getMinU(), sprite.getMaxV(), 0, 1, 0, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, scale, height, scale, sprite.getMaxU(), sprite.getMaxV(), 0, 1, 0, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, scale, height, -scale, sprite.getMaxU(), sprite.getMinV(), 0, 1, 0, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, -scale, height, -scale, sprite.getU0(), sprite.getV0(), 0, 1, 0, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, -scale, height, scale, sprite.getU0(), sprite.getV1(), 0, 1, 0, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, scale, height, scale, sprite.getU1(), sprite.getV1(), 0, 1, 0, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, scale, height, -scale, sprite.getU1(), sprite.getV0(), 0, 1, 0, combinedLight);
 
-			CRRenderUtil.addVertexBlock(builder, matrix, -scale, -height, -scale, sprite.getMinU(), sprite.getMinV(), 0, 1, 0, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, scale, -height, -scale, sprite.getMaxU(), sprite.getMinV(), 0, 1, 0, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, scale, -height, scale, sprite.getMaxU(), sprite.getMaxV(), 0, 1, 0, combinedLight);
-			CRRenderUtil.addVertexBlock(builder, matrix, -scale, -height, scale, sprite.getMinU(), sprite.getMaxV(), 0, 1, 0, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, -scale, -height, -scale, sprite.getU0(), sprite.getV0(), 0, 1, 0, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, scale, -height, -scale, sprite.getU1(), sprite.getV0(), 0, 1, 0, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, scale, -height, scale, sprite.getU1(), sprite.getV1(), 0, 1, 0, combinedLight);
+			CRRenderUtil.addVertexBlock(builder, matrix, -scale, -height, scale, sprite.getU0(), sprite.getV1(), 0, 1, 0, combinedLight);
 
-			matrix.pop();
+			matrix.popPose();
 		}
 	}
 }

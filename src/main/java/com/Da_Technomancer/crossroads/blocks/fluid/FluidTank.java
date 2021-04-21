@@ -46,13 +46,13 @@ public class FluidTank extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new FluidTankTileEntity();
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		CompoundNBT nbt = stack.getTag();
 		if(nbt != null && nbt.contains("FluidName")){
 			FluidStack fStack = FluidStack.loadFluidStackFromNBT(stack.getTag());
@@ -62,7 +62,7 @@ public class FluidTank extends ContainerBlock implements IReadable{
 
 	@Override
 	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder){
-		TileEntity te = builder.get(LootParameters.BLOCK_ENTITY);
+		TileEntity te = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
 		if(te instanceof FluidTankTileEntity){
 			ItemStack drop = new ItemStack(this.asItem(), 1);
 			drop.setTag(((FluidTankTileEntity) te).getContent().writeToNBT(new CompoundNBT()));
@@ -72,21 +72,21 @@ public class FluidTank extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
+	public void setPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		if(stack.hasTag()){
-			FluidTankTileEntity te = (FluidTankTileEntity) world.getTileEntity(pos);
+			FluidTankTileEntity te = (FluidTankTileEntity) world.getBlockEntity(pos);
 			te.setContent(FluidStack.loadFluidStackFromNBT(stack.getTag()));
 		}
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(!worldIn.isRemote){
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		if(!worldIn.isClientSide){
 			TileEntity te;
-			if(FluidUtil.getFluidHandler(playerIn.getHeldItem(Hand.MAIN_HAND)).isPresent()){
+			if(FluidUtil.getFluidHandler(playerIn.getItemInHand(Hand.MAIN_HAND)).isPresent()){
 				//Tanks be clicked on with buckets/equivalent
 				return FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, null) ? ActionResultType.SUCCESS : ActionResultType.FAIL;
-			}else if((te = worldIn.getTileEntity(pos)) instanceof INamedContainerProvider){
+			}else if((te = worldIn.getBlockEntity(pos)) instanceof INamedContainerProvider){
 				NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);
 			}
 		}
@@ -94,23 +94,23 @@ public class FluidTank extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState state){
+	public boolean hasAnalogOutputSignal(BlockState state){
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos){
+	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos){
 		return RedstoneUtil.clampToVanilla(read(worldIn, pos, blockState));
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
 	@Override
 	public float read(World world, BlockPos pos, BlockState blockState){
-		TileEntity te = world.getTileEntity(pos);
+		TileEntity te = world.getBlockEntity(pos);
 		if(te instanceof FluidTankTileEntity){
 			return ((FluidTankTileEntity) te).getContent().getAmount();
 		}

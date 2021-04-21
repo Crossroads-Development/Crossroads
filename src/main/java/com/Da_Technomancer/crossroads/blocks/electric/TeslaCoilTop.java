@@ -30,7 +30,7 @@ import java.util.Locale;
 
 public class TeslaCoilTop extends ContainerBlock{
 
-	private static final VoxelShape SHAPE = VoxelShapes.or(makeCuboidShape(4, 0, 4, 12, 8, 12), makeCuboidShape(0, 8, 0, 16, 16, 16));
+	private static final VoxelShape SHAPE = VoxelShapes.or(box(4, 0, 4, 12, 8, 12), box(0, 8, 0, 16, 16, 16));
 	public final TeslaCoilVariants variant;
 
 	public TeslaCoilTop(TeslaCoilVariants variant){
@@ -48,11 +48,11 @@ public class TeslaCoilTop extends ContainerBlock{
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		ItemStack heldItem = playerIn.getHeldItem(hand);
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		ItemStack heldItem = playerIn.getItemInHand(hand);
 		if(LinkHelper.isLinkTool(heldItem)){
-			TileEntity te = worldIn.getTileEntity(pos);
-			if(!worldIn.isRemote && te instanceof TeslaCoilTopTileEntity){
+			TileEntity te = worldIn.getBlockEntity(pos);
+			if(!worldIn.isClientSide && te instanceof TeslaCoilTopTileEntity){
 				LinkHelper.wrench((ILinkTE) te, heldItem, playerIn);
 			}
 			return ActionResultType.SUCCESS;
@@ -61,12 +61,12 @@ public class TeslaCoilTop extends ContainerBlock{
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_coil_top.range", variant.range));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_coil_top.fe", variant.joltAmt));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_coil_top.eff", (100 - variant.efficiency)));
@@ -82,7 +82,7 @@ public class TeslaCoilTop extends ContainerBlock{
 
 	@Nullable
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new TeslaCoilTopTileEntity();
 	}
 

@@ -7,7 +7,10 @@ import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.CageChargerTileEntity;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
@@ -31,7 +34,7 @@ import java.util.List;
 
 public class CageCharger extends ContainerBlock implements IReadable{
 
-	private static final VoxelShape SHAPE = VoxelShapes.or(makeCuboidShape(0, 0, 0, 16, 4, 16), makeCuboidShape(4, 4, 4, 12, 8, 12));
+	private static final VoxelShape SHAPE = VoxelShapes.or(box(0, 0, 0, 16, 4, 16), box(4, 4, 4, 12, 8, 12));
 
 	public CageCharger(){
 		super(CRBlocks.getMetalProperty());
@@ -39,11 +42,11 @@ public class CageCharger extends ContainerBlock implements IReadable{
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
-		setDefaultState(getDefaultState().with(CRProperties.ACTIVE, false));
+		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false));
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
 		builder.add(CRProperties.ACTIVE);
 	}
 
@@ -53,60 +56,60 @@ public class CageCharger extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new CageChargerTileEntity();
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.cage_charger.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.cage_charger.redstone"));
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		TileEntity te;
-		if(!worldIn.isRemote && (te = worldIn.getTileEntity(pos)) != null){
-			if(state.get(CRProperties.ACTIVE)){
-				playerIn.inventory.addItemStackToInventory(((CageChargerTileEntity) te).getCage());
+		if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) != null){
+			if(state.getValue(CRProperties.ACTIVE)){
+				playerIn.inventory.add(((CageChargerTileEntity) te).getCage());
 				((CageChargerTileEntity) te).setCage(ItemStack.EMPTY);
-				worldIn.setBlockState(pos, getDefaultState().with(CRProperties.ACTIVE, false));
-			}else if(!playerIn.getHeldItem(hand).isEmpty() && playerIn.getHeldItem(hand).getItem() == CRItems.beamCage){
-				((CageChargerTileEntity) te).setCage(playerIn.getHeldItem(hand));
-				playerIn.setHeldItem(hand, ItemStack.EMPTY);
-				worldIn.setBlockState(pos, getDefaultState().with(CRProperties.ACTIVE, true));
+				worldIn.setBlockAndUpdate(pos, defaultBlockState().setValue(CRProperties.ACTIVE, false));
+			}else if(!playerIn.getItemInHand(hand).isEmpty() && playerIn.getItemInHand(hand).getItem() == CRItems.beamCage){
+				((CageChargerTileEntity) te).setCage(playerIn.getItemInHand(hand));
+				playerIn.setItemInHand(hand, ItemStack.EMPTY);
+				worldIn.setBlockAndUpdate(pos, defaultBlockState().setValue(CRProperties.ACTIVE, true));
 			}
 		}
 		return ActionResultType.SUCCESS;
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
-		if(!isMoving && state.get(CRProperties.ACTIVE) && newState.getBlock() != this){
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ((CageChargerTileEntity) world.getTileEntity(pos)).getCage());
+	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
+		if(!isMoving && state.getValue(CRProperties.ACTIVE) && newState.getBlock() != this){
+			InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ((CageChargerTileEntity) world.getBlockEntity(pos)).getCage());
 		}
-		super.onReplaced(state, world, pos, newState, isMoving);
+		super.onRemove(state, world, pos, newState, isMoving);
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState state){
+	public boolean hasAnalogOutputSignal(BlockState state){
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos){
+	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos){
 		return RedstoneUtil.clampToVanilla(read(worldIn, pos, blockState));
 	}
 
 	@Override
 	public float read(World world, BlockPos pos, BlockState state){
-		if(state.get(CRProperties.ACTIVE)){
-			TileEntity te = world.getTileEntity(pos);
+		if(state.getValue(CRProperties.ACTIVE)){
+			TileEntity te = world.getBlockEntity(pos);
 			if(te instanceof CageChargerTileEntity){
 				ItemStack cage = ((CageChargerTileEntity) te).getCage();
 				return BeamCage.getStored(cage).getPower();

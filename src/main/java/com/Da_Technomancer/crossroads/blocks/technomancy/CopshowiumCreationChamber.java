@@ -41,21 +41,21 @@ public class CopshowiumCreationChamber extends ContainerBlock implements IReadab
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new CopshowiumCreationChamberTileEntity();
 	}
 	
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		TileEntity te;
-		if(FluxUtil.handleFluxLinking(worldIn, pos, playerIn.getHeldItem(hand), playerIn).isSuccess()){
+		if(FluxUtil.handleFluxLinking(worldIn, pos, playerIn.getItemInHand(hand), playerIn).shouldSwing()){
 			return ActionResultType.SUCCESS;
-		}else if(!worldIn.isRemote && (te = worldIn.getTileEntity(pos)) instanceof INamedContainerProvider){
+		}else if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) instanceof INamedContainerProvider){
 			NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);
 		}
 		return ActionResultType.SUCCESS;
@@ -63,7 +63,7 @@ public class CopshowiumCreationChamber extends ContainerBlock implements IReadab
 	
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.ccc.desc"));
 //		tooltip.add(new TranslationTextComponent("tt.crossroads.ccc.mult", CRConfig.copsPerLiq.get()));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.ccc.flux", CopshowiumCreationChamberTileEntity.FLUX_PER_INGOT));
@@ -74,18 +74,18 @@ public class CopshowiumCreationChamber extends ContainerBlock implements IReadab
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState p_149740_1_){
+	public boolean hasAnalogOutputSignal(BlockState p_149740_1_){
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState state, World world, BlockPos pos){
+	public int getAnalogOutputSignal(BlockState state, World world, BlockPos pos){
 		return RedstoneUtil.clampToVanilla(read(world, pos, state));
 	}
 
 	@Override
 	public float read(World world, BlockPos pos, BlockState state){
-		TileEntity te = world.getTileEntity(pos);
+		TileEntity te = world.getBlockEntity(pos);
 		return te instanceof CopshowiumCreationChamberTileEntity ? ((CopshowiumCreationChamberTileEntity) te).getRedstone() : 0;
 	}
 }

@@ -12,14 +12,14 @@ import java.util.Random;
 public class SingleGen extends Feature<OreFeatureConfig>{
 
 	protected SingleGen(){
-		super(OreFeatureConfig.field_236566_a_);
+		super(OreFeatureConfig.CODEC);
 	}
 
 	@Override
-	public boolean func_241855_a(ISeedReader world, ChunkGenerator generator, Random rand, BlockPos pos, OreFeatureConfig config){
+	public boolean place(ISeedReader world, ChunkGenerator generator, Random rand, BlockPos pos, OreFeatureConfig config){
 		BlockState state = world.getBlockState(pos);
 		if(config.target.test(state, rand)){
-			world.setBlockState(pos, config.state, 2);
+			world.setBlock(pos, config.state, 2);
 			return true;
 		}
 		return false;

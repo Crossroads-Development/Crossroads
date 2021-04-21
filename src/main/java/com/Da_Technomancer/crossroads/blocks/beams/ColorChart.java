@@ -32,16 +32,16 @@ public class ColorChart extends Block{
 	private static final VoxelShape[] SHAPES = new VoxelShape[6];
 
 	static{
-		SHAPES[0] = makeCuboidShape(0, 15, 0, 16, 16, 16);;
-		SHAPES[1] = makeCuboidShape(0, 0, 0, 16, 1, 16);;
-		SHAPES[2] = makeCuboidShape(0, 0, 15, 16, 16, 16);
-		SHAPES[3] = makeCuboidShape(0, 0, 0, 16, 16, 1);
-		SHAPES[4] = makeCuboidShape(15, 0, 0, 16, 16, 16);
-		SHAPES[5] = makeCuboidShape(0, 0, 0, 1, 16, 16);
+		SHAPES[0] = box(0, 15, 0, 16, 16, 16);;
+		SHAPES[1] = box(0, 0, 0, 16, 1, 16);;
+		SHAPES[2] = box(0, 0, 15, 16, 16, 16);
+		SHAPES[3] = box(0, 0, 0, 16, 16, 1);
+		SHAPES[4] = box(15, 0, 0, 16, 16, 16);
+		SHAPES[5] = box(0, 0, 0, 1, 16, 16);
 	}
 
 	public ColorChart(){
-		super(Properties.create(Material.WOOD).hardnessAndResistance(3));
+		super(Properties.of(Material.WOOD).strength(3));
 		String name = "color_chart";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
@@ -49,8 +49,8 @@ public class ColorChart extends Block{
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(!worldIn.isRemote){
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		if(!worldIn.isClientSide){
 			NetworkHooks.openGui((ServerPlayerEntity) playerIn, new INamedContainerProvider(){
 				@Override
 				public ITextComponent getDisplayName(){
@@ -69,16 +69,16 @@ public class ColorChart extends Block{
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return getDefaultState().with(ESProperties.FACING, context.getNearestLookingDirection().getOpposite());
+		return defaultBlockState().setValue(ESProperties.FACING, context.getNearestLookingDirection().getOpposite());
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context){
-		return SHAPES[state.get(ESProperties.FACING).getIndex()];
+		return SHAPES[state.getValue(ESProperties.FACING).get3DDataValue()];
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
 		builder.add(ESProperties.FACING);
 	}
 }

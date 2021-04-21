@@ -13,7 +13,7 @@ public class OreCleanserRec extends SingleIngrRecipe{
 	}
 
 	@Override
-	public ItemStack getIcon(){
+	public ItemStack getToastSymbol(){
 		return new ItemStack(CRBlocks.oreCleanser);
 	}
 }
