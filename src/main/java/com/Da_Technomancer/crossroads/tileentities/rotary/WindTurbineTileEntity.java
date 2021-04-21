@@ -66,24 +66,24 @@ public class WindTurbineTileEntity extends ModuleTE{
 	protected Direction getFacing(){
 		BlockState state = getBlockState();
 		if(state.getBlock() != CRBlocks.windTurbine){
-			remove();
+			setRemoved();
 			return Direction.NORTH;
 		}
-		return state.get(CRProperties.HORIZ_FACING);
+		return state.getValue(CRProperties.HORIZ_FACING);
 	}
 
 	private AxisAlignedBB getTargetBB(){
 		if(targetBB == null){
 			Direction dir = getFacing();
-			Direction planeDir = dir.rotateY();
+			Direction planeDir = dir.getClockWise();
 			if(planeDir.getAxisDirection() == Direction.AxisDirection.NEGATIVE){
 				planeDir = planeDir.getOpposite();
 			}
-			BlockPos center = pos.offset(dir);
+			BlockPos center = worldPosition.relative(dir);
 			if(dir.getAxisDirection() == Direction.AxisDirection.POSITIVE){
-				targetBB = new AxisAlignedBB(center.offset(planeDir, -2).offset(Direction.DOWN, 2), center.offset(planeDir, 3).offset(Direction.UP, 3).offset(dir));
+				targetBB = new AxisAlignedBB(center.relative(planeDir, -2).relative(Direction.DOWN, 2), center.relative(planeDir, 3).relative(Direction.UP, 3).relative(dir));
 			}else{
-				targetBB = new AxisAlignedBB(center.offset(planeDir, -2).offset(Direction.DOWN, 2), center.offset(planeDir, 3).offset(Direction.UP, 3).offset(dir, -1));
+				targetBB = new AxisAlignedBB(center.relative(planeDir, -2).relative(Direction.DOWN, 2), center.relative(planeDir, 3).relative(Direction.UP, 3).relative(dir, -1));
 			}
 		}
 
@@ -103,16 +103,16 @@ public class WindTurbineTileEntity extends ModuleTE{
 				for(int i = 0; i < bladeColors.length; i++){
 					message |= bladeColors[i] << i * 4;
 				}
-				CRPackets.sendPacketAround(world, pos, new SendLongToClient(5, message, pos));
+				CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(5, message, worldPosition));
 
-				markDirty();
+				setChanged();
 			}
 		}
 	}
 
 	@Override
-	public void updateContainingBlockInfo(){
-		super.updateContainingBlockInfo();
+	public void clearCache(){
+		super.clearCache();
 		axleOpt.invalidate();
 		axleOpt = LazyOptional.of(() -> axleHandler);
 		newlyPlaced = true;
@@ -138,7 +138,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 	private static final long PERIOD = 18000;//Period of this cycle, in ticks; 15 minutes
 
 	private double getPowerOutput(){
-		long worldTime = world.getGameTime();
+		long worldTime = level.getGameTime();
 		double triangleWave = ((double) worldTime / PERIOD) % 1D;//triangle wave with range [0, 1), period PERIOD
 		if(triangleWave > 0.5){
 			return 2D * (triangleWave - 0.5D) * (HIGH_POWER - LOW_POWER) + LOW_POWER;//LOW_POWER to HIGH_POWER, avg (HIGH_POWER - LOW_POWER) / 2
@@ -155,21 +155,21 @@ public class WindTurbineTileEntity extends ModuleTE{
 	public void tick(){
 		super.tick();
 
-		if(!world.isRemote){
+		if(!level.isClientSide){
 			//Every 30 seconds check whether the placement requirements are valid, and cache the result
-			if(newlyPlaced || world.getGameTime() % 600 == 0){
+			if(newlyPlaced || level.getGameTime() % 600 == 0){
 				newlyPlaced = false;
 				running = false;
 				Direction facing = getFacing();
-				BlockPos offsetPos = pos.offset(facing);
-				if(world.canBlockSeeSky(offsetPos)){
+				BlockPos offsetPos = worldPosition.relative(facing);
+				if(level.canSeeSkyFromBelowWater(offsetPos)){
 					running = true;
 					outer:
 					for(int i = -2; i <= 2; i++){
 						for(int j = -2; j <= 2; j++){
-							BlockPos checkPos = offsetPos.add(facing.getZOffset() * i, j, facing.getXOffset() * i);
-							BlockState checkState = world.getBlockState(checkPos);
-							if(!checkState.getBlock().isAir(checkState, world, checkPos)){
+							BlockPos checkPos = offsetPos.offset(facing.getStepZ() * i, j, facing.getStepX() * i);
+							BlockState checkState = level.getBlockState(checkPos);
+							if(!checkState.getBlock().isAir(checkState, level, checkPos)){
 								running = false;
 								break outer;
 							}
@@ -177,17 +177,17 @@ public class WindTurbineTileEntity extends ModuleTE{
 					}
 				}
 
-				markDirty();
+				setChanged();
 			}
 
 			//Damage entities in the blades while spinning at high speed
 			if(Math.abs(axleHandler.getSpeed()) >= 1.5D){
-				List<LivingEntity> ents = world.getEntitiesWithinAABB(LivingEntity.class, getTargetBB(), EntityPredicates.IS_LIVING_ALIVE);
+				List<LivingEntity> ents = level.getEntitiesOfClass(LivingEntity.class, getTargetBB(), EntityPredicates.LIVING_ENTITY_STILL_ALIVE);
 				for(LivingEntity ent : ents){
 					if(ent instanceof PlayerEntity && murderEasterEgg.equals(((PlayerEntity) ent).getGameProfile().getName())){
-						ent.attackEntityFrom(DamageSource.FLY_INTO_WALL, 100);//This seems fair
+						ent.hurt(DamageSource.FLY_INTO_WALL, 100);//This seems fair
 					}else{
-						ent.attackEntityFrom(DamageSource.FLY_INTO_WALL, 1);
+						ent.hurt(DamageSource.FLY_INTO_WALL, 1);
 					}
 				}
 			}
@@ -198,14 +198,14 @@ public class WindTurbineTileEntity extends ModuleTE{
 					axleHandler.addEnergy(power, true);
 				}
 
-				markDirty();
+				setChanged();
 			}
 		}
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		running = nbt.getBoolean("running");
 		for(int i = 0; i < 4; i++){
 			bladeColors[i] = nbt.getByte("blade_col_" + i);
@@ -213,8 +213,8 @@ public class WindTurbineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putBoolean("running", running);
 		for(int i = 0; i < 4; i++){
 			nbt.putByte("blade_col_" + i, (byte) bladeColors[i]);
@@ -243,7 +243,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){
-		return RENDER_BOX.offset(pos);
+		return RENDER_BOX.move(worldPosition);
 	}
 
 	@Override

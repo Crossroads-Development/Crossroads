@@ -24,18 +24,18 @@ public class CrystallinePrismTileEntity extends BeamRenderTE{
 
 	private Direction getDir(){
 		if(dir == null){
-			BlockState state = world.getBlockState(pos);
+			BlockState state = level.getBlockState(worldPosition);
 			if(state.getBlock() != CRBlocks.crystallinePrism){
 				return Direction.NORTH;
 			}
-			dir = state.get(CRProperties.HORIZ_FACING);
+			dir = state.getValue(CRProperties.HORIZ_FACING);
 		}
 		return dir;
 	}
 
 	@Override
-	public void updateContainingBlockInfo(){
-		super.updateContainingBlockInfo();
+	public void clearCache(){
+		super.clearCache();
 		dir = null;
 	}
 
@@ -43,23 +43,23 @@ public class CrystallinePrismTileEntity extends BeamRenderTE{
 	protected void doEmit(BeamUnit out){
 		Direction dir = getDir();
 		//Energy
-		if(beamer[dir.getIndex()].emit(out.mult(1, 0, 0, 0, false), world)){
-			refreshBeam(dir.getIndex());
+		if(beamer[dir.get3DDataValue()].emit(out.mult(1, 0, 0, 0, false), level)){
+			refreshBeam(dir.get3DDataValue());
 		}
-		dir = dir.rotateY();
+		dir = dir.getClockWise();
 		//Potential
-		if(beamer[dir.getIndex()].emit(out.mult(0, 1, 0, 0, false), world)){
-			refreshBeam(dir.getIndex());
+		if(beamer[dir.get3DDataValue()].emit(out.mult(0, 1, 0, 0, false), level)){
+			refreshBeam(dir.get3DDataValue());
 		}
-		dir = dir.rotateY();
+		dir = dir.getClockWise();
 		//Stability
-		if(beamer[dir.getIndex()].emit(out.mult(0, 0, 1, 0, false), world)){
-			refreshBeam(dir.getIndex());
+		if(beamer[dir.get3DDataValue()].emit(out.mult(0, 0, 1, 0, false), level)){
+			refreshBeam(dir.get3DDataValue());
 		}
-		dir = dir.rotateY();
+		dir = dir.getClockWise();
 		//Void
-		if(beamer[dir.getIndex()].emit(out.mult(0, 0, 0, 1, false), world)){
-			refreshBeam(dir.getIndex());
+		if(beamer[dir.get3DDataValue()].emit(out.mult(0, 0, 0, 1, false), level)){
+			refreshBeam(dir.get3DDataValue());
 		}
 	}
 

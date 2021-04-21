@@ -32,67 +32,67 @@ public class GatewayFrameEdge extends ContainerBlock implements IReadable{
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
-		setDefaultState(getDefaultState().with(CRProperties.ACTIVE, false));
+		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false));
 	}
 
 	@Nullable
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new GatewayEdgeTileEntity();
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
 		builder.add(CRProperties.ACTIVE);//ACTIVE is whether this is formed into a multiblock
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
-		TileEntity te = world.getTileEntity(pos);
+	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
+		TileEntity te = world.getBlockEntity(pos);
 		if(newState.getBlock() != state.getBlock() && te instanceof GatewayEdgeTileEntity){
 			//Shutdown the multiblock
 			BlockPos keyPos;
 			if((keyPos = ((GatewayEdgeTileEntity) te).getKey()) != null){
 				//The rest of the multiblock asks the head to dismantle
-				TileEntity controllerTe = world.getTileEntity(pos.add(keyPos));
+				TileEntity controllerTe = world.getBlockEntity(pos.offset(keyPos));
 				if(controllerTe instanceof IGateway){
 					((IGateway) controllerTe).dismantle();
 				}
 			}
 		}
-		super.onReplaced(state, world, pos, newState, isMoving);
+		super.onRemove(state, world, pos, newState, isMoving);
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flag){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flag){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.gateway.frame"));
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState state){
-		return state.get(CRProperties.ACTIVE);
+	public boolean hasAnalogOutputSignal(BlockState state){
+		return state.getValue(CRProperties.ACTIVE);
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState state, World world, BlockPos pos){
+	public int getAnalogOutputSignal(BlockState state, World world, BlockPos pos){
 		return RedstoneUtil.clampToVanilla(read(world, pos, state));
 	}
 
 	@Override
 	public float read(World world, BlockPos pos, BlockState state){
-		if(!state.get(CRProperties.ACTIVE)){
+		if(!state.getValue(CRProperties.ACTIVE)){
 			return 0;
 		}
 		//Read the number of entries in the dialed address [0-4]
-		TileEntity te = world.getTileEntity(pos);
+		TileEntity te = world.getBlockEntity(pos);
 		BlockPos keyPos;
 		if(te instanceof GatewayEdgeTileEntity && (keyPos = ((GatewayEdgeTileEntity) te).getKey()) != null){
-			keyPos = pos.add(keyPos);
+			keyPos = pos.offset(keyPos);
 			BlockState controllerState = world.getBlockState(keyPos);
 			if(controllerState.getBlock() instanceof IReadable){
 				return ((IReadable) controllerState.getBlock()).read(world, keyPos, controllerState);
@@ -102,7 +102,7 @@ public class GatewayFrameEdge extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public PushReaction getPushReaction(BlockState state){
+	public PushReaction getPistonPushReaction(BlockState state){
 		return PushReaction.BLOCK;//Some mods make TileEntities piston moveable. That would be really bad for this block
 	}
 }

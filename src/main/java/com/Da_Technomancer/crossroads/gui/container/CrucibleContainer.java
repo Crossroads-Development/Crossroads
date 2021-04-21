@@ -19,7 +19,7 @@ public class CrucibleContainer extends MachineContainer<HeatingCrucibleTileEntit
 
 	public CrucibleContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
 		super(type, id, playerInv, buf);
-		trackInt(te.progressRef);
+		addDataSlot(te.progressRef);
 	}
 
 	@Override

@@ -11,8 +11,8 @@ import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.API.templates.IBeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.crafting.CRItemTags;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.block.BlockState;
@@ -54,11 +54,11 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 
 	private Direction.Axis getAxis(){
 		if(axis == null){
-			BlockState state = world.getBlockState(pos);
+			BlockState state = level.getBlockState(worldPosition);
 			if(state.getBlock() != CRBlocks.lensFrame){
 				return Direction.Axis.X;
 			}
-			axis = state.get(ESProperties.AXIS);
+			axis = state.getValue(ESProperties.AXIS);
 		}
 
 		return axis;
@@ -112,8 +112,8 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 
 	public void setContents(int id){
 		contents = id;
-		markDirty();
-		CRPackets.sendPacketAround(world, pos, new SendIntToClient((byte) 2, contents, pos));
+		setChanged();
+		CRPackets.sendPacketAround(level, worldPosition, new SendIntToClient((byte) 2, contents, worldPosition));
 	}
 
 	public int getContents(){
@@ -121,14 +121,14 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 	}
 
 	@Override
-	public void updateContainingBlockInfo(){
-		super.updateContainingBlockInfo();
-		if(beamer[1] != null && world != null){
-			beamer[1].emit(BeamUnit.EMPTY, world);
+	public void clearCache(){
+		super.clearCache();
+		if(beamer[1] != null && level != null){
+			beamer[1].emit(BeamUnit.EMPTY, level);
 			refreshBeam(true);
 		}
-		if(beamer[0] != null && world != null){
-			beamer[0].emit(BeamUnit.EMPTY, world);
+		if(beamer[0] != null && level != null){
+			beamer[0].emit(BeamUnit.EMPTY, level);
 			refreshBeam(false);
 		}
 		axis = null;
@@ -137,8 +137,8 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 		magicOpt = LazyOptional.of(() -> new BeamHandler(AxisDirection.NEGATIVE));
 		magicOptNeg = LazyOptional.of(() -> new BeamHandler(AxisDirection.POSITIVE));
 
-		if(world != null && !world.isRemote){
-			CRPackets.sendPacketAround(world, pos, new SendIntToClient((byte) 3, 0, pos));
+		if(level != null && !level.isClientSide){
+			CRPackets.sendPacketAround(level, worldPosition, new SendIntToClient((byte) 3, 0, worldPosition));
 		}
 	}
 
@@ -150,7 +150,7 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 		}else{
 			packetNeg = packet;
 		}
-		CRPackets.sendPacketAround(world, pos, new SendIntToClient((byte) index, packet, pos));
+		CRPackets.sendPacketAround(level, worldPosition, new SendIntToClient((byte) index, packet, worldPosition));
 		if(!beamer[index].getLastSent().isEmpty()){
 			prevMag = beamer[index].getLastSent();
 		}
@@ -169,8 +169,8 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 	@Override
 	public int[] getRenderedBeams(){
 		int[] out = new int[6];
-		out[Direction.getFacingFromAxis(AxisDirection.POSITIVE, getAxis()).getIndex()] = packetPos;
-		out[Direction.getFacingFromAxis(AxisDirection.NEGATIVE, getAxis()).getIndex()] = packetNeg;
+		out[Direction.get(AxisDirection.POSITIVE, getAxis()).get3DDataValue()] = packetPos;
+		out[Direction.get(AxisDirection.NEGATIVE, getAxis()).get3DDataValue()] = packetNeg;
 		return out;
 	}
 
@@ -205,8 +205,8 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putInt("beam_neg", packetNeg);
 		nbt.putInt("beam_pos", packetPos);
 		nbt.putInt("reds", lastRedstone);
@@ -215,8 +215,8 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		packetPos = nbt.getInt("beam_pos");
 		packetNeg = nbt.getInt("beam_neg");
 		lastRedstone = nbt.getInt("reds");
@@ -224,15 +224,15 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		magicOpt.invalidate();
 		magicOptNeg.invalidate();
 		lensOpt.invalidate();
-		if(beamer != null && world != null){
+		if(beamer != null && level != null){
 			for(BeamManager manager : beamer){
 				if(manager != null){
-					manager.emit(BeamUnit.EMPTY, world);
+					manager.emit(BeamUnit.EMPTY, level);
 				}
 			}
 		}
@@ -266,28 +266,28 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 		@Override
 		public void setBeam(@Nonnull BeamUnit mag){
 			if(beamer[0] == null || beamer[1] == null){
-				beamer[0] = new BeamManager(Direction.getFacingFromAxis(AxisDirection.NEGATIVE, getAxis()), pos);
-				beamer[1] = new BeamManager(Direction.getFacingFromAxis(AxisDirection.POSITIVE, getAxis()), pos);
+				beamer[0] = new BeamManager(Direction.get(AxisDirection.NEGATIVE, getAxis()), worldPosition);
+				beamer[1] = new BeamManager(Direction.get(AxisDirection.POSITIVE, getAxis()), worldPosition);
 			}
 
 			switch(contents){
 				case 0:
-					if(beamer[dir == AxisDirection.POSITIVE ? 1 : 0].emit(mag, world)){
+					if(beamer[dir == AxisDirection.POSITIVE ? 1 : 0].emit(mag, level)){
 						refreshBeam(dir == AxisDirection.POSITIVE);
 					}
 					break;
 				case 1:
-					if(beamer[dir == AxisDirection.POSITIVE ? 1 : 0].emit(new BeamUnit(mag.getEnergy(), 0, 0, 0), world)){
+					if(beamer[dir == AxisDirection.POSITIVE ? 1 : 0].emit(new BeamUnit(mag.getEnergy(), 0, 0, 0), level)){
 						refreshBeam(dir == AxisDirection.POSITIVE);
 					}
 					break;
 				case 2:
-					if(beamer[dir == AxisDirection.POSITIVE ? 1 : 0].emit(new BeamUnit(0, mag.getPotential(), 0, 0), world)){
+					if(beamer[dir == AxisDirection.POSITIVE ? 1 : 0].emit(new BeamUnit(0, mag.getPotential(), 0, 0), level)){
 						refreshBeam(dir == AxisDirection.POSITIVE);
 					}
 					break;
 				case 3:
-					if(beamer[dir == AxisDirection.POSITIVE ? 1 : 0].emit(new BeamUnit(0, 0, mag.getStability(), 0), world)){
+					if(beamer[dir == AxisDirection.POSITIVE ? 1 : 0].emit(new BeamUnit(0, 0, mag.getStability(), 0), level)){
 						refreshBeam(dir == AxisDirection.POSITIVE);
 					}
 					break;
@@ -297,19 +297,19 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 					}
 					//No break
 				case 5:
-					if(beamer[dir == AxisDirection.POSITIVE ? 1 : 0].emit(mag, world)){
+					if(beamer[dir == AxisDirection.POSITIVE ? 1 : 0].emit(mag, level)){
 						refreshBeam(dir == AxisDirection.POSITIVE);
 					}
 					break;
 				case 6:
-					if(beamer[dir == AxisDirection.POSITIVE ? 1 : 0].emit(new BeamUnit(0, 0, 0, mag.getPower()), world)){
+					if(beamer[dir == AxisDirection.POSITIVE ? 1 : 0].emit(new BeamUnit(0, 0, 0, mag.getPower()), level)){
 						refreshBeam(dir == AxisDirection.POSITIVE);
 					}
 					break;
 			}
 
 			lastRedstone = Math.max(beamer[0].getLastSent().getPower(), beamer[1].getLastSent().getPower());
-			markDirty();
+			setChanged();
 		}
 	}
 

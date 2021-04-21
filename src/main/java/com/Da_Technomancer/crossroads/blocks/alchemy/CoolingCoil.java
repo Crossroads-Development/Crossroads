@@ -4,7 +4,10 @@ import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.CoolingCoilTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer;
@@ -23,13 +26,13 @@ import javax.annotation.Nullable;
 
 public class CoolingCoil extends ContainerBlock{
 
-	private static final VoxelShape SHAPE_X = makeCuboidShape(0, 4, 4, 16, 12, 12);
-	private static final VoxelShape SHAPE_Z = makeCuboidShape(4, 4, 0, 12, 12, 16);
+	private static final VoxelShape SHAPE_X = box(0, 4, 4, 16, 12, 12);
+	private static final VoxelShape SHAPE_Z = box(4, 4, 0, 12, 12, 16);
 
 	private final boolean crystal;
 
 	public CoolingCoil(boolean crystal){
-		super(CRBlocks.getGlassProperty().notSolid());
+		super(CRBlocks.getGlassProperty().noOcclusion());
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "cooling_coil";
 		setRegistryName(name);
@@ -38,12 +41,12 @@ public class CoolingCoil extends ContainerBlock{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new CoolingCoilTileEntity(!crystal);
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
@@ -54,16 +57,16 @@ public class CoolingCoil extends ContainerBlock{
 //	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
 		builder.add(CRProperties.HORIZ_FACING);
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
-			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.func_235896_a_(CRProperties.HORIZ_FACING));
-				TileEntity te = worldIn.getTileEntity(pos);
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
+			if(!worldIn.isClientSide){
+				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.HORIZ_FACING));
+				TileEntity te = worldIn.getBlockEntity(pos);
 				if(te instanceof CoolingCoilTileEntity){
 					((CoolingCoilTileEntity) te).rotate();
 				}
@@ -76,11 +79,11 @@ public class CoolingCoil extends ContainerBlock{
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return getDefaultState().with(CRProperties.HORIZ_FACING, context.getPlacementHorizontalFacing());
+		return defaultBlockState().setValue(CRProperties.HORIZ_FACING, context.getHorizontalDirection());
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
-		return state.get(CRProperties.HORIZ_FACING).getAxis() == Axis.X ? SHAPE_X : SHAPE_Z;
+		return state.getValue(CRProperties.HORIZ_FACING).getAxis() == Axis.X ? SHAPE_X : SHAPE_Z;
 	}
 }

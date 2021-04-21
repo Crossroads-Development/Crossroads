@@ -39,14 +39,14 @@ public class LodestoneTurbineTileEntity extends ModuleTE{
 	@Override
 	public void tick(){
 		super.tick();
-		if(!world.isRemote && axleHandler.axis != null && validDimension() && axleHandler.getSpeed() < MAX_SPEED){
+		if(!level.isClientSide && axleHandler.axis != null && validDimension() && axleHandler.getSpeed() < MAX_SPEED){
 			axleHandler.addEnergy(CRConfig.lodestoneTurbinePower.get(), true);
-			markDirty();
+			setChanged();
 		}
 	}
 
 	private boolean validDimension(){
-		return !world.getDimensionType().isNatural();//See clock item property for reference
+		return !level.dimensionType().natural();//See clock item property for reference
 	}
 
 	@Nonnull

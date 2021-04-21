@@ -23,12 +23,12 @@ public class HeatingCrucibleRenderer extends TileEntityRenderer<HeatingCrucibleT
 		if(te.getActiveTexture() == null || te.getBlockState().getBlock() != CRBlocks.heatingCrucible){
 			return;
 		}
-		int fullness = te.getBlockState().get(CRProperties.FULLNESS);
+		int fullness = te.getBlockState().getValue(CRProperties.FULLNESS);
 		if(fullness == 0){
 			return;
 		}
 
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getTranslucent());
+		IVertexBuilder builder = buffer.getBuffer(RenderType.translucent());
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(te.getActiveTexture());
 
 		int light = CRRenderUtil.calcMediumLighting(combinedLight);//We want the molten fluid to glow in the dark slightly
@@ -36,9 +36,9 @@ public class HeatingCrucibleRenderer extends TileEntityRenderer<HeatingCrucibleT
 		float xzEnd = 14F / 16F;
 		float height = (float) (2 + 4 * fullness) / 16F;
 
-		CRRenderUtil.addVertexBlock(builder, matrix, xzEnd, height, xzStart, sprite.getInterpolatedU(xzEnd * 16), sprite.getInterpolatedV(16 - (xzStart * 16)), 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, xzStart, height, xzStart, sprite.getInterpolatedU(xzStart * 16), sprite.getInterpolatedV(16 - (xzStart * 16)), 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, xzStart, height, xzEnd, sprite.getInterpolatedU(xzStart * 16), sprite.getInterpolatedV(16 - (xzEnd * 16)), 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, xzEnd, height, xzEnd, sprite.getInterpolatedU(xzEnd * 16), sprite.getInterpolatedV(16 - (xzEnd * 16)), 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, xzEnd, height, xzStart, sprite.getU(xzEnd * 16), sprite.getV(16 - (xzStart * 16)), 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, xzStart, height, xzStart, sprite.getU(xzStart * 16), sprite.getV(16 - (xzStart * 16)), 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, xzStart, height, xzEnd, sprite.getU(xzStart * 16), sprite.getV(16 - (xzEnd * 16)), 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, xzEnd, height, xzEnd, sprite.getU(xzEnd * 16), sprite.getV(16 - (xzEnd * 16)), 0, 1, 0, light);
 	}
 }

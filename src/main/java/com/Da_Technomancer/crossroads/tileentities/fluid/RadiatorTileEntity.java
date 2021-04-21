@@ -52,7 +52,7 @@ public class RadiatorTileEntity extends InventoryTE{
 	public void tick(){
 		super.tick();
 
-		if(!world.isRemote && fluids[0].getAmount() >= FLUID_USE && fluidProps[1].capacity - fluids[1].getAmount() >= FLUID_USE){
+		if(!level.isClientSide && fluids[0].getAmount() >= FLUID_USE && fluidProps[1].capacity - fluids[1].getAmount() >= FLUID_USE){
 			temp += FLUID_USE * (double) CRConfig.steamWorth.get() / 1000;
 			if(fluids[1].isEmpty()){
 				fluids[1] = new FluidStack(CRFluids.distilledWater.still, FLUID_USE);
@@ -61,7 +61,7 @@ public class RadiatorTileEntity extends InventoryTE{
 			}
 
 			fluids[0].shrink(FLUID_USE);
-			markDirty();
+			setChanged();
 		}
 	}
 
@@ -83,12 +83,12 @@ public class RadiatorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
+	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction){
 		return false;
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
+	public boolean canPlaceItem(int index, ItemStack stack){
 		return false;
 	}
 

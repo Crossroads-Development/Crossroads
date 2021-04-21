@@ -13,7 +13,7 @@ import net.minecraft.world.IBlockReader;
 
 public class FluidInjector extends ContainerBlock{
 
-	private static final VoxelShape SHAPE = makeCuboidShape(4, 0, 4, 12, 16, 12);
+	private static final VoxelShape SHAPE = box(4, 0, 4, 12, 16, 12);
 
 	private final boolean crystal;
 
@@ -27,12 +27,12 @@ public class FluidInjector extends ContainerBlock{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new FluidInjectorTileEntity(!crystal);
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 

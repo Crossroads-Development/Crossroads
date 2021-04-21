@@ -27,8 +27,8 @@ public class CRWorldGen{
 	private static ConfiguredFeature<?, ?> TIN_ORE;
 	private static ConfiguredFeature<?, ?> VOID_ORE;
 	private static ConfiguredFeature<?, ?> RUBY_ORE_SPOT;//Ruby is currently generating as single block ores scattered randomly in netherrack
-//	private static final ConfiguredFeature<?, ?> RUBY_ORE = RUBY_FEATURE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.field_241883_b, Blocks.NETHER_QUARTZ_ORE.getDefaultState(), 14)).withPlacement(Features.Placements.field_243998_i).func_242728_a().func_242731_b(16);//Normal nether quartz vein version
-//	private static final ConfiguredFeature<?, ?> RUBY_ORE_BASALT = RUBY_FEATURE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.field_241883_b, Blocks.NETHER_QUARTZ_ORE.getDefaultState(), 14)).withPlacement(Features.Placements.field_243998_i).func_242728_a().func_242731_b(32);//Basalt delta vein version
+//	private static final ConfiguredFeature<?, ?> RUBY_ORE = RUBY_FEATURE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NETHERRACK, Blocks.NETHER_QUARTZ_ORE.getDefaultState(), 14)).withPlacement(Features.Placements.RANGE_10_20_ROOFED).squared().count(16);//Normal nether quartz vein version
+//	private static final ConfiguredFeature<?, ?> RUBY_ORE_BASALT = RUBY_FEATURE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NETHERRACK, Blocks.NETHER_QUARTZ_ORE.getDefaultState(), 14)).withPlacement(Features.Placements.RANGE_10_20_ROOFED).squared().count(32);//Basalt delta vein version
 
 	/**
 	 * Must be called before register(), on both sides
@@ -40,10 +40,10 @@ public class CRWorldGen{
 		ConfigTagRuleTest.registerConfig("cr_ruby", CRConfig.genRubyOre);
 		ConfigTagRuleTest.registerConfig("cr_void", CRConfig.genVoidOre);
 		//Construct our configured features
-		COPPER_ORE = configuredFeature(Feature.ORE, new ConfigTagRuleTest(BlockTags.BASE_STONE_OVERWORLD, "cr_copper"), OreSetup.oreCopper.getDefaultState(), 13, 32, 3);
-		TIN_ORE = configuredFeature(GEM_FEATURE, new ConfigTagRuleTest(BlockTags.BASE_STONE_OVERWORLD, "cr_tin"), OreSetup.oreTin.getDefaultState(), 1, 32, 20);
-		VOID_ORE = configuredFeature(GEM_FEATURE, new ConfigTagRuleTest(Tags.Blocks.END_STONES, "cr_void"), OreSetup.oreVoid.getDefaultState(), 1, 80, 10);
-		RUBY_ORE_SPOT = configuredFeature(GEM_FEATURE, new ConfigTagRuleTest(BlockTags.makeWrapperTag(Crossroads.MODID + ":netherrack"), "cr_ruby"), OreSetup.oreRuby.getDefaultState(), 1, 117, 20);
+		COPPER_ORE = configuredFeature(Feature.ORE, new ConfigTagRuleTest(BlockTags.BASE_STONE_OVERWORLD, "cr_copper"), OreSetup.oreCopper.defaultBlockState(), 13, 32, 3);
+		TIN_ORE = configuredFeature(GEM_FEATURE, new ConfigTagRuleTest(BlockTags.BASE_STONE_OVERWORLD, "cr_tin"), OreSetup.oreTin.defaultBlockState(), 1, 32, 20);
+		VOID_ORE = configuredFeature(GEM_FEATURE, new ConfigTagRuleTest(Tags.Blocks.END_STONES, "cr_void"), OreSetup.oreVoid.defaultBlockState(), 1, 80, 10);
+		RUBY_ORE_SPOT = configuredFeature(GEM_FEATURE, new ConfigTagRuleTest(BlockTags.bind(Crossroads.MODID + ":netherrack"), "cr_ruby"), OreSetup.oreRuby.defaultBlockState(), 1, 117, 20);
 	}
 
 	/**
@@ -64,18 +64,18 @@ public class CRWorldGen{
 
 	public static void addWorldgen(BiomeLoadingEvent event){
 		if(isOverworld(event.getCategory())){
-			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, COPPER_ORE);
-			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, TIN_ORE);
+			event.getGeneration().addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, COPPER_ORE);
+			event.getGeneration().addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, TIN_ORE);
 		}else if(event.getCategory() == Biome.Category.THEEND){
-			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, VOID_ORE);
+			event.getGeneration().addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, VOID_ORE);
 		}else if(event.getCategory() == Biome.Category.NETHER){
-			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, RUBY_ORE_SPOT);
+			event.getGeneration().addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, RUBY_ORE_SPOT);
 		}
 	}
 
 	private static ConfiguredFeature<?, ?> configuredFeature(Feature<OreFeatureConfig> feature, RuleTest canOverwrite, BlockState ore, int veinSize, int maxHeight, int attemptsPerChunk){
 		//MCP note: use whatever iron ore uses in the vanilla Features class
-		return feature.withConfiguration(new OreFeatureConfig(canOverwrite, ore, veinSize)).func_242733_d(maxHeight).func_242728_a().func_242731_b(attemptsPerChunk);
+		return feature.configured(new OreFeatureConfig(canOverwrite, ore, veinSize)).range(maxHeight).squared().count(attemptsPerChunk);
 	}
 
 	private static boolean isOverworld(Biome.Category cat){

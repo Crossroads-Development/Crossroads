@@ -35,11 +35,11 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 	 * @param targetSpeed The current target speed
 	 */
 	private void updateWorldState(double targetSpeed){
-		if(!world.isRemote){
+		if(!level.isClientSide){
 			BlockState state = getBlockState();
 			int targetProp = targetSpeed > 0 ? 1 : targetSpeed < 0 ? 2 : 0;
-			if(state.get(CRProperties.POWER_LEVEL) != targetProp){
-				world.setBlockState(pos, state.with(CRProperties.POWER_LEVEL, targetProp), 2);
+			if(state.getValue(CRProperties.POWER_LEVEL) != targetProp){
+				level.setBlock(worldPosition, state.setValue(CRProperties.POWER_LEVEL, targetProp), 2);
 			}
 		}
 	}
@@ -52,7 +52,7 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 		double sumIRot = energyCalcResults[3];//Sum of every gear's moment of inertia time rotation ratio squared
 
 		double cost = sumIRot * Math.pow(targetBaseSpeed, 2) / 2D;//Total energy required to hold the output at the requested base speed
-		TileEntity backTE = world.getTileEntity(pos.offset(facing.getOpposite()));
+		TileEntity backTE = level.getBlockEntity(worldPosition.relative(facing.getOpposite()));
 		LazyOptional<IAxleHandler> backOpt = backTE == null ? LazyOptional.empty() : backTE.getCapability(Capabilities.AXLE_CAPABILITY, facing);
 		IAxleHandler sourceAxle = backOpt.isPresent() ? backOpt.orElseThrow(NullPointerException::new) : null;
 		double availableEnergy = Math.abs(energyCalcResults[0]);
@@ -105,21 +105,21 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		redsHandler.write(nbt);
 		return nbt;
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		redsHandler.read(state, nbt);
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		redsOpt.invalidate();
 	}
 

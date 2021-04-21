@@ -29,17 +29,17 @@ public class LargeGearRenderer extends TileEntityRenderer<LargeGearMasterTileEnt
 		LazyOptional<IAxleHandler> handler = gear.getCapability(Capabilities.AXLE_CAPABILITY, facing);
 		float dirMult = facing.getAxisDirection() == Direction.AxisDirection.POSITIVE ? -1 : 1;
 
-		matrix.rotate(facing.getOpposite().getRotation());
+		matrix.mulPose(facing.getOpposite().getRotation());
 
 		if(handler.isPresent()){
-			matrix.rotate(Vector3f.YP.rotationDegrees(handler.orElseThrow(NullPointerException::new).getAngle(partialTicks) * dirMult));
-			matrix.push();
+			matrix.mulPose(Vector3f.YP.rotationDegrees(handler.orElseThrow(NullPointerException::new).getAngle(partialTicks) * dirMult));
+			matrix.pushPose();
 			matrix.scale(3, 1, 3);
 			CRModels.draw24Gear(matrix, buffer, combinedLight, gear.getMember().getColor());
-			matrix.pop();
+			matrix.popPose();
 
 			if(gear.isRenderedOffset()){
-				matrix.rotate(Vector3f.YP.rotationDegrees(-7.5F));
+				matrix.mulPose(Vector3f.YP.rotationDegrees(-7.5F));
 			}
 			CRModels.drawAxle(matrix, buffer, combinedLight, gear.getMember().getColor());
 		}

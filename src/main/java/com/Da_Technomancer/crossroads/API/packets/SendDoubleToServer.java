@@ -39,7 +39,7 @@ public class SendDoubleToServer extends ServerPacket{
 	@Override
 	protected void run(@Nullable ServerPlayerEntity serverPlayerEntity){
 		if(serverPlayerEntity != null){
-			TileEntity te = serverPlayerEntity.world.getTileEntity(pos);
+			TileEntity te = serverPlayerEntity.level.getBlockEntity(pos);
 
 			if(te instanceof IDoubleReceiver){
 				((IDoubleReceiver) te).receiveDouble(context, message, serverPlayerEntity);

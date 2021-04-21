@@ -2,9 +2,7 @@ package com.Da_Technomancer.crossroads.gui;
 
 import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.gui.container.RadiatorContainer;
 import com.Da_Technomancer.crossroads.gui.container.SteamTurbineContainer;
-import com.Da_Technomancer.crossroads.tileentities.fluid.RadiatorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SteamTurbineTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
@@ -29,11 +27,11 @@ public class SteamTurbineScreen extends MachineGUI<SteamTurbineContainer, SteamT
 
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
-		Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE);
+	protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+		Minecraft.getInstance().getTextureManager().bind(TEXTURE);
 
-		blit(matrix, guiLeft, guiTop, 0, 0, xSize, ySize);
+		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
-		super.drawGuiContainerBackgroundLayer(matrix, partialTicks, mouseX, mouseY);
+		super.renderBg(matrix, partialTicks, mouseX, mouseY);
 	}
 }

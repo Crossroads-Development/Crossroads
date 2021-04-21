@@ -39,7 +39,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 	@Override
 	public void onRedstoneChange(double prevValue, double newValue, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, double energy, double speed, MechanismTileEntity te){
 		if((newValue == 0) ^ (prevValue == 0)){
-			te.getWorld().playSound(null, te.getPos(), SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, (newValue != 0) ^ inverted ? 0.6F : 0.5F);
+			te.getLevel().playSound(null, te.getBlockPos(), SoundEvents.LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, (newValue != 0) ^ inverted ? 0.6F : 0.5F);
 			RotaryUtil.increaseMasterKey(true);
 		}
 	}
@@ -77,22 +77,22 @@ public class MechanismToggleGear extends MechanismSmallGear{
 		handler.updateKey = key;
 
 
-		TileEntity sideTE = te.getWorld().getTileEntity(te.getPos().offset(side));
+		TileEntity sideTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(side));
 
 		//Don't connect via cogs if disabled
 		if((te.redstoneIn != 0) ^ inverted){
 			//Other internal gears
 			for(int i = 0; i < 6; i++){
-				if(i != side.getIndex() && i != side.getOpposite().getIndex() && te.members[i] != null && te.members[i].hasCap(Capabilities.COG_CAPABILITY, Direction.byIndex(i), te.mats[i], Direction.byIndex(i), te.getAxleAxis(), te)){
-					te.axleHandlers[i].propagate(masterIn, key, RotaryUtil.getDirSign(side, Direction.byIndex(i)) * handler.rotRatio, .5D, !handler.renderOffset);
+				if(i != side.get3DDataValue() && i != side.getOpposite().get3DDataValue() && te.members[i] != null && te.members[i].hasCap(Capabilities.COG_CAPABILITY, Direction.from3DDataValue(i), te.mats[i], Direction.from3DDataValue(i), te.getAxleAxis(), te)){
+					te.axleHandlers[i].propagate(masterIn, key, RotaryUtil.getDirSign(side, Direction.from3DDataValue(i)) * handler.rotRatio, .5D, !handler.renderOffset);
 				}
 			}
 
 			for(int i = 0; i < 6; i++){
-				if(i != side.getIndex() && i != side.getOpposite().getIndex()){
-					Direction facing = Direction.byIndex(i);
+				if(i != side.get3DDataValue() && i != side.getOpposite().get3DDataValue()){
+					Direction facing = Direction.from3DDataValue(i);
 					// Adjacent gears
-					TileEntity adjTE = te.getWorld().getTileEntity(te.getPos().offset(facing));
+					TileEntity adjTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(facing));
 					if(adjTE != null){
 						LazyOptional<ICogHandler> cogOpt;
 						if((cogOpt = adjTE.getCapability(Capabilities.COG_CAPABILITY, side)).isPresent()){
@@ -104,9 +104,9 @@ public class MechanismToggleGear extends MechanismSmallGear{
 					}
 
 					// Diagonal gears
-					TileEntity diagTE = te.getWorld().getTileEntity(te.getPos().offset(facing).offset(side));
+					TileEntity diagTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(facing).relative(side));
 					LazyOptional<ICogHandler> cogOpt;
-					if(diagTE != null && (cogOpt = diagTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())).isPresent() && RotaryUtil.canConnectThrough(te.getWorld(), te.getPos().offset(facing), facing.getOpposite(), side)){
+					if(diagTE != null && (cogOpt = diagTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())).isPresent() && RotaryUtil.canConnectThrough(te.getLevel(), te.getBlockPos().relative(facing), facing.getOpposite(), side)){
 						cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * handler.rotRatio, .5D, side.getOpposite(), handler.renderOffset);
 					}
 
@@ -152,13 +152,13 @@ public class MechanismToggleGear extends MechanismSmallGear{
 			return;
 		}
 
-		MechanismTileEntity.SidedAxleHandler handler = te.axleHandlers[side.getIndex()];
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
+		MechanismTileEntity.SidedAxleHandler handler = te.axleHandlers[side.get3DDataValue()];
+		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
 		
-		matrix.rotate(side.getOpposite().getRotation());//Apply orientation
+		matrix.mulPose(side.getOpposite().getRotation());//Apply orientation
 		float angle = handler.getAngle(partialTicks);
 		matrix.translate(0, -0.4375D, 0);
-		matrix.rotate(Vector3f.YP.rotationDegrees(- (float) RotaryUtil.getCCWSign(side) * angle));
+		matrix.mulPose(Vector3f.YP.rotationDegrees(- (float) RotaryUtil.getCCWSign(side) * angle));
 
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_TEXTURE);
 		float top = 0.0625F;
@@ -171,10 +171,10 @@ public class MechanismToggleGear extends MechanismSmallGear{
 			float zFightOffset = 0.001F;//Vertical offset to prevent z-fighting
 			//Texture coords
 			float radiusT = radius * 16F;
-			float uSt = sprite.getInterpolatedU(8 - radiusT);
-			float uEn = sprite.getInterpolatedU(8 + radiusT);
-			float vSt = sprite.getInterpolatedV(8 - radiusT);
-			float vEn = sprite.getInterpolatedV(8 + radiusT);
+			float uSt = sprite.getU(8 - radiusT);
+			float uEn = sprite.getU(8 + radiusT);
+			float vSt = sprite.getV(8 - radiusT);
+			float vEn = sprite.getV(8 + radiusT);
 			
 			CRRenderUtil.addVertexBlock(builder, matrix, -radius, top + zFightOffset, radius, uSt, vEn, 0, 1, 0, combinedLight, invertCol);
 			CRRenderUtil.addVertexBlock(builder, matrix, radius, top + zFightOffset, radius, uEn, vEn, 0, 1, 0, combinedLight, invertCol);

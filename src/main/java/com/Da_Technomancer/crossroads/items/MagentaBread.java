@@ -20,12 +20,12 @@ import java.util.function.Supplier;
 
 public class MagentaBread extends Item{
 
-	private static final Supplier<EffectInstance> jumpBoostSupplier = () -> new EffectInstance(Effects.JUMP_BOOST, 3600, 20);
-	private static final Supplier<EffectInstance> speedSupplier = () -> new EffectInstance(Effects.SPEED, 3600, 100);
-	private static final Supplier<EffectInstance> nauseaSupplier = () -> new EffectInstance(Effects.NAUSEA, 3600, 10);
+	private static final Supplier<EffectInstance> jumpBoostSupplier = () -> new EffectInstance(Effects.JUMP, 3600, 20);
+	private static final Supplier<EffectInstance> speedSupplier = () -> new EffectInstance(Effects.MOVEMENT_SPEED, 3600, 100);
+	private static final Supplier<EffectInstance> nauseaSupplier = () -> new EffectInstance(Effects.CONFUSION, 3600, 10);
 
 	protected MagentaBread(){
-		super(new Properties().group(CRItems.TAB_CROSSROADS).food(new Food.Builder().setAlwaysEdible().hunger(20).saturation(0.5F).effect(speedSupplier, 1).effect(jumpBoostSupplier, 1).effect(nauseaSupplier, 1).build()));
+		super(new Properties().tab(CRItems.TAB_CROSSROADS).food(new Food.Builder().alwaysEat().nutrition(20).saturationMod(0.5F).effect(speedSupplier, 1).effect(jumpBoostSupplier, 1).effect(nauseaSupplier, 1).build()));
 		String name = "magenta_bread";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
@@ -38,12 +38,12 @@ public class MagentaBread extends Item{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public boolean hasEffect(ItemStack stack){
+	public boolean isFoil(ItemStack stack){
 		return true;
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.mag_bread.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

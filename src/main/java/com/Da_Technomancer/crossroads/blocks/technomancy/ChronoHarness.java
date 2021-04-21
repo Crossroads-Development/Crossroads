@@ -5,7 +5,10 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ChronoHarnessTileEntity;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -31,7 +34,7 @@ import java.util.List;
 
 public class ChronoHarness extends ContainerBlock{
 
-	private static final VoxelShape SHAPE = VoxelShapes.or(makeCuboidShape(0, 0, 0, 16, 2, 16), makeCuboidShape(0, 14, 0, 16, 16, 16), makeCuboidShape(4, 2, 4, 12, 14, 12));
+	private static final VoxelShape SHAPE = VoxelShapes.or(box(0, 0, 0, 16, 2, 16), box(0, 14, 0, 16, 16, 16), box(4, 2, 4, 12, 14, 12));
 
 	public ChronoHarness(){
 		super(CRBlocks.getMetalProperty());
@@ -39,21 +42,21 @@ public class ChronoHarness extends ContainerBlock{
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
-		setDefaultState(getDefaultState().with(ESProperties.REDSTONE_BOOL, false));
+		registerDefaultState(defaultBlockState().setValue(ESProperties.REDSTONE_BOOL, false));
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new ChronoHarnessTileEntity();
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
 		builder.add(ESProperties.REDSTONE_BOOL);
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
@@ -64,28 +67,28 @@ public class ChronoHarness extends ContainerBlock{
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
-		if(worldIn.isBlockPowered(pos)){
-			if(!state.get(ESProperties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, true), 2);
+		if(worldIn.hasNeighborSignal(pos)){
+			if(!state.getValue(ESProperties.REDSTONE_BOOL)){
+				worldIn.setBlock(pos, state.setValue(ESProperties.REDSTONE_BOOL, true), 2);
 			}
-		}else if(state.get(ESProperties.REDSTONE_BOOL)){
-			worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, false), 2);
+		}else if(state.getValue(ESProperties.REDSTONE_BOOL)){
+			worldIn.setBlock(pos, state.setValue(ESProperties.REDSTONE_BOOL, false), 2);
 		}
 	}
 
 	@Override
-	public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
+	public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		neighborChanged(state, worldIn, pos, this, pos, false);
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		return FluxUtil.handleFluxLinking(worldIn, pos, playerIn.getHeldItem(hand), playerIn);
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		return FluxUtil.handleFluxLinking(worldIn, pos, playerIn.getItemInHand(hand), playerIn);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.chrono_harness.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.chrono_harness.power", 64 / FluxUtil.FLUX_TIME * CRConfig.fePerEntropy.get(), CRConfig.fePerEntropy.get()));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.chrono_harness.reds"));

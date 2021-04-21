@@ -3,8 +3,8 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.crafting.recipes.CopshowiumRec;
+import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -49,7 +49,7 @@ public class CopshowiumCategory implements IRecipeCategory<CopshowiumRec>{
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.copshowiumCreationChamber.getTranslatedName().getString();
+		return CRBlocks.copshowiumCreationChamber.getName().getString();
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class CopshowiumCategory implements IRecipeCategory<CopshowiumRec>{
 	@Override
 	public void draw(CopshowiumRec rec, MatrixStack matrix, double mouseX, double mouseY){
 		if(rec.isFlux()){
-			Minecraft.getInstance().fontRenderer.drawString(matrix, MiscUtil.localize("crossroads.jei.copshowium.flux"), 10, 10, 4210752);
+			Minecraft.getInstance().font.draw(matrix, MiscUtil.localize("crossroads.jei.copshowium.flux"), 10, 10, 4210752);
 		}
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();

@@ -53,7 +53,7 @@ public class EdibleBlob extends Item{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		if(stack.hasTag()){
 			tooltip.add(new TranslationTextComponent("tt.crossroads.edible_blob.food", getHealAmount(stack)));
 			tooltip.add(new TranslationTextComponent("tt.crossroads.edible_blob.sat", getTrueSat(stack)));
@@ -67,7 +67,7 @@ public class EdibleBlob extends Item{
 	 * returns the action that specifies what animation to play when the items is being used
 	 */
 	@Override
-	public UseAction getUseAction(ItemStack stack){
+	public UseAction getUseAnimation(ItemStack stack){
 		return UseAction.EAT;
 	}
 
@@ -84,10 +84,10 @@ public class EdibleBlob extends Item{
 	 * {@link #onItemUse}.
 	 */
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn){
-		ItemStack itemstack = playerIn.getHeldItem(handIn);
+	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn){
+		ItemStack itemstack = playerIn.getItemInHand(handIn);
 		if(playerIn.canEat(false)){
-			playerIn.setActiveHand(handIn);
+			playerIn.startUsingItem(handIn);
 			return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
 		}else{
 			return new ActionResult<>(ActionResultType.FAIL, itemstack);
@@ -99,21 +99,21 @@ public class EdibleBlob extends Item{
 	 * the Item before the action is complete.
 	 */
 	@Override
-	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving){
+	public ItemStack finishUsingItem(ItemStack stack, World worldIn, LivingEntity entityLiving){
 //		return this.isFood() ? entityLiving.onFoodEaten(worldIn, stack) : stack;
 		if(entityLiving instanceof PlayerEntity){
-			FoodStats stats = ((PlayerEntity) entityLiving).getFoodStats();
+			FoodStats stats = ((PlayerEntity) entityLiving).getFoodData();
 
 			MiscUtil.setPlayerFood((PlayerEntity) entityLiving, stats.getFoodLevel() + getHealAmount(stack), stats.getSaturationLevel() + getTrueSat(stack));
 
-			((PlayerEntity) entityLiving).addStat(Stats.ITEM_USED.get(this));
-			worldIn.playSound(null, entityLiving.getPosX(), entityLiving.getPosY(), entityLiving.getPosZ(), SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
+			((PlayerEntity) entityLiving).awardStat(Stats.ITEM_USED.get(this));
+			worldIn.playSound(null, entityLiving.getX(), entityLiving.getY(), entityLiving.getZ(), SoundEvents.PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, worldIn.random.nextFloat() * 0.1F + 0.9F);
 			if(entityLiving instanceof ServerPlayerEntity){
 				CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayerEntity) entityLiving, stack);
 			}
 		}
 
-		worldIn.playSound(null, entityLiving.getPosX(), entityLiving.getPosY(), entityLiving.getPosZ(), entityLiving.getEatSound(stack), SoundCategory.NEUTRAL, 1.0F, 1.0F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.4F);
+		worldIn.playSound(null, entityLiving.getX(), entityLiving.getY(), entityLiving.getZ(), entityLiving.getEatingSound(stack), SoundCategory.NEUTRAL, 1.0F, 1.0F + (worldIn.random.nextFloat() - worldIn.random.nextFloat()) * 0.4F);
 		stack.shrink(1);
 
 		return stack;

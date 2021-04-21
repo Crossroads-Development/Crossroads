@@ -32,8 +32,8 @@ public class EntityFlameCore extends Entity{
 	@ObjectHolder("flame_core")
 	public static EntityType<EntityFlameCore> type = null;
 
-	protected static final DataParameter<Integer> TIME_EXISTED = EntityDataManager.createKey(EntityFlameCore.class, DataSerializers.VARINT);
-	protected static final DataParameter<Integer> COLOR = EntityDataManager.createKey(EntityFlameCore.class, DataSerializers.VARINT);
+	protected static final DataParameter<Integer> TIME_EXISTED = EntityDataManager.defineId(EntityFlameCore.class, DataSerializers.INT);
+	protected static final DataParameter<Integer> COLOR = EntityDataManager.defineId(EntityFlameCore.class, DataSerializers.INT);
 	protected static final float FLAME_VEL = 0.1F;//Flame interface speed, blocks per tick
 
 	/**
@@ -47,8 +47,8 @@ public class EntityFlameCore extends Entity{
 	public EntityFlameCore(EntityType<EntityFlameCore> type, World worldIn){
 		super(type, worldIn);
 		setNoGravity(true);
-		noClip = true;
-		ignoreFrustumCheck = true;
+		noPhysics = true;
+		noCulling = true;
 	}
 
 
@@ -60,43 +60,43 @@ public class EntityFlameCore extends Entity{
 	private ReagentMap reags = null;
 
 	@Override
-	public AxisAlignedBB getRenderBoundingBox(){
+	public AxisAlignedBB getBoundingBoxForCulling(){
 		return INFINITE_EXTENT_AABB;
 	}
 
 	@Override
-	public IPacket<?> createSpawnPacket(){
+	public IPacket<?> getAddEntityPacket(){
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
 	@Override
-	protected void registerData(){
-		dataManager.register(TIME_EXISTED, 0);
-		dataManager.register(COLOR, Color.WHITE.getRGB());
+	protected void defineSynchedData(){
+		entityData.define(TIME_EXISTED, 0);
+		entityData.define(COLOR, Color.WHITE.getRGB());
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public boolean isInRangeToRender3d(double x, double y, double z){
+	public boolean shouldRender(double x, double y, double z){
 		return true;
 	}
 
 	@Override
-	public void readAdditional(CompoundNBT nbt){
+	public void readAdditionalSaveData(CompoundNBT nbt){
 		reags = new ReagentMap();
 		maxRadius = nbt.getInt("rad");
 		reags = ReagentMap.readFromNBT(nbt);
 		setInitialValues(reags, maxRadius);
 		ticksExisted = nbt.getInt("life");
-		dataManager.set(TIME_EXISTED, ticksExisted);
+		entityData.set(TIME_EXISTED, ticksExisted);
 		if(nbt.contains("color")){
 			col = new Color(nbt.getInt("color"), true);
-			dataManager.set(COLOR, col.getRGB());
+			entityData.set(COLOR, col.getRGB());
 		}
 	}
 
 	@Override
-	protected void writeAdditional(CompoundNBT nbt){
+	protected void addAdditionalSaveData(CompoundNBT nbt){
 		if(reags != null){
 			reags.write(nbt);
 		}
@@ -112,12 +112,12 @@ public class EntityFlameCore extends Entity{
 	public void tick(){
 		super.tick();
 
-		if(world.isRemote || reags == null){
+		if(level.isClientSide || reags == null){
 			return;
 		}
 
 		ticksExisted++;
-		dataManager.set(TIME_EXISTED, ticksExisted);
+		entityData.set(TIME_EXISTED, ticksExisted);
 
 		if(col == null){
 			reagList.clear();
@@ -148,12 +148,12 @@ public class EntityFlameCore extends Entity{
 			}
 
 			col = new Color(r / amount, g / amount, b / amount, a / amount);
-			dataManager.set(COLOR, col.getRGB());
+			entityData.set(COLOR, col.getRGB());
 		}
 
 		if(ticksExisted % 8 == 0){
 			int radius = Math.round(FLAME_VEL * (float) ticksExisted);
-			BlockPos pos = new BlockPos(getPosX(), getPosY(), getPosZ());
+			BlockPos pos = new BlockPos(getX(), getY(), getZ());
 			boolean lastAction = maxRadius <= radius;
 
 			double temp = reags.getTempC();
@@ -161,32 +161,32 @@ public class EntityFlameCore extends Entity{
 			for(int i = 0; i <= radius; i++){
 				for(int j = 0; j <= radius; j++){
 					//x-z plane
-					act(reagList, reags, temp, world, pos.add(i, -radius, j), lastAction);
-					act(reagList, reags, temp, world, pos.add(i - radius, -radius, j), lastAction);
-					act(reagList, reags, temp, world, pos.add(i, -radius, j - radius), lastAction);
-					act(reagList, reags, temp, world, pos.add(i - radius, -radius, j - radius), lastAction);
-					act(reagList, reags, temp, world, pos.add(i, radius, j), lastAction);
-					act(reagList, reags, temp, world, pos.add(i - radius, radius, j), lastAction);
-					act(reagList, reags, temp, world, pos.add(i, radius, j - radius), lastAction);
-					act(reagList, reags, temp, world, pos.add(i - radius, radius, j - radius), lastAction);
+					act(reagList, reags, temp, level, pos.offset(i, -radius, j), lastAction);
+					act(reagList, reags, temp, level, pos.offset(i - radius, -radius, j), lastAction);
+					act(reagList, reags, temp, level, pos.offset(i, -radius, j - radius), lastAction);
+					act(reagList, reags, temp, level, pos.offset(i - radius, -radius, j - radius), lastAction);
+					act(reagList, reags, temp, level, pos.offset(i, radius, j), lastAction);
+					act(reagList, reags, temp, level, pos.offset(i - radius, radius, j), lastAction);
+					act(reagList, reags, temp, level, pos.offset(i, radius, j - radius), lastAction);
+					act(reagList, reags, temp, level, pos.offset(i - radius, radius, j - radius), lastAction);
 					//x-y plane
-					act(reagList, reags, temp, world, pos.add(i, j, -radius), lastAction);
-					act(reagList, reags, temp, world, pos.add(i - radius, j, -radius), lastAction);
-					act(reagList, reags, temp, world, pos.add(i, j - radius, -radius), lastAction);
-					act(reagList, reags, temp, world, pos.add(i - radius, j - radius, -radius), lastAction);
-					act(reagList, reags, temp, world, pos.add(i, j, radius), lastAction);
-					act(reagList, reags, temp, world, pos.add(i - radius, j, radius), lastAction);
-					act(reagList, reags, temp, world, pos.add(i, j - radius, radius), lastAction);
-					act(reagList, reags, temp, world, pos.add(i - radius, j - radius, radius), lastAction);
+					act(reagList, reags, temp, level, pos.offset(i, j, -radius), lastAction);
+					act(reagList, reags, temp, level, pos.offset(i - radius, j, -radius), lastAction);
+					act(reagList, reags, temp, level, pos.offset(i, j - radius, -radius), lastAction);
+					act(reagList, reags, temp, level, pos.offset(i - radius, j - radius, -radius), lastAction);
+					act(reagList, reags, temp, level, pos.offset(i, j, radius), lastAction);
+					act(reagList, reags, temp, level, pos.offset(i - radius, j, radius), lastAction);
+					act(reagList, reags, temp, level, pos.offset(i, j - radius, radius), lastAction);
+					act(reagList, reags, temp, level, pos.offset(i - radius, j - radius, radius), lastAction);
 					//y-z plane
-					act(reagList, reags, temp, world, pos.add(-radius, i, j), lastAction);
-					act(reagList, reags, temp, world, pos.add(-radius, i - radius, j), lastAction);
-					act(reagList, reags, temp, world, pos.add(-radius, i, j - radius), lastAction);
-					act(reagList, reags, temp, world, pos.add(-radius, i - radius, j - radius), lastAction);
-					act(reagList, reags, temp, world, pos.add(radius, i, j), lastAction);
-					act(reagList, reags, temp, world, pos.add(radius, i - radius, j), lastAction);
-					act(reagList, reags, temp, world, pos.add(radius, i, j - radius), lastAction);
-					act(reagList, reags, temp, world, pos.add(radius, i - radius, j - radius), lastAction);
+					act(reagList, reags, temp, level, pos.offset(-radius, i, j), lastAction);
+					act(reagList, reags, temp, level, pos.offset(-radius, i - radius, j), lastAction);
+					act(reagList, reags, temp, level, pos.offset(-radius, i, j - radius), lastAction);
+					act(reagList, reags, temp, level, pos.offset(-radius, i - radius, j - radius), lastAction);
+					act(reagList, reags, temp, level, pos.offset(radius, i, j), lastAction);
+					act(reagList, reags, temp, level, pos.offset(radius, i - radius, j), lastAction);
+					act(reagList, reags, temp, level, pos.offset(radius, i, j - radius), lastAction);
+					act(reagList, reags, temp, level, pos.offset(radius, i - radius, j - radius), lastAction);
 				}
 			}
 
@@ -201,8 +201,8 @@ public class EntityFlameCore extends Entity{
 		if(reags.getQty(EnumReagents.ALCHEMICAL_SALT.id()) == 0){
 			BlockState state = world.getBlockState(pos);
 
-			if(!CRConfig.isProtected(world, pos, state) && state.getBlockHardness(world, pos) >= 0){
-				world.setBlockState(pos, lastAction && Math.random() > 0.75D && Blocks.FIRE.getDefaultState().isValidPosition(world, pos) ? Blocks.FIRE.getDefaultState() : Blocks.AIR.getDefaultState(), lastAction ? 3 : 18);
+			if(!CRConfig.isProtected(world, pos, state) && state.getDestroySpeed(world, pos) >= 0){
+				world.setBlock(pos, lastAction && Math.random() > 0.75D && Blocks.FIRE.defaultBlockState().canSurvive(world, pos) ? Blocks.FIRE.defaultBlockState() : Blocks.AIR.defaultBlockState(), lastAction ? 3 : 18);
 			}
 		}
 
@@ -217,7 +217,7 @@ public class EntityFlameCore extends Entity{
 	}
 
 	@Override
-	public boolean canTriggerWalking(){
+	public boolean isMovementNoisy(){
 		return false;
 	}
 }

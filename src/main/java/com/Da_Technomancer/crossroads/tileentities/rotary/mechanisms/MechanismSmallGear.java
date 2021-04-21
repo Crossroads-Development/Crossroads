@@ -34,12 +34,12 @@ public class MechanismSmallGear implements IMechanism<GearFactory.GearMaterial>{
 
 	protected static final VoxelShape[] SHAPES = new VoxelShape[6];
 	static{
-		SHAPES[0] = Block.makeCuboidShape(0, 0, 0, 16, 2, 16);//DOWN
-		SHAPES[1] = Block.makeCuboidShape(0, 14, 0, 16, 16, 16);//UP
-		SHAPES[2] = Block.makeCuboidShape(0, 0, 0, 16, 16, 2);//NORTH
-		SHAPES[3] = Block.makeCuboidShape(0, 0, 14, 16, 16, 16);//SOUTH
-		SHAPES[4] = Block.makeCuboidShape(0, 0, 0, 2, 16, 16);//WEST
-		SHAPES[5] = Block.makeCuboidShape(14, 0, 0, 16, 16, 16);//EAST
+		SHAPES[0] = Block.box(0, 0, 0, 16, 2, 16);//DOWN
+		SHAPES[1] = Block.box(0, 14, 0, 16, 16, 16);//UP
+		SHAPES[2] = Block.box(0, 0, 0, 16, 16, 2);//NORTH
+		SHAPES[3] = Block.box(0, 0, 14, 16, 16, 16);//SOUTH
+		SHAPES[4] = Block.box(0, 0, 0, 2, 16, 16);//WEST
+		SHAPES[5] = Block.box(14, 0, 0, 16, 16, 16);//EAST
 	}
 
 	@Override
@@ -87,17 +87,17 @@ public class MechanismSmallGear implements IMechanism<GearFactory.GearMaterial>{
 
 		//Other internal gears
 		for(int i = 0; i < 6; i++){
-			if(i != side.getIndex() && i != side.getOpposite().getIndex() && te.members[i] != null && te.members[i].hasCap(Capabilities.COG_CAPABILITY, Direction.byIndex(i), te.mats[i], Direction.byIndex(i), te.getAxleAxis(), te)){
-				te.axleHandlers[i].propagate(masterIn, key, RotaryUtil.getDirSign(side, Direction.byIndex(i)) * handler.rotRatio, .5D, !handler.renderOffset);
+			if(i != side.get3DDataValue() && i != side.getOpposite().get3DDataValue() && te.members[i] != null && te.members[i].hasCap(Capabilities.COG_CAPABILITY, Direction.from3DDataValue(i), te.mats[i], Direction.from3DDataValue(i), te.getAxleAxis(), te)){
+				te.axleHandlers[i].propagate(masterIn, key, RotaryUtil.getDirSign(side, Direction.from3DDataValue(i)) * handler.rotRatio, .5D, !handler.renderOffset);
 			}
 		}
 
-		TileEntity sideTE = te.getWorld().getTileEntity(te.getPos().offset(side));
+		TileEntity sideTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(side));
 		for(int i = 0; i < 6; i++){
-			if(i != side.getIndex() && i != side.getOpposite().getIndex()){
-				Direction facing = Direction.byIndex(i);
+			if(i != side.get3DDataValue() && i != side.getOpposite().get3DDataValue()){
+				Direction facing = Direction.from3DDataValue(i);
 				// Adjacent gears
-				TileEntity adjTE = te.getWorld().getTileEntity(te.getPos().offset(facing));
+				TileEntity adjTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(facing));
 				if(adjTE != null){
 					LazyOptional<ICogHandler> cogOpt;
 					if((cogOpt = adjTE.getCapability(Capabilities.COG_CAPABILITY, side)).isPresent()){
@@ -109,9 +109,9 @@ public class MechanismSmallGear implements IMechanism<GearFactory.GearMaterial>{
 				}
 
 				// Diagonal gears
-				TileEntity diagTE = te.getWorld().getTileEntity(te.getPos().offset(facing).offset(side));
+				TileEntity diagTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(facing).relative(side));
 				LazyOptional<ICogHandler> cogOpt;
-				if(diagTE != null && (cogOpt = diagTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())).isPresent() && RotaryUtil.canConnectThrough(te.getWorld(), te.getPos().offset(facing), facing.getOpposite(), side)){
+				if(diagTE != null && (cogOpt = diagTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())).isPresent() && RotaryUtil.canConnectThrough(te.getLevel(), te.getBlockPos().relative(facing), facing.getOpposite(), side)){
 					cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * handler.rotRatio, .5D, side.getOpposite(), handler.renderOffset);
 				}
 
@@ -152,7 +152,7 @@ public class MechanismSmallGear implements IMechanism<GearFactory.GearMaterial>{
 
 	@Override
 	public VoxelShape getBoundingBox(@Nullable Direction side, @Nullable Direction.Axis axis){
-		return side == null ? VoxelShapes.empty() : SHAPES[side.getIndex()];
+		return side == null ? VoxelShapes.empty() : SHAPES[side.get3DDataValue()];
 	}
 
 	@Override
@@ -162,13 +162,13 @@ public class MechanismSmallGear implements IMechanism<GearFactory.GearMaterial>{
 			return;
 		}
 
-		MechanismTileEntity.SidedAxleHandler handler = te.axleHandlers[side.getIndex()];
+		MechanismTileEntity.SidedAxleHandler handler = te.axleHandlers[side.get3DDataValue()];
 
-		matrix.rotate(side.getOpposite().getRotation());//Apply orientation
+		matrix.mulPose(side.getOpposite().getRotation());//Apply orientation
 		float angle = handler.getAngle(partialTicks);
 		matrix.translate(0, -0.4375D, 0);
-		matrix.rotate(Vector3f.YP.rotationDegrees(-(float) RotaryUtil.getCCWSign(side) * angle));
-		CRModels.draw8Gear(matrix, buffer.getBuffer(RenderType.getSolid()), CRRenderUtil.convertColor(mat instanceof GearFactory.GearMaterial ? ((GearFactory.GearMaterial) mat).getColor() : Color.WHITE), combinedLight);
+		matrix.mulPose(Vector3f.YP.rotationDegrees(-(float) RotaryUtil.getCCWSign(side) * angle));
+		CRModels.draw8Gear(matrix, buffer.getBuffer(RenderType.solid()), CRRenderUtil.convertColor(mat instanceof GearFactory.GearMaterial ? ((GearFactory.GearMaterial) mat).getColor() : Color.WHITE), combinedLight);
 	}
 
 	@Override

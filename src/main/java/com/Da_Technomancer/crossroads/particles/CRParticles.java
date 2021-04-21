@@ -23,11 +23,11 @@ public class CRParticles{
 
 	@OnlyIn(Dist.CLIENT)
 	public static void clientInit(){
-		ParticleManager manager = Minecraft.getInstance().particles;
-		manager.registerFactory(COLOR_FLAME, ParticleFlameColor.Factory::new);
-		manager.registerFactory(COLOR_GAS, ParticleBubbleColor.Factory::new);
-		manager.registerFactory(COLOR_LIQUID, ParticleDripColor.Factory::new);
-		manager.registerFactory(COLOR_SOLID, ParticlePowderColor.Factory::new);
-		manager.registerFactory(COLOR_SPLASH, ParticleSplashColor.Factory::new);
+		ParticleManager manager = Minecraft.getInstance().particleEngine;
+		manager.register(COLOR_FLAME, ParticleFlameColor.Factory::new);
+		manager.register(COLOR_GAS, ParticleBubbleColor.Factory::new);
+		manager.register(COLOR_LIQUID, ParticleDripColor.Factory::new);
+		manager.register(COLOR_SOLID, ParticlePowderColor.Factory::new);
+		manager.register(COLOR_SPLASH, ParticleSplashColor.Factory::new);
 	}
 }

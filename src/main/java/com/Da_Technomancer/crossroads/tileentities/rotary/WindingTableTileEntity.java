@@ -75,12 +75,12 @@ public class WindingTableTileEntity extends InventoryTE{
 					itemSpeed += INCREMENT;
 					itemSpeed = Math.min(itemSpeed, item.getMaxWind());
 					item.setWindLevel(inventory[0], itemSpeed);
-					world.playSound(null, pos, SoundEvents.BLOCK_METAL_PRESSURE_PLATE_CLICK_ON, SoundCategory.BLOCKS, 1F, (float) Math.random());
+					level.playSound(null, worldPosition, SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON, SoundCategory.BLOCKS, 1F, (float) Math.random());
 				}else{
-					world.playSound(null, pos, SoundEvents.BLOCK_METAL_PRESSURE_PLATE_CLICK_OFF, SoundCategory.BLOCKS, 2F, (float) Math.random());
+					level.playSound(null, worldPosition, SoundEvents.METAL_PRESSURE_PLATE_CLICK_OFF, SoundCategory.BLOCKS, 2F, (float) Math.random());
 				}
 			}
-			markDirty();
+			setChanged();
 		}
 	}
 
@@ -112,7 +112,7 @@ public class WindingTableTileEntity extends InventoryTE{
 	public void tick(){
 		super.tick();
 
-		if(world.isRemote || !(inventory[0].getItem() instanceof IWindableItem)){
+		if(level.isClientSide || !(inventory[0].getItem() instanceof IWindableItem)){
 			return;
 		}
 
@@ -122,11 +122,11 @@ public class WindingTableTileEntity extends InventoryTE{
 			//Machine speed too slow
 			//Release all stored energy
 			axleHandler.addEnergy(INERTIA * itemSpeed * itemSpeed / 2D, true);
-			world.playSound(null, pos, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 1F, 1F);
+			level.playSound(null, worldPosition, SoundEvents.GLASS_BREAK, SoundCategory.BLOCKS, 1F, 1F);
 			if(CRConfig.windingDestroy.get()){
 				//Break the item
 				inventory[0] = ItemStack.EMPTY;
-				markDirty();
+				setChanged();
 			}else{
 				//Remove all stored energy
 				itemSpeed = 0;
@@ -138,12 +138,12 @@ public class WindingTableTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
+	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction){
 		return true;
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
+	public boolean canPlaceItem(int index, ItemStack stack){
 		return index == 0 && stack.getItem() instanceof IWindableItem;
 	}
 
@@ -153,14 +153,14 @@ public class WindingTableTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		redstone = nbt.getBoolean("reds");
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putBoolean("reds", redstone);
 		return nbt;
 	}

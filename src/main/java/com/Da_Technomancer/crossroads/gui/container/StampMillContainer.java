@@ -20,10 +20,10 @@ public class StampMillContainer extends MachineContainer<StampMillTileEntity>{
 
 	public StampMillContainer(int windowId, PlayerInventory playerInv, PacketBuffer data){
 		super(type, windowId, playerInv, data);
-		progRef = new IntDeferredRef(te::getProgress, te.getWorld().isRemote);
-		timeRef = new IntDeferredRef(te::getTimer, te.getWorld().isRemote);
-		trackInt(progRef);
-		trackInt(timeRef);
+		progRef = new IntDeferredRef(te::getProgress, te.getLevel().isClientSide);
+		timeRef = new IntDeferredRef(te::getTimer, te.getLevel().isClientSide);
+		addDataSlot(progRef);
+		addDataSlot(timeRef);
 	}
 
 	@Override

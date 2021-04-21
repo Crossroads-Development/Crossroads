@@ -2,10 +2,10 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.fluids.CRFluids;
-import com.Da_Technomancer.crossroads.gui.container.OreCleanserContainer;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.OreCleanserRec;
+import com.Da_Technomancer.crossroads.fluids.CRFluids;
+import com.Da_Technomancer.crossroads.gui.container.OreCleanserContainer;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -61,19 +61,19 @@ public class OreCleanserTileEntity extends InventoryTE{
 	public void tick(){
 		super.tick();
 
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 
 		if(fluids[0].getAmount() >= WATER_USE && fluidProps[1].capacity - fluids[1].getAmount() >= WATER_USE && !inventory[0].isEmpty()){
-			Optional<OreCleanserRec> rec = world.getRecipeManager().getRecipe(CRRecipes.ORE_CLEANSER_TYPE, this, world);
+			Optional<OreCleanserRec> rec = level.getRecipeManager().getRecipeFor(CRRecipes.ORE_CLEANSER_TYPE, this, level);
 
 			ItemStack created;
 			if(!rec.isPresent()){
 				created = inventory[0].copy();
 				created.setCount(1);
 			}else{
-				created = rec.get().getCraftingResult(this).copy();
+				created = rec.get().assemble(this).copy();
 			}
 
 			if(!inventory[1].isEmpty() && (inventory[1].getMaxStackSize() - inventory[1].getCount() < created.getCount() || !BlockUtil.sameItem(created, inventory[1]))){
@@ -81,7 +81,7 @@ public class OreCleanserTileEntity extends InventoryTE{
 			}
 
 			progress++;
-			markDirty();
+			setChanged();
 			if(progress < 50){
 				return;
 			}
@@ -106,21 +106,21 @@ public class OreCleanserTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		progress = nbt.getInt("prog");
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putInt("prog", progress);
 		return nbt;
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		itemOpt.invalidate();
 		inOpt.invalidate();
 		outOpt.invalidate();
@@ -145,13 +145,13 @@ public class OreCleanserTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
+	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction){
 		return index == 1;
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && world.getRecipeManager().getRecipe(CRRecipes.ORE_CLEANSER_TYPE, new Inventory(stack), world).isPresent();
+	public boolean canPlaceItem(int index, ItemStack stack){
+		return index == 0 && level.getRecipeManager().getRecipeFor(CRRecipes.ORE_CLEANSER_TYPE, new Inventory(stack), level).isPresent();
 	}
 
 	@Override

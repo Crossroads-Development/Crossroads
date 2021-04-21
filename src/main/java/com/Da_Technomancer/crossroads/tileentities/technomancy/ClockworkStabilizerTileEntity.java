@@ -39,27 +39,27 @@ public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 			if(state.getBlock() != CRBlocks.clockworkStabilizer){
 				return Direction.NORTH;
 			}
-			dir = state.get(ESProperties.FACING);
+			dir = state.getValue(ESProperties.FACING);
 		}
 		return dir;
 	}
 
 	@Override
-	public void updateContainingBlockInfo(){
-		super.updateContainingBlockInfo();
+	public void clearCache(){
+		super.clearCache();
 		dir = null;
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		storage.writeToNBT("stab_mag", nbt);
 		return nbt;
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		storage = BeamUnitStorage.readFromNBT("stab_mag", nbt);
 	}
 
@@ -85,25 +85,25 @@ public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 			}
 			BeamUnit output = new BeamUnit(MiscUtil.withdrawExact(storage.getOutput().getValues(), (int) toWithdraw));
 			storage.subtractBeam(output);
-			if(beamer[dir.getIndex()].emit(output, world)){
-				refreshBeam(dir.getIndex());
+			if(beamer[dir.get3DDataValue()].emit(output, level)){
+				refreshBeam(dir.get3DDataValue());
 			}
-		}else if(beamer[dir.getIndex()].emit(BeamUnit.EMPTY, world)){
-			refreshBeam(dir.getIndex());
+		}else if(beamer[dir.get3DDataValue()].emit(BeamUnit.EMPTY, level)){
+			refreshBeam(dir.get3DDataValue());
 		}
 	}
 
 	@Override
 	protected boolean[] inputSides(){
 		boolean[] out = {true, true, true, true, true, true};
-		out[getDir().getIndex()] = false;
+		out[getDir().get3DDataValue()] = false;
 		return out;
 	}
 
 	@Override
 	protected boolean[] outputSides(){
 		boolean[] out = new boolean[6];
-		out[getDir().getIndex()] = true;
+		out[getDir().get3DDataValue()] = true;
 		return out;
 	}
 

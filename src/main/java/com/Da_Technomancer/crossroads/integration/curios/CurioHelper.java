@@ -38,7 +38,7 @@ public class CurioHelper{
 	 */
 	public static ItemStack getEquipped(Item item, LivingEntity player){
 		//Check offhand
-		ItemStack held = player.getHeldItemOffhand();
+		ItemStack held = player.getOffhandItem();
 		if(held.getItem() == item){
 			return held;
 		}

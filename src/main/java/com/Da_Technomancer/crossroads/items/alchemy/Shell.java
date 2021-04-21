@@ -5,10 +5,9 @@ import com.Da_Technomancer.crossroads.entity.EntityShell;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.dispenser.DefaultDispenseItemBehavior;
-import net.minecraft.dispenser.IDispenseItemBehavior;
 import net.minecraft.dispenser.IBlockSource;
+import net.minecraft.dispenser.IDispenseItemBehavior;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
@@ -21,15 +20,15 @@ public class Shell extends AbstractGlassware{
 		 * Dispense the specified stack, play the dispense sound and spawn particles.
 		 */
 		@Override
-		public ItemStack dispenseStack(IBlockSource source, ItemStack stack){
+		public ItemStack execute(IBlockSource source, ItemStack stack){
 			ReagentMap contents = CRItems.shellGlass.getReagants(stack);
 			if(contents.getTotalQty() != 0){
-				Direction dir = source.getBlockState().get(DispenserBlock.FACING);
-				World world = source.getWorld();
+				Direction dir = source.getBlockState().getValue(DispenserBlock.FACING);
+				World world = source.getLevel();
 				EntityShell shellEnt = new EntityShell(world, contents, stack);
-				shellEnt.setPosition(source.getX() + dir.getXOffset() + 0.5D, source.getY() + dir.getYOffset() + 0.5D, source.getZ() + dir.getZOffset() + 0.5D);
-				shellEnt.shoot(dir.getXOffset(), dir.getYOffset(), dir.getZOffset(), 1.5F, 1.0F);
-				world.addEntity(shellEnt);
+				shellEnt.setPos(source.x() + dir.getStepX() + 0.5D, source.y() + dir.getStepY() + 0.5D, source.z() + dir.getStepZ() + 0.5D);
+				shellEnt.shoot(dir.getStepX(), dir.getStepY(), dir.getStepZ(), 1.5F, 1.0F);
+				world.addFreshEntity(shellEnt);
 				stack.shrink(1);
 			}
 			return stack;
@@ -39,8 +38,8 @@ public class Shell extends AbstractGlassware{
 		 * Play the dispense sound from the specified block.
 		 */
 		@Override
-		protected void playDispenseSound(IBlockSource source){
-			source.getWorld().playEvent(1000, source.getBlockPos(), 0);
+		protected void playSound(IBlockSource source){
+			source.getLevel().levelEvent(1000, source.getPos(), 0);
 		}
 	};
 
@@ -49,20 +48,20 @@ public class Shell extends AbstractGlassware{
 		String name = "shell_" + (crystal ? "cryst" : "glass");
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
-		DispenserBlock.registerDispenseBehavior(this, SHELL_DISPENSER_BEHAVIOR);
+		DispenserBlock.registerBehavior(this, SHELL_DISPENSER_BEHAVIOR);
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn){
-		ItemStack held = playerIn.getHeldItem(handIn);
+	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn){
+		ItemStack held = playerIn.getItemInHand(handIn);
 		ReagentMap contents = getReagants(held);
 		if(contents.getTotalQty() != 0){
-			worldIn.playSound(null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+			worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
 
-			if(!worldIn.isRemote){
+			if(!worldIn.isClientSide){
 				EntityShell shellEnt = new EntityShell(worldIn, playerIn, contents, held);
-				shellEnt.func_234612_a_(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0, 1.5F, 1.0F);
-				worldIn.addEntity(shellEnt);
+				shellEnt.shootFromRotation(playerIn, playerIn.xRot, playerIn.yRot, 0, 1.5F, 1.0F);
+				worldIn.addFreshEntity(shellEnt);
 			}
 
 			if(!playerIn.isCreative()){

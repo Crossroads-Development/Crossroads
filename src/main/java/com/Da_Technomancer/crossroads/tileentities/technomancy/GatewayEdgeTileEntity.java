@@ -32,7 +32,7 @@ public class GatewayEdgeTileEntity extends TileEntity implements IInfoTE{
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		if(key != null){
 			//Non-top frames call the top for addInfo
-			TileEntity te = world.getTileEntity(pos.add(key));
+			TileEntity te = level.getBlockEntity(worldPosition.offset(key));
 			if(te instanceof IGateway){
 				((IGateway) te).addInfo(chat, player, hit);
 			}
@@ -41,8 +41,8 @@ public class GatewayEdgeTileEntity extends TileEntity implements IInfoTE{
 
 	public void reset(){
 		key = null;
-		markDirty();
-		updateContainingBlockInfo();
+		setChanged();
+		clearCache();
 	}
 
 	public BlockPos getKey(){
@@ -51,26 +51,26 @@ public class GatewayEdgeTileEntity extends TileEntity implements IInfoTE{
 
 	public void setKey(BlockPos newKey){
 		key = newKey;
-		markDirty();
+		setChanged();
 	}
 
 	//Multiblock management
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 
 		//Generic
-		key = nbt.contains("key") ? BlockPos.fromLong(nbt.getLong("key")) : null;
+		key = nbt.contains("key") ? BlockPos.of(nbt.getLong("key")) : null;
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 
 		//Generic
 		if(key != null){
-			nbt.putLong("key", key.toLong());
+			nbt.putLong("key", key.asLong());
 		}
 
 		return nbt;

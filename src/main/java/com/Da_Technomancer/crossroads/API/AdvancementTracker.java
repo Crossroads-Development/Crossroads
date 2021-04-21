@@ -27,7 +27,7 @@ public class AdvancementTracker{
 	 */
 	@OnlyIn(Dist.CLIENT)
 	public static void listen(){
-		Minecraft.getInstance().player.connection.getAdvancementManager().setListener(Listener.INSTANCE);
+		Minecraft.getInstance().player.connection.getAdvancements().setListener(Listener.INSTANCE);
 	}
 
 	/**
@@ -39,7 +39,7 @@ public class AdvancementTracker{
 	 */
 	public static boolean hasAdvancement(PlayerEntity ent, String advancement){
 		if(ent instanceof ServerPlayerEntity){
-			return ((ServerPlayerEntity) ent).getAdvancements().getProgress(ent.world.getServer().getAdvancementManager().getAdvancement(new ResourceLocation(Crossroads.MODID, advancement))).isDone();
+			return ((ServerPlayerEntity) ent).getAdvancements().getOrStartProgress(ent.level.getServer().getAdvancements().getAdvancement(new ResourceLocation(Crossroads.MODID, advancement))).isDone();
 		}else if(ent instanceof ClientPlayerEntity){
 			return progressMap.getOrDefault(advancement, false);
 		}else{
@@ -56,20 +56,20 @@ public class AdvancementTracker{
 	 */
 	public static void unlockAdvancement(ServerPlayerEntity ent, String advancement, boolean enabled){
 		PlayerAdvancements playAdv = ent.getAdvancements();
-		Advancement adv = ent.world.getServer().getAdvancementManager().getAdvancement(new ResourceLocation(Crossroads.MODID, advancement));
+		Advancement adv = ent.level.getServer().getAdvancements().getAdvancement(new ResourceLocation(Crossroads.MODID, advancement));
 		if(adv == null){
 			return;//No advancement with this name exists
 		}
 
-		AdvancementProgress prog = playAdv.getProgress(adv);
+		AdvancementProgress prog = playAdv.getOrStartProgress(adv);
 
 		if(enabled){
-			for(String s : prog.getRemaningCriteria()){
-				playAdv.grantCriterion(adv, s);
+			for(String s : prog.getRemainingCriteria()){
+				playAdv.award(adv, s);
 			}
 		}else{
 			for(String s : prog.getCompletedCriteria()){
-				playAdv.revokeCriterion(adv, s);
+				playAdv.revoke(adv, s);
 			}
 		}
 	}
@@ -88,32 +88,32 @@ public class AdvancementTracker{
 		}
 
 		@Override
-		public void setSelectedTab(@Nullable Advancement advancementIn){
+		public void onSelectedTabChanged(@Nullable Advancement advancementIn){
 
 		}
 
 		@Override
-		public void rootAdvancementAdded(Advancement advancementIn){
+		public void onAddAdvancementRoot(Advancement advancementIn){
 
 		}
 
 		@Override
-		public void rootAdvancementRemoved(Advancement advancementIn){
+		public void onRemoveAdvancementRoot(Advancement advancementIn){
 
 		}
 
 		@Override
-		public void nonRootAdvancementAdded(Advancement advancementIn){
+		public void onAddAdvancementTask(Advancement advancementIn){
 
 		}
 
 		@Override
-		public void nonRootAdvancementRemoved(Advancement advancementIn){
+		public void onRemoveAdvancementTask(Advancement advancementIn){
 
 		}
 
 		@Override
-		public void advancementsCleared(){
+		public void onAdvancementsCleared(){
 			progressMap.clear();
 		}
 	}

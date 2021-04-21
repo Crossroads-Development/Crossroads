@@ -26,8 +26,8 @@ public class SendElytraBoostToServer extends ServerPacket{
 	@Override
 	protected void run(@Nullable ServerPlayerEntity sender){
 		if(sender != null){
-			ItemStack chestplate = sender.getItemStackFromSlot(EquipmentSlotType.CHEST);
-			if(sender.isElytraFlying() && chestplate.getItem() == CRItems.propellerPack && CRItems.propellerPack.getWindLevel(chestplate) > 0){
+			ItemStack chestplate = sender.getItemBySlot(EquipmentSlotType.CHEST);
+			if(sender.isFallFlying() && chestplate.getItem() == CRItems.propellerPack && CRItems.propellerPack.getWindLevel(chestplate) > 0){
 				CRItems.propellerPack.setWindLevel(chestplate, CRItems.propellerPack.getWindLevel(chestplate) - ArmorPropellerPack.WIND_PER_BOOST);
 				ArmorPropellerPack.applyMidairBoost(sender);
 			}

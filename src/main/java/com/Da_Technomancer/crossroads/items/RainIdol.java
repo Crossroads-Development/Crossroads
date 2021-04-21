@@ -24,7 +24,7 @@ public class RainIdol extends Item{
 	private static final String NBT_KEY_TIME = "rain_idol_time";
 	
 	protected RainIdol(){
-		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
+		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "rain_idol";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
@@ -36,13 +36,13 @@ public class RainIdol extends Item{
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.rain_idol.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override
 	public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected){
-		if(worldIn.isRemote){
+		if(worldIn.isClientSide){
 			return;
 		}
 
@@ -62,7 +62,7 @@ public class RainIdol extends Item{
 			}
 			byte count = play.getPersistentData().getByte(NBT_KEY);
 
-			if(!play.isSneaking() && play.getMotion().y <= 0){
+			if(!play.isShiftKeyDown() && play.getDeltaMovement().y <= 0){
 				if(Math.abs(count) % 2 == 1){
 					count += count > 0 ? 1 : -1;
 					play.getPersistentData().putByte(NBT_KEY, count);
@@ -70,19 +70,19 @@ public class RainIdol extends Item{
 				return;
 			}
 
-			if(play.isSneaking()){
+			if(play.isShiftKeyDown()){
 				if(count < 0){
 					count = 0;
 				}
 				if(count % 2 == 0){
 					if(++count >= 9){
-						IServerWorldInfo worldInfo = (IServerWorldInfo) worldIn.getWorldInfo();
+						IServerWorldInfo worldInfo = (IServerWorldInfo) worldIn.getLevelData();
 						worldInfo.setRaining(true);
 						worldInfo.setThundering(true);
 						worldInfo.setRainTime(0);
 						worldInfo.setRainTime(24000);
-						worldIn.playSound(null, play.getPosX(), play.getPosY(), play.getPosZ(), SoundEvents.ITEM_TOTEM_USE, SoundCategory.PLAYERS, 1F, 1F);
-						play.setHeldItem(Hand.MAIN_HAND, ItemStack.EMPTY);
+						worldIn.playSound(null, play.getX(), play.getY(), play.getZ(), SoundEvents.TOTEM_USE, SoundCategory.PLAYERS, 1F, 1F);
+						play.setItemInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
 						count = 0;
 					}else{
 						play.getPersistentData().putLong(NBT_KEY_TIME, System.currentTimeMillis());
@@ -95,12 +95,12 @@ public class RainIdol extends Item{
 				}
 				if(count % 2 == 0){
 					if(--count <= -9){
-						IServerWorldInfo worldInfo = (IServerWorldInfo) worldIn.getWorldInfo();
+						IServerWorldInfo worldInfo = (IServerWorldInfo) worldIn.getLevelData();
 						worldInfo.setRaining(false);
 						worldInfo.setRainTime(24000);
 						worldInfo.setRainTime(0);
-						worldIn.playSound(null, play.getPosX(), play.getPosY(), play.getPosZ(), SoundEvents.ITEM_TOTEM_USE, SoundCategory.PLAYERS, 1F, 1F);
-						play.setHeldItem(Hand.MAIN_HAND, ItemStack.EMPTY);
+						worldIn.playSound(null, play.getX(), play.getY(), play.getZ(), SoundEvents.TOTEM_USE, SoundCategory.PLAYERS, 1F, 1F);
+						play.setItemInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
 						count = 0;
 					}else{
 						play.getPersistentData().putLong(NBT_KEY_TIME, System.currentTimeMillis());

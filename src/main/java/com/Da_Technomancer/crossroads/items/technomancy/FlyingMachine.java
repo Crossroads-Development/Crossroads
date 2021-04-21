@@ -25,32 +25,32 @@ public class FlyingMachine extends Item{
 	private static final IDispenseItemBehavior SPAWN_DISPENSER_BEHAVIOR = new DefaultDispenseItemBehavior(){
 
 		@Override
-		public ItemStack dispenseStack(IBlockSource source, ItemStack stack){
-			ServerWorld world = source.getWorld();
-			EntityFlyingMachine.type.spawn(world, stack, null, source.getBlockPos(), SpawnReason.SPAWN_EGG, true, false);			stack.shrink(1);
+		public ItemStack execute(IBlockSource source, ItemStack stack){
+			ServerWorld world = source.getLevel();
+			EntityFlyingMachine.type.spawn(world, stack, null, source.getPos(), SpawnReason.SPAWN_EGG, true, false);			stack.shrink(1);
 			return stack;
 		}
 	};
 
 	public FlyingMachine(){
-		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
+		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "flying_machine";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
-		DispenserBlock.registerDispenseBehavior(this, SPAWN_DISPENSER_BEHAVIOR);
+		DispenserBlock.registerBehavior(this, SPAWN_DISPENSER_BEHAVIOR);
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn){
-		ItemStack itemstack = playerIn.getHeldItem(handIn);
-		Vector3d vec3d = new Vector3d(playerIn.getPosX(), playerIn.getPosY() + playerIn.getEyeHeight(), playerIn.getPosZ());
-		RayTraceResult ray = worldIn.rayTraceBlocks(new RayTraceContext(vec3d, vec3d.add(playerIn.getLookVec().scale(5)), RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, playerIn));
+	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn){
+		ItemStack itemstack = playerIn.getItemInHand(handIn);
+		Vector3d vec3d = new Vector3d(playerIn.getX(), playerIn.getY() + playerIn.getEyeHeight(), playerIn.getZ());
+		RayTraceResult ray = worldIn.clip(new RayTraceContext(vec3d, vec3d.add(playerIn.getLookAngle().scale(5)), RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, playerIn));
 
 		if(ray.getType() != RayTraceResult.Type.BLOCK){
 			return new ActionResult<>(ActionResultType.PASS, itemstack);
 		}else{
-			if(!worldIn.isRemote){
-				EntityFlyingMachine.type.spawn((ServerWorld) worldIn, itemstack, playerIn, new BlockPos(ray.getHitVec()), SpawnReason.SPAWN_EGG, true, false);
+			if(!worldIn.isClientSide){
+				EntityFlyingMachine.type.spawn((ServerWorld) worldIn, itemstack, playerIn, new BlockPos(ray.getLocation()), SpawnReason.SPAWN_EGG, true, false);
 			}
 			if(!playerIn.isCreative()){
 				itemstack.shrink(1);

@@ -31,21 +31,21 @@ public class RespawnInventorySavedData extends WorldSavedData{
 
 	public static void markDirty(ServerWorld w){
 		RespawnInventorySavedData data = get(w);
-		data.markDirty();
+		data.setDirty();
 	}
 
 	private static RespawnInventorySavedData get(ServerWorld world){
 		//We want all dimensions to share the same saved data,
 		//So we always reference the overworld instance
 		DimensionSavedDataManager storage;
-		if(world.getDimensionKey().getLocation().equals(DimensionType.OVERWORLD_ID)){
-			storage = world.getSavedData();
+		if(world.dimension().location().equals(DimensionType.OVERWORLD_EFFECTS)){
+			storage = world.getDataStorage();
 		}else{
-			storage = world.getServer().func_241755_D_().getSavedData();
+			storage = world.getServer().overworld().getDataStorage();
 		}
 		RespawnInventorySavedData data;
 		try{
-			data = storage.getOrCreate(RespawnInventorySavedData::new, ID);
+			data = storage.computeIfAbsent(RespawnInventorySavedData::new, ID);
 		}catch(NullPointerException e){
 			Crossroads.logger.error("Failed RespawnInventorySavedData get due to null DimensionSavedDataManager", e);
 			return new RespawnInventorySavedData();//Blank storage that prevents actual read/write, but avoids a crash
@@ -56,14 +56,14 @@ public class RespawnInventorySavedData extends WorldSavedData{
 	private final HashMap<UUID, ItemStack[]> savedInventories = new HashMap<>(1);
 
 	@Override
-	public void read(CompoundNBT nbt){
+	public void load(CompoundNBT nbt){
 		savedInventories.clear();
 		int i = 0;
 		while(nbt.contains("key_low_" + i)){
 			UUID id = new UUID(nbt.getLong("key_high_" + i), nbt.getLong("key_low_" + i));
 			ItemStack[] hotbar = new ItemStack[10];
 			for(int j = 0; j < hotbar.length; j++){
-				hotbar[j] = ItemStack.read(nbt.getCompound("item_" + i + "_" + j));
+				hotbar[j] = ItemStack.of(nbt.getCompound("item_" + i + "_" + j));
 			}
 			savedInventories.put(id, hotbar);
 			i++;
@@ -71,14 +71,14 @@ public class RespawnInventorySavedData extends WorldSavedData{
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
+	public CompoundNBT save(CompoundNBT nbt){
 		int i = 0;
 		for(Map.Entry<UUID, ItemStack[]> entry : savedInventories.entrySet()){
 			nbt.putLong("key_high_" + i, entry.getKey().getMostSignificantBits());
 			nbt.putLong("key_low_" + i, entry.getKey().getLeastSignificantBits());
 			ItemStack[] value = entry.getValue();
 			for(int j = 0; j < value.length; j++){
-				nbt.put("item_" + i + "_" + j, value[j].write(new CompoundNBT()));
+				nbt.put("item_" + i + "_" + j, value[j].save(new CompoundNBT()));
 			}
 			i++;
 		}

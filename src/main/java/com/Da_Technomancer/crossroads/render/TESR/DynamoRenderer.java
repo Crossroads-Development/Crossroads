@@ -33,16 +33,16 @@ public class DynamoRenderer extends TileEntityRenderer<ModuleTE>{
 			return;
 		}
 
-		Direction facing = dynamo.getBlockState().get(CRProperties.HORIZ_FACING);
+		Direction facing = dynamo.getBlockState().getValue(CRProperties.HORIZ_FACING);
 		LazyOptional<IAxleHandler> axle = dynamo.getCapability(Capabilities.AXLE_CAPABILITY, null);
 		if(!axle.isPresent()){
 			return;
 		}
 
 		matrix.translate(0.5D, 0.5D, 0.5D);
-		matrix.rotate(Vector3f.YP.rotationDegrees(270F - facing.getHorizontalAngle()));
-		matrix.rotate(Vector3f.ZP.rotationDegrees(90));
-		matrix.rotate(Vector3f.YP.rotationDegrees(-facing.getAxisDirection().getOffset() * axle.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
+		matrix.mulPose(Vector3f.YP.rotationDegrees(270F - facing.toYRot()));
+		matrix.mulPose(Vector3f.ZP.rotationDegrees(90));
+		matrix.mulPose(Vector3f.YP.rotationDegrees(-facing.getAxisDirection().getStep() * axle.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
 		CRModels.drawAxle(matrix, buffer, combinedLight, GearFactory.findMaterial("iron").getColor());
 
 		matrix.translate(0, 0.45626D, 0);
@@ -53,6 +53,6 @@ public class DynamoRenderer extends TileEntityRenderer<ModuleTE>{
 
 		//Renders the core of the gear, leaving only the prongs
 		matrix.scale(2F * lHalf, 1, 2F * lHalf);
-		CRModels.draw8Core(buffer.getBuffer(RenderType.getSolid()), matrix, CRRenderUtil.convertColor(GearFactory.findMaterial("copper").getColor()), combinedLight, sprite);
+		CRModels.draw8Core(buffer.getBuffer(RenderType.solid()), matrix, CRRenderUtil.convertColor(GearFactory.findMaterial("copper").getColor()), combinedLight, sprite);
 	}
 }

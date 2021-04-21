@@ -102,7 +102,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.BooleanValue cageMeterOverlay;
 	public static ForgeConfigSpec.DoubleValue beamRaytraceStep;
 
-	private static final ITag<Block> destroyBlacklist = BlockTags.makeWrapperTag(Crossroads.MODID + ":destroy_blacklist");
+	private static final ITag<Block> destroyBlacklist = BlockTags.bind(Crossroads.MODID + ":destroy_blacklist");
 
 	private static ForgeConfigSpec clientSpec;
 	private static ForgeConfigSpec serverSpec;

@@ -55,7 +55,7 @@ public class GatewaySavedData extends WorldSavedData{
 		EnumBeamAlignments[] address = new EnumBeamAlignments[4];
 		GatewayAddress reserved = getReservedAddress(w);
 		GatewayAddress gateAdd;
-		Random rand = new Random(pos.toLong());//We use the position as a seed, so that if a controller is broken and replaced/reformed at the same spot, it will have the same address unless it is already taken
+		Random rand = new Random(pos.asLong());//We use the position as a seed, so that if a controller is broken and replaced/reformed at the same spot, it will have the same address unless it is already taken
 		do{
 			for(int i = 0; i < 4; i++){
 				address[i] = GatewayAddress.getLegalEntry(rand.nextInt(GatewayAddress.LEGAL_VALS.length));
@@ -65,7 +65,7 @@ public class GatewaySavedData extends WorldSavedData{
 		
 		//Register this new address in the addressBook
 		data.addressBook.put(gateAdd, new GatewayAddress.Location(pos, w));
-		data.markDirty();
+		data.setDirty();
 
 		return gateAdd;
 	}
@@ -79,7 +79,7 @@ public class GatewaySavedData extends WorldSavedData{
 		if(address != null){
 			GatewaySavedData data = get(w);
 			data.addressBook.remove(address);
-			data.markDirty();
+			data.setDirty();
 		}
 	}
 
@@ -99,14 +99,14 @@ public class GatewaySavedData extends WorldSavedData{
 		//We want all dimensions to share the same saved data,
 		//So we always reference the overworld instance
 		DimensionSavedDataManager storage;
-		if(world.getDimensionKey().getLocation().equals(DimensionType.OVERWORLD_ID)){
-			storage = world.getSavedData();
+		if(world.dimension().location().equals(DimensionType.OVERWORLD_EFFECTS)){
+			storage = world.getDataStorage();
 		}else{
-			storage = world.getServer().func_241755_D_().getSavedData();//MCP note: getOverworld
+			storage = world.getServer().overworld().getDataStorage();//MCP note: getOverworld
 		}
 		GatewaySavedData data;
 		try{
-			data = storage.getOrCreate(GatewaySavedData::new, ID);
+			data = storage.computeIfAbsent(GatewaySavedData::new, ID);
 		}catch(NullPointerException e){
 			Crossroads.logger.error("Failed GatewaySavedData get due to null DimensionSavedDataManager", e);
 			return new GatewaySavedData();//Blank storage that prevents actual read/write, but avoids a crash
@@ -123,7 +123,7 @@ public class GatewaySavedData extends WorldSavedData{
 	}
 
 	@Override
-	public void read(CompoundNBT nbt){
+	public void load(CompoundNBT nbt){
 		addressBook.clear();
 		int i = 0;
 		while(nbt.contains("key_" + i)){
@@ -134,11 +134,11 @@ public class GatewaySavedData extends WorldSavedData{
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
+	public CompoundNBT save(CompoundNBT nbt){
 		int i = 0;
 		for(Map.Entry<GatewayAddress, GatewayAddress.Location> entry : addressBook.entrySet()){
 			nbt.putInt("key_" + i, entry.getKey().serialize());
-			nbt.putLong("pos_" + i, entry.getValue().pos.toLong());
+			nbt.putLong("pos_" + i, entry.getValue().pos.asLong());
 			nbt.putString("dim_" + i, entry.getValue().dim.toString());
 			i++;
 		}

@@ -52,7 +52,7 @@ public class HeatReservoirTileEntity extends ModuleTE{
 		public void addHeat(double heat){
 			init();
 			temp += heat * 0.005D;
-			markDirty();
+			setChanged();
 		}
 	}
 }

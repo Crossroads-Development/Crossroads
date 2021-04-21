@@ -20,12 +20,12 @@ public class ReagentFilterScreen extends TileEntityGUI<ReagentFilterContainer, R
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
-		super.drawGuiContainerBackgroundLayer(matrix, partialTicks, mouseX, mouseY);
+	protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+		super.renderBg(matrix, partialTicks, mouseX, mouseY);
 
 		RenderSystem.color4f(1, 1, 1, 1);
-		Minecraft.getInstance().getTextureManager().bindTexture(GUI_TEXTURES);
+		Minecraft.getInstance().getTextureManager().bind(GUI_TEXTURES);
 
-		blit(matrix, guiLeft, guiTop, 0, 0, xSize, ySize);
+		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 	}
 }

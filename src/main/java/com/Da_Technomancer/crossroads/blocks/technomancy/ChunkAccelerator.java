@@ -27,7 +27,7 @@ import java.util.List;
 
 public class ChunkAccelerator extends ContainerBlock{
 
-	private static final VoxelShape SHAPE = VoxelShapes.or(makeCuboidShape(0, 0, 0, 16, 2, 16), makeCuboidShape(0, 14, 0, 16, 16, 16), makeCuboidShape(2, 2, 2, 14, 14, 14));
+	private static final VoxelShape SHAPE = VoxelShapes.or(box(0, 0, 0, 16, 2, 16), box(0, 14, 0, 16, 16, 16), box(2, 2, 2, 14, 14, 14));
 
 	public ChunkAccelerator(){
 		super(CRBlocks.getMetalProperty());
@@ -38,10 +38,10 @@ public class ChunkAccelerator extends ContainerBlock{
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		ItemStack held = playerIn.getHeldItem(hand);
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		ItemStack held = playerIn.getItemInHand(hand);
 		//Linking with a linking tool
-		if(FluxUtil.handleFluxLinking(worldIn, pos, held, playerIn).isSuccess()){
+		if(FluxUtil.handleFluxLinking(worldIn, pos, held, playerIn).shouldSwing()){
 			return ActionResultType.SUCCESS;
 		}
 		return ActionResultType.PASS;
@@ -53,17 +53,17 @@ public class ChunkAccelerator extends ContainerBlock{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new ChunkAcceleratorTileEntity();
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.time_accel_chunk.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.time_accel_chunk.beam"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.time_accel_chunk.flux"));

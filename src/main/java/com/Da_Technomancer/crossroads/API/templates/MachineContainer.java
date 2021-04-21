@@ -20,18 +20,18 @@ public abstract class MachineContainer<U extends InventoryTE> extends TileEntity
 	public MachineContainer(ContainerType<? extends MachineContainer> type, int windowId, PlayerInventory playerInv, PacketBuffer data){
 		super(type, windowId, playerInv, data);
 
-		boolean remote = te.getWorld().isRemote;
+		boolean remote = te.getLevel().isClientSide;
 		//Track rotary info for UI
 		if(te.useRotary()){
 			rotRef = new IntDeferredRef(te::getUISpeed, remote);
-			trackInt(rotRef);
+			addDataSlot(rotRef);
 		}else{
 			rotRef = null;
 		}
 		//Track heat info for UI
 		if(te.useHeat()){
 			heatRef = new IntDeferredRef(te::getUITemp, remote);
-			trackInt(heatRef);
+			addDataSlot(heatRef);
 		}else{
 			heatRef = null;
 		}
@@ -42,8 +42,8 @@ public abstract class MachineContainer<U extends InventoryTE> extends TileEntity
 			FluidSlotManager manager = te.fluidManagers[i];
 			fluidManagerRefs[i][0] = new IntDeferredRef(manager::getFluidId, remote);
 			fluidManagerRefs[i][1] = new IntDeferredRef(manager::getFluidQty, remote);
-			trackInt(fluidManagerRefs[i][0]);
-			trackInt(fluidManagerRefs[i][1]);
+			addDataSlot(fluidManagerRefs[i][0]);
+			addDataSlot(fluidManagerRefs[i][1]);
 		}
 	}
 
@@ -66,20 +66,20 @@ public abstract class MachineContainer<U extends InventoryTE> extends TileEntity
 	}
 
 	@Override
-	public void onContainerClosed(PlayerEntity playerIn){
-		super.onContainerClosed(playerIn);
+	public void removed(PlayerEntity playerIn){
+		super.removed(playerIn);
 
-		if(!te.getWorld().isRemote){
+		if(!te.getLevel().isClientSide){
 			if(playerIn.isAlive() && !(playerIn instanceof ServerPlayerEntity && ((ServerPlayerEntity) playerIn).hasDisconnected())){
-				for(Slot s : inventorySlots){
-					if(s.inventory instanceof FluidSlotManager.FakeInventory){
-						playerIn.inventory.placeItemBackInInventory(te.getWorld(), s.getStack());
+				for(Slot s : slots){
+					if(s.container instanceof FluidSlotManager.FakeInventory){
+						playerIn.inventory.placeItemBackInInventory(te.getLevel(), s.getItem());
 					}
 				}
 			}else{
-				for(Slot s : inventorySlots){
-					if(s.inventory instanceof FluidSlotManager.FakeInventory){
-						playerIn.dropItem(s.getStack(), false);
+				for(Slot s : slots){
+					if(s.container instanceof FluidSlotManager.FakeInventory){
+						playerIn.drop(s.getItem(), false);
 					}
 				}
 			}

@@ -35,13 +35,13 @@ public class EnergizeEffect extends BeamEffect{
 					BlockState state = worldIn.getBlockState(pos);
 					if(state.getBlock().isAir(state, worldIn, pos)){
 						//Set fires
-						worldIn.setBlockState(pos, Blocks.FIRE.getDefaultState());
+						worldIn.setBlockAndUpdate(pos, Blocks.FIRE.defaultBlockState());
 					}else if(dir != null){
 						//Set a fire w/ offset
-						BlockPos offsetPos = pos.offset(dir);
+						BlockPos offsetPos = pos.relative(dir);
 						state = worldIn.getBlockState(offsetPos);
 						if(state.getBlock().isAir(state, worldIn, offsetPos)){
-							worldIn.setBlockState(offsetPos, Blocks.FIRE.getDefaultState());
+							worldIn.setBlockAndUpdate(offsetPos, Blocks.FIRE.defaultBlockState());
 						}
 					}
 				}
@@ -51,7 +51,7 @@ public class EnergizeEffect extends BeamEffect{
 
 	@Nullable
 	private static IHeatHandler getHitHandler(World w, BlockPos pos, Direction side){
-		TileEntity te = w.getTileEntity(pos);
+		TileEntity te = w.getBlockEntity(pos);
 		if(te == null){
 			return null;
 		}

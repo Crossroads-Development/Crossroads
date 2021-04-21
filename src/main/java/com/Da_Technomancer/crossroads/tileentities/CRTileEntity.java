@@ -128,7 +128,7 @@ public class CRTileEntity{
 	}
 
 	private static void register(Supplier<? extends TileEntity> cons, String id, IForgeRegistry<TileEntityType<?>> reg, Block... blocks){
-		TileEntityType<? extends TileEntity> teType = TileEntityType.Builder.create(cons, blocks).build(DSL.emptyPartType());
+		TileEntityType<? extends TileEntity> teType = TileEntityType.Builder.of(cons, blocks).build(DSL.emptyPartType());
 		teType.setRegistryName(new ResourceLocation(Crossroads.MODID, id));
 		reg.register(teType);
 	}

@@ -38,14 +38,14 @@ public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntit
 
 		int[] bladeCols = te.bladeColors;
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.WINDMILL_TEXTURE);
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getCutout());
-		Direction facing = state.get(CRProperties.HORIZ_FACING);
-		int light = CRRenderUtil.getLightAtPos(te.getWorld(), te.getPos().offset(facing));//Get light from the block in front
+		IVertexBuilder builder = buffer.getBuffer(RenderType.cutout());
+		Direction facing = state.getValue(CRProperties.HORIZ_FACING);
+		int light = CRRenderUtil.getLightAtPos(te.getLevel(), te.getBlockPos().relative(facing));//Get light from the block in front
 
-		matrix.push();
+		matrix.pushPose();
 		matrix.translate(.5F, .5F, .5F);
-		matrix.rotate(Vector3f.YP.rotationDegrees(-facing.getHorizontalAngle()));
-		matrix.rotate(Vector3f.ZP.rotationDegrees((float) RotaryUtil.getCCWSign(facing) * axle.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
+		matrix.mulPose(Vector3f.YP.rotationDegrees(-facing.toYRot()));
+		matrix.mulPose(Vector3f.ZP.rotationDegrees((float) RotaryUtil.getCCWSign(facing) * axle.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
 
 		final float scaleConst = 6F / 5F;
 
@@ -66,10 +66,10 @@ public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntit
 		final float bladeVEdge = 8.075F;
 
 		//Center piece (wood)
-		CRRenderUtil.addVertexBlock(builder, matrix, -bladeLenSt, -bladeLenSt, zEnWood, sprite.getMinU(), sprite.getInterpolatedV(4), 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, bladeLenSt, -bladeLenSt, zEnWood, sprite.getMinU(), sprite.getInterpolatedV(8), 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, bladeLenSt, bladeLenSt, zEnWood, sprite.getInterpolatedU(4), sprite.getInterpolatedV(8), 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -bladeLenSt, bladeLenSt, zEnWood, sprite.getInterpolatedU(4), sprite.getInterpolatedV(4), 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -bladeLenSt, -bladeLenSt, zEnWood, sprite.getU0(), sprite.getV(4), 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, bladeLenSt, -bladeLenSt, zEnWood, sprite.getU0(), sprite.getV(8), 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, bladeLenSt, bladeLenSt, zEnWood, sprite.getU(4), sprite.getV(8), 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -bladeLenSt, bladeLenSt, zEnWood, sprite.getU(4), sprite.getV(4), 0, 0, 1, light);
 
 //		//Center piece back (wood)
 //		CRRenderUtil.addVertexBlock(builder, matrix, -bladeLenSt, -bladeLenSt, zSt, sprite.getMinU(), sprite.getInterpolatedV(4), 0, 0, 1, light);
@@ -79,7 +79,7 @@ public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntit
 
 		//Blades
 		for(int i = 0; i < 4; i++){
-			float[] rawCol = DyeColor.values()[bladeCols[i]].getColorComponentValues();
+			float[] rawCol = DyeColor.values()[bladeCols[i]].getTextureDiffuseColors();
 			int[] col = {(int) (rawCol[0] * 255F), (int) (rawCol[1] * 255F), (int) (rawCol[2] * 255F), 255};
 
 //			//Center cap (wood)
@@ -95,68 +95,68 @@ public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntit
 //			CRRenderUtil.addVertexBlock(builder, matrix, 0.25F, 0.25F, 0.5F, sprite.getMinU(), sprite.getInterpolatedV(8 + woolTextVOffset), 0, 1, 0, light, col);
 
 			//Wood spoke
-			CRRenderUtil.addVertexBlock(builder, matrix, -spokeRad, bladeLenSt, zEnWood, sprite.getMinU(), sprite.getInterpolatedV(spokeVSt), 0, 0, 1, light);
-			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenSt, zEnWood, sprite.getMinU(), sprite.getInterpolatedV(spokeVEn), 0, 0, 1, light);
-			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenEn, zEnWood, sprite.getInterpolatedU(bladeUEn), sprite.getInterpolatedV(spokeVEn), 0, 0, 1, light);
-			CRRenderUtil.addVertexBlock(builder, matrix, -spokeRad, bladeLenEn, zEnWood, sprite.getInterpolatedU(bladeUEn), sprite.getInterpolatedV(spokeVSt), 0, 0, 1, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, -spokeRad, bladeLenSt, zEnWood, sprite.getU0(), sprite.getV(spokeVSt), 0, 0, 1, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenSt, zEnWood, sprite.getU0(), sprite.getV(spokeVEn), 0, 0, 1, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenEn, zEnWood, sprite.getU(bladeUEn), sprite.getV(spokeVEn), 0, 0, 1, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, -spokeRad, bladeLenEn, zEnWood, sprite.getU(bladeUEn), sprite.getV(spokeVSt), 0, 0, 1, light);
 
 			//Wood spoke side (left)
-			CRRenderUtil.addVertexBlock(builder, matrix, -spokeRad, 0, zSt, sprite.getMinU(), sprite.getInterpolatedV(spokeVEn), -1, 0, 0, light);
-			CRRenderUtil.addVertexBlock(builder, matrix, -spokeRad, 0, zEnWood, sprite.getMinU(), sprite.getInterpolatedV(spokeVSt), -1, 0, 0, light);
-			CRRenderUtil.addVertexBlock(builder, matrix, -spokeRad, bladeLenEn, zEnWood, sprite.getMaxU(), sprite.getInterpolatedV(spokeVSt), -1, 0, 0, light);
-			CRRenderUtil.addVertexBlock(builder, matrix, -spokeRad, bladeLenEn, zSt, sprite.getMaxU(), sprite.getInterpolatedV(spokeVEn), -1, 0, 0, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, -spokeRad, 0, zSt, sprite.getU0(), sprite.getV(spokeVEn), -1, 0, 0, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, -spokeRad, 0, zEnWood, sprite.getU0(), sprite.getV(spokeVSt), -1, 0, 0, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, -spokeRad, bladeLenEn, zEnWood, sprite.getU1(), sprite.getV(spokeVSt), -1, 0, 0, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, -spokeRad, bladeLenEn, zSt, sprite.getU1(), sprite.getV(spokeVEn), -1, 0, 0, light);
 
 			//Wood spoke side (right)
-			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, 0, zSt, sprite.getMinU(), sprite.getInterpolatedV(spokeVEn), 1, 0, 0, light);
-			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenEn, zSt, sprite.getMaxU(), sprite.getInterpolatedV(spokeVEn), 1, 0, 0, light);
-			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenEn, zEnWood, sprite.getMaxU(), sprite.getInterpolatedV(spokeVSt), 1, 0, 0, light);
-			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, 0, zEnWood, sprite.getMinU(), sprite.getInterpolatedV(spokeVSt), 1, 0, 0, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, 0, zSt, sprite.getU0(), sprite.getV(spokeVEn), 1, 0, 0, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenEn, zSt, sprite.getU1(), sprite.getV(spokeVEn), 1, 0, 0, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenEn, zEnWood, sprite.getU1(), sprite.getV(spokeVSt), 1, 0, 0, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, 0, zEnWood, sprite.getU0(), sprite.getV(spokeVSt), 1, 0, 0, light);
 
 			//Wood spoke cap
-			CRRenderUtil.addVertexBlock(builder, matrix, -spokeRad, bladeLenEn, zSt, sprite.getMinU(), sprite.getInterpolatedV(spokeVSt), 0, 1, 0, light);
-			CRRenderUtil.addVertexBlock(builder, matrix, -spokeRad, bladeLenEn, zEnWood, sprite.getInterpolatedU(spokeUEdge), sprite.getInterpolatedV(spokeVSt), 0, 1, 0, light);
-			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenEn, zEnWood, sprite.getInterpolatedU(spokeUEdge), sprite.getInterpolatedV(spokeVEn), 0, 1, 0, light);
-			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenEn, zSt, sprite.getMinU(), sprite.getInterpolatedV(spokeVEn), 0, 1, 0, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, -spokeRad, bladeLenEn, zSt, sprite.getU0(), sprite.getV(spokeVSt), 0, 1, 0, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, -spokeRad, bladeLenEn, zEnWood, sprite.getU(spokeUEdge), sprite.getV(spokeVSt), 0, 1, 0, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenEn, zEnWood, sprite.getU(spokeUEdge), sprite.getV(spokeVEn), 0, 1, 0, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenEn, zSt, sprite.getU0(), sprite.getV(spokeVEn), 0, 1, 0, light);
 
 			//Wool panel
-			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenSt, zEnWool, sprite.getMinU(), sprite.getInterpolatedV(bladeVSt), 0, 0, 1, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, bladeWid, bladeLenSt, zEnWool, sprite.getMinU(), sprite.getInterpolatedV(bladeVEn), 0, 0, 1, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, bladeWid, bladeLenEn, zEnWool, sprite.getInterpolatedU(bladeUEn), sprite.getInterpolatedV(bladeVEn), 0, 0, 1, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenEn, zEnWool, sprite.getInterpolatedU(bladeUEn), sprite.getInterpolatedV(bladeVSt), 0, 0, 1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenSt, zEnWool, sprite.getU0(), sprite.getV(bladeVSt), 0, 0, 1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, bladeWid, bladeLenSt, zEnWool, sprite.getU0(), sprite.getV(bladeVEn), 0, 0, 1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, bladeWid, bladeLenEn, zEnWool, sprite.getU(bladeUEn), sprite.getV(bladeVEn), 0, 0, 1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenEn, zEnWool, sprite.getU(bladeUEn), sprite.getV(bladeVSt), 0, 0, 1, light, col);
 
 			//Back (wood)
-			CRRenderUtil.addVertexBlock(builder, matrix, -spokeRad, bladeLenSt, zSt, sprite.getMinU(), sprite.getInterpolatedV(spokeVSt), 0, 0, 1, light);
-			CRRenderUtil.addVertexBlock(builder, matrix, -spokeRad, bladeLenEn, zSt, sprite.getInterpolatedU(bladeUEn), sprite.getInterpolatedV(spokeVSt), 0, 0, 1, light);
-			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenEn, zSt, sprite.getInterpolatedU(bladeUEn), sprite.getInterpolatedV(spokeVEn), 0, 0, 1, light);
-			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenSt, zSt, sprite.getMinU(), sprite.getInterpolatedV(spokeVEn), 0, 0, 1, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, -spokeRad, bladeLenSt, zSt, sprite.getU0(), sprite.getV(spokeVSt), 0, 0, 1, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, -spokeRad, bladeLenEn, zSt, sprite.getU(bladeUEn), sprite.getV(spokeVSt), 0, 0, 1, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenEn, zSt, sprite.getU(bladeUEn), sprite.getV(spokeVEn), 0, 0, 1, light);
+			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenSt, zSt, sprite.getU0(), sprite.getV(spokeVEn), 0, 0, 1, light);
 
 			//Back (wool)
-			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenSt, zSt, sprite.getMinU(), sprite.getInterpolatedV(bladeVSt), 0, 0, 1, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenEn, zSt, sprite.getInterpolatedU(bladeUEn), sprite.getInterpolatedV(bladeVSt), 0, 0, 1, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, bladeWid, bladeLenEn, zSt, sprite.getInterpolatedU(bladeUEn), sprite.getInterpolatedV(bladeVEn), 0, 0, 1, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, bladeWid, bladeLenSt, zSt, sprite.getMinU(), sprite.getInterpolatedV(bladeVEn), 0, 0, 1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenSt, zSt, sprite.getU0(), sprite.getV(bladeVSt), 0, 0, 1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenEn, zSt, sprite.getU(bladeUEn), sprite.getV(bladeVSt), 0, 0, 1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, bladeWid, bladeLenEn, zSt, sprite.getU(bladeUEn), sprite.getV(bladeVEn), 0, 0, 1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, bladeWid, bladeLenSt, zSt, sprite.getU0(), sprite.getV(bladeVEn), 0, 0, 1, light, col);
 
 			//Wool blade (side)
-			CRRenderUtil.addVertexBlock(builder, matrix, bladeWid, bladeLenSt, zSt, sprite.getMinU(), sprite.getInterpolatedV(bladeVSt), 1, 0, 0, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, bladeWid, bladeLenEn, zSt, sprite.getInterpolatedU(bladeUEn), sprite.getInterpolatedV(bladeVSt), 1, 0, 0, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, bladeWid, bladeLenEn, zEnWool, sprite.getInterpolatedU(bladeUEn), sprite.getInterpolatedV(bladeVEdge), 1, 0, 0, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, bladeWid, bladeLenSt, zEnWool, sprite.getMinU(), sprite.getInterpolatedV(bladeVEdge), 1, 0, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, bladeWid, bladeLenSt, zSt, sprite.getU0(), sprite.getV(bladeVSt), 1, 0, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, bladeWid, bladeLenEn, zSt, sprite.getU(bladeUEn), sprite.getV(bladeVSt), 1, 0, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, bladeWid, bladeLenEn, zEnWool, sprite.getU(bladeUEn), sprite.getV(bladeVEdge), 1, 0, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, bladeWid, bladeLenSt, zEnWool, sprite.getU0(), sprite.getV(bladeVEdge), 1, 0, 0, light, col);
 
 			//Wool blade end
-			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenEn, zSt, sprite.getMinU(), sprite.getInterpolatedV(bladeVSt), 0, 1, 0, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenEn, zEnWool, sprite.getInterpolatedU(spokeUEdge), sprite.getInterpolatedV(bladeVSt), 0, 1, 0, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, bladeWid, bladeLenEn, zEnWool, sprite.getInterpolatedU(spokeUEdge), sprite.getInterpolatedV(bladeVEn), 0, 1, 0, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, bladeWid, bladeLenEn, zSt, sprite.getMinU(), sprite.getInterpolatedV(bladeVEn), 0, 1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenEn, zSt, sprite.getU0(), sprite.getV(bladeVSt), 0, 1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenEn, zEnWool, sprite.getU(spokeUEdge), sprite.getV(bladeVSt), 0, 1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, bladeWid, bladeLenEn, zEnWool, sprite.getU(spokeUEdge), sprite.getV(bladeVEn), 0, 1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, bladeWid, bladeLenEn, zSt, sprite.getU0(), sprite.getV(bladeVEn), 0, 1, 0, light, col);
 
 			//Wool blade inner end
-			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenSt, zSt, sprite.getMinU(), sprite.getInterpolatedV(bladeVSt), 0, 1, 0, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, bladeWid, bladeLenSt, zSt, sprite.getMinU(), sprite.getInterpolatedV(bladeVEn), 0, 1, 0, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, bladeWid, bladeLenSt, zEnWool, sprite.getInterpolatedU(spokeUEdge), sprite.getInterpolatedV(bladeVEn), 0, 1, 0, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenSt, zEnWool, sprite.getInterpolatedU(spokeUEdge), sprite.getInterpolatedV(bladeVSt), 0, 1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenSt, zSt, sprite.getU0(), sprite.getV(bladeVSt), 0, 1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, bladeWid, bladeLenSt, zSt, sprite.getU0(), sprite.getV(bladeVEn), 0, 1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, bladeWid, bladeLenSt, zEnWool, sprite.getU(spokeUEdge), sprite.getV(bladeVEn), 0, 1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenSt, zEnWool, sprite.getU(spokeUEdge), sprite.getV(bladeVSt), 0, 1, 0, light, col);
 
-			matrix.rotate(Vector3f.ZP.rotationDegrees(90));
+			matrix.mulPose(Vector3f.ZP.rotationDegrees(90));
 		}
 
-		matrix.pop();
+		matrix.popPose();
 	}
 }

@@ -27,22 +27,22 @@ public class MaxwellDemon extends ContainerBlock{
 		String name = "maxwell_demon";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this, new Item.Properties().group(CRItems.TAB_CROSSROADS).rarity(CRItems.BOBO_RARITY));
+		CRBlocks.blockAddQue(this, new Item.Properties().tab(CRItems.TAB_CROSSROADS).rarity(CRItems.BOBO_RARITY));
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new MaxwellDemonTileEntity();
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 	
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.maxwell_demon.top", MaxwellDemonTileEntity.MAX_TEMP, MaxwellDemonTileEntity.RATE));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.maxwell_demon.bottom", MaxwellDemonTileEntity.MIN_TEMP, MaxwellDemonTileEntity.RATE));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.maxwell_demon.quip").setStyle(MiscUtil.TT_QUIP));

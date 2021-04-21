@@ -69,17 +69,17 @@ public abstract class BeamUsingItem extends Item{
 			acted = true;
 		}
 		if(acted){
-			player.world.playSound(player, player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 4, (float) Math.random() / 4 + 0.5F);
+			player.level.playSound(player, player.blockPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 4, (float) Math.random() / 4 + 0.5F);
 			CRPackets.sendPacketToServer(new SendBeamItemToServer(settings));
 		}else{
 			//Play a sound at a slightly lower pitch
-			player.world.playSound(player, player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 4, (float) Math.random() / 4);
+			player.level.playSound(player, player.blockPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 4, (float) Math.random() / 4);
 		}
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		byte[] settings = getSetting(stack);
 		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_item.energy", settings[0], maxSetting()));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_item.potential", settings[1], maxSetting()));

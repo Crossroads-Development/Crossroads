@@ -36,7 +36,7 @@ import java.util.List;
 public class WindTurbine extends ContainerBlock implements IReadable{
 
 	public WindTurbine(){
-		super(Properties.create(Material.WOOD).hardnessAndResistance(2));
+		super(Properties.of(Material.WOOD).strength(2));
 		String name = "wind_turbine";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
@@ -44,23 +44,23 @@ public class WindTurbine extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new WindTurbineTileEntity(true);
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		ItemStack heldItem = playerIn.getHeldItem(hand);
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		ItemStack heldItem = playerIn.getItemInHand(hand);
 		if(ESConfig.isWrench(heldItem)){
-			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.with(CRProperties.HORIZ_FACING, state.get(CRProperties.HORIZ_FACING).rotateY()));
+			if(!worldIn.isClientSide){
+				worldIn.setBlockAndUpdate(pos, state.setValue(CRProperties.HORIZ_FACING, state.getValue(CRProperties.HORIZ_FACING).getClockWise()));
 				RotaryUtil.increaseMasterKey(true);
 			}
 			return ActionResultType.SUCCESS;
 		}else if(Tags.Items.DYES.contains(heldItem.getItem())){
-			TileEntity te = worldIn.getTileEntity(pos);
+			TileEntity te = worldIn.getBlockEntity(pos);
 			if(te instanceof WindTurbineTileEntity){
-				if(!worldIn.isRemote){
+				if(!worldIn.isClientSide){
 					((WindTurbineTileEntity) te).dyeBlade(heldItem);
 				}
 				return ActionResultType.SUCCESS;
@@ -70,24 +70,24 @@ public class WindTurbine extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return getDefaultState().with(CRProperties.HORIZ_FACING, context.getPlacementHorizontalFacing());
+		return defaultBlockState().setValue(CRProperties.HORIZ_FACING, context.getHorizontalDirection());
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
 		builder.add(CRProperties.HORIZ_FACING);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.wind_turbine.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.wind_turbine.power", WindTurbineTileEntity.LOW_POWER, WindTurbineTileEntity.HIGH_POWER, (WindTurbineTileEntity.LOW_POWER + WindTurbineTileEntity.HIGH_POWER) / 2D));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.wind_turbine.limits", WindTurbineTileEntity.MAX_SPEED));
@@ -97,7 +97,7 @@ public class WindTurbine extends ContainerBlock implements IReadable{
 
 	@Override
 	public float read(World world, BlockPos pos, BlockState state){
-		TileEntity te = world.getTileEntity(pos);
+		TileEntity te = world.getBlockEntity(pos);
 		if(te instanceof WindTurbineTileEntity){
 			return ((WindTurbineTileEntity) te).getRedstoneOutput();
 		}else{
@@ -106,12 +106,12 @@ public class WindTurbine extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState state){
+	public boolean hasAnalogOutputSignal(BlockState state){
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState state, World world, BlockPos pos){
+	public int getAnalogOutputSignal(BlockState state, World world, BlockPos pos){
 		return RedstoneUtil.clampToVanilla(read(world, pos, state));
 	}
 }

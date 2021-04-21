@@ -35,14 +35,14 @@ public class GatewayControllerDestinationRenderer extends TileEntityRenderer<Gat
 		boolean linked = frame.chevrons[frame.chevrons.length - 1] != null;//Whether this gateway is active and linked to another
 
 		//Define lighting based on the interior of the frame, as the frame itself is solid blocks
-		combinedLight = CRRenderUtil.getLightAtPos(frame.getWorld(), frame.getPos().down(frame.getSize() / 5));
+		combinedLight = CRRenderUtil.getLightAtPos(frame.getLevel(), frame.getBlockPos().below(frame.getSize() / 5));
 
 		//Render everything about the center of the multiblock, so we can rotate
 		matrix.translate(0.5D, 1 - radius, 0.5D);
 
 		//Rotate to align with the frame if applicable
 		if(plane == Direction.Axis.Z){
-			matrix.rotate(Vector3f.YP.rotationDegrees(90));
+			matrix.mulPose(Vector3f.YP.rotationDegrees(90));
 		}
 
 		//From this point, the frame is in the X-Y rendering plane
@@ -67,26 +67,26 @@ public class GatewayControllerDestinationRenderer extends TileEntityRenderer<Gat
 
 		//Texture UV coords
 		//Symbols are the 8 alignment icons. They are arranged in a column on the texture
-		final float symbolUSt = sprite.getMinU();
-		final float symbolUEn = sprite.getInterpolatedU(2);
+		final float symbolUSt = sprite.getU0();
+		final float symbolUEn = sprite.getU(2);
 		//Poly used for square and octagon
 		final float polyUSt = symbolUEn;
-		final float polyUEn = sprite.getInterpolatedU(12);
-		final float sqFrUSt = sprite.getInterpolatedU(4);
-		final float sqFrUEn = sprite.getInterpolatedU(10);
-		final float sqFrVSt = sprite.getMinV();
-		final float sqFrVEn = sprite.getInterpolatedV(2);
+		final float polyUEn = sprite.getU(12);
+		final float sqFrUSt = sprite.getU(4);
+		final float sqFrUEn = sprite.getU(10);
+		final float sqFrVSt = sprite.getV0();
+		final float sqFrVEn = sprite.getV(2);
 		final float sqInVSt = sqFrVEn;
-		final float sqInVEn = sprite.getInterpolatedV(4);
+		final float sqInVEn = sprite.getV(4);
 		final float sqOutVSt = sqInVEn;
-		final float sqOutVEn = sprite.getInterpolatedV(6);
-		final float portalUSt = sprite.getInterpolatedU(12);
-		final float portalUEn = sprite.getMaxU();
-		final float portalTexRad = .051F * (sprite.getMaxU() - sprite.getMinU());//half the side length of the regular octagon
+		final float sqOutVEn = sprite.getV(6);
+		final float portalUSt = sprite.getU(12);
+		final float portalUEn = sprite.getU1();
+		final float portalTexRad = .051F * (sprite.getU1() - sprite.getU0());//half the side length of the regular octagon
 		final float portalUMid1 = (portalUSt + portalUEn) / 2F - portalTexRad;
 		final float portalUMid2 = portalUMid1 + 2F * portalTexRad;
-		final float portalVSt = sprite.getInterpolatedV(4 * ((int) (frame.getWorld().getGameTime() / 5L) % 4));
-		final float portalVEn = portalVSt + (sprite.getMaxV() - sprite.getMinV()) * 0.25F;
+		final float portalVSt = sprite.getV(4 * ((int) (frame.getLevel().getGameTime() / 5L) % 4));
+		final float portalVEn = portalVSt + (sprite.getV1() - sprite.getV0()) * 0.25F;
 		final float portalVMid1 = (portalVSt + portalVEn) / 2F - portalTexRad;
 		final float portalVMid2 = portalVMid1 + 2F * portalTexRad;
 
@@ -94,10 +94,10 @@ public class GatewayControllerDestinationRenderer extends TileEntityRenderer<Gat
 		//Because I can't be bothered to math out all 32 distinct vertex positions on an octagon ring
 
 		//The outer edge of the render is aligned with the outside of the block frame. The inside is not aligned with anything
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getCutout());
+		IVertexBuilder builder = buffer.getBuffer(RenderType.cutout());
 		
 		//Fixed square ring
-		matrix.push();
+		matrix.pushPose();
 		Quaternion ringRotation = Vector3f.ZP.rotationDegrees(90);
 		for(int i = 0; i < 4; i++){
 			//Front
@@ -124,15 +124,15 @@ public class GatewayControllerDestinationRenderer extends TileEntityRenderer<Gat
 			CRRenderUtil.addVertexBlock(builder, matrix, -squareIn, squareIn, sqDepth, polyUSt, sqInVEn, 0, 1, 0, combinedLight);
 			CRRenderUtil.addVertexBlock(builder, matrix, -squareIn, squareIn, -sqDepth, polyUSt, sqInVSt, 0, 1, 0, combinedLight);
 
-			matrix.rotate(ringRotation);
+			matrix.mulPose(ringRotation);
 		}
-		matrix.pop();
+		matrix.popPose();
 
 		//Dialed icons
 		if(frame.chevrons[0] != null){
 			//Front
-			matrix.push();
-			matrix.rotate(Vector3f.ZP.rotationDegrees(45));
+			matrix.pushPose();
+			matrix.mulPose(Vector3f.ZP.rotationDegrees(45));
 
 			//Draw each symbol individually
 			Quaternion chevronRotation = Vector3f.ZP.rotationDegrees(-90);
@@ -146,14 +146,14 @@ public class GatewayControllerDestinationRenderer extends TileEntityRenderer<Gat
 				CRRenderUtil.addVertexBlock(builder, matrix, iconEdgeRad, iconDialBottom, sqDepth + zFightingOffset, symbolUEn, getIconVEn(sprite, entryId), 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT);
 				CRRenderUtil.addVertexBlock(builder, matrix, iconEdgeRad, iconDialTop, sqDepth + zFightingOffset, symbolUEn, getIconVSt(sprite, entryId), 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT);
 
-				matrix.rotate(chevronRotation);
+				matrix.mulPose(chevronRotation);
 			}
 
-			matrix.pop();
+			matrix.popPose();
 
 			//Other front
-			matrix.push();
-			matrix.rotate(Vector3f.ZP.rotationDegrees(-45));
+			matrix.pushPose();
+			matrix.mulPose(Vector3f.ZP.rotationDegrees(-45));
 
 			//Draw each symbol individually
 			for(int i = 0; i < frame.chevrons.length; i++){
@@ -167,10 +167,10 @@ public class GatewayControllerDestinationRenderer extends TileEntityRenderer<Gat
 				CRRenderUtil.addVertexBlock(builder, matrix, iconEdgeRad, iconDialBottom, -sqDepth - zFightingOffset, symbolUSt, getIconVEn(sprite, entryId), 0, 0, -1, CRRenderUtil.BRIGHT_LIGHT);
 				CRRenderUtil.addVertexBlock(builder, matrix, -iconEdgeRad, iconDialBottom, -sqDepth - zFightingOffset, symbolUEn, getIconVEn(sprite, entryId), 0, 0, -1, CRRenderUtil.BRIGHT_LIGHT);
 
-				matrix.rotate(ringRotation);
+				matrix.mulPose(ringRotation);
 			}
 
-			matrix.pop();
+			matrix.popPose();
 		}
 
 		//Portal, rendered with translucent type
@@ -182,7 +182,7 @@ public class GatewayControllerDestinationRenderer extends TileEntityRenderer<Gat
 			int[] col = {255, 255, 255, 200};
 
 			//Switch builder to translucent
-			builder = buffer.getBuffer(RenderType.getTranslucentNoCrumbling());
+			builder = buffer.getBuffer(RenderType.translucentNoCrumbling());
 			
 			//Vertices are commented with the number of the vertex on the final octagon
 
@@ -221,15 +221,15 @@ public class GatewayControllerDestinationRenderer extends TileEntityRenderer<Gat
 	}
 
 	private float getIconVSt(TextureAtlasSprite sprite, int index){
-		return sprite.getInterpolatedV(index * 2);
+		return sprite.getV(index * 2);
 	}
 
 	private float getIconVEn(TextureAtlasSprite sprite, int index){
-		return sprite.getInterpolatedV((index + 1) * 2);
+		return sprite.getV((index + 1) * 2);
 	}
 
 	@Override
-	public boolean isGlobalRenderer(GatewayControllerDestinationTileEntity te){
+	public boolean shouldRenderOffScreen(GatewayControllerDestinationTileEntity te){
 		return te.isActive();
 	}
 }

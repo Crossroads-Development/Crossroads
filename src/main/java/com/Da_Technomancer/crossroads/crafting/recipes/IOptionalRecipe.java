@@ -7,8 +7,8 @@ import net.minecraft.item.crafting.IRecipe;
 public interface IOptionalRecipe<T extends IInventory> extends IRecipe<T>{
 
 	@Override
-	default ItemStack getCraftingResult(T inv){
-		return getRecipeOutput().copy();
+	default ItemStack assemble(T inv){
+		return getResultItem().copy();
 	}
 
 	/**

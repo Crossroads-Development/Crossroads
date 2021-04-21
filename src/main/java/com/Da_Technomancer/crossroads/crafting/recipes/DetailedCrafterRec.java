@@ -35,7 +35,7 @@ public class DetailedCrafterRec extends ShapedRecipe implements IOptionalRecipe<
 	}
 
 	@Override
-	public ItemStack getIcon(){
+	public ItemStack getToastSymbol(){
 		return new ItemStack(CRBlocks.detailedCrafter);
 	}
 
@@ -62,12 +62,12 @@ public class DetailedCrafterRec extends ShapedRecipe implements IOptionalRecipe<
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>>  implements IRecipeSerializer<DetailedCrafterRec> {
 
 		@Override
-		public DetailedCrafterRec read(ResourceLocation recipeId, JsonObject json){
+		public DetailedCrafterRec fromJson(ResourceLocation recipeId, JsonObject json){
 			if(!CraftingUtil.isActiveJSON(json)){
 				return new DetailedCrafterRec(recipeId, "", EnumPath.ALCHEMY, false, 0, 0, NonNullList.create(), ItemStack.EMPTY);
 			}
 
-			EnumPath path = EnumPath.fromName(JSONUtils.getString(json, "path"));
+			EnumPath path = EnumPath.fromName(JSONUtils.getAsString(json, "path"));
 			if(path == null){
 				throw new JsonParseException("Invalid path/no path set");
 			}
@@ -77,25 +77,25 @@ public class DetailedCrafterRec extends ShapedRecipe implements IOptionalRecipe<
 			//Path is specified as the name of the path with the key "path"
 			//And only shaped recipes are supported. No shapeless recipes currently <- this could change
 
-			ShapedRecipe templateRec = IRecipeSerializer.CRAFTING_SHAPED.read(recipeId, json);
-			return new DetailedCrafterRec(recipeId, templateRec.getGroup(), path, true, templateRec.getRecipeWidth(), templateRec.getRecipeHeight(), templateRec.getIngredients(), templateRec.getRecipeOutput());
+			ShapedRecipe templateRec = IRecipeSerializer.SHAPED_RECIPE.fromJson(recipeId, json);
+			return new DetailedCrafterRec(recipeId, templateRec.getGroup(), path, true, templateRec.getRecipeWidth(), templateRec.getRecipeHeight(), templateRec.getIngredients(), templateRec.getResultItem());
 		}
 
 		@Override
-		public DetailedCrafterRec read(ResourceLocation recipeId, PacketBuffer buffer){
+		public DetailedCrafterRec fromNetwork(ResourceLocation recipeId, PacketBuffer buffer){
 			if(!buffer.readBoolean()){
 				return new DetailedCrafterRec(recipeId, "", EnumPath.ALCHEMY, false, 0, 0, NonNullList.create(), ItemStack.EMPTY);
 			}
 			EnumPath path = EnumPath.fromIndex(buffer.readByte());
-			ShapedRecipe templateRec = IRecipeSerializer.CRAFTING_SHAPED.read(recipeId, buffer);
-			return new DetailedCrafterRec(recipeId, templateRec.getGroup(), path, true, templateRec.getRecipeWidth(), templateRec.getRecipeHeight(), templateRec.getIngredients(), templateRec.getRecipeOutput());
+			ShapedRecipe templateRec = IRecipeSerializer.SHAPED_RECIPE.fromNetwork(recipeId, buffer);
+			return new DetailedCrafterRec(recipeId, templateRec.getGroup(), path, true, templateRec.getRecipeWidth(), templateRec.getRecipeHeight(), templateRec.getIngredients(), templateRec.getResultItem());
 		}
 
 		@Override
-		public void write(PacketBuffer buffer, DetailedCrafterRec recipe){
+		public void toNetwork(PacketBuffer buffer, DetailedCrafterRec recipe){
 			buffer.writeBoolean(recipe.active);
 			buffer.writeByte(recipe.path.getIndex());
-			IRecipeSerializer.CRAFTING_SHAPED.write(buffer, recipe);
+			IRecipeSerializer.SHAPED_RECIPE.toNetwork(buffer, recipe);
 		}
 	}
 }

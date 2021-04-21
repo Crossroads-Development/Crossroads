@@ -31,7 +31,7 @@ public class EnchantEffect extends BeamEffect{
 	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, World worldIn, BlockPos pos, @Nullable Direction dir){
 		if(!performTransmute(align, voi, power, worldIn, pos)){
 			int range = (int) Math.sqrt(power) / 2;
-			ArrayList<ItemEntity> items = (ArrayList<ItemEntity>) worldIn.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos.add(-range, -range, -range), pos.add(range + 1, range + 1, range + 1)), EntityPredicates.IS_ALIVE);
+			ArrayList<ItemEntity> items = (ArrayList<ItemEntity>) worldIn.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(pos.offset(-range, -range, -range), pos.offset(range + 1, range + 1, range + 1)), EntityPredicates.ENTITY_STILL_ALIVE);
 			if(voi){
 				if(items.size() != 0){
 					for(ItemEntity ent : items){
@@ -54,7 +54,7 @@ public class EnchantEffect extends BeamEffect{
 							continue;
 						}
 
-						List<EnchantmentData> ench = EnchantmentHelper.buildEnchantmentList(RAND, stack, Math.min(power, 45), power >= 64);
+						List<EnchantmentData> ench = EnchantmentHelper.selectEnchantment(RAND, stack, Math.min(power, 45), power >= 64);
 
 						if(ench.isEmpty()){
 							//Non-enchantable items should be skipped
@@ -67,8 +67,8 @@ public class EnchantEffect extends BeamEffect{
 						if(CRConfig.enchantDestruction.get() && RAND.nextInt(100) < power){
 							//Destroy the item
 							created = ItemStack.EMPTY;
-							worldIn.addParticle(ParticleTypes.SMOKE, ent.getPosX(), ent.getPosY(), ent.getPosZ(), 0, 0, 0);
-							worldIn.playSound(null, ent.getPosX(), ent.getPosY(), ent.getPosZ(), SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 1, 1);
+							worldIn.addParticle(ParticleTypes.SMOKE, ent.getX(), ent.getY(), ent.getZ(), 0, 0, 0);
+							worldIn.playSound(null, ent.getX(), ent.getY(), ent.getZ(), SoundEvents.REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 1, 1);
 						}else{
 							if(stack.getItem() == Items.BOOK){
 								created = new ItemStack(Items.ENCHANTED_BOOK, 1);
@@ -84,12 +84,12 @@ public class EnchantEffect extends BeamEffect{
 								if(created.getItem() == Items.ENCHANTED_BOOK){
 									EnchantedBookItem.addEnchantment(created, datum);
 								}else{
-									created.addEnchantment(datum.enchantment, datum.enchantmentLevel);
+									created.enchant(datum.enchantment, datum.level);
 								}
 							}
 						}
 
-						InventoryHelper.spawnItemStack(worldIn, ent.getPosX(), ent.getPosY(), ent.getPosZ(), created);
+						InventoryHelper.dropItemStack(worldIn, ent.getX(), ent.getY(), ent.getZ(), created);
 						ent.getItem().shrink(1);
 						if(ent.getItem().isEmpty()){
 							ent.remove();

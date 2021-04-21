@@ -16,13 +16,13 @@ public class Phial extends AbstractGlassware{
 	}
 
 	@Override
-	public ActionResultType onItemUse(ItemUseContext context){
-		ReagentMap contents = getReagants(context.getItem());
+	public ActionResultType useOn(ItemUseContext context){
+		ReagentMap contents = getReagants(context.getItemInHand());
 		if(contents.getTotalQty() != 0){
-			if(!context.getWorld().isRemote){
-				AlchemyUtil.releaseChemical(context.getWorld(), context.getPos(), contents);
+			if(!context.getLevel().isClientSide){
+				AlchemyUtil.releaseChemical(context.getLevel(), context.getClickedPos(), contents);
 				if(context.getPlayer() == null || !context.getPlayer().isCreative()){
-					setReagents(context.getItem(), new ReagentMap());
+					setReagents(context.getItemInHand(), new ReagentMap());
 				}
 			}
 			return ActionResultType.SUCCESS;

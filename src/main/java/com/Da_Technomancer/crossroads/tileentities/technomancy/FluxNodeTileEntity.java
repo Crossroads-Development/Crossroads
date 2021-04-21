@@ -39,7 +39,7 @@ public class FluxNodeTileEntity extends IFluxLink.FluxHelper{
 	private void syncFlux(){
 		if((entropyClient == 0) ^ (getReadingFlux() == 0) || Math.abs(entropyClient - getReadingFlux()) >= 4){
 			entropyClient = getReadingFlux();
-			CRPackets.sendPacketAround(world, pos, new SendLongToClient((byte) 0, getReadingFlux(), pos));
+			CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient((byte) 0, getReadingFlux(), worldPosition));
 		}
 	}
 
@@ -55,7 +55,7 @@ public class FluxNodeTileEntity extends IFluxLink.FluxHelper{
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){
 		//Increase render BB to include links
-		return new AxisAlignedBB(pos).grow(getRange());
+		return new AxisAlignedBB(worldPosition).inflate(getRange());
 	}
 
 	/**
@@ -68,28 +68,28 @@ public class FluxNodeTileEntity extends IFluxLink.FluxHelper{
 
 	@Override
 	public void tick(){
-		if(world.isRemote){
+		if(level.isClientSide){
 			super.tick();
 			angle += entropyClient * SPIN_RATE / 20F;
 			//This 5 is the lifetime of the render
-			if(world.getGameTime() % 5 == 0 && overSafeLimit()){
-				CRRenderUtil.addArc(world, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F + (float) Math.random(), pos.getY() + 0.5F + (float) Math.random(), pos.getZ() + 0.5F + (float) Math.random(), 3, 1F, FluxUtil.COLOR_CODES[(int) (world.getGameTime() % 3)]);
+			if(level.getGameTime() % 5 == 0 && overSafeLimit()){
+				CRRenderUtil.addArc(level, worldPosition.getX() + 0.5F, worldPosition.getY() + 0.5F, worldPosition.getZ() + 0.5F, worldPosition.getX() + 0.5F + (float) Math.random(), worldPosition.getY() + 0.5F + (float) Math.random(), worldPosition.getZ() + 0.5F + (float) Math.random(), 3, 1F, FluxUtil.COLOR_CODES[(int) (level.getGameTime() % 3)]);
 			}
 		}else{
-			if(lastTick != world.getGameTime() && world.getGameTime() % FluxUtil.FLUX_TIME == 0 && !isShutDown()){
+			if(lastTick != level.getGameTime() && level.getGameTime() % FluxUtil.FLUX_TIME == 0 && !isShutDown()){
 				if(flux > 0){
 					flux += CRConfig.fluxNodeGain.get();
 				}
 			}
 			super.tick();
 			syncFlux();
-			markDirty();
+			setChanged();
 		}
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putFloat("angle", angle);
 		return nbt;
 	}
@@ -102,8 +102,8 @@ public class FluxNodeTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		angle = nbt.getFloat("angle");
 		entropyClient = getReadingFlux();
 	}
@@ -119,7 +119,7 @@ public class FluxNodeTileEntity extends IFluxLink.FluxHelper{
 	@Override
 	public boolean allowAccepting(){
 		//We accept flux as long as we don't have a redstone signal and we aren't shut down
-		return RedstoneUtil.getRedstoneAtPos(world, pos) == 0 && !isShutDown();
+		return RedstoneUtil.getRedstoneAtPos(level, worldPosition) == 0 && !isShutDown();
 	}
 
 	@Override

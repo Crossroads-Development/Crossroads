@@ -30,9 +30,9 @@ public class MechanismAxle implements IMechanism<GearFactory.GearMaterial>{
 
 	protected static final VoxelShape[] SHAPES = new VoxelShape[3];
 	static{
-		SHAPES[0] = Block.makeCuboidShape(0, 7, 7, 16, 9, 9);//X
-		SHAPES[1] = Block.makeCuboidShape(7, 0, 7, 9, 16, 9);//Y
-		SHAPES[2] = Block.makeCuboidShape(7, 7, 0, 9, 9, 16);//Z
+		SHAPES[0] = Block.box(0, 7, 7, 16, 9, 9);//X
+		SHAPES[1] = Block.box(7, 0, 7, 9, 16, 9);//Y
+		SHAPES[2] = Block.box(7, 7, 0, 9, 9, 16);//Z
 	}
 
 	@Override
@@ -80,17 +80,17 @@ public class MechanismAxle implements IMechanism<GearFactory.GearMaterial>{
 		
 		
 		for(Direction.AxisDirection direct : Direction.AxisDirection.values()){
-			Direction endDir = Direction.getFacingFromAxis(direct, axis);
+			Direction endDir = Direction.get(direct, axis);
 			
-			if(te.members[endDir.getIndex()] != null){
+			if(te.members[endDir.get3DDataValue()] != null){
 				//Do internal connection
-				if(te.members[endDir.getIndex()].hasCap(Capabilities.AXLE_CAPABILITY, endDir, te.mats[endDir.getIndex()], endDir, axis, te)){
-					te.axleHandlers[endDir.getIndex()].propagate(masterIn, key, rotRatioIn, 0, handler.renderOffset);
+				if(te.members[endDir.get3DDataValue()].hasCap(Capabilities.AXLE_CAPABILITY, endDir, te.mats[endDir.get3DDataValue()], endDir, axis, te)){
+					te.axleHandlers[endDir.get3DDataValue()].propagate(masterIn, key, rotRatioIn, 0, handler.renderOffset);
 				}
 			}else{
 				//Connect externally
 				Direction oEndDir = endDir.getOpposite();
-				RotaryUtil.propagateAxially(te.getWorld().getTileEntity(te.getPos().offset(endDir)), oEndDir, handler, masterIn, key, handler.renderOffset);
+				RotaryUtil.propagateAxially(te.getLevel().getBlockEntity(te.getBlockPos().relative(endDir)), oEndDir, handler, masterIn, key, handler.renderOffset);
 //				TileEntity endTE = te.getWorld().getTileEntity(te.getPos().offset(endDir));
 //				if(endTE != null){
 //					LazyOptional<IAxisHandler> axisOpt = endTE.getCapability(Capabilities.AXIS_CAPABILITY, oEndDir);
@@ -133,11 +133,11 @@ public class MechanismAxle implements IMechanism<GearFactory.GearMaterial>{
 
 		if(axis != Direction.Axis.Y){
 			Quaternion rotation = (axis == Direction.Axis.X ? Vector3f.ZN : Vector3f.XP).rotationDegrees(90);
-			matrix.rotate(rotation);
+			matrix.mulPose(rotation);
 		}
 
 		float angle = handler.getAngle(partialTicks);
-		matrix.rotate(Vector3f.YP.rotationDegrees(angle));
+		matrix.mulPose(Vector3f.YP.rotationDegrees(angle));
 		CRModels.drawAxle(matrix, buffer, combinedLight, mat instanceof GearFactory.GearMaterial ? ((GearFactory.GearMaterial) mat).getColor() : Color.WHITE);
 	}
 

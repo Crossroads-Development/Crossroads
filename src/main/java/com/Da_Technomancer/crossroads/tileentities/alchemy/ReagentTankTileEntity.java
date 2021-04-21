@@ -68,8 +68,8 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 		EnumTransferMode[] modes = getModes();
 		for(int i = 0; i < 6; i++){
 			if(modes[i].isOutput()){
-				Direction side = Direction.byIndex(i);
-				TileEntity te = world.getTileEntity(pos.offset(side));
+				Direction side = Direction.from3DDataValue(i);
+				TileEntity te = level.getBlockEntity(worldPosition.relative(side));
 				LazyOptional<IChemicalHandler> otherOpt;
 				if(contents.getTotalQty() <= 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
 					continue;
@@ -83,7 +83,7 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 				if(contents.getTotalQty() != 0){
 					if(otherHandler.insertReagents(contents, side.getOpposite(), handler)){
 						correctReag();
-						markDirty();
+						setChanged();
 					}
 				}
 			}
@@ -91,8 +91,8 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		itemOpt.invalidate();
 	}
 
@@ -144,11 +144,11 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 	private void destroyChamber(){
 		if(!broken){
 			broken = true;
-			BlockState state = world.getBlockState(pos);
-			world.setBlockState(pos, Blocks.AIR.getDefaultState());
-			SoundType sound = state.getBlock().getSoundType(state, world, pos, null);
-			world.playSound(null, pos, sound.getBreakSound(), SoundCategory.BLOCKS, sound.getVolume(), sound.getPitch());
-			AlchemyUtil.releaseChemical(world, pos, contents);
+			BlockState state = level.getBlockState(worldPosition);
+			level.setBlockAndUpdate(worldPosition, Blocks.AIR.defaultBlockState());
+			SoundType sound = state.getBlock().getSoundType(state, level, worldPosition, null);
+			level.playSound(null, worldPosition, sound.getBreakSound(), SoundCategory.BLOCKS, sound.getVolume(), sound.getPitch());
+			AlchemyUtil.releaseChemical(level, worldPosition, contents);
 		}
 	}
 }

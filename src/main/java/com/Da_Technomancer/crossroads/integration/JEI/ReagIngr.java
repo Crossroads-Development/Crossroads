@@ -1,13 +1,13 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentManager;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
 import mezz.jei.api.ingredients.IIngredientType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReagIngr{
 

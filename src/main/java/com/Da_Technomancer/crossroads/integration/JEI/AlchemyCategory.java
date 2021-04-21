@@ -93,7 +93,7 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 //		GlStateManager.disableBlend();
 //		GlStateManager.disableAlpha();
 
-		FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
+		FontRenderer fontRenderer = Minecraft.getInstance().font;
 		double maxTemp = recipe.maxTemp();
 		String line;
 		if(maxTemp <= Short.MAX_VALUE - 100){
@@ -101,9 +101,9 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 		}else{
 			line = MiscUtil.localize("crossroads.jei.alchemy.temp", CRConfig.formatVal(Math.max(recipe.minTemp(), HeatUtil.ABSOLUTE_ZERO)));
 		}
-		fontRenderer.drawString(matrix, line, 90 - fontRenderer.getStringWidth(line) / 2F, 42, 0x404040);
+		fontRenderer.draw(matrix, line, 90 - fontRenderer.width(line) / 2F, 42, 0x404040);
 		line = recipe.deltaHeatPer() > 0 ? MiscUtil.localize("crossroads.jei.alchemy.cooling") : recipe.deltaHeatPer() < 0 ? MiscUtil.localize("crossroads.jei.alchemy.heating") : MiscUtil.localize("crossroads.jei.alchemy.no_temp_change");
-		fontRenderer.drawString(matrix, line, 90 - fontRenderer.getStringWidth(line) / 2F, 62, 4210752);
+		fontRenderer.draw(matrix, line, 90 - fontRenderer.width(line) / 2F, 62, 4210752);
 
 		if(recipe.charged()){
 //			GlStateManager.color(1, 1, 1);

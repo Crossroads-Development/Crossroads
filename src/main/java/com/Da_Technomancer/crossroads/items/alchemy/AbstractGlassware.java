@@ -29,7 +29,7 @@ public abstract class AbstractGlassware extends Item{
 	protected final boolean isCrystal;
 
 	protected AbstractGlassware(GlasswareTypes type, boolean isCrystal){
-		super(new Properties().maxStackSize(1).group(CRItems.TAB_CROSSROADS));
+		super(new Properties().stacksTo(1).tab(CRItems.TAB_CROSSROADS));
 		this.type = type;
 		this.isCrystal = isCrystal;
 	}
@@ -102,7 +102,7 @@ public abstract class AbstractGlassware extends Item{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.alchemy_capacity", getCapacity()));
 		if(!stack.hasTag()){
 			return;
@@ -153,7 +153,7 @@ public abstract class AbstractGlassware extends Item{
 		}
 
 		@Override
-		public String getString(){
+		public String getSerializedName(){
 			return name().toLowerCase(Locale.US);
 		}
 	}

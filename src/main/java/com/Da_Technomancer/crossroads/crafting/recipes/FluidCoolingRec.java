@@ -67,17 +67,17 @@ public class FluidCoolingRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public boolean canFit(int width, int height){
+	public boolean canCraftInDimensions(int width, int height){
 		return true;
 	}
 
 	@Override
-	public ItemStack getRecipeOutput(){
+	public ItemStack getResultItem(){
 		return created;
 	}
 
 	@Override
-	public ItemStack getIcon(){
+	public ItemStack getToastSymbol(){
 		return new ItemStack(CRBlocks.fluidCoolingChamber);
 	}
 
@@ -104,9 +104,9 @@ public class FluidCoolingRec implements IOptionalRecipe<IInventory>{
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<FluidCoolingRec>{
 
 		@Override
-		public FluidCoolingRec read(ResourceLocation recipeId, JsonObject json){
+		public FluidCoolingRec fromJson(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and ingredient
-			String s = JSONUtils.getString(json, "group", "");
+			String s = JSONUtils.getAsString(json, "group", "");
 
 			if(!CraftingUtil.isActiveJSON(json)){
 				return new FluidCoolingRec(recipeId, s, FluidStack.EMPTY, ItemStack.EMPTY, 0, 0, false);
@@ -114,31 +114,31 @@ public class FluidCoolingRec implements IOptionalRecipe<IInventory>{
 
 			FluidStack input = CraftingUtil.getFluidStack(json, "input");
 			ItemStack output = CraftingUtil.getItemStack(json, "output", true, false);
-			float maxTemp = JSONUtils.getFloat(json, "max_temp");
-			float tempChange = JSONUtils.getFloat(json, "temp_change", 0);
+			float maxTemp = JSONUtils.getAsFloat(json, "max_temp");
+			float tempChange = JSONUtils.getAsFloat(json, "temp_change", 0);
 			return new FluidCoolingRec(recipeId, s, input, output, maxTemp, tempChange, true);
 		}
 
 		@Nullable
 		@Override
-		public FluidCoolingRec read(ResourceLocation recipeId, PacketBuffer buffer){
-			String s = buffer.readString(Short.MAX_VALUE);
+		public FluidCoolingRec fromNetwork(ResourceLocation recipeId, PacketBuffer buffer){
+			String s = buffer.readUtf(Short.MAX_VALUE);
 			if(!buffer.readBoolean()){//active
 				return new FluidCoolingRec(recipeId, s, FluidStack.EMPTY, ItemStack.EMPTY, 0, 0, false);
 			}
 			FluidStack input = FluidStack.readFromPacket(buffer);
-			ItemStack output = buffer.readItemStack();
+			ItemStack output = buffer.readItem();
 			float maxTemp = buffer.readFloat();
 			float tempChange = buffer.readFloat();
 			return new FluidCoolingRec(recipeId, s, input, output, maxTemp, tempChange, true);
 		}
 
 		@Override
-		public void write(PacketBuffer buffer, FluidCoolingRec recipe){
-			buffer.writeString(recipe.getGroup());
+		public void toNetwork(PacketBuffer buffer, FluidCoolingRec recipe){
+			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
 			recipe.getInput().writeToPacket(buffer);
-			buffer.writeItemStack(recipe.getRecipeOutput());
+			buffer.writeItem(recipe.getResultItem());
 			buffer.writeFloat(recipe.getMaxTemp());
 			buffer.writeFloat(recipe.getAddedHeat());
 		}

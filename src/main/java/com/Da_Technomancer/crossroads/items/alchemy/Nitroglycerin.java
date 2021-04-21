@@ -30,46 +30,46 @@ public class Nitroglycerin extends Item{
 		 * Dispense the specified stack, play the dispense sound and spawn particles.
 		 */
 		@Override
-		public ItemStack dispenseStack(IBlockSource source, ItemStack stack){
-			Direction dir = source.getBlockState().get(DispenserBlock.FACING);
-			World world = source.getWorld();
+		public ItemStack execute(IBlockSource source, ItemStack stack){
+			Direction dir = source.getBlockState().getValue(DispenserBlock.FACING);
+			World world = source.getLevel();
 			EntityNitro nitro = EntityNitro.type.create(world);
-			nitro.setPosition(source.getX() + dir.getXOffset() + 0.5D, source.getY() + dir.getYOffset() + 0.5D, source.getZ() + dir.getZOffset() + 0.5D);
-			nitro.shoot(dir.getXOffset(), dir.getYOffset() + 0.1F, dir.getZOffset(), 1.5F, 1.0F);
-			world.addEntity(nitro);
+			nitro.setPos(source.x() + dir.getStepX() + 0.5D, source.y() + dir.getStepY() + 0.5D, source.z() + dir.getStepZ() + 0.5D);
+			nitro.shoot(dir.getStepX(), dir.getStepY() + 0.1F, dir.getStepZ(), 1.5F, 1.0F);
+			world.addFreshEntity(nitro);
 			stack.shrink(1);
 			return stack;
 		}
 	};
 
 	public Nitroglycerin(){
-		super(new Properties().group(CRItems.TAB_CROSSROADS));
+		super(new Properties().tab(CRItems.TAB_CROSSROADS));
 		String name = "nitroglycerin";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
-		DispenserBlock.registerDispenseBehavior(this, NITRO_DISPENSER_BEHAVIOR);
+		DispenserBlock.registerBehavior(this, NITRO_DISPENSER_BEHAVIOR);
 	}
 
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn){
-		ItemStack held = playerIn.getHeldItem(handIn);
+	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn){
+		ItemStack held = playerIn.getItemInHand(handIn);
 		if(!playerIn.isCreative()){
 			held.shrink(1);
 		}
 
-		worldIn.playSound(null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+		worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
 
-		if(!worldIn.isRemote){
+		if(!worldIn.isClientSide){
 			EntityNitro nitroEntity = new EntityNitro(worldIn, playerIn);
 			//MCP note: Use the method in SnowballItem::onItemRightClick; it is NOT ProjectileEntity::shoot (currently)
-			nitroEntity.func_234612_a_(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0F, 1.5F, 1.0F);
-			worldIn.addEntity(nitroEntity);
+			nitroEntity.shootFromRotation(playerIn, playerIn.xRot, playerIn.yRot, 0F, 1.5F, 1.0F);
+			worldIn.addFreshEntity(nitroEntity);
 		}
 		return new ActionResult<>(ActionResultType.SUCCESS, held);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.nitroglycerin.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 

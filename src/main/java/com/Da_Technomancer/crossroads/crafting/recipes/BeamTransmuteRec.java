@@ -87,22 +87,22 @@ public class BeamTransmuteRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public ItemStack getCraftingResult(IInventory inv){
-		return getRecipeOutput();
+	public ItemStack assemble(IInventory inv){
+		return getResultItem();
 	}
 
 	@Override
-	public ItemStack getRecipeOutput(){
+	public ItemStack getResultItem(){
 		return new ItemStack(getOutput());
 	}
 
 	@Override
-	public boolean canFit(int width, int height){
+	public boolean canCraftInDimensions(int width, int height){
 		return true;
 	}
 
 	@Override
-	public ItemStack getIcon(){
+	public ItemStack getToastSymbol(){
 		return new ItemStack(CRBlocks.beamReflector);
 	}
 
@@ -134,16 +134,16 @@ public class BeamTransmuteRec implements IOptionalRecipe<IInventory>{
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<BeamTransmuteRec>{
 
 		@Override
-		public BeamTransmuteRec read(ResourceLocation recipeId, JsonObject json){
+		public BeamTransmuteRec fromJson(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and ingredient
-			String s = JSONUtils.getString(json, "group", "");
+			String s = JSONUtils.getAsString(json, "group", "");
 
 			if(!CraftingUtil.isActiveJSON(json)){
 				return new BeamTransmuteRec(recipeId, s, EnumBeamAlignments.NO_MATCH, false, BlockIngredient.EMPTY, Blocks.AIR, 0, false);
 			}
 
 			//Beam alignment as string name (names in com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments), case ignored
-			String alignName = JSONUtils.getString(json, "alignment");
+			String alignName = JSONUtils.getAsString(json, "alignment");
 			EnumBeamAlignments align;
 			try{
 				align = EnumBeamAlignments.valueOf(alignName.toUpperCase(Locale.US));
@@ -152,13 +152,13 @@ public class BeamTransmuteRec implements IOptionalRecipe<IInventory>{
 			}
 
 			//Optional specification of void version of beam, defaults false
-			boolean voidBeam = JSONUtils.getBoolean(json, "void", false);
+			boolean voidBeam = JSONUtils.getAsBoolean(json, "void", false);
 			//Optional specification of minimum beam power. Defaults to 1
-			int power = JSONUtils.getInt(json, "power", 1);
+			int power = JSONUtils.getAsInt(json, "power", 1);
 			//BlockIngredient input, with name "input"
 			BlockIngredient in = CraftingUtil.getBlockIngredient(json, "input", false);
 			//Block output
-			ResourceLocation outName = new ResourceLocation(JSONUtils.getString(json, "output"));
+			ResourceLocation outName = new ResourceLocation(JSONUtils.getAsString(json, "output"));
 			Block created = ForgeRegistries.BLOCKS.getValue(outName);
 			if(created == null){
 				throw new JsonParseException("Non-existent output specified");
@@ -168,8 +168,8 @@ public class BeamTransmuteRec implements IOptionalRecipe<IInventory>{
 
 		@Nullable
 		@Override
-		public BeamTransmuteRec read(ResourceLocation recipeId, PacketBuffer buffer){
-			String s = buffer.readString(Short.MAX_VALUE);
+		public BeamTransmuteRec fromNetwork(ResourceLocation recipeId, PacketBuffer buffer){
+			String s = buffer.readUtf(Short.MAX_VALUE);
 			boolean active = buffer.readBoolean();
 			if(active){
 				EnumBeamAlignments align = EnumBeamAlignments.values()[buffer.readVarInt()];
@@ -184,8 +184,8 @@ public class BeamTransmuteRec implements IOptionalRecipe<IInventory>{
 		}
 
 		@Override
-		public void write(PacketBuffer buffer, BeamTransmuteRec recipe){
-			buffer.writeString(recipe.getGroup());
+		public void toNetwork(PacketBuffer buffer, BeamTransmuteRec recipe){
+			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
 			buffer.writeVarInt(recipe.align.ordinal());
 			buffer.writeBoolean(recipe.voi);

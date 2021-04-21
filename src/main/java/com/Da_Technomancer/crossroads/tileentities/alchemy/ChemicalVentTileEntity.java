@@ -40,30 +40,30 @@ public class ChemicalVentTileEntity extends TileEntity implements ITickableTileE
 
 	@Override
 	public void tick(){
-		if(!reags.isEmpty() && (world.getGameTime() - lastInputTime) >= (CYCLES - 1) * AlchemyUtil.ALCHEMY_TIME){
-			AlchemyUtil.releaseChemical(world, pos, reags);
+		if(!reags.isEmpty() && (level.getGameTime() - lastInputTime) >= (CYCLES - 1) * AlchemyUtil.ALCHEMY_TIME){
+			AlchemyUtil.releaseChemical(level, worldPosition, reags);
 			reags = new ReagentMap();
 		}
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		lastInputTime = nbt.getLong("last_input");
 		reags = ReagentMap.readFromNBT(nbt);
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putLong("last_input", lastInputTime);
 		reags.write(nbt);
 		return nbt;
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		alcOpt.invalidate();
 	}
 
@@ -124,8 +124,8 @@ public class ChemicalVentTileEntity extends TileEntity implements ITickableTileE
 					acted = true;
 				}
 			}
-			if(acted && (world.getGameTime() - lastInputTime) > (CYCLES - 1) * AlchemyUtil.ALCHEMY_TIME){
-				lastInputTime = world.getGameTime();
+			if(acted && (level.getGameTime() - lastInputTime) > (CYCLES - 1) * AlchemyUtil.ALCHEMY_TIME){
+				lastInputTime = level.getGameTime();
 			}
 
 			return acted;

@@ -30,7 +30,7 @@ import java.util.List;
 
 public class FluxNode extends ContainerBlock implements IReadable{
 
-	private static final VoxelShape SHAPE = makeCuboidShape(4, 4, 4, 12, 12, 12);
+	private static final VoxelShape SHAPE = box(4, 4, 4, 12, 12, 12);
 
 	public FluxNode(){
 		super(CRBlocks.getMetalProperty());
@@ -46,33 +46,33 @@ public class FluxNode extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new FluxNodeTileEntity();
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace){
-		return FluxUtil.handleFluxLinking(world, pos, player.getHeldItem(hand), player);
+	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace){
+		return FluxUtil.handleFluxLinking(world, pos, player.getItemInHand(hand), player);
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState state){
+	public boolean hasAnalogOutputSignal(BlockState state){
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos){
+	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos){
 		return RedstoneUtil.clampToVanilla(read(worldIn, pos, blockState));
 	}
 
 	@Override
 	public float read(World world, BlockPos blockPos, BlockState blockState){
-		TileEntity te = world.getTileEntity(blockPos);
+		TileEntity te = world.getBlockEntity(blockPos);
 		if(te instanceof IFluxLink){
 			return ((IFluxLink) te).getReadingFlux();
 		}
@@ -80,7 +80,7 @@ public class FluxNode extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.flux_node.desc", 64));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.flux_node.gain", CRConfig.fluxNodeGain.get()));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.flux_node.link"));

@@ -61,17 +61,17 @@ public class CopshowiumRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public boolean canFit(int width, int height){
+	public boolean canCraftInDimensions(int width, int height){
 		return true;
 	}
 
 	@Override
-	public ItemStack getRecipeOutput(){
+	public ItemStack getResultItem(){
 		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public ItemStack getIcon(){
+	public ItemStack getToastSymbol(){
 		return new ItemStack(CRBlocks.copshowiumCreationChamber);
 	}
 
@@ -98,9 +98,9 @@ public class CopshowiumRec implements IOptionalRecipe<IInventory>{
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CopshowiumRec>{
 
 		@Override
-		public CopshowiumRec read(ResourceLocation recipeId, JsonObject json){
+		public CopshowiumRec fromJson(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and ingredient
-			String s = JSONUtils.getString(json, "group", "");
+			String s = JSONUtils.getAsString(json, "group", "");
 
 			if(!CraftingUtil.isActiveJSON(json)){
 				return new CopshowiumRec(recipeId, s, FluidStack.EMPTY, 0, false, false);
@@ -110,16 +110,16 @@ public class CopshowiumRec implements IOptionalRecipe<IInventory>{
 			FluidStack input = CraftingUtil.getFluidStack(json, "input");
 			input.setAmount(1000);
 			//How much to expand the fluid by when crafting
-			float mult = JSONUtils.getFloat(json, "mult", 1);
+			float mult = JSONUtils.getAsFloat(json, "mult", 1);
 			//Whether this recipe generates temporal entropy
-			boolean flux = JSONUtils.getBoolean(json, "entropy", false);
+			boolean flux = JSONUtils.getAsBoolean(json, "entropy", false);
 			return new CopshowiumRec(recipeId, s, input, mult, flux, true);
 		}
 
 		@Nullable
 		@Override
-		public CopshowiumRec read(ResourceLocation recipeId, PacketBuffer buffer){
-			String s = buffer.readString(Short.MAX_VALUE);
+		public CopshowiumRec fromNetwork(ResourceLocation recipeId, PacketBuffer buffer){
+			String s = buffer.readUtf(Short.MAX_VALUE);
 			if(!buffer.readBoolean()){
 				return new CopshowiumRec(recipeId, s, FluidStack.EMPTY, 0, false, false);
 			}
@@ -130,8 +130,8 @@ public class CopshowiumRec implements IOptionalRecipe<IInventory>{
 		}
 
 		@Override
-		public void write(PacketBuffer buffer, CopshowiumRec recipe){
-			buffer.writeString(recipe.getGroup());
+		public void toNetwork(PacketBuffer buffer, CopshowiumRec recipe){
+			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
 			recipe.getInput().writeToPacket(buffer);
 			buffer.writeFloat(recipe.mult);

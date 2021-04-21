@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 public class SquidHelmet extends ArmorItem{
 
 	protected SquidHelmet(){
-		super(ChickenBoots.BOBO_MATERIAL, EquipmentSlotType.HEAD, new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
+		super(ChickenBoots.BOBO_MATERIAL, EquipmentSlotType.HEAD, new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "squid_helmet";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
@@ -25,9 +25,9 @@ public class SquidHelmet extends ArmorItem{
 
 	@Override
 	public void onArmorTick(ItemStack stack, World world, PlayerEntity player){
-		if(player.getAir() <= 150){
-			player.setAir(300);
-			world.playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ENTITY_SQUID_DEATH, SoundCategory.PLAYERS, 2.5F, 1F);
+		if(player.getAirSupply() <= 150){
+			player.setAirSupply(300);
+			world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.SQUID_DEATH, SoundCategory.PLAYERS, 2.5F, 1F);
 		}
 	}
 

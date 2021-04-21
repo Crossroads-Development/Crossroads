@@ -34,12 +34,12 @@ public class BeamCannon extends ContainerBlock{
 
 	private static final VoxelShape[] SHAPES = new VoxelShape[6];
 	static{
-		SHAPES[0] = VoxelShapes.or(makeCuboidShape(0, 7, 0, 16, 16, 16));
-		SHAPES[1] = VoxelShapes.or(makeCuboidShape(0, 0, 0, 16, 9, 16));
-		SHAPES[2] = VoxelShapes.or(makeCuboidShape(0, 0, 7, 16, 16, 16));
-		SHAPES[3] = VoxelShapes.or(makeCuboidShape(0, 0, 0, 16, 16, 9));
-		SHAPES[4] = VoxelShapes.or(makeCuboidShape(7, 0, 0, 16, 16, 16));
-		SHAPES[5] = VoxelShapes.or(makeCuboidShape(0, 0, 0, 9, 16, 16));
+		SHAPES[0] = VoxelShapes.or(box(0, 7, 0, 16, 16, 16));
+		SHAPES[1] = VoxelShapes.or(box(0, 0, 0, 16, 9, 16));
+		SHAPES[2] = VoxelShapes.or(box(0, 0, 7, 16, 16, 16));
+		SHAPES[3] = VoxelShapes.or(box(0, 0, 0, 16, 16, 9));
+		SHAPES[4] = VoxelShapes.or(box(7, 0, 0, 16, 16, 16));
+		SHAPES[5] = VoxelShapes.or(box(0, 0, 0, 9, 16, 16));
 	}
 
 	public BeamCannon(){
@@ -48,39 +48,39 @@ public class BeamCannon extends ContainerBlock{
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
-		setDefaultState(getDefaultState());
+		registerDefaultState(defaultBlockState());
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
 		builder.add(ESProperties.FACING);
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
-		return SHAPES[state.get(ESProperties.FACING).getIndex()];
+		return SHAPES[state.getValue(ESProperties.FACING).get3DDataValue()];
 	}
 
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return getDefaultState().with(ESProperties.FACING, context.getFace());
+		return defaultBlockState().setValue(ESProperties.FACING, context.getClickedFace());
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		ItemStack held = playerIn.getHeldItem(hand);
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		ItemStack held = playerIn.getItemInHand(hand);
 		if(ESConfig.isWrench(held)){
-			if(playerIn.isSneaking()){
+			if(playerIn.isShiftKeyDown()){
 				//Sneak clicking- lock/unlock
-				TileEntity te = worldIn.getTileEntity(pos);
+				TileEntity te = worldIn.getBlockEntity(pos);
 				if(te instanceof BeamCannonTileEntity){
 					((BeamCannonTileEntity) te).updateLock(playerIn);
 				}
 				return ActionResultType.SUCCESS;
 			}else{
 				//Rotate this machine
-				worldIn.setBlockState(pos, state.func_235896_a_(ESProperties.FACING));
+				worldIn.setBlockAndUpdate(pos, state.cycle(ESProperties.FACING));
 			}
 			return ActionResultType.SUCCESS;
 		}
@@ -88,17 +88,17 @@ public class BeamCannon extends ContainerBlock{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new BeamCannonTileEntity();
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_cannon.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_cannon.angle"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_cannon.lockable"));

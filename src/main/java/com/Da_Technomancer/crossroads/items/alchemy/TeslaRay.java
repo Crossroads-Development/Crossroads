@@ -40,14 +40,14 @@ public class TeslaRay extends Item{
 	private final Multimap<Attribute, AttributeModifier> attributeModifiers;
 
 	public TeslaRay(){
-		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
+		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "tesla_ray";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
 
 		//Attributes
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -2D, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -2D, AttributeModifier.Operation.ADDITION));
 		attributeModifiers = builder.build();
 	}
 
@@ -57,19 +57,19 @@ public class TeslaRay extends Item{
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_ray.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_ray.leyden"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_ray.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand){
-		float scale = playerIn.getCooledAttackStrength(0.5F);
+	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand hand){
+		float scale = playerIn.getAttackStrengthScale(0.5F);
 
-		if(worldIn.isRemote){
-			playerIn.resetCooldown();
-			return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(hand));
+		if(worldIn.isClientSide){
+			playerIn.resetAttackStrengthTicker();
+			return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getItemInHand(hand));
 		}
 
 		ItemStack leyden = CurioHelper.getEquipped(CRItems.leydenJar, playerIn);
@@ -79,25 +79,25 @@ public class TeslaRay extends Item{
 
 			//Populate and damage targets
 			//The first target is found in a conical area with the vertex at the player
-			List<LivingEntity> entities = worldIn.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(playerIn.getPosX(), playerIn.getPosY() + playerIn.getEyeHeight(), playerIn.getPosZ(), playerIn.getPosX(), playerIn.getPosY() + playerIn.getEyeHeight(), playerIn.getPosZ()).grow(RANGE), EntityPredicates.IS_ALIVE);
-			Predicate<LivingEntity> cannotTarget = (LivingEntity e) -> targets.contains(e) || e == playerIn || e instanceof ServerPlayerEntity && !playerIn.canAttackPlayer((PlayerEntity) e);
+			List<LivingEntity> entities = worldIn.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(playerIn.getX(), playerIn.getY() + playerIn.getEyeHeight(), playerIn.getZ(), playerIn.getX(), playerIn.getY() + playerIn.getEyeHeight(), playerIn.getZ()).inflate(RANGE), EntityPredicates.ENTITY_STILL_ALIVE);
+			Predicate<LivingEntity> cannotTarget = (LivingEntity e) -> targets.contains(e) || e == playerIn || e instanceof ServerPlayerEntity && !playerIn.canHarmPlayer((PlayerEntity) e);
 
 			//Removes entities from the list if they aren't in the conical region in the direction the player is looking, and checks PVP rules
-			Vector3d look = playerIn.getLookVec();
+			Vector3d look = playerIn.getLookAngle();
 			Vector3d playPos = playerIn.getEyePosition(0);
-			entities.removeIf((LivingEntity e) -> {Vector3d ePos = e.getPositionVec().subtract(playPos); return ePos.crossProduct(look).lengthSquared() > RADIUS * RADIUS || ePos.dotProduct(look) > RANGE || ePos.dotProduct(look) < 0 || cannotTarget.test(e);});
+			entities.removeIf((LivingEntity e) -> {Vector3d ePos = e.position().subtract(playPos); return ePos.cross(look).lengthSqr() > RADIUS * RADIUS || ePos.dot(look) > RANGE || ePos.dot(look) < 0 || cannotTarget.test(e);});
 
 			double minDist = Integer.MAX_VALUE;
 			LivingEntity closest = null;
 			for(LivingEntity e : entities){
-				if(e.getPositionVec().squareDistanceTo(playPos) < minDist){
-					minDist = e.getPositionVec().squareDistanceTo(playPos);
+				if(e.position().distanceToSqr(playPos) < minDist){
+					minDist = e.position().distanceToSqr(playPos);
 					closest = e;
 				}
 			}
 
 			if(closest == null){
-				return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(hand));
+				return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getItemInHand(hand));
 			}
 
 			LeydenJar.setCharge(leyden, LeydenJar.getCharge(leyden) - FE_USE);
@@ -110,7 +110,7 @@ public class TeslaRay extends Item{
 			if(scale >= 0.99F){//Check attack meter is charged
 				//An arbitrary limit of 32 targets exists to prevent glitchy infinite chaining behaviour- which could occur under exceptional circumstances
 				for(int i = 0; i < 32; i++){
-					entities = worldIn.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(targets.get(i).getPosX(), targets.get(i).getPosY(), targets.get(i).getPosZ(), targets.get(i).getPosX(), targets.get(i).getPosY(), targets.get(i).getPosZ()).grow(RADIUS - i), EntityPredicates.IS_ALIVE);
+					entities = worldIn.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(targets.get(i).getX(), targets.get(i).getY(), targets.get(i).getZ(), targets.get(i).getX(), targets.get(i).getY(), targets.get(i).getZ()).inflate(RADIUS - i), EntityPredicates.ENTITY_STILL_ALIVE);
 					entities.removeIf(cannotTarget);
 					if(entities.isEmpty()){
 						break;
@@ -124,19 +124,19 @@ public class TeslaRay extends Item{
 			//Render the electric arcs. The player is added to targets for simplification, despite not taking damage
 			targets.add(0, playerIn);
 			for(int i = 0; i < targets.size() - 1; i++){
-				Vector3d start = targets.get(i).getPositionVec();
+				Vector3d start = targets.get(i).position();
 				if(i == 0){
-					double angleOffset = 30D * (playerIn.getPrimaryHand() == HandSide.LEFT ? -1D : 1D);
-					start = start.add(-Math.sin(Math.toRadians(playerIn.rotationYaw + angleOffset)) * 0.4F, 0.8D, Math.cos(Math.toRadians(playerIn.rotationYaw + angleOffset)) * 0.4F);
+					double angleOffset = 30D * (playerIn.getMainArm() == HandSide.LEFT ? -1D : 1D);
+					start = start.add(-Math.sin(Math.toRadians(playerIn.yRot + angleOffset)) * 0.4F, 0.8D, Math.cos(Math.toRadians(playerIn.yRot + angleOffset)) * 0.4F);
 				}
 				Vector3d end = targets.get(i + 1).getEyePosition(0);
 
-				CRRenderUtil.addArc(playerIn.world, start, end, 1, 0, TeslaCoilTopTileEntity.COLOR_CODES[(int) (Math.random() * 3D)]);
+				CRRenderUtil.addArc(playerIn.level, start, end, 1, 0, TeslaCoilTopTileEntity.COLOR_CODES[(int) (Math.random() * 3D)]);
 			}
 
-			return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(hand));
+			return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getItemInHand(hand));
 		}else{
-			return new ActionResult<>(ActionResultType.FAIL, playerIn.getHeldItem(hand));
+			return new ActionResult<>(ActionResultType.FAIL, playerIn.getItemInHand(hand));
 		}
 	}
 
@@ -145,7 +145,7 @@ public class TeslaRay extends Item{
 			//We want to apply lightning effects (ex. pig->pig zombie, creeper->charged creeper, etc) if this is fully charged
 			MiscUtil.attackWithLightning(entity, DAMAGE, null);
 		}else{
-			entity.attackEntityFrom(DamageSource.LIGHTNING_BOLT, DAMAGE * scale);
+			entity.hurt(DamageSource.LIGHTNING_BOLT, DAMAGE * scale);
 		}
 	}
 }

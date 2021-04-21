@@ -34,9 +34,9 @@ public class SendBeamItemToServer extends ServerPacket{
 	protected void run(@Nullable ServerPlayerEntity player){
 		if(player != null){
 			ItemStack stack;
-			stack = player.getHeldItemMainhand();
+			stack = player.getMainHandItem();
 			if(!(stack.getItem() instanceof BeamUsingItem)){
-				stack = player.getHeldItemOffhand();
+				stack = player.getOffhandItem();
 			}
 			if(stack.getItem() instanceof BeamUsingItem){
 				BeamUsingItem.setSetting(stack, newSetting);

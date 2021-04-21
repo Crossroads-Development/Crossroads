@@ -20,8 +20,8 @@ public class MillstoneContainer extends MachineContainer<MillstoneTileEntity>{
 
 	public MillstoneContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
 		super(type, id, playerInv, buf);
-		progRef = new IntDeferredRef(te::getProgress, te.getWorld().isRemote);
-		trackInt(progRef);
+		progRef = new IntDeferredRef(te::getProgress, te.getLevel().isClientSide);
+		addDataSlot(progRef);
 	}
 
 	@Override

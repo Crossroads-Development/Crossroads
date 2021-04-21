@@ -23,7 +23,7 @@ public class BeamCage extends Item{
 	public static final int CAPACITY = 2048;
 
 	public BeamCage(){
-		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
+		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "beam_cage";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
@@ -52,8 +52,8 @@ public class BeamCage extends Item{
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items){
-		if(isInGroup(group)){
+	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items){
+		if(allowdedIn(group)){
 			items.add(new ItemStack(this, 1));
 			ItemStack stack = new ItemStack(this, 1);
 			storeBeam(stack, new BeamUnit(CAPACITY, CAPACITY, CAPACITY, CAPACITY));
@@ -63,7 +63,7 @@ public class BeamCage extends Item{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		BeamUnit stored = getStored(stack);
 		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_cage.energy", stored.getEnergy(), CAPACITY));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_cage.potential", stored.getPotential(), CAPACITY));

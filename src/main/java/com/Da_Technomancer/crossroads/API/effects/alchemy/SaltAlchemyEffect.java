@@ -23,19 +23,19 @@ import java.util.function.Predicate;
 
 public class SaltAlchemyEffect implements IAlchEffect{
 
-	private static final Predicate<Entity> FILTER = (Entity e) -> (e instanceof SlimeEntity || e instanceof CreeperEntity) && EntityPredicates.IS_ALIVE.test(e);
+	private static final Predicate<Entity> FILTER = (Entity e) -> (e instanceof SlimeEntity || e instanceof CreeperEntity) && EntityPredicates.ENTITY_STILL_ALIVE.test(e);
 
 	@Override
 	public void doEffect(World world, BlockPos pos, int amount, EnumMatterPhase phase, ReagentMap reags){
 		//Affect mobs
 		float range = 0.5F;
-		for(MobEntity e : world.getEntitiesWithinAABB(MobEntity.class, new AxisAlignedBB(pos.getX() + 0.5F - range, pos.getY() + 0.5F - range, pos.getZ() + 0.5F - range, pos.getX() + 0.5F + range, pos.getY() + 0.5F + range, pos.getZ() + 0.5F + range), FILTER)){
+		for(MobEntity e : world.getEntitiesOfClass(MobEntity.class, new AxisAlignedBB(pos.getX() + 0.5F - range, pos.getY() + 0.5F - range, pos.getZ() + 0.5F - range, pos.getX() + 0.5F + range, pos.getY() + 0.5F + range, pos.getZ() + 0.5F + range), FILTER)){
 			if(e instanceof SlimeEntity){
 				e.remove();
-				InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.SLIME_BALL, ((SlimeEntity) e).getSlimeSize() + 1));
+				InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.SLIME_BALL, ((SlimeEntity) e).getSize() + 1));
 			}else{
 				e.remove();
-				InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Blocks.DEAD_BUSH, 1));
+				InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Blocks.DEAD_BUSH, 1));
 			}
 		}
 

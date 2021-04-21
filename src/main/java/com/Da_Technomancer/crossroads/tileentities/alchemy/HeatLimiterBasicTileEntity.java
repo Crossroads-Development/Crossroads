@@ -55,7 +55,7 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		init();
 		HeatUtil.addHeatInfo(chat, heatIn, Short.MIN_VALUE);//Add the first temp without biome temp to prevent double printing
-		HeatUtil.addHeatInfo(chat, heatOut, HeatUtil.convertBiomeTemp(world, pos));
+		HeatUtil.addHeatInfo(chat, heatOut, HeatUtil.convertBiomeTemp(level, worldPosition));
 	}
 
 	protected double getSetting(){
@@ -64,7 +64,7 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 
 	@Override
 	public void tick(){
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 
@@ -73,7 +73,7 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 		}
 
 		double goalTemp = getSetting();
-		boolean blueMode = getBlockState().get(CRProperties.ACTIVE);
+		boolean blueMode = getBlockState().getValue(CRProperties.ACTIVE);
 
 		if(blueMode){
 			//Trick to re-use the same logic; reverted at the end
@@ -94,7 +94,7 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 			}
 			heatOut += toTrans;
 			heatIn -= toTrans;
-			markDirty();
+			setChanged();
 		}
 
 		if(blueMode){
@@ -107,15 +107,15 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 	private void init(){
 		if(!init){
 			init = true;
-			heatIn = HeatUtil.convertBiomeTemp(world, pos);
-			heatOut = HeatUtil.convertBiomeTemp(world, pos);
-			markDirty();
+			heatIn = HeatUtil.convertBiomeTemp(level, worldPosition);
+			heatOut = HeatUtil.convertBiomeTemp(level, worldPosition);
+			setChanged();
 		}
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putBoolean("init_heat", init);
 		nbt.putDouble("heat_in", heatIn);
 		nbt.putDouble("heat_out", heatOut);
@@ -125,8 +125,8 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		init = nbt.getBoolean("init_heat");
 		heatIn = nbt.getDouble("heat_in");
 		heatOut = nbt.getDouble("heat_out");
@@ -135,8 +135,8 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 	}
 
 	@Override
-	public void updateContainingBlockInfo(){
-		super.updateContainingBlockInfo();
+	public void clearCache(){
+		super.clearCache();
 		heatInOpt.invalidate();
 		heatOutOpt.invalidate();
 		heatInOpt = LazyOptional.of(() -> new HeatHandler(true));
@@ -144,8 +144,8 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		heatInOpt.invalidate();
 		heatOutOpt.invalidate();
 	}
@@ -153,7 +153,7 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
-		Direction facing = getBlockState().get(ESProperties.FACING);
+		Direction facing = getBlockState().getValue(ESProperties.FACING);
 		if(cap == Capabilities.HEAT_CAPABILITY){
 			if(side == null || side == facing.getOpposite()){
 				return (LazyOptional<T>) heatInOpt;
@@ -175,7 +175,7 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 	@Nullable
 	@Override
 	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
-		return new HeatLimiterContainer(id, playerInv, setting, expression, pos);
+		return new HeatLimiterContainer(id, playerInv, setting, expression, worldPosition);
 	}
 
 	@Override
@@ -183,7 +183,7 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 		if(nbt.contains("value")){
 			setting = nbt.getFloat("value");
 			expression = nbt.getString("config");
-			markDirty();
+			setChanged();
 		}
 	}
 
@@ -209,7 +209,7 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 			}else{
 				heatOut = tempIn;
 			}
-			markDirty();
+			setChanged();
 		}
 
 		@Override
@@ -220,7 +220,7 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 			}else{
 				heatOut += heatChange;
 			}
-			markDirty();
+			setChanged();
 		}
 	}
 }

@@ -214,22 +214,22 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public ItemStack getCraftingResult(IInventory inv){
-		return getRecipeOutput();//Irrelevant
+	public ItemStack assemble(IInventory inv){
+		return getResultItem();//Irrelevant
 	}
 
 	@Override
-	public boolean canFit(int width, int height){
+	public boolean canCraftInDimensions(int width, int height){
 		return true;//Irrelevant
 	}
 
 	@Override
-	public ItemStack getRecipeOutput(){
+	public ItemStack getResultItem(){
 		return ItemStack.EMPTY;//Irrelevant
 	}
 
 	@Override
-	public ItemStack getIcon(){
+	public ItemStack getToastSymbol(){
 		return new ItemStack(CRItems.florenceFlaskCrystal);
 	}
 
@@ -305,58 +305,58 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 		 */
 
 		@Override
-		public AlchemyRec read(ResourceLocation recipeId, JsonObject json){
+		public AlchemyRec fromJson(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and output
-			String group = JSONUtils.getString(json, "group", "");
+			String group = JSONUtils.getAsString(json, "group", "");
 
 			boolean real = CraftingUtil.isActiveJSON(json);
 			if(real){
 				//Only bother reading the whole file if this is a real recipe
-				Type type = Type.getType(JSONUtils.getString(json, "category", "normal"));
-				double minTemp = JSONUtils.getFloat(json, "min_temp", -300F);
-				double maxTemp = JSONUtils.getFloat(json, "max_temp", Short.MAX_VALUE);
-				double heatChange = JSONUtils.getFloat(json, "heat", 0);
-				String s = JSONUtils.getString(json, "catalyst", VOID_STR);
+				Type type = Type.getType(JSONUtils.getAsString(json, "category", "normal"));
+				double minTemp = JSONUtils.getAsFloat(json, "min_temp", -300F);
+				double maxTemp = JSONUtils.getAsFloat(json, "max_temp", Short.MAX_VALUE);
+				double heatChange = JSONUtils.getAsFloat(json, "heat", 0);
+				String s = JSONUtils.getAsString(json, "catalyst", VOID_STR);
 				String cat = s.equals(VOID_STR) ? null : s;
-				boolean charge = JSONUtils.getBoolean(json, "charged", false);
+				boolean charge = JSONUtils.getAsBoolean(json, "charged", false);
 
 				float data = 0;
 				EnumBeamAlignments alignment = EnumBeamAlignments.NO_MATCH;
 				if(type == Type.DESTRUCTIVE){
-					data = JSONUtils.getFloat(json, "data", 0);
+					data = JSONUtils.getAsFloat(json, "data", 0);
 				}else if(type == Type.ELEMENTAL){
-					alignment = EnumBeamAlignments.valueOf(JSONUtils.getString(json, "data", "no_match").toUpperCase(Locale.US));
+					alignment = EnumBeamAlignments.valueOf(JSONUtils.getAsString(json, "data", "no_match").toUpperCase(Locale.US));
 				}
 
 				JsonArray jsonR;
-				if(JSONUtils.isJsonArray(json, "reagents")){
-					jsonR = JSONUtils.getJsonArray(json, "reagents");
+				if(JSONUtils.isArrayNode(json, "reagents")){
+					jsonR = JSONUtils.getAsJsonArray(json, "reagents");
 				}else{
 					jsonR = new JsonArray();
-					jsonR.add(JSONUtils.getJsonObject(json, "reagents"));
+					jsonR.add(JSONUtils.getAsJsonObject(json, "reagents"));
 				}
 				ReagentStack[] reags = new ReagentStack[jsonR.size()];
 				for(int i = 0; i < reags.length; i++){
 					JsonElement elem = jsonR.get(i);
 					if(elem instanceof JsonObject){
 						JsonObject obj = (JsonObject) elem;
-						String reagent = JSONUtils.getString(obj, "type");
-						reags[i] = new ReagentStack(reagent, JSONUtils.getInt(obj, "qty", 1));
+						String reagent = JSONUtils.getAsString(obj, "type");
+						reags[i] = new ReagentStack(reagent, JSONUtils.getAsInt(obj, "qty", 1));
 					}
 				}
-				if(JSONUtils.isJsonArray(json, "products")){
-					jsonR = JSONUtils.getJsonArray(json, "products");
+				if(JSONUtils.isArrayNode(json, "products")){
+					jsonR = JSONUtils.getAsJsonArray(json, "products");
 				}else{
 					jsonR = new JsonArray();
-					jsonR.add(JSONUtils.getJsonObject(json, "products"));
+					jsonR.add(JSONUtils.getAsJsonObject(json, "products"));
 				}
 				ReagentStack[] prods = new ReagentStack[jsonR.size()];
 				for(int i = 0; i < prods.length; i++){
 					JsonElement elem = jsonR.get(i);
 					if(elem instanceof JsonObject){
 						JsonObject obj = (JsonObject) elem;
-						String reagent = JSONUtils.getString(obj, "type");
-						prods[i] = new ReagentStack(reagent, JSONUtils.getInt(obj, "qty", 1));
+						String reagent = JSONUtils.getAsString(obj, "type");
+						prods[i] = new ReagentStack(reagent, JSONUtils.getAsInt(obj, "qty", 1));
 					}
 				}
 
@@ -370,25 +370,25 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 
 		@Nullable
 		@Override
-		public AlchemyRec read(ResourceLocation recipeId, PacketBuffer buffer){
+		public AlchemyRec fromNetwork(ResourceLocation recipeId, PacketBuffer buffer){
 			boolean real = buffer.readBoolean();
-			String group = buffer.readString(Short.MAX_VALUE);
+			String group = buffer.readUtf(Short.MAX_VALUE);
 
 			if(real){
 				Type type = Type.values()[buffer.readByte()];
 				float heatChange = buffer.readFloat();
 				float minTemp = buffer.readFloat();
 				float maxTemp = buffer.readFloat();
-				String s = buffer.readString(Short.MAX_VALUE);
+				String s = buffer.readUtf(Short.MAX_VALUE);
 				String catalyst = s.equals(VOID_STR) ? null : s;
 				boolean charged = buffer.readBoolean();
 				ReagentStack[] reags = new ReagentStack[buffer.readByte()];
 				for(int i = 0; i < reags.length; i++){
-					reags[i] = new ReagentStack(buffer.readString(), buffer.readByte());
+					reags[i] = new ReagentStack(buffer.readUtf(), buffer.readByte());
 				}
 				ReagentStack[] prod = new ReagentStack[buffer.readByte()];
 				for(int i = 0; i < prod.length; i++){
-					prod[i] = new ReagentStack(buffer.readString(), buffer.readByte());
+					prod[i] = new ReagentStack(buffer.readUtf(), buffer.readByte());
 				}
 				float data = buffer.readFloat();
 				EnumBeamAlignments alignment = EnumBeamAlignments.values()[buffer.readVarInt()];
@@ -400,26 +400,26 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 		}
 
 		@Override
-		public void write(PacketBuffer buffer, AlchemyRec recipe){
+		public void toNetwork(PacketBuffer buffer, AlchemyRec recipe){
 			buffer.writeBoolean(recipe.real);
-			buffer.writeString(recipe.getGroup());//group
+			buffer.writeUtf(recipe.getGroup());//group
 			if(recipe.real){
 				buffer.writeByte(recipe.type.ordinal());//type
 				buffer.writeFloat((float) recipe.heatChange);//heat
 				buffer.writeFloat((float) recipe.minTemp);//min temp
 				buffer.writeFloat((float) recipe.maxTemp);//max temp
-				buffer.writeString(recipe.cat == null ? VOID_STR : recipe.cat);//catalyst
+				buffer.writeUtf(recipe.cat == null ? VOID_STR : recipe.cat);//catalyst
 				buffer.writeBoolean(recipe.charged);//charged
 				int total = recipe.reagents.length;
 				buffer.writeByte(total);//Number of reagents
 				for(ReagentStack reag : recipe.reagents){
-					buffer.writeString(reag.getType().getID());//reag type
+					buffer.writeUtf(reag.getType().getID());//reag type
 					buffer.writeByte(reag.getAmount());//reag qty
 				}
 				total = recipe.products.length;
 				buffer.writeByte(total);//Number of products
 				for(ReagentStack reag : recipe.products){
-					buffer.writeString(reag.getType().getID());//prod type
+					buffer.writeUtf(reag.getType().getID());//prod type
 					buffer.writeByte(reag.getAmount());//prod qty
 				}
 				buffer.writeFloat(recipe.data);//data

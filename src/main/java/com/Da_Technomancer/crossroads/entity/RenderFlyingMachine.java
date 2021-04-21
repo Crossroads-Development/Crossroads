@@ -20,19 +20,19 @@ public class RenderFlyingMachine extends EntityRenderer<EntityFlyingMachine>{
 	}
 
 	@Override
-	public ResourceLocation getEntityTexture(EntityFlyingMachine entity){
+	public ResourceLocation getTextureLocation(EntityFlyingMachine entity){
 		return TEXTURE;
 	}
 
 	@Override
 	public void render(EntityFlyingMachine entity, float entityYaw, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int light){
-		matrix.rotate(Vector3f.YP.rotationDegrees(-entityYaw));
+		matrix.mulPose(Vector3f.YP.rotationDegrees(-entityYaw));
 
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getEntitySolid(getEntityTexture(entity)));
+		IVertexBuilder builder = buffer.getBuffer(RenderType.entitySolid(getTextureLocation(entity)));
 
-		matrix.push();
+		matrix.pushPose();
 		matrix.translate(0, 0.5D, 0);
-		matrix.rotate(Vector3f.XP.rotation(-entity.getAngle()));
+		matrix.mulPose(Vector3f.XP.rotation(-entity.getAngle()));
 
 		//All of these texture coords were originally specified as literals, and now that I have to port it to the new renderer, I regret this fact
 		//But am also too lazy to fix this for the future
@@ -100,7 +100,7 @@ public class RenderFlyingMachine extends EntityRenderer<EntityFlyingMachine>{
 		CRRenderUtil.addVertexEntity(builder, matrix, -0.35F, 0.2F, 0.35F, 0.75F, 0.90625F, -1, 0, 0, light);
 		CRRenderUtil.addVertexEntity(builder, matrix, -0.35F, 0.2F, -0.35F, 1, 0.90625F, -1, 0, 0, light);
 
-		matrix.pop();
+		matrix.popPose();
 		
 		//End boxes
 		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, 0.7F, -0.2F, 0.25F, 0.5F, 1, 0, 0, light);
@@ -165,25 +165,25 @@ public class RenderFlyingMachine extends EntityRenderer<EntityFlyingMachine>{
 
 		//Legs
 		renderLeg(builder, matrix, light);
-		matrix.push();
+		matrix.pushPose();
 		float xTranslation = 1.275F;
 		float zTranslation = 0.525F;
 		matrix.translate(xTranslation, 0, 0);
 		renderLeg(builder, matrix, light);
 		matrix.translate(0, 0, zTranslation);
 		renderLeg(builder, matrix, light);
-		matrix.pop();
-		matrix.push();
+		matrix.popPose();
+		matrix.pushPose();
 		matrix.translate(0, 0, zTranslation);
 		renderLeg(builder, matrix, light);
-		matrix.pop();
+		matrix.popPose();
 
 		//Supports
-		matrix.push();
+		matrix.pushPose();
 		renderSupport(builder, matrix, light);
 		matrix.translate(1.275, 0, 0);
 		renderSupport(builder, matrix, light);
-		matrix.pop();
+		matrix.popPose();
 
 		//Seat
 		float seatX = 0.7F;

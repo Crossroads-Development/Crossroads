@@ -64,7 +64,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 			if(state.getBlock() != CRBlocks.largeGearMaster){
 				return Direction.NORTH;
 			}
-			facing = state.get(ESProperties.FACING);
+			facing = state.getValue(ESProperties.FACING);
 		}
 		return facing;
 	}
@@ -80,7 +80,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 
 	public void initSetup(GearFactory.GearMaterial typ){
 		type = typ;
-		if(!world.isRemote){
+		if(!level.isClientSide){
 			newTE = true;
 		}
 
@@ -96,7 +96,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){
-		return RENDER_BOX.offset(pos);
+		return RENDER_BOX.move(worldPosition);
 	}
 
 	public void breakGroup(Direction side, boolean drop){
@@ -106,29 +106,29 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 		borken = true;
 		for(int i = -1; i < 2; ++i){
 			for(int j = -1; j < 2; ++j){
-				world.setBlockState(pos.offset(side.getAxis() == Axis.X ? Direction.UP : Direction.EAST, i).offset(side.getAxis() == Axis.Z ? Direction.UP : Direction.NORTH, j), Blocks.AIR.getDefaultState());
+				level.setBlockAndUpdate(worldPosition.relative(side.getAxis() == Axis.X ? Direction.UP : Direction.EAST, i).relative(side.getAxis() == Axis.Z ? Direction.UP : Direction.NORTH, j), Blocks.AIR.defaultBlockState());
 			}
 		}
 		if(drop){
-			world.addEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), CRItems.largeGear.withMaterial(type, 1)));
+			level.addFreshEntity(new ItemEntity(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), CRItems.largeGear.withMaterial(type, 1)));
 		}
 	}
 
 	@Override
 	public void tick(){
-		if(world.isRemote){
+		if(level.isClientSide){
 			angleW[0] += angleW[1] * 9D / Math.PI;
 		}else if(newTE){
 			newTE = false;
 			//This is newly placed. Lazy-load send (lazy send? lazy network?) the type data to any clients.
 			//This is unnecessary for the client that placed this, but needed in MP for other clients
-			CRPackets.sendPacketAround(world, pos, new SendLongToClient((byte) 1, type == null ? -1 : type.serialize(), pos));
+			CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient((byte) 1, type == null ? -1 : type.serialize(), worldPosition));
 		}
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 
 		energy = nbt.getDouble("[1]mot");
 		// member
@@ -141,8 +141,8 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 
 		// motionData
 		nbt.putDouble("[1]mot", energy);
@@ -184,8 +184,8 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		mainOpt.invalidate();
 	}
 
@@ -215,7 +215,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 		@Override
 		public void setEnergy(double newEnergy){
 			energy = newEnergy;
-			markDirty();
+			setChanged();
 		}
 
 		@Override
@@ -256,10 +256,10 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 			Direction side = getFacing();
 			
 			for(int i = 0; i < 6; i++){
-				if(i != side.getIndex() && i != side.getOpposite().getIndex()){
-					Direction facing = Direction.byIndex(i);
+				if(i != side.get3DDataValue() && i != side.getOpposite().get3DDataValue()){
+					Direction facing = Direction.from3DDataValue(i);
 					// Adjacent gears
-					TileEntity adjTE = world.getTileEntity(pos.offset(facing, 2));
+					TileEntity adjTE = level.getBlockEntity(worldPosition.relative(facing, 2));
 					if(adjTE != null){
 						LazyOptional<ICogHandler> cogOpt;
 						if((cogOpt = adjTE.getCapability(Capabilities.COG_CAPABILITY, side)).isPresent()){
@@ -271,14 +271,14 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 					}
 
 					// Diagonal gears
-					TileEntity diagTE = world.getTileEntity(pos.offset(facing, 2).offset(side));
+					TileEntity diagTE = level.getBlockEntity(worldPosition.relative(facing, 2).relative(side));
 					LazyOptional<ICogHandler> cogOpt;
-					if(diagTE != null && (cogOpt = diagTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())).isPresent() && RotaryUtil.canConnectThrough(world, pos.offset(facing, 2), facing.getOpposite(), side)){
+					if(diagTE != null && (cogOpt = diagTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())).isPresent() && RotaryUtil.canConnectThrough(level, worldPosition.relative(facing, 2), facing.getOpposite(), side)){
 						cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatio, 1.5D, side.getOpposite(), renderOffset);
 					}
 
 					//Underside gears
-					TileEntity undersideTE = world.getTileEntity(pos.offset(facing, 1).offset(side));
+					TileEntity undersideTE = level.getBlockEntity(worldPosition.relative(facing, 1).relative(side));
 					if(undersideTE != null && (cogOpt = undersideTE.getCapability(Capabilities.COG_CAPABILITY, facing)).isPresent()){
 						cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatioIn, 1.5D, side.getOpposite(), renderOffset);
 					}
@@ -287,7 +287,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 
 			for(Direction.AxisDirection dir : Direction.AxisDirection.values()){
 				Direction axleDir = dir == Direction.AxisDirection.POSITIVE ? getFacing() : getFacing().getOpposite();
-				TileEntity connectTE = world.getTileEntity(pos.offset(axleDir));
+				TileEntity connectTE = level.getBlockEntity(worldPosition.relative(axleDir));
 
 				if(connectTE != null){
 					LazyOptional<IAxisHandler> axisOpt;

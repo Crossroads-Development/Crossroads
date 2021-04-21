@@ -80,22 +80,22 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 	}
 
 	@Override
-	public ItemStack getCraftingResult(IInventory inv){
-		return getRecipeOutput();
+	public ItemStack assemble(IInventory inv){
+		return getResultItem();
 	}
 
 	@Override
-	public boolean canFit(int width, int height){
+	public boolean canCraftInDimensions(int width, int height){
 		return true;
 	}
 
 	@Override
-	public ItemStack getRecipeOutput(){
+	public ItemStack getResultItem(){
 		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public ItemStack getIcon(){
+	public ItemStack getToastSymbol(){
 		return new ItemStack(CRItems.phialGlass);
 	}
 
@@ -228,21 +228,21 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 		 * }
 		 */
 		@Override
-		public ReagentRec read(ResourceLocation recipeId, JsonObject json){
+		public ReagentRec fromJson(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and ingredient
-			String group = JSONUtils.getString(json, "group", "");
-			String id = JSONUtils.getString(json, "id").toLowerCase(Locale.US).replace(' ', '_');
-			double melting = JSONUtils.getString(json, "melting", "-275").equals("never") ? Short.MAX_VALUE - 1 : JSONUtils.getFloat(json, "melting", -275);
-			double boiling = JSONUtils.getString(json, "boiling", "-274").equals("never") ? Short.MAX_VALUE : JSONUtils.getFloat(json, "boiling", -274);
+			String group = JSONUtils.getAsString(json, "group", "");
+			String id = JSONUtils.getAsString(json, "id").toLowerCase(Locale.US).replace(' ', '_');
+			double melting = JSONUtils.getAsString(json, "melting", "-275").equals("never") ? Short.MAX_VALUE - 1 : JSONUtils.getAsFloat(json, "melting", -275);
+			double boiling = JSONUtils.getAsString(json, "boiling", "-274").equals("never") ? Short.MAX_VALUE : JSONUtils.getAsFloat(json, "boiling", -274);
 			if(melting > boiling){
 				boiling = melting;//Equal melting and boiling point would cause sublimation, skipping liquid
 			}
-			ITag.INamedTag<Item> item = ItemTags.makeWrapperTag(JSONUtils.getString(json, "item", "crossroads:empty"));
+			ITag.INamedTag<Item> item = ItemTags.bind(JSONUtils.getAsString(json, "item", "crossroads:empty"));
 			FluidStack fluid = CraftingUtil.getFluidStack(json, "fluid", FluidStack.EMPTY);
-			ContainRequirements vessel = containTypeMap.getOrDefault(JSONUtils.getString(json, "vessel", "none"), ContainRequirements.NONE);
-			String effectName = JSONUtils.getString(json, "effect", "none");
+			ContainRequirements vessel = containTypeMap.getOrDefault(JSONUtils.getAsString(json, "vessel", "none"), ContainRequirements.NONE);
+			String effectName = JSONUtils.getAsString(json, "effect", "none");
 			IAlchEffect effect = effectMap.getOrDefault(effectName, null);
-			String flameName = JSONUtils.getString(json, "flame", "none");
+			String flameName = JSONUtils.getAsString(json, "flame", "none");
 			Function<Integer, Integer> flameFunc = flameRadiusMap.getOrDefault(flameName, flameRadiusMap.get("none"));
 			boolean flame = flameFunc != flameRadiusMap.get("none");
 			Function<EnumMatterPhase, Color> colorFunction;
@@ -271,14 +271,14 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 
 		@Nullable
 		@Override
-		public ReagentRec read(ResourceLocation recipeId, PacketBuffer buffer){
-			String group = buffer.readString(Short.MAX_VALUE);
-			String id = buffer.readString();
+		public ReagentRec fromNetwork(ResourceLocation recipeId, PacketBuffer buffer){
+			String group = buffer.readUtf(Short.MAX_VALUE);
+			String id = buffer.readUtf();
 			double melting = buffer.readDouble();
 			double boiling = buffer.readDouble();
 			boolean flame = buffer.readBoolean();
-			ITag.INamedTag<Item> solid = ItemTags.makeWrapperTag(buffer.readString());
-			Fluid fl = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(buffer.readString()));
+			ITag.INamedTag<Item> solid = ItemTags.bind(buffer.readUtf());
+			Fluid fl = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(buffer.readUtf()));
 			int flQty = buffer.readVarInt();
 			FluidStack fluid = fl == null || flQty == 0 ? FluidStack.EMPTY : new FluidStack(fl, flQty);
 			ContainRequirements vessel = ContainRequirements.values()[buffer.readVarInt()];
@@ -288,27 +288,27 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 				colMap[i] = new Color(colMapInt[i], true);
 			}
 			Function<EnumMatterPhase, Color> colFunc = phase -> colMap[phase.ordinal()];
-			String effectName = buffer.readString();
+			String effectName = buffer.readUtf();
 			IAlchEffect effect = effectMap.getOrDefault(effectName, effectMap.get("none"));
-			String flameName = buffer.readString();
+			String flameName = buffer.readUtf();
 			Function<Integer, Integer> flameFunc = flameRadiusMap.getOrDefault(flameName, flameRadiusMap.get("none"));
 			return new ReagentRec(recipeId, group, id, melting, boiling, flame, solid, fluid, vessel, colMapInt, colFunc, effectName, effect, flameName, flameFunc);
 		}
 
 		@Override
-		public void write(PacketBuffer buffer, ReagentRec recipe){
-			buffer.writeString(recipe.getGroup());
-			buffer.writeString(recipe.id);
+		public void toNetwork(PacketBuffer buffer, ReagentRec recipe){
+			buffer.writeUtf(recipe.getGroup());
+			buffer.writeUtf(recipe.id);
 			buffer.writeDouble(recipe.melting);
 			buffer.writeDouble(recipe.boiling);
 			buffer.writeBoolean(recipe.flame);
-			buffer.writeString(recipe.solid.getName().toString());
-			buffer.writeString(recipe.fluid.getFluid().getRegistryName().toString());
+			buffer.writeUtf(recipe.solid.getName().toString());
+			buffer.writeUtf(recipe.fluid.getFluid().getRegistryName().toString());
 			buffer.writeVarInt(recipe.fluid.getAmount());
 			buffer.writeVarInt(recipe.containment.ordinal());
 			buffer.writeVarIntArray(recipe.colMap);
-			buffer.writeString(recipe.effectName);
-			buffer.writeString(recipe.flameName);
+			buffer.writeUtf(recipe.effectName);
+			buffer.writeUtf(recipe.flameName);
 		}
 	}
 

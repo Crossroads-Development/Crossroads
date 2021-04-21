@@ -21,19 +21,19 @@ public class CheatWandHeat extends Item{
 	private static final int RATE = 100;
 
 	protected CheatWandHeat(){
-		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
+		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "cheat_wand_heat";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
 	}
 
 	@Override
-	public ActionResultType onItemUse(ItemUseContext context){
-		TileEntity te = context.getWorld().getTileEntity(context.getPos());
+	public ActionResultType useOn(ItemUseContext context){
+		TileEntity te = context.getLevel().getBlockEntity(context.getClickedPos());
 		LazyOptional<IHeatHandler> heatOpt;
 		if(te != null && (heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, null)).isPresent()){
 			IHeatHandler cable = heatOpt.orElseThrow(NullPointerException::new);
-			if(context.getPlayer() != null && context.getPlayer().isSneaking()){
+			if(context.getPlayer() != null && context.getPlayer().isShiftKeyDown()){
 				cable.addHeat(-RATE);
 			}else{
 				cable.addHeat(RATE);
@@ -44,7 +44,7 @@ public class CheatWandHeat extends Item{
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.creative"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.cheat_heat.desc", RATE));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.cheat_heat.cold", RATE));

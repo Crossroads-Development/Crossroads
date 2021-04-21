@@ -73,7 +73,7 @@ public class AlchemicalTube extends ConduitBlock<EnumTransferMode>{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new AlchemicalTubeTileEntity(!crystal);
 	}
 
@@ -87,7 +87,7 @@ public class AlchemicalTube extends ConduitBlock<EnumTransferMode>{
 	protected EnumTransferMode getValueForPlacement(World world, BlockPos pos, Direction side, @Nullable TileEntity neighTE){
 		//If adjacent to another pipe, set the initial mode based on the other pipe for continuous flow
 		if(neighTE instanceof AlchemicalTubeTileEntity){
-			EnumTransferMode otherMode = ((AlchemicalTubeTileEntity) neighTE).getModes()[side.getOpposite().getIndex()];
+			EnumTransferMode otherMode = ((AlchemicalTubeTileEntity) neighTE).getModes()[side.getOpposite().get3DDataValue()];
 			if(otherMode == EnumTransferMode.OUTPUT){
 				return EnumTransferMode.INPUT;
 			}else if(otherMode == EnumTransferMode.INPUT){
@@ -101,7 +101,7 @@ public class AlchemicalTube extends ConduitBlock<EnumTransferMode>{
 	protected void onAdjusted(World world, BlockPos pos, BlockState newState, Direction facing, EnumTransferMode newVal, @Nullable IConduitTE<EnumTransferMode> te){
 		super.onAdjusted(world, pos, newState, facing, newVal, te);
 
-		TileEntity neighTE = world.getTileEntity(pos.offset(facing));
+		TileEntity neighTE = world.getBlockEntity(pos.relative(facing));
 		//Check the neighbor is another conduit with the same channel
 		if(neighTE instanceof AlchemicalTubeTileEntity && ((AlchemicalTube) neighTE.getBlockState().getBlock()).crystal == crystal){
 			//Adjust the neighboring pipe alongside this one
@@ -119,7 +119,7 @@ public class AlchemicalTube extends ConduitBlock<EnumTransferMode>{
 					break;
 			}
 
-			((AlchemicalTubeTileEntity) neighTE).setData(facing.getOpposite().getIndex(), newVal.isConnection(), otherMode);
+			((AlchemicalTubeTileEntity) neighTE).setData(facing.getOpposite().get3DDataValue(), newVal.isConnection(), otherMode);
 		}
 	}
 }

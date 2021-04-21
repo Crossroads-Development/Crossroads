@@ -52,26 +52,26 @@ public class IceboxRec implements IOptionalRecipe<IInventory>{
 
 	@Override
 	public boolean matches(IInventory inv, World worldIn){
-		return active && ingr.test(inv.getStackInSlot(0));
+		return active && ingr.test(inv.getItem(0));
 	}
 
 	@Override
-	public ItemStack getCraftingResult(IInventory inv){
-		return getRecipeOutput();
+	public ItemStack assemble(IInventory inv){
+		return getResultItem();
 	}
 
 	@Override
-	public boolean canFit(int width, int height){
+	public boolean canCraftInDimensions(int width, int height){
 		return true;
 	}
 
 	@Override
-	public ItemStack getRecipeOutput(){
+	public ItemStack getResultItem(){
 		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public ItemStack getIcon(){
+	public ItemStack getToastSymbol(){
 		return new ItemStack(CRBlocks.icebox);
 	}
 
@@ -98,9 +98,9 @@ public class IceboxRec implements IOptionalRecipe<IInventory>{
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<IceboxRec>{
 
 		@Override
-		public IceboxRec read(ResourceLocation recipeId, JsonObject json){
+		public IceboxRec fromJson(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and ingredient
-			String s = JSONUtils.getString(json, "group", "");
+			String s = JSONUtils.getAsString(json, "group", "");
 			if(!CraftingUtil.isActiveJSON(json)){
 				return new IceboxRec(recipeId, s, Ingredient.EMPTY, 0, false);
 			}
@@ -108,27 +108,27 @@ public class IceboxRec implements IOptionalRecipe<IInventory>{
 			Ingredient ingredient = CraftingUtil.getIngredient(json, "fuel", false);
 
 			//Output specified as 1 float tag
-			double cooling = JSONUtils.getFloat(json, "cooling");
+			double cooling = JSONUtils.getAsFloat(json, "cooling");
 			return new IceboxRec(recipeId, s, ingredient, cooling, true);
 		}
 
 		@Nullable
 		@Override
-		public IceboxRec read(ResourceLocation recipeId, PacketBuffer buffer){
-			String s = buffer.readString(Short.MAX_VALUE);
+		public IceboxRec fromNetwork(ResourceLocation recipeId, PacketBuffer buffer){
+			String s = buffer.readUtf(Short.MAX_VALUE);
 			if(!buffer.readBoolean()){
 				return new IceboxRec(recipeId, s, Ingredient.EMPTY, 0, false);
 			}
-			Ingredient ingredient = Ingredient.read(buffer);
+			Ingredient ingredient = Ingredient.fromNetwork(buffer);
 			float cooling = buffer.readFloat();
 			return new IceboxRec(recipeId, s, ingredient, cooling, true);
 		}
 
 		@Override
-		public void write(PacketBuffer buffer, IceboxRec recipe){
-			buffer.writeString(recipe.getGroup());
+		public void toNetwork(PacketBuffer buffer, IceboxRec recipe){
+			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
-			recipe.ingr.write(buffer);
+			recipe.ingr.toNetwork(buffer);
 			buffer.writeFloat(recipe.cooling);
 		}
 	}

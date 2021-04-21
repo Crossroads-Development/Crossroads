@@ -24,9 +24,9 @@ public class DisinfectAlchemyEffect implements IAlchEffect{
 
 	@Override
 	public void doEffect(World world, BlockPos pos, int amount, EnumMatterPhase phase, ReagentMap reags){
-		for(LivingEntity e : world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos, pos.add(1, 1, 1)), EntityPredicates.IS_ALIVE)){
-			e.removePotionEffect(Effects.POISON);
-			e.removePotionEffect(Effects.HUNGER);
+		for(LivingEntity e : world.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(pos, pos.offset(1, 1, 1)), EntityPredicates.ENTITY_STILL_ALIVE)){
+			e.removeEffect(Effects.POISON);
+			e.removeEffect(Effects.HUNGER);
 
 			if(e instanceof ZombieVillagerEntity && villConv != null){
 				try{

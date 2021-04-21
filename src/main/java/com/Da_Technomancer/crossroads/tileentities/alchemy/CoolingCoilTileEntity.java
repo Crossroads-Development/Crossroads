@@ -34,7 +34,7 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 	private double calcAmbTemp(){
 		if(!init){
 			init = true;
-			ambientTemp = HeatUtil.convertBiomeTemp(world, pos);
+			ambientTemp = HeatUtil.convertBiomeTemp(level, worldPosition);
 		}
 		return ambientTemp;
 	}
@@ -55,7 +55,7 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == getBlockState().get(CRProperties.HORIZ_FACING).getAxis())){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == getBlockState().getValue(CRProperties.HORIZ_FACING).getAxis())){
 			return (LazyOptional<T>) chemOpt;
 		}
 		return super.getCapability(cap, side);
@@ -64,15 +64,15 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 	@Override
 	protected EnumTransferMode[] getModes(){
 		EnumTransferMode[] output = {EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE};
-		Direction outSide = world.getBlockState(pos).get(CRProperties.HORIZ_FACING);
-		output[outSide.getIndex()] = EnumTransferMode.OUTPUT;
-		output[outSide.getOpposite().getIndex()] = EnumTransferMode.INPUT;
+		Direction outSide = level.getBlockState(worldPosition).getValue(CRProperties.HORIZ_FACING);
+		output[outSide.get3DDataValue()] = EnumTransferMode.OUTPUT;
+		output[outSide.getOpposite().get3DDataValue()] = EnumTransferMode.INPUT;
 		return output;
 	}
 	
 	@Override
 	protected Vector3d getParticlePos(){
-		return Vector3d.copy(pos).add(0.5D, 0.3D, 0.5D);//We add the offset ourselves for finer precision
+		return Vector3d.atLowerCornerOf(worldPosition).add(0.5D, 0.3D, 0.5D);//We add the offset ourselves for finer precision
 		
 	}
 }

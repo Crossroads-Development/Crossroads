@@ -92,18 +92,18 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 		if(facing == null){
 			BlockState state = getBlockState();
 			if(!state.hasProperty(ESProperties.FACING)){
-				remove();
+				setRemoved();
 				return Direction.DOWN;
 			}
-			facing = state.get(ESProperties.FACING);
+			facing = state.getValue(ESProperties.FACING);
 		}
 
 		return facing;
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		//It is important that disconnect is called when this TE is destroyed/removed/invalidated on both the server and client to both prevent memory leaks, and clear up minor rendering abnormalities
 		disconnect();
 		axisOpt.invalidate();
@@ -111,8 +111,8 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public void updateContainingBlockInfo(){
-		super.updateContainingBlockInfo();
+	public void clearCache(){
+		super.clearCache();
 		disconnect();
 		axisOpt.invalidate();
 		axisOpt = LazyOptional.of(() -> handler);
@@ -173,7 +173,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 					wCoeff[i] = 0;
 				}
 			}
-		}else if(!world.isRemote){//Server side, has members
+		}else if(!level.isClientSide){//Server side, has members
 			float trueSpeed = (float) baseSpeed / 20F;//Speed in rad/t
 			if(Float.isNaN(trueSpeed)){
 				trueSpeed = 0;
@@ -240,7 +240,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 				coeff[3] = prevAngles[3] - offset;
 
 				//Sync the series to the client
-				CRPackets.sendPacketAround(world, pos, new SendTaylorToClient(ticksExisted, coeff, pos));
+				CRPackets.sendPacketAround(level, worldPosition, new SendTaylorToClient(ticksExisted, coeff, worldPosition));
 			}
 		}
 	}
@@ -264,7 +264,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 
 	@Override
 	public void receiveSeries(long timestamp, float[] series){
-		float partTicks = Minecraft.getInstance().getRenderPartialTicks();
+		float partTicks = Minecraft.getInstance().getFrameTime();
 		float prevAngle = runSeries(ticksExisted, partTicks);
 		regrTimestamp = timestamp;
 		coeff = series;
@@ -275,7 +275,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 	@Override
 	public void tick(){
 		ticksExisted++;
-		markDirty();
+		setChanged();
 
 		if(ticksExisted % UPDATE_TIME == 20 || forceUpdate || rotaryMembers.isEmpty()){
 			handler.requestUpdate();
@@ -286,7 +286,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 		lastKey = RotaryUtil.getMasterKey();
 
 		if(!locked && !rotaryMembers.isEmpty()){
-			if(!world.isRemote){
+			if(!level.isClientSide){
 				runCalc();
 			}
 			runAngleCalc();
@@ -294,8 +294,8 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		ticksExisted = nbt.getLong("life");
 		for(int i = 0; i < 4; i++){
 			prevAngles[i] = nbt.getFloat("prev_" + i);
@@ -317,8 +317,8 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putLong("life", ticksExisted);
 		for(int i = 0; i < 4; i++){
 			nbt.putFloat("prev_" + i, prevAngles[i]);
@@ -339,7 +339,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
-		return write(nbt);
+		return save(nbt);
 	}
 
 	/**
@@ -380,7 +380,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 			rotaryMembers.clear();
 			locked = false;
 			Direction dir = getFacing();
-			TileEntity te = world.getTileEntity(pos.offset(dir));
+			TileEntity te = level.getBlockEntity(worldPosition.relative(dir));
 			LazyOptional<IAxleHandler> axleOpt;
 			if(te != null && (axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, dir.getOpposite())).isPresent()){
 				byte keyNew;

@@ -26,7 +26,7 @@ public abstract class TileEntityContainer<U extends TileEntity & IInventory> ext
 		super(type, windowId);
 		this.playerInv = playerInv;
 		BlockPos pos = data.readBlockPos();
-		TileEntity rawTE = playerInv.player.world.getTileEntity(pos);
+		TileEntity rawTE = playerInv.player.level.getBlockEntity(pos);
 		U worldTe = null;
 		if(rawTE != null){
 			try{
@@ -44,7 +44,7 @@ public abstract class TileEntityContainer<U extends TileEntity & IInventory> ext
 			//Just in case one of the two things that should never happen happens, we create a fake instance of type U
 			//The UI will be basically non-functional, but we prevent a hard crash
 			worldTe = generateEmptyTE();
-			worldTe.setWorldAndPos(playerInv.player.world, pos);
+			worldTe.setLevelAndPosition(playerInv.player.level, pos);
 			Crossroads.logger.error("Null world tile entity! Generating dummy TE. Report to mod author; type=%1$s", type.toString());
 		}
 		this.te = worldTe;
@@ -92,31 +92,31 @@ public abstract class TileEntityContainer<U extends TileEntity & IInventory> ext
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(PlayerEntity playerIn, int fromSlot){
+	public ItemStack quickMoveStack(PlayerEntity playerIn, int fromSlot){
 		ItemStack previous = ItemStack.EMPTY;
-		Slot slot = inventorySlots.get(fromSlot);
+		Slot slot = slots.get(fromSlot);
 
-		if(slot != null && slot.getHasStack()){
-			ItemStack current = slot.getStack();
+		if(slot != null && slot.hasItem()){
+			ItemStack current = slot.getItem();
 			previous = current.copy();
 
 			//fromSlot < slotCount means TE -> Player, else Player -> TE input slots
 			if(fromSlot < slotCount()){
-				if(!mergeItemStack(current, slotCount(), 36 + slotCount(), true)){
+				if(!moveItemStackTo(current, slotCount(), 36 + slotCount(), true)){
 					return ItemStack.EMPTY;
 				}
-				slot.onSlotChange(current, previous);
+				slot.onQuickCraft(current, previous);
 			}else{
-				if(!mergeItemStack(current, 0, slotCount(), false)){
+				if(!moveItemStackTo(current, 0, slotCount(), false)){
 					return ItemStack.EMPTY;
 				}
-				slot.onSlotChange(current, previous);
+				slot.onQuickCraft(current, previous);
 			}
 
 			if(current.isEmpty()){
-				slot.putStack(ItemStack.EMPTY);
+				slot.set(ItemStack.EMPTY);
 			}else{
-				slot.onSlotChanged();
+				slot.setChanged();
 			}
 
 			if(current.getCount() == previous.getCount()){
@@ -129,8 +129,8 @@ public abstract class TileEntityContainer<U extends TileEntity & IInventory> ext
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity playerIn){
-		return te.isUsableByPlayer(playerIn);
+	public boolean stillValid(PlayerEntity playerIn){
+		return te.stillValid(playerIn);
 	}
 
 	protected static class StrictSlot extends Slot{
@@ -140,8 +140,8 @@ public abstract class TileEntityContainer<U extends TileEntity & IInventory> ext
 		}
 
 		@Override
-		public boolean isItemValid(ItemStack stack){
-			return inventory.isItemValidForSlot(getSlotIndex(), stack);
+		public boolean mayPlace(ItemStack stack){
+			return container.canPlaceItem(getSlotIndex(), stack);
 		}
 	}
 
@@ -152,7 +152,7 @@ public abstract class TileEntityContainer<U extends TileEntity & IInventory> ext
 		}
 
 		@Override
-		public boolean isItemValid(ItemStack stack){
+		public boolean mayPlace(ItemStack stack){
 			return false;
 		}
 	}

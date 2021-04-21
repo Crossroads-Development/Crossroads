@@ -21,7 +21,7 @@ public class RedsAlchemicalTubeTileEntity extends AlchemicalTubeTileEntity{
 	}
 
 	private boolean isUnlocked(){
-		return getBlockState().get(ESProperties.REDSTONE_BOOL);
+		return getBlockState().getValue(ESProperties.REDSTONE_BOOL);
 	}
 
 	@Override

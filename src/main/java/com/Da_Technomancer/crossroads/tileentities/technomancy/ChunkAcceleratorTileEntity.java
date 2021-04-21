@@ -82,13 +82,13 @@ public class ChunkAcceleratorTileEntity extends IFluxLink.FluxHelper{
 		//Handle flux
 		super.tick();
 
-		if(!world.isRemote && world.getGameTime() != lastRunTick){
+		if(!level.isClientSide && level.getGameTime() != lastRunTick){
 			//Prevent time acceleration of this block
-			lastRunTick = world.getGameTime();
+			lastRunTick = level.getGameTime();
 			int extraTicks = extraTicks(intensity);
 
 
-			if(world.getGameTime() % FluxUtil.FLUX_TIME == 0){
+			if(level.getGameTime() % FluxUtil.FLUX_TIME == 0){
 				addFlux(producedFlux(intensity));
 				infoIntensity = intensity;
 				intensity = 0;//Reset stored beam power
@@ -96,9 +96,9 @@ public class ChunkAcceleratorTileEntity extends IFluxLink.FluxHelper{
 
 			//Apply time acceleration
 			if(extraTicks > 0 && CRConfig.teTimeAccel.get() && !isShutDown()){
-				ChunkPos chunkPos = new ChunkPos(pos);
+				ChunkPos chunkPos = new ChunkPos(worldPosition);
 				//List of every tile entity in the chunk which is tickable
-				List<TileEntity> tickables = world.tickableTileEntities.stream().filter(te -> te instanceof ITickableTileEntity && te.getPos().getX() >> 4 == chunkPos.x && te.getPos().getZ() >> 4 == chunkPos.z).collect(Collectors.toList());
+				List<TileEntity> tickables = level.tickableBlockEntities.stream().filter(te -> te instanceof ITickableTileEntity && te.getBlockPos().getX() >> 4 == chunkPos.x && te.getBlockPos().getZ() >> 4 == chunkPos.z).collect(Collectors.toList());
 				for(TileEntity te : tickables){
 					ITickableTileEntity tte = (ITickableTileEntity) te;
 					for(int run = 0; run < extraTicks; run++){
@@ -110,23 +110,23 @@ public class ChunkAcceleratorTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putInt("intensity", intensity);
 		nbt.putLong("last_run", lastRunTick);
 		return nbt;
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		intensity = nbt.getInt("intensity");
 		lastRunTick = nbt.getLong("last_run");
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		beamOpt.invalidate();
 	}
 
@@ -150,7 +150,7 @@ public class ChunkAcceleratorTileEntity extends IFluxLink.FluxHelper{
 				if(mag.getVoid() == 0){
 					intensity += mag.getPower();//Speed up time
 				}
-				markDirty();
+				setChanged();
 			}
 		}
 	}

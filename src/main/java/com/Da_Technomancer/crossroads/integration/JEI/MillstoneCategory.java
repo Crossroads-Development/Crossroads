@@ -45,7 +45,7 @@ public class MillstoneCategory implements IRecipeCategory<MillRec>{
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.millstone.getTranslatedName().getString();
+		return CRBlocks.millstone.getName().getString();
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class MillstoneCategory implements IRecipeCategory<MillRec>{
 	@Override
 	public void setIngredients(MillRec recipe, IIngredients ingredients){
 		ingredients.setInputIngredients(recipe.getIngredients());
-		ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
+		ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
 	}
 
 	@Override

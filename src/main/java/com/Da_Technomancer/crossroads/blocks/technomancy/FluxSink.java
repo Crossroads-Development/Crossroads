@@ -31,7 +31,7 @@ import java.util.List;
 public class FluxSink extends ContainerBlock{
 
 	private final float[] COLOR_CODE = new float[] {1, 1, 1F};//R: 255, G: 100, B: 0
-	private final VoxelShape SHAPE = makeCuboidShape(1, 1, 1, 15, 15, 15);
+	private final VoxelShape SHAPE = box(1, 1, 1, 15, 15, 15);
 
 	public FluxSink(){
 		super(CRBlocks.getMetalProperty());
@@ -41,26 +41,26 @@ public class FluxSink extends ContainerBlock{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new FluxSinkTileEntity();
 	}
 
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.flux_sink.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.flux_sink.beacon"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.flux_sink.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		return FluxUtil.handleFluxLinking(worldIn, pos, playerIn.getHeldItem(hand), playerIn);
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		return FluxUtil.handleFluxLinking(worldIn, pos, playerIn.getItemInHand(hand), playerIn);
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 

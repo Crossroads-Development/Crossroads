@@ -41,8 +41,8 @@ public class LooseBeamRenderable implements IVisualEffect{
 	@Override
 	public boolean render(MatrixStack matrix, IRenderTypeBuffer buffer, long worldTime, float partialTicks, Random rand){
 		matrix.translate(x, y, z);
-		matrix.rotate(Vector3f.YP.rotationDegrees(-angleY));
-		matrix.rotate(Vector3f.XP.rotationDegrees(angleX + 90F));
+		matrix.mulPose(Vector3f.YP.rotationDegrees(-angleY));
+		matrix.mulPose(Vector3f.XP.rotationDegrees(angleX + 90F));
 		BeamRenderer.drawBeam(matrix, buffer.getBuffer(CRRenderTypes.BEAM_TYPE), (float) length, width / 8F, new Color(color));
 
 		if(lastTick != worldTime){

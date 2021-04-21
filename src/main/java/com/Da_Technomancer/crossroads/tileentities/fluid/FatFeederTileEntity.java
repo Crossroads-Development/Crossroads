@@ -54,16 +54,16 @@ public class FatFeederTileEntity extends InventoryTE{
 
 	@Override
 	public void tick(){
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 
 		//Player feeding
 		float range = (float) Math.abs(fluids[0].getAmount() - fluidProps[0].capacity / 2) / (float) (fluidProps[0].capacity / 2);
 		range = (1F - range) * (MAX_RANGE - MIN_RANGE) + MIN_RANGE;
-		List<PlayerEntity> players = world.getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(pos.subtract(new Vector3i(range, range, range)), pos.add(new Vector3i(range, range, range))), EntityPredicates.IS_ALIVE);
+		List<PlayerEntity> players = level.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(worldPosition.subtract(new Vector3i(range, range, range)), worldPosition.offset(new Vector3i(range, range, range))), EntityPredicates.ENTITY_STILL_ALIVE);
 		for(PlayerEntity play : players){
-			FoodStats food = play.getFoodStats();
+			FoodStats food = play.getFoodData();
 			int added = Math.min(fluids[0].getAmount() / CRConfig.fatPerValue.get(), 40 - (food.getFoodLevel() + (int) food.getSaturationLevel()));
 			if(added < 4){
 				continue;
@@ -72,11 +72,11 @@ public class FatFeederTileEntity extends InventoryTE{
 			int hungerAdded = Math.min(20 - food.getFoodLevel(), added);
 			//The way saturation is coded is weird (defined relative to hunger), and the best way to do this is through nbt.
 			CompoundNBT nbt = new CompoundNBT();
-			food.write(nbt);
+			food.addAdditionalSaveData(nbt);
 			nbt.putInt("foodLevel", hungerAdded + food.getFoodLevel());
 			nbt.putFloat("foodSaturationLevel", Math.min(20F - food.getSaturationLevel(), added - hungerAdded) + food.getSaturationLevel());
-			food.read(nbt);
-			markDirty();
+			food.readAdditionalSaveData(nbt);
+			setChanged();
 		}
 
 
@@ -85,7 +85,7 @@ public class FatFeederTileEntity extends InventoryTE{
 			return;
 		}
 
-		List<AgeableEntity> animals = world.getEntitiesWithinAABB(AgeableEntity.class, new AxisAlignedBB(pos.subtract(new Vector3i(range, range, range)), pos.add(new Vector3i(range, range, range))), EntityPredicates.IS_ALIVE);
+		List<AgeableEntity> animals = level.getEntitiesOfClass(AgeableEntity.class, new AxisAlignedBB(worldPosition.subtract(new Vector3i(range, range, range)), worldPosition.offset(new Vector3i(range, range, range))), EntityPredicates.ENTITY_STILL_ALIVE);
 
 		//Cap out animal feeding at 64, to prevent flooding the world with animals
 		if(animals.size() >= 64){
@@ -93,30 +93,30 @@ public class FatFeederTileEntity extends InventoryTE{
 		}
 
 		//Bobo feature: If this is placed on an Emerald Block, it can feed villagers to make them willing to breed without feeding/trading.
-		boolean canBreedVillagers = Tags.Blocks.STORAGE_BLOCKS_EMERALD.contains(world.getBlockState(pos.down()).getBlock());
+		boolean canBreedVillagers = Tags.Blocks.STORAGE_BLOCKS_EMERALD.contains(level.getBlockState(worldPosition.below()).getBlock());
 
 		for(AgeableEntity ent : animals){
 			if(ent instanceof AnimalEntity){
 				AnimalEntity anim = (AnimalEntity) ent;
-				if(fluids[0].getAmount() >= BREED_AMOUNT && anim.getGrowingAge() == 0 && !anim.isInLove()){
+				if(fluids[0].getAmount() >= BREED_AMOUNT && anim.getAge() == 0 && !anim.isInLove()){
 					anim.setInLove(null);
 					fluids[0].shrink(BREED_AMOUNT);
-					markDirty();
+					setChanged();
 				}
 			}else if(ent instanceof VillagerEntity && canBreedVillagers){
 				VillagerEntity vill = (VillagerEntity) ent;
 
 				//Vanilla villager bread reqs. as of MC1.14:
 				//Must have foodLevel >= 12, growing age == 0
-				if(fluids[0].getAmount() >= BREED_AMOUNT && vill.getGrowingAge() == 0 && vill.getGrowingAge() == 0 && !vill.canBreed()){
+				if(fluids[0].getAmount() >= BREED_AMOUNT && vill.getAge() == 0 && vill.getAge() == 0 && !vill.canBreed()){
 					//We need to increase the villager's foodLevel. This is a private field with no setters
 					//We can adjust it indirectly, by saving the villager to NBT, modifying the NBT, and then reading from it
 					CompoundNBT villNBT = new CompoundNBT();
-					vill.writeAdditional(villNBT);
+					vill.addAdditionalSaveData(villNBT);
 					villNBT.putByte("FoodLevel", (byte) (villNBT.getByte("FoodLevel") + 12));
-					vill.readAdditional(villNBT);
+					vill.readAdditionalSaveData(villNBT);
 					fluids[0].shrink(BREED_AMOUNT);
-					markDirty();
+					setChanged();
 				}
 			}
 		}
@@ -138,12 +138,12 @@ public class FatFeederTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
+	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction){
 		return false;
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
+	public boolean canPlaceItem(int index, ItemStack stack){
 		return false;
 	}
 

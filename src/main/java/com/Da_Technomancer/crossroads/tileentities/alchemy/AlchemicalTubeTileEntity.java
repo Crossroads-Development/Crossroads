@@ -44,8 +44,8 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements Condui
 	}
 
 	@Override
-	public void updateContainingBlockInfo(){
-		super.updateContainingBlockInfo();
+	public void clearCache(){
+		super.clearCache();
 		//When adjusting a side to lock, we need to invalidate the optional in case a side was disconnected
 		chemOpt.invalidate();
 		chemOpt = LazyOptional.of(() -> handler);
@@ -64,8 +64,8 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements Condui
 
 	@Override
 	public boolean hasMatch(int side, EnumTransferMode mode){
-		Direction face = Direction.byIndex(side);
-		TileEntity neighTE = world.getTileEntity(pos.offset(face));
+		Direction face = Direction.from3DDataValue(side);
+		TileEntity neighTE = level.getBlockEntity(worldPosition.relative(face));
 		//Check for a neighbor w/ an alchemy reagent handler of a compatible channel
 		LazyOptional<IChemicalHandler> otherOpt;
 		return neighTE != null && (otherOpt = neighTE.getCapability(Capabilities.CHEMICAL_CAPABILITY, face.getOpposite())).isPresent() && otherOpt.orElseThrow(NoSuchFieldError::new).getChannel(face.getOpposite()).connectsWith(glass ? EnumContainerType.GLASS : EnumContainerType.CRYSTAL);
@@ -81,10 +81,10 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements Condui
 	protected void performTransfer(){
 		EnumTransferMode[] modes = getModes();
 		for(int i = 0; i < 6; i++){
-			Direction side = Direction.byIndex(i);
+			Direction side = Direction.from3DDataValue(i);
 			TileEntity te;
 			if(modes[i].isConnection()){
-				te = world.getTileEntity(pos.offset(side));
+				te = level.getBlockEntity(worldPosition.relative(side));
 				LazyOptional<IChemicalHandler> otherOpt;
 				IChemicalHandler otherHandler;
 				if(te != null && (otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent() && (otherHandler = otherOpt.orElseThrow(NullPointerException::new)).getChannel(side.getOpposite()).connectsWith(glass ? EnumContainerType.GLASS : EnumContainerType.CRYSTAL)){
@@ -93,7 +93,7 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements Condui
 					if(contents.getTotalQty() != 0 && modes[i] == EnumTransferMode.OUTPUT){
 						if(otherHandler.insertReagents(contents, side.getOpposite(), handler)){
 							correctReag();
-							markDirty();
+							setChanged();
 						}
 					}
 				}else{
@@ -105,19 +105,19 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements Condui
 
 	protected boolean allowConnect(Direction side){
 		//Lazy clooge to let redstone tubes work
-		return side == null || modes[side.getIndex()].isConnection();
+		return side == null || modes[side.get3DDataValue()].isConnection();
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		ConduitBlock.IConduitTE.writeConduitNBT(nbt, this);
 		return nbt;
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		ConduitBlock.IConduitTE.readConduitNBT(nbt, this);
 	}
 

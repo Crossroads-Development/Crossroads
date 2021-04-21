@@ -23,21 +23,21 @@ public final class CRItems{
 
 	public static final ItemGroup TAB_CROSSROADS = new ItemGroup(Crossroads.MODID){
 		@Override
-		public ItemStack createIcon(){
+		public ItemStack makeIcon(){
 			return new ItemStack(omnimeter, 1);
 		}
 	};
 
 	public static final ItemGroup TAB_HEAT_CABLE = new ItemGroup("heat_cable"){
 		@Override
-		public ItemStack createIcon(){
+		public ItemStack makeIcon(){
 			return new ItemStack(HeatCableFactory.HEAT_CABLES.get(HeatInsulators.WOOL), 1);
 		}
 	};
 
 	public static final ItemGroup TAB_GEAR = new ItemGroup("gear"){
 		@Override
-		public ItemStack createIcon(){
+		public ItemStack makeIcon(){
 			return smallGear.withMaterial(GearFactory.findMaterial("copper"), 1);
 		}
 	};
@@ -143,16 +143,16 @@ public final class CRItems{
 		debugGearWriter = new CheatWandRotary();
 		handCrank = new HandCrank();
 		debugHeatWriter = new CheatWandHeat();
-		toRegister.add(dustSalt = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_salt"));
+		toRegister.add(dustSalt = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("dust_salt"));
 //		mashedPotato = new MashedPotato();
 		omnimeter = new OmniMeter();
 		vacuum = new Vacuum();
 		magentaBread = new MagentaBread();
 		edibleBlob = new EdibleBlob();
 		rainIdol = new RainIdol();
-		toRegister.add(pureQuartz = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("pure_quartz"));
-		toRegister.add(brightQuartz = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("bright_quartz"));
-		toRegister.add(lensArray = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("lens_array"));
+		toRegister.add(pureQuartz = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("pure_quartz"));
+		toRegister.add(brightQuartz = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("bright_quartz"));
+		toRegister.add(lensArray = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("lens_array"));
 		squidHelmet = new SquidHelmet();
 		pigZombieChestplate = new PigZombieChestsplate();
 		cowLeggings = new CowLeggings();
@@ -163,13 +163,13 @@ public final class CRItems{
 		beamCage = new BeamCage();
 //		pistol = new PrototypePistol();
 //		watch = new PrototypeWatch();
-		toRegister.add(adamant = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("adamant"));
-		toRegister.add(sulfur = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("sulfur"));
-		toRegister.add(vanadiumOxide = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("vanadium_oxide"));
+		toRegister.add(adamant = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("adamant"));
+		toRegister.add(sulfur = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("sulfur"));
+		toRegister.add(vanadiumOxide = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("vanadium_oxide"));
 		philosopherStone = new PhilStone(false);
 		practitionerStone = new PhilStone(true);
-		toRegister.add(alchCrystal = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("alch_crystal"));
-		toRegister.add(alchemySalt = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("waste_salt"));
+		toRegister.add(alchCrystal = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("alch_crystal"));
+		toRegister.add(alchemySalt = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("waste_salt"));
 		phialGlass = new Phial(false);
 		florenceFlaskGlass = new FlorenceFlask(false);
 		shellGlass = new Shell(false);
@@ -180,22 +180,22 @@ public final class CRItems{
 		leydenJar = new LeydenJar();
 		nitroglycerin = new Nitroglycerin();
 		poisonVodka = new PoisonVodka();
-		toRegister.add(solidQuicksilver = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_quicksilver"));
-		toRegister.add(solidFusas = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_fusas"));
-		toRegister.add(solidEldrine = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_eldrine"));
-		toRegister.add(solidStasisol = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_stasisol"));
-		toRegister.add(solidVoltus = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_voltus"));
-		toRegister.add(solidElemEnchant = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_elem_enchantment"));
-		toRegister.add(solidDensus = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_densus"));
-		toRegister.add(solidAntiDensus = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_anti_densus"));
-		toRegister.add(solidFortis = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_fortis"));
-		toRegister.add(solidVitriol = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_vitriol"));
-		toRegister.add(solidMuriatic = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_muriatic"));
-		toRegister.add(solidRegia = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_regia"));
-		toRegister.add(solidCavorite = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_cavorite"));
-		toRegister.add(solidSO2 = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_sulfur_dioxide"));
-		toRegister.add(solidChlorine = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("solid_chlorine"));
-		toRegister.add(bedrockDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_bedrock"));
+		toRegister.add(solidQuicksilver = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("solid_quicksilver"));
+		toRegister.add(solidFusas = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("solid_fusas"));
+		toRegister.add(solidEldrine = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("solid_eldrine"));
+		toRegister.add(solidStasisol = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("solid_stasisol"));
+		toRegister.add(solidVoltus = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("solid_voltus"));
+		toRegister.add(solidElemEnchant = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("solid_elem_enchantment"));
+		toRegister.add(solidDensus = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("solid_densus"));
+		toRegister.add(solidAntiDensus = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("solid_anti_densus"));
+		toRegister.add(solidFortis = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("solid_fortis"));
+		toRegister.add(solidVitriol = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("solid_vitriol"));
+		toRegister.add(solidMuriatic = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("solid_muriatic"));
+		toRegister.add(solidRegia = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("solid_regia"));
+		toRegister.add(solidCavorite = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("solid_cavorite"));
+		toRegister.add(solidSO2 = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("solid_sulfur_dioxide"));
+		toRegister.add(solidChlorine = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("solid_chlorine"));
+		toRegister.add(bedrockDust = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("dust_bedrock"));
 		flyingMachine = new FlyingMachine();
 		teslaRay = new TeslaRay();
 		slag = new Slag();
@@ -217,12 +217,12 @@ public final class CRItems{
 		gearFacadeCobble = new GearFacade(GearFacade.FacadeBlock.COBBLE);
 		gearFacadeIron = new GearFacade(GearFacade.FacadeBlock.IRON);
 		gearFacadeGlass = new GearFacade(GearFacade.FacadeBlock.GLASS);
-		oreGravel = (OreProfileItem) new OreProfileItem(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("ore_gravel");
-		oreClump = (OreProfileItem) new OreProfileItem(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("ore_clump");
-		toRegister.add(ironDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_iron"));
-		toRegister.add(goldDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_gold"));
-		toRegister.add(copperDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_copper"));
-		toRegister.add(tinDust = new Item(new Item.Properties().group(TAB_CROSSROADS)).setRegistryName("dust_tin"));
+		oreGravel = (OreProfileItem) new OreProfileItem(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("ore_gravel");
+		oreClump = (OreProfileItem) new OreProfileItem(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("ore_clump");
+		toRegister.add(ironDust = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("dust_iron"));
+		toRegister.add(goldDust = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("dust_gold"));
+		toRegister.add(copperDust = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("dust_copper"));
+		toRegister.add(tinDust = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("dust_tin"));
 		sigilAlch = new PathSigil(EnumPath.ALCHEMY);
 		sigilTech = new PathSigil(EnumPath.TECHNOMANCY);
 		sigilWitch = new PathSigil(EnumPath.WITCHCRAFT);
@@ -248,8 +248,8 @@ public final class CRItems{
 		itemColor.register(itemColoring, oreGravel, oreClump, axle, smallGear, largeGear, clutch, invClutch, toggleGear, invToggleGear, axleMount);
 
 		//Item model properties
-		ItemModelsProperties.registerProperty(whirligig, new ResourceLocation("angle"), (ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) -> {
-			if(entity == null || entity.getActiveItemStack() != stack){
+		ItemModelsProperties.register(whirligig, new ResourceLocation("angle"), (ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) -> {
+			if(entity == null || entity.getUseItem() != stack){
 				return 0;
 			}
 			//The following gets the angle in degrees of the blades based on:
@@ -258,7 +258,7 @@ public final class CRItems{
 			//Assumption that speed decreased since start at -WIND_USE_RATE/tick
 			//Assumption that angle started at 0
 			//TODO re-work this formula, make it more reliable, cap at wind = 0
-			int useTime = entity.getItemInUseMaxCount();//Method is poorly MCP mapped- actually gives number of ticks since started using
+			int useTime = entity.getTicksUsingItem();//Method is poorly MCP mapped- actually gives number of ticks since started using
 			float currSpeed = (float) whirligig.getWindLevel(stack) / 20F;//Converted to rad/t
 			float deaccel = (float) Whirligig.WIND_USE_RATE / 20F;//Converted to rad/t/t
 			float angle = (currSpeed * useTime + deaccel * useTime * useTime / 2F) % (2F * (float) Math.PI);
@@ -266,9 +266,9 @@ public final class CRItems{
 			return angle;
 		});
 		IItemPropertyGetter technoArmorPropertyGetter = (ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) -> TechnomancyArmor.isReinforced(stack) ? TechnomancyArmor.hasDurability(stack) ? 2F : 1F : 0F;
-		ItemModelsProperties.registerProperty(armorGoggles, new ResourceLocation("protection"), technoArmorPropertyGetter);
-		ItemModelsProperties.registerProperty(propellerPack, new ResourceLocation("protection"), technoArmorPropertyGetter);
-		ItemModelsProperties.registerProperty(armorToolbelt, new ResourceLocation("protection"), technoArmorPropertyGetter);
-		ItemModelsProperties.registerProperty(armorEnviroBoots, new ResourceLocation("protection"), technoArmorPropertyGetter);
+		ItemModelsProperties.register(armorGoggles, new ResourceLocation("protection"), technoArmorPropertyGetter);
+		ItemModelsProperties.register(propellerPack, new ResourceLocation("protection"), technoArmorPropertyGetter);
+		ItemModelsProperties.register(armorToolbelt, new ResourceLocation("protection"), technoArmorPropertyGetter);
+		ItemModelsProperties.register(armorEnviroBoots, new ResourceLocation("protection"), technoArmorPropertyGetter);
 	}
 }

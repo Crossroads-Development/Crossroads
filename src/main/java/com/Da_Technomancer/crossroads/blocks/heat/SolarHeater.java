@@ -34,8 +34,8 @@ import java.util.List;
 public class SolarHeater extends ContainerBlock{
 
 	//Very simple shape currently, could be improved
-	private static final VoxelShape X_SHAPE = Block.makeCuboidShape(0, 0, 1, 16, 8, 15);
-	private static final VoxelShape Z_SHAPE = Block.makeCuboidShape(1, 0, 0, 15, 8, 16);
+	private static final VoxelShape X_SHAPE = Block.box(0, 0, 1, 16, 8, 15);
+	private static final VoxelShape Z_SHAPE = Block.box(1, 0, 0, 15, 8, 16);
 
 	public SolarHeater(){
 		super(CRBlocks.getMetalProperty());
@@ -46,25 +46,25 @@ public class SolarHeater extends ContainerBlock{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new SolarHeaterTileEntity();
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
-		return state.get(CRProperties.HORIZ_AXIS) == Direction.Axis.X ? X_SHAPE : Z_SHAPE;
+		return state.getValue(CRProperties.HORIZ_AXIS) == Direction.Axis.X ? X_SHAPE : Z_SHAPE;
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
-			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.func_235896_a_(CRProperties.HORIZ_AXIS));
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
+			if(!worldIn.isClientSide){
+				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.HORIZ_AXIS));
 			}
 			return ActionResultType.SUCCESS;
 		}
@@ -72,19 +72,19 @@ public class SolarHeater extends ContainerBlock{
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
 		builder.add(CRProperties.HORIZ_AXIS);
 	}
 
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return getDefaultState().with(CRProperties.HORIZ_AXIS, context.getPlacementHorizontalFacing().getAxis());
+		return defaultBlockState().setValue(CRProperties.HORIZ_AXIS, context.getHorizontalDirection().getAxis());
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.solar_heater.desc", SolarHeaterTileEntity.RATE));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.solar_heater.limit", SolarHeaterTileEntity.CAP));
 	}

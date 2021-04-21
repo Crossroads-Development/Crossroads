@@ -31,23 +31,23 @@ public class FluxSinkRenderer extends EntropyRenderer<FluxSinkTileEntity>{
 		//Render entropy arcs to the plates
 		if(te.renderPortals[0] != -1){
 			IVertexBuilder entropyBuilder = buffer.getBuffer(CRRenderTypes.FLUX_TRANSFER_TYPE);
-			long worldTime = te.getWorld().getGameTime();
+			long worldTime = te.getLevel().getGameTime();
 			for(int portalIndex : te.renderPortals){
 				if(portalIndex == -1){
 					continue;
 				}
-				matrix.push();
+				matrix.pushPose();
 				float[] portalPos = getPortalCenterPos(portalIndex, runtime);
-				matrix.rotate(Vector3f.YP.rotation((float) Math.atan2(portalPos[0], portalPos[2])));
-				matrix.rotate(Vector3f.XP.rotation((float) (Math.atan2(-portalPos[1], Math.sqrt(portalPos[0] * portalPos[0] + portalPos[2] * portalPos[2])) + Math.PI / 2F)));
+				matrix.mulPose(Vector3f.YP.rotation((float) Math.atan2(portalPos[0], portalPos[2])));
+				matrix.mulPose(Vector3f.XP.rotation((float) (Math.atan2(-portalPos[1], Math.sqrt(portalPos[0] * portalPos[0] + portalPos[2] * portalPos[2])) + Math.PI / 2F)));
 				EntropyRenderer.renderArc((float) Math.sqrt(portalPos[0] * portalPos[0] + portalPos[1] * portalPos[1] + portalPos[2] * portalPos[2]), matrix, entropyBuilder, worldTime, partialTicks);
-				matrix.pop();
+				matrix.popPose();
 			}
 		}
 
 		IVertexBuilder builder = buffer.getBuffer(CRRenderTypes.FLUX_SINK_TYPE);
 
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GlStateManager._blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 		//Render an icosahedron
 
@@ -56,8 +56,8 @@ public class FluxSinkRenderer extends EntropyRenderer<FluxSinkTileEntity>{
 		int medLight = CRRenderUtil.calcMediumLighting(combinedLight);
 
 		//Ring of plates
-		matrix.push();
-		matrix.rotate(Vector3f.YP.rotationDegrees(runtime / 10F));
+		matrix.pushPose();
+		matrix.mulPose(Vector3f.YP.rotationDegrees(runtime / 10F));
 		final float len = 4;
 		final float plateScale = Math.min(runtime / (FluxSinkTileEntity.STARTUP_TIME * 2F / 3F), 1) * 0.5F;
 
@@ -65,19 +65,19 @@ public class FluxSinkRenderer extends EntropyRenderer<FluxSinkTileEntity>{
 			float yOffset = 0.4F * (float) Math.sin(runtime / 100 + i * 5);
 			float textVSt = ((i + (int) (runtime / 8)) % 4) * 0.25F;//Animated texture
 
-			builder.pos(matrix.getLast().getMatrix(), len, yOffset - plateScale, -plateScale).color(255, 255, 255, 255).tex(0.75F, textVSt).lightmap(medLight).endVertex();
-			builder.pos(matrix.getLast().getMatrix(), len, yOffset + plateScale, -plateScale).color(255, 255, 255, 255).tex(0.75F, textVSt + 0.25F).lightmap(medLight).endVertex();
-			builder.pos(matrix.getLast().getMatrix(), len, yOffset + plateScale, plateScale).color(255, 255, 255, 255).tex(1, textVSt + 0.25F).lightmap(medLight).endVertex();
-			builder.pos(matrix.getLast().getMatrix(), len, yOffset - plateScale, plateScale).color(255, 255, 255, 255).tex(1, textVSt).lightmap(medLight).endVertex();
+			builder.vertex(matrix.last().pose(), len, yOffset - plateScale, -plateScale).color(255, 255, 255, 255).uv(0.75F, textVSt).uv2(medLight).endVertex();
+			builder.vertex(matrix.last().pose(), len, yOffset + plateScale, -plateScale).color(255, 255, 255, 255).uv(0.75F, textVSt + 0.25F).uv2(medLight).endVertex();
+			builder.vertex(matrix.last().pose(), len, yOffset + plateScale, plateScale).color(255, 255, 255, 255).uv(1, textVSt + 0.25F).uv2(medLight).endVertex();
+			builder.vertex(matrix.last().pose(), len, yOffset - plateScale, plateScale).color(255, 255, 255, 255).uv(1, textVSt).uv2(medLight).endVertex();
 
-			matrix.rotate(Vector3f.YP.rotationDegrees(360F / 8F));
+			matrix.mulPose(Vector3f.YP.rotationDegrees(360F / 8F));
 		}
 
-		matrix.pop();
+		matrix.popPose();
 
 		//Wobble effect
-		matrix.rotate(Vector3f.XP.rotationDegrees(8F * (float) Math.sin(runtime / 40D)));
-		matrix.rotate(Vector3f.ZP.rotationDegrees(8F * (float) Math.cos(runtime / 40D)));
+		matrix.mulPose(Vector3f.XP.rotationDegrees(8F * (float) Math.sin(runtime / 40D)));
+		matrix.mulPose(Vector3f.ZP.rotationDegrees(8F * (float) Math.cos(runtime / 40D)));
 
 		//Inner layer, almost opaque
 		drawIcos(builder, matrix, scale, 0, 0, new int[] {255, 255, 255, 230}, combinedLight);
@@ -110,20 +110,20 @@ public class FluxSinkRenderer extends EntropyRenderer<FluxSinkTileEntity>{
 				//We want triangles, but are in QUADS mode
 				//We double one of the vertices
 
-				builder.pos(matrix.getLast().getMatrix(), 0, largeLen, smallLen).color(col[0], col[1], col[2], col[3]).tex(cornerU, cornerV).lightmap(light).endVertex();
-				builder.pos(matrix.getLast().getMatrix(), 0, largeLen, -smallLen).color(col[0], col[1], col[2], col[3]).tex(uEn, vSt).lightmap(light).endVertex();
-				builder.pos(matrix.getLast().getMatrix(), largeLen, smallLen, 0).color(col[0], col[1], col[2], col[3]).tex(uSt, vEn).lightmap(light).endVertex();
-				builder.pos(matrix.getLast().getMatrix(), largeLen, smallLen, 0).color(col[0], col[1], col[2], col[3]).tex(uSt, vEn).lightmap(light).endVertex();//Repeat for triangle
+				builder.vertex(matrix.last().pose(), 0, largeLen, smallLen).color(col[0], col[1], col[2], col[3]).uv(cornerU, cornerV).uv2(light).endVertex();
+				builder.vertex(matrix.last().pose(), 0, largeLen, -smallLen).color(col[0], col[1], col[2], col[3]).uv(uEn, vSt).uv2(light).endVertex();
+				builder.vertex(matrix.last().pose(), largeLen, smallLen, 0).color(col[0], col[1], col[2], col[3]).uv(uSt, vEn).uv2(light).endVertex();
+				builder.vertex(matrix.last().pose(), largeLen, smallLen, 0).color(col[0], col[1], col[2], col[3]).uv(uSt, vEn).uv2(light).endVertex();//Repeat for triangle
 
-				builder.pos(matrix.getLast().getMatrix(), 0, largeLen, smallLen).color(col[0], col[1], col[2], col[3]).tex(cornerU, cornerV).lightmap(light).endVertex();
-				builder.pos(matrix.getLast().getMatrix(), 0, largeLen, -smallLen).color(col[0], col[1], col[2], col[3]).tex(uEn, vSt).lightmap(light).endVertex();
-				builder.pos(matrix.getLast().getMatrix(), -largeLen, smallLen, 0).color(col[0], col[1], col[2], col[3]).tex(uSt, vEn).lightmap(light).endVertex();
-				builder.pos(matrix.getLast().getMatrix(), -largeLen, smallLen, 0).color(col[0], col[1], col[2], col[3]).tex(uSt, vEn).lightmap(light).endVertex();//Repeat for triangle
+				builder.vertex(matrix.last().pose(), 0, largeLen, smallLen).color(col[0], col[1], col[2], col[3]).uv(cornerU, cornerV).uv2(light).endVertex();
+				builder.vertex(matrix.last().pose(), 0, largeLen, -smallLen).color(col[0], col[1], col[2], col[3]).uv(uEn, vSt).uv2(light).endVertex();
+				builder.vertex(matrix.last().pose(), -largeLen, smallLen, 0).color(col[0], col[1], col[2], col[3]).uv(uSt, vEn).uv2(light).endVertex();
+				builder.vertex(matrix.last().pose(), -largeLen, smallLen, 0).color(col[0], col[1], col[2], col[3]).uv(uSt, vEn).uv2(light).endVertex();//Repeat for triangle
 
-				matrix.rotate(rotationAxis.rotationDegrees(72));
+				matrix.mulPose(rotationAxis.rotationDegrees(72));
 			}
-			matrix.rotate(rotationAxis.rotationDegrees(36));
-			matrix.rotate(rotationCounterAxis.rotationDegrees(180));
+			matrix.mulPose(rotationAxis.rotationDegrees(36));
+			matrix.mulPose(rotationCounterAxis.rotationDegrees(180));
 		}
 	}
 

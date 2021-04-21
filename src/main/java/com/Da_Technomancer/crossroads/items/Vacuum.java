@@ -26,7 +26,7 @@ public class Vacuum extends Item{
 	private static final double ANGLE = Math.cos(Math.PI / 4F);//Pre-calc cosine for speed
 
 	protected Vacuum(){
-		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1).defaultMaxDamage(2400));
+		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1).defaultDurability(2400));
 		String name = "vacuum";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
@@ -38,30 +38,30 @@ public class Vacuum extends Item{
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.vacuum.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand){
-		ArrayList<Entity> entities = (ArrayList<Entity>) worldIn.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ()).grow(RANGE), EntityPredicates.IS_ALIVE);
+	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand hand){
+		ArrayList<Entity> entities = (ArrayList<Entity>) worldIn.getEntitiesOfClass(Entity.class, new AxisAlignedBB(playerIn.getX(), playerIn.getY(), playerIn.getZ(), playerIn.getX(), playerIn.getY(), playerIn.getZ()).inflate(RANGE), EntityPredicates.ENTITY_STILL_ALIVE);
 
 		//Affects a conical region
 		//Removes entities from the list if they aren't in the conical region in the direction the player is looking
-		Vector3d look = playerIn.getLookVec().scale(RANGE);
-		Vector3d playPos = playerIn.getPositionVec();
+		Vector3d look = playerIn.getLookAngle().scale(RANGE);
+		Vector3d playPos = playerIn.position();
 		entities.removeIf((Entity e) -> {
-			Vector3d ePos = e.getPositionVec().subtract(playPos);
-			return ePos.length() >= RANGE || ePos.dotProduct(look) / (ePos.length() * look.length()) <= ANGLE;
+			Vector3d ePos = e.position().subtract(playPos);
+			return ePos.length() >= RANGE || ePos.dot(look) / (ePos.length() * look.length()) <= ANGLE;
 		});
 
 		for(Entity ent : entities){
-			Vector3d motVec = playerIn.getPositionVec().subtract(ent.getPositionVec()).scale(0.25D);
-			ent.addVelocity(motVec.x, motVec.y, motVec.z);
+			Vector3d motVec = playerIn.position().subtract(ent.position()).scale(0.25D);
+			ent.push(motVec.x, motVec.y, motVec.z);
 		}
 
-		playerIn.getHeldItem(hand).damageItem(1, playerIn, p -> p.sendBreakAnimation(hand));
+		playerIn.getItemInHand(hand).hurtAndBreak(1, playerIn, p -> p.broadcastBreakEvent(hand));
 
-		return ActionResult.resultSuccess(playerIn.getHeldItem(hand));
+		return ActionResult.success(playerIn.getItemInHand(hand));
 	}
 }

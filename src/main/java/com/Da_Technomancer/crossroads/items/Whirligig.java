@@ -33,19 +33,19 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 	private final Multimap<Attribute, AttributeModifier> attributeModifiers;
 
 	protected Whirligig(){
-		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
+		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "whirligig";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
 
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 5, AttributeModifier.Operation.ADDITION));
-		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -3.1D, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 5, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -3.1D, AttributeModifier.Operation.ADDITION));
 		attributeModifiers = builder.build();
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		double wind = getWindLevel(stack);
 		double maxWind = getMaxWind();
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(wind), CRConfig.formatVal(maxWind)));
@@ -65,15 +65,15 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn){
+	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn){
 		//Starts using the item if there is sufficient charge
-		ItemStack held = playerIn.getHeldItem(handIn);
+		ItemStack held = playerIn.getItemInHand(handIn);
 		double wind = getWindLevel(held);
 		if(wind > 0 || murderEasterEgg.equals(playerIn.getGameProfile().getName())){
-			playerIn.setActiveHand(handIn);
-			return ActionResult.resultSuccess(held);
+			playerIn.startUsingItem(handIn);
+			return ActionResult.success(held);
 		}
-		return ActionResult.resultFail(held);
+		return ActionResult.fail(held);
 	}
 
 	private static final String murderEasterEgg = "dinidini";
@@ -81,7 +81,7 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 	@Override
 	public void onUsingTick(ItemStack stack, LivingEntity player, int count){
 		//Called on both sides every tick while the item is being actively used
-		if(player.isServerWorld()){
+		if(player.isEffectiveAi()){
 			double wind = getWindLevel(stack);
 
 			if(player instanceof PlayerEntity && murderEasterEgg.equals(((PlayerEntity) player).getGameProfile().getName()))
@@ -93,7 +93,7 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 				final double HOVER_WIND = CRConfig.whirligigHover.get();//Minimum charge level to hover
 
 				//Target the player's mount instead of the player if they have one
-				Entity targetEntity = player.getRidingEntity() == null ? player : player.getRidingEntity();
+				Entity targetEntity = player.getVehicle() == null ? player : player.getVehicle();
 
 				//Fall damage
 				if(wind >= SLOWFALL_WIND){
@@ -106,19 +106,19 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 				}
 
 				//Upward thrust
-				if(player.getPosY() < 250){//Safety limit to prevent ridiculous heights being attained
+				if(player.getY() < 250){//Safety limit to prevent ridiculous heights being attained
 					//Vanilla gravity is applied as constant change in y-velocity every tick
 					final double gravity = 0.08;
 					double thrust = gravity * (wind / HOVER_WIND);
-					targetEntity.addVelocity(0, thrust, 0);
-					targetEntity.velocityChanged = true;
+					targetEntity.push(0, thrust, 0);
+					targetEntity.hurtMarked = true;
 				}
 
 				//Consume charge
 				wind = Math.max(wind - WIND_USE_RATE, 0);
 				setWindLevel(stack, wind);
 			}else{
-				player.resetActiveHand();//Insufficient charge
+				player.stopUsingItem();//Insufficient charge
 			}
 		}
 	}
@@ -130,8 +130,8 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items){
-		if(isInGroup(group)){
+	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items){
+		if(allowdedIn(group)){
 			items.add(new ItemStack(this, 1));
 			ItemStack stack = new ItemStack(this, 1);
 			setWindLevel(stack, getMaxWind());
@@ -140,7 +140,7 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 	}
 
 	@Override
-	public UseAction getUseAction(ItemStack stack){
+	public UseAction getUseAnimation(ItemStack stack){
 		return UseAction.BLOCK;
 	}
 }

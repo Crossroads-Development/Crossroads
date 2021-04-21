@@ -16,20 +16,20 @@ public class EqualibriumEffect extends BeamEffect{
 		if(!performTransmute(align, voi, power, worldIn, pos)){
 			if(voi){
 				EntityGhostMarker marker = new EntityGhostMarker(worldIn, EntityGhostMarker.EnumMarkerType.VOID_EQUILIBRIUM);
-				marker.setPosition(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
+				marker.setPos(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
 				CompoundNBT rangeData = new CompoundNBT();
 				rangeData.putInt("range", power);
 				marker.data = rangeData;
-				worldIn.addEntity(marker);
+				worldIn.addFreshEntity(marker);
 
 				//Effect in crystal master axis.
 			}else{
 				EntityGhostMarker marker = new EntityGhostMarker(worldIn, EntityGhostMarker.EnumMarkerType.EQUILIBRIUM);
-				marker.setPosition(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
+				marker.setPos(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
 				CompoundNBT rangeData = new CompoundNBT();
 				rangeData.putInt("range", power);
 				marker.data = rangeData;
-				worldIn.addEntity(marker);
+				worldIn.addFreshEntity(marker);
 
 				//Effect in crystal master axis
 			}

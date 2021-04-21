@@ -50,7 +50,7 @@ public class HeatingCrucibleCategory implements IRecipeCategory<CrucibleRec>{
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.heatingCrucible.getTranslatedName().getString();
+		return CRBlocks.heatingCrucible.getName().getString();
 	}
 
 	@Override
@@ -62,8 +62,8 @@ public class HeatingCrucibleCategory implements IRecipeCategory<CrucibleRec>{
 	public void draw(CrucibleRec recipe, MatrixStack matrix, double mouseX, double mouseY){
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
-		Minecraft.getInstance().fontRenderer.drawString(matrix, "When above 1000°C", 10, 10, 0x404040);
-		Minecraft.getInstance().fontRenderer.drawString(matrix, String.format("Total Heat Consumed: %1$d°C", HeatingCrucibleTileEntity.REQUIRED), 10, 20, 0x404040);
+		Minecraft.getInstance().font.draw(matrix, "When above 1000°C", 10, 10, 0x404040);
+		Minecraft.getInstance().font.draw(matrix, String.format("Total Heat Consumed: %1$d°C", HeatingCrucibleTileEntity.REQUIRED), 10, 20, 0x404040);
 		slot.draw(matrix, 40, 50);
 		arrowStatic.draw(matrix, 62, 50);
 		arrow.draw(matrix, 62, 50);

@@ -38,8 +38,8 @@ public class SequenceBoxScreen extends ContainerScreen<SequenceBoxContainer>{
 
 	public SequenceBoxScreen(SequenceBoxContainer container, PlayerInventory inv, ITextComponent name){
 		super(container, inv, name);
-		xSize = 176;
-		ySize = 166;
+		imageWidth = 176;
+		imageHeight = 166;
 	}
 
 	@Override
@@ -56,15 +56,15 @@ public class SequenceBoxScreen extends ContainerScreen<SequenceBoxContainer>{
 		};
 
 		for(int i = 0; i < inputBars.length; i++){
-			inputBars[i] = new TextFieldWidget(font, guiLeft + 24, guiTop + 24 + 18 * i, 144 - 4, 18, new StringTextComponent(""));
+			inputBars[i] = new TextFieldWidget(font, leftPos + 24, topPos + 24 + 18 * i, 144 - 4, 18, new StringTextComponent(""));
 			inputBars[i].setCanLoseFocus(true);
 			inputBars[i].setTextColor(-1);
-			inputBars[i].setDisabledTextColour(-1);
-			inputBars[i].setEnableBackgroundDrawing(false);
-			inputBars[i].setMaxStringLength(20);
-			inputBars[i].setText(container.inputs.size() > i ? container.inputs.get(i) : "");
+			inputBars[i].setTextColorUneditable(-1);
+			inputBars[i].setBordered(false);
+			inputBars[i].setMaxLength(20);
+			inputBars[i].setValue(menu.inputs.size() > i ? menu.inputs.get(i) : "");
 			inputBars[i].setResponder(this::entryChanged);
-			inputBars[i].setValidator(validator);
+			inputBars[i].setFilter(validator);
 			children.add(inputBars[i]);
 		}
 	}
@@ -73,37 +73,37 @@ public class SequenceBoxScreen extends ContainerScreen<SequenceBoxContainer>{
 	public void resize(Minecraft minecraft, int width, int height){
 		String[] text = new String[inputBars.length];
 		for(int i = 0; i < inputBars.length; i++){
-			text[i] = inputBars[i].getText();
+			text[i] = inputBars[i].getValue();
 		}
 		init(minecraft, width, height);
 		for(int i = 0; i < inputBars.length; i++){
-			inputBars[i].setText(text[i]);
+			inputBars[i].setValue(text[i]);
 		}
 	}
 
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+	protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
 		RenderSystem.color4f(1, 1, 1, 1);
-		Minecraft.getInstance().getTextureManager().bindTexture(BACKGROUND_TEXTURE);
+		Minecraft.getInstance().getTextureManager().bind(BACKGROUND_TEXTURE);
 
-		blit(matrix, guiLeft, guiTop, 0, 0, xSize, ySize);
+		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
 		//Text bars
-		minecraft.getTextureManager().bindTexture(SEARCH_BAR_TEXTURE);
+		minecraft.getTextureManager().bind(SEARCH_BAR_TEXTURE);
 		for(TextFieldWidget bar : inputBars){
 			blit(matrix, bar.x - 2, bar.y - 8, 0, 0, bar.getWidth(), 18, 144, 18);
 		}
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(MatrixStack matrix, int mouseX, int mouseY){
-		font.func_243248_b(matrix, title, titleX, titleY, 0x404040);
+	protected void renderLabels(MatrixStack matrix, int mouseX, int mouseY){
+		font.draw(matrix, title, titleLabelX, titleLabelY, 0x404040);
 
 		for(int i = 0; i < inputBars.length; i++){
 			int lineNumber = i + topIndex;
 			String lineStr = "" + (lineNumber + 1);
-			font.drawString(matrix, lineStr, 8, 24 + i * 18, lineNumber == container.outputIndex ? 0xFF0000 : lineNumber < container.inputs.size() ? 0xFFFF00 : 0x404040);
+			font.draw(matrix, lineStr, 8, 24 + i * 18, lineNumber == menu.outputIndex ? 0xFF0000 : lineNumber < menu.inputs.size() ? 0xFFFF00 : 0x404040);
 		}
 	}
 
@@ -124,7 +124,7 @@ public class SequenceBoxScreen extends ContainerScreen<SequenceBoxContainer>{
 		topIndex = Math.min(newTopIndex, SequenceBoxTileEntity.MAX_VALUES - inputBars.length);
 		for(int i = 0; i < inputBars.length; i++){
 			int barIndex = topIndex + i;
-			inputBars[i].setText(barIndex < container.inputs.size() ? container.inputs.get(barIndex) : "");
+			inputBars[i].setValue(barIndex < menu.inputs.size() ? menu.inputs.get(barIndex) : "");
 		}
 
 		shiftingUI = false;
@@ -142,9 +142,9 @@ public class SequenceBoxScreen extends ContainerScreen<SequenceBoxContainer>{
 			if(!inputBars[index].isFocused()){
 				inputBars[index].changeFocus(true);
 			}
-			setListener(inputBars[index]);
+			setFocused(inputBars[index]);
 		}else{
-			setListener(null);
+			setFocused(null);
 		}
 	}
 
@@ -166,7 +166,7 @@ public class SequenceBoxScreen extends ContainerScreen<SequenceBoxContainer>{
 	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers){
 		if(keyCode == GLFW.GLFW_KEY_ESCAPE){//256
-			minecraft.player.closeScreen();
+			minecraft.player.closeContainer();
 			return true;
 		}
 
@@ -187,11 +187,11 @@ public class SequenceBoxScreen extends ContainerScreen<SequenceBoxContainer>{
 			}
 		}else if(keyCode == GLFW.GLFW_KEY_TAB){
 			//Change the output index to the currently selected text widget
-			container.outputIndex = Math.min(getSelection() + topIndex, container.inputs.size() - 1);
+			menu.outputIndex = Math.min(getSelection() + topIndex, menu.inputs.size() - 1);
 			updateTEWithPacket();
 		}else{
 			for(TextFieldWidget bar : inputBars){
-				if(bar.keyPressed(keyCode, scanCode, modifiers) || bar.canWrite()){
+				if(bar.keyPressed(keyCode, scanCode, modifiers) || bar.canConsumeInput()){
 					return true;
 				}
 			}
@@ -212,36 +212,36 @@ public class SequenceBoxScreen extends ContainerScreen<SequenceBoxContainer>{
 				if(inputIndex + 1 >= SequenceBoxTileEntity.MAX_VALUES){
 					continue;//Should never happen
 				}
-				String barContents = inputBars[barIndex].getText();
+				String barContents = inputBars[barIndex].getValue();
 				boolean hasContents = !barContents.trim().isEmpty();
 				float barValue = RedstoneUtil.interpretFormulaString(barContents);
 				if(hasContents){
-					while(container.inputs.size() <= inputIndex){
-						container.inputs.add("");//Pad the inputs list with empty strings to reach this index
+					while(menu.inputs.size() <= inputIndex){
+						menu.inputs.add("");//Pad the inputs list with empty strings to reach this index
 					}
-					container.inputs.set(inputIndex, barContents);
-				}else if(inputIndex == container.inputs.size() - 1){
-					container.inputs.remove(inputIndex);//We are the last entry in inputs, and the bar is now empty. Remove
-				}else if(inputIndex < container.inputs.size() - 1){
-					container.inputs.set(inputIndex, "");//We are an entry that is still needed as padding for a later padding. Change our own value, but don't change the overall length
+					menu.inputs.set(inputIndex, barContents);
+				}else if(inputIndex == menu.inputs.size() - 1){
+					menu.inputs.remove(inputIndex);//We are the last entry in inputs, and the bar is now empty. Remove
+				}else if(inputIndex < menu.inputs.size() - 1){
+					menu.inputs.set(inputIndex, "");//We are an entry that is still needed as padding for a later padding. Change our own value, but don't change the overall length
 				}
 			}
 
-			container.outputIndex = Math.min(container.outputIndex, container.inputs.size() - 1);
+			menu.outputIndex = Math.min(menu.outputIndex, menu.inputs.size() - 1);
 			updateTEWithPacket();
 		}
 	}
 
 	private void updateTEWithPacket(){
-		if(container.outputIndex < 0){
-			container.outputIndex = 0;
+		if(menu.outputIndex < 0){
+			menu.outputIndex = 0;
 		}
 		CompoundNBT nbt = new CompoundNBT();
-		nbt.putInt("output_index", container.outputIndex);
-		for(int i = 0; i < container.inputs.size(); i++){
-			nbt.putFloat(i + "_val", RedstoneUtil.interpretFormulaString(container.inputs.get(i)));
-			nbt.putString(i + "_str", container.inputs.get(i));
+		nbt.putInt("output_index", menu.outputIndex);
+		for(int i = 0; i < menu.inputs.size(); i++){
+			nbt.putFloat(i + "_val", RedstoneUtil.interpretFormulaString(menu.inputs.get(i)));
+			nbt.putString(i + "_str", menu.inputs.get(i));
 		}
-		CRPackets.sendPacketToServer(new SendNBTToServer(nbt, container.pos));
+		CRPackets.sendPacketToServer(new SendNBTToServer(nbt, menu.pos));
 	}
 }

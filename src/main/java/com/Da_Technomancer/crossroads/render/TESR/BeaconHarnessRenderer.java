@@ -40,22 +40,22 @@ public class BeaconHarnessRenderer extends EntropyRenderer<BeaconHarnessTileEnti
 			//We are running. Calculate angle for rods
 			angle = calcAngle(te, partialTicks);
 
-			matrix.push();
-			matrix.rotate(Vector3f.XP.rotationDegrees(180));
+			matrix.pushPose();
+			matrix.mulPose(Vector3f.XP.rotationDegrees(180));
 
 			final float width = trip.getRight().floatValue() / 8F / (float) Math.sqrt(2);//Convert diagonal radius to side length
 			final int length = trip.getMiddle();
 			boolean doRotation = CRConfig.rotateBeam.get();
 			Quaternion verticalRot;
 			if(doRotation){
-				verticalRot = Vector3f.YP.rotationDegrees(CRRenderUtil.getRenderTime(partialTicks, te.getWorld()) * 2F);
+				verticalRot = Vector3f.YP.rotationDegrees(CRRenderUtil.getRenderTime(partialTicks, te.getLevel()) * 2F);
 			}else{
 				verticalRot = Vector3f.YP.rotationDegrees(45);//Constant 45 degree angle
 			}
 			matrix.translate(0, -0.5D, 0);
-			matrix.rotate(verticalRot);
+			matrix.mulPose(verticalRot);
 			BeamRenderer.drawBeam(matrix, beamBuilder, length, width, trip.getLeft());
-			matrix.pop();
+			matrix.popPose();
 		}
 
 		//Revolving rods
@@ -66,15 +66,15 @@ public class BeaconHarnessRenderer extends EntropyRenderer<BeaconHarnessTileEnti
 		int mediumLight = CRRenderUtil.calcMediumLighting(combinedLight);
 		TextureAtlasSprite copSprite = CRRenderUtil.getTextureSprite(CRRenderTypes.COPSHOWIUM_TEXTURE);
 		TextureAtlasSprite quartzSprite = CRRenderUtil.getTextureSprite(CRRenderTypes.QUARTZ_TEXTURE);
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
+		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
 
-		matrix.rotate(Vector3f.YP.rotationDegrees(angle));
+		matrix.mulPose(Vector3f.YP.rotationDegrees(angle));
 		addRod(matrix, builder, smallOffset, smallOffset, copSprite, mediumLight);
 		addRod(matrix, builder, smallOffset, -smallOffset, copSprite, mediumLight);
 		addRod(matrix, builder, -smallOffset, -smallOffset, copSprite, mediumLight);
 		addRod(matrix, builder, -smallOffset, smallOffset, copSprite, mediumLight);
 
-		matrix.rotate(Vector3f.YP.rotationDegrees(-2F * angle));
+		matrix.mulPose(Vector3f.YP.rotationDegrees(-2F * angle));
 
 		addRod(matrix, builder, medOffset, largeOffset, quartzSprite, mediumLight);
 		addRod(matrix, builder, medOffset, -largeOffset, quartzSprite, mediumLight);
@@ -90,41 +90,41 @@ public class BeaconHarnessRenderer extends EntropyRenderer<BeaconHarnessTileEnti
 		float rad = 1F / 16F;
 		float minY = 1F / 16F;
 		float maxY = 15F / 16F;
-		float uEn = sprite.getInterpolatedU(2F * rad * 16F);
-		float vEn = sprite.getInterpolatedV(2F * rad * 16F);
+		float uEn = sprite.getU(2F * rad * 16F);
+		float vEn = sprite.getV(2F * rad * 16F);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, minY, z - rad, sprite.getMinU(), sprite.getMinV(), 0, 0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, maxY, z - rad, sprite.getMinU(), sprite.getMaxV(), 0, 0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, maxY, z - rad, uEn, sprite.getMaxV(), 0, 0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, minY, z - rad, uEn, sprite.getMinV(), 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, minY, z - rad, sprite.getU0(), sprite.getV0(), 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, maxY, z - rad, sprite.getU0(), sprite.getV1(), 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, maxY, z - rad, uEn, sprite.getV1(), 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, minY, z - rad, uEn, sprite.getV0(), 0, 0, -1, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, minY, z + rad, sprite.getMinU(), sprite.getMinV(), 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, minY, z + rad, uEn, sprite.getMinV(), 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, maxY, z + rad, uEn, sprite.getMaxV(), 0, 0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, maxY, z + rad, sprite.getMinU(), sprite.getMaxV(), 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, minY, z + rad, sprite.getU0(), sprite.getV0(), 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, minY, z + rad, uEn, sprite.getV0(), 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, maxY, z + rad, uEn, sprite.getV1(), 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, maxY, z + rad, sprite.getU0(), sprite.getV1(), 0, 0, 1, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, minY, z - rad, sprite.getMinU(), sprite.getMinV(), -1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, minY, z + rad, uEn, sprite.getMinV(), -1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, maxY, z + rad, uEn, sprite.getMaxV(), -1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, maxY, z - rad, sprite.getMinU(), sprite.getMaxV(), -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, minY, z - rad, sprite.getU0(), sprite.getV0(), -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, minY, z + rad, uEn, sprite.getV0(), -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, maxY, z + rad, uEn, sprite.getV1(), -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, maxY, z - rad, sprite.getU0(), sprite.getV1(), -1, 0, 0, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, minY, z - rad, sprite.getMinU(), sprite.getMinV(), 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, maxY, z - rad, sprite.getMinU(), sprite.getMaxV(), 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, maxY, z + rad, uEn, sprite.getMaxV(), 1, 0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, minY, z + rad, uEn, sprite.getMinV(), 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, minY, z - rad, sprite.getU0(), sprite.getV0(), 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, maxY, z - rad, sprite.getU0(), sprite.getV1(), 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, maxY, z + rad, uEn, sprite.getV1(), 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, minY, z + rad, uEn, sprite.getV0(), 1, 0, 0, light);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, minY, z + rad, sprite.getMinU(), sprite.getMinV(), 0, -1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, minY, z + rad, uEn, sprite.getMinV(), 0, -1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, minY, z + rad, sprite.getU0(), sprite.getV0(), 0, -1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, minY, z + rad, uEn, sprite.getV0(), 0, -1, 0, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, minY, z - rad, uEn, vEn, 0, -1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, minY, z - rad, sprite.getMinU(), vEn, 0, -1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, minY, z - rad, sprite.getU0(), vEn, 0, -1, 0, light);
 	}
 
 	private static float calcAngle(BeaconHarnessTileEntity te, float partialTicks){
-		return (float) Math.toDegrees(CRRenderUtil.getRenderTime(partialTicks, te.getWorld()) * (float) Math.PI / 20F);
+		return (float) Math.toDegrees(CRRenderUtil.getRenderTime(partialTicks, te.getLevel()) * (float) Math.PI / 20F);
 	}
 
 	@Override
-	public boolean isGlobalRenderer(BeaconHarnessTileEntity te){
+	public boolean shouldRenderOffScreen(BeaconHarnessTileEntity te){
 		return true;
 	}
 }

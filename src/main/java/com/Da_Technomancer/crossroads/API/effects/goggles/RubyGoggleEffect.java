@@ -27,13 +27,13 @@ public class RubyGoggleEffect implements IGoggleEffect{
 	public void armorTick(World world, PlayerEntity player, ArrayList<ITextComponent> chat, BlockRayTraceResult ray){
 		if(world.getGameTime() % 5 == 0){
 			Entity entHit = null;
-			Vector3d start = new Vector3d(player.getPosX() - Math.cos(Math.toRadians(player.getRotationYawHead())) * 0.18D, player.getPosY() + player.getEyeHeight() + 0.03D, player.getPosZ() - Math.sin(Math.toRadians(player.getRotationYawHead())) * 0.18D);
+			Vector3d start = new Vector3d(player.getX() - Math.cos(Math.toRadians(player.getYHeadRot())) * 0.18D, player.getY() + player.getEyeHeight() + 0.03D, player.getZ() - Math.sin(Math.toRadians(player.getYHeadRot())) * 0.18D);
 			Vector3d end = start;
-			Vector3d look = player.getLookVec();
-			Direction collisionDir = Direction.getFacingFromVector(look.x, look.y, look.z);
+			Vector3d look = player.getLookAngle();
+			Direction collisionDir = Direction.getNearest(look.x, look.y, look.z);
 			for(double d = 0; d < RANGE; d += 0.2D){
 				Vector3d tar = player.getEyePosition(0).add(0, 0.2D, 0).add(look.scale(d));
-				List<Entity> ents = world.getEntitiesInAABBexcluding(player, new AxisAlignedBB(tar.x - 0.1D, tar.y - 0.1D, tar.z - 0.1D, tar.x + 0.1D, tar.y + 0.1D, tar.z + 0.1D), EntityPredicates.IS_ALIVE);
+				List<Entity> ents = world.getEntities(player, new AxisAlignedBB(tar.x - 0.1D, tar.y - 0.1D, tar.z - 0.1D, tar.x + 0.1D, tar.y + 0.1D, tar.z + 0.1D), EntityPredicates.ENTITY_STILL_ALIVE);
 				if(!ents.isEmpty()){
 					entHit = ents.get((int) (Math.random() * ents.size()));
 					end = tar;
@@ -49,12 +49,12 @@ public class RubyGoggleEffect implements IGoggleEffect{
 
 			BlockPos endPos = new BlockPos(end);
 			if(entHit != null){
-				entHit.setFire(3);
+				entHit.setSecondsOnFire(3);
 			}else if(world.getBlockState(endPos).isAir(world, endPos)){
-				world.setBlockState(endPos, Blocks.FIRE.getDefaultState());
+				world.setBlockAndUpdate(endPos, Blocks.FIRE.defaultBlockState());
 			}
 
-			CRRenderUtil.addBeam(world, start.x, start.y, start.z, (int) Math.sqrt(end.squareDistanceTo(start)), player.rotationPitch, player.rotationYawHead, (byte) 1, Color.RED.getRGB());
+			CRRenderUtil.addBeam(world, start.x, start.y, start.z, (int) Math.sqrt(end.distanceToSqr(start)), player.xRot, player.yHeadRot, (byte) 1, Color.RED.getRGB());
 		}
 	}
 }

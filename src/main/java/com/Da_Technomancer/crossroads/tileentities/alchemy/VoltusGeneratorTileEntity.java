@@ -50,48 +50,48 @@ public class VoltusGeneratorTileEntity extends TileEntity implements ITickableTi
 
 	@Override
 	public void tick(){
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 
 		if(voltusAmount != 0 && FE_CAPACITY - fe >= CRConfig.voltusValue.get()){
 			voltusAmount -= 1;
 			fe += CRConfig.voltusValue.get();
-			markDirty();
+			setChanged();
 		}
 
 		for(Direction dir : Direction.values()){
-			TileEntity te = world.getTileEntity(pos.offset(dir));
+			TileEntity te = level.getBlockEntity(worldPosition.relative(dir));
 			LazyOptional<IEnergyStorage> energyOpt;
 			if(te != null && (energyOpt = te.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite())).isPresent()){
 				IEnergyStorage storage = energyOpt.orElseThrow(NullPointerException::new);
 				int moved = storage.receiveEnergy(fe, false);
 				if(moved > 0){
 					fe -= moved;
-					markDirty();
+					setChanged();
 				}
 			}
 		}
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		voltusAmount = nbt.getInt("voltus");
 		fe = nbt.getInt("fe");
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putInt("voltus", voltusAmount);
 		nbt.putInt("fe", fe);
 		return nbt;
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		chemOpt.invalidate();
 		feOpt.invalidate();
 	}
@@ -124,7 +124,7 @@ public class VoltusGeneratorTileEntity extends TileEntity implements ITickableTi
 			int toMove = Math.min(maxExtract, fe);
 			if(!simulate){
 				fe -= toMove;
-				markDirty();
+				setChanged();
 			}
 			return toMove;
 		}
@@ -182,7 +182,7 @@ public class VoltusGeneratorTileEntity extends TileEntity implements ITickableTi
 			int moved = Math.min(reag.getQty(EnumReagents.ELEM_CHARGE.id()), VOLTUS_CAPACITY - voltusAmount);
 			voltusAmount += moved;
 			reag.removeReagent(EnumReagents.ELEM_CHARGE.id(), moved);
-			markDirty();
+			setChanged();
 			return true;
 		}
 

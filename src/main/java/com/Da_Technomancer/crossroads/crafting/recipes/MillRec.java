@@ -60,26 +60,26 @@ public class MillRec implements IOptionalRecipe<IInventory>{
 
 	@Override
 	public boolean matches(IInventory inv, World worldIn){
-		return ingr.test(inv.getStackInSlot(0));
+		return ingr.test(inv.getItem(0));
 	}
 
 	@Override
-	public ItemStack getCraftingResult(IInventory inv){
-		return getRecipeOutput().copy();
+	public ItemStack assemble(IInventory inv){
+		return getResultItem().copy();
 	}
 
 	@Override
-	public boolean canFit(int width, int height){
+	public boolean canCraftInDimensions(int width, int height){
 		return true;
 	}
 
 	@Override
-	public ItemStack getRecipeOutput(){
+	public ItemStack getResultItem(){
 		return outputs.length != 0 ? outputs[0].copy() : ItemStack.EMPTY;
 	}
 
 	@Override
-	public ItemStack getIcon(){
+	public ItemStack getToastSymbol(){
 		return new ItemStack(CRBlocks.millstone);
 	}
 
@@ -111,9 +111,9 @@ public class MillRec implements IOptionalRecipe<IInventory>{
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<MillRec>{
 
 		@Override
-		public MillRec read(ResourceLocation recipeId, JsonObject json){
+		public MillRec fromJson(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and ingredient
-			String s = JSONUtils.getString(json, "group", "");
+			String s = JSONUtils.getAsString(json, "group", "");
 			if(!CraftingUtil.isActiveJSON(json)){
 				return new MillRec(recipeId, s, Ingredient.EMPTY, false);
 			}
@@ -125,8 +125,8 @@ public class MillRec implements IOptionalRecipe<IInventory>{
 			//As a single object ("output") containing result and count for one output
 
 			ItemStack[] outputs;
-			if(JSONUtils.isJsonArray(json, "output")){
-				JsonArray array = JSONUtils.getJsonArray(json, "output");
+			if(JSONUtils.isArrayNode(json, "output")){
+				JsonArray array = JSONUtils.getAsJsonArray(json, "output");
 				outputs = new ItemStack[Math.min(3, array.size())];
 				for(int i = 0; i < outputs.length; i++){
 					JsonObject outputObj = array.get(i).getAsJsonObject();
@@ -142,28 +142,28 @@ public class MillRec implements IOptionalRecipe<IInventory>{
 
 		@Nullable
 		@Override
-		public MillRec read(ResourceLocation recipeId, PacketBuffer buffer){
-			String s = buffer.readString(Short.MAX_VALUE);
+		public MillRec fromNetwork(ResourceLocation recipeId, PacketBuffer buffer){
+			String s = buffer.readUtf(Short.MAX_VALUE);
 			if(!buffer.readBoolean()){
 				return new MillRec(recipeId, s, Ingredient.EMPTY, false);
 			}
-			Ingredient ingredient = Ingredient.read(buffer);
+			Ingredient ingredient = Ingredient.fromNetwork(buffer);
 			int outputCount = buffer.readByte();
 			ItemStack[] outputs = new ItemStack[outputCount];
 			for(int i = 0; i < outputCount; i++){
-				outputs[i] = buffer.readItemStack();
+				outputs[i] = buffer.readItem();
 			}
 			return new MillRec(recipeId, s, ingredient, true, outputs);
 		}
 
 		@Override
-		public void write(PacketBuffer buffer, MillRec recipe){
-			buffer.writeString(recipe.getGroup());
+		public void toNetwork(PacketBuffer buffer, MillRec recipe){
+			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
-			recipe.ingr.write(buffer);
+			recipe.ingr.toNetwork(buffer);
 			buffer.writeByte(recipe.outputs.length);
 			for(ItemStack stack : recipe.outputs){
-				buffer.writeItemStack(stack);
+				buffer.writeItem(stack);
 			}
 		}
 	}

@@ -69,19 +69,19 @@ public class ColorParticleData implements IParticleData{
 	}
 
 	@Override
-	public void write(PacketBuffer buffer){
+	public void writeToNetwork(PacketBuffer buffer){
 		buffer.writeInt(col.getRGB());
 	}
 
 	@Override
-	public String getParameters(){
+	public String writeToString(){
 		return String.format(Locale.ROOT, "%s %d %d %d %d", type.getRegistryName(), col.getRed(), col.getGreen(), col.getBlue(), col.getAlpha());
 	}
 
 	private static class Deserializer implements IParticleData.IDeserializer<ColorParticleData>{
 
 		@Override
-		public ColorParticleData deserialize(ParticleType<ColorParticleData> type, StringReader reader) throws CommandSyntaxException{
+		public ColorParticleData fromCommand(ParticleType<ColorParticleData> type, StringReader reader) throws CommandSyntaxException{
 			int[] col = new int[4];
 			for(int i = 0; i < 4; i++){
 				reader.expect(' ');
@@ -91,7 +91,7 @@ public class ColorParticleData implements IParticleData{
 		}
 
 		@Override
-		public ColorParticleData read(ParticleType<ColorParticleData> type, PacketBuffer buffer){
+		public ColorParticleData fromNetwork(ParticleType<ColorParticleData> type, PacketBuffer buffer){
 			return new ColorParticleData(type, new Color(buffer.readInt(), true));
 		}
 	}

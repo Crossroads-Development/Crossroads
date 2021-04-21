@@ -9,13 +9,13 @@ public class SlimeEffect implements IEffect{
 
 	@Override
 	public void doEffect(World worldIn, BlockPos pos){
-		if(worldIn.isRemote){
+		if(worldIn.isClientSide){
 			return;
 		}
 		worldIn.destroyBlock(pos, false);
 
 		SlimeEntity slime = EntityType.SLIME.create(worldIn);
-		slime.setPosition(pos.getX(), pos.getY(), pos.getZ());
-		worldIn.addEntity(slime);
+		slime.setPos(pos.getX(), pos.getY(), pos.getZ());
+		worldIn.addFreshEntity(slime);
 	}
 }

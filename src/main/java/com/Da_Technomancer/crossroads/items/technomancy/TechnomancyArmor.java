@@ -37,12 +37,12 @@ public abstract class TechnomancyArmor extends ArmorItem{
 	protected final Multimap<Attribute, AttributeModifier> reinforcedProperties;
 
 	public TechnomancyArmor(EquipmentSlotType slot){
-		super(TECHNOMANCY_MAT, slot, new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1).isImmuneToFire());
+		super(TECHNOMANCY_MAT, slot, new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1).fireResistant());
 
 		//Prepare reinforced properties map
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 		UUID uuid = ARMOR_MODIFIERS[slot.getIndex()];
-		builder.put(Attributes.ARMOR, new AttributeModifier(uuid, "Armor modifier", TECHNOMANCY_REINFORCED_MAT.getDamageReductionAmount(slot), AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ARMOR, new AttributeModifier(uuid, "Armor modifier", TECHNOMANCY_REINFORCED_MAT.getDefenseForSlot(slot), AttributeModifier.Operation.ADDITION));
 		builder.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(uuid, "Armor toughness", TECHNOMANCY_REINFORCED_MAT.getToughness(), AttributeModifier.Operation.ADDITION));
 		if(TECHNOMANCY_REINFORCED_MAT.getKnockbackResistance() > 0){
 			builder.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(uuid, "Armor knockback resistance", TECHNOMANCY_REINFORCED_MAT.getKnockbackResistance(), AttributeModifier.Operation.ADDITION));
@@ -60,7 +60,7 @@ public abstract class TechnomancyArmor extends ArmorItem{
 	}
 
 	public static boolean hasDurability(ItemStack stack){
-		return stack.getDamage() < stack.getMaxDamage() - 1;
+		return stack.getDamageValue() < stack.getMaxDamage() - 1;
 	}
 
 	@Override
@@ -96,15 +96,15 @@ public abstract class TechnomancyArmor extends ArmorItem{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		if(isReinforced(stack)){
-			tooltip.add(new TranslationTextComponent("tt.crossroads.technomancy_armor.reinforced").setStyle(Style.EMPTY.applyFormatting(TextFormatting.DARK_RED)));
+			tooltip.add(new TranslationTextComponent("tt.crossroads.technomancy_armor.reinforced").setStyle(Style.EMPTY.applyFormat(TextFormatting.DARK_RED)));
 		}
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items){
-		if(isInGroup(group)){
+	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items){
+		if(allowdedIn(group)){
 			items.add(new ItemStack(this, 1));
 			items.add(setReinforced(new ItemStack(this, 1), true));
 		}
@@ -122,28 +122,28 @@ public abstract class TechnomancyArmor extends ArmorItem{
 	private static class TechnoMat implements IArmorMaterial{
 
 		@Override
-		public int getDurability(EquipmentSlotType slotIn){
-			return ArmorMaterial.NETHERITE.getDurability(slotIn);
+		public int getDurabilityForSlot(EquipmentSlotType slotIn){
+			return ArmorMaterial.NETHERITE.getDurabilityForSlot(slotIn);
 		}
 
 		@Override
-		public int getDamageReductionAmount(EquipmentSlotType slotIn){
+		public int getDefenseForSlot(EquipmentSlotType slotIn){
 			return 0;
 		}
 
 		@Override
-		public int getEnchantability(){
-			return ArmorMaterial.NETHERITE.getEnchantability();
+		public int getEnchantmentValue(){
+			return ArmorMaterial.NETHERITE.getEnchantmentValue();
 		}
 
 		@Override
-		public SoundEvent getSoundEvent(){
-			return SoundEvents.ITEM_ARMOR_EQUIP_IRON;
+		public SoundEvent getEquipSound(){
+			return SoundEvents.ARMOR_EQUIP_IRON;
 		}
 
 		@Override
-		public Ingredient getRepairMaterial(){
-			return Ingredient.fromItems(Items.NETHERITE_INGOT);
+		public Ingredient getRepairIngredient(){
+			return Ingredient.of(Items.NETHERITE_INGOT);
 		}
 
 		@Override
@@ -165,28 +165,28 @@ public abstract class TechnomancyArmor extends ArmorItem{
 	private static class TechnoMatReinforced implements IArmorMaterial{
 
 		@Override
-		public int getDurability(EquipmentSlotType slotIn){
-			return ArmorMaterial.NETHERITE.getDurability(slotIn);
+		public int getDurabilityForSlot(EquipmentSlotType slotIn){
+			return ArmorMaterial.NETHERITE.getDurabilityForSlot(slotIn);
 		}
 
 		@Override
-		public int getDamageReductionAmount(EquipmentSlotType slotIn){
-			return ArmorMaterial.NETHERITE.getDamageReductionAmount(slotIn);
+		public int getDefenseForSlot(EquipmentSlotType slotIn){
+			return ArmorMaterial.NETHERITE.getDefenseForSlot(slotIn);
 		}
 
 		@Override
-		public int getEnchantability(){
-			return ArmorMaterial.NETHERITE.getEnchantability();
+		public int getEnchantmentValue(){
+			return ArmorMaterial.NETHERITE.getEnchantmentValue();
 		}
 
 		@Override
-		public SoundEvent getSoundEvent(){
-			return ArmorMaterial.IRON.getSoundEvent();
+		public SoundEvent getEquipSound(){
+			return ArmorMaterial.IRON.getEquipSound();
 		}
 
 		@Override
-		public Ingredient getRepairMaterial(){
-			return Ingredient.fromItems(Items.NETHERITE_INGOT);
+		public Ingredient getRepairIngredient(){
+			return Ingredient.of(Items.NETHERITE_INGOT);
 		}
 
 		@Override

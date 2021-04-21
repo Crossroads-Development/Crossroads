@@ -52,16 +52,16 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEnti
 			message |= 1;
 		}
 		message |= stored << 1;
-		CRPackets.sendPacketAround(world, pos, new SendIntToClient((byte) 0, message, pos));
+		CRPackets.sendPacketAround(level, worldPosition, new SendIntToClient((byte) 0, message, worldPosition));
 	}
 
 	public void setStored(int storedIn){
 		int prev = stored;
 		stored = storedIn;
-		if(!world.isRemote && prev >= TeslaCoilTop.TeslaCoilVariants.DECORATIVE.joltAmt ^ storedIn >= TeslaCoilTop.TeslaCoilVariants.DECORATIVE.joltAmt){
+		if(!level.isClientSide && prev >= TeslaCoilTop.TeslaCoilVariants.DECORATIVE.joltAmt ^ storedIn >= TeslaCoilTop.TeslaCoilVariants.DECORATIVE.joltAmt){
 			syncState();
 		}
-		markDirty();
+		setChanged();
 	}
 
 	public int getStored(){
@@ -82,39 +82,39 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEnti
 
 	private boolean hasJar(){
 		if(hasJar == null){
-			BlockState state = world.getBlockState(pos);
+			BlockState state = level.getBlockState(worldPosition);
 			if(state.getBlock() != CRBlocks.teslaCoil){
-				remove();
+				setRemoved();
 				return false;
 			}
-			hasJar = world.getBlockState(pos).get(CRProperties.ACTIVE);
+			hasJar = level.getBlockState(worldPosition).getValue(CRProperties.ACTIVE);
 		}
 		return hasJar;
 	}
 
 	@Override
 	public void tick(){
-		if(!redstone && world.rand.nextInt(10) == 0 && stored > 0){
-			TileEntity topTE = world.getTileEntity(pos.up());
+		if(!redstone && level.random.nextInt(10) == 0 && stored > 0){
+			TileEntity topTE = level.getBlockEntity(worldPosition.above());
 			if(topTE instanceof TeslaCoilTopTileEntity){
 				((TeslaCoilTopTileEntity) topTE).jolt(this);
 			}
 		}
 
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 
 		if(!redstone && stored > 0){
-			Direction facing = world.getBlockState(pos).get(CRProperties.HORIZ_FACING);
-			TileEntity te = world.getTileEntity(pos.offset(facing));
+			Direction facing = level.getBlockState(worldPosition).getValue(CRProperties.HORIZ_FACING);
+			TileEntity te = level.getBlockEntity(worldPosition.relative(facing));
 			LazyOptional<IEnergyStorage> energyOpt;
 			if(te != null && (energyOpt = te.getCapability(CapabilityEnergy.ENERGY, facing.getOpposite())).isPresent()){
 				IEnergyStorage storage = energyOpt.orElseThrow(NullPointerException::new);
 				int moved = storage.receiveEnergy(stored, false);
 				if(moved > 0){
 					setStored(getStored() - moved);
-					markDirty();
+					setChanged();
 				}
 			}
 		}
@@ -123,20 +123,20 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEnti
 	public void addJar(ItemStack stack){
 		setStored(Math.min(stored + LeydenJar.getCharge(stack), CAPACITY + LeydenJar.MAX_CHARGE));
 		hasJar = true;
-		markDirty();
+		setChanged();
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putInt("stored", stored);
 		nbt.putBoolean("reds", redstone);
 		return nbt;
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		stored = nbt.getInt("stored");
 		redstone = nbt.getBoolean("reds");
 	}
@@ -155,7 +155,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEnti
 		LeydenJar.setCharge(out, Math.min(stored, LeydenJar.MAX_CHARGE));
 		setStored(stored - Math.min(stored, LeydenJar.MAX_CHARGE));
 		hasJar = false;
-		markDirty();
+		setChanged();
 		return out;
 	}
 
@@ -167,8 +167,8 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		optIn.invalidate();
 		optOut.invalidate();
 	}
@@ -179,7 +179,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEnti
 	@SuppressWarnings("unchecked")
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == CapabilityEnergy.ENERGY){
-			return (LazyOptional<T>) (side == world.getBlockState(pos).get(CRProperties.HORIZ_FACING) ? optOut : optIn);
+			return (LazyOptional<T>) (side == level.getBlockState(worldPosition).getValue(CRProperties.HORIZ_FACING) ? optOut : optIn);
 		}
 		return super.getCapability(cap, side);
 	}
@@ -192,7 +192,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEnti
 
 			if(!simulate){
 				setStored(stored + toInsert);
-				markDirty();
+				setChanged();
 			}
 			return toInsert;
 		}
@@ -235,7 +235,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEnti
 			int toExtract = Math.min(stored, maxExtract);
 			if(!simulate){
 				setStored(stored - toExtract);
-				markDirty();
+				setChanged();
 			}
 			return toExtract;
 		}

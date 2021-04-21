@@ -25,12 +25,12 @@ public class BeamCannonRenderer extends TileEntityRenderer<BeamCannonTileEntity>
 		if(te.getBlockState().getBlock() != CRBlocks.beamCannon){
 			return;
 		}
-		matrix.push();
+		matrix.pushPose();
 		matrix.translate(0.5, 0.5, 0.5);
-		matrix.rotate(te.getBlockState().get(CRProperties.FACING).getRotation());
-		matrix.rotate(Vector3f.YP.rotation(-te.clientAngle[0]));
+		matrix.mulPose(te.getBlockState().getValue(CRProperties.FACING).getRotation());
+		matrix.mulPose(Vector3f.YP.rotation(-te.clientAngle[0]));
 
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
+		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
 		TextureAtlasSprite bronzeSprite = CRRenderUtil.getTextureSprite(CRRenderTypes.BRONZE_TEXTURE);
 		TextureAtlasSprite barrelSprite = CRRenderUtil.getTextureSprite(CRRenderTypes.BEAM_CANNON_BARREL_TEXTURE);
 
@@ -40,15 +40,15 @@ public class BeamCannonRenderer extends TileEntityRenderer<BeamCannonTileEntity>
 		float widthInner = 4F / 16F;
 		float height = 4F / 16F;
 		float heightInner = 1F / 16F;
-		float uSt = bronzeSprite.getMinU();
-		float uEn = bronzeSprite.getMaxU();
-		float uShort = bronzeSprite.getInterpolatedU(3);
-		float vSt = bronzeSprite.getMinV();
-		float vHeight = bronzeSprite.getInterpolatedV(4);
-		float vRim = bronzeSprite.getInterpolatedV(1);
-		float vTopSt = bronzeSprite.getInterpolatedV(2);
-		float vTopEn = bronzeSprite.getInterpolatedV(3);
-		float vTopWidth = bronzeSprite.getInterpolatedV(10);
+		float uSt = bronzeSprite.getU0();
+		float uEn = bronzeSprite.getU1();
+		float uShort = bronzeSprite.getU(3);
+		float vSt = bronzeSprite.getV0();
+		float vHeight = bronzeSprite.getV(4);
+		float vRim = bronzeSprite.getV(1);
+		float vTopSt = bronzeSprite.getV(2);
+		float vTopEn = bronzeSprite.getV(3);
+		float vTopWidth = bronzeSprite.getV(10);
 
 		matrix.translate(0, 1F / 16F, 0);
 		
@@ -132,19 +132,19 @@ public class BeamCannonRenderer extends TileEntityRenderer<BeamCannonTileEntity>
 
 		//Draw barrel
 		matrix.translate(0, 2.5F / 16F, 0);
-		matrix.rotate(Vector3f.XP.rotation(te.clientAngle[1]));
+		matrix.mulPose(Vector3f.XP.rotation(te.clientAngle[1]));
 
 		float barrelWidth = widthInner - 0.001F;
 		float barrelBottom = -1.5F / 16F;
 		float barrelTop = 33.5F / 16F;
-		float bUTopSt = barrelSprite.getInterpolatedU(8);
-		float bUTopEn = barrelSprite.getInterpolatedU(12);
-		float bVTopSt = barrelSprite.getInterpolatedV(0);
-		float bVTopEn = barrelSprite.getInterpolatedV(4);
-		float bUSideSt = barrelSprite.getInterpolatedU(0);
-		float bUSideEn = barrelSprite.getInterpolatedU(4);
-		float bVSideSt = barrelSprite.getInterpolatedV(16);
-		float bVSideEn = barrelSprite.getInterpolatedV(0);
+		float bUTopSt = barrelSprite.getU(8);
+		float bUTopEn = barrelSprite.getU(12);
+		float bVTopSt = barrelSprite.getV(0);
+		float bVTopEn = barrelSprite.getV(4);
+		float bUSideSt = barrelSprite.getU(0);
+		float bUSideEn = barrelSprite.getU(4);
+		float bVSideSt = barrelSprite.getV(16);
+		float bVSideEn = barrelSprite.getV(0);
 
 		//Bottom
 		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelBottom, -barrelWidth, bUTopSt, bVTopSt, 0,  -1, 0, light);
@@ -184,11 +184,11 @@ public class BeamCannonRenderer extends TileEntityRenderer<BeamCannonTileEntity>
 			BeamRenderer.drawBeam(matrix, beamBuilder, 1 + Math.max(0, te.beamLength - (barrelTop + 3.5F / 16F)), te.beamSize / 8F / (float) Math.sqrt(2), te.beamCol);
 		}
 
-		matrix.pop();
+		matrix.popPose();
 	}
 
 	@Override
-	public boolean isGlobalRenderer(BeamCannonTileEntity te){
+	public boolean shouldRenderOffScreen(BeamCannonTileEntity te){
 		return true;
 	}
 }

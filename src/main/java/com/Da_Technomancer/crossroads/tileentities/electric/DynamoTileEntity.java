@@ -51,18 +51,18 @@ public class DynamoTileEntity extends ModuleTE{
 			axleHandler.addEnergy(-operations, false);
 			fe += operations * CRConfig.electPerJoule.get();
 			fe = Math.min(fe, CHARGE_CAPACITY);
-			markDirty();
+			setChanged();
 		}
 
 		//Transfer FE
-		Direction facing = getBlockState().get(CRProperties.HORIZ_FACING);
-		TileEntity neighbor = world.getTileEntity(pos.offset(facing.getOpposite()));
+		Direction facing = getBlockState().getValue(CRProperties.HORIZ_FACING);
+		TileEntity neighbor = level.getBlockEntity(worldPosition.relative(facing.getOpposite()));
 		LazyOptional<IEnergyStorage> energyOpt;
 		if(neighbor != null && (energyOpt = neighbor.getCapability(CapabilityEnergy.ENERGY, facing)).isPresent()){
 			IEnergyStorage handler = energyOpt.orElseThrow(NullPointerException::new);
 			if(handler.canReceive()){
 				fe -= handler.receiveEnergy(fe, false);
-				markDirty();
+				setChanged();
 			}
 		}
 	}
@@ -73,8 +73,8 @@ public class DynamoTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void updateContainingBlockInfo(){
-		super.updateContainingBlockInfo();
+	public void clearCache(){
+		super.clearCache();
 		axleOpt.invalidate();
 		axleOpt = LazyOptional.of(() -> axleHandler);
 		feOpt.invalidate();
@@ -82,22 +82,22 @@ public class DynamoTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		fe = nbt.getInt("charge");
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putInt("charge", fe);
 
 		return nbt;
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		feOpt.invalidate();
 	}
 
@@ -107,10 +107,10 @@ public class DynamoTileEntity extends ModuleTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.AXLE_CAPABILITY && (side == null || side == getBlockState().get(CRProperties.HORIZ_FACING))){
+		if(cap == Capabilities.AXLE_CAPABILITY && (side == null || side == getBlockState().getValue(CRProperties.HORIZ_FACING))){
 			return (LazyOptional<T>) axleOpt;
 		}
-		if(cap == CapabilityEnergy.ENERGY && (side == null || side == getBlockState().get(CRProperties.HORIZ_FACING).getOpposite())){
+		if(cap == CapabilityEnergy.ENERGY && (side == null || side == getBlockState().getValue(CRProperties.HORIZ_FACING).getOpposite())){
 			return (LazyOptional<T>) feOpt;
 		}
 		return super.getCapability(cap, side);
@@ -130,7 +130,7 @@ public class DynamoTileEntity extends ModuleTE{
 			}
 			maxExtract = Math.min(maxExtract, fe);
 			fe -= maxExtract;
-			markDirty();
+			setChanged();
 			return maxExtract;
 		}
 

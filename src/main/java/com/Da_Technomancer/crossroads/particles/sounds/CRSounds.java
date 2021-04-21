@@ -61,10 +61,10 @@ public class CRSounds{
 	 * @param pitch Pitch multiplier, multiplied with event pitch and clamped within [0.5, 2] after multiplying
 	 */
 	public static void playSoundClientLocal(World world, BlockPos pos, SoundEvent sound, SoundCategory category, float volume, float pitch){
-		if(world.isRemote){
+		if(world.isClientSide){
 			float distance = Math.max(1, volume) * 16F;
 			PlayerEntity player = SafeCallable.getClientPlayer();
-			if(player.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= distance * distance){
+			if(player.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= distance * distance){
 				world.playSound(player, pos, sound, category, volume, pitch);
 			}
 		}

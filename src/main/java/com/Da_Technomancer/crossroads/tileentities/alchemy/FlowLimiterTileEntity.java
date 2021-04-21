@@ -40,9 +40,9 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 
 	public Direction getFacing(){
 		if(facing == null){
-			BlockState state = world.getBlockState(pos);
+			BlockState state = level.getBlockState(worldPosition);
 			if(state.hasProperty(ESProperties.FACING)){
-				facing = state.get(ESProperties.FACING);
+				facing = state.getValue(ESProperties.FACING);
 				return facing;
 			}
 			return Direction.DOWN;
@@ -57,7 +57,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 	public void cycleLimit(ServerPlayerEntity player){
 		limitIndex += 1;
 		limitIndex %= LIMITS.length;
-		markDirty();
+		setChanged();
 		ArrayList<ITextComponent> chat = new ArrayList<>(1);
 		chat.add(new TranslationTextComponent("tt.crossroads.flow_limiter.mode", LIMITS[limitIndex]));
 		CRPackets.sendPacketToPlayer(player, new SendChatToClient(chat, 25856));//CHAT_ID chosen at random
@@ -65,8 +65,8 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 
 	@Override
 	protected void performTransfer(){
-		Direction side = world.getBlockState(pos).get(ESProperties.FACING);
-		TileEntity te = world.getTileEntity(pos.offset(side));
+		Direction side = level.getBlockState(worldPosition).getValue(ESProperties.FACING);
+		TileEntity te = level.getBlockEntity(worldPosition.relative(side));
 		LazyOptional<IChemicalHandler> otherOpt;
 		if(contents.getTotalQty() == 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
 			return;
@@ -95,28 +95,28 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 
 		if(changed){
 			correctReag();
-			markDirty();
+			setChanged();
 		}
 	}
 
 	@Override
 	protected EnumTransferMode[] getModes(){
 		EnumTransferMode[] output = {EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE};
-		Direction outSide = world.getBlockState(pos).get(ESProperties.FACING);
-		output[outSide.getIndex()] = EnumTransferMode.OUTPUT;
-		output[outSide.getOpposite().getIndex()] = EnumTransferMode.INPUT;
+		Direction outSide = level.getBlockState(worldPosition).getValue(ESProperties.FACING);
+		output[outSide.get3DDataValue()] = EnumTransferMode.OUTPUT;
+		output[outSide.getOpposite().get3DDataValue()] = EnumTransferMode.INPUT;
 		return output;
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		limitIndex = Math.min(nbt.getInt("limit"), LIMITS.length - 1);
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putInt("limit", limitIndex);
 		return nbt;
 	}
@@ -124,7 +124,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == getBlockState().get(ESProperties.FACING).getAxis())){
+		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == getBlockState().getValue(ESProperties.FACING).getAxis())){
 			return (LazyOptional<T>) chemOpt;
 		}
 		return super.getCapability(cap, side);

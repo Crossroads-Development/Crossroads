@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.API.packets;
 import com.Da_Technomancer.essentials.packets.ClientPacket;
 import com.Da_Technomancer.essentials.packets.INBTReceiver;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
 
@@ -40,8 +39,8 @@ public class NbtToEntityClient extends ClientPacket{
 			return;
 		}
 		Entity ent = null;
-		for(Entity loadedEnt : Minecraft.getInstance().world.getAllEntities()){
-			if(entity.equals(loadedEnt.getUniqueID())){
+		for(Entity loadedEnt : Minecraft.getInstance().level.entitiesForRendering()){
+			if(entity.equals(loadedEnt.getUUID())){
 				ent = loadedEnt;
 				break;
 			}

@@ -32,7 +32,7 @@ import java.util.ArrayList;
 public class OmniMeter extends Item{
 
 	protected OmniMeter(){
-		super(new Item.Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
+		super(new Item.Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "omnimeter";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
@@ -50,7 +50,7 @@ public class OmniMeter extends Item{
 	 * @param hit Detailed target info
 	 */
 	public static void measure(ArrayList<ITextComponent> chat, PlayerEntity player, World world, BlockPos pos, Direction facing, BlockRayTraceResult hit){
-		TileEntity te = world.getTileEntity(pos);
+		TileEntity te = world.getBlockEntity(pos);
 		if(te != null){
 			LazyOptional<IFluidHandler> fluidOpt;
 			if((fluidOpt = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)).isPresent()){
@@ -119,12 +119,12 @@ public class OmniMeter extends Item{
 	}
 
 	@Override
-	public ActionResultType onItemUse(ItemUseContext context){
-		if(!context.getWorld().isRemote){
+	public ActionResultType useOn(ItemUseContext context){
+		if(!context.getLevel().isClientSide){
 			ArrayList<ITextComponent> chat = new ArrayList<>();
 
-			BlockRayTraceResult result = new BlockRayTraceResult(context.getHitVec(), context.getFace(), context.getPos(), false);
-			measure(chat, context.getPlayer(), context.getWorld(), context.getPos(), context.getFace(), result);
+			BlockRayTraceResult result = new BlockRayTraceResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), false);
+			measure(chat, context.getPlayer(), context.getLevel(), context.getClickedPos(), context.getClickedFace(), result);
 
 			if(!chat.isEmpty()){
 				CRPackets.sendPacketToPlayer((ServerPlayerEntity) context.getPlayer(), new SendChatToClient(chat, CHAT_ID));

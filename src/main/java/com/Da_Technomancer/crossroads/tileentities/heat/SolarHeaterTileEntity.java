@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
-import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.block.BlockState;
@@ -37,42 +37,42 @@ public class SolarHeaterTileEntity extends ModuleTE{
 	@Override
 	public void tick(){
 		super.tick();
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 
 		//Every 30 seconds, check if we still have sky view and cache the result
-		if(newlyPlaced || world.getGameTime() % 600 == 0){
-			running = world.canBlockSeeSky(pos);
+		if(newlyPlaced || level.getGameTime() % 600 == 0){
+			running = level.canSeeSkyFromBelowWater(worldPosition);
 			newlyPlaced = false;
 		}
 
 		//This machine can share heat with other Solar Heaters in the same line, but only other Solar Heaters. Otherwise, a heat cable is needed like normal
-		TileEntity adjTE = world.getTileEntity(pos.offset(Direction.getFacingFromAxis(Direction.AxisDirection.NEGATIVE, world.getBlockState(pos).get(CRProperties.HORIZ_AXIS))));
+		TileEntity adjTE = level.getBlockEntity(worldPosition.relative(Direction.get(Direction.AxisDirection.NEGATIVE, level.getBlockState(worldPosition).getValue(CRProperties.HORIZ_AXIS))));
 		if(adjTE instanceof SolarHeaterTileEntity){
 			SolarHeaterTileEntity otherTE = (SolarHeaterTileEntity) adjTE;
 			temp += otherTE.temp;
 			temp /= 2;
 			otherTE.temp = temp;
-			markDirty();
-			otherTE.markDirty();
+			setChanged();
+			otherTE.setChanged();
 		}
 
-		if(running && temp < CAP && world.isDaytime() && !world.isRaining()){
+		if(running && temp < CAP && level.isDay() && !level.isRaining()){
 			temp = Math.min(CAP, temp + RATE);
-			markDirty();
+			setChanged();
 		}
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		running = nbt.getBoolean("running");
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putBoolean("running", running);
 		return nbt;
 	}
@@ -80,7 +80,7 @@ public class SolarHeaterTileEntity extends ModuleTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing){
-		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || facing.getAxis() == world.getBlockState(pos).get(CRProperties.HORIZ_AXIS))){
+		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || facing.getAxis() == level.getBlockState(worldPosition).getValue(CRProperties.HORIZ_AXIS))){
 			return (LazyOptional<T>) heatOpt;
 		}
 		return super.getCapability(capability, facing);

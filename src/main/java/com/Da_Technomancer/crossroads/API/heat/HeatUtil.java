@@ -74,7 +74,7 @@ public class HeatUtil{
 		//This formula was derived with the power of wikipedia and excel spreadsheets to compare biome temperatures to actual real world temperatures.
 		//Most people probably wouldn't care if I'd just pulled it out of my *rse, but I made an effort and I want someone to know this. Appreciate it. Please?
 		double outTemp = rawTemp * 17.5D - 2.5D;
-		if(biome.getCategory() == Biome.Category.NETHER){
+		if(biome.getBiomeCategory() == Biome.Category.NETHER){
 			outTemp = Math.max(outTemp, CRConfig.hellTemperature.get());
 		}
 		return MiscUtil.preciseRound(outTemp, 3);

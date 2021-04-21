@@ -79,7 +79,7 @@ public interface IGateway extends IInfoTE{
 			//Based on TeleportCommand
 
 			//Load endpoint chunk
-			target.getChunkProvider().registerTicket(TicketType.POST_TELEPORT, new ChunkPos(new BlockPos(posX, posY, posZ)), 1, e.getEntityId());
+			target.getChunkSource().addRegionTicket(TicketType.POST_TELEPORT, new ChunkPos(new BlockPos(posX, posY, posZ)), 1, e.getId());
 
 			e.stopRiding();
 			ServerPlayerEntity play = (ServerPlayerEntity) e;
@@ -87,37 +87,37 @@ public interface IGateway extends IInfoTE{
 				play.stopSleepInBed(true, true);
 			}
 
-			float prevHeadYaw = play.getRotationYawHead();
-			Vector3d prevVelocity = play.getMotion();
-			if(target == e.world){
-				play.connection.setPlayerLocation(posX, posY, posZ, play.getYaw(1) + yawRotation, play.getPitch(1));
+			float prevHeadYaw = play.getYHeadRot();
+			Vector3d prevVelocity = play.getDeltaMovement();
+			if(target == e.level){
+				play.connection.teleport(posX, posY, posZ, play.getViewYRot(1) + yawRotation, play.getViewXRot(1));
 			}else{
-				play.teleport(target, posX, posY, posZ, play.getYaw(1) + yawRotation, play.getPitch(1));
+				play.teleportTo(target, posX, posY, posZ, play.getViewYRot(1) + yawRotation, play.getViewXRot(1));
 			}
-			play.setRotationYawHead(prevHeadYaw + yawRotation);
-			play.setMotion(prevVelocity.rotateYaw(yawRotation));
+			play.setYHeadRot(prevHeadYaw + yawRotation);
+			play.setDeltaMovement(prevVelocity.yRot(yawRotation));
 		}else{
-			Vector3d prevVelocity = e.getMotion();
-			if(target == e.world){
-				float prevHeadYaw = e.getRotationYawHead();
-				e.setLocationAndAngles(posX, posY, posZ, e.getYaw(1) + yawRotation, e.getPitch(1));
-				e.setRotationYawHead(prevHeadYaw + yawRotation);
+			Vector3d prevVelocity = e.getDeltaMovement();
+			if(target == e.level){
+				float prevHeadYaw = e.getYHeadRot();
+				e.moveTo(posX, posY, posZ, e.getViewYRot(1) + yawRotation, e.getViewXRot(1));
+				e.setYHeadRot(prevHeadYaw + yawRotation);
 			}else{
 				//We clone the entity, and delete the original
-				e.detach();
+				e.unRide();
 				Entity entity = e;
 				e = e.getType().create(target);
 				if(e == null){
 					return;
 				}
 
-				e.copyDataFromOld(entity);
-				e.setLocationAndAngles(posX, posY, posZ, entity.getYaw(1) + yawRotation, entity.getPitch(1));
-				e.setRotationYawHead(entity.getRotationYawHead() + yawRotation);
+				e.restoreFrom(entity);
+				e.moveTo(posX, posY, posZ, entity.getViewYRot(1) + yawRotation, entity.getViewXRot(1));
+				e.setYHeadRot(entity.getYHeadRot() + yawRotation);
 				target.addFromAnotherDimension(e);
 				entity.remove();//Remove the copy in the source dimension
 			}
-			e.setMotion(prevVelocity.rotateYaw(yawRotation));
+			e.setDeltaMovement(prevVelocity.yRot(yawRotation));
 		}
 
 		//Add a timestamp of when this entity was teleported by a gateway

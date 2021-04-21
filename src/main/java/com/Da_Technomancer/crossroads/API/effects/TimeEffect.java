@@ -21,8 +21,8 @@ public class TimeEffect extends BeamEffect{
 			if(voi){
 				FluxUtil.fluxEvent(worldIn, pos);
 			}else{
-				TileEntity te = worldIn.getTileEntity(pos);
-				if(worldIn.rand.nextInt(64) < power){
+				TileEntity te = worldIn.getBlockEntity(pos);
+				if(worldIn.random.nextInt(64) < power){
 					if(te instanceof ITickableTileEntity){
 
 						//Don't do extra ticks to beam blocks
@@ -35,8 +35,8 @@ public class TimeEffect extends BeamEffect{
 					}
 
 					BlockState state = worldIn.getBlockState(pos);
-					if(state.ticksRandomly()){
-						state.randomTick((ServerWorld) worldIn, pos, worldIn.rand);
+					if(state.isRandomlyTicking()){
+						state.randomTick((ServerWorld) worldIn, pos, worldIn.random);
 					}
 				}
 			}

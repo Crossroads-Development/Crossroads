@@ -25,7 +25,7 @@ public class BeaconHarnessContainer extends Container{
 		super(type, id);
 
 		BlockPos pos = data.readBlockPos();
-		TileEntity rawTE = playerInv.player.world.getTileEntity(pos);
+		TileEntity rawTE = playerInv.player.level.getBlockEntity(pos);
 		if(rawTE instanceof BeaconHarnessTileEntity){
 			te = (BeaconHarnessTileEntity) rawTE;
 		}else{
@@ -37,13 +37,13 @@ public class BeaconHarnessContainer extends Container{
 		if(te == null){
 			cycleRef = new IntDeferredRef(() -> 0, false);
 		}else{
-			cycleRef = new IntDeferredRef(te::getCycles, te.getWorld().isRemote);
+			cycleRef = new IntDeferredRef(te::getCycles, te.getLevel().isClientSide);
 		}
-		trackInt(cycleRef);
+		addDataSlot(cycleRef);
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity playerIn){
-		return te.isUsableByPlayer(playerIn);
+	public boolean stillValid(PlayerEntity playerIn){
+		return te.stillValid(playerIn);
 	}
 }

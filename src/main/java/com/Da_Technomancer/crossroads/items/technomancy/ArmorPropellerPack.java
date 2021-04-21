@@ -46,8 +46,8 @@ public class ArmorPropellerPack extends TechnomancyArmor implements WindingTable
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items){
-		if(isInGroup(group)){
+	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items){
+		if(allowdedIn(group)){
 			items.add(new ItemStack(this, 1));
 			ItemStack unarmoredWound = new ItemStack(this, 1);
 			setWindLevel(unarmoredWound, getMaxWind());
@@ -60,16 +60,16 @@ public class ArmorPropellerPack extends TechnomancyArmor implements WindingTable
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-		super.addInformation(stack, worldIn, tooltip, flagIn);
+	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+		super.appendHoverText(stack, worldIn, tooltip, flagIn);
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(getWindLevel(stack)), CRConfig.formatVal(getMaxWind())));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.propeller_pack.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.propeller_pack.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	public static void applyMidairBoost(PlayerEntity player){
-		Vector3d look = player.getLookVec();
-		Vector3d motion = player.getMotion();
-		player.setMotion(motion.add(look.x * 0.1D + (look.x * 1.5D - motion.x) * 0.5D, look.y * 0.1D + (look.y * 1.5D - motion.y) * 0.5D, look.z * 0.1D + (look.z * 1.5D - motion.z) * 0.5D));
+		Vector3d look = player.getLookAngle();
+		Vector3d motion = player.getDeltaMovement();
+		player.setDeltaMovement(motion.add(look.x * 0.1D + (look.x * 1.5D - motion.x) * 0.5D, look.y * 0.1D + (look.y * 1.5D - motion.y) * 0.5D, look.z * 0.1D + (look.z * 1.5D - motion.z) * 0.5D));
 	}
 }

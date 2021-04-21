@@ -19,13 +19,13 @@ public class BeamUtil{
 	public static final int BEAM_TIME = 4;
 	public static final int POWER_LIMIT = 64_000;
 
-	private static final ITag<Block> PASSABLE = BlockTags.makeWrapperTag(Crossroads.MODID + ":beam_passable");
+	private static final ITag<Block> PASSABLE = BlockTags.bind(Crossroads.MODID + ":beam_passable");
 	private static final VoxelShape[] COLLISION_MASK = new VoxelShape[3];
 
 	static{
-		COLLISION_MASK[0] = Block.makeCuboidShape(0, 5, 5, 16, 11, 11);
-		COLLISION_MASK[1] = Block.makeCuboidShape(5, 0, 5, 11, 16, 11);
-		COLLISION_MASK[2] = Block.makeCuboidShape(5, 5, 0, 11, 11, 16);
+		COLLISION_MASK[0] = Block.box(0, 5, 5, 16, 11, 11);
+		COLLISION_MASK[1] = Block.box(5, 0, 5, 11, 16, 11);
+		COLLISION_MASK[2] = Block.box(5, 5, 0, 11, 11, 16);
 	}
 
 	/**
@@ -43,26 +43,26 @@ public class BeamUtil{
 		}
 
 		//Return false if any portion of the shape intersects with the mask for that direction
-		VoxelShape shape = state.getRenderShape(world, pos);
+		VoxelShape shape = state.getBlockSupportShape(world, pos);
 		VoxelShape mask;
 		if(CRConfig.beamPowerCollision.get()){
 			int radius = getBeamRadius(power);
 			switch(toDir.getAxis()){
 				case X:
-					mask = Block.makeCuboidShape(0, 8 - radius, 8 - radius, 16, 8 + radius, 8 + radius);
+					mask = Block.box(0, 8 - radius, 8 - radius, 16, 8 + radius, 8 + radius);
 					break;
 				case Y:
-					mask = Block.makeCuboidShape(8 - radius, 0, 8 - radius, 8 + radius, 16, 8 + radius);
+					mask = Block.box(8 - radius, 0, 8 - radius, 8 + radius, 16, 8 + radius);
 					break;
 				case Z:
 				default:
-					mask = Block.makeCuboidShape(8 - radius, 8 - radius, 0, 8 + radius, 8 + radius, 16);
+					mask = Block.box(8 - radius, 8 - radius, 0, 8 + radius, 8 + radius, 16);
 					break;
 			}
 		}else{
 			 mask = COLLISION_MASK[toDir.getAxis().ordinal()];
 		}
-		return VoxelShapes.compare(shape, mask, IBooleanFunction.AND);
+		return VoxelShapes.joinIsNotEmpty(shape, mask, IBooleanFunction.AND);
 	}
 
 	/**

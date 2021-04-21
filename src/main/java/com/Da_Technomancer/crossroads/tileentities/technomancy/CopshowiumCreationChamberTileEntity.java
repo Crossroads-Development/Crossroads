@@ -81,7 +81,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){
 		//Increase render BB to include links
-		return new AxisAlignedBB(pos).grow(getRange());
+		return new AxisAlignedBB(worldPosition).inflate(getRange());
 	}
 
 	@Override
@@ -93,15 +93,15 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		fluxHelper.writeData(nbt);
 		return nbt;
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		fluxHelper.readData(nbt);
 	}
 
@@ -134,12 +134,12 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
+	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction){
 		return false;
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
+	public boolean canPlaceItem(int index, ItemStack stack){
 		return false;
 	}
 
@@ -185,8 +185,8 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		inputOpt.invalidate();
 		outputOpt.invalidate();
 		beamOpt.invalidate();
@@ -234,9 +234,9 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 				//A void beam destroys all stored liquid
 				fluids[0] = FluidStack.EMPTY;
 				fluids[1] = FluidStack.EMPTY;
-				markDirty();
+				setChanged();
 			}else if((!CRConfig.cccRequireTime.get() || align == EnumBeamAlignments.TIME) && !fluids[0].isEmpty()){
-				Optional<CopshowiumRec> recOpt = world.getRecipeManager().getRecipe(CRRecipes.COPSHOWIUM_TYPE, CopshowiumCreationChamberTileEntity.this, world);
+				Optional<CopshowiumRec> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.COPSHOWIUM_TYPE, CopshowiumCreationChamberTileEntity.this, level);
 				if(recOpt.isPresent()){
 					CopshowiumRec rec = recOpt.get();
 					int created = (int) (fluids[0].getAmount() * rec.getMult());
@@ -246,12 +246,12 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 						fluids[1].grow(created);
 					}
 					fluids[0] = FluidStack.EMPTY;
-					markDirty();
+					setChanged();
 
 					//Check for overflowing
 					if(fluids[1].getAmount() > CAPACITY){
 						if(CRConfig.allowOverflow.get()){
-							world.setBlockState(pos, CRFluids.moltenCopshowium.still.getDefaultState().getBlockState());
+							level.setBlockAndUpdate(worldPosition, CRFluids.moltenCopshowium.still.defaultFluidState().createLegacyBlock());
 						}else{
 							fluids[1].setAmount(CAPACITY);//The config is disabled- just delete any excess fluid
 						}
@@ -263,7 +263,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 				}else{
 					//Wipe the contents- no matching recipe
 					fluids[0] = FluidStack.EMPTY;
-					markDirty();
+					setChanged();
 				}
 			}
 		}

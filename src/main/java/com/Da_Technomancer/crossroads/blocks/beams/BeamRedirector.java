@@ -24,38 +24,38 @@ public class BeamRedirector extends BeamBlock{
 
 	public BeamRedirector(){
 		super("beam_redirector");
-		setDefaultState(getDefaultState().with(CRProperties.REDSTONE_BOOL, false));
+		registerDefaultState(defaultBlockState().setValue(CRProperties.REDSTONE_BOOL, false));
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new BeamRedirectorTileEntity();
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
-		super.fillStateContainer(builder);
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
+		super.createBlockStateDefinition(builder);
 		builder.add(CRProperties.REDSTONE_BOOL);
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return super.getStateForPlacement(context).with(ESProperties.REDSTONE_BOOL, context.getWorld().isBlockPowered(context.getPos()));
+		return super.getStateForPlacement(context).setValue(ESProperties.REDSTONE_BOOL, context.getLevel().hasNeighborSignal(context.getClickedPos()));
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
-		if(worldIn.isBlockPowered(pos)){
-			if(!state.get(ESProperties.REDSTONE_BOOL)){
-				worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, true));
+		if(worldIn.hasNeighborSignal(pos)){
+			if(!state.getValue(ESProperties.REDSTONE_BOOL)){
+				worldIn.setBlockAndUpdate(pos, state.setValue(ESProperties.REDSTONE_BOOL, true));
 			}
-		}else if(state.get(ESProperties.REDSTONE_BOOL)){
-			worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, false));
+		}else if(state.getValue(ESProperties.REDSTONE_BOOL)){
+			worldIn.setBlockAndUpdate(pos, state.setValue(ESProperties.REDSTONE_BOOL, false));
 		}
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_redirector.desc"));
 	}
 }

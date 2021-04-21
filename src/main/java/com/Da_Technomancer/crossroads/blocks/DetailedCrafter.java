@@ -30,7 +30,7 @@ import java.util.List;
 
 public class DetailedCrafter extends Block{
 
-	private static final VoxelShape SHAPE = VoxelShapes.or(makeCuboidShape(1, 0, 1, 15, 7, 15), makeCuboidShape(0, 7, 0, 16, 15, 16));
+	private static final VoxelShape SHAPE = VoxelShapes.or(box(1, 0, 1, 15, 7, 15), box(0, 7, 0, 16, 15, 16));
 
 	public DetailedCrafter(){
 		super(CRBlocks.getMetalProperty());
@@ -41,7 +41,7 @@ public class DetailedCrafter extends Block{
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.detailed_crafter.desc"));
 	}
 
@@ -51,8 +51,8 @@ public class DetailedCrafter extends Block{
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(!worldIn.isRemote){
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		if(!worldIn.isClientSide){
 //			StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) playerIn);//Sync player path data to client
 			NetworkHooks.openGui((ServerPlayerEntity) playerIn, new DetailedCrafterProvider(pos), buf -> {buf.writeBoolean(false); buf.writeBlockPos(pos);});
 		}

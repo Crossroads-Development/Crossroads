@@ -40,37 +40,37 @@ public class BoboRod extends Item{
 	private static final IDispenseItemBehavior BOBO_DISPENSER_BEHAVIOR = new DefaultDispenseItemBehavior(){
 
 		@Override
-		public ItemStack dispenseStack(IBlockSource source, ItemStack stack){
+		public ItemStack execute(IBlockSource source, ItemStack stack){
 			//Able to do bobo crafting via dispenser
-			act(source.getWorld(), source.getBlockPos(), new Vector3d(source.getX(), source.getY(), source.getZ()), null);
+			act(source.getLevel(), source.getPos(), new Vector3d(source.x(), source.y(), source.z()), null);
 			return stack;
 		}
 	};
 
 	//Items that are considered valid offerings
-	private static final ITag<Item> offering = ItemTags.makeWrapperTag(Crossroads.MODID + ":bobo_unlock_key");
+	private static final ITag<Item> offering = ItemTags.bind(Crossroads.MODID + ":bobo_unlock_key");
 
 	protected BoboRod(){
-		super(new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
+		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "bobo_rod";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
-		DispenserBlock.registerDispenseBehavior(this, BOBO_DISPENSER_BEHAVIOR);
+		DispenserBlock.registerBehavior(this, BOBO_DISPENSER_BEHAVIOR);
 	}
 
 	@Override
-	public ActionResultType onItemUse(ItemUseContext context){
-		return act(context.getWorld(), context.getPos(), context.getHitVec(), context.getPlayer()) ? ActionResultType.SUCCESS : ActionResultType.FAIL;
+	public ActionResultType useOn(ItemUseContext context){
+		return act(context.getLevel(), context.getClickedPos(), context.getClickLocation(), context.getPlayer()) ? ActionResultType.SUCCESS : ActionResultType.FAIL;
 	}
 	
 	private static boolean act(World world, BlockPos pos, Vector3d hitVec, @Nullable PlayerEntity player){
-		List<ItemEntity> items = world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(hitVec.add(-1, -1, -1), hitVec.add(1, 1, 1)), Entity::isAlive);
+		List<ItemEntity> items = world.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(hitVec.add(-1, -1, -1), hitVec.add(1, 1, 1)), Entity::isAlive);
 		if(items.size() == 4){
 			Inventory inv = new Inventory(3);
 			boolean hasOffering = false;
 			for(ItemEntity ent : items){
 				if(ent.getItem().getCount() != 1){
-					world.playSound(player, pos, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.PLAYERS, 1F, (float) Math.random());
+					world.playSound(player, pos, SoundEvents.REDSTONE_TORCH_BURNOUT, SoundCategory.PLAYERS, 1F, (float) Math.random());
 					return false;
 				}
 				if(!hasOffering && offering.contains(ent.getItem().getItem())){
@@ -80,14 +80,14 @@ public class BoboRod extends Item{
 				}
 			}
 			if(hasOffering){
-				Optional<BoboRec> rec = world.getRecipeManager().getRecipe(CRRecipes.BOBO_TYPE, inv, world);
+				Optional<BoboRec> rec = world.getRecipeManager().getRecipeFor(CRRecipes.BOBO_TYPE, inv, world);
 				if(rec.isPresent()){
 					items.forEach(Entity::remove);
-					InventoryHelper.spawnItemStack(world, hitVec.x, hitVec.y, hitVec.z, rec.get().getCraftingResult(inv));
+					InventoryHelper.dropItemStack(world, hitVec.x, hitVec.y, hitVec.z, rec.get().assemble(inv));
 
 					//Spawn some particles and sound
 					world.addParticle(ParticleTypes.POOF, hitVec.x, hitVec.y, hitVec.z, Math.random() * 0.02, Math.random() * 0.02, Math.random() * 0.02);
-					world.playSound(player, pos, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1F, (float) Math.random());
+					world.playSound(player, pos, SoundEvents.PLAYER_LEVELUP, SoundCategory.PLAYERS, 1F, (float) Math.random());
 					return true;
 				}
 			}
@@ -101,7 +101,7 @@ public class BoboRod extends Item{
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.bobo_rod.desc"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.bobo_rod.use"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.bobo_rod.quip").setStyle(MiscUtil.TT_QUIP));

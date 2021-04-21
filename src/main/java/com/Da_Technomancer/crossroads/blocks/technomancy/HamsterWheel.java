@@ -36,10 +36,10 @@ public class HamsterWheel extends ContainerBlock{
 	private static final VoxelShape[] SHAPES = new VoxelShape[4];
 
 	static{
-		SHAPES[0] = makeCuboidShape(3, 3, 8, 13, 13, 16);
-		SHAPES[1] = makeCuboidShape(0, 3, 3, 8, 13, 13);
-		SHAPES[2] = makeCuboidShape(3, 3, 0, 13, 13, 8);
-		SHAPES[3] = makeCuboidShape(8, 3, 3, 16, 13, 13);
+		SHAPES[0] = box(3, 3, 8, 13, 13, 16);
+		SHAPES[1] = box(0, 3, 3, 8, 13, 13);
+		SHAPES[2] = box(3, 3, 0, 13, 13, 8);
+		SHAPES[3] = box(8, 3, 3, 16, 13, 13);
 	}
 
 	public HamsterWheel(){
@@ -47,30 +47,30 @@ public class HamsterWheel extends ContainerBlock{
 		String name = "hamster_wheel";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this, new Item.Properties().group(CRItems.TAB_CROSSROADS).rarity(CRItems.BOBO_RARITY));
+		CRBlocks.blockAddQue(this, new Item.Properties().tab(CRItems.TAB_CROSSROADS).rarity(CRItems.BOBO_RARITY));
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new HamsterWheelTileEntity();
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
 		builder.add(CRProperties.HORIZ_FACING);
 	}
 
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return getDefaultState().with(CRProperties.HORIZ_FACING, context.getPlacementHorizontalFacing());
+		return defaultBlockState().setValue(CRProperties.HORIZ_FACING, context.getHorizontalDirection());
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
-			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, state.with(CRProperties.HORIZ_FACING, state.get(CRProperties.HORIZ_FACING).rotateY()));
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
+			if(!worldIn.isClientSide){
+				worldIn.setBlockAndUpdate(pos, state.setValue(CRProperties.HORIZ_FACING, state.getValue(CRProperties.HORIZ_FACING).getClockWise()));
 			}
 			return ActionResultType.SUCCESS;
 		}
@@ -79,17 +79,17 @@ public class HamsterWheel extends ContainerBlock{
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
-		return SHAPES[state.get(CRProperties.HORIZ_FACING).getHorizontalIndex()];
+		return SHAPES[state.getValue(CRProperties.HORIZ_FACING).get2DDataValue()];
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.hamster_wheel.desc", CRConfig.hamsterPower.get()));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.hamster_wheel.quip").setStyle(MiscUtil.TT_QUIP));
 	}

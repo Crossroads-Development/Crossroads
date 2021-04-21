@@ -44,6 +44,6 @@ public class SendBiomeUpdateToClient extends ClientPacket{
 	protected void run(){
 		//The .getClientWorld() call is needed to defer class loading and prevent this crashing on dedicated servers
 		World world = SafeCallable.getClientWorld();
-		AetherEffect.setBiomeAtPos(world, pos, AetherEffect.lookupBiome(RegistryKey.getOrCreateKey(Registry.BIOME_KEY, new ResourceLocation(newBiome)), world));
+		AetherEffect.setBiomeAtPos(world, pos, AetherEffect.lookupBiome(RegistryKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(newBiome)), world));
 	}
 }

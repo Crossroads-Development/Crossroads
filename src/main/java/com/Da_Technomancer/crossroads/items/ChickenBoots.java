@@ -2,7 +2,10 @@ package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.*;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.IArmorMaterial;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Rarity;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
@@ -12,7 +15,7 @@ public class ChickenBoots extends ArmorItem{
 	protected static final IArmorMaterial BOBO_MATERIAL = new BoboMat();
 
 	protected ChickenBoots(){
-		super(BOBO_MATERIAL, EquipmentSlotType.FEET, new Properties().group(CRItems.TAB_CROSSROADS).maxStackSize(1));
+		super(BOBO_MATERIAL, EquipmentSlotType.FEET, new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "chicken_boots";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
@@ -26,27 +29,27 @@ public class ChickenBoots extends ArmorItem{
 	private static class BoboMat implements IArmorMaterial{
 
 		@Override
-		public int getDurability(EquipmentSlotType slotIn){
+		public int getDurabilityForSlot(EquipmentSlotType slotIn){
 			return 0;
 		}
 
 		@Override
-		public int getDamageReductionAmount(EquipmentSlotType slotIn){
+		public int getDefenseForSlot(EquipmentSlotType slotIn){
 			return 0;
 		}
 
 		@Override
-		public int getEnchantability(){
+		public int getEnchantmentValue(){
 			return 0;
 		}
 
 		@Override
-		public SoundEvent getSoundEvent(){
-			return SoundEvents.ENTITY_HORSE_DEATH;//I am not a benevolent overlord. RIP the ears of anyone who uses headphones
+		public SoundEvent getEquipSound(){
+			return SoundEvents.HORSE_DEATH;//I am not a benevolent overlord. RIP the ears of anyone who uses headphones
 		}
 
 		@Override
-		public Ingredient getRepairMaterial(){
+		public Ingredient getRepairIngredient(){
 			return Ingredient.EMPTY;
 		}
 

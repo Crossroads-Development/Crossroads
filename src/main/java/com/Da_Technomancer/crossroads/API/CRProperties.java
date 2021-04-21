@@ -42,10 +42,10 @@ public class CRProperties extends ESProperties{
 
 	static{
 		for(Direction dir : Direction.values()){
-			int ind = dir.getIndex();
-			CONDUIT_SIDES_BASE[ind] = EnumProperty.create(dir.getName2(), EnumTransferMode.class, mode -> mode == EnumTransferMode.NONE || mode == EnumTransferMode.BOTH);
-			CONDUIT_SIDES_FULL[ind] = EnumProperty.create(dir.getName2(), EnumTransferMode.class);
-			CONDUIT_SIDES_SINGLE[ind] = EnumProperty.create(dir.getName2(), EnumTransferMode.class, mode -> mode != EnumTransferMode.BOTH);
+			int ind = dir.get3DDataValue();
+			CONDUIT_SIDES_BASE[ind] = EnumProperty.create(dir.getName(), EnumTransferMode.class, mode -> mode == EnumTransferMode.NONE || mode == EnumTransferMode.BOTH);
+			CONDUIT_SIDES_FULL[ind] = EnumProperty.create(dir.getName(), EnumTransferMode.class);
+			CONDUIT_SIDES_SINGLE[ind] = EnumProperty.create(dir.getName(), EnumTransferMode.class, mode -> mode != EnumTransferMode.BOTH);
 		}
 	}
 }

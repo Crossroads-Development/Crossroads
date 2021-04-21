@@ -9,13 +9,13 @@ import net.minecraft.entity.IRendersAsItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
@@ -31,7 +31,7 @@ public class EntityShell extends ThrowableEntity implements IRendersAsItem{
 
 	@ObjectHolder("shell")
 	public static EntityType<EntityShell> type = null;
-	private static final DataParameter<ItemStack> item = EntityDataManager.createKey(EntityShell.class, DataSerializers.ITEMSTACK);
+	private static final DataParameter<ItemStack> item = EntityDataManager.defineId(EntityShell.class, DataSerializers.ITEM_STACK);
 
 	private ReagentMap contents;//Technically redundant with the itemstack in data manager, but meh
 
@@ -42,55 +42,55 @@ public class EntityShell extends ThrowableEntity implements IRendersAsItem{
 	public EntityShell(World worldIn, ReagentMap contents, ItemStack stack){
 		this(type, worldIn);
 		this.contents = contents;
-		dataManager.set(item, stack);
+		entityData.set(item, stack);
 	}
 
 	public EntityShell(World worldIn, LivingEntity throwerIn, ReagentMap contents, ItemStack stack){
 		super(type, throwerIn, worldIn);
 		this.contents = contents;
-		dataManager.set(item, stack);
+		entityData.set(item, stack);
 	}
 
 	@Override
-	protected void onImpact(RayTraceResult result){
-		if(!world.isRemote){
+	protected void onHit(RayTraceResult result){
+		if(!level.isClientSide){
 			if(contents != null){
-				Vector3d hit = result.getHitVec();
-				AlchemyUtil.releaseChemical(world, new BlockPos(hit.x, hit.y, hit.z), contents);
+				Vector3d hit = result.getLocation();
+				AlchemyUtil.releaseChemical(level, new BlockPos(hit.x, hit.y, hit.z), contents);
 			}
-			world.playSound(null, getPosX(), getPosY(), getPosZ(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.NEUTRAL, 0.5F, 0.4F / (rand.nextFloat() * 0.4F + 0.8F));
-			world.setEntityState(this, (byte) 3);
+			level.playSound(null, getX(), getY(), getZ(), SoundEvents.GLASS_BREAK, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+			level.broadcastEntityEvent(this, (byte) 3);
 			remove();
 		}
 	}
 
 	@Override
-	protected void registerData(){
-		dataManager.register(item, new ItemStack(CRItems.shellGlass));
+	protected void defineSynchedData(){
+		entityData.define(item, new ItemStack(CRItems.shellGlass));
 	}
 
 	@Override
-	public void readAdditional(CompoundNBT nbt){
-		super.readAdditional(nbt);
+	public void readAdditionalSaveData(CompoundNBT nbt){
+		super.readAdditionalSaveData(nbt);
 		contents = ReagentMap.readFromNBT(nbt);
 	}
 
 	@Override
-	public void writeAdditional(CompoundNBT nbt){
-		super.writeAdditional(nbt);
+	public void addAdditionalSaveData(CompoundNBT nbt){
+		super.addAdditionalSaveData(nbt);
 		if(contents != null){
 			contents.write(nbt);
 		}
 	}
 
 	@Override
-	public IPacket<?> createSpawnPacket(){
+	public IPacket<?> getAddEntityPacket(){
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public ItemStack getItem(){
-		return dataManager.get(item);
+		return entityData.get(item);
 	}
 }

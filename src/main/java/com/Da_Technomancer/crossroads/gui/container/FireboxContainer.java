@@ -19,8 +19,8 @@ public class FireboxContainer extends MachineContainer<FireboxTileEntity>{
 
 	public FireboxContainer(int id, PlayerInventory playerInv, PacketBuffer data){
 		super(type, id, playerInv, data);
-		burnProg = new IntDeferredRef(te::getBurnProg, te.getWorld().isRemote);
-		trackInt(burnProg);
+		burnProg = new IntDeferredRef(te::getBurnProg, te.getLevel().isClientSide);
+		addDataSlot(burnProg);
 	}
 
 	@Override

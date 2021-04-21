@@ -100,16 +100,16 @@ public class AlchemyUtil{
 		if(flameRange > 0){
 			if(CRConfig.phelEffect.get()){
 				EntityFlameCore coreFlame = EntityFlameCore.type.create(world);
-				coreFlame.setPosition(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
+				coreFlame.setPos(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
 				coreFlame.setInitialValues(reags, flameRange);
-				world.addEntity(coreFlame);
+				world.addFreshEntity(coreFlame);
 			}else{
 				//If flame effect is disabled in the config, just spawn a single small fire
 				BlockState prev = world.getBlockState(pos);
 				if(prev.getBlock() == Blocks.FIRE || CRConfig.isProtected(world, pos, prev)){
 					return;
 				}
-				world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+				world.setBlockAndUpdate(pos, Blocks.FIRE.defaultBlockState());
 			}
 		}else{
 			if(liqQty > 0){
@@ -122,7 +122,7 @@ public class AlchemyUtil{
 				for(int i = 0; i < 32; i++){
 					float horizSpeed = maxRange / 20F;
 					float offset = i < 16 ? 0 : 1;
-					((ServerWorld) world).spawnParticle(new ColorParticleData(CRParticles.COLOR_SPLASH, new Color(liqCol[0], liqCol[1], liqCol[2], liqCol[3])), pos.getX() + 0.5D, pos.getY() + 1.3F, pos.getZ() + 0.5D, 1, Math.cos((i + offset) * Math.PI / 8), (3 * offset + 1) / 8D, Math.sin((i + offset) * Math.PI / 8), horizSpeed);
+					((ServerWorld) world).sendParticles(new ColorParticleData(CRParticles.COLOR_SPLASH, new Color(liqCol[0], liqCol[1], liqCol[2], liqCol[3])), pos.getX() + 0.5D, pos.getY() + 1.3F, pos.getZ() + 0.5D, 1, Math.cos((i + offset) * Math.PI / 8), (3 * offset + 1) / 8D, Math.sin((i + offset) * Math.PI / 8), horizSpeed);
 				}
 				for(int i = -maxRange; i <= maxRange; i++){
 					for(int j = -maxRange; j <= maxRange; j++){
@@ -130,7 +130,7 @@ public class AlchemyUtil{
 							for(QueuedEffect eff : effectsLiq){
 								//Pythagorean distance- not taxicab
 								if(maxRange * maxRange >= i * i + j * j + k * k){
-									eff.perform(world, pos.add(i, j, k), reags, EnumMatterPhase.LIQUID);
+									eff.perform(world, pos.offset(i, j, k), reags, EnumMatterPhase.LIQUID);
 								}
 							}
 						}
@@ -147,7 +147,7 @@ public class AlchemyUtil{
 					e.perform(world, pos, reags, EnumMatterPhase.SOLID);
 				}
 				for(int i = 0; i < 5; i++){
-					((ServerWorld) world).spawnParticle(new ColorParticleData(CRParticles.COLOR_SOLID, new Color(solCol[0], solCol[1], solCol[2], solCol[3])), pos.getX() + 0.25D + world.rand.nextFloat() / 2F, pos.getY() + 1.3F, pos.getZ() + 0.25D + world.rand.nextFloat() / 2F, 1, 0, 0, 0, 0F);
+					((ServerWorld) world).sendParticles(new ColorParticleData(CRParticles.COLOR_SOLID, new Color(solCol[0], solCol[1], solCol[2], solCol[3])), pos.getX() + 0.25D + world.random.nextFloat() / 2F, pos.getY() + 1.3F, pos.getZ() + 0.25D + world.random.nextFloat() / 2F, 1, 0, 0, 0, 0F);
 				}
 			}
 			if(gasQty > 0){
@@ -162,8 +162,8 @@ public class AlchemyUtil{
 							for(QueuedEffect eff : effectsGas){
 								//Pythagorean distance- not taxicab
 								if(maxRange * maxRange >= i * i + j * j + k * k){
-									eff.perform(world, pos.add(i, j, k), reags, EnumMatterPhase.GAS);
-									((ServerWorld) world).spawnParticle(new ColorParticleData(CRParticles.COLOR_GAS, new Color(gasCol[0], gasCol[1], gasCol[2], gasCol[3])), (float) pos.getX() + Math.random(), (float) pos.getY() + Math.random(), (float) pos.getZ() + Math.random(), 1, (Math.random() * 2D - 1D), Math.random(), (Math.random() * 2D - 1D), 0.015D);
+									eff.perform(world, pos.offset(i, j, k), reags, EnumMatterPhase.GAS);
+									((ServerWorld) world).sendParticles(new ColorParticleData(CRParticles.COLOR_GAS, new Color(gasCol[0], gasCol[1], gasCol[2], gasCol[3])), (float) pos.getX() + Math.random(), (float) pos.getY() + Math.random(), (float) pos.getZ() + Math.random(), 1, (Math.random() * 2D - 1D), Math.random(), (Math.random() * 2D - 1D), 0.015D);
 								}
 							}
 						}

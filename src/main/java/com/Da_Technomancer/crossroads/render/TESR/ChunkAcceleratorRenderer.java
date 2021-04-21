@@ -33,18 +33,18 @@ public class ChunkAcceleratorRenderer extends EntropyRenderer<ChunkAcceleratorTi
 
 		//Render the two rotating octagons
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_TEXTURE);
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
+		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
 		int[] col = CRRenderUtil.convertColor(GearFactory.findMaterial("copshowium").getColor());
-		float angle = CRRenderUtil.getRenderTime(partialTicks, te.getWorld());
+		float angle = CRRenderUtil.getRenderTime(partialTicks, te.getLevel());
 		float lHalf = 7F / 16F;//Half the side length of the octagon
 		int medLight = CRRenderUtil.calcMediumLighting(combinedLight);
 
-		matrix.rotate(Vector3f.YP.rotationDegrees(angle));
+		matrix.mulPose(Vector3f.YP.rotationDegrees(angle));
 		matrix.translate(0, 5F / 16F, 0);
 		matrix.scale(2F * lHalf * 0.8F, 1, 2F * lHalf * 0.8F);
 		CRModels.draw8Core(builder, matrix, col, medLight, sprite);
 
-		matrix.rotate(Vector3f.YP.rotationDegrees(-2F * angle));
+		matrix.mulPose(Vector3f.YP.rotationDegrees(-2F * angle));
 		matrix.translate(0, -10F / 16F, 0);
 		CRModels.draw8Core(builder, matrix, col, medLight, sprite);
 	}

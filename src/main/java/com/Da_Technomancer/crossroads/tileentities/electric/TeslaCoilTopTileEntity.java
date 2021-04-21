@@ -53,7 +53,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 			if(state.getBlock() instanceof TeslaCoilTop){
 				variant = ((TeslaCoilTop) state.getBlock()).variant;
 			}else{
-				remove();
+				setRemoved();
 				return TeslaCoilTop.TeslaCoilVariants.NORMAL;
 			}
 		}
@@ -71,52 +71,52 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 		int joltQty = variant.joltAmt;
 
 		if(variant == TeslaCoilTop.TeslaCoilVariants.ATTACK){
-			if(world.isRemote){
+			if(level.isClientSide){
 				return;
 			}
 
 			//ATTACK
-			List<LivingEntity> ents = world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range, pos.getY() + range, pos.getZ() + range), EntityPredicates.IS_ALIVE);
+			List<LivingEntity> ents = level.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(worldPosition.getX() - range, worldPosition.getY() - range, worldPosition.getZ() - range, worldPosition.getX() + range, worldPosition.getY() + range, worldPosition.getZ() + range), EntityPredicates.ENTITY_STILL_ALIVE);
 
 			if(!ents.isEmpty() && coilTE.getStored() >= joltQty){
-				LivingEntity ent = ents.get(world.rand.nextInt(ents.size()));
+				LivingEntity ent = ents.get(level.random.nextInt(ents.size()));
 				coilTE.setStored(coilTE.getStored() - joltQty);
-				markDirty();
+				setChanged();
 
-				CRRenderUtil.addArc(world, pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F, (float) ent.getPosX(), (float) ent.getPosY(), (float) ent.getPosZ(), 5, 0.2F, ATTACK_COLOR_CODES[(int) (world.getGameTime() % 3)]);
+				CRRenderUtil.addArc(level, worldPosition.getX() + 0.5F, worldPosition.getY() + 0.75F, worldPosition.getZ() + 0.5F, (float) ent.getX(), (float) ent.getY(), (float) ent.getZ(), 5, 0.2F, ATTACK_COLOR_CODES[(int) (level.getGameTime() % 3)]);
 				MiscUtil.attackWithLightning(ent, 0, null);
 			}
 		}else if(variant == TeslaCoilTop.TeslaCoilVariants.DECORATIVE){
 			if(coilTE.getStored() >= TeslaCoilTop.TeslaCoilVariants.DECORATIVE.joltAmt){
-				if(world.isRemote){
+				if(level.isClientSide){
 					//Spawn the purely decorative bolts on the client side directly to reduce packet load
-					int count = world.rand.nextInt(5) + 1;
-					Vector3d start = new Vector3d(pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F);
+					int count = level.random.nextInt(5) + 1;
+					Vector3d start = new Vector3d(worldPosition.getX() + 0.5F, worldPosition.getY() + 0.75F, worldPosition.getZ() + 0.5F);
 					for(int i = 0; i < count; i++){
-						float angle = world.rand.nextFloat() * 2F * (float) Math.PI;
-						float rad = world.rand.nextFloat() * 2F + 3F;
-						Vector3d end = start.add(new Vector3d(rad * Math.cos(angle), world.rand.nextFloat() * 2F - 1F, rad * Math.sin(angle)));
-						CRRenderUtil.addArc(world, start, end, 6, 0.6F, COLOR_CODES[world.rand.nextInt(COLOR_CODES.length)]);
+						float angle = level.random.nextFloat() * 2F * (float) Math.PI;
+						float rad = level.random.nextFloat() * 2F + 3F;
+						Vector3d end = start.add(new Vector3d(rad * Math.cos(angle), level.random.nextFloat() * 2F - 1F, rad * Math.sin(angle)));
+						CRRenderUtil.addArc(level, start, end, 6, 0.6F, COLOR_CODES[level.random.nextInt(COLOR_CODES.length)]);
 					}
 				}else{
 					coilTE.setStored(coilTE.getStored() - TeslaCoilTop.TeslaCoilVariants.DECORATIVE.joltAmt);
 				}
 			}
-		}else if(!world.isRemote){
+		}else if(!level.isClientSide){
 			//TRANSFER
 			for(BlockPos linkPos : linkHelper.getLinksRelative()){
-				if(linkPos != null && coilTE.getStored() >= joltQty && linkPos.distanceSq(0, 0, 0, false) <= range * range){
-					BlockPos actualPos = linkPos.add(pos.getX(), pos.getY() - 1, pos.getZ());
-					TileEntity te = world.getTileEntity(actualPos);
-					if(te instanceof TeslaCoilTileEntity && world.getTileEntity(actualPos.up()) instanceof TeslaCoilTopTileEntity){
+				if(linkPos != null && coilTE.getStored() >= joltQty && linkPos.distSqr(0, 0, 0, false) <= range * range){
+					BlockPos actualPos = linkPos.offset(worldPosition.getX(), worldPosition.getY() - 1, worldPosition.getZ());
+					TileEntity te = level.getBlockEntity(actualPos);
+					if(te instanceof TeslaCoilTileEntity && level.getBlockEntity(actualPos.above()) instanceof TeslaCoilTopTileEntity){
 						TeslaCoilTileEntity tcTe = (TeslaCoilTileEntity) te;
 						if(tcTe.getCapacity() - tcTe.getStored() > joltQty * (double) variant.efficiency / 100D){
 							tcTe.setStored(tcTe.getStored() + (int) (joltQty * (double) variant.efficiency / 100D));
-							tcTe.markDirty();
+							tcTe.setChanged();
 							coilTE.setStored(coilTE.getStored() - joltQty);
-							markDirty();
+							setChanged();
 
-							CRRenderUtil.addArc(world, pos.getX() + 0.5F, pos.getY() + 0.75F, pos.getZ() + 0.5F, actualPos.getX() + 0.5F, actualPos.getY() + 1.75F, actualPos.getZ() + 0.5F, 5, (100F - variant.efficiency) / 100F, COLOR_CODES[(int) (world.getGameTime() % 3)]);
+							CRRenderUtil.addArc(level, worldPosition.getX() + 0.5F, worldPosition.getY() + 0.75F, worldPosition.getZ() + 0.5F, actualPos.getX() + 0.5F, actualPos.getY() + 1.75F, actualPos.getZ() + 0.5F, 5, (100F - variant.efficiency) / 100F, COLOR_CODES[(int) (level.getGameTime() % 3)]);
 							break;
 						}
 					}
@@ -140,8 +140,8 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		int i = 0;
 		while(nbt.contains("link" + i)){
 			//TODO remove: backwards compatibility nbt format
@@ -153,8 +153,8 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		linkHelper.writeNBT(nbt);
 		return nbt;
 	}

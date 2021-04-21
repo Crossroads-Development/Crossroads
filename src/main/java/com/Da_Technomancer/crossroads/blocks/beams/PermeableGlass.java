@@ -22,7 +22,7 @@ import java.util.List;
 public class PermeableGlass extends Block{
 
 	public PermeableGlass(){
-		super(CRBlocks.getGlassProperty().notSolid());
+		super(CRBlocks.getGlassProperty().noOcclusion());
 		String name = "permeable_glass";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
@@ -31,7 +31,7 @@ public class PermeableGlass extends Block{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public float getAmbientOcclusionLightValue(BlockState state, IBlockReader world, BlockPos pos){
+	public float getShadeBrightness(BlockState state, IBlockReader world, BlockPos pos){
 		return 1.0F;
 	}
 
@@ -41,18 +41,18 @@ public class PermeableGlass extends Block{
 	}
 
 	@Override
-	public VoxelShape getRayTraceShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext selection) {
+	public VoxelShape getVisualShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext selection) {
 		return VoxelShapes.empty();
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public boolean isSideInvisible(BlockState state, BlockState otherState, Direction dir) {
-		return otherState.getBlock() == this || super.isSideInvisible(state, otherState, dir);
+	public boolean skipRendering(BlockState state, BlockState otherState, Direction dir) {
+		return otherState.getBlock() == this || super.skipRendering(state, otherState, dir);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void addInformation(ItemStack stack, @Nullable IBlockReader player, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader player, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.beam_permeable"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.decor"));
 	}

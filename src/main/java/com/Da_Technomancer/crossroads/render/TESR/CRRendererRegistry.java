@@ -62,13 +62,13 @@ public class CRRendererRegistry{
 	}
 
 	private static void reg(Block block){
-		Minecraft.getInstance().getItemRenderer().getItemModelMesher().register(block.asItem(), new ModelResourceLocation(block.getRegistryName(), "inventory"));
+		Minecraft.getInstance().getItemRenderer().getItemModelShaper().register(block.asItem(), new ModelResourceLocation(block.getRegistryName(), "inventory"));
 	}
 
 	public static void registerEntityLayerRenderers(){
 
 		//Add the technomancy armor elytra render layer to every entity that can render an elytra
-		EntityRendererManager manager = Minecraft.getInstance().getRenderManager();
+		EntityRendererManager manager = Minecraft.getInstance().getEntityRenderDispatcher();
 		for(EntityRenderer<?> entityRenderer : manager.renderers.values()){
 			if(entityRenderer instanceof BipedRenderer || entityRenderer instanceof ArmorStandRenderer){
 				LivingRenderer<?, ?> livingRenderer = (LivingRenderer<?, ?>) entityRenderer;

@@ -63,7 +63,7 @@ public class SmelterTileEntity extends InventoryTE{
 	@Override
 	public void tick(){
 		super.tick();
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 
@@ -87,23 +87,23 @@ public class SmelterTileEntity extends InventoryTE{
 			}else{
 				progress = 0;
 			}
-			markDirty();
+			setChanged();
 		}
 	}
 
 	private ItemStack getOutput(){
-		Optional<FurnaceRecipe> recOpt = world.getRecipeManager().getRecipe(IRecipeType.SMELTING, this, world);
-		ItemStack stack = recOpt.isPresent() ? recOpt.get().getRecipeOutput() : ItemStack.EMPTY;
+		Optional<FurnaceRecipe> recOpt = level.getRecipeManager().getRecipeFor(IRecipeType.SMELTING, this, level);
+		ItemStack stack = recOpt.isPresent() ? recOpt.get().getResultItem() : ItemStack.EMPTY;
 
 		if(stack.isEmpty()){
 			return ItemStack.EMPTY;
 		}
 
-		if(!inventory[1].isEmpty() && !ItemStack.areItemsEqual(stack, inventory[1])){
+		if(!inventory[1].isEmpty() && !ItemStack.isSame(stack, inventory[1])){
 			return ItemStack.EMPTY;
 		}
 
-		if(!inventory[1].isEmpty() && getInventoryStackLimit() - inventory[1].getCount() < stack.getCount()){
+		if(!inventory[1].isEmpty() && getMaxStackSize() - inventory[1].getCount() < stack.getCount()){
 			return ItemStack.EMPTY;
 		}
 
@@ -111,21 +111,21 @@ public class SmelterTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		progress = nbt.getInt("prog");
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putInt("prog", progress);
 		return nbt;
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		itemOpt.invalidate();
 	}
 
@@ -144,12 +144,12 @@ public class SmelterTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && world.getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory(stack), world).isPresent();
+	public boolean canPlaceItem(int index, ItemStack stack){
+		return index == 0 && level.getRecipeManager().getRecipeFor(IRecipeType.SMELTING, new Inventory(stack), level).isPresent();
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
+	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction){
 		return index == 1;
 	}
 

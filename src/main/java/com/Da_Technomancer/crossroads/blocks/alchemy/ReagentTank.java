@@ -40,7 +40,7 @@ public class ReagentTank extends ContainerBlock implements IReadable{
 	private final boolean crystal;
 
 	public ReagentTank(boolean crystal){
-		super(CRBlocks.getGlassProperty().notSolid());
+		super(CRBlocks.getGlassProperty().noOcclusion());
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "reagent_tank";
 		setRegistryName(name);
@@ -49,12 +49,12 @@ public class ReagentTank extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new ReagentTankTileEntity(!crystal);
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
@@ -92,7 +92,7 @@ public class ReagentTank extends ContainerBlock implements IReadable{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		ReagentMap stored = getReagants(stack);
 
 		double temp = stored.getTempC();
@@ -123,7 +123,7 @@ public class ReagentTank extends ContainerBlock implements IReadable{
 
 	@Override
 	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder){
-		TileEntity te = builder.get(LootParameters.BLOCK_ENTITY);
+		TileEntity te = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
 		if(te instanceof ReagentTankTileEntity){
 			ItemStack drop = new ItemStack(this.asItem(), 1);
 			setReagents(drop, ((ReagentTankTileEntity) te).getMap());
@@ -133,9 +133,9 @@ public class ReagentTank extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
+	public void setPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		if(stack.hasTag()){
-			TileEntity te = world.getTileEntity(pos);
+			TileEntity te = world.getBlockEntity(pos);
 			if(te instanceof ReagentTankTileEntity){
 				((ReagentTankTileEntity) te).writeContentNBT(stack.getTag().getCompound(TAG_NAME));
 			}
@@ -143,11 +143,11 @@ public class ReagentTank extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		TileEntity te = worldIn.getTileEntity(pos);
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		TileEntity te = worldIn.getBlockEntity(pos);
 		if(te instanceof ReagentTankTileEntity){
-			if(!worldIn.isRemote){
-				playerIn.setHeldItem(hand, ((ReagentTankTileEntity) te).rightClickWithItem(playerIn.getHeldItem(hand), playerIn.isSneaking(), playerIn, hand));
+			if(!worldIn.isClientSide){
+				playerIn.setItemInHand(hand, ((ReagentTankTileEntity) te).rightClickWithItem(playerIn.getItemInHand(hand), playerIn.isShiftKeyDown(), playerIn, hand));
 			}
 			return ActionResultType.SUCCESS;
 		}
@@ -155,18 +155,18 @@ public class ReagentTank extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState state){
+	public boolean hasAnalogOutputSignal(BlockState state){
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos){
+	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos){
 		return RedstoneUtil.clampToVanilla(read(worldIn, pos, blockState));
 	}
 
 	@Override
 	public float read(World world, BlockPos pos, BlockState blockState){
-		TileEntity te = world.getTileEntity(pos);
+		TileEntity te = world.getBlockEntity(pos);
 		if(te instanceof ReagentTankTileEntity){
 			return ((ReagentTankTileEntity) te).getReds();
 		}

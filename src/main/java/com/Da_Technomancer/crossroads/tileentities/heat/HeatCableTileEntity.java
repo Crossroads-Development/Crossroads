@@ -49,8 +49,8 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 	}
 
 	@Override
-	public void updateContainingBlockInfo(){
-		super.updateContainingBlockInfo();
+	public void clearCache(){
+		super.clearCache();
 		//When adjusting a side to lock, we need to invalidate the optional in case a side was disconnected
 		heatOpt.invalidate();
 		heatOpt = LazyOptional.of(this::createHeatHandler);
@@ -74,7 +74,7 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 	public void tick(){
 		super.tick();
 
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 
@@ -83,15 +83,15 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 		//Heat transfer
 		ArrayList<IHeatHandler> heatHandlers = new ArrayList<>(6);
 		for(Direction side : Direction.values()){
-			if(locked(side.getIndex())){
+			if(locked(side.get3DDataValue())){
 				continue;
 			}
-			LazyOptional<IHeatHandler> otherOpt = neighCache[side.getIndex()];
-			if(!neighCache[side.getIndex()].isPresent()){
-				TileEntity te = world.getTileEntity(pos.offset(side));
+			LazyOptional<IHeatHandler> otherOpt = neighCache[side.get3DDataValue()];
+			if(!neighCache[side.get3DDataValue()].isPresent()){
+				TileEntity te = level.getBlockEntity(worldPosition.relative(side));
 				if(te != null){
 					otherOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, side.getOpposite());
-					neighCache[side.getIndex()] = otherOpt;
+					neighCache[side.get3DDataValue()] = otherOpt;
 				}
 			}
 
@@ -100,9 +100,9 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 				temp += handler.getTemp();
 //				handler.addHeat(-handler.getTemp());
 				heatHandlers.add(handler);
-				setData(side.getIndex(), true, modes[side.getIndex()]);
+				setData(side.get3DDataValue(), true, modes[side.get3DDataValue()]);
 			}else{
-				setData(side.getIndex(), false, modes[side.getIndex()]);
+				setData(side.get3DDataValue(), false, modes[side.get3DDataValue()]);
 			}
 		}
 
@@ -115,14 +115,14 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 		temp = runLoss();
 
 		if(temp != prevTemp){
-			markDirty();
+			setChanged();
 		}
 
 		if(temp > insulator.getLimit()){
 			if(CRConfig.heatEffects.get()){
-				insulator.getEffect().doEffect(world, pos);
+				insulator.getEffect().doEffect(level, worldPosition);
 			}else{
-				world.setBlockState(pos, Blocks.FIRE.getDefaultState(), 3);
+				level.setBlock(worldPosition, Blocks.FIRE.defaultBlockState(), 3);
 			}
 		}
 	}
@@ -130,20 +130,20 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 	protected double runLoss(){
 		//Does not change the temperature- only does the calculation
 		//Energy loss
-		double biomeTemp = HeatUtil.convertBiomeTemp(world, pos);
+		double biomeTemp = HeatUtil.convertBiomeTemp(level, worldPosition);
 		return temp + Math.min(insulator.getRate(), Math.abs(temp - biomeTemp)) * Math.signum(biomeTemp - temp);
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		ConduitBlock.IConduitTE.readConduitNBT(nbt, this);
 		insulator = nbt.contains("insul") ? HeatInsulators.valueOf(nbt.getString("insul")) : HeatInsulators.WOOL;
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		ConduitBlock.IConduitTE.writeConduitNBT(nbt, this);
 		nbt.putString("insul", insulator.name());
 		return nbt;
@@ -151,13 +151,13 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 
 	@Override
 	public CompoundNBT getUpdateTag(){
-		return write(super.getUpdateTag());
+		return save(super.getUpdateTag());
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || !locked(facing.getIndex()))){
+		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || !locked(facing.get3DDataValue()))){
 			return (LazyOptional<T>) heatOpt;
 		}
 		return super.getCapability(capability, facing);
@@ -183,8 +183,8 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 
 	@Override
 	public boolean hasMatch(int side, EnumTransferMode mode){
-		Direction face = Direction.byIndex(side);
-		TileEntity neighTE = world.getTileEntity(pos.offset(face));
+		Direction face = Direction.from3DDataValue(side);
+		TileEntity neighTE = level.getBlockEntity(worldPosition.relative(face));
 		return neighTE != null && neighTE.getCapability(Capabilities.HEAT_CAPABILITY, face.getOpposite()).isPresent();
 	}
 
@@ -196,10 +196,10 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 				if(insulator == HeatInsulators.ICE){
 					temp = -10;
 				}else{
-					temp = HeatUtil.convertBiomeTemp(world, pos);
+					temp = HeatUtil.convertBiomeTemp(level, worldPosition);
 				}
 				initHeat = true;
-				markDirty();
+				setChanged();
 			}
 		}
 	}

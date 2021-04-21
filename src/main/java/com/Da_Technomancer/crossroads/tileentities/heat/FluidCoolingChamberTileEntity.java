@@ -3,9 +3,9 @@ package com.Da_Technomancer.crossroads.tileentities.heat;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.gui.container.FluidCoolerContainer;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.FluidCoolingRec;
+import com.Da_Technomancer.crossroads.gui.container.FluidCoolerContainer;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -62,7 +62,7 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 	public void tick(){
 		super.tick();
 
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 
@@ -70,38 +70,38 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 		if(moved > 0){
 			storedHeat -= moved;
 			temp += moved;
-			markDirty();
+			setChanged();
 		}
 
 		//We can not use the recipe manager to filter recipes due to the fluid input
-		List<FluidCoolingRec> recipes = world.getRecipeManager().getRecipes(CRRecipes.FLUID_COOLING_TYPE, this, world);
+		List<FluidCoolingRec> recipes = level.getRecipeManager().getRecipesFor(CRRecipes.FLUID_COOLING_TYPE, this, level);
 		//Filter the recipes by fluid type, fluid qty, temperature, and item type of output, and take the first recipe that matches the laundry list of specifications
-		Optional<FluidCoolingRec> recOpt = recipes.parallelStream().filter(rec -> rec.getMaxTemp() > temp + storedHeat && BlockUtil.sameFluid(rec.getInput(), fluids[0]) && rec.getInput().getAmount() <= fluids[0].getAmount() && (inventory[0].isEmpty() || BlockUtil.sameItem(inventory[0], rec.getRecipeOutput()))).findFirst();
+		Optional<FluidCoolingRec> recOpt = recipes.parallelStream().filter(rec -> rec.getMaxTemp() > temp + storedHeat && BlockUtil.sameFluid(rec.getInput(), fluids[0]) && rec.getInput().getAmount() <= fluids[0].getAmount() && (inventory[0].isEmpty() || BlockUtil.sameItem(inventory[0], rec.getResultItem()))).findFirst();
 		if(recOpt.isPresent()){
 			FluidCoolingRec rec = recOpt.get();
 			//Check the output will fit
-			if(inventory[0].getMaxStackSize() - inventory[0].getCount() >= rec.getRecipeOutput().getCount()){
+			if(inventory[0].getMaxStackSize() - inventory[0].getCount() >= rec.getResultItem().getCount()){
 				storedHeat += rec.getAddedHeat();
 				fluids[0].shrink(rec.getInput().getAmount());
 				if(inventory[0].isEmpty()){
-					inventory[0] = rec.getCraftingResult(this);
+					inventory[0] = rec.assemble(this);
 				}else{
-					inventory[0].grow(rec.getRecipeOutput().getCount());
+					inventory[0].grow(rec.getResultItem().getCount());
 				}
-				markDirty();
+				setChanged();
 			}
 		}
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		storedHeat = nbt.getDouble("heat_stored");
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putDouble("heat_stored", storedHeat);
 		return nbt;
 	}
@@ -109,8 +109,8 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 	private final LazyOptional<ItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		itemOpt.invalidate();
 	}
 
@@ -132,12 +132,12 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
+	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction){
 		return true;
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
+	public boolean canPlaceItem(int index, ItemStack stack){
 		return false;
 	}
 

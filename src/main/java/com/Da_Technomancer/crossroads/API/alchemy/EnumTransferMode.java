@@ -38,7 +38,7 @@ public enum EnumTransferMode implements IStringSerializable{
 	}
 
 	@Override
-	public String getString(){
+	public String getSerializedName(){
 		return toString();
 	}
 

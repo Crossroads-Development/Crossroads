@@ -48,12 +48,12 @@ public class BeamExtractRec implements IOptionalRecipe<IInventory>{
 
 	@Override
 	public boolean matches(IInventory inv, World worldIn){
-		return active && ingr.test(inv.getStackInSlot(0));
+		return active && ingr.test(inv.getItem(0));
 	}
 
 	@Override
-	public ItemStack getCraftingResult(IInventory inv){
-		return getRecipeOutput();
+	public ItemStack assemble(IInventory inv){
+		return getResultItem();
 	}
 
 	@Override
@@ -62,12 +62,12 @@ public class BeamExtractRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public boolean canFit(int width, int height){
+	public boolean canCraftInDimensions(int width, int height){
 		return true;
 	}
 
 	@Override
-	public ItemStack getRecipeOutput(){
+	public ItemStack getResultItem(){
 		return ItemStack.EMPTY;
 	}
 
@@ -83,7 +83,7 @@ public class BeamExtractRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public ItemStack getIcon(){
+	public ItemStack getToastSymbol(){
 		return new ItemStack(CRBlocks.beamExtractor);
 	}
 
@@ -110,9 +110,9 @@ public class BeamExtractRec implements IOptionalRecipe<IInventory>{
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<BeamExtractRec>{
 
 		@Override
-		public BeamExtractRec read(ResourceLocation recipeId, JsonObject json){
+		public BeamExtractRec fromJson(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and ingredient
-			String s = JSONUtils.getString(json, "group", "");
+			String s = JSONUtils.getAsString(json, "group", "");
 			Ingredient ingredient = Ingredient.EMPTY;
 			boolean active = CraftingUtil.isActiveJSON(json);
 			if(active){
@@ -120,21 +120,21 @@ public class BeamExtractRec implements IOptionalRecipe<IInventory>{
 
 				//Output specified as 4 integer tags, all of which are optional and default to zero
 				int[] units = new int[4];
-				if(JSONUtils.hasField(json, "energy")){
-					units[0] = JSONUtils.getInt(json, "energy");
+				if(JSONUtils.isValidNode(json, "energy")){
+					units[0] = JSONUtils.getAsInt(json, "energy");
 				}
-				if(JSONUtils.hasField(json, "potential")){
-					units[1] = JSONUtils.getInt(json, "potential");
+				if(JSONUtils.isValidNode(json, "potential")){
+					units[1] = JSONUtils.getAsInt(json, "potential");
 				}
-				if(JSONUtils.hasField(json, "stability")){
-					units[2] = JSONUtils.getInt(json, "stability");
+				if(JSONUtils.isValidNode(json, "stability")){
+					units[2] = JSONUtils.getAsInt(json, "stability");
 				}
-				if(JSONUtils.hasField(json, "void")){
-					units[3] = JSONUtils.getInt(json, "void");
+				if(JSONUtils.isValidNode(json, "void")){
+					units[3] = JSONUtils.getAsInt(json, "void");
 				}
 
 				//Optional duration tag, for number of cycles an output lasts
-				int dur = JSONUtils.getInt(json, "duration", 1);
+				int dur = JSONUtils.getAsInt(json, "duration", 1);
 				return new BeamExtractRec(recipeId, s, ingredient, new BeamUnit(units), dur, true);
 			}
 			return new BeamExtractRec(recipeId, s, ingredient, BeamUnit.EMPTY, 0, false);
@@ -142,12 +142,12 @@ public class BeamExtractRec implements IOptionalRecipe<IInventory>{
 
 		@Nullable
 		@Override
-		public BeamExtractRec read(ResourceLocation recipeId, PacketBuffer buffer){
-			String s = buffer.readString(Short.MAX_VALUE);
+		public BeamExtractRec fromNetwork(ResourceLocation recipeId, PacketBuffer buffer){
+			String s = buffer.readUtf(Short.MAX_VALUE);
 			boolean active = buffer.readBoolean();
 
 			if(active){
-				Ingredient ingredient = Ingredient.read(buffer);
+				Ingredient ingredient = Ingredient.fromNetwork(buffer);
 				int duration = buffer.readVarInt();
 
 				int[] units = new int[4];
@@ -161,10 +161,10 @@ public class BeamExtractRec implements IOptionalRecipe<IInventory>{
 		}
 
 		@Override
-		public void write(PacketBuffer buffer, BeamExtractRec recipe){
-			buffer.writeString(recipe.getGroup());
+		public void toNetwork(PacketBuffer buffer, BeamExtractRec recipe){
+			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
-			recipe.ingr.write(buffer);
+			recipe.ingr.toNetwork(buffer);
 			buffer.writeVarInt(recipe.duration);
 			buffer.writeVarInt(recipe.output.getEnergy());
 			buffer.writeVarInt(recipe.output.getPotential());

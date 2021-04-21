@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.API.effects.goggles;
 import com.Da_Technomancer.crossroads.items.OmniMeter;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
@@ -17,6 +16,6 @@ public class QuartzGoggleEffect implements IGoggleEffect{
 			return;
 		}
 
-		OmniMeter.measure(chat, player, player.world, ray.getPos(), ray.getFace(), ray);
+		OmniMeter.measure(chat, player, player.level, ray.getBlockPos(), ray.getDirection(), ray);
 	}
 }

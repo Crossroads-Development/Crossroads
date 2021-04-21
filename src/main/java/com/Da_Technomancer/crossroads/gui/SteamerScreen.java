@@ -28,14 +28,14 @@ public class SteamerScreen extends MachineGUI<SteamerContainer, SteamerTileEntit
 
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+	protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
 		RenderSystem.color4f(1, 1, 1, 1);
-		Minecraft.getInstance().getTextureManager().bindTexture(GUI_TEXTURES);
+		Minecraft.getInstance().getTextureManager().bind(GUI_TEXTURES);
 
-		blit(matrix, guiLeft, guiTop, 0, 0, xSize, ySize);
+		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
-		blit(matrix, guiLeft + 79, guiTop + 34, 176, 0, container.cookProg.get() * 24 / SteamerTileEntity.REQUIRED, 17);
+		blit(matrix, leftPos + 79, topPos + 34, 176, 0, menu.cookProg.get() * 24 / SteamerTileEntity.REQUIRED, 17);
 
-		super.drawGuiContainerBackgroundLayer(matrix, partialTicks, mouseX, mouseY);
+		super.renderBg(matrix, partialTicks, mouseX, mouseY);
 	}
 }

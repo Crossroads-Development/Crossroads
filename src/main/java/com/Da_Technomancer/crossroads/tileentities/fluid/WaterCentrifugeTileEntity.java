@@ -68,7 +68,7 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 	@Override
 	public void tick(){
 		super.tick();
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 
@@ -77,13 +77,13 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 			neg = !neg;
 			//Handle direction switching regardless of whether crafting occurred
 
-			Optional<CentrifugeRec> recOpt = world.getRecipeManager().getRecipe(CRRecipes.CENTRIFUGE_TYPE, this, world);
+			Optional<CentrifugeRec> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.CENTRIFUGE_TYPE, this, level);
 			if(recOpt.isPresent() && !fluids[0].isEmpty()){
 				CentrifugeRec rec = recOpt.get();
 				//The recipe matches() method checks inputs- those being valid is a given
 
 				FluidStack fluidOut = rec.getFluidOutput();
-				ItemStack itemOut = rec.getRecipeOutput();
+				ItemStack itemOut = rec.getResultItem();
 
 				fluids[0].shrink(rec.getInput().getAmount());
 				if(fluids[1].isEmpty()){
@@ -97,28 +97,28 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 				}else if(BlockUtil.sameItem(inventory[0], itemOut)){
 					inventory[0].setCount(Math.min(inventory[0].getCount() + itemOut.getCount(), itemOut.getMaxStackSize()));
 				}
-				markDirty();
+				setChanged();
 			}
 		}
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putBoolean("neg", neg);
 
 		return nbt;
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		neg = nbt.getBoolean("neg");
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		saltOpt.invalidate();
 	}
 
@@ -146,12 +146,12 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
+	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction){
 		return index == 0;
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
+	public boolean canPlaceItem(int index, ItemStack stack){
 		return false;
 	}
 

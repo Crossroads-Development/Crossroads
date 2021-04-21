@@ -44,15 +44,15 @@ public class DetailedAutoCrafterTileEntity extends AutoCrafterTileEntity{
 	@Nullable
 	@Override
 	public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity player){
-		return new DetailedAutoCrafterContainer(id, playerInventory, iInv, pos);
+		return new DetailedAutoCrafterContainer(id, playerInventory, iInv, worldPosition);
 	}
 
 	@Nullable
 	@Override
 	public IRecipe<CraftingInventory> validateRecipe(IRecipe<?> rec, @Nullable AutoCrafterContainer container){
-		if(rec != null && rec.getType() == CRRecipes.DETAILED_TYPE && rec.canFit(3, 3)){
+		if(rec != null && rec.getType() == CRRecipes.DETAILED_TYPE && rec.canCraftInDimensions(3, 3)){
 			DetailedCrafterRec drec = (DetailedCrafterRec) rec;
-			ItemStack sigil = container == null ? inv[19] : container.getSlot(55).getStack();
+			ItemStack sigil = container == null ? inv[19] : container.getSlot(55).getItem();
 			if(!sigil.isEmpty() && sigil.getItem() instanceof PathSigil && drec.getPath() == ((PathSigil) sigil.getItem()).getPath()){
 				return drec;
 			}
@@ -70,7 +70,7 @@ public class DetailedAutoCrafterTileEntity extends AutoCrafterTileEntity{
 		if(recipe == null){
 			//No recipe has been directly set via recipe book/JEI. Pick a recipe based on manually configured inputs, if applicable
 			//Use the recipe manager to find a recipe matching the inputs
-			Optional<DetailedCrafterRec> recipeOptional = getRecipeManager().getRecipe(CRRecipes.DETAILED_TYPE, fakeInv, world);
+			Optional<DetailedCrafterRec> recipeOptional = getRecipeManager().getRecipeFor(CRRecipes.DETAILED_TYPE, fakeInv, level);
 			iRecipe = validateRecipe(recipeOptional.orElse(null), container);
 		}else{
 			//Recipe set via recipe book/JEI

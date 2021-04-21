@@ -116,13 +116,13 @@ public class GatewayAddress{
 		private RegistryKey<World> cache;//Used to retrieve the associated world data more quickly
 
 		public Location(BlockPos pos, World world){
-			this.pos = pos.toImmutable();
-			cache = world.getDimensionKey();
-			this.dim = cache.getLocation();
+			this.pos = pos.immutable();
+			cache = world.dimension();
+			this.dim = cache.location();
 		}
 
 		public Location(long posSerial, String dimSerial){
-			this.pos = BlockPos.fromLong(posSerial);
+			this.pos = BlockPos.of(posSerial);
 			this.dim = new ResourceLocation(dimSerial);
 		}
 
@@ -144,8 +144,8 @@ public class GatewayAddress{
 			}
 			//Load the chunk
 			ChunkPos chunkPos = new ChunkPos(pos);
-			((ServerChunkProvider) (w.getChunkProvider())).registerTicket(TicketType.PORTAL, chunkPos, 3, pos);
-			TileEntity te = w.getTileEntity(pos);
+			((ServerChunkProvider) (w.getChunkSource())).addRegionTicket(TicketType.PORTAL, chunkPos, 3, pos);
+			TileEntity te = w.getBlockEntity(pos);
 			if(te instanceof IGateway){
 				return (IGateway) te;
 			}

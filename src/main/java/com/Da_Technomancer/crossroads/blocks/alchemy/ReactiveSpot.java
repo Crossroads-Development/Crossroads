@@ -14,7 +14,7 @@ import net.minecraft.world.IBlockReader;
 public class ReactiveSpot extends ContainerBlock{
 
 	public ReactiveSpot(){
-		super(Properties.create(Material.SPONGE).hardnessAndResistance(0).doesNotBlockMovement().noDrops());
+		super(Properties.of(Material.SPONGE).strength(0).noCollission().noDrops());
 		String name = "reactive_spot";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
@@ -22,12 +22,12 @@ public class ReactiveSpot extends ContainerBlock{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new ReactiveSpotTileEntity();
 	}
 
 	@Override
-	public VoxelShape getRaytraceShape(BlockState state, IBlockReader worldIn, BlockPos pos){
+	public VoxelShape getInteractionShape(BlockState state, IBlockReader worldIn, BlockPos pos){
 		return VoxelShapes.empty();
 	}
 }

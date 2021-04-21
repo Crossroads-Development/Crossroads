@@ -1,7 +1,9 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.rotary.*;
+import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.API.rotary.IMechanismProperty;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFacade;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.render.TESR.CRModels;
@@ -26,12 +28,12 @@ public class MechanismFacade implements IMechanism<GearFacade.FacadeBlock>{
 	private static final VoxelShape[] SHAPES = new VoxelShape[6];
 
 	static{
-		SHAPES[0] = Block.makeCuboidShape(0, 0, 0, 16, 2, 16);
-		SHAPES[1] = Block.makeCuboidShape(0, 14, 0, 16, 16, 16);
-		SHAPES[2] = Block.makeCuboidShape(0, 0, 0, 16, 16, 2);
-		SHAPES[3] = Block.makeCuboidShape(0, 0, 14, 16, 16, 16);
-		SHAPES[4] = Block.makeCuboidShape(0, 0, 0, 2, 16, 16);
-		SHAPES[5] = Block.makeCuboidShape(14, 0, 0, 16, 16, 16);
+		SHAPES[0] = Block.box(0, 0, 0, 16, 2, 16);
+		SHAPES[1] = Block.box(0, 14, 0, 16, 16, 16);
+		SHAPES[2] = Block.box(0, 0, 0, 16, 16, 2);
+		SHAPES[3] = Block.box(0, 0, 14, 16, 16, 16);
+		SHAPES[4] = Block.box(0, 0, 0, 2, 16, 16);
+		SHAPES[5] = Block.box(14, 0, 0, 16, 16, 16);
 	}
 
 	@Override
@@ -73,7 +75,7 @@ public class MechanismFacade implements IMechanism<GearFacade.FacadeBlock>{
 //		handler.rotRatio = rotRatioIn;
 		handler.updateKey = key;
 
-		TileEntity sideTE = te.getWorld().getTileEntity(te.getPos().offset(side));
+		TileEntity sideTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(side));
 
 		//Connected block
 		if(sideTE != null){
@@ -104,7 +106,7 @@ public class MechanismFacade implements IMechanism<GearFacade.FacadeBlock>{
 
 	@Override
 	public VoxelShape getBoundingBox(@Nullable Direction side, @Nullable Direction.Axis axis){
-		return side == null ? SHAPES[0] : SHAPES[side.getIndex()];
+		return side == null ? SHAPES[0] : SHAPES[side.get3DDataValue()];
 	}
 
 	@Override
@@ -115,13 +117,13 @@ public class MechanismFacade implements IMechanism<GearFacade.FacadeBlock>{
 
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(mat instanceof GearFacade.FacadeBlock ? ((GearFacade.FacadeBlock) mat).getTexture() : GearFacade.FacadeBlock.STONE_BRICK.getTexture());
 
-		matrix.rotate(side.getRotation());
+		matrix.mulPose(side.getRotation());
 		matrix.translate(0, 7F / 16F, 0);
 
 		//Render along the top
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getCutoutMipped());
-		float antiZFightScale = 0.0001F * side.getIndex();
-		CRModels.drawBox(matrix, builder, combinedLight, new int[] {255, 255, 255, 255}, 0.5F - antiZFightScale, 1F / 16F, 0.5F - antiZFightScale, sprite.getMinU(), sprite.getMinV(), sprite.getMaxU(), sprite.getMaxV(), sprite.getMinU(), sprite.getMinV(), sprite.getMaxU(), sprite.getInterpolatedV(2), sprite.getMinU(), sprite.getMinV(), sprite.getMaxU(), sprite.getInterpolatedV(2));
+		IVertexBuilder builder = buffer.getBuffer(RenderType.cutoutMipped());
+		float antiZFightScale = 0.0001F * side.get3DDataValue();
+		CRModels.drawBox(matrix, builder, combinedLight, new int[] {255, 255, 255, 255}, 0.5F - antiZFightScale, 1F / 16F, 0.5F - antiZFightScale, sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1(), sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV(2), sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV(2));
 	}
 
 	@Override

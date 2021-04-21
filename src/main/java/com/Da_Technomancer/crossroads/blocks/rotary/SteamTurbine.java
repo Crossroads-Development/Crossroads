@@ -32,7 +32,7 @@ import java.util.List;
 
 public class SteamTurbine extends ContainerBlock{
 
-	private VoxelShape SHAPE = VoxelShapes.or(makeCuboidShape(2, 0, 2, 14, 16, 14), makeCuboidShape(0, 5, 5, 16, 11, 11), makeCuboidShape(5, 5, 0, 11, 11, 16));
+	private VoxelShape SHAPE = VoxelShapes.or(box(2, 0, 2, 14, 16, 14), box(0, 5, 5, 16, 11, 11), box(5, 5, 0, 11, 11, 16));
 
 	public SteamTurbine(){
 		super(CRBlocks.getMetalProperty());
@@ -43,12 +43,12 @@ public class SteamTurbine extends ContainerBlock{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new SteamTurbineTileEntity();
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
@@ -58,9 +58,9 @@ public class SteamTurbine extends ContainerBlock{
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		TileEntity te;
-		if(!worldIn.isRemote && (te = worldIn.getTileEntity(pos)) instanceof INamedContainerProvider){
+		if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) instanceof INamedContainerProvider){
 			NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);
 		}
 		return ActionResultType.SUCCESS;
@@ -74,7 +74,7 @@ public class SteamTurbine extends ContainerBlock{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.steam_turbine.input", 100 * SteamTurbineTileEntity.LIMIT));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.steam_turbine.output", ((double) SteamTurbineTileEntity.LIMIT) * 0.1D * (double) CRConfig.steamWorth.get() * CRConfig.jouleWorth.get()));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", SteamTurbineTileEntity.INERTIA));

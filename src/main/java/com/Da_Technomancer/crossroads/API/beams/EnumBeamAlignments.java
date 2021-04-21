@@ -109,7 +109,7 @@ public enum EnumBeamAlignments{
 	 * @param discover Whether this player should have this alignment unlocked. If false, relocks this path
 	 */
 	public void discover(PlayerEntity player, boolean discover){
-		if(player.world.isRemote){
+		if(player.level.isClientSide){
 			return;//We can't do this on the client side
 		}
 		AdvancementTracker.unlockAdvancement((ServerPlayerEntity) player, "progress/alignment/" + toString(), discover);

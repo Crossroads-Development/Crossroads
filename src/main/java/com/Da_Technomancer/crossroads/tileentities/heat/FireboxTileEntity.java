@@ -54,16 +54,16 @@ public class FireboxTileEntity extends InventoryTE{
 	@Override
 	public void tick(){
 		super.tick();
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 
 		if(burnTime != 0){
 			temp = Math.min(MAX_TEMP, temp + POWER);
 			if(--burnTime == 0){
-				world.setBlockState(pos, CRBlocks.firebox.getDefaultState(), 18);
+				level.setBlock(worldPosition, CRBlocks.firebox.defaultBlockState(), 18);
 			}
-			markDirty();
+			setChanged();
 		}
 
 		int fuelBurn;
@@ -79,21 +79,21 @@ public class FireboxTileEntity extends InventoryTE{
 			if(inventory[0].isEmpty() && item.hasContainerItem(inventory[0])){
 				inventory[0] = item.getContainerItem(inventory[0]);
 			}
-			world.setBlockState(pos, CRBlocks.firebox.getDefaultState().with(CRProperties.ACTIVE, true), 18);
-			markDirty();
+			level.setBlock(worldPosition, CRBlocks.firebox.defaultBlockState().setValue(CRProperties.ACTIVE, true), 18);
+			setChanged();
 		}
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		burnTime = nbt.getInt("burn");
 		maxBurnTime = nbt.getInt("max_burn");
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putInt("burn", burnTime);
 		nbt.putInt("max_burn", maxBurnTime);
 		return nbt;
@@ -102,8 +102,8 @@ public class FireboxTileEntity extends InventoryTE{
 	private LazyOptional<ItemHandler> itemOpt = LazyOptional.of(() -> new ItemHandler(null));
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		itemOpt.invalidate();
 	}
 
@@ -120,13 +120,13 @@ public class FireboxTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
+	public boolean canPlaceItem(int index, ItemStack stack){
 		return index == 0 && ForgeHooks.getBurnTime(stack) != 0;
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
-		return index == 0 && !isItemValidForSlot(index, stack);//Allow removing empty buckets
+	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction){
+		return index == 0 && !canPlaceItem(index, stack);//Allow removing empty buckets
 	}
 
 	@Override

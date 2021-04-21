@@ -77,15 +77,15 @@ public class RotaryDrillTileEntity extends ModuleTE{
 	private Direction getFacing(){
 		BlockState state = getBlockState();
 		if(state.getBlock() instanceof RotaryDrill){
-			return state.get(ESProperties.FACING);
+			return state.getValue(ESProperties.FACING);
 		}
-		remove();
+		setRemoved();
 		return Direction.UP;
 	}
 
 	@Override
-	public void updateContainingBlockInfo(){
-		super.updateContainingBlockInfo();
+	public void clearCache(){
+		super.clearCache();
 		axleOpt.invalidate();
 		axleOpt = LazyOptional.of(() -> axleHandler);
 	}
@@ -94,7 +94,7 @@ public class RotaryDrillTileEntity extends ModuleTE{
 	public void tick(){
 		super.tick();
 
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 
@@ -103,12 +103,12 @@ public class RotaryDrillTileEntity extends ModuleTE{
 			axleHandler.addEnergy(-powerDrain, false);
 			if(++ticksExisted % 2 == 0){//Activate once every redstone tick
 				Direction facing = getFacing();
-				BlockPos targetPos = pos.offset(facing);
-				BlockState targetState = world.getBlockState(targetPos);
-				if(!targetState.isAir(world, targetPos)){
-					float hardness = targetState.getBlockHardness(world, targetPos);
+				BlockPos targetPos = worldPosition.relative(facing);
+				BlockState targetState = level.getBlockState(targetPos);
+				if(!targetState.isAir(level, targetPos)){
+					float hardness = targetState.getDestroySpeed(level, targetPos);
 					if(hardness >= 0 && Math.abs(axleHandler.getSpeed()) >= hardness * SPEED_PER_HARDNESS){
-						FakePlayer fakePlayer = PlaceEffect.getBlockFakePlayer((ServerWorld) world);
+						FakePlayer fakePlayer = PlaceEffect.getBlockFakePlayer((ServerWorld) level);
 						ItemStack tool;
 						ToolType toolType = targetState.getHarvestTool();
 						if(toolType == ToolType.PICKAXE){
@@ -122,8 +122,8 @@ public class RotaryDrillTileEntity extends ModuleTE{
 						}else{
 							tool = ItemStack.EMPTY;
 						}
-						world.destroyBlock(targetPos, false);//Don't drop items; we do that separately on the next line
-						targetState.getBlock().harvestBlock(world, fakePlayer, targetPos, targetState, null, tool);//Make sure to call harvestBlock so we can get tool-specific (like snow layers for shovels) and multiblock-specific drops
+						level.destroyBlock(targetPos, false);//Don't drop items; we do that separately on the next line
+						targetState.getBlock().playerDestroy(level, fakePlayer, targetPos, targetState, null, tool);//Make sure to call harvestBlock so we can get tool-specific (like snow layers for shovels) and multiblock-specific drops
 
 //						boolean isSnow = targetState.getBlock() == Blocks.SNOW;
 //						//Snow layers have an unusual loot table that requires it to be broken by an entity holding a shovel
@@ -135,24 +135,24 @@ public class RotaryDrillTileEntity extends ModuleTE{
 					}
 				}
 
-				List<LivingEntity> ents = world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos.offset(facing)), EntityPredicates.IS_ALIVE);
+				List<LivingEntity> ents = level.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(worldPosition.relative(facing)), EntityPredicates.ENTITY_STILL_ALIVE);
 				for(LivingEntity ent : ents){
-					ent.attackEntityFrom(golden ? new EntityDamageSource("drill", FakePlayerFactory.get((ServerWorld) world, new GameProfile(null, "drill_player_" + MiscUtil.getDimensionName(world)))) : DRILL, (float) Math.abs(axleHandler.getSpeed()) * DAMAGE_PER_SPEED);
+					ent.hurt(golden ? new EntityDamageSource("drill", FakePlayerFactory.get((ServerWorld) level, new GameProfile(null, "drill_player_" + MiscUtil.getDimensionName(level)))) : DRILL, (float) Math.abs(axleHandler.getSpeed()) * DAMAGE_PER_SPEED);
 				}
 			}
 		}
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putBoolean("gold", golden);
 		return nbt;
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		golden = nbt.getBoolean("gold");
 	}
 

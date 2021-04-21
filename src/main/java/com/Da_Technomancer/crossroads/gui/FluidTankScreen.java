@@ -26,9 +26,9 @@ public class FluidTankScreen extends MachineGUI<FluidTankContainer, FluidTankTil
 
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
-		Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE);
-		blit(matrix, guiLeft, guiTop, 0, 0, xSize, ySize);
-		super.drawGuiContainerBackgroundLayer(matrix, partialTicks, mouseX, mouseY);
+	protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+		Minecraft.getInstance().getTextureManager().bind(TEXTURE);
+		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+		super.renderBg(matrix, partialTicks, mouseX, mouseY);
 	}
 }

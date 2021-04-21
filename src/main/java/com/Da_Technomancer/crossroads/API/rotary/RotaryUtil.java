@@ -141,10 +141,10 @@ public class RotaryUtil{
 	 */
 	public static boolean canConnectThrough(World world, BlockPos pos, Direction fromDir, Direction toDir){
 		BlockState state = world.getBlockState(pos);
-		return !state.isNormalCube(world, pos) && state.getBlock() != CRBlocks.largeGearSlave && state.getBlock() != CRBlocks.largeGearMaster;
+		return !state.isRedstoneConductor(world, pos) && state.getBlock() != CRBlocks.largeGearSlave && state.getBlock() != CRBlocks.largeGearMaster;
 	}
 
-	private static final VoxelShape GEAR_ANCHOR_SHAPE = Block.makeCuboidShape(7.05D, 7.05D, 7.05D, 8.95D, 8.95D, 8.95D);
+	private static final VoxelShape GEAR_ANCHOR_SHAPE = Block.box(7.05D, 7.05D, 7.05D, 8.95D, 8.95D, 8.95D);
 
 	/**
 	 * Returns whether the block at the provided position is solid to gears on the specified side
@@ -158,10 +158,10 @@ public class RotaryUtil{
 		//Block collision shape contains the 2x2 of pixels in the center of the face in side
 		//And block is not the back of a large gear or leaves
 		BlockState state = world.getBlockState(pos);
-		if(state.getBlock() instanceof LargeGearSlave || (state.getBlock() instanceof LargeGearMaster && side != state.get(ESProperties.FACING).getOpposite())){
+		if(state.getBlock() instanceof LargeGearSlave || (state.getBlock() instanceof LargeGearMaster && side != state.getValue(ESProperties.FACING).getOpposite())){
 			return false;
 		}
-		if(state.isIn(BlockTags.LEAVES)){
+		if(state.is(BlockTags.LEAVES)){
 			return false;//Vanilla convention has leaves as non-solid
 		}
 
@@ -169,7 +169,7 @@ public class RotaryUtil{
 		//Projections remove all cuboids that don't touch the passed side, and extend those that remain into a full column from one side to the opposite (the project method is poorly named)
 		//Projections are cached by default, so this operation is fast
 		//We have a reference anchor shape, which should fit neatly inside the projected shape if this is a solid surface
-		return !VoxelShapes.compare(state.getCollisionShape(world, pos).project(side), GEAR_ANCHOR_SHAPE, IBooleanFunction.ONLY_SECOND);
+		return !VoxelShapes.joinIsNotEmpty(state.getCollisionShape(world, pos).getFaceShape(side), GEAR_ANCHOR_SHAPE, IBooleanFunction.ONLY_SECOND);
 	}
 
 	/**
@@ -197,7 +197,7 @@ public class RotaryUtil{
 	 * @return The value to multiply the energy or speed by for CCW rotation
 	 */
 	public static double getCCWSign(Direction dir){
-		return dir.getAxisDirection().getOffset();
+		return dir.getAxisDirection().getStep();
 	}
 
 	/**

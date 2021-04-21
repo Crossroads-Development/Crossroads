@@ -30,15 +30,15 @@ import java.util.List;
 
 public class LightCluster extends Block{
 
-	private static final VoxelShape SHAPE = makeCuboidShape(6.4, 6.4, 6.4, 9.6, 9.6, 9.6);
+	private static final VoxelShape SHAPE = box(6.4, 6.4, 6.4, 9.6, 9.6, 9.6);
 
 	public LightCluster(){
-		super(Properties.create(Material.MISCELLANEOUS).hardnessAndResistance(0).sound(SoundType.GLASS).doesNotBlockMovement().noDrops().setLightLevel(state -> 15));
+		super(Properties.of(Material.DECORATION).strength(0).sound(SoundType.GLASS).noCollission().noDrops().lightLevel(state -> 15));
 		String name = "light_cluster";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
-		setDefaultState(getDefaultState().with(ESProperties.COLOR, DyeColor.WHITE));
+		registerDefaultState(defaultBlockState().setValue(ESProperties.COLOR, DyeColor.WHITE));
 	}
 
 	@Override
@@ -47,17 +47,17 @@ public class LightCluster extends Block{
 	}
 
 	@Override
-	public PushReaction getPushReaction(BlockState state){
+	public PushReaction getPistonPushReaction(BlockState state){
 		return PushReaction.DESTROY;
 	}
 
 	@Override
-	public boolean isReplaceable(BlockState p_196253_1_, BlockItemUseContext p_196253_2_){
+	public boolean canBeReplaced(BlockState p_196253_1_, BlockItemUseContext p_196253_2_){
 		return true;
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.beam_permeable"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.light_cluster.decor"));
 	}
@@ -68,16 +68,16 @@ public class LightCluster extends Block{
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
 		builder.add(ESProperties.COLOR);
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		ItemStack heldItem = playerIn.getHeldItem(hand);
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		ItemStack heldItem = playerIn.getItemInHand(hand);
 		DyeColor col = DyeColor.getColor(heldItem);
 		if(col != null){
-			worldIn.setBlockState(pos, state.with(ESProperties.COLOR, col),  2);
+			worldIn.setBlock(pos, state.setValue(ESProperties.COLOR, col),  2);
 			return ActionResultType.SUCCESS;
 		}
 		return ActionResultType.PASS;

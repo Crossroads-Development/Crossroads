@@ -66,9 +66,9 @@ public class SteamerTileEntity extends InventoryTE{
 		super.tick();
 
 		SmokingRecipe rec;
-		if(!inventory[0].isEmpty() && (rec = world.getRecipeManager().getRecipe(IRecipeType.SMOKING, this, world).orElse(null)) != null && (inventory[1].isEmpty() || BlockUtil.sameItem(rec.getRecipeOutput(), inventory[1]) && inventory[1].getCount() < inventory[1].getMaxStackSize())){
+		if(!inventory[0].isEmpty() && (rec = level.getRecipeManager().getRecipeFor(IRecipeType.SMOKING, this, level).orElse(null)) != null && (inventory[1].isEmpty() || BlockUtil.sameItem(rec.getResultItem(), inventory[1]) && inventory[1].getCount() < inventory[1].getMaxStackSize())){
 			//Check fluids
-			if(!world.isRemote && fluids[0].getAmount() >= FLUID_USE && fluidProps[1].capacity - fluids[1].getAmount() >= FLUID_USE){
+			if(!level.isClientSide && fluids[0].getAmount() >= FLUID_USE && fluidProps[1].capacity - fluids[1].getAmount() >= FLUID_USE){
 				if(fluids[1].isEmpty()){
 					fluids[1] = new FluidStack(CRFluids.distilledWater.still, FLUID_USE);
 				}else{
@@ -80,14 +80,14 @@ public class SteamerTileEntity extends InventoryTE{
 				if(++progress >= REQUIRED){
 					progress = 0;
 					if(inventory[1].isEmpty()){
-						inventory[1] = rec.getCraftingResult(this);
+						inventory[1] = rec.assemble(this);
 					}else{
 						inventory[1].grow(1);
 					}
 					inventory[0].shrink(1);
 				}
 
-				markDirty();
+				setChanged();
 			}
 		}else{
 			progress = 0;
@@ -95,18 +95,18 @@ public class SteamerTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return index == 0 && !stack.isEmpty() && world.getRecipeManager().getRecipe(IRecipeType.SMOKING, new Inventory(stack), world).isPresent();
+	public boolean canPlaceItem(int index, ItemStack stack){
+		return index == 0 && !stack.isEmpty() && level.getRecipeManager().getRecipeFor(IRecipeType.SMOKING, new Inventory(stack), level).isPresent();
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
+	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction){
 		return index == 1;
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		steamOpt.invalidate();
 		waterOpt.invalidate();
 	}

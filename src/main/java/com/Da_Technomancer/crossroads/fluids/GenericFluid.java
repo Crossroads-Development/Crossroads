@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.fluids;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.block.Block;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.fluid.FlowingFluid;
@@ -20,9 +20,9 @@ import java.util.function.Supplier;
 
 public class GenericFluid extends FlowingFluidBlock{
 
-	private static final Block.Properties BLOCK_PROP = Block.Properties.create(Material.WATER).doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops();
-	private static final Block.Properties BLOCK_PROP_HOT = Block.Properties.create(Material.LAVA).doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops().setLightLevel(state -> 15);
-	private static final Item.Properties BUCKET_PROP = new Item.Properties().containerItem(Items.BUCKET).maxStackSize(1).group(ItemGroup.MISC);
+	private static final AbstractBlock.Properties BLOCK_PROP = AbstractBlock.Properties.of(Material.WATER).noCollission().strength(100.0F).noDrops();
+	private static final AbstractBlock.Properties BLOCK_PROP_HOT = AbstractBlock.Properties.of(Material.LAVA).noCollission().strength(100.0F).noDrops().lightLevel(state -> 15);
+	private static final Item.Properties BUCKET_PROP = new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(ItemGroup.TAB_MISC);
 
 	public static FluidData create(String name, boolean lavaLike, boolean gaseous){
 		FluidData data = new FluidData();
@@ -42,7 +42,7 @@ public class GenericFluid extends FlowingFluidBlock{
 		return data;
 	}
 
-	protected GenericFluid(String name, Supplier<FlowingFluid> still, Block.Properties prop){
+	protected GenericFluid(String name, Supplier<FlowingFluid> still, AbstractBlock.Properties prop){
 		super(still, prop);
 		setRegistryName(name);
 	}

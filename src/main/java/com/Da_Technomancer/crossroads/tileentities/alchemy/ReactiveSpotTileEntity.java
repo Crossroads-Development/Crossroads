@@ -27,36 +27,36 @@ public class ReactiveSpotTileEntity extends TileEntity implements ITickableTileE
 
 	public void setTarget(BlockState targetIn){
 		this.target = targetIn;
-		markDirty();
+		setChanged();
 	}
 
 	@Override
 	public void tick(){
 		if(target == null){
-			world.setBlockState(pos, Blocks.AIR.getDefaultState());
+			level.setBlockAndUpdate(worldPosition, Blocks.AIR.defaultBlockState());
 		}else{
 			if(lifespan++ >= 30){
-				world.setBlockState(pos, target, 3);
+				level.setBlock(worldPosition, target, 3);
 			}
 		}
 
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		lifespan = nbt.getInt("lif");
 		Block b = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(nbt.getString("tar")));
 		if(b == null){
-			target = Blocks.AIR.getDefaultState();
+			target = Blocks.AIR.defaultBlockState();
 		}else{
-			target = b.getDefaultState();
+			target = b.defaultBlockState();
 		}
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putInt("lif", lifespan);
 		if(target != null){
 			nbt.putString("tar", target.getBlock().getRegistryName().toString());

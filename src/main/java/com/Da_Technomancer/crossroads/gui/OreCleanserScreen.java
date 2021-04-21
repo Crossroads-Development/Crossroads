@@ -27,12 +27,12 @@ public class OreCleanserScreen extends MachineGUI<OreCleanserContainer, OreClean
 
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
-		Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE);
+	protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+		Minecraft.getInstance().getTextureManager().bind(TEXTURE);
 
-		blit(matrix, guiLeft, guiTop, 0, 0, xSize, ySize);
-		blit(matrix, guiLeft + 25, guiTop + 21, 176, 0, 36 * container.progRef.get() / 50, 10);
+		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+		blit(matrix, leftPos + 25, topPos + 21, 176, 0, 36 * menu.progRef.get() / 50, 10);
 
-		super.drawGuiContainerBackgroundLayer(matrix, partialTicks, mouseX, mouseY);
+		super.renderBg(matrix, partialTicks, mouseX, mouseY);
 	}
 }

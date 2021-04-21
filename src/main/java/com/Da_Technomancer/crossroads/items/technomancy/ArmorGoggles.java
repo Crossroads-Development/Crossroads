@@ -43,7 +43,7 @@ public class ArmorGoggles extends TechnomancyArmor{
 	@Override
 	public void onArmorTick(ItemStack stack, World world, PlayerEntity player){
 		CompoundNBT nbt;
-		if(!world.isRemote && (nbt = stack.getTag()) != null){
+		if(!world.isClientSide && (nbt = stack.getTag()) != null){
 			ArrayList<ITextComponent> chat = new ArrayList<>();
 			BlockRayTraceResult ray = MiscUtil.rayTrace(player, 8);
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
@@ -61,8 +61,8 @@ public class ArmorGoggles extends TechnomancyArmor{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-		super.addInformation(stack, worldIn, tooltip, flagIn);
+	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+		super.appendHoverText(stack, worldIn, tooltip, flagIn);
 		tooltip.add(new TranslationTextComponent("tt.crossroads.goggles.lenses"));
 		CompoundNBT nbt = stack.getTag();
 		boolean hasLens = false;
@@ -103,8 +103,8 @@ public class ArmorGoggles extends TechnomancyArmor{
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items){
-		if(isInGroup(group)){
+	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items){
+		if(allowdedIn(group)){
 			items.add(new ItemStack(this, 1));
 			items.add(setReinforced(new ItemStack(this, 1), true));
 			ItemStack unarmoredLenses = new ItemStack(this, 1);

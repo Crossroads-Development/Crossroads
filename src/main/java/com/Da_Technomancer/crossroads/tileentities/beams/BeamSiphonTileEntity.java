@@ -35,27 +35,27 @@ public class BeamSiphonTileEntity extends BeamRenderTE{
 			if(state.getBlock() != CRBlocks.beamSiphon){
 				return Direction.NORTH;
 			}
-			dir = state.get(ESProperties.FACING);
+			dir = state.getValue(ESProperties.FACING);
 		}
 		return dir;
 	}
 
 	@Override
-	public void updateContainingBlockInfo(){
+	public void clearCache(){
 		dir = null;
-		super.updateContainingBlockInfo();
+		super.clearCache();
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		redsHandler.write(nbt);
 		return nbt;
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		redsHandler.read(state, nbt);
 	}
 
@@ -78,11 +78,11 @@ public class BeamSiphonTileEntity extends BeamRenderTE{
 			remain = new BeamUnit(out.getEnergy() - toDraw.getEnergy(), out.getPotential() - toDraw.getPotential(), out.getStability() - toDraw.getStability(), out.getVoid() - toDraw.getVoid());
 		}
 
-		if(beamer[facing.getIndex()].emit(toDraw, world)){
-			refreshBeam(facing.getIndex());
+		if(beamer[facing.get3DDataValue()].emit(toDraw, level)){
+			refreshBeam(facing.get3DDataValue());
 		}
-		if(beamer[facing.getOpposite().getIndex()].emit(remain, world)){
-			refreshBeam(facing.getOpposite().getIndex());
+		if(beamer[facing.getOpposite().get3DDataValue()].emit(remain, level)){
+			refreshBeam(facing.getOpposite().get3DDataValue());
 		}
 //		if(toFill < out.getPower()){
 //			int[] output = out.mult(((double) toFill) / ((double) out.getPower()), true).getValues();//Use the floor formula as a starting point
@@ -122,8 +122,8 @@ public class BeamSiphonTileEntity extends BeamRenderTE{
 	protected boolean[] inputSides(){
 		boolean[] input = new boolean[] {true, true, true, true, true, true};
 		Direction facing = getDir();
-		input[facing.getIndex()] = false;
-		input[facing.getOpposite().getIndex()] = false;
+		input[facing.get3DDataValue()] = false;
+		input[facing.getOpposite().get3DDataValue()] = false;
 		return input;
 	}
 
@@ -131,27 +131,27 @@ public class BeamSiphonTileEntity extends BeamRenderTE{
 	protected boolean[] outputSides(){
 		boolean[] output = new boolean[6];
 		Direction facing = getDir();
-		output[facing.getIndex()] = true;
-		output[facing.getOpposite().getIndex()] = true;
+		output[facing.get3DDataValue()] = true;
+		output[facing.getOpposite().get3DDataValue()] = true;
 		return output;
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		redsOpt.invalidate();
 	}
 
 	private void updateSignalState(){
-		markDirty();
+		setChanged();
 		BlockState state = getBlockState();
 		int powerLevel = getPowerInput();
 		if(powerLevel > 0){
-			if(!state.get(ESProperties.REDSTONE_BOOL)){
-				world.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, true));
+			if(!state.getValue(ESProperties.REDSTONE_BOOL)){
+				level.setBlockAndUpdate(worldPosition, state.setValue(ESProperties.REDSTONE_BOOL, true));
 			}
-		}else if(state.get(ESProperties.REDSTONE_BOOL)){
-			world.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, false));
+		}else if(state.getValue(ESProperties.REDSTONE_BOOL)){
+			level.setBlockAndUpdate(worldPosition, state.setValue(ESProperties.REDSTONE_BOOL, false));
 		}
 	}
 

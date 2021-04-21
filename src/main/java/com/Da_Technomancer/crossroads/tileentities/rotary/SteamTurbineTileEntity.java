@@ -64,7 +64,7 @@ public class SteamTurbineTileEntity extends InventoryTE{
 	public void tick(){
 		super.tick();
 		
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 
@@ -100,7 +100,7 @@ public class SteamTurbineTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
+	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction){
 		return false;
 	}
 

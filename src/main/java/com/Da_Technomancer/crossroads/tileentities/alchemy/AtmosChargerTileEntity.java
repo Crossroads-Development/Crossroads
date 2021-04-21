@@ -38,7 +38,7 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 	@ObjectHolder("atmos_charger")
 	private static TileEntityType<AtmosChargerTileEntity> type = null;
 
-	private static final ITag<Block> ANTENNA_TAG = BlockTags.makeWrapperTag(Crossroads.MODID + ":atmos_antenna");
+	private static final ITag<Block> ANTENNA_TAG = BlockTags.bind(Crossroads.MODID + ":atmos_antenna");
 
 	private static final int FE_CAPACITY = 20_000;
 
@@ -51,8 +51,8 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public void updateContainingBlockInfo(){
-		super.updateContainingBlockInfo();
+	public void clearCache(){
+		super.clearCache();
 		mode = null;
 	}
 
@@ -60,28 +60,28 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 		if(mode != null){
 			return mode;
 		}
-		BlockState state = world.getBlockState(pos);
+		BlockState state = level.getBlockState(worldPosition);
 		if(state.getBlock() != CRBlocks.atmosCharger){
 			return false;
 		}
-		mode = state.get(CRProperties.ACTIVE);
+		mode = state.getValue(CRProperties.ACTIVE);
 		return mode;
 	}
 
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		if(player.world instanceof ServerWorld){
-			int charge = AtmosChargeSavedData.getCharge((ServerWorld) player.world);
+		if(player.level instanceof ServerWorld){
+			int charge = AtmosChargeSavedData.getCharge((ServerWorld) player.level);
 			chat.add(new TranslationTextComponent("tt.crossroads.atmos_charger.reading", charge, AtmosChargeSavedData.getCapacity(), MiscUtil.preciseRound(100D * charge / AtmosChargeSavedData.getCapacity(), 1)));
 		}
 	}
 
 	private boolean isValidStructure(){
 		//Requires 4 iron bars (block type controlled via tag) placed in a pillar on top
-		BlockPos checkPos = pos;
+		BlockPos checkPos = worldPosition;
 		for(int i = 0; i < 4; i++){
-			checkPos = checkPos.up();
-			if(!world.getBlockState(checkPos).isIn(ANTENNA_TAG)){
+			checkPos = checkPos.above();
+			if(!level.getBlockState(checkPos).is(ANTENNA_TAG)){
 				return false;
 			}
 		}
@@ -91,34 +91,34 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 	@Override
 	public void tick(){
 		BlockState state = getBlockState();
-		if(world.isRemote || !(state.getBlock() instanceof AtmosCharger)){
+		if(level.isClientSide || !(state.getBlock() instanceof AtmosCharger)){
 			return;
 		}
 		renderTimer--;
 
-		int atmosCharge = AtmosChargeSavedData.getCharge((ServerWorld) world);
+		int atmosCharge = AtmosChargeSavedData.getCharge((ServerWorld) level);
 
 		if(isExtractMode()){
 			int op = Math.min((FE_CAPACITY - fe) / 1000, atmosCharge / 1000);
 			if(op != 0 && isValidStructure()){
 				fe += op * 1000;
 				atmosCharge -= op * 1000;
-				AtmosChargeSavedData.setCharge((ServerWorld) world, atmosCharge);
-				markDirty();
+				AtmosChargeSavedData.setCharge((ServerWorld) level, atmosCharge);
+				setChanged();
 				renderArc(false);
 			}
 
 			//Transfer fe out
 			if(fe > 0){
 				for(int i = 0; i < 4; i++){
-					Direction side = Direction.byHorizontalIndex(i);
-					TileEntity te = world.getTileEntity(pos.offset(side));
+					Direction side = Direction.from2DDataValue(i);
+					TileEntity te = level.getBlockEntity(worldPosition.relative(side));
 					LazyOptional<IEnergyStorage> otherCap;
 					if(te != null && (otherCap = te.getCapability(CapabilityEnergy.ENERGY, side.getOpposite())).isPresent()){
 						int moved = otherCap.orElseThrow(NullPointerException::new).receiveEnergy(fe, false);
 						if(moved > 0){
 							fe -= moved;
-							markDirty();
+							setChanged();
 						}
 					}
 				}
@@ -128,8 +128,8 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 			if(op != 0 && isValidStructure()){
 				fe -= op * 1000;
 				atmosCharge += op * 1000;
-				AtmosChargeSavedData.setCharge((ServerWorld) world, atmosCharge);
-				markDirty();
+				AtmosChargeSavedData.setCharge((ServerWorld) level, atmosCharge);
+				setChanged();
 				renderArc(true);
 			}
 		}
@@ -139,44 +139,44 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 		if(renderTimer <= 0){
 			renderTimer = 10;
 
-			int color = TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)];
+			int color = TeslaCoilTopTileEntity.COLOR_CODES[(int) (level.getGameTime() % 3)];
 			if(charging){
 				//Render electric arcs coming from the tip of the rod
-				int arcs = world.rand.nextInt(3) + 1;
-				float[] start = new float[] {pos.getX() + 0.5F, pos.getY() + 5, pos.getZ() + 0.5F};
+				int arcs = level.random.nextInt(3) + 1;
+				float[] start = new float[] {worldPosition.getX() + 0.5F, worldPosition.getY() + 5, worldPosition.getZ() + 0.5F};
 				for(int i = 0; i < arcs; i++){
-					float[] end = new float[] {start[0] + (world.rand.nextFloat() - 0.5F) * 6F, start[1] + 6F * world.rand.nextFloat(), start[2] + (world.rand.nextFloat() - 0.5F) * 6F};
-					CRRenderUtil.addArc(world, start[0], start[1], start[2], end[0], end[1], end[2], 1, 0F, (byte) 10, color, true);
+					float[] end = new float[] {start[0] + (level.random.nextFloat() - 0.5F) * 6F, start[1] + 6F * level.random.nextFloat(), start[2] + (level.random.nextFloat() - 0.5F) * 6F};
+					CRRenderUtil.addArc(level, start[0], start[1], start[2], end[0], end[1], end[2], 1, 0F, (byte) 10, color, true);
 				}
 			}else{
 				//Render arcs striking from various points along the rod
-				int arcs = world.rand.nextInt(3) + 2;
-				float[] start = new float[] {pos.getX() + 0.5F, 0, pos.getZ() + 0.5F};
+				int arcs = level.random.nextInt(3) + 2;
+				float[] start = new float[] {worldPosition.getX() + 0.5F, 0, worldPosition.getZ() + 0.5F};
 				for(int i = 0; i < arcs; i++){
-					start[1] = pos.getY() + 1F + world.rand.nextFloat() * 4F;//Randomize start height along the rod
-					float[] end = new float[] {start[0] + (world.rand.nextFloat() - 0.5F) * 6F, start[1] + world.rand.nextFloat() * 1.5F, start[2] + (world.rand.nextFloat() - 0.5F) * 6F};
-					CRRenderUtil.addArc(world, start[0], start[1], start[2], end[0], end[1], end[2], world.rand.nextInt(3) / 2 + 1, 0.2F, (byte) 10, color, true);
+					start[1] = worldPosition.getY() + 1F + level.random.nextFloat() * 4F;//Randomize start height along the rod
+					float[] end = new float[] {start[0] + (level.random.nextFloat() - 0.5F) * 6F, start[1] + level.random.nextFloat() * 1.5F, start[2] + (level.random.nextFloat() - 0.5F) * 6F};
+					CRRenderUtil.addArc(level, start[0], start[1], start[2], end[0], end[1], end[2], level.random.nextInt(3) / 2 + 1, 0.2F, (byte) 10, color, true);
 				}
 			}
 		}
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		fe = nbt.getInt("fe");
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putInt("fe", fe);
 		return nbt;
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		feOpt.invalidate();
 	}
 
@@ -202,7 +202,7 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 
 			if(!simulate && toMove > 0){
 				fe += toMove;
-				markDirty();
+				setChanged();
 			}
 
 			return toMove;
@@ -217,7 +217,7 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 			int toMove = Math.min(maxExtract, fe);
 			if(!simulate){
 				fe -= toMove;
-				markDirty();
+				setChanged();
 			}
 			return toMove;
 		}

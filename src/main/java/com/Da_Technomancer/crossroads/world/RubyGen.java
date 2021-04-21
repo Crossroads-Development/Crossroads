@@ -13,7 +13,7 @@ import java.util.Random;
 public class RubyGen extends OreFeature{
 
 	protected RubyGen(){
-		super(OreFeatureConfig.field_236566_a_);
+		super(OreFeatureConfig.CODEC);
 	}
 
 	private static BlockState getStateToPlace(Random random, OreFeatureConfig config){
@@ -22,7 +22,7 @@ public class RubyGen extends OreFeature{
 	}
 
 	@Override
-	protected boolean func_207803_a(IWorld worldIn, Random random, OreFeatureConfig config, double p_207803_4_, double p_207803_6_, double p_207803_8_, double p_207803_10_, double p_207803_12_, double p_207803_14_, int p_207803_16_, int p_207803_17_, int p_207803_18_, int p_207803_19_, int p_207803_20_){
+	protected boolean doPlace(IWorld worldIn, Random random, OreFeatureConfig config, double p_207803_4_, double p_207803_6_, double p_207803_8_, double p_207803_10_, double p_207803_12_, double p_207803_14_, int p_207803_16_, int p_207803_17_, int p_207803_18_, int p_207803_19_, int p_207803_20_){
 		//Almost an exact copy of the super method, with one change
 
 		int i = 0;
@@ -89,10 +89,10 @@ public class RubyGen extends OreFeature{
 										int l2 = i2 - p_207803_16_ + (j2 - p_207803_17_) * p_207803_19_ + (k2 - p_207803_18_) * p_207803_19_ * p_207803_20_;
 										if(!bitset.get(l2)){
 											bitset.set(l2);
-											blockpos$mutable.setPos(i2, j2, k2);
+											blockpos$mutable.set(i2, j2, k2);
 											if(config.target.test(worldIn.getBlockState(blockpos$mutable), random)){
 												//The only changed line
-												worldIn.setBlockState(blockpos$mutable, getStateToPlace(random, config), 2);
+												worldIn.setBlock(blockpos$mutable, getStateToPlace(random, config), 2);
 												++i;
 											}
 										}

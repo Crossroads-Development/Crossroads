@@ -4,7 +4,10 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.FlowLimiterTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -26,9 +29,9 @@ public class FlowLimiter extends ContainerBlock{
 	private static final VoxelShape[] SHAPES = new VoxelShape[3];
 
 	static{
-		SHAPES[0] = makeCuboidShape(0, 4, 4, 16, 12, 12);
-		SHAPES[1] = makeCuboidShape(4, 0, 4, 12, 16, 12);
-		SHAPES[2] = makeCuboidShape(4, 4, 0, 12, 12, 16);
+		SHAPES[0] = box(0, 4, 4, 16, 12, 12);
+		SHAPES[1] = box(4, 0, 4, 12, 16, 12);
+		SHAPES[2] = box(4, 4, 0, 12, 12, 16);
 	}
 
 	private final boolean crystal;
@@ -43,12 +46,12 @@ public class FlowLimiter extends ContainerBlock{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new FlowLimiterTileEntity(!crystal);
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state){
+	public BlockRenderType getRenderShape(BlockState state){
 		return BlockRenderType.MODEL;
 	}
 
@@ -59,17 +62,17 @@ public class FlowLimiter extends ContainerBlock{
 //	}
 	
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(ESConfig.isWrench(playerIn.getHeldItem(hand))){
-			if(!worldIn.isRemote){
-				if(playerIn.isSneaking()){
-					TileEntity te = worldIn.getTileEntity(pos);
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
+			if(!worldIn.isClientSide){
+				if(playerIn.isShiftKeyDown()){
+					TileEntity te = worldIn.getBlockEntity(pos);
 					if(te instanceof FlowLimiterTileEntity){
 						((FlowLimiterTileEntity) te).cycleLimit((ServerPlayerEntity) playerIn);
 					}
 				}else{
-					worldIn.setBlockState(pos, state.func_235896_a_(ESProperties.FACING));
-					TileEntity te = worldIn.getTileEntity(pos);
+					worldIn.setBlockAndUpdate(pos, state.cycle(ESProperties.FACING));
+					TileEntity te = worldIn.getBlockEntity(pos);
 					if(te instanceof FlowLimiterTileEntity){
 						((FlowLimiterTileEntity) te).wrench();
 					}
@@ -81,18 +84,18 @@ public class FlowLimiter extends ContainerBlock{
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
 		builder.add(ESProperties.FACING);
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
-		return SHAPES[state.get(ESProperties.FACING).getAxis().ordinal()];
+		return SHAPES[state.getValue(ESProperties.FACING).getAxis().ordinal()];
 	}
 
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return getDefaultState().with(ESProperties.FACING, context.getNearestLookingDirection());
+		return defaultBlockState().setValue(ESProperties.FACING, context.getNearestLookingDirection());
 	}
 }

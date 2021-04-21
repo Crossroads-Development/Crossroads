@@ -32,10 +32,10 @@ public class FluxNodeRenderer extends EntropyRenderer<FluxNodeTileEntity>{
 //		Tessellator tess = Tessellator.getInstance();
 //		BufferBuilder buf = tess.getBuffer();
 
-		matrix.rotate(Vector3f.YP.rotationDegrees(angle));
+		matrix.mulPose(Vector3f.YP.rotationDegrees(angle));
 //		GlStateManager.rotated(angle, 0, 1, 0);
 
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
+		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
 
 //		GlStateManager.color4f(1, 1, 1, 1);
 
@@ -45,15 +45,15 @@ public class FluxNodeRenderer extends EntropyRenderer<FluxNodeTileEntity>{
 		drawGimbal(builder, matrix, spriteGimbal, combinedLight);
 //		GlStateManager.rotated(90, 0, 0, 1);
 //		GlStateManager.rotated(angle + 90, 0, 1, 0);
-		matrix.rotate(Vector3f.ZP.rotationDegrees(90));
-		matrix.rotate(Vector3f.YP.rotationDegrees(angle + 90));
+		matrix.mulPose(Vector3f.ZP.rotationDegrees(90));
+		matrix.mulPose(Vector3f.YP.rotationDegrees(angle + 90));
 		matrix.scale(5F / 7F, 5F / 7F, 5F / 7F);
 //		GlStateManager.scalef(5F / 7F, 5F / 7F, 5F / 7F);
 		drawGimbal(builder, matrix, spriteGimbal, combinedLight);
 //		GlStateManager.rotated(90, 0, 0, 1);
 //		GlStateManager.rotated(angle + 90, 0, 1, 0);
-		matrix.rotate(Vector3f.ZP.rotationDegrees(90));
-		matrix.rotate(Vector3f.YP.rotationDegrees(angle + 90));
+		matrix.mulPose(Vector3f.ZP.rotationDegrees(90));
+		matrix.mulPose(Vector3f.YP.rotationDegrees(angle + 90));
 		matrix.scale(5F / 7F, 5F / 7F, 5F / 7F);
 //		GlStateManager.scalef(5F / 7F, 5F / 7F, 5F / 7F);
 		drawGimbal(builder, matrix, spriteGimbal, combinedLight);
@@ -68,55 +68,55 @@ public class FluxNodeRenderer extends EntropyRenderer<FluxNodeTileEntity>{
 
 		float size = 0.5F;
 
-		builder.pos(matrix.getLast().getMatrix(), -size, -size, -size).color(255, 255, 255, 255).tex(spriteCop.getMinU(), spriteCop.getMinV()).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -size, size, -size).color(255, 255, 255, 255).tex(spriteCop.getMinU(), spriteCop.getMaxV()).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), size, size, -size).color(255, 255, 255, 255).tex(spriteCop.getMaxU(), spriteCop.getMaxV()).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), size, -size, -size).color(255, 255, 255, 255).tex(spriteCop.getMaxU(), spriteCop.getMinV()).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
+		builder.vertex(matrix.last().pose(), -size, -size, -size).color(255, 255, 255, 255).uv(spriteCop.getU0(), spriteCop.getV0()).uv2(combinedLight).normal(matrix.last().normal(), 0, 0, -1).endVertex();
+		builder.vertex(matrix.last().pose(), -size, size, -size).color(255, 255, 255, 255).uv(spriteCop.getU0(), spriteCop.getV1()).uv2(combinedLight).normal(matrix.last().normal(), 0, 0, -1).endVertex();
+		builder.vertex(matrix.last().pose(), size, size, -size).color(255, 255, 255, 255).uv(spriteCop.getU1(), spriteCop.getV1()).uv2(combinedLight).normal(matrix.last().normal(), 0, 0, -1).endVertex();
+		builder.vertex(matrix.last().pose(), size, -size, -size).color(255, 255, 255, 255).uv(spriteCop.getU1(), spriteCop.getV0()).uv2(combinedLight).normal(matrix.last().normal(), 0, 0, -1).endVertex();
 //		buf.pos(-0.5D, -0.5D, -0.5D).tex(0, 0).endVertex();
 //		buf.pos(-0.5D, 0.5D, -0.5D).tex(0, 1).endVertex();
 //		buf.pos(0.5D, 0.5D, -0.5D).tex(1, 1).endVertex();
 //		buf.pos(0.5D, -0.5D, -0.5D).tex(1, 0).endVertex();
 
-		builder.pos(matrix.getLast().getMatrix(), -size, -size, size).color(255, 255, 255, 255).tex(spriteCop.getMinU(), spriteCop.getMinV()).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), size, -size, size).color(255, 255, 255, 255).tex(spriteCop.getMaxU(), spriteCop.getMinV()).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), size, size, size).color(255, 255, 255, 255).tex(spriteCop.getMaxU(), spriteCop.getMaxV()).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -size, size, size).color(255, 255, 255, 255).tex(spriteCop.getMinU(), spriteCop.getMaxV()).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
+		builder.vertex(matrix.last().pose(), -size, -size, size).color(255, 255, 255, 255).uv(spriteCop.getU0(), spriteCop.getV0()).uv2(combinedLight).normal(matrix.last().normal(), 0, 0, 1).endVertex();
+		builder.vertex(matrix.last().pose(), size, -size, size).color(255, 255, 255, 255).uv(spriteCop.getU1(), spriteCop.getV0()).uv2(combinedLight).normal(matrix.last().normal(), 0, 0, 1).endVertex();
+		builder.vertex(matrix.last().pose(), size, size, size).color(255, 255, 255, 255).uv(spriteCop.getU1(), spriteCop.getV1()).uv2(combinedLight).normal(matrix.last().normal(), 0, 0, 1).endVertex();
+		builder.vertex(matrix.last().pose(), -size, size, size).color(255, 255, 255, 255).uv(spriteCop.getU0(), spriteCop.getV1()).uv2(combinedLight).normal(matrix.last().normal(), 0, 0, 1).endVertex();
 //		buf.pos(-0.5D, -0.5D, 0.5D).tex(0, 0).endVertex();
 //		buf.pos(0.5D, -0.5D, 0.5D).tex(1, 0).endVertex();
 //		buf.pos(0.5D, 0.5D, 0.5D).tex(1, 1).endVertex();
 //		buf.pos(-0.5D, 0.5D, 0.5D).tex(0, 1).endVertex();
 
-		builder.pos(matrix.getLast().getMatrix(), -size, -size, -size).color(255, 255, 255, 255).tex(spriteCop.getMinU(), spriteCop.getMinV()).lightmap(combinedLight).normal(matrix.getLast().getNormal(), -1, 0, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -size, -size, size).color(255, 255, 255, 255).tex(spriteCop.getMaxU(), spriteCop.getMinV()).lightmap(combinedLight).normal(matrix.getLast().getNormal(), -1, 0, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -size, size, size).color(255, 255, 255, 255).tex(spriteCop.getMaxU(), spriteCop.getMaxV()).lightmap(combinedLight).normal(matrix.getLast().getNormal(), -1, 0, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -size, size, -size).color(255, 255, 255, 255).tex(spriteCop.getMinU(), spriteCop.getMaxV()).lightmap(combinedLight).normal(matrix.getLast().getNormal(), -1, 0, 0).endVertex();
+		builder.vertex(matrix.last().pose(), -size, -size, -size).color(255, 255, 255, 255).uv(spriteCop.getU0(), spriteCop.getV0()).uv2(combinedLight).normal(matrix.last().normal(), -1, 0, 0).endVertex();
+		builder.vertex(matrix.last().pose(), -size, -size, size).color(255, 255, 255, 255).uv(spriteCop.getU1(), spriteCop.getV0()).uv2(combinedLight).normal(matrix.last().normal(), -1, 0, 0).endVertex();
+		builder.vertex(matrix.last().pose(), -size, size, size).color(255, 255, 255, 255).uv(spriteCop.getU1(), spriteCop.getV1()).uv2(combinedLight).normal(matrix.last().normal(), -1, 0, 0).endVertex();
+		builder.vertex(matrix.last().pose(), -size, size, -size).color(255, 255, 255, 255).uv(spriteCop.getU0(), spriteCop.getV1()).uv2(combinedLight).normal(matrix.last().normal(), -1, 0, 0).endVertex();
 //		buf.pos(-0.5D, -0.5D, -0.5D).tex(0, 0).endVertex();
 //		buf.pos(-0.5D, -0.5D, 0.5D).tex(1, 0).endVertex();
 //		buf.pos(-0.5D, 0.5D, 0.5D).tex(1, 1).endVertex();
 //		buf.pos(-0.5D, 0.5D, -0.5D).tex(0, 1).endVertex();
 
-		builder.pos(matrix.getLast().getMatrix(), size, -size, -size).color(255, 255, 255, 255).tex(spriteCop.getMinU(), spriteCop.getMinV()).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 1, 0, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), size, size, -size).color(255, 255, 255, 255).tex(spriteCop.getMinU(), spriteCop.getMaxV()).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 1, 0, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), size, size, size).color(255, 255, 255, 255).tex(spriteCop.getMaxU(), spriteCop.getMaxV()).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 1, 0, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), size, -size, size).color(255, 255, 255, 255).tex(spriteCop.getMaxU(), spriteCop.getMinV()).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 1, 0, 0).endVertex();
+		builder.vertex(matrix.last().pose(), size, -size, -size).color(255, 255, 255, 255).uv(spriteCop.getU0(), spriteCop.getV0()).uv2(combinedLight).normal(matrix.last().normal(), 1, 0, 0).endVertex();
+		builder.vertex(matrix.last().pose(), size, size, -size).color(255, 255, 255, 255).uv(spriteCop.getU0(), spriteCop.getV1()).uv2(combinedLight).normal(matrix.last().normal(), 1, 0, 0).endVertex();
+		builder.vertex(matrix.last().pose(), size, size, size).color(255, 255, 255, 255).uv(spriteCop.getU1(), spriteCop.getV1()).uv2(combinedLight).normal(matrix.last().normal(), 1, 0, 0).endVertex();
+		builder.vertex(matrix.last().pose(), size, -size, size).color(255, 255, 255, 255).uv(spriteCop.getU1(), spriteCop.getV0()).uv2(combinedLight).normal(matrix.last().normal(), 1, 0, 0).endVertex();
 //		buf.pos(0.5D, -0.5D, -0.5D).tex(0, 0).endVertex();
 //		buf.pos(0.5D, 0.5D, -0.5D).tex(0, 1).endVertex();
 //		buf.pos(0.5D, 0.5D, 0.5D).tex(1, 1).endVertex();
 //		buf.pos(0.5D, -0.5D, 0.5D).tex(1, 0).endVertex();
 
-		builder.pos(matrix.getLast().getMatrix(), -size, -size, -size).color(255, 255, 255, 255).tex(spriteCop.getMinU(), spriteCop.getMinV()).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, -1, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), size, -size, -size).color(255, 255, 255, 255).tex(spriteCop.getMaxU(), spriteCop.getMinV()).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, -1, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), size, -size, size).color(255, 255, 255, 255).tex(spriteCop.getMaxU(), spriteCop.getMaxV()).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, -1, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -size, -size, size).color(255, 255, 255, 255).tex(spriteCop.getMinU(), spriteCop.getMaxV()).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, -1, 0).endVertex();
+		builder.vertex(matrix.last().pose(), -size, -size, -size).color(255, 255, 255, 255).uv(spriteCop.getU0(), spriteCop.getV0()).uv2(combinedLight).normal(matrix.last().normal(), 0, -1, 0).endVertex();
+		builder.vertex(matrix.last().pose(), size, -size, -size).color(255, 255, 255, 255).uv(spriteCop.getU1(), spriteCop.getV0()).uv2(combinedLight).normal(matrix.last().normal(), 0, -1, 0).endVertex();
+		builder.vertex(matrix.last().pose(), size, -size, size).color(255, 255, 255, 255).uv(spriteCop.getU1(), spriteCop.getV1()).uv2(combinedLight).normal(matrix.last().normal(), 0, -1, 0).endVertex();
+		builder.vertex(matrix.last().pose(), -size, -size, size).color(255, 255, 255, 255).uv(spriteCop.getU0(), spriteCop.getV1()).uv2(combinedLight).normal(matrix.last().normal(), 0, -1, 0).endVertex();
 //		buf.pos(-0.5D, -0.5D, -0.5D).tex(0, 0).endVertex();
 //		buf.pos(0.5D, -0.5D, -0.5D).tex(1, 0).endVertex();
 //		buf.pos(0.5D, -0.5D, 0.5D).tex(1, 1).endVertex();
 //		buf.pos(-0.5D, -0.5D, 0.5D).tex(0, 1).endVertex();
 
-		builder.pos(matrix.getLast().getMatrix(), -size, size, -size).color(255, 255, 255, 255).tex(spriteCop.getMinU(), spriteCop.getMinV()).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, 1, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -size, size, size).color(255, 255, 255, 255).tex(spriteCop.getMinU(), spriteCop.getMaxV()).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, 1, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), size, size, size).color(255, 255, 255, 255).tex(spriteCop.getMaxU(), spriteCop.getMaxV()).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, 1, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), size, size, -size).color(255, 255, 255, 255).tex(spriteCop.getMaxU(), spriteCop.getMinV()).lightmap(combinedLight).normal(matrix.getLast().getNormal(), 0, 1, 0).endVertex();
+		builder.vertex(matrix.last().pose(), -size, size, -size).color(255, 255, 255, 255).uv(spriteCop.getU0(), spriteCop.getV0()).uv2(combinedLight).normal(matrix.last().normal(), 0, 1, 0).endVertex();
+		builder.vertex(matrix.last().pose(), -size, size, size).color(255, 255, 255, 255).uv(spriteCop.getU0(), spriteCop.getV1()).uv2(combinedLight).normal(matrix.last().normal(), 0, 1, 0).endVertex();
+		builder.vertex(matrix.last().pose(), size, size, size).color(255, 255, 255, 255).uv(spriteCop.getU1(), spriteCop.getV1()).uv2(combinedLight).normal(matrix.last().normal(), 0, 1, 0).endVertex();
+		builder.vertex(matrix.last().pose(), size, size, -size).color(255, 255, 255, 255).uv(spriteCop.getU1(), spriteCop.getV0()).uv2(combinedLight).normal(matrix.last().normal(), 0, 1, 0).endVertex();
 //		buf.pos(-0.5D, 0.5D, -0.5D).tex(0, 0).endVertex();
 //		buf.pos(-0.5D, 0.5D, 0.5D).tex(0, 1).endVertex();
 //		buf.pos(0.5D, 0.5D, 0.5D).tex(1, 1).endVertex();
@@ -138,73 +138,73 @@ public class FluxNodeRenderer extends EntropyRenderer<FluxNodeTileEntity>{
 
 //		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
-		builder.pos(matrix.getLast().getMatrix(), outer, outer, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -outer, outer, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -outer, inner, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), outer, inner, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
+		builder.vertex(matrix.last().pose(), outer, outer, edge).color(255, 255, 255, 255).uv(sprite.getU(texWidth), sprite.getV(0)).uv2(light).normal(matrix.last().normal(), 0, 0, 1).endVertex();
+		builder.vertex(matrix.last().pose(), -outer, outer, edge).color(255, 255, 255, 255).uv(sprite.getU(0), sprite.getV(0)).uv2(light).normal(matrix.last().normal(), 0, 0, 1).endVertex();
+		builder.vertex(matrix.last().pose(), -outer, inner, edge).color(255, 255, 255, 255).uv(sprite.getU(0), sprite.getV(innerTex)).uv2(light).normal(matrix.last().normal(), 0, 0, 1).endVertex();
+		builder.vertex(matrix.last().pose(), outer, inner, edge).color(255, 255, 255, 255).uv(sprite.getU(texWidth), sprite.getV(innerTex)).uv2(light).normal(matrix.last().normal(), 0, 0, 1).endVertex();
 //		buf.pos(outer, outer, edge).tex(texWidth, 0).endVertex();
 //		buf.pos(-outer, outer, edge).tex(0, 0).endVertex();
 //		buf.pos(-outer, inner, edge).tex(0, innerTex).endVertex();
 //		buf.pos(outer, inner, edge).tex(texWidth, innerTex).endVertex();
 
-		builder.pos(matrix.getLast().getMatrix(), outer, outer, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), outer, inner, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -outer, inner, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -outer, outer, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
+		builder.vertex(matrix.last().pose(), outer, outer, -edge).color(255, 255, 255, 255).uv(sprite.getU(texWidth), sprite.getV(0)).uv2(light).normal(matrix.last().normal(), 0, 0, -1).endVertex();
+		builder.vertex(matrix.last().pose(), outer, inner, -edge).color(255, 255, 255, 255).uv(sprite.getU(texWidth), sprite.getV(innerTex)).uv2(light).normal(matrix.last().normal(), 0, 0, -1).endVertex();
+		builder.vertex(matrix.last().pose(), -outer, inner, -edge).color(255, 255, 255, 255).uv(sprite.getU(0), sprite.getV(innerTex)).uv2(light).normal(matrix.last().normal(), 0, 0, -1).endVertex();
+		builder.vertex(matrix.last().pose(), -outer, outer, -edge).color(255, 255, 255, 255).uv(sprite.getU(0), sprite.getV(0)).uv2(light).normal(matrix.last().normal(), 0, 0, -1).endVertex();
 //		buf.pos(outer, outer, -edge).tex(texWidth, 0).endVertex();
 //		buf.pos(outer, inner, -edge).tex(texWidth, innerTex).endVertex();
 //		buf.pos(-outer, inner, -edge).tex(0, innerTex).endVertex();
 //		buf.pos(-outer, outer, -edge).tex(0, 0).endVertex();
 
-		builder.pos(matrix.getLast().getMatrix(), outer, -outer, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), outer, -inner, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -outer, -inner, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -outer, -outer, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
+		builder.vertex(matrix.last().pose(), outer, -outer, edge).color(255, 255, 255, 255).uv(sprite.getU(texWidth), sprite.getV(0)).uv2(light).normal(matrix.last().normal(), 0, 0, 1).endVertex();
+		builder.vertex(matrix.last().pose(), outer, -inner, edge).color(255, 255, 255, 255).uv(sprite.getU(texWidth), sprite.getV(innerTex)).uv2(light).normal(matrix.last().normal(), 0, 0, 1).endVertex();
+		builder.vertex(matrix.last().pose(), -outer, -inner, edge).color(255, 255, 255, 255).uv(sprite.getU(0), sprite.getV(innerTex)).uv2(light).normal(matrix.last().normal(), 0, 0, 1).endVertex();
+		builder.vertex(matrix.last().pose(), -outer, -outer, edge).color(255, 255, 255, 255).uv(sprite.getU(0), sprite.getV(0)).uv2(light).normal(matrix.last().normal(), 0, 0, 1).endVertex();
 //		buf.pos(outer, -outer, edge).tex(texWidth, 0).endVertex();
 //		buf.pos(outer, -inner, edge).tex(texWidth, innerTex).endVertex();
 //		buf.pos(-outer, -inner, edge).tex(0, innerTex).endVertex();
 //		buf.pos(-outer, -outer, edge).tex(0, 0).endVertex();
 
-		builder.pos(matrix.getLast().getMatrix(), outer, -outer, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -outer, -outer, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -outer, -inner, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), outer, -inner, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
+		builder.vertex(matrix.last().pose(), outer, -outer, -edge).color(255, 255, 255, 255).uv(sprite.getU(texWidth), sprite.getV(0)).uv2(light).normal(matrix.last().normal(), 0, 0, -1).endVertex();
+		builder.vertex(matrix.last().pose(), -outer, -outer, -edge).color(255, 255, 255, 255).uv(sprite.getU(0), sprite.getV(0)).uv2(light).normal(matrix.last().normal(), 0, 0, -1).endVertex();
+		builder.vertex(matrix.last().pose(), -outer, -inner, -edge).color(255, 255, 255, 255).uv(sprite.getU(0), sprite.getV(innerTex)).uv2(light).normal(matrix.last().normal(), 0, 0, -1).endVertex();
+		builder.vertex(matrix.last().pose(), outer, -inner, -edge).color(255, 255, 255, 255).uv(sprite.getU(texWidth), sprite.getV(innerTex)).uv2(light).normal(matrix.last().normal(), 0, 0, -1).endVertex();
 //		buf.pos(outer, -outer, -edge).tex(texWidth, 0).endVertex();
 //		buf.pos(-outer, -outer, -edge).tex(0, 0).endVertex();
 //		buf.pos(-outer, -inner, -edge).tex(0, innerTex).endVertex();
 //		buf.pos(outer, -inner, -edge).tex(texWidth, innerTex).endVertex();
 
-		builder.pos(matrix.getLast().getMatrix(), outer, inner, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), inner, inner, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(innerTex), sprite.getInterpolatedV(innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), inner, -inner, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(innerTex), sprite.getInterpolatedV(texWidth - innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), outer, -inner, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(texWidth - innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
+		builder.vertex(matrix.last().pose(), outer, inner, edge).color(255, 255, 255, 255).uv(sprite.getU(0), sprite.getV(innerTex)).uv2(light).normal(matrix.last().normal(), 0, 0, 1).endVertex();
+		builder.vertex(matrix.last().pose(), inner, inner, edge).color(255, 255, 255, 255).uv(sprite.getU(innerTex), sprite.getV(innerTex)).uv2(light).normal(matrix.last().normal(), 0, 0, 1).endVertex();
+		builder.vertex(matrix.last().pose(), inner, -inner, edge).color(255, 255, 255, 255).uv(sprite.getU(innerTex), sprite.getV(texWidth - innerTex)).uv2(light).normal(matrix.last().normal(), 0, 0, 1).endVertex();
+		builder.vertex(matrix.last().pose(), outer, -inner, edge).color(255, 255, 255, 255).uv(sprite.getU(0), sprite.getV(texWidth - innerTex)).uv2(light).normal(matrix.last().normal(), 0, 0, 1).endVertex();
 //		buf.pos(outer, inner, edge).tex(0, innerTex).endVertex();
 //		buf.pos(inner, inner, edge).tex(innerTex, innerTex).endVertex();
 //		buf.pos(inner, -inner, edge).tex(innerTex, texWidth - innerTex).endVertex();
 //		buf.pos(outer, -inner, edge).tex(0, texWidth - innerTex).endVertex();
 
-		builder.pos(matrix.getLast().getMatrix(), outer, inner, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), outer, -inner, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(texWidth - innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), inner, -inner, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(innerTex), sprite.getInterpolatedV(texWidth - innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), inner, inner, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(innerTex), sprite.getInterpolatedV(innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
+		builder.vertex(matrix.last().pose(), outer, inner, -edge).color(255, 255, 255, 255).uv(sprite.getU(0), sprite.getV(innerTex)).uv2(light).normal(matrix.last().normal(), 0, 0, -1).endVertex();
+		builder.vertex(matrix.last().pose(), outer, -inner, -edge).color(255, 255, 255, 255).uv(sprite.getU(0), sprite.getV(texWidth - innerTex)).uv2(light).normal(matrix.last().normal(), 0, 0, -1).endVertex();
+		builder.vertex(matrix.last().pose(), inner, -inner, -edge).color(255, 255, 255, 255).uv(sprite.getU(innerTex), sprite.getV(texWidth - innerTex)).uv2(light).normal(matrix.last().normal(), 0, 0, -1).endVertex();
+		builder.vertex(matrix.last().pose(), inner, inner, -edge).color(255, 255, 255, 255).uv(sprite.getU(innerTex), sprite.getV(innerTex)).uv2(light).normal(matrix.last().normal(), 0, 0, -1).endVertex();
 //		buf.pos(outer, inner, -edge).tex(0, innerTex).endVertex();
 //		buf.pos(outer, -inner, -edge).tex(0, texWidth - innerTex).endVertex();
 //		buf.pos(inner, -inner, -edge).tex(innerTex, texWidth - innerTex).endVertex();
 //		buf.pos(inner, inner, -edge).tex(innerTex, innerTex).endVertex();
 
-		builder.pos(matrix.getLast().getMatrix(), -outer, inner, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -outer, -inner, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(texWidth - innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -inner, -inner, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(innerTex), sprite.getInterpolatedV(texWidth - innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -inner, inner, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(innerTex), sprite.getInterpolatedV(innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, 1).endVertex();
+		builder.vertex(matrix.last().pose(), -outer, inner, edge).color(255, 255, 255, 255).uv(sprite.getU(0), sprite.getV(innerTex)).uv2(light).normal(matrix.last().normal(), 0, 0, 1).endVertex();
+		builder.vertex(matrix.last().pose(), -outer, -inner, edge).color(255, 255, 255, 255).uv(sprite.getU(0), sprite.getV(texWidth - innerTex)).uv2(light).normal(matrix.last().normal(), 0, 0, 1).endVertex();
+		builder.vertex(matrix.last().pose(), -inner, -inner, edge).color(255, 255, 255, 255).uv(sprite.getU(innerTex), sprite.getV(texWidth - innerTex)).uv2(light).normal(matrix.last().normal(), 0, 0, 1).endVertex();
+		builder.vertex(matrix.last().pose(), -inner, inner, edge).color(255, 255, 255, 255).uv(sprite.getU(innerTex), sprite.getV(innerTex)).uv2(light).normal(matrix.last().normal(), 0, 0, 1).endVertex();
 //		buf.pos(-outer, inner, edge).tex(0, innerTex).endVertex();
 //		buf.pos(-outer, -inner, edge).tex(0, texWidth - innerTex).endVertex();
 //		buf.pos(-inner, -inner, edge).tex(innerTex, texWidth - innerTex).endVertex();
 //		buf.pos(-inner, inner, edge).tex(innerTex, innerTex).endVertex();
 
-		builder.pos(matrix.getLast().getMatrix(), -outer, inner, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -inner, inner, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(innerTex), sprite.getInterpolatedV(innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -inner, -inner, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(innerTex), sprite.getInterpolatedV(texWidth - innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -outer, -inner, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(0), sprite.getInterpolatedV(texWidth - innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 0, -1).endVertex();
+		builder.vertex(matrix.last().pose(), -outer, inner, -edge).color(255, 255, 255, 255).uv(sprite.getU(0), sprite.getV(innerTex)).uv2(light).normal(matrix.last().normal(), 0, 0, -1).endVertex();
+		builder.vertex(matrix.last().pose(), -inner, inner, -edge).color(255, 255, 255, 255).uv(sprite.getU(innerTex), sprite.getV(innerTex)).uv2(light).normal(matrix.last().normal(), 0, 0, -1).endVertex();
+		builder.vertex(matrix.last().pose(), -inner, -inner, -edge).color(255, 255, 255, 255).uv(sprite.getU(innerTex), sprite.getV(texWidth - innerTex)).uv2(light).normal(matrix.last().normal(), 0, 0, -1).endVertex();
+		builder.vertex(matrix.last().pose(), -outer, -inner, -edge).color(255, 255, 255, 255).uv(sprite.getU(0), sprite.getV(texWidth - innerTex)).uv2(light).normal(matrix.last().normal(), 0, 0, -1).endVertex();
 //		buf.pos(-outer, inner, -edge).tex(0, innerTex).endVertex();
 //		buf.pos(-inner, inner, -edge).tex(innerTex, innerTex).endVertex();
 //		buf.pos(-inner, -inner, -edge).tex(innerTex, texWidth - innerTex).endVertex();
@@ -212,37 +212,37 @@ public class FluxNodeRenderer extends EntropyRenderer<FluxNodeTileEntity>{
 
 		//Outer rim
 
-		builder.pos(matrix.getLast().getMatrix(), -outer, -outer, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 0, -1, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), outer, -outer, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(texWidth)).lightmap(light).normal(matrix.getLast().getNormal(), 0, -1, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), outer, -outer, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(edgeEnd), sprite.getInterpolatedV(texWidth)).lightmap(light).normal(matrix.getLast().getNormal(), 0, -1, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -outer, -outer, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(edgeEnd), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 0, -1, 0).endVertex();
+		builder.vertex(matrix.last().pose(), -outer, -outer, -edge).color(255, 255, 255, 255).uv(sprite.getU(texWidth), sprite.getV(0)).uv2(light).normal(matrix.last().normal(), 0, -1, 0).endVertex();
+		builder.vertex(matrix.last().pose(), outer, -outer, -edge).color(255, 255, 255, 255).uv(sprite.getU(texWidth), sprite.getV(texWidth)).uv2(light).normal(matrix.last().normal(), 0, -1, 0).endVertex();
+		builder.vertex(matrix.last().pose(), outer, -outer, edge).color(255, 255, 255, 255).uv(sprite.getU(edgeEnd), sprite.getV(texWidth)).uv2(light).normal(matrix.last().normal(), 0, -1, 0).endVertex();
+		builder.vertex(matrix.last().pose(), -outer, -outer, edge).color(255, 255, 255, 255).uv(sprite.getU(edgeEnd), sprite.getV(0)).uv2(light).normal(matrix.last().normal(), 0, -1, 0).endVertex();
 //		buf.pos(-outer, -outer, -edge).tex(texWidth, 0).endVertex();
 //		buf.pos(outer, -outer, -edge).tex(texWidth, texWidth).endVertex();
 //		buf.pos(outer, -outer, edge).tex(edgeEnd, texWidth).endVertex();
 //		buf.pos(-outer, -outer, edge).tex(edgeEnd, 0).endVertex();
 
-		builder.pos(matrix.getLast().getMatrix(), -outer, outer, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 1, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -outer, outer, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(edgeEnd), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 1, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), outer, outer, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(edgeEnd), sprite.getInterpolatedV(texWidth)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 1, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), outer, outer, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(texWidth)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 1, 0).endVertex();
+		builder.vertex(matrix.last().pose(), -outer, outer, -edge).color(255, 255, 255, 255).uv(sprite.getU(texWidth), sprite.getV(0)).uv2(light).normal(matrix.last().normal(), 0, 1, 0).endVertex();
+		builder.vertex(matrix.last().pose(), -outer, outer, edge).color(255, 255, 255, 255).uv(sprite.getU(edgeEnd), sprite.getV(0)).uv2(light).normal(matrix.last().normal(), 0, 1, 0).endVertex();
+		builder.vertex(matrix.last().pose(), outer, outer, edge).color(255, 255, 255, 255).uv(sprite.getU(edgeEnd), sprite.getV(texWidth)).uv2(light).normal(matrix.last().normal(), 0, 1, 0).endVertex();
+		builder.vertex(matrix.last().pose(), outer, outer, -edge).color(255, 255, 255, 255).uv(sprite.getU(texWidth), sprite.getV(texWidth)).uv2(light).normal(matrix.last().normal(), 0, 1, 0).endVertex();
 //		buf.pos(-outer, outer, -edge).tex(texWidth, 0).endVertex();
 //		buf.pos(-outer, outer, edge).tex(edgeEnd, 0).endVertex();
 //		buf.pos(outer, outer, edge).tex(edgeEnd, texWidth).endVertex();
 //		buf.pos(outer, outer, -edge).tex(texWidth, texWidth).endVertex();
 
-		builder.pos(matrix.getLast().getMatrix(), -outer, -outer, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), -1, 0, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -outer, -outer, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(edgeEnd), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), -1, 0, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -outer, outer, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(edgeEnd), sprite.getInterpolatedV(texWidth)).lightmap(light).normal(matrix.getLast().getNormal(), -1, 0, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -outer, outer, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(texWidth)).lightmap(light).normal(matrix.getLast().getNormal(), -1, 0, 0).endVertex();
+		builder.vertex(matrix.last().pose(), -outer, -outer, -edge).color(255, 255, 255, 255).uv(sprite.getU(texWidth), sprite.getV(0)).uv2(light).normal(matrix.last().normal(), -1, 0, 0).endVertex();
+		builder.vertex(matrix.last().pose(), -outer, -outer, edge).color(255, 255, 255, 255).uv(sprite.getU(edgeEnd), sprite.getV(0)).uv2(light).normal(matrix.last().normal(), -1, 0, 0).endVertex();
+		builder.vertex(matrix.last().pose(), -outer, outer, edge).color(255, 255, 255, 255).uv(sprite.getU(edgeEnd), sprite.getV(texWidth)).uv2(light).normal(matrix.last().normal(), -1, 0, 0).endVertex();
+		builder.vertex(matrix.last().pose(), -outer, outer, -edge).color(255, 255, 255, 255).uv(sprite.getU(texWidth), sprite.getV(texWidth)).uv2(light).normal(matrix.last().normal(), -1, 0, 0).endVertex();
 //		buf.pos(-outer, -outer, -edge).tex(texWidth, 0).endVertex();
 //		buf.pos(-outer, -outer, edge).tex(edgeEnd, 0).endVertex();
 //		buf.pos(-outer, outer, edge).tex(edgeEnd, texWidth).endVertex();
 //		buf.pos(-outer, outer, -edge).tex(texWidth, texWidth).endVertex();
 
-		builder.pos(matrix.getLast().getMatrix(), outer, -outer, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 1, 0, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), outer, outer, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(texWidth)).lightmap(light).normal(matrix.getLast().getNormal(), 1, 0, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), outer, outer, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(edgeEnd), sprite.getInterpolatedV(texWidth)).lightmap(light).normal(matrix.getLast().getNormal(), 1, 0, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), outer, -outer, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(edgeEnd), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 1, 0, 0).endVertex();
+		builder.vertex(matrix.last().pose(), outer, -outer, -edge).color(255, 255, 255, 255).uv(sprite.getU(texWidth), sprite.getV(0)).uv2(light).normal(matrix.last().normal(), 1, 0, 0).endVertex();
+		builder.vertex(matrix.last().pose(), outer, outer, -edge).color(255, 255, 255, 255).uv(sprite.getU(texWidth), sprite.getV(texWidth)).uv2(light).normal(matrix.last().normal(), 1, 0, 0).endVertex();
+		builder.vertex(matrix.last().pose(), outer, outer, edge).color(255, 255, 255, 255).uv(sprite.getU(edgeEnd), sprite.getV(texWidth)).uv2(light).normal(matrix.last().normal(), 1, 0, 0).endVertex();
+		builder.vertex(matrix.last().pose(), outer, -outer, edge).color(255, 255, 255, 255).uv(sprite.getU(edgeEnd), sprite.getV(0)).uv2(light).normal(matrix.last().normal(), 1, 0, 0).endVertex();
 //		buf.pos(outer, -outer, -edge).tex(texWidth, 0).endVertex();
 //		buf.pos(outer, outer, -edge).tex(texWidth, texWidth).endVertex();
 //		buf.pos(outer, outer, edge).tex(edgeEnd, texWidth).endVertex();
@@ -250,37 +250,37 @@ public class FluxNodeRenderer extends EntropyRenderer<FluxNodeTileEntity>{
 
 		//Inner rim
 
-		builder.pos(matrix.getLast().getMatrix(), -inner, -inner, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 0, -1, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -inner, -inner, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(edgeEnd), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 0, -1, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), inner, -inner, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(edgeEnd), sprite.getInterpolatedV(texWidth - innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, -1, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), inner, -inner, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(texWidth - innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, -1, 0).endVertex();
+		builder.vertex(matrix.last().pose(), -inner, -inner, -edge).color(255, 255, 255, 255).uv(sprite.getU(texWidth), sprite.getV(0)).uv2(light).normal(matrix.last().normal(), 0, -1, 0).endVertex();
+		builder.vertex(matrix.last().pose(), -inner, -inner, edge).color(255, 255, 255, 255).uv(sprite.getU(edgeEnd), sprite.getV(0)).uv2(light).normal(matrix.last().normal(), 0, -1, 0).endVertex();
+		builder.vertex(matrix.last().pose(), inner, -inner, edge).color(255, 255, 255, 255).uv(sprite.getU(edgeEnd), sprite.getV(texWidth - innerTex)).uv2(light).normal(matrix.last().normal(), 0, -1, 0).endVertex();
+		builder.vertex(matrix.last().pose(), inner, -inner, -edge).color(255, 255, 255, 255).uv(sprite.getU(texWidth), sprite.getV(texWidth - innerTex)).uv2(light).normal(matrix.last().normal(), 0, -1, 0).endVertex();
 //		buf.pos(-inner, -inner, -edge).tex(texWidth, 0).endVertex();
 //		buf.pos(-inner, -inner, edge).tex(edgeEnd, 0).endVertex();
 //		buf.pos(inner, -inner, edge).tex(edgeEnd, texWidth - innerTex).endVertex();
 //		buf.pos(inner, -inner, -edge).tex(texWidth, texWidth - innerTex).endVertex();
 
-		builder.pos(matrix.getLast().getMatrix(), -inner, inner, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 1, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), inner, inner, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(texWidth - innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 1, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), inner, inner, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(edgeEnd), sprite.getInterpolatedV(texWidth - innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 1, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -inner, inner, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(edgeEnd), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 0, 1, 0).endVertex();
+		builder.vertex(matrix.last().pose(), -inner, inner, -edge).color(255, 255, 255, 255).uv(sprite.getU(texWidth), sprite.getV(0)).uv2(light).normal(matrix.last().normal(), 0, 1, 0).endVertex();
+		builder.vertex(matrix.last().pose(), inner, inner, -edge).color(255, 255, 255, 255).uv(sprite.getU(texWidth), sprite.getV(texWidth - innerTex)).uv2(light).normal(matrix.last().normal(), 0, 1, 0).endVertex();
+		builder.vertex(matrix.last().pose(), inner, inner, edge).color(255, 255, 255, 255).uv(sprite.getU(edgeEnd), sprite.getV(texWidth - innerTex)).uv2(light).normal(matrix.last().normal(), 0, 1, 0).endVertex();
+		builder.vertex(matrix.last().pose(), -inner, inner, edge).color(255, 255, 255, 255).uv(sprite.getU(edgeEnd), sprite.getV(0)).uv2(light).normal(matrix.last().normal(), 0, 1, 0).endVertex();
 //		buf.pos(-inner, inner, -edge).tex(texWidth, 0).endVertex();
 //		buf.pos(inner, inner, -edge).tex(texWidth, texWidth - innerTex).endVertex();
 //		buf.pos(inner, inner, edge).tex(edgeEnd, texWidth - innerTex).endVertex();
 //		buf.pos(-inner, inner, edge).tex(edgeEnd, 0).endVertex();
 
-		builder.pos(matrix.getLast().getMatrix(), -inner, -inner, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), -1, 0, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -inner, inner, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(texWidth - innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), -1, 0, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -inner, inner, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(edgeEnd), sprite.getInterpolatedV(texWidth - innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), -1, 0, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), -inner, -inner, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(edgeEnd), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), -1, 0, 0).endVertex();
+		builder.vertex(matrix.last().pose(), -inner, -inner, -edge).color(255, 255, 255, 255).uv(sprite.getU(texWidth), sprite.getV(0)).uv2(light).normal(matrix.last().normal(), -1, 0, 0).endVertex();
+		builder.vertex(matrix.last().pose(), -inner, inner, -edge).color(255, 255, 255, 255).uv(sprite.getU(texWidth), sprite.getV(texWidth - innerTex)).uv2(light).normal(matrix.last().normal(), -1, 0, 0).endVertex();
+		builder.vertex(matrix.last().pose(), -inner, inner, edge).color(255, 255, 255, 255).uv(sprite.getU(edgeEnd), sprite.getV(texWidth - innerTex)).uv2(light).normal(matrix.last().normal(), -1, 0, 0).endVertex();
+		builder.vertex(matrix.last().pose(), -inner, -inner, edge).color(255, 255, 255, 255).uv(sprite.getU(edgeEnd), sprite.getV(0)).uv2(light).normal(matrix.last().normal(), -1, 0, 0).endVertex();
 //		buf.pos(-inner, -inner, -edge).tex(texWidth, 0).endVertex();
 //		buf.pos(-inner, inner, -edge).tex(texWidth, texWidth - innerTex).endVertex();
 //		buf.pos(-inner, inner, edge).tex(edgeEnd, texWidth - innerTex).endVertex();
 //		buf.pos(-inner, -inner, edge).tex(edgeEnd, 0).endVertex();
 
-		builder.pos(matrix.getLast().getMatrix(), inner, -inner, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 1, 0, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), inner, -inner, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(edgeEnd), sprite.getInterpolatedV(0)).lightmap(light).normal(matrix.getLast().getNormal(), 1, 0, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), inner, inner, edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(edgeEnd), sprite.getInterpolatedV(texWidth - innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 1, 0, 0).endVertex();
-		builder.pos(matrix.getLast().getMatrix(), inner, inner, -edge).color(255, 255, 255, 255).tex(sprite.getInterpolatedU(texWidth), sprite.getInterpolatedV(texWidth - innerTex)).lightmap(light).normal(matrix.getLast().getNormal(), 1, 0, 0).endVertex();
+		builder.vertex(matrix.last().pose(), inner, -inner, -edge).color(255, 255, 255, 255).uv(sprite.getU(texWidth), sprite.getV(0)).uv2(light).normal(matrix.last().normal(), 1, 0, 0).endVertex();
+		builder.vertex(matrix.last().pose(), inner, -inner, edge).color(255, 255, 255, 255).uv(sprite.getU(edgeEnd), sprite.getV(0)).uv2(light).normal(matrix.last().normal(), 1, 0, 0).endVertex();
+		builder.vertex(matrix.last().pose(), inner, inner, edge).color(255, 255, 255, 255).uv(sprite.getU(edgeEnd), sprite.getV(texWidth - innerTex)).uv2(light).normal(matrix.last().normal(), 1, 0, 0).endVertex();
+		builder.vertex(matrix.last().pose(), inner, inner, -edge).color(255, 255, 255, 255).uv(sprite.getU(texWidth), sprite.getV(texWidth - innerTex)).uv2(light).normal(matrix.last().normal(), 1, 0, 0).endVertex();
 //		buf.pos(inner, -inner, -edge).tex(texWidth, 0).endVertex();
 //		buf.pos(inner, -inner, edge).tex(edgeEnd, 0).endVertex();
 //		buf.pos(inner, inner, edge).tex(edgeEnd, texWidth - innerTex).endVertex();

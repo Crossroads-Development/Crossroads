@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
  * This class is for CLIENT SIDE CODE ONLY
  *
  * Any changes to this class must be tested on a dedicated server to be accepted
- */	
+ */
 public class SafeCallable{
 
 	private static Method printChatNoLog;
@@ -25,8 +25,10 @@ public class SafeCallable{
 	@OnlyIn(Dist.CLIENT)
 	public static Method getPrintChatNoLog(){
 		if(printChatNoLog == null){
-			printChatNoLog = ReflectionUtil.reflectMethod(CRReflection.SET_CHAT);
+			//NewChatGui::addMessage is a special case- there are several methods with the same name. To ensure we reflect the correct one, we filter by parameter count
+			printChatNoLog = ReflectionUtil.reflectMethod(CRReflection.SET_CHAT, (Method m) -> m.getParameterCount() == 4);
 		}
+
 		return printChatNoLog;
 	}
 
@@ -35,7 +37,7 @@ public class SafeCallable{
 	}
 
 	public static World getClientWorld(){
-		return Minecraft.getInstance().world;
+		return Minecraft.getInstance().level;
 	}
 
 	public static PlayerEntity getClientPlayer(){

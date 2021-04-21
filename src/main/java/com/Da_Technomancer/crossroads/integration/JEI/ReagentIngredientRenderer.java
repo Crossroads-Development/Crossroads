@@ -36,28 +36,28 @@ public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 
 		RenderSystem.enableBlend();
 		RenderSystem.enableAlphaTest();
-		matrix.push();
+		matrix.pushPose();
 		matrix.translate(xPosition, yPosition, 0);
 
-		BufferBuilder buf = Tessellator.getInstance().getBuffer();
+		BufferBuilder buf = Tessellator.getInstance().getBuilder();
 
-		Minecraft.getInstance().textureManager.bindTexture(PHIAL_TEXTURE);
+		Minecraft.getInstance().textureManager.bind(PHIAL_TEXTURE);
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
-		buf.pos(matrix.getLast().getMatrix(), 0, 16, 100).color(255, 255, 255, 255).tex(0, 1).endVertex();
-		buf.pos(matrix.getLast().getMatrix(), 16, 16, 100).color(255, 255, 255, 255).tex(1, 1).endVertex();
-		buf.pos(matrix.getLast().getMatrix(), 16, 0, 100).color(255, 255, 255, 255).tex(1, 0).endVertex();
-		buf.pos(matrix.getLast().getMatrix(), 0, 0, 100).color(255, 255, 255, 255).tex(0, 0).endVertex();
-		Tessellator.getInstance().draw();
+		buf.vertex(matrix.last().pose(), 0, 16, 100).color(255, 255, 255, 255).uv(0, 1).endVertex();
+		buf.vertex(matrix.last().pose(), 16, 16, 100).color(255, 255, 255, 255).uv(1, 1).endVertex();
+		buf.vertex(matrix.last().pose(), 16, 0, 100).color(255, 255, 255, 255).uv(1, 0).endVertex();
+		buf.vertex(matrix.last().pose(), 0, 0, 100).color(255, 255, 255, 255).uv(0, 0).endVertex();
+		Tessellator.getInstance().end();
 
-		Minecraft.getInstance().textureManager.bindTexture(INNER_TEXTURE);
+		Minecraft.getInstance().textureManager.bind(INNER_TEXTURE);
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
-		buf.pos(matrix.getLast().getMatrix(), 0, 16, 200).color(col[0], col[1], col[2], col[3]).tex(0, 1).endVertex();
-		buf.pos(matrix.getLast().getMatrix(), 16, 16, 200).color(col[0], col[1], col[2], col[3]).tex(1, 1).endVertex();
-		buf.pos(matrix.getLast().getMatrix(), 16, 0, 200).color(col[0], col[1], col[2], col[3]).tex(1, 0).endVertex();
-		buf.pos(matrix.getLast().getMatrix(), 0, 0, 200).color(col[0], col[1], col[2], col[3]).tex(0, 0).endVertex();
-		Tessellator.getInstance().draw();
+		buf.vertex(matrix.last().pose(), 0, 16, 200).color(col[0], col[1], col[2], col[3]).uv(0, 1).endVertex();
+		buf.vertex(matrix.last().pose(), 16, 16, 200).color(col[0], col[1], col[2], col[3]).uv(1, 1).endVertex();
+		buf.vertex(matrix.last().pose(), 16, 0, 200).color(col[0], col[1], col[2], col[3]).uv(1, 0).endVertex();
+		buf.vertex(matrix.last().pose(), 0, 0, 200).color(col[0], col[1], col[2], col[3]).uv(0, 0).endVertex();
+		Tessellator.getInstance().end();
 
-		matrix.pop();
+		matrix.popPose();
 
 //		RenderHelper.disableStandardItemLighting();
 		RenderSystem.disableAlphaTest();

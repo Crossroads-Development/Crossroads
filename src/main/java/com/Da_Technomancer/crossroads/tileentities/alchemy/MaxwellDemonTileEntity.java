@@ -45,12 +45,12 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileE
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		chat.add(new TranslationTextComponent("tt.crossroads.maxwell_demon.read_top", CRConfig.formatVal(tempUp)));
 		chat.add(new TranslationTextComponent("tt.crossroads.maxwell_demon.read_bottom", CRConfig.formatVal(tempDown)));
-		chat.add(new TranslationTextComponent("tt.crossroads.maxwell_demon.read_biome", CRConfig.formatVal(HeatUtil.convertBiomeTemp(world, pos))));
+		chat.add(new TranslationTextComponent("tt.crossroads.maxwell_demon.read_biome", CRConfig.formatVal(HeatUtil.convertBiomeTemp(level, worldPosition))));
 	}
 
 	private void init(){
 		if(!init){
-			tempUp = HeatUtil.convertBiomeTemp(world, pos);
+			tempUp = HeatUtil.convertBiomeTemp(level, worldPosition);
 			tempDown = tempUp;
 			init = true;
 		}
@@ -58,7 +58,7 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileE
 
 	@Override
 	public void tick(){
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 
@@ -66,17 +66,17 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileE
 
 		if(tempUp < MAX_TEMP){
 			tempUp = Math.min(MAX_TEMP, tempUp + RATE);
-			markDirty();
+			setChanged();
 		}
 		if(tempDown > MIN_TEMP){
 			tempDown = Math.max(MIN_TEMP, tempDown - RATE);
-			markDirty();
+			setChanged();
 		}
 
 		for(int i = 0; i < 2; i++){
-			Direction dir = Direction.byIndex(i);
+			Direction dir = Direction.from3DDataValue(i);
 
-			TileEntity te = world.getTileEntity(pos.offset(dir));
+			TileEntity te = level.getBlockEntity(worldPosition.relative(dir));
 			LazyOptional<IHeatHandler> heatOpt;
 			if(te != null && (heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, dir.getOpposite())).isPresent()){
 				double reservePool = i == 0 ? tempDown : tempUp;
@@ -101,8 +101,8 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putBoolean("init_heat", init);
 		nbt.putDouble("temp_u", tempUp);
 		nbt.putDouble("temp_d", tempDown);
@@ -110,16 +110,16 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		init = nbt.getBoolean("init_heat");
 		tempUp = nbt.getDouble("temp_u");
 		tempDown = nbt.getDouble("temp_d");
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		heatOptUp.invalidate();
 		heatOptDown.invalidate();
 	}
@@ -162,7 +162,7 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileE
 			}else{
 				tempDown = tempIn;
 			}
-			markDirty();
+			setChanged();
 		}
 
 		@Override
@@ -173,7 +173,7 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileE
 			}else{
 				tempDown += heat;
 			}
-			markDirty();
+			setChanged();
 		}
 	}
 }

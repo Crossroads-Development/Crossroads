@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.crafting.recipes;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.CraftingUtil;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.gson.JsonObject;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -50,7 +50,7 @@ public class BlastFurnaceRec implements IOptionalRecipe<IInventory>{
 
 	@Override
 	public boolean matches(IInventory inv, World worldIn){
-		return isEnabled() && ingr.test(inv.getStackInSlot(0));
+		return isEnabled() && ingr.test(inv.getItem(0));
 	}
 
 	@Override
@@ -61,12 +61,12 @@ public class BlastFurnaceRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public ItemStack getCraftingResult(IInventory inv){
-		return getRecipeOutput().copy();
+	public ItemStack assemble(IInventory inv){
+		return getResultItem().copy();
 	}
 
 	@Override
-	public boolean canFit(int width, int height){
+	public boolean canCraftInDimensions(int width, int height){
 		return true;
 	}
 
@@ -76,12 +76,12 @@ public class BlastFurnaceRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public ItemStack getRecipeOutput(){
+	public ItemStack getResultItem(){
 		return new ItemStack(CRItems.slag, slag);
 	}
 
 	@Override
-	public ItemStack getIcon(){
+	public ItemStack getToastSymbol(){
 		return new ItemStack(CRBlocks.blastFurnace);
 	}
 
@@ -108,9 +108,9 @@ public class BlastFurnaceRec implements IOptionalRecipe<IInventory>{
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<BlastFurnaceRec>{
 
 		@Override
-		public BlastFurnaceRec read(ResourceLocation recipeId, JsonObject json){
+		public BlastFurnaceRec fromJson(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and ingredient
-			String s = JSONUtils.getString(json, "group", "");
+			String s = JSONUtils.getAsString(json, "group", "");
 			if(!CraftingUtil.isActiveJSON(json)){
 				return new BlastFurnaceRec(recipeId, s, Ingredient.EMPTY, FluidStack.EMPTY, 0, false);
 			}
@@ -118,16 +118,16 @@ public class BlastFurnaceRec implements IOptionalRecipe<IInventory>{
 			//Output specified as fluid- see CraftingUtil
 			FluidStack fluid = CraftingUtil.getFluidStack(json, "output");
 			//Slag specified as 1 int tag (default 0)
-			int slag = JSONUtils.getInt(json, "slag", 0);
+			int slag = JSONUtils.getAsInt(json, "slag", 0);
 			return new BlastFurnaceRec(recipeId, s, ingredient, fluid, slag, true);
 		}
 
 		@Nullable
 		@Override
-		public BlastFurnaceRec read(ResourceLocation recipeId, PacketBuffer buffer){
-			String s = buffer.readString(Short.MAX_VALUE);
+		public BlastFurnaceRec fromNetwork(ResourceLocation recipeId, PacketBuffer buffer){
+			String s = buffer.readUtf(Short.MAX_VALUE);
 			if(buffer.readBoolean()){
-				Ingredient ingredient = Ingredient.read(buffer);
+				Ingredient ingredient = Ingredient.fromNetwork(buffer);
 				FluidStack fluid = FluidStack.readFromPacket(buffer);
 				int slag = buffer.readVarInt();
 				return new BlastFurnaceRec(recipeId, s, ingredient, fluid, slag, true);
@@ -136,10 +136,10 @@ public class BlastFurnaceRec implements IOptionalRecipe<IInventory>{
 		}
 
 		@Override
-		public void write(PacketBuffer buffer, BlastFurnaceRec recipe){
-			buffer.writeString(recipe.getGroup());
+		public void toNetwork(PacketBuffer buffer, BlastFurnaceRec recipe){
+			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
-			recipe.ingr.write(buffer);
+			recipe.ingr.toNetwork(buffer);
 			recipe.output.writeToPacket(buffer);
 			buffer.writeVarInt(recipe.slag);
 		}

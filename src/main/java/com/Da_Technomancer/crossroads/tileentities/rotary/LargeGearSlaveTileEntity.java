@@ -40,12 +40,12 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IInfoTE{
 
 	protected Direction getFacing(){
 		if(facing == null){
-			BlockState state = world.getBlockState(pos);
+			BlockState state = level.getBlockState(worldPosition);
 			if(state.getBlock() != CRBlocks.largeGearSlave){
-				remove();
+				setRemoved();
 				return Direction.NORTH;
 			}
-			facing = state.get(ESProperties.FACING);
+			facing = state.getValue(ESProperties.FACING);
 		}
 
 		return facing;
@@ -67,7 +67,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IInfoTE{
 
 	public void passBreak(Direction side, boolean drop){
 		if(masterPos != null){
-			TileEntity te = world.getTileEntity(pos.add(masterPos));
+			TileEntity te = level.getBlockEntity(worldPosition.offset(masterPos));
 			if(te instanceof LargeGearMasterTileEntity){
 				((LargeGearMasterTileEntity) te).breakGroup(side, drop);
 			}
@@ -75,36 +75,36 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IInfoTE{
 	}
 
 	private boolean isEdge(){
-		return masterPos != null && masterPos.manhattanDistance(BlockPos.ZERO) == 1;
+		return masterPos != null && masterPos.distManhattan(BlockPos.ZERO) == 1;
 	}
 
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
 		if(masterPos != null){
-			nbt.putLong("mast", masterPos.toLong());
+			nbt.putLong("mast", masterPos.asLong());
 		}
 		return nbt;
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
-		this.masterPos = BlockPos.fromLong(nbt.getLong("mast"));
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
+		this.masterPos = BlockPos.of(nbt.getLong("mast"));
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		if(masterPos != null){
-			nbt.putLong("mast", masterPos.toLong());
+			nbt.putLong("mast", masterPos.asLong());
 		}
 		return nbt;
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		cogOpt.invalidate();
 	}
 
@@ -125,7 +125,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IInfoTE{
 
 		@Override
 		public void connect(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, Direction cogOrient, boolean renderOffset){
-			if(cogOrient == Direction.getFacingFromVector(-masterPos.getX(), -masterPos.getY(), -masterPos.getZ())){
+			if(cogOrient == Direction.getNearest(-masterPos.getX(), -masterPos.getY(), -masterPos.getZ())){
 				IAxleHandler axle = getAxle();
 				if(axle != null){
 					axle.propagate(masterIn, key, rotationRatioIn, lastRadius, !renderOffset);
@@ -135,7 +135,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IInfoTE{
 
 		@Override
 		public IAxleHandler getAxle(){
-			TileEntity te = world.getTileEntity(pos.add(masterPos));
+			TileEntity te = level.getBlockEntity(worldPosition.offset(masterPos));
 			if(te instanceof LargeGearMasterTileEntity){
 				LazyOptional<IAxleHandler> axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, getFacing());
 				return axleOpt.isPresent() ? axleOpt.orElseThrow(NullPointerException::new) : null;

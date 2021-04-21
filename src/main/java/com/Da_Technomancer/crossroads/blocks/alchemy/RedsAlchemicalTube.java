@@ -23,43 +23,43 @@ public class RedsAlchemicalTube extends AlchemicalTube{
 
 	public RedsAlchemicalTube(boolean crystal){
 		super(crystal, (crystal ? "crystal_" : "") + "reds_alch_tube");
-		setDefaultState(getDefaultState().with(ESProperties.REDSTONE_BOOL, false));
+		registerDefaultState(defaultBlockState().setValue(ESProperties.REDSTONE_BOOL, false));
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new RedsAlchemicalTubeTileEntity(!crystal);
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(state.get(ESProperties.REDSTONE_BOOL) && ESConfig.isWrench(playerIn.getHeldItem(hand))){
-			return super.onBlockActivated(state, worldIn, pos, playerIn, hand, hit);
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+		if(state.getValue(ESProperties.REDSTONE_BOOL) && ESConfig.isWrench(playerIn.getItemInHand(hand))){
+			return super.use(state, worldIn, pos, playerIn, hand, hit);
 		}
 		return ActionResultType.PASS;
 	}
 	
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
-		boolean isPowered = worldIn.isBlockPowered(pos);
-		if(isPowered != state.get(ESProperties.REDSTONE_BOOL)){
-			worldIn.setBlockState(pos, state.with(ESProperties.REDSTONE_BOOL, isPowered));
+		boolean isPowered = worldIn.hasNeighborSignal(pos);
+		if(isPowered != state.getValue(ESProperties.REDSTONE_BOOL)){
+			worldIn.setBlockAndUpdate(pos, state.setValue(ESProperties.REDSTONE_BOOL, isPowered));
 		}
 	}
 
 	@Override
 	protected boolean evaluate(EnumTransferMode value, BlockState state, @Nullable IConduitTE<EnumTransferMode> te){
-		return super.evaluate(value, state, te) && state.get(ESProperties.REDSTONE_BOOL);
+		return super.evaluate(value, state, te) && state.getValue(ESProperties.REDSTONE_BOOL);
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context){
-		return super.getStateForPlacement(context).with(ESProperties.REDSTONE_BOOL, context.getWorld().isBlockPowered(context.getPos()));
+		return super.getStateForPlacement(context).setValue(ESProperties.REDSTONE_BOOL, context.getLevel().hasNeighborSignal(context.getClickedPos()));
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder){
-		super.fillStateContainer(builder);
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
+		super.createBlockStateDefinition(builder);
 		builder.add(ESProperties.REDSTONE_BOOL);
 	}
 }

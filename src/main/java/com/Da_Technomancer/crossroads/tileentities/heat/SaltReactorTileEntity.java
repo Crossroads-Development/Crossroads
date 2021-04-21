@@ -62,7 +62,7 @@ public class SaltReactorTileEntity extends InventoryTE{
 	public void tick(){
 		super.tick();
 
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 
@@ -76,32 +76,32 @@ public class SaltReactorTileEntity extends InventoryTE{
 			}else{
 				fluids[1].grow(WATER_USE);
 			}
-			markDirty();
+			setChanged();
 			fuelTime = FUEL_DURATION;
 		}
 		if(fuelTime > 0){
 			fuelTime -= 1;
 			temp = Math.max(HeatUtil.ABSOLUTE_ZERO, temp - COOLING);
-			markDirty();
+			setChanged();
 		}
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		fuelTime = nbt.getInt("fuel_time");
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putInt("fuel_time", fuelTime);
 		return nbt;
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		itemOpt.invalidate();
 	}
 
@@ -126,12 +126,12 @@ public class SaltReactorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
+	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction){
 		return false;
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
+	public boolean canPlaceItem(int index, ItemStack stack){
 		return index == 0 && CRItemTags.SALT_REACTOR_COOLANT.contains(stack.getItem());
 	}
 

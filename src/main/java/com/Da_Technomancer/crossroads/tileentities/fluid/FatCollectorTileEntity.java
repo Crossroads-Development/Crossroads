@@ -60,9 +60,9 @@ public class FatCollectorTileEntity extends InventoryTE{
 		int tier = HeatUtil.getHeatTier(temp, TIERS);
 
 		Food food;
-		if(tier != -1 && !inventory[0].isEmpty() && (food = inventory[0].getItem().getFood()) != null){
+		if(tier != -1 && !inventory[0].isEmpty() && (food = inventory[0].getItem().getFoodProperties()) != null){
 			//I don't know why vanilla multiplies saturation by 2, but it does
-			int liqAm = Math.min(food.getHealing() + (int) (food.getHealing() * food.getSaturation() * 2F), fluidProps[0].capacity);
+			int liqAm = Math.min(food.getNutrition() + (int) (food.getNutrition() * food.getSaturationModifier() * 2F), fluidProps[0].capacity);
 			double heatUse = ((double) liqAm) * USE_PER_VALUE;
 			liqAm *= CRConfig.fatPerValue.get();
 			liqAm *= EFFICIENCY[tier];
@@ -79,8 +79,8 @@ public class FatCollectorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		itemOpt.invalidate();
 	}
 
@@ -103,13 +103,13 @@ public class FatCollectorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, Direction direction){
+	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction){
 		return false;
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack){
-		return stack.getItem().isFood() && stack.getItem() != CRItems.edibleBlob;
+	public boolean canPlaceItem(int index, ItemStack stack){
+		return stack.getItem().isEdible() && stack.getItem() != CRItems.edibleBlob;
 	}
 
 	@Override

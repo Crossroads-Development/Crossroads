@@ -24,12 +24,12 @@ public class BeamManager{
 
 	public BeamManager(@Nonnull Direction dir, @Nonnull BlockPos pos){
 		this.dir = dir;
-		this.pos = pos.toImmutable();
+		this.pos = pos.immutable();
 	}
 
 	public boolean emit(@Nonnull BeamUnit mag, World world){
 		for(int i = 1; i <= BeamUtil.MAX_DISTANCE; i++){
-			TileEntity checkTE = world.getTileEntity(pos.offset(dir, i));
+			TileEntity checkTE = world.getBlockEntity(pos.relative(dir, i));
 			LazyOptional<IBeamHandler> opt;
 			if(checkTE != null && (opt = checkTE.getCapability(Capabilities.BEAM_CAPABILITY, dir.getOpposite())).isPresent()){
 				opt.orElseThrow(NullPointerException::new).setBeam(mag);
@@ -42,12 +42,12 @@ public class BeamManager{
 				}
 			}
 
-			BlockState checkState = world.getBlockState(pos.offset(dir, i));
-			if(i == BeamUtil.MAX_DISTANCE || BeamUtil.solidToBeams(checkState, world, pos.offset(dir, i), dir, mag.getPower())){
+			BlockState checkState = world.getBlockState(pos.relative(dir, i));
+			if(i == BeamUtil.MAX_DISTANCE || BeamUtil.solidToBeams(checkState, world, pos.relative(dir, i), dir, mag.getPower())){
 				if(!mag.isEmpty()){
 					EnumBeamAlignments align = EnumBeamAlignments.getAlignment(mag);
 					BeamEffect e = align.getEffect();
-					e.doBeamEffect(align, mag.getVoid() != 0, Math.min(64, mag.getPower()), world, pos.offset(dir, i), dir.getOpposite());
+					e.doBeamEffect(align, mag.getVoid() != 0, Math.min(64, mag.getPower()), world, pos.relative(dir, i), dir.getOpposite());
 				}
 				if(dist != i || !mag.equals(lastSent)){
 					dist = i;

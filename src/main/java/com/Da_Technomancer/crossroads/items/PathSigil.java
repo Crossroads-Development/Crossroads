@@ -21,7 +21,7 @@ public class PathSigil extends Item{
 	private final EnumPath path;
 
 	protected PathSigil(EnumPath path){
-		super(new Properties().group(CRItems.TAB_CROSSROADS));
+		super(new Properties().tab(CRItems.TAB_CROSSROADS));
 		this.path = path;
 		String name = "sigil_" + path.toString();
 		setRegistryName(name);
@@ -33,7 +33,7 @@ public class PathSigil extends Item{
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.path_sigil.desc"));
 		if(CRConfig.forgetPaths.get()){
 			tooltip.add(new TranslationTextComponent("tt.crossroads.path_sigil.desc.forget"));
@@ -41,48 +41,48 @@ public class PathSigil extends Item{
 	}
 
 	@Override
-	public ActionResultType onItemUse(ItemUseContext context){
+	public ActionResultType useOn(ItemUseContext context){
 		if(context.getPlayer() == null){
-			return super.onItemUse(context);
+			return super.useOn(context);
 		}
-		if(context.getWorld().isRemote){
+		if(context.getLevel().isClientSide){
 			AdvancementTracker.listen();
 		}
 
-		if(context.getPlayer().isSneaking()){
+		if(context.getPlayer().isShiftKeyDown()){
 			if(CRConfig.forgetPaths.get()){
 				if(path.isUnlocked(context.getPlayer())){
-					if(context.getWorld().isRemote()){
+					if(context.getLevel().isClientSide()){
 						MiscUtil.chatMessage(context.getPlayer(), new TranslationTextComponent("tt.crossroads.path_sigil.forget", path.getLocalName()));
 					}
 					path.setUnlocked(context.getPlayer(), false);
-					context.getItem().shrink(1);
+					context.getItemInHand().shrink(1);
 					return ActionResultType.CONSUME;
 				}else{
-					if(context.getWorld().isRemote()){
+					if(context.getLevel().isClientSide()){
 						MiscUtil.chatMessage(context.getPlayer(), new TranslationTextComponent("tt.crossroads.path_sigil.forget.fail"));
 					}
 					return ActionResultType.FAIL;
 				}
 			}else{
-				if(context.getWorld().isRemote()){
+				if(context.getLevel().isClientSide()){
 					MiscUtil.chatMessage(context.getPlayer(), new TranslationTextComponent("tt.crossroads.path_sigil.forget.fail.config"));
 				}
 				return ActionResultType.FAIL;
 			}
 		}else if(EnumPath.canUnlockNewPath(context.getPlayer())){
 			if(path.isUnlocked(context.getPlayer())){
-				if(context.getWorld().isRemote()){
+				if(context.getLevel().isClientSide()){
 					MiscUtil.chatMessage(context.getPlayer(), new TranslationTextComponent("tt.crossroads.path_sigil.taken"));
 				}
 				return ActionResultType.FAIL;
 			}else{
 				path.setUnlocked(context.getPlayer(), true);
-				context.getItem().shrink(1);
+				context.getItemInHand().shrink(1);
 				return ActionResultType.CONSUME;
 			}
 		}else{
-			if(context.getWorld().isRemote()){
+			if(context.getLevel().isClientSide()){
 				MiscUtil.chatMessage(context.getPlayer(), new TranslationTextComponent("tt.crossroads.path_sigil.fail"));
 			}
 			return ActionResultType.FAIL;

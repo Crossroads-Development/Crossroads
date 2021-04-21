@@ -46,7 +46,7 @@ public class BeamExtractorCategory implements IRecipeCategory<BeamExtractRec>{
 
 	@Override
 	public String getTitle(){
-		return CRBlocks.beamExtractor.getTranslatedName().getString();
+		return CRBlocks.beamExtractor.getName().getString();
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class BeamExtractorCategory implements IRecipeCategory<BeamExtractRec>{
 			tt.add(MiscUtil.localize("crossroads.jei.extract.duration.plural", rec.getDuration()));//Duration
 		}
 		for(int i = 0; i < tt.size(); i++){
-			minecraft.fontRenderer.drawString(matrix, tt.get(i), 74, 5 + 20 * i, 0x404040);
+			minecraft.font.draw(matrix, tt.get(i), 74, 5 + 20 * i, 0x404040);
 		}
 	}
 

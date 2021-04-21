@@ -57,7 +57,7 @@ public class SendChatToClient extends ClientPacket{
 			if(nextInd == -1){
 				nextInd = active.length();
 			}
-			components.add(ITextComponent.Serializer.getComponentFromJsonLenient(active.substring(0, nextInd)));
+			components.add(ITextComponent.Serializer.fromJsonLenient(active.substring(0, nextInd)));
 			if(nextInd + 1 < active.length()){
 				active = active.substring(nextInd);
 			}else{
@@ -75,13 +75,13 @@ public class SendChatToClient extends ClientPacket{
 		}
 		combined = new StringTextComponent(combo.toString());
 
-		NewChatGui chatGui = Minecraft.getInstance().ingameGUI.getChatGUI();
+		NewChatGui chatGui = Minecraft.getInstance().gui.getChat();
 		if(SafeCallable.getPrintChatNoLog() == null){
-			chatGui.printChatMessage(combined);
+			chatGui.addMessage(combined);
 		}else{
 			//Print it to the chat without logging it, to avoid flooding the log
 			try{
-				SafeCallable.getPrintChatNoLog().invoke(chatGui, combined, id, Minecraft.getInstance().ingameGUI.getTicks(), false);
+				SafeCallable.getPrintChatNoLog().invoke(chatGui, combined, id, Minecraft.getInstance().gui.getGuiTicks(), false);
 			}catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e){
 				Crossroads.logger.catching(e);
 			}

@@ -24,12 +24,12 @@ public class DetailedAutoCrafter extends AutoCrafter{
 
 	@Nullable
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn){
+	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new DetailedAutoCrafterTileEntity();
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.detailed_auto_crafter.basic"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.detailed_auto_crafter.sigil"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.detailed_auto_crafter.quip").setStyle(MiscUtil.TT_QUIP));

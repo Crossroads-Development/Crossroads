@@ -33,19 +33,19 @@ public class ChargingStandTileEntity extends GlasswareHolderTileEntity{
 
 	@Override
 	public void tick(){
-		if(world.isRemote){
+		if(level.isClientSide){
 			return;
 		}
 		if(fe > 0){
 			fe = Math.max(0, fe - DRAIN);
-			if(world.rand.nextInt(10) == 0){
+			if(level.random.nextInt(10) == 0){
 				//Create an arc from one of the vertical metal pieces on the model to another, chosen at random
-				Vector3d startOffset = new Vector3d(-6.5D / 16D, world.rand.nextFloat() * 12D / 16D + 2D / 16D, world.rand.nextFloat() * 6D / 16D - 3D / 16D);
-				Vector3d endOffset = new Vector3d(6.5D / 16D, world.rand.nextFloat() * 12D / 16D + 2D / 16D, world.rand.nextFloat() * 6D / 16D - 3D / 16D);
-				Vector3d centeredPos = Vector3d.copyCenteredHorizontally(pos);
-				Vector3d arcStart = world.rand.nextBoolean() ? startOffset.add(centeredPos) : startOffset.rotateYaw((float) Math.PI / 2F).add(centeredPos);
-				Vector3d arcEnd = world.rand.nextBoolean() ? endOffset.add(centeredPos) : endOffset.rotateYaw((float) Math.PI / 2F).add(centeredPos);
-				CRRenderUtil.addArc(world, arcStart, arcEnd, 1, 0F, TeslaCoilTopTileEntity.COLOR_CODES[(int) (world.getGameTime() % 3)]);
+				Vector3d startOffset = new Vector3d(-6.5D / 16D, level.random.nextFloat() * 12D / 16D + 2D / 16D, level.random.nextFloat() * 6D / 16D - 3D / 16D);
+				Vector3d endOffset = new Vector3d(6.5D / 16D, level.random.nextFloat() * 12D / 16D + 2D / 16D, level.random.nextFloat() * 6D / 16D - 3D / 16D);
+				Vector3d centeredPos = Vector3d.atBottomCenterOf(worldPosition);
+				Vector3d arcStart = level.random.nextBoolean() ? startOffset.add(centeredPos) : startOffset.yRot((float) Math.PI / 2F).add(centeredPos);
+				Vector3d arcEnd = level.random.nextBoolean() ? endOffset.add(centeredPos) : endOffset.yRot((float) Math.PI / 2F).add(centeredPos);
+				CRRenderUtil.addArc(level, arcStart, arcEnd, 1, 0F, TeslaCoilTopTileEntity.COLOR_CODES[(int) (level.getGameTime() % 3)]);
 			}
 		}
 		super.tick();
@@ -57,14 +57,14 @@ public class ChargingStandTileEntity extends GlasswareHolderTileEntity{
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		fe = nbt.getInt("fe");
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		super.save(nbt);
 		nbt.putInt("fe", fe);
 		return nbt;
 	}
@@ -76,8 +76,8 @@ public class ChargingStandTileEntity extends GlasswareHolderTileEntity{
 	}
 
 	@Override
-	public void remove(){
-		super.remove();
+	public void setRemoved(){
+		super.setRemoved();
 		elecOpt.invalidate();
 	}
 
@@ -105,7 +105,7 @@ public class ChargingStandTileEntity extends GlasswareHolderTileEntity{
 
 			if(!simulate && toMove > 0){
 				fe += toMove;
-				markDirty();
+				setChanged();
 			}
 
 			return toMove;

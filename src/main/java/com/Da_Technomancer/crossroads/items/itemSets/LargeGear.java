@@ -48,47 +48,47 @@ public class LargeGear extends GearMatItem{
 	}
 
 	@Override
-	public ActionResultType onItemUse(ItemUseContext context){
+	public ActionResultType useOn(ItemUseContext context){
 //		if(context.getWorld().isRemote){
 //			return ActionResultType.SUCCESS;
 //		}
-		GearFactory.GearMaterial type = getMaterial(context.getItem());
+		GearFactory.GearMaterial type = getMaterial(context.getItemInHand());
 		if(type == null){
 			return ActionResultType.SUCCESS;
 		}
-		World world = context.getWorld();
-		BlockPos pos = context.getPos();
+		World world = context.getLevel();
+		BlockPos pos = context.getClickedPos();
 		PlayerEntity playerIn = context.getPlayer();
-		Direction side = context.getFace();
-		pos = pos.offset(side);
+		Direction side = context.getClickedFace();
+		pos = pos.relative(side);
 		BlockItemUseContext blockContext = new BlockItemUseContext(context);
 
 		//Check we have space to place this
-		if(!world.getBlockState(pos).isReplaceable(blockContext)){
+		if(!world.getBlockState(pos).canBeReplaced(blockContext)){
 			return ActionResultType.FAIL;
 		}
 
 		for(BlockPos cPos : relSlavePos[side.getAxis().ordinal()]){
-			if(!world.getBlockState(pos.add(cPos)).isReplaceable(blockContext)){
+			if(!world.getBlockState(pos.offset(cPos)).canBeReplaced(blockContext)){
 				return ActionResultType.FAIL;
 			}
 		}
 
 		//Consume the item
-		if(!world.isRemote && (playerIn == null || !playerIn.isCreative())){
-			context.getItem().shrink(1);
+		if(!world.isClientSide && (playerIn == null || !playerIn.isCreative())){
+			context.getItemInHand().shrink(1);
 		}
 
 		//Place the gear
-		world.setBlockState(pos, CRBlocks.largeGearMaster.getDefaultState().with(ESProperties.FACING, side.getOpposite()), 3);
-		TileEntity te = world.getTileEntity(pos);
+		world.setBlock(pos, CRBlocks.largeGearMaster.defaultBlockState().setValue(ESProperties.FACING, side.getOpposite()), 3);
+		TileEntity te = world.getBlockEntity(pos);
 		if(te instanceof LargeGearMasterTileEntity){
 			((LargeGearMasterTileEntity) te).initSetup(type);
 		}
 
 		for(BlockPos cPos : relSlavePos[side.getAxis().ordinal()]){
-			world.setBlockState(pos.add(cPos), CRBlocks.largeGearSlave.getDefaultState().with(ESProperties.FACING, side.getOpposite()), 3);
-			TileEntity relTE = world.getTileEntity(pos.add(cPos));
+			world.setBlock(pos.offset(cPos), CRBlocks.largeGearSlave.defaultBlockState().setValue(ESProperties.FACING, side.getOpposite()), 3);
+			TileEntity relTE = world.getBlockEntity(pos.offset(cPos));
 			if(relTE instanceof LargeGearSlaveTileEntity){
 				((LargeGearSlaveTileEntity) relTE).setInitial(BlockPos.ZERO.subtract(cPos));
 			}
