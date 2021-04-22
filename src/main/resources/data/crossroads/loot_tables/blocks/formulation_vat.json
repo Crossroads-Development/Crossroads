@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "crossroads:steam_turbine"
+					"name": "crossroads:formulation_vat"
 				}
 			],
 			"conditions": [

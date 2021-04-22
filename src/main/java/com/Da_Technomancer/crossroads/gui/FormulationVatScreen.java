@@ -22,8 +22,8 @@ public class FormulationVatScreen extends MachineGUI<FormulationVatContainer, Fo
 	public void init(){
 		super.init();
 
-		initFluidManager(0, 10, 70);
-		initFluidManager(1, 70, 70);
+		initFluidManager(0, 9, 64);
+		initFluidManager(1, 79, 64);
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class FormulationVatScreen extends MachineGUI<FormulationVatContainer, Fo
 		Minecraft.getInstance().getTextureManager().bind(TEXTURE);
 
 		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-		blit(matrix, leftPos + 24, topPos + 35, 176, 0, menu.craftProgress.get() * 46 / FormulationVatTileEntity.REQUIRED, 19);
+		blit(matrix, leftPos + 25, topPos + 35, 176, 0, menu.craftProgress.get() * 54 / FormulationVatTileEntity.REQUIRED, 19);
 
 		super.renderBg(matrix, partialTicks, mouseX, mouseY);
 	}

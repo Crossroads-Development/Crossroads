@@ -21,7 +21,7 @@ def writeGem(file, blockName, gemName):
 
 for name in regNames:
 	filepath = loottablePath + "/" + name
-	if "molten_" in name or "liquid_" in name or "distilled_water" in name or "dirty_water" in name or "steam" in name:
+	if "molten_" in name or "liquid_" in name or "distilled_water" in name or "dirty_water" in name or "steam" in name or "soul_essence" in name or "blood" in name or "_solution" in name:
 		# Fluids don't have loot tables
 		continue
 

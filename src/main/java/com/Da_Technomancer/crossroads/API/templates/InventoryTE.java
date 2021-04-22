@@ -164,12 +164,21 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 		return inventory.length == 0 ? 0 : 64;
 	}
 
+	public int getMaxStackSize(int slot){
+		return getMaxStackSize();
+	}
+
 	@Override
 	public void clearContent(){
 		Arrays.fill(inventory, ItemStack.EMPTY);
 		if(inventory.length != 0){
 			setChanged();
 		}
+	}
+
+	@Override
+	public boolean canPlaceItem(int index, ItemStack stack){
+		return index >= 0 && index < inventory.length && inventory[index].getCount() < getMaxStackSize(index);
 	}
 
 	@Override
@@ -234,7 +243,7 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate){
 			if(canPlaceItem(slot, stack) && (inventory[slot].isEmpty() || BlockUtil.sameItem(stack, inventory[slot]))){
 				int oldCount = inventory[slot].getCount();
-				int moved = Math.min(stack.getCount(), stack.getMaxStackSize() - oldCount);
+				int moved = Math.max(0, Math.min(stack.getCount(), Math.min(stack.getMaxStackSize(), getMaxStackSize(slot)) - oldCount));
 				ItemStack out = stack.copy();
 				out.setCount(stack.getCount() - moved);
 
@@ -268,7 +277,7 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 
 		@Override
 		public int getSlotLimit(int slot){
-			return 64;
+			return getMaxStackSize(slot);
 		}
 
 		@Override

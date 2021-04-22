@@ -6,18 +6,24 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
+import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.crossroads.items.technomancy.TechnomancyArmor;
+import com.google.common.collect.ImmutableList;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
 import mezz.jei.api.registration.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -53,6 +59,7 @@ public class JEICrossroadsPlugin implements IModPlugin{
 		//Add relevant crossroads machines to vanilla recipe types
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.smelter, 1), VanillaRecipeCategoryUid.FURNACE);
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.steamer, 1), VanillaRecipeCategoryUid.SMOKING);
+		registry.addRecipeCatalyst(new ItemStack(CRBlocks.brewingVat, 1), VanillaRecipeCategoryUid.BREWING);
 	}
 
 	@Override
@@ -79,6 +86,15 @@ public class JEICrossroadsPlugin implements IModPlugin{
 		registration.addRecipes(getRecipes(recipeManager, CRRecipes.COPSHOWIUM_TYPE), CopshowiumCategory.ID);
 		registration.addRecipes(getRecipes(recipeManager, CRRecipes.FORMULATION_VAT_TYPE), FormulationVatCategory.ID);
 		registration.addRecipes(ReagentManager.getRegisteredReags(), ReagInfoCategory.ID);
+
+		//Add anvil recipes for Technomancy items
+		IVanillaRecipeFactory vanillaFactory = registration.getVanillaRecipeFactory();
+		ArrayList<Object> anvilRecipes = new ArrayList<>(4);
+		anvilRecipes.add(vanillaFactory.createAnvilRecipe(new ItemStack(CRItems.armorGoggles), ImmutableList.of(new ItemStack(Items.NETHERITE_HELMET)), ImmutableList.of(TechnomancyArmor.setReinforced(new ItemStack(CRItems.armorGoggles, 1), true))));
+		anvilRecipes.add(vanillaFactory.createAnvilRecipe(new ItemStack(CRItems.propellerPack), ImmutableList.of(new ItemStack(Items.NETHERITE_CHESTPLATE)), ImmutableList.of(TechnomancyArmor.setReinforced(new ItemStack(CRItems.propellerPack, 1), true))));
+		anvilRecipes.add(vanillaFactory.createAnvilRecipe(new ItemStack(CRItems.armorToolbelt), ImmutableList.of(new ItemStack(Items.NETHERITE_LEGGINGS)), ImmutableList.of(TechnomancyArmor.setReinforced(new ItemStack(CRItems.armorToolbelt, 1), true))));
+		anvilRecipes.add(vanillaFactory.createAnvilRecipe(new ItemStack(CRItems.armorEnviroBoots), ImmutableList.of(new ItemStack(Items.NETHERITE_BOOTS)), ImmutableList.of(TechnomancyArmor.setReinforced(new ItemStack(CRItems.armorEnviroBoots, 1), true))));
+		registration.addRecipes(anvilRecipes, VanillaRecipeCategoryUid.ANVIL);
 	}
 
 	private static Collection<?> getRecipes(RecipeManager manage, IRecipeType<?> type){

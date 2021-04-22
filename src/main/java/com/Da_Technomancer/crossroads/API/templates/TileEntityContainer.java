@@ -143,6 +143,14 @@ public abstract class TileEntityContainer<U extends TileEntity & IInventory> ext
 		public boolean mayPlace(ItemStack stack){
 			return container.canPlaceItem(getSlotIndex(), stack);
 		}
+
+		@Override
+		public int getMaxStackSize(){
+			if(container instanceof InventoryTE){
+				return ((InventoryTE) container).getMaxStackSize(getSlotIndex());
+			}
+			return super.getMaxStackSize();
+		}
 	}
 
 	protected static class OutputSlot extends Slot{

@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.loot_modifiers.PiglinBarterLootModifier;
 import com.Da_Technomancer.crossroads.crafting.recipes.*;
 import com.Da_Technomancer.crossroads.entity.*;
-import com.Da_Technomancer.crossroads.entity.mob_effects.Sedation;
+import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.*;
 import com.Da_Technomancer.crossroads.gui.container.*;
@@ -33,6 +33,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.potion.Effect;
+import net.minecraft.potion.Potion;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -250,6 +251,7 @@ public final class Crossroads{
 		registerCon(SteamTurbineContainer::new, SteamTurbineScreen::new, "steam_turbine", e);
 		registerCon(BeaconHarnessContainer::new, BeaconHarnessScreen::new, "beacon_harness", e);
 		registerCon(FormulationVatContainer::new, FormulationVatScreen::new, "formulation_vat", e);
+		registerCon(BrewingVatContainer::new, BrewingVatScreen::new, "brewing_vat", e);
 	}
 
 	@SuppressWarnings("unused")
@@ -287,6 +289,7 @@ public final class Crossroads{
 		registerConType(SteamTurbineContainer::new, "steam_turbine", e);
 		registerConType(BeaconHarnessContainer::new, "beacon_harness", e);
 		registerConType(FormulationVatContainer::new, "formulation_vat", e);
+		registerConType(BrewingVatContainer::new, "brewing_vat", e);
 	}
 
 	/**
@@ -334,7 +337,13 @@ public final class Crossroads{
 	@SuppressWarnings("unused")
 	@SubscribeEvent
 	public static void registerMobEffects(RegistryEvent.Register<Effect> e){
-		e.getRegistry().register(new Sedation());
+		CRPotions.registerEffects(e.getRegistry());
+	}
+
+	@SuppressWarnings("unused")
+	@SubscribeEvent
+	public static void registerPotions(RegistryEvent.Register<Potion> e){
+		CRPotions.registerPotions(e.getRegistry());
 	}
 
 	@SubscribeEvent

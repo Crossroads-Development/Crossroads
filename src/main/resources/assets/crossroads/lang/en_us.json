@@ -257,6 +257,7 @@
 	"block.crossroads.beam_cannon": "Beam Cannon",
 	"item.crossroads.propeller_pack": "Propelled Wingpack",
 	"block.crossroads.formulation_vat": "Formulation Vat",
+	"block.crossroads.brewing_vat": "Brewing Vat",
 
 	"item.crossroads.distilled_water_bucket": "Distilled Water Bucket",
 	"item.crossroads.dirty_water_bucket": "Dirty Water Bucket",
@@ -271,6 +272,12 @@
 	"item.crossroads.fertilizer_solution_bucket": "Fertilizer Solution Bucket",
 	"item.crossroads.blood_bucket": "Blood Bucket",
 	"item.crossroads.soul_essence_bucket": "Soul Essence Bucket",
+
+	"item.minecraft.potion.effect.sedation": "Potion of Sedation",
+	"item.minecraft.splash_potion.effect.sedation": "Splash Potion of Sedation",
+	"item.minecraft.lingering_potion.effect.sedation": "Lingering Potion of Sedation",
+	"item.minecraft.tipped_arrow.effect.sedation": "Arrow of Sedation",
+
 
 	"item.crossroads.ore_gravel": "Raw %1$s Grit",
 	"item.crossroads.ore_clump": "%1$s Clump",
@@ -673,8 +680,10 @@
 	"tt.crossroads.beam_cannon.lockable": "Firing angle can be locked by sneak-clicking with a wrench",
 	"tt.crossroads.beam_cannon.quip": "Canonically this cannon is an artillery",
 	"tt.crossroads.toolbelt.desc": "Respawn with your hotbar and offhand on death",
-	"tt.crossroads.formulation_vat.desc": "Creates liquids by combining a liquid and item; Faster at higher temperatures",
+	"tt.crossroads.formulation_vat.desc": "Creates liquids by combining a liquid and item; Faster at higher temperatures, but stops when it boils",
 	"tt.crossroads.formulation_vat.tier": "Works at x%2$d speed using %3$d°C/t when above %1$d°C",
+	"tt.crossroads.brewing_vat.desc": "Brews potions with heat instead of blaze powder; Faster at higher temperatures, but stops when it boils",
+	"tt.crossroads.brewing_vat.tier": "Works at x%2$d speed using %3$d°C/t when above %1$d°C",
 
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
@@ -721,6 +730,7 @@
 	"container.steam_turbine": "Steam Turbine",
 	"container.beacon_harness": "Beacon Harness",
 	"container.crossroads.formulation_vat": "Formulation Vat",
+	"container.crossroads.brewing_vat": "Brewing Vat",
 
 
 	"subtitle.crossroads.beam_passive": "Beam emitted",
