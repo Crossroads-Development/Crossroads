@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
+import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.tags.BlockTags;
@@ -101,6 +102,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.BooleanValue undergroundLightning;
 	public static ForgeConfigSpec.BooleanValue cageMeterOverlay;
 	public static ForgeConfigSpec.DoubleValue beamRaytraceStep;
+	public static ForgeConfigSpec.ConfigValue<List<? extends String>> sedationBlacklist;
 
 	private static final ITag<Block> destroyBlacklist = BlockTags.bind(Crossroads.MODID + ":destroy_blacklist");
 
@@ -114,6 +116,7 @@ public class CRConfig{
 	private static final String CAT_SPECIALIZATION = "Specializations";
 	private static final String CAT_TECHNOMANCY = "Technomancy";
 	private static final String CAT_ALCHEMY = "Alchemy";
+	private static final String CAT_WITCHCRAFT = "Witchcraft";
 
 	protected static void init(){
 		//Client config
@@ -220,6 +223,9 @@ public class CRConfig{
 		gravRange = serverBuilder.comment("Range of Density Plates").defineInRange("grav_range", 64, 0, 128);
 		verticalBiomes = serverBuilder.comment("Whether to change biomes in columns", "If true, biomes are transmuted in a column from bedrock to worldheight", "If false, biomes are transmitted only within the vertical bounds of the effect").define("vertical_biomes", true);
 		riftSpawnDrops = serverBuilder.comment("If true, rift beams will spawn mob drops instead of actual mobs", "Rift beams do this regardless of config setting in peaceful mode").define("rift_drops", false);
+		serverBuilder.pop();
+		serverBuilder.push(CAT_WITCHCRAFT);
+		sedationBlacklist = serverBuilder.comment("Specify entities that can not have their AI disabled by sedation. Players can never be fully sedated", "Format of 'domain:entity_id', ex. minecraft:pig").defineList("sedation_blacklist", Lists.newArrayList("minecraft:player", "minecraft:wither", "minecraft:ender_dragon"), (Object entry) -> entry instanceof String);
 		serverBuilder.pop();
 		serverBuilder.pop();
 

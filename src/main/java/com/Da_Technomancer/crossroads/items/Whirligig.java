@@ -81,7 +81,7 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 	@Override
 	public void onUsingTick(ItemStack stack, LivingEntity player, int count){
 		//Called on both sides every tick while the item is being actively used
-		if(player.isEffectiveAi()){
+		if(!player.level.isClientSide()){
 			double wind = getWindLevel(stack);
 
 			if(player instanceof PlayerEntity && murderEasterEgg.equals(((PlayerEntity) player).getGameProfile().getName()))

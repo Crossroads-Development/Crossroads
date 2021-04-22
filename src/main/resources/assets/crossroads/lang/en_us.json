@@ -904,5 +904,7 @@
 	"key.control_void": "Item Void Control",
 	"key.prop_pack_boost": "Boost",
 
-	"book.crossroads_essentials.name": "Crossroads & Essentials Guidebook"
+	"book.crossroads_essentials.name": "Crossroads & Essentials Guidebook",
+
+	"effect.crossroads.sedation": "Sedation"
 }

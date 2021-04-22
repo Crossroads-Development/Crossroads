@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.loot_modifiers.PiglinBarterLootModifier;
 import com.Da_Technomancer.crossroads.crafting.recipes.*;
 import com.Da_Technomancer.crossroads.entity.*;
+import com.Da_Technomancer.crossroads.entity.mob_effects.Sedation;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.*;
 import com.Da_Technomancer.crossroads.gui.container.*;
@@ -31,6 +32,7 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.particles.ParticleType;
+import net.minecraft.potion.Effect;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -327,6 +329,12 @@ public final class Crossroads{
 	@SubscribeEvent
 	public static void registerSounds(RegistryEvent.Register<SoundEvent> e){
 		CRSounds.register(e.getRegistry());
+	}
+
+	@SuppressWarnings("unused")
+	@SubscribeEvent
+	public static void registerMobEffects(RegistryEvent.Register<Effect> e){
+		e.getRegistry().register(new Sedation());
 	}
 
 	@SubscribeEvent
