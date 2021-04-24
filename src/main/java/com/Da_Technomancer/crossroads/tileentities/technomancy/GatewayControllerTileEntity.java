@@ -421,8 +421,6 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 			//Perform angle movement on the client, and track what the client is probably doing on the server
 			clientAngle += calcAngleChange(clientW, clientAngle);
 
-			super.tick();
-
 			if(!level.isClientSide){
 				genOptionals();
 				//Perform angle movement on the server
@@ -464,6 +462,8 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 					addFlux(FLUX_PER_CYCLE);
 				}
 			}
+
+			super.tick();//We call the super method last, as we use lastTick to prevent time acceleration in the code above, and lastTick is updated in the super method
 		}
 	}
 
