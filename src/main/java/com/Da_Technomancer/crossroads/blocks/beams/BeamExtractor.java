@@ -62,6 +62,7 @@ public class BeamExtractor extends BeamBlock{
 	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_extractor.desc"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_extractor.redstone"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_extractor.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

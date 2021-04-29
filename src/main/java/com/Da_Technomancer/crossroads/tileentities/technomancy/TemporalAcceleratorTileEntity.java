@@ -141,7 +141,7 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 				BlockPos endPos;//Exclusive
 				//Assumes SIZE is odd
 				switch(getFacing()){
-					//I'm sure there's a clever formula for this, but I don't see it
+					//This should probably be done as a simple formula if it ever gets rewritten. See AutoInjectorTileEntity for an example
 					case DOWN:
 						startPos = worldPosition.offset(-SIZE / 2, -SIZE, -SIZE / 2);
 						endPos = worldPosition.offset(SIZE / 2 + 1, 0, SIZE / 2 + 1);

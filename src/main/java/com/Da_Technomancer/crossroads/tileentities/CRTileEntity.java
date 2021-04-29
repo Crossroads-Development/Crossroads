@@ -13,6 +13,7 @@ import com.Da_Technomancer.crossroads.tileentities.heat.*;
 import com.Da_Technomancer.crossroads.tileentities.rotary.*;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.*;
+import com.Da_Technomancer.crossroads.tileentities.witchcraft.AutoInjectorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.BrewingVatTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.FormulationVatTileEntity;
 import com.mojang.datafixers.DSL;
@@ -129,6 +130,7 @@ public class CRTileEntity{
 		register(BeamCannonTileEntity::new, "beam_cannon", reg, beamCannon);
 		register(FormulationVatTileEntity::new, "formulation_vat", reg, formulationVat);
 		register(BrewingVatTileEntity::new, "brewing_vat", reg, brewingVat);
+		register(AutoInjectorTileEntity::new, "auto_injector", reg, autoInjector);
 	}
 
 	private static void register(Supplier<? extends TileEntity> cons, String id, IForgeRegistry<TileEntityType<?>> reg, Block... blocks){

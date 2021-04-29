@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
@@ -24,6 +25,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 @ObjectHolder(Crossroads.MODID)
 public class BrewingVatTileEntity extends InventoryTE{
@@ -39,6 +41,12 @@ public class BrewingVatTileEntity extends InventoryTE{
 
 	public BrewingVatTileEntity(){
 		super(type, 7);//Index 0: Ingredient; 1-3: Input potions; 4-6: Output potions
+	}
+
+	@Override
+	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.progress", progress, REQUIRED));
+		super.addInfo(chat, player, hit);
 	}
 
 	@Override

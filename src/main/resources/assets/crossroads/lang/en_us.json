@@ -258,6 +258,7 @@
 	"item.crossroads.propeller_pack": "Propelled Wingpack",
 	"block.crossroads.formulation_vat": "Formulation Vat",
 	"block.crossroads.brewing_vat": "Brewing Vat",
+	"block.crossroads.auto_injector": "Auto-Injector",
 
 	"item.crossroads.distilled_water_bucket": "Distilled Water Bucket",
 	"item.crossroads.dirty_water_bucket": "Dirty Water Bucket",
@@ -277,6 +278,10 @@
 	"item.minecraft.splash_potion.effect.sedation": "Splash Potion of Sedation",
 	"item.minecraft.lingering_potion.effect.sedation": "Lingering Potion of Sedation",
 	"item.minecraft.tipped_arrow.effect.sedation": "Arrow of Sedation",
+	"item.minecraft.potion.effect.curative": "Potion of Neutralization",
+	"item.minecraft.splash_potion.effect.curative": "Splash Potion of Neutralization",
+	"item.minecraft.lingering_potion.effect.curative": "Lingering Potion of Neutralization",
+	"item.minecraft.tipped_arrow.effect.curative": "Arrow of Neutralization",
 
 
 	"item.crossroads.ore_gravel": "Raw %1$s Grit",
@@ -456,6 +461,7 @@
 	"tt.crossroads.boilerplate.decor": "Safe for decoration",
 	"tt.crossroads.beam_redirector.desc": "Toggles beam output between two directions based on a redstone signal",
 	"tt.crossroads.beam_extractor.desc": "Produces beams from various items",
+	"tt.crossroads.beam_extractor.redstone": "Disabled by redstone",
 	"tt.crossroads.beam_extractor.quip": "Who knew salt had magic powers?",
 	"tt.crossroads.beam_siphon.desc": "Siphons off a beam power equal to redstone signal to the front. Remaining beams come out the back",
 	"tt.crossroads.beam_splitter.desc": "Splits off a portion equal to the redstone signal over 15 to the front. Remaining beams come out the back",
@@ -684,6 +690,13 @@
 	"tt.crossroads.formulation_vat.tier": "Works at x%2$d speed using %3$d°C/t when above %1$d°C",
 	"tt.crossroads.brewing_vat.desc": "Brews potions with heat instead of blaze powder; Faster at higher temperatures, but stops when it boils",
 	"tt.crossroads.brewing_vat.tier": "Works at x%2$d speed using %3$d°C/t when above %1$d°C",
+	"tt.crossroads.auto_injector.desc": "Applies non-instant potion effects to entities in range, consuming potions %1$fx more efficiently",
+	"tt.crossroads.auto_injector.dose": "Duration of the effect applied set by shift-clicking with a wrench. Potions can be spread over several mobs based on dose size",
+	"tt.crossroads.auto_injector.redstone": "Disabled by redstone",
+	"tt.crossroads.auto_injector.stored.empty": "No potion stored",
+	"tt.crossroads.auto_injector.stored": "Contents: %1$d/%2$d seconds of Lvl %3$d ",
+	"tt.crossroads.auto_injector.duration_setting": "Administering doses of %1$d seconds",
+	"tt.crossroads.auto_injector.duration_setting_new": "Now administering doses of %1$d seconds",
 
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
@@ -697,6 +710,10 @@
 	"container.crossroads.beacon_harness.output.stability": "Stability Output: %1$d",
 	"container.crossroads.beacon_harness.cycle": "Cycle %1$d/%2$d",
 	"container.crossroads.beacon_harness.cooldown": "Cooldown: %1$d cycles",
+	"container.crossroads.auto_injector.empty": "Empty",
+	"container.crossroads.auto_injector.contents": "%1$s %2$d",
+	"container.crossroads.auto_injector.qty": "%1$d/%2$d seconds",
+	"container.crossroads.auto_injector.dose_qty": "Dose size: %1$d sec.",
 
 	"container.smelter": "Smelter",
 	"container.firebox": "Firebox",
@@ -731,6 +748,7 @@
 	"container.beacon_harness": "Beacon Harness",
 	"container.crossroads.formulation_vat": "Formulation Vat",
 	"container.crossroads.brewing_vat": "Brewing Vat",
+	"container.crossroads.auto_injector": "Auto-Injector",
 
 
 	"subtitle.crossroads.beam_passive": "Beam emitted",
@@ -916,5 +934,7 @@
 
 	"book.crossroads_essentials.name": "Crossroads & Essentials Guidebook",
 
-	"effect.crossroads.sedation": "Sedation"
+	"effect.crossroads.sedation": "Sedation",
+	"effect.crossroads.curative": "Neutralization"
+
 }

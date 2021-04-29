@@ -252,6 +252,7 @@ public final class Crossroads{
 		registerCon(BeaconHarnessContainer::new, BeaconHarnessScreen::new, "beacon_harness", e);
 		registerCon(FormulationVatContainer::new, FormulationVatScreen::new, "formulation_vat", e);
 		registerCon(BrewingVatContainer::new, BrewingVatScreen::new, "brewing_vat", e);
+		registerCon(AutoInjectorContainer::new, AutoInjectorScreen::new, "auto_injector", e);
 	}
 
 	@SuppressWarnings("unused")
@@ -290,6 +291,7 @@ public final class Crossroads{
 		registerConType(BeaconHarnessContainer::new, "beacon_harness", e);
 		registerConType(FormulationVatContainer::new, "formulation_vat", e);
 		registerConType(BrewingVatContainer::new, "brewing_vat", e);
+		registerConType(AutoInjectorContainer::new, "auto_injector", e);
 	}
 
 	/**

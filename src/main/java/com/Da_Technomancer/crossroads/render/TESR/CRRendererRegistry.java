@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntit
 import com.Da_Technomancer.crossroads.tileentities.rotary.*;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.*;
+import com.Da_Technomancer.crossroads.tileentities.witchcraft.AutoInjectorTileEntity;
 import com.Da_Technomancer.essentials.render.LinkLineRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -59,9 +60,11 @@ public class CRRendererRegistry{
 		ClientRegistry.bindTileEntityRenderer(CopshowiumCreationChamberTileEntity.type, EntropyRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(FluxSinkTileEntity.type, FluxSinkRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(BeamCannonTileEntity.type, BeamCannonRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(AutoInjectorTileEntity.type, AutoInjectorRenderer::new);
 	}
 
 	private static void reg(Block block){
+		//Registers the item form of a block to use the block's TESR
 		Minecraft.getInstance().getItemRenderer().getItemModelShaper().register(block.asItem(), new ModelResourceLocation(block.getRegistryName(), "inventory"));
 	}
 

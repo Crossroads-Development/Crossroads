@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"facing=north": { "model": "crossroads:block/auto_injector", "x": 90},
+		"facing=south": { "model": "crossroads:block/auto_injector", "x": 270 },
+		"facing=east": { "model": "crossroads:block/auto_injector", "x": 90, "y": 90 },
+		"facing=west": { "model": "crossroads:block/auto_injector", "x": 90, "y": 270 },
+		"facing=up": { "model": "crossroads:block/auto_injector"},
+		"facing=down": { "model": "crossroads:block/auto_injector", "x": 180}
+	}
+}

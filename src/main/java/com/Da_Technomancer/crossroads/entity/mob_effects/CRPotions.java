@@ -14,17 +14,21 @@ import net.minecraftforge.registries.IForgeRegistry;
 public class CRPotions{
 
 	public static final Sedation SEDATION_EFFECT = new Sedation();
+	public static final Curative CURATIVE_EFFECT = new Curative();
 
 	public static final Potion POTION_SEDATION = new Potion("sedation", new EffectInstance(SEDATION_EFFECT, 3600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "sedation"));
 	public static final Potion POTION_SEDATION_LONG = new Potion("sedation", new EffectInstance(SEDATION_EFFECT, 9600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "long_sedation"));
+	public static final Potion POTION_CURATIVE = new Potion("curative", new EffectInstance(CURATIVE_EFFECT, 1)).setRegistryName(new ResourceLocation(Crossroads.MODID, "curative"));
 
 	public static void registerEffects(IForgeRegistry<Effect> reg){
 		reg.register(SEDATION_EFFECT);
+		reg.register(CURATIVE_EFFECT);
 	}
 
 	public static void registerPotions(IForgeRegistry<Potion> reg){
 		reg.register(POTION_SEDATION);
 		reg.register(POTION_SEDATION_LONG);
+		reg.register(POTION_CURATIVE);
 
 		registerPotionRecipes();
 	}
@@ -42,6 +46,8 @@ public class CRPotions{
 		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_SEDATION)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_SEDATION_LONG));
 		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), POTION_SEDATION)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), POTION_SEDATION_LONG));
 		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), POTION_SEDATION)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), POTION_SEDATION_LONG));
+		//Curative potions
+		//TODO
 		//Filling empty bottles
 		BrewingRecipeRegistry.addRecipe(Ingredient.of(Items.GLASS_BOTTLE), Ingredient.of(Blocks.ICE), PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER));
 	}
