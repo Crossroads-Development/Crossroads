@@ -253,6 +253,7 @@ public final class Crossroads{
 		registerCon(FormulationVatContainer::new, FormulationVatScreen::new, "formulation_vat", e);
 		registerCon(BrewingVatContainer::new, BrewingVatScreen::new, "brewing_vat", e);
 		registerCon(AutoInjectorContainer::new, AutoInjectorScreen::new, "auto_injector", e);
+		registerCon(ColdStorageContainer::new, ColdStorageScreen::new, "cold_storage", e);
 	}
 
 	@SuppressWarnings("unused")
@@ -292,6 +293,7 @@ public final class Crossroads{
 		registerConType(FormulationVatContainer::new, "formulation_vat", e);
 		registerConType(BrewingVatContainer::new, "brewing_vat", e);
 		registerConType(AutoInjectorContainer::new, "auto_injector", e);
+		registerConType(ColdStorageContainer::new, "cold_storage", e);
 	}
 
 	/**

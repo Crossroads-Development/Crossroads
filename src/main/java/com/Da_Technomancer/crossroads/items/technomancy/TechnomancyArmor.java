@@ -83,8 +83,6 @@ public abstract class TechnomancyArmor extends ArmorItem{
 		return true;
 	}
 
-
-
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack){
 		Multimap<Attribute, AttributeModifier> baseMap = super.getAttributeModifiers(slot, stack);//The un-reinforced version with no protection

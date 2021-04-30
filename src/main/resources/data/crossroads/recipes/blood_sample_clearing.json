@@ -1,12 +1,12 @@
 {
 	"type": "minecraft:crafting_shapeless",
 	"result": {
-		"item": "crossroads:fluid_tank",
+		"item": "crossroads:blood_sample_empty",
 		"count": 1
 	},
 	"ingredients": [
 		{
-			"item": "crossroads:fluid_tank"
+			"item": "crossroads:blood_sample"
 		}
 	]
 }

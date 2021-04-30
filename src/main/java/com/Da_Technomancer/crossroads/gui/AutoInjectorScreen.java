@@ -43,9 +43,9 @@ public class AutoInjectorScreen extends MachineGUI<AutoInjectorContainer, AutoIn
 		}
 		String durationStr = MiscUtil.localize("container.crossroads.auto_injector.qty", menu.durationRef.get() / 20, AutoInjectorTileEntity.DURATION_CAPACITY / 20);
 		String doseStr = MiscUtil.localize("container.crossroads.auto_injector.dose_qty", menu.doseRef.get() / 20);
-		font.draw(matrix, typeStr, 6, 25, 0x404040);
-		font.draw(matrix, durationStr, 6, 35, 0x404040);
-		font.draw(matrix, doseStr, 6, 45, 0x404040);
+		font.draw(matrix, typeStr, 8, 25, 0x404040);
+		font.draw(matrix, durationStr, 8, 35, 0x404040);
+		font.draw(matrix, doseStr, 8, 45, 0x404040);
 
 		Minecraft.getInstance().getTextureManager().bind(TEXTURE);
 		//Draw dose indicator

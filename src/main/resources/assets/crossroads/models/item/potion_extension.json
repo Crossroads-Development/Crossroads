@@ -1,0 +1,14 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "crossroads:item/potion_extension"
+	},
+	"overrides": [
+		{
+			"predicate": {
+				"spoiled": 1
+			},
+			"model": "crossroads:item/potion_extension_spoiled"
+		}
+	]
+}

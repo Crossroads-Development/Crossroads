@@ -2,10 +2,14 @@ package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.API.EnumPath;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
+import com.Da_Technomancer.crossroads.API.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.alchemy.*;
 import com.Da_Technomancer.crossroads.items.itemSets.*;
 import com.Da_Technomancer.crossroads.items.technomancy.*;
+import com.Da_Technomancer.crossroads.items.witchcraft.BloodSample;
+import com.Da_Technomancer.crossroads.items.witchcraft.PotionExtension;
+import com.Da_Technomancer.crossroads.items.witchcraft.Syringe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
@@ -115,6 +119,10 @@ public final class CRItems{
 	public static PathSigil sigilWitch;
 	public static ArmorEnviroBoots armorEnviroBoots;
 	public static ArmorToolbelt armorToolbelt;
+	public static Item bloodSampleEmpty;
+	public static BloodSample bloodSample;
+	public static PotionExtension potionExtension;
+	public static Syringe syringe;
 
 	public static OreProfileItem oreGravel;
 	public static OreProfileItem oreClump;
@@ -229,10 +237,15 @@ public final class CRItems{
 		propellerPack = new ArmorPropellerPack();
 		armorEnviroBoots = new ArmorEnviroBoots();
 		armorToolbelt = new ArmorToolbelt();
+		toRegister.add(bloodSampleEmpty = new Item(new Item.Properties().stacksTo(1).tab(TAB_CROSSROADS)).setRegistryName("blood_sample_empty"));
+		bloodSample = new BloodSample();
+		potionExtension = new PotionExtension();
+		syringe = new Syringe();
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static void clientInit(){
+		//Coloring
 		ItemColors itemColor = Minecraft.getInstance().getItemColors();
 		//Alchemy containers
 		itemColor.register((ItemStack stack, int layer) -> layer == 0 ? AbstractGlassware.getColorRGB(stack) : -1, phialGlass, florenceFlaskGlass, shellGlass, phialCrystal, florenceFlaskCrystal, shellCrystal);
@@ -247,7 +260,8 @@ public final class CRItems{
 		};
 		itemColor.register(itemColoring, oreGravel, oreClump, axle, smallGear, largeGear, clutch, invClutch, toggleGear, invToggleGear, axleMount);
 
-		//Item model properties
+		//Properties
+		//Whirligig rotation
 		ItemModelsProperties.register(whirligig, new ResourceLocation("angle"), (ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) -> {
 			if(entity == null || entity.getUseItem() != stack){
 				return 0;
@@ -265,10 +279,18 @@ public final class CRItems{
 			angle = (float) Math.toDegrees(angle);
 			return angle;
 		});
+		//Technomancy armor
 		IItemPropertyGetter technoArmorPropertyGetter = (ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) -> TechnomancyArmor.isReinforced(stack) ? TechnomancyArmor.hasDurability(stack) ? 2F : 1F : 0F;
 		ItemModelsProperties.register(armorGoggles, new ResourceLocation("protection"), technoArmorPropertyGetter);
 		ItemModelsProperties.register(propellerPack, new ResourceLocation("protection"), technoArmorPropertyGetter);
 		ItemModelsProperties.register(armorToolbelt, new ResourceLocation("protection"), technoArmorPropertyGetter);
 		ItemModelsProperties.register(armorEnviroBoots, new ResourceLocation("protection"), technoArmorPropertyGetter);
+		//Rotting samples
+		IItemPropertyGetter rottingPropertyGetter = (ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) -> stack.getItem() instanceof IPerishable && ((IPerishable) stack.getItem()).isSpoiled(stack, world) ? 1F : 0F;
+		ItemModelsProperties.register(bloodSample, new ResourceLocation("spoiled"), rottingPropertyGetter);
+		ItemModelsProperties.register(potionExtension, new ResourceLocation("spoiled"), rottingPropertyGetter);
+		//Syringe treatment
+		IItemPropertyGetter syringePropertyGetter = (ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) -> CRItems.syringe.isTreated(stack) ? 1 : 0;
+		ItemModelsProperties.register(syringe, new ResourceLocation("treated"), syringePropertyGetter);
 	}
 }

@@ -104,6 +104,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.DoubleValue beamRaytraceStep;
 	public static ForgeConfigSpec.ConfigValue<List<? extends String>> sedationBlacklist;
 	public static ForgeConfigSpec.DoubleValue injectionEfficiency;
+	public static ForgeConfigSpec.IntValue injectionPermaPenalty;
 
 	private static final ITag<Block> destroyBlacklist = BlockTags.bind(Crossroads.MODID + ":destroy_blacklist");
 
@@ -228,6 +229,7 @@ public class CRConfig{
 		serverBuilder.push(CAT_WITCHCRAFT);
 		sedationBlacklist = serverBuilder.comment("Specify entities that can not have their AI disabled by sedation. Players can never be fully sedated", "Format of 'domain:entity_id', ex. minecraft:pig").defineList("sedation_blacklist", Lists.newArrayList("minecraft:player", "minecraft:wither", "minecraft:ender_dragon"), (Object entry) -> entry instanceof String);
 		injectionEfficiency = serverBuilder.comment("The duration of injected potions vs drinking them", "Setting to 1 or below makes injection equivalent to normal potions").defineInRange("injection_efficiency", 2F, 1F, 100F);
+		injectionPermaPenalty = serverBuilder.comment("The permanent maximum health reduction for each injected permanent potion effect", "Set to 0 or lower to disable the penalty", "Set to 20 or higher to effectively disable permanent injection for players").defineInRange("injection_perma_penalty", 2, 0, 100);
 		serverBuilder.pop();
 		serverBuilder.pop();
 

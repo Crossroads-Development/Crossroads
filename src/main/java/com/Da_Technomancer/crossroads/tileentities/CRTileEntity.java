@@ -15,6 +15,7 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTi
 import com.Da_Technomancer.crossroads.tileentities.technomancy.*;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.AutoInjectorTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.BrewingVatTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.witchcraft.ColdStorageTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.FormulationVatTileEntity;
 import com.mojang.datafixers.DSL;
 import net.minecraft.block.Block;
@@ -131,6 +132,7 @@ public class CRTileEntity{
 		register(FormulationVatTileEntity::new, "formulation_vat", reg, formulationVat);
 		register(BrewingVatTileEntity::new, "brewing_vat", reg, brewingVat);
 		register(AutoInjectorTileEntity::new, "auto_injector", reg, autoInjector);
+		register(ColdStorageTileEntity::new, "cold_storage", reg, coldStorage);
 	}
 
 	private static void register(Supplier<? extends TileEntity> cons, String id, IForgeRegistry<TileEntityType<?>> reg, Block... blocks){

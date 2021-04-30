@@ -259,6 +259,11 @@
 	"block.crossroads.formulation_vat": "Formulation Vat",
 	"block.crossroads.brewing_vat": "Brewing Vat",
 	"block.crossroads.auto_injector": "Auto-Injector",
+	"block.crossroads.cold_storage": "Sample Freezer",
+	"item.crossroads.blood_sample_empty": "Empty Blood Pouch",
+	"item.crossroads.blood_sample": "Blood Pouch",
+	"item.crossroads.potion_extension": "Genetic Plasmids",
+	"item.crossroads.syringe": "Syringe",
 
 	"item.crossroads.distilled_water_bucket": "Distilled Water Bucket",
 	"item.crossroads.dirty_water_bucket": "Dirty Water Bucket",
@@ -697,6 +702,22 @@
 	"tt.crossroads.auto_injector.stored": "Contents: %1$d/%2$d seconds of Lvl %3$d ",
 	"tt.crossroads.auto_injector.duration_setting": "Administering doses of %1$d seconds",
 	"tt.crossroads.auto_injector.duration_setting_new": "Now administering doses of %1$d seconds",
+	"tt.crossroads.cold_storage.desc": "Prevents samples from spoiling by keeping them frozen",
+	"tt.crossroads.cold_storage.drain": "Heat Loss: -%1$d°C/t for every stored item",
+	"tt.crossroads.cold_storage.redstone": "Circuits read total stored items",
+	"tt.crossroads.boilerplate.spoilage.error": "Newly created (fresh)",
+	"tt.crossroads.boilerplate.spoilage.spoiled": "Spoiled",
+	"tt.crossroads.boilerplate.spoilage.remain": "Spoils in %1$dd%2$dh%3$dm%4$ds",
+	"tt.crossroads.boilerplate.spoilage.freezing": "Store below %1$f°C to freeze",
+	"tt.crossroads.potion_extension.desc": "Can be applied to a Syringe to inject a potion permanently",
+	"tt.crossroads.potion_extension.penalty": "Each permanent potion effect reduces maximum health by %1$d",
+	"tt.crossroads.potion_extension.quip": "We're out of Pfizer, is AstraZeneca OK?",
+	"tt.crossroads.blood_sample.type": "Sample from: ",
+	"tt.crossroads.blood_sample.type.missing": "Generic blood sample",
+	"tt.crossroads.syringe.desc": "Injects potions (with %1$fX effectiveness) or takes blood samples",
+	"tt.crossroads.syringe.use": "Right click to target a mob, shift-right click to target self",
+	"tt.crossroads.syringe.offhand": "Requires a potion or Empty Blood Pouch in the offhand",
+	"tt.crossroads.syringe.perm": "Use with Genetic Plasmids in the offhand to make the next injection permanent",
 
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
@@ -749,6 +770,7 @@
 	"container.crossroads.formulation_vat": "Formulation Vat",
 	"container.crossroads.brewing_vat": "Brewing Vat",
 	"container.crossroads.auto_injector": "Auto-Injector",
+	"container.crossroads.cold_storage": "Sample Freezer",
 
 
 	"subtitle.crossroads.beam_passive": "Beam emitted",
@@ -872,6 +894,8 @@
 	"death.attack.chemical.player": "%2$s spilled chemicals on %1$s",
 	"death.attack.cr_bullet": "%1$s was shot",
 	"death.attack.cr_bullet.player": "%1$s was shot by %2$s",
+	"death.attack.cr_syringe": "%1$s died of medical malpractice",
+	"death.attack.cr_syringe.player": "%2$s killed %1$s from medical malpractice",
 
 
 	"crossroads.command.discover.no_elem": "That alignment does not exist",
@@ -935,6 +959,7 @@
 	"book.crossroads_essentials.name": "Crossroads & Essentials Guidebook",
 
 	"effect.crossroads.sedation": "Sedation",
-	"effect.crossroads.curative": "Neutralization"
+	"effect.crossroads.curative": "Neutralization",
+	"effect.crossroads.health_penalty": "Genetic Strain"
 
 }

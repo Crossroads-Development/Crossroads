@@ -15,6 +15,7 @@ public class CRPotions{
 
 	public static final Sedation SEDATION_EFFECT = new Sedation();
 	public static final Curative CURATIVE_EFFECT = new Curative();
+	public static final HealthPenalty HEALTH_PENALTY_EFFECT = new HealthPenalty();
 
 	public static final Potion POTION_SEDATION = new Potion("sedation", new EffectInstance(SEDATION_EFFECT, 3600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "sedation"));
 	public static final Potion POTION_SEDATION_LONG = new Potion("sedation", new EffectInstance(SEDATION_EFFECT, 9600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "long_sedation"));
@@ -23,6 +24,7 @@ public class CRPotions{
 	public static void registerEffects(IForgeRegistry<Effect> reg){
 		reg.register(SEDATION_EFFECT);
 		reg.register(CURATIVE_EFFECT);
+		reg.register(HEALTH_PENALTY_EFFECT);
 	}
 
 	public static void registerPotions(IForgeRegistry<Potion> reg){
