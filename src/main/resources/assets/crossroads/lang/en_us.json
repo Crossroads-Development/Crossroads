@@ -264,6 +264,7 @@
 	"item.crossroads.blood_sample": "Blood Pouch",
 	"item.crossroads.potion_extension": "Genetic Plasmids",
 	"item.crossroads.syringe": "Syringe",
+	"block.crossroads.hydroponics_trough": "Hydroponics Trough",
 
 	"item.crossroads.distilled_water_bucket": "Distilled Water Bucket",
 	"item.crossroads.dirty_water_bucket": "Dirty Water Bucket",
@@ -718,6 +719,10 @@
 	"tt.crossroads.syringe.use": "Right click to target a mob, shift-right click to target self",
 	"tt.crossroads.syringe.offhand": "Requires a potion or Empty Blood Pouch in the offhand",
 	"tt.crossroads.syringe.perm": "Use with Genetic Plasmids in the offhand to make the next injection permanent",
+	"tt.crossroads.hydroponic_trough.desc": "Rapidly grows plants (or mushrooms) based on a seed, needing light",
+	"tt.crossroads.hydroponic_trough.output": "Items can only be extracted while redstone powered, but wastes all liquid",
+	"tt.crossroads.hydroponic_trough.drain": "Consumes: -%1$dmb/t of Fertilizer Solution OR Nutrient Solution",
+	"tt.crossroads.hydroponic_trough.circuit": "Circuits measure total items in the output",
 
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
@@ -771,6 +776,7 @@
 	"container.crossroads.brewing_vat": "Brewing Vat",
 	"container.crossroads.auto_injector": "Auto-Injector",
 	"container.crossroads.cold_storage": "Sample Freezer",
+	"container.crossroads.hydroponics_trough": "Hydroponics Trough",
 
 
 	"subtitle.crossroads.beam_passive": "Beam emitted",

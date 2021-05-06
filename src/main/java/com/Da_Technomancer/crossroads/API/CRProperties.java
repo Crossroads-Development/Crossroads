@@ -15,6 +15,7 @@ public class CRProperties extends ESProperties{
 
 	public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 	public static final IntegerProperty FULLNESS = IntegerProperty.create("fullness", 0, 3);
+	public static final IntegerProperty SOLID_FULLNESS = IntegerProperty.create("solid_fullness", 0, 3);
 	public static final EnumProperty<Direction.Axis> HORIZ_AXIS = EnumProperty.create("horiz_axis", Direction.Axis.class, (Direction.Axis axis) -> axis != null && axis.isHorizontal());
 
 	public static final EnumProperty<HeatCable.Conductors> CONDUCTOR = EnumProperty.create("skin", HeatCable.Conductors.class);

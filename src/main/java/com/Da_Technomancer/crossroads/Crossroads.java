@@ -254,6 +254,7 @@ public final class Crossroads{
 		registerCon(BrewingVatContainer::new, BrewingVatScreen::new, "brewing_vat", e);
 		registerCon(AutoInjectorContainer::new, AutoInjectorScreen::new, "auto_injector", e);
 		registerCon(ColdStorageContainer::new, ColdStorageScreen::new, "cold_storage", e);
+		registerCon(HydroponicsTroughContainer::new, HydroponicsTroughScreen::new, "hydroponics_trough", e);
 	}
 
 	@SuppressWarnings("unused")
@@ -294,6 +295,7 @@ public final class Crossroads{
 		registerConType(BrewingVatContainer::new, "brewing_vat", e);
 		registerConType(AutoInjectorContainer::new, "auto_injector", e);
 		registerConType(ColdStorageContainer::new, "cold_storage", e);
+		registerConType(HydroponicsTroughContainer::new, "hydroponics_trough", e);
 	}
 
 	/**

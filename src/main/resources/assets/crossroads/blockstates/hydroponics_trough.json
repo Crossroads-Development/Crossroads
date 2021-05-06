@@ -1,0 +1,20 @@
+{
+	"variants": {
+		"fullness=0,solid_fullness=0": { "model": "crossroads:block/hydroponics_trough_0_0" },
+		"fullness=1,solid_fullness=0": { "model": "crossroads:block/hydroponics_trough_1_0" },
+		"fullness=2,solid_fullness=0": { "model": "crossroads:block/hydroponics_trough_2_0" },
+		"fullness=3,solid_fullness=0": { "model": "crossroads:block/hydroponics_trough_3_0" },
+		"fullness=0,solid_fullness=1": { "model": "crossroads:block/hydroponics_trough_0_1" },
+		"fullness=1,solid_fullness=1": { "model": "crossroads:block/hydroponics_trough_1_1" },
+		"fullness=2,solid_fullness=1": { "model": "crossroads:block/hydroponics_trough_2_1" },
+		"fullness=3,solid_fullness=1": { "model": "crossroads:block/hydroponics_trough_3_1" },
+		"fullness=0,solid_fullness=2": { "model": "crossroads:block/hydroponics_trough_0_2" },
+		"fullness=1,solid_fullness=2": { "model": "crossroads:block/hydroponics_trough_1_2" },
+		"fullness=2,solid_fullness=2": { "model": "crossroads:block/hydroponics_trough_2_2" },
+		"fullness=3,solid_fullness=2": { "model": "crossroads:block/hydroponics_trough_3_2" },
+		"fullness=0,solid_fullness=3": { "model": "crossroads:block/hydroponics_trough_0_3" },
+		"fullness=1,solid_fullness=3": { "model": "crossroads:block/hydroponics_trough_1_3" },
+		"fullness=2,solid_fullness=3": { "model": "crossroads:block/hydroponics_trough_2_3" },
+		"fullness=3,solid_fullness=3": { "model": "crossroads:block/hydroponics_trough_3_3" }
+	}
+}

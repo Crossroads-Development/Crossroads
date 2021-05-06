@@ -16,7 +16,6 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameters;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -53,9 +52,8 @@ public class FluidTank extends ContainerBlock implements IReadable{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		CompoundNBT nbt = stack.getTag();
-		if(nbt != null && nbt.contains("FluidName")){
-			FluidStack fStack = FluidStack.loadFluidStackFromNBT(stack.getTag());
+		FluidStack fStack = getFluidOnItem(stack);
+		if(!fStack.isEmpty()){
 			tooltip.add(new TranslationTextComponent("tt.crossroads.fluid_tank", fStack.getAmount(), fStack.getDisplayName().getString()));
 		}
 	}
@@ -65,17 +63,25 @@ public class FluidTank extends ContainerBlock implements IReadable{
 		TileEntity te = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
 		if(te instanceof FluidTankTileEntity){
 			ItemStack drop = new ItemStack(this.asItem(), 1);
-			drop.setTag(((FluidTankTileEntity) te).getContent().writeToNBT(new CompoundNBT()));
+			((FluidTankTileEntity) te).getContent().writeToNBT(drop.getOrCreateTag());
 			return Lists.newArrayList(drop);
 		}
 		return super.getDrops(state, builder);
+	}
+
+	private FluidStack getFluidOnItem(ItemStack stack){
+		FluidStack nbtFluid = FluidStack.loadFluidStackFromNBT(stack.getTag());
+		if(nbtFluid.isEmpty()){
+			nbtFluid = FluidStack.loadFluidStackFromNBT(stack.getOrCreateTagElement("BlockEntityTag").getCompound("fluid_0"));
+		}
+		return nbtFluid;
 	}
 
 	@Override
 	public void setPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		if(stack.hasTag()){
 			FluidTankTileEntity te = (FluidTankTileEntity) world.getBlockEntity(pos);
-			te.setContent(FluidStack.loadFluidStackFromNBT(stack.getTag()));
+			te.setContent(getFluidOnItem(stack));
 		}
 	}
 

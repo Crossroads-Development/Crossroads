@@ -2,13 +2,13 @@
 	"type": "crossroads:formulation_vat",
 	"input_fluid": {
 		"fluid": "water",
-		"amount": 500
+		"amount": 100
 	},
 	"input_item": {
 		"item": "crossroads:slag"
 	},
 	"output": {
 		"fluid": "crossroads:fertilizer_solution",
-		"amount": 500
+		"amount": 100
 	}
 }

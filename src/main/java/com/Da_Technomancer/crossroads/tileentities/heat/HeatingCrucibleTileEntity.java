@@ -108,7 +108,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 
 		if(level.getGameTime() % 2 == 0){
 			int fullness = Math.min(3, (int) Math.ceil((float) fluids[0].getAmount() * 3F / (float) fluidProps[0].capacity));
-			BlockState state = level.getBlockState(worldPosition);
+			BlockState state = getBlockState();
 			if(state.getBlock() != CRBlocks.heatingCrucible){
 				setRemoved();
 				return;

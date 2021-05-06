@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.FluidTankContainer;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -43,10 +42,6 @@ public class FluidTankTileEntity extends InventoryTE{
 	@Override
 	protected IFluidHandler createGlobalFluidHandler(){
 		return new FluidTankHandler(0);
-	}
-
-	public int getRedstone(){
-		return RedstoneUtil.clampToVanilla(15F * fluids[0].getAmount() / CAPACITY);
 	}
 
 	/*

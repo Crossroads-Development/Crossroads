@@ -4,6 +4,14 @@
 		"crossroads:distilled_water",
 		"crossroads:flowing_distilled_water",
 		"crossroads:dirty_water",
-		"crossroads:flowing_dirty_water"
+		"crossroads:flowing_dirty_water",
+		"crossroads:nutrient_solution",
+		"crossroads:flowing_nutrient_solution",
+		"crossroads:fertilizer_solution",
+		"crossroads:flowing_fertilizer_solution",
+		"crossroads:blood",
+		"crossroads:flowing_blood",
+		"crossroads:soul_essence",
+		"crossroads:flowing_soul_essence"
 	]
 }

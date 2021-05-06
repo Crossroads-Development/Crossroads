@@ -105,7 +105,7 @@ public class AutoInjectorTileEntity extends InventoryTE{
 				Direction facing = getBlockState().getValue(ESProperties.FACING);
 				AxisAlignedBB region = ZONE.move(worldPosition.getX() + 0.5D + facing.getStepX() * SIZE / 2D, worldPosition.getY() + 0.5D + facing.getStepY() * SIZE / 2D, worldPosition.getZ() + 0.5D + facing.getStepZ() * SIZE / 2D);
 
-				List<LivingEntity> entities = level.getEntities(null, region, EntityPredicates.LIVING_ENTITY_STILL_ALIVE);
+				List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, region, EntityPredicates.LIVING_ENTITY_STILL_ALIVE);
 
 				//Apply the effect
 				for(LivingEntity ent : entities){

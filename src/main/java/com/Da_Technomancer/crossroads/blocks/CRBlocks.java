@@ -9,10 +9,7 @@ import com.Da_Technomancer.crossroads.blocks.fluid.*;
 import com.Da_Technomancer.crossroads.blocks.heat.*;
 import com.Da_Technomancer.crossroads.blocks.rotary.*;
 import com.Da_Technomancer.crossroads.blocks.technomancy.*;
-import com.Da_Technomancer.crossroads.blocks.witchcraft.AutoInjector;
-import com.Da_Technomancer.crossroads.blocks.witchcraft.BrewingVat;
-import com.Da_Technomancer.crossroads.blocks.witchcraft.ColdStorage;
-import com.Da_Technomancer.crossroads.blocks.witchcraft.FormulationVat;
+import com.Da_Technomancer.crossroads.blocks.witchcraft.*;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.fluids.GenericFluid;
 import com.Da_Technomancer.crossroads.items.CRItems;
@@ -164,6 +161,7 @@ public class CRBlocks{
 	public static BrewingVat brewingVat;
 	public static AutoInjector autoInjector;
 	public static ColdStorage coldStorage;
+	public static HydroponicsTrough hydroponicsTrough;
 
 	public static AbstractBlock.Properties getRockProperty(){
 		return AbstractBlock.Properties.of(Material.STONE).strength(3).requiresCorrectToolForDrops().sound(SoundType.STONE);
@@ -345,6 +343,7 @@ public class CRBlocks{
 		brewingVat = new BrewingVat();
 		autoInjector = new AutoInjector();
 		coldStorage = new ColdStorage();
+		hydroponicsTrough = new HydroponicsTrough();
 	}
 
 	@OnlyIn(Dist.CLIENT)

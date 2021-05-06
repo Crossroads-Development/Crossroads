@@ -103,7 +103,9 @@ public class AutoInjector extends ContainerBlock{
 
 	@Override
 	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
-		InventoryHelper.dropContents(world, pos, (IInventory) world.getBlockEntity(pos));
+		if(newState.getBlock() != this){
+			InventoryHelper.dropContents(world, pos, (IInventory) world.getBlockEntity(pos));
+		}
 		super.onRemove(state, world, pos, newState, isMoving);
 	}
 

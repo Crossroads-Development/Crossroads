@@ -12,6 +12,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.vector.Vector3d;
@@ -257,5 +258,9 @@ public final class MiscUtil{
 		if(damage > 5){
 			ent.hurt(DamageSource.LIGHTNING_BOLT, damage - 5F);//Deal any additional damage
 		}
+	}
+
+	public static int getLight(World world, BlockPos pos){
+		return world.isThundering() ? world.getMaxLocalRawBrightness(pos, 10) : world.getMaxLocalRawBrightness(pos);
 	}
 }
