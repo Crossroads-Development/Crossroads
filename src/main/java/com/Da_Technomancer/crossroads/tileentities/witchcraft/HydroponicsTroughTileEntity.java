@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.HydroponicsTroughContainer;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
@@ -73,6 +74,7 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 		CROPS.put(Items.CRIMSON_FUNGUS, Triple.of(false, 5, new ItemStack[] {new ItemStack(Items.CRIMSON_FUNGUS)}));
 		CROPS.put(Items.WARPED_FUNGUS, Triple.of(false, 5, new ItemStack[] {new ItemStack(Items.WARPED_FUNGUS)}));
 		CROPS.put(Items.LILY_PAD, Triple.of(true, 7, new ItemStack[] {new ItemStack(Items.LILY_PAD)}));
+		CROPS.put(CRBlocks.medicinalMushroom.asItem(), Triple.of(false, 5, new ItemStack[] {new ItemStack(CRBlocks.medicinalMushroom)}));
 	}
 
 	private int progress = 0;

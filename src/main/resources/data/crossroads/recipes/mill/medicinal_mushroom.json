@@ -1,0 +1,9 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"item": "crossroads:medicinal_mushroom"
+	},
+	"output": {
+		"item": "crossroads:mushroom_dust"
+	}
+}

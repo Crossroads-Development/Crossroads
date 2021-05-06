@@ -123,6 +123,7 @@ public final class CRItems{
 	public static BloodSample bloodSample;
 	public static PotionExtension potionExtension;
 	public static Syringe syringe;
+	public static Item mushroomDust;
 
 	public static OreProfileItem oreGravel;
 	public static OreProfileItem oreClump;
@@ -241,6 +242,7 @@ public final class CRItems{
 		bloodSample = new BloodSample();
 		potionExtension = new PotionExtension();
 		syringe = new Syringe();
+		toRegister.add(mushroomDust = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("mushroom_dust"));
 	}
 
 	@OnlyIn(Dist.CLIENT)

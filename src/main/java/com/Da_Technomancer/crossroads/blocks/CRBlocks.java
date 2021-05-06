@@ -162,6 +162,7 @@ public class CRBlocks{
 	public static AutoInjector autoInjector;
 	public static ColdStorage coldStorage;
 	public static HydroponicsTrough hydroponicsTrough;
+	public static MedicinalMushroom medicinalMushroom;
 
 	public static AbstractBlock.Properties getRockProperty(){
 		return AbstractBlock.Properties.of(Material.STONE).strength(3).requiresCorrectToolForDrops().sound(SoundType.STONE);
@@ -344,6 +345,7 @@ public class CRBlocks{
 		autoInjector = new AutoInjector();
 		coldStorage = new ColdStorage();
 		hydroponicsTrough = new HydroponicsTrough();
+		medicinalMushroom = new MedicinalMushroom();
 	}
 
 	@OnlyIn(Dist.CLIENT)

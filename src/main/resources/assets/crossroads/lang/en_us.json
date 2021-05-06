@@ -265,6 +265,8 @@
 	"item.crossroads.potion_extension": "Genetic Plasmids",
 	"item.crossroads.syringe": "Syringe",
 	"block.crossroads.hydroponics_trough": "Hydroponics Trough",
+	"block.crossroads.medicinal_mushroom": "Medicinal Mushroom",
+	"item.crossroads.mushroom_dust": "Medicinal Mushroom Powder",
 
 	"item.crossroads.distilled_water_bucket": "Distilled Water Bucket",
 	"item.crossroads.dirty_water_bucket": "Dirty Water Bucket",
@@ -288,7 +290,14 @@
 	"item.minecraft.splash_potion.effect.curative": "Splash Potion of Neutralization",
 	"item.minecraft.lingering_potion.effect.curative": "Lingering Potion of Neutralization",
 	"item.minecraft.tipped_arrow.effect.curative": "Arrow of Neutralization",
-
+	"item.minecraft.potion.effect.nausea": "Potion of Nausea",
+	"item.minecraft.splash_potion.effect.nausea": "Splash Potion of Nausea",
+	"item.minecraft.lingering_potion.effect.nausea": "Lingering Potion of Nausea",
+	"item.minecraft.tipped_arrow.effect.nausea": "Arrow of Nausea",
+	"item.minecraft.potion.effect.blindness": "Potion of Blindness",
+	"item.minecraft.splash_potion.effect.blindness": "Splash Potion of Blindness",
+	"item.minecraft.lingering_potion.effect.blindness": "Lingering Potion of Blindness",
+	"item.minecraft.tipped_arrow.effect.blindness": "Arrow of Blindness",
 
 	"item.crossroads.ore_gravel": "Raw %1$s Grit",
 	"item.crossroads.ore_clump": "%1$s Clump",
@@ -723,6 +732,8 @@
 	"tt.crossroads.hydroponic_trough.output": "Items can only be extracted while redstone powered, but wastes all liquid",
 	"tt.crossroads.hydroponic_trough.drain": "Consumes: -%1$dmb/t of Fertilizer Solution OR Nutrient Solution",
 	"tt.crossroads.hydroponic_trough.circuit": "Circuits measure total items in the output",
+	"tt.crossroads.medicinal_mushroom.desc": "A mushroom with several important uses in brewing",
+	"tt.crossroads.medicinal_mushroom.quip": "It's not drugs. Probably",
 
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
