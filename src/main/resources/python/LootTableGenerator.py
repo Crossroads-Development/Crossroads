@@ -4,9 +4,11 @@ import os
 
 blockstates = os.listdir("../assets/crossroads/blockstates/")
 
+# Note these have a .json suffix
 regNames = [os.path.basename(bstate) for bstate in blockstates]
 
 loottablePath = "../data/crossroads/loot_tables/blocks"
+templatePath = '../python/templates/loot_tables/'
 
 for prevTable in os.listdir(loottablePath):
 	if os.path.isfile(prevTable):
@@ -21,7 +23,7 @@ def writeGem(file, blockName, gemName):
 
 for name in regNames:
 	filepath = loottablePath + "/" + name
-	if "molten_" in name or "liquid_" in name or "distilled_water" in name or "dirty_water" in name or "steam" in name or "soul_essence" in name or "blood" in name or "_solution" in name:
+	if "molten_" in name or "liquid_" in name or "distilled_water" in name or "dirty_water" in name or "steam.json" == name or "soul_essence" in name or "_solution" in name:
 		# Fluids don't have loot tables
 		continue
 
@@ -36,6 +38,13 @@ for name in regNames:
 		elif name.startswith("redstone_crystal"):
 			# Redstone crystal drops 1-4 redstone dust (silk touch & fortune applies)
 			f.write("{\n\t\"type\": \"minecraft:block\",\n\t\"pools\": [\n\t\t{\n\t\t\t\"rolls\": 1,\n\t\t\t\"entries\": [\n\t\t\t\t{\n\t\t\t\t\t\"type\": \"minecraft:alternatives\",\n\t\t\t\t\t\"children\": [\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\"type\": \"minecraft:item\",\n\t\t\t\t\t\t\t\"conditions\": [\n\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\"condition\": \"minecraft:match_tool\",\n\t\t\t\t\t\t\t\t\t\"predicate\": {\n\t\t\t\t\t\t\t\t\t\t\"enchantments\": [\n\t\t\t\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\t\t\t\"enchantment\": \"minecraft:silk_touch\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"levels\": {\n\t\t\t\t\t\t\t\t\t\t\t\t\t\"min\": 1\n\t\t\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t],\n\t\t\t\t\t\t\t\"name\": \"crossroads:redstone_crystal\"\n\t\t\t\t\t\t},\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\"type\": \"minecraft:item\",\n\t\t\t\t\t\t\t\"functions\": [\n\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\"function\": \"minecraft:set_count\",\n\t\t\t\t\t\t\t\t\t\"count\": {\n\t\t\t\t\t\t\t\t\t\t\"min\": 2.0,\n\t\t\t\t\t\t\t\t\t\t\"max\": 4.0,\n\t\t\t\t\t\t\t\t\t\t\"type\": \"minecraft:uniform\"\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\"function\": \"minecraft:apply_bonus\",\n\t\t\t\t\t\t\t\t\t\"enchantment\": \"minecraft:fortune\",\n\t\t\t\t\t\t\t\t\t\"formula\": \"minecraft:uniform_bonus_count\",\n\t\t\t\t\t\t\t\t\t\"parameters\": {\n\t\t\t\t\t\t\t\t\t\t\"bonusMultiplier\": 1\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\"function\": \"minecraft:limit_count\",\n\t\t\t\t\t\t\t\t\t\"limit\": {\n\t\t\t\t\t\t\t\t\t\t\"max\": 4,\n\t\t\t\t\t\t\t\t\t\t\"min\": 1\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\"function\": \"minecraft:explosion_decay\"\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t],\n\t\t\t\t\t\t\t\"name\": \"minecraft:redstone\"\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t]\n\t\t}\n\t]\n}")
+		elif name.startswith("densus_plate") or name.startswith("anti_densus_plate"):
+			# Special loot table for density plate to drop the layers. From a template file
+			with open(templatePath + "densus_plate.json", 'r') as template:
+				lines = template.readlines()
+				template.seek(0)
+				lines = [line.replace("<BLOCK>", "crossroads:" + name[:-5]) for line in lines]
+				f.writelines(lines)
 		else:
 			f.write("{\n\t\"type\": \"minecraft:block\",\n\t\"pools\": [\n\t\t{\n\t\t\t\"rolls\": 1,\n\t\t\t\"entries\": [\n\t\t\t\t{\n\t\t\t\t\t\"type\": \"minecraft:item\",\n\t\t\t\t\t\"name\": \"crossroads:" + name.replace(".json", "", 1) + "\"\n\t\t\t\t}\n\t\t\t],\n\t\t\t\"conditions\": [\n\t\t\t\t{\n\t\t\t\t\t\"condition\": \"minecraft:survives_explosion\"\n\t\t\t\t}\n\t\t\t]\n\t\t}\n\t]\n}")
 

@@ -19,7 +19,7 @@ public final class CRFluids{
 	//Witchcraft fluids
 	public static GenericFluid.FluidData nutrientSolution;
 	public static GenericFluid.FluidData fertilizerSolution;
-	public static GenericFluid.FluidData blood;
+//	public static GenericFluid.FluidData blood;
 	public static GenericFluid.FluidData soulEssence;
 
 	public static ArrayList<Fluid> toRegister = new ArrayList<>();
@@ -36,7 +36,7 @@ public final class CRFluids{
 		moltenCopshowium = GenericFluid.create("molten_copshowium", true, false);
 		nutrientSolution = GenericFluid.create("nutrient_solution", false, false);
 		fertilizerSolution = GenericFluid.create("fertilizer_solution", false, false);
-		blood = GenericFluid.create("blood", false, false);
+//		blood = GenericFluid.create("blood", false, false);
 		soulEssence = GenericFluid.create("soul_essence", false, true);
 	}
 }

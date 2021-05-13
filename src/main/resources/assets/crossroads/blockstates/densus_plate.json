@@ -1,10 +1,31 @@
 {
 	"variants": {
-		"facing=up": { "model": "crossroads:block/densus_plate", "x": 0 },
-		"facing=down": { "model": "crossroads:block/densus_plate", "x": 180 },
-		"facing=north": { "model": "crossroads:block/densus_plate", "x": 90, "y": 0},
-		"facing=south": { "model": "crossroads:block/densus_plate", "x": 90, "y": 180 },
-		"facing=east": { "model": "crossroads:block/densus_plate", "x": 90, "y": 90 },
-		"facing=west": { "model": "crossroads:block/densus_plate", "x": 90, "y": 270 }
+		"layers=1,facing=up": { "model": "crossroads:block/densus_plate_1", "x": 0 },
+		"layers=1,facing=down": { "model": "crossroads:block/densus_plate_1", "x": 180 },
+		"layers=1,facing=north": { "model": "crossroads:block/densus_plate_1", "x": 90, "y": 0},
+		"layers=1,facing=south": { "model": "crossroads:block/densus_plate_1", "x": 90, "y": 180 },
+		"layers=1,facing=east": { "model": "crossroads:block/densus_plate_1", "x": 90, "y": 90 },
+		"layers=1,facing=west": { "model": "crossroads:block/densus_plate_1", "x": 90, "y": 270 },
+
+		"layers=2,facing=up": { "model": "crossroads:block/densus_plate_2", "x": 0 },
+		"layers=2,facing=down": { "model": "crossroads:block/densus_plate_2", "x": 180 },
+		"layers=2,facing=north": { "model": "crossroads:block/densus_plate_2", "x": 90, "y": 0},
+		"layers=2,facing=south": { "model": "crossroads:block/densus_plate_2", "x": 90, "y": 180 },
+		"layers=2,facing=east": { "model": "crossroads:block/densus_plate_2", "x": 90, "y": 90 },
+		"layers=2,facing=west": { "model": "crossroads:block/densus_plate_2", "x": 90, "y": 270 },
+
+		"layers=3,facing=up": { "model": "crossroads:block/densus_plate_3", "x": 0 },
+		"layers=3,facing=down": { "model": "crossroads:block/densus_plate_3", "x": 180 },
+		"layers=3,facing=north": { "model": "crossroads:block/densus_plate_3", "x": 90, "y": 0},
+		"layers=3,facing=south": { "model": "crossroads:block/densus_plate_3", "x": 90, "y": 180 },
+		"layers=3,facing=east": { "model": "crossroads:block/densus_plate_3", "x": 90, "y": 90 },
+		"layers=3,facing=west": { "model": "crossroads:block/densus_plate_3", "x": 90, "y": 270 },
+
+		"layers=4,facing=up": { "model": "crossroads:block/densus_plate_4", "x": 0 },
+		"layers=4,facing=down": { "model": "crossroads:block/densus_plate_4", "x": 180 },
+		"layers=4,facing=north": { "model": "crossroads:block/densus_plate_4", "x": 90, "y": 0},
+		"layers=4,facing=south": { "model": "crossroads:block/densus_plate_4", "x": 90, "y": 180 },
+		"layers=4,facing=east": { "model": "crossroads:block/densus_plate_4", "x": 90, "y": 90 },
+		"layers=4,facing=west": { "model": "crossroads:block/densus_plate_4", "x": 90, "y": 270 }
 	}
 }

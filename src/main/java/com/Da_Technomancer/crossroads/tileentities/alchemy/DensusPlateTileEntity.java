@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -27,7 +28,8 @@ public class DensusPlateTileEntity extends TileEntity implements ITickableTileEn
 
 	private static final ITag<Block> gravityBlocking = BlockTags.bind(Crossroads.MODID + ":gravity_blocking");
 
-	private static final int RANGE = CRConfig.gravRange.get();
+	private final int RANGE = CRConfig.gravRange.get();
+	private final double ACCEL = CRConfig.gravAccel.get();
 
 	public DensusPlateTileEntity(){
 		super(type);
@@ -65,25 +67,28 @@ public class DensusPlateTileEntity extends TileEntity implements ITickableTileEn
 			}
 		}
 
+		double acceleration = getBlockState().getValue(CRProperties.LAYERS) * ACCEL;
+
 		List<Entity> ents = level.getEntitiesOfClass(Entity.class, new AxisAlignedBB(worldPosition.getX() + (dir.getStepX() == 1 ? 1 : 0), worldPosition.getY() + (dir.getStepY() == 1 ? 1 : 0), worldPosition.getZ() + (dir.getStepZ() == 1 ? 1 : 0), worldPosition.getX() + (dir.getStepX() == -1 ? 0 : 1) + effectiveRange * dir.getStepX(), worldPosition.getY() + (dir.getStepY() == -1 ? 0 : 1) + effectiveRange * dir.getStepY(), worldPosition.getZ() + (dir.getStepZ() == -1 ? 0 : 1) + effectiveRange * dir.getStepZ()), EntityPredicates.ENTITY_NOT_BEING_RIDDEN);
 		for(Entity ent : ents){
 			if(ent.isShiftKeyDown() || ent.isSpectator()){
 				continue;
 			}
+
 			switch(dir.getAxis()){
 				case X:
-					ent.push(0.6D * (ent.getX() < worldPosition.getX() ^ inverse ? 1D : -1D), 0, 0);
+					ent.push(acceleration * (ent.getX() < worldPosition.getX() ^ inverse ? 1D : -1D), 0, 0);
 					ent.hurtMarked = true;
 					break;
 				case Y:
-					ent.push(0, 0.6D * (ent.getY() < worldPosition.getY() ^ inverse ? 1D : -1D), 0);
+					ent.push(0, acceleration * (ent.getY() < worldPosition.getY() ^ inverse ? 1D : -1D), 0);
 					ent.hurtMarked = true;
 					if(inverse && dir == Direction.UP || !inverse && dir == Direction.DOWN){
 						ent.fallDistance = 0;
 					}
 					break;
 				case Z:
-					ent.push(0, 0, 0.6D * (ent.getZ() < worldPosition.getZ() ^ inverse ? 1D : -1D));
+					ent.push(0, 0, acceleration * (ent.getZ() < worldPosition.getZ() ^ inverse ? 1D : -1D));
 					ent.hurtMarked = true;
 					break;
 				default:

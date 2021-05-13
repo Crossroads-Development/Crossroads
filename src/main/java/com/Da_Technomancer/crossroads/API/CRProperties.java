@@ -27,6 +27,7 @@ public class CRProperties extends ESProperties{
 //	public static final BooleanProperty TOP = BooleanProperty.create("top");
 	public static final IntegerProperty POWER_LEVEL = IntegerProperty.create("power_level", 0, 2);//Used for changing visual model on the beam splitter and redstone axis; Beam Splitter: 0 is no signal, 2 for signal >= 15, 1 for signal in (0, 15); Redstone Axis: 0: No signal, 1: Signal > 0, 2: Signal < 0
 	public static final IntegerProperty RATE_SIGNED = IntegerProperty.create("rate", 0, 4);//Used for changing animation speed on stirling engine; 2: no animation; 3: slow forward; 4: fast forward; 1: slow reverse; 0: fast reverse
+	public static final IntegerProperty LAYERS = IntegerProperty.create("layers", 1, 4);//Used for density plates
 
 	//Individual properties for each direction- for blocks with a conduit-like shape
 	public static final BooleanProperty[] HAS_MATCH_SIDES = new BooleanProperty[] {BooleanProperty.create("down_b"), BooleanProperty.create("up_b"), BooleanProperty.create("north_b"), BooleanProperty.create("south_b"), BooleanProperty.create("west_b"), BooleanProperty.create("east_b")};

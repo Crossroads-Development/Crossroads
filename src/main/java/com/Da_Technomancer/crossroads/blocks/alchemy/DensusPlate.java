@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.DensusPlateTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
@@ -10,6 +11,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -25,15 +27,18 @@ import javax.annotation.Nullable;
 
 public class DensusPlate extends ContainerBlock{
 
-	private static final VoxelShape[] SHAPES = new VoxelShape[6];
+	private static final VoxelShape[][] SHAPES = new VoxelShape[4][6];
 
 	static{
-		SHAPES[0] = box(0, 14, 0, 16, 16, 16);
-		SHAPES[1] = box(0, 0, 0, 16, 2, 16);
-		SHAPES[2] = box(0, 0, 14, 16, 16, 16);
-		SHAPES[3] = box(0, 0, 0, 16, 16, 2);
-		SHAPES[4] = box(14, 0, 0, 16, 16, 16);
-		SHAPES[5] = box(0, 0, 0, 2, 16, 16);
+		for(int i = 0; i < 4; i++){
+			int width = (i + 1) * 2;
+			SHAPES[i][0] = box(0, 16 - width, 0, 16, 16, 16);
+			SHAPES[i][1] = box(0, 0, 0, 16, width, 16);
+			SHAPES[i][2] = box(0, 0, 16 - width, 16, 16, 16);
+			SHAPES[i][3] = box(0, 0, 0, 16, 16, width);
+			SHAPES[i][4] = box(16 - width, 0, 0, 16, 16, 16);
+			SHAPES[i][5] = box(0, 0, 0, width, 16, 16);
+		}
 	}
 
 	public DensusPlate(boolean anti){
@@ -42,15 +47,27 @@ public class DensusPlate extends ContainerBlock{
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
+		registerDefaultState(defaultBlockState().setValue(CRProperties.LAYERS, 1));
 	}
 
 	@Override
 	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
+		ItemStack stack = playerIn.getItemInHand(hand);
+		if(ESConfig.isWrench(stack)){
 			if(!worldIn.isClientSide){
 				worldIn.setBlockAndUpdate(pos, state.cycle(ESProperties.FACING));
 			}
 			return ActionResultType.SUCCESS;
+		}
+		if(stack.getItem() == this.asItem()){
+			int layers = state.getValue(CRProperties.LAYERS);
+			if(layers < 4){
+				if(!worldIn.isClientSide){
+					worldIn.setBlockAndUpdate(pos, state.setValue(CRProperties.LAYERS, layers + 1));
+					stack.shrink(1);
+				}
+				return ActionResultType.SUCCESS;
+			}
 		}
 		return ActionResultType.PASS;
 	}
@@ -63,12 +80,12 @@ public class DensusPlate extends ContainerBlock{
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
-		return SHAPES[state.getValue(ESProperties.FACING).get3DDataValue()];
+		return SHAPES[state.getValue(CRProperties.LAYERS) - 1][state.getValue(ESProperties.FACING).get3DDataValue()];
 	}
 
 	@Override
 	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
-		builder.add(ESProperties.FACING);
+		builder.add(ESProperties.FACING, CRProperties.LAYERS);
 	}
 
 	@Override

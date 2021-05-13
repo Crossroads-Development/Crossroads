@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"item": "minecraft:soul_soil",
+		"count": 4
+	},
+	"ingredients": [
+		{
+			"item": "minecraft:nether_wart"
+		},
+		{
+			"item": "minecraft:soul_sand"
+		},
+		{
+			"item": "minecraft:soul_sand"
+		},
+		{
+			"tag": "forge:gravel"
+		}
+	]
+}

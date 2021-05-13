@@ -6,13 +6,13 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "crossroads:anti_densus_plate",
+					"name": "<BLOCK>",
 					"functions": [
 						{
 							"conditions": [
 								{
 									"condition": "block_state_property",
-									"block": "crossroads:anti_densus_plate",
+									"block": "<BLOCK>",
 									"properties": {
 										"layers": 2
 									}
@@ -25,7 +25,7 @@
 							"conditions": [
 								{
 									"condition": "block_state_property",
-									"block": "crossroads:anti_densus_plate",
+									"block": "<BLOCK>",
 									"properties": {
 										"layers": 3
 									}
@@ -38,7 +38,7 @@
 							"conditions": [
 								{
 									"condition": "block_state_property",
-									"block": "crossroads:anti_densus_plate",
+									"block": "<BLOCK>",
 									"properties": {
 										"layers": 4
 									}

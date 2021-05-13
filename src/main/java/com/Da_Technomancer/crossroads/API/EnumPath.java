@@ -14,10 +14,6 @@ public enum EnumPath{
 	TECHNOMANCY((byte) 0),
 	ALCHEMY((byte) 1),
 	WITCHCRAFT((byte) 2);
-	//Witchcraft is NYI by Crossroads
-	//However, all the code is in place for recipes to be added to the witchcraft category
-	//If a datapack modifies the witchcraft_unlock_key tag, it can be unlocked
-	//Food for thought, modpack makers
 
 	private final byte index;
 

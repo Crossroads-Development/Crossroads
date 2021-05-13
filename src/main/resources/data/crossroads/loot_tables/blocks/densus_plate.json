@@ -6,12 +6,51 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "crossroads:densus_plate"
-				}
-			],
-			"conditions": [
-				{
-					"condition": "minecraft:survives_explosion"
+					"name": "crossroads:densus_plate",
+					"functions": [
+						{
+							"conditions": [
+								{
+									"condition": "block_state_property",
+									"block": "crossroads:densus_plate",
+									"properties": {
+										"layers": 2
+									}
+								}
+							],
+							"function": "minecraft:set_count",
+							"count": 2
+						},
+						{
+							"conditions": [
+								{
+									"condition": "block_state_property",
+									"block": "crossroads:densus_plate",
+									"properties": {
+										"layers": 3
+									}
+								}
+							],
+							"function": "minecraft:set_count",
+							"count": 3
+						},
+						{
+							"conditions": [
+								{
+									"condition": "block_state_property",
+									"block": "crossroads:densus_plate",
+									"properties": {
+										"layers": 4
+									}
+								}
+							],
+							"function": "minecraft:set_count",
+							"count": 4
+						},
+						{
+							"function": "minecraft:explosion_decay"
+						}
+					]
 				}
 			]
 		}

@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"item": "minecraft:dirt",
+		"count": 4
+	},
+	"ingredients": [
+		{
+			"tag": "minecraft:flowers"
+		},
+		{
+			"tag": "minecraft:sand"
+		},
+		{
+			"tag": "minecraft:sand"
+		},
+		{
+			"item": "minecraft:clay_ball"
+		}
+	]
+}
