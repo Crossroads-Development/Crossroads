@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"age=1,half=lower": { "model": "crossroads:block/wheezewort_bottom_1" },
+		"age=2,half=lower": { "model": "crossroads:block/wheezewort_bottom_2" },
+		"age=3,half=lower": { "model": "crossroads:block/wheezewort_bottom_3" },
+		"age=1,half=upper": { "model": "crossroads:block/wheezewort_top_2" },
+		"age=2,half=upper": { "model": "crossroads:block/wheezewort_top_2" },
+		"age=3,half=upper": { "model": "crossroads:block/wheezewort_top_3" }
+	}
+}

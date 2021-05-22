@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.particles.sounds.CRSounds;
+import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;

@@ -267,6 +267,9 @@
 	"block.crossroads.hydroponics_trough": "Hydroponics Trough",
 	"block.crossroads.medicinal_mushroom": "Medicinal Mushroom",
 	"item.crossroads.mushroom_dust": "Medicinal Mushroom Powder",
+	"block.crossroads.petrol_cactus": "Combustible Cactus",
+	"block.crossroads.wheezewort": "Wheezewort",
+	"item.crossroads.wheezewort_seeds": "Wheezewort Seed",
 
 	"item.crossroads.distilled_water_bucket": "Distilled Water Bucket",
 	"item.crossroads.dirty_water_bucket": "Dirty Water Bucket",
@@ -734,7 +737,12 @@
 	"tt.crossroads.hydroponic_trough.circuit": "Circuits measure total items in the output",
 	"tt.crossroads.medicinal_mushroom.desc": "A mushroom with several important uses in brewing",
 	"tt.crossroads.medicinal_mushroom.quip": "It's not drugs. Probably",
-
+	"tt.crossroads.petrol_cactus.desc": "A good growable fuel source. Also highly combustible",
+	"tt.crossroads.petrol_cactus.quip": "When life gives you cactus, burn life's house down",
+	"tt.crossroads.wheezewort.purpose": "Occasionally cools the block above it by -%1$d°C",
+	"tt.crossroads.wheezewort.age": "Has three growth stages - Only does cooling in the middle stage",
+	"tt.crossroads.wheezewort.dispense": "Can be planted by dispensers",
+	"tt.crossroads.wheezewort.quip": "It's made of meat?",
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
 	"container.crossroads.boilerplate.speed": "%1$f rad/s",
@@ -795,6 +803,7 @@
 	"subtitle.crossroads.spark": "Small electrical discharge",
 	"subtitle.crossroads.arc": "Electrical discharge",
 	"subtitle.crossroads.entropy_trans": "Temporal entropy transfer",
+	"subtitle.crossroads.steam_release": "High pressure gas release",
 
 	"material.iron": "Iron",
 	"material.gold": "Gold",

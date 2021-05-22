@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.IIntArrayReceiver;
 import com.Da_Technomancer.crossroads.API.packets.SendIntArrayToClient;
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.particles.sounds.CRSounds;
+import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.essentials.packets.ILongReceiver;
 import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import com.Da_Technomancer.essentials.tileentities.LinkHelper;

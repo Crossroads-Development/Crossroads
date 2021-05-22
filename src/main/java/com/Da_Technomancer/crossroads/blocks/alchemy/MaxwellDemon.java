@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.MaxwellDemonTileEntity;
@@ -43,8 +44,9 @@ public class MaxwellDemon extends ContainerBlock{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.maxwell_demon.top", MaxwellDemonTileEntity.MAX_TEMP, MaxwellDemonTileEntity.RATE));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.maxwell_demon.bottom", MaxwellDemonTileEntity.MIN_TEMP, MaxwellDemonTileEntity.RATE));
+		double rate = CRConfig.demonPower.get();
+		tooltip.add(new TranslationTextComponent("tt.crossroads.maxwell_demon.top", MaxwellDemonTileEntity.MAX_TEMP, rate));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.maxwell_demon.bottom", MaxwellDemonTileEntity.MIN_TEMP, rate));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.maxwell_demon.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

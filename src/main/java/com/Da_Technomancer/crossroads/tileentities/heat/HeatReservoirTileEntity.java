@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.heat;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.nbt.CompoundNBT;
@@ -51,7 +52,7 @@ public class HeatReservoirTileEntity extends ModuleTE{
 		@Override
 		public void addHeat(double heat){
 			init();
-			temp += heat * 0.005D;
+			temp = Math.max(HeatUtil.ABSOLUTE_ZERO, temp + heat * 0.005D);
 			setChanged();
 		}
 	}

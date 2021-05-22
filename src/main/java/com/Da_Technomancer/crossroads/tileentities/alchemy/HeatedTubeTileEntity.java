@@ -80,7 +80,7 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 		@Override
 		public void setTemp(double tempIn){
 			init = true;
-			cableTemp = tempIn;
+			cableTemp = Math.max(HeatUtil.ABSOLUTE_ZERO, tempIn);
 			//Shares heat between internal cable & contents
 			dirtyReag = true;
 			setChanged();
@@ -89,7 +89,7 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 		@Override
 		public void addHeat(double tempChange){
 			initHeat();
-			cableTemp += tempChange;
+			cableTemp = Math.max(HeatUtil.ABSOLUTE_ZERO, cableTemp + tempChange);
 			//Shares heat between internal cable & contents
 			dirtyReag = true;
 			setChanged();

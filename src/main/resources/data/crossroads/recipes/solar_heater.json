@@ -7,7 +7,7 @@
 	"pattern": [
 		"T T",
 		"TCT",
-		"TTT"
+		"III"
 	],
 	"key": {
 		"C": {
@@ -15,6 +15,9 @@
 		},
 		"T": {
 			"tag": "forge:ingots/tin"
+		},
+		"I": {
+			"tag": "forge:ingots/iron"
 		}
 	}
 }

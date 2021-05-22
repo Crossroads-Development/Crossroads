@@ -172,14 +172,14 @@ public class StirlingEngineTileEntity extends ModuleTE{
 		@Override
 		public void setTemp(double tempIn){
 			init();
-			tempSide = tempIn;
+			tempSide = Math.max(HeatUtil.ABSOLUTE_ZERO, tempIn);
 			setChanged();
 		}
 
 		@Override
 		public void addHeat(double heat){
 			init();
-			tempSide += heat;
+			tempSide = Math.max(HeatUtil.ABSOLUTE_ZERO, tempSide + heat);
 			setChanged();
 		}
 	}
@@ -195,14 +195,14 @@ public class StirlingEngineTileEntity extends ModuleTE{
 		@Override
 		public void setTemp(double tempIn){
 			init();
-			tempBottom = tempIn;
+			tempBottom = Math.max(HeatUtil.ABSOLUTE_ZERO, tempBottom);
 			setChanged();
 		}
 
 		@Override
 		public void addHeat(double heat){
 			init();
-			tempBottom += heat;
+			tempBottom = Math.max(HeatUtil.ABSOLUTE_ZERO, tempBottom + heat);
 			setChanged();
 		}
 	}

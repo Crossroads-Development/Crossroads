@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.particles;
+package com.Da_Technomancer.crossroads.ambient.particles;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;

@@ -163,6 +163,8 @@ public class CRBlocks{
 	public static ColdStorage coldStorage;
 	public static HydroponicsTrough hydroponicsTrough;
 	public static MedicinalMushroom medicinalMushroom;
+	public static PetrolCactus petrolCactus;
+	public static Wheezewort wheezewort;
 
 	public static AbstractBlock.Properties getRockProperty(){
 		return AbstractBlock.Properties.of(Material.STONE).strength(3).requiresCorrectToolForDrops().sound(SoundType.STONE);
@@ -176,7 +178,12 @@ public class CRBlocks{
 		return AbstractBlock.Properties.of(Material.GLASS).strength(0.5F).sound(SoundType.GLASS);
 	}
 
-	private static final Item.Properties itemBlockProp = new Item.Properties().tab(CRItems.TAB_CROSSROADS);
+	/**
+	 * Public for read only
+	 * Do NOT modify this value, as it is mutable
+	 */
+	public static final Item.Properties itemBlockProp = new Item.Properties().tab(CRItems.TAB_CROSSROADS);
+
 	public static final ArrayList<Block> toRegister = new ArrayList<>();
 
 	/**
@@ -189,9 +196,13 @@ public class CRBlocks{
 	}
 
 	public static <T extends Block> T blockAddQue(T block, Item.Properties itemProp){
+		return blockAddQue(block, new BlockItem(block, itemProp));
+	}
+
+	public static <T extends Block> T blockAddQue(T block, BlockItem itemBlock){
 		assert block.getRegistryName() != null;
-		Item item = new BlockItem(block, itemProp).setRegistryName(block.getRegistryName());
-		CRItems.toRegister.add(item);
+		itemBlock.setRegistryName(block.getRegistryName());
+		CRItems.toRegister.add(itemBlock);
 		return block;
 	}
 
@@ -346,6 +357,8 @@ public class CRBlocks{
 		coldStorage = new ColdStorage();
 		hydroponicsTrough = new HydroponicsTrough();
 		medicinalMushroom = new MedicinalMushroom();
+		petrolCactus = new PetrolCactus();
+		wheezewort = new Wheezewort();
 	}
 
 	@OnlyIn(Dist.CLIENT)

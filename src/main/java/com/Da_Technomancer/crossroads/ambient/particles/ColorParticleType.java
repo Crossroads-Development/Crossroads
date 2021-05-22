@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.particles;
+package com.Da_Technomancer.crossroads.ambient.particles;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.mojang.serialization.Codec;

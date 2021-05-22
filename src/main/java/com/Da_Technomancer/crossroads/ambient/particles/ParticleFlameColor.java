@@ -1,8 +1,9 @@
-package com.Da_Technomancer.crossroads.particles;
+package com.Da_Technomancer.crossroads.ambient.particles;
 
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -10,20 +11,17 @@ import javax.annotation.Nullable;
 import java.awt.*;
 
 @OnlyIn(Dist.CLIENT)
-public class ParticleBubbleColor extends SpriteTexturedParticle{
+public class ParticleFlameColor extends SpriteTexturedParticle{
 
 	private final IAnimatedSprite sprite;
 
-	protected ParticleBubbleColor(ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, Color c, IAnimatedSprite s){
+	private ParticleFlameColor(ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, Color c, IAnimatedSprite s){
 		super(worldIn, x, y, z);
-		this.sprite = s;
 		setSize(0.02F, 0.02F);
 		setBoundingBox(new AxisAlignedBB(x, y, z, x + bbWidth, y + bbHeight, z + bbWidth));
 		hasPhysics = false;
-		rCol = 1F;
-		gCol = 1F;
-		bCol = 1F;
-//		setParticleTextureIndex(133);
+		sprite = s;
+//		setParticleTextureIndex(48);
 		quadSize *= random.nextFloat() * 0.6F + 0.2F;
 		xd = xSpeed;//Suggestion: (Math.random() * 2D - 1D) * 0.015D
 		yd = ySpeed;//Suggestion: Math.random() * 0.015D
@@ -32,6 +30,21 @@ public class ParticleBubbleColor extends SpriteTexturedParticle{
 		setAlpha(c.getAlpha() / 255F);
 		setLifetime((int) (7.0D / (Math.random() * 0.8D + 0.2D)));
 		setSpriteFromAge(sprite);
+	}
+
+	@Override
+	public int getLightColor(float partialTick){
+		float f = (age + partialTick) / (float) lifetime;
+		f = MathHelper.clamp(f, 0.0F, 1.0F);
+		int i = super.getLightColor(partialTick);
+		int j = i & 255;
+		int k = i >> 16 & 255;
+		j += (int) (f * 15.0F * 16.0F);
+		if(j > 240){
+			j = 240;
+		}
+
+		return j | k << 16;
 	}
 
 	@Override
@@ -66,7 +79,7 @@ public class ParticleBubbleColor extends SpriteTexturedParticle{
 		@Nullable
 		@Override
 		public Particle createParticle(ColorParticleData typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed){
-			return new ParticleBubbleColor(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, typeIn.getColor(), sprite);
+			return new ParticleFlameColor(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, typeIn.getColor(), sprite);
 		}
 	}
 }

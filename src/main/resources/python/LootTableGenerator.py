@@ -45,6 +45,13 @@ for name in regNames:
 				template.seek(0)
 				lines = [line.replace("<BLOCK>", "crossroads:" + name[:-5]) for line in lines]
 				f.writelines(lines)
+		elif name.startswith("wheezewort"):
+			# Special loot table for two tall plants. From a template file
+			with open(templatePath + "double_plant.json", 'r') as template:
+				lines = template.readlines()
+				template.seek(0)
+				lines = [line.replace("<BLOCK>", "crossroads:" + name[:-5]).replace("<ITEM>", "crossroads:wheezewort_seeds") for line in lines]
+				f.writelines(lines)
 		else:
 			f.write("{\n\t\"type\": \"minecraft:block\",\n\t\"pools\": [\n\t\t{\n\t\t\t\"rolls\": 1,\n\t\t\t\"entries\": [\n\t\t\t\t{\n\t\t\t\t\t\"type\": \"minecraft:item\",\n\t\t\t\t\t\"name\": \"crossroads:" + name.replace(".json", "", 1) + "\"\n\t\t\t\t}\n\t\t\t],\n\t\t\t\"conditions\": [\n\t\t\t\t{\n\t\t\t\t\t\"condition\": \"minecraft:survives_explosion\"\n\t\t\t\t}\n\t\t\t]\n\t\t}\n\t]\n}")
 

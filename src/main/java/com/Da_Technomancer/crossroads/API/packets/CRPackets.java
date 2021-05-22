@@ -5,14 +5,18 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.packets.*;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.ParticleType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashSet;
+import java.util.Objects;
 
 public class CRPackets{
 
@@ -23,6 +27,14 @@ public class CRPackets{
 	public static void preInit(){
 		channel = NetworkRegistry.newSimpleChannel(new ResourceLocation(Crossroads.MODID, "channel"), () -> "1.0.0", (s) -> s.equals("1.0.0"), (s) -> s.equals("1.0.0"));
 		PacketManager.addCodec(int[].class, (val, buf) -> buf.writeVarIntArray((int[]) val), PacketBuffer::readVarIntArray);
+		PacketManager.addCodec(IParticleData.class,
+				(Object val, PacketBuffer buf) -> {
+					IParticleData data = (IParticleData) val;
+					buf.writeResourceLocation(Objects.requireNonNull(data.getType().getRegistryName()));
+					data.writeToNetwork(buf);
+				},
+				(PacketBuffer buf) -> readParticleData(ForgeRegistries.PARTICLE_TYPES.getValue(buf.readResourceLocation()), buf)
+		);
 
 		registerPacket(SendIntToClient.class);
 		registerPacket(SendStringToClient.class);
@@ -50,6 +62,7 @@ public class CRPackets{
 		registerPacket(SendMasterKeyToClient.class);
 		registerPacket(SendElytraBoostToServer.class);
 		registerPacket(SendIntArrayToClient.class);
+		registerPacket(CreateParticlesOnClient.class);
 	}
 
 	private static <T extends Packet> void registerPacket(Class<T> clazz){
@@ -97,5 +110,12 @@ public class CRPackets{
 		//Check if this packet is registered with CR. If not, send it via the Essentials packet channel; this is done to make this method correct for all CR usage
 		SimpleChannel messageChannel = registeredTypes.contains(packet.getClass()) ? channel : EssentialsPackets.channel;
 		messageChannel.send(PacketDistributor.DIMENSION.with(world::dimension), packet);
+	}
+
+	private static <T extends IParticleData> T readParticleData(ParticleType<T> type, PacketBuffer buf){
+		if(type == null){
+			return null;
+		}
+		return type.getDeserializer().fromNetwork(type, buf);
 	}
 }

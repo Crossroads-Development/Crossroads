@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.render;
 
-import com.Da_Technomancer.crossroads.particles.sounds.CRSounds;
+import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;

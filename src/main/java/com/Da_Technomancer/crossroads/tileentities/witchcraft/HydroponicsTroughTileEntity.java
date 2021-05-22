@@ -75,6 +75,7 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 		CROPS.put(Items.WARPED_FUNGUS, Triple.of(false, 5, new ItemStack[] {new ItemStack(Items.WARPED_FUNGUS)}));
 		CROPS.put(Items.LILY_PAD, Triple.of(true, 7, new ItemStack[] {new ItemStack(Items.LILY_PAD)}));
 		CROPS.put(CRBlocks.medicinalMushroom.asItem(), Triple.of(false, 5, new ItemStack[] {new ItemStack(CRBlocks.medicinalMushroom)}));
+		CROPS.put(CRBlocks.petrolCactus.asItem(), Triple.of(true, 2, new ItemStack[] {new ItemStack(CRBlocks.petrolCactus)}));
 	}
 
 	private int progress = 0;

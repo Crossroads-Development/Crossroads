@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.particles;
+package com.Da_Technomancer.crossroads.ambient.particles;
 
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
@@ -10,24 +10,27 @@ import javax.annotation.Nullable;
 import java.awt.*;
 
 @OnlyIn(Dist.CLIENT)
-public class ParticlePowderColor extends SpriteTexturedParticle{
+public class ParticleBubbleColor extends SpriteTexturedParticle{
 
 	private final IAnimatedSprite sprite;
 
-	private ParticlePowderColor(ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, Color c, IAnimatedSprite s){
+	protected ParticleBubbleColor(ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, Color c, IAnimatedSprite s){
 		super(worldIn, x, y, z);
+		this.sprite = s;
 		setSize(0.02F, 0.02F);
 		setBoundingBox(new AxisAlignedBB(x, y, z, x + bbWidth, y + bbHeight, z + bbWidth));
 		hasPhysics = false;
-		sprite = s;
-//		setParticleTextureIndex(177);
-		scale(random.nextFloat() * 0.6F + 0.6F);
-		xd = xSpeed;//Suggestion: 0
-		yd = ySpeed;//Suggestion: 0
-		zd = zSpeed;//Suggestion: 0
-		setLifetime((int) (7.0D / (Math.random() * 0.8D + 0.2D)));
+		rCol = 1F;
+		gCol = 1F;
+		bCol = 1F;
+//		setParticleTextureIndex(133);
+		quadSize *= random.nextFloat() * 0.6F + 0.2F;
+		xd = xSpeed;//Suggestion: (Math.random() * 2D - 1D) * 0.015D
+		yd = ySpeed;//Suggestion: Math.random() * 0.015D
+		zd = zSpeed;//Suggestion: (Math.random() * 2D - 1D) * 0.015D
 		setColor(c.getRed() / 255F, c.getGreen() / 255F, c.getBlue() / 255F);
 		setAlpha(c.getAlpha() / 255F);
+		setLifetime((int) (7.0D / (Math.random() * 0.8D + 0.2D)));
 		setSpriteFromAge(sprite);
 	}
 
@@ -63,7 +66,7 @@ public class ParticlePowderColor extends SpriteTexturedParticle{
 		@Nullable
 		@Override
 		public Particle createParticle(ColorParticleData typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed){
-			return new ParticlePowderColor(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, typeIn.getColor(), sprite);
+			return new ParticleBubbleColor(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, typeIn.getColor(), sprite);
 		}
 	}
 }

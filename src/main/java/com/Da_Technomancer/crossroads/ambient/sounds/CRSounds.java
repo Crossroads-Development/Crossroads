@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.particles.sounds;
+package com.Da_Technomancer.crossroads.ambient.sounds;
 
 import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
 import com.Da_Technomancer.crossroads.Crossroads;
@@ -14,13 +14,14 @@ import java.util.ArrayList;
 
 public class CRSounds{
 
-	private static final ArrayList<SoundEvent> soundsToRegister = new ArrayList<>(5);
+	private static final ArrayList<SoundEvent> soundsToRegister = new ArrayList<>(6);
 
 	public static final SoundEvent BEAM_PASSIVE = createEvent("beam_passive");
 	public static final SoundEvent BEAM_TRANSMUTE = createEvent("beam_transmute");
 	public static final SoundEvent ELECTRIC_SPARK = createEvent("electric_spark");
 	public static final SoundEvent ELECTRIC_ARC = createEvent("electric_arc");
 	public static final SoundEvent FLUX_TRANSFER = createEvent("entropy_transfer");
+	public static final SoundEvent STEAM_RELEASE = createEvent("steam_release");
 
 	public static void register(IForgeRegistry<SoundEvent> reg){
 		for(SoundEvent e : soundsToRegister){

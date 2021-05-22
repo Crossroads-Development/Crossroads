@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.particles;
+package com.Da_Technomancer.crossroads.ambient.particles;
 
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;

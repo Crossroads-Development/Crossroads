@@ -20,7 +20,7 @@ public class SolarHeaterTileEntity extends ModuleTE{
 	private static TileEntityType<SolarHeaterTileEntity> type = null;
 
 	public static final double RATE = 5;
-	public static final double CAP = 250;
+	public static final double CAP = 325;
 
 	private boolean newlyPlaced = true;//Used to immediately generate the cache to reduce the latency for the player with a new heater
 	private boolean running = false;

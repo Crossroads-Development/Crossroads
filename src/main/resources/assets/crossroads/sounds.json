@@ -45,5 +45,14 @@
 				"attenuation_distance": 10
 			}
 		]
+	},
+	"steam_release": {
+		"category": "block",
+		"subtitle": "subtitle.crossroads.steam_release",
+		"sounds": [
+			{
+				"name": "crossroads:steam_release"
+			}
+		]
 	}
 }

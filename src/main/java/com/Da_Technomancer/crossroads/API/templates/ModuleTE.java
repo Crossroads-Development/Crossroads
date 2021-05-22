@@ -480,14 +480,14 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 		@Override
 		public void setTemp(double tempIn){
 			initHeat = true;
-			temp = tempIn;
+			temp = Math.max(HeatUtil.ABSOLUTE_ZERO, tempIn);
 			setChanged();
 		}
 
 		@Override
 		public void addHeat(double heat){
 			init();
-			temp += heat;
+			temp = Math.max(HeatUtil.ABSOLUTE_ZERO, temp + heat);
 			setChanged();
 		}
 	}

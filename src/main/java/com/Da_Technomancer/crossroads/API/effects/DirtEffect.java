@@ -47,7 +47,7 @@ public class DirtEffect implements IEffect{
 				break;
 			case 3:
 				worldIn.destroyBlock(pos, false);
-				worldIn.explode(null, pos.getX(), pos.getY(), pos.getZ(), 3, Explosion.Mode.BREAK);
+				worldIn.explode(null, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, 3, Explosion.Mode.BREAK);
 				break;
 			case 4:
 				worldIn.destroyBlock(pos, false);

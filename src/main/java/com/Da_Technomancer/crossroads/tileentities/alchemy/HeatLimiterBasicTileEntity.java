@@ -205,9 +205,9 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 		public void setTemp(double tempIn){
 			init = true;
 			if(in){
-				heatIn = tempIn;
+				heatIn = Math.max(HeatUtil.ABSOLUTE_ZERO, tempIn);
 			}else{
-				heatOut = tempIn;
+				heatOut = Math.max(HeatUtil.ABSOLUTE_ZERO, tempIn);
 			}
 			setChanged();
 		}
@@ -216,9 +216,9 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 		public void addHeat(double heatChange){
 			init();
 			if(in){
-				heatIn += heatChange;
+				heatIn = Math.max(HeatUtil.ABSOLUTE_ZERO, heatIn + heatChange);
 			}else{
-				heatOut += heatChange;
+				heatOut = Math.max(HeatUtil.ABSOLUTE_ZERO, heatOut + heatChange);
 			}
 			setChanged();
 		}

@@ -30,12 +30,12 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileE
 	private static TileEntityType<MaxwellDemonTileEntity> type = null;
 
 	public static final double MAX_TEMP = 2500;
-	public static final double MIN_TEMP = -250;
-	public static final double RATE = 5;
+	public static final double MIN_TEMP = -200;
 
 	private double tempUp = 0;
 	private double tempDown = 0;
 	private boolean init = false;
+	private double rate = -1;//Not saved/loaded to NBT, as we want this to regenerate on reload with the config
 
 	public MaxwellDemonTileEntity(){
 		super(type);
@@ -54,6 +54,9 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileE
 			tempDown = tempUp;
 			init = true;
 		}
+		if(rate < 0){
+			rate = CRConfig.demonPower.get();
+		}
 	}
 
 	@Override
@@ -65,11 +68,11 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileE
 		init();
 
 		if(tempUp < MAX_TEMP){
-			tempUp = Math.min(MAX_TEMP, tempUp + RATE);
+			tempUp = Math.min(MAX_TEMP, tempUp + rate);
 			setChanged();
 		}
 		if(tempDown > MIN_TEMP){
-			tempDown = Math.max(MIN_TEMP, tempDown - RATE);
+			tempDown = Math.max(MIN_TEMP, tempDown - rate);
 			setChanged();
 		}
 

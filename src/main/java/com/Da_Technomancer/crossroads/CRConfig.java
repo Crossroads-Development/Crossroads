@@ -78,6 +78,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.BooleanValue forgetPaths;
 	public static ForgeConfigSpec.DoubleValue lodestoneTurbinePower;
 	public static ForgeConfigSpec.DoubleValue hamsterPower;
+	public static ForgeConfigSpec.DoubleValue demonPower;
 	public static ForgeConfigSpec.IntValue lodestoneDynamo;
 	public static ForgeConfigSpec.IntValue fatPerValue;
 	public static ForgeConfigSpec.IntValue mbPerIngot;
@@ -175,6 +176,7 @@ public class CRConfig{
 		springGunCap = serverBuilder.comment("The maximum speed on a Spring Gun", "Higher maximum speeds increase maximum damage").defineInRange("spring_gun_cap", 10D, 1D, 100D);
 		lodestoneTurbinePower = serverBuilder.comment("The power produced by the Lodestone Turbine (in J/t)").defineInRange("lodestone_power", 15D, 0D, 100D);
 		hamsterPower = serverBuilder.comment("The power produced by the Hamster Wheel (in J/t)").defineInRange("hamster_power", 5D, 0D, 100D);
+		demonPower = serverBuilder.comment("The power produced by the Maxwell's Demon (both hot and cold, in degrees C/t)").defineInRange("demon_power", 5D, 0D, 100D);
 		fireboxCap = serverBuilder.comment("Maximum fuel burn time in the Firebox. Set to -1 to remove the limit").defineInRange("firebox_cap", 4000, -1, Integer.MAX_VALUE);
 		serverBuilder.pop();
 		serverBuilder.push(CAT_MISC);

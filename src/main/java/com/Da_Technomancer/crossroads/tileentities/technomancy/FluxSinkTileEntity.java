@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.particles.sounds.CRSounds;
+import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

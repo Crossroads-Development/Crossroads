@@ -248,7 +248,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 		@Override
 		public void setTemp(double tempIn){
 			init = true;
-			cableTemp = tempIn;
+			cableTemp = Math.max(HeatUtil.ABSOLUTE_ZERO, tempIn);
 			dirtyReag = true;
 			setChanged();
 		}
@@ -256,7 +256,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 		@Override
 		public void addHeat(double tempChange){
 			initHeat();
-			cableTemp += tempChange;
+			cableTemp = Math.max(HeatUtil.ABSOLUTE_ZERO, cableTemp + tempChange);
 			dirtyReag = true;
 			setChanged();
 		}
