@@ -3,7 +3,7 @@ crossroads:fluid_tube
 <thing>Fluids/$ in Crossroads act the same as in all other mods. They can be moved with <item><link:crossroads:fluid/pipe>pipes/$, stored in <item><link:crossroads:fluid/tank>tanks/$, and so on.
 The typical fluids added by Crossroads are:
 <thing>Distilled Water/$: This is usually used to produce <thing><link:crossroads:fluid/steam>steam/$, and is treated as "pure" water in the mod.
-<thing><link:crossroads:fluid/steam>Steam/$: This is a way of moving energy around as a fluid, and can be readily converted into either <thing><link:crossroads:heat/radiator>heat/$ or <thing><link:crossroads:rotary/steam_turbine>rotary energy/$. It is produced in a <item><link:crossroads:fluid/boiler>steam boiler/$.
+<thing>Steam/$: This is a way of moving energy around as a fluid, and can be readily converted into either <thing><link:crossroads:heat/radiator>heat/$ or <thing><link:crossroads:rotary/steam_turbine>rotary energy/$. It is produced in a <item><link:crossroads:fluid/boiler>steam boiler/$.
 <thing>Dirty Water/$: This is usually a byproduct. It can be reprocessed into <thing>distilled water/$ and useful byproducts in a <item><link:crossroads:fluid/centrifuge>water centrifuge/$.
 <thing>Liquid Fat/$: This is food in liquid form. There are machines to <item><link:crossroads:fluid/fat_collector>produce it/$, <item><link:crossroads:fluid/fat_feeder>feed it to nearby players or animals/$, and <item><link:crossroads:fluid/fat_congealer>turn it into custom food/$.
 <thing>Molten Metal/$: There is a molten metal for each of the basic metals (iron, gold, copper, tin- other mods may add more). It can be <item><link:crossroads:heat/fcc>cooled into ingots/$.

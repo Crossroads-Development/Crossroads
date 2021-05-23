@@ -30,10 +30,18 @@ public class StirlingEngineTileEntity extends ModuleTE{
 	private static TileEntityType<StirlingEngineTileEntity> type = null;
 
 	public static final double INERTIA = 200;
-	public static final double RATE = 5;
+	public static final double HEAT_INTERVAL = 20;
+	public static final double MAX_TEMPERATURE_DIFFERANCE = 2000;
+	public static final double EFFICIENCY_MULTIPLIER = 0.8D;
+	public static final double HEAT_VENTING_RATIO = 0.5D;
 
 	private double tempSide;
 	private double tempBottom;
+
+	//For readout
+	private double lastPower = 0;
+	private double lastHeatIn = 0;
+	private double lastHeatOut = 0;
 
 	public StirlingEngineTileEntity(){
 		super(type);
@@ -58,18 +66,22 @@ public class StirlingEngineTileEntity extends ModuleTE{
 
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		chat.add(new TranslationTextComponent("tt.crossroads.stirling_engine.side_temp", CRConfig.formatVal(tempSide)));
-		chat.add(new TranslationTextComponent("tt.crossroads.stirling_engine.bottom_temp", CRConfig.formatVal(tempBottom)));
-		//We have to add the biome temp manually because we don't use the ModuleTE heat template
-		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.temp.biome", CRConfig.formatVal(temp)));
+		//TODO
+		chat.add(new TranslationTextComponent("tt.crossroads.stirling_engine.temp", CRConfig.formatVal(tempSide), CRConfig.formatVal(HeatUtil.toKelvin(tempSide)), CRConfig.formatVal(tempBottom), CRConfig.formatVal(HeatUtil.toKelvin(tempBottom))));
+		chat.add(new TranslationTextComponent("tt.crossroads.stirling_engine.status", CRConfig.formatVal(lastHeatIn), CRConfig.formatVal(lastHeatOut), CRConfig.formatVal(lastPower)));
+		if(lastHeatIn > 0 && lastHeatOut > 0){
+			chat.add(new TranslationTextComponent("tt.crossroads.stirling_engine.efficiency", CRConfig.formatVal(lastPower / lastHeatIn), CRConfig.formatVal(lastPower / lastHeatOut)));
+		}else{
+			chat.add(new TranslationTextComponent("tt.crossroads.stirling_engine.efficiency", CRConfig.formatVal(0), CRConfig.formatVal(0)));
+		}
 		super.addInfo(chat, player, hit);
 	}
 
 	private void updateWorldState(){
 		//Updates the (purely for rending) blockstate in the world to match the gear speed
 		BlockState worldState = getBlockState();
-		final double slowMin = 0.25D;
-		final double fastMin = 0.75D;
+		final double slowMin = 0.5D;
+		final double fastMin = 1.5D;
 		double speedMagnitude = Math.abs(axleHandler.getSpeed());
 		int target = 0;
 		if(speedMagnitude > slowMin){
@@ -97,14 +109,31 @@ public class StirlingEngineTileEntity extends ModuleTE{
 		}
 		init();
 
-		int level = (int) ((tempSide - tempBottom) / 100D);
+		//Ok, to summarize what is going on here:
+		//This is being modelled as a non-ideal thermodynamic heat engine
+		//ΔT is being rounded DOWN to the next HEAT_INTERVAL
+		//Let Efficiency η = EFFICIENCY_MULTIPLIER * ΔT / MAX_TEMPERATURE_DIFFERANCE, capped at EFFICIENCY_MULTIPLIER
+		//And where not all ejected heat is coming out the cold side- some fraction HEAT_VENTING_RATIO of the heat that should be ejected is being lost (unaccounted for)
+		//If this seems like an excessive amount of detail, know that I planned this in a spreadsheet to try to carefully control gameplay balance
+		//You can be the judge of whether that worked
+		lastHeatIn = (int) Math.abs((tempSide - tempBottom) / HEAT_INTERVAL);
+		double deltaT = Math.min(MAX_TEMPERATURE_DIFFERANCE, lastHeatIn * HEAT_INTERVAL);
+		boolean isSideHot = tempSide > tempBottom;
+		double efficiency = EFFICIENCY_MULTIPLIER * deltaT / MAX_TEMPERATURE_DIFFERANCE;
+		lastHeatOut = lastHeatIn * HEAT_VENTING_RATIO * (1 - efficiency);
+		lastPower = CRConfig.stirlingConversion.get() * lastHeatIn * efficiency;
 
-		if(level != 0){
-			tempSide -= RATE * level;
-			tempBottom += RATE * level;
+		if(lastHeatIn != 0){
+			if(isSideHot){
+				tempSide -= lastHeatIn;
+				tempBottom += lastHeatOut;
+			}else{
+				tempSide += lastHeatOut;
+				tempBottom -= lastHeatIn;
+			}
 
-			if(axleHandler.axis != null && Math.signum(level) * axleHandler.getSpeed() < CRConfig.stirlingSpeedLimit.get()){
-				energy += CRConfig.stirlingMultiplier.get() * RATE * level * Math.abs(level);//5*stirlingMult*level^2 with sign of level
+			if(axleHandler.axis != null && (isSideHot ? axleHandler.getSpeed() : -axleHandler.getSpeed()) < CRConfig.stirlingSpeedLimit.get()){
+				energy += (isSideHot ? 1D : -1D) * lastPower;
 			}
 
 			setChanged();

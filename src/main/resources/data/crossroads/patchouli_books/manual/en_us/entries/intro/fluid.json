@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "text",
-			"text": "and is treated as \"pure\" water in the mod.$(br2)<thing>$(l:crossroads:fluid/steam)Steam/$: This is a way of moving energy around as a fluid, and can be readily converted into either <thing>$(l:crossroads:heat/radiator)heat/$ or <thing>$(l:crossroads:rotary/steam_turbine)rotary energy/$. It is produced in a <item>$(l:crossroads:fluid/boiler)steam boiler/$.$(br2)<thing>Dirty Water/$: This is usually a byproduct. It can be reprocessed into <thing>distilled water/$ and useful "
+			"text": "and is treated as \"pure\" water in the mod.$(br2)<thing>Steam/$: This is a way of moving energy around as a fluid, and can be readily converted into either <thing>$(l:crossroads:heat/radiator)heat/$ or <thing>$(l:crossroads:rotary/steam_turbine)rotary energy/$. It is produced in a <item>$(l:crossroads:fluid/boiler)steam boiler/$.$(br2)<thing>Dirty Water/$: This is usually a byproduct. It can be reprocessed into <thing>distilled water/$ and useful "
 		},
 		{
 			"type": "text",

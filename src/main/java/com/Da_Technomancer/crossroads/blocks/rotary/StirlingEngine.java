@@ -50,9 +50,9 @@ public class StirlingEngine extends ContainerBlock{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.stirling_engine.desc"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.stirling_engine.rate", StirlingEngineTileEntity.RATE));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.stirling_engine.power", CRConfig.formatVal(CRConfig.stirlingMultiplier.get())));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.stirling_engine.desc", CRConfig.jouleWorth.get() * StirlingEngineTileEntity.MAX_TEMPERATURE_DIFFERANCE / CRConfig.stirlingConversion.get() / StirlingEngineTileEntity.EFFICIENCY_MULTIPLIER));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.stirling_engine.rate", StirlingEngineTileEntity.HEAT_INTERVAL));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.stirling_engine.power", CRConfig.formatVal(CRConfig.stirlingConversion.get())));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.stirling_engine.limit", CRConfig.stirlingSpeedLimit.get()));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", StirlingEngineTileEntity.INERTIA));
 	}

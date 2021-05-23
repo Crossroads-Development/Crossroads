@@ -10,11 +10,11 @@
 			"type": "spotlight",
 			"title": "Solar Heater",
 			"item": "crossroads:solar_heater",
-			"text": "The <item>Solar Heater/$ is a solar panel that produces heat. When in direct sunlight during the day in clear weather, the <item>solar heat/$ will produce heat at a slow steady rate, up to a maximum temperature of 250°C.$(br2)This isn't hot enough to run advanced machines- but "
+			"text": "The <item>Solar Heater/$ is a solar panel that produces heat. When in direct sunlight during the day in clear weather, the <item>solar heat/$ will produce heat at a slow steady rate, up to a maximum temperature of 325°C.$(br2)This isn't hot enough to run advanced machines- but "
 		},
 		{
 			"type": "text",
-			"text": "it could be used for $(l:crossroads:heat/smelter)smelting/$ or <thing>$(l:crossroads:fluid/steam)steam generation/$.$(br2)A line of <item>solar heaters/$ connected on their copper ends will share heat. The copper ends are also where <item>$(l:crossroads:heat/cable)cables/$ can be connected.$(br2)"
+			"text": "it could be used for $(l:crossroads:heat/smelter)smelting/$ or <thing>$(l:crossroads:fluid/steam)steam generation/$. By using it to make <thing>$(l:crossroads:fluid/steam)steam/$ then converting it back to heat with a <item>$(l:crossroads:heat/radiator)radiator/$, you can get around the temperature limit.$(br2)A line of <item>solar heaters/$ connected on their copper ends will share heat. The copper ends are also where <item>$(l:crossroads:heat/cable)cables/$ can be connected.$(br2)"
 		},
 		{
 			"type": "text",
