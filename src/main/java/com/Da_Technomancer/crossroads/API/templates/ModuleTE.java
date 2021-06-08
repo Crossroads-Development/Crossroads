@@ -65,7 +65,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	}
 
 	/**
-	 * Must be overriden if createFluidTanks() is overriden
+	 * Must be overriden if using tank properties for fluid support
 	 * @return How many fluid tanks this machine has. Should not change at runtime, cannot be negative
 	 */
 	protected int fluidTanks(){

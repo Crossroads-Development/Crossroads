@@ -99,7 +99,7 @@ public class FireboxTileEntity extends InventoryTE{
 		return nbt;
 	}
 
-	private LazyOptional<ItemHandler> itemOpt = LazyOptional.of(() -> new ItemHandler(null));
+	private LazyOptional<ItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@Override
 	public void setRemoved(){

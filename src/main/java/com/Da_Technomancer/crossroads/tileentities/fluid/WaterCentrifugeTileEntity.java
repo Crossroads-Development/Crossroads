@@ -10,7 +10,6 @@ import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -42,8 +41,8 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 
 	public WaterCentrifugeTileEntity(){
 		super(type, 1);
-		fluidProps[0] = new TankProperty(10_000, true, false, (Fluid f) -> true);
-		fluidProps[1] = new TankProperty(10_000, false, true, (Fluid f) -> false);
+		fluidProps[0] = new TankProperty(10_000, true, false);
+		fluidProps[1] = new TankProperty(10_000, false, true);
 		initFluidManagers();
 	}
 

@@ -241,7 +241,7 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 		@Nonnull
 		@Override
 		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate){
-			if(canPlaceItem(slot, stack) && (inventory[slot].isEmpty() || BlockUtil.sameItem(stack, inventory[slot]))){
+			if(canPlaceItemThroughFace(slot, stack, dir) && (inventory[slot].isEmpty() || BlockUtil.sameItem(stack, inventory[slot]))){
 				int oldCount = inventory[slot].getCount();
 				int moved = Math.max(0, Math.min(stack.getCount(), Math.min(stack.getMaxStackSize(), getMaxStackSize(slot)) - oldCount));
 				ItemStack out = stack.copy();

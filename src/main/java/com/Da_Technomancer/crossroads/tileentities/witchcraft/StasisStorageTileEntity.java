@@ -41,22 +41,7 @@ public class StasisStorageTileEntity extends InventoryTE{
 
 	public float getRedstone(){
 		//Return average lifetime remaining for the contents, in seconds
-		int totalLifetime = 0;//Ticks
-		int itemCount = 0;
-		long currentTime = level.getGameTime();
-		for(ItemStack stack : inventory){
-			if(stack.getItem() instanceof IPerishable){
-				long spoilTime = ((IPerishable) stack.getItem()).getSpoilTime(stack, level);
-				itemCount++;
-				if(spoilTime > currentTime){
-					totalLifetime += spoilTime - currentTime;
-				};
-			}
-		}
-		if(itemCount == 0){
-			return 0;
-		}
-		return (float) totalLifetime / itemCount / 20;
+		return AbstractNutrientEnvironmentTileEntity.getAverageLifetime(level, inventory) / 20F;
 	}
 
 	@Override
@@ -98,7 +83,7 @@ public class StasisStorageTileEntity extends InventoryTE{
 				}
 			}
 		}
-		lastTick += gameTime;
+		lastTick = gameTime;
 //		setChanged(); Note to self: Calling setChanged() in onLoad() freezes the loading process; bad
 	}
 
