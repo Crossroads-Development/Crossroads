@@ -1,0 +1,100 @@
+package com.Da_Technomancer.crossroads.API.witchcraft;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+import java.util.Objects;
+
+public interface ICultivatable extends IPerishable{
+
+	public static final String FROZEN_KEY = "cr_was_frozen";
+
+	default int getPassiveNutrientDrain(){
+		return 1;
+	}
+
+	default boolean wasFrozen(ItemStack stack){
+		CompoundNBT nbt = stack.getOrCreateTag();
+		//Correct broken stacks, by setting a spoil time for a fresh item
+		if(!nbt.contains(FROZEN_KEY)){
+			return false;
+		}
+		return nbt.getBoolean(SPOIL_KEY);
+	}
+
+	default ItemStack setWasFrozen(ItemStack stack, boolean frozen){
+		CompoundNBT nbt = stack.getOrCreateTag();
+		nbt.putBoolean(FROZEN_KEY, frozen);
+		return stack;
+	}
+
+	@Override
+	default ItemStack freeze(ItemStack stack, World world, double temp, long duration){
+		if(temp <= getFreezeTemperature()){
+			//Damage the item if applicable
+			stack = setWasFrozen(stack, true);
+			setSpoilTime(stack, getSpoilTime(stack, world) + duration, 0);
+		}
+
+		return stack;
+	}
+
+	default ItemStack cultivate(ItemStack stack, World world, long duration){
+		return setSpoilTime(stack, getSpoilTime(stack, world) + duration, 0);
+	}
+
+	/**
+	 * Note: Minimize calls, as most implementations create a new instance with each call
+	 * @param self The item
+	 * @param world The world
+	 * @return The trade or recipe this item can perform, or null if none
+	 */
+	@Nullable
+	CultivationTrade getCultivationTrade(ItemStack self, World world);
+
+	/**
+	 * Whether the passed trade is plausibly the value which would be returned from getCultivationTrade
+	 * This is used for validating cached values of getCultivationTrade.
+	 * Do not recalculate the passed value unless necessary, for efficiency
+	 * @param self The item
+	 * @param trade The trade to validate
+	 * @param world The world
+	 * @return Whether the trade is plausible
+	 */
+	default boolean isTradeValid(ItemStack self, CultivationTrade trade, World world){
+		boolean spoiled = isSpoiled(self, world);
+		return (trade == null) == spoiled;
+	}
+
+	static class CultivationTrade{
+
+		public final ItemStack ingr1;
+		public final ItemStack ingr2;
+		public final ItemStack created;
+
+		public CultivationTrade(ItemStack ingr1, ItemStack ingr2, ItemStack created){
+			this.ingr1 = ingr1;
+			this.ingr2 = ingr2;
+			this.created = created;
+		}
+
+		@Override
+		public boolean equals(Object o){
+			if(this == o){
+				return true;
+			}
+			if(o == null || getClass() != o.getClass()){
+				return false;
+			}
+			CultivationTrade that = (CultivationTrade) o;
+			return ingr1.equals(that.ingr1) && ingr2.equals(that.ingr2) && created.equals(that.created);
+		}
+
+		@Override
+		public int hashCode(){
+			return Objects.hash(ingr1, ingr2, created);
+		}
+	}
+}

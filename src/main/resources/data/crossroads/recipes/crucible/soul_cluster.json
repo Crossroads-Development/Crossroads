@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:crucible",
+	"input": {
+		"item": "crossroads:soul_cluster"
+	},
+	"output": {
+		"fluid": "crossroads:soul_essence",
+		"amount": 200
+	}
+}

@@ -270,6 +270,8 @@
 	"block.crossroads.petrol_cactus": "Combustible Cactus",
 	"block.crossroads.wheezewort": "Wheezewort",
 	"item.crossroads.wheezewort_seeds": "Wheezewort Seed",
+	"item.crossroads.soul_cluster": "Crystallized Soul Cluster",
+	"block.crossroads.stasis_storage": "Stasis Box",
 
 	"item.crossroads.distilled_water_bucket": "Distilled Water Bucket",
 	"item.crossroads.dirty_water_bucket": "Dirty Water Bucket",
@@ -716,9 +718,9 @@
 	"tt.crossroads.auto_injector.stored": "Contents: %1$d/%2$d seconds of Lvl %3$d ",
 	"tt.crossroads.auto_injector.duration_setting": "Administering doses of %1$d seconds",
 	"tt.crossroads.auto_injector.duration_setting_new": "Now administering doses of %1$d seconds",
-	"tt.crossroads.cold_storage.desc": "Prevents samples from spoiling by keeping them frozen",
+	"tt.crossroads.cold_storage.desc": "Prevents perishables from spoiling by keeping them frozen",
 	"tt.crossroads.cold_storage.drain": "Heat Loss: -%1$d°C/t for every stored item",
-	"tt.crossroads.cold_storage.redstone": "Circuits read total stored items",
+	"tt.crossroads.cold_storage.redstone": "Circuits read average freshness time remaining of the contents (in seconds)",
 	"tt.crossroads.boilerplate.spoilage.error": "Newly created (fresh)",
 	"tt.crossroads.boilerplate.spoilage.spoiled": "Spoiled",
 	"tt.crossroads.boilerplate.spoilage.remain": "Spoils in %1$dd%2$dh%3$dm%4$ds",
@@ -744,6 +746,10 @@
 	"tt.crossroads.wheezewort.age": "Has three growth stages - Only does cooling in the middle stage",
 	"tt.crossroads.wheezewort.dispense": "Can be planted by dispensers",
 	"tt.crossroads.wheezewort.quip": "It's made of meat?",
+	"tt.crossroads.soul_cluster": "Both a fuel and a source of cold",
+	"tt.crossroads.stasis_storage.desc": "Prevents perishables from spoiling, without needing to freeze them",
+	"tt.crossroads.stasis_storage.reverse": "Time beams un-age the contents, at a rate equal to beam power",
+	"tt.crossroads.stasis_storage.redstone": "Circuits read freshness time remaining of the contents (in seconds)",
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
 	"container.crossroads.boilerplate.speed": "%1$f rad/s",
@@ -797,6 +803,7 @@
 	"container.crossroads.auto_injector": "Auto-Injector",
 	"container.crossroads.cold_storage": "Sample Freezer",
 	"container.crossroads.hydroponics_trough": "Hydroponics Trough",
+	"container.crossroads.stasis_storage": "Stasis Box",
 
 
 	"subtitle.crossroads.beam_passive": "Beam emitted",

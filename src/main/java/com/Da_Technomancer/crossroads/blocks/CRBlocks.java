@@ -165,6 +165,7 @@ public class CRBlocks{
 	public static MedicinalMushroom medicinalMushroom;
 	public static PetrolCactus petrolCactus;
 	public static Wheezewort wheezewort;
+	public static StasisStorage stasisStorage;
 
 	public static AbstractBlock.Properties getRockProperty(){
 		return AbstractBlock.Properties.of(Material.STONE).strength(3).requiresCorrectToolForDrops().sound(SoundType.STONE);
@@ -359,6 +360,7 @@ public class CRBlocks{
 		medicinalMushroom = new MedicinalMushroom();
 		petrolCactus = new PetrolCactus();
 		wheezewort = new Wheezewort();
+		stasisStorage = new StasisStorage();
 	}
 
 	@OnlyIn(Dist.CLIENT)

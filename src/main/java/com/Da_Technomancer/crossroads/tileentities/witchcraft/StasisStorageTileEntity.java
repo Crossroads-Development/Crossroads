@@ -1,11 +1,14 @@
 package com.Da_Technomancer.crossroads.tileentities.witchcraft;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
+import com.Da_Technomancer.crossroads.API.beams.BeamUtil;
+import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
+import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.API.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.gui.container.ColdStorageContainer;
+import com.Da_Technomancer.crossroads.gui.container.StasisStorageContainer;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -25,22 +28,15 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nullable;
 
 @ObjectHolder(Crossroads.MODID)
-public class ColdStorageTileEntity extends InventoryTE{
+public class StasisStorageTileEntity extends InventoryTE{
 
-	@ObjectHolder("cold_storage")
-	public static TileEntityType<ColdStorageTileEntity> type = null;
-
-	public static final double LOSS_PER_ITEM = 2;
+	@ObjectHolder("stasis_storage")
+	public static TileEntityType<StasisStorageTileEntity> type = null;
 
 	private long lastTick;
 
-	public ColdStorageTileEntity(){
-		super(type, 18);
-	}
-
-	@Override
-	protected boolean useHeat(){
-		return true;
+	public StasisStorageTileEntity(){
+		super(type, 1);
 	}
 
 	public float getRedstone(){
@@ -73,18 +69,13 @@ public class ColdStorageTileEntity extends InventoryTE{
 
 		long gameTime = level.getGameTime();
 
-		double preTemp = temp;
-		double biomeTemp = HeatUtil.convertBiomeTemp(level, worldPosition);
-
-		for(ItemStack stack : inventory){
-			if(stack.getItem() instanceof IPerishable){
-				if(gameTime != lastTick){
-					//Don't allow tick accelerating this step, or the life span of the contents will actually increase
-					((IPerishable) stack.getItem()).freeze(stack, level, preTemp, 1);
-				}
-
-				if(temp < biomeTemp){
-					temp = Math.min(temp + LOSS_PER_ITEM, biomeTemp);
+		if(gameTime != lastTick){
+			//Don't allow tick accelerating this step, or the life span of the contents will actually increase
+			for(ItemStack stack : inventory){
+				if(stack.getItem() instanceof IPerishable){
+					//We reverse the age, without freezing, to prevent damage of ICultivatable
+					IPerishable perishable = (IPerishable) stack.getItem();
+					perishable.setSpoilTime(stack, perishable.getSpoilTime(stack, level) + 1, 0);
 				}
 			}
 		}
@@ -102,7 +93,8 @@ public class ColdStorageTileEntity extends InventoryTE{
 		if(gameTime > lastTick){
 			for(ItemStack stack : inventory){
 				if(stack.getItem() instanceof IPerishable){
-					((IPerishable) stack.getItem()).freeze(stack, level, temp, gameTime - lastTick + 1);
+					IPerishable perishable = (IPerishable) stack.getItem();
+					perishable.setSpoilTime(stack, perishable.getSpoilTime(stack, level) + gameTime - lastTick + 1, 0);
 				}
 			}
 		}
@@ -127,15 +119,17 @@ public class ColdStorageTileEntity extends InventoryTE{
 	public void setRemoved(){
 		super.setRemoved();
 		itemOpt.invalidate();
+		beamOpt.invalidate();
 	}
 
 	private final LazyOptional<IItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
+	private final LazyOptional<IBeamHandler> beamOpt = LazyOptional.of(BeamHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == Capabilities.HEAT_CAPABILITY){
-			return (LazyOptional<T>) heatOpt;
+		if(capability == Capabilities.BEAM_CAPABILITY){
+			return (LazyOptional<T>) beamOpt;
 		}
 
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
@@ -160,12 +154,42 @@ public class ColdStorageTileEntity extends InventoryTE{
 
 	@Override
 	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.crossroads.cold_storage");
+		return new TranslationTextComponent("container.crossroads.stasis_storage");
 	}
 
 	@Nullable
 	@Override
 	public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity playerEntity){
-		return new ColdStorageContainer(id, playerInventory, createContainerBuf());
+		return new StasisStorageContainer(id, playerInventory, createContainerBuf());
+	}
+
+	private class BeamHandler implements IBeamHandler{
+
+		@Override
+		public void setBeam(BeamUnit mag){
+			if(mag.isEmpty()){
+				return;
+			}
+
+			EnumBeamAlignments align = EnumBeamAlignments.getAlignment(mag);
+			if(align == EnumBeamAlignments.TIME && mag.getVoid() == 0){
+				//Time beams only
+				//Rewind time by the power of the beam * BEAM_TIME ticks
+				int rewind = mag.getPower() * BeamUtil.BEAM_TIME;
+				long gameTime = level.getGameTime();
+				for(ItemStack stack : inventory){
+					if(stack.getItem() instanceof IPerishable){
+						IPerishable perishable = (IPerishable) stack.getItem();
+						long remaining = perishable.getSpoilTime(stack, level) - gameTime;
+						long limit = perishable.getLifetime();
+						if(remaining < limit){
+							//Don't allow rewinding beyond the original lifetime
+							long singleRewind = Math.min(rewind, limit - remaining);
+							perishable.setSpoilTime(stack, remaining + singleRewind, gameTime);
+						}
+					}
+				}
+			}
+		}
 	}
 }

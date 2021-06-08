@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"item": "minecraft:soul_sand",
+		"count": 4
+	},
+	"ingredients": [
+		{
+			"tag": "minecraft:sand"
+		},
+		{
+			"tag": "minecraft:sand"
+		},
+		{
+			"tag": "minecraft:sand"
+		},
+		{
+			"item": "crossroads:soul_cluster"
+		}
+	]
+}

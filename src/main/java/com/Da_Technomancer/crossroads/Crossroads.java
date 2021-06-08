@@ -2,21 +2,21 @@ package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
+import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
+import com.Da_Technomancer.crossroads.ambient.particles.ColorParticleType;
+import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.loot_modifiers.PiglinBarterLootModifier;
 import com.Da_Technomancer.crossroads.crafting.recipes.*;
 import com.Da_Technomancer.crossroads.entity.*;
 import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
-import com.Da_Technomancer.crossroads.gui.*;
 import com.Da_Technomancer.crossroads.gui.container.*;
+import com.Da_Technomancer.crossroads.gui.screen.*;
 import com.Da_Technomancer.crossroads.integration.CRIntegration;
 import com.Da_Technomancer.crossroads.integration.curios.CurioHelper;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.ItemSets;
-import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
-import com.Da_Technomancer.crossroads.ambient.particles.ColorParticleType;
-import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.TESR.CRRendererRegistry;
 import com.Da_Technomancer.crossroads.tileentities.CRTileEntity;
@@ -255,6 +255,7 @@ public final class Crossroads{
 		registerCon(AutoInjectorContainer::new, AutoInjectorScreen::new, "auto_injector", e);
 		registerCon(ColdStorageContainer::new, ColdStorageScreen::new, "cold_storage", e);
 		registerCon(HydroponicsTroughContainer::new, HydroponicsTroughScreen::new, "hydroponics_trough", e);
+		registerCon(StasisStorageContainer::new, StasisStorageScreen::new, "stasis_storage", e);
 	}
 
 	@SuppressWarnings("unused")
@@ -296,6 +297,7 @@ public final class Crossroads{
 		registerConType(AutoInjectorContainer::new, "auto_injector", e);
 		registerConType(ColdStorageContainer::new, "cold_storage", e);
 		registerConType(HydroponicsTroughContainer::new, "hydroponics_trough", e);
+		registerConType(StasisStorageContainer::new, "stasis_storage", e);
 	}
 
 	/**

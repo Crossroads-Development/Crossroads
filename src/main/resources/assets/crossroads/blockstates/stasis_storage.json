@@ -1,0 +1,5 @@
+{
+	"variants": {
+		"": { "model": "crossroads:block/stasis_storage" }
+	}
+}

@@ -1,0 +1,7 @@
+{
+	"type": "crossroads:cooling",
+	"fuel": {
+		"item": "crossroads:soul_cluster"
+	},
+	"cooling": 400
+}

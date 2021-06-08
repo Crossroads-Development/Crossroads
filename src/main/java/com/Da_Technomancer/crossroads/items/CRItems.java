@@ -4,14 +4,10 @@ import com.Da_Technomancer.crossroads.API.EnumPath;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.alchemy.*;
 import com.Da_Technomancer.crossroads.items.itemSets.*;
 import com.Da_Technomancer.crossroads.items.technomancy.*;
-import com.Da_Technomancer.crossroads.items.witchcraft.BloodSample;
-import com.Da_Technomancer.crossroads.items.witchcraft.PotionExtension;
-import com.Da_Technomancer.crossroads.items.witchcraft.Syringe;
-import com.Da_Technomancer.crossroads.items.witchcraft.WheezewortSeeds;
+import com.Da_Technomancer.crossroads.items.witchcraft.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
@@ -127,6 +123,7 @@ public final class CRItems{
 	public static Syringe syringe;
 	public static Item mushroomDust;
 	public static WheezewortSeeds wheezewortSeeds;
+	public static SoulCluster soulCluster;
 
 	public static OreProfileItem oreGravel;
 	public static OreProfileItem oreClump;
@@ -247,6 +244,7 @@ public final class CRItems{
 		syringe = new Syringe();
 		toRegister.add(mushroomDust = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("mushroom_dust"));
 		wheezewortSeeds = new WheezewortSeeds();
+		soulCluster = new SoulCluster();
 	}
 
 	@OnlyIn(Dist.CLIENT)

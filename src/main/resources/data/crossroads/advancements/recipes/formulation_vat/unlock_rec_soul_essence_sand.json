@@ -1,0 +1,21 @@
+{
+	"parent": "minecraft:recipes/root",
+	"rewards": {
+		"recipes": [
+			"crossroads:formulation_vat/soul_essence_sand"
+		]
+	},
+	"criteria": {
+		"has_recipe": {
+			"trigger": "minecraft:recipe_unlocked",
+			"conditions": {
+				"recipe": "crossroads:formulation_vat/soul_essence_sand"
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_recipe"
+		]
+	]
+}

@@ -2,10 +2,10 @@ package com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.*;
+import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
-import com.Da_Technomancer.crossroads.particles.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.render.TESR.CRModels;

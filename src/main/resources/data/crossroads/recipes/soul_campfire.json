@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "soul_campfire",
+		"count": 1
+	},
+	"pattern": [
+		" W ",
+		"WCW",
+		"LLL"
+	],
+	"key": {
+		"C": {
+			"item": "crossroads:soul_cluster"
+		},
+		"W": {
+			"tag": "forge:rods/wooden"
+		},
+		"L": {
+			"tag": "minecraft:logs"
+		}
+	}
+}

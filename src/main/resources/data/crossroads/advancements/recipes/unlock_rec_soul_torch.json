@@ -1,0 +1,21 @@
+{
+	"parent": "minecraft:recipes/root",
+	"rewards": {
+		"recipes": [
+			"crossroads:soul_torch"
+		]
+	},
+	"criteria": {
+		"has_recipe": {
+			"trigger": "minecraft:recipe_unlocked",
+			"conditions": {
+				"recipe": "crossroads:soul_torch"
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_recipe"
+		]
+	]
+}

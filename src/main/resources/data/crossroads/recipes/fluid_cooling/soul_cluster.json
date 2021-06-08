@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:fluid_cooling",
+	"input": {
+		"fluid": "crossroads:soul_essence",
+		"amount": 200
+	},
+	"item": "crossroads:soul_cluster",
+	"max_temp": 0,
+	"temp_change": 20
+}

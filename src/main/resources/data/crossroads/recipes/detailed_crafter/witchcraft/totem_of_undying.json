@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "witchcraft",
+	"result": {
+		"item": "minecraft:totem_of_undying",
+		"count": 1
+	},
+	"pattern": [
+		"EGE",
+		"SGS",
+		"SGS"
+	],
+	"key": {
+		"E": {
+			"tag": "forge:gems/emerald"
+		},
+		"G": {
+			"tag": "forge:ingots/gold"
+		},
+		"S": {
+			"item": "crossroads:soul_cluster"
+		}
+	}
+}
