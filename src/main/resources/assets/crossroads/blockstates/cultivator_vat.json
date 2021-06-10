@@ -1,0 +1,11 @@
+{
+	"multipart": [
+		{
+			"apply": { "model": "crossroads:block/cultivator_vat_base" }
+		},
+		{
+			"when": { "active": true },
+			"apply": { "model": "crossroads:block/cultivator_vat_liquid" }
+		}
+	]
+}

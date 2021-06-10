@@ -1,8 +1,12 @@
 package com.Da_Technomancer.crossroads.blocks.witchcraft;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.tileentities.witchcraft.AbstractNutrientEnvironmentTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.CultivatorVatTileEntity;
+import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
+import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -21,6 +25,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -30,7 +35,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class CultivatorVat extends ContainerBlock{
+public class CultivatorVat extends ContainerBlock implements IReadable{
 
 	public CultivatorVat(){
 		super(CRBlocks.getMetalProperty().lightLevel(state -> state.getValue(CRProperties.ACTIVE) ? 10 : 0));//They glow a little
@@ -74,6 +79,28 @@ public class CultivatorVat extends ContainerBlock{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		//TODO
+		tooltip.add(new TranslationTextComponent("tt.crossroads.cultivator_vat.desc"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.cultivator_vat.sustain"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.cultivator_vat.redstone"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.cultivator_vat.quip").setStyle(MiscUtil.TT_QUIP));
+	}
+
+	@Override
+	public boolean hasAnalogOutputSignal(BlockState p_149740_1_){
+		return true;
+	}
+
+	@Override
+	public int getAnalogOutputSignal(BlockState state, World world, BlockPos pos){
+		return RedstoneUtil.clampToVanilla(read(world, pos, state));
+	}
+
+	@Override
+	public float read(World world, BlockPos pos, BlockState blockState){
+		TileEntity te = world.getBlockEntity(pos);
+		if(te instanceof AbstractNutrientEnvironmentTileEntity){
+			return ((AbstractNutrientEnvironmentTileEntity) te).getRedstone();
+		}
+		return 0;
 	}
 }

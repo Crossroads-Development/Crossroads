@@ -256,6 +256,7 @@ public final class Crossroads{
 		registerCon(ColdStorageContainer::new, ColdStorageScreen::new, "cold_storage", e);
 		registerCon(HydroponicsTroughContainer::new, HydroponicsTroughScreen::new, "hydroponics_trough", e);
 		registerCon(StasisStorageContainer::new, StasisStorageScreen::new, "stasis_storage", e);
+		registerCon(CultivatorVatContainer::new, CultivatorVatScreen::new, "cultivator_vat", e);
 	}
 
 	@SuppressWarnings("unused")
@@ -298,6 +299,7 @@ public final class Crossroads{
 		registerConType(ColdStorageContainer::new, "cold_storage", e);
 		registerConType(HydroponicsTroughContainer::new, "hydroponics_trough", e);
 		registerConType(StasisStorageContainer::new, "stasis_storage", e);
+		registerConType(CultivatorVatContainer::new, "cultivator_vat", e);
 	}
 
 	/**

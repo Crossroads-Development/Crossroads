@@ -58,23 +58,25 @@ public abstract class AbstractNutrientEnvironmentTileEntity extends InventoryTE{
 	@Override
 	public void tick(){
 		super.tick();
-		long gameTime = level.getGameTime();
-		if(gameTime > lastTick && canCultivate()){
-			for(int cultivated : cultivatedSlots){
-				ItemStack stack = inventory[cultivated];
-				if(stack.getItem() instanceof ICultivatable){
-					ICultivatable item = (ICultivatable) stack.getItem();
-					//Drain liquid
-					if(!fluids[nutrientTankIndex].isEmpty()){
-						fluids[nutrientTankIndex].shrink(item.getPassiveNutrientDrain());
+		if(!level.isClientSide){
+			long gameTime = level.getGameTime();
+			if(gameTime > lastTick && canCultivate()){
+				for(int cultivated : cultivatedSlots){
+					ItemStack stack = inventory[cultivated];
+					if(stack.getItem() instanceof ICultivatable){
+						ICultivatable item = (ICultivatable) stack.getItem();
+						//Drain liquid
+						if(!fluids[nutrientTankIndex].isEmpty()){
+							fluids[nutrientTankIndex].shrink(item.getPassiveNutrientDrain());
+						}
+						//Update the item
+						item.cultivate(stack, level, 1);
 					}
-					//Update the item
-					item.cultivate(stack, level, 1);
 				}
 			}
+			lastTick = gameTime;
+			setChanged();
 		}
-		lastTick = gameTime;
-		setChanged();
 	}
 
 	@Override
