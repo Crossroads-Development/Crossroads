@@ -5,7 +5,7 @@ license="MIT" #mandatory
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
 modId="crossroads" #mandatory
-version="${version}" #mandatory
+version="${file.jarVersion}" #mandatory
 displayName="Crossroads" #mandatory
 # updateJSONURL="http://myurl.me/" #optional
 # displayURL="http://example.com/" #optional
