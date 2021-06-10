@@ -28,6 +28,7 @@ public class CRProperties extends ESProperties{
 	public static final IntegerProperty RATE_SIGNED = IntegerProperty.create("rate", 0, 4);//Used for changing animation speed on stirling engine; 2: no animation; 3: slow forward; 4: fast forward; 1: slow reverse; 0: fast reverse
 	public static final IntegerProperty LAYERS = IntegerProperty.create("layers", 1, 4);//Used for density plates
 	public static final IntegerProperty AGE_3 = IntegerProperty.create("age", 1, 3);//Used for wheezeworts
+	public static final IntegerProperty CONTENTS = IntegerProperty.create("contents", 0, 2);//Used for cultivator vat; 0: empty; 1: misc; 2: brain
 
 	//Individual properties for each direction- for blocks with a conduit-like shape
 	public static final BooleanProperty[] HAS_MATCH_SIDES = new BooleanProperty[] {BooleanProperty.create("down_b"), BooleanProperty.create("up_b"), BooleanProperty.create("north_b"), BooleanProperty.create("south_b"), BooleanProperty.create("west_b"), BooleanProperty.create("east_b")};

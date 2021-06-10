@@ -1,7 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.witchcraft;
 
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.CultivatorVatTileEntity;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
@@ -12,6 +14,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -30,16 +33,22 @@ import java.util.List;
 public class CultivatorVat extends ContainerBlock{
 
 	public CultivatorVat(){
-		super(CRBlocks.getMetalProperty());
+		super(CRBlocks.getMetalProperty().lightLevel(state -> state.getValue(CRProperties.ACTIVE) ? 10 : 0));//They glow a little
 		String name = "cultivator_vat";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
+		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false).setValue(CRProperties.CONTENTS, 0));
 	}
 
 	@Override
 	public TileEntity newBlockEntity(IBlockReader worldIn){
 		return new CultivatorVatTileEntity();
+	}
+
+	@Override
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
+		builder.add(CRProperties.ACTIVE, CRProperties.CONTENTS);
 	}
 
 	@Override
