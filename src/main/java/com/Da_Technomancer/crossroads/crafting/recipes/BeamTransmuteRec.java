@@ -187,11 +187,13 @@ public class BeamTransmuteRec implements IOptionalRecipe<IInventory>{
 		public void toNetwork(PacketBuffer buffer, BeamTransmuteRec recipe){
 			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
-			buffer.writeVarInt(recipe.align.ordinal());
-			buffer.writeBoolean(recipe.voi);
-			buffer.writeVarInt(recipe.power);
-			buffer.writeResourceLocation(recipe.output.getRegistryName());
-			recipe.ingr.writeToBuffer(buffer);
+			if(recipe.active){
+				buffer.writeVarInt(recipe.align.ordinal());
+				buffer.writeBoolean(recipe.voi);
+				buffer.writeVarInt(recipe.power);
+				buffer.writeResourceLocation(recipe.output.getRegistryName());
+				recipe.ingr.writeToBuffer(buffer);
+			}
 		}
 	}
 }

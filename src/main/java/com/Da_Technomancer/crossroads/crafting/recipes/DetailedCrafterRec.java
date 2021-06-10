@@ -94,8 +94,10 @@ public class DetailedCrafterRec extends ShapedRecipe implements IOptionalRecipe<
 		@Override
 		public void toNetwork(PacketBuffer buffer, DetailedCrafterRec recipe){
 			buffer.writeBoolean(recipe.active);
-			buffer.writeByte(recipe.path.getIndex());
-			IRecipeSerializer.SHAPED_RECIPE.toNetwork(buffer, recipe);
+			if(recipe.active){
+				buffer.writeByte(recipe.path.getIndex());
+				IRecipeSerializer.SHAPED_RECIPE.toNetwork(buffer, recipe);
+			}
 		}
 	}
 }

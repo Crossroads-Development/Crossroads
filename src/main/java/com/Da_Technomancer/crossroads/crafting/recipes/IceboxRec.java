@@ -128,8 +128,10 @@ public class IceboxRec implements IOptionalRecipe<IInventory>{
 		public void toNetwork(PacketBuffer buffer, IceboxRec recipe){
 			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
-			recipe.ingr.toNetwork(buffer);
-			buffer.writeFloat(recipe.cooling);
+			if(recipe.active){
+				recipe.ingr.toNetwork(buffer);
+				buffer.writeFloat(recipe.cooling);
+			}
 		}
 	}
 }

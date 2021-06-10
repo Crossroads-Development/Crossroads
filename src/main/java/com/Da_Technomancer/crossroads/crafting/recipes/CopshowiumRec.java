@@ -133,9 +133,11 @@ public class CopshowiumRec implements IOptionalRecipe<IInventory>{
 		public void toNetwork(PacketBuffer buffer, CopshowiumRec recipe){
 			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
-			recipe.getInput().writeToPacket(buffer);
-			buffer.writeFloat(recipe.mult);
-			buffer.writeBoolean(recipe.flux);
+			if(recipe.active){
+				recipe.getInput().writeToPacket(buffer);
+				buffer.writeFloat(recipe.mult);
+				buffer.writeBoolean(recipe.flux);
+			}
 		}
 	}
 }

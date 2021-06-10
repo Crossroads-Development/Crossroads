@@ -137,10 +137,12 @@ public class FluidCoolingRec implements IOptionalRecipe<IInventory>{
 		public void toNetwork(PacketBuffer buffer, FluidCoolingRec recipe){
 			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
-			recipe.getInput().writeToPacket(buffer);
-			buffer.writeItem(recipe.getResultItem());
-			buffer.writeFloat(recipe.getMaxTemp());
-			buffer.writeFloat(recipe.getAddedHeat());
+			if(recipe.active){
+				recipe.getInput().writeToPacket(buffer);
+				buffer.writeItem(recipe.getResultItem());
+				buffer.writeFloat(recipe.getMaxTemp());
+				buffer.writeFloat(recipe.getAddedHeat());
+			}
 		}
 	}
 }

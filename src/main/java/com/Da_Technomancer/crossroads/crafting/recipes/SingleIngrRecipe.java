@@ -126,8 +126,10 @@ public abstract class SingleIngrRecipe implements IOptionalRecipe<IInventory>{
 		public void toNetwork(PacketBuffer buffer, T recipe){
 			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.isEnabled());
-			recipe.getIngredients().get(0).toNetwork(buffer);
-			buffer.writeItem(recipe.getResultItem());
+			if(recipe.active){
+				recipe.getIngredients().get(0).toNetwork(buffer);
+				buffer.writeItem(recipe.getResultItem());
+			}
 		}
 
 		public interface IRecipeFactory<T extends SingleIngrRecipe>{

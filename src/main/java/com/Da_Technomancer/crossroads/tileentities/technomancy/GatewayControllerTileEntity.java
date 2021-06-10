@@ -421,6 +421,8 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 			//Perform angle movement on the client, and track what the client is probably doing on the server
 			clientAngle += calcAngleChange(clientW, clientAngle);
 
+			super.tick();
+
 			if(!level.isClientSide){
 				genOptionals();
 				//Perform angle movement on the server
