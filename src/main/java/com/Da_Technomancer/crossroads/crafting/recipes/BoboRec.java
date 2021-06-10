@@ -151,10 +151,12 @@ public class BoboRec implements IOptionalRecipe<IInventory>{
 		public void toNetwork(PacketBuffer buffer, BoboRec recipe){
 			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
-			for(Ingredient ingr : recipe.ingr){
-				ingr.toNetwork(buffer);
+			if(recipe.active){
+				for(Ingredient ingr : recipe.ingr){
+					ingr.toNetwork(buffer);
+				}
+				buffer.writeItem(recipe.output);
 			}
-			buffer.writeItem(recipe.output);
 		}
 	}
 }

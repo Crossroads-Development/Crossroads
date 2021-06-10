@@ -124,8 +124,10 @@ public class CrucibleRec implements IOptionalRecipe<IInventory>{
 		public void toNetwork(PacketBuffer buffer, CrucibleRec recipe){
 			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
-			recipe.input.toNetwork(buffer);
-			recipe.output.writeToPacket(buffer);
+			if(recipe.active){
+				recipe.input.toNetwork(buffer);
+				recipe.output.writeToPacket(buffer);
+			}
 		}
 	}
 }

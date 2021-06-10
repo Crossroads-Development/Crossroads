@@ -139,9 +139,11 @@ public class BlastFurnaceRec implements IOptionalRecipe<IInventory>{
 		public void toNetwork(PacketBuffer buffer, BlastFurnaceRec recipe){
 			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
-			recipe.ingr.toNetwork(buffer);
-			recipe.output.writeToPacket(buffer);
-			buffer.writeVarInt(recipe.slag);
+			if(recipe.active){
+				recipe.ingr.toNetwork(buffer);
+				recipe.output.writeToPacket(buffer);
+				buffer.writeVarInt(recipe.slag);
+			}
 		}
 	}
 }

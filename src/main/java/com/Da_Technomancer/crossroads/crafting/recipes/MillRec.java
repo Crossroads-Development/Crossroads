@@ -160,10 +160,12 @@ public class MillRec implements IOptionalRecipe<IInventory>{
 		public void toNetwork(PacketBuffer buffer, MillRec recipe){
 			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
-			recipe.ingr.toNetwork(buffer);
-			buffer.writeByte(recipe.outputs.length);
-			for(ItemStack stack : recipe.outputs){
-				buffer.writeItem(stack);
+			if(recipe.active){
+				recipe.ingr.toNetwork(buffer);
+				buffer.writeByte(recipe.outputs.length);
+				for(ItemStack stack : recipe.outputs){
+					buffer.writeItem(stack);
+				}
 			}
 		}
 	}

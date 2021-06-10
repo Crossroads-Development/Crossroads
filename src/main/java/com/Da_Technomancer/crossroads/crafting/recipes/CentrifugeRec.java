@@ -213,11 +213,13 @@ public class CentrifugeRec implements IOptionalRecipe<IInventory>{
 		public void toNetwork(PacketBuffer buffer, CentrifugeRec recipe){
 			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
-			buffer.writeFluidStack(recipe.input);
-			buffer.writeFluidStack(recipe.fluidOutput);
-			buffer.writeVarInt(recipe.outputs.length);
-			for(WeightOutput out : recipe.outputs){
-				out.serialize(buffer);
+			if(recipe.active){
+				buffer.writeFluidStack(recipe.input);
+				buffer.writeFluidStack(recipe.fluidOutput);
+				buffer.writeVarInt(recipe.outputs.length);
+				for(WeightOutput out : recipe.outputs){
+					out.serialize(buffer);
+				}
 			}
 		}
 	}

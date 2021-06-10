@@ -164,12 +164,14 @@ public class BeamExtractRec implements IOptionalRecipe<IInventory>{
 		public void toNetwork(PacketBuffer buffer, BeamExtractRec recipe){
 			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
-			recipe.ingr.toNetwork(buffer);
-			buffer.writeVarInt(recipe.duration);
-			buffer.writeVarInt(recipe.output.getEnergy());
-			buffer.writeVarInt(recipe.output.getPotential());
-			buffer.writeVarInt(recipe.output.getStability());
-			buffer.writeVarInt(recipe.output.getVoid());
+			if(recipe.active){
+				recipe.ingr.toNetwork(buffer);
+				buffer.writeVarInt(recipe.duration);
+				buffer.writeVarInt(recipe.output.getEnergy());
+				buffer.writeVarInt(recipe.output.getPotential());
+				buffer.writeVarInt(recipe.output.getStability());
+				buffer.writeVarInt(recipe.output.getVoid());
+			}
 		}
 	}
 }

@@ -26,18 +26,18 @@ public class CRConfig{
 	public static ForgeConfigSpec.BooleanValue genTinOre;
 	public static ForgeConfigSpec.BooleanValue genRubyOre;
 	public static ForgeConfigSpec.BooleanValue genVoidOre;
-//	public static ForgeConfigSpec.DoubleValue rubyRarity;
+	//	public static ForgeConfigSpec.DoubleValue rubyRarity;
 	public static ForgeConfigSpec.ConfigValue<List<? extends String>> processableOres;
 	public static ForgeConfigSpec.ConfigValue<List<? extends String>> gearTypes;
 	public static ForgeConfigSpec.DoubleValue speedPrecision;
 	public static ForgeConfigSpec.BooleanValue enchantDestruction;
-//	public static ForgeConfigSpec.ConfigValue<String> retrogen; TODO
+	//	public static ForgeConfigSpec.ConfigValue<String> retrogen; TODO
 	public static ForgeConfigSpec.BooleanValue heatEffects;
 	public static ForgeConfigSpec.BooleanValue allowAllSingle;
 	public static ForgeConfigSpec.BooleanValue allowAllServer;
 	public static ForgeConfigSpec.BooleanValue fluxEvent;
 	public static ForgeConfigSpec.IntValue gearResetTime;
-	public static ForgeConfigSpec.BooleanValue wipeInvalidMappings;
+	//	public static ForgeConfigSpec.BooleanValue wipeInvalidMappings;
 	public static ForgeConfigSpec.BooleanValue beamPowerCollision;
 	public static ForgeConfigSpec.IntValue electPerJoule;
 	public static ForgeConfigSpec.BooleanValue allowHellfire;
@@ -135,7 +135,7 @@ public class CRConfig{
 		serverBuilder.push(CAT_INTERNAL);
 		speedPrecision = serverBuilder.comment("Lower values increase network lag but increases gear speed synchronization").defineInRange("predict_speed", 0.20F, 0.05F, 10F);
 		gearResetTime = serverBuilder.comment("Interval in ticks between gear network checks").defineInRange("network_time", 300, 100, 2400);
-		wipeInvalidMappings = serverBuilder.worldRestart().comment("Wipe internal per player dimension mappings on failure?", "Only change this if you know what you're doing").define("wipe_dim_map", false);
+//		wipeInvalidMappings = serverBuilder.worldRestart().comment("Wipe internal per player dimension mappings on failure?", "Only change this if you know what you're doing").define("wipe_dim_map", false);
 		mbPerIngot = serverBuilder.comment("Number of millibuckets of molten metal per ingot", "Does not change recipes").defineInRange("ingot_mb", 144, 1, 10_000);
 		effectPacketDistance = serverBuilder.comment("Distance in blocks that players can see various effects from (electric arcs, beams from staffs, etc)", "Lower values will decrease the amount of packets sent").defineInRange("effect_distance", 512, 1, 512);
 		beamPowerCollision = serverBuilder.comment("Whether beams decide what they can pass through based on beam power", "If true, low power beams require a smaller hole, and high power beams require a larger empty space in blocks to pass through").define("beam_collision_use_power", false);
@@ -149,8 +149,8 @@ public class CRConfig{
 		genVoidOre = serverBuilder.comment("Generate Void Crystal Ore?").define("void", true);
 //		rubyRarity = serverBuilder.comment("Ruby ore spawn frequency", "The chance that a nether quartz ore will generate as ruby instead").defineInRange("ruby_rate", 1D / 64D, 0F, 1D);
 //		retrogen = serverBuilder.comment("Retrogen Key", "Changing this value will cause retrogen. Leaving it blank disables retrogen", "Turn this off when you are done!").define("retrogen", "");
-		processableOres = serverBuilder.worldRestart().comment("Metal ore types that Crossroads should generate tripling items for", "Specify the metal then a space then a hexadecimal color, ex. \"copper FF4800\"", "Doesn't register a molten fluid, recipes, or localization", "Use a datapack to register any desired recipes or localization for new materials, Find a mod already adding the desired molten fluid for the fluid").define("process_ores", initList("copper FF7800", "tin C8C8C8", "iron A0A0A0", "gold FFFF00"), compileRegex("\\w++ [0-9A-Fa-f]{6}+"));
-		gearTypes = serverBuilder.worldRestart().comment("Metal types that Crossroads should add gears for", "Specify the metal then a space then a hexadecimal color then a space then a density in kg/m3", "Adding a new gear material requires adding localization and recipes via datapack", "Removing a default gear material is not recommended").define("gear_types", initList("copper FF783C 9000", "tin F0F0F0 7300", "iron A0A0A0 8000", "gold FFFF00 20000", "bronze FFA03C 8800", "copshowium FF8200 0"), compileRegex("\\w++ [0-9A-Fa-f]{6}+ [+]?\\d*\\.?[0-9]+"));
+		processableOres = serverBuilder.worldRestart().comment("Metal ore types that Crossroads should generate tripling items for", "Specify the metal then a space then a hexadecimal color, ex. \"copper FF4800\"", "Doesn't register a molten fluid, recipes, or localization", "Use a datapack to register any desired recipes or localization for new materials, Find a mod already adding the desired molten fluid for the fluid").defineList("process_ores", initList("copper FF7800", "tin C8C8C8", "iron A0A0A0", "gold FFFF00"), compileRegex("\\w++ [0-9A-Fa-f]{6}+"));
+		gearTypes = serverBuilder.worldRestart().comment("Metal types that Crossroads should add gears for", "Specify the metal then a space then a hexadecimal color then a space then a density in kg/m3", "Adding a new gear material requires adding localization and recipes via datapack", "Removing a default gear material is not recommended").defineList("gear_types", initList("copper FF783C 9000", "tin F0F0F0 7300", "iron A0A0A0 8000", "gold FFFF00 20000", "bronze FFA03C 8800", "copshowium FF8200 0"), compileRegex("\\w++ [0-9A-Fa-f]{6}+ [+]?\\d*\\.?[0-9]+"));
 		serverBuilder.pop();
 		serverBuilder.push(CAT_BALANCE);
 		steamWorth = serverBuilder.comment("The number of degrees one bucket of steam is worth", "If this is changed, it is recommended to rebalance JSON recipes with steam").defineInRange("steam_value", 50, 0, Integer.MAX_VALUE);
@@ -237,14 +237,7 @@ public class CRConfig{
 	private static Predicate<Object> compileRegex(String regex){
 		Pattern p = Pattern.compile(regex);
 		return (Object o) -> {
-			if(o instanceof Iterable<?>){
-				for(Object ent : (Iterable<?>) o){
-					if(!(ent instanceof String) || !p.matcher((String) ent).matches()){
-						return false;
-					}
-				}
-			}
-			return true;
+			return o instanceof String && p.matcher((String) o).matches();
 		};
 	}
 
