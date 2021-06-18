@@ -28,11 +28,11 @@ public class CultivatorVatContainer extends MachineContainer<CultivatorVatTileEn
 
 	@Override
 	protected void addSlots(){
-		addSlot(new StrictSlot(te, 0, 5, 22));//Target
-		addSlot(new StrictSlot(te, 1, 5, 32));//Input 1
-		addSlot(new StrictSlot(te, 2, 25, 32));//Input 2
-		addSlot(new OutputSlot(te, 3, 45, 32));//Output
-		Pair<Slot, Slot> fluidSlots = FluidSlotManager.createFluidSlots(new FluidSlotManager.FakeInventory(this), 0, 100, 19, 100, 54, te, new int[] {0});
+		addSlot(new StrictSlot(te, 0, 98, 36));//Target
+		addSlot(new StrictSlot(te, 1, 62, 18));//Input 1
+		addSlot(new StrictSlot(te, 2, 62, 54));//Input 2
+		addSlot(new OutputSlot(te, 3, 134, 36));//Output
+		Pair<Slot, Slot> fluidSlots = FluidSlotManager.createFluidSlots(new FluidSlotManager.FakeInventory(this), 0, 8, 19, 8, 54, te, new int[] {0});
 		addFluidManagerSlots(fluidSlots);
 	}
 

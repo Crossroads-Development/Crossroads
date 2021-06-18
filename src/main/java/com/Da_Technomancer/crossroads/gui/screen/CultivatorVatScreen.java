@@ -2,9 +2,7 @@ package com.Da_Technomancer.crossroads.gui.screen;
 
 import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.gui.container.CrucibleContainer;
 import com.Da_Technomancer.crossroads.gui.container.CultivatorVatContainer;
-import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.CultivatorVatTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
@@ -23,7 +21,7 @@ public class CultivatorVatScreen extends MachineGUI<CultivatorVatContainer, Cult
 	@Override
 	protected void init(){
 		super.init();
-		initFluidManager(0, 70, 70);
+		initFluidManager(0, 30, 70);
 	}
 
 	@Override
@@ -31,7 +29,7 @@ public class CultivatorVatScreen extends MachineGUI<CultivatorVatContainer, Cult
 		Minecraft.getInstance().getTextureManager().bind(TEXTURE);
 
 		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-		blit(matrix, leftPos + 42, topPos + 35, 176, 0, menu.progressRef.get() * 28 / HeatingCrucibleTileEntity.REQUIRED, 18);
+		blit(matrix, leftPos + 79, topPos + 17, 176, 0, menu.progressRef.get() * 54 / CultivatorVatTileEntity.REQUIRED_PROGRESS, 54);
 
 		super.renderBg(matrix, partialTicks, mouseX, mouseY);
 	}
