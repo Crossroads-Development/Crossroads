@@ -87,8 +87,8 @@ public class Embryo extends Item implements ICultivatable{
 		//The new item carries over the degradation due to freezing, but can be further damaged by freezing
 		withEntityTypeData(created, template, false);
 
-		ItemStack ingr1 = null;
-		ItemStack ingr2 = null;
+		ItemStack ingr1 = ItemStack.EMPTY;
+		ItemStack ingr2 = ItemStack.EMPTY;
 		if(template.getEffects().size() > 0){
 			//Require as many genetic plasmids as there are effects applied
 			ingr1 = new ItemStack(CRItems.potionExtension, template.getEffects().size());
