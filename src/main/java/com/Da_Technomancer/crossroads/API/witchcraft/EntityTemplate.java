@@ -27,7 +27,6 @@ public class EntityTemplate implements INBTSerializable<CompoundNBT>{
 	private boolean loyal;
 	private boolean respawning;
 	private ArrayList<EffectInstance> effects;//Durations of these effects are ignored when applying
-	private CompoundNBT data;
 	private int degradation;
 
 	//Cache generated based on entity name
@@ -43,16 +42,14 @@ public class EntityTemplate implements INBTSerializable<CompoundNBT>{
 		this.loyal = template.loyal;
 		this.respawning = template.respawning;
 		this.effects = template.effects;
-		this.data = template.data;
 		this.degradation = template.degradation;
 	}
 
-	public EntityTemplate(ResourceLocation entityName, boolean loyal, boolean respawning, ArrayList<EffectInstance> effects, CompoundNBT data, int degradation){
+	public EntityTemplate(ResourceLocation entityName, boolean loyal, boolean respawning, ArrayList<EffectInstance> effects, int degradation){
 		this.entityName = entityName;
 		this.loyal = loyal;
 		this.respawning = respawning;
 		this.effects = effects;
-		this.data = data;
 		this.degradation = degradation;
 	}
 
@@ -102,14 +99,6 @@ public class EntityTemplate implements INBTSerializable<CompoundNBT>{
 		this.effects = effects;
 	}
 
-	public CompoundNBT getData(){
-		return data;
-	}
-
-	public void setData(CompoundNBT data){
-		this.data = data;
-	}
-
 	public int getDegradation(){
 		return degradation;
 	}
@@ -131,7 +120,6 @@ public class EntityTemplate implements INBTSerializable<CompoundNBT>{
 			}
 		}
 		nbt.put("potions", potions);
-		nbt.put("data", data);
 		nbt.putInt("degradation", degradation);
 		return nbt;
 	}
@@ -147,7 +135,6 @@ public class EntityTemplate implements INBTSerializable<CompoundNBT>{
 		for(int i = 0; i < potions.size(); i++){
 			effects.add(EffectInstance.load(potions.getCompound(i)));
 		}
-		data = nbt.getCompound("data");
 		degradation = nbt.getInt("degradation");
 	}
 
@@ -164,13 +151,12 @@ public class EntityTemplate implements INBTSerializable<CompoundNBT>{
 				respawning == that.respawning &&
 				degradation == that.degradation &&
 				Objects.equals(entityName, that.entityName) &&
-				Objects.equals(effects, that.effects) &&
-				Objects.equals(data, that.data);
+				Objects.equals(effects, that.effects);
 	}
 
 	@Override
 	public int hashCode(){
-		return Objects.hash(entityName, loyal, respawning, effects, data, degradation);
+		return Objects.hash(entityName, loyal, respawning, effects, degradation);
 	}
 
 	/**

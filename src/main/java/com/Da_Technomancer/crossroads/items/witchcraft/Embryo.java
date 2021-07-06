@@ -94,7 +94,7 @@ public class Embryo extends Item implements ICultivatable{
 			ingr1 = new ItemStack(CRItems.potionExtension, template.getEffects().size());
 		}
 		if(template.isRespawning()){
-			if(ingr1 == null){
+			if(ingr1.isEmpty()){
 				ingr1 = new ItemStack(CRItems.soulCluster);
 			}else{
 				ingr2 = new ItemStack(CRItems.soulCluster);

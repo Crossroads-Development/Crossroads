@@ -71,8 +71,7 @@ public class Syringe extends Item{
 						target.addEffect(new EffectInstance(effect.getEffect(), effect.getDuration(), (int) Math.round(effect.getAmplifier() * multiplier), effect.isAmbient(), effect.isVisible(), effect.showIcon()));
 					}else{
 						//Make permanent, apply a penalty
-						//'Permanent' is actually maximum duration, which is ~3.4 years ingame
-						target.addEffect(new EffectInstance(effect.getEffect(), Integer.MAX_VALUE, effect.getAmplifier(), effect.isAmbient(), effect.isVisible(), effect.showIcon()));
+						CRPotions.applyAsPermanent(target, effect);
 						if(penalty > 0){
 							EffectInstance prevPenalty = target.getEffect(CRPotions.HEALTH_PENALTY_EFFECT);
 							int prevPenaltyIntensity = prevPenalty != null ? prevPenalty.getAmplifier() : -1;

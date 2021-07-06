@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRNBTIngredient;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
@@ -74,5 +75,18 @@ public class CRPotions{
 		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), POTION_BLINDNESS)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), POTION_BLINDNESS_LONG));
 		//Filling empty bottles
 		BrewingRecipeRegistry.addRecipe(Ingredient.of(Items.GLASS_BOTTLE), Ingredient.of(Blocks.ICE), PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER));
+	}
+
+	/**
+	 * Applies a non-instantaneous potion effect to be permanent
+	 * Instantaneous effects will have no result
+	 * @param target The entity to apply it to
+	 * @param toApply The effect to apply, but in a permanent form. The passed argument will not be modified
+	 */
+	public static void applyAsPermanent(LivingEntity target, EffectInstance toApply){
+		if(!toApply.getEffect().isInstantenous()){
+			//'Permanent' is actually maximum duration, which is ~3.4 years ingame
+			target.addEffect(new EffectInstance(toApply.getEffect(), Integer.MAX_VALUE, toApply.getAmplifier(), toApply.isAmbient(), toApply.isVisible(), toApply.showIcon()));
+		}
 	}
 }

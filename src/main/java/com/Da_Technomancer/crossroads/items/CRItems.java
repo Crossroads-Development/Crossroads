@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.API.EnumPath;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
+import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.API.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.alchemy.*;
@@ -12,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.*;
 import net.minecraft.util.ResourceLocation;
@@ -19,6 +21,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.util.ArrayList;
 
 public final class CRItems{
@@ -125,6 +128,7 @@ public final class CRItems{
 	public static WheezewortSeeds wheezewortSeeds;
 	public static SoulCluster soulCluster;
 	public static Embryo embryo;
+	public static GeneticSpawnEgg geneticSpawnEgg;
 
 	public static OreProfileItem oreGravel;
 	public static OreProfileItem oreClump;
@@ -247,6 +251,7 @@ public final class CRItems{
 		wheezewortSeeds = new WheezewortSeeds();
 		soulCluster = new SoulCluster();
 		embryo = new Embryo();
+		geneticSpawnEgg = new GeneticSpawnEgg();
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -257,14 +262,34 @@ public final class CRItems{
 		itemColor.register((ItemStack stack, int layer) -> layer == 0 ? AbstractGlassware.getColorRGB(stack) : -1, phialGlass, florenceFlaskGlass, shellGlass, phialCrystal, florenceFlaskCrystal, shellCrystal);
 
 		//Gears and ore processing dusts
-		IItemColor itemColoring = (ItemStack stack, int tintIndex) -> {
+		IItemColor oreItemColoring = (ItemStack stack, int tintIndex) -> {
 			if(tintIndex == 0){
 				return -1;
 			}
 			OreSetup.OreProfile mat = OreProfileItem.getProfile(stack);
 			return mat == null ? -1 : mat.getColor().getRGB();
 		};
-		itemColor.register(itemColoring, oreGravel, oreClump, axle, smallGear, largeGear, clutch, invClutch, toggleGear, invToggleGear, axleMount);
+		itemColor.register(oreItemColoring, oreGravel, oreClump, axle, smallGear, largeGear, clutch, invClutch, toggleGear, invToggleGear, axleMount);
+
+		//Genetic spawn egg
+		IItemColor eggItemColoring = (ItemStack stack, int tintIndex) -> {
+			//Lookup the mob's vanilla egg, copy the colors
+			//If it doesn't have an egg, fallback to defaults
+			if(stack.getItem() instanceof GeneticSpawnEgg){
+				EntityTemplate template = ((GeneticSpawnEgg) stack.getItem()).getEntityTypeData(stack);
+				EntityType<?> type = template.getEntityType();
+				if(type != null){
+					SpawnEggItem vanillaEgg = SpawnEggItem.byId(type);
+					if(vanillaEgg != null){
+						return vanillaEgg.getColor(tintIndex);
+					}
+				}
+			}
+			//Fallback to defaults
+			//Which are hideous, but that's what you get for not registering spawn eggs
+			return tintIndex == 0 ? Color.CYAN.getRGB() : Color.GREEN.getRGB();
+		};
+		itemColor.register(eggItemColoring, geneticSpawnEgg);
 
 		//Properties
 		//Whirligig rotation
