@@ -1,10 +1,14 @@
 package com.Da_Technomancer.crossroads.API.witchcraft;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Objects;
 
 public interface ICultivatable extends IPerishable{
@@ -53,6 +57,37 @@ public interface ICultivatable extends IPerishable{
 	 */
 	@Nullable
 	CultivationTrade getCultivationTrade(ItemStack self, World world);
+
+	public static void addTooltip(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip){
+		Item item = stack.getItem();
+		if(item instanceof ICultivatable){
+			ICultivatable sItem = (ICultivatable) item;
+			long spoilTimestamp = sItem.getSpoilTime(stack, world);
+			if(spoilTimestamp < 0){
+				//Broken/new item; hasn't been configured properly
+				tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.spoilage.error"));
+			}else if(world != null){
+				if(sItem.isSpoiled(stack, world)){
+					tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.spoilage.spoiled"));
+				}else{
+					spoilTimestamp -= world.getGameTime();
+					int days = (int) (spoilTimestamp / (20 * 60 * 60 * 24));
+					spoilTimestamp -= days * 20 * 60 * 60 * 24;
+					int hours = (int) (spoilTimestamp / (20 * 60 * 60));
+					spoilTimestamp -= hours * 20 * 60 * 60;
+					int minutes = (int) (spoilTimestamp / (20 * 60));
+					spoilTimestamp -= minutes * 20 * 60;
+					int seconds = (int) (spoilTimestamp / 20);
+					tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.spoilage.remain", days, hours, minutes, seconds));
+				}
+			}
+			if(sItem.wasFrozen(stack)){
+				tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.spoilage.freezing.damaged", sItem.getFreezeTemperature()));//Freezing information
+			}else{
+				tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.spoilage.freezing", sItem.getFreezeTemperature()));//Freezing information
+			}
+		}
+	}
 
 	/**
 	 * Whether the passed trade is plausibly the value which would be returned from getCultivationTrade

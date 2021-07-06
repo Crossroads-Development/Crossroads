@@ -80,13 +80,15 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 
 		//Preserving the target item is handled in the superclass
 
-		//If the target item is expired, attempt to eject it to the output
-		Item targetItem = inventory[0].getItem();
-		if(targetItem instanceof ICultivatable && ((ICultivatable) targetItem).isSpoiled(inventory[0], level)){
-			if(inventory[3].isEmpty()){
-				inventory[3] = inventory[0];
-				inventory[0] = ItemStack.EMPTY;
-				setChanged();
+		//If the target or input item is expired, attempt to eject it to the output
+		for(int i = 0; i < 3; i++){
+			Item targetItem = inventory[i].getItem();
+			if(targetItem instanceof IPerishable && ((IPerishable) targetItem).isSpoiled(inventory[i], level)){
+				if(inventory[3].isEmpty()){
+					inventory[3] = inventory[0];
+					inventory[i] = ItemStack.EMPTY;
+					setChanged();
+				}
 			}
 		}
 
@@ -109,6 +111,17 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 		}
 	}
 
+	private boolean sameItem(ItemStack a, ItemStack b){
+		//Due to the item spoilage mechanic
+		//For the inputs on this machine, we do not check NBT
+		return ItemStack.isSame(a, b);
+	}
+
+	private boolean sameItemSpoilage(ItemStack a, ItemStack strictB){
+		//Same as sameItem, but fails if strictB is spoiled
+		return sameItem(a, strictB) && !(strictB.getItem() instanceof IPerishable && ((IPerishable) strictB.getItem()).isSpoiled(strictB, level));
+	}
+
 	private void consumeIngredient(ItemStack ingredient){
 		int toConsume = ingredient.getCount();
 		for(int i = 1; i <= 2; i++){
@@ -116,7 +129,7 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 				return;
 			}
 			ItemStack inputItem = inventory[i];
-			if(BlockUtil.sameItem(ingredient, inputItem)){
+			if(sameItemSpoilage(ingredient, inputItem)){
 				int used = Math.min(toConsume, inputItem.getCount());
 				inputItem.shrink(used);
 				toConsume -= used;
@@ -167,14 +180,14 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 
 		//Known issue: we don't check for or account for the possibility that req1 and req2 are the same item when checking quantities
 		//But this case should never occur anyway
-		if(!req1.isEmpty() && (BlockUtil.sameItem(req1, inventory[1]) ? inventory[1].getCount() : 0) + (BlockUtil.sameItem(req1, inventory[2]) ? inventory[2].getCount() : 0) < req1.getCount()){
-			//Insufficient quantity of input 1
+		if(!req1.isEmpty() && (sameItemSpoilage(req1, inventory[1]) ? inventory[1].getCount() : 0) + (sameItemSpoilage(req1, inventory[2]) ? inventory[2].getCount() : 0) < req1.getCount()){
+			//Insufficient quantity/spoilage of input 1
 			activeTrade = null;
 			return;
 		}
 
-		if(!req2.isEmpty() && (BlockUtil.sameItem(req2, inventory[1]) ? inventory[1].getCount() : 0) + (BlockUtil.sameItem(req2, inventory[2]) ? inventory[2].getCount() : 0) < req2.getCount()){
-			//Insufficient quantity of input 2
+		if(!req2.isEmpty() && (sameItemSpoilage(req2, inventory[1]) ? inventory[1].getCount() : 0) + (sameItemSpoilage(req2, inventory[2]) ? inventory[2].getCount() : 0) < req2.getCount()){
+			//Insufficient quantity/spoilage of input 2
 			activeTrade = null;
 			return;
 		}
@@ -265,7 +278,7 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 			}
 			//If the item is already present in the other input slot, don't allow it into this one (unless it is already present)
 			ItemStack otherSlot = inventory[index == 1 ? 2 : 1];
-			return BlockUtil.sameItem(inventory[index], stack) || !BlockUtil.sameItem(otherSlot, stack);
+			return BlockUtil.sameItem(inventory[index], stack) || !sameItem(otherSlot, stack);
 		}
 
 		return false;
@@ -274,8 +287,7 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 	@Override
 	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction dir){
 		//Items can be removed from the output
-		//Spoiled items can be removed from the target slot
-		return index == 3 || (index == 0 && inventory[0].getItem() instanceof IPerishable && ((IPerishable) inventory[0].getItem()).isSpoiled(inventory[0], level));
+		return index == 3;
 	}
 
 	@Override

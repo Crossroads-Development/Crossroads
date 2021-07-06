@@ -124,6 +124,7 @@ public final class CRItems{
 	public static Item mushroomDust;
 	public static WheezewortSeeds wheezewortSeeds;
 	public static SoulCluster soulCluster;
+	public static Embryo embryo;
 
 	public static OreProfileItem oreGravel;
 	public static OreProfileItem oreClump;
@@ -245,6 +246,7 @@ public final class CRItems{
 		toRegister.add(mushroomDust = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("mushroom_dust"));
 		wheezewortSeeds = new WheezewortSeeds();
 		soulCluster = new SoulCluster();
+		embryo = new Embryo();
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -293,6 +295,7 @@ public final class CRItems{
 		IItemPropertyGetter rottingPropertyGetter = (ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) -> stack.getItem() instanceof IPerishable && ((IPerishable) stack.getItem()).isSpoiled(stack, world) ? 1F : 0F;
 		ItemModelsProperties.register(bloodSample, new ResourceLocation("spoiled"), rottingPropertyGetter);
 		ItemModelsProperties.register(potionExtension, new ResourceLocation("spoiled"), rottingPropertyGetter);
+		ItemModelsProperties.register(embryo, new ResourceLocation("spoiled"), rottingPropertyGetter);
 		//Syringe treatment
 		IItemPropertyGetter syringePropertyGetter = (ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) -> CRItems.syringe.isTreated(stack) ? 1 : 0;
 		ItemModelsProperties.register(syringe, new ResourceLocation("treated"), syringePropertyGetter);

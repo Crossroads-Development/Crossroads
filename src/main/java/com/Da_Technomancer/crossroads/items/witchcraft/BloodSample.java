@@ -1,26 +1,27 @@
 package com.Da_Technomancer.crossroads.items.witchcraft;
 
+import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.API.witchcraft.IPerishable;
+import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class BloodSample extends Item implements IPerishable{
 
 	private static final long LIFETIME = 20 * 60 * 60 * 2;
+	private static final int PERM_EFFECT_CUTOFF = Integer.MAX_VALUE / 4;//We assume any effect on a mob over this duration was originally a permanent effect; this is not a flawless method
 	private static final String KEY = "cr_genetics";
 
 	public BloodSample(){
@@ -31,19 +32,34 @@ public class BloodSample extends Item implements IPerishable{
 	}
 
 	public ItemStack withEntityData(ItemStack stack, LivingEntity source){
-		CompoundNBT nbt = stack.getOrCreateTagElement(KEY);
-		nbt.putString("entity_type", source.getType().getRegistryName().toString());
-		nbt.putUUID("entity_uuid", source.getUUID());
+		EntityTemplate template = new EntityTemplate();
+		template.setEntityName(source.getType().getRegistryName());
+		template.setRespawning(source.getPersistentData().getBoolean(EntityTemplate.RESPAWNING_KEY));
+		template.setLoyal(source.getPersistentData().getBoolean(EntityTemplate.LOYAL_KEY));
+
+		Collection<EffectInstance> effects = source.getActiveEffects();
+		int degrade = 0;
+		ArrayList<EffectInstance> permanentEffects = new ArrayList<>(0);
+		for(EffectInstance instance : effects){
+			if(CRPotions.HEALTH_PENALTY_EFFECT.getRegistryName().equals(instance.getEffect().getRegistryName())){
+				//This is the health penalty, interpret as degradation
+				degrade += instance.getAmplifier() + 1;
+			}else if(!instance.getEffect().isInstantenous() && instance.getDuration() > PERM_EFFECT_CUTOFF){
+				permanentEffects.add(new EffectInstance(instance));//Copy the value to prevent changes in the mutable instance
+			}
+		}
+		template.setDegradation(degrade);
+		template.setEffects(permanentEffects);
+
+		stack.getOrCreateTag().put(KEY, template.serializeNBT());
 		return stack;
 	}
 
-	@Nullable
-	public ResourceLocation getEntityTypeData(ItemStack stack){
-		CompoundNBT nbt = stack.getTagElement(KEY);
-		if(nbt != null && nbt.contains("entity_type")){
-			return new ResourceLocation(nbt.getString("entity_type"));
-		}
-		return null;
+	public EntityTemplate getEntityTypeData(ItemStack stack){
+		CompoundNBT nbt = stack.getOrCreateTag();
+		EntityTemplate template = new EntityTemplate();
+		template.deserializeNBT(nbt.getCompound(KEY));
+		return template;
 	}
 
 	@Override
@@ -58,13 +74,8 @@ public class BloodSample extends Item implements IPerishable{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag){
-		ResourceLocation entityRegName = getEntityTypeData(stack);
-		EntityType<?> type = entityRegName == null ? null : ForgeRegistries.ENTITIES.getValue(entityRegName);
-		if(entityRegName == null){
-			tooltip.add(new TranslationTextComponent("tt.crossroads.blood_sample.type.missing"));
-		}else{
-			tooltip.add(new TranslationTextComponent("tt.crossroads.blood_sample.type").append(type == null ? new StringTextComponent(entityRegName.toString()) : type.getDescription()));
-		}
+		EntityTemplate template = getEntityTypeData(stack);
+		template.addTooltip(tooltip, 2);
 		IPerishable.addTooltip(stack, world, tooltip);
 	}
 }
