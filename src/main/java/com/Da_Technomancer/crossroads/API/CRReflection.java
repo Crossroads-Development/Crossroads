@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.API;
 
 import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
 import com.Da_Technomancer.essentials.ReflectionUtil;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.monster.ZombieVillagerEntity;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.biome.BiomeContainer;
@@ -24,7 +25,8 @@ public enum CRReflection implements ReflectionUtil.IReflectionKey{
 	LOADED_CHUNKS(ChunkManager.class, "func_223491_f ", "getChunks ", "Spawn lightning at high atmospheric charge"),
 	LIGHTNING_POS(ServerWorld.class, "func_175736_a", "findLightingTargetAround", "Target lightning at high atmospheric charge"),
 	SPAWN_RADIUS(ChunkManager.class, "func_219243_d", "noPlayersCloseForSpawning", "Spawn lightning at high atmospheric charge"),
-	BIOME_ARRAY(BiomeContainer.class, "field_227054_f_", "biomes", "Terraforming alchemy reagents changing the biome");
+	BIOME_ARRAY(BiomeContainer.class, "field_227054_f_", "biomes", "Terraforming alchemy reagents changing the biome"),
+	OFFSPRING_SPAWN_EGG(MobEntity.class, "func_213406_a", "onOffspringSpawnedFromEgg", "Imprinting on cloned foxes");
 
 
 	private Class<?> clazz;

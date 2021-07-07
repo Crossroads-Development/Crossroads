@@ -1,18 +1,20 @@
 package com.Da_Technomancer.crossroads.items.witchcraft;
 
+import com.Da_Technomancer.crossroads.API.CRReflection;
 import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
 import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.essentials.ReflectionUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.dispenser.IBlockSource;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
+import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -32,6 +34,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -39,6 +43,8 @@ import java.util.Objects;
 public class GeneticSpawnEgg extends Item{
 
 	private static final String KEY = "cr_genetics";
+
+	private static final Method OFFSPRING_SPAWNING_METHOD = ReflectionUtil.reflectMethod(CRReflection.OFFSPRING_SPAWN_EGG);
 
 	public GeneticSpawnEgg(){
 		super(new Item.Properties());//Not added to any creative tab
@@ -49,7 +55,7 @@ public class GeneticSpawnEgg extends Item{
 		DefaultDispenseItemBehavior dispenseBehavior = new DefaultDispenseItemBehavior(){
 			public ItemStack execute(IBlockSource source, ItemStack stack){
 				Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
-				spawnMob(stack, source.getLevel(), source.getPos().relative(direction), SpawnReason.DISPENSER, direction != Direction.UP, false);
+				spawnMob(stack, null, source.getLevel(), source.getPos().relative(direction), SpawnReason.DISPENSER, direction != Direction.UP, false);
 				stack.shrink(1);
 				return stack;
 			}
@@ -76,7 +82,7 @@ public class GeneticSpawnEgg extends Item{
 		template.addTooltip(tooltip, 4);
 	}
 	
-	public boolean spawnMob(ItemStack stack, ServerWorld world, BlockPos pos, SpawnReason reason, boolean offset, boolean unmapped){
+	public boolean spawnMob(ItemStack stack, @Nullable PlayerEntity player, ServerWorld world, BlockPos pos, SpawnReason reason, boolean offset, boolean unmapped){
 		EntityTemplate template = getEntityTypeData(stack);
 		EntityType<?> type = template.getEntityType();
 		if(type == null){
@@ -86,7 +92,7 @@ public class GeneticSpawnEgg extends Item{
 		//Don't pass the itemstack to the spawn method
 		//That parameter is designed for the vanilla spawn egg NBT structure, which we don't use
 		//We have to adjust the mob manually after spawning as a result
-		Entity created = type.spawn(world, null, stack.hasCustomHoverName() ? stack.getHoverName() : null, null, pos, reason, offset, unmapped);
+		Entity created = type.spawn(world, null, stack.hasCustomHoverName() ? stack.getHoverName() : null, player, pos, reason, offset, unmapped);
 		LivingEntity entity;
 		if(created == null){
 			return false;
@@ -100,7 +106,7 @@ public class GeneticSpawnEgg extends Item{
 		if(created instanceof LivingEntity){
 			entity = (LivingEntity) created;
 
-			//Degredation
+			//Degradation
 			if(template.getDegradation() > 0){
 				entity.addEffect(new EffectInstance(CRPotions.HEALTH_PENALTY_EFFECT, Integer.MAX_VALUE, template.getDegradation() - 1));
 			}
@@ -109,6 +115,24 @@ public class GeneticSpawnEgg extends Item{
 			ArrayList<EffectInstance> rawEffects = template.getEffects();
 			for(EffectInstance effect : rawEffects){
 				CRPotions.applyAsPermanent(entity, effect);
+			}
+
+			//Loyalty
+			if(template.isLoyal() && player != null){
+				//There isn't a single method for this. The correct way to set something as tamed varies based on the mob
+				//New vanilla tamable mobs may require changes here, and modded tameable mobs are unlikely to work
+				if(created instanceof TameableEntity){
+					((TameableEntity) created).tame(player);
+				}else if(created instanceof AbstractHorseEntity){
+					((AbstractHorseEntity) created).tameWithName(player);
+				}else if(created instanceof MobEntity && OFFSPRING_SPAWNING_METHOD != null){
+					//As of vanilla MC1.16.5, this is literally only applicable to foxes
+					try{
+						OFFSPRING_SPAWNING_METHOD.invoke(created, player, created);
+					}catch(IllegalAccessException | InvocationTargetException e){
+						Crossroads.logger.catching(e);
+					}
+				}
 			}
 		}
 
@@ -149,7 +173,7 @@ public class GeneticSpawnEgg extends Item{
 				blockpos1 = blockpos.relative(direction);
 			}
 
-			if(spawnMob(itemstack, (ServerWorld) world, blockpos1, SpawnReason.SPAWN_EGG, true, !Objects.equals(blockpos, blockpos1) && direction == Direction.UP)){
+			if(spawnMob(itemstack, context.getPlayer(), (ServerWorld) world, blockpos1, SpawnReason.SPAWN_EGG, true, !Objects.equals(blockpos, blockpos1) && direction == Direction.UP)){
 				itemstack.shrink(1);
 			}
 
@@ -171,7 +195,7 @@ public class GeneticSpawnEgg extends Item{
 			if(!(world.getBlockState(blockpos).getBlock() instanceof FlowingFluidBlock)){
 				return ActionResult.pass(itemstack);
 			}else if(world.mayInteract(player, blockpos) && player.mayUseItemAt(blockpos, raytraceresult.getDirection(), itemstack)){
-				if(!spawnMob(itemstack, (ServerWorld) world, blockpos, SpawnReason.SPAWN_EGG, false, false)){
+				if(!spawnMob(itemstack, player, (ServerWorld) world, blockpos, SpawnReason.SPAWN_EGG, false, false)){
 					return ActionResult.pass(itemstack);
 				}else{
 					if(!player.abilities.instabuild){
