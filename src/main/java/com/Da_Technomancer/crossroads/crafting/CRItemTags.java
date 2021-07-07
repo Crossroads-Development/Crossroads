@@ -53,6 +53,8 @@ public class CRItemTags{
 	public static final ITag<Item> EXPLODE_IF_KNOCKED = ItemTags.bind(CR + ":explode_on_hit");
 	public static final ITag<Item> SALT_REACTOR_COOLANT = ItemTags.bind(CR + ":salt_reactor_coolant");
 
+	public static final ITag<Item> INCUBATOR_EGG = ItemTags.bind(CR + ":incubator_egg");
+
 	/**
 	 * Returns an entry from the Tag
 	 * If the Tag is set to preserve order, it will reliably return the first entry.

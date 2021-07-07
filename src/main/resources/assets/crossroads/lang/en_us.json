@@ -274,6 +274,7 @@
 	"block.crossroads.stasis_storage": "Stasis Box",
 	"block.crossroads.cultivator_vat": "Nutrition Vat",
 	"item.crossroads.spawn_egg": "Spawn Egg",
+	"block.crossroads.incubator": "Incubator",
 
 	"item.crossroads.distilled_water_bucket": "Distilled Water Bucket",
 	"item.crossroads.dirty_water_bucket": "Dirty Water Bucket",
@@ -369,6 +370,7 @@
 	"tt.crossroads.firebox": "Adds: %1$d°C/t while burning fuel",
 	"tt.crossroads.fcc.desc": "Cools fluids to solid form, creating heat in the process",
 	"tt.crossroads.fcc.rate": "Releases heat at up to %1$f°C/t",
+	"tt.crossroads.boilerplate.degrees_c": "%1$s°C",
 	"tt.crossroads.boilerplate.temp": "Temp: %1$s°C",
 	"tt.crossroads.boilerplate.temp_k": "Temp: %1$s°C (%2$sK)",
 	"tt.crossroads.boilerplate.temp.biome": "Biome Temp: %1$s°C",
@@ -383,7 +385,6 @@
 	"tt.crossroads.crucible.tier": "%1$dx speed: -%2$d°C/t when above %3$d°C",
 	"tt.crossroads.heat_battery.info": "Acts as a buffer to slow down temperature change",
 	"tt.crossroads.heat_battery.reds": "Circuits measure the temperature",
-	"tt.crossroads.heat_battery.temp": "%1$s°C",
 	"tt.crossroads.heat_sink.desc": "Has a large configurable heat loss",
 	"tt.crossroads.heat_sink.rate": "Loss Rate: -%1$d, -%2$d, -%3$d, -%4$d, or -%5$d°C/t",
 	"tt.crossroads.heat_sink.loss": "Current Loss: -%1$d°C/t",
@@ -762,7 +763,10 @@
 	"tt.crossroads.cultivator_vat.sustain": "Consumes Nutrient Solution to keep perishables fresh",
 	"tt.crossroads.cultivator_vat.redstone": "Circuits read freshness time remaining of the contents (in seconds)",
 	"tt.crossroads.cultivator_vat.quip": "I sure hope living brains in jars don't get rights",
-
+	"tt.crossroads.incubator.target": "Target temperature: %2$d-%3$d°C (centered at %1$d°C)",
+	"tt.crossroads.incubator.desc": "Combines embryos and eggs to make spawn eggs",
+	"tt.crossroads.incubator.heating": "Requires between %1$d-%2$d°C; Extremely slow unless within %1$d°C of the target temperature",
+	"tt.crossroads.incubator.redstone": "Circuits read the target temperature, which changes with every craft",
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
 	"container.crossroads.boilerplate.speed": "%1$f rad/s",
@@ -779,6 +783,7 @@
 	"container.crossroads.auto_injector.contents": "%1$s %2$d",
 	"container.crossroads.auto_injector.qty": "%1$d/%2$d seconds",
 	"container.crossroads.auto_injector.dose_qty": "Dose size: %1$d sec.",
+	"container.crossroads.incubator.target": "Target: %1$d°C",
 
 	"container.smelter": "Smelter",
 	"container.firebox": "Firebox",
@@ -818,6 +823,7 @@
 	"container.crossroads.hydroponics_trough": "Hydroponics Trough",
 	"container.crossroads.stasis_storage": "Stasis Box",
 	"container.crossroads.cultivator_vat": "Nutrient Vat",
+	"container.crossroads.incubator": "Incubator",
 
 
 	"subtitle.crossroads.beam_passive": "Beam emitted",

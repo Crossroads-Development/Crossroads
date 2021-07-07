@@ -167,6 +167,7 @@ public class CRBlocks{
 	public static Wheezewort wheezewort;
 	public static StasisStorage stasisStorage;
 	public static CultivatorVat cultivatorVat;
+	public static Incubator incubator;
 
 	public static AbstractBlock.Properties getRockProperty(){
 		return AbstractBlock.Properties.of(Material.STONE).strength(3).requiresCorrectToolForDrops().sound(SoundType.STONE);
@@ -363,6 +364,7 @@ public class CRBlocks{
 		wheezewort = new Wheezewort();
 		stasisStorage = new StasisStorage();
 		cultivatorVat = new CultivatorVat();
+		incubator = new Incubator();
 	}
 
 	@OnlyIn(Dist.CLIENT)

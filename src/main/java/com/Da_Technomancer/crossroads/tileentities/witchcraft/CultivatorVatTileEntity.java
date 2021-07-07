@@ -100,6 +100,10 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 				//Produce output
 				if(inventory[3].isEmpty()){
 					inventory[3] = activeTrade.created.copy();
+					if(inventory[3].getItem() instanceof IPerishable){
+						//Initializes the spoil time
+						((IPerishable) inventory[3].getItem()).getSpoilTime(inventory[3], level);
+					}
 				}else{
 					inventory[3].grow(activeTrade.created.getCount());
 				}

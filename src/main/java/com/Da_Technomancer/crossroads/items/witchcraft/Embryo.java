@@ -15,7 +15,7 @@ import java.util.List;
 
 public class Embryo extends Item implements ICultivatable{
 
-	private static final long LIFETIME = 20 * 60 * 20;//20 minute
+	private static final long LIFETIME = 30 * 60 * 20;//30 minutes
 	private static final String KEY = "cr_genetics";
 	private static final int FREEZE_DEGRADE = 1;
 

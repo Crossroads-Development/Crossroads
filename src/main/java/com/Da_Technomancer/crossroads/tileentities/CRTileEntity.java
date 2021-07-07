@@ -133,6 +133,7 @@ public class CRTileEntity{
 		register(HydroponicsTroughTileEntity::new, "hydroponics_trough", reg, hydroponicsTrough);
 		register(StasisStorageTileEntity::new, "stasis_storage", reg, stasisStorage);
 		register(CultivatorVatTileEntity::new, "cultivator_vat", reg, cultivatorVat);
+		register(IncubatorTileEntity::new, "incubator", reg, incubator);
 	}
 
 	private static void register(Supplier<? extends TileEntity> cons, String id, IForgeRegistry<TileEntityType<?>> reg, Block... blocks){

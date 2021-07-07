@@ -57,7 +57,7 @@ public class HeatReservoir extends ContainerBlock implements IReadable{
 		tooltip.add(new TranslationTextComponent("tt.crossroads.heat_battery.reds"));
 		CompoundNBT nbt = stack.getTag();
 		if(nbt != null && nbt.contains("temp")){
-			tooltip.add(new TranslationTextComponent("tt.crossroads.heat_battery.temp", CRConfig.formatVal(nbt.getDouble("temp"))));
+			tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.degrees_c", CRConfig.formatVal(nbt.getDouble("temp"))));
 		}
 	}
 
