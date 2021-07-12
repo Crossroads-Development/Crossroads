@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.API.technomancy.RespawnInventorySavedData;
+import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import com.Da_Technomancer.crossroads.items.CRItems;
@@ -91,7 +92,7 @@ public final class EventHandlerCommon{
 			world.getProfiler().pop();
 		}
 	}
-	
+
 	@SubscribeEvent
 	@SuppressWarnings("unused")
 	public void chargeCreepers(LivingSpawnEvent.SpecialSpawn e){
@@ -443,6 +444,25 @@ public final class EventHandlerCommon{
 			}
 		}catch(Exception ex){
 			Crossroads.logger.error("Error while restoring player hotbar for toolbelt", ex);
+		}
+	}
+
+	@SubscribeEvent()
+	@SuppressWarnings("unused")
+	public void trackDeaths(LivingDeathEvent e){
+		//For genetically modified mobs with respawning, if they died without the respawn marker effect, create a ghost marker to respawn them
+		LivingEntity entity = e.getEntityLiving();
+		EntityTemplate template;
+		if(!entity.level.isClientSide && (template = EntityTemplate.getTemplateFromEntity(entity)).isRespawning()){
+			int delay = CRConfig.respawnDelay.get();
+			delay *= 20;//Convert from seconds to ticks
+			//Ensure it doesn't have the marker effect and this is enabled in config
+			if(!entity.hasEffect(EntityTemplate.getRespawnMarkerEffect()) && delay > 0){
+				EntityGhostMarker marker = new EntityGhostMarker(entity.level, EntityGhostMarker.EnumMarkerType.RESPAWNING, delay);
+				marker.setPos(entity.getX(), entity.getY(), entity.getZ());
+				marker.data = template.serializeNBT();
+				entity.level.addFreshEntity(marker);
+			}
 		}
 	}
 }

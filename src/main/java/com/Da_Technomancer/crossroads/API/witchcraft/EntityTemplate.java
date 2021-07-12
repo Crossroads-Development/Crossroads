@@ -1,20 +1,34 @@
 package com.Da_Technomancer.crossroads.API.witchcraft;
 
-import net.minecraft.entity.EntityType;
+import com.Da_Technomancer.crossroads.API.CRReflection;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
+import com.Da_Technomancer.essentials.ReflectionUtil;
+import net.minecraft.entity.*;
+import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.entity.passive.horse.AbstractHorseEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,6 +36,9 @@ public class EntityTemplate implements INBTSerializable<CompoundNBT>{
 
 	public static final String RESPAWNING_KEY = "cr_respawning";
 	public static final String LOYAL_KEY = "cr_loyal";
+
+	private static final Method OFFSPRING_SPAWNING_METHOD = ReflectionUtil.reflectMethod(CRReflection.OFFSPRING_SPAWN_EGG);
+	private static final int PERM_EFFECT_CUTOFF = Integer.MAX_VALUE / 4;//We assume any effect on a mob over this duration was originally a permanent effect; this is not a flawless method
 
 	private ResourceLocation entityName;
 	private boolean loyal;
@@ -195,5 +212,89 @@ public class EntityTemplate implements INBTSerializable<CompoundNBT>{
 				tooltips.add(new TranslationTextComponent("tt.crossroads.boilerplate.entity_template.potion.additional", needExtension));
 			}
 		}
+	}
+
+	@Nullable
+	public static Entity spawnEntityFromTemplate(EntityTemplate template, ServerWorld world, BlockPos pos, SpawnReason reason, boolean offset, boolean unmapped, @Nullable ITextComponent customName, @Nullable PlayerEntity player){
+		EntityType<?> type = template.getEntityType();
+		if(type == null){
+			return null;
+		}
+
+		//Don't pass the itemstack to the spawn method
+		//That parameter is designed for the vanilla spawn egg NBT structure, which we don't use
+		//We have to adjust the mob manually after spawning as a result
+		Entity created = type.spawn(world, null, customName, player, pos, reason, offset, unmapped);
+		LivingEntity entity;
+		if(created == null){
+			return null;
+		}
+
+		//NBT traits
+		CompoundNBT nbt = created.getPersistentData();
+		nbt.putBoolean(EntityTemplate.LOYAL_KEY, template.isLoyal());
+		nbt.putBoolean(EntityTemplate.RESPAWNING_KEY, template.isRespawning());
+
+		if(created instanceof LivingEntity){
+			entity = (LivingEntity) created;
+
+			//Degradation
+			if(template.getDegradation() > 0){
+				entity.addEffect(new EffectInstance(CRPotions.HEALTH_PENALTY_EFFECT, Integer.MAX_VALUE, template.getDegradation() - 1));
+			}
+
+			//Potion effects
+			ArrayList<EffectInstance> rawEffects = template.getEffects();
+			for(EffectInstance effect : rawEffects){
+				CRPotions.applyAsPermanent(entity, effect);
+			}
+
+			//Loyalty
+			if(template.isLoyal() && player != null){
+				//There isn't a single method for this. The correct way to set something as tamed varies based on the mob
+				//New vanilla tamable mobs may require changes here, and modded tameable mobs are unlikely to work
+				if(created instanceof TameableEntity){
+					((TameableEntity) created).tame(player);
+				}else if(created instanceof AbstractHorseEntity){
+					((AbstractHorseEntity) created).tameWithName(player);
+				}else if(created instanceof MobEntity && OFFSPRING_SPAWNING_METHOD != null){
+					//As of vanilla MC1.16.5, this is literally only applicable to foxes
+					try{
+						OFFSPRING_SPAWNING_METHOD.invoke(created, player, created);
+					}catch(IllegalAccessException | InvocationTargetException e){
+						Crossroads.logger.catching(e);
+					}
+				}
+			}
+		}
+
+		return created;
+	}
+
+	public static Effect getRespawnMarkerEffect(){
+		return Effects.GLOWING;
+	}
+
+	public static EntityTemplate getTemplateFromEntity(LivingEntity source){
+		EntityTemplate template = new EntityTemplate();
+		template.setEntityName(source.getType().getRegistryName());
+		template.setRespawning(source.getPersistentData().getBoolean(RESPAWNING_KEY));
+		template.setLoyal(source.getPersistentData().getBoolean(LOYAL_KEY));
+
+		Collection<EffectInstance> effects = source.getActiveEffects();
+		int degrade = 0;
+		ArrayList<EffectInstance> permanentEffects = new ArrayList<>(0);
+		for(EffectInstance instance : effects){
+			if(CRPotions.HEALTH_PENALTY_EFFECT.getRegistryName().equals(instance.getEffect().getRegistryName())){
+				//This is the health penalty, interpret as degradation
+				degrade += instance.getAmplifier() + 1;
+			}else if(!instance.getEffect().isInstantenous() && instance.getDuration() > PERM_EFFECT_CUTOFF){
+				permanentEffects.add(new EffectInstance(instance));//Copy the value to prevent changes in the mutable instance
+			}
+		}
+		template.setDegradation(degrade);
+		template.setEffects(permanentEffects);
+
+		return template;
 	}
 }

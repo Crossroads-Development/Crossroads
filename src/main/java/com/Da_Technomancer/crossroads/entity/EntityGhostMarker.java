@@ -1,30 +1,43 @@
 package com.Da_Technomancer.crossroads.entity;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.BeamUtil;
+import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.ParticleTypes;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @ObjectHolder(Crossroads.MODID)
 public class EntityGhostMarker extends Entity{
+
+	private static final DataParameter<Integer> LIFESPAN = EntityDataManager.defineId(EntityGhostMarker.class, DataSerializers.INT);
+	private static final DataParameter<String> MARKER_TYPE = EntityDataManager.defineId(EntityGhostMarker.class, DataSerializers.STRING);
 
 	@ObjectHolder("ghost_marker")
 	public static EntityType<EntityGhostMarker> type = null;
 
 	private long time;
-	private int lifespan;
-	private EnumMarkerType markType;
 	public CompoundNBT data;
 
 	public EntityGhostMarker(EntityType<EntityGhostMarker> type, World worldIn){
@@ -39,40 +52,38 @@ public class EntityGhostMarker extends Entity{
 
 	public EntityGhostMarker(World worldIn, @Nonnull EnumMarkerType markerType, int lifespan){
 		super(type, worldIn);
-		this.markType = markerType;
-		this.lifespan = lifespan;
 		time = worldIn.getGameTime();
 		setNoGravity(true);
 		noPhysics = true;
+		entityData.set(LIFESPAN, lifespan);
+		entityData.set(MARKER_TYPE, markerType.name());
+	}
+
+	@Nonnull
+	public EnumMarkerType getMarkerType(){
+		String typeName = entityData.get(MARKER_TYPE);
+		try{
+			return EnumMarkerType.valueOf(typeName);
+		}catch(IllegalArgumentException e){
+			Crossroads.logger.warn("Missing ghost marker type: " + typeName);
+			remove();
+			return EnumMarkerType.NONE;
+		}
 	}
 
 	@Override
 	protected void readAdditionalSaveData(CompoundNBT nbt){
-		nbt.putString("type", markType.name());
-		nbt.putInt("life", lifespan);
-		nbt.putLong("time", time);
-		if(data != null){
-			nbt.put("data", data);
+		time = nbt.getLong("time");
+		if(nbt.contains("data")){
+			data = nbt.getCompound("data");
 		}
-	}
-
-	@Nullable
-	public EnumMarkerType getMarkerType(){
-		return markType;
 	}
 
 	@Override
 	protected void addAdditionalSaveData(CompoundNBT nbt){
-		try{
-			markType = EnumMarkerType.valueOf(nbt.getString("type"));
-		}catch(IllegalArgumentException | NullPointerException e){
-			Crossroads.logger.error("Failed to load EntityGhostMarker at " + position().toString() + "; dim: " + MiscUtil.getDimensionName(level) + "; with type: " + nbt.getString("type") + ". Removing.");
-			remove();
-		}
-		lifespan = nbt.getInt("life");
-		time = nbt.getLong("time");
-		if(nbt.contains("data")){
-			data = nbt.getCompound("data");
+		nbt.putLong("time", time);
+		if(data != null){
+			nbt.put("data", data);
 		}
 	}
 
@@ -83,36 +94,70 @@ public class EntityGhostMarker extends Entity{
 
 	@Override
 	protected void defineSynchedData(){
-		//
+		entityData.define(LIFESPAN, 5);
+		entityData.define(MARKER_TYPE, EnumMarkerType.NONE.name());
 	}
 
 	@Override
 	public void tick(){
 		super.tick();
-		if(!level.isClientSide && lifespan >= 0 && time != level.getGameTime()){
+
+
+		if(time != level.getGameTime()){
 			time = level.getGameTime();//World time check to avoid tick-acceleration
-			if(--lifespan == 0){
-				if(markType != null && markType.expireEffect != null){
-					markType.expireEffect.accept(this);
+			EnumMarkerType markType = getMarkerType();
+
+			if(!level.isClientSide){
+				//Decrease lifespan
+				int lifespan = entityData.get(LIFESPAN);
+				lifespan -= 1;
+				entityData.set(LIFESPAN, lifespan);
+				//Remove expired markers
+				if(lifespan <= 0){
+					if(markType.expireEffect != null){
+						markType.expireEffect.accept(this);
+					}
+					remove();
 				}
-				remove();
+			}else if(markType.particleSupplier != null && time % 2 == 0){
+				//Client side, particles
+				level.addParticle(markType.particleSupplier.get(), getX() + level.random.nextGaussian(), getY() + level.random.nextGaussian(), getZ() + level.random.nextGaussian(), 0, 0, 0);
 			}
 		}
 	}
 
 	public enum EnumMarkerType{
 
-		EQUILIBRIUM(BeamUtil.BEAM_TIME + 1, null),
-		VOID_EQUILIBRIUM(BeamUtil.BEAM_TIME + 1, null),
-		DELAYED_EXPLOSION(BeamUtil.BEAM_TIME, (EntityGhostMarker marker) -> {if(marker.data != null && marker.data.contains("power")) marker.level.explode(marker, marker.getX(), marker.getY(), marker.getZ(), marker.data.getFloat("power"), marker.data.getBoolean("flaming"), Explosion.Mode.valueOf(marker.data.getString("blast_type")));}),
-		BLOCK_SPAWNING(BeamUtil.BEAM_TIME + 1, null);
+		NONE(1, null, null),//Used for errors
+		EQUILIBRIUM(BeamUtil.BEAM_TIME + 1, null, null),
+		VOID_EQUILIBRIUM(BeamUtil.BEAM_TIME + 1, null, null),
+		DELAYED_EXPLOSION(BeamUtil.BEAM_TIME, (EntityGhostMarker marker) -> {if(marker.data != null && marker.data.contains("power")) marker.level.explode(marker, marker.getX(), marker.getY(), marker.getZ(), marker.data.getFloat("power"), marker.data.getBoolean("flaming"), Explosion.Mode.valueOf(marker.data.getString("blast_type")));}, null),
+		BLOCK_SPAWNING(BeamUtil.BEAM_TIME + 1, null, null),
+		RESPAWNING(30 * 60, (EntityGhostMarker marker) -> {
+			//Used for genetically modified entities which are respawning after death
 
+			int penaltyTime = CRConfig.respawnPenaltyDuration.get() * 20;//Converted to ticks from seconds
+			EntityTemplate template = new EntityTemplate();
+			if(marker.data != null && !marker.level.isClientSide){
+				template.deserializeNBT(marker.data.getCompound(EntityTemplate.RESPAWNING_KEY));
+				Entity created = EntityTemplate.spawnEntityFromTemplate(template, (ServerWorld) marker.level, marker.blockPosition(), SpawnReason.COMMAND, false, false, null, null);
+				if(created instanceof LivingEntity){
+					LivingEntity entity = (LivingEntity) created;
+					entity.addEffect(new EffectInstance(Effects.WEAKNESS, penaltyTime));
+					entity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, penaltyTime));
+					entity.addEffect(new EffectInstance(EntityTemplate.getRespawnMarkerEffect(), penaltyTime));
+				}
+			}
+		}, () -> ParticleTypes.TOTEM_OF_UNDYING);//TODO test that there isn't weird tracking on the particle
 		private final int defaultLifespan;
 		private final Consumer<EntityGhostMarker> expireEffect;
+		@Nullable
+		private final Supplier<IParticleData> particleSupplier;
 
-		EnumMarkerType(int defaultLifespan, @Nullable Consumer<EntityGhostMarker> expireEffect){
+		EnumMarkerType(int defaultLifespan, @Nullable Consumer<EntityGhostMarker> expireEffect, @Nullable Supplier<IParticleData> particles){
 			this.defaultLifespan = defaultLifespan;
 			this.expireEffect = expireEffect;
+			this.particleSupplier = particles;
 		}
 	}
 }

@@ -1,26 +1,20 @@
 package com.Da_Technomancer.crossroads.items.witchcraft;
 
-import com.Da_Technomancer.crossroads.API.CRReflection;
 import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
-import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.essentials.ReflectionUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.dispenser.IBlockSource;
-import net.minecraft.entity.*;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.passive.horse.AbstractHorseEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -34,9 +28,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,7 +35,6 @@ public class GeneticSpawnEgg extends Item{
 
 	private static final String KEY = "cr_genetics";
 
-	private static final Method OFFSPRING_SPAWNING_METHOD = ReflectionUtil.reflectMethod(CRReflection.OFFSPRING_SPAWN_EGG);
 
 	public GeneticSpawnEgg(){
 		super(new Item.Properties());//Not added to any creative tab
@@ -81,62 +71,11 @@ public class GeneticSpawnEgg extends Item{
 		EntityTemplate template = getEntityTypeData(stack);
 		template.addTooltip(tooltip, 4);
 	}
-	
+
 	public boolean spawnMob(ItemStack stack, @Nullable PlayerEntity player, ServerWorld world, BlockPos pos, SpawnReason reason, boolean offset, boolean unmapped){
 		EntityTemplate template = getEntityTypeData(stack);
-		EntityType<?> type = template.getEntityType();
-		if(type == null){
-			return false;
-		}
-
-		//Don't pass the itemstack to the spawn method
-		//That parameter is designed for the vanilla spawn egg NBT structure, which we don't use
-		//We have to adjust the mob manually after spawning as a result
-		Entity created = type.spawn(world, null, stack.hasCustomHoverName() ? stack.getHoverName() : null, player, pos, reason, offset, unmapped);
-		LivingEntity entity;
-		if(created == null){
-			return false;
-		}
-
-		//NBT traits
-		CompoundNBT nbt = created.getPersistentData();
-		nbt.putBoolean(EntityTemplate.LOYAL_KEY, template.isLoyal());
-		nbt.putBoolean(EntityTemplate.RESPAWNING_KEY, template.isRespawning());
-
-		if(created instanceof LivingEntity){
-			entity = (LivingEntity) created;
-
-			//Degradation
-			if(template.getDegradation() > 0){
-				entity.addEffect(new EffectInstance(CRPotions.HEALTH_PENALTY_EFFECT, Integer.MAX_VALUE, template.getDegradation() - 1));
-			}
-
-			//Potion effects
-			ArrayList<EffectInstance> rawEffects = template.getEffects();
-			for(EffectInstance effect : rawEffects){
-				CRPotions.applyAsPermanent(entity, effect);
-			}
-
-			//Loyalty
-			if(template.isLoyal() && player != null){
-				//There isn't a single method for this. The correct way to set something as tamed varies based on the mob
-				//New vanilla tamable mobs may require changes here, and modded tameable mobs are unlikely to work
-				if(created instanceof TameableEntity){
-					((TameableEntity) created).tame(player);
-				}else if(created instanceof AbstractHorseEntity){
-					((AbstractHorseEntity) created).tameWithName(player);
-				}else if(created instanceof MobEntity && OFFSPRING_SPAWNING_METHOD != null){
-					//As of vanilla MC1.16.5, this is literally only applicable to foxes
-					try{
-						OFFSPRING_SPAWNING_METHOD.invoke(created, player, created);
-					}catch(IllegalAccessException | InvocationTargetException e){
-						Crossroads.logger.catching(e);
-					}
-				}
-			}
-		}
-
-		return true;
+		Entity created = EntityTemplate.spawnEntityFromTemplate(template, world, pos, reason, offset, unmapped, stack.hasCustomHoverName() ? stack.getHoverName() : null, player);
+		return created != null;
 	}
 
 	@Override
