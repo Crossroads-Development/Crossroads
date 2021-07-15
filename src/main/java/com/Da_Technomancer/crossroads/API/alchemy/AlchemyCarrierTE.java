@@ -539,9 +539,9 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 				IReagent r = ReagentManager.getReagent(id);
 				FluidStack refStack = r.getFluid();
 				int qty = contents.getQty(id);
-				if(qty >= refStack.getAmount() && r.getPhase(contents.getTempC()) == EnumMatterPhase.LIQUID){
+				if(qty > 0 && r.getPhase(contents.getTempC()) == EnumMatterPhase.LIQUID){
 					FluidStack out = refStack.copy();
-					out.setAmount(qty / refStack.getAmount());
+					out.setAmount(qty * refStack.getAmount());
 					return out;
 				}
 			}
