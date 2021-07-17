@@ -441,22 +441,22 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 
 		@Override
 		public double getTotalEnergy(){
-			return sumEnergy;
+			return locked ? 0 : sumEnergy;
 		}
 
 		@Override
 		public double getEnergyChange(){
-			return energyChange;
+			return locked ? 0 : energyChange;
 		}
 
 		@Override
 		public double getEnergyLost(){
-			return -energyLossChange;
+			return locked ? 0 : -energyLossChange;
 		}
 
 		@Override
 		public double getBaseSpeed(){
-			return baseSpeed;
+			return locked ? 0 : baseSpeed;
 		}
 
 		@Override
