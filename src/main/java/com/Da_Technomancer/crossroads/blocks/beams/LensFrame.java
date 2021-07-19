@@ -1,6 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.crafting.CRRecipes;
+import com.Da_Technomancer.crossroads.crafting.recipes.BeamLensRec;
 import com.Da_Technomancer.crossroads.tileentities.beams.LensFrameTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
@@ -12,6 +14,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -27,6 +30,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Optional;
 
 public class LensFrame extends ContainerBlock implements IReadable{
 
@@ -80,18 +85,19 @@ public class LensFrame extends ContainerBlock implements IReadable{
 
 	@Override
 	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		if(!worldIn.isClientSide){
-			ItemStack stack = playerIn.getItemInHand(hand);
+		ItemStack stack = playerIn.getItemInHand(hand);
 
+		if(!worldIn.isClientSide) {
 			if(ESConfig.isWrench(stack)){
 				worldIn.setBlockAndUpdate(pos, state.cycle(ESProperties.AXIS));
+				return ActionResultType.SUCCESS;
 			}else{
 				TileEntity te = worldIn.getBlockEntity(pos);
 				if(!(te instanceof LensFrameTileEntity)){
-					return ActionResultType.SUCCESS;
+					return ActionResultType.PASS;
 				}
 				LensFrameTileEntity lens = (LensFrameTileEntity) te;
-				ItemStack held = lens.getItem();
+				ItemStack held = lens.getItem(0);
 				if(!held.isEmpty()){
 					if(!playerIn.inventory.add(held)){
 						ItemEntity dropped = playerIn.drop(held, false);
@@ -100,24 +106,43 @@ public class LensFrame extends ContainerBlock implements IReadable{
 							dropped.setOwner(playerIn.getUUID());
 						}
 					}
-					lens.setContents(0);
+					lens.setItem(0, ItemStack.EMPTY);
+					return ActionResultType.SUCCESS;
 				}else if(!stack.isEmpty()){
-					int id = lens.getIDFromItem(stack);
-					if(id != 0){
-						lens.setContents(id);
-						stack.shrink(1);
+					if(worldIn.getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, new Inventory(stack), worldIn).isPresent()) {
+						lens.setItem(0, stack.split(1));
+						return ActionResultType.SUCCESS;
+					}
+				}
+			}
+		} else {
+			if(ESConfig.isWrench(stack)){
+				return ActionResultType.SUCCESS;
+			}else{
+				TileEntity te = worldIn.getBlockEntity(pos);
+				if(!(te instanceof LensFrameTileEntity)){
+					return ActionResultType.PASS;
+				}
+				LensFrameTileEntity lens = (LensFrameTileEntity) te;
+				ItemStack held = lens.getItem(0);
+				if(!held.isEmpty()){
+					return ActionResultType.SUCCESS;
+				}else if(!stack.isEmpty()){
+					if(worldIn.getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, new Inventory(stack), worldIn).isPresent()) {
+						return ActionResultType.SUCCESS;
 					}
 				}
 			}
 		}
-		return ActionResultType.SUCCESS;
+
+		return ActionResultType.PASS;
 	}
 
 	@Override
 	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
 		TileEntity te = world.getBlockEntity(pos);
 		if(newState.getBlock() != this && te instanceof LensFrameTileEntity){
-			InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ((LensFrameTileEntity) te).getItem());
+			InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ((LensFrameTileEntity) te).getItem(0));
 		}
 		super.onRemove(state, world, pos, newState, isMoving);
 	}

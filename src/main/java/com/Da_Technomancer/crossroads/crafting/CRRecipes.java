@@ -39,6 +39,8 @@ public final class CRRecipes{
 	public static IRecipeSerializer<CopshowiumRec> COPSHOWIUM_SERIAL = null;
 	@ObjectHolder("reagents")
 	public static IRecipeSerializer<ReagentRec> REAGENT_SERIAL = null;
+	@ObjectHolder("beam_lens")
+	public static IRecipeSerializer<BeamLensRec> BEAM_LENS_SERIAL = null;
 
 	//Forge hasn't replaced the IRecipeType registry (yet). We use the vanilla registry as a result.
 	public static IRecipeType<MillRec> MILL_TYPE = IRecipeType.register(Crossroads.MODID + ":mill");
@@ -56,5 +58,6 @@ public final class CRRecipes{
 	public static IRecipeType<BoboRec> BOBO_TYPE = IRecipeType.register(Crossroads.MODID + ":bobo");
 	public static IRecipeType<CopshowiumRec> COPSHOWIUM_TYPE = IRecipeType.register(Crossroads.MODID + ":copshowium");
 	public static IRecipeType<ReagentRec> REAGENT_TYPE = IRecipeType.register(Crossroads.MODID + ":reagents");
+	public static IRecipeType<BeamLensRec> BEAM_LENS_TYPE = IRecipeType.register(Crossroads.MODID + ":beam_lens");
 
 }

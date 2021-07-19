@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:beam_lens",
+	"input": {
+		"item": "crossroads:void_crystal"
+	},
+	"energy": 0,
+	"potential": 0,
+	"stability": 0,
+	"void": 1
+}
