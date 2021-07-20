@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -17,14 +18,16 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ReagInfoCategory implements IRecipeCategory<IReagent>{
 
@@ -95,13 +98,16 @@ public class ReagInfoCategory implements IRecipeCategory<IReagent>{
 		ingredients.setInput(ReagIngr.REAG, reagIngr);
 		ingredients.setOutput(ReagIngr.REAG, reagIngr);
 
-		//There is a known issue (github issue #119) where the items fail to load into JEI because the tag hasn't been initialized yet
-		//The try-catch lets the recipe load without the item form
+		//In the event that items fail to load into JEI because the tag hasn't been initialized yet, the try-catch lets the recipe load without the item form
 		try{
-			List<ItemStack> solid = recipe.getJEISolids().getValues().stream().map(ItemStack::new).collect(Collectors.toList());
-			List<List<ItemStack>> solidLists = ImmutableList.of(solid);
-			ingredients.setInputLists(VanillaTypes.ITEM, solidLists);
-			ingredients.setOutputLists(VanillaTypes.ITEM, solidLists);
+//			List<ItemStack> solid = recipe.getJEISolids().getValues().stream().map(ItemStack::new).collect(Collectors.toList());
+//			List<List<ItemStack>> solidLists = ImmutableList.of(solid);
+			ITag<Item> jeiSolids = recipe.getJEISolids();
+			Ingredient itemForm = Ingredient.of(jeiSolids);
+			ingredients.setInputIngredients(ImmutableList.of(itemForm));
+//			ingredients.setInputLists(VanillaTypes.ITEM, solidLists);
+//			ingredients.setOutputLists(VanillaTypes.ITEM, solidLists);
+			ingredients.setOutput(VanillaTypes.ITEM, new ItemStack(CRItemTags.getTagEntry(jeiSolids)));
 		}catch(Exception e){
 			Crossroads.logger.error(String.format("Failed to load item form of reagent %1$s for JEI integration", recipe.getName()));
 		}
