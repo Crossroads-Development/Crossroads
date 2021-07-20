@@ -87,7 +87,7 @@ public class LensFrame extends ContainerBlock implements IReadable{
 	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		ItemStack stack = playerIn.getItemInHand(hand);
 
-		if(!worldIn.isClientSide) {
+		if(!worldIn.isClientSide){
 			if(ESConfig.isWrench(stack)){
 				worldIn.setBlockAndUpdate(pos, state.cycle(ESProperties.AXIS));
 				return ActionResultType.SUCCESS;
@@ -96,7 +96,7 @@ public class LensFrame extends ContainerBlock implements IReadable{
 				if(!(te instanceof LensFrameTileEntity)){
 					return ActionResultType.PASS;
 				}
-				LensFrameTileEntity lens = (LensFrameTileEntity) te;
+				LensFrameTileEntity lens = (LensFrameTileEntity)te;
 				ItemStack held = lens.getItem(0);
 				if(!held.isEmpty()){
 					if(!playerIn.inventory.add(held)){
@@ -109,13 +109,13 @@ public class LensFrame extends ContainerBlock implements IReadable{
 					lens.setItem(0, ItemStack.EMPTY);
 					return ActionResultType.SUCCESS;
 				}else if(!stack.isEmpty()){
-					if(worldIn.getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, new Inventory(stack), worldIn).isPresent()) {
+					if(worldIn.getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, new Inventory(stack), worldIn).isPresent()){
 						lens.setItem(0, stack.split(1));
 						return ActionResultType.SUCCESS;
 					}
 				}
 			}
-		} else {
+		}else{
 			if(ESConfig.isWrench(stack)){
 				return ActionResultType.SUCCESS;
 			}else{
@@ -123,12 +123,12 @@ public class LensFrame extends ContainerBlock implements IReadable{
 				if(!(te instanceof LensFrameTileEntity)){
 					return ActionResultType.PASS;
 				}
-				LensFrameTileEntity lens = (LensFrameTileEntity) te;
+				LensFrameTileEntity lens = (LensFrameTileEntity)te;
 				ItemStack held = lens.getItem(0);
 				if(!held.isEmpty()){
 					return ActionResultType.SUCCESS;
 				}else if(!stack.isEmpty()){
-					if(worldIn.getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, new Inventory(stack), worldIn).isPresent()) {
+					if(worldIn.getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, new Inventory(stack), worldIn).isPresent()){
 						return ActionResultType.SUCCESS;
 					}
 				}

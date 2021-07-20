@@ -23,7 +23,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 
-public class LensFrameRenderer extends BeamRenderer<LensFrameTileEntity>{
+public class LensFrameRenderer extends BeamRenderer<LensFrameTileEntity> {
 
 	protected LensFrameRenderer(TileEntityRendererDispatcher dispatcher){
 		super(dispatcher);
@@ -42,7 +42,7 @@ public class LensFrameRenderer extends BeamRenderer<LensFrameTileEntity>{
 
 			matrix.pushPose();
 
-			if(!stack.isEmpty()) {
+			if(!stack.isEmpty()){
 				ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 
 				matrix.translate(0.5F, 0.5F, 0.5F);
@@ -50,12 +50,7 @@ public class LensFrameRenderer extends BeamRenderer<LensFrameTileEntity>{
 				Direction.Axis axis = state.getValue(ESProperties.AXIS);
 				switch(axis){
 					case X:
-						//matrix.mulPose(Direction.WEST.getRotation());
 						matrix.mulPose(Vector3f.YP.rotationDegrees(90));
-						break;
-						//break;
-					case Z:
-						//matrix.mulPose(Vector3f.YP.rotationDegrees(90));
 						break;
 					case Y:
 						matrix.mulPose(Vector3f.XP.rotationDegrees(90));

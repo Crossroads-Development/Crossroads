@@ -1,10 +1,7 @@
 package com.Da_Technomancer.crossroads.tileentities.beams;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.beams.BeamManager;
-import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
-import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
+import com.Da_Technomancer.crossroads.API.beams.*;
 import com.Da_Technomancer.crossroads.API.packets.*;
 import com.Da_Technomancer.crossroads.API.templates.IBeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
@@ -22,6 +19,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -52,6 +50,7 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 	private ItemStack inv = ItemStack.EMPTY;
 	private Direction.Axis axis = null;
 	private BeamUnit prevMag = BeamUnit.EMPTY;
+	private BeamLensRec currRec;
 	private int lastRedstone;
 
 	public LensFrameTileEntity(){
@@ -93,7 +92,7 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 		magicOptNeg = LazyOptional.of(() -> new BeamHandler(AxisDirection.POSITIVE));
 
 		if(level != null && !level.isClientSide){
-			CRPackets.sendPacketAround(level, worldPosition, new SendIntToClient((byte) 3, 0, worldPosition));
+			CRPackets.sendPacketAround(level, worldPosition, new SendIntToClient((byte)3, 0, worldPosition));
 		}
 	}
 
@@ -105,7 +104,7 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 		}else{
 			packetNeg = packet;
 		}
-		CRPackets.sendPacketAround(level, worldPosition, new SendIntToClient((byte) index, packet, worldPosition));
+		CRPackets.sendPacketAround(level, worldPosition, new SendIntToClient((byte)index, packet, worldPosition));
 		if(!beamer[index].getLastSent().isEmpty()){
 			prevMag = beamer[index].getLastSent();
 		}
@@ -114,7 +113,11 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 	@Override
 	@Nullable
 	public BeamUnit[] getLastSent(){
-		return new BeamUnit[] {prevMag};
+		return new BeamUnit[]{prevMag};
+	}
+
+	public BeamLensRec getCurrRec() {
+		return currRec;
 	}
 
 	public int getRedstone(){
@@ -201,32 +204,32 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.BEAM_CAPABILITY && (side == null || getAxis() == side.getAxis())){
-			return side == null || side.getAxisDirection() == AxisDirection.POSITIVE ? (LazyOptional<T>) magicOpt : (LazyOptional<T>) magicOptNeg;
+			return side == null || side.getAxisDirection() == AxisDirection.POSITIVE ? (LazyOptional<T>)magicOpt : (LazyOptional<T>)magicOptNeg;
 		}
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-			return (LazyOptional<T>) lensOpt;
+			return (LazyOptional<T>)lensOpt;
 		}
 
 		return super.getCapability(cap, side);
 	}
 
 	@Override
-	public int getContainerSize() {
+	public int getContainerSize(){
 		return 1;
 	}
 
 	@Override
-	public boolean isEmpty() {
+	public boolean isEmpty(){
 		return inv.isEmpty();
 	}
 
 	@Override
-	public ItemStack getItem(int index) {
+	public ItemStack getItem(int index){
 		return index == 0 ? inv : ItemStack.EMPTY;
 	}
 
 	@Override
-	public ItemStack removeItem(int index, int count) {
+	public ItemStack removeItem(int index, int count){
 		if(index == 0){
 			setChanged();
 			return inv.split(count);
@@ -235,13 +238,14 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 	}
 
 	@Override
-	public void setChanged() {
+	public void setChanged(){
 		super.setChanged();
 		CRPackets.sendPacketAround(level, worldPosition, new SendNBTToClient(inv.save(new CompoundNBT()), this.getBlockPos()));
+		updateRecipe();
 	}
 
 	@Override
-	public ItemStack removeItemNoUpdate(int index) {
+	public ItemStack removeItemNoUpdate(int index){
 		if(index != 0){
 			return ItemStack.EMPTY;
 		}
@@ -260,24 +264,30 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 	}
 
 	@Override
-	public boolean stillValid(PlayerEntity p_70300_1_) {
+	public boolean stillValid(PlayerEntity p_70300_1_){
 		// Normally this detects whether the player is close enough to still access the inventory
 		// However this is not an inventory with a UI so we don't care
 		return false;
 	}
 
 	@Override
-	public void clearContent() {
+	public void clearContent(){
 		inv = ItemStack.EMPTY;
 		setChanged();
 	}
 
 	@Override
-	public void receiveNBT(CompoundNBT nbt, ServerPlayerEntity serverPlayer) {
+	public void receiveNBT(CompoundNBT nbt, ServerPlayerEntity serverPlayer){
 		inv = ItemStack.of(nbt);
+		updateRecipe();
 	}
 
-	private class BeamHandler implements IBeamHandler{
+	public void updateRecipe() {
+		Optional<BeamLensRec> rec = level.getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, this, level);
+		currRec = rec.isPresent() ? rec.get() : null;
+	}
+
+	private class BeamHandler implements IBeamHandler {
 
 		private final AxisDirection dir;
 
@@ -293,21 +303,23 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 			}
 
 			BeamManager activeBeam = beamer[dir == AxisDirection.POSITIVE ? 1 : 0];
+			BeamLensRec recipe = ((LensFrameTileEntity)getTileEntity()).getCurrRec();
+			BeamMod mod = BeamMod.EMPTY;
 
-			List<BeamLensRec> recipes = getLevel().getRecipeManager().getRecipesFor(CRRecipes.BEAM_LENS_TYPE, (LensFrameTileEntity)getTileEntity(), level);
-			Optional<BeamLensRec> recipe = recipes.parallelStream().filter(rec -> rec.matches((LensFrameTileEntity)getTileEntity(), level)).findAny();
+			if(recipe == null && !getItem(0).isEmpty()) {
+				updateRecipe();
+			}
 
-			if(recipe.isPresent()) {
+			if(recipe != null){
+				// TODO: Proper support for lens transmutation
 				if(EnumBeamAlignments.getAlignment(mag) == EnumBeamAlignments.LIGHT){
-					setItem(0, recipe.get().getResultItem());
+					setItem(0, recipe.getResultItem());
 				}
-				if(activeBeam.emit(recipe.get().getOutput().mult(mag), level)) {
-					refreshBeam(dir == AxisDirection.POSITIVE);
-				}
-			} else {
-				if(activeBeam.emit(mag, level)){
-					refreshBeam(dir == AxisDirection.POSITIVE);
-				}
+				mod = recipe.getOutput();
+			}
+
+			if(activeBeam.emit(mod.mult(mag), level)){
+				refreshBeam(dir == AxisDirection.POSITIVE);
 			}
 
 			lastRedstone = Math.max(beamer[0].getLastSent().getPower(), beamer[1].getLastSent().getPower());
@@ -315,7 +327,7 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 		}
 	}
 
-	private class LensHandler implements IItemHandler{
+	private class LensHandler implements IItemHandler {
 
 		@Override
 		public int getSlots(){
@@ -362,11 +374,8 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 		public boolean isItemValid(int slot, @Nonnull ItemStack stack){
 			return slot == 0 && getLevel()
 					.getRecipeManager()
-					.getRecipesFor(CRRecipes.BEAM_LENS_TYPE, (LensFrameTileEntity)getTileEntity(), level)
-					.parallelStream()
-					.filter(rec -> rec.canApply(stack))
-					.findAny()
+					.getRecipeFor(CRRecipes.BEAM_LENS_TYPE, new Inventory(stack), level)
 					.isPresent();
 		}
 	}
-} 
+}

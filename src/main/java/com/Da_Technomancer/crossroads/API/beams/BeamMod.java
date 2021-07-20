@@ -13,7 +13,7 @@ import java.util.Arrays;
  */
 public class BeamMod {
 
-	public static final BeamMod EMPTY = new BeamMod(0, 0, 0, 0);
+	public static final BeamMod EMPTY = new BeamMod(1, 1, 1, 0);
 
 	private final float[] multipliers = new float[4];//0: Energy, 1: Potential, 2: stability, 3: Void
 
@@ -59,20 +59,30 @@ public class BeamMod {
 		return Arrays.copyOf(multipliers, 4);
 	}
 
-	public BeamUnit mult(BeamUnit u) {
-		float energy = u.getEnergy() * getEnergyMult() * (1 - getVoidMult());
-		float potential = u.getPotential() * getPotentialMult() * (1 - getVoidMult());
-		float stability = u.getStability() * getStabilityMult() * (1 - getVoidMult());
+	/**
+	 * @param u
+	 * @return A BeamUnit modified by this set of multipliers and the void conversion factor.
+	 */
+	public BeamUnit mult(BeamUnit u){
+		float energy = u.getEnergy() * getEnergyMult();
+		float potential = u.getPotential() * getPotentialMult();
+		float stability = u.getStability() * getStabilityMult();
 
-		float voi = u.getVoid() + (u.getEnergy() + u.getPotential() + u.getStability()) * getVoidMult();
+		// Void converts a percentage of the other colors to itself
+		float voi = u.getVoid() + (energy + potential + stability) * getVoidMult();
+		energy *= 1 - getVoidMult();
+		potential *= 1 - getVoidMult();
+		stability *= 1 - getVoidMult();
 
-		return new BeamUnit(Math.round(energy), Math.round(potential), Math.round(stability), Math.round(voi));
+		// Numbers are truncated in order to prevent possible positive feedback loops
+		// This is necessary since lenses can't simply redirect the excess elsewhere
+		return new BeamUnit((int)energy, (int)potential, (int)stability, (int)voi);
 	}
 
 	@Override
 	public boolean equals(Object other){
 		if(other instanceof BeamMod){
-			BeamMod o = (BeamMod) other;
+			BeamMod o = (BeamMod)other;
 			return o == this || o.multipliers[0] == multipliers[0] && o.multipliers[1] == multipliers[1] && o.multipliers[2] == multipliers[2] && o.multipliers[3] == multipliers[3];
 		}
 		return false;
