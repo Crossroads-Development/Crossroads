@@ -13,22 +13,23 @@ import java.util.Arrays;
  */
 public class BeamMod {
 
-	public static final BeamMod EMPTY = new BeamMod(1, 1, 1, 0);
+	public static final BeamMod EMPTY = new BeamMod(1, 1, 1, 1, 0);
 
-	private final float[] multipliers = new float[4];//0: Energy, 1: Potential, 2: stability, 3: Void
+	private final float[] multipliers = new float[5];//0: Energy, 1: Potential, 2: stability, 3: Void, 4: Void Convert
 
 	public BeamMod(float[] mults){
-		this(mults[0], mults[1], mults[2], mults[3]);
+		this(mults[0], mults[1], mults[2], mults[3], mults[4]);
 	}
 
-	public BeamMod(float energy, float potential, float stability, float voi){
+	public BeamMod(float energy, float potential, float stability, float voi, float voiConv){
 		multipliers[0] = energy;
 		multipliers[1] = potential;
 		multipliers[2] = stability;
 		multipliers[3] = voi;
+		multipliers[4] = voiConv;
 
-		if(energy < 0 || potential < 0 || stability < 0 || voi < 0){
-			throw new IllegalArgumentException("Negative BeamMod input! EN: " + energy + "; PO: " + potential + "; ST: " + stability + "; VO: " + voi);
+		if(energy < 0 || potential < 0 || stability < 0 || voi < 0 || voiConv < 0){
+			throw new IllegalArgumentException("Negative BeamMod input! EN: " + energy + "; PO: " + potential + "; ST: " + stability + "; VO: " + voi + "; VO-CONV: " + voiConv);
 		}
 	}
 
@@ -48,15 +49,25 @@ public class BeamMod {
 		return multipliers[3];
 	}
 
+	public float getVoidConvert(){
+		return multipliers[4];
+	}
+
 	public boolean isEmpty(){
-		return multipliers[0] == 0 && multipliers[1] == 0 && multipliers[2] == 0 && multipliers[3] == 0;
+		return this == BeamMod.EMPTY ||
+				multipliers[0] == 1
+				&& multipliers[1] == 1
+				&& multipliers[2] == 1
+				&& multipliers[3] == 1
+				&& multipliers[4] == 0;
 	}
 
 	/**
-	 * @return A size four array containing energy, potential, stability, and void in that order. Changes to the array will not write back to the BeamMod
+	 * @return A size five array containing energy, potential, stability, void, and void conversion in that order.
+	 * Changes to the array will not write back to the BeamMod
 	 */
 	public float[] getValues(){
-		return Arrays.copyOf(multipliers, 4);
+		return Arrays.copyOf(multipliers, 5);
 	}
 
 	/**
@@ -67,12 +78,15 @@ public class BeamMod {
 		float energy = u.getEnergy() * getEnergyMult();
 		float potential = u.getPotential() * getPotentialMult();
 		float stability = u.getStability() * getStabilityMult();
+		float voi = u.getVoid() * getVoidMult();
 
-		// Void converts a percentage of the other colors to itself
-		float voi = u.getVoid() + (energy + potential + stability) * getVoidMult();
-		energy *= 1 - getVoidMult();
-		potential *= 1 - getVoidMult();
-		stability *= 1 - getVoidMult();
+		// Convert a percentage of non-Void colors to Void
+		float voiConv = u.getVoid() + (energy + potential + stability) * getVoidConvert();
+		energy *= 1 - getVoidConvert();
+		potential *= 1 - getVoidConvert();
+		stability *= 1 - getVoidConvert();
+
+		voi += voiConv;
 
 		// Numbers are truncated in order to prevent possible positive feedback loops
 		// This is necessary since lenses can't simply redirect the excess elsewhere
@@ -83,7 +97,12 @@ public class BeamMod {
 	public boolean equals(Object other){
 		if(other instanceof BeamMod){
 			BeamMod o = (BeamMod)other;
-			return o == this || o.multipliers[0] == multipliers[0] && o.multipliers[1] == multipliers[1] && o.multipliers[2] == multipliers[2] && o.multipliers[3] == multipliers[3];
+			return o == this ||
+					o.multipliers[0] == multipliers[0]
+					&& o.multipliers[1] == multipliers[1]
+					&& o.multipliers[2] == multipliers[2]
+					&& o.multipliers[3] == multipliers[3]
+					&& o.multipliers[4] == multipliers[4];
 		}
 		return false;
 	}
@@ -94,6 +113,7 @@ public class BeamMod {
 		newNBT.putFloat("potential", multipliers[1]);
 		newNBT.putFloat("stability", multipliers[2]);
 		newNBT.putFloat("void", multipliers[3]);
+		newNBT.putFloat("voidConvert", multipliers[4]);
 		nbt.put(key, newNBT);
 	}
 
@@ -104,7 +124,8 @@ public class BeamMod {
 					compound.getFloat("energy"),
 					compound.getFloat("potential"),
 					compound.getFloat("stability"),
-					compound.getFloat("void")
+					compound.getFloat("void"),
+					compound.getFloat("voidConvert")
 			);
 		}
 		return BeamMod.EMPTY;

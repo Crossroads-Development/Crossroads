@@ -2,10 +2,12 @@ package com.Da_Technomancer.crossroads.crafting.recipes;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamMod;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
+import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.CraftingUtil;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -19,23 +21,40 @@ import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
+import java.util.Locale;
 
 public class BeamLensRec implements IOptionalRecipe<IInventory>{
+
+	// Blank recipe for when containing an item that doesn't have a recipe
+	public static final BeamLensRec BLANK = new BeamLensRec(
+			new ResourceLocation(""),
+			"",
+			Ingredient.EMPTY,
+			BeamMod.EMPTY,
+			ItemStack.EMPTY,
+			EnumBeamAlignments.NO_MATCH,
+			false,
+			false
+	);
 
 	private final ResourceLocation id;
 	private final String group;
 	private final Ingredient ingr;
 	private final BeamMod output;
+	private final EnumBeamAlignments transformAlignment;
+	private final boolean transformVoid;
 	private final ItemStack transform;
 
 	private final boolean active;
-	public BeamLensRec(ResourceLocation location, String name, Ingredient input, ItemStack transform, BeamMod output, boolean active){
+	public BeamLensRec(ResourceLocation location, String name, Ingredient input, BeamMod output, ItemStack transform, EnumBeamAlignments transformAlignment, boolean transformVoid, boolean active){
 		id = location;
 		group = name;
 		ingr = input;
 		this.output = output;
 		this.active = active;
 		this.transform = transform;
+		this.transformVoid = transformVoid;
+		this.transformAlignment = transformAlignment;
 	}
 
 	public BeamMod getOutput(){
@@ -69,6 +88,14 @@ public class BeamLensRec implements IOptionalRecipe<IInventory>{
 	@Override
 	public ItemStack getResultItem(){
 		return transform.copy();
+	}
+
+	public EnumBeamAlignments getTransformAlignment(){
+		return transformAlignment;
+	}
+
+	public boolean isVoid(){
+		return transformVoid;
 	}
 
 	public boolean isActive(){
@@ -114,35 +141,41 @@ public class BeamLensRec implements IOptionalRecipe<IInventory>{
 			//Normal specification of recipe group and ingredient
 			String s = JSONUtils.getAsString(json, "group", "");
 			Ingredient ingredient = Ingredient.EMPTY;
-			ItemStack output = ItemStack.EMPTY;
+			ItemStack transform = ItemStack.EMPTY;
+			EnumBeamAlignments alignment = EnumBeamAlignments.NO_MATCH;
+			boolean transformVoid = false;
+
 			boolean active = CraftingUtil.isActiveJSON(json);
 			if(active){
 				ingredient = CraftingUtil.getIngredient(json, "input", true);
 
-				if(JSONUtils.isValidNode(json, "output")) {
-					output = CraftingUtil.getItemStack(json, "output", false, true);
-				} else {
-					output = CraftingUtil.getIngredient(json, "input", true).getItems()[0];
+				if(JSONUtils.isValidNode(json, "transform")){
+					transform = CraftingUtil.getItemStack(json, "transform", false, true);
 				}
 
-				//Output specified as 4 float tags, all of which are optional and default to zero
-				float[] mults = new float[4];
-				if(JSONUtils.isValidNode(json, "energy")){
-					mults[0] = JSONUtils.getAsFloat(json, "energy");
+				if(JSONUtils.isValidNode(json, "transform_alignment")){
+					try{
+						String alignName = JSONUtils.getAsString(json, "transform_alignment");
+						alignment = EnumBeamAlignments.valueOf(alignName.toUpperCase(Locale.US));
+					}catch(NullPointerException e){
+						throw new JsonParseException("Non-existent alignment specified");
+					}
 				}
-				if(JSONUtils.isValidNode(json, "potential")){
-					mults[1] = JSONUtils.getAsFloat(json, "potential");
-				}
-				if(JSONUtils.isValidNode(json, "stability")){
-					mults[2] = JSONUtils.getAsFloat(json, "stability");
-				}
-				if(JSONUtils.isValidNode(json, "void")){
-					mults[3] = JSONUtils.getAsFloat(json, "void");
-				}
+				transformVoid = JSONUtils.getAsBoolean(json, "transform_void", false);
 
-				return new BeamLensRec(recipeId, s, ingredient, output, new BeamMod(mults), true);
+				//Output specified as 5 float tags, all of which are optional
+				//Filters default to 1, while void conversion defaults to 0
+				//This means beams pass right through by default
+				float[] mults = new float[5];
+				mults[0] = JSONUtils.getAsFloat(json, "energy", 1);
+				mults[1] = JSONUtils.getAsFloat(json, "potential", 1);
+				mults[2] = JSONUtils.getAsFloat(json, "stability", 1);
+				mults[3] = JSONUtils.getAsFloat(json, "void", 1);
+				mults[4] = JSONUtils.getAsFloat(json, "void_convert", 0);
+
+				return new BeamLensRec(recipeId, s, ingredient, new BeamMod(mults), transform, alignment, transformVoid, true);
 			}
-			return new BeamLensRec(recipeId, s, ingredient, output, BeamMod.EMPTY, false);
+			return new BeamLensRec(recipeId, s, ingredient, BeamMod.EMPTY, transform, alignment, transformVoid, false);
 		}
 
 		@Nullable
@@ -154,14 +187,16 @@ public class BeamLensRec implements IOptionalRecipe<IInventory>{
 			if(active){
 				Ingredient ingredient = Ingredient.fromNetwork(buffer);
 				ItemStack stack = buffer.readItem();
+				EnumBeamAlignments alignment = EnumBeamAlignments.valueOf(buffer.readUtf());
+				boolean transformVoid = buffer.readBoolean();
 
-				float[] units = new float[4];
-				for(int i = 0; i < 4; i++){
+				float[] units = new float[5];
+				for(int i = 0; i < units.length; i++){
 					units[i] = buffer.readFloat();
 				}
-				return new BeamLensRec(recipeId, s, ingredient, stack, new BeamMod(units), true);
+				return new BeamLensRec(recipeId, s, ingredient, new BeamMod(units), stack, alignment, transformVoid, true);
 			}else{
-				return new BeamLensRec(recipeId, s, Ingredient.EMPTY, ItemStack.EMPTY, BeamMod.EMPTY, false);
+				return new BeamLensRec(recipeId, s, Ingredient.EMPTY, BeamMod.EMPTY, ItemStack.EMPTY, EnumBeamAlignments.NO_MATCH, false, false);
 			}
 		}
 
@@ -172,10 +207,13 @@ public class BeamLensRec implements IOptionalRecipe<IInventory>{
 			if(recipe.active){
 				recipe.ingr.toNetwork(buffer);
 				buffer.writeItem(recipe.transform);
+				buffer.writeUtf(recipe.transformAlignment.name());
+				buffer.writeBoolean(recipe.transformVoid);
 				buffer.writeFloat(recipe.output.getEnergyMult());
 				buffer.writeFloat(recipe.output.getPotentialMult());
 				buffer.writeFloat(recipe.output.getStabilityMult());
 				buffer.writeFloat(recipe.output.getVoidMult());
+				buffer.writeFloat(recipe.output.getVoidConvert());
 			}
 		}
 	}

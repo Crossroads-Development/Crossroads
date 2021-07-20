@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:beam_lens",
+	"input": {
+		"item": "crossroads:pure_quartz"
+	},
+	"transform": {
+		"item": "crossroads:bright_quartz"
+	},
+	"transform_alignment": "light"
+}

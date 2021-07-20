@@ -6,12 +6,8 @@ import com.Da_Technomancer.crossroads.API.packets.*;
 import com.Da_Technomancer.crossroads.API.templates.IBeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.BeamLensRec;
-import com.Da_Technomancer.crossroads.crafting.recipes.BeamTransmuteRec;
-import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.packets.INBTReceiver;
 import com.Da_Technomancer.essentials.packets.SendNBTToClient;
@@ -27,7 +23,6 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -36,7 +31,6 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Optional;
 
 @ObjectHolder(Crossroads.MODID)
@@ -284,7 +278,7 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 
 	public void updateRecipe() {
 		Optional<BeamLensRec> rec = level.getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, this, level);
-		currRec = rec.isPresent() ? rec.get() : null;
+		currRec = rec.isPresent() ? rec.get() : BeamLensRec.BLANK;
 	}
 
 	private class BeamHandler implements IBeamHandler {
@@ -311,8 +305,8 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 			}
 
 			if(recipe != null){
-				// TODO: Proper support for lens transmutation
-				if(EnumBeamAlignments.getAlignment(mag) == EnumBeamAlignments.LIGHT){
+				if(mag.getPower() > 0 && EnumBeamAlignments.getAlignment(mag) == recipe.getTransformAlignment()
+						&& (recipe.isVoid() == (mag.getVoid() > 0))){
 					setItem(0, recipe.getResultItem());
 				}
 				mod = recipe.getOutput();
