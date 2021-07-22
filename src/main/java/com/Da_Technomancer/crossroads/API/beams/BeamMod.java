@@ -4,7 +4,6 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import net.minecraft.nbt.CompoundNBT;
 
 import javax.annotation.Nonnull;
-import java.awt.*;
 import java.util.Arrays;
 
 /**
