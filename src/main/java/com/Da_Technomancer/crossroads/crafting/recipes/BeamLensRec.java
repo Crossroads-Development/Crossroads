@@ -25,18 +25,6 @@ import java.util.Locale;
 
 public class BeamLensRec implements IOptionalRecipe<IInventory>{
 
-	// Blank recipe for when containing an item that doesn't have a recipe
-	public static final BeamLensRec BLANK = new BeamLensRec(
-			new ResourceLocation(""),
-			"",
-			Ingredient.EMPTY,
-			BeamMod.EMPTY,
-			ItemStack.EMPTY,
-			EnumBeamAlignments.NO_MATCH,
-			false,
-			false
-	);
-
 	private final ResourceLocation id;
 	private final String group;
 	private final Ingredient ingr;
@@ -107,6 +95,10 @@ public class BeamLensRec implements IOptionalRecipe<IInventory>{
 		NonNullList<Ingredient> nonnulllist = NonNullList.create();
 		nonnulllist.add(ingr);
 		return nonnulllist;
+	}
+
+	public Ingredient getIngr() {
+		return ingr;
 	}
 
 	@Override

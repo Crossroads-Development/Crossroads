@@ -45,6 +45,7 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 	private Direction.Axis axis = null;
 	private BeamUnit prevMag = BeamUnit.EMPTY;
 	private BeamLensRec currRec;
+	private boolean recipeCheck;
 	private int lastRedstone;
 
 	public LensFrameTileEntity(){
@@ -278,7 +279,8 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 
 	public void updateRecipe() {
 		Optional<BeamLensRec> rec = level.getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, this, level);
-		currRec = rec.isPresent() ? rec.get() : BeamLensRec.BLANK;
+		currRec = rec.orElse(null);
+		recipeCheck = true;
 	}
 
 	private class BeamHandler implements IBeamHandler {
@@ -300,7 +302,7 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 			BeamLensRec recipe = ((LensFrameTileEntity)getTileEntity()).getCurrRec();
 			BeamMod mod = BeamMod.EMPTY;
 
-			if(recipe == null && !getItem(0).isEmpty()) {
+			if(recipe == null && !recipeCheck) {
 				updateRecipe();
 			}
 
