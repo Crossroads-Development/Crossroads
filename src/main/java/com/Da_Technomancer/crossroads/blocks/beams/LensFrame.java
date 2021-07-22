@@ -88,20 +88,22 @@ public class LensFrame extends ContainerBlock implements IReadable{
 	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		ItemStack stack = playerIn.getItemInHand(hand);
 
-		if(!worldIn.isClientSide){
-			if(ESConfig.isWrench(stack)){
-				worldIn.setBlockAndUpdate(pos, state.cycle(ESProperties.AXIS));
-				return ActionResultType.SUCCESS;
-			}else if(stack.sameItem(CRItems.omnimeter.getDefaultInstance())){
+		if(ESConfig.isWrench(stack)){
+			// Wrenches rotate the block instead
+			if(!worldIn.isClientSide) worldIn.setBlockAndUpdate(pos, state.cycle(ESProperties.AXIS));
+			return ActionResultType.SUCCESS;
+		}else if(stack.sameItem(CRItems.omnimeter.getDefaultInstance())){
+			// Omnimeter performs its function instead
+			return ActionResultType.PASS;
+		}else{
+			TileEntity te = worldIn.getBlockEntity(pos);
+			if(!(te instanceof LensFrameTileEntity)){
 				return ActionResultType.PASS;
-			}else{
-				TileEntity te = worldIn.getBlockEntity(pos);
-				if(!(te instanceof LensFrameTileEntity)){
-					return ActionResultType.PASS;
-				}
-				LensFrameTileEntity lens = (LensFrameTileEntity)te;
-				ItemStack held = lens.getItem(0);
-				if(!held.isEmpty()){
+			}
+			LensFrameTileEntity lens = (LensFrameTileEntity)te;
+			ItemStack held = lens.getItem(0);
+			if(!held.isEmpty()){
+				if(!worldIn.isClientSide) {
 					if(!playerIn.inventory.add(held)){
 						ItemEntity dropped = playerIn.drop(held, false);
 						if(dropped != null){
@@ -110,32 +112,12 @@ public class LensFrame extends ContainerBlock implements IReadable{
 						}
 					}
 					lens.setItem(0, ItemStack.EMPTY);
-					return ActionResultType.SUCCESS;
-				}else if(!stack.isEmpty()){
-					if(worldIn.getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, new Inventory(stack), worldIn).isPresent()){
-						lens.setItem(0, stack.split(1));
-						return ActionResultType.SUCCESS;
-					}
 				}
-			}
-		}else{
-			if(ESConfig.isWrench(stack)){
 				return ActionResultType.SUCCESS;
-			}else if(stack.sameItem(CRItems.omnimeter.getDefaultInstance())) {
-				return ActionResultType.PASS;
-			}else{
-				TileEntity te = worldIn.getBlockEntity(pos);
-				if(!(te instanceof LensFrameTileEntity)){
-					return ActionResultType.PASS;
-				}
-				LensFrameTileEntity lens = (LensFrameTileEntity)te;
-				ItemStack held = lens.getItem(0);
-				if(!held.isEmpty()){
+			}else if(!stack.isEmpty()){
+				if(worldIn.getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, new Inventory(stack), worldIn).isPresent()){
+					if(!worldIn.isClientSide) lens.setItem(0, stack.split(1));
 					return ActionResultType.SUCCESS;
-				}else if(!stack.isEmpty()){
-					if(worldIn.getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, new Inventory(stack), worldIn).isPresent()){
-						return ActionResultType.SUCCESS;
-					}
 				}
 			}
 		}
