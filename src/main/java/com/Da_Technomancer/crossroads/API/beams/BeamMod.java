@@ -75,22 +75,22 @@ public class BeamMod {
 	 * @return A BeamUnit modified by this set of multipliers and the void conversion factor.
 	 */
 	public BeamUnit mult(BeamUnit u){
-		float energy = u.getEnergy() * getEnergyMult();
-		float potential = u.getPotential() * getPotentialMult();
-		float stability = u.getStability() * getStabilityMult();
-		float voi = u.getVoid() * getVoidMult();
+		int energy = Math.round(u.getEnergy() * getEnergyMult());
+		int potential = Math.round(u.getPotential() * getPotentialMult());
+		int stability = Math.round(u.getStability() * getStabilityMult());
+		int voi = Math.round(u.getVoid() * getVoidMult());
 
-		// Convert a percentage of non-Void colors to Void
-		float voiConv = u.getVoid() + (energy + potential + stability) * getVoidConvert();
-		energy *= 1 - getVoidConvert();
-		potential *= 1 - getVoidConvert();
-		stability *= 1 - getVoidConvert();
+		int powToVoid = Math.round((energy + potential + stability) * getVoidConvert());
+		if(powToVoid > 0) {
+			int[] toWithdraw = MiscUtil.withdrawExact(new int[]{energy, potential, stability}, powToVoid);
 
-		voi += voiConv;
+			energy -= toWithdraw[0];
+			potential -= toWithdraw[1];
+			stability -= toWithdraw[2];
+			voi += toWithdraw[0] + toWithdraw[1] + toWithdraw[2];
+		}
 
-		// Numbers are truncated in order to prevent possible positive feedback loops
-		// This is necessary since lenses can't simply redirect the excess elsewhere
-		return new BeamUnit((int)energy, (int)potential, (int)stability, (int)voi);
+		return new BeamUnit(energy, potential, stability, voi);
 	}
 
 	@Override

@@ -307,9 +307,9 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 			}
 
 			if(recipe != null){
-				if(mag.getPower() > 0 && EnumBeamAlignments.getAlignment(mag) == recipe.getTransformAlignment()
+				if(mag.getPower() > 0 && EnumBeamAlignments.getAlignment(mag) == recipe.getTransmuteAlignment()
 						&& (recipe.isVoid() == (mag.getVoid() > 0))){
-					setItem(0, recipe.getResultItem());
+					setItem(0, recipe.assemble((LensFrameTileEntity)getTileEntity()));
 				}
 				mod = recipe.getOutput();
 			}

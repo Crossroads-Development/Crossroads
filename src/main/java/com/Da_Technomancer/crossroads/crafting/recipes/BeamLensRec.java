@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.crafting.recipes;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamMod;
-import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
@@ -29,20 +28,20 @@ public class BeamLensRec implements IOptionalRecipe<IInventory>{
 	private final String group;
 	private final Ingredient ingr;
 	private final BeamMod output;
-	private final EnumBeamAlignments transformAlignment;
-	private final boolean transformVoid;
-	private final ItemStack transform;
+	private final EnumBeamAlignments transmuteAlignment;
+	private final boolean transmuteVoid;
+	private final ItemStack transmuteResult;
 
 	private final boolean active;
-	public BeamLensRec(ResourceLocation location, String name, Ingredient input, BeamMod output, ItemStack transform, EnumBeamAlignments transformAlignment, boolean transformVoid, boolean active){
+	public BeamLensRec(ResourceLocation location, String name, Ingredient input, BeamMod output, ItemStack transmuteResult, EnumBeamAlignments transmuteAlignment, boolean transmuteVoid, boolean active){
 		id = location;
 		group = name;
 		ingr = input;
 		this.output = output;
 		this.active = active;
-		this.transform = transform;
-		this.transformVoid = transformVoid;
-		this.transformAlignment = transformAlignment;
+		this.transmuteResult = transmuteResult;
+		this.transmuteVoid = transmuteVoid;
+		this.transmuteAlignment = transmuteAlignment;
 	}
 
 	public BeamMod getOutput(){
@@ -60,7 +59,7 @@ public class BeamLensRec implements IOptionalRecipe<IInventory>{
 
 	@Override
 	public ItemStack assemble(IInventory inv){
-		return getResultItem();
+		return getResultItem().copy();
 	}
 
 	@Override
@@ -75,15 +74,15 @@ public class BeamLensRec implements IOptionalRecipe<IInventory>{
 
 	@Override
 	public ItemStack getResultItem(){
-		return transform.copy();
+		return transmuteResult;
 	}
 
-	public EnumBeamAlignments getTransformAlignment(){
-		return transformAlignment;
+	public EnumBeamAlignments getTransmuteAlignment(){
+		return transmuteAlignment;
 	}
 
 	public boolean isVoid(){
-		return transformVoid;
+		return transmuteVoid;
 	}
 
 	public boolean isActive(){
@@ -141,19 +140,19 @@ public class BeamLensRec implements IOptionalRecipe<IInventory>{
 			if(active){
 				ingredient = CraftingUtil.getIngredient(json, "input", true);
 
-				if(JSONUtils.isValidNode(json, "transform")){
-					transform = CraftingUtil.getItemStack(json, "transform", false, true);
+				if(JSONUtils.isValidNode(json, "transmute_result")){
+					transform = CraftingUtil.getItemStack(json, "transmute_result", false, true);
 				}
 
-				if(JSONUtils.isValidNode(json, "transform_alignment")){
+				if(JSONUtils.isValidNode(json, "transmute_alignment")){
 					try{
-						String alignName = JSONUtils.getAsString(json, "transform_alignment");
+						String alignName = JSONUtils.getAsString(json, "transmute_alignment");
 						alignment = EnumBeamAlignments.valueOf(alignName.toUpperCase(Locale.US));
 					}catch(NullPointerException e){
 						throw new JsonParseException("Non-existent alignment specified");
 					}
 				}
-				transformVoid = JSONUtils.getAsBoolean(json, "transform_void", false);
+				transformVoid = JSONUtils.getAsBoolean(json, "transmute_void", false);
 
 				//Output specified as 5 float tags, all of which are optional
 				//Filters default to 1, while void conversion defaults to 0
@@ -198,9 +197,9 @@ public class BeamLensRec implements IOptionalRecipe<IInventory>{
 			buffer.writeBoolean(recipe.active);
 			if(recipe.active){
 				recipe.ingr.toNetwork(buffer);
-				buffer.writeItem(recipe.transform);
-				buffer.writeUtf(recipe.transformAlignment.name());
-				buffer.writeBoolean(recipe.transformVoid);
+				buffer.writeItem(recipe.transmuteResult);
+				buffer.writeUtf(recipe.transmuteAlignment.name());
+				buffer.writeBoolean(recipe.transmuteVoid);
 				buffer.writeFloat(recipe.output.getEnergyMult());
 				buffer.writeFloat(recipe.output.getPotentialMult());
 				buffer.writeFloat(recipe.output.getStabilityMult());

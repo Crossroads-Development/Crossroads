@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.beams;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.BeamLensRec;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.beams.LensFrameTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
@@ -91,6 +92,8 @@ public class LensFrame extends ContainerBlock implements IReadable{
 			if(ESConfig.isWrench(stack)){
 				worldIn.setBlockAndUpdate(pos, state.cycle(ESProperties.AXIS));
 				return ActionResultType.SUCCESS;
+			}else if(stack.sameItem(CRItems.omnimeter.getDefaultInstance())){
+				return ActionResultType.PASS;
 			}else{
 				TileEntity te = worldIn.getBlockEntity(pos);
 				if(!(te instanceof LensFrameTileEntity)){
@@ -118,6 +121,8 @@ public class LensFrame extends ContainerBlock implements IReadable{
 		}else{
 			if(ESConfig.isWrench(stack)){
 				return ActionResultType.SUCCESS;
+			}else if(stack.sameItem(CRItems.omnimeter.getDefaultInstance())) {
+				return ActionResultType.PASS;
 			}else{
 				TileEntity te = worldIn.getBlockEntity(pos);
 				if(!(te instanceof LensFrameTileEntity)){

@@ -5,7 +5,6 @@ import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.recipes.BeamLensRec;
-import com.Da_Technomancer.crossroads.crafting.recipes.BeamTransmuteRec;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
@@ -17,7 +16,6 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -72,8 +70,8 @@ public class BeamLensCategory implements IRecipeCategory<BeamLensRec>{
 		//Render without shadow
 
 		// Draw relevant transmutation data
-		if(recipe.getTransformAlignment() != EnumBeamAlignments.NO_MATCH) {
-			String align = recipe.getTransformAlignment().getLocalName(recipe.isVoid());
+		if(recipe.getTransmuteAlignment() != EnumBeamAlignments.NO_MATCH) {
+			String align = recipe.getTransmuteAlignment().getLocalName(recipe.isVoid());
 			Minecraft.getInstance().font.draw(matrix, new TranslationTextComponent("crossroads.jei.beam_trans.align", align), 2, 2, 0x404040);
 			slot.draw(matrix, 20, 60);//Output
 
@@ -130,7 +128,7 @@ public class BeamLensCategory implements IRecipeCategory<BeamLensRec>{
 		recipeLayout.getItemStacks().init(0, true, 20, 15);
 		recipeLayout.getItemStacks().set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
 		// Don't draw the second item if there is no valid transmutation
-		if(recipe.getTransformAlignment() != EnumBeamAlignments.NO_MATCH) {
+		if(recipe.getTransmuteAlignment() != EnumBeamAlignments.NO_MATCH) {
 			recipeLayout.getItemStacks().init(1, false, 20, 60);
 			recipeLayout.getItemStacks().set(1, recipe.getResultItem());
 		}
