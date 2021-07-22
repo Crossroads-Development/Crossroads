@@ -74,6 +74,10 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 
 	public void setLensItem(ItemStack lens){
 		inventoryWrapper.setItem(0, lens);
+		if(!level.isClientSide){
+			//Update on the client
+			CRPackets.sendPacketAround(level, worldPosition, new SendNBTToClient(lens.save(new CompoundNBT()), worldPosition));
+		}
 	}
 
 	@Override
@@ -229,7 +233,6 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 	@Override
 	public void setChanged(){
 		super.setChanged();
-		CRPackets.sendPacketAround(level, worldPosition, new SendNBTToClient(getLensItem().save(new CompoundNBT()), worldPosition));
 	}
 
 	@Override

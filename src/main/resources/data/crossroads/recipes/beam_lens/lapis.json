@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:beam_lens",
+	"input": {
+		"tag": "forge:gems/lapis"
+	},
+	"energy": 0,
+	"potential": 0,
+	"stability": 0.5,
+	"void": 0
+}
