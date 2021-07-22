@@ -98,22 +98,24 @@ public class LensFrame extends ContainerBlock implements IReadable{
 				return ActionResultType.PASS;
 			}
 			LensFrameTileEntity lens = (LensFrameTileEntity)te;
-			ItemStack held = lens.getItem(0);
-			if(!held.isEmpty()){
+			ItemStack inLens = lens.getLensItem();
+			if(!inLens.isEmpty()){
 				if(!worldIn.isClientSide) {
-					if(!playerIn.inventory.add(held)){
-						ItemEntity dropped = playerIn.drop(held, false);
+					if(!playerIn.inventory.add(inLens)){
+						ItemEntity dropped = playerIn.drop(inLens, false);
 						if(dropped != null){
 							dropped.setNoPickUpDelay();
 							dropped.setOwner(playerIn.getUUID());
 						}
 					}
-					lens.setItem(0, ItemStack.EMPTY);
+					lens.setLensItem(ItemStack.EMPTY);
 				}
 				return ActionResultType.SUCCESS;
 			}else if(!stack.isEmpty()){
 				if(worldIn.getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, new Inventory(stack), worldIn).isPresent()){
-					if(!worldIn.isClientSide) lens.setItem(0, stack.split(1));
+					if(!worldIn.isClientSide){
+						lens.setLensItem(stack.split(1));
+					}
 					return ActionResultType.SUCCESS;
 				}
 			}
@@ -126,7 +128,7 @@ public class LensFrame extends ContainerBlock implements IReadable{
 	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
 		TileEntity te = world.getBlockEntity(pos);
 		if(newState.getBlock() != this && te instanceof LensFrameTileEntity){
-			InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ((LensFrameTileEntity) te).getItem(0));
+			InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ((LensFrameTileEntity) te).getLensItem());
 		}
 		super.onRemove(state, world, pos, newState, isMoving);
 	}

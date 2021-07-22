@@ -19,8 +19,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.TranslationTextComponent;
 
-import java.util.Arrays;
-
 public class BeamLensCategory implements IRecipeCategory<BeamLensRec>{
 
 	public static final ResourceLocation ID = new ResourceLocation(Crossroads.MODID, "lens_beam");
@@ -136,6 +134,9 @@ public class BeamLensCategory implements IRecipeCategory<BeamLensRec>{
 
 	@Override
 	public void setIngredients(BeamLensRec recipe, IIngredients ingredients){
-		ingredients.setInputLists(VanillaTypes.ITEM, ImmutableList.of(Arrays.asList(recipe.getIngr().getItems())));
+		ingredients.setInputIngredients(ImmutableList.of(recipe.getIngr()));
+		if(recipe.getTransmuteAlignment() != EnumBeamAlignments.NO_MATCH) {
+			ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
+		}
 	}
 }

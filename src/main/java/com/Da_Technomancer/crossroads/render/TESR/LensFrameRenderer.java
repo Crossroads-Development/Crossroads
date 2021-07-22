@@ -29,7 +29,7 @@ public class LensFrameRenderer extends BeamRenderer<LensFrameTileEntity> {
 
 		if(state.getBlock() == CRBlocks.lensFrame){
 
-			ItemStack stack = beam.getItem(0);
+			ItemStack stack = beam.getLensItem();
 
 			matrix.pushPose();
 

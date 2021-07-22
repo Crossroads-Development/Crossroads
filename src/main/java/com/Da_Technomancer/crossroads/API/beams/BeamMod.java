@@ -7,8 +7,7 @@ import javax.annotation.Nonnull;
 import java.util.Arrays;
 
 /**
- * An immutable class that represents one beam pulse lasting one cycle. It stores the energy, potential, stability, and void values and has several helper methods
- * For a mutable version, see BeamUnitStorage
+ * An immutable class that represents a modification to be performed to incoming beam units
  */
 public class BeamMod {
 
@@ -70,7 +69,7 @@ public class BeamMod {
 	}
 
 	/**
-	 * @param u
+	 * @param u The beam unit to modify
 	 * @return A BeamUnit modified by this set of multipliers and the void conversion factor.
 	 */
 	public BeamUnit mult(BeamUnit u){
