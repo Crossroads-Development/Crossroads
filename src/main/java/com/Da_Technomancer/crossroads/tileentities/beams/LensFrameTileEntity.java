@@ -10,6 +10,8 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.BeamLensRec;
+import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.packets.INBTReceiver;
@@ -19,7 +21,9 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.IInventoryChangedListener;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -74,7 +78,7 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 
 	public void setLensItem(ItemStack lens){
 		inventoryWrapper.setItem(0, lens);
-		if(!level.isClientSide){
+		if(level != null && !level.isClientSide){
 			//Update on the client
 			CRPackets.sendPacketAround(level, worldPosition, new SendNBTToClient(lens.save(new CompoundNBT()), worldPosition));
 		}
@@ -195,7 +199,35 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 		packetPos = nbt.getInt("beam_pos");
 		packetNeg = nbt.getInt("beam_neg");
 		lastRedstone = nbt.getInt("reds");
-		setLensItem(nbt.contains("inv") ? ItemStack.of(nbt.getCompound("inv")) : ItemStack.EMPTY);
+		if(nbt.contains("inv")){
+			setLensItem(ItemStack.of(nbt.getCompound("inv")));
+		}else if(nbt.contains("contents")){
+			// Load from legacy data
+			Item item = null;
+			switch(nbt.getInt("contents")){
+				case 1:
+					item = OreSetup.gemRuby;
+					break;
+				case 2:
+					item = Items.EMERALD;
+					break;
+				case 3:
+					item = Items.DIAMOND;
+					break;
+				case 4:
+					item = CRItems.pureQuartz;
+					break;
+				case 5:
+					item = CRItems.brightQuartz;
+					break;
+				case 6:
+					item = OreSetup.voidCrystal;
+					break;
+			}
+			setLensItem(item != null ? new ItemStack(item) : ItemStack.EMPTY);
+		}else{
+			setLensItem(ItemStack.EMPTY);
+		}
 	}
 
 	@Override
