@@ -169,6 +169,7 @@ public final class Crossroads{
 		reg.register(new BoboRec.Serializer().setRegistryName("bobo"));
 		reg.register(new CopshowiumRec.Serializer().setRegistryName("copshowium"));
 		reg.register(new ReagentRec.Serializer().setRegistryName("reagents"));
+		reg.register(new BeamLensRec.Serializer().setRegistryName(("beam_lens")));
 	}
 
 	@SubscribeEvent

@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:beam_lens",
+	"input": {
+		"tag": "forge:gems/diamond"
+	},
+	"energy": 0,
+	"potential": 0,
+	"stability": 1,
+	"void": 0
+}

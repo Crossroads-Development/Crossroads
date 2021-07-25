@@ -12,7 +12,8 @@ displayName="Crossroads" #mandatory
 # A file name (in the root of the mod JAR) containing a logo for display
 # logoFile="examplemod.png" #optional
 credits='''Many textures were created by 5284973, Potus4mine, Unnamed1334, marbles-box, DA, Spo0ok, MushroomDynamo.
-Translations by Луксиния Гримхольд, Water_Moon, kappa_maintainer.''' #optional
+Translations by Луксиния Гримхольд, Water_Moon, kappa_maintainer.
+Code contributed by thegamemaster1234.''' #optional
 authors="Technomancer" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
