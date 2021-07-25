@@ -128,7 +128,7 @@ public class SequenceBoxTileEntity extends TileEntity implements INBTReceiver, I
 	}
 
 	public final CircuitUtil.OutputCircHandler circHandler = new CircuitUtil.OutputCircHandler();
-	private final LazyOptional<IRedstoneHandler> circOpt = CircuitUtil.makeBaseCircuitOptional(this, circHandler, () -> index < sequenceVal.size() ? sequenceVal.get(index) : 0);
+	private final LazyOptional<IRedstoneHandler> circOpt = CircuitUtil.makeBaseCircuitOptional(this, circHandler, () -> index < sequenceVal.size() ? sequenceVal.get(index) : 0F);
 
 	@Nonnull
 	@Override

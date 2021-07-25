@@ -45,8 +45,13 @@ minecraft {
 			// Recommended logging level for the console
 			property 'forge.logging.console.level', 'debug'
 
-			// Make patchouli work
-			properties 'mixin.env.disableRefMap': 'true'
+			// Make patchouli work in dev
+			// For some dev environments, patchouli only works if this is disabled
+			// In other dev environments, patchouli only works if this is enabled
+//			properties 'mixin.env.disableRefMap': 'true'
+			//Alternate configuration to make patchouli work in dev
+			property 'mixin.env.remapRefMap', 'true'
+			property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
 			mods {
 				crossroads {
