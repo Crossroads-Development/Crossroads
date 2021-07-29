@@ -168,6 +168,7 @@ public class CRBlocks{
 	public static StasisStorage stasisStorage;
 	public static CultivatorVat cultivatorVat;
 	public static Incubator incubator;
+	public static BloodCentrifuge bloodCentrifuge;
 
 	public static AbstractBlock.Properties getRockProperty(){
 		return AbstractBlock.Properties.of(Material.STONE).strength(3).requiresCorrectToolForDrops().sound(SoundType.STONE);
@@ -365,6 +366,7 @@ public class CRBlocks{
 		stasisStorage = new StasisStorage();
 		cultivatorVat = new CultivatorVat();
 		incubator = new Incubator();
+		bloodCentrifuge = new BloodCentrifuge();
 	}
 
 	@OnlyIn(Dist.CLIENT)

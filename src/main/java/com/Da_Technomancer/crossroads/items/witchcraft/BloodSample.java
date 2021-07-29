@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -20,14 +21,21 @@ public class BloodSample extends Item implements IPerishable{
 	private static final String KEY = "cr_genetics";
 
 	public BloodSample(){
+		this("blood_sample");
+	}
+
+	public BloodSample(String name){
 		super(new Item.Properties().stacksTo(1));//Not added to any creative tab
-		String name = "blood_sample";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
 	}
 
 	public ItemStack withEntityData(ItemStack stack, LivingEntity source){
 		EntityTemplate template = EntityTemplate.getTemplateFromEntity(source);
+		return withEntityData(stack, template);
+	}
+
+	public ItemStack withEntityData(ItemStack stack, EntityTemplate template){
 		stack.getOrCreateTag().put(KEY, template.serializeNBT());
 		return stack;
 	}
@@ -51,6 +59,7 @@ public class BloodSample extends Item implements IPerishable{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag){
+		tooltip.add(new TranslationTextComponent("tt.crossroads.blood_sample.craft"));
 		EntityTemplate template = getEntityTypeData(stack);
 		template.addTooltip(tooltip, 2);
 		IPerishable.addTooltip(stack, world, tooltip);

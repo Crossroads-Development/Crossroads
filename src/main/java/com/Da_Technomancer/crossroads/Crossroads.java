@@ -258,6 +258,7 @@ public final class Crossroads{
 		registerCon(StasisStorageContainer::new, StasisStorageScreen::new, "stasis_storage", e);
 		registerCon(CultivatorVatContainer::new, CultivatorVatScreen::new, "cultivator_vat", e);
 		registerCon(IncubatorContainer::new, IncubatorScreen::new, "incubator", e);
+		registerCon(BloodCentrifugeContainer::new, BloodCentrifugeScreen::new, "blood_centrifuge", e);
 	}
 
 	@SuppressWarnings("unused")
@@ -302,6 +303,7 @@ public final class Crossroads{
 		registerConType(StasisStorageContainer::new, "stasis_storage", e);
 		registerConType(CultivatorVatContainer::new, "cultivator_vat", e);
 		registerConType(IncubatorContainer::new, "incubator", e);
+		registerConType(BloodCentrifugeContainer::new, "blood_centrifuge", e);
 	}
 
 	/**

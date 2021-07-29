@@ -11,6 +11,7 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.*;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.*;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.AutoInjectorTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.witchcraft.BloodCentrifugeTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.CultivatorVatTileEntity;
 import com.Da_Technomancer.essentials.render.LinkLineRenderer;
 import net.minecraft.block.Block;
@@ -60,10 +61,10 @@ public class CRRendererRegistry{
 		ClientRegistry.bindTileEntityRenderer(ChunkAcceleratorTileEntity.type, ChunkAcceleratorRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(CopshowiumCreationChamberTileEntity.type, EntropyRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(FluxSinkTileEntity.type, FluxSinkRenderer::new);
-
 		ClientRegistry.bindTileEntityRenderer(BeamCannonTileEntity.type, BeamCannonRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(AutoInjectorTileEntity.type, AutoInjectorRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(CultivatorVatTileEntity.type, CultivatorVatRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(BloodCentrifugeTileEntity.type, BloodCentrifugeRenderer::new);
 	}
 
 	private static void reg(Block block){

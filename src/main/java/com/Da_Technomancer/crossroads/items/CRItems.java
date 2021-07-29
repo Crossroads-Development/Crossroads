@@ -122,6 +122,7 @@ public final class CRItems{
 	public static ArmorToolbelt armorToolbelt;
 	public static Item bloodSampleEmpty;
 	public static BloodSample bloodSample;
+	public static BloodSample separatedBloodSample;
 	public static PotionExtension potionExtension;
 	public static Syringe syringe;
 	public static Item mushroomDust;
@@ -245,6 +246,7 @@ public final class CRItems{
 		armorToolbelt = new ArmorToolbelt();
 		toRegister.add(bloodSampleEmpty = new Item(new Item.Properties().stacksTo(1).tab(TAB_CROSSROADS)).setRegistryName("blood_sample_empty"));
 		bloodSample = new BloodSample();
+		separatedBloodSample = new BloodSample("separated_blood_sample");
 		potionExtension = new PotionExtension();
 		syringe = new Syringe();
 		toRegister.add(mushroomDust = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("mushroom_dust"));
@@ -319,6 +321,7 @@ public final class CRItems{
 		//Rotting samples
 		IItemPropertyGetter rottingPropertyGetter = (ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) -> stack.getItem() instanceof IPerishable && ((IPerishable) stack.getItem()).isSpoiled(stack, world) ? 1F : 0F;
 		ItemModelsProperties.register(bloodSample, new ResourceLocation("spoiled"), rottingPropertyGetter);
+		ItemModelsProperties.register(separatedBloodSample, new ResourceLocation("spoiled"), rottingPropertyGetter);
 		ItemModelsProperties.register(potionExtension, new ResourceLocation("spoiled"), rottingPropertyGetter);
 		ItemModelsProperties.register(embryo, new ResourceLocation("spoiled"), rottingPropertyGetter);
 		//Syringe treatment
