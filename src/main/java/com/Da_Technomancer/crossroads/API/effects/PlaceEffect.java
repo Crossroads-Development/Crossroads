@@ -43,8 +43,8 @@ public class PlaceEffect extends BeamEffect{
 					worldIn.destroyBlock(pos, true);
 				}
 			}else{
-				int range = (int) Math.sqrt(power) / 2;
-				List<ItemEntity> items = worldIn.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(pos.offset(-range, -range, -range), pos.offset(range + 1, range + 1, range + 1)), EntityPredicates.ENTITY_STILL_ALIVE);
+				double range = Math.sqrt(power) / 2D;
+				List<ItemEntity> items = worldIn.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(Vector3d.atCenterOf(pos).add(-range, -range, -range), Vector3d.atCenterOf(pos).add(range, range, range)), EntityPredicates.ENTITY_STILL_ALIVE);
 				if(items.size() != 0){
 					FakePlayer placer = getBlockFakePlayer((ServerWorld) worldIn);
 					for(ItemEntity ent : items){
