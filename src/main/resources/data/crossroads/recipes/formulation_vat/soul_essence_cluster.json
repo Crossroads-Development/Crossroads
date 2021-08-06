@@ -5,7 +5,7 @@
 		"amount": 200
 	},
 	"input_item": {
-		"item": "soul_cluster"
+		"item": "crossroads:soul_cluster"
 	},
 	"output": {
 		"fluid": "crossroads:soul_essence",

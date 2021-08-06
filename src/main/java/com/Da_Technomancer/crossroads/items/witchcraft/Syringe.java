@@ -64,19 +64,18 @@ public class Syringe extends Item{
 			self.setItemInHand(Hand.OFF_HAND, new ItemStack(Items.GLASS_BOTTLE, 1));
 			double multiplier = CRConfig.injectionEfficiency.get();
 			if(treated){
+				//The syringe has a treatment applied; applied effects are more powerful/longer lasting
 				int penalty = CRConfig.injectionPermaPenalty.get();
 				for(EffectInstance effect : potion.getEffects()){
 					if(effect.getEffect().isInstantenous()){
 						//Multiply intensity
 						target.addEffect(new EffectInstance(effect.getEffect(), effect.getDuration(), (int) Math.round(effect.getAmplifier() * multiplier), effect.isAmbient(), effect.isVisible(), effect.showIcon()));
-					}else{
+					}else if(CRPotions.applyAsPermanent(target, effect) && penalty > 0){
 						//Make permanent, apply a penalty
-						CRPotions.applyAsPermanent(target, effect);
-						if(penalty > 0){
-							EffectInstance prevPenalty = target.getEffect(CRPotions.HEALTH_PENALTY_EFFECT);
-							int prevPenaltyIntensity = prevPenalty != null ? prevPenalty.getAmplifier() : -1;
-							target.addEffect(new EffectInstance(CRPotions.HEALTH_PENALTY_EFFECT, Integer.MAX_VALUE, (penalty - 1) + (prevPenaltyIntensity + 1)));
-						}
+						EffectInstance penaltyEffect = target.getEffect(CRPotions.HEALTH_PENALTY_EFFECT);
+						int prevPenaltyIntensity = penaltyEffect != null ? penaltyEffect.getAmplifier() : -1;
+						penaltyEffect = new EffectInstance(CRPotions.HEALTH_PENALTY_EFFECT, Integer.MAX_VALUE, (penalty - 1) + (prevPenaltyIntensity + 1));
+						CRPotions.applyAsPermanent(target, penaltyEffect);
 					}
 				}
 			}else{

@@ -90,6 +90,7 @@ public final class Crossroads{
 		//Main
 		MinecraftForge.EVENT_BUS.register(new EventHandlerCommon());
 		//NetworkRegistry.INSTANCE.registerGuiHandler(Crossroads.instance, new GuiHandler());
+		CRItems.registerDispenserOverrides();
 		CRIntegration.init();
 		CurioHelper.initIntegration();
 //		CrossroadsConfig.config.save();
@@ -259,6 +260,7 @@ public final class Crossroads{
 		registerCon(CultivatorVatContainer::new, CultivatorVatScreen::new, "cultivator_vat", e);
 		registerCon(IncubatorContainer::new, IncubatorScreen::new, "incubator", e);
 		registerCon(BloodCentrifugeContainer::new, BloodCentrifugeScreen::new, "blood_centrifuge", e);
+		registerCon(EmbryoLabContainer::new, EmbryoLabScreen::new, "embryo_lab", e);
 	}
 
 	@SuppressWarnings("unused")
@@ -304,6 +306,7 @@ public final class Crossroads{
 		registerConType(CultivatorVatContainer::new, "cultivator_vat", e);
 		registerConType(IncubatorContainer::new, "incubator", e);
 		registerConType(BloodCentrifugeContainer::new, "blood_centrifuge", e);
+		registerConType(EmbryoLabContainer::new, "embryo_lab", e);
 	}
 
 	/**

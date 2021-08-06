@@ -5,14 +5,20 @@ import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.API.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.blocks.witchcraft.EmbryoLab;
 import com.Da_Technomancer.crossroads.items.alchemy.*;
 import com.Da_Technomancer.crossroads.items.itemSets.*;
 import com.Da_Technomancer.crossroads.items.technomancy.*;
 import com.Da_Technomancer.crossroads.items.witchcraft.*;
+import net.minecraft.block.DispenserBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.dispenser.IBlockSource;
+import net.minecraft.dispenser.IDispenseItemBehavior;
+import net.minecraft.dispenser.OptionalDispenseBehavior;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.*;
@@ -20,6 +26,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
@@ -48,11 +55,11 @@ public final class CRItems{
 	};
 
 	public static final Rarity BOBO_RARITY = Rarity.EPIC;
-	
+
 	public static CheatWandRotary debugGearWriter;
 	public static CheatWandHeat debugHeatWriter;
 	public static Item dustSalt;
-//	public static MashedPotato mashedPotato;
+	//	public static MashedPotato mashedPotato;
 	public static HandCrank handCrank;
 	public static OmniMeter omnimeter;
 	public static Vacuum vacuum;
@@ -71,7 +78,7 @@ public final class CRItems{
 	public static ArmorPropellerPack propellerPack;
 	public static StaffTechnomancy staffTechnomancy;
 	public static BeamCage beamCage;
-//	public static PrototypePistol pistol;
+	//	public static PrototypePistol pistol;
 //	public static PrototypeWatch watch;
 	public static Item adamant;
 	public static Item sulfur;
@@ -327,5 +334,66 @@ public final class CRItems{
 		//Syringe treatment
 		IItemPropertyGetter syringePropertyGetter = (ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) -> CRItems.syringe.isTreated(stack) ? 1 : 0;
 		ItemModelsProperties.register(syringe, new ResourceLocation("treated"), syringePropertyGetter);
+	}
+
+	/**
+	 * Registers dispenser behaviours for any item where the behaviour isn't being registered by the item itself for whatever reason
+	 */
+	public static void registerDispenserOverrides(){
+		registerDispenserOverride(EmbryoLab.DISPENSE_ONTO_EMBRYO_LAB, CRItems.separatedBloodSample, Items.NAME_TAG, CRItems.soulCluster, Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION);
+	}
+
+	/**
+	 * Registers a dispenser behaviour for an item where the item will attempt to do the override behaviour.
+	 * If the override behaviour is not successful, it performs the behaviour registered to the item before the method call
+	 * This is used for adding dispenser functionality to an item without removing some existing other dispenser functionality on the same item
+	 * @param overrideBehaviour The new behaviour to add to the item. If not successful when executed, the fallback behaviour will be used
+	 * @param items All items to override the dispenser behaviour for
+	 */
+	private static void registerDispenserOverride(OptionalDispenseBehavior overrideBehaviour, Item... items){
+		for(Item item : items){
+			DispenserBlock.registerBehavior(item, new FallbackDispenseBehaviour(overrideBehaviour, DispenserSubclass.INSTANCE.getDispenseMethod(new ItemStack(item))));
+		}
+	}
+
+	private static class DispenserSubclass extends DispenserBlock{
+
+		/**
+		 * This class solely exists to get access to the private static dispense behaviour map
+		 * There is a protected non-static accessor we create an instance of this subclass to access
+		 */
+		public static final DispenserSubclass INSTANCE = new DispenserSubclass(CRBlocks.getRockProperty());
+
+		private DispenserSubclass(Properties dummyProp){
+			super(dummyProp);
+		}
+
+		@Override
+		public IDispenseItemBehavior getDispenseMethod(ItemStack stack){
+			return super.getDispenseMethod(stack);
+		}
+	}
+
+	private static class FallbackDispenseBehaviour implements IDispenseItemBehavior{
+
+		private final OptionalDispenseBehavior overrideBehaviour;
+		private final IDispenseItemBehavior fallbackBehaviour;
+
+		public FallbackDispenseBehaviour(@Nullable OptionalDispenseBehavior overrideBehaviour, @Nonnull IDispenseItemBehavior fallbackBehaviour){
+			this.overrideBehaviour = overrideBehaviour;
+			this.fallbackBehaviour = fallbackBehaviour;
+		}
+
+		@Override
+		public ItemStack dispense(IBlockSource source, ItemStack stack){
+			if(overrideBehaviour != null){
+				overrideBehaviour.setSuccess(false);
+				ItemStack result = overrideBehaviour.dispense(source, stack);
+				if(overrideBehaviour.isSuccess()){
+					return result;
+				}
+			}
+			return fallbackBehaviour.dispense(source, stack);
+		}
 	}
 }

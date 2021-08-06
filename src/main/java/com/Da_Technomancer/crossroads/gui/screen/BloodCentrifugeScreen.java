@@ -26,7 +26,7 @@ public class BloodCentrifugeScreen extends MachineGUI<BloodCentrifugeContainer, 
 		Minecraft.getInstance().getTextureManager().bind(BACKGROUND);
 		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
-		blit(matrix, leftPos + 50, topPos + 30, 176, 0, Math.min(66, menu.progRef.get() * 66 / BloodCentrifugeTileEntity.REQUIRED), 9);
+		blit(matrix, leftPos + 50, topPos + 48, 176, 0, Math.min(66, menu.progRef.get() * 66 / BloodCentrifugeTileEntity.REQUIRED), 9);
 	}
 
 	@Override
@@ -34,6 +34,6 @@ public class BloodCentrifugeScreen extends MachineGUI<BloodCentrifugeContainer, 
 		super.renderLabels(matrix, mouseX, mouseY);
 
 		String s = MiscUtil.localize("container.crossroads.blood_centrifuge.target", MiscUtil.preciseRound(BloodCentrifugeTileEntity.getTargetSpeed(menu.progRef.get()), 1));
-		font.draw(matrix, s, imageWidth - 8 - font.width(s), 16, 0x404040);
+		font.draw(matrix, s, imageWidth - 8 - font.width(s), 18, 0x404040);
 	}
 }

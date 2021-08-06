@@ -59,7 +59,9 @@ public class BloodSample extends Item implements IPerishable{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.blood_sample.craft"));
+		if(this != CRItems.separatedBloodSample){
+			tooltip.add(new TranslationTextComponent("tt.crossroads.blood_sample.craft"));
+		}
 		EntityTemplate template = getEntityTypeData(stack);
 		template.addTooltip(tooltip, 2);
 		IPerishable.addTooltip(stack, world, tooltip);

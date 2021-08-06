@@ -103,11 +103,13 @@ public class ReagInfoCategory implements IRecipeCategory<IReagent>{
 //			List<ItemStack> solid = recipe.getJEISolids().getValues().stream().map(ItemStack::new).collect(Collectors.toList());
 //			List<List<ItemStack>> solidLists = ImmutableList.of(solid);
 			ITag<Item> jeiSolids = recipe.getJEISolids();
-			Ingredient itemForm = Ingredient.of(jeiSolids);
-			ingredients.setInputIngredients(ImmutableList.of(itemForm));
-//			ingredients.setInputLists(VanillaTypes.ITEM, solidLists);
-//			ingredients.setOutputLists(VanillaTypes.ITEM, solidLists);
-			ingredients.setOutput(VanillaTypes.ITEM, new ItemStack(CRItemTags.getTagEntry(jeiSolids)));
+			if(!jeiSolids.getValues().isEmpty()){
+				Ingredient itemForm = Ingredient.of(jeiSolids);
+				ingredients.setInputIngredients(ImmutableList.of(itemForm));
+//				ingredients.setInputLists(VanillaTypes.ITEM, solidLists);
+//				ingredients.setOutputLists(VanillaTypes.ITEM, solidLists);
+				ingredients.setOutput(VanillaTypes.ITEM, new ItemStack(CRItemTags.getTagEntry(jeiSolids)));
+			}
 		}catch(Exception e){
 			Crossroads.logger.error(String.format("Failed to load item form of reagent %1$s for JEI integration", recipe.getName()));
 		}

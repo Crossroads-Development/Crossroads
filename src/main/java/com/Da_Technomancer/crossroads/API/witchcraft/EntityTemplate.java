@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.API.witchcraft;
 
 import com.Da_Technomancer.crossroads.API.CRReflection;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
 import com.Da_Technomancer.essentials.ReflectionUtil;
@@ -38,7 +39,6 @@ public class EntityTemplate implements INBTSerializable<CompoundNBT>{
 	public static final String LOYAL_KEY = "cr_loyal";
 
 	private static final Method OFFSPRING_SPAWNING_METHOD = ReflectionUtil.reflectMethod(CRReflection.OFFSPRING_SPAWN_EGG);
-	private static final int PERM_EFFECT_CUTOFF = Integer.MAX_VALUE / 4;//We assume any effect on a mob over this duration was originally a permanent effect; this is not a flawless method
 
 	private ResourceLocation entityName;
 	private boolean loyal;
@@ -183,27 +183,49 @@ public class EntityTemplate implements INBTSerializable<CompoundNBT>{
 	 */
 	public void addTooltip(List<ITextComponent> tooltips, int maxLines){
 		getEntityType();//Builds the cache
+
+		int linesUsed = 0;
+
 		if(entityName == null){
 			tooltips.add(new TranslationTextComponent("tt.crossroads.boilerplate.entity_template.type.missing"));
+			linesUsed += 1;
 			//Error message, nothing else
 		}else{
 			tooltips.add(new TranslationTextComponent("tt.crossroads.boilerplate.entity_template.type").append(entityType == null ? new StringTextComponent(entityName.toString()) : entityType.getDescription()));
-			TextComponent detailsCompon = new TranslationTextComponent("tt.crossroads.boilerplate.entity_template.degradation", degradation);
-			if(loyal){
-				detailsCompon.append(new TranslationTextComponent("tt.crossroads.boilerplate.entity_template.loyal"));
-			}
-			if(respawning){
-				detailsCompon.append(new TranslationTextComponent("tt.crossroads.boilerplate.entity_template.respawning"));
-			}
-			tooltips.add(detailsCompon);
 
-			int lines = 2;
+			if(maxLines <= 4){
+				//Only a few lines; fit degradation, loyalty, and respawning onto one line
+				TextComponent detailsCompon = new TranslationTextComponent("tt.crossroads.boilerplate.entity_template.degradation", degradation);
+				if(loyal){
+					detailsCompon.append(new TranslationTextComponent("tt.crossroads.boilerplate.entity_template.separator"));
+					detailsCompon.append(new TranslationTextComponent("tt.crossroads.boilerplate.entity_template.loyal"));
+				}
+				if(respawning){
+					detailsCompon.append(new TranslationTextComponent("tt.crossroads.boilerplate.entity_template.separator"));
+					detailsCompon.append(new TranslationTextComponent("tt.crossroads.boilerplate.entity_template.respawning"));
+				}
+				tooltips.add(detailsCompon);
+				linesUsed += 1;
+			}else{
+				//Degredation, loyalty, and respawning all get separate lines
+				tooltips.add(new TranslationTextComponent("tt.crossroads.boilerplate.entity_template.degradation", degradation));
+				linesUsed += 1;
+				if(loyal){
+					tooltips.add(new TranslationTextComponent("tt.crossroads.boilerplate.entity_template.loyal"));
+					linesUsed += 1;
+				}
+				if(respawning){
+					tooltips.add(new TranslationTextComponent("tt.crossroads.boilerplate.entity_template.respawning"));
+					linesUsed += 1;
+				}
+			}
+
 			int effectCount = effects.size();
-			int needExtension = Math.max(0, effectCount - (maxLines - lines));
+			int needExtension = Math.max(0, effectCount - (maxLines - linesUsed));
 			for(EffectInstance effect : effects){
-				if(lines < maxLines || needExtension > 0 && lines < maxLines - 1){
-					tooltips.add(new TranslationTextComponent("tt.crossroads.boilerplate.entity_template.potion").append(effect.getEffect().getDisplayName()).append(new TranslationTextComponent("enchantment.level." + (effect.getAmplifier() + 1))));
-					lines++;
+				if(linesUsed < maxLines || needExtension > 0 && linesUsed < maxLines - 1){
+					tooltips.add(new TranslationTextComponent("tt.crossroads.boilerplate.entity_template.potion").append(effect.getEffect().getDisplayName()).append(" ").append(new TranslationTextComponent("enchantment.level." + (effect.getAmplifier() + 1))));
+					linesUsed++;
 				}else{
 					break;
 				}
@@ -216,6 +238,12 @@ public class EntityTemplate implements INBTSerializable<CompoundNBT>{
 
 	@Nullable
 	public static Entity spawnEntityFromTemplate(EntityTemplate template, ServerWorld world, BlockPos pos, SpawnReason reason, boolean offset, boolean unmapped, @Nullable ITextComponent customName, @Nullable PlayerEntity player){
+		//Check if the entity is on the blacklist. If so, refuse to spawn
+		ResourceLocation entityRegistryName = template.getEntityName();
+		if(!isCloningAllowed(entityRegistryName)){
+			return null;
+		}
+
 		EntityType<?> type = template.getEntityType();
 		if(type == null){
 			return null;
@@ -240,7 +268,7 @@ public class EntityTemplate implements INBTSerializable<CompoundNBT>{
 
 			//Degradation
 			if(template.getDegradation() > 0){
-				entity.addEffect(new EffectInstance(CRPotions.HEALTH_PENALTY_EFFECT, Integer.MAX_VALUE, template.getDegradation() - 1));
+				entity.addEffect(new EffectInstance(CRPotions.HEALTH_PENALTY_EFFECT, Integer.MAX_VALUE, template.getDegradation() * 2 - 1));
 			}
 
 			//Potion effects
@@ -288,7 +316,7 @@ public class EntityTemplate implements INBTSerializable<CompoundNBT>{
 			if(CRPotions.HEALTH_PENALTY_EFFECT.getRegistryName().equals(instance.getEffect().getRegistryName())){
 				//This is the health penalty, interpret as degradation
 				degrade += instance.getAmplifier() + 1;
-			}else if(!instance.getEffect().isInstantenous() && instance.getDuration() > PERM_EFFECT_CUTOFF){
+			}else if(!instance.getEffect().isInstantenous() && instance.getDuration() > CRPotions.PERM_EFFECT_CUTOFF){
 				permanentEffects.add(new EffectInstance(instance));//Copy the value to prevent changes in the mutable instance
 			}
 		}
@@ -296,5 +324,13 @@ public class EntityTemplate implements INBTSerializable<CompoundNBT>{
 		template.setEffects(permanentEffects);
 
 		return template;
+	}
+
+	public static boolean isCloningAllowed(ResourceLocation entityName){
+		if(entityName.equals(new ResourceLocation("minecraft:player"))){
+			return false;
+		}
+		List<? extends String> blacklist = CRConfig.cloningBlacklist.get();
+		return blacklist.stream().noneMatch(entry -> new ResourceLocation(entry).equals(entityName));
 	}
 }

@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.witchcraft;
 
+import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.Crossroads;
@@ -45,7 +46,7 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		chat.add(new TranslationTextComponent("tt.crossroads.blood_centrifuge.deviation", deviation / progress));
+		chat.add(new TranslationTextComponent("tt.crossroads.blood_centrifuge.deviation", progress == 0 ? 0 : deviation / progress));
 		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.progress", progress, REQUIRED));
 		super.addInfo(chat, player, hit);
 	}
@@ -97,7 +98,7 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 							template.setDegradation(template.getDegradation() + degradation);
 							//Sets the output to a copy of the input with the item as a separated blood sample instead of normal blood sample
 							//Has to copy spoil time and template
-							inventory[2 + i] = CRItems.separatedBloodSample.setSpoilTime(CRItems.separatedBloodSample.withEntityData(new ItemStack(CRItems.separatedBloodSample, 1), template), CRItems.bloodSample.getSpoilTime(inventory[i], level), level.getGameTime());
+							inventory[2 + i] = CRItems.separatedBloodSample.setSpoilTime(CRItems.separatedBloodSample.withEntityData(new ItemStack(CRItems.separatedBloodSample, 1), template), CRItems.bloodSample.getSpoilTime(inventory[i], level), 0);
 							inventory[i] = ItemStack.EMPTY;
 						}
 					}
@@ -170,6 +171,9 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return (LazyOptional<T>) itemOpt;
+		}
+		if(capability == Capabilities.AXLE_CAPABILITY && facing == Direction.UP){
+			return (LazyOptional<T>) axleOpt;
 		}
 
 		return super.getCapability(capability, facing);

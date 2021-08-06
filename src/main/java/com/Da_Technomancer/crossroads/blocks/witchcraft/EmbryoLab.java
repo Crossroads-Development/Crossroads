@@ -3,15 +3,15 @@ package com.Da_Technomancer.crossroads.blocks.witchcraft;
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.witchcraft.AbstractNutrientEnvironmentTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.witchcraft.CultivatorVatTileEntity;
+import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.crossroads.tileentities.witchcraft.EmbryoLabTileEntity;
+import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
+import net.minecraft.block.*;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.dispenser.IBlockSource;
+import net.minecraft.dispenser.OptionalDispenseBehavior;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
@@ -35,31 +35,64 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class CultivatorVat extends ContainerBlock implements IReadable{
+public class EmbryoLab extends ContainerBlock implements IReadable{
 
-	public CultivatorVat(){
-		super(CRBlocks.getMetalProperty().lightLevel(state -> state.getValue(CRProperties.ACTIVE) ? 10 : 0));//They glow a little
-		String name = "cultivator_vat";
+	public static final OptionalDispenseBehavior DISPENSE_ONTO_EMBRYO_LAB = new OptionalDispenseBehavior(){
+
+		@Override
+		protected ItemStack execute(IBlockSource source, ItemStack stack){
+			World world = source.getLevel();
+			if(!world.isClientSide()){
+				BlockPos pos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
+				TileEntity te = world.getBlockEntity(pos);
+				if(te instanceof EmbryoLabTileEntity){
+					setSuccess(true);
+					return ((EmbryoLabTileEntity) te).addItem(stack);
+				}
+			}
+			return stack;
+		}
+	};
+
+	public EmbryoLab(){
+		super(CRBlocks.getMetalProperty());
+		String name = "embryo_lab";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
-		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false).setValue(CRProperties.CONTENTS, 0));
+		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false));
 	}
 
 	@Override
 	public TileEntity newBlockEntity(IBlockReader worldIn){
-		return new CultivatorVatTileEntity();
+		return new EmbryoLabTileEntity();
 	}
 
 	@Override
 	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
-		builder.add(CRProperties.ACTIVE, CRProperties.CONTENTS);
+		builder.add(CRProperties.ACTIVE);
 	}
 
 	@Override
 	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
 		TileEntity te;
-		if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) instanceof INamedContainerProvider){
+		if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) instanceof EmbryoLabTileEntity){
+			//Attempt to add the item in the offhand if there is a syringe in the main hand
+			ItemStack held = playerIn.getItemInHand(hand);
+			if(held.getItem() == CRItems.syringe){
+				hand = Hand.OFF_HAND;
+				held = playerIn.getItemInHand(hand);
+
+				ItemStack heldCopy = held.copy();
+				ItemStack result = ((EmbryoLabTileEntity) te).addItem(held);
+				//If the stack changed, assume we did something and shouldn't open the UI
+				if(!BlockUtil.sameItem(result, heldCopy) || result.getCount() != heldCopy.getCount()){
+					playerIn.setItemInHand(hand, result);
+					return ActionResultType.SUCCESS;
+				}
+			}
+
+			//Didn't add an item. Open the UI
 			NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);
 		}
 		return ActionResultType.SUCCESS;
@@ -82,10 +115,10 @@ public class CultivatorVat extends ContainerBlock implements IReadable{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.cultivator_vat.desc"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.cultivator_vat.sustain"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.cultivator_vat.redstone"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.cultivator_vat.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.embryo_lab.desc"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.embryo_lab.ingr"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.embryo_lab.circuit"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.embryo_lab.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override
@@ -100,10 +133,6 @@ public class CultivatorVat extends ContainerBlock implements IReadable{
 
 	@Override
 	public float read(World world, BlockPos pos, BlockState blockState){
-		TileEntity te = world.getBlockEntity(pos);
-		if(te instanceof AbstractNutrientEnvironmentTileEntity){
-			return ((AbstractNutrientEnvironmentTileEntity) te).getRedstone();
-		}
-		return 0;
+		return blockState.getValue(CRProperties.ACTIVE) ? 1 : 0;
 	}
 }

@@ -25,7 +25,7 @@ public interface ICultivatable extends IPerishable{
 		if(!nbt.contains(FROZEN_KEY)){
 			return false;
 		}
-		return nbt.getBoolean(SPOIL_KEY);
+		return nbt.getBoolean(FROZEN_KEY);
 	}
 
 	default ItemStack setWasFrozen(ItemStack stack, boolean frozen){

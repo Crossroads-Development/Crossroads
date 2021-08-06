@@ -36,7 +36,7 @@ import java.util.List;
 public class BloodCentrifuge extends ContainerBlock implements IReadable{
 
 	//TODO shape
-	private static final VoxelShape SHAPE = box(2, 0, 2, 14, 14, 14);
+	private static final VoxelShape SHAPE = box(2, 0, 2, 14, 16, 14);
 
 	public BloodCentrifuge(){
 		super(CRBlocks.getMetalProperty());

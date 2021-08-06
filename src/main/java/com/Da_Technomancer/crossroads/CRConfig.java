@@ -105,11 +105,13 @@ public class CRConfig{
 	public static ForgeConfigSpec.BooleanValue cageMeterOverlay;
 	public static ForgeConfigSpec.DoubleValue beamRaytraceStep;
 	public static ForgeConfigSpec.ConfigValue<List<? extends String>> sedationBlacklist;
+	public static ForgeConfigSpec.ConfigValue<List<? extends String>> cloningBlacklist;
 	public static ForgeConfigSpec.DoubleValue injectionEfficiency;
 	public static ForgeConfigSpec.IntValue injectionPermaPenalty;
 	public static ForgeConfigSpec.IntValue hydroponicsMult;
 	public static ForgeConfigSpec.IntValue respawnDelay;
 	public static ForgeConfigSpec.IntValue respawnPenaltyDuration;
+	public static ForgeConfigSpec.ConfigValue<List<? extends String>> permanentEffectBlacklist;
 
 	private static final ITag<Block> destroyBlacklist = BlockTags.bind(Crossroads.MODID + ":destroy_blacklist");
 
@@ -235,6 +237,8 @@ public class CRConfig{
 		serverBuilder.pop();
 		serverBuilder.push(CAT_WITCHCRAFT);
 		sedationBlacklist = serverBuilder.comment("Specify entities that can not have their AI disabled by sedation. Players can never be fully sedated", "Format of 'domain:entity_id', ex. minecraft:pig").defineList("sedation_blacklist", Lists.newArrayList("minecraft:player", "minecraft:wither", "minecraft:ender_dragon"), (Object entry) -> entry instanceof String);
+		cloningBlacklist = serverBuilder.comment("Specify entities which can not be cloned. Players can never be cloned", "Format of 'domain:entity_id', ex. minecraft:pig").defineList("cloning_blacklist", Lists.newArrayList("minecraft:player", "minecraft:wither", "minecraft:ender_dragon"), (Object entry) -> entry instanceof String);
+		permanentEffectBlacklist = serverBuilder.comment("Specify potion effects that can not be applied permanently to an entity or player", "Format of 'domain:potion_effect_id', ex. minecraft:health_boost").defineList("permanent_effect_blacklist", Lists.newArrayList("minecraft:health_boost"), (Object entry) -> entry instanceof String);
 		injectionEfficiency = serverBuilder.comment("The duration of injected potions vs drinking them", "Setting to 1 or below makes injection equivalent to normal potions").defineInRange("injection_efficiency", 2F, 1F, 100F);
 		injectionPermaPenalty = serverBuilder.comment("The permanent maximum health reduction for each injected permanent potion effect", "Set to 0 or lower to disable the penalty", "Set to 20 or higher to effectively disable permanent injection for players").defineInRange("injection_perma_penalty", 2, 0, 100);
 		hydroponicsMult = serverBuilder.comment("Production/growth speed multiplier for the Hydroponics Trough", "Setting to 0 will effectively disable the machine").defineInRange("hydroponics_mult", 4, 0, 100);

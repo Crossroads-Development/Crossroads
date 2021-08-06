@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.entity.mob_effects;
 
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRNBTIngredient;
@@ -14,7 +15,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import java.util.List;
+
 public class CRPotions{
+
+	//We assume any effect on a mob over this duration was originally a permanent effect; this is not a flawless method
+	public static final int PERM_EFFECT_CUTOFF = Integer.MAX_VALUE / 4;
 
 	public static final Sedation SEDATION_EFFECT = new Sedation();
 	public static final Curative CURATIVE_EFFECT = new Curative();
@@ -77,16 +83,48 @@ public class CRPotions{
 		BrewingRecipeRegistry.addRecipe(Ingredient.of(Items.GLASS_BOTTLE), Ingredient.of(Blocks.ICE), PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER));
 	}
 
+	public static boolean canBePermanentEffect(EffectInstance effect){
+		if(!effect.getEffect().isInstantenous()){
+			//Confirm the effect isn't blacklisted
+			ResourceLocation effectRegistryName = effect.getEffect().getRegistryName();
+			List<? extends String> blacklist = CRConfig.permanentEffectBlacklist.get();
+			return blacklist.stream().noneMatch(entry -> new ResourceLocation(entry).equals(effectRegistryName));
+		}
+		return false;
+	}
+
+	/**
+	 * Determines whether a potion effect can be applied permanently to an entity
+	 * If the effect is already applied permanently, this will return false
+	 * @param target The target entity to apply the effect to
+	 * @param effect The effect to be applied
+	 * @return Whether a new application of the effect can be applied to the target
+	 */
+	public static boolean canBeAppliedPermanentlyToTarget(LivingEntity target, EffectInstance effect){
+		if(canBePermanentEffect(effect)){
+			for(EffectInstance active : target.getActiveEffects()){
+				if(active.getEffect() == effect.getEffect() && active.getAmplifier() >= effect.getAmplifier() && active.getDuration() > PERM_EFFECT_CUTOFF){
+					return false;//This effect already exists in permanent form in an equal or stronger intensity
+				}
+			}
+			return true;//This is a valid effect type and it is not already applied
+		}
+		return false;//Invalid effect type
+	}
+
 	/**
 	 * Applies a non-instantaneous potion effect to be permanent
 	 * Instantaneous effects will have no result
 	 * @param target The entity to apply it to
 	 * @param toApply The effect to apply, but in a permanent form. The passed argument will not be modified
+	 * @return Whether this effect was applied
 	 */
-	public static void applyAsPermanent(LivingEntity target, EffectInstance toApply){
-		if(!toApply.getEffect().isInstantenous()){
+	public static boolean applyAsPermanent(LivingEntity target, EffectInstance toApply){
+		if(canBeAppliedPermanentlyToTarget(target, toApply)){
 			//'Permanent' is actually maximum duration, which is ~3.4 years ingame
 			target.addEffect(new EffectInstance(toApply.getEffect(), Integer.MAX_VALUE, toApply.getAmplifier(), toApply.isAmbient(), toApply.isVisible(), toApply.showIcon()));
+			return true;
 		}
+		return false;
 	}
 }

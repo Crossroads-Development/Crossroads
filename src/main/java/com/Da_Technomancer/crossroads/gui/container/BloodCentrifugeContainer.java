@@ -27,12 +27,12 @@ public class BloodCentrifugeContainer extends MachineContainer<BloodCentrifugeTi
 	@Override
 	protected void addSlots(){
 		// input 0
-		addSlot(new StrictSlot(te, 0, 25, 18));
+		addSlot(new StrictSlot(te, 0, 25, 36));
 		// input 1
-		addSlot(new StrictSlot(te, 1, 25, 36));
+		addSlot(new StrictSlot(te, 1, 25, 54));
 		// output 2
-		addSlot(new OutputSlot(te, 2, 125, 18));
+		addSlot(new OutputSlot(te, 2, 125, 36));
 		// output 3
-		addSlot(new OutputSlot(te, 3, 125, 36));
+		addSlot(new OutputSlot(te, 3, 125, 54));
 	}
 }

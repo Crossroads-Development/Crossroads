@@ -93,7 +93,8 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 		}
 
 		verifyTradeCache();
-		if(activeTrade != null && RedstoneUtil.getRedstoneAtPos(level, worldPosition) == 0){
+		//Only run if we have fluid and there isn't a redstone signal
+		if(activeTrade != null && RedstoneUtil.getRedstoneAtPos(level, worldPosition) == 0 && !fluids[0].isEmpty()){
 			progress += 1;
 			if(progress >= REQUIRED_PROGRESS){
 				progress = 0;

@@ -226,10 +226,10 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && side == null && globalFluidOpt != null){
 			return (LazyOptional<T>) globalFluidOpt;
 		}
-		if(cap == Capabilities.HEAT_CAPABILITY && side == null){
+		if(cap == Capabilities.HEAT_CAPABILITY && side == null && useHeat()){
 			return (LazyOptional<T>) heatOpt;
 		}
-		if(cap == Capabilities.AXLE_CAPABILITY && side == null){
+		if(cap == Capabilities.AXLE_CAPABILITY && side == null && useRotary()){
 			return (LazyOptional<T>) axleOpt;
 		}
 		return super.getCapability(cap, side);
