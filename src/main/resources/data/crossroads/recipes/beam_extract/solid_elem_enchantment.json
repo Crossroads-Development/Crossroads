@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:beam_extract",
+	"input": {
+		"tag": "crossroads:dusts/elem_enchantment"
+	},
+	"energy": 24,
+	"potential": 24,
+	"stability": 16,
+	"duration": 5
+}

@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "witchcraft",
+	"result": {
+		"item": "crossroads:stasis_storage",
+		"count": 1
+	},
+	"pattern": [
+		"CVC",
+		"CFC",
+		"CVC"
+	],
+	"key": {
+		"V": {
+			"tag": "crossroads:gems/void"
+		},
+		"C": {
+			"tag": "crossroads:ingots/copshowium"
+		},
+		"F": {
+			"item": "crossroads:cold_storage"
+		}
+	}
+}

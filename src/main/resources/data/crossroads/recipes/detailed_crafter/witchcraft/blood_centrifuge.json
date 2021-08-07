@@ -1,0 +1,27 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "witchcraft",
+	"result": {
+		"item": "crossroads:blood_centrifuge",
+		"count": 1
+	},
+	"pattern": [
+		" A ",
+		"GBG",
+		"SSS"
+	],
+	"key": {
+		"A": {
+			"item": "crossroads:axle"
+		},
+		"G": {
+			"tag": "forge:glass/colorless"
+		},
+		"B": {
+			"item": "crossroads:water_centrifuge"
+		},
+		"S": {
+			"item": "minecraft:smooth_stone"
+		}
+	}
+}

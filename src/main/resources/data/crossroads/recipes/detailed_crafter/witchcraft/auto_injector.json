@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "witchcraft",
+	"result": {
+		"item": "crossroads:auto_injector",
+		"count": 1
+	},
+	"pattern": [
+		"III",
+		"IDI",
+		"ISI"
+	],
+	"key": {
+		"I": {
+			"tag": "forge:ingots/bronze"
+		},
+		"D": {
+			"item": "minecraft:dispenser"
+		},
+		"S": {
+			"item": "crossroads:syringe"
+		}
+	}
+}

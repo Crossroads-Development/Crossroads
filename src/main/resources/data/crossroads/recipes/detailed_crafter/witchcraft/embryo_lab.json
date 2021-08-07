@@ -1,0 +1,21 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "witchcraft",
+	"result": {
+		"item": "crossroads:embryo_lab",
+		"count": 1
+	},
+	"pattern": [
+		" C ",
+		"G G",
+		"CCC"
+	],
+	"key": {
+		"C": {
+			"tag": "forge:ingots/copper"
+		},
+		"G": {
+			"tag": "forge:glass/colorless"
+		}
+	}
+}

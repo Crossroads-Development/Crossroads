@@ -1,7 +1,6 @@
 {
 	"parent": "crossroads:block/wheezewort_bottom_23",
 	"textures": {
-		"side": "crossroads:block/wip",
-		"top": "crossroads:block/wip"
+		"side": "crossroads:block/wheezewort_3_side"
 	}
 }

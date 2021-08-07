@@ -1,17 +1,17 @@
 {   "parent": "block/block",
 	"ambientocclusion": false,
 	"textures": {
-		"particle": "crossroads:block/wip",
-		"bottom": "crossroads:block/wip",
-		"top": "crossroads:block/wip",
-		"side": "crossroads:block/wip"
+		"particle": "crossroads:block/petrol_cactus_side",
+		"bottom": "crossroads:block/petrol_cactus_bottom",
+		"top": "crossroads:block/petrol_cactus_top",
+		"side": "crossroads:block/petrol_cactus_side"
 	},
 	"elements": [
-		{   "from": [ 0, 0, 0 ],
-			"to": [ 16, 16, 16 ],
+		{   "from": [ 1, 0, 1 ],
+			"to": [ 15, 16, 15 ],
 			"faces": {
-				"down": { "uv": [ 0, 0, 16, 16 ], "texture": "#bottom", "cullface": "down" },
-				"up":   { "uv": [ 0, 0, 16, 16 ], "texture": "#top", "cullface": "up" }
+				"down": { "uv": [ 1, 1, 15, 15 ], "texture": "#bottom", "cullface": "down" },
+				"up":   { "uv": [ 1, 1, 15, 15 ], "texture": "#top", "cullface": "up" }
 			}
 		},
 		{   "from": [ 0, 0, 1 ],

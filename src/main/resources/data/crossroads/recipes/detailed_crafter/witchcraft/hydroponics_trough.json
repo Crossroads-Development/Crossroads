@@ -1,0 +1,26 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "witchcraft",
+	"result": {
+		"item": "crossroads:hydroponics_trough",
+		"count": 1
+	},
+	"pattern": [
+		"FBF",
+		"tTt"
+	],
+	"key": {
+		"T": {
+			"tag": "forge:storage_blocks/tin"
+		},
+		"t": {
+			"tag": "forge:ingots/tin"
+		},
+		"F": {
+			"item": "crossroads:fluid_tube"
+		},
+		"B": {
+			"item": "minecraft:bone_meal"
+		}
+	}
+}

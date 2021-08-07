@@ -49,7 +49,7 @@ public class PetrolCactus extends CactusBlock{
 
 	@Override
 	public boolean canSustainPlant(BlockState state, IBlockReader world, BlockPos pos, Direction facing, net.minecraftforge.common.IPlantable plantable){
-		return state.is(this) || state.is(Blocks.SAND) || state.is(Blocks.RED_SAND);
+		return plantable == this && (state.is(this) || state.is(Blocks.SAND) || state.is(Blocks.RED_SAND));
 	}
 
 	@Override

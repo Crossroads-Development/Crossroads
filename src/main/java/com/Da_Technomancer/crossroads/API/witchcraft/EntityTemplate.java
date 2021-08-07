@@ -278,19 +278,27 @@ public class EntityTemplate implements INBTSerializable<CompoundNBT>{
 			}
 
 			//Loyalty
-			if(template.isLoyal() && player != null){
-				//There isn't a single method for this. The correct way to set something as tamed varies based on the mob
-				//New vanilla tamable mobs may require changes here, and modded tameable mobs are unlikely to work
-				if(created instanceof TameableEntity){
-					((TameableEntity) created).tame(player);
-				}else if(created instanceof AbstractHorseEntity){
-					((AbstractHorseEntity) created).tameWithName(player);
-				}else if(created instanceof MobEntity && OFFSPRING_SPAWNING_METHOD != null){
-					//As of vanilla MC1.16.5, this is literally only applicable to foxes
-					try{
-						OFFSPRING_SPAWNING_METHOD.invoke(created, player, created);
-					}catch(IllegalAccessException | InvocationTargetException e){
-						Crossroads.logger.catching(e);
+			if(template.isLoyal()){
+				//Prevent despawning
+				if(created instanceof MobEntity){
+					((MobEntity) created).setPersistenceRequired();
+				}
+
+				//Auto-tame it to the player who spawned it
+				if(player != null){
+					//There isn't a single method for this. The correct way to set something as tamed varies based on the mob
+					//New vanilla tamable mobs may require changes here, and modded tameable mobs are unlikely to work
+					if(created instanceof TameableEntity){
+						((TameableEntity) created).tame(player);
+					}else if(created instanceof AbstractHorseEntity){
+						((AbstractHorseEntity) created).tameWithName(player);
+					}else if(created instanceof MobEntity && OFFSPRING_SPAWNING_METHOD != null){
+						//As of vanilla MC1.16.5, this is literally only applicable to foxes
+						try{
+							OFFSPRING_SPAWNING_METHOD.invoke(created, player, created);
+						}catch(IllegalAccessException | InvocationTargetException e){
+							Crossroads.logger.catching(e);
+						}
 					}
 				}
 			}

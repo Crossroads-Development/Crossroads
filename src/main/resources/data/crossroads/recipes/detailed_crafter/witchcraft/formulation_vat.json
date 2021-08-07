@@ -1,0 +1,27 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "witchcraft",
+	"result": {
+		"item": "crossroads:formulation_vat",
+		"count": 1
+	},
+	"pattern": [
+		"ICI",
+		"IBI",
+		"ISI"
+	],
+	"key": {
+		"I": {
+			"tag": "forge:ingots/iron"
+		},
+		"C": {
+			"tag": "forge:ingots/copper"
+		},
+		"B": {
+			"item": "crossroads:salt_reactor"
+		},
+		"S": {
+			"item": "minecraft:cauldron"
+		}
+	}
+}

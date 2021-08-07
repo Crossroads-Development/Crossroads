@@ -1,0 +1,10 @@
+{
+	"type": "minecraft:smelting",
+	"result": "crossroads:blood_sample_empty",
+	"experience": 0.1,
+	"ingredient": [
+		{
+			"item": "crossroads:separated_blood_sample"
+		}
+	]
+}

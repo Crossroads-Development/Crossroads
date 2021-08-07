@@ -70,6 +70,7 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 		CROPS.put(Items.SWEET_BERRIES, Triple.of(true, 2, new ItemStack[] {new ItemStack(Items.SWEET_BERRIES)}));
 		CROPS.put(Items.NETHER_WART, Triple.of(false, 3, new ItemStack[] {new ItemStack(Items.NETHER_WART, 2)}));
 		CROPS.put(Items.SEAGRASS, Triple.of(false, 7, new ItemStack[] {new ItemStack(Items.SEAGRASS)}));
+		CROPS.put(Items.KELP, Triple.of(false, 3, new ItemStack[] {new ItemStack(Items.KELP)}));
 		CROPS.put(Items.BROWN_MUSHROOM, Triple.of(false, 5, new ItemStack[] {new ItemStack(Items.BROWN_MUSHROOM)}));
 		CROPS.put(Items.RED_MUSHROOM, Triple.of(false, 5, new ItemStack[] {new ItemStack(Items.RED_MUSHROOM)}));
 		CROPS.put(Items.CRIMSON_FUNGUS, Triple.of(false, 5, new ItemStack[] {new ItemStack(Items.CRIMSON_FUNGUS)}));
@@ -77,7 +78,7 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 		CROPS.put(Items.LILY_PAD, Triple.of(true, 7, new ItemStack[] {new ItemStack(Items.LILY_PAD)}));
 		CROPS.put(CRBlocks.medicinalMushroom.asItem(), Triple.of(false, 5, new ItemStack[] {new ItemStack(CRBlocks.medicinalMushroom)}));
 		CROPS.put(CRBlocks.petrolCactus.asItem(), Triple.of(true, 2, new ItemStack[] {new ItemStack(CRBlocks.petrolCactus)}));
-		CROPS.put(CRItems.wheezewortSeeds, Triple.of(false, 15, new ItemStack[] {new ItemStack(CRBlocks.wheezewort)}));
+		CROPS.put(CRItems.wheezewortSeeds, Triple.of(false, 15, new ItemStack[] {new ItemStack(CRItems.wheezewortSeeds)}));
 	}
 
 	private int progress = 0;
@@ -255,10 +256,10 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != Direction.UP){
 			return (LazyOptional<T>) itemOpt;
 		}
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != Direction.UP){
 			return (LazyOptional<T>) globalFluidOpt;
 		}
 

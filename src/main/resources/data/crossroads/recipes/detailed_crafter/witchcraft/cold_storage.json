@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "witchcraft",
+	"result": {
+		"item": "crossroads:cold_storage",
+		"count": 1
+	},
+	"pattern": [
+		"III",
+		"CBC",
+		"III"
+	],
+	"key": {
+		"I": {
+			"tag": "forge:ingots/iron"
+		},
+		"C": {
+			"tag": "forge:ingots/copper"
+		},
+		"B": {
+			"tag": "forge:chests"
+		}
+	}
+}

@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "witchcraft",
+	"result": {
+		"item": "crossroads:medicinal_mushroom",
+		"count": 1
+	},
+	"pattern": [
+		"SWS",
+		"WMW",
+		"SWS"
+	],
+	"key": {
+		"M": {
+			"item": "minecraft:red_mushroom"
+		},
+		"S": {
+			"tag": "forge:slimeballs"
+		},
+		"W": {
+			"tag": "forge:crops/nether_wart"
+		}
+	}
+}

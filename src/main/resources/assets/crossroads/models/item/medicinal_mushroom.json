@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "crossroads:item/medicinal_mushroom"
+		"layer0": "crossroads:block/medicinal_mushroom"
 	}
 }

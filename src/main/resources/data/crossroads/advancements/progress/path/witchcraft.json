@@ -2,7 +2,8 @@
 	"parent": "crossroads:progress/path/technomancy",
 	"display": {
 		"icon": {
-			"item": "minecraft:stick"
+			"item": "crossroads:syringe",
+			"nbt": "{extension_treated:true}"
 		},
 		"title": {
 			"translate": "crossroads.advancement.path.witchcraft"

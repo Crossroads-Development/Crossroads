@@ -50,6 +50,7 @@ public class JEICrossroadsPlugin implements IModPlugin{
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.beamExtractor, 1), BeamExtractorCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.beamReflector, 1), BeamTransmuteCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.detailedCrafter, 1), DetailedCrafterCategory.ID);
+		registry.addRecipeCatalyst(new ItemStack(CRBlocks.detailedAutoCrafter, 1), DetailedCrafterCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.reactionChamberGlass, 1), AlchemyCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.reactionChamberCrystal, 1), AlchemyCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.glasswareHolder, 1), AlchemyCategory.ID);

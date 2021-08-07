@@ -1,0 +1,23 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "witchcraft",
+	"result": {
+		"item": "crossroads:blood_sample_empty",
+		"count": 1
+	},
+	"pattern": [
+		" S ",
+		"PGP"
+	],
+	"key": {
+		"S": {
+			"tag": "forge:string"
+		},
+		"G": {
+			"tag": "forge:glass/colorless"
+		},
+		"P": {
+			"item": "minecraft:paper"
+		}
+	}
+}

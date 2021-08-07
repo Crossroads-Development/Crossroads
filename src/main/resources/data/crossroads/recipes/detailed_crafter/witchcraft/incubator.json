@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "witchcraft",
+	"result": {
+		"item": "crossroads:incubator",
+		"count": 1
+	},
+	"pattern": [
+		"BCB",
+		"B B",
+		"SSS"
+	],
+	"key": {
+		"C": {
+			"tag": "forge:ingots/copper"
+		},
+		"B": {
+			"item": "minecraft:bricks"
+		},
+		"S": {
+			"item": "minecraft:hay_block"
+		}
+	}
+}

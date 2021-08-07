@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "witchcraft",
+	"result": {
+		"item": "crossroads:petrol_cactus",
+		"count": 1
+	},
+	"pattern": [
+		"KBK",
+		"BCB",
+		"KBK"
+	],
+	"key": {
+		"C": {
+			"item": "minecraft:cactus"
+		},
+		"K": {
+			"item": "minecraft:coal"
+		},
+		"B": {
+			"tag": "forge:gunpowder"
+		}
+	}
+}

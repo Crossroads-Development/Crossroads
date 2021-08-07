@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "witchcraft",
+	"result": {
+		"item": "crossroads:wheezewort_seeds",
+		"count": 1
+	},
+	"pattern": [
+		"IPI",
+		"PSP",
+		"IPI"
+	],
+	"key": {
+		"S": {
+			"item": "minecraft:wheat_seeds"
+		},
+		"I": {
+			"tag": "crossroads:pure_ice"
+		},
+		"P": {
+			"item": "minecraft:porkchop"
+		}
+	}
+}

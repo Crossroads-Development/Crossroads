@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"item": "crossroads:petrol_cactus"
+	},
+	"output": [
+		{
+			"item": "black_dye",
+			"count": 1
+		}
+	]
+}

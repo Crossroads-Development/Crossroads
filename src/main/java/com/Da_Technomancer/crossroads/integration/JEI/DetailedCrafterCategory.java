@@ -30,7 +30,7 @@ public class DetailedCrafterCategory implements IRecipeCategory<DetailedCrafterR
 
 	protected DetailedCrafterCategory(IGuiHelper guiHelper){
 		ResourceLocation location = new ResourceLocation(Crossroads.MODID, "textures/gui/container/detailed_crafter.png");
-		back = guiHelper.createDrawable(location, 29, 16, 125, 60);
+		back = guiHelper.createDrawable(location, 29, 16, 129, 62);
 		icon = guiHelper.createDrawableIngredient(new ItemStack(CRBlocks.detailedCrafter, 1));
 		gear = guiHelper.createDrawable(location, 176, 0, 16, 16);
 		flask = guiHelper.createDrawable(location, 176, 16, 16, 16);

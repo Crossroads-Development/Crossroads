@@ -1,0 +1,27 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "witchcraft",
+	"result": {
+		"item": "crossroads:brewing_vat",
+		"count": 1
+	},
+	"pattern": [
+		"ICI",
+		"IBI",
+		"ISI"
+	],
+	"key": {
+		"I": {
+			"tag": "forge:ingots/bronze"
+		},
+		"C": {
+			"tag": "forge:ingots/copper"
+		},
+		"B": {
+			"item": "minecraft:brewing_stand"
+		},
+		"S": {
+			"item": "minecraft:cauldron"
+		}
+	}
+}
