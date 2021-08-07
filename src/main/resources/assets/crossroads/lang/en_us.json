@@ -771,7 +771,7 @@
 	"tt.crossroads.cultivator_vat.quip": "I sure hope living brains in jars don't get rights",
 	"tt.crossroads.incubator.target": "Target temperature: %2$f-%3$f°C (centered at %1$f°C)",
 	"tt.crossroads.incubator.desc": "Combines embryos and eggs to make spawn eggs",
-	"tt.crossroads.incubator.heating": "Requires between %1$f-%2$f°C; Extremely slow unless within %1$f°C of the target temperature",
+	"tt.crossroads.incubator.heating": "Requires between %1$f-%2$f°C; Extremely slow unless within %3$f°C of the target temperature",
 	"tt.crossroads.incubator.redstone": "Circuits read the target temperature, which changes with every craft",
 	"tt.crossroads.blood_centrifuge.deviation": "Average Deviation: %1$d",
 	"tt.crossroads.blood_centrifuge.desc": "Processes Blood Pouches into Centrifuged Blood Pouches, requiring speeds up to %1$frad/s",

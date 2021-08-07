@@ -86,7 +86,7 @@ public class EmbryoLab extends ContainerBlock implements IReadable{
 				ItemStack heldCopy = held.copy();
 				ItemStack result = ((EmbryoLabTileEntity) te).addItem(held);
 				//If the stack changed, assume we did something and shouldn't open the UI
-				if(!BlockUtil.sameItem(result, heldCopy) || result.getCount() != heldCopy.getCount()){
+				if(!held.isEmpty() && (!BlockUtil.sameItem(result, heldCopy) || result.getCount() != heldCopy.getCount())){
 					playerIn.setItemInHand(hand, result);
 					return ActionResultType.SUCCESS;
 				}

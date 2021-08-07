@@ -139,7 +139,7 @@ public class EntityGhostMarker extends Entity{
 			int penaltyTime = CRConfig.respawnPenaltyDuration.get() * 20;//Converted to ticks from seconds
 			EntityTemplate template = new EntityTemplate();
 			if(marker.data != null && !marker.level.isClientSide){
-				template.deserializeNBT(marker.data.getCompound(EntityTemplate.RESPAWNING_KEY));
+				template.deserializeNBT(marker.data);
 				Entity created = EntityTemplate.spawnEntityFromTemplate(template, (ServerWorld) marker.level, marker.blockPosition(), SpawnReason.COMMAND, false, false, null, null);
 				if(created instanceof LivingEntity){
 					LivingEntity entity = (LivingEntity) created;
@@ -148,7 +148,7 @@ public class EntityGhostMarker extends Entity{
 					entity.addEffect(new EffectInstance(EntityTemplate.getRespawnMarkerEffect(), penaltyTime));
 				}
 			}
-		}, () -> ParticleTypes.TOTEM_OF_UNDYING);//TODO test that there isn't weird tracking on the particle
+		}, () -> ParticleTypes.TOTEM_OF_UNDYING);
 		private final int defaultLifespan;
 		private final Consumer<EntityGhostMarker> expireEffect;
 		@Nullable

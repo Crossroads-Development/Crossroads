@@ -315,7 +315,7 @@ public class EntityTemplate implements INBTSerializable<CompoundNBT>{
 		for(EffectInstance instance : effects){
 			if(CRPotions.HEALTH_PENALTY_EFFECT.getRegistryName().equals(instance.getEffect().getRegistryName())){
 				//This is the health penalty, interpret as degradation
-				degrade += instance.getAmplifier() + 1;
+				degrade += (instance.getAmplifier() + 1) / 2;//We divide by 2, as degradation is measured in hearts
 			}else if(!instance.getEffect().isInstantenous() && instance.getDuration() > CRPotions.PERM_EFFECT_CUTOFF){
 				permanentEffects.add(new EffectInstance(instance));//Copy the value to prevent changes in the mutable instance
 			}
