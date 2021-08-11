@@ -25,6 +25,7 @@ public class CRPotions{
 	public static final Sedation SEDATION_EFFECT = new Sedation();
 	public static final Curative CURATIVE_EFFECT = new Curative();
 	public static final HealthPenalty HEALTH_PENALTY_EFFECT = new HealthPenalty();
+	public static final Transient TRANSIENT_EFFECT = new Transient();
 
 	public static final Potion POTION_SEDATION = new Potion("sedation", new EffectInstance(SEDATION_EFFECT, 3600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "sedation"));
 	public static final Potion POTION_SEDATION_LONG = new Potion("sedation", new EffectInstance(SEDATION_EFFECT, 9600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "long_sedation"));
@@ -33,11 +34,14 @@ public class CRPotions{
 	public static final Potion POTION_NAUSEA_LONG = new Potion("nausea", new EffectInstance(Effects.CONFUSION, 9600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "long_nausea"));
 	public static final Potion POTION_BLINDNESS = new Potion("blindness", new EffectInstance(Effects.BLINDNESS, 3600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "blindness"));
 	public static final Potion POTION_BLINDNESS_LONG = new Potion("blindness", new EffectInstance(Effects.BLINDNESS, 9600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "long_blindness"));
+	public static final Potion POTION_TRANSIENT = new Potion("transient", new EffectInstance(TRANSIENT_EFFECT, 3600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "transient"));
+	public static final Potion POTION_TRANSIENT_LONG = new Potion("transient", new EffectInstance(TRANSIENT_EFFECT, 9600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "long_transient"));
 
 	public static void registerEffects(IForgeRegistry<Effect> reg){
 		reg.register(SEDATION_EFFECT);
 		reg.register(CURATIVE_EFFECT);
 		reg.register(HEALTH_PENALTY_EFFECT);
+		reg.register(TRANSIENT_EFFECT);
 	}
 
 	public static void registerPotions(IForgeRegistry<Potion> reg){
@@ -48,6 +52,8 @@ public class CRPotions{
 		reg.register(POTION_NAUSEA_LONG);
 		reg.register(POTION_BLINDNESS);
 		reg.register(POTION_BLINDNESS_LONG);
+		reg.register(POTION_TRANSIENT);
+		reg.register(POTION_TRANSIENT_LONG);
 
 		registerPotionRecipes();
 	}
@@ -79,6 +85,13 @@ public class CRPotions{
 		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_BLINDNESS)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_BLINDNESS_LONG));
 		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), POTION_BLINDNESS)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), POTION_BLINDNESS_LONG));
 		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), POTION_BLINDNESS)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), POTION_BLINDNESS_LONG));
+		//Transient
+		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.AWKWARD)), Ingredient.of(new ItemStack(CRItems.soulCluster)), PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_TRANSIENT));
+		//Extend transient
+		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_TRANSIENT)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_TRANSIENT_LONG));
+		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), POTION_TRANSIENT)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), POTION_TRANSIENT_LONG));
+		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), POTION_TRANSIENT)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), POTION_TRANSIENT_LONG));
+
 		//Filling empty bottles
 		BrewingRecipeRegistry.addRecipe(Ingredient.of(Items.GLASS_BOTTLE), Ingredient.of(Blocks.ICE), PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER));
 	}

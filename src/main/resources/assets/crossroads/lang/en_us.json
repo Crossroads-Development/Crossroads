@@ -272,6 +272,7 @@
 	"block.crossroads.wheezewort": "Wheezewort",
 	"item.crossroads.wheezewort_seeds": "Wheezewort Seed",
 	"item.crossroads.soul_cluster": "Crystallized Soul Cluster",
+	"item.crossroads.soul_shard": "Crystallized Soul Shard",
 	"block.crossroads.stasis_storage": "Stasis Box",
 	"block.crossroads.cultivator_vat": "Nutrition Vat",
 	"item.crossroads.embryo": "Embryo",
@@ -310,6 +311,10 @@
 	"item.minecraft.splash_potion.effect.blindness": "Splash Potion of Blindness",
 	"item.minecraft.lingering_potion.effect.blindness": "Lingering Potion of Blindness",
 	"item.minecraft.tipped_arrow.effect.blindness": "Arrow of Blindness",
+	"item.minecraft.potion.effect.transient": "Potion of Soul Transience",
+	"item.minecraft.splash_potion.effect.transient": "Splash Potion of Soul Transience",
+	"item.minecraft.lingering_potion.effect.transient": "Lingering Potion of Soul Transience",
+	"item.minecraft.tipped_arrow.effect.transient": "Arrow of Soul Transience",
 
 	"item.crossroads.ore_gravel": "Raw %1$s Grit",
 	"item.crossroads.ore_clump": "%1$s Clump",
@@ -762,6 +767,7 @@
 	"tt.crossroads.wheezewort.dispense": "Can be planted by dispensers",
 	"tt.crossroads.wheezewort.quip": "It's made of meat?",
 	"tt.crossroads.soul_cluster": "Both a fuel and a source of cold",
+	"tt.crossroads.soul_cluster.small": "Dropped by mobs with Soul Transience",
 	"tt.crossroads.stasis_storage.desc": "Prevents perishables from spoiling, without needing to freeze them",
 	"tt.crossroads.stasis_storage.reverse": "Time beams un-age the contents, at a rate equal to beam power",
 	"tt.crossroads.stasis_storage.redstone": "Circuits read freshness time remaining of the contents (in seconds)",
@@ -1034,6 +1040,6 @@
 
 	"effect.crossroads.sedation": "Sedation",
 	"effect.crossroads.curative": "Neutralization",
-	"effect.crossroads.health_penalty": "Genetic Strain"
-
+	"effect.crossroads.health_penalty": "Genetic Strain",
+	"effect.crossroads.transient": "Soul Transience"
 }

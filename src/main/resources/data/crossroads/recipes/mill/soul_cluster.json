@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"item": "crossroads:soul_cluster"
+	},
+	"output": [
+		{
+			"item": "crossroads:soul_shard",
+			"count": 8
+		}
+	]
+}

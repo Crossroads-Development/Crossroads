@@ -13,7 +13,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -308,7 +307,7 @@ public class EntityTemplate implements INBTSerializable<CompoundNBT>{
 	}
 
 	public static Effect getRespawnMarkerEffect(){
-		return Effects.GLOWING;
+		return CRPotions.TRANSIENT_EFFECT;
 	}
 
 	public static EntityTemplate getTemplateFromEntity(LivingEntity source){

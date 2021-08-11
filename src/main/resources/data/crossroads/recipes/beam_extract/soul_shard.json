@@ -1,9 +1,9 @@
 {
 	"type": "crossroads:beam_extract",
 	"input": {
-		"item": "crossroads:soul_cluster"
+		"item": "crossroads:soul_shard"
 	},
 	"potential" : 16,
 	"void": 16,
-	"duration": 40
+	"duration": 5
 }

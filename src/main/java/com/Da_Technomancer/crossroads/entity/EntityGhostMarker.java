@@ -145,6 +145,7 @@ public class EntityGhostMarker extends Entity{
 					LivingEntity entity = (LivingEntity) created;
 					entity.addEffect(new EffectInstance(Effects.WEAKNESS, penaltyTime));
 					entity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, penaltyTime));
+					entity.addEffect(new EffectInstance(Effects.GLOWING, penaltyTime));
 					entity.addEffect(new EffectInstance(EntityTemplate.getRespawnMarkerEffect(), penaltyTime));
 				}
 			}

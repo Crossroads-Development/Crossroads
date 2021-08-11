@@ -135,6 +135,7 @@ public final class CRItems{
 	public static Item mushroomDust;
 	public static WheezewortSeeds wheezewortSeeds;
 	public static SoulCluster soulCluster;
+	public static SoulCluster soulShard;
 	public static Embryo embryo;
 	public static GeneticSpawnEgg geneticSpawnEgg;
 
@@ -258,7 +259,8 @@ public final class CRItems{
 		syringe = new Syringe();
 		toRegister.add(mushroomDust = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("mushroom_dust"));
 		wheezewortSeeds = new WheezewortSeeds();
-		soulCluster = new SoulCluster();
+		soulCluster = new SoulCluster(true);
+		soulShard = new SoulCluster(false);
 		embryo = new Embryo();
 		geneticSpawnEgg = new GeneticSpawnEgg();
 	}

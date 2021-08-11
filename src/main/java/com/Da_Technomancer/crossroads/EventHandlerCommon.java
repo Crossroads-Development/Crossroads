@@ -8,16 +8,21 @@ import com.Da_Technomancer.crossroads.API.technomancy.RespawnInventorySavedData;
 import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
+import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.crossroads.items.technomancy.TechnomancyArmor;
 import com.Da_Technomancer.crossroads.world.CRWorldGen;
 import com.Da_Technomancer.essentials.ReflectionUtil;
+import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.LightningBoltEntity;
+import net.minecraft.entity.item.ArmorStandEntity;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.passive.horse.SkeletonHorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -42,10 +47,7 @@ import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
@@ -462,6 +464,30 @@ public final class EventHandlerCommon{
 				marker.setPos(entity.getX(), entity.getY(), entity.getZ());
 				marker.data = template.serializeNBT();
 				entity.level.addFreshEntity(marker);
+			}
+		}
+	}
+
+	@SubscribeEvent()
+	@SuppressWarnings("unused")
+	public void dropSouls(LivingDropsEvent e){
+		LivingEntity ent = e.getEntityLiving();
+		if(!ent.level.isClientSide && ent.hasEffect(CRPotions.TRANSIENT_EFFECT)){
+			//Drop count is based on entity type
+			int soulCount;
+
+			//Players and 'fake' living drop no souls (anti-exploit)
+			if(ent instanceof PlayerEntity || ent instanceof ArmorStandEntity){
+				soulCount = 0;
+			}else if(ent.getMobType() == CreatureAttribute.UNDEAD){
+				soulCount = 1;//Undead give 1
+			}else if(ent instanceof AbstractVillagerEntity || ent.getMobType() == CreatureAttribute.ILLAGER){
+				soulCount = 8;//'People' type creatures give a full soul cluster worth
+			}else{
+				soulCount = 2;//Most things give 2
+			}
+			if(soulCount > 0){
+				e.getDrops().add(new ItemEntity(ent.level, ent.getX(), ent.getY(), ent.getZ(), new ItemStack(CRItems.soulShard, soulCount)));
 			}
 		}
 	}

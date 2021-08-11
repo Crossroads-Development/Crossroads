@@ -1,0 +1,7 @@
+{
+	"type": "crossroads:cooling",
+	"fuel": {
+		"item": "crossroads:soul_shard"
+	},
+	"cooling": 50
+}

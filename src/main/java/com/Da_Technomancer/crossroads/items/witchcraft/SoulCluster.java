@@ -13,20 +13,26 @@ import java.util.List;
 
 public class SoulCluster extends Item{
 
-	public SoulCluster(){
+	private final boolean large;
+
+	public SoulCluster(boolean large){
 		super(new Item.Properties().tab(CRItems.TAB_CROSSROADS));
-		String name = "soul_cluster";
+		this.large = large;
+		String name = large ? "soul_cluster" : "soul_shard";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
 	}
 
 	@Override
 	public int getBurnTime(ItemStack itemStack){
-		return 1600;
+		return large ? 1600 : 200;
 	}
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.soul_cluster"));
+		if(!large){
+			tooltip.add(new TranslationTextComponent("tt.crossroads.soul_cluster.small"));
+		}
 	}
 }
