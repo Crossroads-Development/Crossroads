@@ -673,9 +673,6 @@
 	"tt.crossroads.whirligig.desc": "Provides slowfall and even flight if wound in a Spring Winding Table",
 	"tt.crossroads.whirligig.elevate": "Elevates the player when Spring Speed is above %1$frad/s",
 	"tt.crossroads.whirligig.quip": "Chim-Chim-iney",
-	"tt.crossroads.jei.reag.amount.single": "%1$d Part",
-	"tt.crossroads.jei.reag.amount.plural": "%1$d Parts",
-	"tt.crossroads.jei.reag.id": "ID: %1$s",
 	"tt.crossroads.pig_zombie_chestplate.quip": "We've got to be in Cognito",
 	"tt.crossroads.redstone_crystal.drops": "Drops 1-4 redstone dust",
 	"tt.crossroads.redstone_crystal.power": "Emits a redstone signal",
@@ -1007,6 +1004,11 @@
 	"crossroads.jei.reagent.effect": "Effect: %1$s",
 	"crossroads.jei.reagent.crystal": "Must be contained in crystal",
 	"crossroads.jei.copshowium.flux": "Produces Temporal Entropy",
+	"tt.crossroads.jei.reag.amount.single": "%1$d Part",
+	"tt.crossroads.jei.reag.amount.plural": "%1$d Parts",
+	"tt.crossroads.jei.reag.id": "ID: %1$s",
+	"crossroads.jei.icebox.total": "Total cooling: %1$d°C",
+	"crossroads.jei.icebox.duration": "Cooling time: %1$d ticks",
 
 
 	"crossroads.advancement.root": "Crossroads",
