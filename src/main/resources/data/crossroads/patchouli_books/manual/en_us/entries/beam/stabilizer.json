@@ -14,7 +14,11 @@
 		},
 		{
 			"type": "text",
-			"text": "them slowly over time. The power of the emitted beam can be configured by shift-clicking with a <item>$(l:essentials/wrench)wrench/$.$(br2)This has the effect of spreading large beams out into a continuous beam of constant power.$(br2)<item>$(l:essentials/circuits#reader)Circuits/$ measure the total stored <thing>$(l:crossroads:intro/beam)power/$.$(br2)"
+			"text": "them slowly over time. The power of the emitted beam can be configured by shift-clicking with a <item>$(l:essentials/wrench)wrench/$.$(br2)This has the effect of spreading large beams out into a continuous beam of constant power. It has a total capacity of 1024 power.$(br2)It attempts to output the same color as the stored beam, but "
+		},
+		{
+			"type": "text",
+			"text": "there may be small color-mismatches due to rounding. $(br2)<item>$(l:essentials/circuits#reader)Circuits/$ measure the total stored <thing>$(l:crossroads:intro/beam)power/$.$(br2)"
 		}
 	]
 }

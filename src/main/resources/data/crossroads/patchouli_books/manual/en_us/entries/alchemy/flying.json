@@ -11,7 +11,7 @@
 			"type": "spotlight",
 			"title": "Flying Machine",
 			"item": "crossroads:flying_machine",
-			"text": "The <item>Flying Machine/$ is a vehicle that flies. The item is placed down similarly to a boat or minecart, and mounted.$(br2)The <item>flying machine/$ will move in the horizontal direction the player is looking. The player can 'steer' by pressing the 'w' and 'a' keys to rotate "
+			"text": "The <item>Flying Machine/$ is a vehicle that flies. The item is placed down similarly to a boat or minecart, and mounted.$(br2)The <item>flying machine/$ will move in the horizontal direction the player is looking. The player can 'steer' by pressing the 'w' and 's' keys to rotate "
 		},
 		{
 			"type": "text",

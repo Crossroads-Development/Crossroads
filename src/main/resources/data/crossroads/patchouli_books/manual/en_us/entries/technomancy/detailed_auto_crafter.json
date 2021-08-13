@@ -15,7 +15,7 @@
 		},
 		{
 			"type": "text",
-			"text": "<thing>$(l:crossroads:intro/path)path sigil/$. The <thing>$(l:crossroads:intro/path)path sigil/$ is required to craft recipes from that <thing>$(l:crossroads:intro/path)path/$, but the <thing>$(l:crossroads:intro/path)path sigil/$ will not be consumed.$(br2)It works the same as a normal <item>$(l:essentials/autocrafter)Auto-Crafter/$ other than these differences.$(br2)"
+			"text": "<thing>$(l:crossroads:intro/path)path sigil/$. The <thing>$(l:crossroads:intro/path#sigils)path sigil/$ is required to craft recipes from that <thing>$(l:crossroads:intro/path)path/$, but the <thing>$(l:crossroads:intro/path#sigils)path sigil/$ will not be consumed.$(br2)It works the same as a normal <item>$(l:essentials/autocrafter)Auto-Crafter/$ other than these differences.$(br2)"
 		}
 	]
 }

@@ -10,18 +10,19 @@
 			"type": "spotlight",
 			"title": "Intro to Paths",
 			"item": "crossroads:detailed_crafter",
-			"text": "Wait! This is a late-mid-game feature. By this point you should have used <thing>$(l:crossroads:intro/beam)beams/$.$(br2)<thing>Alchemy/$ and <thing>Technomancy/$ are the two <thing>paths/$ you can spec into. By default (config controlled- may have been changed in your modpack), you can take every <thing>path/$ in singleplayer, but "
+			"text": "Wait! This is a late-mid-game feature. By this point you should have used <thing>$(l:crossroads:intro/beam)beams/$.$(br2)<thing>Alchemy/$, <thing>Technomancy/$, and <thing>Witchcraft/$ are the three <thing>paths/$ you can spec into. By default (config controlled- may have been changed in your modpack), you can take every <thing>path/$ in singleplayer, "
 		},
 		{
 			"type": "text",
-			"text": "<em>can only pick one/$ <thing>path/$ in multiplayer.$(br2)If you can only take one <thing>path/$, pick carefully. A description of each <thing>path/$ is given below. When you unlock a <thing>path/$, you gain access to a huge number of new recipes, machines, and items. These recipes have to be made in a <item>Detailed Crafter/$, which is a special crafting table that can also craft <thing>path/$ specific "
+			"text": "but <em>can only pick one/$ <thing>path/$ in multiplayer.$(br2)If you can only take one <thing>path/$, pick carefully. A description of each <thing>path/$ is given below. When you unlock a <thing>path/$, you gain access to a huge number of new recipes, machines, and items. These recipes have to be made in a <item>Detailed Crafter/$, which is a special crafting table that can also craft <thing>path"
 		},
 		{
 			"type": "text",
-			"text": "recipes. In order to unlock any <thing>path/$, you <em>must/$ have discovered every <thing>$(l:crossroads:intro/beam)alignment/$ (other than <thing>$(l:crossroads:beam/void)void/$)- otherwise the <thing>path/$ will not unlock.$(br2)"
+			"text": "<thing>/$ specific recipes. In order to unlock any <thing>path/$, you <em>must/$ have discovered every <thing>$(l:crossroads:intro/beam)alignment/$ (other than <thing>$(l:crossroads:beam/void)void/$)- otherwise the <thing>path/$ will not unlock.$(br2)Every <thing>path/$ has specialities- things only it can do. Not all <thing>paths/$ are equally powerful overall, or equally difficult.$(br2)"
 		},
 		{
 			"type": "text",
+			"anchor": "alchemy",
 			"text": "<thing>Alchemy/$ is a <thing>path/$ all about chemistry, materials, and transmutation. It adds a new crafting system based on chemical reactions. <thing>Alchemy/$ allows mass producing gems and metals, making special new super-dense materials that allow controlling gravity, doing terraforming and biome changing, and generally manipulating the forces of nature on a massive scale.$(br2)"
 		},
 		{
@@ -34,6 +35,7 @@
 		},
 		{
 			"type": "text",
+			"anchor": "technomancy",
 			"text": "<thing>Technomancy/$ is a <thing>path/$ about time manipulation and high-power, high-risk systems. It is also the path with the most cool gadgets. It allows manipulating time in an area, and is fairly simple to start with, but making even a small mistake <em>has drastic consequences/$ (unlike <thing>Alchemy/$, where small mistakes have small consequences).$(br2)<thing>Technomancy"
 		},
 		{
@@ -46,6 +48,16 @@
 		},
 		{
 			"type": "text",
+			"anchor": "witchcraft",
+			"text": "<thing>Witchcraft/$ is the <thing>path/$ about life and death. It is the simplest path and the least dangerous, but also the least powerful.$(br2)It is focused around mass-producing and manipulating living creatures and plants.$(br2)To unlock <thing>Witchcraft/$, in a <item>detailed crafter/$, surround shears with paper after having discovered "
+		},
+		{
+			"type": "text",
+			"text": "every non-<thing>$(l:crossroads:beam/void)void/$ <thing>$(l:crossroads:intro/beam)alignment/$. The items will be consumed.$(br2)"
+		},
+		{
+			"type": "text",
+			"anchor": "sigils",
 			"text": "The <item>Path Sigils/$ (called the <item>Alchemy Sigil/$, <item>Technomancy Sigil/$, and <item>Witchcraft Sigil/$) are items that allow sharing <thing>paths/$. Any player can use one to instantly unlock a <thing>path/$, or shift-right click the <item>sigil/$ to forget a path. Unlocking a <thing>path/$ this way does not require discovering <thing>$(l:crossroads:intro/beam)alignment/$ first.$(br2)They are single use, and can only be crafted "
 		},
 		{

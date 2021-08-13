@@ -1,0 +1,17 @@
+{
+	"category": "intro",
+	"name": "Intro to Witchcraft",
+	"icon": "crossroads:syringe{extension_treated:true}",
+	"sortnum": 6,
+	"priority": true,
+	"advancement": "crossroads:progress/path/witchcraft",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Intro to Witchcraft",
+			"item": "crossroads:syringe{extension_treated:true}",
+			"text": "This entry (and the rest of the Witchcraft documentation) is a Work In Progress. Refer any questions or issues directly to the mod dev on Discord.$(br2)"
+		}
+	]
+}
