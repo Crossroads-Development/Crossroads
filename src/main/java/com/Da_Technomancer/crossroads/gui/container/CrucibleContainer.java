@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntity;
 import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
+import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
@@ -17,9 +18,12 @@ public class CrucibleContainer extends MachineContainer<HeatingCrucibleTileEntit
 	@ObjectHolder("crucible")
 	private static ContainerType<CrucibleContainer> type = null;
 
+	public final IntDeferredRef progRef;
+
 	public CrucibleContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
 		super(type, id, playerInv, buf);
-		addDataSlot(te.progressRef);
+		progRef = new IntDeferredRef(te::getProgress, te.getLevel().isClientSide);
+		addDataSlot(progRef);
 	}
 
 	@Override
