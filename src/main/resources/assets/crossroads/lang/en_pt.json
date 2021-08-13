@@ -794,8 +794,6 @@
 	"crossroads.jei.blast_furnace.carbon": "Consumed carbon: %1$d",
 	"crossroads.jei.fluid_cooling.max": "Bar Temperature: %1$f°C",
 	"crossroads.jei.fluid_cooling.add": "Added ouch burn: %1$f°C",
-	"crossroads.jei.beam_trans.align": "Alignment: %1$s",
-	"crossroads.jei.beam_trans.power": "Minimum power: %1$d",
 	"crossroads.jei.alchemy.temp.dual": "%1$s°C to %2$s°C",
 	"crossroads.jei.alchemy.temp": "%1$s°C and up",
 	"crossroads.jei.alchemy.cooling": "Endothermic",

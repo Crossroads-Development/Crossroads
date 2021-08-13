@@ -1,6 +1,6 @@
 Flying Machine
 crossroads:flying_machine|crossroads:progress/path/alchemy
 The <item>Flying Machine/$ is a vehicle that flies. The item is placed down similarly to a boat or minecart, and mounted.
-The <item>flying machine/$ will move in the horizontal direction the player is looking. The player can 'steer' by pressing the 'w' and 'a' keys to rotate the large wheel forward or back. The angle of the wheel controls the ratio of upwards/downwards vs horizontal acceleration.
+The <item>flying machine/$ will move in the horizontal direction the player is looking. The player can 'steer' by pressing the 'w' and 's' keys to rotate the large wheel forward or back. The angle of the wheel controls the ratio of upwards/downwards vs horizontal acceleration.
 As the <item>flying machine/$ has to fight gravity, the steering wheel has to be pointed partly upwards to stay level, and it is generally slower when ascending then descending.
 Note that the <item>flying machine/$ requires ingredients from both <link:crossroads:intro/path>Alchemy & Technomancy/$ to craft by default.

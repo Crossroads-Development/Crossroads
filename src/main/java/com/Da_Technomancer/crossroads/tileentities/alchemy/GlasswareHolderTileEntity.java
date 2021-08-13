@@ -218,6 +218,15 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
+	protected void performReaction(){
+		//Only florence flasks have reactions occur
+		//Phials and shells are meant to be single-purpose
+		if(heldType() == AbstractGlassware.GlasswareTypes.FLORENCE){
+			super.performReaction();
+		}
+	}
+
+	@Override
 	protected EnumTransferMode[] getModes(){
 		EnumTransferMode[] modes = {EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE};
 		if(heldType() != AbstractGlassware.GlasswareTypes.NONE){

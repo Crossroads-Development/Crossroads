@@ -70,7 +70,7 @@ public class SendChatToClient extends ClientPacket{
 		for(int i = 0; i < components.size(); i++){
 			combo.append(components.get(i).getString());
 			if(i + 1 < components.size()){
-				combo.append("\n");
+				combo.append("§f\n");
 			}
 		}
 		combined = new StringTextComponent(combo.toString());

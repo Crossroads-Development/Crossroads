@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:beam_lens",
+	"input": {
+		"tag": "forge:gems/quartz"
+	},
+	"energy": 0.5,
+	"potential": 0.5,
+	"stability": 0.5,
+	"void": 0.5
+}

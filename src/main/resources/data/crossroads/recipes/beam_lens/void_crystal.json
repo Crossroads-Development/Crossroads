@@ -1,0 +1,7 @@
+{
+	"type": "crossroads:beam_lens",
+	"input": {
+		"item": "crossroads:void_crystal"
+	},
+	"void_convert": 1
+}

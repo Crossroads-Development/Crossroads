@@ -75,6 +75,10 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 		return true;
 	}
 
+	public int getProgress(){
+		return progress;
+	}
+
 	@Override
 	public void receiveString(byte context, String message, @Nullable ServerPlayerEntity sender){
 		if(level.isClientSide){
