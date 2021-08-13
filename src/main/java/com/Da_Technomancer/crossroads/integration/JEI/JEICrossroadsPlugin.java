@@ -131,8 +131,9 @@ public class JEICrossroadsPlugin implements IModPlugin{
 				new CentrifugeCategory(guiHelper),
 				new CopshowiumCategory(guiHelper),
 				new FormulationVatCategory(guiHelper),
-				new IceboxFuelCategory(guiHelper)
-				new BeamLensCategory(guiHelper));
+				new IceboxFuelCategory(guiHelper),
+				new BeamLensCategory(guiHelper)
+		);
 	}
 
 	protected static IDrawableStatic createFluidOverlay(IGuiHelper helper){
