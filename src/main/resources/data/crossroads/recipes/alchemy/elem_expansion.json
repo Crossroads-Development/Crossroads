@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:alchemy",
+	"category": "elemental",
+	"data": "expansion",
+	"catalyst": "practitioner",
+	"charged": true,
+	"reagents": [
+		{
+			"type": "phelostogen"
+		},
+		{
+			"type": "aether"
+		},
+		{
+			"type": "adamant"
+		}
+	],
+	"products": [
+		{
+			"type": "elem_expansion",
+			"qty": 1
+		}
+	]
+}

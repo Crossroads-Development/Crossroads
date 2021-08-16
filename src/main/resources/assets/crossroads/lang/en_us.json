@@ -190,6 +190,7 @@
 	"item.crossroads.solid_fusas": "Solidified Fusas",
 	"item.crossroads.solid_voltus": "Solidified Voltus",
 	"item.crossroads.solid_elem_enchantment": "Solidified Magicae",
+	"item.crossroads.solid_elem_expansion": "Solidified Expandus",
 	"item.crossroads.solid_densus": "Densus Chunk",
 	"item.crossroads.solid_anti_densus": "Anti-Densus Chunk",
 	"item.crossroads.solid_fortis": "Aziotic Salt",
@@ -838,7 +839,7 @@
 	"container.crossroads.formulation_vat": "Formulation Vat",
 	"container.crossroads.brewing_vat": "Potion Brewing Still",
 	"container.crossroads.auto_injector": "Auto-Injector",
-	"container.crossroads.cold_storage": "Sample Freezer",
+	"container.crossroads.cold_storage": "Freezer Box",
 	"container.crossroads.hydroponics_trough": "Hydroponics Trough",
 	"container.crossroads.stasis_storage": "Stasis Box",
 	"container.crossroads.cultivator_vat": "Nutrient Vat",
@@ -952,6 +953,7 @@
 	"effect.terraform_mushroom": "Create Mushroom Biome",
 	"effect.terraform_jungle": "Create Jungle",
 	"effect.terraform_end": "Create End",
+	"effect.terraform_flower_forest": "Create Flower Forest",
 
 
 	"path.technomancy": "Technomancy",

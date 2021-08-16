@@ -311,40 +311,62 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 			buffer.writeUtf(recipe.flameName);
 		}
 	}
-
-	private static final HashMap<String, ContainRequirements> containTypeMap = new HashMap<>(3);
+	
+	private static final HashMap<String, ContainRequirements> containTypeMap = new HashMap<>(3);//No register method for this, as it maps to an enum
 	private static final HashMap<String, Function<Integer, Integer>> flameRadiusMap = new HashMap<>(5);
-	private static final HashMap<String, IAlchEffect> effectMap = new HashMap<>(15);
+	private static final HashMap<String, IAlchEffect> effectMap = new HashMap<>(19);
+
+	/**
+	 * Adds a new alchemy effect, which reagents can use by setting their effect to the passed id
+	 * Should be called BEFORE recipes are loaded from data
+	 * @param id A unique string ID representing the effect. This method will overwrite the existing effect for this ID
+	 * @param effect The alchemy effect to perform
+	 */
+	public static void registerEffect(String id, IAlchEffect effect){
+		effectMap.put(id, effect);
+	}
+
+	/**
+	 * Adds a new function for determining the radius of a flame reagent
+	 * Function converts between quantity of the flame reagent and the final radius
+	 * Should be called BEFORE recipes are loaded from data
+	 * @param id A unique string ID representing the function. This method will overwrite the existing function for this ID
+	 * @param flameRadiusFormula The function to apply
+	 */
+	public static void registerFlameFormula(String id, Function<Integer, Integer> flameRadiusFormula){
+		flameRadiusMap.put(id, flameRadiusFormula);
+	}
 
 	static{
 		containTypeMap.put("glass", ContainRequirements.NONE);
 		containTypeMap.put("crystal", ContainRequirements.CRYSTAL_EVAP);
 		containTypeMap.put("destructive", ContainRequirements.CRYSTAL_DESTROY);
 
-		flameRadiusMap.put("none", qty -> 0);
-		flameRadiusMap.put("small", qty -> Math.min(8, (int) Math.round(qty / 2D)));
-		flameRadiusMap.put("large", qty -> CRConfig.allowHellfire.get() ? Math.min(64, qty * 4) : Math.min(8, (int) Math.round(qty / 2D)));
-		flameRadiusMap.put("fixed_small", qty -> qty == 0 ? 0 : 8);//Constant 8 block range, regardless of quantity
-		flameRadiusMap.put("fixed_large", qty -> qty == 0 ? 0 : CRConfig.allowHellfire.get() ? 64 : 8);//Constant 64 block range, regardless of quantity
+		registerFlameFormula("none", qty -> 0);
+		registerFlameFormula("small", qty -> Math.min(8, (int) Math.round(qty / 2D)));
+		registerFlameFormula("large", qty -> CRConfig.allowHellfire.get() ? Math.min(64, qty * 4) : Math.min(8, (int) Math.round(qty / 2D)));
+		registerFlameFormula("fixed_small", qty -> qty == 0 ? 0 : 8);//Constant 8 block range, regardless of quantity
+		registerFlameFormula("fixed_large", qty -> qty == 0 ? 0 : CRConfig.allowHellfire.get() ? 64 : 8);//Constant 64 block range, regardless of quantity
 
-		effectMap.put("none", new NoneEffect());
-		effectMap.put("acid", new AcidAlchemyEffect());
-		effectMap.put("acid_gold", new AquaRegiaAlchemyEffect());
-		effectMap.put("disinfect", new DisinfectAlchemyEffect());
-		effectMap.put("drop_phil_stone", new SpawnItemAlchemyEffect(CRItems.philosopherStone));
-		effectMap.put("drop_prac_stone", new SpawnItemAlchemyEffect(CRItems.practitionerStone));
-		effectMap.put("electric", new VoltusEffect());
-		effectMap.put("poison", new ChlorineAlchemyEffect());
-		effectMap.put("salt", new SaltAlchemyEffect());
-		effectMap.put("salt_alc", new AlcSaltAlchemyEffect());
-		effectMap.put("terraform_desert", new LumenEffect());
-		effectMap.put("terraform_nether", new EldrineEffect());
-		effectMap.put("terraform_ocean", new FusasEffect());
-		effectMap.put("terraform_plains", new AetherEffect());
-		effectMap.put("terraform_snow", new StasisolEffect());
-		effectMap.put("terraform_mushroom", new MushroomTerraformEffect());
-		effectMap.put("terraform_jungle", new JungleTerraformEffect());
-		effectMap.put("terraform_end", new EndTerraformEffect());
+		registerEffect("none", new NoneEffect());
+		registerEffect("acid", new AcidAlchemyEffect());
+		registerEffect("acid_gold", new AquaRegiaAlchemyEffect());
+		registerEffect("disinfect", new DisinfectAlchemyEffect());
+		registerEffect("drop_phil_stone", new SpawnItemAlchemyEffect(CRItems.philosopherStone));
+		registerEffect("drop_prac_stone", new SpawnItemAlchemyEffect(CRItems.practitionerStone));
+		registerEffect("electric", new VoltusEffect());
+		registerEffect("poison", new ChlorineAlchemyEffect());
+		registerEffect("salt", new SaltAlchemyEffect());
+		registerEffect("salt_alc", new AlcSaltAlchemyEffect());
+		registerEffect("terraform_desert", new LumenEffect());
+		registerEffect("terraform_nether", new EldrineEffect());
+		registerEffect("terraform_ocean", new FusasEffect());
+		registerEffect("terraform_plains", new AetherEffect());
+		registerEffect("terraform_snow", new StasisolEffect());
+		registerEffect("terraform_mushroom", new MushroomTerraformEffect());
+		registerEffect("terraform_jungle", new JungleTerraformEffect());
+		registerEffect("terraform_end", new EndTerraformEffect());
+		registerEffect("terraform_flower_forest", new FlowerForestTerraformEffect());
 	}
 
 	private enum ContainRequirements{

@@ -103,6 +103,7 @@ public final class CRItems{
 	public static Item solidStasisol;
 	public static Item solidVoltus;
 	public static Item solidElemEnchant;
+	public static Item solidElemExpansion;
 	public static Item solidDensus;
 	public static Item solidAntiDensus;
 	public static Item solidFortis;
@@ -209,6 +210,7 @@ public final class CRItems{
 		toRegister.add(solidStasisol = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("solid_stasisol"));
 		toRegister.add(solidVoltus = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("solid_voltus"));
 		toRegister.add(solidElemEnchant = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("solid_elem_enchantment"));
+		toRegister.add(solidElemExpansion = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("solid_elem_expansion"));
 		toRegister.add(solidDensus = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("solid_densus"));
 		toRegister.add(solidAntiDensus = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("solid_anti_densus"));
 		toRegister.add(solidFortis = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("solid_fortis"));

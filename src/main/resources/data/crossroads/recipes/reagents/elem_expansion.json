@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:reagents",
+	"id": "elem_expansion",
+	"melting": 800,
+	"boiling": 1600,
+	"vessel": "crystal",
+	"item": "crossroads:dusts/elem_expansion",
+	"color": "00FFFF",
+	"effect": "terraform_flower_forest"
+}

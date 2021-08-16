@@ -13,6 +13,7 @@
 		"#forge:storage_blocks/salt",
 		"minecraft:blue_ice",
 		"minecraft:purpur_block",
-		"minecraft:purpur_pillar"
+		"minecraft:purpur_pillar",
+		"minecraft:honey_block"
 	]
 }
