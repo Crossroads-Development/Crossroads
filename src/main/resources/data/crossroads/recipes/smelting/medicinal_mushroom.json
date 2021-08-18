@@ -1,6 +1,6 @@
 {
 	"type": "minecraft:smelting",
-	"result": "minecraft:lime_dye",
+	"result": "crossroads:mutagen",
 	"experience": 0.1,
 	"ingredient": [
 		{

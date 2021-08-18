@@ -2,16 +2,17 @@ package com.Da_Technomancer.crossroads.tileentities.witchcraft;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
-import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
+import com.Da_Technomancer.crossroads.API.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.gui.container.IncubatorContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.items.witchcraft.Embryo;
+import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
@@ -19,6 +20,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -45,7 +47,7 @@ public class IncubatorTileEntity extends InventoryTE{
 
 	public IncubatorTileEntity(){
 		super(type, 3);
-		//Index 0: embryo, index 1: eggs, index 2: output
+		//Index 0: mutator, index 1: eggs, index 2: output
 	}
 
 	@Override
@@ -84,18 +86,10 @@ public class IncubatorTileEntity extends InventoryTE{
 
 		if(!level.isClientSide){
 			boolean validRecipe = false;
-			if(inventory[0].getItem() instanceof Embryo){
-				Embryo embryo = (Embryo) inventory[0].getItem();
-				EntityTemplate template = null;
-				if(embryo.isSpoiled(inventory[0], level)){
-					//If the embryo is spoiled, eject it to the output
-					if(inventory[2].isEmpty()){
-						inventory[2] = inventory[0];
-						inventory[0] = ItemStack.EMPTY;
-						setChanged();
-					}
-				}else if(!inventory[1].isEmpty() && (inventory[2].isEmpty() || inventory[2].getItem() == CRItems.geneticSpawnEgg && CRItems.geneticSpawnEgg.getEntityTypeData(inventory[2]).equals(template = embryo.getEntityTypeData(inventory[0])))){
-					//Check that we have the other ingredient, and that there is space for the output
+			if(isValidMutator(inventory[0], level)){
+				ItemStack toCreate = getCreatedItem(inventory[0], level);
+				//Check that we have the other ingredient, and that there is space for the output
+				if(!inventory[1].isEmpty() && (inventory[2].isEmpty() || BlockUtil.sameItem(inventory[2], toCreate) && toCreate.getCount() + inventory[2].getCount() <= toCreate.getMaxStackSize())){
 					validRecipe = true;
 
 					//Increase progress
@@ -109,10 +103,9 @@ public class IncubatorTileEntity extends InventoryTE{
 							progress = 0;
 							targetTemp = 0;//Reset the target temp, to be re-randomized
 							if(inventory[2].isEmpty()){
-								inventory[2] = new ItemStack(CRItems.geneticSpawnEgg, 1);
-								CRItems.geneticSpawnEgg.withEntityTypeData(inventory[2], template == null ? embryo.getEntityTypeData(inventory[0]) : template);
+								inventory[2] = toCreate;
 							}else{
-								inventory[2].grow(1);
+								inventory[2].grow(toCreate.getCount());
 							}
 							inventory[0].shrink(1);
 							inventory[1].shrink(1);
@@ -120,6 +113,11 @@ public class IncubatorTileEntity extends InventoryTE{
 						setChanged();
 					}
 				}
+			}else if(inventory[2].isEmpty()){
+				//Eject the invalid input item, including spoiled embryos
+				inventory[2] = inventory[0];
+				inventory[0] = ItemStack.EMPTY;
+				setChanged();
 			}
 
 			if(!validRecipe){
@@ -127,6 +125,29 @@ public class IncubatorTileEntity extends InventoryTE{
 				progress = 0;
 			}
 		}
+	}
+
+	private static ItemStack getCreatedItem(ItemStack mutator, World world){
+		Item item = mutator.getItem();
+		if(item == CRItems.embryo){
+			ItemStack out = new ItemStack(CRItems.geneticSpawnEgg, 1);
+			CRItems.geneticSpawnEgg.withEntityTypeData(out, CRItems.embryo.getEntityTypeData(mutator));
+			return out;
+		}
+		if(item == CRItems.mutagen){
+			ItemStack out = new ItemStack(CRItems.potionExtension);
+			CRItems.potionExtension.getSpoilTime(out, world);
+			return out;
+		}
+		return ItemStack.EMPTY;
+	}
+
+	private static boolean isValidMutator(ItemStack stack, World world){
+		Item item = stack.getItem();
+		if(item instanceof IPerishable && ((IPerishable) item).isSpoiled(stack, world)){
+			return false;
+		}
+		return stack.getItem() == CRItems.embryo || stack.getItem() == CRItems.mutagen;
 	}
 
 	@Override
@@ -146,7 +167,7 @@ public class IncubatorTileEntity extends InventoryTE{
 
 	@Override
 	public boolean canPlaceItem(int index, ItemStack stack){
-		return index == 0 && stack.getItem() instanceof Embryo || index == 1 && CRItemTags.INCUBATOR_EGG.contains(stack.getItem());
+		return index == 0 && isValidMutator(stack, level) || index == 1 && CRItemTags.INCUBATOR_EGG.contains(stack.getItem());
 	}
 
 	@Override

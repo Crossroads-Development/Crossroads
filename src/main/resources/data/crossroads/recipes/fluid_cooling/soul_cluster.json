@@ -5,6 +5,6 @@
 		"amount": 200
 	},
 	"item": "crossroads:soul_cluster",
-	"max_temp": 0,
+	"max_temp": -30,
 	"temp_change": 20
 }

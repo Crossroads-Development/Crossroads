@@ -139,6 +139,7 @@ public final class CRItems{
 	public static SoulCluster soulShard;
 	public static Embryo embryo;
 	public static GeneticSpawnEgg geneticSpawnEgg;
+	public static Item mutagen;
 
 	public static OreProfileItem oreGravel;
 	public static OreProfileItem oreClump;
@@ -265,6 +266,7 @@ public final class CRItems{
 		soulShard = new SoulCluster(false);
 		embryo = new Embryo();
 		geneticSpawnEgg = new GeneticSpawnEgg();
+		toRegister.add(mutagen = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("mutagen"));
 	}
 
 	@OnlyIn(Dist.CLIENT)
