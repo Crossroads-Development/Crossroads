@@ -1,0 +1,10 @@
+{
+	"type": "minecraft:smelting",
+	"result": "crossroads:mutagen",
+	"experience": 0.1,
+	"ingredient": [
+		{
+			"item": "crossroads:potion_extension"
+		}
+	]
+}

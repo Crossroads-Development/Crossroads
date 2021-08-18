@@ -1,5 +1,5 @@
 Nutrition Vat
 crossroads:cultivator_vat|crossroads:progress/path/witchcraft
 TODO This page is a placeholder for a feature which is still being developed.
-Summary: Preserves embryos using nutrient solution. Can duplicate embryos, possibly needing souls and/or genetic plasmids based on stats. Circuits measure the remaining lifetime of the stored item, in seconds before they spoil.
+Summary: Preserves embryos using nutrient solution. Can duplicate embryos, possibly needing souls and/or mutagen based on stats. Circuits measure the remaining lifetime of the stored item, in seconds before they spoil.
 There will be a <bobo>bobo/$ feature on this page, when it's added.

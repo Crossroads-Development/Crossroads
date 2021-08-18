@@ -139,10 +139,11 @@ public class AutoInjectorTileEntity extends InventoryTE{
 			//We can only reload with single-effect potions
 			if(effectList.size() == 1){
 				EffectInstance effectInstance = effectList.get(0);
-				if(duration <= 0 || effectInstance.getEffect() == storedEffect && effectInstance.getAmplifier() == intensity && effectInstance.getDuration() * CRConfig.injectionEfficiency.get() + duration < DURATION_CAPACITY){
+				int timeToAdd = (int) (effectInstance.getDuration() * CRConfig.injectionEfficiency.get());
+				if(duration <= 0 || effectInstance.getEffect() == storedEffect && effectInstance.getAmplifier() == intensity && timeToAdd + duration < DURATION_CAPACITY){
 					storedEffect = effectInstance.getEffect();
 					intensity = effectInstance.getAmplifier();
-					duration += effectInstance.getDuration() * CRConfig.injectionEfficiency.get();
+					duration += timeToAdd;
 					inventory[0].shrink(1);
 					if(inventory[1].isEmpty()){
 						inventory[1] = new ItemStack(Items.GLASS_BOTTLE, 1);

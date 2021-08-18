@@ -6,6 +6,8 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.AutoInjectorTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
+import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
+import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -37,7 +39,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class AutoInjector extends ContainerBlock{
+public class AutoInjector extends ContainerBlock implements IReadable{
 
 	private static final VoxelShape[] SHAPES = new VoxelShape[6];
 
@@ -120,5 +122,25 @@ public class AutoInjector extends ContainerBlock{
 		tooltip.add(new TranslationTextComponent("tt.crossroads.auto_injector.desc", CRConfig.injectionEfficiency.get()));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.auto_injector.dose"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.auto_injector.redstone"));
+	}
+
+	@Override
+	public boolean hasAnalogOutputSignal(BlockState p_149740_1_){
+		return true;
+	}
+
+	@Override
+	public int getAnalogOutputSignal(BlockState state, World world, BlockPos pos){
+		return RedstoneUtil.clampToVanilla(read(world, pos, state));
+	}
+
+	@Override
+	public float read(World world, BlockPos pos, BlockState state){
+		TileEntity te = world.getBlockEntity(pos);
+		if(te instanceof AutoInjectorTileEntity){
+			return ((AutoInjectorTileEntity) te).getDuration();
+		}else{
+			return 0;
+		}
 	}
 }

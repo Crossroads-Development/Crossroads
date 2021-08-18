@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.witchcraft;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.API.CircuitUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.HydroponicsTroughTileEntity;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
@@ -107,12 +108,13 @@ public class HydroponicsTrough extends ContainerBlock implements IReadable, IGro
 	}
 
 	@Override
-	public float read(World world, BlockPos pos, BlockState blockState){
+	public float read(World world, BlockPos pos, BlockState state){
 		TileEntity te = world.getBlockEntity(pos);
-		if(te instanceof HydroponicsTroughTileEntity){
-			return ((HydroponicsTroughTileEntity) te).getCircuitOutput();
+		if(te instanceof IInventory){
+			return CircuitUtil.getRedstoneFromSlots((IInventory) te, 1, 2, 3, 4);
+		}else{
+			return 0;
 		}
-		return 0;
 	}
 
 	@Override

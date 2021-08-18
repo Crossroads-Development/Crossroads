@@ -48,7 +48,7 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 	@ObjectHolder(Crossroads.MODID + ":hydroponics_trough")
 	public static TileEntityType<HydroponicsTroughTileEntity> type = null;
 
-	private static final int CAPACITY = 4000;
+	private static final int CAPACITY = 8000;
 	public static final int SOLUTION_DRAIN = 1;
 
 	/**
@@ -84,7 +84,7 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 	private int progress = 0;
 
 	public HydroponicsTroughTileEntity(){
-		super(type, 5);//Slot 0 is the seed
+		super(type, 5);//Slot 0 is the seed; 1, 2, 3, 4 are output
 		fluidProps[0] = new TankProperty(CAPACITY, true, false, f -> f == CRFluids.nutrientSolution.still || f == CRFluids.fertilizerSolution.still);
 		initFluidManagers();
 	}

@@ -1,7 +1,10 @@
 package com.Da_Technomancer.crossroads.blocks.witchcraft;
 
+import com.Da_Technomancer.crossroads.API.CircuitUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.BrewingVatTileEntity;
+import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
+import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
@@ -28,7 +31,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BrewingVat extends ContainerBlock{
+public class BrewingVat extends ContainerBlock implements IReadable{
 
 	public BrewingVat(){
 		super(CRBlocks.getMetalProperty());
@@ -69,6 +72,26 @@ public class BrewingVat extends ContainerBlock{
 		tooltip.add(new TranslationTextComponent("tt.crossroads.brewing_vat.desc"));
 		for(int i = 0; i < BrewingVatTileEntity.TEMP_TIERS.length; i++){
 			tooltip.add(new TranslationTextComponent("tt.crossroads.brewing_vat.tier", BrewingVatTileEntity.TEMP_TIERS[i], BrewingVatTileEntity.SPEED_MULT[i], BrewingVatTileEntity.HEAT_DRAIN[i]));
+		}
+	}
+
+	@Override
+	public boolean hasAnalogOutputSignal(BlockState state){
+		return true;
+	}
+
+	@Override
+	public int getAnalogOutputSignal(BlockState state, World worldIn, BlockPos pos){
+		return RedstoneUtil.clampToVanilla(read(worldIn, pos, state));
+	}
+
+	@Override
+	public float read(World world, BlockPos pos, BlockState state){
+		TileEntity te = world.getBlockEntity(pos);
+		if(te instanceof IInventory){
+			return CircuitUtil.getRedstoneFromSlots((IInventory) te, 1, 2, 3);
+		}else{
+			return 0;
 		}
 	}
 }

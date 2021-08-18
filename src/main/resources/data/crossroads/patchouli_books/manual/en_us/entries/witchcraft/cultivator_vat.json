@@ -11,11 +11,11 @@
 			"type": "spotlight",
 			"title": "Nutrition Vat",
 			"item": "crossroads:cultivator_vat",
-			"text": "TODO This page is a placeholder for a feature which is still being developed.$(br2)Summary: Preserves embryos using nutrient solution. Can duplicate embryos, possibly needing souls and/or genetic plasmids based on stats. Circuits measure the remaining lifetime of "
+			"text": "TODO This page is a placeholder for a feature which is still being developed.$(br2)Summary: Preserves embryos using nutrient solution. Can duplicate embryos, possibly needing souls and/or mutagen based on stats. Circuits measure the remaining lifetime of the stored "
 		},
 		{
 			"type": "text",
-			"text": "the stored item, in seconds before they spoil.$(br2)There will be a <bobo>bobo/$ feature on this page, when it's added.$(br2)"
+			"text": "item, in seconds before they spoil.$(br2)There will be a <bobo>bobo/$ feature on this page, when it's added.$(br2)"
 		}
 	]
 }

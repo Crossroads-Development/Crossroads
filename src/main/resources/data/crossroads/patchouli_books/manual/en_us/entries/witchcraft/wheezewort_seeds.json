@@ -15,11 +15,15 @@
 		},
 		{
 			"type": "text",
-			"text": "it two blocks tall and is active. It will randomly shoot cold spurts upwards, causing the block directly above the top of the <item>wheezewort/$ will be cooled enormously. Most of this cooling would normally be wasted from capping out at <thing>$(l:crossroads:intro/heat)absolute zero/$. However, if the block directly above it is <block>$(l:crossroads:heat/reserve)heat reservoir/$, then it will be able to take advantage of much more of the cooling.$(br2)"
+			"text": "it two blocks tall and is active. It will randomly shoot cold spurts upwards, causing the block directly above the top of the <item>wheezewort/$ will be cooled enormously. Most of this cooling would normally be wasted from capping out at <thing>$(l:crossroads:intro/heat)absolute zero/$. However, if the block directly above it is <item>$(l:crossroads:heat/reserve)heat reservoir/$, then it will be able to take advantage of much more of the cooling.$(br2)"
 		},
 		{
 			"type": "text",
 			"text": "In the third growth stage, it is two blocks tall and turns brown. It stops being active and is totally useless for cooling.$(br2)Harvesting the plant always drops a seed, but it has a chance to drop a second seed if it's fully grown. The plant can be planted by dispensers, and broken by pistons. It must be planted on dirt.$(br2)"
+		},
+		{
+			"type": "text",
+			"text": "The <item>$(l:crossroads:witchcraft/hydroponics_trough)hydroponics trough/$ is a good way of producing lots of <item>wheezewort seeds/$ quickly.$(br2)"
 		}
 	]
 }
