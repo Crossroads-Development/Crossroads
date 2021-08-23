@@ -19,5 +19,5 @@ Qc: Heat produced on the cold side, °C/t
 W: Rotary power produced, Joules/t
 K: Conversion constant, configurable (Default 20)
 Qh = ΔT/20 <- Rounded down
-Qc = ΔT/40 - (ΔT)²/100,000 (for ΔT<2000; Qc=ΔT/400 for ΔT>200)
-W = K*(ΔT)²/50,000 (for ΔT<2000; W=K*ΔT/25 for ΔT>200)
+Qc = ΔT/40 - (ΔT)²/100,000 (for ΔT<2000; Qc=ΔT/400 for ΔT>2000)
+W = K*(ΔT)²/50,000 (for ΔT<2000; W=K*ΔT/25 for ΔT>2000)
