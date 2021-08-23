@@ -1,0 +1,21 @@
+{
+	"category": "witchcraft",
+	"name": "Miller-Urey Capsule",
+	"icon": "crossroads:embryo_lab",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/witchcraft",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "spotlight",
+			"title": "Miller-Urey Capsule",
+			"item": "crossroads:embryo_lab",
+			"text": "TODO This page is a placeholder for a feature which is still being developed.$(br2)Summary: Creates an embryo from a centrifuged blood sample and various ingredients. Add items with a syringe in the mainhand and the ingredient in the offhand. Add the blood first, "
+		},
+		{
+			"type": "text",
+			"text": "then modifiers. Potions for effects, nametag for imprinting, soul for respawning.$(br2)A charge beam finalizes the crafting. Support for circuits and dispensers.$(br2)"
+		}
+	]
+}
