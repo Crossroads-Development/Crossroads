@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.witchcraft.CultivatorVat;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.CultivatorVatContainer;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.BlockState;
@@ -189,8 +190,7 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 		boolean active = !fluids[0].isEmpty();
 		int contents = 0;
 		if(!inventory[0].isEmpty()){
-			//TODO: When the relevant item is added, correct this
-			if(inventory[0].getItem() == null){
+			if(inventory[0].getItem() == CRItems.villagerBrain){
 				contents = 2;//Brain
 			}else{
 				contents = 1;//Anything else (generic)

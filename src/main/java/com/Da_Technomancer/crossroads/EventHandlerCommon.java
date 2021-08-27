@@ -22,6 +22,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.merchant.IMerchant;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.passive.horse.SkeletonHorseEntity;
@@ -32,6 +33,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -470,24 +472,40 @@ public final class EventHandlerCommon{
 
 	@SubscribeEvent()
 	@SuppressWarnings("unused")
-	public void dropSouls(LivingDropsEvent e){
+	public void appendDrops(LivingDropsEvent e){
 		LivingEntity ent = e.getEntityLiving();
-		if(!ent.level.isClientSide && ent.hasEffect(CRPotions.TRANSIENT_EFFECT)){
-			//Drop count is based on entity type
-			int soulCount;
+		if(!ent.level.isClientSide){
 
-			//Players and 'fake' living drop no souls (anti-exploit)
-			if(ent instanceof PlayerEntity || ent instanceof ArmorStandEntity){
-				soulCount = 0;
-			}else if(ent.getMobType() == CreatureAttribute.UNDEAD){
-				soulCount = 1;//Undead give 1
-			}else if(ent instanceof AbstractVillagerEntity || ent.getMobType() == CreatureAttribute.ILLAGER){
-				soulCount = 8;//'People' type creatures give a full soul cluster worth
-			}else{
-				soulCount = 2;//Most things give 2
+			//Drop souls
+			if(ent.hasEffect(CRPotions.TRANSIENT_EFFECT)){
+				//Drop count is based on entity type
+				int soulCount;
+
+				//Players and 'fake' living drop no souls (anti-exploit)
+				if(ent instanceof PlayerEntity || ent instanceof ArmorStandEntity){
+					soulCount = 0;
+				}else if(ent.getMobType() == CreatureAttribute.UNDEAD){
+					soulCount = 1;//Undead give 1
+				}else if(ent instanceof AbstractVillagerEntity || ent.getMobType() == CreatureAttribute.ILLAGER){
+					soulCount = 8;//'People' type creatures give a full soul cluster worth
+				}else{
+					soulCount = 2;//Most things give 2
+				}
+				if(soulCount > 0){
+					e.getDrops().add(new ItemEntity(ent.level, ent.getX(), ent.getY(), ent.getZ(), new ItemStack(CRItems.soulShard, soulCount)));
+				}
 			}
-			if(soulCount > 0){
-				e.getDrops().add(new ItemEntity(ent.level, ent.getX(), ent.getY(), ent.getZ(), new ItemStack(CRItems.soulShard, soulCount)));
+
+			//Drop brain
+			if(ent instanceof IMerchant){
+				DamageSource damageSource = e.getSource();
+				//Known issue: This can have a false positive if other mods allow dealing direct damage by a method other than melee attacking with the weapon in the mainhand
+				if(damageSource.getClass() == EntityDamageSource.class && damageSource.getDirectEntity() instanceof LivingEntity && ((LivingEntity) damageSource.getDirectEntity()).getMainHandItem().getItem() == CRItems.brainHarvester){
+					ItemStack brain = new ItemStack(CRItems.villagerBrain, 1);
+					CRItems.villagerBrain.setOffers(brain, ((IMerchant) ent).getOffers());
+					CRItems.villagerBrain.getSpoilTime(brain, ent.level);
+					e.getDrops().add(new ItemEntity(ent.level, ent.getX(), ent.getY(), ent.getZ(), brain));
+				}
 			}
 		}
 	}

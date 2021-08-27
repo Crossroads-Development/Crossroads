@@ -140,6 +140,8 @@ public final class CRItems{
 	public static Embryo embryo;
 	public static GeneticSpawnEgg geneticSpawnEgg;
 	public static Item mutagen;
+	public static VillagerBrain villagerBrain;
+	public static BrainHarvester brainHarvester;
 
 	public static OreProfileItem oreGravel;
 	public static OreProfileItem oreClump;
@@ -267,6 +269,8 @@ public final class CRItems{
 		embryo = new Embryo();
 		geneticSpawnEgg = new GeneticSpawnEgg();
 		toRegister.add(mutagen = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("mutagen"));
+		villagerBrain = new VillagerBrain();
+		brainHarvester = new BrainHarvester();
 	}
 
 	@OnlyIn(Dist.CLIENT)

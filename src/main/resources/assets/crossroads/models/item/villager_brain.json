@@ -1,0 +1,14 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "crossroads:item/villager_brain"
+	},
+	"overrides": [
+		{
+			"predicate": {
+				"spoiled": 1
+			},
+			"model": "crossroads:item/villager_brain_spoiled"
+		}
+	]
+}

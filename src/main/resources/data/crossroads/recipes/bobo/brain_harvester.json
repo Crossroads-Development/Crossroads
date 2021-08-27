@@ -1,0 +1,22 @@
+{
+	"type": "crossroads:bobo",
+	"output": {
+		"item": "crossroads:brain_harvester",
+		"count": 1
+	},
+	"input_a": [
+		{
+			"tag": "forge:gems/emerald"
+		}
+	],
+	"input_b": [
+		{
+			"item": "minecraft:iron_axe"
+		}
+	],
+	"input_c": [
+		{
+			"item": "crossroads:syringe"
+		}
+	]
+}

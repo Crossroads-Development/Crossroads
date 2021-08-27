@@ -282,6 +282,8 @@
 	"block.crossroads.blood_centrifuge": "Blood Centrifuge",
 	"block.crossroads.embryo_lab": "Miller–Urey Capsule",
 	"item.crossroads.mutagen": "Mutagen",
+	"item.crossroads.villager_brain": "Villager Brain",
+	"item.crossroads.brain_harvester": "Surgical Battleaxe",
 
 	"item.crossroads.distilled_water_bucket": "Distilled Water Bucket",
 	"item.crossroads.dirty_water_bucket": "Dirty Water Bucket",
@@ -788,6 +790,14 @@
 	"tt.crossroads.embryo_lab.ingr": "Ingredients are added with a syringe or dispenser. Charge beams finish the crafting",
 	"tt.crossroads.embryo_lab.circuit": "Circuits read 1 if it contains blood",
 	"tt.crossroads.embryo_lab.quip": "IT'S ALIVVEEEEE!!!!",
+	"tt.crossroads.village_brain.desc": "Performs trades in a Cultivation Vat. Right-click to cycle trades",
+	"tt.crossroads.villager_brain.trade.none": "No known trades",
+	"tt.crossroads.villager_brain.trade.single": "%2$dx%1$s -> %4$dx%3$s",
+	"tt.crossroads.villager_brain.trade.dual": "%2$dx%1$s + %4$dx%3$s -> %6$dx%5$s",
+	"tt.crossroads.villager_brain.item.enchant": "%1$s[%2$s]",
+	"tt.crossroads.villager_brain.item.enchant.multi": "%1$s[%2$s... and %4$d more]",
+	"tt.crossroads.brain_harvester.desc": "Harvests the brains of villagers very surgically",
+	"tt.crossroads.brain_harvester.quip": "ARE YOU THE BRAIN SPECIALIST?",
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
 	"container.crossroads.boilerplate.speed": "%1$f rad/s",
