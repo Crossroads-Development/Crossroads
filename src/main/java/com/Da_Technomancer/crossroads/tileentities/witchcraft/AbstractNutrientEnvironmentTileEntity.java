@@ -67,7 +67,7 @@ public abstract class AbstractNutrientEnvironmentTileEntity extends InventoryTE{
 						ICultivatable item = (ICultivatable) stack.getItem();
 						//Drain liquid
 						if(!fluids[nutrientTankIndex].isEmpty()){
-							fluids[nutrientTankIndex].shrink(item.getPassiveNutrientDrain());
+							fluids[nutrientTankIndex].shrink(getPassiveNutrientDrain());
 						}
 						//Update the item
 						item.cultivate(stack, level, 1);
@@ -78,6 +78,8 @@ public abstract class AbstractNutrientEnvironmentTileEntity extends InventoryTE{
 			setChanged();
 		}
 	}
+
+	protected abstract int getPassiveNutrientDrain();
 
 	@Override
 	public void onLoad(){

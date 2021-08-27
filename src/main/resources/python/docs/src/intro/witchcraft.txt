@@ -1,3 +1,6 @@
 Intro to Witchcraft6
 crossroads:syringe{extension_treated:true}|crossroads:progress/path/witchcraft
-This entry (and the rest of the Witchcraft documentation) is a Work In Progress. Refer any questions or issues directly to the mod dev on Discord.
+Witchcraft is the simplest path. It doesn't introduce any new energy systems, overarching mechanics, or have any particularly dangerous or risky features. Most features revolve around mobs, potions, or plants in some way.
+The largest system in Witchcraft is <thing><link:crossroads:witchcraft/cloning>cloning/$, which has many applications.
+Other highlights include the <item><link:crossroads:witchcraft/hydroponics_trough>hydroponics trough/$, for mass-producing plants, and new <thing><link:crossroads:witchcraft/medicinal_mushroom>potions effects and recipes/$.
+There's no set or recommended order for using Witchcraft. Pick whatever looks interesting and try it out!

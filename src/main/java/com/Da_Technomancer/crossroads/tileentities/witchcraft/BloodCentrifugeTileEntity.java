@@ -36,6 +36,7 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 	public static final double LOW_SPEED = 0;
 	public static final double HIGH_SPEED = 20;
 	public static final int REQUIRED = 100;
+	public static final int INERTIA = 100;
 
 	private int progress = 0;
 	private int deviation = 0;
@@ -75,7 +76,7 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 
 	@Override
 	protected double getMoInertia(){
-		return 100;
+		return INERTIA;
 	}
 
 	@Override

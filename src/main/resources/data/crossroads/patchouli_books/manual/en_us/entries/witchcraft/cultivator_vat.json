@@ -11,11 +11,24 @@
 			"type": "spotlight",
 			"title": "Nutrition Vat",
 			"item": "crossroads:cultivator_vat",
-			"text": "TODO This page is a placeholder for a feature which is still being developed.$(br2)Summary: Preserves embryos using nutrient solution. Can duplicate embryos, possibly needing souls and/or mutagen based on stats. Circuits measure the remaining lifetime of the stored "
+			"text": "The <item>nutrition vat/$ has two purposes: It can preserve items which can <thing>$(l:crossroads:witchcraft/spoilage)spoil/$ but are damaged by freezing and it can duplicate <item>$(l:crossroads:witchcraft/cloning#process)embryos/$, making it part of the <thing>$(l:crossroads:witchcraft/cloning)cloning process/$.$(br2)It stores a single <thing>$(l:crossroads:witchcraft/spoilage)perishable/$ item, draining 1mb/t of Nutrient Solution but preventing "
 		},
 		{
 			"type": "text",
-			"text": "item, in seconds before they spoil.$(br2)There will be a <bobo>bobo/$ feature on this page, when it's added.$(br2)"
+			"text": "the item from <thing>$(l:crossroads:witchcraft/spoilage)spoiling/$. It can't store items which can be safely frozen without penalty.$(br2)While it has nutrient solution, it will also create <thing>$(l:crossroads:witchcraft/spoilage)fresh/$ copies of the stored <item>$(l:crossroads:witchcraft/cloning#process)embryo/$.$(br2)Cloning <item>$(l:crossroads:witchcraft/cloning#process)embryos/$ is free, unless the <item>$(l:crossroads:witchcraft/cloning#process)embryo/$ has special <thing>$(l:crossroads:witchcraft/cloning#traits)traits/$. Each permanent potion effect requires 1 <item>mutagen/$, and <thing>$(l:crossroads:witchcraft/cloning#traits)respawning"
+		},
+		{
+			"type": "text",
+			"text": "<thing>$(l:crossroads:witchcraft/cloning#traits)/$ requires 1 <item>$(l:crossroads:witchcraft/souls)soul cluster/$. $(l:crossroads:witchcraft/cloning#traits)Imprinting/$ is free.$(br2)"
+		},
+		{
+			"type": "text",
+			"anchor": "bobo",
+			"text": "<bobo>uwu hewo??¿ is meesa $(l:crossroads:intro/welcome#bobo)BOB0!/$<bobo>$(br2)<bobo>chOp-chip-chip-cHop another yuse 4 dis machine~_~~ jUst nede 2 uze ur hed. n0T ur youR head, ur tHEy\"re hed, ya Diphthong of a dr.oktur!$(br2)<bobo>oll u n33d iz somting choppy-loppy-tree-head-takey-awayie uv da ferrrrrous ver-eye-et-E"
+		},
+		{
+			"type": "text",
+			"text": "<bobo>and sumtyng pokey dat takie-awayie crimsunie-goopy~goop$(br2)<bobo>&nd suhmtng shiney-wimey-greenie-monie-rok$(br2)"
 		}
 	]
 }

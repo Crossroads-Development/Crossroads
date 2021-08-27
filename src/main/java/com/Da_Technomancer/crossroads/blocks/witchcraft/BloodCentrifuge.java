@@ -85,6 +85,7 @@ public class BloodCentrifuge extends ContainerBlock implements IReadable{
 		tooltip.add(new TranslationTextComponent("tt.crossroads.blood_centrifuge.desc", BloodCentrifugeTileEntity.HIGH_SPEED));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.blood_centrifuge.degradation"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.blood_centrifuge.redstone"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.inertia", BloodCentrifugeTileEntity.INERTIA));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.blood_centrifuge.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 

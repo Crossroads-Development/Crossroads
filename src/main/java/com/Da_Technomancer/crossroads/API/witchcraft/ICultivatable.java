@@ -15,10 +15,6 @@ public interface ICultivatable extends IPerishable{
 
 	public static final String FROZEN_KEY = "cr_was_frozen";
 
-	default int getPassiveNutrientDrain(){
-		return 1;
-	}
-
 	default boolean wasFrozen(ItemStack stack){
 		CompoundNBT nbt = stack.getOrCreateTag();
 		//Correct broken stacks, by setting a spoil time for a fresh item

@@ -36,6 +36,7 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 	@ObjectHolder("cultivator_vat")
 	public static TileEntityType<CultivatorVatTileEntity> type = null;
 	public static final int REQUIRED_PROGRESS = 100;
+	public static final int NUTRIENT_DRAIN = 1;
 
 	private int progress = 0;
 	/**
@@ -113,6 +114,11 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 			}
 			setChanged();
 		}
+	}
+
+	@Override
+	protected int getPassiveNutrientDrain(){
+		return NUTRIENT_DRAIN;
 	}
 
 	private void consumeIngredient(ItemStack ingredient){

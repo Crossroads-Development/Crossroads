@@ -25,15 +25,15 @@
 		},
 		{
 			"type": "text",
-			"text": "and Instant Damage 2 will act as Instant Damage 4.$(br2)Potions with a duration can also be injected to last <em>permanently/$. This requires <item>Genetic Plasmids/$. To apply <item>genetic plasmids/$ to the <item>syringe/$, use the <item>syringe/$ with $(l:crossroads:witchcraft/spoilage)non-spoiled/$ <item>genetic plasmids/$ in the offhand, which will consume the <item>genetic plasmids/$. The next potion (with a duration) injected "
+			"text": "and Instant Damage 2 will act as Instant Damage 4.$(br2)Potions with a duration can also be injected to last <em>permanently/$. This requires <item>Genetic Plasmids/$, which are made in the <item>$(l:crossroads:witchcraft:incubator)incubator/$. To apply <item>genetic plasmids/$ to the <item>syringe/$, use the <item>syringe/$ with $(l:crossroads:witchcraft/spoilage)non-spoiled/$ <item>genetic plasmids/$ in the offhand, which will consume the <item>genetic plasmids/$. The next "
 		},
 		{
 			"type": "text",
-			"text": "will last <em>forever/$. However, every permanent potion effect added this way will reduce the target's maximum health by 1 heart (by default, configurable).$(br2)Permanent potion effects and the associated decrease in maximum health can be removed with milk or a $(l:crossroads:witchcraft/medicinal_mushroom#neutralization)neutralization potion/$ as usual.$(br2)<item>Genetic "
+			"text": "potion (with a duration) injected will last <em>forever/$. However, every permanent potion effect added this way will reduce the target's maximum health by 1 heart (by default, configurable).$(br2)Permanent potion effects and the associated decrease in maximum health can be removed with milk or a $(l:crossroads:witchcraft/medicinal_mushroom#neutralization)neutralization potion/$ as usual.$(br2)"
 		},
 		{
 			"type": "text",
-			"text": "<item>plasmids/$ will $(l:crossroads:witchcraft/spoilage)spoil/$ after 30 minutes.$(br2)"
+			"text": "<item>Genetic plasmids/$ will $(l:crossroads:witchcraft/spoilage)spoil/$ after 30 minutes.$(br2)"
 		},
 		{
 			"type": "spotlight",

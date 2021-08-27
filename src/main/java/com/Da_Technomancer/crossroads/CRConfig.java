@@ -111,6 +111,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.IntValue hydroponicsMult;
 	public static ForgeConfigSpec.IntValue respawnDelay;
 	public static ForgeConfigSpec.IntValue respawnPenaltyDuration;
+	public static ForgeConfigSpec.IntValue degradationPenalty;
 	public static ForgeConfigSpec.ConfigValue<List<? extends String>> permanentEffectBlacklist;
 
 	private static final ITag<Block> destroyBlacklist = BlockTags.bind(Crossroads.MODID + ":destroy_blacklist");
@@ -241,6 +242,7 @@ public class CRConfig{
 		permanentEffectBlacklist = serverBuilder.comment("Specify potion effects that can not be applied permanently to an entity or player", "Format of 'domain:potion_effect_id', ex. minecraft:health_boost").defineList("permanent_effect_blacklist", Lists.newArrayList("minecraft:health_boost", "minecraft:glowing"), (Object entry) -> entry instanceof String);
 		injectionEfficiency = serverBuilder.comment("The duration of injected potions vs drinking them", "Setting to 1 or below makes injection equivalent to normal potions").defineInRange("injection_efficiency", 2F, 1F, 100F);
 		injectionPermaPenalty = serverBuilder.comment("The permanent maximum health reduction for each injected permanent potion effect", "Set to 0 or lower to disable the penalty", "Set to 20 or higher to effectively disable permanent injection for players").defineInRange("injection_perma_penalty", 2, 0, 100);
+		degradationPenalty = serverBuilder.comment("The reduction in maximum health for each point of degradation on a clone").defineInRange("degradation_penalty", 2, 0, 100);
 		hydroponicsMult = serverBuilder.comment("Production/growth speed multiplier for the Hydroponics Trough compared to normal crop growth", "Setting to 0 will effectively disable the machine").defineInRange("hydroponics_mult", 16, 0, 100);
 		respawnDelay = serverBuilder.comment("Time in seconds for genetically modified entities to respawn", "Set to 0 or a negative value to disable respawning").defineInRange("respawn_delay", 30, -1, Short.MAX_VALUE);
 		respawnPenaltyDuration = serverBuilder.comment("Time in seconds for the debuffs on respawned entities", "Also controls the vulnerability period. Cannot be disabled").defineInRange("respawn_penalty_duration", 30, 1, Short.MAX_VALUE);

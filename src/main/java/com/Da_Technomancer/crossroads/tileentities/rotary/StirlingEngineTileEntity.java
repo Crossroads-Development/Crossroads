@@ -66,7 +66,6 @@ public class StirlingEngineTileEntity extends ModuleTE{
 
 	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		//TODO
 		chat.add(new TranslationTextComponent("tt.crossroads.stirling_engine.temp", CRConfig.formatVal(tempSide), CRConfig.formatVal(HeatUtil.toKelvin(tempSide)), CRConfig.formatVal(tempBottom), CRConfig.formatVal(HeatUtil.toKelvin(tempBottom))));
 		chat.add(new TranslationTextComponent("tt.crossroads.stirling_engine.status", CRConfig.formatVal(lastHeatIn), CRConfig.formatVal(lastHeatOut), CRConfig.formatVal(lastPower)));
 		if(lastHeatIn > 0 && lastHeatOut > 0){

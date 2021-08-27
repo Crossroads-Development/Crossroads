@@ -11,11 +11,24 @@
 			"type": "spotlight",
 			"title": "Miller-Urey Capsule",
 			"item": "crossroads:embryo_lab",
-			"text": "TODO This page is a placeholder for a feature which is still being developed.$(br2)Summary: Creates an embryo from a centrifuged blood sample and various ingredients. Add items with a syringe in the mainhand and the ingredient in the offhand. Add the blood first, "
+			"text": "The <item>Miller-Urey capsule/$ creates an <item>$(l:crossroads:witchcraft/cloning#process)embryo/$ from a <item>$(l:crossroads:witchcraft/blood_centrifuge)centrifuged blood pouch/$, as part of the <thing>$(l:crossroads:witchcraft/cloning)cloning process/$.$(br2)Ingredients have to be added to the <item>Miller-Urey capsule/$ using either a <item>$(l:crossroads:witchcraft/syringe#embryo_lab)syringe/$ or a dispenser. If adding items using a <item>$(l:crossroads:witchcraft/syringe#embryo_lab)syringe/$, hold the <item>$(l:crossroads:witchcraft/syringe#embryo_lab)syringe/$ in the "
 		},
 		{
 			"type": "text",
-			"text": "then modifiers. Potions for effects, nametag for imprinting, soul for respawning.$(br2)A charge beam finalizes the crafting. Support for circuits and dispensers.$(br2)"
+			"text": "main hand and the item being added in the offhand, and right click.$(br2)The <item>$(l:crossroads:witchcraft/blood_centrifuge)centrifuged blood pouch/$ must be added first- the <item>empty blood pouch/$ will be returned.$(br2)Additional items can be added to add special <thing>$(l:crossroads:witchcraft/cloning#traits)traits/$. Adding a potion will add the potion effect (returning the empty bottle), adding a nametag "
+		},
+		{
+			"type": "text",
+			"text": "will add <thing>$(l:crossroads:witchcraft/cloning#traits)imprinting/$, and adding a <item>$(l:crossroads:witchcraft/souls)soul cluster/$ will add <thing>$(l:crossroads:witchcraft/cloning#traits)respawning/$.$(br2)To finalize the crafting, the <item>Miller-Urey capsule/$ needs to be hit by a <thing>$(l:crossroads:beam/charge)charge beam/$, which will consume all the ingredients and create one <thing>$(l:crossroads:witchcraft/spoilage)fresh/$ <item>$(l:crossroads:witchcraft/cloning#process)embryo/$. If the <item>$(l:crossroads:witchcraft/blood_centrifuge)centrifuged blood pouch/$ was originally spoiled, it will add 1 <thing>$(l:crossroads:witchcraft/cloning#degradation)degradation/$.$(br2)"
+		},
+		{
+			"type": "text",
+			"text": "<thing>$(l:essentials/circuits)Circuits/$ read 1 if there is a <item>$(l:crossroads:witchcraft/blood_centrifuge)centrifuged blood pouch/$ in the machine, otherwise 0.$(br2)"
+		},
+		{
+			"type": "text",
+			"anchor": "bobo",
+			"text": "TODO This page is a placeholder for a bobo feature which is still being developed$(br2)"
 		}
 	]
 }

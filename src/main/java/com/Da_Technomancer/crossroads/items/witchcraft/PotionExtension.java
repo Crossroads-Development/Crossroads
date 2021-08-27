@@ -16,7 +16,7 @@ import java.util.List;
 
 public class PotionExtension extends Item implements IPerishable{
 
-	private static final long LIFETIME = 20 * 60 * 30;
+	private static final long LIFETIME = 20 * 60 * 30;//30 minutes
 
 	public PotionExtension(){
 		super(new Item.Properties().stacksTo(1).tab(CRItems.TAB_CROSSROADS));

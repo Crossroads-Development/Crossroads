@@ -266,8 +266,9 @@ public class EntityTemplate implements INBTSerializable<CompoundNBT>{
 			entity = (LivingEntity) created;
 
 			//Degradation
-			if(template.getDegradation() > 0){
-				entity.addEffect(new EffectInstance(CRPotions.HEALTH_PENALTY_EFFECT, Integer.MAX_VALUE, template.getDegradation() * 2 - 1));
+			int degradeConfig = CRConfig.degradationPenalty.get();
+			if(template.getDegradation() > 0 && degradeConfig > 0){
+				entity.addEffect(new EffectInstance(CRPotions.HEALTH_PENALTY_EFFECT, Integer.MAX_VALUE, template.getDegradation() * degradeConfig - 1));
 			}
 
 			//Potion effects

@@ -83,7 +83,7 @@ public class CultivatorVat extends ContainerBlock implements IReadable{
 	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
 		tooltip.add(new TranslationTextComponent("tt.crossroads.cultivator_vat.desc"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.cultivator_vat.sustain"));
+		tooltip.add(new TranslationTextComponent("tt.crossroads.cultivator_vat.sustain", CultivatorVatTileEntity.NUTRIENT_DRAIN));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.cultivator_vat.redstone"));
 		tooltip.add(new TranslationTextComponent("tt.crossroads.cultivator_vat.quip").setStyle(MiscUtil.TT_QUIP));
 	}

@@ -11,7 +11,7 @@
 			"type": "spotlight",
 			"title": "Spoilage",
 			"item": "crossroads:cold_storage",
-			"text": "Several witchcraft ingredients will <thing>spoil/$ once a certain amount of time has passed since creation. <thing>Spoiled/$ items are less effective or useless. Items will continue to <thing>spoil/$ in unloaded chunks.$(br2)There are several ways to prevent <thing>spoilage/$.$(br2)"
+			"text": "Several witchcraft ingredients will <thing>spoil/$ once a certain amount of time has passed since creation. <thing>Spoiled/$ items are less effective or useless. Items will continue to <thing>spoil/$ in unloaded chunks unless preserved.$(br2)There are several ways to prevent <thing>spoilage/$.$(br2)"
 		},
 		{
 			"type": "spotlight",
@@ -31,11 +31,11 @@
 			"type": "spotlight",
 			"anchor": "stasis_storage",
 			"item": "crossroads:stasis_storage",
-			"text": "The <item>Stasis Box/$ stops items from <thing>spoiling/$ at no cost and without causing freezing damage. It only has 1 slot, and requires <thing>$(l:crossroads:intro/path#technomancy)technomancy/$ to craft.$(br2)The <item>stasis box/$ is the only way to un-spoil items. A <thing>$(l:crossroads:beam/time)Temporal Entropy beam/$ (Void-Time) will cause the stored item "
+			"text": "The <item>Stasis Box/$ stops items from <thing>spoiling/$ at no cost and without causing freezing damage. It only has 1 slot, and requires <thing>$(l:crossroads:intro/path#technomancy)technomancy/$ to craft.$(br2)The <item>stasis box/$ is the only way to un-spoil items. A <thing>$(l:crossroads:beam/time)time beam/$ will cause the stored item to re-wind the <thing>spoilage/$ "
 		},
 		{
 			"type": "text",
-			"text": "to re-wind the <thing>spoilage/$ timer, by (<thing>beam power/$ * 4) ticks per cycle. If the stored item has been <thing>spoiled/$ for a very long time, it may take a lot of rewinding.$(br2)<thing>$(l:essentials/circuits)Circuits/$ read the remaining lifetime of the stored item, in seconds before they spoil. Already spoiled items are measured as 0.$(br2)"
+			"text": "timer, by (<thing>beam power/$ * 4) ticks per cycle. If the stored item has been <thing>spoiled/$ for a very long time, it may take a lot of rewinding.$(br2)<thing>$(l:essentials/circuits)Circuits/$ read the remaining lifetime of the stored item, in seconds before they spoil. Already spoiled items are measured as 0.$(br2)"
 		},
 		{
 			"type": "spotlight",

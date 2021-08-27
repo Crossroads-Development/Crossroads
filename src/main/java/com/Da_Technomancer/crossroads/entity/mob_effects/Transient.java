@@ -10,6 +10,4 @@ public class Transient extends Effect{
 		super(EffectType.HARMFUL, 0xB7FFF1);
 		setRegistryName(Crossroads.MODID, "transient");
 	}
-
-	//TODO mob drop effects
 }
