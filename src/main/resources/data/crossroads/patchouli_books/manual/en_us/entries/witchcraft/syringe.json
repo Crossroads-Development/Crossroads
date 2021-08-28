@@ -15,7 +15,7 @@
 		},
 		{
 			"type": "text",
-			"text": "you're looking at, right click. To target yourself, shift-right-click.$(br2)Using a <item>syringe/$ does one point of damage to the target.$(br2)"
+			"text": "you're looking at, shift-right-click. To target yourself, right-click.$(br2)Using a <item>syringe/$ does one point of damage to the target.$(br2)"
 		},
 		{
 			"type": "spotlight",

@@ -752,7 +752,7 @@
 	"tt.crossroads.boilerplate.entity_template.potion": "-",
 	"tt.crossroads.boilerplate.entity_template.potion.additional": "...%1$d additional effects",
 	"tt.crossroads.syringe.desc": "Injects potions (with %1$fX effectiveness) or takes blood samples",
-	"tt.crossroads.syringe.use": "Right click to target a mob, shift-right click to target self",
+	"tt.crossroads.syringe.use": "Right click to target self, shift-right click to target a mob",
 	"tt.crossroads.syringe.offhand": "Requires a potion or Empty Blood Pouch in the offhand",
 	"tt.crossroads.syringe.perm": "Use with Genetic Plasmids in the offhand to make the next injection permanent",
 	"tt.crossroads.hydroponic_trough.desc": "Rapidly grows plants (or mushrooms) based on a seed, needing light",

@@ -97,8 +97,8 @@ public class Syringe extends Item{
 
 	@Override
 	public ActionResultType interactLivingEntity(ItemStack stack, PlayerEntity player, LivingEntity target, Hand hand){
-		//Only target others if not sneaking
-		if(!player.isShiftKeyDown()){
+		//Only target others if sneaking
+		if(player.isShiftKeyDown()){
 			return interact(stack, player, target);
 		}
 		return ActionResultType.PASS;
@@ -107,8 +107,12 @@ public class Syringe extends Item{
 	@Override
 	public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand){
 		ItemStack stack = player.getItemInHand(hand);
-		ActionResultType resultType = interact(stack, player, player);
-		return new ActionResult<>(resultType, stack);
+		//Only target self if not sneaking
+		if(!player.isShiftKeyDown()){
+			ActionResultType resultType = interact(stack, player, player);
+			return new ActionResult<>(resultType, stack);
+		}
+		return ActionResult.pass(stack);
 	}
 
 	private boolean canActivateWith(ItemStack syringeStack, ItemStack offhandStack){

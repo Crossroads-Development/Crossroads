@@ -40,7 +40,7 @@ public class FormulationVatTileEntity extends InventoryTE{
 	public static final int[] TEMP_TIERS = {0, 75, 85, 95, 98, 100};
 	public static final double[] SPEED_MULT = {0.25D, 0.5D, 1, 2, 4, 0};
 	public static final int[] HEAT_DRAIN = {0, 2, 4, 8, 8, 8};
-	public static final int REQUIRED = 1000;
+	public static final int REQUIRED = 200;
 	private double progress = 0;
 
 	public FormulationVatTileEntity(){
