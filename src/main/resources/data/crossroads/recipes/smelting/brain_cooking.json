@@ -1,0 +1,10 @@
+{
+	"type": "minecraft:smelting",
+	"result": "minecraft:baked_potato",
+	"experience": 1.0,
+	"ingredient": [
+		{
+			"item": "crossroads:villager_brain"
+		}
+	]
+}
