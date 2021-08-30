@@ -1,7 +1,12 @@
 {
 	"multipart": [
 		{
+			"when": { "fullness": "0|1|2" },
 			"apply": { "model": "crossroads:block/hydroponics_trough_base" }
+		},
+		{
+			"when": { "fullness": 3 },
+			"apply": { "model": "crossroads:block/hydroponics_trough_base_drain" }
 		},
 		{
 			"when": { "solid_fullness": 1 },
@@ -33,10 +38,6 @@
 		},
 		{
 			"when": { "solid_fullness": "1|2|3", "fullness": 2 },
-			"apply": { "model": "crossroads:block/hydroponics_trough_liquid_3" }
-		},
-		{
-			"when": { "fullness": 3 },
 			"apply": { "model": "crossroads:block/hydroponics_trough_liquid_3" }
 		}
 	]

@@ -757,7 +757,7 @@
 	"tt.crossroads.syringe.perm": "Use with Genetic Plasmids in the offhand to make the next injection permanent",
 	"tt.crossroads.hydroponic_trough.desc": "Rapidly grows plants (or mushrooms) based on a seed, needing light",
 	"tt.crossroads.hydroponic_trough.output": "Items can only be extracted while redstone powered, but wastes all liquid",
-	"tt.crossroads.hydroponic_trough.drain": "Consumes: -%1$dmb/t of Fertilizer Solution OR Nutrient Solution",
+	"tt.crossroads.hydroponic_trough.drain": "Consumes: -%1$dmb/t of Fertilizer Solution",
 	"tt.crossroads.hydroponic_trough.circuit": "Circuits measure total items in the output",
 	"tt.crossroads.medicinal_mushroom.desc": "A mushroom with several important uses in brewing",
 	"tt.crossroads.medicinal_mushroom.quip": "It's not drugs. Probably",

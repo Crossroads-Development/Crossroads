@@ -30,6 +30,7 @@ public class HydroponicsTroughScreen extends MachineGUI<HydroponicsTroughContain
 		Minecraft.getInstance().getTextureManager().bind(TEXTURE);
 
 		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+		blit(matrix, leftPos + 61, topPos + 33, 176, 0, 72, menu.progRef.get() * 18 / 100);
 
 		super.renderBg(matrix, partialTicks, mouseX, mouseY);
 	}

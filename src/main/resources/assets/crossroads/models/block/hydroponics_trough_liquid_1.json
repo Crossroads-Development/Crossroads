@@ -1,0 +1,16 @@
+{
+	"ambientocclusion": false,
+	"textures": {
+		"particle": "crossroads:block/fertilizer_solution_still",
+		"main": "crossroads:block/fertilizer_solution_still"
+	},
+	"elements": [
+		{
+			"from": [ 2, 2, 2 ],
+			"to": [ 14, 5, 14 ],
+			"faces": {
+				"up":    { "uv": [ 2, 2, 14, 14 ], "texture": "#main" }
+			}
+		}
+	]
+}

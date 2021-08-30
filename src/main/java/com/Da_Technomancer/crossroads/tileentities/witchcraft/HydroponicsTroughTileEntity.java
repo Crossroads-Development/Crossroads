@@ -85,7 +85,7 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 
 	public HydroponicsTroughTileEntity(){
 		super(type, 5);//Slot 0 is the seed; 1, 2, 3, 4 are output
-		fluidProps[0] = new TankProperty(CAPACITY, true, false, f -> f == CRFluids.nutrientSolution.still || f == CRFluids.fertilizerSolution.still);
+		fluidProps[0] = new TankProperty(CAPACITY, true, false, f -> f == CRFluids.fertilizerSolution.still);
 		initFluidManagers();
 	}
 
@@ -100,14 +100,6 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 
 	public boolean canBonemeal(){
 		return getCrop(inventory[0]) != null;
-	}
-
-	public float getCircuitOutput(){
-		int measured = 0;
-		for(int i = 1; i < inventory.length; i++){
-			measured += inventory[i].getCount();
-		}
-		return measured;
 	}
 
 	private int getGrowthMult(){
@@ -165,6 +157,17 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 				}
 			}
 			updateBlockstate();
+		}
+	}
+
+	public int getProgressBar(){
+		Triple<Boolean, Integer, ItemStack[]> product = getCrop(inventory[0]);
+		if(product == null){
+			return 0;
+		}else{
+			//Because the maximum progress can vary based on crop type, we get the progress as the percentage complete
+			int maxProg = product.getMiddle();
+			return 100 * progress / maxProg;
 		}
 	}
 

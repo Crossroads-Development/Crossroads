@@ -41,6 +41,7 @@ import java.util.Random;
 public class HydroponicsTrough extends ContainerBlock implements IReadable, IGrowable{
 
 	private static final VoxelShape SHAPE = VoxelShapes.join(box(0, 0, 0, 16, 12, 16), box(2, 2, 2, 14, 16, 14), IBooleanFunction.ONLY_FIRST);
+	private static final VoxelShape SHAPE_OPEN = VoxelShapes.join(box(0, 0, 0, 16, 12, 16), box(2, 0, 2, 14, 16, 14), IBooleanFunction.ONLY_FIRST);
 
 	public HydroponicsTrough(){
 		super(CRBlocks.getMetalProperty().randomTicks());
@@ -63,7 +64,7 @@ public class HydroponicsTrough extends ContainerBlock implements IReadable, IGro
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context){
-		return SHAPE;
+		return state.getValue(CRProperties.FULLNESS) == 3 ? SHAPE_OPEN : SHAPE;
 	}
 
 	@Override

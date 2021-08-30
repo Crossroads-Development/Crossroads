@@ -374,7 +374,8 @@ public class CRBlocks{
 	@OnlyIn(Dist.CLIENT)
 	public static void clientInit(){
 		setCutout(permeableGlass, rotaryPump, steamTurbine, alchemicalTubeGlass, alchemicalTubeCrystal, redsAlchemicalTubeGlass, redsAlchemicalTubeCrystal, fluidInjectorGlass, fluidInjectorCrystal, flowLimiterGlass, flowLimiterCrystal, heatedTubeGlass, heatedTubeCrystal, coolingCoilGlass, coolingCoilCrystal, reactionChamberGlass, reactionChamberCrystal, reagentTankGlass, reagentTankCrystal, reagentPumpGlass, reagentPumpCrystal, glasswareHolder, reagentFilterGlass, reagentFilterCrystal, chargingStand, medicinalMushroom, petrolCactus);
-		setFluidTrans(CRFluids.distilledWater, CRFluids.steam);
+		setTrans(hydroponicsTrough);
+		setFluidTrans(CRFluids.distilledWater, CRFluids.steam, CRFluids.fertilizerSolution, CRFluids.dirtyWater);
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -382,6 +383,13 @@ public class CRBlocks{
 		RenderType cutout = RenderType.cutout();
 		for(Block block : blocks){
 			RenderTypeLookup.setRenderLayer(block, cutout);
+		}
+	}
+
+	private static void setTrans(Block... blocks){
+		RenderType type = RenderType.translucent();
+		for(Block block : blocks){
+			RenderTypeLookup.setRenderLayer(block, type);
 		}
 	}
 

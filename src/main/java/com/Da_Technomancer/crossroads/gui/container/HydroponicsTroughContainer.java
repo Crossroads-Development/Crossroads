@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.HydroponicsTroughTileEntity;
 import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
+import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
@@ -17,8 +18,12 @@ public class HydroponicsTroughContainer extends MachineContainer<HydroponicsTrou
 	@ObjectHolder("hydroponics_trough")
 	private static ContainerType<HydroponicsTroughContainer> type = null;
 
+	public final IntDeferredRef progRef;
+
 	public HydroponicsTroughContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
 		super(type, id, playerInv, buf);
+		progRef = new IntDeferredRef(te::getProgressBar, te.getLevel().isClientSide);
+		addDataSlot(progRef);
 	}
 
 	@Override

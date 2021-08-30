@@ -1,0 +1,17 @@
+{
+	"ambientocclusion": false,
+	"textures": {
+		"particle": "crossroads:block/hydroponics_trough_solid",
+		"main": "crossroads:block/hydroponics_trough_solid"
+	},
+	"elements": [
+		{
+			"from": [ 2, 2, 2 ],
+			"to": [ 14, 10, 14 ],
+			"faces": {
+				"up": { "uv": [ 2, 2, 14, 14 ], "texture": "#main" },
+				"down": { "uv": [ 2, 2, 14, 14 ], "texture": "#main" }
+			}
+		}
+	]
+}
