@@ -12,7 +12,6 @@ import com.Da_Technomancer.crossroads.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -25,9 +24,8 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,7 +43,8 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 	private final double boiling;
 	private final boolean flame;
 	private final ITag.INamedTag<Item> solid;
-	private final FluidStack fluid;
+	private final FluidIngredient fluid;
+	private final int fluidQty;
 	private final ContainRequirements containment;
 	private final int[] colMap;//Used for serialization
 	private final Function<EnumMatterPhase, Color> colorFunc;
@@ -55,7 +54,7 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 	private final String flameName;//Used for serialization
 	private final Function<Integer, Integer> flameFunction;
 
-	public ReagentRec(ResourceLocation location, String group, String id, double melting, double boiling, boolean flame, ITag.INamedTag<Item> solid, FluidStack fluid, ContainRequirements containment, int[] colMap, Function<EnumMatterPhase, Color> colorFunc, String effectName, @Nonnull IAlchEffect effect, String flameName, Function<Integer, Integer> flameFunction){
+	public ReagentRec(ResourceLocation location, String group, String id, double melting, double boiling, boolean flame, ITag.INamedTag<Item> solid, FluidIngredient fluid, int fluidQty, ContainRequirements containment, int[] colMap, Function<EnumMatterPhase, Color> colorFunc, String effectName, @Nonnull IAlchEffect effect, String flameName, Function<Integer, Integer> flameFunction){
 		this.location = location;
 		this.group = group;
 		this.id = id;
@@ -64,6 +63,7 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 		this.flame = flame;
 		this.solid = solid;
 		this.fluid = fluid;
+		this.fluidQty = fluidQty;
 		this.containment = containment;
 		this.colMap = colMap;
 		this.colorFunc = colorFunc;
@@ -120,8 +120,13 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 	}
 
 	@Override
-	public FluidStack getFluid(){
+	public FluidIngredient getFluid(){
 		return fluid;
+	}
+
+	@Override
+	public int getFluidQty(){
+		return fluidQty;
 	}
 
 	@Override
@@ -238,7 +243,8 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 				boiling = melting;//Equal melting and boiling point would cause sublimation, skipping liquid
 			}
 			ITag.INamedTag<Item> item = ItemTags.bind(JSONUtils.getAsString(json, "item", "crossroads:empty"));
-			FluidStack fluid = CraftingUtil.getFluidStack(json, "fluid", FluidStack.EMPTY);
+			//Fluid definition is optional, but must have a quantity and be specified in a subelement if present
+			Pair<FluidIngredient, Integer> fluid = json.has("fluid") ? null : CraftingUtil.getFluidIngredientAndQuantity(json, "fluid", false, -1);
 			ContainRequirements vessel = containTypeMap.getOrDefault(JSONUtils.getAsString(json, "vessel", "none"), ContainRequirements.NONE);
 			String effectName = JSONUtils.getAsString(json, "effect", "none");
 			IAlchEffect effect = effectMap.getOrDefault(effectName, null);
@@ -266,7 +272,7 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 
 			colorFunction = elem -> colorMap[elem.ordinal()];
 
-			return new ReagentRec(recipeId, group, id, melting, boiling, flame, item, fluid, vessel, colEncodeMap, colorFunction, effectName, effect, flameName, flameFunc);
+			return new ReagentRec(recipeId, group, id, melting, boiling, flame, item, fluid == null ? FluidIngredient.EMPTY : fluid.getLeft(), fluid == null ? 0 : fluid.getRight(), vessel, colEncodeMap, colorFunction, effectName, effect, flameName, flameFunc);
 		}
 
 		@Nullable
@@ -278,9 +284,8 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 			double boiling = buffer.readDouble();
 			boolean flame = buffer.readBoolean();
 			ITag.INamedTag<Item> solid = ItemTags.bind(buffer.readUtf());
-			Fluid fl = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(buffer.readUtf()));
+			FluidIngredient fl = FluidIngredient.readFromBuffer(buffer);
 			int flQty = buffer.readVarInt();
-			FluidStack fluid = fl == null || flQty == 0 ? FluidStack.EMPTY : new FluidStack(fl, flQty);
 			ContainRequirements vessel = ContainRequirements.values()[buffer.readVarInt()];
 			int[] colMapInt = buffer.readVarIntArray();
 			Color[] colMap = new Color[colMapInt.length];
@@ -292,7 +297,7 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 			IAlchEffect effect = effectMap.getOrDefault(effectName, effectMap.get("none"));
 			String flameName = buffer.readUtf();
 			Function<Integer, Integer> flameFunc = flameRadiusMap.getOrDefault(flameName, flameRadiusMap.get("none"));
-			return new ReagentRec(recipeId, group, id, melting, boiling, flame, solid, fluid, vessel, colMapInt, colFunc, effectName, effect, flameName, flameFunc);
+			return new ReagentRec(recipeId, group, id, melting, boiling, flame, solid, fl, flQty, vessel, colMapInt, colFunc, effectName, effect, flameName, flameFunc);
 		}
 
 		@Override
@@ -303,8 +308,8 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 			buffer.writeDouble(recipe.boiling);
 			buffer.writeBoolean(recipe.flame);
 			buffer.writeUtf(recipe.solid.getName().toString());
-			buffer.writeUtf(recipe.fluid.getFluid().getRegistryName().toString());
-			buffer.writeVarInt(recipe.fluid.getAmount());
+			recipe.fluid.writeToBuffer(buffer);
+			buffer.writeVarInt(recipe.fluidQty);
 			buffer.writeVarInt(recipe.containment.ordinal());
 			buffer.writeVarIntArray(recipe.colMap);
 			buffer.writeUtf(recipe.effectName);

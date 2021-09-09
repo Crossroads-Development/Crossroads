@@ -5,8 +5,8 @@
 	"boiling": 2560,
 	"item": "forge:nuggets/copper",
 	"fluid": {
-		"fluid": "crossroads:molten_copper",
-		"amount": 16
+		"tag": "forge:molten_copper"
 	},
+	"fluid_amount": 16,
 	"color": "FFC800"
 }

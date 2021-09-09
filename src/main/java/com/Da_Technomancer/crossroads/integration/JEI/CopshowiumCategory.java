@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.recipes.CopshowiumRec;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -89,7 +90,8 @@ public class CopshowiumCategory implements IRecipeCategory<CopshowiumRec>{
 
 	@Override
 	public void setIngredients(CopshowiumRec recipe, IIngredients ingredients){
-		ingredients.setInput(VanillaTypes.FLUID, recipe.getInput());
-		ingredients.setOutput(VanillaTypes.FLUID, new FluidStack(CRFluids.moltenCopshowium.still, (int) (recipe.getInput().getAmount() * recipe.getMult())));
+		int displaySize = 1000;
+		ingredients.setInputLists(VanillaTypes.FLUID, ImmutableList.of(recipe.getInput().getMatchedFluidStacks(displaySize)));
+		ingredients.setOutput(VanillaTypes.FLUID, new FluidStack(CRFluids.moltenCopshowium.still, (int) (displaySize * recipe.getMult())));
 	}
 }

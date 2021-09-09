@@ -5,9 +5,9 @@
 	"boiling": 2560,
 	"item": "forge:nuggets/iron",
 	"fluid": {
-		"fluid": "crossroads:molten_iron",
-		"amount": 16
+		"tag": "forge:molten_iron"
 	},
+	"fluid_amount": 16,
 	"color": {
 		"base": "FFFF00",
 		"solid": "808080"

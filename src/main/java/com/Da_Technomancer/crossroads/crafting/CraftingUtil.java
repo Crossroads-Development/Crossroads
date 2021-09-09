@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.crafting;
 
 import com.Da_Technomancer.crossroads.crafting.recipes.BlockIngredient;
+import com.Da_Technomancer.crossroads.crafting.recipes.FluidIngredient;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -13,6 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -118,6 +120,48 @@ public class CraftingUtil{
 			return BlockIngredient.readFromJSON(json);
 		}
 		throw new JsonParseException("Non-BlockIngredient passed as JSON ingredient");
+	}
+
+	/**
+	 * Parses a fluid ingredient
+	 * @param json The JSON to read from. Could be a JsonObject or JsonArray
+	 * @param memberName The name of the element in json containing the fluid ingredient definition
+	 * @param allowDirect If true, attempt to parse json itself as the fluid ingredient if no element with the member name is found
+	 * @return The fluid ingredient specified in json
+	 */
+	public static FluidIngredient getFluidIngredient(JsonElement json, String memberName, boolean allowDirect){
+		if(json.isJsonObject()){
+			JsonObject jsonO = (JsonObject) json;
+			if(jsonO.has(memberName)){
+				return FluidIngredient.readFromJSON(((JsonObject) json).get(memberName));
+			}
+		}
+		if(allowDirect){
+			return FluidIngredient.readFromJSON(json);
+		}
+		throw new JsonParseException("Non-FluidIngredient passed as JSON ingredient");
+	}
+
+	/**
+	 * Parses a fluid ingredient and gets a quantity associated with it
+	 * Expects 'fluid_amount' to be specified in json directly
+	 * @param json The JSON to read from. Could be a JsonObject or JsonArray
+	 * @param memberName The name of the element in json containing the fluid ingredient definition
+	 * @param allowDirect If true, attempt to parse json itself as the fluid ingredient if no element with the member name is found
+	 * @param defaultQuantity The default quantity to return if none was specified. 0 or negative values will require a value to be specified (no default)
+	 * @return The fluid ingredient and quantity specified in json
+	 */
+	public static Pair<FluidIngredient, Integer> getFluidIngredientAndQuantity(JsonElement json, String memberName, boolean allowDirect, int defaultQuantity){
+		FluidIngredient ingr = getFluidIngredient(json, memberName, allowDirect);
+		int quantity = defaultQuantity;
+		if(json.isJsonObject()){
+			quantity = JSONUtils.getAsInt((JsonObject) json, "fluid_amount", defaultQuantity);
+		}
+		if(quantity <= 0){
+			throw new JsonParseException("No/invalid quantity specified for fluid ingredient");
+		}
+
+		return Pair.of(ingr, quantity);
 	}
 
 	public static boolean isActiveJSON(JsonObject json){

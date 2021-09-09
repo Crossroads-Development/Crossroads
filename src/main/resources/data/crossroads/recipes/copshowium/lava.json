@@ -1,8 +1,7 @@
 {
 	"type": "crossroads:copshowium",
 	"input": {
-		"fluid": "minecraft:lava",
-		"amount": 1000
+		"fluid": "minecraft:lava"
 	},
 	"mult": 2,
 	"entropy": true

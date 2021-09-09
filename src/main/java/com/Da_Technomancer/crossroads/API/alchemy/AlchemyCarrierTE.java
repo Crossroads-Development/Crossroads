@@ -5,16 +5,16 @@ import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.ambient.particles.ColorParticleData;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
-import com.Da_Technomancer.essentials.blocks.BlockUtil;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
+import com.Da_Technomancer.crossroads.crafting.recipes.FluidIngredient;
+import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -531,18 +531,25 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 
 	protected final FalseFluidHandler falseFluidHandler = new FalseFluidHandler();
 
+	/**
+	 * This class doesn't allow actual storage of fluids
+	 * Instead, it assumes storage of reagents, and creates fake internal fluid tanks backed by the reagents
+	 * Liquid can only be added and removed in integer quantities of reagents
+	 * One fluid tank is created per reagent type with a liquid equivalent
+	 * Matters are complicated by multiple fluids possibly mapping to the same reagent, if backed by a fluid ingredient
+	 * This class attempts to auto-convert when dealing with mixed fluids it considers equivalent
+	 */
 	private class FalseFluidHandler implements IFluidHandler{
 
 		private FluidStack simulateFluid(int tank){
 			if(tank >= 0 && tank < getTanks()){
 				String id = ReagentManager.getFluidReags().get(tank);
 				IReagent r = ReagentManager.getReagent(id);
-				FluidStack refStack = r.getFluid();
+				FluidIngredient refStack = r.getFluid();
+				int refQty = r.getFluidQty();
 				int qty = contents.getQty(id);
 				if(qty > 0 && r.getPhase(contents.getTempC()) == EnumMatterPhase.LIQUID){
-					FluidStack out = refStack.copy();
-					out.setAmount(qty * refStack.getAmount());
-					return out;
+					return new FluidStack(CRItemTags.getPreferredEntry(refStack.getMatchedFluids()), qty * refQty);
 				}
 			}
 			return FluidStack.EMPTY;
@@ -562,7 +569,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 		@Override
 		public int getTankCapacity(int tank){
 			if(tank >= 0 && tank < ReagentManager.getFluidReags().size()){
-				return ReagentManager.getReagent(ReagentManager.getFluidReags().get(tank)).getFluid().getAmount() * transferCapacity();
+				return ReagentManager.getReagent(ReagentManager.getFluidReags().get(tank)).getFluidQty() * transferCapacity();
 			}else{
 				return 0;
 			}
@@ -570,7 +577,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 
 		@Override
 		public boolean isFluidValid(int tank, @Nonnull FluidStack stack){
-			return tank >= 0 && tank < ReagentManager.getFluidReags().size() && BlockUtil.sameFluid(ReagentManager.getReagent(ReagentManager.getFluidReags().get(tank)).getFluid(), stack);
+			return tank >= 0 && tank < ReagentManager.getFluidReags().size() && ReagentManager.getReagent(ReagentManager.getFluidReags().get(tank)).getFluid().test(stack);
 		}
 
 		@Override
@@ -579,29 +586,29 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 			for(int i = 0; i < ReagentManager.getFluidReags().size(); i++){
 				String id = ReagentManager.getFluidReags().get(i);
 				IReagent reag = ReagentManager.getReagent(id);
-				if(BlockUtil.sameFluid(reag.getFluid(), resource)){
-					int toFillReag = Math.min(resource.getAmount() / reag.getFluid().getAmount(), transferCapacity() - contents.getTotalQty());
+				if(reag.getFluid().test(resource)){
+					int toFillReag = Math.min(resource.getAmount() / reag.getFluidQty(), transferCapacity() - contents.getTotalQty());
 					//Note: toFillReag could be negative
 					if(toFillReag <= 0){
 						return 0;
 					}
 					if(action.execute()){
-						contents.addReagent(id, toFillReag, calcInputTemp(reag, reag.getFluid().getFluid()));
+						contents.addReagent(id, toFillReag, calcInputTemp(reag));
 						setChanged();
 					}
-					return toFillReag * reag.getFluid().getAmount();
+					return toFillReag * reag.getFluidQty();
 				}
 			}
 			return 0;
 		}
 
-		private double calcInputTemp(IReagent reag, Fluid fluid){
+		private double calcInputTemp(IReagent reag){
 			//Calculates the effective input temperature (in C) for the reagents derived from a fluid piped in
 			//Returns a value which is reagent and location dependent but state independent
 
 			Predicate<Double> legal = (temp) -> temp >= reag.getMeltingPoint() && temp < reag.getBoilingPoint();
 			//Try the fluid's modder-defined temperature
-			double temp = fluid.getAttributes().getTemperature();
+			double temp = CRItemTags.getPreferredEntry(reag.getFluid().getMatchedFluids()).getAttributes().getTemperature();
 			if(legal.test(temp)){
 				return temp;
 			}
@@ -626,19 +633,19 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 			for(int i = 0; i < ReagentManager.getFluidReags().size(); i++){
 				String id = ReagentManager.getFluidReags().get(i);
 				IReagent reag = ReagentManager.getReagent(id);
-				if(BlockUtil.sameFluid(reag.getFluid(), resource)){
-
+				if(reag.getFluid().test(resource)){
 					FluidStack tank = simulateFluid(i);
 					if(!tank.isEmpty()){
 						int drained = Math.min(tank.getAmount(), resource.getAmount());
-
-						//It isn't necessary to modify tank as we normally would, as it's only a conversion
-						tank.setAmount(drained);
+						int reagQtyDrained = drained / reag.getFluidQty();
+						drained = reagQtyDrained * reag.getFluidQty();//Forces rounding down to the nearest full reagent unit
+						resource.setAmount(drained);
+						//It isn't necessary to modify tank as we normally would, as it's only a conversion and modifying the reagent is sufficient
 						if(action.execute()){
-							contents.removeReagent(id, drained / reag.getFluid().getAmount());
+							contents.removeReagent(id, reagQtyDrained);
 							setChanged();
 						}
-						return tank;
+						return resource;
 					}else{
 						return FluidStack.EMPTY;
 					}
@@ -660,7 +667,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 					tank.setAmount(drained);
 					if(action.execute()){
 						String id = ReagentManager.getFluidReags().get(i);
-						contents.removeReagent(id, drained / ReagentManager.getReagent(id).getFluid().getAmount());
+						contents.removeReagent(id, drained / ReagentManager.getReagent(id).getFluidQty());
 						setChanged();
 					}
 					return tank;

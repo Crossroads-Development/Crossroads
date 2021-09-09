@@ -76,13 +76,13 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 		//We can not use the recipe manager to filter recipes due to the fluid input
 		List<FluidCoolingRec> recipes = level.getRecipeManager().getRecipesFor(CRRecipes.FLUID_COOLING_TYPE, this, level);
 		//Filter the recipes by fluid type, fluid qty, temperature, and item type of output, and take the first recipe that matches the laundry list of specifications
-		Optional<FluidCoolingRec> recOpt = recipes.parallelStream().filter(rec -> rec.getMaxTemp() > temp + storedHeat && BlockUtil.sameFluid(rec.getInput(), fluids[0]) && rec.getInput().getAmount() <= fluids[0].getAmount() && (inventory[0].isEmpty() || BlockUtil.sameItem(inventory[0], rec.getResultItem()))).findFirst();
+		Optional<FluidCoolingRec> recOpt = recipes.parallelStream().filter(rec -> rec.getMaxTemp() > temp + storedHeat && rec.inputMatches(fluids[0]) && (inventory[0].isEmpty() || BlockUtil.sameItem(inventory[0], rec.getResultItem()))).findFirst();
 		if(recOpt.isPresent()){
 			FluidCoolingRec rec = recOpt.get();
 			//Check the output will fit
 			if(inventory[0].getMaxStackSize() - inventory[0].getCount() >= rec.getResultItem().getCount()){
 				storedHeat += rec.getAddedHeat();
-				fluids[0].shrink(rec.getInput().getAmount());
+				fluids[0].shrink(rec.getInputQty());
 				if(inventory[0].isEmpty()){
 					inventory[0] = rec.assemble(this);
 				}else{

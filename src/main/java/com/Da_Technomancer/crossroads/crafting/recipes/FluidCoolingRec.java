@@ -4,7 +4,6 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.tileentities.heat.FluidCoolingChamberTileEntity;
-import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.google.gson.JsonObject;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -16,6 +15,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 
@@ -24,16 +24,18 @@ public class FluidCoolingRec implements IOptionalRecipe<IInventory>{
 	private final ResourceLocation id;
 	private final String group;
 
-	private final FluidStack input;
+	private final FluidIngredient input;
+	private final int inputQty;
 	private final ItemStack created;
 	private final float maxTemp;
 	private final float addedHeat;
 	private final boolean active;
 
-	public FluidCoolingRec(ResourceLocation location, String name, FluidStack input, ItemStack output, float maxTemp, float addedHeat, boolean active){
+	public FluidCoolingRec(ResourceLocation location, String name, FluidIngredient input, int inputQty, ItemStack output, float maxTemp, float addedHeat, boolean active){
 		id = location;
 		group = name;
 		this.input = input;
+		this.inputQty = inputQty;
 		this.created = output;
 		this.maxTemp = maxTemp;
 		this.addedHeat = addedHeat;
@@ -45,8 +47,16 @@ public class FluidCoolingRec implements IOptionalRecipe<IInventory>{
 		return active;
 	}
 
-	public FluidStack getInput(){
+	public FluidIngredient getInput(){
 		return input;
+	}
+
+	public int getInputQty(){
+		return inputQty;
+	}
+
+	public boolean inputMatches(FluidStack available){
+		return input != null && input.test(available) && inputQty <= available.getAmount();
 	}
 
 	public ItemStack getCreated(){
@@ -63,7 +73,7 @@ public class FluidCoolingRec implements IOptionalRecipe<IInventory>{
 
 	@Override
 	public boolean matches(IInventory inv, World worldIn){
-		return active && inv instanceof FluidCoolingChamberTileEntity && BlockUtil.sameFluid(((FluidCoolingChamberTileEntity) inv).getFluid(), input);
+		return active && inv instanceof FluidCoolingChamberTileEntity && input.test(((FluidCoolingChamberTileEntity) inv).getFluid());
 	}
 
 	@Override
@@ -109,14 +119,14 @@ public class FluidCoolingRec implements IOptionalRecipe<IInventory>{
 			String s = JSONUtils.getAsString(json, "group", "");
 
 			if(!CraftingUtil.isActiveJSON(json)){
-				return new FluidCoolingRec(recipeId, s, FluidStack.EMPTY, ItemStack.EMPTY, 0, 0, false);
+				return new FluidCoolingRec(recipeId, s, FluidIngredient.EMPTY, 0, ItemStack.EMPTY, 0, 0, false);
 			}
 
-			FluidStack input = CraftingUtil.getFluidStack(json, "input");
+			Pair<FluidIngredient, Integer> input = CraftingUtil.getFluidIngredientAndQuantity(json, "input", true, -1);
 			ItemStack output = CraftingUtil.getItemStack(json, "output", true, false);
 			float maxTemp = JSONUtils.getAsFloat(json, "max_temp");
 			float tempChange = JSONUtils.getAsFloat(json, "temp_change", 0);
-			return new FluidCoolingRec(recipeId, s, input, output, maxTemp, tempChange, true);
+			return new FluidCoolingRec(recipeId, s, input.getLeft(), input.getRight(), output, maxTemp, tempChange, true);
 		}
 
 		@Nullable
@@ -124,13 +134,14 @@ public class FluidCoolingRec implements IOptionalRecipe<IInventory>{
 		public FluidCoolingRec fromNetwork(ResourceLocation recipeId, PacketBuffer buffer){
 			String s = buffer.readUtf(Short.MAX_VALUE);
 			if(!buffer.readBoolean()){//active
-				return new FluidCoolingRec(recipeId, s, FluidStack.EMPTY, ItemStack.EMPTY, 0, 0, false);
+				return new FluidCoolingRec(recipeId, s, FluidIngredient.EMPTY, 0, ItemStack.EMPTY, 0, 0, false);
 			}
-			FluidStack input = FluidStack.readFromPacket(buffer);
+			FluidIngredient input = FluidIngredient.readFromBuffer(buffer);
+			int qty = buffer.readVarInt();
 			ItemStack output = buffer.readItem();
 			float maxTemp = buffer.readFloat();
 			float tempChange = buffer.readFloat();
-			return new FluidCoolingRec(recipeId, s, input, output, maxTemp, tempChange, true);
+			return new FluidCoolingRec(recipeId, s, input, qty, output, maxTemp, tempChange, true);
 		}
 
 		@Override
@@ -138,7 +149,8 @@ public class FluidCoolingRec implements IOptionalRecipe<IInventory>{
 			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
 			if(recipe.active){
-				recipe.getInput().writeToPacket(buffer);
+				recipe.getInput().writeToBuffer(buffer);
+				buffer.writeVarInt(recipe.getInputQty());
 				buffer.writeItem(recipe.getResultItem());
 				buffer.writeFloat(recipe.getMaxTemp());
 				buffer.writeFloat(recipe.getAddedHeat());

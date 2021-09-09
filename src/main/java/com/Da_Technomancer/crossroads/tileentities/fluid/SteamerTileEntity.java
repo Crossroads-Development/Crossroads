@@ -41,7 +41,7 @@ public class SteamerTileEntity extends InventoryTE{
 
 	public SteamerTileEntity(){
 		super(type, 2);
-		fluidProps[0] = new TankProperty(10_000, true, false, (Fluid f) -> f == CRFluids.steam.still);
+		fluidProps[0] = new TankProperty(10_000, true, false, CRFluids.STEAM::contains);
 		fluidProps[1] = new TankProperty(10_000, false, true);
 		initFluidManagers();
 	}

@@ -39,7 +39,7 @@ public class SteamBoilerTileEntity extends InventoryTE{
 
 	public SteamBoilerTileEntity(){
 		super(type, 1);//Salt
-		fluidProps[0] = new TankProperty(8_000, true, false, f -> f == Fluids.WATER || f == CRFluids.distilledWater.still);
+		fluidProps[0] = new TankProperty(8_000, true, false, f -> f == Fluids.WATER || CRFluids.DISTILLED_WATER.contains(f));
 		fluidProps[1] = new TankProperty(8_000, false, true, fluid -> true);
 		initFluidManagers();
 	}

@@ -5,12 +5,13 @@ import com.Da_Technomancer.essentials.Essentials;
 import net.minecraft.item.Item;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.LinkedHashSet;
-import java.util.Optional;
 
 public class CRItemTags{
 
@@ -59,10 +60,10 @@ public class CRItemTags{
 	 * Returns an entry from the Tag
 	 * If the Tag is set to preserve order, it will reliably return the first entry.
 	 * Otherwise, any entry could be returned- but which entry will remain consistent between calls.
-	 * If the tag is unordered, this method will prioritize CR items, then essentials items, then vanilla items, then all other items
+	 * If the tag is unordered, this method will prioritize CR items, then essentials items, then vanilla items, then all other items, prioritized by alphabetical order of the registry name
 	 * @param tag The Tag to return an entry from
 	 * @param <T> The type of the tag. Normally Block or Item
-	 * @return An entry in the tag.
+	 * @return An entry in the tag, or null if the tag is empty.
 	 */
 	@Nullable
 	public static <T extends IForgeRegistryEntry<T>> T getTagEntry(ITag<T> tag){
@@ -74,16 +75,29 @@ public class CRItemTags{
 		if(elems instanceof LinkedHashSet){
 			return randEntry;//This is an ordered tag. Return the first entry
 		}
+		return getPreferredEntry(elems);
+	}
+
+	public static <T extends IForgeRegistryEntry<T>> T getPreferredEntry(Collection<T> entries){
 		//We can use the registry name to prioritize the result. Applies to items and blocks (among others)
-		Optional<T> opt = elems.stream().filter(t -> t.getRegistryName().getNamespace().equals(CR)).findFirst();
-		if(opt.isPresent()){
-			return opt.get();
-		}
-		opt = elems.stream().filter(t -> t.getRegistryName().getNamespace().equals(Essentials.MODID)).findFirst();
-		if(opt.isPresent()){
-			return opt.get();
-		}
-		opt = elems.stream().filter(t -> t.getRegistryName().getNamespace().equals("minecraft")).findFirst();
-		return opt.orElse(randEntry);
+		final Comparator<T> compareByRegName = (a, b) -> {
+			if(a.equals(b)){
+				return 0;
+			}
+			ResourceLocation aLocation = a.getRegistryName();
+			ResourceLocation bLocation = b.getRegistryName();
+//			assert aLocation != null && bLocation != null;
+			String aNamespace = aLocation.getNamespace();
+			String bNamespace = bLocation.getNamespace();
+			//This would be a great application for the Java 12 switch expressions
+			int aNamespaceWeight = aNamespace.equals(CR) ? 3 : aNamespace.equals(Essentials.MODID) ? 2 : aNamespace.equals("minecraft") ? 1 : 0;
+			int bNamespaceWeight = bNamespace.equals(CR) ? 3 : bNamespace.equals(Essentials.MODID) ? 2 : bNamespace.equals("minecraft") ? 1 : 0;
+			if(aNamespaceWeight != bNamespaceWeight){
+				return bNamespaceWeight - aNamespaceWeight;//Crossroads < Essentials < vanilla < anything else
+			}
+			return aLocation.compareTo(bLocation);//Default to alphabetical of the entire resource location
+		};
+
+		return entries.stream().min(compareByRegName).orElse(null);
 	}
 }

@@ -43,7 +43,7 @@ public class SaltReactorTileEntity extends InventoryTE{
 
 	public SaltReactorTileEntity(){
 		super(type, 1);
-		fluidProps[0] = new TankProperty(20 * WATER_USE, true, false, (Fluid f) -> f == CRFluids.distilledWater.still);//Distilled water
+		fluidProps[0] = new TankProperty(20 * WATER_USE, true, false, CRFluids.DISTILLED_WATER::contains);//Distilled water
 		fluidProps[1] = new TankProperty(20 * WATER_USE, false, true);//Water
 		initFluidManagers();
 	}

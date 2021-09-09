@@ -1,9 +1,7 @@
 {
 	"type": "crossroads:fluid_cooling",
-	"input": {
-		"fluid": "water",
-		"amount": 1000
-	},
+	"fluid": "water",
+	"fluid_amount": 1000,
 	"item": "ice",
 	"max_temp": 0,
 	"temp_change": 15

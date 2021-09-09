@@ -5,9 +5,9 @@
 	"boiling": 100,
 	"item": "crossroads:pure_ice",
 	"fluid": {
-		"fluid": "crossroads:distilled_water",
-		"amount": 100
+		"fluid": "crossroads:distilled_water"
 	},
+	"fluid_amount": 100,
 	"color": {
 		"base": "C80000FF",
 		"gas": "C8FFFFFF"

@@ -43,7 +43,7 @@ public class FatFeederTileEntity extends InventoryTE{
 
 	public FatFeederTileEntity(){
 		super(type, 0);
-		fluidProps[0] = new TankProperty(10_000, true, true, f -> f == CRFluids.liquidFat.still);
+		fluidProps[0] = new TankProperty(10_000, true, true, CRFluids.LIQUID_FAT::contains);
 		initFluidManagers();
 	}
 

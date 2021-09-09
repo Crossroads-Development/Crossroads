@@ -2,10 +2,10 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.IAlchEffect;
+import com.Da_Technomancer.crossroads.crafting.recipes.FluidIngredient;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.ITag;
-import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -43,11 +43,18 @@ public interface IReagent{
 	String getID();
 
 	/**
-	 * Do not modify the returned value- it is unfortunately mutable
-	 * @return A fluidstack representing the fluid equivalent of 1 unit of this reagent. EMPTY means no equivalent.
+	 * @return A FluidIngredient representing the fluid equivalent of 1 unit of this reagent. EMPTY means no equivalent.
 	 */
-	default FluidStack getFluid(){
-		return FluidStack.EMPTY;
+	default FluidIngredient getFluid(){
+		return FluidIngredient.EMPTY;
+	}
+
+	/**
+	 *
+	 * @return The quantity of fluid associated with 1 unit of this reagent. May be 0 only if getFluid() returns FluidIngredient.EMPTY
+	 */
+	default int getFluidQty(){
+		return 0;
 	}
 
 	default int getFlameRadius(int amount){

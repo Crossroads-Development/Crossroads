@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.PredicateMap;
 import com.Da_Technomancer.crossroads.crafting.recipes.AlchemyRec;
+import com.Da_Technomancer.crossroads.crafting.recipes.FluidIngredient;
 import com.Da_Technomancer.crossroads.crafting.recipes.ReagentRec;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.RecipeManager;
@@ -49,8 +50,8 @@ public final class ReagentManager{
 		//Adding and updating reagents is done through this method, which is called via the RecipeManager when the reagent recipes change
 		//This method does not remove reagents
 		REAGENTS.put(changedReag.getID(), changedReag);
-		FluidStack fluid = changedReag.getFluid();
-		if(fluid.isEmpty()){
+		FluidIngredient fluid = changedReag.getFluid();
+		if(fluid.getMatchedFluids().isEmpty()){
 			REAGENT_WITH_FLUID.remove(changedReag.getID());
 		}else if(!REAGENT_WITH_FLUID.contains(changedReag.getID())){
 			REAGENT_WITH_FLUID.add(changedReag.getID());

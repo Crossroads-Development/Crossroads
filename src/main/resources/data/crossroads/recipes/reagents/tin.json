@@ -5,8 +5,8 @@
 	"boiling": 2560,
 	"item": "forge:nuggets/tin",
 	"fluid": {
-		"fluid": "crossroads:molten_tin",
-		"amount": 16
+		"tag": "forge:molten_tin"
 	},
+	"fluid_amount": 16,
 	"color": "C0C0C0"
 }

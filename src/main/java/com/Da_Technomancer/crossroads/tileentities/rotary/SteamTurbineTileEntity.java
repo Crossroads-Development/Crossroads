@@ -36,7 +36,7 @@ public class SteamTurbineTileEntity extends InventoryTE{
 	public SteamTurbineTileEntity(){
 		super(type, 0);
 		fluidProps[0] = new TankProperty(CAPACITY, false, true);
-		fluidProps[1] = new TankProperty(CAPACITY, true, false, (Fluid f) -> f == CRFluids.steam.still);
+		fluidProps[1] = new TankProperty(CAPACITY, true, false, CRFluids.STEAM::contains);
 		initFluidManagers();
 	}
 

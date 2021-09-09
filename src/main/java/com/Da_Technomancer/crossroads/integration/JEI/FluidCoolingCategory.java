@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.recipes.FluidCoolingRec;
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -92,7 +93,7 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRec>{
 
 	@Override
 	public void setIngredients(FluidCoolingRec fluidCoolingRecipe, IIngredients ingredients){
-		ingredients.setInput(VanillaTypes.FLUID, fluidCoolingRecipe.getInput());
+		ingredients.setInputLists(VanillaTypes.FLUID, ImmutableList.of(fluidCoolingRecipe.getInput().getMatchedFluidStacks(fluidCoolingRecipe.getInputQty())));
 		ingredients.setOutput(VanillaTypes.ITEM, fluidCoolingRecipe.getResultItem());
 	}
 }
