@@ -7,6 +7,8 @@ import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.crossroads.items.itemSets.OreProfileItem;
+import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.crossroads.items.technomancy.TechnomancyArmor;
 import com.google.common.collect.ImmutableList;
 import mezz.jei.api.IModPlugin;
@@ -14,6 +16,7 @@ import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
 import mezz.jei.api.registration.*;
 import net.minecraft.client.Minecraft;
@@ -134,6 +137,27 @@ public class JEICrossroadsPlugin implements IModPlugin{
 				new IceboxFuelCategory(guiHelper),
 				new BeamLensCategory(guiHelper)
 		);
+	}
+
+	@Override
+	public void registerItemSubtypes(ISubtypeRegistration registration){
+		//Register item types with a finite number of variants based on NBT
+
+		final ISubtypeInterpreter oreProfileInterpreter = (ItemStack stack) -> {
+			OreSetup.OreProfile mat = OreProfileItem.getProfile(stack);
+			return mat == null ? ISubtypeInterpreter.NONE : mat.getName();
+		};
+
+		registration.registerSubtypeInterpreter(CRItems.oreClump, oreProfileInterpreter);
+		registration.registerSubtypeInterpreter(CRItems.oreGravel, oreProfileInterpreter);
+		registration.registerSubtypeInterpreter(CRItems.largeGear, oreProfileInterpreter);
+		registration.registerSubtypeInterpreter(CRItems.smallGear, oreProfileInterpreter);
+		registration.registerSubtypeInterpreter(CRItems.toggleGear, oreProfileInterpreter);
+		registration.registerSubtypeInterpreter(CRItems.invToggleGear, oreProfileInterpreter);
+		registration.registerSubtypeInterpreter(CRItems.axle, oreProfileInterpreter);
+		registration.registerSubtypeInterpreter(CRItems.clutch, oreProfileInterpreter);
+		registration.registerSubtypeInterpreter(CRItems.invClutch, oreProfileInterpreter);
+		//TODO test
 	}
 
 	protected static IDrawableStatic createFluidOverlay(IGuiHelper helper){

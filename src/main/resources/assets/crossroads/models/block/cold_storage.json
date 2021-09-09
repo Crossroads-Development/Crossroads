@@ -1,6 +1,7 @@
 {
-	"parent": "block/cube_all",
+	"parent": "block/cube_column",
 	"textures": {
-		"all": "crossroads:block/wip"
+		"side": "crossroads:block/cold_storage_side",
+		"end": "crossroads:block/cold_storage_top"
 	}
 }
