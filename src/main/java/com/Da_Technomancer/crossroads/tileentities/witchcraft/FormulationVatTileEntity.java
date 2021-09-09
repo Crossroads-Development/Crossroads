@@ -88,7 +88,7 @@ public class FormulationVatTileEntity extends InventoryTE{
 			Optional<FormulationVatRec> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.FORMULATION_VAT_TYPE, this, level);
 			if(recOpt.isPresent()){
 				rec = recOpt.get();
-				if(rec.getInput().getAmount() > fluids[0].getAmount() || (!fluids[1].isEmpty() && !BlockUtil.sameFluid(rec.getOutput(), fluids[1])) || rec.getOutput().getAmount() > fluidProps[1].capacity - fluids[1].getAmount()){
+				if(rec.getInputQty() > fluids[0].getAmount() || (!fluids[1].isEmpty() && !BlockUtil.sameFluid(rec.getOutput(), fluids[1])) || rec.getOutput().getAmount() > fluidProps[1].capacity - fluids[1].getAmount()){
 					//Ensure that there is sufficient fluid to craft, and we can fit the output
 					rec = null;
 				}
@@ -115,7 +115,7 @@ public class FormulationVatTileEntity extends InventoryTE{
 						fluids[1].grow(created.getAmount());
 					}
 					inventory[0].shrink(1);
-					fluids[0].shrink(rec.getInput().getAmount());
+					fluids[0].shrink(rec.getInputQty());
 				}
 			}
 

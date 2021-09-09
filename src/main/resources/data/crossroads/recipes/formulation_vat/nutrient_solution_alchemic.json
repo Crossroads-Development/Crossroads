@@ -1,9 +1,9 @@
 {
 	"type": "crossroads:formulation_vat",
 	"input_fluid": {
-		"fluid": "crossroads:liquid_fat",
-		"amount": 100
+		"tag": "crossroads:liquid_fat"
 	},
+	"fluid_amount": 100,
 	"input_item": {
 		"tag": "forge:dusts/sulfur"
 	},

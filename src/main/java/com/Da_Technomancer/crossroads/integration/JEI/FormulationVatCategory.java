@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.recipes.FormulationVatRec;
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -87,7 +88,7 @@ public class FormulationVatCategory implements IRecipeCategory<FormulationVatRec
 
 	@Override
 	public void setIngredients(FormulationVatRec rec, IIngredients ingredients){
-		ingredients.setInput(VanillaTypes.FLUID, rec.getInput());
+		ingredients.setInputLists(VanillaTypes.FLUID, ImmutableList.of(rec.getInput().getMatchedFluidStacks(rec.getInputQty())));
 		ingredients.setInputIngredients(rec.getIngredients());
 		ingredients.setOutput(VanillaTypes.FLUID, rec.getOutput());
 	}

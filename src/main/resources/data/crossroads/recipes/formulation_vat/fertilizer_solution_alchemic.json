@@ -1,9 +1,9 @@
 {
 	"type": "crossroads:formulation_vat",
 	"input_fluid": {
-		"fluid": "water",
-		"amount": 200
+		"fluid": "water"
 	},
+	"fluid_amount": 200,
 	"input_item": {
 		"tag": "crossroads:dusts/nitric_acid"
 	},
