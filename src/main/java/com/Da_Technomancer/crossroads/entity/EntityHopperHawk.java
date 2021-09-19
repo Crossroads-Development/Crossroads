@@ -63,7 +63,7 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements IFlyingAni
 	}
 
 	public static AttributeModifierMap createAttributes(){
-		return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 6.0D).add(Attributes.FLYING_SPEED, 0.4F).add(Attributes.MOVEMENT_SPEED, 0.2F).build();
+		return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 6.0D).add(Attributes.FLYING_SPEED, 0.8F).add(Attributes.MOVEMENT_SPEED, 0.4F).build();
 	}
 
 	@Override
@@ -208,6 +208,7 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements IFlyingAni
 
 		private final EntityHopperHawk mob;
 		private final PathNavigator navigation;
+		private static final float COLLECTION_RANGE_SMALL = 4;
 		private static final float COLLECTION_RANGE = 10;
 		private static final float COLLECTION_RANGE_SQR = COLLECTION_RANGE * COLLECTION_RANGE;
 		private static final float SPEED_MULTIPLIER = 2;
@@ -250,10 +251,19 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements IFlyingAni
 		}
 
 		private ItemEntity findNewTarget(){
-			List<ItemEntity> list = mob.level.getEntities(EntityType.ITEM, new AxisAlignedBB(mob.getX() - COLLECTION_RANGE, mob.getY() - COLLECTION_RANGE, mob.getZ() - COLLECTION_RANGE, mob.getX() + COLLECTION_RANGE, mob.getY() + COLLECTION_RANGE, mob.getZ() + COLLECTION_RANGE), (ItemEntity e) -> isValidTarget(e, false));
+			//To prevent multiple hopper hawks always targeting the same items, items are selected in two rounds
+			//Pick the closest 'nearby' item
+			float range = COLLECTION_RANGE_SMALL;
+			List<ItemEntity> list = mob.level.getEntities(EntityType.ITEM, new AxisAlignedBB(mob.getX() - range, mob.getY() - range, mob.getZ() - range, mob.getX() + range, mob.getY() + range, mob.getZ() + range), (ItemEntity e) -> isValidTarget(e, false));
 			if(!list.isEmpty()){
 				//Get the closest item in the list
 				return list.stream().min((e1, e2) -> (int) (e1.distanceToSqr(mob) - e2.distanceToSqr(mob))).orElse(null);
+			}
+			//If no items are 'nearby', use the larger range and select a target at random
+			range = COLLECTION_RANGE;
+			list = mob.level.getEntities(EntityType.ITEM, new AxisAlignedBB(mob.getX() - range, mob.getY() - range, mob.getZ() - range, mob.getX() + range, mob.getY() + range, mob.getZ() + range), (ItemEntity e) -> isValidTarget(e, false));
+			if(!list.isEmpty()){
+				return list.get(mob.level.random.nextInt(list.size()));
 			}
 			return null;
 		}

@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.render.HopperHawkShoulderRenderer;
 import com.Da_Technomancer.crossroads.render.TechnomancyElytraRenderer;
 import com.Da_Technomancer.crossroads.tileentities.beams.*;
 import com.Da_Technomancer.crossroads.tileentities.electric.DynamoTileEntity;
@@ -16,9 +17,7 @@ import com.Da_Technomancer.crossroads.tileentities.witchcraft.CultivatorVatTileE
 import com.Da_Technomancer.essentials.render.LinkLineRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.entity.*;
-import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 
@@ -84,7 +83,8 @@ public class CRRendererRegistry{
 		}
 		//Player renderers are stored separately from the main renderer map
 		for(PlayerRenderer playerRenderer : manager.getSkinMap().values()){
-			playerRenderer.addLayer(new TechnomancyElytraRenderer<AbstractClientPlayerEntity, PlayerModel<AbstractClientPlayerEntity>>(playerRenderer));
+			playerRenderer.addLayer(new TechnomancyElytraRenderer<>(playerRenderer));
+			playerRenderer.addLayer(new HopperHawkShoulderRenderer<>(playerRenderer));
 		}
 	}
 }
