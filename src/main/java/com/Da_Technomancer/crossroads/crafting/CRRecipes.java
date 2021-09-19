@@ -44,6 +44,8 @@ public final class CRRecipes{
 	public static IRecipeSerializer<FormulationVatRec> FORMULATION_VAT_SERIAL = null;
 	@ObjectHolder("beam_lens")
 	public static IRecipeSerializer<BeamLensRec> BEAM_LENS_SERIAL = null;
+	@ObjectHolder("embryo_lab_morph")
+	public static IRecipeSerializer<EmbryoLabMorphRec> EMBRYO_LAB_MORPH_SERIAL = null;
 
 	//Forge hasn't replaced the IRecipeType registry (yet). We use the vanilla registry as a result.
 	public static IRecipeType<MillRec> MILL_TYPE = IRecipeType.register(Crossroads.MODID + ":mill");
@@ -63,5 +65,5 @@ public final class CRRecipes{
 	public static IRecipeType<ReagentRec> REAGENT_TYPE = IRecipeType.register(Crossroads.MODID + ":reagents");
 	public static IRecipeType<FormulationVatRec> FORMULATION_VAT_TYPE = IRecipeType.register(Crossroads.MODID + ":formulation_vat");
 	public static IRecipeType<BeamLensRec> BEAM_LENS_TYPE = IRecipeType.register(Crossroads.MODID + ":beam_lens");
-
+	public static IRecipeType<EmbryoLabMorphRec> EMBRYO_LAB_MORPH_TYPE = IRecipeType.register(Crossroads.MODID + ":embryo_lab_morph");
 }

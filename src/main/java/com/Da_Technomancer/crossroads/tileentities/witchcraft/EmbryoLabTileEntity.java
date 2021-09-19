@@ -9,6 +9,8 @@ import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.crafting.CRRecipes;
+import com.Da_Technomancer.crossroads.crafting.recipes.EmbryoLabMorphRec;
 import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
 import com.Da_Technomancer.crossroads.gui.container.EmbryoLabContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
@@ -41,6 +43,7 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.List;
 
 @ObjectHolder(Crossroads.MODID)
 public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
@@ -150,6 +153,18 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 					setChanged();
 					syncTemplate();
 					return new ItemStack(Items.GLASS_BOTTLE);
+				}
+			}
+
+			//Handle entity type morphing
+			List<EmbryoLabMorphRec> recipes = level.getRecipeManager().getAllRecipesFor(CRRecipes.EMBRYO_LAB_MORPH_TYPE);
+			for(EmbryoLabMorphRec rec : recipes){
+				if(rec.isEnabled() && rec.getInputMob().equals(template.getEntityName()) && rec.getIngr().test(stack)){
+					template.setEntityName(rec.getOutputMob());
+					stack.shrink(1);
+					setChanged();
+					syncTemplate();
+					return stack;
 				}
 			}
 		}

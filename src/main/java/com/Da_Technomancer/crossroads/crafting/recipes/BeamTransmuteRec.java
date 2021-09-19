@@ -65,10 +65,6 @@ public class BeamTransmuteRec implements IOptionalRecipe<IInventory>{
 		return Math.max(power, 0);
 	}
 
-	public boolean isActive(){
-		return active;
-	}
-
 	@Override
 	public boolean matches(IInventory inv, World worldIn){
 		return true;//The entire condition of this recipe is based on block type and power, which can't be determined here

@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.API.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.witchcraft.EmbryoLab;
+import com.Da_Technomancer.crossroads.entity.EntityHopperHawk;
 import com.Da_Technomancer.crossroads.items.alchemy.*;
 import com.Da_Technomancer.crossroads.items.itemSets.*;
 import com.Da_Technomancer.crossroads.items.technomancy.*;
@@ -142,6 +143,7 @@ public final class CRItems{
 	public static Item mutagen;
 	public static VillagerBrain villagerBrain;
 	public static BrainHarvester brainHarvester;
+	public static Item hopperHawkSpawnEgg;
 
 	public static OreProfileItem oreGravel;
 	public static OreProfileItem oreClump;
@@ -271,6 +273,7 @@ public final class CRItems{
 		toRegister.add(mutagen = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("mutagen"));
 		villagerBrain = new VillagerBrain();
 		brainHarvester = new BrainHarvester();
+		toRegister.add(hopperHawkSpawnEgg = new SpawnEggItem(EntityHopperHawk.type, 0x555555, 0x999999, (new Item.Properties()).tab(ItemGroup.TAB_MISC)).setRegistryName("hopper_hawk_spawn_egg"));
 	}
 
 	@OnlyIn(Dist.CLIENT)

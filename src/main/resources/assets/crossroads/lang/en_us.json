@@ -284,6 +284,7 @@
 	"item.crossroads.mutagen": "Mutagen",
 	"item.crossroads.villager_brain": "Villager Brain",
 	"item.crossroads.brain_harvester": "Surgical Battleaxe",
+	"item.crossroads.hopper_hawk_spawn_egg": "Hopper Hawk Spawn Egg",
 
 	"item.crossroads.distilled_water_bucket": "Distilled Water Bucket",
 	"item.crossroads.dirty_water_bucket": "Dirty Water Bucket",
@@ -359,12 +360,13 @@
 	"fluid.crossroads.flowing_soul_essence":"Soul Essence",
 
 
-	"entity.cr_bullet": "Bullet",
-	"entity.flame_core": "Alchemy Flame Cloud",
-	"entity.flying_machine": "Flying Machine",
-	"entity.ghost_marker": "Internal Position Anchor",
-	"entity.nitro": "Nitroglycerin Bottle",
-	"entity.shell": "Chemical Shell",
+	"entity.crossroads.cr_bullet": "Bullet",
+	"entity.crossroads.flame_core": "Alchemy Flame Cloud",
+	"entity.crossroads.flying_machine": "Flying Machine",
+	"entity.crossroads.ghost_marker": "Internal Position Anchor",
+	"entity.crossroads.nitro": "Nitroglycerin Bottle",
+	"entity.crossroads.shell": "Chemical Shell",
+	"entity.crossroads.hopper_hawk": "Hopper Hawk",
 
 
 	"tt.crossroads.salt_block": "Kills plants and slimes around it",

@@ -8,7 +8,8 @@ import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.loot_modifiers.PiglinBarterLootModifier;
 import com.Da_Technomancer.crossroads.crafting.recipes.*;
-import com.Da_Technomancer.crossroads.entity.*;
+import com.Da_Technomancer.crossroads.entity.CREntities;
+import com.Da_Technomancer.crossroads.entity.EntityHopperHawk;
 import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.*;
@@ -24,7 +25,6 @@ import com.Da_Technomancer.crossroads.world.CRWorldGen;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.Container;
@@ -46,6 +46,7 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -73,6 +74,7 @@ public final class Crossroads{
 		bus.addListener(this::commonInit);
 		bus.addListener(this::clientInit);
 		bus.addListener(this::serverStarted);
+		bus.addListener(this::registerEntityAttributes);
 
 		CRConfig.init();
 
@@ -175,6 +177,7 @@ public final class Crossroads{
 		reg.register(new ReagentRec.Serializer().setRegistryName("reagents"));
 		reg.register(new FormulationVatRec.Serializer().setRegistryName("formulation_vat"));
 		reg.register(new BeamLensRec.Serializer().setRegistryName(("beam_lens")));
+		reg.register(new EmbryoLabMorphRec.Serializer().setRegistryName("embryo_lab_morph"));
 	}
 
 	@SubscribeEvent
@@ -186,12 +189,7 @@ public final class Crossroads{
 	@SubscribeEvent
 	public static void registerEnts(RegistryEvent.Register<EntityType<?>> e){
 		IForgeRegistry<EntityType<?>> reg = e.getRegistry();
-
-		reg.register(EntityType.Builder.of(EntityFlameCore::new, EntityClassification.MISC).fireImmune().noSummon().setShouldReceiveVelocityUpdates(false).sized(1, 1).build("flame_core").setRegistryName("flame_core"));
-		reg.register(EntityType.Builder.<EntityShell>of(EntityShell::new, EntityClassification.MISC).fireImmune().setTrackingRange(64).setUpdateInterval(5).sized(.25F, .25F).build("shell").setRegistryName("shell"));
-		reg.register(EntityType.Builder.<EntityNitro>of(EntityNitro::new, EntityClassification.MISC).setTrackingRange(64).setUpdateInterval(5).build("nitro").setRegistryName("nitro"));
-		reg.register(EntityType.Builder.<EntityGhostMarker>of(EntityGhostMarker::new, EntityClassification.MISC).noSummon().setTrackingRange(64).setUpdateInterval(20).fireImmune().setShouldReceiveVelocityUpdates(false).build("ghost_marker").setRegistryName("ghost_marker"));
-		reg.register(EntityType.Builder.of(EntityFlyingMachine::new, EntityClassification.MISC).sized(1F, 1.3F).setTrackingRange(64).setUpdateInterval(1).build("flying_machine").setRegistryName("flying_machine"));
+		CREntities.init(reg);
 	}
 
 	@SuppressWarnings("unused")
@@ -370,5 +368,9 @@ public final class Crossroads{
 	public static void onTextureStitch(TextureStitchEvent.Pre event){
 		//Add textures used in TESRs
 		CRRenderTypes.stitchTextures(event);
+	}
+
+	private void registerEntityAttributes(EntityAttributeCreationEvent e){
+		e.put(EntityHopperHawk.type, EntityHopperHawk.createAttributes());
 	}
 }

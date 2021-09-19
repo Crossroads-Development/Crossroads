@@ -74,6 +74,16 @@ public class FluidIngredient implements Predicate<FluidStack>{
 	}
 
 	/**
+	 * Checks if this was defined as an empty ingredient
+	 * This does not load contained tags, making this method safe for lazy-loading
+	 * Note that if this ingredient was defined as containing only tags which are empty, it will return false
+	 * @return Whether this ingredient was defined as being totally empty
+	 */
+	public boolean isStrictlyEmpty(){
+		return this == EMPTY || keys.isEmpty() || keys.stream().allMatch(IFluidList::isEmpty);
+	}
+
+	/**
 	 * Creates a list of the item forms of every matched fluid
 	 * @param size The size of the fluidstacks to return
 	 * @return The fluids matched, with the passed size. Will contain no duplicates, may be empty
@@ -100,6 +110,9 @@ public class FluidIngredient implements Predicate<FluidStack>{
 
 	public static FluidIngredient readFromBuffer(PacketBuffer buf){
 		int count = buf.readVarInt();
+		if(count <= 0){
+			return FluidIngredient.EMPTY;
+		}
 		Fluid[] matched = new Fluid[count];
 		for(int i = 0; i < count; i++){
 			matched[i] = ForgeRegistries.FLUIDS.getValue(buf.readResourceLocation());
@@ -152,6 +165,8 @@ public class FluidIngredient implements Predicate<FluidStack>{
 
 		Collection<Fluid> getMatched();
 
+		boolean isEmpty();
+
 	}
 
 	private static class SingleList implements IFluidList{
@@ -170,6 +185,11 @@ public class FluidIngredient implements Predicate<FluidStack>{
 		public Collection<Fluid> getMatched(){
 			return matchL;
 		}
+
+		@Override
+		public boolean isEmpty(){
+			return false;
+		}
 	}
 
 	private static class TagList implements IFluidList{
@@ -178,11 +198,19 @@ public class FluidIngredient implements Predicate<FluidStack>{
 
 		public TagList(ITag<Fluid> matched){
 			tag = matched;
+			if(tag == null){
+				throw new JsonParseException("No defined tag in FluidIngredient");
+			}
 		}
 
 		@Override
 		public Collection<Fluid> getMatched(){
 			return tag.getValues();
+		}
+
+		@Override
+		public boolean isEmpty(){
+			return false;
 		}
 	}
 
@@ -197,6 +225,11 @@ public class FluidIngredient implements Predicate<FluidStack>{
 		@Override
 		public Collection<Fluid> getMatched(){
 			return fluids;
+		}
+
+		@Override
+		public boolean isEmpty(){
+			return fluids.isEmpty();
 		}
 	}
 }

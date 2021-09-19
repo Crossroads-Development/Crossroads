@@ -51,7 +51,7 @@ public final class ReagentManager{
 		//This method does not remove reagents
 		REAGENTS.put(changedReag.getID(), changedReag);
 		FluidIngredient fluid = changedReag.getFluid();
-		if(fluid.getMatchedFluids().isEmpty()){
+		if(fluid.isStrictlyEmpty()){
 			REAGENT_WITH_FLUID.remove(changedReag.getID());
 		}else if(!REAGENT_WITH_FLUID.contains(changedReag.getID())){
 			REAGENT_WITH_FLUID.add(changedReag.getID());

@@ -7,4 +7,5 @@ Additional items can be added to add special <thing><link:crossroads:witchcraft/
 To finalize the crafting, the <item>Miller-Urey capsule/$ needs to be hit by a <thing><link:crossroads:beam/charge>charge beam/$, which will consume all the ingredients and create one <thing><link:crossroads:witchcraft/spoilage>fresh/$ <item><link:crossroads:witchcraft/cloning#process>embryo/$. If the <item><link:crossroads:witchcraft/blood_centrifuge>centrifuged blood pouch/$ was originally spoiled, it will add 1 <thing><link:crossroads:witchcraft/cloning#degradation>degradation/$.
 <thing><link:essentials/circuits>Circuits/$ read 1 if there is a <item><link:crossroads:witchcraft/blood_centrifuge>centrifuged blood pouch/$ in the machine, otherwise 0.
 <page|text|bobo>
-TODO This page is a placeholder for a bobo feature which is still being developed
+<bobo>heWO !!! izME <link:crossroads:intro/welcome#bobo>(.)^(.)/$<bobo>
+biLD @ buDy! a HOPPERH0CK! sTahrt wiv bErd DAT tok! nOT da tiCk-Tokc (cuKoo?)! out-n't-gect won hoPre! uR bUdddie lIek 2 ete mure hohpyre!

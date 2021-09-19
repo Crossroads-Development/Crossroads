@@ -6,8 +6,8 @@
 	"vessel": "crystal",
 	"item": "crossroads:nuggets/copshowium",
 	"fluid": {
-		"fluid": "crossroads:molten_copshowium",
-		"amount": 16
+		"tag": "forge:molten_copshowium"
 	},
+	"fluid_amount": 16,
 	"color": "FF8200"
 }

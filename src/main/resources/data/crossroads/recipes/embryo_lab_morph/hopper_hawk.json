@@ -1,0 +1,16 @@
+{
+	"type": "crossroads:embryo_lab_morph",
+	"input": [
+		{
+			"item": "minecraft:hopper"
+		},
+		{
+			"item": "essentials:sorting_hopper"
+		},
+		{
+			"item": "essentials:speed_hopper"
+		}
+	],
+	"input_mob": "minecraft:parrot",
+	"output_mob": "crossroads:hopper_hawk"
+}

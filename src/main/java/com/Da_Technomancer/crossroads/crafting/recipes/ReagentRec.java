@@ -244,7 +244,7 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 			}
 			ITag.INamedTag<Item> item = ItemTags.bind(JSONUtils.getAsString(json, "item", "crossroads:empty"));
 			//Fluid definition is optional, but must have a quantity and be specified in a subelement if present
-			Pair<FluidIngredient, Integer> fluid = json.has("fluid") ? null : CraftingUtil.getFluidIngredientAndQuantity(json, "fluid", false, -1);
+			Pair<FluidIngredient, Integer> fluid = json.has("fluid") ? CraftingUtil.getFluidIngredientAndQuantity(json, "fluid", false, -1) : null;
 			ContainRequirements vessel = containTypeMap.getOrDefault(JSONUtils.getAsString(json, "vessel", "none"), ContainRequirements.NONE);
 			String effectName = JSONUtils.getAsString(json, "effect", "none");
 			IAlchEffect effect = effectMap.getOrDefault(effectName, null);
