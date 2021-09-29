@@ -11,7 +11,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class RenderHopperHawk extends MobRenderer<EntityHopperHawk, ModelHopperHawk>{
 
-	public static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/entity/hopper_hawk.png");
+	public static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/entities/hopper_hawk.png");
 
 	protected RenderHopperHawk(EntityRendererManager manager){
 		super(manager, new ModelHopperHawk(), 0.3F);
