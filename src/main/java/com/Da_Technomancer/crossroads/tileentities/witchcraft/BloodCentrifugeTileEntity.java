@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.witchcraft;
 
+import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
@@ -55,11 +56,6 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 	@Override
 	protected boolean useRotary(){
 		return true;
-	}
-
-	@Override
-	protected AxleHandler createAxleHandler(){
-		return new AngleAxleHandler();
 	}
 
 	public double getTargetSpeed(){
@@ -133,6 +129,20 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 		CompoundNBT nbt = super.getUpdateTag();
 		nbt.putInt("progress", progress);
 		return nbt;
+	}
+
+	@Override
+	public void setChanged(){
+		super.setChanged();
+		if(level != null && !level.isClientSide){
+			//Update the blockstate in the world
+			BlockState state = getBlockState();
+			int inputCount = (inventory[0].isEmpty() ? 0 : 1) + (inventory[1].isEmpty() ? 0 : 1);
+			if(state.getValue(CRProperties.CONTENTS) != inputCount){
+				//No block update
+				level.setBlock(worldPosition, state.setValue(CRProperties.CONTENTS, inputCount), 2);
+			}
+		}
 	}
 
 	@Override

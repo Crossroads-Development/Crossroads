@@ -64,11 +64,6 @@ public class RotaryPumpTileEntity extends InventoryTE{
 	}
 
 	@Override
-	protected AxleHandler createAxleHandler(){
-		return new AngleAxleHandler();
-	}
-
-	@Override
 	protected double getMoInertia(){
 		return INERTIA;
 	}

@@ -73,6 +73,7 @@ public class StampMillTileEntity extends InventoryTE{
 	}
 
 	public float renderAngle(float partialTicks){
+		//This machines doesn't visually switch rotation direction when rotary direction changes
 		float prev = axleHandler.getAngle(partialTicks - 1F);
 		float cur = axleHandler.getAngle(partialTicks);
 		return Math.signum(cur - prev) * cur;
@@ -178,7 +179,7 @@ public class StampMillTileEntity extends InventoryTE{
 		return new StampMillContainer(id, playerInv, createContainerBuf());
 	}
 
-	private class ThroughAxleHandler extends AngleAxleHandler{
+	private class ThroughAxleHandler extends AxleHandler{
 
 		@Override
 		public void propagate(IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius, boolean renderOffset){

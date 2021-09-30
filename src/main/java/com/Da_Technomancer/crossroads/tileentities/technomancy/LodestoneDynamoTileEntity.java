@@ -56,11 +56,6 @@ public class LodestoneDynamoTileEntity extends ModuleTE{
 	}
 
 	@Override
-	protected AxleHandler createAxleHandler(){
-		return new AngleAxleHandler();
-	}
-
-	@Override
 	public void clearCache(){
 		super.clearCache();
 		axleOpt.invalidate();

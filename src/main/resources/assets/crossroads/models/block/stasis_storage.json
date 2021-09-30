@@ -1,6 +1,12 @@
 {
 	"parent": "block/cube_all",
 	"textures": {
-		"all": "crossroads:block/wip"
+		"north": "crossroads:block/stasis_storage_side",
+		"south": "crossroads:block/stasis_storage_side",
+		"east": "crossroads:block/stasis_storage_side",
+		"west": "crossroads:block/stasis_storage_side",
+		"up": "crossroads:block/stasis_storage_top",
+		"down": "crossroads:block/stasis_storage_top",
+		"particle": "crossroads:block/stasis_storage_side"
 	}
 }

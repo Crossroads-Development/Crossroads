@@ -1,5 +1,7 @@
 {
 	"variants": {
-		"": { "model": "crossroads:block/blood_centrifuge" }
+		"contents=0": { "model": "crossroads:block/blood_centrifuge" },
+		"contents=1": { "model": "crossroads:block/blood_centrifuge" },
+		"contents=2": { "model": "crossroads:block/blood_centrifuge" }
 	}
 }

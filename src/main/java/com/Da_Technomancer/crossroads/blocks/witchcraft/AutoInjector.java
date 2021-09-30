@@ -28,6 +28,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -44,10 +45,12 @@ public class AutoInjector extends ContainerBlock implements IReadable{
 	private static final VoxelShape[] SHAPES = new VoxelShape[6];
 
 	static{
-		//TODO temp; make proper shapes based on direction
-		for(int i = 0; i < 6; i++){
-			SHAPES[i] = box(0, 0, 0, 16, 16, 16);
-		}
+		SHAPES[0] = VoxelShapes.or(box(0, 7, 0, 16, 16, 16), box(7.5, 0, 7.5, 8.5, 7, 8.5));
+		SHAPES[1] = VoxelShapes.or(box(0, 0, 0, 16, 9, 16), box(7.5, 9, 7.5, 8.5, 16, 8.5));
+		SHAPES[2] = VoxelShapes.or(box(0, 0, 7, 16, 16, 16), box(7.5, 7.5, 0, 8.5, 8.5, 7));
+		SHAPES[3] = VoxelShapes.or(box(0, 0, 0, 16, 16, 9), box(7.5, 7.5, 9, 8.5, 8.5, 16));
+		SHAPES[4] = VoxelShapes.or(box(7, 0, 0, 16, 16, 16), box(0, 7.5, 7.5, 7, 8.5, 8.5));
+		SHAPES[5] = VoxelShapes.or(box(0, 0, 0, 9, 16, 16), box(9, 7.5, 7.5, 16, 8.5, 8.5));
 	}
 
 	public AutoInjector(){

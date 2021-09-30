@@ -42,8 +42,6 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	//Rotary
 	protected double energy = 0;
 	// 0: angle, 1: clientW
-	// Initialized by the constructor of AngleAxleHandler, making its use conditional upon the use of AngleAxleHandler
-	protected float[] angleW = null;
 	//Heat
 	protected boolean initHeat = false;
 	protected double temp;
@@ -115,11 +113,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 
 	@Override
 	public void tick(){
-		if(level.isClientSide){
-			if(useRotary() && angleW != null){
-				angleW[0] += angleW[1] * 9D / Math.PI;
-			}
-		}else{
+		if(!level.isClientSide){
 			if(useHeat() && !initHeat){
 				heatHandler.init();
 			}
@@ -148,10 +142,6 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	public CompoundNBT save(CompoundNBT nbt){
 		super.save(nbt);
 		nbt.putDouble("mot_1", energy);
-		if(angleW != null){
-			nbt.putFloat("ang_w_0", angleW[0]);
-			nbt.putFloat("ang_w_1", angleW[1]);
-		}
 
 		nbt.putBoolean("init_heat", initHeat);
 		nbt.putDouble("temp", temp);
@@ -170,10 +160,6 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	public void load(BlockState state, CompoundNBT nbt){
 		super.load(state, nbt);
 		energy = nbt.getDouble("mot_1");
-		if(angleW != null){
-			angleW[0] = nbt.getFloat("ang_w_0");
-			angleW[1] = nbt.getFloat("ang_w_1");
-		}
 
 		initHeat = nbt.getBoolean("init_heat");
 		temp = nbt.getDouble("temp");
@@ -188,10 +174,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	@Override
 	public CompoundNBT getUpdateTag(){
 		CompoundNBT nbt = super.getUpdateTag();
-		if(angleW != null){
-			nbt.putFloat("ang_w_0", angleW[0]);
-			nbt.putFloat("ang_w_1", angleW[1]);
-		}
+		//Placeholder for future use
 		return nbt;
 	}
 
@@ -211,10 +194,9 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 
 	@Override
 	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
-		if(identifier == 0 && angleW != null){
-			float angle = Float.intBitsToFloat((int) (message & 0xFFFFFFFFL));
-			angleW[0] = Math.abs(angle - angleW[0]) > 5F ? angle : angleW[0];
-			angleW[1] = Float.intBitsToFloat((int) (message >>> 32L));
+		if(identifier == 0){
+			//No-op (removed code)
+			//Reserving identifier 0 for future use
 		}
 	}
 
@@ -540,24 +522,12 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 
 		@Override
 		public float getAngle(float partialTicks){
-			return 0;
+			return axis == null ? 0 : axis.getAngle(rotRatio, partialTicks, renderOffset, 22.5F);
 		}
 
 		@Override
 		public void disconnect(){
 			axis = null;
-		}
-	}
-
-	protected class AngleAxleHandler extends AxleHandler{
-
-		public AngleAxleHandler(){
-			angleW = new float[2];
-		}
-
-		@Override
-		public float getAngle(float partialTicks){
-			return axis == null ? 0 : axis.getAngle(rotRatio, partialTicks, renderOffset, 22.5F);
 		}
 	}
 }

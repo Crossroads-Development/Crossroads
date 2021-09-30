@@ -157,7 +157,6 @@ public class JEICrossroadsPlugin implements IModPlugin{
 		registration.registerSubtypeInterpreter(CRItems.axle, oreProfileInterpreter);
 		registration.registerSubtypeInterpreter(CRItems.clutch, oreProfileInterpreter);
 		registration.registerSubtypeInterpreter(CRItems.invClutch, oreProfileInterpreter);
-		//TODO test
 	}
 
 	protected static IDrawableStatic createFluidOverlay(IGuiHelper helper){

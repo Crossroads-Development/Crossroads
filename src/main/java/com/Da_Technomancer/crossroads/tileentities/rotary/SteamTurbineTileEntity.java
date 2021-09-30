@@ -56,11 +56,6 @@ public class SteamTurbineTileEntity extends InventoryTE{
 	}
 
 	@Override
-	protected AxleHandler createAxleHandler(){
-		return new AngleAxleHandler();
-	}
-
-	@Override
 	public void tick(){
 		super.tick();
 		

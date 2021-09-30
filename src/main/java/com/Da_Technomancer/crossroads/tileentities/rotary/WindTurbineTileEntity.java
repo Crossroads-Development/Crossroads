@@ -125,11 +125,6 @@ public class WindTurbineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	protected AxleHandler createAxleHandler(){
-		return new AngleAxleHandler();
-	}
-
-	@Override
 	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
 		chat.add(new TranslationTextComponent("tt.crossroads.wind_turbine.weather", CRConfig.formatVal(getPowerOutput())));
 		super.addInfo(chat, player, hit);

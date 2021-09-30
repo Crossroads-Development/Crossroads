@@ -65,11 +65,6 @@ public class RotaryDrillTileEntity extends ModuleTE{
 	}
 
 	@Override
-	protected AxleHandler createAxleHandler(){
-		return new AngleAxleHandler();
-	}
-
-	@Override
 	protected double getMoInertia(){
 		return INERTIA[golden ? 1 : 0];
 	}

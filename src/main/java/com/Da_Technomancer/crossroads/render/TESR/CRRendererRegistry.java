@@ -18,6 +18,7 @@ import com.Da_Technomancer.essentials.render.LinkLineRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.*;
+import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 
@@ -26,9 +27,9 @@ public class CRRendererRegistry{
 	public static void registerBlockRenderer(){
 
 		ClientRegistry.bindTileEntityRenderer(MechanismTileEntity.type, MechanismRenderer::new);
-		reg(CRBlocks.rotaryPump);
+//		reg(CRBlocks.rotaryPump);
 		ClientRegistry.bindTileEntityRenderer(RotaryPumpTileEntity.type, RotaryPumpRenderer::new);
-		reg(CRBlocks.steamTurbine);
+//		reg(CRBlocks.steamTurbine);
 		ClientRegistry.bindTileEntityRenderer(SteamTurbineTileEntity.type, SteamTurbineRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(LargeGearMasterTileEntity.teType, LargeGearRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(RotaryDrillTileEntity.type, RotaryDrillRenderer::new);
@@ -66,10 +67,11 @@ public class CRRendererRegistry{
 		ClientRegistry.bindTileEntityRenderer(BloodCentrifugeTileEntity.type, BloodCentrifugeRenderer::new);
 	}
 
-	private static void reg(Block block){
-		//Registers the item form of a block to use the block's TESR
-		Minecraft.getInstance().getItemRenderer().getItemModelShaper().register(block.asItem(), new ModelResourceLocation(block.getRegistryName(), "inventory"));
-	}
+//	This doesn't work anymore, and any existing blocks were switched to JSON models for the item form
+//	private static void reg(Block block){
+//		//Registers the item form of a block to use the block's TESR
+//		Minecraft.getInstance().getItemRenderer().getItemModelShaper().register(block.asItem(), new ModelResourceLocation(block.getRegistryName(), "inventory"));
+//	}
 
 	public static void registerEntityLayerRenderers(){
 
