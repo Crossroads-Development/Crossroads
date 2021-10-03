@@ -5,6 +5,8 @@ A steampunk techology mod for Minecraft with the intention of expanding automati
 ---------------------------------
 
 Required coding style for commits:
+There is a full coding style config here (please use): https://gist.github.com/Da-Technomancer/b9a5ab70985712e0d91961fb1af0e5a0
+Summary:
 * Use tabs over spaces.
 * Comment your code.
 * Put the { on the same line, but the } on a new line.
