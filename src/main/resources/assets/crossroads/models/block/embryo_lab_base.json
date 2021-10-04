@@ -1,0 +1,54 @@
+{
+	"ambientocclusion": false,
+	"textures": {
+		"copper": "crossroads:block/block_copper",
+		"glass": "minecraft:block/cyan_stained_glass",
+		"particle": "crossroads:block/block_copper"
+	},
+	"elements": [
+		{
+			"from": [ 3, 0, 3 ],
+			"to": [ 13, 2, 13 ],
+			"faces": {
+				"down":  { "uv": [ 3, 3, 13, 13 ], "texture": "#copper", "cullface": "down" },
+				"up":    { "uv": [ 3, 3, 13, 13 ], "texture": "#copper" },
+				"north": { "uv": [ 3, 3, 13, 5 ], "texture": "#copper"},
+				"south": { "uv": [ 3, 3, 13, 5 ], "texture": "#copper"},
+				"west":  { "uv": [ 3, 3, 13, 5 ], "texture": "#copper"},
+				"east":  { "uv": [ 3, 3, 13, 5 ], "texture": "#copper"}
+			}
+		},
+		{
+			"from": [ 3, 14, 3 ],
+			"to": [ 13, 16, 13 ],
+			"faces": {
+				"down":  { "uv": [ 3, 3, 13, 13 ], "texture": "#copper" },
+				"up":    { "uv": [ 3, 3, 13, 13 ], "texture": "#copper", "cullface": "up" },
+				"north": { "uv": [ 3, 3, 13, 5 ], "texture": "#copper"},
+				"south": { "uv": [ 3, 3, 13, 5 ], "texture": "#copper"},
+				"west":  { "uv": [ 3, 3, 13, 5 ], "texture": "#copper"},
+				"east":  { "uv": [ 3, 3, 13, 5 ], "texture": "#copper"}
+			}
+		},
+		{
+			"from": [ 7, 4, 7 ],
+			"to": [ 9, 14, 9 ],
+			"faces": {
+				"north": { "uv": [ 7, 4, 9, 14 ], "texture": "#copper"},
+				"south": { "uv": [ 7, 4, 9, 14 ], "texture": "#copper"},
+				"west":  { "uv": [ 7, 4, 9, 14 ], "texture": "#copper"},
+				"east":  { "uv": [ 7, 4, 9, 14 ], "texture": "#copper"}
+			}
+		},
+		{	
+			"from": [ 3, 2, 3 ],
+			"to": [ 13, 14, 13 ],
+			"faces": {
+				"north": { "uv": [ 3, 2, 13, 14 ], "texture": "#glass"},
+				"south": { "uv": [ 3, 2, 13, 14 ], "texture": "#glass"},
+				"west":  { "uv": [ 3, 2, 13, 14 ], "texture": "#glass"},
+				"east":  { "uv": [ 3, 2, 13, 14 ], "texture": "#glass"}
+			}
+		}
+	]
+}

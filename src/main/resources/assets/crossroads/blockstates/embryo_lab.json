@@ -1,0 +1,11 @@
+{
+	"multipart": [
+		{
+			"apply": { "model": "crossroads:block/embryo_lab_base" }
+		},
+		{
+			"when": { "active": "true" },
+			"apply": { "model": "crossroads:block/embryo_lab_fill" }
+		}
+	]
+}

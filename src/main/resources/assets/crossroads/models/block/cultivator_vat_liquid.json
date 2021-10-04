@@ -1,0 +1,19 @@
+{
+	"ambientocclusion": false,
+	"textures": {
+		"fluid": "crossroads:block/nutrient_solution_still",
+		"particle": "crossroads:block/nutrient_solution_still"
+	},
+	"elements": [
+		{	
+			"from": [ 1, 4.5, 1 ],
+			"to": [ 15, 14, 15 ],
+			"faces": {
+				"north": { "uv": [ 1, 4.5, 14, 15 ], "texture": "#fluid"},
+				"south": { "uv": [ 1, 4.5, 14, 15 ], "texture": "#fluid"},
+				"west":  { "uv": [ 1, 4.5, 14, 15 ], "texture": "#fluid"},
+				"east":  { "uv": [ 1, 4.5, 14, 15 ], "texture": "#fluid"}
+			}
+		}
+	]
+}

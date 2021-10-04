@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:block/cultivator_vat_base_off",
+	"parent": "crossroads:block/embryo_lab_base",
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170],

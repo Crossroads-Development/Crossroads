@@ -1,0 +1,20 @@
+{
+	"ambientocclusion": false,
+	"textures": {
+		"fill": "minecraft:block/red_glazed_terracotta",
+		"particle": "crossroads:block/block_copper"
+	},
+	"elements": [
+		{	
+			"from": [ 4, 2, 4 ],
+			"to": [ 12, 8, 12 ],
+			"faces": {
+				"north": { "uv": [ 4, 2, 12, 8 ], "texture": "#fill"},
+				"south": { "uv": [ 4, 2, 12, 8 ], "texture": "#fill"},
+				"west":  { "uv": [ 4, 2, 12, 8 ], "texture": "#fill"},
+				"east":  { "uv": [ 4, 2, 12, 8 ], "texture": "#fill"},
+				"up": { "uv": [ 4, 4, 12, 12 ], "texture": "#fill"}
+			}
+		}
+	]
+}

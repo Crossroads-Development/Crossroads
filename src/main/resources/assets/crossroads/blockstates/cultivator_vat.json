@@ -1,7 +1,12 @@
 {
 	"multipart": [
 		{
-			"apply": { "model": "crossroads:block/cultivator_vat_base" }
+			"when": { "active": false },
+			"apply": { "model": "crossroads:block/cultivator_vat_base_off" }
+		},
+		{
+			"when": { "active": true },
+			"apply": { "model": "crossroads:block/cultivator_vat_base_on" }
 		},
 		{
 			"when": { "active": true },

@@ -24,6 +24,8 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -36,6 +38,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class EmbryoLab extends ContainerBlock implements IReadable{
+
+	private static final VoxelShape SHAPE = box(3, 0, 3, 13, 16, 13);
 
 	public static final OptionalDispenseBehavior DISPENSE_ONTO_EMBRYO_LAB = new OptionalDispenseBehavior(){
 
@@ -61,6 +65,11 @@ public class EmbryoLab extends ContainerBlock implements IReadable{
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false));
+	}
+
+	@Override
+	public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_){
+		return SHAPE;
 	}
 
 	@Override
