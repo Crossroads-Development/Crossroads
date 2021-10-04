@@ -42,7 +42,6 @@ public class BloodCentrifugeRenderer extends TileEntityRenderer<BloodCentrifugeT
 		LazyOptional<IAxleHandler> axle = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
 		int sampleCount = state.getValue(CRProperties.CONTENTS);
 		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
-		int light = CRRenderUtil.getLightAtPos(te.getLevel(), te.getBlockPos());//Get light from this blockspace
 
 		matrix.translate(.5F, .5F, .5F);
 		//Rotate
@@ -52,7 +51,7 @@ public class BloodCentrifugeRenderer extends TileEntityRenderer<BloodCentrifugeT
 		Color tinCol = GearFactory.findMaterial("tin").getColor();
 
 		//Rotating axle
-		CRModels.drawAxle(matrix, buffer, light, ironCol);
+		CRModels.drawAxle(matrix, buffer, combinedLight, ironCol);
 
 		float supportHeight = 0.05F;
 		float supportLen = 0.2F;
@@ -61,7 +60,7 @@ public class BloodCentrifugeRenderer extends TileEntityRenderer<BloodCentrifugeT
 
 		//Draw sample 'holder'
 		matrix.translate(0, 0.4F, 0);
-		CRModels.drawBox(matrix, builder, light, new int[] {tinCol.getRed(), tinCol.getGreen(), tinCol.getBlue(), tinCol.getAlpha()}, supportWid, supportHeight, supportLen, sSprite.getU0(), sSprite.getV0(), sSprite.getU(supportWid * 32D), sSprite.getV(supportLen * 32D), sSprite.getU0(), sSprite.getV0(), sSprite.getU(supportLen * 32D), sSprite.getV(supportHeight * 32D), sSprite.getU0(), sSprite.getV0(), sSprite.getU(supportWid * 32D), sSprite.getV(supportHeight * 32D));
+		CRModels.drawBox(matrix, builder, combinedLight, new int[] {tinCol.getRed(), tinCol.getGreen(), tinCol.getBlue(), tinCol.getAlpha()}, supportWid, supportHeight, supportLen, sSprite.getU0(), sSprite.getV0(), sSprite.getU(supportWid * 32D), sSprite.getV(supportLen * 32D), sSprite.getU0(), sSprite.getV0(), sSprite.getU(supportLen * 32D), sSprite.getV(supportHeight * 32D), sSprite.getU0(), sSprite.getV0(), sSprite.getU(supportWid * 32D), sSprite.getV(supportHeight * 32D));
 
 		//Draw sample(s), if present
 		for(int i = 0; i < sampleCount; i++){
