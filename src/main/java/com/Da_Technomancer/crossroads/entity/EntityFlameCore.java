@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.IAlchEffect;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.entity.Entity;
@@ -24,9 +25,8 @@ import net.minecraftforge.registries.ObjectHolder;
 import java.awt.*;
 import java.util.ArrayList;
 
-import static net.minecraft.tileentity.TileEntity.INFINITE_EXTENT_AABB;
-
-@ObjectHoldnet.minecraft.world.level.block.entity.BlockEntityEntityFlameCore extends Entity{
+@ObjectHolder(Crossroads.MODID)
+public class EntityFlameCore extends Entity{
 
 	@ObjectHolder("flame_core")
 	public static EntityType<EntityFlameCore> type = null;
@@ -60,7 +60,7 @@ import static net.minecraft.tileentity.TileEntity.INFINITE_EXTENT_AABB;
 
 	@Override
 	public AABB getBoundingBoxForCulling(){
-		return INFINITE_EXTENT_AABB;
+		return BlockEntity.INFINITE_EXTENT_AABB;
 	}
 
 	@Override

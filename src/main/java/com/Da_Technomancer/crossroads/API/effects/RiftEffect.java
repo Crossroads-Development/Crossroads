@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.API.effects;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
-import net.minecraft.entity.*;
+import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -62,7 +62,7 @@ public class RiftEffect extends BeamEffect{
 				if(RAND.nextInt(256) < power){
 					boolean peaceful = worldServ.getDifficulty() == Difficulty.PEACEFUL || CRConfig.riftSpawnDrops.get();
 					try{
-						List<MobSpawnSettings.SpawnerData> list = worldServ.getChunkSource().generator.getMobsAt(worldIn.getBiome(pos), worldServ.structureFeatureManager(), MobCategory.MONSTER, pos);
+						WeightedRandomList<MobSpawnSettings.SpawnerData> list = worldServ.getChunkSource().generator.getMobsAt(worldIn.getBiome(pos), worldServ.structureFeatureManager(), MobCategory.MONSTER, pos);
 						list = ForgeEventFactory.getPotentialSpawns(worldServ, MobCategory.MONSTER, pos, list);
 						if(list != null && list.size() != 0){
 							//Vanilla style spawning would spawn a group of mobs at a time (with group size defined by the SpawnListEntry). We only want to spawn 1 mob at a time
