@@ -4,18 +4,18 @@ import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.IAlchEffect;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -26,14 +26,13 @@ import java.util.ArrayList;
 
 import static net.minecraft.tileentity.TileEntity.INFINITE_EXTENT_AABB;
 
-@ObjectHolder(Crossroads.MODID)
-public class EntityFlameCore extends Entity{
+@ObjectHoldnet.minecraft.world.level.block.entity.BlockEntityEntityFlameCore extends Entity{
 
 	@ObjectHolder("flame_core")
 	public static EntityType<EntityFlameCore> type = null;
 
-	protected static final DataParameter<Integer> TIME_EXISTED = EntityDataManager.defineId(EntityFlameCore.class, DataSerializers.INT);
-	protected static final DataParameter<Integer> COLOR = EntityDataManager.defineId(EntityFlameCore.class, DataSerializers.INT);
+	protected static final EntityDataAccessor<Integer> TIME_EXISTED = SynchedEntityData.defineId(EntityFlameCore.class, EntityDataSerializers.INT);
+	protected static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(EntityFlameCore.class, EntityDataSerializers.INT);
 	protected static final float FLAME_VEL = 0.1F;//Flame interface speed, blocks per tick
 
 	/**
@@ -44,7 +43,7 @@ public class EntityFlameCore extends Entity{
 	private int ticksExisted = -1;
 	private int maxRadius;
 
-	public EntityFlameCore(EntityType<EntityFlameCore> type, World worldIn){
+	public EntityFlameCore(EntityType<EntityFlameCore> type, Level worldIn){
 		super(type, worldIn);
 		setNoGravity(true);
 		noPhysics = true;
@@ -60,12 +59,12 @@ public class EntityFlameCore extends Entity{
 	private ReagentMap reags = null;
 
 	@Override
-	public AxisAlignedBB getBoundingBoxForCulling(){
+	public AABB getBoundingBoxForCulling(){
 		return INFINITE_EXTENT_AABB;
 	}
 
 	@Override
-	public IPacket<?> getAddEntityPacket(){
+	public Packet<?> getAddEntityPacket(){
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
@@ -82,7 +81,7 @@ public class EntityFlameCore extends Entity{
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundNBT nbt){
+	public void readAdditionalSaveData(CompoundTag nbt){
 		reags = new ReagentMap();
 		maxRadius = nbt.getInt("rad");
 		reags = ReagentMap.readFromNBT(nbt);
@@ -96,7 +95,7 @@ public class EntityFlameCore extends Entity{
 	}
 
 	@Override
-	protected void addAdditionalSaveData(CompoundNBT nbt){
+	protected void addAdditionalSaveData(CompoundTag nbt){
 		if(reags != null){
 			reags.write(nbt);
 		}
@@ -196,7 +195,7 @@ public class EntityFlameCore extends Entity{
 		}
 	}
 
-	private static void act(ArrayList<ReagentStack> reagList, ReagentMap reags, double temp, World world, BlockPos pos, boolean lastAction){
+	private static void act(ArrayList<ReagentStack> reagList, ReagentMap reags, double temp, Level world, BlockPos pos, boolean lastAction){
 		//Block destruction is disabled by alchemical salt
 		if(reags.getQty(EnumReagents.ALCHEMICAL_SALT.id()) == 0){
 			BlockState state = world.getBlockState(pos);

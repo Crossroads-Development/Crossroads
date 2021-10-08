@@ -9,27 +9,27 @@ import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.*;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.dispenser.IBlockSource;
-import net.minecraft.dispenser.OptionalDispenseBehavior;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.core.BlockSource;
+import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -37,18 +37,24 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class EmbryoLab extends ContainerBlock implements IReadable{
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+
+public class EmbryoLab extends BaseEntityBlock implements IReadable{
 
 	private static final VoxelShape SHAPE = box(3, 0, 3, 13, 16, 13);
 
-	public static final OptionalDispenseBehavior DISPENSE_ONTO_EMBRYO_LAB = new OptionalDispenseBehavior(){
+	public static final OptionalDispenseItemBehavior DISPENSE_ONTO_EMBRYO_LAB = new OptionalDispenseItemBehavior(){
 
 		@Override
-		protected ItemStack execute(IBlockSource source, ItemStack stack){
-			World world = source.getLevel();
+		protected ItemStack execute(BlockSource source, ItemStack stack){
+			Level world = source.getLevel();
 			if(!world.isClientSide()){
 				BlockPos pos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
-				TileEntity te = world.getBlockEntity(pos);
+				BlockEntity te = world.getBlockEntity(pos);
 				if(te instanceof EmbryoLabTileEntity){
 					setSuccess(true);
 					return ((EmbryoLabTileEntity) te).addItem(stack);
@@ -68,28 +74,28 @@ public class EmbryoLab extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_){
+	public VoxelShape getShape(BlockState p_220053_1_, BlockGetter p_220053_2_, BlockPos p_220053_3_, CollisionContext p_220053_4_){
 		return SHAPE;
 	}
 
 	@Override
-	public TileEntity newBlockEntity(IBlockReader worldIn){
+	public BlockEntity newBlockEntity(BlockGetter worldIn){
 		return new EmbryoLabTileEntity();
 	}
 
 	@Override
-	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
 		builder.add(CRProperties.ACTIVE);
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		TileEntity te;
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
+		BlockEntity te;
 		if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) instanceof EmbryoLabTileEntity){
 			//Attempt to add the item in the offhand if there is a syringe in the main hand
 			ItemStack held = playerIn.getItemInHand(hand);
 			if(held.getItem() == CRItems.syringe){
-				hand = Hand.OFF_HAND;
+				hand = InteractionHand.OFF_HAND;
 				held = playerIn.getItemInHand(hand);
 
 				ItemStack heldCopy = held.copy();
@@ -97,37 +103,37 @@ public class EmbryoLab extends ContainerBlock implements IReadable{
 				//If the stack changed, assume we did something and shouldn't open the UI
 				if(!held.isEmpty() && (!BlockUtil.sameItem(result, heldCopy) || result.getCount() != heldCopy.getCount())){
 					playerIn.setItemInHand(hand, result);
-					return ActionResultType.SUCCESS;
+					return InteractionResult.SUCCESS;
 				}
 			}
 
 			//Didn't add an item. Open the UI
-			NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);
+			NetworkHooks.openGui((ServerPlayer) playerIn, (MenuProvider) te, pos);
 		}
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
-		TileEntity te = world.getBlockEntity(pos);
-		if(te instanceof IInventory && newState.getBlock() != state.getBlock()){
-			InventoryHelper.dropContents(world, pos, (IInventory) te);
+	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving){
+		BlockEntity te = world.getBlockEntity(pos);
+		if(te instanceof Container && newState.getBlock() != state.getBlock()){
+			Containers.dropContents(world, pos, (Container) te);
 		}
 		super.onRemove(state, world, pos, newState, isMoving);
 	}
 
 	@Override
-	public BlockRenderType getRenderShape(BlockState state){
-		return BlockRenderType.MODEL;
+	public RenderShape getRenderShape(BlockState state){
+		return RenderShape.MODEL;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.embryo_lab.desc"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.embryo_lab.ingr"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.embryo_lab.circuit"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.embryo_lab.quip").setStyle(MiscUtil.TT_QUIP));
+	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
+		tooltip.add(new TranslatableComponent("tt.crossroads.embryo_lab.desc"));
+		tooltip.add(new TranslatableComponent("tt.crossroads.embryo_lab.ingr"));
+		tooltip.add(new TranslatableComponent("tt.crossroads.embryo_lab.circuit"));
+		tooltip.add(new TranslatableComponent("tt.crossroads.embryo_lab.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override
@@ -136,12 +142,12 @@ public class EmbryoLab extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState state, World world, BlockPos pos){
+	public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos){
 		return RedstoneUtil.clampToVanilla(read(world, pos, state));
 	}
 
 	@Override
-	public float read(World world, BlockPos pos, BlockState blockState){
+	public float read(Level world, BlockPos pos, BlockState blockState){
 		return blockState.getValue(CRProperties.ACTIVE) ? 1 : 0;
 	}
 }

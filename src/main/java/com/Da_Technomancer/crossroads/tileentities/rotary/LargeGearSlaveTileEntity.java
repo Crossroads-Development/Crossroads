@@ -9,15 +9,15 @@ import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -26,10 +26,10 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 @ObjectHolder(Crossroads.MODID)
-public class LargeGearSlaveTileEntity extends TileEntity implements IInfoTE{
+public class LargeGearSlaveTileEntity extends BlockEntity implements IInfoTE{
 
 	@ObjectHolder("large_gear_slave")
-	private static TileEntityType<LargeGearSlaveTileEntity> type = null;
+	private static BlockEntityType<LargeGearSlaveTileEntity> type = null;
 
 	public LargeGearSlaveTileEntity(){
 		super(type);
@@ -52,7 +52,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IInfoTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		IAxleHandler axle = handler.getAxle();
 		if(axle == null){
 			return;
@@ -67,7 +67,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IInfoTE{
 
 	public void passBreak(Direction side, boolean drop){
 		if(masterPos != null){
-			TileEntity te = level.getBlockEntity(worldPosition.offset(masterPos));
+			BlockEntity te = level.getBlockEntity(worldPosition.offset(masterPos));
 			if(te instanceof LargeGearMasterTileEntity){
 				((LargeGearMasterTileEntity) te).breakGroup(side, drop);
 			}
@@ -79,8 +79,8 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IInfoTE{
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag(){
-		CompoundNBT nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(){
+		CompoundTag nbt = super.getUpdateTag();
 		if(masterPos != null){
 			nbt.putLong("mast", masterPos.asLong());
 		}
@@ -88,13 +88,13 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IInfoTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		this.masterPos = BlockPos.of(nbt.getLong("mast"));
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		if(masterPos != null){
 			nbt.putLong("mast", masterPos.asLong());
@@ -135,7 +135,7 @@ public class LargeGearSlaveTileEntity extends TileEntity implements IInfoTE{
 
 		@Override
 		public IAxleHandler getAxle(){
-			TileEntity te = level.getBlockEntity(worldPosition.offset(masterPos));
+			BlockEntity te = level.getBlockEntity(worldPosition.offset(masterPos));
 			if(te instanceof LargeGearMasterTileEntity){
 				LazyOptional<IAxleHandler> axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, getFacing());
 				return axleOpt.isPresent() ? axleOpt.orElseThrow(NullPointerException::new) : null;

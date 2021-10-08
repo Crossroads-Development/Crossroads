@@ -4,22 +4,22 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3f;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.core.Direction;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class LargeGearRenderer extends TileEntityRenderer<LargeGearMasterTileEntity>{
+public class LargeGearRenderer extends BlockEntityRenderer<LargeGearMasterTileEntity>{
 
-	protected LargeGearRenderer(TileEntityRendererDispatcher dispatcher){
+	protected LargeGearRenderer(BlockEntityRenderDispatcher dispatcher){
 		super(dispatcher);
 	}
 
 	@Override
-	public void render(LargeGearMasterTileEntity gear, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
+	public void render(LargeGearMasterTileEntity gear, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		if(gear.getBlockState().getBlock() != CRBlocks.largeGearMaster){
 			return;
 		}

@@ -5,12 +5,12 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.templates.ConduitBlock;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
@@ -23,11 +23,13 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+
 @ObjectHolder(Crossroads.MODID)
-public class FluidTubeTileEntity extends TileEntity implements ITickableTileEntity, ConduitBlock.IConduitTE<EnumTransferMode>{
+public class FluidTubeTileEntity extends BlockEntity implements TickableBlockEntity, ConduitBlock.IConduitTE<EnumTransferMode>{
 
 	@ObjectHolder("fluid_tube")
-	private static TileEntityType<FluidTubeTileEntity> type = null;
+	private static BlockEntityType<FluidTubeTileEntity> type = null;
 
 	protected static final int CAPACITY = 2000;
 
@@ -59,7 +61,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 		this(type);
 	}
 
-	protected FluidTubeTileEntity(TileEntityType<? extends FluidTubeTileEntity> type){
+	protected FluidTubeTileEntity(BlockEntityType<? extends FluidTubeTileEntity> type){
 		super(type);
 	}
 
@@ -136,7 +138,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 			}else{
 				//Cache is invalid- get from world
 				Direction dir = Direction.from3DDataValue(i);
-				TileEntity otherTe = level.getBlockEntity(worldPosition.relative(dir));
+				BlockEntity otherTe = level.getBlockEntity(worldPosition.relative(dir));
 				//Update cache
 				if(otherTe != null && (otherOpts[i] = otherTe.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite())).isPresent()){
 					otherHandler = otherOpts[i].orElseThrow(NullPointerException::new);
@@ -324,14 +326,14 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		ConduitBlock.IConduitTE.readConduitNBT(nbt, this);
 		content = FluidStack.loadFluidStackFromNBT(nbt);
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		ConduitBlock.IConduitTE.writeConduitNBT(nbt, this);
 		if(!content.isEmpty()){
@@ -402,7 +404,7 @@ public class FluidTubeTileEntity extends TileEntity implements ITickableTileEnti
 	@Override
 	public boolean hasMatch(int side, EnumTransferMode mode){
 		Direction face = Direction.from3DDataValue(side);
-		TileEntity neighTE = level.getBlockEntity(worldPosition.relative(face));
+		BlockEntity neighTE = level.getBlockEntity(worldPosition.relative(face));
 		if(neighTE != null){
 			LazyOptional<IFluidHandler> opt = neighTE.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, face.getOpposite());
 			return opt.isPresent();

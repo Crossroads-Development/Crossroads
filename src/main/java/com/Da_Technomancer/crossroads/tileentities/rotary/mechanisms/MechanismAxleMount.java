@@ -8,17 +8,17 @@ import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.render.TESR.CRModels;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -33,12 +33,12 @@ public class MechanismAxleMount implements IMechanism<GearFactory.GearMaterial>{
 	private static final VoxelShape[] SHAPES_END = new VoxelShape[6];
 	static{
 		VoxelShape core = Block.box(6, 6, 6, 10, 10, 10);
-		SHAPES_SIDE[0] = VoxelShapes.or(core, Block.box(6, 0, 6, 10, 3, 10), Block.box(7, 3, 7, 9, 6, 9));//DOWN
-		SHAPES_SIDE[1] = VoxelShapes.or(core, Block.box(6, 13, 6, 10, 16, 10), Block.box(7, 10, 7, 9, 13, 9));//UP
-		SHAPES_SIDE[2] = VoxelShapes.or(core, Block.box(6, 6, 0, 10, 10, 3), Block.box(7, 7, 3, 9, 9, 6));//NORTH
-		SHAPES_SIDE[3] = VoxelShapes.or(core, Block.box(6, 6, 13, 10, 10, 16), Block.box(7, 7, 10, 9, 9, 13));//SOUTH
-		SHAPES_SIDE[4] = VoxelShapes.or(core, Block.box(0, 6, 6, 3, 10, 10), Block.box(3, 7, 7, 6, 9, 9));//WEST
-		SHAPES_SIDE[5] = VoxelShapes.or(core, Block.box(13, 6, 6, 16, 10, 10), Block.box(10, 7, 7, 13, 9, 9));//EAST
+		SHAPES_SIDE[0] = Shapes.or(core, Block.box(6, 0, 6, 10, 3, 10), Block.box(7, 3, 7, 9, 6, 9));//DOWN
+		SHAPES_SIDE[1] = Shapes.or(core, Block.box(6, 13, 6, 10, 16, 10), Block.box(7, 10, 7, 9, 13, 9));//UP
+		SHAPES_SIDE[2] = Shapes.or(core, Block.box(6, 6, 0, 10, 10, 3), Block.box(7, 7, 3, 9, 9, 6));//NORTH
+		SHAPES_SIDE[3] = Shapes.or(core, Block.box(6, 6, 13, 10, 10, 16), Block.box(7, 7, 10, 9, 9, 13));//SOUTH
+		SHAPES_SIDE[4] = Shapes.or(core, Block.box(0, 6, 6, 3, 10, 10), Block.box(3, 7, 7, 6, 9, 9));//WEST
+		SHAPES_SIDE[5] = Shapes.or(core, Block.box(13, 6, 6, 16, 10, 10), Block.box(10, 7, 7, 13, 9, 9));//EAST
 		SHAPES_END[0] = Block.box(6, 0, 6, 10, 2, 10);
 		SHAPES_END[1] = Block.box(6, 14, 6, 10, 16, 10);
 		SHAPES_END[2] = Block.box(6, 6, 0, 10, 10, 2);
@@ -76,12 +76,12 @@ public class MechanismAxleMount implements IMechanism<GearFactory.GearMaterial>{
 
 	@Override
 	public VoxelShape getBoundingBox(@Nullable Direction side, @Nullable Direction.Axis axis){
-		return side == null ? VoxelShapes.empty() : axis == null || side.getAxis() == axis ? SHAPES_END[side.get3DDataValue()] : SHAPES_SIDE[side.get3DDataValue()];
+		return side == null ? Shapes.empty() : axis == null || side.getAxis() == axis ? SHAPES_END[side.get3DDataValue()] : SHAPES_SIDE[side.get3DDataValue()];
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void doRender(MechanismTileEntity te, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, float partialTicks, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis){
+	public void doRender(MechanismTileEntity te, PoseStack matrix, MultiBufferSource buffer, int combinedLight, float partialTicks, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis){
 		if(side == null){
 			return;
 		}
@@ -89,7 +89,7 @@ public class MechanismAxleMount implements IMechanism<GearFactory.GearMaterial>{
 		matrix.mulPose(side.getOpposite().getRotation());//Apply orientation
 
 		Direction.Axis selfAxis = side.getAxis();
-		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
+		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
 		int[] matCol = CRRenderUtil.convertColor(mat instanceof GearFactory.GearMaterial ? ((GearFactory.GearMaterial) mat).getColor() : Color.WHITE);
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.AXLE_MOUNT_TEXTURE);
 		TextureAtlasSprite octSprite = CRRenderUtil.getTextureSprite(CRRenderTypes.AXLE_MOUNT_OCT_TEXTURE);

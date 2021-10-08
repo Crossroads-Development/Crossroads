@@ -5,17 +5,17 @@ import com.Da_Technomancer.crossroads.tileentities.technomancy.ClockworkStabiliz
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -39,12 +39,12 @@ public class ClockworkStabilizer extends BeamBlock implements IReadable{
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context){
+	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context){
 		return SHAPE[state.getValue(ESProperties.FACING).get3DDataValue()];
 	}
 
 	@Override
-	public TileEntity newBlockEntity(IBlockReader worldIn){
+	public BlockEntity newBlockEntity(BlockGetter worldIn){
 		return new ClockworkStabilizerTileEntity();
 	}
 
@@ -54,19 +54,19 @@ public class ClockworkStabilizer extends BeamBlock implements IReadable{
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos){
+	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos){
 		return RedstoneUtil.clampToVanilla(read(worldIn, pos, blockState));
 	}
 
 	@Override
-	public float read(World world, BlockPos pos, BlockState blockState){
-		TileEntity te = world.getBlockEntity(pos);
+	public float read(Level world, BlockPos pos, BlockState blockState){
+		BlockEntity te = world.getBlockEntity(pos);
 		return te instanceof ClockworkStabilizerTileEntity ? ((ClockworkStabilizerTileEntity) te).getRedstone() : 0;
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flag){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.clock_stab.desc", ClockworkStabilizerTileEntity.RATE * 100));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.clock_stab.circuit"));
+	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag flag){
+		tooltip.add(new TranslatableComponent("tt.crossroads.clock_stab.desc", ClockworkStabilizerTileEntity.RATE * 100));
+		tooltip.add(new TranslatableComponent("tt.crossroads.clock_stab.circuit"));
 	}
 }

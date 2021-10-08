@@ -2,19 +2,21 @@ package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class CheatWandHeat extends Item{
 
@@ -28,8 +30,8 @@ public class CheatWandHeat extends Item{
 	}
 
 	@Override
-	public ActionResultType useOn(ItemUseContext context){
-		TileEntity te = context.getLevel().getBlockEntity(context.getClickedPos());
+	public InteractionResult useOn(UseOnContext context){
+		BlockEntity te = context.getLevel().getBlockEntity(context.getClickedPos());
 		LazyOptional<IHeatHandler> heatOpt;
 		if(te != null && (heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, null)).isPresent()){
 			IHeatHandler cable = heatOpt.orElseThrow(NullPointerException::new);
@@ -38,15 +40,15 @@ public class CheatWandHeat extends Item{
 			}else{
 				cable.addHeat(RATE);
 			}
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.creative"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.cheat_heat.desc", RATE));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.cheat_heat.cold", RATE));
+	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.creative"));
+		tooltip.add(new TranslatableComponent("tt.crossroads.cheat_heat.desc", RATE));
+		tooltip.add(new TranslatableComponent("tt.crossroads.cheat_heat.cold", RATE));
 	}
 }

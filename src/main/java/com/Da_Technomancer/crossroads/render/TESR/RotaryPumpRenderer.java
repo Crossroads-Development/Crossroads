@@ -4,30 +4,30 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.common.util.LazyOptional;
 
 import java.awt.*;
 
-public class RotaryPumpRenderer extends TileEntityRenderer<RotaryPumpTileEntity>{
+public class RotaryPumpRenderer extends BlockEntityRenderer<RotaryPumpTileEntity>{
 
-	protected RotaryPumpRenderer(TileEntityRendererDispatcher dispatcher){
+	protected RotaryPumpRenderer(BlockEntityRenderDispatcher dispatcher){
 		super(dispatcher);
 	}
 
 	@Override
-	public void render(RotaryPumpTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
+	public void render(RotaryPumpTileEntity te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		//Render the screw
 		matrix.pushPose();
 		matrix.translate(0.5D, 0, 0.5D);
@@ -66,7 +66,7 @@ public class RotaryPumpRenderer extends TileEntityRenderer<RotaryPumpTileEntity>
 			float vEn = lText.getV(16 - (yEn * 16));
 
 			//Draw liquid layer
-			IVertexBuilder builder = buffer.getBuffer(RenderType.translucentNoCrumbling());
+			VertexConsumer builder = buffer.getBuffer(RenderType.translucentNoCrumbling());
 
 			CRRenderUtil.addVertexBlock(builder, matrix, xEn, ySt, zSt, uEn, vSt, 0, 0, -1, combinedLight, cols);
 			CRRenderUtil.addVertexBlock(builder, matrix, xSt, ySt, zSt, uSt, vSt, 0, 0, -1, combinedLight, cols);

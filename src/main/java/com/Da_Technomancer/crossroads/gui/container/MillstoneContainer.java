@@ -4,21 +4,24 @@ import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MillstoneTileEntity;
 import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.IntReferenceHolder;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.inventory.DataSlot;
 import net.minecraftforge.registries.ObjectHolder;
+
+import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.OutputSlot;
+import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.StrictSlot;
 
 @ObjectHolder(Crossroads.MODID)
 public class MillstoneContainer extends MachineContainer<MillstoneTileEntity>{
 
 	@ObjectHolder("millstone")
-	private static ContainerType<MillstoneContainer> type = null;
+	private static MenuType<MillstoneContainer> type = null;
 
-	public IntReferenceHolder progRef;
+	public DataSlot progRef;
 
-	public MillstoneContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
+	public MillstoneContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
 		super(type, id, playerInv, buf);
 		progRef = new IntDeferredRef(te::getProgress, te.getLevel().isClientSide);
 		addDataSlot(progRef);

@@ -3,13 +3,13 @@ package com.Da_Technomancer.crossroads.API;
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
-import net.minecraft.advancements.PlayerAdvancements;
+import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.multiplayer.ClientAdvancementManager;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.multiplayer.ClientAdvancements;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -37,10 +37,10 @@ public class AdvancementTracker{
 	 * @param advancement The path of the advancement to check. Assumes this is a crossroads advancement
 	 * @return Whether the passed advancement has been completed
 	 */
-	public static boolean hasAdvancement(PlayerEntity ent, String advancement){
-		if(ent instanceof ServerPlayerEntity){
-			return ((ServerPlayerEntity) ent).getAdvancements().getOrStartProgress(ent.level.getServer().getAdvancements().getAdvancement(new ResourceLocation(Crossroads.MODID, advancement))).isDone();
-		}else if(ent instanceof ClientPlayerEntity){
+	public static boolean hasAdvancement(Player ent, String advancement){
+		if(ent instanceof ServerPlayer){
+			return ((ServerPlayer) ent).getAdvancements().getOrStartProgress(ent.level.getServer().getAdvancements().getAdvancement(new ResourceLocation(Crossroads.MODID, advancement))).isDone();
+		}else if(ent instanceof LocalPlayer){
 			return progressMap.getOrDefault(advancement, false);
 		}else{
 			Crossroads.logger.error("Advancement fetch on illegal entity type: " + (ent == null ? "NULL" : ent.toString()) + "; with advancement: " + advancement + "; Report to mod author");
@@ -54,7 +54,7 @@ public class AdvancementTracker{
 	 * @param advancement The path of the advancement to (un)lock- assumes this is a Crossroads advancement
 	 * @param enabled If true, enable the advancement- otherwise lock it
 	 */
-	public static void unlockAdvancement(ServerPlayerEntity ent, String advancement, boolean enabled){
+	public static void unlockAdvancement(ServerPlayer ent, String advancement, boolean enabled){
 		PlayerAdvancements playAdv = ent.getAdvancements();
 		Advancement adv = ent.level.getServer().getAdvancements().getAdvancement(new ResourceLocation(Crossroads.MODID, advancement));
 		if(adv == null){
@@ -75,7 +75,7 @@ public class AdvancementTracker{
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private static class Listener implements  ClientAdvancementManager.IListener{
+	private static class Listener implements  ClientAdvancements.Listener{
 
 		private static final Listener INSTANCE = new Listener();
 

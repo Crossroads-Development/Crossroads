@@ -5,24 +5,24 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.VoltusGeneratorTileEntity;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class VoltusGenerator extends ContainerBlock implements IReadable{
+public class VoltusGenerator extends BaseEntityBlock implements IReadable{
 
 	public VoltusGenerator(){
 		super(CRBlocks.getMetalProperty());
@@ -34,21 +34,21 @@ public class VoltusGenerator extends ContainerBlock implements IReadable{
 
 	@Nullable
 	@Override
-	public TileEntity newBlockEntity(IBlockReader worldIn){
+	public BlockEntity newBlockEntity(BlockGetter worldIn){
 		return new VoltusGeneratorTileEntity();
 	}
 
 	@Override
-	public BlockRenderType getRenderShape(BlockState state){
-		return BlockRenderType.MODEL;
+	public RenderShape getRenderShape(BlockState state){
+		return RenderShape.MODEL;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.voltus_generator.desc"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.voltus_generator.eff", CRConfig.voltusValue.get()));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.voltus_generator.rate"));
+	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
+		tooltip.add(new TranslatableComponent("tt.crossroads.voltus_generator.desc"));
+		tooltip.add(new TranslatableComponent("tt.crossroads.voltus_generator.eff", CRConfig.voltusValue.get()));
+		tooltip.add(new TranslatableComponent("tt.crossroads.voltus_generator.rate"));
 	}
 
 	@Override
@@ -57,13 +57,13 @@ public class VoltusGenerator extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState state, World worldIn, BlockPos pos){
+	public int getAnalogOutputSignal(BlockState state, Level worldIn, BlockPos pos){
 		return RedstoneUtil.clampToVanilla(read(worldIn, pos, state));
 	}
 
 	@Override
-	public float read(World world, BlockPos pos, BlockState state){
-		TileEntity te = world.getBlockEntity(pos);
+	public float read(Level world, BlockPos pos, BlockState state){
+		BlockEntity te = world.getBlockEntity(pos);
 		if(te instanceof VoltusGeneratorTileEntity){
 			return ((VoltusGeneratorTileEntity) te).getRedstone();
 		}else{

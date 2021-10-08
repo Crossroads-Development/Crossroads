@@ -7,21 +7,21 @@ import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -47,37 +47,37 @@ public class QuartzStabilizer extends BeamBlock implements IReadable{
 	}
 
 	@Override
-	public TileEntity newBlockEntity(IBlockReader worldIn){
+	public BlockEntity newBlockEntity(BlockGetter worldIn){
 		return new QuartzStabilizerTileEntity();
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context){
 		return SHAPE[state.getValue(ESProperties.FACING).get3DDataValue()];
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
 			if(!worldIn.isClientSide){
-				TileEntity te = worldIn.getBlockEntity(pos);
+				BlockEntity te = worldIn.getBlockEntity(pos);
 				if(!playerIn.isShiftKeyDown()){
 					worldIn.setBlockAndUpdate(pos, state.cycle(ESProperties.FACING));
 				}else if(te instanceof QuartzStabilizerTileEntity){
-					MiscUtil.chatMessage(playerIn, new TranslationTextComponent("tt.crossroads.quartz_stabilizer.setting", ((QuartzStabilizerTileEntity) te).adjustSetting()));
+					MiscUtil.chatMessage(playerIn, new TranslatableComponent("tt.crossroads.quartz_stabilizer.setting", ((QuartzStabilizerTileEntity) te).adjustSetting()));
 				}
 			}
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.quartz_stabilizer.desc"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.quartz_stabilizer.wrench"));
+	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
+		tooltip.add(new TranslatableComponent("tt.crossroads.quartz_stabilizer.desc"));
+		tooltip.add(new TranslatableComponent("tt.crossroads.quartz_stabilizer.wrench"));
 	}
 
 	@Override
@@ -86,13 +86,13 @@ public class QuartzStabilizer extends BeamBlock implements IReadable{
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos){
+	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos){
 		return RedstoneUtil.clampToVanilla(read(worldIn, pos, blockState));
 	}
 
 	@Override
-	public float read(World world, BlockPos pos, BlockState blockState){
-		TileEntity te = world.getBlockEntity(pos);
+	public float read(Level world, BlockPos pos, BlockState blockState){
+		BlockEntity te = world.getBlockEntity(pos);
 		return te instanceof QuartzStabilizerTileEntity ? ((QuartzStabilizerTileEntity) te).getRedstone() : 0;
 	}
 }

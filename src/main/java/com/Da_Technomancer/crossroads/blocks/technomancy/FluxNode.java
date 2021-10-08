@@ -7,28 +7,28 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxNodeTileEntity;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class FluxNode extends ContainerBlock implements IReadable{
+public class FluxNode extends BaseEntityBlock implements IReadable{
 
 	private static final VoxelShape SHAPE = box(4, 4, 4, 12, 12, 12);
 
@@ -41,22 +41,22 @@ public class FluxNode extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context){
 		return SHAPE;
 	}
 
 	@Override
-	public BlockRenderType getRenderShape(BlockState state){
-		return BlockRenderType.MODEL;
+	public RenderShape getRenderShape(BlockState state){
+		return RenderShape.MODEL;
 	}
 
 	@Override
-	public TileEntity newBlockEntity(IBlockReader worldIn){
+	public BlockEntity newBlockEntity(BlockGetter worldIn){
 		return new FluxNodeTileEntity();
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace){
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult trace){
 		return FluxUtil.handleFluxLinking(world, pos, player.getItemInHand(hand), player);
 	}
 
@@ -66,13 +66,13 @@ public class FluxNode extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos){
+	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos){
 		return RedstoneUtil.clampToVanilla(read(worldIn, pos, blockState));
 	}
 
 	@Override
-	public float read(World world, BlockPos blockPos, BlockState blockState){
-		TileEntity te = world.getBlockEntity(blockPos);
+	public float read(Level world, BlockPos blockPos, BlockState blockState){
+		BlockEntity te = world.getBlockEntity(blockPos);
 		if(te instanceof IFluxLink){
 			return ((IFluxLink) te).getReadingFlux();
 		}
@@ -80,10 +80,10 @@ public class FluxNode extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.flux_node.desc", 64));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.flux_node.gain", CRConfig.fluxNodeGain.get()));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.flux_node.link"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.flux_node.circuit"));
+	public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
+		tooltip.add(new TranslatableComponent("tt.crossroads.flux_node.desc", 64));
+		tooltip.add(new TranslatableComponent("tt.crossroads.flux_node.gain", CRConfig.fluxNodeGain.get()));
+		tooltip.add(new TranslatableComponent("tt.crossroads.flux_node.link"));
+		tooltip.add(new TranslatableComponent("tt.crossroads.flux_node.circuit"));
 	}
 }

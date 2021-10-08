@@ -5,23 +5,23 @@ import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.BloodCentrifugeContainer;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.BloodCentrifugeTileEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
 
 public class BloodCentrifugeScreen extends MachineGUI<BloodCentrifugeContainer, BloodCentrifugeTileEntity>{
 
 	private static final ResourceLocation BACKGROUND = new ResourceLocation(Crossroads.MODID, "textures/gui/container/blood_centrifuge_gui.png");
 
-	public BloodCentrifugeScreen(BloodCentrifugeContainer cont, PlayerInventory playerInv, ITextComponent text){
+	public BloodCentrifugeScreen(BloodCentrifugeContainer cont, Inventory playerInv, Component text){
 		super(cont, playerInv, text);
 	}
 
 	@Override
-	protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
 		RenderSystem.color4f(1, 1, 1, 1);
 		Minecraft.getInstance().getTextureManager().bind(BACKGROUND);
 		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
@@ -30,7 +30,7 @@ public class BloodCentrifugeScreen extends MachineGUI<BloodCentrifugeContainer, 
 	}
 
 	@Override
-	protected void renderLabels(MatrixStack matrix, int mouseX, int mouseY){
+	protected void renderLabels(PoseStack matrix, int mouseX, int mouseY){
 		super.renderLabels(matrix, mouseX, mouseY);
 
 		String s = MiscUtil.localize("container.crossroads.blood_centrifuge.target", MiscUtil.preciseRound(BloodCentrifugeTileEntity.getTargetSpeed(menu.progRef.get()), 1));

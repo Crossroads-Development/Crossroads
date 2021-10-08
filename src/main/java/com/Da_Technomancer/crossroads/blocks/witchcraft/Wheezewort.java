@@ -9,22 +9,22 @@ import com.Da_Technomancer.crossroads.ambient.particles.ColorParticleData;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.DoubleBlockHalf;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
@@ -32,7 +32,15 @@ import java.awt.*;
 import java.util.List;
 import java.util.Random;
 
-public class Wheezewort extends DoublePlantBlock implements IGrowable{
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.DoublePlantBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockBehaviour.OffsetType;
+import net.minecraft.world.level.block.state.BlockState;
+
+public class Wheezewort extends DoublePlantBlock implements BonemealableBlock{
 
 	private static final VoxelShape SHAPE_BOTTOM_1 = box(4, 0, 4, 12, 12, 12);
 	private static final VoxelShape SHAPE_BOTTOM_23 = box(4, 0, 4, 12, 16, 12);
@@ -41,7 +49,7 @@ public class Wheezewort extends DoublePlantBlock implements IGrowable{
 	private static final int COOLING = 100_000;
 
 	public Wheezewort(){
-		super(AbstractBlock.Properties.of(Material.PLANT).randomTicks().instabreak().sound(SoundType.GRASS));
+		super(BlockBehaviour.Properties.of(Material.PLANT).randomTicks().instabreak().sound(SoundType.GRASS));
 		String name = "wheezewort";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
@@ -51,27 +59,27 @@ public class Wheezewort extends DoublePlantBlock implements IGrowable{
 	}
 
 	@Override
-	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
 		super.createBlockStateDefinition(builder);//Adds a property for DOUBLE_BLOCK_HALF
 		builder.add(CRProperties.AGE_3);
 	}
 
 	@Override
-	public boolean isValidBonemealTarget(IBlockReader world, BlockPos pos, BlockState state, boolean p_176473_4_){
+	public boolean isValidBonemealTarget(BlockGetter world, BlockPos pos, BlockState state, boolean p_176473_4_){
 		return state.getValue(CRProperties.AGE_3) != 3;
 	}
 
 	@Override
-	public boolean isBonemealSuccess(World world, Random p_180670_2_, BlockPos pos, BlockState state){
+	public boolean isBonemealSuccess(Level world, Random p_180670_2_, BlockPos pos, BlockState state){
 		return true;
 	}
 
 	@Override
-	public void performBonemeal(ServerWorld world, Random random, BlockPos pos, BlockState state){
+	public void performBonemeal(ServerLevel world, Random random, BlockPos pos, BlockState state){
 		grow(world, pos, state);
 	}
 
-	private void grow(World world, BlockPos pos, BlockState state){
+	private void grow(Level world, BlockPos pos, BlockState state){
 		//If this is the top block, re-route the call to the bottom block
 		if(state.getValue(HALF) == DoubleBlockHalf.UPPER){
 			BlockPos downPos = pos.below();
@@ -94,7 +102,7 @@ public class Wheezewort extends DoublePlantBlock implements IGrowable{
 	}
 
 	@Override
-	public void setPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+	public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		//Add an extra check- we don't add a top half for age 1 (and this should only be called with age 1 in practice)
 		if(state.getValue(CRProperties.AGE_3) != 1 && state.getValue(HALF) == DoubleBlockHalf.LOWER){
 			world.setBlock(pos.above(), state.setValue(HALF, DoubleBlockHalf.UPPER), 3);
@@ -102,7 +110,7 @@ public class Wheezewort extends DoublePlantBlock implements IGrowable{
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context){
+	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context){
 		if(state.getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER){
 			return SHAPE_TOP;
 		}else if(state.getValue(CRProperties.AGE_3) == 1){
@@ -122,10 +130,10 @@ public class Wheezewort extends DoublePlantBlock implements IGrowable{
 		return state.getValue(CRProperties.AGE_3) != 3;
 	}
 
-	private void coldSpurt(ServerWorld world, BlockPos pos){
-		CRSounds.playSoundServer(world, pos, CRSounds.STEAM_RELEASE, SoundCategory.BLOCKS, 0.75F, 0.5F + world.random.nextFloat());
+	private void coldSpurt(ServerLevel world, BlockPos pos){
+		CRSounds.playSoundServer(world, pos, CRSounds.STEAM_RELEASE, SoundSource.BLOCKS, 0.75F, 0.5F + world.random.nextFloat());
 		CRParticles.summonParticlesFromServer(world, new ColorParticleData(CRParticles.COLOR_SOLID, Color.WHITE), 8, pos.getX() + 0.5F, pos.getY() + 0.55F, pos.getZ() + 0.5F, 0.1F, 0, 0.1F, 0, 0.15F, 0, 0.005F, 0.05F, 0.005F, false);
-		TileEntity te = world.getBlockEntity(pos.above());
+		BlockEntity te = world.getBlockEntity(pos.above());
 		LazyOptional<IHeatHandler> heatOpt;
 		if(te != null && (heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY)).isPresent()){
 			heatOpt.orElseThrow(NullPointerException::new).addHeat(-COOLING);
@@ -135,7 +143,7 @@ public class Wheezewort extends DoublePlantBlock implements IGrowable{
 	}
 
 	@Override
-	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random rand){
+	public void randomTick(BlockState state, ServerLevel world, BlockPos pos, Random rand){
 		boolean bottom = state.getValue(HALF) == DoubleBlockHalf.LOWER;
 		int age = state.getValue(CRProperties.AGE_3);
 
@@ -152,10 +160,10 @@ public class Wheezewort extends DoublePlantBlock implements IGrowable{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltips, ITooltipFlag context){
-		tooltips.add(new TranslationTextComponent("tt.crossroads.wheezewort.purpose", COOLING));
-		tooltips.add(new TranslationTextComponent("tt.crossroads.wheezewort.age"));
-		tooltips.add(new TranslationTextComponent("tt.crossroads.wheezewort.dispense"));
-		tooltips.add(new TranslationTextComponent("tt.crossroads.wheezewort.quip").setStyle(MiscUtil.TT_QUIP));
+	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltips, TooltipFlag context){
+		tooltips.add(new TranslatableComponent("tt.crossroads.wheezewort.purpose", COOLING));
+		tooltips.add(new TranslatableComponent("tt.crossroads.wheezewort.age"));
+		tooltips.add(new TranslatableComponent("tt.crossroads.wheezewort.dispense"));
+		tooltips.add(new TranslatableComponent("tt.crossroads.wheezewort.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

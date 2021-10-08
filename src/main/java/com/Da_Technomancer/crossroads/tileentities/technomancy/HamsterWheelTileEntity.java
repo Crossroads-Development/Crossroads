@@ -6,18 +6,18 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder(Crossroads.MODID)
-public class HamsterWheelTileEntity extends TileEntity implements ITickableTileEntity{
+public class HamsterWheelTileEntity extends BlockEntity implements TickableBlockEntity{
 
 	@ObjectHolder("hamster_wheel")
-	public static TileEntityType<HamsterWheelTileEntity> type = null;
+	public static BlockEntityType<HamsterWheelTileEntity> type = null;
 
 	public float angle = 0;
 	public float nextAngle = 0;
@@ -29,7 +29,7 @@ public class HamsterWheelTileEntity extends TileEntity implements ITickableTileE
 	@Override
 	public void tick(){
 		Direction facing = getBlockState().getValue(CRProperties.HORIZ_FACING);
-		TileEntity te = level.getBlockEntity(worldPosition.relative(facing));
+		BlockEntity te = level.getBlockEntity(worldPosition.relative(facing));
 		LazyOptional<IAxleHandler> axleOpt;
 		if(te != null && (axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, facing.getOpposite())).isPresent()){
 			IAxleHandler axle = axleOpt.orElseThrow(NullPointerException::new);

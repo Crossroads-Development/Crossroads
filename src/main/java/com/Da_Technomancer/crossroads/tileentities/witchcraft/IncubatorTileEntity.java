@@ -8,19 +8,19 @@ import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.gui.container.IncubatorContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -29,6 +29,8 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+
+import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
 
 @ObjectHolder(Crossroads.MODID)
 public class IncubatorTileEntity extends InventoryTE{
@@ -43,7 +45,7 @@ public class IncubatorTileEntity extends InventoryTE{
 	private int targetTemp = 0;//Target temperature will be between (MIN_TEMP + MARGIN) and (MAX_TEMP - MARGIN), inclusive, once initialized
 
 	@ObjectHolder("incubator")
-	public static TileEntityType<IncubatorTileEntity> type = null;
+	public static BlockEntityType<IncubatorTileEntity> type = null;
 
 	public IncubatorTileEntity(){
 		super(type, 3);
@@ -51,10 +53,10 @@ public class IncubatorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		double target = getTargetTemp();
-		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.progress", progress, REQUIRED));
-		chat.add(new TranslationTextComponent("tt.crossroads.incubator.target", target, target - MARGIN, target + MARGIN));
+		chat.add(new TranslatableComponent("tt.crossroads.boilerplate.progress", progress, REQUIRED));
+		chat.add(new TranslatableComponent("tt.crossroads.incubator.target", target, target - MARGIN, target + MARGIN));
 		super.addInfo(chat, player, hit);
 	}
 
@@ -127,7 +129,7 @@ public class IncubatorTileEntity extends InventoryTE{
 		}
 	}
 
-	private static ItemStack getCreatedItem(ItemStack mutator, World world){
+	private static ItemStack getCreatedItem(ItemStack mutator, Level world){
 		Item item = mutator.getItem();
 		if(item == CRItems.embryo){
 			ItemStack out = new ItemStack(CRItems.geneticSpawnEgg, 1);
@@ -142,7 +144,7 @@ public class IncubatorTileEntity extends InventoryTE{
 		return ItemStack.EMPTY;
 	}
 
-	private static boolean isValidMutator(ItemStack stack, World world){
+	private static boolean isValidMutator(ItemStack stack, Level world){
 		Item item = stack.getItem();
 		if(item instanceof IPerishable && ((IPerishable) item).isSpoiled(stack, world)){
 			return false;
@@ -151,14 +153,14 @@ public class IncubatorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		targetTemp = nbt.getInt("target");
 		progress = nbt.getDouble("progress");
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putInt("target", targetTemp);
 		nbt.putDouble("progress", progress);
@@ -176,13 +178,13 @@ public class IncubatorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.crossroads.incubator");
+	public Component getDisplayName(){
+		return new TranslatableComponent("container.crossroads.incubator");
 	}
 
 	@Nullable
 	@Override
-	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
+	public AbstractContainerMenu createMenu(int id, Inventory playerInv, Player player){
 		return new IncubatorContainer(id, playerInv, createContainerBuf());
 	}
 

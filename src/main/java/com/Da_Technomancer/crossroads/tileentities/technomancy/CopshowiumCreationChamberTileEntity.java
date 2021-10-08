@@ -14,20 +14,20 @@ import com.Da_Technomancer.crossroads.crafting.recipes.CopshowiumRec;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.CopshowiumMakerContainer;
 import com.Da_Technomancer.essentials.tileentities.ILinkTE;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -40,11 +40,17 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Set;
 
+import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink.Behaviour;
+import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink.FluxHelper;
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE.FluidHandler;
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE.FluidTankHandler;
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE.TankProperty;
+
 @ObjectHolder(Crossroads.MODID)
 public class CopshowiumCreationChamberTileEntity extends InventoryTE implements IFluxLink{
 
 	@ObjectHolder("copshowium_creation_chamber")
-	public static TileEntityType<CopshowiumCreationChamberTileEntity> type = null;
+	public static BlockEntityType<CopshowiumCreationChamberTileEntity> type = null;
 
 	public static final int CAPACITY = 1_440;
 	public static final int FLUX_PER_INGOT = 4;
@@ -59,7 +65,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		FluxUtil.addFluxInfo(chat, this, -1);
 		super.addInfo(chat, player, hit);
 		fluxHelper.addInfo(chat, player, hit);
@@ -79,9 +85,9 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	}
 
 	@Override
-	public AxisAlignedBB getRenderBoundingBox(){
+	public AABB getRenderBoundingBox(){
 		//Increase render BB to include links
-		return new AxisAlignedBB(worldPosition).inflate(getRange());
+		return new AABB(worldPosition).inflate(getRange());
 	}
 
 	@Override
@@ -93,21 +99,21 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		fluxHelper.writeData(nbt);
 		return nbt;
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		fluxHelper.readData(nbt);
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag(){
-		CompoundNBT nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(){
+		CompoundTag nbt = super.getUpdateTag();
 		fluxHelper.writeData(nbt);
 		return nbt;
 	}
@@ -128,7 +134,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	}
 
 	@Override
-	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayer sendingPlayer){
 		super.receiveLong(identifier, message, sendingPlayer);
 		fluxHelper.receiveLong(identifier, message, sendingPlayer);
 	}
@@ -144,8 +150,8 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	}
 
 	@Override
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.copshowium_maker");
+	public Component getDisplayName(){
+		return new TranslatableComponent("container.copshowium_maker");
 	}
 
 	@Override
@@ -169,7 +175,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	}
 
 	@Override
-	public boolean createLinkSource(ILinkTE endpoint, @Nullable PlayerEntity player){
+	public boolean createLinkSource(ILinkTE endpoint, @Nullable Player player){
 		return fluxHelper.createLinkSource(endpoint, player);
 	}
 
@@ -180,7 +186,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 
 	@Nullable
 	@Override
-	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
+	public AbstractContainerMenu createMenu(int id, Inventory playerInv, Player player){
 		return new CopshowiumMakerContainer(id, playerInv, createContainerBuf());
 	}
 
@@ -212,7 +218,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	}
 
 	@Override
-	public void receiveInts(byte context, int[] message, @Nullable ServerPlayerEntity sendingPlayer){
+	public void receiveInts(byte context, int[] message, @Nullable ServerPlayer sendingPlayer){
 		fluxHelper.receiveInts(context, message, sendingPlayer);
 	}
 

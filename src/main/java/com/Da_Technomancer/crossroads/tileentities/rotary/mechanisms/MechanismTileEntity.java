@@ -9,18 +9,18 @@ import com.Da_Technomancer.crossroads.blocks.rotary.Mechanism;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import com.Da_Technomancer.essentials.packets.ILongReceiver;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -29,10 +29,10 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 //@ObjectHolder(Crossroads.MODID)
-public class MechanismTileEntity extends TileEntity implements ITickableTileEntity, ILongReceiver, IInfoTE{
+public class MechanismTileEntity extends BlockEntity implements TickableBlockEntity, ILongReceiver, IInfoTE{
 
 	@ObjectHolder(Crossroads.MODID + ":mechanism")
-	public static TileEntityType<MechanismTileEntity> type = null;
+	public static BlockEntityType<MechanismTileEntity> type = null;
 
 	public static final ArrayList<IMechanism<?>> MECHANISMS = new ArrayList<>(8);//This is a list instead of an array to allow expansion by addons
 
@@ -52,9 +52,9 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		int part = -1;
-		Vector3d hitVec = hit.getLocation().subtract(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());//Subtract position, as the VoxelShapes are defined relative to position
+		Vec3 hitVec = hit.getLocation().subtract(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());//Subtract position, as the VoxelShapes are defined relative to position
 		for(int i = 0; i < 7; i++){
 			if(boundingBoxes[i] != null && Mechanism.voxelContains(boundingBoxes[i], hitVec)){
 				part = i;
@@ -115,7 +115,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 
 		// members
@@ -137,8 +137,8 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag(){
-		CompoundNBT nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(){
+		CompoundTag nbt = super.getUpdateTag();
 		for(int i = 0; i < 7; i++){
 			if(members[i] != null && mats[i] != null){//Sanity check. mats[i] should never be null if members[i] isn't
 				nbt.putInt("[" + i + "]memb", MECHANISMS.indexOf(members[i]));
@@ -158,7 +158,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 
 		if(nbt.contains("[6]memb") && nbt.contains("[6]mat")){
@@ -189,7 +189,7 @@ public class MechanismTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	@Override
-	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayer sendingPlayer){
 		/*if(identifier >= 0 && identifier < 7){
 			float angleIn = Float.intBitsToFloat((int) (message & 0xFFFFFFFFL));
 			angle[identifier] = Math.abs(angleIn - angle[identifier]) > 15F ? angleIn : angle[identifier];

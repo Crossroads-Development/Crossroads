@@ -1,13 +1,13 @@
 package com.Da_Technomancer.crossroads.entity;
 
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.resources.ResourceLocation;
 
 public class RenderEmpty extends EntityRenderer<Entity>{
 
-	protected RenderEmpty(EntityRendererManager renderManager){
+	protected RenderEmpty(EntityRenderDispatcher renderManager){
 		super(renderManager);
 	}
 

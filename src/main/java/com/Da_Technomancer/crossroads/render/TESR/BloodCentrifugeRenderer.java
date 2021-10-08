@@ -10,38 +10,38 @@ import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.BloodCentrifugeTileEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.block.BlockState;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.common.util.LazyOptional;
 
 import java.awt.*;
 
-public class BloodCentrifugeRenderer extends TileEntityRenderer<BloodCentrifugeTileEntity>{
+public class BloodCentrifugeRenderer extends BlockEntityRenderer<BloodCentrifugeTileEntity>{
 
-	protected BloodCentrifugeRenderer(TileEntityRendererDispatcher dispatcher){
+	protected BloodCentrifugeRenderer(BlockEntityRenderDispatcher dispatcher){
 		super(dispatcher);
 	}
 
 	@Override
-	public void render(BloodCentrifugeTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
+	public void render(BloodCentrifugeTileEntity te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		BlockState state = te.getBlockState();
 		if(state.getBlock() != CRBlocks.bloodCentrifuge){
 			return;
 		}
 		LazyOptional<IAxleHandler> axle = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
 		int sampleCount = state.getValue(CRProperties.CONTENTS);
-		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
+		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
 
 		matrix.translate(.5F, .5F, .5F);
 		//Rotate
@@ -69,7 +69,7 @@ public class BloodCentrifugeRenderer extends TileEntityRenderer<BloodCentrifugeT
 			matrix.translate(0, -0.2F, supportLen - 0.05F);
 			matrix.mulPose(Vector3f.ZP.rotationDegrees(45));
 			matrix.scale(0.5F, 0.5F, 0.5F);
-			Minecraft.getInstance().getItemRenderer().renderStatic(getSampleItemstack(), ItemCameraTransforms.TransformType.FIXED, combinedLight, combinedOverlay, matrix, buffer);
+			Minecraft.getInstance().getItemRenderer().renderStatic(getSampleItemstack(), ItemTransforms.TransformType.FIXED, combinedLight, combinedOverlay, matrix, buffer);
 			matrix.popPose();
 		}
 	}

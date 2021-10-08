@@ -4,12 +4,12 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -36,13 +36,13 @@ public class PotionExtension extends Item implements IPerishable{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.potion_extension.desc"));
+	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag){
+		tooltip.add(new TranslatableComponent("tt.crossroads.potion_extension.desc"));
 		int penalty = CRConfig.injectionPermaPenalty.get();
 		if(penalty > 0){
-			tooltip.add(new TranslationTextComponent("tt.crossroads.potion_extension.penalty", penalty));
+			tooltip.add(new TranslatableComponent("tt.crossroads.potion_extension.penalty", penalty));
 		}
 		IPerishable.addTooltip(stack, world, tooltip);
-		tooltip.add(new TranslationTextComponent("tt.crossroads.potion_extension.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslatableComponent("tt.crossroads.potion_extension.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

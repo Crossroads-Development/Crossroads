@@ -5,26 +5,26 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.CultivatorVatTileEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.block.BlockState;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import com.mojang.math.Vector3f;
 
-public class CultivatorVatRenderer extends TileEntityRenderer<CultivatorVatTileEntity>{
+public class CultivatorVatRenderer extends BlockEntityRenderer<CultivatorVatTileEntity>{
 
-	protected CultivatorVatRenderer(TileEntityRendererDispatcher dispatcher){
+	protected CultivatorVatRenderer(BlockEntityRenderDispatcher dispatcher){
 		super(dispatcher);
 	}
 
 	@Override
-	public void render(CultivatorVatTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
+	public void render(CultivatorVatTileEntity te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		BlockState state = te.getBlockState();
 		if(state.getBlock() != CRBlocks.cultivatorVat){
 			return;
@@ -39,7 +39,7 @@ public class CultivatorVatRenderer extends TileEntityRenderer<CultivatorVatTileE
 		matrix.translate(.5F, .5F, .5F);
 		//When active, use a fixed light level (block light 6) due to liquid and internal lamp. Otherwise, get light from above this blockspace
 		int light = state.getValue(CRProperties.ACTIVE) ? 6 << 4 : CRRenderUtil.getLightAtPos(te.getLevel(), te.getBlockPos().above());
-		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
+		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
 		int[] col = {255, 255, 255, 255};
 
 		if(contents == 1){
@@ -71,7 +71,7 @@ public class CultivatorVatRenderer extends TileEntityRenderer<CultivatorVatTileE
 			matrix.translate(0, 0.15F + 0.05F * Math.sin((te.getLevel().getGameTime() + partialTicks) / 20F), 0);
 
 			//Brains rotate to follow the player
-			ClientPlayerEntity player = Minecraft.getInstance().player;
+			LocalPlayer player = Minecraft.getInstance().player;
 
 			matrix.mulPose(Vector3f.YN.rotation((float) Math.atan2(player.getZ() - (0.5D + te.getBlockPos().getZ()), player.getX() - (0.5D + te.getBlockPos().getX()))));
 			matrix.scale(0.4F, 0.4F, 0.4F);

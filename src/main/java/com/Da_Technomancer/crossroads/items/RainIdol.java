@@ -1,22 +1,24 @@
 package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.storage.IServerWorldInfo;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ServerLevelData;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class RainIdol extends Item{
 
@@ -36,12 +38,12 @@ public class RainIdol extends Item{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.rain_idol.quip").setStyle(MiscUtil.TT_QUIP));
+	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+		tooltip.add(new TranslatableComponent("tt.crossroads.rain_idol.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override
-	public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected){
+	public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected){
 		if(worldIn.isClientSide){
 			return;
 		}
@@ -49,8 +51,8 @@ public class RainIdol extends Item{
 		//Start rain if the player sneaks 5 times in a few seconds
 		//Ends rain if the player jumps 5 times in a few seconds
 
-		if(isSelected && entityIn instanceof PlayerEntity){
-			PlayerEntity play = (PlayerEntity) entityIn;
+		if(isSelected && entityIn instanceof Player){
+			Player play = (Player) entityIn;
 			if(!play.getPersistentData().contains(NBT_KEY)){
 				play.getPersistentData().putByte(NBT_KEY, (byte) 0);
 				play.getPersistentData().putLong(NBT_KEY_TIME, System.currentTimeMillis());
@@ -76,13 +78,13 @@ public class RainIdol extends Item{
 				}
 				if(count % 2 == 0){
 					if(++count >= 9){
-						IServerWorldInfo worldInfo = (IServerWorldInfo) worldIn.getLevelData();
+						ServerLevelData worldInfo = (ServerLevelData) worldIn.getLevelData();
 						worldInfo.setRaining(true);
 						worldInfo.setThundering(true);
 						worldInfo.setRainTime(0);
 						worldInfo.setRainTime(24000);
-						worldIn.playSound(null, play.getX(), play.getY(), play.getZ(), SoundEvents.TOTEM_USE, SoundCategory.PLAYERS, 1F, 1F);
-						play.setItemInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
+						worldIn.playSound(null, play.getX(), play.getY(), play.getZ(), SoundEvents.TOTEM_USE, SoundSource.PLAYERS, 1F, 1F);
+						play.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
 						count = 0;
 					}else{
 						play.getPersistentData().putLong(NBT_KEY_TIME, System.currentTimeMillis());
@@ -95,12 +97,12 @@ public class RainIdol extends Item{
 				}
 				if(count % 2 == 0){
 					if(--count <= -9){
-						IServerWorldInfo worldInfo = (IServerWorldInfo) worldIn.getLevelData();
+						ServerLevelData worldInfo = (ServerLevelData) worldIn.getLevelData();
 						worldInfo.setRaining(false);
 						worldInfo.setRainTime(24000);
 						worldInfo.setRainTime(0);
-						worldIn.playSound(null, play.getX(), play.getY(), play.getZ(), SoundEvents.TOTEM_USE, SoundCategory.PLAYERS, 1F, 1F);
-						play.setItemInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
+						worldIn.playSound(null, play.getX(), play.getY(), play.getZ(), SoundEvents.TOTEM_USE, SoundSource.PLAYERS, 1F, 1F);
+						play.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
 						count = 0;
 					}else{
 						play.getPersistentData().putLong(NBT_KEY_TIME, System.currentTimeMillis());

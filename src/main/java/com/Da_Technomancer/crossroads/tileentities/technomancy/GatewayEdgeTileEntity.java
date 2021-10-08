@@ -3,23 +3,23 @@ package com.Da_Technomancer.crossroads.tileentities.technomancy;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.technomancy.IGateway;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 
 @ObjectHolder(Crossroads.MODID)
-public class GatewayEdgeTileEntity extends TileEntity implements IInfoTE{
+public class GatewayEdgeTileEntity extends BlockEntity implements IInfoTE{
 
 	@ObjectHolder("gateway_edge")
-	private static TileEntityType<GatewayEdgeTileEntity> type = null;
+	private static BlockEntityType<GatewayEdgeTileEntity> type = null;
 
 	//These fields will be correct for any portion of a formed multiblock
 	private BlockPos key = null;//The relative position of the top center of the multiblock. Null if this is not formedprivate Direction.Axis plane = null;//Legal values are null (unformed), x (for structure in x-y plane), and z (for structure in y-z plane). This should never by y
@@ -29,10 +29,10 @@ public class GatewayEdgeTileEntity extends TileEntity implements IInfoTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		if(key != null){
 			//Non-top frames call the top for addInfo
-			TileEntity te = level.getBlockEntity(worldPosition.offset(key));
+			BlockEntity te = level.getBlockEntity(worldPosition.offset(key));
 			if(te instanceof IGateway){
 				((IGateway) te).addInfo(chat, player, hit);
 			}
@@ -57,7 +57,7 @@ public class GatewayEdgeTileEntity extends TileEntity implements IInfoTE{
 	//Multiblock management
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 
 		//Generic
@@ -65,7 +65,7 @@ public class GatewayEdgeTileEntity extends TileEntity implements IInfoTE{
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 
 		//Generic

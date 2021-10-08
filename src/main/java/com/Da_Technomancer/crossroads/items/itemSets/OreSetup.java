@@ -6,12 +6,12 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.BasicBlock;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -99,8 +99,8 @@ public final class OreSetup{
 
 		ingotCopshowium = new Item(new Item.Properties().tab(CRItems.TAB_CROSSROADS)){
 			@Override
-			public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-				tooltip.add(new TranslationTextComponent("tt.crossroads.copshowium.quip").setStyle(MiscUtil.TT_QUIP));
+			public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+				tooltip.add(new TranslatableComponent("tt.crossroads.copshowium.quip").setStyle(MiscUtil.TT_QUIP));
 			}
 		}.setRegistryName("ingot_copshowium");
 		CRItems.toRegister.add(ingotCopshowium);

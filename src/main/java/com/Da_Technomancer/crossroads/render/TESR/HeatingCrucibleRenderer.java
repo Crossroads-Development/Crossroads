@@ -4,22 +4,22 @@ import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 
-public class HeatingCrucibleRenderer extends TileEntityRenderer<HeatingCrucibleTileEntity>{
+public class HeatingCrucibleRenderer extends BlockEntityRenderer<HeatingCrucibleTileEntity>{
 
-	protected HeatingCrucibleRenderer(TileEntityRendererDispatcher dispatcher){
+	protected HeatingCrucibleRenderer(BlockEntityRenderDispatcher dispatcher){
 		super(dispatcher);
 	}
 
 	@Override
-	public void render(HeatingCrucibleTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
+	public void render(HeatingCrucibleTileEntity te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		if(te.getActiveTexture() == null || te.getBlockState().getBlock() != CRBlocks.heatingCrucible){
 			return;
 		}
@@ -28,7 +28,7 @@ public class HeatingCrucibleRenderer extends TileEntityRenderer<HeatingCrucibleT
 			return;
 		}
 
-		IVertexBuilder builder = buffer.getBuffer(RenderType.translucent());
+		VertexConsumer builder = buffer.getBuffer(RenderType.translucent());
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(te.getActiveTexture());
 
 		int light = CRRenderUtil.calcMediumLighting(combinedLight);//We want the molten fluid to glow in the dark slightly

@@ -8,15 +8,15 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.FatCollectorContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.Food;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -27,11 +27,14 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 
+import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE.TankProperty;
+
 @ObjectHolder(Crossroads.MODID)
 public class FatCollectorTileEntity extends InventoryTE{
 
 	@ObjectHolder("fat_collector")
-	private static TileEntityType<FatCollectorTileEntity> type = null;
+	private static BlockEntityType<FatCollectorTileEntity> type = null;
 
 	public static final int[] TIERS = {100, 120, 140, 160, 180, 200};
 	public static final double[] EFFICIENCY = {0.8D, 1D, 1.2D, 1D, 0.8D, 0};
@@ -59,7 +62,7 @@ public class FatCollectorTileEntity extends InventoryTE{
 
 		int tier = HeatUtil.getHeatTier(temp, TIERS);
 
-		Food food;
+		FoodProperties food;
 		if(tier != -1 && !inventory[0].isEmpty() && (food = inventory[0].getItem().getFoodProperties()) != null){
 			//I don't know why vanilla multiplies saturation by 2, but it does
 			int liqAm = Math.min(food.getNutrition() + (int) (food.getNutrition() * food.getSaturationModifier() * 2F), fluidProps[0].capacity);
@@ -113,13 +116,13 @@ public class FatCollectorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.fat_collector");
+	public Component getDisplayName(){
+		return new TranslatableComponent("container.fat_collector");
 	}
 
 	@Nullable
 	@Override
-	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
+	public AbstractContainerMenu createMenu(int id, Inventory playerInv, Player player){
 		return new FatCollectorContainer(id, playerInv, createContainerBuf());
 	}
 }

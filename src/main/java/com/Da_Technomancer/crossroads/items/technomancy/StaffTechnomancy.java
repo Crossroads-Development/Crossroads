@@ -11,29 +11,37 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
+
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.item.Item.Properties;
 
 public class StaffTechnomancy extends BeamUsingItem{
 
@@ -60,9 +68,9 @@ public class StaffTechnomancy extends BeamUsingItem{
 	}
 
 	@Override
-	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand hand){
+	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand hand){
 		playerIn.startUsingItem(hand);
-		return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getItemInHand(hand));
+		return new InteractionResultHolder<>(InteractionResult.SUCCESS, playerIn.getItemInHand(hand));
 	}
 
 	@Override
@@ -77,10 +85,10 @@ public class StaffTechnomancy extends BeamUsingItem{
 				BeamUnit mag = new BeamUnit(setting[0], setting[1], setting[2], setting[3]);
 
 				//Calculate the start and end point of the fired beam
-				double heldOffset = .22D * (player.getUsedItemHand() == Hand.MAIN_HAND ^ player.getMainArm() == HandSide.LEFT ? 1D : -1D);
-				Vector3d start = new Vector3d(player.getX() - (heldOffset * Math.cos(Math.toRadians(player.yRot))), player.getY() + player.getEyeHeight() + 0.4D, player.getZ() - (heldOffset * Math.sin(Math.toRadians(player.yRot))));
+				double heldOffset = .22D * (player.getUsedItemHand() == InteractionHand.MAIN_HAND ^ player.getMainArm() == HumanoidArm.LEFT ? 1D : -1D);
+				Vec3 start = new Vec3(player.getX() - (heldOffset * Math.cos(Math.toRadians(player.yRot))), player.getY() + player.getEyeHeight() + 0.4D, player.getZ() - (heldOffset * Math.sin(Math.toRadians(player.yRot))));
 
-				Triple<BlockPos, Vector3d, Direction> beamHitResult = rayTraceBeams(mag, player.level, start, player.getEyePosition(1), player.getLookAngle(), player, null, MAX_RANGE);
+				Triple<BlockPos, Vec3, Direction> beamHitResult = rayTraceBeams(mag, player.level, start, player.getEyePosition(1), player.getLookAngle(), player, null, MAX_RANGE);
 				BlockPos endPos = beamHitResult.getLeft();
 				Direction effectDir = beamHitResult.getRight();
 
@@ -130,25 +138,25 @@ public class StaffTechnomancy extends BeamUsingItem{
 //				}
 
 				if(endPos != null){//Should always be true
-					TileEntity te = player.level.getBlockEntity(endPos);
+					BlockEntity te = player.level.getBlockEntity(endPos);
 					LazyOptional<IBeamHandler> opt;
 					if(te != null && (opt = te.getCapability(Capabilities.BEAM_CAPABILITY, effectDir)).isPresent()){
 						opt.orElseThrow(NullPointerException::new).setBeam(mag);
 					}else{
 						EnumBeamAlignments align = EnumBeamAlignments.getAlignment(mag);
-						if(!World.isOutsideBuildHeight(endPos)){
+						if(!Level.isOutsideBuildHeight(endPos)){
 							align.getEffect().doBeamEffect(align, mag.getVoid() != 0, Math.min(64, mag.getPower()), player.level, endPos, effectDir);
 						}
 					}
 				}
 
-				Vector3d beamVec = beamHitResult.getMiddle().subtract(start);
+				Vec3 beamVec = beamHitResult.getMiddle().subtract(start);
 				CRRenderUtil.addBeam(player.level, start.x, start.y, start.z, beamVec.length(), (float) Math.toDegrees(Math.atan2(-beamVec.y, Math.sqrt(beamVec.x * beamVec.x + beamVec.z * beamVec.z))), (float) Math.toDegrees(Math.atan2(-beamVec.x, beamVec.z)), (byte) Math.round(Math.sqrt(mag.getPower())), mag.getRGB().getRGB());
 			}
 		}
 	}
 
-	public static Triple<BlockPos, Vector3d, Direction> rayTraceBeams(BeamUnit beam, World world, Vector3d startPos, Vector3d endSourcePos, Vector3d ray, @Nullable Entity excludedEntity, @Nullable BlockPos ignorePos, double maxRange){
+	public static Triple<BlockPos, Vec3, Direction> rayTraceBeams(BeamUnit beam, Level world, Vec3 startPos, Vec3 endSourcePos, Vec3 ray, @Nullable Entity excludedEntity, @Nullable BlockPos ignorePos, double maxRange){
 		final double stepSize = CRConfig.beamRaytraceStep.get();
 		final double halfStep = stepSize / 2D;
 		ray = ray.scale(stepSize);
@@ -162,11 +170,11 @@ public class StaffTechnomancy extends BeamUsingItem{
 			end[1] += ray.y;
 			end[2] += ray.z;
 			//Look for entities along the firing path to collide with
-			List<Entity> ents = world.getEntities(excludedEntity, new AxisAlignedBB(end[0] - halfStep, end[1] - halfStep, end[2] - halfStep, end[0] + halfStep, end[1] + halfStep, end[2] + halfStep), EntityPredicates.ENTITY_STILL_ALIVE);
+			List<Entity> ents = world.getEntities(excludedEntity, new AABB(end[0] - halfStep, end[1] - halfStep, end[2] - halfStep, end[0] + halfStep, end[1] + halfStep, end[2] + halfStep), EntitySelector.ENTITY_STILL_ALIVE);
 			if(!ents.isEmpty()){
-				Optional<Vector3d> res = ents.get(0).getBoundingBox().clip(startPos, new Vector3d(end[0], end[1], end[2]));
+				Optional<Vec3> res = ents.get(0).getBoundingBox().clip(startPos, new Vec3(end[0], end[1], end[2]));
 				if(res.isPresent()){
-					Vector3d hitVec = res.get();
+					Vec3 hitVec = res.get();
 					end[0] = hitVec.x;
 					end[1] = hitVec.y;
 					end[2] = hitVec.z;
@@ -176,7 +184,7 @@ public class StaffTechnomancy extends BeamUsingItem{
 
 			BlockPos newEndPos = new BlockPos(end[0], end[1], end[2]);
 			//Speed things up a bit by not rechecking blocks
-			if(newEndPos.equals(endPos) || World.isOutsideBuildHeight(newEndPos) || newEndPos.equals(ignorePos)){
+			if(newEndPos.equals(endPos) || Level.isOutsideBuildHeight(newEndPos) || newEndPos.equals(ignorePos)){
 				continue;
 			}
 			endPos = newEndPos;
@@ -184,9 +192,9 @@ public class StaffTechnomancy extends BeamUsingItem{
 			if(BeamUtil.solidToBeams(state, world, endPos, collisionDir, beam.getPower())){
 				//Note: this VoxelShape has no offset
 				VoxelShape shape = state.getBlockSupportShape(world, endPos);//.getBoundingBox(player.world, endPos).offset(endPos);
-				BlockRayTraceResult res = shape.clip(startPos, new Vector3d(end[0] + ray.x / stepSize, end[1] + ray.y / stepSize, end[2] + ray.z / stepSize), endPos);
+				BlockHitResult res = shape.clip(startPos, new Vec3(end[0] + ray.x / stepSize, end[1] + ray.y / stepSize, end[2] + ray.z / stepSize), endPos);
 				if(res != null){
-					Vector3d hitVec = res.getLocation();
+					Vec3 hitVec = res.getLocation();
 					end[0] = hitVec.x;
 					end[1] = hitVec.y;
 					end[2] = hitVec.z;
@@ -196,13 +204,13 @@ public class StaffTechnomancy extends BeamUsingItem{
 			}
 		}
 
-		return Triple.of(endPos, new Vector3d(end[0], end[1], end[2]), effectDir);
+		return Triple.of(endPos, new Vec3(end[0], end[1], end[2]), effectDir);
 	}
 
 	@Override
-	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack){
+	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack){
 		//Acts as a melee weapon; absolutely a DiscWorld reference
-		return slot == EquipmentSlotType.MAINHAND ? attributeModifiers : super.getAttributeModifiers(slot, stack);
+		return slot == EquipmentSlot.MAINHAND ? attributeModifiers : super.getAttributeModifiers(slot, stack);
 	}
 
 	@Override

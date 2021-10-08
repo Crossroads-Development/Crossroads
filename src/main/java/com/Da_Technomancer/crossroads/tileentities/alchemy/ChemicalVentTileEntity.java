@@ -4,12 +4,12 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -17,10 +17,10 @@ import net.minecraftforge.registries.ObjectHolder;
 import java.util.HashSet;
 
 @ObjectHolder(Crossroads.MODID)
-public class ChemicalVentTileEntity extends TileEntity implements ITickableTileEntity{
+public class ChemicalVentTileEntity extends BlockEntity implements TickableBlockEntity{
 
 	@ObjectHolder("chemical_vent")
-	private static TileEntityType<ChemicalVentTileEntity> type = null;
+	private static BlockEntityType<ChemicalVentTileEntity> type = null;
 
 	/*
 	 * In order to make behaviour more consistent when venting large quantities or mixes (expecially phelostogen + anything else),
@@ -47,14 +47,14 @@ public class ChemicalVentTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		lastInputTime = nbt.getLong("last_input");
 		reags = ReagentMap.readFromNBT(nbt);
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putLong("last_input", lastInputTime);
 		reags.write(nbt);

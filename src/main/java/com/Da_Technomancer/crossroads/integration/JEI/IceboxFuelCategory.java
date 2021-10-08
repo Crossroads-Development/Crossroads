@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.recipes.IceboxRec;
 import com.Da_Technomancer.crossroads.tileentities.heat.IceboxTileEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
@@ -13,8 +13,8 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
 
 
 public class IceboxFuelCategory implements IRecipeCategory<IceboxRec>{
@@ -61,7 +61,7 @@ public class IceboxFuelCategory implements IRecipeCategory<IceboxRec>{
 	}
 
 	@Override
-	public void draw(IceboxRec rec, MatrixStack matrix, double mouseX, double mouseY){
+	public void draw(IceboxRec rec, PoseStack matrix, double mouseX, double mouseY){
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
 		slot.draw(matrix, 20, 50);

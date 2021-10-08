@@ -3,14 +3,14 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.FluidTankContainer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -20,11 +20,14 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE.FluidTankHandler;
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE.TankProperty;
+
 @ObjectHolder(Crossroads.MODID)
 public class FluidTankTileEntity extends InventoryTE{
 
 	@ObjectHolder("fluid_tank")
-	private static TileEntityType<FluidTankTileEntity> type = null;
+	private static BlockEntityType<FluidTankTileEntity> type = null;
 
 	public static final int CAPACITY = 16_000;
 
@@ -81,13 +84,13 @@ public class FluidTankTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.fluid_tank");
+	public Component getDisplayName(){
+		return new TranslatableComponent("container.fluid_tank");
 	}
 
 	@Nullable
 	@Override
-	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
+	public AbstractContainerMenu createMenu(int id, Inventory playerInv, Player player){
 		return new FluidTankContainer(id, playerInv, createContainerBuf());
 	}
 }

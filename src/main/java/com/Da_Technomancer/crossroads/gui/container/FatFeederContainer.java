@@ -4,10 +4,10 @@ import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FatFeederTileEntity;
 import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.registries.ObjectHolder;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -15,9 +15,9 @@ import org.apache.commons.lang3.tuple.Pair;
 public class FatFeederContainer extends MachineContainer<FatFeederTileEntity>{
 
 	@ObjectHolder("fat_feeder")
-	private static ContainerType<FatFeederContainer> type = null;
+	private static MenuType<FatFeederContainer> type = null;
 
-	public FatFeederContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
+	public FatFeederContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
 		super(type, id, playerInv, buf);
 	}
 

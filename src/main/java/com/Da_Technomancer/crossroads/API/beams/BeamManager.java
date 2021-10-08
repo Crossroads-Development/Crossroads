@@ -2,11 +2,11 @@ package com.Da_Technomancer.crossroads.API.beams;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.effects.BeamEffect;
-import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -27,9 +27,9 @@ public class BeamManager{
 		this.pos = pos.immutable();
 	}
 
-	public boolean emit(@Nonnull BeamUnit mag, World world){
+	public boolean emit(@Nonnull BeamUnit mag, Level world){
 		for(int i = 1; i <= BeamUtil.MAX_DISTANCE; i++){
-			TileEntity checkTE = world.getBlockEntity(pos.relative(dir, i));
+			BlockEntity checkTE = world.getBlockEntity(pos.relative(dir, i));
 			LazyOptional<IBeamHandler> opt;
 			if(checkTE != null && (opt = checkTE.getCapability(Capabilities.BEAM_CAPABILITY, dir.getOpposite())).isPresent()){
 				opt.orElseThrow(NullPointerException::new).setBeam(mag);

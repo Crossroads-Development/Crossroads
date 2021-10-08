@@ -3,22 +3,22 @@ package com.Da_Technomancer.crossroads.render.TESR;
 import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.essentials.render.LinkLineRenderer;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3f;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 
-public class EntropyRenderer<T extends TileEntity & IFluxLink> extends LinkLineRenderer<T>{
+public class EntropyRenderer<T extends BlockEntity & IFluxLink> extends LinkLineRenderer<T>{
 
-	public EntropyRenderer(TileEntityRendererDispatcher rendererDispatcherIn){
+	public EntropyRenderer(BlockEntityRenderDispatcher rendererDispatcherIn){
 		super(rendererDispatcherIn);
 	}
 
 	@Override
-	public void render(T te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
+	public void render(T te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		super.render(te, partialTicks, matrix, buffer, combinedLight, combinedOverlay);
 
 		int[] arcs = te.getRenderedArcs();
@@ -28,7 +28,7 @@ public class EntropyRenderer<T extends TileEntity & IFluxLink> extends LinkLineR
 
 		matrix.pushPose();
 		matrix.translate(0.5D, 0.5D, 0.5D);
-		IVertexBuilder entropyBuilder = buffer.getBuffer(CRRenderTypes.FLUX_TRANSFER_TYPE);
+		VertexConsumer entropyBuilder = buffer.getBuffer(CRRenderTypes.FLUX_TRANSFER_TYPE);
 		long gameTime = te.getLevel().getGameTime();
 		for(int arc : arcs){
 			byte relX = (byte) (arc & 0xFF);
@@ -53,7 +53,7 @@ public class EntropyRenderer<T extends TileEntity & IFluxLink> extends LinkLineR
 	 * @param worldTime Total world/game time
 	 * @param partialTicks Partial ticks, [0, 1]
 	 */
-	public static void renderArc(float length, MatrixStack matrix, IVertexBuilder entropyBuilder, long worldTime, float partialTicks){
+	public static void renderArc(float length, PoseStack matrix, VertexConsumer entropyBuilder, long worldTime, float partialTicks){
 		matrix.pushPose();
 
 		final float unitLen = 0.5F;

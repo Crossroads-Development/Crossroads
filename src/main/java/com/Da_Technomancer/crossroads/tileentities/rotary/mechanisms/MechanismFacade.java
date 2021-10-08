@@ -7,16 +7,16 @@ import com.Da_Technomancer.crossroads.API.rotary.IMechanismProperty;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFacade;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.render.TESR.CRModels;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -75,7 +75,7 @@ public class MechanismFacade implements IMechanism<GearFacade.FacadeBlock>{
 //		handler.rotRatio = rotRatioIn;
 		handler.updateKey = key;
 
-		TileEntity sideTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(side));
+		BlockEntity sideTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(side));
 
 		//Connected block
 		if(sideTE != null){
@@ -110,7 +110,7 @@ public class MechanismFacade implements IMechanism<GearFacade.FacadeBlock>{
 	}
 
 	@Override
-	public void doRender(MechanismTileEntity te, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, float partialTicks, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis){
+	public void doRender(MechanismTileEntity te, PoseStack matrix, MultiBufferSource buffer, int combinedLight, float partialTicks, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis){
 		if(side == null){
 			return;
 		}
@@ -121,7 +121,7 @@ public class MechanismFacade implements IMechanism<GearFacade.FacadeBlock>{
 		matrix.translate(0, 7F / 16F, 0);
 
 		//Render along the top
-		IVertexBuilder builder = buffer.getBuffer(RenderType.cutoutMipped());
+		VertexConsumer builder = buffer.getBuffer(RenderType.cutoutMipped());
 		float antiZFightScale = 0.0001F * side.get3DDataValue();
 		CRModels.drawBox(matrix, builder, combinedLight, new int[] {255, 255, 255, 255}, 0.5F - antiZFightScale, 1F / 16F, 0.5F - antiZFightScale, sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1(), sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV(2), sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV(2));
 	}

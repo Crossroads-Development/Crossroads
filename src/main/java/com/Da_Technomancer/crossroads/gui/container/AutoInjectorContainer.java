@@ -4,23 +4,26 @@ import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.AutoInjectorTileEntity;
 import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.registries.ObjectHolder;
+
+import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.OutputSlot;
+import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.StrictSlot;
 
 @ObjectHolder(Crossroads.MODID)
 public class AutoInjectorContainer extends MachineContainer<AutoInjectorTileEntity>{
 
 	@ObjectHolder("auto_injector")
-	private static ContainerType<AutoInjectorContainer> type = null;
+	private static MenuType<AutoInjectorContainer> type = null;
 
 	public final IntDeferredRef effectRef;
 	public final IntDeferredRef intensityRef;
 	public final IntDeferredRef durationRef;
 	public final IntDeferredRef doseRef;
 
-	public AutoInjectorContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
+	public AutoInjectorContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
 		super(type, id, playerInv, buf);
 
 		effectRef = new IntDeferredRef(te::getStoredEffectIndex, te.getLevel().isClientSide);

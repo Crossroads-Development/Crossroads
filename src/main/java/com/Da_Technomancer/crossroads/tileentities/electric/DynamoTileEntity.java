@@ -5,11 +5,11 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -20,7 +20,7 @@ import net.minecraftforge.registries.ObjectHolder;
 public class DynamoTileEntity extends ModuleTE{
 
 	@ObjectHolder("dynamo")
-	public static TileEntityType<DynamoTileEntity> type = null;
+	public static BlockEntityType<DynamoTileEntity> type = null;
 
 	private static final int CHARGE_CAPACITY = 8_000;
 	public static final int INERTIA = 200;
@@ -56,7 +56,7 @@ public class DynamoTileEntity extends ModuleTE{
 
 		//Transfer FE
 		Direction facing = getBlockState().getValue(CRProperties.HORIZ_FACING);
-		TileEntity neighbor = level.getBlockEntity(worldPosition.relative(facing.getOpposite()));
+		BlockEntity neighbor = level.getBlockEntity(worldPosition.relative(facing.getOpposite()));
 		LazyOptional<IEnergyStorage> energyOpt;
 		if(neighbor != null && (energyOpt = neighbor.getCapability(CapabilityEnergy.ENERGY, facing)).isPresent()){
 			IEnergyStorage handler = energyOpt.orElseThrow(NullPointerException::new);
@@ -77,13 +77,13 @@ public class DynamoTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		fe = nbt.getInt("charge");
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putInt("charge", fe);
 

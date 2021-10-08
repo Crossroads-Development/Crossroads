@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.API.beams;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -105,8 +105,8 @@ public class BeamMod {
 		return false;
 	}
 
-	public void writeToNBT(@Nonnull String key, CompoundNBT nbt){
-		CompoundNBT newNBT = new CompoundNBT();
+	public void writeToNBT(@Nonnull String key, CompoundTag nbt){
+		CompoundTag newNBT = new CompoundTag();
 		newNBT.putFloat("energy", multipliers[0]);
 		newNBT.putFloat("potential", multipliers[1]);
 		newNBT.putFloat("stability", multipliers[2]);
@@ -115,9 +115,9 @@ public class BeamMod {
 		nbt.put(key, newNBT);
 	}
 
-	public static BeamMod readFromNBT(@Nonnull String key, CompoundNBT nbt){
+	public static BeamMod readFromNBT(@Nonnull String key, CompoundTag nbt){
 		if(nbt.contains(key)){
-			CompoundNBT compound = nbt.getCompound(key);
+			CompoundTag compound = nbt.getCompound(key);
 			return new BeamMod(
 					compound.getFloat("energy"),
 					compound.getFloat("potential"),

@@ -2,21 +2,23 @@ package com.Da_Technomancer.crossroads.items.technomancy;
 
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendBeamItemToServer;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import net.minecraft.world.item.Item.Properties;
 
 public abstract class BeamUsingItem extends Item{
 
@@ -31,7 +33,7 @@ public abstract class BeamUsingItem extends Item{
 	protected abstract byte maxSetting();
 
 	public static byte[] getSetting(ItemStack stack){
-		CompoundNBT nbt = stack.getTag();
+		CompoundTag nbt = stack.getTag();
 		if(nbt == null){
 			return new byte[4];
 		}
@@ -40,13 +42,13 @@ public abstract class BeamUsingItem extends Item{
 
 	public static void setSetting(ItemStack stack, byte[] settings){
 		if(stack.getTag() == null){
-			stack.setTag(new CompoundNBT());
+			stack.setTag(new CompoundTag());
 		}
 		stack.getTag().putByteArray(NBT_KEY, settings);
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void adjustSetting(ClientPlayerEntity player, ItemStack stack, int elemIndex, boolean increase){
+	public void adjustSetting(LocalPlayer player, ItemStack stack, int elemIndex, boolean increase){
 		long currTime = System.currentTimeMillis();
 		long timeSince = currTime - lastKeyTime;
 		if(timeSince < 0){
@@ -69,21 +71,21 @@ public abstract class BeamUsingItem extends Item{
 			acted = true;
 		}
 		if(acted){
-			player.level.playSound(player, player.blockPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 4, (float) Math.random() / 4 + 0.5F);
+			player.level.playSound(player, player.blockPosition(), SoundEvents.UI_BUTTON_CLICK, SoundSource.PLAYERS, 4, (float) Math.random() / 4 + 0.5F);
 			CRPackets.sendPacketToServer(new SendBeamItemToServer(settings));
 		}else{
 			//Play a sound at a slightly lower pitch
-			player.level.playSound(player, player.blockPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 4, (float) Math.random() / 4);
+			player.level.playSound(player, player.blockPosition(), SoundEvents.UI_BUTTON_CLICK, SoundSource.PLAYERS, 4, (float) Math.random() / 4);
 		}
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag advanced){
 		byte[] settings = getSetting(stack);
-		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_item.energy", settings[0], maxSetting()));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_item.potential", settings[1], maxSetting()));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_item.stability", settings[2], maxSetting()));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_item.void", settings[3], maxSetting()));
+		tooltip.add(new TranslatableComponent("tt.crossroads.beam_item.energy", settings[0], maxSetting()));
+		tooltip.add(new TranslatableComponent("tt.crossroads.beam_item.potential", settings[1], maxSetting()));
+		tooltip.add(new TranslatableComponent("tt.crossroads.beam_item.stability", settings[2], maxSetting()));
+		tooltip.add(new TranslatableComponent("tt.crossroads.beam_item.void", settings[3], maxSetting()));
 	}
 }

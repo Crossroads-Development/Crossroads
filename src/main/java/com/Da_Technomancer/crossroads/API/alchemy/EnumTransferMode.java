@@ -1,11 +1,11 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.StringRepresentable;
 
 import javax.annotation.Nonnull;
 import java.util.Locale;
 
-public enum EnumTransferMode implements IStringSerializable{
+public enum EnumTransferMode implements StringRepresentable{
 	
 	INPUT(true, false),
 	OUTPUT(false, true),

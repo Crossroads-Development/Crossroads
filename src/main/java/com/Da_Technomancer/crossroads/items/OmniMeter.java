@@ -9,18 +9,18 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.essentials.blocks.redstone.IRedstoneHandler;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -49,8 +49,8 @@ public class OmniMeter extends Item{
 	 * @param facing The side clicked on
 	 * @param hit Detailed target info
 	 */
-	public static void measure(ArrayList<ITextComponent> chat, PlayerEntity player, World world, BlockPos pos, Direction facing, BlockRayTraceResult hit){
-		TileEntity te = world.getBlockEntity(pos);
+	public static void measure(ArrayList<Component> chat, Player player, Level world, BlockPos pos, Direction facing, BlockHitResult hit){
+		BlockEntity te = world.getBlockEntity(pos);
 		if(te != null){
 			LazyOptional<IFluidHandler> fluidOpt;
 			if((fluidOpt = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)).isPresent()){
@@ -58,37 +58,37 @@ public class OmniMeter extends Item{
 
 				int tanks = pipe.getTanks();
 				if(tanks == 1){
-					chat.add(new TranslationTextComponent("tt.crossroads.meter.fluid_tank.single"));
+					chat.add(new TranslatableComponent("tt.crossroads.meter.fluid_tank.single"));
 				}else{
-					chat.add(new TranslationTextComponent("tt.crossroads.meter.fluid_tank.plural", tanks));
+					chat.add(new TranslatableComponent("tt.crossroads.meter.fluid_tank.plural", tanks));
 				}
 
 				for(int tank = 0; tank < tanks; tank++){
 					//Hi future me,
 					//If you're (me're?) looking at this, someone wrote a translation lang file for CR and subsequently discovered that the fluid printout isn't localized properly
 					//It's a straightforward fix- send the fluid registry name in the packet and localize on the client- it's just kind of weird
-					chat.add(new TranslationTextComponent("tt.crossroads.meter.fluid_tank.info", pipe.getTankCapacity(tank), MiscUtil.getLocalizedFluidName(pipe.getFluidInTank(tank).getTranslationKey()), pipe.getFluidInTank(tank).getAmount()));
+					chat.add(new TranslatableComponent("tt.crossroads.meter.fluid_tank.info", pipe.getTankCapacity(tank), MiscUtil.getLocalizedFluidName(pipe.getFluidInTank(tank).getTranslationKey()), pipe.getFluidInTank(tank).getAmount()));
 				}
 			}
 
 			LazyOptional<IAxisHandler> axisOpt;
 			if((axisOpt = te.getCapability(Capabilities.AXIS_CAPABILITY, null)).isPresent()){
 				IAxisHandler axisHandler = axisOpt.orElseThrow(NullPointerException::new);
-				chat.add(new TranslationTextComponent("tt.crossroads.meter.axis.current", CRConfig.formatVal(axisHandler.getTotalEnergy()), CRConfig.formatVal(axisHandler.getBaseSpeed())));
-				chat.add(new TranslationTextComponent("tt.crossroads.meter.axis.change", CRConfig.formatVal(axisHandler.getEnergyChange()), CRConfig.formatVal(axisHandler.getEnergyLost())));
+				chat.add(new TranslatableComponent("tt.crossroads.meter.axis.current", CRConfig.formatVal(axisHandler.getTotalEnergy()), CRConfig.formatVal(axisHandler.getBaseSpeed())));
+				chat.add(new TranslatableComponent("tt.crossroads.meter.axis.change", CRConfig.formatVal(axisHandler.getEnergyChange()), CRConfig.formatVal(axisHandler.getEnergyLost())));
 			}
 
 			LazyOptional<IEnergyStorage> engOpt;
 			if((engOpt = te.getCapability(CapabilityEnergy.ENERGY, null)).isPresent()){
 				IEnergyStorage batt = engOpt.orElseThrow(NullPointerException::new);
-				chat.add(new TranslationTextComponent("tt.crossroads.meter.fe", batt.getEnergyStored(), batt.getMaxEnergyStored()));
+				chat.add(new TranslatableComponent("tt.crossroads.meter.fe", batt.getEnergyStored(), batt.getMaxEnergyStored()));
 			}
 
 			//Read circuit output
 			LazyOptional<IRedstoneHandler> redsOpt;
 			if((redsOpt = te.getCapability(RedstoneUtil.REDSTONE_CAPABILITY, null)).isPresent()){
 				IRedstoneHandler redstoneHandler = redsOpt.orElseThrow(NullPointerException::new);
-				chat.add(new TranslationTextComponent("tt.crossroads.meter.circuit", CRConfig.formatVal(redstoneHandler.getOutput())));
+				chat.add(new TranslatableComponent("tt.crossroads.meter.circuit", CRConfig.formatVal(redstoneHandler.getOutput())));
 			}
 		}
 
@@ -119,18 +119,18 @@ public class OmniMeter extends Item{
 	}
 
 	@Override
-	public ActionResultType useOn(ItemUseContext context){
+	public InteractionResult useOn(UseOnContext context){
 		if(!context.getLevel().isClientSide){
-			ArrayList<ITextComponent> chat = new ArrayList<>();
+			ArrayList<Component> chat = new ArrayList<>();
 
-			BlockRayTraceResult result = new BlockRayTraceResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), false);
+			BlockHitResult result = new BlockHitResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), false);
 			measure(chat, context.getPlayer(), context.getLevel(), context.getClickedPos(), context.getClickedFace(), result);
 
 			if(!chat.isEmpty()){
-				CRPackets.sendPacketToPlayer((ServerPlayerEntity) context.getPlayer(), new SendChatToClient(chat, CHAT_ID));
+				CRPackets.sendPacketToPlayer((ServerPlayer) context.getPlayer(), new SendChatToClient(chat, CHAT_ID));
 			}
 		}
 
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 }

@@ -5,23 +5,23 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.BeamCannonTileEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import com.mojang.math.Vector3f;
 
-public class BeamCannonRenderer extends TileEntityRenderer<BeamCannonTileEntity>{
+public class BeamCannonRenderer extends BlockEntityRenderer<BeamCannonTileEntity>{
 
-	public BeamCannonRenderer(TileEntityRendererDispatcher dispatcher){
+	public BeamCannonRenderer(BlockEntityRenderDispatcher dispatcher){
 		super(dispatcher);
 	}
 
 	@Override
-	public void render(BeamCannonTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int light, int combinedOverlayIn){
+	public void render(BeamCannonTileEntity te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int light, int combinedOverlayIn){
 		if(te.getBlockState().getBlock() != CRBlocks.beamCannon){
 			return;
 		}
@@ -30,7 +30,7 @@ public class BeamCannonRenderer extends TileEntityRenderer<BeamCannonTileEntity>
 		matrix.mulPose(te.getBlockState().getValue(CRProperties.FACING).getRotation());
 		matrix.mulPose(Vector3f.YP.rotation(-te.clientAngle[0]));
 
-		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
+		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
 		TextureAtlasSprite bronzeSprite = CRRenderUtil.getTextureSprite(CRRenderTypes.BRONZE_TEXTURE);
 		TextureAtlasSprite barrelSprite = CRRenderUtil.getTextureSprite(CRRenderTypes.BEAM_CANNON_BARREL_TEXTURE);
 
@@ -179,7 +179,7 @@ public class BeamCannonRenderer extends TileEntityRenderer<BeamCannonTileEntity>
 
 		//Render the beam
 		if(te.beamLength > 0){
-			IVertexBuilder beamBuilder = buffer.getBuffer(CRRenderTypes.BEAM_TYPE);
+			VertexConsumer beamBuilder = buffer.getBuffer(CRRenderTypes.BEAM_TYPE);
 			matrix.translate(0, barrelTop, 0);
 			BeamRenderer.drawBeam(matrix, beamBuilder, 1 + Math.max(0, te.beamLength - (barrelTop + 3.5F / 16F)), te.beamSize / 8F / (float) Math.sqrt(2), te.beamCol);
 		}

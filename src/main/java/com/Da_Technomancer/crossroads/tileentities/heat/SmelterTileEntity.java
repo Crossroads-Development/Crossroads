@@ -5,20 +5,20 @@ import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.SmelterContainer;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -29,11 +29,13 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
+
 @ObjectHolder(Crossroads.MODID)
 public class SmelterTileEntity extends InventoryTE{
 
 	@ObjectHolder("smelter")
-	private static TileEntityType<SmelterTileEntity> type = null;
+	private static BlockEntityType<SmelterTileEntity> type = null;
 
 	public static final int REQUIRED = 500;
 	public static final int[] TEMP_TIERS = {200, 300};
@@ -55,8 +57,8 @@ public class SmelterTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.progress", progress, REQUIRED));
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
+		chat.add(new TranslatableComponent("tt.crossroads.boilerplate.progress", progress, REQUIRED));
 		super.addInfo(chat, player, hit);
 	}
 
@@ -92,7 +94,7 @@ public class SmelterTileEntity extends InventoryTE{
 	}
 
 	private ItemStack getOutput(){
-		Optional<FurnaceRecipe> recOpt = level.getRecipeManager().getRecipeFor(IRecipeType.SMELTING, this, level);
+		Optional<SmeltingRecipe> recOpt = level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, this, level);
 		ItemStack stack = recOpt.isPresent() ? recOpt.get().getResultItem() : ItemStack.EMPTY;
 
 		if(stack.isEmpty()){
@@ -111,13 +113,13 @@ public class SmelterTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		progress = nbt.getInt("prog");
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putInt("prog", progress);
 		return nbt;
@@ -145,7 +147,7 @@ public class SmelterTileEntity extends InventoryTE{
 
 	@Override
 	public boolean canPlaceItem(int index, ItemStack stack){
-		return index == 0 && level.getRecipeManager().getRecipeFor(IRecipeType.SMELTING, new Inventory(stack), level).isPresent();
+		return index == 0 && level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(stack), level).isPresent();
 	}
 
 	@Override
@@ -154,13 +156,13 @@ public class SmelterTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.smelter");
+	public Component getDisplayName(){
+		return new TranslatableComponent("container.smelter");
 	}
 
 	@Nullable
 	@Override
-	public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity playerEntity){
+	public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player playerEntity){
 		return new SmelterContainer(id, playerInventory, createContainerBuf());
 	}
 }

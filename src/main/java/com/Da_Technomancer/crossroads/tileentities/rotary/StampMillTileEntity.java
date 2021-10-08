@@ -11,22 +11,22 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.StampMillRec;
 import com.Da_Technomancer.crossroads.gui.container.StampMillContainer;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -37,11 +37,14 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE.AxleHandler;
+
 @ObjectHolder(Crossroads.MODID)
 public class StampMillTileEntity extends InventoryTE{
 
 	@ObjectHolder("stamp_mill")
-	public static TileEntityType<StampMillTileEntity> type = null;
+	public static BlockEntityType<StampMillTileEntity> type = null;
 
 	public static final int TIME_LIMIT = 100;
 	public static final int INERTIA = 200;
@@ -80,8 +83,8 @@ public class StampMillTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.progress", (int) progress, (int) REQUIRED));
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
+		chat.add(new TranslatableComponent("tt.crossroads.boilerplate.progress", (int) progress, (int) REQUIRED));
 		super.addInfo(chat, player, hit);
 	}
 
@@ -103,7 +106,7 @@ public class StampMillTileEntity extends InventoryTE{
 					timer = 0;
 					if(progress >= REQUIRED){
 						progress = 0;
-						level.playLocalSound(worldPosition.getX() + 0.5, worldPosition.getY() + 1, worldPosition.getZ() + 0.5, SoundEvents.ANVIL_PLACE, SoundCategory.BLOCKS, 1, level.random.nextFloat(), true);
+						level.playLocalSound(worldPosition.getX() + 0.5, worldPosition.getY() + 1, worldPosition.getZ() + 0.5, SoundEvents.ANVIL_PLACE, SoundSource.BLOCKS, 1, level.random.nextFloat(), true);
 						Optional<StampMillRec> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.STAMP_MILL_TYPE, this, level);
 						ItemStack produced;
 						if(recOpt.isPresent()){
@@ -129,7 +132,7 @@ public class StampMillTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putDouble("prog", progress);
 		nbt.putInt("timer", timer);
@@ -137,7 +140,7 @@ public class StampMillTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		progress = nbt.getDouble("prog");
 		timer = nbt.getInt("timer");
@@ -175,7 +178,7 @@ public class StampMillTileEntity extends InventoryTE{
 
 	@Nullable
 	@Override
-	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
+	public AbstractContainerMenu createMenu(int id, Inventory playerInv, Player player){
 		return new StampMillContainer(id, playerInv, createContainerBuf());
 	}
 
@@ -199,7 +202,7 @@ public class StampMillTileEntity extends InventoryTE{
 			Direction.Axis ax = state.getValue(CRProperties.HORIZ_AXIS);
 			for(Direction.AxisDirection dir : Direction.AxisDirection.values()){
 				Direction side = Direction.get(dir, ax);
-				TileEntity te = level.getBlockEntity(worldPosition.relative(side));
+				BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
 				if(te != null){
 					LazyOptional<IAxisHandler> axisOpt = te.getCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite());
 					if(axisOpt.isPresent()){
@@ -221,12 +224,12 @@ public class StampMillTileEntity extends InventoryTE{
 
 	@Override
 	public boolean canPlaceItem(int index, ItemStack stack){
-		return index == 0 && level.getRecipeManager().getRecipeFor(CRRecipes.STAMP_MILL_TYPE, new Inventory(stack), level).isPresent();
+		return index == 0 && level.getRecipeManager().getRecipeFor(CRRecipes.STAMP_MILL_TYPE, new SimpleContainer(stack), level).isPresent();
 	}
 
 	@Override
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.stamp_mill");
+	public Component getDisplayName(){
+		return new TranslatableComponent("container.stamp_mill");
 	}
 
 	@Override
@@ -234,10 +237,10 @@ public class StampMillTileEntity extends InventoryTE{
 		return INERTIA;
 	}
 
-	private static final AxisAlignedBB RENDER_BOX = new AxisAlignedBB(0, 0, 0, 1, 2, 1);
+	private static final AABB RENDER_BOX = new AABB(0, 0, 0, 1, 2, 1);
 
 	@Override
-	public AxisAlignedBB getRenderBoundingBox(){
+	public AABB getRenderBoundingBox(){
 		return RENDER_BOX.move(worldPosition);
 	}
 }

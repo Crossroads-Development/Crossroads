@@ -3,9 +3,9 @@ package com.Da_Technomancer.crossroads.API.packets;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.packets.ClientPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.NewChatGui;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.ChatComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
@@ -29,11 +29,11 @@ public class SendChatToClient extends ClientPacket{
 
 	}
 
-	public SendChatToClient(List<ITextComponent> chat, int id){
+	public SendChatToClient(List<Component> chat, int id){
 		StringBuilder s = new StringBuilder();
-		for(ITextComponent comp : chat){
+		for(Component comp : chat){
 			s.append(DIVIDER);
-			s.append(ITextComponent.Serializer.toJson(comp));
+			s.append(Component.Serializer.toJson(comp));
 		}
 
 		this.chat = s.toString();
@@ -48,7 +48,7 @@ public class SendChatToClient extends ClientPacket{
 
 	@Override
 	protected void run(){
-		List<ITextComponent> components = new ArrayList<>();
+		List<Component> components = new ArrayList<>();
 
 		String active = chat;
 		while(active.length() != 0){
@@ -57,7 +57,7 @@ public class SendChatToClient extends ClientPacket{
 			if(nextInd == -1){
 				nextInd = active.length();
 			}
-			components.add(ITextComponent.Serializer.fromJsonLenient(active.substring(0, nextInd)));
+			components.add(Component.Serializer.fromJsonLenient(active.substring(0, nextInd)));
 			if(nextInd + 1 < active.length()){
 				active = active.substring(nextInd);
 			}else{
@@ -65,7 +65,7 @@ public class SendChatToClient extends ClientPacket{
 			}
 		}
 
-		ITextComponent combined;
+		Component combined;
 		StringBuilder combo = new StringBuilder();
 		for(int i = 0; i < components.size(); i++){
 			combo.append(components.get(i).getString());
@@ -73,9 +73,9 @@ public class SendChatToClient extends ClientPacket{
 				combo.append("§f\n");
 			}
 		}
-		combined = new StringTextComponent(combo.toString());
+		combined = new TextComponent(combo.toString());
 
-		NewChatGui chatGui = Minecraft.getInstance().gui.getChat();
+		ChatComponent chatGui = Minecraft.getInstance().gui.getChat();
 		if(SafeCallable.getPrintChatNoLog() == null){
 			chatGui.addMessage(combined);
 		}else{

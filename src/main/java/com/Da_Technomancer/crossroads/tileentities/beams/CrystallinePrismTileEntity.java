@@ -5,16 +5,16 @@ import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
 import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder(Crossroads.MODID)
 public class CrystallinePrismTileEntity extends BeamRenderTE{
 
 	@ObjectHolder("crystal_prism")
-	public static TileEntityType<CrystallinePrismTileEntity> type = null;
+	public static BlockEntityType<CrystallinePrismTileEntity> type = null;
 
 	private Direction dir = null;
 

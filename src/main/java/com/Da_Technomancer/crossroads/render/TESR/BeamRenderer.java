@@ -5,16 +5,16 @@ import com.Da_Technomancer.crossroads.API.templates.IBeamRenderTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3f;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.*;
@@ -22,9 +22,9 @@ import java.awt.*;
 /**
  * All blocks using BeamRenderer MUST return false to isOpaqueCube 
  */
-public class BeamRenderer<T extends TileEntity & IBeamRenderTE> extends TileEntityRenderer<T>{
+public class BeamRenderer<T extends BlockEntity & IBeamRenderTE> extends BlockEntityRenderer<T>{
 
-	public BeamRenderer(TileEntityRendererDispatcher dispatcher){
+	public BeamRenderer(BlockEntityRenderDispatcher dispatcher){
 		super(dispatcher);
 	}
 
@@ -37,7 +37,7 @@ public class BeamRenderer<T extends TileEntity & IBeamRenderTE> extends TileEnti
 	 * @param width The width of the beam, in blocks
 	 * @param color The beam color
 	 */
-	public static void drawBeam(MatrixStack matrix, IVertexBuilder builder, float length, float width, Color color){
+	public static void drawBeam(PoseStack matrix, VertexConsumer builder, float length, float width, Color color){
 		final float BEAM_SIDE_U = 0;
 		final float BEAM_END_U = 0.5F;
 		final float BEAM_V_STOP = 0.5F;
@@ -83,7 +83,7 @@ public class BeamRenderer<T extends TileEntity & IBeamRenderTE> extends TileEnti
 	}
 
 	@Override
-	public void render(T beam, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
+	public void render(T beam, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		int[] packets = beam.getRenderedBeams();
 
 		matrix.pushPose();
@@ -96,7 +96,7 @@ public class BeamRenderer<T extends TileEntity & IBeamRenderTE> extends TileEnti
 		}else{
 			verticalRot = Vector3f.YP.rotationDegrees(45);//Constant 45 degree angle
 		}
-		IVertexBuilder builder = buffer.getBuffer(CRRenderTypes.BEAM_TYPE);
+		VertexConsumer builder = buffer.getBuffer(CRRenderTypes.BEAM_TYPE);
 
 		for(int dir = 0; dir < 6; dir++){
 			if(packets[dir] != 0){

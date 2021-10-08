@@ -6,11 +6,11 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.entity.EntityFlameCore;
 import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.ambient.particles.ColorParticleData;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -39,7 +39,7 @@ public class AlchemyUtil{
 	 * @param pos The position to release the chemicals at
 	 * @param reags The reagents to release. Temperature does matter. The passed map will not be modified
 	 */
-	public static void releaseChemical(World world, BlockPos pos, ReagentMap reags){
+	public static void releaseChemical(Level world, BlockPos pos, ReagentMap reags){
 //		boolean hasFire = false;
 		int solQty = 0;
 		int liqQty = 0;
@@ -122,7 +122,7 @@ public class AlchemyUtil{
 				for(int i = 0; i < 32; i++){
 					float horizSpeed = maxRange / 20F;
 					float offset = i < 16 ? 0 : 1;
-					((ServerWorld) world).sendParticles(new ColorParticleData(CRParticles.COLOR_SPLASH, new Color(liqCol[0], liqCol[1], liqCol[2], liqCol[3])), pos.getX() + 0.5D, pos.getY() + 1.3F, pos.getZ() + 0.5D, 1, Math.cos((i + offset) * Math.PI / 8), (3 * offset + 1) / 8D, Math.sin((i + offset) * Math.PI / 8), horizSpeed);
+					((ServerLevel) world).sendParticles(new ColorParticleData(CRParticles.COLOR_SPLASH, new Color(liqCol[0], liqCol[1], liqCol[2], liqCol[3])), pos.getX() + 0.5D, pos.getY() + 1.3F, pos.getZ() + 0.5D, 1, Math.cos((i + offset) * Math.PI / 8), (3 * offset + 1) / 8D, Math.sin((i + offset) * Math.PI / 8), horizSpeed);
 				}
 				for(int i = -maxRange; i <= maxRange; i++){
 					for(int j = -maxRange; j <= maxRange; j++){
@@ -147,7 +147,7 @@ public class AlchemyUtil{
 					e.perform(world, pos, reags, EnumMatterPhase.SOLID);
 				}
 				for(int i = 0; i < 5; i++){
-					((ServerWorld) world).sendParticles(new ColorParticleData(CRParticles.COLOR_SOLID, new Color(solCol[0], solCol[1], solCol[2], solCol[3])), pos.getX() + 0.25D + world.random.nextFloat() / 2F, pos.getY() + 1.3F, pos.getZ() + 0.25D + world.random.nextFloat() / 2F, 1, 0, 0, 0, 0F);
+					((ServerLevel) world).sendParticles(new ColorParticleData(CRParticles.COLOR_SOLID, new Color(solCol[0], solCol[1], solCol[2], solCol[3])), pos.getX() + 0.25D + world.random.nextFloat() / 2F, pos.getY() + 1.3F, pos.getZ() + 0.25D + world.random.nextFloat() / 2F, 1, 0, 0, 0, 0F);
 				}
 			}
 			if(gasQty > 0){
@@ -163,7 +163,7 @@ public class AlchemyUtil{
 								//Pythagorean distance- not taxicab
 								if(maxRange * maxRange >= i * i + j * j + k * k){
 									eff.perform(world, pos.offset(i, j, k), reags, EnumMatterPhase.GAS);
-									((ServerWorld) world).sendParticles(new ColorParticleData(CRParticles.COLOR_GAS, new Color(gasCol[0], gasCol[1], gasCol[2], gasCol[3])), (float) pos.getX() + Math.random(), (float) pos.getY() + Math.random(), (float) pos.getZ() + Math.random(), 1, (Math.random() * 2D - 1D), Math.random(), (Math.random() * 2D - 1D), 0.015D);
+									((ServerLevel) world).sendParticles(new ColorParticleData(CRParticles.COLOR_GAS, new Color(gasCol[0], gasCol[1], gasCol[2], gasCol[3])), (float) pos.getX() + Math.random(), (float) pos.getY() + Math.random(), (float) pos.getZ() + Math.random(), 1, (Math.random() * 2D - 1D), Math.random(), (Math.random() * 2D - 1D), 0.015D);
 								}
 							}
 						}
@@ -183,7 +183,7 @@ public class AlchemyUtil{
 			this.qty = qty;
 		}
 
-		private void perform(World world, BlockPos pos, ReagentMap reags, EnumMatterPhase phase){
+		private void perform(Level world, BlockPos pos, ReagentMap reags, EnumMatterPhase phase){
 			if(effect != null){
 				effect.doEffect(world, pos, qty, phase, reags);
 			}

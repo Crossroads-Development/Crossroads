@@ -8,17 +8,17 @@ import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -27,11 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink.Behaviour;
+
 @ObjectHolder(Crossroads.MODID)
 public class ChunkAcceleratorTileEntity extends IFluxLink.FluxHelper{
 
 	@ObjectHolder("chunk_accelerator")
-	public static TileEntityType<ChunkAcceleratorTileEntity> type = null;
+	public static BlockEntityType<ChunkAcceleratorTileEntity> type = null;
 
 	public static final int FLUX_MULT = 8;
 
@@ -49,8 +51,8 @@ public class ChunkAcceleratorTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		chat.add(new TranslationTextComponent("tt.crossroads.time_accel.boost", 100 * extraTicks(infoIntensity)));
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
+		chat.add(new TranslatableComponent("tt.crossroads.time_accel.boost", 100 * extraTicks(infoIntensity)));
 		FluxUtil.addFluxInfo(chat, this, producedFlux(infoIntensity));
 		super.addInfo(chat, player, hit);
 	}
@@ -98,9 +100,9 @@ public class ChunkAcceleratorTileEntity extends IFluxLink.FluxHelper{
 			if(extraTicks > 0 && CRConfig.teTimeAccel.get() && !isShutDown()){
 				ChunkPos chunkPos = new ChunkPos(worldPosition);
 				//List of every tile entity in the chunk which is tickable
-				List<TileEntity> tickables = level.tickableBlockEntities.stream().filter(te -> te instanceof ITickableTileEntity && te.getBlockPos().getX() >> 4 == chunkPos.x && te.getBlockPos().getZ() >> 4 == chunkPos.z).collect(Collectors.toList());
-				for(TileEntity te : tickables){
-					ITickableTileEntity tte = (ITickableTileEntity) te;
+				List<BlockEntity> tickables = level.tickableBlockEntities.stream().filter(te -> te instanceof TickableBlockEntity && te.getBlockPos().getX() >> 4 == chunkPos.x && te.getBlockPos().getZ() >> 4 == chunkPos.z).collect(Collectors.toList());
+				for(BlockEntity te : tickables){
+					TickableBlockEntity tte = (TickableBlockEntity) te;
 					for(int run = 0; run < extraTicks; run++){
 						tte.tick();
 					}
@@ -110,7 +112,7 @@ public class ChunkAcceleratorTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putInt("intensity", intensity);
 		nbt.putLong("last_run", lastRunTick);
@@ -118,7 +120,7 @@ public class ChunkAcceleratorTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		intensity = nbt.getInt("intensity");
 		lastRunTick = nbt.getLong("last_run");

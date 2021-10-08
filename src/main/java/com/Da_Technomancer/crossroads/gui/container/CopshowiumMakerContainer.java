@@ -4,10 +4,10 @@ import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.CopshowiumCreationChamberTileEntity;
 import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.registries.ObjectHolder;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -15,9 +15,9 @@ import org.apache.commons.lang3.tuple.Pair;
 public class CopshowiumMakerContainer extends MachineContainer<CopshowiumCreationChamberTileEntity>{
 
 	@ObjectHolder("copshowium_maker")
-	private static ContainerType<CopshowiumMakerContainer> type = null;
+	private static MenuType<CopshowiumMakerContainer> type = null;
 
-	public CopshowiumMakerContainer(int windowId, PlayerInventory playerInv, PacketBuffer data){
+	public CopshowiumMakerContainer(int windowId, Inventory playerInv, FriendlyByteBuf data){
 		super(type, windowId, playerInv, data);
 	}
 

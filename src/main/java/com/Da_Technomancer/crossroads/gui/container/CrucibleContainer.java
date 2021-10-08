@@ -5,22 +5,24 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntity;
 import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
 import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.registries.ObjectHolder;
 import org.apache.commons.lang3.tuple.Pair;
+
+import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.StrictSlot;
 
 @ObjectHolder(Crossroads.MODID)
 public class CrucibleContainer extends MachineContainer<HeatingCrucibleTileEntity>{
 
 	@ObjectHolder("crucible")
-	private static ContainerType<CrucibleContainer> type = null;
+	private static MenuType<CrucibleContainer> type = null;
 
 	public final IntDeferredRef meltProgress;
 
-	public CrucibleContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
+	public CrucibleContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
 		super(type, id, playerInv, buf);
 		meltProgress = new IntDeferredRef(te::getProgress, te.getLevel().isClientSide);
 		addDataSlot(meltProgress);

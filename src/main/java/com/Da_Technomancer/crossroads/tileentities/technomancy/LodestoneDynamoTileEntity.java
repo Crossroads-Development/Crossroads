@@ -7,10 +7,10 @@ import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.electric.DynamoTileEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -21,7 +21,7 @@ import net.minecraftforge.registries.ObjectHolder;
 public class LodestoneDynamoTileEntity extends ModuleTE{
 
 	@ObjectHolder("lodestone_dynamo")
-	public static TileEntityType<LodestoneDynamoTileEntity> type = null;
+	public static BlockEntityType<LodestoneDynamoTileEntity> type = null;
 
 	public static final double INERTIA = DynamoTileEntity.INERTIA;
 	private static final int CHARGE_CAPACITY = 8_000;
@@ -65,13 +65,13 @@ public class LodestoneDynamoTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		fe = nbt.getInt("charge");
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putInt("charge", fe);
 

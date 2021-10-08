@@ -3,8 +3,8 @@ package com.Da_Technomancer.crossroads.API;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.CRConfig;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
 
 import javax.annotation.Nullable;
 import java.util.Locale;
@@ -53,7 +53,7 @@ public enum EnumPath{
 	 * @param player The player to check
 	 * @return Whether the given player has unlocked this path
 	 */
-	public boolean isUnlocked(PlayerEntity player){
+	public boolean isUnlocked(Player player){
 		return AdvancementTracker.hasAdvancement(player, "progress/path/" + toString());
 	}
 
@@ -63,11 +63,11 @@ public enum EnumPath{
 	 * @param player The player to (un)lock this path for
 	 * @param unlocked Whether this player should have this path unlocked. If false, relocks this path
 	 */
-	public void setUnlocked(PlayerEntity player, boolean unlocked){
+	public void setUnlocked(Player player, boolean unlocked){
 		if(player.level.isClientSide){
 			return;//We can't do this on the client side
 		}
-		AdvancementTracker.unlockAdvancement((ServerPlayerEntity) player, "progress/path/" + toString(), unlocked);
+		AdvancementTracker.unlockAdvancement((ServerPlayer) player, "progress/path/" + toString(), unlocked);
 	}
 
 	/**
@@ -75,7 +75,7 @@ public enum EnumPath{
 	 * @param player The player to check
 	 * @return Whether they are allowed to unlock new paths. Does not check path-specific requirements
 	 */
-	public static boolean canUnlockNewPath(PlayerEntity player){
+	public static boolean canUnlockNewPath(Player player){
 		boolean multiplayer;//We use a different config option depending on if this is multiplayer or singleplayer
 		if(player.level.isClientSide){
 			multiplayer = !Minecraft.getInstance().hasSingleplayerServer();
@@ -103,7 +103,7 @@ public enum EnumPath{
 	 * @param player The player to check
 	 * @return Whether this player should be allowed to unlock paths
 	 */
-	public boolean pathGatePassed(PlayerEntity player){
+	public boolean pathGatePassed(Player player){
 		if(!canUnlockNewPath(player)){
 			return false;
 		}

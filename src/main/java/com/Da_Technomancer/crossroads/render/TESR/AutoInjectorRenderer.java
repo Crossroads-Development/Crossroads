@@ -5,25 +5,25 @@ import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.AutoInjectorTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.block.BlockState;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
 
-public class AutoInjectorRenderer extends TileEntityRenderer<AutoInjectorTileEntity>{
+public class AutoInjectorRenderer extends BlockEntityRenderer<AutoInjectorTileEntity>{
 
 
-	protected AutoInjectorRenderer(TileEntityRendererDispatcher dispatcher){
+	protected AutoInjectorRenderer(BlockEntityRenderDispatcher dispatcher){
 		super(dispatcher);
 	}
 
 	@Override
-	public void render(AutoInjectorTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
+	public void render(AutoInjectorTileEntity te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		BlockState state = te.getBlockState();
 		if(state.getBlock() != CRBlocks.autoInjector){
 			return;
@@ -34,10 +34,10 @@ public class AutoInjectorRenderer extends TileEntityRenderer<AutoInjectorTileEnt
 		matrix.mulPose(dir.getRotation());
 
 		//Area of effect overlay when holding wrench
-		if(ESConfig.isWrench(Minecraft.getInstance().player.getItemInHand(Hand.MAIN_HAND)) || ESConfig.isWrench(Minecraft.getInstance().player.getItemInHand(Hand.OFF_HAND))){
+		if(ESConfig.isWrench(Minecraft.getInstance().player.getItemInHand(InteractionHand.MAIN_HAND)) || ESConfig.isWrench(Minecraft.getInstance().player.getItemInHand(InteractionHand.OFF_HAND))){
 			float radius = AutoInjectorTileEntity.SIZE / 2F + 0.01F;
 			int[] overlayCol = {0, 255, 100, 60};
-			IVertexBuilder overlayBuilder = buffer.getBuffer(CRRenderTypes.AREA_OVERLAY_TYPE);
+			VertexConsumer overlayBuilder = buffer.getBuffer(CRRenderTypes.AREA_OVERLAY_TYPE);
 
 			matrix.pushPose();
 			matrix.translate(0, radius + 0.5D - 0.001D, 0);

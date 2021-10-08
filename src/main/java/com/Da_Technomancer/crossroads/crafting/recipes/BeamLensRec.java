@@ -7,22 +7,22 @@ import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.CraftingUtil;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 import java.util.Locale;
 
-public class BeamLensRec implements IOptionalRecipe<IInventory>{
+public class BeamLensRec implements IOptionalRecipe<Container>{
 
 	private final ResourceLocation id;
 	private final String group;
@@ -49,7 +49,7 @@ public class BeamLensRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public boolean matches(IInventory inv, World worldIn){
+	public boolean matches(Container inv, Level worldIn){
 		return active && ingr.test(inv.getItem(0));
 	}
 
@@ -58,7 +58,7 @@ public class BeamLensRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public ItemStack assemble(IInventory inv){
+	public ItemStack assemble(Container inv){
 		return getResultItem().copy();
 	}
 
@@ -111,7 +111,7 @@ public class BeamLensRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer(){
+	public RecipeSerializer<?> getSerializer(){
 		return CRRecipes.BEAM_LENS_SERIAL;
 	}
 
@@ -121,16 +121,16 @@ public class BeamLensRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public IRecipeType<?> getType(){
+	public RecipeType<?> getType(){
 		return CRRecipes.BEAM_LENS_TYPE;
 	}
 
-	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<BeamLensRec>{
+	public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<BeamLensRec>{
 
 		@Override
 		public BeamLensRec fromJson(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and ingredient
-			String s = JSONUtils.getAsString(json, "group", "");
+			String s = GsonHelper.getAsString(json, "group", "");
 			Ingredient ingredient = Ingredient.EMPTY;
 			ItemStack transform = ItemStack.EMPTY;
 			EnumBeamAlignments alignment = EnumBeamAlignments.NO_MATCH;
@@ -140,29 +140,29 @@ public class BeamLensRec implements IOptionalRecipe<IInventory>{
 			if(active){
 				ingredient = CraftingUtil.getIngredient(json, "input", true);
 
-				if(JSONUtils.isValidNode(json, "transmute_result")){
+				if(GsonHelper.isValidNode(json, "transmute_result")){
 					transform = CraftingUtil.getItemStack(json, "transmute_result", false, true);
 				}
 
-				if(JSONUtils.isValidNode(json, "transmute_alignment")){
+				if(GsonHelper.isValidNode(json, "transmute_alignment")){
 					try{
-						String alignName = JSONUtils.getAsString(json, "transmute_alignment");
+						String alignName = GsonHelper.getAsString(json, "transmute_alignment");
 						alignment = EnumBeamAlignments.valueOf(alignName.toUpperCase(Locale.US));
 					}catch(NullPointerException e){
 						throw new JsonParseException("Non-existent alignment specified");
 					}
 				}
-				transformVoid = JSONUtils.getAsBoolean(json, "transmute_void", false);
+				transformVoid = GsonHelper.getAsBoolean(json, "transmute_void", false);
 
 				//Output specified as 5 float tags, all of which are optional
 				//Filters default to 1, while void conversion defaults to 0
 				//This means beams pass right through by default
 				float[] mults = new float[5];
-				mults[0] = JSONUtils.getAsFloat(json, "energy", 1);
-				mults[1] = JSONUtils.getAsFloat(json, "potential", 1);
-				mults[2] = JSONUtils.getAsFloat(json, "stability", 1);
-				mults[3] = JSONUtils.getAsFloat(json, "void", 1);
-				mults[4] = JSONUtils.getAsFloat(json, "void_convert", 0);
+				mults[0] = GsonHelper.getAsFloat(json, "energy", 1);
+				mults[1] = GsonHelper.getAsFloat(json, "potential", 1);
+				mults[2] = GsonHelper.getAsFloat(json, "stability", 1);
+				mults[3] = GsonHelper.getAsFloat(json, "void", 1);
+				mults[4] = GsonHelper.getAsFloat(json, "void_convert", 0);
 
 				return new BeamLensRec(recipeId, s, ingredient, new BeamMod(mults), transform, alignment, transformVoid, true);
 			}
@@ -171,7 +171,7 @@ public class BeamLensRec implements IOptionalRecipe<IInventory>{
 
 		@Nullable
 		@Override
-		public BeamLensRec fromNetwork(ResourceLocation recipeId, PacketBuffer buffer){
+		public BeamLensRec fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
 			String s = buffer.readUtf(Short.MAX_VALUE);
 			boolean active = buffer.readBoolean();
 
@@ -192,7 +192,7 @@ public class BeamLensRec implements IOptionalRecipe<IInventory>{
 		}
 
 		@Override
-		public void toNetwork(PacketBuffer buffer, BeamLensRec recipe){
+		public void toNetwork(FriendlyByteBuf buffer, BeamLensRec recipe){
 			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
 			if(recipe.active){

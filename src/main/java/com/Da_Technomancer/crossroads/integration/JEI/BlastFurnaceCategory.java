@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.recipes.BlastFurnaceRec;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -17,8 +17,8 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
 
 public class BlastFurnaceCategory implements IRecipeCategory<BlastFurnaceRec>{
 
@@ -60,7 +60,7 @@ public class BlastFurnaceCategory implements IRecipeCategory<BlastFurnaceRec>{
 	}
 
 	@Override
-	public void draw(BlastFurnaceRec recipe, MatrixStack matrix, double mouseX, double mouseY){
+	public void draw(BlastFurnaceRec recipe, PoseStack matrix, double mouseX, double mouseY){
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
 		slot.draw(matrix, 54, 55);//Input

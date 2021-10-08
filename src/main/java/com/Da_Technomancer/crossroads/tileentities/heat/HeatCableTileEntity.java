@@ -9,12 +9,12 @@ import com.Da_Technomancer.crossroads.API.templates.ConduitBlock;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -23,11 +23,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE.HeatHandler;
+
 @ObjectHolder(Crossroads.MODID)
 public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.IConduitTE<EnumTransferMode>{
 
 	@ObjectHolder("heat_cable")
-	private static TileEntityType<HeatCableTileEntity> type = null;
+	private static BlockEntityType<HeatCableTileEntity> type = null;
 
 	@SuppressWarnings("unchecked")//Darn Java, not being able to verify arrays of parameterized types. Bah Humbug!
 	protected final LazyOptional<IHeatHandler>[] neighCache = new LazyOptional[] {LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty()};
@@ -44,7 +46,7 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 		this.insulator = insulator;
 	}
 
-	protected HeatCableTileEntity(TileEntityType<? extends HeatCableTileEntity> type){
+	protected HeatCableTileEntity(BlockEntityType<? extends HeatCableTileEntity> type){
 		super(type);
 	}
 
@@ -88,7 +90,7 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 			}
 			LazyOptional<IHeatHandler> otherOpt = neighCache[side.get3DDataValue()];
 			if(!neighCache[side.get3DDataValue()].isPresent()){
-				TileEntity te = level.getBlockEntity(worldPosition.relative(side));
+				BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
 				if(te != null){
 					otherOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, side.getOpposite());
 					neighCache[side.get3DDataValue()] = otherOpt;
@@ -135,14 +137,14 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		ConduitBlock.IConduitTE.readConduitNBT(nbt, this);
 		insulator = nbt.contains("insul") ? HeatInsulators.valueOf(nbt.getString("insul")) : HeatInsulators.WOOL;
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		ConduitBlock.IConduitTE.writeConduitNBT(nbt, this);
 		nbt.putString("insul", insulator.name());
@@ -150,7 +152,7 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag(){
+	public CompoundTag getUpdateTag(){
 		return save(super.getUpdateTag());
 	}
 
@@ -184,7 +186,7 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 	@Override
 	public boolean hasMatch(int side, EnumTransferMode mode){
 		Direction face = Direction.from3DDataValue(side);
-		TileEntity neighTE = level.getBlockEntity(worldPosition.relative(face));
+		BlockEntity neighTE = level.getBlockEntity(worldPosition.relative(face));
 		return neighTE != null && neighTE.getCapability(Capabilities.HEAT_CAPABILITY, face.getOpposite()).isPresent();
 	}
 

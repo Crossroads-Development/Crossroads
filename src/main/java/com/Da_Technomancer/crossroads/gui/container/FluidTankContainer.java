@@ -4,10 +4,10 @@ import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidTankTileEntity;
 import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.registries.ObjectHolder;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -15,9 +15,9 @@ import org.apache.commons.lang3.tuple.Pair;
 public class FluidTankContainer extends MachineContainer<FluidTankTileEntity>{
 
 	@ObjectHolder("fluid_tank")
-	private static ContainerType<FluidTankContainer> type = null;
+	private static MenuType<FluidTankContainer> type = null;
 
-	public FluidTankContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
+	public FluidTankContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
 		super(type, id, playerInv, buf);
 	}
 

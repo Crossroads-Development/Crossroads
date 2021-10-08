@@ -2,11 +2,11 @@ package com.Da_Technomancer.crossroads.API.heat;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.List;
 
@@ -36,10 +36,10 @@ public class HeatUtil{
 	 * @param temp The temperature, in degrees C
 	 * @param biomeTemp The biome temperature, in degrees C. Specify a value below absolute zero to not print this
 	 */
-	public static void addHeatInfo(List<ITextComponent> chat, double temp, double biomeTemp){
-		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.temp_k", CRConfig.formatVal(temp), CRConfig.formatVal(toKelvin(temp))));
+	public static void addHeatInfo(List<Component> chat, double temp, double biomeTemp){
+		chat.add(new TranslatableComponent("tt.crossroads.boilerplate.temp_k", CRConfig.formatVal(temp), CRConfig.formatVal(toKelvin(temp))));
 		if(biomeTemp >= ABSOLUTE_ZERO){
-			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.temp.biome", CRConfig.formatVal(biomeTemp)));
+			chat.add(new TranslatableComponent("tt.crossroads.boilerplate.temp.biome", CRConfig.formatVal(biomeTemp)));
 		}
 	}
 
@@ -65,7 +65,7 @@ public class HeatUtil{
 	 * @param pos The position to find the temperature at
 	 * @return The biome temperature, in degrees C
 	 */
-	public static double convertBiomeTemp(World world, BlockPos pos){
+	public static double convertBiomeTemp(Level world, BlockPos pos){
 		if(world == null || pos == null){
 			return ABSOLUTE_ZERO;
 		}
@@ -74,7 +74,7 @@ public class HeatUtil{
 		//This formula was derived with the power of wikipedia and excel spreadsheets to compare biome temperatures to actual real world temperatures.
 		//Most people probably wouldn't care if I'd just pulled it out of my *rse, but I made an effort and I want someone to know this. Appreciate it. Please?
 		double outTemp = rawTemp * 17.5D - 2.5D;
-		if(biome.getBiomeCategory() == Biome.Category.NETHER){
+		if(biome.getBiomeCategory() == Biome.BiomeCategory.NETHER){
 			outTemp = Math.max(outTemp, CRConfig.hellTemperature.get());
 		}
 		return MiscUtil.preciseRound(outTemp, 3);

@@ -10,20 +10,20 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import io.netty.buffer.Unpooled;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -35,10 +35,10 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 @ObjectHolder(Crossroads.MODID)
-public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory, INamedContainerProvider{
+public class BeamExtractorTileEntity extends BeamRenderTE implements Container, MenuProvider{
 
 	@ObjectHolder("beam_extractor")
-	public static TileEntityType<BeamExtractorTileEntity> type = null;
+	public static BlockEntityType<BeamExtractorTileEntity> type = null;
 
 	private ItemStack inv = ItemStack.EMPTY;
 	private Direction facing = null;
@@ -75,10 +75,10 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		if(!inv.isEmpty()){
-			nbt.put("inv", inv.save(new CompoundNBT()));
+			nbt.put("inv", inv.save(new CompoundTag()));
 		}
 		output.writeToNBT("output", nbt);
 		nbt.putInt("remain", timeRemaining);
@@ -88,7 +88,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		inv = nbt.contains("inv") ? ItemStack.of(nbt.getCompound("inv")) : ItemStack.EMPTY;
 		output = BeamUnit.readFromNBT("output", nbt);
@@ -166,13 +166,13 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 	}
 
 	@Override
-	public boolean stillValid(PlayerEntity player){
+	public boolean stillValid(Player player){
 		return level.getBlockEntity(worldPosition) == this && player.distanceToSqr(worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5) <= 64;
 	}
 
 	@Override
 	public boolean canPlaceItem(int index, ItemStack stack){
-		return index == 0 && (level.getRecipeManager().getRecipeFor(CRRecipes.BEAM_EXTRACT_TYPE, new Inventory(stack), level).isPresent() || stack.getItem() == CRItems.beamCage);
+		return index == 0 && (level.getRecipeManager().getRecipeFor(CRRecipes.BEAM_EXTRACT_TYPE, new SimpleContainer(stack), level).isPresent() || stack.getItem() == CRItems.beamCage);
 	}
 
 	@Override
@@ -182,14 +182,14 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements IInventory,
 	}
 
 	@Override
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.beam_extractor");
+	public Component getDisplayName(){
+		return new TranslatableComponent("container.beam_extractor");
 	}
 
 	@Nullable
 	@Override
-	public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity){
-		return new BeamExtractorContainer(i, playerInventory, new PacketBuffer(Unpooled.buffer()).writeBlockPos(worldPosition));
+	public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player playerEntity){
+		return new BeamExtractorContainer(i, playerInventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(worldPosition));
 	}
 
 	@Override

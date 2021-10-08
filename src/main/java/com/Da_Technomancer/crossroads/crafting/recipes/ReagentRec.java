@@ -12,18 +12,18 @@ import com.Da_Technomancer.crossroads.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tags.ITag;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.tags.Tag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.function.Function;
 
-public class ReagentRec implements IRecipe<IInventory>, IReagent{
+public class ReagentRec implements Recipe<Container>, IReagent{
 
 	private final ResourceLocation location;
 	private final String group;
@@ -42,7 +42,7 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 	private final double melting;
 	private final double boiling;
 	private final boolean flame;
-	private final ITag.INamedTag<Item> solid;
+	private final Tag.Named<Item> solid;
 	private final FluidIngredient fluid;
 	private final int fluidQty;
 	private final ContainRequirements containment;
@@ -54,7 +54,7 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 	private final String flameName;//Used for serialization
 	private final Function<Integer, Integer> flameFunction;
 
-	public ReagentRec(ResourceLocation location, String group, String id, double melting, double boiling, boolean flame, ITag.INamedTag<Item> solid, FluidIngredient fluid, int fluidQty, ContainRequirements containment, int[] colMap, Function<EnumMatterPhase, Color> colorFunc, String effectName, @Nonnull IAlchEffect effect, String flameName, Function<Integer, Integer> flameFunction){
+	public ReagentRec(ResourceLocation location, String group, String id, double melting, double boiling, boolean flame, Tag.Named<Item> solid, FluidIngredient fluid, int fluidQty, ContainRequirements containment, int[] colMap, Function<EnumMatterPhase, Color> colorFunc, String effectName, @Nonnull IAlchEffect effect, String flameName, Function<Integer, Integer> flameFunction){
 		this.location = location;
 		this.group = group;
 		this.id = id;
@@ -75,12 +75,12 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 	}
 
 	@Override
-	public boolean matches(IInventory inv, World worldIn){
+	public boolean matches(Container inv, Level worldIn){
 		return true;
 	}
 
 	@Override
-	public ItemStack assemble(IInventory inv){
+	public ItemStack assemble(Container inv){
 		return getResultItem();
 	}
 
@@ -160,7 +160,7 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 		return flame;
 	}
 
-	public ITag<Item> getSolid(){
+	public Tag<Item> getSolid(){
 		return solid;
 	}
 
@@ -176,12 +176,12 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 	}
 
 	@Override
-	public ITag<Item> getJEISolids(){
+	public Tag<Item> getJEISolids(){
 		return solid;
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer(){
+	public RecipeSerializer<?> getSerializer(){
 		return CRRecipes.REAGENT_SERIAL;
 	}
 
@@ -191,11 +191,11 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 	}
 
 	@Override
-	public IRecipeType<?> getType(){
+	public RecipeType<?> getType(){
 		return CRRecipes.REAGENT_TYPE;
 	}
 
-	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ReagentRec>{
+	public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ReagentRec>{
 
 
 		/*
@@ -235,20 +235,20 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 		@Override
 		public ReagentRec fromJson(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and ingredient
-			String group = JSONUtils.getAsString(json, "group", "");
-			String id = JSONUtils.getAsString(json, "id").toLowerCase(Locale.US).replace(' ', '_');
-			double melting = JSONUtils.getAsString(json, "melting", "-275").equals("never") ? Short.MAX_VALUE - 1 : JSONUtils.getAsFloat(json, "melting", -275);
-			double boiling = JSONUtils.getAsString(json, "boiling", "-274").equals("never") ? Short.MAX_VALUE : JSONUtils.getAsFloat(json, "boiling", -274);
+			String group = GsonHelper.getAsString(json, "group", "");
+			String id = GsonHelper.getAsString(json, "id").toLowerCase(Locale.US).replace(' ', '_');
+			double melting = GsonHelper.getAsString(json, "melting", "-275").equals("never") ? Short.MAX_VALUE - 1 : GsonHelper.getAsFloat(json, "melting", -275);
+			double boiling = GsonHelper.getAsString(json, "boiling", "-274").equals("never") ? Short.MAX_VALUE : GsonHelper.getAsFloat(json, "boiling", -274);
 			if(melting > boiling){
 				boiling = melting;//Equal melting and boiling point would cause sublimation, skipping liquid
 			}
-			ITag.INamedTag<Item> item = ItemTags.bind(JSONUtils.getAsString(json, "item", "crossroads:empty"));
+			Tag.Named<Item> item = ItemTags.bind(GsonHelper.getAsString(json, "item", "crossroads:empty"));
 			//Fluid definition is optional, but must have a quantity and be specified in a subelement if present
 			Pair<FluidIngredient, Integer> fluid = json.has("fluid") ? CraftingUtil.getFluidIngredientAndQuantity(json, "fluid", false, -1) : null;
-			ContainRequirements vessel = containTypeMap.getOrDefault(JSONUtils.getAsString(json, "vessel", "none"), ContainRequirements.NONE);
-			String effectName = JSONUtils.getAsString(json, "effect", "none");
+			ContainRequirements vessel = containTypeMap.getOrDefault(GsonHelper.getAsString(json, "vessel", "none"), ContainRequirements.NONE);
+			String effectName = GsonHelper.getAsString(json, "effect", "none");
 			IAlchEffect effect = effectMap.getOrDefault(effectName, null);
-			String flameName = JSONUtils.getAsString(json, "flame", "none");
+			String flameName = GsonHelper.getAsString(json, "flame", "none");
 			Function<Integer, Integer> flameFunc = flameRadiusMap.getOrDefault(flameName, flameRadiusMap.get("none"));
 			boolean flame = flameFunc != flameRadiusMap.get("none");
 			Function<EnumMatterPhase, Color> colorFunction;
@@ -277,13 +277,13 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 
 		@Nullable
 		@Override
-		public ReagentRec fromNetwork(ResourceLocation recipeId, PacketBuffer buffer){
+		public ReagentRec fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
 			String group = buffer.readUtf(Short.MAX_VALUE);
 			String id = buffer.readUtf();
 			double melting = buffer.readDouble();
 			double boiling = buffer.readDouble();
 			boolean flame = buffer.readBoolean();
-			ITag.INamedTag<Item> solid = ItemTags.bind(buffer.readUtf());
+			Tag.Named<Item> solid = ItemTags.bind(buffer.readUtf());
 			FluidIngredient fl = FluidIngredient.readFromBuffer(buffer);
 			int flQty = buffer.readVarInt();
 			ContainRequirements vessel = ContainRequirements.values()[buffer.readVarInt()];
@@ -301,7 +301,7 @@ public class ReagentRec implements IRecipe<IInventory>, IReagent{
 		}
 
 		@Override
-		public void toNetwork(PacketBuffer buffer, ReagentRec recipe){
+		public void toNetwork(FriendlyByteBuf buffer, ReagentRec recipe){
 			buffer.writeUtf(recipe.getGroup());
 			buffer.writeUtf(recipe.id);
 			buffer.writeDouble(recipe.melting);

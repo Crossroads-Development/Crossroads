@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads;
 
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.client.util.InputMappings;
+import net.minecraft.client.KeyMapping;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraftforge.client.extensions.IForgeKeybinding;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 
@@ -18,19 +18,19 @@ public class Keys{
 
 	protected static void init(){
 		try{
-			controlEnergy = new KeyBinding("key.control_energy", InputMappings.UNKNOWN.getValue(), Crossroads.MODID);
-			controlPotential = new KeyBinding("key.control_potential", InputMappings.UNKNOWN.getValue(), Crossroads.MODID);
-			controlStability = new KeyBinding("key.control_stability", InputMappings.UNKNOWN.getValue(), Crossroads.MODID);
-			controlVoid = new KeyBinding("key.control_void", InputMappings.UNKNOWN.getValue(), Crossroads.MODID);
-			boost = new KeyBinding("key.prop_pack_boost", 341, Crossroads.MODID);//341 is Control
+			controlEnergy = new KeyMapping("key.control_energy", InputConstants.UNKNOWN.getValue(), Crossroads.MODID);
+			controlPotential = new KeyMapping("key.control_potential", InputConstants.UNKNOWN.getValue(), Crossroads.MODID);
+			controlStability = new KeyMapping("key.control_stability", InputConstants.UNKNOWN.getValue(), Crossroads.MODID);
+			controlVoid = new KeyMapping("key.control_void", InputConstants.UNKNOWN.getValue(), Crossroads.MODID);
+			boost = new KeyMapping("key.prop_pack_boost", 341, Crossroads.MODID);//341 is Control
 			keysInitialized = true;
 		}catch(RuntimeException e){
 			Crossroads.logger.error("Keys loaded on server side; Report to mod author", e);
 		}
-		ClientRegistry.registerKeyBinding((KeyBinding) controlEnergy);
-		ClientRegistry.registerKeyBinding((KeyBinding) controlPotential);
-		ClientRegistry.registerKeyBinding((KeyBinding) controlStability);
-		ClientRegistry.registerKeyBinding((KeyBinding) controlVoid);
-		ClientRegistry.registerKeyBinding((KeyBinding) boost);
+		ClientRegistry.registerKeyBinding((KeyMapping) controlEnergy);
+		ClientRegistry.registerKeyBinding((KeyMapping) controlPotential);
+		ClientRegistry.registerKeyBinding((KeyMapping) controlStability);
+		ClientRegistry.registerKeyBinding((KeyMapping) controlVoid);
+		ClientRegistry.registerKeyBinding((KeyMapping) boost);
 	}
 }

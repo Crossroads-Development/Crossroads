@@ -5,32 +5,32 @@ import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
 import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import com.Da_Technomancer.essentials.tileentities.LinkHelper;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Locale;
 
-public class TeslaCoilTop extends ContainerBlock{
+public class TeslaCoilTop extends BaseEntityBlock{
 
-	private static final VoxelShape SHAPE = VoxelShapes.or(box(4, 0, 4, 12, 8, 12), box(0, 8, 0, 16, 16, 16));
+	private static final VoxelShape SHAPE = Shapes.or(box(4, 0, 4, 12, 8, 12), box(0, 8, 0, 16, 16, 16));
 	public final TeslaCoilVariants variant;
 
 	public TeslaCoilTop(TeslaCoilVariants variant){
@@ -43,46 +43,46 @@ public class TeslaCoilTop extends ContainerBlock{
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context){
 		return SHAPE;
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		ItemStack heldItem = playerIn.getItemInHand(hand);
 		if(LinkHelper.isLinkTool(heldItem)){
-			TileEntity te = worldIn.getBlockEntity(pos);
+			BlockEntity te = worldIn.getBlockEntity(pos);
 			if(!worldIn.isClientSide && te instanceof TeslaCoilTopTileEntity){
 				LinkHelper.wrench((ILinkTE) te, heldItem, playerIn);
 			}
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 
 	@Override
-	public BlockRenderType getRenderShape(BlockState state){
-		return BlockRenderType.MODEL;
+	public RenderShape getRenderShape(BlockState state){
+		return RenderShape.MODEL;
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_coil_top.range", variant.range));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_coil_top.fe", variant.joltAmt));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_coil_top.eff", (100 - variant.efficiency)));
+	public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
+		tooltip.add(new TranslatableComponent("tt.crossroads.tesla_coil_top.range", variant.range));
+		tooltip.add(new TranslatableComponent("tt.crossroads.tesla_coil_top.fe", variant.joltAmt));
+		tooltip.add(new TranslatableComponent("tt.crossroads.tesla_coil_top.eff", (100 - variant.efficiency)));
 		if(variant == TeslaCoilVariants.ATTACK){
-			tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_coil_top.att"));
+			tooltip.add(new TranslatableComponent("tt.crossroads.tesla_coil_top.att"));
 		}else if(variant == TeslaCoilVariants.DECORATIVE){
-			tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_coil_top.decor"));
+			tooltip.add(new TranslatableComponent("tt.crossroads.tesla_coil_top.decor"));
 		}
 		if(variant.joltAmt > TeslaCoilTileEntity.CAPACITY){
-			tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_coil_top.leyden"));
+			tooltip.add(new TranslatableComponent("tt.crossroads.tesla_coil_top.leyden"));
 		}
 	}
 
 	@Nullable
 	@Override
-	public TileEntity newBlockEntity(IBlockReader worldIn){
+	public BlockEntity newBlockEntity(BlockGetter worldIn){
 		return new TeslaCoilTopTileEntity();
 	}
 

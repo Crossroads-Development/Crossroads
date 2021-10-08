@@ -9,18 +9,18 @@ import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.essentials.packets.ILongReceiver;
 import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import com.Da_Technomancer.essentials.tileentities.LinkHelper;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
@@ -110,11 +110,11 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 	 * Can be used as either a superclass (extenders should pass null/themselves and their type to the constructor), or as an instantiated helper (instantiators should pass any non-null type and themselves to the constructor)
 	 * When used as a helper, calls to the IFluxLink & tick methods should be passed to this class, and read() & write() should call readData() and writeData()
 	 */
-	class FluxHelper extends TileEntity implements ITickableTileEntity, IFluxLink{
+	class FluxHelper extends BlockEntity implements TickableBlockEntity, IFluxLink{
 
 		private static final byte RENDER_ID = 6;
 
-		private final TileEntity owner;
+		private final BlockEntity owner;
 		private final Behaviour behaviour;
 		private final LinkHelper linkHelper;
 		private int queuedFlux = 0;
@@ -125,11 +125,11 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 		private boolean shutDown = false;//Only used if safe mode is enabled in the config
 		private int[] rendered = new int[0];
 
-		public FluxHelper(TileEntityType<?> type, @Nullable TileEntity owner, Behaviour behaviour){
+		public FluxHelper(BlockEntityType<?> type, @Nullable BlockEntity owner, Behaviour behaviour){
 			this(type, owner, behaviour, null);
 		}
 
-		public FluxHelper(TileEntityType<?> type, @Nullable TileEntity owner, Behaviour behaviour, @Nullable Consumer<Integer> fluxTransferHandler){
+		public FluxHelper(BlockEntityType<?> type, @Nullable BlockEntity owner, Behaviour behaviour, @Nullable Consumer<Integer> fluxTransferHandler){
 			super(type);
 			this.owner = owner == null ? this : owner;
 			this.behaviour = behaviour;
@@ -138,26 +138,26 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 		}
 
 		@Override
-		public void load(BlockState state, CompoundNBT nbt){
+		public void load(BlockState state, CompoundTag nbt){
 			super.load(state, nbt);
 			readData(nbt);
 		}
 
 		@Override
-		public CompoundNBT save(CompoundNBT nbt){
+		public CompoundTag save(CompoundTag nbt){
 			nbt = super.save(nbt);
 			writeData(nbt);
 			return nbt;
 		}
 
 		@Override
-		public CompoundNBT getUpdateTag(){
-			CompoundNBT nbt = super.getUpdateTag();
+		public CompoundTag getUpdateTag(){
+			CompoundTag nbt = super.getUpdateTag();
 			nbt.putIntArray("rendered_arcs", rendered);
 			return nbt;
 		}
 
-		public void readData(CompoundNBT nbt){
+		public void readData(CompoundTag nbt){
 			if(nbt.contains("link")){
 				//TODO remove: backwards compatibility nbt format
 				//Convert from the pre-2.6.0 format used by several flux machines to the format used by LinkHelper
@@ -172,7 +172,7 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 			rendered = nbt.getIntArray("rendered_arcs");
 		}
 
-		public void writeData(CompoundNBT nbt){
+		public void writeData(CompoundTag nbt){
 			linkHelper.writeNBT(nbt);
 			nbt.putLong("last_tick", lastTick);
 			nbt.putInt("flux", flux);
@@ -188,11 +188,11 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 		 */
 		@Override
 		public void tick(){
-			World world = owner.getLevel();
+			Level world = owner.getLevel();
 			if(world.isClientSide()){
 				//Play sounds
 				if(rendered.length != 0 && world.getGameTime() % FluxUtil.FLUX_TIME == 0 && CRConfig.fluxSounds.get()){
-					CRSounds.playSoundClientLocal(world, owner.getBlockPos(), CRSounds.FLUX_TRANSFER, SoundCategory.BLOCKS, 0.4F, 1F);
+					CRSounds.playSoundClientLocal(world, owner.getBlockPos(), CRSounds.FLUX_TRANSFER, SoundSource.BLOCKS, 0.4F, 1F);
 				}
 				return;
 			}
@@ -250,7 +250,7 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 		}
 
 		@Override
-		public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+		public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 			FluxUtil.addLinkInfo(chat, (ILinkTE) owner);
 		}
 
@@ -260,7 +260,7 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 		}
 
 		@Override
-		public boolean createLinkSource(ILinkTE endpoint, @Nullable PlayerEntity player){
+		public boolean createLinkSource(ILinkTE endpoint, @Nullable Player player){
 			return linkHelper.addLink(endpoint, player);
 		}
 
@@ -270,12 +270,12 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 		}
 
 		@Override
-		public void receiveLong(byte id, long value, @Nullable ServerPlayerEntity sender){
+		public void receiveLong(byte id, long value, @Nullable ServerPlayer sender){
 			linkHelper.handleIncomingPacket(id, value);
 		}
 
 		@Override
-		public void receiveInts(byte context, int[] message, @Nullable ServerPlayerEntity sendingPlayer){
+		public void receiveInts(byte context, int[] message, @Nullable ServerPlayer sendingPlayer){
 			if(context == RENDER_ID){
 				rendered = message == null ? new int[0] : message;
 			}
@@ -302,7 +302,7 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 		}
 
 		@Override
-		public TileEntity getTE(){
+		public BlockEntity getTE(){
 			return owner;
 		}
 

@@ -5,13 +5,13 @@ import com.mojang.datafixers.Products;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.tags.ITag;
-import net.minecraft.tags.ITagCollection;
-import net.minecraft.tags.TagCollectionManager;
-import net.minecraft.world.gen.feature.template.IRuleTestType;
-import net.minecraft.world.gen.feature.template.TagMatchRuleTest;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagCollection;
+import net.minecraft.tags.SerializationTags;
+import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTestType;
+import net.minecraft.world.level.levelgen.structure.templatesystem.TagMatchTest;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.HashMap;
@@ -23,7 +23,7 @@ import java.util.function.Supplier;
  * Similar to a TagMatchRuleTest for worldgen, except each instance has a config value specified, and worldgen will only be allowed while the config is true.
  * Configs need to be registered on BOTH sides with registerConfig before use with the constructor
  */
-public class ConfigTagRuleTest extends TagMatchRuleTest{
+public class ConfigTagRuleTest extends TagMatchTest{
 
 	//Literally this should have just been a bunch of lambdas, but for reasons unknown, that fails at runtime
 	//However, it works if explicitly declared as classes (see bottom of this file)
@@ -37,7 +37,7 @@ public class ConfigTagRuleTest extends TagMatchRuleTest{
 
 	public static final Codec<ConfigTagRuleTest> CONFIG_CODEC = RecordCodecBuilder.create(new CodecApplyFunction());
 
-	public static final IRuleTestType<ConfigTagRuleTest> TYPE = IRuleTestType.register("tag_and_config_match", CONFIG_CODEC);
+	public static final RuleTestType<ConfigTagRuleTest> TYPE = RuleTestType.register("tag_and_config_match", CONFIG_CODEC);
 	public static final HashMap<String, ForgeConfigSpec.BooleanValue> configMap = new HashMap<>(4);
 
 	public static void registerConfig(String configName, ForgeConfigSpec.BooleanValue controllingConfig){
@@ -46,9 +46,9 @@ public class ConfigTagRuleTest extends TagMatchRuleTest{
 
 	private final String configName;
 	private final ForgeConfigSpec.BooleanValue config;
-	private final ITag<Block> tag;//private in the superclass
+	private final Tag<Block> tag;//private in the superclass
 
-	public ConfigTagRuleTest(ITag<Block> tag, String configName){
+	public ConfigTagRuleTest(Tag<Block> tag, String configName){
 		super(tag);
 		this.tag = tag;
 		this.configName = configName;
@@ -59,7 +59,7 @@ public class ConfigTagRuleTest extends TagMatchRuleTest{
 		}
 	}
 
-	public ITag<Block> getTag(){
+	public Tag<Block> getTag(){
 		return tag;
 	}
 
@@ -73,26 +73,26 @@ public class ConfigTagRuleTest extends TagMatchRuleTest{
 	}
 
 	@Override
-	protected IRuleTestType<?> getType(){
+	protected RuleTestType<?> getType(){
 		return TYPE;
 	}
 
-	private static class CodecTagCollection implements Supplier<ITagCollection<Block>>{
+	private static class CodecTagCollection implements Supplier<TagCollection<Block>>{
 
 		@Override
-		public ITagCollection<Block> get(){
-			return TagCollectionManager.getInstance().getBlocks();
+		public TagCollection<Block> get(){
+			return SerializationTags.getInstance().getBlocks();
 		}
 	}
 
-	private static class CodecGroupFunction implements Function<RecordCodecBuilder.Instance<ConfigTagRuleTest>, Products.P2<RecordCodecBuilder.Mu<ConfigTagRuleTest>, ITag<Block>, String>>{
+	private static class CodecGroupFunction implements Function<RecordCodecBuilder.Instance<ConfigTagRuleTest>, Products.P2<RecordCodecBuilder.Mu<ConfigTagRuleTest>, Tag<Block>, String>>{
 
 		private static final CodecTagCollection supplier = new CodecTagCollection();
 
 		@Override
-		public Products.P2<RecordCodecBuilder.Mu<ConfigTagRuleTest>, ITag<Block>, String> apply(RecordCodecBuilder.Instance<ConfigTagRuleTest> instance){
+		public Products.P2<RecordCodecBuilder.Mu<ConfigTagRuleTest>, Tag<Block>, String> apply(RecordCodecBuilder.Instance<ConfigTagRuleTest> instance){
 			return instance.group(
-					ITag.codec(supplier).fieldOf("tag").forGetter(ConfigTagRuleTest::getTag),
+					Tag.codec(supplier).fieldOf("tag").forGetter(ConfigTagRuleTest::getTag),
 					Codec.STRING.fieldOf("config_name").forGetter(ConfigTagRuleTest::getConfigName)
 			);
 		}

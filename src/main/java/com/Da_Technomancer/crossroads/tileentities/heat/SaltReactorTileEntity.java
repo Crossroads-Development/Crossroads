@@ -7,18 +7,18 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.SaltReactorContainer;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -29,11 +29,14 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 
+import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE.TankProperty;
+
 @ObjectHolder(Crossroads.MODID)
 public class SaltReactorTileEntity extends InventoryTE{
 
 	@ObjectHolder("salt_reactor")
-	private static TileEntityType<SaltReactorTileEntity> type = null;
+	private static BlockEntityType<SaltReactorTileEntity> type = null;
 
 	public static final int WATER_USE = 200;
 	public static final double COOLING = 5D;
@@ -87,13 +90,13 @@ public class SaltReactorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		fuelTime = nbt.getInt("fuel_time");
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putInt("fuel_time", fuelTime);
 		return nbt;
@@ -136,13 +139,13 @@ public class SaltReactorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.salt_reactor");
+	public Component getDisplayName(){
+		return new TranslatableComponent("container.salt_reactor");
 	}
 
 	@Nullable
 	@Override
-	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
+	public AbstractContainerMenu createMenu(int id, Inventory playerInv, Player player){
 		return new SaltReactorContainer(id, playerInv, createContainerBuf());
 	}
 }

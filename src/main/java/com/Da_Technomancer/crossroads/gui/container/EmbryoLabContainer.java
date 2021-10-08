@@ -3,18 +3,20 @@ package com.Da_Technomancer.crossroads.gui.container;
 import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.EmbryoLabTileEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.registries.ObjectHolder;
+
+import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.OutputSlot;
 
 @ObjectHolder(Crossroads.MODID)
 public class EmbryoLabContainer extends MachineContainer<EmbryoLabTileEntity>{
 
 	@ObjectHolder("embryo_lab")
-	private static ContainerType<EmbryoLabContainer> type = null;
+	private static MenuType<EmbryoLabContainer> type = null;
 
-	public EmbryoLabContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
+	public EmbryoLabContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
 		super(type, id, playerInv, buf);
 	}
 

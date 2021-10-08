@@ -4,14 +4,14 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleType;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
 
 import java.awt.*;
 import java.util.Locale;
 
-public class ColorParticleData implements IParticleData{
+public class ColorParticleData implements ParticleOptions{
 
 	protected static final Codec<ColorParticleData> codec = RecordCodecBuilder.create((instance) -> instance.group(Codec.BYTE.fieldOf("type").forGetter(ColorParticleData::getTypeID), Codec.BYTE.fieldOf("r").forGetter((ColorParticleData data) -> (byte) data.getColor().getRed()), Codec.BYTE.fieldOf("g").forGetter((ColorParticleData data) -> (byte) data.getColor().getGreen()), Codec.BYTE.fieldOf("b").forGetter((ColorParticleData data) -> (byte) data.getColor().getBlue()), Codec.BYTE.fieldOf("a").forGetter((ColorParticleData data) -> (byte) data.getColor().getAlpha())).apply(instance, ColorParticleData::new));
 	protected static final Deserializer DESERIALIZER = new Deserializer();
@@ -69,7 +69,7 @@ public class ColorParticleData implements IParticleData{
 	}
 
 	@Override
-	public void writeToNetwork(PacketBuffer buffer){
+	public void writeToNetwork(FriendlyByteBuf buffer){
 		buffer.writeInt(col.getRGB());
 	}
 
@@ -78,7 +78,7 @@ public class ColorParticleData implements IParticleData{
 		return String.format(Locale.ROOT, "%s %d %d %d %d", type.getRegistryName(), col.getRed(), col.getGreen(), col.getBlue(), col.getAlpha());
 	}
 
-	private static class Deserializer implements IParticleData.IDeserializer<ColorParticleData>{
+	private static class Deserializer implements ParticleOptions.Deserializer<ColorParticleData>{
 
 		@Override
 		public ColorParticleData fromCommand(ParticleType<ColorParticleData> type, StringReader reader) throws CommandSyntaxException{
@@ -91,7 +91,7 @@ public class ColorParticleData implements IParticleData{
 		}
 
 		@Override
-		public ColorParticleData fromNetwork(ParticleType<ColorParticleData> type, PacketBuffer buffer){
+		public ColorParticleData fromNetwork(ParticleType<ColorParticleData> type, FriendlyByteBuf buffer){
 			return new ColorParticleData(type, new Color(buffer.readInt(), true));
 		}
 	}

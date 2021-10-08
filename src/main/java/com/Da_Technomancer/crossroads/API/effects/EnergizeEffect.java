@@ -4,12 +4,12 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
@@ -19,7 +19,7 @@ public class EnergizeEffect extends BeamEffect{
 	private static final double MULT = 100;
 
 	@Override
-	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, World worldIn, BlockPos pos, @Nullable Direction dir){
+	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, Level worldIn, BlockPos pos, @Nullable Direction dir){
 		if(!performTransmute(align, voi, power, worldIn, pos)){
 			IHeatHandler hitHandler = getHitHandler(worldIn, pos, dir);
 			if(voi){
@@ -50,8 +50,8 @@ public class EnergizeEffect extends BeamEffect{
 	}
 
 	@Nullable
-	private static IHeatHandler getHitHandler(World w, BlockPos pos, Direction side){
-		TileEntity te = w.getBlockEntity(pos);
+	private static IHeatHandler getHitHandler(Level w, BlockPos pos, Direction side){
+		BlockEntity te = w.getBlockEntity(pos);
 		if(te == null){
 			return null;
 		}

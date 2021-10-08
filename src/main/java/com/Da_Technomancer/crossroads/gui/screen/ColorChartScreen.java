@@ -4,23 +4,23 @@ import com.Da_Technomancer.crossroads.API.AdvancementTracker;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.ColorChartContainer;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.IGuiEventListener;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class ColorChartScreen extends ContainerScreen<ColorChartContainer>{
+public class ColorChartScreen extends AbstractContainerScreen<ColorChartContainer>{
 
 	//This texture is a 4x4 grid of 300x300 color charts, with different alignments colored in. The top second-left one is fully B&W
 	private static final ResourceLocation BACKGROUND = new ResourceLocation(Crossroads.MODID, "textures/gui/container/color_chart_gui.png");
@@ -30,9 +30,9 @@ public class ColorChartScreen extends ContainerScreen<ColorChartContainer>{
 	private static final int RADIUS = 138;
 //	private static final int[] RESOLUTIONS = {1, 2, 3, 6};//UI color vs B&W resolution options for config. Lower numbers are better. All values must be factors of RADIUS
 
-	private TextFieldWidget searchBar;
+	private EditBox searchBar;
 
-	public ColorChartScreen(ColorChartContainer cont, PlayerInventory playerInv, ITextComponent name){
+	public ColorChartScreen(ColorChartContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);
 		imageWidth = 300;
 		imageHeight = 300;
@@ -44,7 +44,7 @@ public class ColorChartScreen extends ContainerScreen<ColorChartContainer>{
 
 		AdvancementTracker.listen();//Used for beam alignments
 
-		searchBar = new TextFieldWidget(font, leftPos, topPos + imageHeight, imageWidth, 18, new TranslationTextComponent("container.search_bar"));
+		searchBar = new EditBox(font, leftPos, topPos + imageHeight, imageWidth, 18, new TranslatableComponent("container.search_bar"));
 		searchBar.setCanLoseFocus(false);
 		searchBar.setTextColor(-1);
 		searchBar.setTextColorUneditable(-1);
@@ -67,7 +67,7 @@ public class ColorChartScreen extends ContainerScreen<ColorChartContainer>{
 	}
 
 	@Override
-	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTicks){
+	public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks){
 		renderBackground(matrix);
 		super.render(matrix, mouseX, mouseY, partialTicks);
 
@@ -75,13 +75,13 @@ public class ColorChartScreen extends ContainerScreen<ColorChartContainer>{
 		if(Math.pow(xCENTER - mouseX + leftPos, 2) + Math.pow(yCENTER - mouseY + topPos, 2) <= RADIUS * RADIUS){
 			Color col = getColor(mouseX - leftPos, mouseY - topPos);
 			EnumBeamAlignments elem = EnumBeamAlignments.getAlignment(col);
-			ArrayList<ITextComponent> tooltip = new ArrayList<>(2);
+			ArrayList<Component> tooltip = new ArrayList<>(2);
 			if(elem.isDiscovered(inventory.player)){
-				tooltip.add(new StringTextComponent(elem.getLocalName(false)));
+				tooltip.add(new TextComponent(elem.getLocalName(false)));
 			}else{
-				tooltip.add(new StringTextComponent("???"));
+				tooltip.add(new TextComponent("???"));
 			}
-			tooltip.add(new StringTextComponent("R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue()));
+			tooltip.add(new TextComponent("R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue()));
 			renderComponentTooltip(matrix, tooltip, mouseX, mouseY);//MCP note: renderTooltip
 		}
 
@@ -89,7 +89,7 @@ public class ColorChartScreen extends ContainerScreen<ColorChartContainer>{
 	}
 
 	@Override
-	protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
 		RenderSystem.color4f(1, 1, 1, 1);
 		Minecraft.getInstance().getTextureManager().bind(BACKGROUND);
 		int i = leftPos;
@@ -126,7 +126,7 @@ public class ColorChartScreen extends ContainerScreen<ColorChartContainer>{
 
 	@Override
 	public boolean charTyped(char key, int keyCode){
-		for(IGuiEventListener gui : children){
+		for(GuiEventListener gui : children){
 			if(gui.charTyped(key, keyCode)){
 				return true;
 			}
@@ -136,7 +136,7 @@ public class ColorChartScreen extends ContainerScreen<ColorChartContainer>{
 	}
 
 	@Override
-	protected void renderLabels(MatrixStack matrix, int p_230451_2_, int p_230451_3_){
+	protected void renderLabels(PoseStack matrix, int p_230451_2_, int p_230451_3_){
 		font.draw(matrix, title, titleLabelX, titleLabelY, 0x404040);
 		//Render no inventory label
 	}

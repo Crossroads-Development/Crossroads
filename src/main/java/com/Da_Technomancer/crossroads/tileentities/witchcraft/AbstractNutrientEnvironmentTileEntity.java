@@ -4,11 +4,11 @@ import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.API.witchcraft.ICultivatable;
 import com.Da_Technomancer.crossroads.API.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.Level;
 
 public abstract class AbstractNutrientEnvironmentTileEntity extends InventoryTE{
 
@@ -16,13 +16,13 @@ public abstract class AbstractNutrientEnvironmentTileEntity extends InventoryTE{
 	private final int nutrientTankIndex;
 	protected long lastTick;
 
-	public AbstractNutrientEnvironmentTileEntity(TileEntityType<? extends InventoryTE> type, int invSize, int[] cultivatedSlots, int nutrientTankIndex){
+	public AbstractNutrientEnvironmentTileEntity(BlockEntityType<? extends InventoryTE> type, int invSize, int[] cultivatedSlots, int nutrientTankIndex){
 		super(type, invSize);
 		this.cultivatedSlots = cultivatedSlots;
 		this.nutrientTankIndex = nutrientTankIndex;
 	}
 
-	public static float getAverageLifetime(World world, ItemStack... perishableStacks){
+	public static float getAverageLifetime(Level world, ItemStack... perishableStacks){
 		int totalLifetime = 0;//Ticks
 		int itemCount = 0;
 		long currentTime = world.getGameTime();
@@ -101,13 +101,13 @@ public abstract class AbstractNutrientEnvironmentTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		lastTick = nbt.getLong("last_tick");
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		nbt = super.save(nbt);
 		nbt.putLong("last_tick", lastTick);
 		return nbt;

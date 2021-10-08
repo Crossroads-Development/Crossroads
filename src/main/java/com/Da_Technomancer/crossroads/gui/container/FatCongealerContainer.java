@@ -4,20 +4,22 @@ import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FatCongealerTileEntity;
 import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.registries.ObjectHolder;
 import org.apache.commons.lang3.tuple.Pair;
+
+import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.StrictSlot;
 
 @ObjectHolder(Crossroads.MODID)
 public class FatCongealerContainer extends MachineContainer<FatCongealerTileEntity>{
 
 	@ObjectHolder("fat_congealer")
-	private static ContainerType<FatCongealerContainer> type = null;
+	private static MenuType<FatCongealerContainer> type = null;
 
-	public FatCongealerContainer(int id, PlayerInventory inv, PacketBuffer data){
+	public FatCongealerContainer(int id, Inventory inv, FriendlyByteBuf data){
 		super(type, id, inv, data);
 	}
 

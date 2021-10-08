@@ -5,22 +5,25 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.fluid.OreCleanserTileEntity;
 import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
 import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.registries.ObjectHolder;
 import org.apache.commons.lang3.tuple.Pair;
+
+import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.OutputSlot;
+import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.StrictSlot;
 
 @ObjectHolder(Crossroads.MODID)
 public class OreCleanserContainer extends MachineContainer<OreCleanserTileEntity>{
 
 	@ObjectHolder("ore_cleanser")
-	private static ContainerType<OreCleanserContainer> type = null;
+	private static MenuType<OreCleanserContainer> type = null;
 
 	public final IntDeferredRef progRef;
 
-	public OreCleanserContainer(int id, PlayerInventory playerInv, PacketBuffer data){
+	public OreCleanserContainer(int id, Inventory playerInv, FriendlyByteBuf data){
 		super(type, id, playerInv, data);
 		progRef = new IntDeferredRef(te::getProgress, te.getLevel().isClientSide);
 		addDataSlot(progRef);

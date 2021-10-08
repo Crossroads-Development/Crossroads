@@ -5,21 +5,21 @@ import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.CraftingUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 
-public class MillRec implements IOptionalRecipe<IInventory>{
+public class MillRec implements IOptionalRecipe<Container>{
 
 	private final ResourceLocation id;
 	private final String group;
@@ -59,12 +59,12 @@ public class MillRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public boolean matches(IInventory inv, World worldIn){
+	public boolean matches(Container inv, Level worldIn){
 		return ingr.test(inv.getItem(0));
 	}
 
 	@Override
-	public ItemStack assemble(IInventory inv){
+	public ItemStack assemble(Container inv){
 		return getResultItem().copy();
 	}
 
@@ -89,7 +89,7 @@ public class MillRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer(){
+	public RecipeSerializer<?> getSerializer(){
 		return CRRecipes.MILL_SERIAL;
 	}
 
@@ -99,7 +99,7 @@ public class MillRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public IRecipeType<?> getType(){
+	public RecipeType<?> getType(){
 		return CRRecipes.MILL_TYPE;
 	}
 
@@ -108,12 +108,12 @@ public class MillRec implements IOptionalRecipe<IInventory>{
 		return active;
 	}
 
-	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<MillRec>{
+	public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<MillRec>{
 
 		@Override
 		public MillRec fromJson(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and ingredient
-			String s = JSONUtils.getAsString(json, "group", "");
+			String s = GsonHelper.getAsString(json, "group", "");
 			if(!CraftingUtil.isActiveJSON(json)){
 				return new MillRec(recipeId, s, Ingredient.EMPTY, false);
 			}
@@ -125,8 +125,8 @@ public class MillRec implements IOptionalRecipe<IInventory>{
 			//As a single object ("output") containing result and count for one output
 
 			ItemStack[] outputs;
-			if(JSONUtils.isArrayNode(json, "output")){
-				JsonArray array = JSONUtils.getAsJsonArray(json, "output");
+			if(GsonHelper.isArrayNode(json, "output")){
+				JsonArray array = GsonHelper.getAsJsonArray(json, "output");
 				outputs = new ItemStack[Math.min(3, array.size())];
 				for(int i = 0; i < outputs.length; i++){
 					JsonObject outputObj = array.get(i).getAsJsonObject();
@@ -142,7 +142,7 @@ public class MillRec implements IOptionalRecipe<IInventory>{
 
 		@Nullable
 		@Override
-		public MillRec fromNetwork(ResourceLocation recipeId, PacketBuffer buffer){
+		public MillRec fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
 			String s = buffer.readUtf(Short.MAX_VALUE);
 			if(!buffer.readBoolean()){
 				return new MillRec(recipeId, s, Ingredient.EMPTY, false);
@@ -157,7 +157,7 @@ public class MillRec implements IOptionalRecipe<IInventory>{
 		}
 
 		@Override
-		public void toNetwork(PacketBuffer buffer, MillRec recipe){
+		public void toNetwork(FriendlyByteBuf buffer, MillRec recipe){
 			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
 			if(recipe.active){

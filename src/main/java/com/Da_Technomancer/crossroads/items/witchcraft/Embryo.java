@@ -3,15 +3,17 @@ package com.Da_Technomancer.crossroads.items.witchcraft;
 import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.API.witchcraft.ICultivatable;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import com.Da_Technomancer.crossroads.API.witchcraft.ICultivatable.CultivationTrade;
 
 public class Embryo extends Item implements ICultivatable{
 
@@ -44,7 +46,7 @@ public class Embryo extends Item implements ICultivatable{
 	 * @param wasFrozen Whether this item should have been frozen in the past
 	 */
 	public void withEntityTypeData(ItemStack stack, EntityTemplate template, boolean wasFrozen){
-		CompoundNBT nbt = stack.getOrCreateTag();
+		CompoundTag nbt = stack.getOrCreateTag();
 		setWasFrozen(stack, wasFrozen);
 		if(wasFrozen){
 			//getEntityTypeData inflates the degradation value for frozen items. We account for this here
@@ -54,7 +56,7 @@ public class Embryo extends Item implements ICultivatable{
 	}
 
 	public EntityTemplate getEntityTypeData(ItemStack stack){
-		CompoundNBT nbt = stack.getOrCreateTag();
+		CompoundTag nbt = stack.getOrCreateTag();
 		EntityTemplate template = new EntityTemplate();
 		template.deserializeNBT(nbt.getCompound(KEY));
 
@@ -68,7 +70,7 @@ public class Embryo extends Item implements ICultivatable{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag){
+	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag){
 		EntityTemplate template = getEntityTypeData(stack);
 		template.addTooltip(tooltip, 2);
 		ICultivatable.addTooltip(stack, world, tooltip);
@@ -76,7 +78,7 @@ public class Embryo extends Item implements ICultivatable{
 
 	@Nullable
 	@Override
-	public CultivationTrade getCultivationTrade(ItemStack self, World world){
+	public CultivationTrade getCultivationTrade(ItemStack self, Level world){
 		//Produces (near)-copies of itself, using soul clusters &/or genetic plasmids as applicable
 		
 		if(isSpoiled(self, world)){

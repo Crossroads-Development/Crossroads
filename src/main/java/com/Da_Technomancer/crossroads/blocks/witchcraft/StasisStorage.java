@@ -4,25 +4,25 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.StasisStorageTileEntity;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -30,7 +30,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class StasisStorage extends ContainerBlock implements IReadable{
+public class StasisStorage extends BaseEntityBlock implements IReadable{
 
 	public StasisStorage(){
 		super(CRBlocks.getMetalProperty());
@@ -41,36 +41,36 @@ public class StasisStorage extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public TileEntity newBlockEntity(IBlockReader worldIn){
+	public BlockEntity newBlockEntity(BlockGetter worldIn){
 		return new StasisStorageTileEntity();
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
-		TileEntity te;
-		if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) instanceof INamedContainerProvider){
-			NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
+		BlockEntity te;
+		if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) instanceof MenuProvider){
+			NetworkHooks.openGui((ServerPlayer) playerIn, (MenuProvider) te, pos);
 		}
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
-		InventoryHelper.dropContents(world, pos, (IInventory) world.getBlockEntity(pos));
+	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving){
+		Containers.dropContents(world, pos, (Container) world.getBlockEntity(pos));
 		super.onRemove(state, world, pos, newState, isMoving);
 	}
 
 	@Override
-	public BlockRenderType getRenderShape(BlockState state){
-		return BlockRenderType.MODEL;
+	public RenderShape getRenderShape(BlockState state){
+		return RenderShape.MODEL;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.stasis_storage.desc"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.stasis_storage.reverse"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.stasis_storage.redstone"));
+	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
+		tooltip.add(new TranslatableComponent("tt.crossroads.stasis_storage.desc"));
+		tooltip.add(new TranslatableComponent("tt.crossroads.stasis_storage.reverse"));
+		tooltip.add(new TranslatableComponent("tt.crossroads.stasis_storage.redstone"));
 
 	}
 
@@ -80,13 +80,13 @@ public class StasisStorage extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState state, World world, BlockPos pos){
+	public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos){
 		return RedstoneUtil.clampToVanilla(read(world, pos, state));
 	}
 
 	@Override
-	public float read(World world, BlockPos pos, BlockState blockState){
-		TileEntity te = world.getBlockEntity(pos);
+	public float read(Level world, BlockPos pos, BlockState blockState){
+		BlockEntity te = world.getBlockEntity(pos);
 		if(te instanceof StasisStorageTileEntity){
 			return ((StasisStorageTileEntity) te).getRedstone();
 		}

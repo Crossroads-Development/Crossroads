@@ -4,20 +4,22 @@ import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.heat.IceboxTileEntity;
 import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.registries.ObjectHolder;
+
+import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.StrictSlot;
 
 @ObjectHolder(Crossroads.MODID)
 public class IceboxContainer extends MachineContainer<IceboxTileEntity>{
 
 	@ObjectHolder("icebox")
-	private static ContainerType<IceboxContainer> type = null;
+	private static MenuType<IceboxContainer> type = null;
 
 	public IntDeferredRef coolProg;
 
-	public IceboxContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
+	public IceboxContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
 		super(type, id, playerInv, buf);
 
 		coolProg = new IntDeferredRef(te::getCoolProg, te.getLevel().isClientSide);

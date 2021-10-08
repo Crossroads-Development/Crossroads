@@ -2,21 +2,21 @@ package com.Da_Technomancer.crossroads.API.effects;
 
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.CRConfig;
-import net.minecraft.enchantment.EnchantmentData;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.EnchantedBookItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.Direction;
-import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.Containers;
+import net.minecraft.world.item.EnchantedBookItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -28,10 +28,10 @@ public class EnchantEffect extends BeamEffect{
 	private static final Random RAND = new Random();
 
 	@Override
-	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, World worldIn, BlockPos pos, @Nullable Direction dir){
+	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, Level worldIn, BlockPos pos, @Nullable Direction dir){
 		if(!performTransmute(align, voi, power, worldIn, pos)){
 			int range = (int) Math.sqrt(power) / 2;
-			ArrayList<ItemEntity> items = (ArrayList<ItemEntity>) worldIn.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(pos.offset(-range, -range, -range), pos.offset(range + 1, range + 1, range + 1)), EntityPredicates.ENTITY_STILL_ALIVE);
+			ArrayList<ItemEntity> items = (ArrayList<ItemEntity>) worldIn.getEntitiesOfClass(ItemEntity.class, new AABB(pos.offset(-range, -range, -range), pos.offset(range + 1, range + 1, range + 1)), EntitySelector.ENTITY_STILL_ALIVE);
 			if(voi){
 				if(items.size() != 0){
 					for(ItemEntity ent : items){
@@ -54,7 +54,7 @@ public class EnchantEffect extends BeamEffect{
 							continue;
 						}
 
-						List<EnchantmentData> ench = EnchantmentHelper.selectEnchantment(RAND, stack, Math.min(power, 45), power >= 64);
+						List<EnchantmentInstance> ench = EnchantmentHelper.selectEnchantment(RAND, stack, Math.min(power, 45), power >= 64);
 
 						if(ench.isEmpty()){
 							//Non-enchantable items should be skipped
@@ -68,7 +68,7 @@ public class EnchantEffect extends BeamEffect{
 							//Destroy the item
 							created = ItemStack.EMPTY;
 							worldIn.addParticle(ParticleTypes.SMOKE, ent.getX(), ent.getY(), ent.getZ(), 0, 0, 0);
-							worldIn.playSound(null, ent.getX(), ent.getY(), ent.getZ(), SoundEvents.REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 1, 1);
+							worldIn.playSound(null, ent.getX(), ent.getY(), ent.getZ(), SoundEvents.REDSTONE_TORCH_BURNOUT, SoundSource.BLOCKS, 1, 1);
 						}else{
 							if(stack.getItem() == Items.BOOK){
 								created = new ItemStack(Items.ENCHANTED_BOOK, 1);
@@ -80,7 +80,7 @@ public class EnchantEffect extends BeamEffect{
 								created.setCount(1);
 							}
 
-							for(EnchantmentData datum : ench){
+							for(EnchantmentInstance datum : ench){
 								if(created.getItem() == Items.ENCHANTED_BOOK){
 									EnchantedBookItem.addEnchantment(created, datum);
 								}else{
@@ -89,7 +89,7 @@ public class EnchantEffect extends BeamEffect{
 							}
 						}
 
-						InventoryHelper.dropItemStack(worldIn, ent.getX(), ent.getY(), ent.getZ(), created);
+						Containers.dropItemStack(worldIn, ent.getX(), ent.getY(), ent.getZ(), created);
 						ent.getItem().shrink(1);
 						if(ent.getItem().isEmpty()){
 							ent.remove();

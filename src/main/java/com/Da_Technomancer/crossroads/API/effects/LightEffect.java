@@ -2,22 +2,22 @@ package com.Da_Technomancer.crossroads.API.effects;
 
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 
 public class LightEffect extends BeamEffect{
 
 	@Override
-	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, World worldIn, BlockPos pos, @Nullable Direction dir){
+	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, Level worldIn, BlockPos pos, @Nullable Direction dir){
 		if(!performTransmute(align, voi, power, worldIn, pos)){
 			if(voi){
 				//Break light sources nearby
 				int range = (int) Math.sqrt(power) / 2;//0 to 4 radius
-				BlockPos.Mutable checkPos = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ());
+				BlockPos.MutableBlockPos checkPos = new BlockPos.MutableBlockPos(pos.getX(), pos.getY(), pos.getZ());
 				for(int i = -range; i <= range; i++){
 					for(int j = -range; j <= range; j++){
 						for(int k = -range; k <= range; k++){

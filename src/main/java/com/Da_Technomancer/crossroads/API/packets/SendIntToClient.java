@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
 import com.Da_Technomancer.essentials.packets.ClientPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
@@ -35,11 +35,11 @@ public class SendIntToClient extends ClientPacket{
 
 	@Override
 	protected void run(){
-		World world = SafeCallable.getClientWorld();
+		Level world = SafeCallable.getClientWorld();
 		if(world == null){
 			return;
 		}
-		TileEntity te = world.getBlockEntity(pos);
+		BlockEntity te = world.getBlockEntity(pos);
 
 		if(te instanceof IIntReceiver){
 			((IIntReceiver) te).receiveInt(identifier, message, null);

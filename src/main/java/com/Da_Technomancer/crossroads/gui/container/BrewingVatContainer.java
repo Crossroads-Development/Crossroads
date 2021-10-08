@@ -4,20 +4,23 @@ import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.BrewingVatTileEntity;
 import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.registries.ObjectHolder;
+
+import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.OutputSlot;
+import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.StrictSlot;
 
 @ObjectHolder(Crossroads.MODID)
 public class BrewingVatContainer extends MachineContainer<BrewingVatTileEntity>{
 
 	@ObjectHolder("brewing_vat")
-	private static ContainerType<BrewingVatContainer> type = null;
+	private static MenuType<BrewingVatContainer> type = null;
 
 	public final IntDeferredRef craftProgress;
 
-	public BrewingVatContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
+	public BrewingVatContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
 		super(type, id, playerInv, buf);
 		craftProgress = new IntDeferredRef(te::getProgess, te.getLevel().isClientSide);
 		addDataSlot(craftProgress);

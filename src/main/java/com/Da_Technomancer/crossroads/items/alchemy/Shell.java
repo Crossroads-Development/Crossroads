@@ -3,28 +3,35 @@ package com.Da_Technomancer.crossroads.items.alchemy;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.entity.EntityShell;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.block.DispenserBlock;
-import net.minecraft.dispenser.DefaultDispenseItemBehavior;
-import net.minecraft.dispenser.IBlockSource;
-import net.minecraft.dispenser.IDispenseItemBehavior;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.core.BlockSource;
+import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.util.*;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 
 public class Shell extends AbstractGlassware{
 
-	private static final IDispenseItemBehavior SHELL_DISPENSER_BEHAVIOR = new DefaultDispenseItemBehavior(){
+	private static final DispenseItemBehavior SHELL_DISPENSER_BEHAVIOR = new DefaultDispenseItemBehavior(){
 
 		/**
 		 * Dispense the specified stack, play the dispense sound and spawn particles.
 		 */
 		@Override
-		public ItemStack execute(IBlockSource source, ItemStack stack){
+		public ItemStack execute(BlockSource source, ItemStack stack){
 			ReagentMap contents = CRItems.shellGlass.getReagants(stack);
 			if(contents.getTotalQty() != 0){
 				Direction dir = source.getBlockState().getValue(DispenserBlock.FACING);
-				World world = source.getLevel();
+				Level world = source.getLevel();
 				EntityShell shellEnt = new EntityShell(world, contents, stack);
 				shellEnt.setPos(source.x() + dir.getStepX() + 0.5D, source.y() + dir.getStepY() + 0.5D, source.z() + dir.getStepZ() + 0.5D);
 				shellEnt.shoot(dir.getStepX(), dir.getStepY(), dir.getStepZ(), 1.5F, 1.0F);
@@ -38,7 +45,7 @@ public class Shell extends AbstractGlassware{
 		 * Play the dispense sound from the specified block.
 		 */
 		@Override
-		protected void playSound(IBlockSource source){
+		protected void playSound(BlockSource source){
 			source.getLevel().levelEvent(1000, source.getPos(), 0);
 		}
 	};
@@ -52,11 +59,11 @@ public class Shell extends AbstractGlassware{
 	}
 
 	@Override
-	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn){
+	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn){
 		ItemStack held = playerIn.getItemInHand(handIn);
 		ReagentMap contents = getReagants(held);
 		if(contents.getTotalQty() != 0){
-			worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+			worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
 
 			if(!worldIn.isClientSide){
 				EntityShell shellEnt = new EntityShell(worldIn, playerIn, contents, held);
@@ -68,8 +75,8 @@ public class Shell extends AbstractGlassware{
 				held = ItemStack.EMPTY;
 			}
 
-			return new ActionResult<>(ActionResultType.SUCCESS, held);
+			return new InteractionResultHolder<>(InteractionResult.SUCCESS, held);
 		}
-		return new ActionResult<>(ActionResultType.PASS, held);
+		return new InteractionResultHolder<>(InteractionResult.PASS, held);
 	}
 }

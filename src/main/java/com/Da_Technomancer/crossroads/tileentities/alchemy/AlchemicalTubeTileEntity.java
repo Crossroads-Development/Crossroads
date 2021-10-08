@@ -7,11 +7,11 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
 import com.Da_Technomancer.crossroads.API.templates.ConduitBlock;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements ConduitBlock.IConduitTE<EnumTransferMode>{
 
 	@ObjectHolder("alchemical_tube")
-	private static TileEntityType<AlchemicalTubeTileEntity> type = null;
+	private static BlockEntityType<AlchemicalTubeTileEntity> type = null;
 
 	protected boolean[] matches = new boolean[6];
 	protected EnumTransferMode[] modes = ConduitBlock.IConduitTE.genModeArray(EnumTransferMode.INPUT);
@@ -31,7 +31,7 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements Condui
 		this(type);
 	}
 
-	protected AlchemicalTubeTileEntity(TileEntityType<? extends AlchemicalTubeTileEntity> type){
+	protected AlchemicalTubeTileEntity(BlockEntityType<? extends AlchemicalTubeTileEntity> type){
 		super(type);
 	}
 
@@ -39,7 +39,7 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements Condui
 		this(type, glass);
 	}
 
-	protected AlchemicalTubeTileEntity(TileEntityType<? extends AlchemicalTubeTileEntity> type, boolean glass){
+	protected AlchemicalTubeTileEntity(BlockEntityType<? extends AlchemicalTubeTileEntity> type, boolean glass){
 		super(type, glass);
 	}
 
@@ -65,7 +65,7 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements Condui
 	@Override
 	public boolean hasMatch(int side, EnumTransferMode mode){
 		Direction face = Direction.from3DDataValue(side);
-		TileEntity neighTE = level.getBlockEntity(worldPosition.relative(face));
+		BlockEntity neighTE = level.getBlockEntity(worldPosition.relative(face));
 		//Check for a neighbor w/ an alchemy reagent handler of a compatible channel
 		LazyOptional<IChemicalHandler> otherOpt;
 		return neighTE != null && (otherOpt = neighTE.getCapability(Capabilities.CHEMICAL_CAPABILITY, face.getOpposite())).isPresent() && otherOpt.orElseThrow(NoSuchFieldError::new).getChannel(face.getOpposite()).connectsWith(glass ? EnumContainerType.GLASS : EnumContainerType.CRYSTAL);
@@ -82,7 +82,7 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements Condui
 		EnumTransferMode[] modes = getModes();
 		for(int i = 0; i < 6; i++){
 			Direction side = Direction.from3DDataValue(i);
-			TileEntity te;
+			BlockEntity te;
 			if(modes[i].isConnection()){
 				te = level.getBlockEntity(worldPosition.relative(side));
 				LazyOptional<IChemicalHandler> otherOpt;
@@ -109,14 +109,14 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements Condui
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		ConduitBlock.IConduitTE.writeConduitNBT(nbt, this);
 		return nbt;
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		ConduitBlock.IConduitTE.readConduitNBT(nbt, this);
 	}

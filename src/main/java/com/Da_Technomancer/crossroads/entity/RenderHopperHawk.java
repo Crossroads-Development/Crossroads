@@ -1,10 +1,10 @@
 package com.Da_Technomancer.crossroads.entity;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -13,7 +13,7 @@ public class RenderHopperHawk extends MobRenderer<EntityHopperHawk, ModelHopperH
 
 	public static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/entities/hopper_hawk.png");
 
-	protected RenderHopperHawk(EntityRendererManager manager){
+	protected RenderHopperHawk(EntityRenderDispatcher manager){
 		super(manager, new ModelHopperHawk(), 0.3F);
 	}
 
@@ -24,8 +24,8 @@ public class RenderHopperHawk extends MobRenderer<EntityHopperHawk, ModelHopperH
 
 	@Override
 	public float getBob(EntityHopperHawk entity, float p_77044_2_){
-		float f = MathHelper.lerp(p_77044_2_, entity.oFlap, entity.flap);
-		float f1 = MathHelper.lerp(p_77044_2_, entity.oFlapSpeed, entity.flapSpeed);
-		return (MathHelper.sin(f) + 1.0F) * f1;
+		float f = Mth.lerp(p_77044_2_, entity.oFlap, entity.flap);
+		float f1 = Mth.lerp(p_77044_2_, entity.oFlapSpeed, entity.flapSpeed);
+		return (Mth.sin(f) + 1.0F) * f1;
 	}
 }

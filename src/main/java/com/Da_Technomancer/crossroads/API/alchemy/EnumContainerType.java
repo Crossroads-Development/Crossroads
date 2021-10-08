@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.StringRepresentable;
 
-public enum EnumContainerType implements IStringSerializable{
+public enum EnumContainerType implements StringRepresentable{
 	
 	NONE(),
 	GLASS(),

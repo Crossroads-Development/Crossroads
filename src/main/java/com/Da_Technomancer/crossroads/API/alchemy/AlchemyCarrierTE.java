@@ -11,24 +11,24 @@ import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.crafting.recipes.FluidIngredient;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SoundType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
@@ -42,10 +42,12 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.function.Predicate;
 
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+
 /**
  * Implementations must implement getCapability directly.
  */
-public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTileEntity, IInfoTE{
+public abstract class AlchemyCarrierTE extends BlockEntity implements TickableBlockEntity, IInfoTE{
 
 	protected boolean init = false;
 	protected double cableTemp = 0;
@@ -58,8 +60,8 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 	 * Position to spawn particles for contents
 	 * @return Position
 	 */
-	protected Vector3d getParticlePos(){
-		return Vector3d.atCenterOf(worldPosition);
+	protected Vec3 getParticlePos(){
+		return Vec3.atCenterOf(worldPosition);
 	}
 
 	protected boolean useCableHeat(){
@@ -71,12 +73,12 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		double temp = correctTemp();
 		if(contents.getTotalQty() != 0 || temp != HeatUtil.ABSOLUTE_ZERO){
 			HeatUtil.addHeatInfo(chat, temp, Short.MIN_VALUE);
 		}else{
-			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.alchemy_empty"));
+			chat.add(new TranslatableComponent("tt.crossroads.boilerplate.alchemy_empty"));
 		}
 
 		int total = 0;
@@ -85,22 +87,22 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 			if(qty > 0){
 				total++;
 				if(total <= 4){
-					chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.alchemy_content", type.getName(), qty));
+					chat.add(new TranslatableComponent("tt.crossroads.boilerplate.alchemy_content", type.getName(), qty));
 				}else{
 					break;
 				}
 			}
 		}
 		if(total > 4){
-			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.alchemy_excess", total - 4));
+			chat.add(new TranslatableComponent("tt.crossroads.boilerplate.alchemy_excess", total - 4));
 		}
 	}
 
-	protected AlchemyCarrierTE(TileEntityType<? extends AlchemyCarrierTE> type){
+	protected AlchemyCarrierTE(BlockEntityType<? extends AlchemyCarrierTE> type){
 		super(type);
 	}
 
-	protected AlchemyCarrierTE(TileEntityType<? extends AlchemyCarrierTE> type, boolean glass){
+	protected AlchemyCarrierTE(BlockEntityType<? extends AlchemyCarrierTE> type, boolean glass){
 		this(type);
 		this.glass = glass;
 	}
@@ -111,10 +113,10 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 			BlockState state = level.getBlockState(worldPosition);
 			level.setBlockAndUpdate(worldPosition, Blocks.AIR.defaultBlockState());
 			SoundType sound = state.getBlock().getSoundType(state, level, worldPosition, null);
-			CRSounds.playSoundServer(level, worldPosition, sound.getBreakSound(), SoundCategory.BLOCKS, sound.getVolume(), sound.getPitch());
+			CRSounds.playSoundServer(level, worldPosition, sound.getBreakSound(), SoundSource.BLOCKS, sound.getVolume(), sound.getPitch());
 			AlchemyUtil.releaseChemical(level, worldPosition, contents);
 			if(strength > 0F){
-				level.explode(null, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), strength, Explosion.Mode.BREAK);//We will drop items, because an explosion in your lab is devastating enough without having to re-craft everything
+				level.explode(null, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), strength, Explosion.BlockInteraction.BREAK);//We will drop items, because an explosion in your lab is devastating enough without having to re-craft everything
 			}
 		}
 	}
@@ -193,7 +195,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 	 */
 	protected void spawnParticles(){
 		double temp = handler.getTemp();
-		ServerWorld server = (ServerWorld) level;
+		ServerLevel server = (ServerLevel) level;
 		float liqAmount = 0;
 		float[] liqCol = new float[4];
 		float gasAmount = 0;
@@ -241,7 +243,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 			}
 		}
 
-		Vector3d particlePos = getParticlePos();
+		Vec3 particlePos = getParticlePos();
 
 		if(liqAmount > 0){
 			server.sendParticles(new ColorParticleData(CRParticles.COLOR_LIQUID, new Color((int) (liqCol[0] / liqAmount), (int) (liqCol[1] / liqAmount), (int) (liqCol[2] / liqAmount), (int) (liqCol[3] / liqAmount))), particlePos.x, particlePos.y, particlePos.z, 0, (Math.random() * 2D - 1D) * 0.02D, (Math.random() - 1D) * 0.02D, (Math.random() * 2D - 1D) * 0.02D, 1F);
@@ -261,7 +263,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 	 * Helper method for moving reagents with glassware/solid items. Use is optional, and must be added in the block if used.
 	 */
 	@Nonnull
-	public ItemStack rightClickWithItem(ItemStack stack, boolean sneaking, PlayerEntity player, Hand hand){
+	public ItemStack rightClickWithItem(ItemStack stack, boolean sneaking, Player player, InteractionHand hand){
 		if(dirtyReag){
 			correctReag();
 		}
@@ -396,7 +398,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 		for(int i = 0; i < 6; i++){
 			if(modes[i].isOutput()){
 				Direction side = Direction.from3DDataValue(i);
-				TileEntity te = level.getBlockEntity(worldPosition.relative(side));
+				BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
 				LazyOptional<IChemicalHandler> otherOpt;
 				if(contents.getTotalQty() <= 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
 					continue;
@@ -417,7 +419,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		glass = nbt.getBoolean("glass");
 		contents = ReagentMap.readFromNBT(nbt);
@@ -428,7 +430,7 @@ public abstract class AlchemyCarrierTE extends TileEntity implements ITickableTi
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putBoolean("glass", glass);
 		contents.write(nbt);

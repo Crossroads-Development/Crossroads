@@ -13,33 +13,35 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.technomancy.TemporalAccelerator;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 
+import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink.Behaviour;
+
 @ObjectHolder(Crossroads.MODID)
 public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 
 	@ObjectHolder("temporal_accelerator")
-	public static TileEntityType<TemporalAcceleratorTileEntity> type = null;
+	public static BlockEntityType<TemporalAcceleratorTileEntity> type = null;
 
 	public static final int FLUX_MULT = 2;
 	public static final int SIZE = 5;
@@ -56,8 +58,8 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		chat.add(new TranslationTextComponent("tt.crossroads.time_accel.boost", 100 * extraTicks(infoIntensity)));
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
+		chat.add(new TranslatableComponent("tt.crossroads.time_accel.boost", 100 * extraTicks(infoIntensity)));
 		FluxUtil.addFluxInfo(chat, this, producedFlux(infoIntensity));
 		super.addInfo(chat, player, hit);
 	}
@@ -85,9 +87,9 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public AxisAlignedBB getRenderBoundingBox(){
+	public AABB getRenderBoundingBox(){
 		//Increase render BB to include links
-		return new AxisAlignedBB(worldPosition).inflate(getRange());
+		return new AABB(worldPosition).inflate(getRange());
 	}
 
 	private Direction getFacing(){
@@ -170,14 +172,14 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 				}
 
 				if(mode.accelerateEntities){
-					AxisAlignedBB bb = new AxisAlignedBB(startPos, endPos);
+					AABB bb = new AABB(startPos, endPos);
 					//Perform entity effect
 					ArrayList<Entity> ents = (ArrayList<Entity>) level.getEntitiesOfClass(Entity.class, bb);
 
 					for(Entity ent : ents){
-						if(ent instanceof ServerPlayerEntity){
+						if(ent instanceof ServerPlayer){
 							//Players have to tick on both the client and server side or things act very strange
-							CRPackets.sendPacketToPlayer((ServerPlayerEntity) ent, new SendPlayerTickCountToClient(extraTicks + 1));
+							CRPackets.sendPacketToPlayer((ServerPlayer) ent, new SendPlayerTickCountToClient(extraTicks + 1));
 						}
 						for(int i = 0; i < extraTicks; i++){
 							ent.tick();
@@ -195,10 +197,10 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 
 								//Perform tile entity effect
 								if(actOnTe){
-									TileEntity te = level.getBlockEntity(effectPos);
-									if(te instanceof ITickableTileEntity){
+									BlockEntity te = level.getBlockEntity(effectPos);
+									if(te instanceof TickableBlockEntity){
 										for(int run = 0; run < extraTicks; run++){
-											((ITickableTileEntity) te).tick();
+											((TickableBlockEntity) te).tick();
 										}
 									}
 								}
@@ -208,7 +210,7 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 									BlockState state = level.getBlockState(effectPos);
 									//Blocks have a 16^3/randomTickSpeed chance of a random tick each game tick in vanilla
 									if(state.isRandomlyTicking() && level.random.nextInt(16 * 16 * 16 / level.getGameRules().getInt(GameRules.RULE_RANDOMTICKING)) < extraTicks){
-										state.randomTick((ServerWorld) level, effectPos, level.random);
+										state.randomTick((ServerLevel) level, effectPos, level.random);
 									}
 								}
 							}
@@ -247,7 +249,7 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putInt("intensity", intensity);
 		nbt.putLong("last_run", lastRunTick);
@@ -255,7 +257,7 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		intensity = nbt.getInt("intensity");
 		lastRunTick = nbt.getLong("last_run");

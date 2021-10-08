@@ -3,18 +3,20 @@ package com.Da_Technomancer.crossroads.gui.container;
 import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.ColdStorageTileEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.registries.ObjectHolder;
+
+import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.StrictSlot;
 
 @ObjectHolder(Crossroads.MODID)
 public class ColdStorageContainer extends MachineContainer<ColdStorageTileEntity>{
 
 	@ObjectHolder("cold_storage")
-	private static ContainerType<ColdStorageContainer> type = null;
+	private static MenuType<ColdStorageContainer> type = null;
 
-	public ColdStorageContainer(int id, PlayerInventory playerInv, PacketBuffer data){
+	public ColdStorageContainer(int id, Inventory playerInv, FriendlyByteBuf data){
 		super(type, id, playerInv, data);
 	}
 

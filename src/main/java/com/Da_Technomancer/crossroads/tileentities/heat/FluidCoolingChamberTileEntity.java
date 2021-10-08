@@ -7,16 +7,16 @@ import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.FluidCoolingRec;
 import com.Da_Technomancer.crossroads.gui.container.FluidCoolerContainer;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -29,11 +29,14 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
+import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE.TankProperty;
+
 @ObjectHolder(Crossroads.MODID)
 public class FluidCoolingChamberTileEntity extends InventoryTE{
 
 	@ObjectHolder("fluid_cooling_chamber")
-	private static TileEntityType<FluidCoolingChamberTileEntity> type = null;
+	private static BlockEntityType<FluidCoolingChamberTileEntity> type = null;
 
 	public static final int HEATING_RATE = 40;
 	private double storedHeat = 0;//The buffered heat that will be added to the temperature over time at a constant rate
@@ -94,13 +97,13 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		storedHeat = nbt.getDouble("heat_stored");
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putDouble("heat_stored", storedHeat);
 		return nbt;
@@ -142,13 +145,13 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.fluid_cooler");
+	public Component getDisplayName(){
+		return new TranslatableComponent("container.fluid_cooler");
 	}
 
 	@Nullable
 	@Override
-	public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity playerEntity){
+	public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player playerEntity){
 		return new FluidCoolerContainer(id, playerInventory, createContainerBuf());
 	}
 }

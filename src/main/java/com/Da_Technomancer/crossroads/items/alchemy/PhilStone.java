@@ -1,15 +1,17 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class PhilStone extends Item{
 
@@ -23,7 +25,7 @@ public class PhilStone extends Item{
 	@Override
 	public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity){
 		if(entity.isOnGround()){
-			AxisAlignedBB entityBox = entity.getBoundingBox();
+			AABB entityBox = entity.getBoundingBox();
 			clearBlock(entity.level, new BlockPos(entityBox.maxX, entityBox.minY - 0.05D, entityBox.maxZ));
 			clearBlock(entity.level, new BlockPos(entityBox.maxX, entityBox.minY - 0.05D, entityBox.minZ));
 			clearBlock(entity.level, new BlockPos(entityBox.minX, entityBox.minY - 0.05D, entityBox.maxZ));
@@ -32,7 +34,7 @@ public class PhilStone extends Item{
 		return false;
 	}
 
-	private static void clearBlock(World world, BlockPos pos){
+	private static void clearBlock(Level world, BlockPos pos){
 		BlockState state = world.getBlockState(pos);
 		//Able to break any non-indestructible block, and also bedrock
 		if(!state.getBlock().isAir(state, world, pos) && (state.getDestroySpeed(world, pos) >= 0 || state.getBlock() == Blocks.BEDROCK)){

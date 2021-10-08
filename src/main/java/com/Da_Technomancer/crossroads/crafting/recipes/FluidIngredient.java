@@ -5,13 +5,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.tags.Tag;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -48,9 +48,9 @@ public class FluidIngredient implements Predicate<FluidStack>{
 		for(Object key : matched){
 			if(key instanceof IFluidList){
 				keys.add((IFluidList) key);
-			}else if(key instanceof ITag){
+			}else if(key instanceof Tag){
 				try{
-					ITag<Fluid> tag = (ITag<Fluid>) key;
+					Tag<Fluid> tag = (Tag<Fluid>) key;
 					keys.add(new TagList(tag));
 				}catch(ClassCastException e){
 					Crossroads.logger.error("An illegal tag type was added to a FluidIngredient. Report to mod author!", e);
@@ -100,7 +100,7 @@ public class FluidIngredient implements Predicate<FluidStack>{
 		}
 	}
 
-	public void writeToBuffer(PacketBuffer buf){
+	public void writeToBuffer(FriendlyByteBuf buf){
 		updateCache();
 		buf.writeVarInt(matched.size());//Write how many Fluids this matches
 		for(Fluid b : matched){
@@ -108,7 +108,7 @@ public class FluidIngredient implements Predicate<FluidStack>{
 		}
 	}
 
-	public static FluidIngredient readFromBuffer(PacketBuffer buf){
+	public static FluidIngredient readFromBuffer(FriendlyByteBuf buf){
 		int count = buf.readVarInt();
 		if(count <= 0){
 			return FluidIngredient.EMPTY;
@@ -143,9 +143,9 @@ public class FluidIngredient implements Predicate<FluidStack>{
 
 	private static IFluidList readIngr(JsonObject o){
 		if(o.has("tag")){
-			return new TagList(FluidTags.bind(JSONUtils.getAsString(o, "tag")));
+			return new TagList(FluidTags.bind(GsonHelper.getAsString(o, "tag")));
 		}else if(o.has("fluid")){
-			return new SingleList(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(JSONUtils.getAsString(o, "fluid"))));
+			return new SingleList(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(GsonHelper.getAsString(o, "fluid"))));
 		}else{
 			throw new JsonParseException("No value defined in FluidIngredient");
 		}
@@ -194,9 +194,9 @@ public class FluidIngredient implements Predicate<FluidStack>{
 
 	private static class TagList implements IFluidList{
 
-		private final ITag<Fluid> tag;
+		private final Tag<Fluid> tag;
 
-		public TagList(ITag<Fluid> matched){
+		public TagList(Tag<Fluid> matched){
 			tag = matched;
 			if(tag == null){
 				throw new JsonParseException("No defined tag in FluidIngredient");

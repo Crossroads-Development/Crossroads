@@ -7,18 +7,18 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.IMechanism;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 import java.util.HashMap;
 
@@ -65,17 +65,17 @@ public class GearFacade extends Item{
 	}
 
 	@Override
-	public ActionResultType useOn(ItemUseContext context){
+	public InteractionResult useOn(UseOnContext context){
 		FacadeBlock type = getMaterial();
 		if(type == null){
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
-		World world = context.getLevel();
+		Level world = context.getLevel();
 		BlockPos pos = context.getClickedPos();//The position of the block clicked
 		Direction side = context.getClickedFace();
-		PlayerEntity playerIn = context.getPlayer();
+		Player playerIn = context.getPlayer();
 		BlockPos placePos = pos;//Where the gear will be placed
-		TileEntity teAtPlacement = world.getBlockEntity(placePos);
+		BlockEntity teAtPlacement = world.getBlockEntity(placePos);
 
 		if(teAtPlacement instanceof MechanismTileEntity){
 			//Try to place inside clicked mechanism
@@ -89,7 +89,7 @@ public class GearFacade extends Item{
 				if(!world.isClientSide && (playerIn == null || !playerIn.isCreative())){
 					context.getItemInHand().shrink(1);
 				}
-				return ActionResultType.SUCCESS;
+				return InteractionResult.SUCCESS;
 			}
 		}
 
@@ -103,7 +103,7 @@ public class GearFacade extends Item{
 			MechanismTileEntity mte = (MechanismTileEntity) teAtPlacement;
 			if(mte.members[mechInd] != null){
 				//This spot is already taken
-				return ActionResultType.SUCCESS;
+				return InteractionResult.SUCCESS;
 			}
 
 			mte.setMechanism(mechInd, mechanismToPlace(), type, null, false);
@@ -112,7 +112,7 @@ public class GearFacade extends Item{
 			if(!world.isClientSide && (playerIn == null || !playerIn.isCreative())){
 				context.getItemInHand().shrink(1);
 			}
-		}else if(stateAtPlacement.canBeReplaced(new BlockItemUseContext(context))){
+		}else if(stateAtPlacement.canBeReplaced(new BlockPlaceContext(context))){
 			//No existing mechanism- we will create a new one
 			world.setBlock(placePos, CRBlocks.mechanism.defaultBlockState(), 3);
 
@@ -130,7 +130,7 @@ public class GearFacade extends Item{
 			}
 		}
 
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	private static final HashMap<String, FacadeBlock> NAME_MAP = new HashMap<>(4);

@@ -5,19 +5,19 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.SteamerContainer;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.SmokingRecipe;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SmokingRecipe;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -28,11 +28,14 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE.FluidHandler;
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE.TankProperty;
+
 @ObjectHolder(Crossroads.MODID)
 public class SteamerTileEntity extends InventoryTE{
 
 	@ObjectHolder("steamer")
-	private static TileEntityType<SteamerTileEntity> type = null;
+	private static BlockEntityType<SteamerTileEntity> type = null;
 
 	public static final int FLUID_USE = 200;//Steam per tick
 	public static final int REQUIRED = 50;//Number of processing ticks
@@ -52,8 +55,8 @@ public class SteamerTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.progress", progress, REQUIRED));
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
+		chat.add(new TranslatableComponent("tt.crossroads.boilerplate.progress", progress, REQUIRED));
 		super.addInfo(chat, player, hit);
 	}
 
@@ -66,7 +69,7 @@ public class SteamerTileEntity extends InventoryTE{
 		super.tick();
 
 		SmokingRecipe rec;
-		if(!inventory[0].isEmpty() && (rec = level.getRecipeManager().getRecipeFor(IRecipeType.SMOKING, this, level).orElse(null)) != null && (inventory[1].isEmpty() || BlockUtil.sameItem(rec.getResultItem(), inventory[1]) && inventory[1].getCount() < inventory[1].getMaxStackSize())){
+		if(!inventory[0].isEmpty() && (rec = level.getRecipeManager().getRecipeFor(RecipeType.SMOKING, this, level).orElse(null)) != null && (inventory[1].isEmpty() || BlockUtil.sameItem(rec.getResultItem(), inventory[1]) && inventory[1].getCount() < inventory[1].getMaxStackSize())){
 			//Check fluids
 			if(!level.isClientSide && fluids[0].getAmount() >= FLUID_USE && fluidProps[1].capacity - fluids[1].getAmount() >= FLUID_USE){
 				if(fluids[1].isEmpty()){
@@ -96,7 +99,7 @@ public class SteamerTileEntity extends InventoryTE{
 
 	@Override
 	public boolean canPlaceItem(int index, ItemStack stack){
-		return index == 0 && !stack.isEmpty() && level.getRecipeManager().getRecipeFor(IRecipeType.SMOKING, new Inventory(stack), level).isPresent();
+		return index == 0 && !stack.isEmpty() && level.getRecipeManager().getRecipeFor(RecipeType.SMOKING, new SimpleContainer(stack), level).isPresent();
 	}
 
 	@Override
@@ -130,13 +133,13 @@ public class SteamerTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.steamer");
+	public Component getDisplayName(){
+		return new TranslatableComponent("container.steamer");
 	}
 
 	@Nullable
 	@Override
-	public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity playerEntity){
+	public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player playerEntity){
 		return new SteamerContainer(id, playerInventory, createContainerBuf());
 	}
 }

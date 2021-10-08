@@ -4,17 +4,19 @@ import com.Da_Technomancer.crossroads.API.AdvancementTracker;
 import com.Da_Technomancer.crossroads.API.EnumPath;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class PathSigil extends Item{
 
@@ -33,15 +35,15 @@ public class PathSigil extends Item{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.path_sigil.desc"));
+	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+		tooltip.add(new TranslatableComponent("tt.crossroads.path_sigil.desc"));
 		if(CRConfig.forgetPaths.get()){
-			tooltip.add(new TranslationTextComponent("tt.crossroads.path_sigil.desc.forget"));
+			tooltip.add(new TranslatableComponent("tt.crossroads.path_sigil.desc.forget"));
 		}
 	}
 
 	@Override
-	public ActionResultType useOn(ItemUseContext context){
+	public InteractionResult useOn(UseOnContext context){
 		if(context.getPlayer() == null){
 			return super.useOn(context);
 		}
@@ -53,39 +55,39 @@ public class PathSigil extends Item{
 			if(CRConfig.forgetPaths.get()){
 				if(path.isUnlocked(context.getPlayer())){
 					if(context.getLevel().isClientSide()){
-						MiscUtil.chatMessage(context.getPlayer(), new TranslationTextComponent("tt.crossroads.path_sigil.forget", path.getLocalName()));
+						MiscUtil.chatMessage(context.getPlayer(), new TranslatableComponent("tt.crossroads.path_sigil.forget", path.getLocalName()));
 					}
 					path.setUnlocked(context.getPlayer(), false);
 					context.getItemInHand().shrink(1);
-					return ActionResultType.CONSUME;
+					return InteractionResult.CONSUME;
 				}else{
 					if(context.getLevel().isClientSide()){
-						MiscUtil.chatMessage(context.getPlayer(), new TranslationTextComponent("tt.crossroads.path_sigil.forget.fail"));
+						MiscUtil.chatMessage(context.getPlayer(), new TranslatableComponent("tt.crossroads.path_sigil.forget.fail"));
 					}
-					return ActionResultType.FAIL;
+					return InteractionResult.FAIL;
 				}
 			}else{
 				if(context.getLevel().isClientSide()){
-					MiscUtil.chatMessage(context.getPlayer(), new TranslationTextComponent("tt.crossroads.path_sigil.forget.fail.config"));
+					MiscUtil.chatMessage(context.getPlayer(), new TranslatableComponent("tt.crossroads.path_sigil.forget.fail.config"));
 				}
-				return ActionResultType.FAIL;
+				return InteractionResult.FAIL;
 			}
 		}else if(EnumPath.canUnlockNewPath(context.getPlayer())){
 			if(path.isUnlocked(context.getPlayer())){
 				if(context.getLevel().isClientSide()){
-					MiscUtil.chatMessage(context.getPlayer(), new TranslationTextComponent("tt.crossroads.path_sigil.taken"));
+					MiscUtil.chatMessage(context.getPlayer(), new TranslatableComponent("tt.crossroads.path_sigil.taken"));
 				}
-				return ActionResultType.FAIL;
+				return InteractionResult.FAIL;
 			}else{
 				path.setUnlocked(context.getPlayer(), true);
 				context.getItemInHand().shrink(1);
-				return ActionResultType.CONSUME;
+				return InteractionResult.CONSUME;
 			}
 		}else{
 			if(context.getLevel().isClientSide()){
-				MiscUtil.chatMessage(context.getPlayer(), new TranslationTextComponent("tt.crossroads.path_sigil.fail"));
+				MiscUtil.chatMessage(context.getPlayer(), new TranslatableComponent("tt.crossroads.path_sigil.fail"));
 			}
-			return ActionResultType.FAIL;
+			return InteractionResult.FAIL;
 		}
 	}
 }

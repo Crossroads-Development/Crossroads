@@ -4,18 +4,18 @@ import com.Da_Technomancer.crossroads.API.packets.AddVisualToClient;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.essentials.render.RenderUtil;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -26,16 +26,16 @@ import java.util.function.BiFunction;
 
 public class CRRenderUtil extends RenderUtil{
 
-	public static final Vector3d VEC_I = new Vector3d(1, 0, 0);
-	public static final Vector3d VEC_J = new Vector3d(0, 1, 0);
-	public static final Vector3d VEC_K = new Vector3d(0, 0, 1);
+	public static final Vec3 VEC_I = new Vec3(1, 0, 0);
+	public static final Vec3 VEC_J = new Vec3(0, 1, 0);
+	public static final Vec3 VEC_K = new Vec3(0, 0, 1);
 	private static final int[] WHITE_COLOR = {255, 255, 255, 255};
 
 	/**
 	 * Used internally. Public only for packet use
 	 */
 	@SuppressWarnings("unchecked")
-	public static final BiFunction<World, CompoundNBT, IVisualEffect>[] visualFactories = (BiFunction<World, CompoundNBT, IVisualEffect>[]) new BiFunction[3];
+	public static final BiFunction<Level, CompoundTag, IVisualEffect>[] visualFactories = (BiFunction<Level, CompoundTag, IVisualEffect>[]) new BiFunction[3];
 
 	static{
 		visualFactories[0] = LooseBeamRenderable::readFromNBT;
@@ -45,8 +45,8 @@ public class CRRenderUtil extends RenderUtil{
 
 	//Pre-made render effects
 
-	public static void addBeam(World world, double x, double y, double z, double length, float angleX, float angleY, byte width, int color){
-		CompoundNBT nbt = new CompoundNBT();
+	public static void addBeam(Level world, double x, double y, double z, double length, float angleX, float angleY, byte width, int color){
+		CompoundTag nbt = new CompoundTag();
 		nbt.putInt("id", 0);
 		nbt.putDouble("x", x);
 		nbt.putDouble("y", y);
@@ -59,17 +59,17 @@ public class CRRenderUtil extends RenderUtil{
 		CRPackets.sendEffectPacketAround(world, new BlockPos(x, y, z), new AddVisualToClient(nbt));
 	}
 
-	public static void addArc(World world, Vector3d start, Vector3d end, int count, float diffusionRate, int color){
+	public static void addArc(Level world, Vec3 start, Vec3 end, int count, float diffusionRate, int color){
 		addArc(world, (float) start.x, (float) start.y, (float) start.z, (float) end.x, (float) end.y, (float) end.z, count, diffusionRate, color);
 	}
 
-	public static void addArc(World world, float xSt, float ySt, float zSt, float xEn, float yEn, float zEn, int count, float diffusionRate, int color){
+	public static void addArc(Level world, float xSt, float ySt, float zSt, float xEn, float yEn, float zEn, int count, float diffusionRate, int color){
 		addArc(world, xSt, ySt, zSt, xEn, yEn, zEn, count, diffusionRate, (byte) 5, color, true);
 	}
 
-	public static void addArc(World world, float xSt, float ySt, float zSt, float xEn, float yEn, float zEn, int count, float diffusionRate, byte lifespan, int color, boolean playSound){
+	public static void addArc(Level world, float xSt, float ySt, float zSt, float xEn, float yEn, float zEn, int count, float diffusionRate, byte lifespan, int color, boolean playSound){
 		boolean sound = playSound && CRConfig.electricSounds.get();
-		CompoundNBT nbt = new CompoundNBT();
+		CompoundTag nbt = new CompoundTag();
 		nbt.putInt("id", 1);
 		nbt.putFloat("x", xSt);
 		nbt.putFloat("y", ySt);
@@ -96,9 +96,9 @@ public class CRRenderUtil extends RenderUtil{
 	}
 
 	@Deprecated
-	public static void addEntropyBeam(World world, float xSt, float ySt, float zSt, float xEn, float yEn, float zEn, int qty, byte lifespan, boolean playSound){
+	public static void addEntropyBeam(Level world, float xSt, float ySt, float zSt, float xEn, float yEn, float zEn, int qty, byte lifespan, boolean playSound){
 		boolean sound = playSound && CRConfig.fluxSounds.get();
-		CompoundNBT nbt = new CompoundNBT();
+		CompoundTag nbt = new CompoundTag();
 		nbt.putInt("id", 2);
 		nbt.putFloat("x_st", xSt);
 		nbt.putFloat("y_st", ySt);
@@ -125,7 +125,7 @@ public class CRRenderUtil extends RenderUtil{
 	 * @return The corresponding texture atlas sprite
 	 */
 	public static TextureAtlasSprite getTextureSprite(ResourceLocation location){
-		return Minecraft.getInstance().getTextureAtlas(PlayerContainer.BLOCK_ATLAS).apply(location);
+		return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(location);
 	}
 
 	/**
@@ -144,7 +144,7 @@ public class CRRenderUtil extends RenderUtil{
 	 * @param col A size 4 array (r, g, b, a) defining the color, scale [0, 255]
 	 */
 	@OnlyIn(Dist.CLIENT)
-	public static void addVertexBlock(IVertexBuilder builder, MatrixStack matrix, float x, float y, float z, float u, float v, float normalX, float normalY, float normalZ, int light, int[] col){
+	public static void addVertexBlock(VertexConsumer builder, PoseStack matrix, float x, float y, float z, float u, float v, float normalX, float normalY, float normalZ, int light, int[] col){
 		builder.vertex(matrix.last().pose(), x, y, z).color(col[0], col[1], col[2], col[3]).uv(u, v).uv2(light).normal(matrix.last().normal(), normalX, normalY, normalZ).endVertex();
 	}
 
@@ -164,7 +164,7 @@ public class CRRenderUtil extends RenderUtil{
 	 * @param col A size 4 array (r, g, b, a) defining the color, scale [0, 255]
 	 */
 	@OnlyIn(Dist.CLIENT)
-	public static void addVertexEntity(IVertexBuilder builder, MatrixStack matrix, float x, float y, float z, float u, float v, float normalX, float normalY, float normalZ, int light, int[] col){
+	public static void addVertexEntity(VertexConsumer builder, PoseStack matrix, float x, float y, float z, float u, float v, float normalX, float normalY, float normalZ, int light, int[] col){
 		builder.vertex(matrix.last().pose(), x, y, z).color(col[0], col[1], col[2], col[3]).uv(u, v).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix.last().normal(), normalX, normalY, normalZ).endVertex();
 	}
 
@@ -183,7 +183,7 @@ public class CRRenderUtil extends RenderUtil{
 	 * @param light The light value
 	 */
 	@OnlyIn(Dist.CLIENT)
-	public static void addVertexEntity(IVertexBuilder builder, MatrixStack matrix, float x, float y, float z, float u, float v, float normalX, float normalY, float normalZ, int light){
+	public static void addVertexEntity(VertexConsumer builder, PoseStack matrix, float x, float y, float z, float u, float v, float normalX, float normalY, float normalZ, int light){
 		addVertexEntity(builder, matrix, x, y, z, u, v, normalX, normalY, normalZ, light, WHITE_COLOR);
 	}
 
@@ -193,7 +193,7 @@ public class CRRenderUtil extends RenderUtil{
 	 * @param world Any world reference
 	 * @return The animation render time
 	 */
-	public static float getRenderTime(float partialTicks, @Nullable World world){
+	public static float getRenderTime(float partialTicks, @Nullable Level world){
 		if(world == null){
 			return 0;//We really don't want to crash for this
 		}else{
@@ -220,7 +220,7 @@ public class CRRenderUtil extends RenderUtil{
 	 * @param point2 The position of the other adjacent vertex
 	 * @return The normal vector
 	 */
-	public static Vector3d findNormal(Vector3d point0, Vector3d point1, Vector3d point2){
+	public static Vec3 findNormal(Vec3 point0, Vec3 point1, Vec3 point2){
 		point1 = point1.subtract(point0);
 		point2 = point2.subtract(point0);
 		return point1.cross(point2);
@@ -232,9 +232,9 @@ public class CRRenderUtil extends RenderUtil{
 	 * @param pos The position to check
 	 * @return The light value, as a packed lightmap coordinate
 	 */
-	public static int getLightAtPos(World world, BlockPos pos){
+	public static int getLightAtPos(Level world, BlockPos pos){
 		if(world != null){
-			return WorldRenderer.getLightColor(world, pos);
+			return LevelRenderer.getLightColor(world, pos);
 		}else{
 			return BRIGHT_LIGHT;
 		}
@@ -263,7 +263,7 @@ public class CRRenderUtil extends RenderUtil{
 	 * @return The camera position relative to the world
 	 */
 	@OnlyIn(Dist.CLIENT)
-	public static Vector3d getCameraPos(){
+	public static Vec3 getCameraPos(){
 		return Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
 	}
 
@@ -279,10 +279,10 @@ public class CRRenderUtil extends RenderUtil{
 	 * @param light The combined light coordinate to render with
 	 */
 	@OnlyIn(Dist.CLIENT)
-	public static void draw3dLine(IVertexBuilder builder, MatrixStack matrix, Vector3d start, Vector3d end, double width, int[] col, int light){
-		Vector3d lineVec = end.subtract(start);
+	public static void draw3dLine(VertexConsumer builder, PoseStack matrix, Vec3 start, Vec3 end, double width, int[] col, int light){
+		Vec3 lineVec = end.subtract(start);
 		//Find any perpendicular vector using a deterministic method
-		Vector3d[] perpVec = new Vector3d[3];
+		Vec3[] perpVec = new Vec3[3];
 		perpVec[0] = lineVec.cross(VEC_I);
 		if(perpVec[0].lengthSqr() == 0){
 			perpVec[0] = lineVec.cross(VEC_J);
@@ -290,15 +290,15 @@ public class CRRenderUtil extends RenderUtil{
 		//width * sqrt(3) / 4 is the length for center-to-tip distance of equilateral triangle that will be formed by the 3 quads
 		perpVec[0] = perpVec[0].scale(width * Math.sqrt(3) / 4 / perpVec[0].length());
 		//Rotate perVecA +-120deg about lineVec using a simplified form of Rodrigues' rotation formula
-		Vector3d compA = perpVec[0].scale(-.5D);//perpVecA * cos(120deg)
-		Vector3d compB = perpVec[0].cross(lineVec.normalize()).scale(Math.sqrt(3) / 2D);//(perpVecA x unit vector of lineVec) * sin(120deg)
+		Vec3 compA = perpVec[0].scale(-.5D);//perpVecA * cos(120deg)
+		Vec3 compB = perpVec[0].cross(lineVec.normalize()).scale(Math.sqrt(3) / 2D);//(perpVecA x unit vector of lineVec) * sin(120deg)
 		perpVec[1] = compA.add(compB);
 		perpVec[2] = compA.subtract(compB);
 		//perpVec 0, 1, & 2 represent the vertices of the triangular ends of the triangular prism formed, relative to start (or end)
 
 		for(int i = 0; i < 3; i++){
-			Vector3d offsetPrev = perpVec[i];
-			Vector3d offsetNext = perpVec[(i + 1) % perpVec.length];
+			Vec3 offsetPrev = perpVec[i];
+			Vec3 offsetNext = perpVec[(i + 1) % perpVec.length];
 			builder.vertex(matrix.last().pose(), (float) (start.x() + offsetPrev.x()), (float) (start.y() + offsetPrev.y()), (float) (start.z() + offsetPrev.z())).color(col[0], col[1], col[2], col[3]).uv2(light).endVertex();
 			builder.vertex(matrix.last().pose(), (float) (end.x() + offsetPrev.x()), (float) (end.y() + offsetPrev.y()), (float) (end.z() + offsetPrev.z())).color(col[0], col[1], col[2], col[3]).uv2(light).endVertex();
 			builder.vertex(matrix.last().pose(), (float) (end.x() + offsetNext.x()), (float) (end.y() + offsetNext.y()), (float) (end.z() + offsetNext.z())).color(col[0], col[1], col[2], col[3]).uv2(light).endVertex();

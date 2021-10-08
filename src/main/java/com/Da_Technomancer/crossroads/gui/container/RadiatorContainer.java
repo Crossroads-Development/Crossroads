@@ -4,10 +4,10 @@ import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RadiatorTileEntity;
 import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.registries.ObjectHolder;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -15,9 +15,9 @@ import org.apache.commons.lang3.tuple.Pair;
 public class RadiatorContainer extends MachineContainer<RadiatorTileEntity>{
 
 	@ObjectHolder("radiator")
-	private static ContainerType<RadiatorContainer> type = null;
+	private static MenuType<RadiatorContainer> type = null;
 
-	public RadiatorContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
+	public RadiatorContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
 		super(type, id, playerInv, buf);
 	}
 

@@ -9,14 +9,14 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoilTop;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.LeydenJar;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -27,10 +27,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @ObjectHolder(Crossroads.MODID)
-public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEntity, IIntReceiver{
+public class TeslaCoilTileEntity extends BlockEntity implements TickableBlockEntity, IIntReceiver{
 
 	@ObjectHolder("tesla_coil")
-	private static TileEntityType<TeslaCoilTileEntity> type = null;
+	private static BlockEntityType<TeslaCoilTileEntity> type = null;
 
 	public static final int CAPACITY = 2000;
 
@@ -73,7 +73,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	@Override
-	public void receiveInt(byte identifier, int message, @Nullable ServerPlayerEntity sendingPlayer){
+	public void receiveInt(byte identifier, int message, @Nullable ServerPlayer sendingPlayer){
 		if(identifier == 0){
 			redstone = (message & 1) == 1;
 			stored = message >>> 1;
@@ -95,7 +95,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEnti
 	@Override
 	public void tick(){
 		if(!redstone && level.random.nextInt(10) == 0 && stored > 0){
-			TileEntity topTE = level.getBlockEntity(worldPosition.above());
+			BlockEntity topTE = level.getBlockEntity(worldPosition.above());
 			if(topTE instanceof TeslaCoilTopTileEntity){
 				((TeslaCoilTopTileEntity) topTE).jolt(this);
 			}
@@ -107,7 +107,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEnti
 
 		if(!redstone && stored > 0){
 			Direction facing = level.getBlockState(worldPosition).getValue(CRProperties.HORIZ_FACING);
-			TileEntity te = level.getBlockEntity(worldPosition.relative(facing));
+			BlockEntity te = level.getBlockEntity(worldPosition.relative(facing));
 			LazyOptional<IEnergyStorage> energyOpt;
 			if(te != null && (energyOpt = te.getCapability(CapabilityEnergy.ENERGY, facing.getOpposite())).isPresent()){
 				IEnergyStorage storage = energyOpt.orElseThrow(NullPointerException::new);
@@ -127,7 +127,7 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putInt("stored", stored);
 		nbt.putBoolean("reds", redstone);
@@ -135,15 +135,15 @@ public class TeslaCoilTileEntity extends TileEntity implements ITickableTileEnti
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		stored = nbt.getInt("stored");
 		redstone = nbt.getBoolean("reds");
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag(){
-		CompoundNBT nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(){
+		CompoundTag nbt = super.getUpdateTag();
 		nbt.putInt("stored", stored);
 		nbt.putBoolean("reds", redstone);
 		return nbt;

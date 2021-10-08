@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.API;
 
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.Mth;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 
 /**
  * Stripped down re-implementation of net.minecraft.util.math.vector.Quaternion that is server-side safe
@@ -127,7 +127,7 @@ public class ServerQuaternion{
 	public void normalize(){
 		float f = this.getX() * this.getX() + this.getY() * this.getY() + this.getZ() * this.getZ() + this.getW() * this.getW();
 		if(f > 1.0E-6F){
-			float f1 = MathHelper.fastInvSqrt(f);
+			float f1 = Mth.fastInvSqrt(f);
 			this.x *= f1;
 			this.y *= f1;
 			this.z *= f1;

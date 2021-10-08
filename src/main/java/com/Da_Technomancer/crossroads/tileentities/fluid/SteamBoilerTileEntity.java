@@ -8,16 +8,16 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.SteamBoilerContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -28,11 +28,14 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE.FluidHandler;
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE.TankProperty;
+
 @ObjectHolder(Crossroads.MODID)
 public class SteamBoilerTileEntity extends InventoryTE{
 
 	@ObjectHolder("steam_boiler")
-	private static TileEntityType<SteamBoilerTileEntity> type = null;
+	private static BlockEntityType<SteamBoilerTileEntity> type = null;
 
 	public static final int BATCH_SIZE = 100;
 	public static final int[] TIERS = {100, 200, 300, 400, 500};
@@ -55,9 +58,9 @@ public class SteamBoilerTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		super.addInfo(chat, player, hit);
-		chat.add(new TranslationTextComponent("tt.crossroads.steam_boiler.salt", inventory[0].getCount()));
+		chat.add(new TranslatableComponent("tt.crossroads.steam_boiler.salt", inventory[0].getCount()));
 	}
 
 	@Override
@@ -143,14 +146,14 @@ public class SteamBoilerTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.steam_boiler");
+	public Component getDisplayName(){
+		return new TranslatableComponent("container.steam_boiler");
 	}
 
 
 	@Nullable
 	@Override
-	public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity){
+	public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player playerEntity){
 		return new SteamBoilerContainer(i, playerInventory, createContainerBuf());
 	}
 }

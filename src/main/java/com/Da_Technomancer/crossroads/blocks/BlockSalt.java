@@ -3,20 +3,20 @@ package com.Da_Technomancer.crossroads.blocks;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.essentials.blocks.FertileSoil;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.entity.monster.SlimeEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.Slime;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
@@ -27,6 +27,14 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BushBlock;
+import net.minecraft.world.level.block.FallingBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class BlockSalt extends FallingBlock{
 
@@ -65,15 +73,15 @@ public class BlockSalt extends FallingBlock{
 	}
 
 	@Override
-	public void stepOn(World worldIn, BlockPos pos, Entity entityIn){
-		if(!worldIn.isClientSide && (entityIn instanceof SlimeEntity || entityIn instanceof CreeperEntity)){
+	public void stepOn(Level worldIn, BlockPos pos, Entity entityIn){
+		if(!worldIn.isClientSide && (entityIn instanceof Slime || entityIn instanceof Creeper)){
 			entityIn.hurt(SALT_DAMAGE, 20);
 		}
 
 		super.stepOn(worldIn, pos, entityIn);
 	}
 	
-	public static boolean salinate(World worldIn, BlockPos pos){
+	public static boolean salinate(Level worldIn, BlockPos pos){
 		BlockState killState = worldIn.getBlockState(pos);
 		Block killBlock = killState.getBlock();
 		BlockState resultState = killState;
@@ -106,7 +114,7 @@ public class BlockSalt extends FallingBlock{
 	}
 
 	@Override
-	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand){
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random rand){
 		if(worldIn.isClientSide){
 			return;
 		}
@@ -120,14 +128,14 @@ public class BlockSalt extends FallingBlock{
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public int getDustColor(BlockState state, IBlockReader world, BlockPos pos){
+	public int getDustColor(BlockState state, BlockGetter world, BlockPos pos){
 		return Color.WHITE.getRGB();
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.salt_block"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.salt_block.quip").setStyle(MiscUtil.TT_QUIP));
+	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
+		tooltip.add(new TranslatableComponent("tt.crossroads.salt_block"));
+		tooltip.add(new TranslatableComponent("tt.crossroads.salt_block.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

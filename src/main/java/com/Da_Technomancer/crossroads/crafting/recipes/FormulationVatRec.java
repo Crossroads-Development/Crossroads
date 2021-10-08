@@ -5,23 +5,23 @@ import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.FormulationVatTileEntity;
 import com.google.gson.JsonObject;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 
-public class FormulationVatRec implements IOptionalRecipe<IInventory>{
+public class FormulationVatRec implements IOptionalRecipe<Container>{
 
 	private final ResourceLocation id;
 	private final String group;
@@ -67,7 +67,7 @@ public class FormulationVatRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public boolean matches(IInventory inv, World worldIn){
+	public boolean matches(Container inv, Level worldIn){
 		if(active && inv instanceof FormulationVatTileEntity){
 			FormulationVatTileEntity te = (FormulationVatTileEntity) inv;
 			return itemInput.test(te.getItem(0)) && input.test(te.getInputFluid());
@@ -96,7 +96,7 @@ public class FormulationVatRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer(){
+	public RecipeSerializer<?> getSerializer(){
 		return CRRecipes.FORMULATION_VAT_SERIAL;
 	}
 
@@ -106,16 +106,16 @@ public class FormulationVatRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public IRecipeType<?> getType(){
+	public RecipeType<?> getType(){
 		return CRRecipes.FORMULATION_VAT_TYPE;
 	}
 
-	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<FormulationVatRec>{
+	public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<FormulationVatRec>{
 
 		@Override
 		public FormulationVatRec fromJson(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and ingredient
-			String s = JSONUtils.getAsString(json, "group", "");
+			String s = GsonHelper.getAsString(json, "group", "");
 
 			if(!CraftingUtil.isActiveJSON(json)){
 				return new FormulationVatRec(recipeId, s, FluidIngredient.EMPTY, 0, Ingredient.EMPTY, FluidStack.EMPTY, false);
@@ -129,7 +129,7 @@ public class FormulationVatRec implements IOptionalRecipe<IInventory>{
 
 		@Nullable
 		@Override
-		public FormulationVatRec fromNetwork(ResourceLocation recipeId, PacketBuffer buffer){
+		public FormulationVatRec fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
 			String s = buffer.readUtf(Short.MAX_VALUE);
 			if(!buffer.readBoolean()){//active
 				return new FormulationVatRec(recipeId, s, FluidIngredient.EMPTY, 0, Ingredient.EMPTY, FluidStack.EMPTY, false);
@@ -142,7 +142,7 @@ public class FormulationVatRec implements IOptionalRecipe<IInventory>{
 		}
 
 		@Override
-		public void toNetwork(PacketBuffer buffer, FormulationVatRec recipe){
+		public void toNetwork(FriendlyByteBuf buffer, FormulationVatRec recipe){
 			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
 

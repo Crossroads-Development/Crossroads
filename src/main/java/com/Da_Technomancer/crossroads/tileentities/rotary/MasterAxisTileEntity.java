@@ -11,13 +11,13 @@ import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -26,10 +26,10 @@ import java.util.ArrayList;
 import java.util.Random;
 
 @ObjectHolder(Crossroads.MODID)
-public class MasterAxisTileEntity extends TileEntity implements ITickableTileEntity, ITaylorReceiver{
+public class MasterAxisTileEntity extends BlockEntity implements TickableBlockEntity, ITaylorReceiver{
 
 	@ObjectHolder("master_axis")
-	private static TileEntityType<MasterAxisTileEntity> type = null;
+	private static BlockEntityType<MasterAxisTileEntity> type = null;
 
 	protected static final Random RAND = new Random();
 
@@ -84,7 +84,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 		this(type);
 	}
 
-	protected MasterAxisTileEntity(TileEntityType<? extends MasterAxisTileEntity> typeIn){
+	protected MasterAxisTileEntity(BlockEntityType<? extends MasterAxisTileEntity> typeIn){
 		super(typeIn);
 	}
 
@@ -294,7 +294,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		ticksExisted = nbt.getLong("life");
 		for(int i = 0; i < 4; i++){
@@ -317,7 +317,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putLong("life", ticksExisted);
 		for(int i = 0; i < 4; i++){
@@ -337,8 +337,8 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag(){
-		CompoundNBT nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(){
+		CompoundTag nbt = super.getUpdateTag();
 		return save(nbt);
 	}
 
@@ -380,7 +380,7 @@ public class MasterAxisTileEntity extends TileEntity implements ITickableTileEnt
 			rotaryMembers.clear();
 			locked = false;
 			Direction dir = getFacing();
-			TileEntity te = level.getBlockEntity(worldPosition.relative(dir));
+			BlockEntity te = level.getBlockEntity(worldPosition.relative(dir));
 			LazyOptional<IAxleHandler> axleOpt;
 			if(te != null && (axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, dir.getOpposite())).isPresent()){
 				byte keyNew;

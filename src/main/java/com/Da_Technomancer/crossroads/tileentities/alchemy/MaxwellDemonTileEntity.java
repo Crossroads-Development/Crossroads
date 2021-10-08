@@ -6,16 +6,16 @@ import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -24,10 +24,10 @@ import java.util.ArrayList;
 
 //We can't use ModuleTE because this has 2 internal temperatures
 @ObjectHolder(Crossroads.MODID)
-public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileEntity, IInfoTE{
+public class MaxwellDemonTileEntity extends BlockEntity implements TickableBlockEntity, IInfoTE{
 
 	@ObjectHolder("maxwell_demon")
-	private static TileEntityType<MaxwellDemonTileEntity> type = null;
+	private static BlockEntityType<MaxwellDemonTileEntity> type = null;
 
 	public static final double MAX_TEMP = 2500;
 	public static final double MIN_TEMP = -200;
@@ -42,10 +42,10 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		chat.add(new TranslationTextComponent("tt.crossroads.maxwell_demon.read_top", CRConfig.formatVal(tempUp)));
-		chat.add(new TranslationTextComponent("tt.crossroads.maxwell_demon.read_bottom", CRConfig.formatVal(tempDown)));
-		chat.add(new TranslationTextComponent("tt.crossroads.maxwell_demon.read_biome", CRConfig.formatVal(HeatUtil.convertBiomeTemp(level, worldPosition))));
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
+		chat.add(new TranslatableComponent("tt.crossroads.maxwell_demon.read_top", CRConfig.formatVal(tempUp)));
+		chat.add(new TranslatableComponent("tt.crossroads.maxwell_demon.read_bottom", CRConfig.formatVal(tempDown)));
+		chat.add(new TranslatableComponent("tt.crossroads.maxwell_demon.read_biome", CRConfig.formatVal(HeatUtil.convertBiomeTemp(level, worldPosition))));
 	}
 
 	private void init(){
@@ -79,7 +79,7 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileE
 		for(int i = 0; i < 2; i++){
 			Direction dir = Direction.from3DDataValue(i);
 
-			TileEntity te = level.getBlockEntity(worldPosition.relative(dir));
+			BlockEntity te = level.getBlockEntity(worldPosition.relative(dir));
 			LazyOptional<IHeatHandler> heatOpt;
 			if(te != null && (heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, dir.getOpposite())).isPresent()){
 				double reservePool = i == 0 ? tempDown : tempUp;
@@ -104,7 +104,7 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putBoolean("init_heat", init);
 		nbt.putDouble("temp_u", tempUp);
@@ -113,7 +113,7 @@ public class MaxwellDemonTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		init = nbt.getBoolean("init_heat");
 		tempUp = nbt.getDouble("temp_u");

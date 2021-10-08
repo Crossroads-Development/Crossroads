@@ -8,14 +8,14 @@ import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.rotary.StirlingEngine;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 public class StirlingEngineTileEntity extends ModuleTE{
 
 	@ObjectHolder("stirling_engine")
-	private static TileEntityType<StirlingEngineTileEntity> type = null;
+	private static BlockEntityType<StirlingEngineTileEntity> type = null;
 
 	public static final double INERTIA = 200;
 	public static final double HEAT_INTERVAL = 20;
@@ -65,13 +65,13 @@ public class StirlingEngineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		chat.add(new TranslationTextComponent("tt.crossroads.stirling_engine.temp", CRConfig.formatVal(tempSide), CRConfig.formatVal(HeatUtil.toKelvin(tempSide)), CRConfig.formatVal(tempBottom), CRConfig.formatVal(HeatUtil.toKelvin(tempBottom))));
-		chat.add(new TranslationTextComponent("tt.crossroads.stirling_engine.status", CRConfig.formatVal(lastHeatIn), CRConfig.formatVal(lastHeatOut), CRConfig.formatVal(lastPower)));
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
+		chat.add(new TranslatableComponent("tt.crossroads.stirling_engine.temp", CRConfig.formatVal(tempSide), CRConfig.formatVal(HeatUtil.toKelvin(tempSide)), CRConfig.formatVal(tempBottom), CRConfig.formatVal(HeatUtil.toKelvin(tempBottom))));
+		chat.add(new TranslatableComponent("tt.crossroads.stirling_engine.status", CRConfig.formatVal(lastHeatIn), CRConfig.formatVal(lastHeatOut), CRConfig.formatVal(lastPower)));
 		if(lastHeatIn > 0 && lastHeatOut > 0){
-			chat.add(new TranslationTextComponent("tt.crossroads.stirling_engine.efficiency", CRConfig.formatVal(lastPower / lastHeatIn), CRConfig.formatVal(lastPower / lastHeatOut)));
+			chat.add(new TranslatableComponent("tt.crossroads.stirling_engine.efficiency", CRConfig.formatVal(lastPower / lastHeatIn), CRConfig.formatVal(lastPower / lastHeatOut)));
 		}else{
-			chat.add(new TranslationTextComponent("tt.crossroads.stirling_engine.efficiency", CRConfig.formatVal(0), CRConfig.formatVal(0)));
+			chat.add(new TranslatableComponent("tt.crossroads.stirling_engine.efficiency", CRConfig.formatVal(0), CRConfig.formatVal(0)));
 		}
 		super.addInfo(chat, player, hit);
 	}
@@ -141,7 +141,7 @@ public class StirlingEngineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 
 		tempSide = nbt.getDouble("temp_side");
@@ -149,7 +149,7 @@ public class StirlingEngineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 
 		nbt.putDouble("temp_side", tempSide);

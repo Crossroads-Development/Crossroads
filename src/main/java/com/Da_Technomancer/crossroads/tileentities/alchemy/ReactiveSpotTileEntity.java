@@ -1,22 +1,22 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder(Crossroads.MODID)
-public class ReactiveSpotTileEntity extends TileEntity implements ITickableTileEntity{
+public class ReactiveSpotTileEntity extends BlockEntity implements TickableBlockEntity{
 
 	@ObjectHolder("reactive_spot")
-	private static TileEntityType<ReactiveSpotTileEntity> type = null;
+	private static BlockEntityType<ReactiveSpotTileEntity> type = null;
 
 	private BlockState target;
 	private int lifespan = 0;
@@ -43,7 +43,7 @@ public class ReactiveSpotTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		lifespan = nbt.getInt("lif");
 		Block b = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(nbt.getString("tar")));
@@ -55,7 +55,7 @@ public class ReactiveSpotTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putInt("lif", lifespan);
 		if(target != null){

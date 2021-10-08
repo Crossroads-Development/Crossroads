@@ -9,13 +9,13 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.alchemy.ReactionChamber;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -24,11 +24,13 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ObjectHolder;
 
+import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE.ItemHandler;
+
 @ObjectHolder(Crossroads.MODID)
 public class ReactionChamberTileEntity extends AlchemyReactorTE{
 
 	@ObjectHolder("reaction_chamber")
-	private static TileEntityType<ReactionChamberTileEntity> type = null;
+	private static BlockEntityType<ReactionChamberTileEntity> type = null;
 
 	private int energy = 0;
 	private static final int ENERGY_CAPACITY = 20;
@@ -74,28 +76,28 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 			energy -= DRAIN;
 			//Spawn random electric arcs between the walls of the block
 			if(level.random.nextInt(10) == 0){
-				Vector3d[] arcPos = new Vector3d[2];
+				Vec3[] arcPos = new Vec3[2];
 				for(int i = 0; i < 2; i++){
 					float u = level.random.nextFloat() * 0.8F + 0.1F;
 					float v = level.random.nextFloat() * 0.8F + 0.1F;
 					switch(level.random.nextInt(6)){
 						case 0:
-							arcPos[i] = new Vector3d(u, v, 0.1);
+							arcPos[i] = new Vec3(u, v, 0.1);
 							break;
 						case 1:
-							arcPos[i] = new Vector3d(u, v, 0.9);
+							arcPos[i] = new Vec3(u, v, 0.9);
 							break;
 						case 2:
-							arcPos[i] = new Vector3d(u, 0.1, v);
+							arcPos[i] = new Vec3(u, 0.1, v);
 							break;
 						case 3:
-							arcPos[i] = new Vector3d(u, 0.9, v);
+							arcPos[i] = new Vec3(u, 0.9, v);
 							break;
 						case 4:
-							arcPos[i] = new Vector3d(0.1, u, v);
+							arcPos[i] = new Vec3(0.1, u, v);
 							break;
 						case 5:
-							arcPos[i] = new Vector3d(0.9, u, v);
+							arcPos[i] = new Vec3(0.9, u, v);
 							break;
 					}
 				}
@@ -132,7 +134,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 		for(int i = 0; i < 6; i++){
 			if(modes[i].isOutput()){
 				Direction side = Direction.from3DDataValue(i);
-				TileEntity te = level.getBlockEntity(worldPosition.relative(side));
+				BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
 				LazyOptional<IChemicalHandler> otherOpt;
 				if(contents.getTotalQty() <= 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
 					continue;
@@ -155,13 +157,13 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		energy = nbt.getInt("ener");
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putInt("ener", energy);
 		return nbt;

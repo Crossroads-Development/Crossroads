@@ -5,29 +5,29 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.BeaconHarnessTileEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.*;
 
 public class BeaconHarnessRenderer extends EntropyRenderer<BeaconHarnessTileEntity>{
 
-	protected BeaconHarnessRenderer(TileEntityRendererDispatcher dispatcher){
+	protected BeaconHarnessRenderer(BlockEntityRenderDispatcher dispatcher){
 		super(dispatcher);
 	}
 
 	@Override
-	public void render(BeaconHarnessTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
+	public void render(BeaconHarnessTileEntity te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		super.render(te, partialTicks, matrix, buffer, combinedLight, combinedOverlay);
 
-		IVertexBuilder beamBuilder = buffer.getBuffer(CRRenderTypes.BEAM_TYPE);
+		VertexConsumer beamBuilder = buffer.getBuffer(CRRenderTypes.BEAM_TYPE);
 
 		matrix.translate(0.5D, 0, 0.5D);
 		float angle = 0;
@@ -66,7 +66,7 @@ public class BeaconHarnessRenderer extends EntropyRenderer<BeaconHarnessTileEnti
 		int mediumLight = CRRenderUtil.calcMediumLighting(combinedLight);
 		TextureAtlasSprite copSprite = CRRenderUtil.getTextureSprite(CRRenderTypes.COPSHOWIUM_TEXTURE);
 		TextureAtlasSprite quartzSprite = CRRenderUtil.getTextureSprite(CRRenderTypes.QUARTZ_TEXTURE);
-		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
+		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
 
 		matrix.mulPose(Vector3f.YP.rotationDegrees(angle));
 		addRod(matrix, builder, smallOffset, smallOffset, copSprite, mediumLight);
@@ -86,7 +86,7 @@ public class BeaconHarnessRenderer extends EntropyRenderer<BeaconHarnessTileEnti
 		addRod(matrix, builder, -largeOffset, -medOffset, quartzSprite, mediumLight);
 	}
 
-	private static void addRod(MatrixStack matrix, IVertexBuilder builder, float x, float z, TextureAtlasSprite sprite, int light){
+	private static void addRod(PoseStack matrix, VertexConsumer builder, float x, float z, TextureAtlasSprite sprite, int light){
 		float rad = 1F / 16F;
 		float minY = 1F / 16F;
 		float maxY = 15F / 16F;

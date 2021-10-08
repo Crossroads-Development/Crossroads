@@ -4,40 +4,40 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LargeGearMaster extends ContainerBlock{
+public class LargeGearMaster extends BaseEntityBlock{
 
 	private static final VoxelShape[] SHAPES = new VoxelShape[6];
 
 	static{
 		//Create a shape for each facing. Base plate + axle
-		SHAPES[0] = VoxelShapes.or(box(0, 0, 0, 16, 2, 16), box(7, 2, 7, 9, 16, 9));
-		SHAPES[1] = VoxelShapes.or(box(0, 14, 0, 16, 16, 16), box(7, 0, 7, 9, 14, 9));
-		SHAPES[2] = VoxelShapes.or(box(0, 0, 0, 16, 16, 2), box(7, 7, 2, 9, 9, 16));
-		SHAPES[3] = VoxelShapes.or(box(0, 0, 14, 16, 16, 16), box(7, 7, 0, 9, 9, 14));
-		SHAPES[4] = VoxelShapes.or(box(0, 0, 0, 2, 16, 16), box(2, 7, 7, 16, 9, 9));
-		SHAPES[5] = VoxelShapes.or(box(14, 0, 0, 16, 16, 16), box(0, 7, 7, 14, 9, 9));
+		SHAPES[0] = Shapes.or(box(0, 0, 0, 16, 2, 16), box(7, 2, 7, 9, 16, 9));
+		SHAPES[1] = Shapes.or(box(0, 14, 0, 16, 16, 16), box(7, 0, 7, 9, 14, 9));
+		SHAPES[2] = Shapes.or(box(0, 0, 0, 16, 16, 2), box(7, 7, 2, 9, 9, 16));
+		SHAPES[3] = Shapes.or(box(0, 0, 14, 16, 16, 16), box(7, 7, 0, 9, 9, 14));
+		SHAPES[4] = Shapes.or(box(0, 0, 0, 2, 16, 16), box(2, 7, 7, 16, 9, 9));
+		SHAPES[5] = Shapes.or(box(14, 0, 0, 16, 16, 16), box(0, 7, 7, 14, 9, 9));
 	}
 
 	public LargeGearMaster(){
@@ -48,13 +48,13 @@ public class LargeGearMaster extends ContainerBlock{
 	}
 
 	@Override
-	public TileEntity newBlockEntity(IBlockReader worldIn){
+	public BlockEntity newBlockEntity(BlockGetter worldIn){
 		return new LargeGearMasterTileEntity();
 	}
 
 	@Override
-	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player){
-		TileEntity te = world.getBlockEntity(pos);
+	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player){
+		BlockEntity te = world.getBlockEntity(pos);
 		if(te instanceof LargeGearMasterTileEntity){
 			return CRItems.largeGear.withMaterial(((LargeGearMasterTileEntity) te).getMember(), 1);
 		}
@@ -62,24 +62,24 @@ public class LargeGearMaster extends ContainerBlock{
 	}
 
 	@Override
-	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
 		builder.add(ESProperties.FACING);
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context){
 		return SHAPES[state.getValue(ESProperties.FACING).get3DDataValue()];
 	}
 
 	@Override
-	public BlockRenderType getRenderShape(BlockState state){
-		return BlockRenderType.ENTITYBLOCK_ANIMATED;
+	public RenderShape getRenderShape(BlockState state){
+		return RenderShape.ENTITYBLOCK_ANIMATED;
 	}
 
 	@Override
 	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder){
 		List<ItemStack> drops = new ArrayList<>();
-		TileEntity te = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
+		BlockEntity te = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
 		if(te instanceof LargeGearMasterTileEntity){
 			drops.add(CRItems.largeGear.withMaterial(((LargeGearMasterTileEntity) te).getMember(), 1));
 		}
@@ -87,7 +87,7 @@ public class LargeGearMaster extends ContainerBlock{
 	}
 
 	@Override
-	public boolean removedByPlayer(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid){
+	public boolean removedByPlayer(BlockState state, Level worldIn, BlockPos pos, Player player, boolean willHarvest, FluidState fluid){
 		if(willHarvest && worldIn.getBlockEntity(pos) instanceof LargeGearMasterTileEntity){
 			((LargeGearMasterTileEntity) worldIn.getBlockEntity(pos)).breakGroup(state.getValue(ESProperties.FACING), true);
 		}
@@ -95,7 +95,7 @@ public class LargeGearMaster extends ContainerBlock{
 	}
 
 	@Override
-	public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving){
+	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving){
 		if(worldIn.getBlockEntity(pos) instanceof LargeGearMasterTileEntity){
 			((LargeGearMasterTileEntity) worldIn.getBlockEntity(pos)).breakGroup(state.getValue(ESProperties.FACING), false);
 		}

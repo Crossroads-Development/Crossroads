@@ -4,30 +4,30 @@ import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.GlasswareHolderTileEntity;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 
-public class GlasswareHolder extends ContainerBlock{
+public class GlasswareHolder extends BaseEntityBlock{
 
 	private static final VoxelShape EMPTY_SHAPE = box(5, 0, 5, 11, 8, 11);
 	private static final VoxelShape PHIAL_SHAPE = box(5, 0, 5, 11, 16, 11);
-	private static final VoxelShape FLORENCE_SHAPE = VoxelShapes.or(box(5, 8, 5, 11, 16, 11), box(3, 0, 3, 13, 8, 13));
+	private static final VoxelShape FLORENCE_SHAPE = Shapes.or(box(5, 8, 5, 11, 16, 11), box(3, 0, 3, 13, 8, 13));
 	private static final VoxelShape SHELL_SHAPE = box(4, 0, 4, 12, 12, 12);
 
 	public GlasswareHolder(){
@@ -42,12 +42,12 @@ public class GlasswareHolder extends ContainerBlock{
 	}
 
 	@Override
-	public TileEntity newBlockEntity(IBlockReader worldIn){
+	public BlockEntity newBlockEntity(BlockGetter worldIn){
 		return new GlasswareHolderTileEntity();
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context){
 		switch(state.getValue(CRProperties.CONTAINER_TYPE)){
 			case NONE:
 				return EMPTY_SHAPE;
@@ -58,12 +58,12 @@ public class GlasswareHolder extends ContainerBlock{
 			case SHELL:
 				return SHELL_SHAPE;
 		}
-		return VoxelShapes.block();
+		return Shapes.block();
 	}
 
 	@Override
-	public BlockRenderType getRenderShape(BlockState state){
-		return BlockRenderType.MODEL;
+	public RenderShape getRenderShape(BlockState state){
+		return RenderShape.MODEL;
 	}
 
 //	@Override
@@ -73,9 +73,9 @@ public class GlasswareHolder extends ContainerBlock{
 //	}
 
 	@Override
-	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
+	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving){
 		if(newState.getBlock() != this){
-			TileEntity te = world.getBlockEntity(pos);
+			BlockEntity te = world.getBlockEntity(pos);
 			if(te instanceof GlasswareHolderTileEntity){
 				((GlasswareHolderTileEntity) te).onBlockDestroyed(state);
 			}
@@ -84,12 +84,12 @@ public class GlasswareHolder extends ContainerBlock{
 	}
 
 	@Override
-	public void setPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
+	public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		neighborChanged(state, world, pos, this, pos, false);
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
+	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
 		if(worldIn.hasNeighborSignal(pos)){
 			if(!state.getValue(ESProperties.REDSTONE_BOOL)){
 				worldIn.setBlockAndUpdate(pos, state.setValue(ESProperties.REDSTONE_BOOL, true));
@@ -102,18 +102,18 @@ public class GlasswareHolder extends ContainerBlock{
 	}
 
 	@Override
-	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
 		builder.add(CRProperties.CRYSTAL, CRProperties.CONTAINER_TYPE, ESProperties.REDSTONE_BOOL);
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(!worldIn.isClientSide){
-			TileEntity te = worldIn.getBlockEntity(pos);
+			BlockEntity te = worldIn.getBlockEntity(pos);
 			if(te instanceof GlasswareHolderTileEntity){
 				playerIn.setItemInHand(hand, ((GlasswareHolderTileEntity) te).rightClickWithItem(playerIn.getItemInHand(hand), playerIn.isShiftKeyDown(), playerIn, hand));
 			}
 		}
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 }

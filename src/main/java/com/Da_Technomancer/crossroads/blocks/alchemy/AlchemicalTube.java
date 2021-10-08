@@ -5,16 +5,18 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.templates.ConduitBlock;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.AlchemicalTubeTileEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.state.Property;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
+
+import com.Da_Technomancer.crossroads.API.templates.ConduitBlock.IConduitTE;
 
 public class AlchemicalTube extends ConduitBlock<EnumTransferMode>{
 
@@ -73,7 +75,7 @@ public class AlchemicalTube extends ConduitBlock<EnumTransferMode>{
 	}
 
 	@Override
-	public TileEntity newBlockEntity(IBlockReader worldIn){
+	public BlockEntity newBlockEntity(BlockGetter worldIn){
 		return new AlchemicalTubeTileEntity(!crystal);
 	}
 
@@ -84,7 +86,7 @@ public class AlchemicalTube extends ConduitBlock<EnumTransferMode>{
 //	}
 
 	@Override
-	protected EnumTransferMode getValueForPlacement(World world, BlockPos pos, Direction side, @Nullable TileEntity neighTE){
+	protected EnumTransferMode getValueForPlacement(Level world, BlockPos pos, Direction side, @Nullable BlockEntity neighTE){
 		//If adjacent to another pipe, set the initial mode based on the other pipe for continuous flow
 		if(neighTE instanceof AlchemicalTubeTileEntity){
 			EnumTransferMode otherMode = ((AlchemicalTubeTileEntity) neighTE).getModes()[side.getOpposite().get3DDataValue()];
@@ -98,10 +100,10 @@ public class AlchemicalTube extends ConduitBlock<EnumTransferMode>{
 	}
 
 	@Override
-	protected void onAdjusted(World world, BlockPos pos, BlockState newState, Direction facing, EnumTransferMode newVal, @Nullable IConduitTE<EnumTransferMode> te){
+	protected void onAdjusted(Level world, BlockPos pos, BlockState newState, Direction facing, EnumTransferMode newVal, @Nullable IConduitTE<EnumTransferMode> te){
 		super.onAdjusted(world, pos, newState, facing, newVal, te);
 
-		TileEntity neighTE = world.getBlockEntity(pos.relative(facing));
+		BlockEntity neighTE = world.getBlockEntity(pos.relative(facing));
 		//Check the neighbor is another conduit with the same channel
 		if(neighTE instanceof AlchemicalTubeTileEntity && ((AlchemicalTube) neighTE.getBlockState().getBlock()).crystal == crystal){
 			//Adjust the neighboring pipe alongside this one

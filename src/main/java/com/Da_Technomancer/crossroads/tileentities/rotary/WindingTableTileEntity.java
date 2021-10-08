@@ -5,19 +5,19 @@ import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.WindingTableContainer;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -27,11 +27,13 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
+import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
+
 @ObjectHolder(Crossroads.MODID)
 public class WindingTableTileEntity extends InventoryTE{
 
 	@ObjectHolder("winding_table")
-	private static TileEntityType<WindingTableTileEntity> type = null;
+	private static BlockEntityType<WindingTableTileEntity> type = null;
 
 	public static final double INERTIA = 50;
 	public static final double INCREMENT = 0.2;
@@ -43,16 +45,16 @@ public class WindingTableTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		if(inventory[0].getItem() instanceof IWindableItem){
 			IWindableItem item = (IWindableItem) inventory[0].getItem();
 			double speed = item.getWindLevel(inventory[0]);
 			double maxSpeed = item.getMaxWind();
-			chat.add(new TranslationTextComponent("tt.crossroads.winding_table.winding", CRConfig.formatVal(speed), CRConfig.formatVal(maxSpeed)));
-			chat.add(new TranslationTextComponent("tt.crossroads.winding_table.power", CRConfig.formatVal(speed * CRConfig.windingResist.get())));
+			chat.add(new TranslatableComponent("tt.crossroads.winding_table.winding", CRConfig.formatVal(speed), CRConfig.formatVal(maxSpeed)));
+			chat.add(new TranslatableComponent("tt.crossroads.winding_table.power", CRConfig.formatVal(speed * CRConfig.windingResist.get())));
 		}else{
-			chat.add(new TranslationTextComponent("tt.crossroads.winding_table.empty"));
-			chat.add(new TranslationTextComponent("tt.crossroads.winding_table.power", 0));
+			chat.add(new TranslatableComponent("tt.crossroads.winding_table.empty"));
+			chat.add(new TranslatableComponent("tt.crossroads.winding_table.power", 0));
 		}
 
 		super.addInfo(chat, player, hit);
@@ -75,9 +77,9 @@ public class WindingTableTileEntity extends InventoryTE{
 					itemSpeed += INCREMENT;
 					itemSpeed = Math.min(itemSpeed, item.getMaxWind());
 					item.setWindLevel(inventory[0], itemSpeed);
-					level.playSound(null, worldPosition, SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON, SoundCategory.BLOCKS, 1F, (float) Math.random());
+					level.playSound(null, worldPosition, SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON, SoundSource.BLOCKS, 1F, (float) Math.random());
 				}else{
-					level.playSound(null, worldPosition, SoundEvents.METAL_PRESSURE_PLATE_CLICK_OFF, SoundCategory.BLOCKS, 2F, (float) Math.random());
+					level.playSound(null, worldPosition, SoundEvents.METAL_PRESSURE_PLATE_CLICK_OFF, SoundSource.BLOCKS, 2F, (float) Math.random());
 				}
 			}
 			setChanged();
@@ -122,7 +124,7 @@ public class WindingTableTileEntity extends InventoryTE{
 			//Machine speed too slow
 			//Release all stored energy
 			axleHandler.addEnergy(INERTIA * itemSpeed * itemSpeed / 2D, true);
-			level.playSound(null, worldPosition, SoundEvents.GLASS_BREAK, SoundCategory.BLOCKS, 1F, 1F);
+			level.playSound(null, worldPosition, SoundEvents.GLASS_BREAK, SoundSource.BLOCKS, 1F, 1F);
 			if(CRConfig.windingDestroy.get()){
 				//Break the item
 				inventory[0] = ItemStack.EMPTY;
@@ -148,18 +150,18 @@ public class WindingTableTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.winding_table");
+	public Component getDisplayName(){
+		return new TranslatableComponent("container.winding_table");
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		redstone = nbt.getBoolean("reds");
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putBoolean("reds", redstone);
 		return nbt;
@@ -182,7 +184,7 @@ public class WindingTableTileEntity extends InventoryTE{
 
 	@Nullable
 	@Override
-	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
+	public AbstractContainerMenu createMenu(int id, Inventory playerInv, Player player){
 		return new WindingTableContainer(id, playerInv, createContainerBuf());
 	}
 

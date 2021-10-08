@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.API;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 
@@ -16,6 +16,6 @@ public interface IInfoTE{
 	 * @param player The player using the info device.
 	 * @param hit Portion of the block clicked/viewed
 	 */
-	void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit);
+	void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit);
 
 }

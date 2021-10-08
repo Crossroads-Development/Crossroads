@@ -6,19 +6,19 @@ import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -29,7 +29,7 @@ import java.util.List;
 public class ArmorGoggles extends TechnomancyArmor{
 
 	public ArmorGoggles(){
-		super(EquipmentSlotType.HEAD);
+		super(EquipmentSlot.HEAD);
 		String name = "module_goggles";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
@@ -41,11 +41,11 @@ public class ArmorGoggles extends TechnomancyArmor{
 	private static final int CHAT_ID = 718749;
 
 	@Override
-	public void onArmorTick(ItemStack stack, World world, PlayerEntity player){
-		CompoundNBT nbt;
+	public void onArmorTick(ItemStack stack, Level world, Player player){
+		CompoundTag nbt;
 		if(!world.isClientSide && (nbt = stack.getTag()) != null){
-			ArrayList<ITextComponent> chat = new ArrayList<>();
-			BlockRayTraceResult ray = MiscUtil.rayTrace(player, 8);
+			ArrayList<Component> chat = new ArrayList<>();
+			BlockHitResult ray = MiscUtil.rayTrace(player, 8);
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				if(nbt.contains(lens.toString())){
 					if(!lens.useKey() || nbt.getBoolean(lens.toString())){
@@ -54,17 +54,17 @@ public class ArmorGoggles extends TechnomancyArmor{
 				}
 			}
 			if(!chat.isEmpty()){
-				CRPackets.sendPacketToPlayer((ServerPlayerEntity) player, new SendChatToClient(chat, CHAT_ID));
+				CRPackets.sendPacketToPlayer((ServerPlayer) player, new SendChatToClient(chat, CHAT_ID));
 			}
 		}
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
 		super.appendHoverText(stack, worldIn, tooltip, flagIn);
-		tooltip.add(new TranslationTextComponent("tt.crossroads.goggles.lenses"));
-		CompoundNBT nbt = stack.getTag();
+		tooltip.add(new TranslatableComponent("tt.crossroads.goggles.lenses"));
+		CompoundTag nbt = stack.getTag();
 		boolean hasLens = false;
 		if(nbt != null && !nbt.isEmpty()){
 			String enabled = MiscUtil.localize("tt.crossroads.goggles.enabled");
@@ -72,25 +72,25 @@ public class ArmorGoggles extends TechnomancyArmor{
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				if(nbt.contains(lens.toString())){
 					//Displaying the enabled/disabled parameter is optional. By default, diamond and quartz lenses don't
-					tooltip.add(new TranslationTextComponent("tt.crossroads.goggles." + lens.toString(), nbt.getBoolean(lens.toString()) ? enabled : disabled));
+					tooltip.add(new TranslatableComponent("tt.crossroads.goggles." + lens.toString(), nbt.getBoolean(lens.toString()) ? enabled : disabled));
 					hasLens = true;
 				}
 			}
 		}
 		if(!hasLens){
-			tooltip.add(new TranslationTextComponent("tt.crossroads.goggles.none"));
+			tooltip.add(new TranslatableComponent("tt.crossroads.goggles.none"));
 		}
 	}
 
 	@Override
-	public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type){
+	public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type){
 		StringBuilder path = new StringBuilder(Crossroads.MODID + ":textures/models/armor/goggles/");
 		if(isReinforced(stack)){
 			path.append("reinf_goggle");
 		}else{
 			path.append("goggle");
 		}
-		CompoundNBT nbt = stack.getTag();
+		CompoundTag nbt = stack.getTag();
 		if(nbt != null){
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				if(nbt.contains(lens.toString())){
@@ -103,7 +103,7 @@ public class ArmorGoggles extends TechnomancyArmor{
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items){
+	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
 		if(allowdedIn(group)){
 			items.add(new ItemStack(this, 1));
 			items.add(setReinforced(new ItemStack(this, 1), true));

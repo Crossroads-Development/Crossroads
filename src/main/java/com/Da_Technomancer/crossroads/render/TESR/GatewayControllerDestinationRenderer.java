@@ -4,25 +4,25 @@ import com.Da_Technomancer.crossroads.API.technomancy.GatewayAddress;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayControllerDestinationTileEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.core.Direction;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 
-public class GatewayControllerDestinationRenderer extends TileEntityRenderer<GatewayControllerDestinationTileEntity>{
+public class GatewayControllerDestinationRenderer extends BlockEntityRenderer<GatewayControllerDestinationTileEntity>{
 
-	protected GatewayControllerDestinationRenderer(TileEntityRendererDispatcher dispatcher){
+	protected GatewayControllerDestinationRenderer(BlockEntityRenderDispatcher dispatcher){
 		super(dispatcher);
 	}
 
 	@Override
-	public void render(GatewayControllerDestinationTileEntity frame, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
+	public void render(GatewayControllerDestinationTileEntity frame, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		//Stripped-down version of the renderer in GatewayControllerRenderer, without the dialing wheel, triangular selector, or link lines
 
 		if(!frame.isActive()){
@@ -94,7 +94,7 @@ public class GatewayControllerDestinationRenderer extends TileEntityRenderer<Gat
 		//Because I can't be bothered to math out all 32 distinct vertex positions on an octagon ring
 
 		//The outer edge of the render is aligned with the outside of the block frame. The inside is not aligned with anything
-		IVertexBuilder builder = buffer.getBuffer(RenderType.cutout());
+		VertexConsumer builder = buffer.getBuffer(RenderType.cutout());
 		
 		//Fixed square ring
 		matrix.pushPose();

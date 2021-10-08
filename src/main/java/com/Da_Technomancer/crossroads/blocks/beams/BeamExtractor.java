@@ -3,23 +3,23 @@ package com.Da_Technomancer.crossroads.blocks.beams;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.templates.BeamBlock;
 import com.Da_Technomancer.crossroads.tileentities.beams.BeamExtractorTileEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -34,35 +34,35 @@ public class BeamExtractor extends BeamBlock{
 	}
 
 	@Override
-	public TileEntity newBlockEntity(IBlockReader worldIn){
+	public BlockEntity newBlockEntity(BlockGetter worldIn){
 		return new BeamExtractorTileEntity();
 	}
 
 	@Override
-	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
+	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving){
 		if(newState.getBlock() != this){
-			InventoryHelper.dropContents(world, pos, (IInventory) world.getBlockEntity(pos));
+			Containers.dropContents(world, pos, (Container) world.getBlockEntity(pos));
 		}
 		super.onRemove(state, world, pos, newState, isMoving);
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(!super.use(state, worldIn, pos, playerIn, hand, hit).shouldSwing() && !worldIn.isClientSide){
-			TileEntity te = worldIn.getBlockEntity(pos);
-			if(te instanceof INamedContainerProvider){
-				NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);
+			BlockEntity te = worldIn.getBlockEntity(pos);
+			if(te instanceof MenuProvider){
+				NetworkHooks.openGui((ServerPlayer) playerIn, (MenuProvider) te, pos);
 			}
 		}
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_extractor.desc"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_extractor.redstone"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_extractor.quip").setStyle(MiscUtil.TT_QUIP));
+	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
+		tooltip.add(new TranslatableComponent("tt.crossroads.beam_extractor.desc"));
+		tooltip.add(new TranslatableComponent("tt.crossroads.beam_extractor.redstone"));
+		tooltip.add(new TranslatableComponent("tt.crossroads.beam_extractor.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

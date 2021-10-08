@@ -2,24 +2,24 @@ package com.Da_Technomancer.crossroads.entity.mob_effects;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.AttributeModifierManager;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
-public class Sedation extends Effect{
+public class Sedation extends MobEffect{
 
 	private static final String SEDATION_KEY = "cr_sedation";
 
 	public Sedation(){
-		super(EffectType.HARMFUL, 0x848484);
+		super(MobEffectCategory.HARMFUL, 0x848484);
 		setRegistryName(Crossroads.MODID, "sedation");
 
 		//On non-players (and other blacklisted entities):
@@ -35,7 +35,7 @@ public class Sedation extends Effect{
 	}
 
 	private boolean canSedationApplyFully(LivingEntity entity){
-		if(entity instanceof MobEntity){
+		if(entity instanceof Mob){
 			//If the entity is already sedated, it must be sedatable
 			if(entity.getPersistentData().getBoolean(SEDATION_KEY)){
 				//We track if the AI was disabled by sedation (vs another source) using a flag in NBT
@@ -51,15 +51,15 @@ public class Sedation extends Effect{
 			//We can NOT fully sedate anything that already had the AI disabled due to something other than sedation
 			//Because we assume anything with the AI already disabled is supposed to remain that way
 			//We track if the AI was disabled by sedation (vs another source) using a flag in NBT, which is handled above
-			return !((MobEntity) entity).isNoAi();
+			return !((Mob) entity).isNoAi();
 		}
 		return false;
 	}
 
 	@Override
-	public void addAttributeModifiers(LivingEntity entity, AttributeModifierManager p_111185_2_, int p_111185_3_){
+	public void addAttributeModifiers(LivingEntity entity, AttributeMap p_111185_2_, int p_111185_3_){
 		if(canSedationApplyFully(entity)){
-			MobEntity mob = (MobEntity) entity;
+			Mob mob = (Mob) entity;
 			mob.setNoAi(true);
 			mob.getPersistentData().putBoolean(SEDATION_KEY, true);
 		}
@@ -67,9 +67,9 @@ public class Sedation extends Effect{
 	}
 
 	@Override
-	public void removeAttributeModifiers(LivingEntity entity, AttributeModifierManager p_111187_2_, int p_111187_3_){
+	public void removeAttributeModifiers(LivingEntity entity, AttributeMap p_111187_2_, int p_111187_3_){
 		if(canSedationApplyFully(entity)){
-			MobEntity mob = (MobEntity) entity;
+			Mob mob = (Mob) entity;
 			mob.setNoAi(false);
 			mob.getPersistentData().putBoolean(SEDATION_KEY, false);
 		}
@@ -82,9 +82,9 @@ public class Sedation extends Effect{
 			//Force basic physics to apply despite AI being disabled
 			//Done by enabling AI, calling the method responsible for physics, then re-disabling AI
 			if(!entity.level.isClientSide()){
-				MobEntity mob = (MobEntity) entity;
+				Mob mob = (Mob) entity;
 				mob.setNoAi(false);
-				mob.travel(new Vector3d(mob.xxa, mob.yya, mob.zza));
+				mob.travel(new Vec3(mob.xxa, mob.yya, mob.zza));
 //				mob.aiStep();
 				//Entities keep their momentum when the AI stops, and if they were walking, they have a tendency to moonwalk if we don't deteriorate the speed
 				//Sedated entities therefore move in a more sluggish manner, losing their momentum more rapidly

@@ -1,27 +1,27 @@
 package com.Da_Technomancer.crossroads.API;
 
 import com.Da_Technomancer.essentials.ESConfig;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.LightningBoltEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.FoodStats;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.food.FoodData;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -69,10 +69,10 @@ public final class MiscUtil{
 	/**
 	 * A server-side friendly version of Entity.class' raytrace (currently called Entity#pick(double, float, boolean))
 	 */
-	public static BlockRayTraceResult rayTrace(Entity ent, double blockReachDistance){
-		Vector3d vec3d = ent.position().add(0, ent.getEyeHeight(), 0);
-		Vector3d vec3d2 = vec3d.add(ent.getViewVector(1F).scale(blockReachDistance));
-		return ent.level.clip(new RayTraceContext(vec3d, vec3d2, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, ent));
+	public static BlockHitResult rayTrace(Entity ent, double blockReachDistance){
+		Vec3 vec3d = ent.position().add(0, ent.getEyeHeight(), 0);
+		Vec3 vec3d2 = vec3d.add(ent.getViewVector(1F).scale(blockReachDistance));
+		return ent.level.clip(new ClipContext(vec3d, vec3d2, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, ent));
 	}
 
 	/**
@@ -81,7 +81,7 @@ public final class MiscUtil{
 	 * @return The localized string
 	 */
 	public static String localize(String input){
-		return new TranslationTextComponent(input).getString();
+		return new TranslatableComponent(input).getString();
 	}
 
 	/**
@@ -91,7 +91,7 @@ public final class MiscUtil{
 	 * @return The localized and formatted string
 	 */
 	public static String localize(String input, Object... formatArgs){
-		return new TranslationTextComponent(input, formatArgs).getString();
+		return new TranslatableComponent(input, formatArgs).getString();
 	}
 
 	public static String getLocalizedFluidName(String localizationKey){
@@ -186,10 +186,10 @@ public final class MiscUtil{
 	 * @param hunger New hunger value, [0, 20]
 	 * @param saturation New saturation value, [0, 20]
 	 */
-	public static void setPlayerFood(PlayerEntity player, int hunger, float saturation){
+	public static void setPlayerFood(Player player, int hunger, float saturation){
 		// The way saturation is coded is weird, and the best way to do this is through nbt.
-		CompoundNBT nbt = new CompoundNBT();
-		FoodStats stats = player.getFoodData();
+		CompoundTag nbt = new CompoundTag();
+		FoodData stats = player.getFoodData();
 		stats.addAdditionalSaveData(nbt);
 		nbt.putInt("foodLevel", Math.min(hunger, 20));
 		nbt.putFloat("foodSaturationLevel", Math.min(20F, saturation));
@@ -202,7 +202,7 @@ public final class MiscUtil{
 	 * @param player The player to add a message to
 	 * @param message The message to send
 	 */
-	public static void chatMessage(Entity player, ITextComponent message){
+	public static void chatMessage(Entity player, Component message){
 		player.sendMessage(message, player.getUUID());
 	}
 
@@ -211,7 +211,7 @@ public final class MiscUtil{
 	 * @param world The world to get the dimension of
 	 * @return The name of the dimension, for logging purposes, unlocalized
 	 */
-	public static String getDimensionName(@Nonnull World world){
+	public static String getDimensionName(@Nonnull Level world){
 		return world.dimension().location().toString();
 	}
 
@@ -221,12 +221,12 @@ public final class MiscUtil{
 	 * @param cache An optional cache parameter- will return this value if it matches the passed ID
 	 * @return The registry key in the World Key registry associated with a given registry keyname
 	 */
-	public static RegistryKey<World> getWorldKey(ResourceLocation registryID, @Nullable RegistryKey<World> cache){
+	public static ResourceKey<Level> getWorldKey(ResourceLocation registryID, @Nullable ResourceKey<Level> cache){
 		if(cache != null && cache.location().equals(registryID)){
 			return cache;
 		}
 
-		return RegistryKey.create(Registry.DIMENSION_REGISTRY, registryID);
+		return ResourceKey.create(Registry.DIMENSION_REGISTRY, registryID);
 	}
 
 	/**
@@ -237,7 +237,7 @@ public final class MiscUtil{
 	 * @return The world instance for the passed registry key
 	 */
 	@Nullable
-	public static ServerWorld getWorld(RegistryKey<World> registryKey, MinecraftServer server){
+	public static ServerLevel getWorld(ResourceKey<Level> registryKey, MinecraftServer server){
 		return server.getLevel(registryKey);
 	}
 
@@ -248,19 +248,19 @@ public final class MiscUtil{
 	 * @param damage The damage to deal. Will deal a minimum of 5 damage, regardless of value; Passing 0 to do default lightning damage is acceptable
 	 * @param lightning The lightning entity doing the striking. Pass null if there is no lightning bolt entity
 	 */
-	public static void attackWithLightning(LivingEntity ent, float damage, @Nullable LightningBoltEntity lightning){
+	public static void attackWithLightning(LivingEntity ent, float damage, @Nullable LightningBolt lightning){
 		if(lightning == null){
 			//Create a generic lightning entity at the entity position, but don't add it to the world
 			lightning = EntityType.LIGHTNING_BOLT.create(ent.level);
 			lightning.moveTo(ent.position());
 		}
-		ent.thunderHit((ServerWorld) ent.level, lightning);//Deals 5 lightning damage
+		ent.thunderHit((ServerLevel) ent.level, lightning);//Deals 5 lightning damage
 		if(damage > 5){
 			ent.hurt(DamageSource.LIGHTNING_BOLT, damage - 5F);//Deal any additional damage
 		}
 	}
 
-	public static int getLight(World world, BlockPos pos){
+	public static int getLight(Level world, BlockPos pos){
 		return world.isThundering() ? world.getMaxLocalRawBrightness(pos, 10) : world.getMaxLocalRawBrightness(pos);
 	}
 }

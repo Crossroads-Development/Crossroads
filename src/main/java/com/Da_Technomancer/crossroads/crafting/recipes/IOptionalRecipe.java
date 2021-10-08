@@ -1,10 +1,10 @@
 package com.Da_Technomancer.crossroads.crafting.recipes;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
 
-public interface IOptionalRecipe<T extends IInventory> extends IRecipe<T>{
+public interface IOptionalRecipe<T extends Container> extends Recipe<T>{
 
 	@Override
 	default ItemStack assemble(T inv){

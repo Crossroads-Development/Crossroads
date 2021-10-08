@@ -8,18 +8,18 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.IceboxRec;
 import com.Da_Technomancer.crossroads.gui.container.IceboxContainer;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -29,11 +29,13 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
+import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
+
 @ObjectHolder(Crossroads.MODID)
 public class IceboxTileEntity extends InventoryTE{
 
 	@ObjectHolder("icebox")
-	private static TileEntityType<IceboxTileEntity> type = null;
+	private static BlockEntityType<IceboxTileEntity> type = null;
 
 	public static final int RATE = 10;
 	public static final int MIN_TEMP = -20;
@@ -86,14 +88,14 @@ public class IceboxTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		burnTime = nbt.getInt("burn");
 		maxBurnTime = nbt.getInt("max_burn");
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putInt("burn", burnTime);
 		nbt.putInt("max_burn", maxBurnTime);
@@ -122,7 +124,7 @@ public class IceboxTileEntity extends InventoryTE{
 
 	@Override
 	public boolean canPlaceItem(int index, ItemStack stack){
-		return index == 0 && level.getRecipeManager().getRecipeFor(CRRecipes.COOLING_TYPE, new Inventory(stack), level).isPresent();
+		return index == 0 && level.getRecipeManager().getRecipeFor(CRRecipes.COOLING_TYPE, new SimpleContainer(stack), level).isPresent();
 	}
 
 	@Override
@@ -131,13 +133,13 @@ public class IceboxTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.icebox");
+	public Component getDisplayName(){
+		return new TranslatableComponent("container.icebox");
 	}
 
 	@Nullable
 	@Override
-	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
+	public AbstractContainerMenu createMenu(int id, Inventory playerInv, Player player){
 		return new IceboxContainer(id, playerInv, createContainerBuf());
 	}
 }

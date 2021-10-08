@@ -7,14 +7,14 @@ import com.Da_Technomancer.crossroads.tileentities.fluid.WaterCentrifugeTileEnti
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class CentrifugeRec implements IOptionalRecipe<IInventory>{
+public class CentrifugeRec implements IOptionalRecipe<Container>{
 
 	private static final Random RAND = new Random();
 
@@ -54,7 +54,7 @@ public class CentrifugeRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public boolean matches(IInventory inv, World worldIn){
+	public boolean matches(Container inv, Level worldIn){
 		FluidStack teInput;
 		return active && inv instanceof WaterCentrifugeTileEntity && BlockUtil.sameFluid(teInput = ((WaterCentrifugeTileEntity) inv).getInputFluid(), input) && teInput.getAmount() >= input.getAmount();
 	}
@@ -99,7 +99,7 @@ public class CentrifugeRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer(){
+	public RecipeSerializer<?> getSerializer(){
 		return CRRecipes.CENTRIFUGE_SERIAL;
 	}
 
@@ -109,7 +109,7 @@ public class CentrifugeRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public IRecipeType<?> getType(){
+	public RecipeType<?> getType(){
 		return CRRecipes.CENTRIFUGE_TYPE;
 	}
 
@@ -136,22 +136,22 @@ public class CentrifugeRec implements IOptionalRecipe<IInventory>{
 			this.weight = weight;
 		}
 
-		private void serialize(PacketBuffer buf){
+		private void serialize(FriendlyByteBuf buf){
 			buf.writeItem(item);
 			buf.writeVarInt(weight);
 		}
 
-		private static WeightOutput deserialize(PacketBuffer buf){
+		private static WeightOutput deserialize(FriendlyByteBuf buf){
 			return new WeightOutput(buf.readItem(), buf.readVarInt());
 		}
 	}
 
-	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CentrifugeRec>{
+	public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<CentrifugeRec>{
 
 		@Override
 		public CentrifugeRec fromJson(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and output
-			String s = JSONUtils.getAsString(json, "group", "");
+			String s = GsonHelper.getAsString(json, "group", "");
 			if(!CraftingUtil.isActiveJSON(json)){
 				return new CentrifugeRec(recipeId, s, FluidStack.EMPTY, FluidStack.EMPTY, new WeightOutput[0], false);
 			}
@@ -164,15 +164,15 @@ public class CentrifugeRec implements IOptionalRecipe<IInventory>{
 			//If it's an array, expect it to be an array of objects of outputs
 
 			WeightOutput[] outputs;
-			if(JSONUtils.isArrayNode(json, "output")){
-				JsonArray arr = JSONUtils.getAsJsonArray(json, "output");
+			if(GsonHelper.isArrayNode(json, "output")){
+				JsonArray arr = GsonHelper.getAsJsonArray(json, "output");
 				outputs = new WeightOutput[arr.size()];
 				for(int i = 0; i < outputs.length; i++){
 					outputs[i] = readOutput(arr.get(i).getAsJsonObject());
 				}
 			}else{
 				outputs = new WeightOutput[1];
-				outputs[0] = readOutput(JSONUtils.getAsJsonObject(json, "output"));
+				outputs[0] = readOutput(GsonHelper.getAsJsonObject(json, "output"));
 			}
 
 			return new CentrifugeRec(recipeId, s, input, outputFluid, outputs, true);
@@ -190,12 +190,12 @@ public class CentrifugeRec implements IOptionalRecipe<IInventory>{
 			 * "count": <number>
 			 * "weight": <number, optional- defaults to 1>
 			 */
-			return new WeightOutput(CraftingUtil.getItemStack(json, "output", true, false), JSONUtils.getAsInt(json, "weight", 1));
+			return new WeightOutput(CraftingUtil.getItemStack(json, "output", true, false), GsonHelper.getAsInt(json, "weight", 1));
 		}
 
 		@Nullable
 		@Override
-		public CentrifugeRec fromNetwork(ResourceLocation recipeId, PacketBuffer buffer){
+		public CentrifugeRec fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
 			String s = buffer.readUtf(Short.MAX_VALUE);
 			if(!buffer.readBoolean()){
 				return new CentrifugeRec(recipeId, s, FluidStack.EMPTY, FluidStack.EMPTY, new WeightOutput[0], false);
@@ -210,7 +210,7 @@ public class CentrifugeRec implements IOptionalRecipe<IInventory>{
 		}
 
 		@Override
-		public void toNetwork(PacketBuffer buffer, CentrifugeRec recipe){
+		public void toNetwork(FriendlyByteBuf buffer, CentrifugeRec recipe){
 			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
 			if(recipe.active){

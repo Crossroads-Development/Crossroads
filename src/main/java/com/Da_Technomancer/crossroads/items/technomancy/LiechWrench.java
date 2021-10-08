@@ -4,34 +4,36 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemTier;
-import net.minecraft.item.Rarity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class LiechWrench extends Item{
 
 	private final Multimap<Attribute, AttributeModifier> attributeModifiers;
 
 	public LiechWrench(){
-		super(new Properties().tab(CRItems.TAB_CROSSROADS).addToolType(ToolType.PICKAXE, ItemTier.STONE.getLevel()).addToolType(ToolType.SHOVEL, ItemTier.STONE.getLevel()).addToolType(ToolType.AXE, ItemTier.STONE.getLevel()).addToolType(ToolType.HOE, ItemTier.STONE.getLevel()).addToolType(ToolType.get("wrench"), 0).stacksTo(1));
+		super(new Properties().tab(CRItems.TAB_CROSSROADS).addToolType(ToolType.PICKAXE, Tiers.STONE.getLevel()).addToolType(ToolType.SHOVEL, Tiers.STONE.getLevel()).addToolType(ToolType.AXE, Tiers.STONE.getLevel()).addToolType(ToolType.HOE, Tiers.STONE.getLevel()).addToolType(ToolType.get("wrench"), 0).stacksTo(1));
 		String name = "liech_wrench";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
@@ -45,7 +47,7 @@ public class LiechWrench extends Item{
 	}
 
 	@Override
-	public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, PlayerEntity player){
+	public boolean doesSneakBypassUse(ItemStack stack, LevelReader world, BlockPos pos, Player player){
 		return true;
 	}
 
@@ -55,8 +57,8 @@ public class LiechWrench extends Item{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.liech_wrench.quip").setStyle(MiscUtil.TT_QUIP));
+	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+		tooltip.add(new TranslatableComponent("tt.crossroads.liech_wrench.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override
@@ -79,7 +81,7 @@ public class LiechWrench extends Item{
 
 	@Override
 	public boolean isCorrectToolForDrops(BlockState blockIn){
-		int i = ItemTier.STONE.getLevel();
+		int i = Tiers.STONE.getLevel();
 		if (blockIn.getHarvestTool() == ToolType.PICKAXE) {
 			return i >= blockIn.getHarvestLevel();
 		}
@@ -88,8 +90,8 @@ public class LiechWrench extends Item{
 	}
 
 	@Override
-	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack){
+	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack){
 		//Acts as a stone sword tier melee weapon
-		return slot == EquipmentSlotType.MAINHAND ? attributeModifiers : super.getAttributeModifiers(slot, stack);
+		return slot == EquipmentSlot.MAINHAND ? attributeModifiers : super.getAttributeModifiers(slot, stack);
 	}
 }

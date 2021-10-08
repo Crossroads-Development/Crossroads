@@ -6,9 +6,9 @@ import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -17,7 +17,7 @@ import net.minecraftforge.registries.ObjectHolder;
 public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 
 	@ObjectHolder("cooling_coil")
-	private static TileEntityType<CoolingCoilTileEntity> type = null;
+	private static BlockEntityType<CoolingCoilTileEntity> type = null;
 
 	//Cached biome temperature
 	private boolean init = false;
@@ -71,8 +71,8 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 	}
 	
 	@Override
-	protected Vector3d getParticlePos(){
-		return Vector3d.atLowerCornerOf(worldPosition).add(0.5D, 0.3D, 0.5D);//We add the offset ourselves for finer precision
+	protected Vec3 getParticlePos(){
+		return Vec3.atLowerCornerOf(worldPosition).add(0.5D, 0.3D, 0.5D);//We add the offset ourselves for finer precision
 		
 	}
 }

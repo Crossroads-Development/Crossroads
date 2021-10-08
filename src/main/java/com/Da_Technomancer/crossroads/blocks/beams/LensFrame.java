@@ -8,30 +8,30 @@ import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.Containers;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 
-public class LensFrame extends ContainerBlock implements IReadable{
+public class LensFrame extends BaseEntityBlock implements IReadable{
 
 	private static final VoxelShape[] SHAPE = new VoxelShape[3];
 
@@ -50,18 +50,18 @@ public class LensFrame extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context){
 		return SHAPE[state.getValue(ESProperties.AXIS).ordinal()];
 	}
 
 	@Override
-	public TileEntity newBlockEntity(IBlockReader worldIn){
+	public BlockEntity newBlockEntity(BlockGetter worldIn){
 		return new LensFrameTileEntity();
 	}
 
 	@Override
-	public BlockRenderType getRenderShape(BlockState state){
-		return BlockRenderType.MODEL;
+	public RenderShape getRenderShape(BlockState state){
+		return RenderShape.MODEL;
 	}
 
 //	@Override
@@ -72,30 +72,30 @@ public class LensFrame extends ContainerBlock implements IReadable{
 
 	@Nullable
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context){
+	public BlockState getStateForPlacement(BlockPlaceContext context){
 		return defaultBlockState().setValue(ESProperties.AXIS, context.getNearestLookingDirection().getAxis());
 	}
 
 	@Override
-	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
 		builder.add(ESProperties.AXIS);
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		ItemStack stack = playerIn.getItemInHand(hand);
 
 		if(ESConfig.isWrench(stack)){
 			// Wrenches rotate the block instead
 			if(!worldIn.isClientSide) worldIn.setBlockAndUpdate(pos, state.cycle(ESProperties.AXIS));
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}else if(stack.sameItem(CRItems.omnimeter.getDefaultInstance())){
 			// Omnimeter performs its function instead
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		}else{
-			TileEntity te = worldIn.getBlockEntity(pos);
+			BlockEntity te = worldIn.getBlockEntity(pos);
 			if(!(te instanceof LensFrameTileEntity)){
-				return ActionResultType.PASS;
+				return InteractionResult.PASS;
 			}
 			LensFrameTileEntity lens = (LensFrameTileEntity)te;
 			ItemStack inLens = lens.getLensItem();
@@ -110,25 +110,25 @@ public class LensFrame extends ContainerBlock implements IReadable{
 					}
 					lens.setLensItem(ItemStack.EMPTY);
 				}
-				return ActionResultType.SUCCESS;
+				return InteractionResult.SUCCESS;
 			}else if(!stack.isEmpty()){
-				if(worldIn.getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, new Inventory(stack), worldIn).isPresent()){
+				if(worldIn.getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, new SimpleContainer(stack), worldIn).isPresent()){
 					if(!worldIn.isClientSide){
 						lens.setLensItem(stack.split(1));
 					}
-					return ActionResultType.SUCCESS;
+					return InteractionResult.SUCCESS;
 				}
 			}
 		}
 
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 
 	@Override
-	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving){
-		TileEntity te = world.getBlockEntity(pos);
+	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving){
+		BlockEntity te = world.getBlockEntity(pos);
 		if(newState.getBlock() != this && te instanceof LensFrameTileEntity){
-			InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ((LensFrameTileEntity) te).getLensItem());
+			Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ((LensFrameTileEntity) te).getLensItem());
 		}
 		super.onRemove(state, world, pos, newState, isMoving);
 	}
@@ -139,13 +139,13 @@ public class LensFrame extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState blockState, World world, BlockPos pos){
+	public int getAnalogOutputSignal(BlockState blockState, Level world, BlockPos pos){
 		return RedstoneUtil.clampToVanilla(read(world, pos, blockState));
 	}
 
 	@Override
-	public float read(World world, BlockPos pos, BlockState blockState){
-		TileEntity te = world.getBlockEntity(pos);
+	public float read(Level world, BlockPos pos, BlockState blockState){
+		BlockEntity te = world.getBlockEntity(pos);
 		if(te instanceof LensFrameTileEntity){
 			return ((LensFrameTileEntity) te).getRedstone();
 		}

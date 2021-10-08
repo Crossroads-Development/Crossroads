@@ -5,9 +5,9 @@ import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import net.minecraft.block.Blocks;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 public class RedstoneHeatCableTileEntity extends HeatCableTileEntity{
 
 	@ObjectHolder("redstone_heat_cable")
-	private static TileEntityType<RedstoneHeatCableTileEntity> type = null;
+	private static BlockEntityType<RedstoneHeatCableTileEntity> type = null;
 
 	public RedstoneHeatCableTileEntity(){
 		this(HeatInsulators.WOOL);

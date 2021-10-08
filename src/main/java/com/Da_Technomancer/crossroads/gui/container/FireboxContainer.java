@@ -4,20 +4,22 @@ import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.heat.FireboxTileEntity;
 import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.registries.ObjectHolder;
+
+import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.StrictSlot;
 
 @ObjectHolder(Crossroads.MODID)
 public class FireboxContainer extends MachineContainer<FireboxTileEntity>{
 
 	@ObjectHolder("firebox")
-	private static ContainerType<FireboxContainer> type = null;
+	private static MenuType<FireboxContainer> type = null;
 
 	public IntDeferredRef burnProg;
 
-	public FireboxContainer(int id, PlayerInventory playerInv, PacketBuffer data){
+	public FireboxContainer(int id, Inventory playerInv, FriendlyByteBuf data){
 		super(type, id, playerInv, data);
 		burnProg = new IntDeferredRef(te::getBurnProg, te.getLevel().isClientSide);
 		addDataSlot(burnProg);

@@ -2,12 +2,12 @@ package com.Da_Technomancer.crossroads.API.templates;
 
 import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
 import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.network.FriendlyByteBuf;
 import org.apache.commons.lang3.tuple.Pair;
 
 public abstract class MachineContainer<U extends InventoryTE> extends TileEntityContainer<U>{
@@ -17,7 +17,7 @@ public abstract class MachineContainer<U extends InventoryTE> extends TileEntity
 	public final IntDeferredRef[][] fluidManagerRefs;//Outer array is each fluid manager, inner array is size 2 {id, qty}
 
 	//The passed PacketBuffer must have the blockpos as the first encoded datum
-	public MachineContainer(ContainerType<? extends MachineContainer> type, int windowId, PlayerInventory playerInv, PacketBuffer data){
+	public MachineContainer(MenuType<? extends MachineContainer> type, int windowId, Inventory playerInv, FriendlyByteBuf data){
 		super(type, windowId, playerInv, data);
 
 		boolean remote = te.getLevel().isClientSide;
@@ -66,11 +66,11 @@ public abstract class MachineContainer<U extends InventoryTE> extends TileEntity
 	}
 
 	@Override
-	public void removed(PlayerEntity playerIn){
+	public void removed(Player playerIn){
 		super.removed(playerIn);
 
 		if(!te.getLevel().isClientSide){
-			if(playerIn.isAlive() && !(playerIn instanceof ServerPlayerEntity && ((ServerPlayerEntity) playerIn).hasDisconnected())){
+			if(playerIn.isAlive() && !(playerIn instanceof ServerPlayer && ((ServerPlayer) playerIn).hasDisconnected())){
 				for(Slot s : slots){
 					if(s.container instanceof FluidSlotManager.FakeInventory){
 						playerIn.inventory.placeItemBackInInventory(te.getLevel(), s.getItem());

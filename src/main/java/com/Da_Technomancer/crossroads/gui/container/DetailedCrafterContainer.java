@@ -6,28 +6,28 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.DetailedCrafterRec;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.CraftResultInventory;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.CraftingResultSlot;
-import net.minecraft.inventory.container.RecipeBookContainer;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.ResultSlot;
+import net.minecraft.world.inventory.RecipeBookMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.item.crafting.*;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.server.SSetSlotPacket;
-import net.minecraft.tags.ITag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
+import net.minecraft.tags.Tag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.NonNullList;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ObjectHolder;
@@ -38,15 +38,21 @@ import java.util.Optional;
 
 import static net.minecraftforge.common.ForgeHooks.setCraftingPlayer;
 
+import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.inventory.RecipeBookType;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
+
 @ObjectHolder(Crossroads.MODID)
-public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInventory>{
+public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 
 	@ObjectHolder("detailed_crafter")
-	private static ContainerType<DetailedCrafterContainer> type = null;
+	private static MenuType<DetailedCrafterContainer> type = null;
 
 	@SuppressWarnings("unchecked")
-	private static final ITag<Item>[] unlockKeys = new ITag[3];
-	private static final ITag<Item> fillerMats = ItemTags.bind(Crossroads.MODID + ":path_unlock_filler");
+	private static final Tag<Item>[] unlockKeys = new Tag[3];
+	private static final Tag<Item> fillerMats = ItemTags.bind(Crossroads.MODID + ":path_unlock_filler");
 
 	static{
 		unlockKeys[0] = ItemTags.bind(Crossroads.MODID + ":technomancy_unlock_key");
@@ -54,16 +60,16 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 		unlockKeys[2] = ItemTags.bind(Crossroads.MODID + ":witchcraft_unlock_key");
 	}
 
-	private final CraftingInventory inInv = new CraftingInventory(this, 3, 3);
-	private final CraftResultInventory outInv = new CraftResultInventory();
-	private final World world;
-	private final PlayerEntity player;
+	private final CraftingContainer inInv = new CraftingContainer(this, 3, 3);
+	private final ResultContainer outInv = new ResultContainer();
+	private final Level world;
+	private final Player player;
 
 	private final boolean fake;//True for goggles- used to shortcut canInteractWith checks
 	@Nullable
 	private final BlockPos pos;//Null if fake, nonnull otherwise- used for canInteractWith
 
-	public DetailedCrafterContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
+	public DetailedCrafterContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
 		super(type, id);
 		player = playerInv.player;
 		world = player.level;
@@ -100,7 +106,7 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 	}
 
 	@Override
-	public void fillCraftSlotsStackedContents(RecipeItemHelper helper){
+	public void fillCraftSlotsStackedContents(StackedContents helper){
 		inInv.fillStackedContents(helper);
 	}
 
@@ -111,7 +117,7 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 	}
 
 	@Override
-	public boolean recipeMatches(IRecipe<? super CraftingInventory> recipeIn){
+	public boolean recipeMatches(Recipe<? super CraftingContainer> recipeIn){
 		if(recipeIn instanceof DetailedCrafterRec){
 			return ((DetailedCrafterRec) recipeIn).getPath().isUnlocked(player) && recipeIn.matches(inInv, player.level);
 		}else{
@@ -123,13 +129,13 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 	 * Called when the container is closed.
 	 */
 	@Override
-	public void removed(PlayerEntity playerIn){
+	public void removed(Player playerIn){
 		super.removed(playerIn);
 		clearContainer(playerIn, world, inInv);
 	}
 
 	@Override
-	public boolean stillValid(PlayerEntity playerIn){
+	public boolean stillValid(Player playerIn){
 		return fake || pos == null || playerIn.level.getBlockState(pos).getBlock() == CRBlocks.detailedCrafter && playerIn.distanceToSqr((pos.getX()) + .5D, (pos.getY()) + .5D, (pos.getZ()) + .5D) <= 64;
 	}
 
@@ -138,7 +144,7 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 	 * inventory and the other inventory(s).
 	 */
 	@Override
-	public ItemStack quickMoveStack(PlayerEntity playerIn, int index){
+	public ItemStack quickMoveStack(Player playerIn, int index){
 		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = slots.get(index);
 		if(slot != null && slot.hasItem()){
@@ -213,8 +219,8 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 	}
 
 	@Override
-	public RecipeBookCategory getRecipeBookType(){
-		return RecipeBookCategory.CRAFTING;
+	public RecipeBookType getRecipeBookType(){
+		return RecipeBookType.CRAFTING;
 	}
 
 	/**
@@ -225,7 +231,7 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 	private byte lastUnlock = -1;
 
 	@Override
-	public void slotsChanged(IInventory inventoryIn){
+	public void slotsChanged(Container inventoryIn){
 		for(EnumPath path : EnumPath.values()){
 			//Check for path unlocking
 			if(!path.isUnlocked(player) && path.pathGatePassed(player) && unlockRecipe(path) && (!world.isClientSide || lastUnlock != path.getIndex())){
@@ -243,24 +249,24 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 		}
 
 		if(!world.isClientSide){
-			ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) player;
+			ServerPlayer serverplayerentity = (ServerPlayer) player;
 			ItemStack itemstack = ItemStack.EMPTY;
 			List<DetailedCrafterRec> recipes = world.getRecipeManager().getRecipesFor(CRRecipes.DETAILED_TYPE, inInv, world);
 			//Find a detailed crafter specific recipe first
-			Optional<? extends ICraftingRecipe> recipeOpt = recipes.stream().filter(rec -> rec.getPath().isUnlocked(player)).findFirst();
+			Optional<? extends CraftingRecipe> recipeOpt = recipes.stream().filter(rec -> rec.getPath().isUnlocked(player)).findFirst();
 			//If there is no valid detailed crafter recipe, try vanilla crafting
 			if(!recipeOpt.isPresent()){
-				recipeOpt = world.getRecipeManager().getRecipeFor(IRecipeType.CRAFTING, inInv, world);
+				recipeOpt = world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, inInv, world);
 			}
 
 			if(recipeOpt.isPresent()){
-				ICraftingRecipe recipe = recipeOpt.get();
+				CraftingRecipe recipe = recipeOpt.get();
 				if(outInv.setRecipeUsed(world, serverplayerentity, recipe)){
 					itemstack = recipe.assemble(inInv);
 				}
 			}
 			outInv.setItem(0, itemstack);
-			serverplayerentity.connection.send(new SSetSlotPacket(containerId, 0, itemstack));
+			serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(containerId, 0, itemstack));
 		}
 	}
 
@@ -279,27 +285,27 @@ public class DetailedCrafterContainer extends RecipeBookContainer<CraftingInvent
 	}
 
 	private void playUnlockSound(){
-		world.playSound(player, player.blockPosition(), SoundEvents.PLAYER_LEVELUP, SoundCategory.PLAYERS, 2, 0);
+		world.playSound(player, player.blockPosition(), SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 2, 0);
 	}
 
-	private static class SlotCraftingFlexible extends CraftingResultSlot{
+	private static class SlotCraftingFlexible extends ResultSlot{
 
 		// The craft matrix inventory linked to this result slot.
-		private final CraftingInventory craftMatrix;//We keep a copy because the superclass field is private
+		private final CraftingContainer craftMatrix;//We keep a copy because the superclass field is private
 
-		public SlotCraftingFlexible(PlayerEntity player, CraftingInventory craftingInventory, IInventory inventoryIn, int slotIndex, int xPosition, int yPosition){
+		public SlotCraftingFlexible(Player player, CraftingContainer craftingInventory, Container inventoryIn, int slotIndex, int xPosition, int yPosition){
 			super(player, craftingInventory, inventoryIn, slotIndex, xPosition, yPosition);
 			craftMatrix = craftingInventory;
 		}
 
 		@Override
-		public ItemStack onTake(PlayerEntity thePlayer, ItemStack stack){
+		public ItemStack onTake(Player thePlayer, ItemStack stack){
 			checkTakeAchievements(stack);
 			setCraftingPlayer(thePlayer);
 			List<DetailedCrafterRec> recipes = thePlayer.level.getRecipeManager().getRecipesFor(CRRecipes.DETAILED_TYPE, craftMatrix, thePlayer.level);
-			Optional<? extends ICraftingRecipe> recipeOpt = recipes.stream().filter(rec -> rec.getPath().isUnlocked(thePlayer)).findFirst();
+			Optional<? extends CraftingRecipe> recipeOpt = recipes.stream().filter(rec -> rec.getPath().isUnlocked(thePlayer)).findFirst();
 			if(!recipeOpt.isPresent()){
-				recipeOpt = thePlayer.level.getRecipeManager().getRecipeFor(IRecipeType.CRAFTING, craftMatrix, thePlayer.level);
+				recipeOpt = thePlayer.level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftMatrix, thePlayer.level);
 			}
 			if(recipeOpt.isPresent()){
 				//Remove items if there is a matching recipe

@@ -9,20 +9,20 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.HeatLimiterContainer;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.packets.INBTReceiver;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -31,10 +31,10 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 @ObjectHolder(Crossroads.MODID)
-public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableTileEntity, IInfoTE, INamedContainerProvider, INBTReceiver{
+public class HeatLimiterBasicTileEntity extends BlockEntity implements TickableBlockEntity, IInfoTE, MenuProvider, INBTReceiver{
 
 	@ObjectHolder("heat_limiter_basic")
-	private static TileEntityType<HeatLimiterBasicTileEntity> type = null;
+	private static BlockEntityType<HeatLimiterBasicTileEntity> type = null;
 
 	private double heatIn = 0;
 	private double heatOut = 0;
@@ -47,12 +47,12 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 		super(type);
 	}
 
-	protected HeatLimiterBasicTileEntity(TileEntityType<? extends HeatLimiterBasicTileEntity> type){
+	protected HeatLimiterBasicTileEntity(BlockEntityType<? extends HeatLimiterBasicTileEntity> type){
 		super(type);
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		init();
 		HeatUtil.addHeatInfo(chat, heatIn, Short.MIN_VALUE);//Add the first temp without biome temp to prevent double printing
 		HeatUtil.addHeatInfo(chat, heatOut, HeatUtil.convertBiomeTemp(level, worldPosition));
@@ -114,7 +114,7 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putBoolean("init_heat", init);
 		nbt.putDouble("heat_in", heatIn);
@@ -125,7 +125,7 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		init = nbt.getBoolean("init_heat");
 		heatIn = nbt.getDouble("heat_in");
@@ -168,18 +168,18 @@ public class HeatLimiterBasicTileEntity extends TileEntity implements ITickableT
 	private LazyOptional<IHeatHandler> heatOutOpt = LazyOptional.of(() -> new HeatHandler(false));
 
 	@Override
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.heat_limiter");
+	public Component getDisplayName(){
+		return new TranslatableComponent("container.heat_limiter");
 	}
 
 	@Nullable
 	@Override
-	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
+	public AbstractContainerMenu createMenu(int id, Inventory playerInv, Player player){
 		return new HeatLimiterContainer(id, playerInv, setting, expression, worldPosition);
 	}
 
 	@Override
-	public void receiveNBT(CompoundNBT nbt, @Nullable ServerPlayerEntity player){
+	public void receiveNBT(CompoundTag nbt, @Nullable ServerPlayer player){
 		if(nbt.contains("value")){
 			setting = nbt.getFloat("value");
 			expression = nbt.getString("config");

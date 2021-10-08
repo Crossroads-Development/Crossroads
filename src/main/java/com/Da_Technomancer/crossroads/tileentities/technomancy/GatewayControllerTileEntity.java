@@ -15,27 +15,27 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -47,11 +47,13 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink.Behaviour;
+
 @ObjectHolder(Crossroads.MODID)
 public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements IGateway{
 
 	@ObjectHolder("gateway_frame")
-	public static TileEntityType<GatewayControllerTileEntity> type = null;
+	public static BlockEntityType<GatewayControllerTileEntity> type = null;
 	public static final int INERTIA = 0;//Moment of inertia
 	public static final int FLUX_PER_CYCLE = 4;
 	private static final float ROTATION_SPEED = (float) Math.PI / 40F;//Rate of convergence between angle and axle 'speed' in radians/tick. Yes, this terminology is confusing
@@ -80,7 +82,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		if(isActive() && address != null){
 			//Address of this gateway
 			String[] names = new String[4];
@@ -91,7 +93,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 				}
 				names[i] = align.getLocalName(false);
 			}
-			chat.add(new TranslationTextComponent("tt.crossroads.gateway.chevron.address", names[0], names[1], names[2], names[3]));
+			chat.add(new TranslatableComponent("tt.crossroads.gateway.chevron.address", names[0], names[1], names[2], names[3]));
 
 			//Chevrons
 			boolean addedPotential = false;//Whether we have added the name of the potentially next alignment to dial
@@ -107,7 +109,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 					names[i] = chevrons[i].getLocalName(false);
 				}
 			}
-			chat.add(new TranslationTextComponent("tt.crossroads.gateway.chevron.dialed", names[0], names[1], names[2], names[3]));
+			chat.add(new TranslatableComponent("tt.crossroads.gateway.chevron.dialed", names[0], names[1], names[2], names[3]));
 			genOptionals();
 			RotaryUtil.addRotaryInfo(chat, axleHandler, true);
 			FluxUtil.addFluxInfo(chat, this, chevrons[3] != null && origin ? FLUX_PER_CYCLE : 0);
@@ -160,7 +162,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 
 	private void undialLinkedGateway(){
 		GatewayAddress prevDialed = new GatewayAddress(chevrons);
-		GatewayAddress.Location prevLinkLocation = GatewaySavedData.lookupAddress((ServerWorld) level, prevDialed);
+		GatewayAddress.Location prevLinkLocation = GatewaySavedData.lookupAddress((ServerLevel) level, prevDialed);
 		if(prevLinkLocation != null){
 			IGateway prevLink = prevLinkLocation.evalTE(level.getServer());
 			if(prevLink != null){
@@ -209,20 +211,20 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 
 	@Override
 	public void teleportEntity(Entity entity, float horizontalRelPos, float verticalRelPos, Direction.Axis sourceAxis){
-		Vector3d centerPos = new Vector3d(worldPosition.getX() + 0.5D, worldPosition.getY() - size / 2D + 0.5D, worldPosition.getZ() + 0.5D);
+		Vec3 centerPos = new Vec3(worldPosition.getX() + 0.5D, worldPosition.getY() - size / 2D + 0.5D, worldPosition.getZ() + 0.5D);
 		float scalingRadius = (size - 2) / 2F;
 		if(plane == Direction.Axis.X){
-			IGateway.teleportEntityTo(entity, (ServerWorld) level, centerPos.x + scalingRadius * horizontalRelPos, centerPos.y + scalingRadius * verticalRelPos, centerPos.z, sourceAxis == plane ? 0 : 90);
+			IGateway.teleportEntityTo(entity, (ServerLevel) level, centerPos.x + scalingRadius * horizontalRelPos, centerPos.y + scalingRadius * verticalRelPos, centerPos.z, sourceAxis == plane ? 0 : 90);
 		}else{
-			IGateway.teleportEntityTo(entity, (ServerWorld) level, centerPos.x, centerPos.y + scalingRadius * verticalRelPos, centerPos.z + scalingRadius * horizontalRelPos, sourceAxis == plane ? 0 : -90);
+			IGateway.teleportEntityTo(entity, (ServerLevel) level, centerPos.x, centerPos.y + scalingRadius * verticalRelPos, centerPos.z + scalingRadius * horizontalRelPos, sourceAxis == plane ? 0 : -90);
 		}
 		playTPEffect(level, entity.getX(), entity.getY(), entity.getZ());
 	}
 
 	@Override
-	public AxisAlignedBB getRenderBoundingBox(){
+	public AABB getRenderBoundingBox(){
 		//Increase render BB to include links and the entire formed frame
-		return new AxisAlignedBB(worldPosition).inflate(Math.max(getRange(), isActive() ? size : 0));
+		return new AABB(worldPosition).inflate(Math.max(getRange(), isActive() ? size : 0));
 	}
 
 	/**
@@ -231,7 +233,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 	 * @param success Whether this is for a successful action (like connecting) or an unsucessful action (like dialing a fake address)
 	 */
 	private void playEffects(boolean success){
-		level.playLocalSound(worldPosition.getX() + 0.5F, worldPosition.getY() - 1.5F, worldPosition.getZ() + 0.5F, success ? SoundEvents.END_PORTAL_FRAME_FILL : SoundEvents.GLASS_BREAK, SoundCategory.BLOCKS, 1F, level.random.nextFloat(), true);
+		level.playLocalSound(worldPosition.getX() + 0.5F, worldPosition.getY() - 1.5F, worldPosition.getZ() + 0.5F, success ? SoundEvents.END_PORTAL_FRAME_FILL : SoundEvents.GLASS_BREAK, SoundSource.BLOCKS, 1F, level.random.nextFloat(), true);
 	}
 
 	//Multiblock management
@@ -246,9 +248,9 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 			undial(new GatewayAddress(chevrons));
 
 			//Release our address back into the pool
-			GatewaySavedData.releaseAddress((ServerWorld) level, address);
+			GatewaySavedData.releaseAddress((ServerLevel) level, address);
 
-			BlockPos.Mutable mutPos = new BlockPos.Mutable(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
+			BlockPos.MutableBlockPos mutPos = new BlockPos.MutableBlockPos(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
 			Direction horiz = plane == Direction.Axis.X ? Direction.EAST : Direction.SOUTH;//horizontal direction
 			int preSize = size;//We have to store this, as the field will be modified in the loop
 			mutPos.move(horiz, -preSize / 2);
@@ -259,7 +261,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 					if(otherState.getBlock() == CRBlocks.gatewayEdge){
 						level.setBlockAndUpdate(mutPos, otherState.setValue(CRProperties.ACTIVE, false));
 					}
-					TileEntity te = level.getBlockEntity(mutPos);
+					BlockEntity te = level.getBlockEntity(mutPos);
 					if(te instanceof GatewayEdgeTileEntity){
 						GatewayEdgeTileEntity otherTE = (GatewayEdgeTileEntity) te;
 						otherTE.reset();
@@ -291,7 +293,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 	 * This will only work if this is the top-center block
 	 * @return Whether this succeeded at forming the multiblock
 	 */
-	public boolean assemble(PlayerEntity player){
+	public boolean assemble(Player player){
 		if(level.isClientSide){
 			return false;//Server side only
 		}
@@ -301,7 +303,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 
 		//First step is to determine the size
 		int newSize = 0;
-		BlockPos.Mutable mutPos = new BlockPos.Mutable(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
+		BlockPos.MutableBlockPos mutPos = new BlockPos.MutableBlockPos(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
 		//Maximum size is a 63x63, odd sized squares only
 		boolean foundAir = false;//Indicates we have passed the top section of the frame
 		int foundThickness = 1;
@@ -322,7 +324,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 			}
 		}
 		if(newSize < 5 || newSize % 2 == 0){
-			MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.gateway.size_wrong"));
+			MiscUtil.chatMessage(player, new TranslatableComponent("tt.crossroads.gateway.size_wrong"));
 			return false;//Even sizes are not allowed
 		}
 
@@ -350,7 +352,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 				if(i < thickness || size - i <= thickness || j < thickness || size - j <= thickness){
 					//We are on the edges, and expect a frame block
 					if((i != 0 || j != size / 2) && !legalForGateway(otherState)){
-						MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.gateway.thickness", thickness));
+						MiscUtil.chatMessage(player, new TranslatableComponent("tt.crossroads.gateway.thickness", thickness));
 						return false;
 					}
 				}
@@ -367,9 +369,9 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 
 		//Configure this TE
 		//Request an address- fail if we can't get one
-		address = GatewaySavedData.requestAddress((ServerWorld) level, worldPosition);
+		address = GatewaySavedData.requestAddress((ServerLevel) level, worldPosition);
 		if(address == null){
-			MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.gateway.address_taken"));
+			MiscUtil.chatMessage(player, new TranslatableComponent("tt.crossroads.gateway.address_taken"));
 			return false;
 		}
 		//Resetting the optionals to null forces the optional cache to regenerate
@@ -385,7 +387,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 				if(i < thickness || size - i <= thickness || j < thickness || size - j <= thickness){
 					//We are on the edges
 					level.setBlockAndUpdate(mutPos, otherState.setValue(CRProperties.ACTIVE, true));
-					TileEntity te = level.getBlockEntity(mutPos);
+					BlockEntity te = level.getBlockEntity(mutPos);
 					if(te instanceof GatewayEdgeTileEntity){
 						GatewayEdgeTileEntity otherTE = (GatewayEdgeTileEntity) te;
 						otherTE.setKey(worldPosition.subtract(mutPos));
@@ -439,19 +441,19 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 				//Teleportation
 				if(chevrons[3] != null && plane != null && !isShutDown()){
 					Direction horiz = Direction.get(Direction.AxisDirection.POSITIVE, plane);
-					AxisAlignedBB area = new AxisAlignedBB(worldPosition.below(size).relative(horiz, -size / 2), worldPosition.relative(horiz, size / 2 + 1));
+					AABB area = new AABB(worldPosition.below(size).relative(horiz, -size / 2), worldPosition.relative(horiz, size / 2 + 1));
 					//We use the timeUntilPortal field in Entity to not spam TP entities between two portals
 					//This is both not what it's for, and exactly what it's for
-					List<Entity> entities = level.getEntitiesOfClass(Entity.class, area, EntityPredicates.ENTITY_STILL_ALIVE.and(e -> IGateway.isAllowedToTeleport(e, level)));
+					List<Entity> entities = level.getEntitiesOfClass(Entity.class, area, EntitySelector.ENTITY_STILL_ALIVE.and(e -> IGateway.isAllowedToTeleport(e, level)));
 					if(!entities.isEmpty()){
-						GatewayAddress.Location loc = GatewaySavedData.lookupAddress((ServerWorld) level, new GatewayAddress(chevrons));
+						GatewayAddress.Location loc = GatewaySavedData.lookupAddress((ServerLevel) level, new GatewayAddress(chevrons));
 						IGateway otherTE;
 						if(loc != null && (otherTE = loc.evalTE(level.getServer())) != null){
-							Vector3d centerPos = new Vector3d(worldPosition.getX() + 0.5D, worldPosition.getY() - size / 2D + 0.5D, worldPosition.getZ() + 0.5D);
+							Vec3 centerPos = new Vec3(worldPosition.getX() + 0.5D, worldPosition.getY() - size / 2D + 0.5D, worldPosition.getZ() + 0.5D);
 							float scalingRadius = (size - 2) / 2F;
 							for(Entity e : entities){
-								float relPosH = MathHelper.clamp(plane == Direction.Axis.X ? ((float) (e.getX() - centerPos.x) / scalingRadius) : ((float) (e.getZ() - centerPos.z) / scalingRadius), -1, 1);
-								float relPosV = MathHelper.clamp((float) (e.getY() - centerPos.y) / scalingRadius, -1, 1);
+								float relPosH = Mth.clamp(plane == Direction.Axis.X ? ((float) (e.getX() - centerPos.x) / scalingRadius) : ((float) (e.getZ() - centerPos.z) / scalingRadius), -1, 1);
+								float relPosV = Mth.clamp((float) (e.getY() - centerPos.y) / scalingRadius, -1, 1);
 								playTPEffect(level, e.getX(), e.getY(), e.getZ());//Play effects at the start position
 								otherTE.teleportEntity(e, relPosH, relPosV, plane);
 							}
@@ -487,21 +489,21 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 				angleChange += pi2;
 			}
 		}
-		angleChange = MathHelper.clamp(angleChange, -ROTATION_SPEED, ROTATION_SPEED);
+		angleChange = Mth.clamp(angleChange, -ROTATION_SPEED, ROTATION_SPEED);
 		return angleChange;
 	}
 
-	private static void playTPEffect(World world, double xPos, double yPos, double zPos){
+	private static void playTPEffect(Level world, double xPos, double yPos, double zPos){
 		//Spawn smoke particles
 		for(int i = 0; i < 10; i++){
 			world.addAlwaysVisibleParticle(ParticleTypes.SMOKE, xPos + Math.random() - 0.5D, yPos + Math.random() - 0.5D, zPos + Math.random() - 0.5D, Math.random() - 0.5F, Math.random() - 0.5F, Math.random() - 0.5F);
 		}
 		//play a sound
-		world.playLocalSound(xPos, yPos, zPos, SoundEvents.PORTAL_TRAVEL, SoundCategory.BLOCKS, 1, (float) Math.random(), true);
+		world.playLocalSound(xPos, yPos, zPos, SoundEvents.PORTAL_TRAVEL, SoundSource.BLOCKS, 1, (float) Math.random(), true);
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		//Active only
 		address = nbt.contains("address") ? GatewayAddress.deserialize(nbt.getInt("address")) : null;
@@ -521,7 +523,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		//Active only
 		if(address != null){
@@ -548,8 +550,8 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag(){
-		CompoundNBT nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(){
+		CompoundTag nbt = super.getUpdateTag();
 		for(int i = 0; i < 4; i++){
 			if(chevrons[i] != null){
 				nbt.putInt("chev_" + i, chevrons[i].ordinal());
@@ -617,7 +619,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 	}
 
 	@Override
-	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity player){
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayer player){
 		super.receiveLong(identifier, message, player);
 		switch(identifier){
 			case 3:
@@ -737,7 +739,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 			if(index == 3){
 				//If this is the final chevron, make the connection and reset the target
 				GatewayAddress targetAddress = new GatewayAddress(chevrons);
-				GatewayAddress.Location location = GatewaySavedData.lookupAddress((ServerWorld) level, targetAddress);
+				GatewayAddress.Location location = GatewaySavedData.lookupAddress((ServerLevel) level, targetAddress);
 				IGateway otherGateway;
 				if(location != null && (otherGateway = location.evalTE(level.getServer())) != null){
 					otherGateway.dialTo(address, false);

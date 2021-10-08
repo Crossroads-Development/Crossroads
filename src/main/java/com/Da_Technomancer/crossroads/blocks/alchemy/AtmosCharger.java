@@ -9,31 +9,31 @@ import com.Da_Technomancer.crossroads.tileentities.alchemy.AtmosChargerTileEntit
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class AtmosCharger extends ContainerBlock implements IReadable{
+public class AtmosCharger extends BaseEntityBlock implements IReadable{
 
 	public AtmosCharger(){
 		super(CRBlocks.getMetalProperty());
@@ -45,31 +45,31 @@ public class AtmosCharger extends ContainerBlock implements IReadable{
 
 	@Nullable
 	@Override
-	public TileEntity newBlockEntity(IBlockReader worldIn){
+	public BlockEntity newBlockEntity(BlockGetter worldIn){
 		return new AtmosChargerTileEntity();
 	}
 
 	@Override
-	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
 		builder.add(CRProperties.ACTIVE);
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
 			if(!worldIn.isClientSide){
 				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.ACTIVE));
-				MiscUtil.chatMessage(playerIn, new TranslationTextComponent(state.getValue(CRProperties.ACTIVE) ? "tt.crossroads.atmos_charger.charging" : "tt.crossroads.atmos_charger.draining"));
+				MiscUtil.chatMessage(playerIn, new TranslatableComponent(state.getValue(CRProperties.ACTIVE) ? "tt.crossroads.atmos_charger.charging" : "tt.crossroads.atmos_charger.draining"));
 			}
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 
 	@Override
-	public BlockRenderType getRenderShape(BlockState state){
-		return BlockRenderType.MODEL;
+	public RenderShape getRenderShape(BlockState state){
+		return RenderShape.MODEL;
 	}
 
 	@Override
@@ -78,23 +78,23 @@ public class AtmosCharger extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos){
+	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos){
 		return RedstoneUtil.clampToVanilla(read(worldIn, pos, blockState));
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.atmos_charger.desc"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.atmos_charger.safety"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.atmos_charger.structure"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.atmos_charger.circuit"));
+	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
+		tooltip.add(new TranslatableComponent("tt.crossroads.atmos_charger.desc"));
+		tooltip.add(new TranslatableComponent("tt.crossroads.atmos_charger.safety"));
+		tooltip.add(new TranslatableComponent("tt.crossroads.atmos_charger.structure"));
+		tooltip.add(new TranslatableComponent("tt.crossroads.atmos_charger.circuit"));
 	}
 
 	@Override
-	public float read(World world, BlockPos blockPos, BlockState blockState){
-		if(world instanceof ServerWorld){
-			return (float) AtmosChargeSavedData.getCharge((ServerWorld) world);
+	public float read(Level world, BlockPos blockPos, BlockState blockState){
+		if(world instanceof ServerLevel){
+			return (float) AtmosChargeSavedData.getCharge((ServerLevel) world);
 		}else{
 			Crossroads.logger.warn("Atmos Charger read on client side! Report to mod author");
 			return 0;

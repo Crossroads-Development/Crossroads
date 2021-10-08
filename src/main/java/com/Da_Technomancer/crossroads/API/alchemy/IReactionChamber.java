@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
-import net.minecraft.particles.IParticleData;
+import net.minecraft.core.particles.ParticleOptions;
 
 import javax.annotation.Nonnull;
 
@@ -42,5 +42,5 @@ public interface IReactionChamber{
 	 * @param speedY Will be passed as offsetY
 	 * @param speedZ Will be passed as offsetZ
 	 */
-	<T extends IParticleData> void addVisualEffect(T particleType, double speedX, double speedY, double speedZ);
+	<T extends ParticleOptions> void addVisualEffect(T particleType, double speedX, double speedY, double speedZ);
 }

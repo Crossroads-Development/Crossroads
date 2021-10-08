@@ -3,14 +3,14 @@ package com.Da_Technomancer.crossroads.items.witchcraft;
 import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.API.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -41,7 +41,7 @@ public class BloodSample extends Item implements IPerishable{
 	}
 
 	public static EntityTemplate getEntityTypeData(ItemStack stack){
-		CompoundNBT nbt = stack.getOrCreateTag();
+		CompoundTag nbt = stack.getOrCreateTag();
 		EntityTemplate template = new EntityTemplate();
 		template.deserializeNBT(nbt.getCompound(KEY));
 		return template;
@@ -58,9 +58,9 @@ public class BloodSample extends Item implements IPerishable{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag){
+	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag){
 		if(this != CRItems.separatedBloodSample){
-			tooltip.add(new TranslationTextComponent("tt.crossroads.blood_sample.craft"));
+			tooltip.add(new TranslatableComponent("tt.crossroads.blood_sample.craft"));
 		}
 		EntityTemplate template = getEntityTypeData(stack);
 		template.addTooltip(tooltip, 2);

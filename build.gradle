@@ -1,24 +1,23 @@
 buildscript {
 	repositories {
-		maven { url = 'https://files.minecraftforge.net/maven' }
+		maven { url = 'https://maven.minecraftforge.net/' }
 		jcenter()
 		mavenCentral()
 	}
 	dependencies {
-		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
 	}
 }
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 //apply plugin: 'maven-publish'
+apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
 
 version = "$mc_version-$mod_version"
 group = "com.technomancer.crossroads"
 archivesBaseName = "crossroads"
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
 compileJava.options.encoding = 'UTF-8'
 //Exclude python scripts from the build
 sourceSets.main.java.exclude('**/python/**')
@@ -27,7 +26,8 @@ tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+//sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 
 minecraft {
 	mappings channel: "$mcp_channel", version: "$mcp_version"
@@ -78,9 +78,9 @@ minecraft {
 }
 
 repositories {
-	maven { url "http://dvs1.progwml6.com/files/maven" } //JEI
+	maven { url "https://dvs1.progwml6.com/files/maven" } //JEI
 	maven { url "https://maven.blamejared.com" } //Patchouli
-	maven {url "http://tehnut.info/maven"} //hwyla
+//	maven {url "https://tehnut.info/maven"} //hwyla
 	maven {url "https://maven.theillusivec4.top/"} //Curios
 	flatDir { dirs 'libs' }//Lets us grab dependencies from the libs folder
 }
@@ -95,7 +95,9 @@ dependencies {
 	runtimeOnly(fg.deobf("mezz.jei:jei-$jei_mc_version:$jei_version"))//JEI
 	runtimeOnly(fg.deobf("top.theillusivec4.curios:curios-forge:$curios_version"))//Curios
 
-	compile(fg.deobf("vazkii.patchouli:Patchouli:$patchouli_version"))
+//	Disabled until Patchouli updates to MC1.17 Forge
+//	compileOnly(fg.deobf("vazkii.patchouli:Patchouli:$patchouli_version"))
+//	runtimeOnly(fg.deobf("vazkii.patchouli:Patchouli:$patchouli_version"))
 
 	//No special CR integration for hwayla- only used for testing, so no compile inclusion needed
 //	runtimeOnly(fg.deobf("mcp.mobius.waila:Hwyla:$hwyla_version"))

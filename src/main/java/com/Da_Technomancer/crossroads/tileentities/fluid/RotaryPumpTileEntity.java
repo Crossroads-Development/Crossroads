@@ -8,21 +8,21 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.RotaryPumpContainer;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.IBucketPickupHandler;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.BucketPickup;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidAttributes;
@@ -32,11 +32,13 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE.TankProperty;
+
 @ObjectHolder(Crossroads.MODID)
 public class RotaryPumpTileEntity extends InventoryTE{
 
 	@ObjectHolder("rotary_pump")
-	public static TileEntityType<RotaryPumpTileEntity> type = null;
+	public static BlockEntityType<RotaryPumpTileEntity> type = null;
 
 	public static final int INERTIA = 80;
 	public static final double MAX_POWER = 5;
@@ -94,8 +96,8 @@ public class RotaryPumpTileEntity extends InventoryTE{
 				progress = 0;
 				BlockState state = level.getBlockState(worldPosition.below());
 				Block block = state.getBlock();
-				if(block instanceof IBucketPickupHandler){
-					Fluid fl = ((IBucketPickupHandler) block).takeLiquid(level, worldPosition.below(), state);
+				if(block instanceof BucketPickup){
+					Fluid fl = ((BucketPickup) block).takeLiquid(level, worldPosition.below(), state);
 					fluids[0] = new FluidStack(fl, 1000 + fluids[0].getAmount());
 				}else{
 					Crossroads.logger.info("Pump attempted to drain a non-traditional fluid at pos: " + worldPosition.below().toString());
@@ -137,7 +139,7 @@ public class RotaryPumpTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void receiveLong(byte identifier, long message, ServerPlayerEntity player){
+	public void receiveLong(byte identifier, long message, ServerPlayer player){
 		super.receiveLong(identifier, message, player);
 		if(identifier == 1){
 			progChange = Float.intBitsToFloat((int) (message & 0xFFFFFFFFL));
@@ -146,14 +148,14 @@ public class RotaryPumpTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		progress = nbt.getDouble("prog");
 		progChange = nbt.getFloat("prog_change");
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putDouble("prog", progress);
 		nbt.putFloat("prog_change", progChange);
@@ -161,8 +163,8 @@ public class RotaryPumpTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag(){
-		CompoundNBT nbt =  super.getUpdateTag();
+	public CompoundTag getUpdateTag(){
+		CompoundTag nbt =  super.getUpdateTag();
 		nbt.putDouble("prog", progress);
 		nbt.putFloat("prog_change", progChange);
 		return nbt;
@@ -187,13 +189,13 @@ public class RotaryPumpTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.rotary_pump");
+	public Component getDisplayName(){
+		return new TranslatableComponent("container.rotary_pump");
 	}
 
 	@Nullable
 	@Override
-	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
+	public AbstractContainerMenu createMenu(int id, Inventory playerInv, Player player){
 		return new RotaryPumpContainer(id, playerInv, createContainerBuf());
 	}
 }

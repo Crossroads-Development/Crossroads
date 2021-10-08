@@ -1,32 +1,32 @@
 package com.Da_Technomancer.crossroads.entity;
 
 import com.Da_Technomancer.essentials.blocks.ESBlocks;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.controller.FlyingMovementController;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.passive.IFlyingAnimal;
-import net.minecraft.entity.passive.ShoulderRidingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.IPacket;
-import net.minecraft.pathfinding.FlyingPathNavigator;
-import net.minecraft.pathfinding.PathNavigator;
-import net.minecraft.pathfinding.PathNodeType;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.FlyingAnimal;
+import net.minecraft.world.entity.animal.ShoulderRidingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.network.NetworkHooks;
 
@@ -35,13 +35,32 @@ import java.util.EnumSet;
 import java.util.List;
 
 //@ObjectHolder(Crossroads.MODID)
-public class EntityHopperHawk extends ShoulderRidingEntity implements IFlyingAnimal{
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.AgableMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
+import net.minecraft.world.entity.ai.goal.LandOnOwnersShoulderGoal;
+import net.minecraft.world.entity.ai.goal.PanicGoal;
+import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomFlyingGoal;
+
+public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnimal{
 
 	private static final Ingredient FOOD_INGREDIENT = Ingredient.of(Items.HOPPER, ESBlocks.sortingHopper, ESBlocks.speedHopper);
 
 	static{
 		//We have to create the type early so we can use it for the spawn egg
-		type = CREntities.createType(EntityType.Builder.of(EntityHopperHawk::new, EntityClassification.CREATURE).sized(0.5F, 0.9F).clientTrackingRange(8), "hopper_hawk");
+		type = CREntities.createType(EntityType.Builder.of(EntityHopperHawk::new, MobCategory.CREATURE).sized(0.5F, 0.9F).clientTrackingRange(8), "hopper_hawk");
 	}
 
 	//	@ObjectHolder("hopper_hawk")
@@ -53,22 +72,22 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements IFlyingAni
 	protected float oFlap;
 	private float flapping = 1.0F;
 
-	public EntityHopperHawk(EntityType<EntityHopperHawk> type, World worldIn){
+	public EntityHopperHawk(EntityType<EntityHopperHawk> type, Level worldIn){
 		super(type, worldIn);
-		moveControl = new FlyingMovementController(this, 10, false);
+		moveControl = new FlyingMoveControl(this, 10, false);
 		//Copied from parrots
-		setPathfindingMalus(PathNodeType.DANGER_FIRE, -1.0F);
-		setPathfindingMalus(PathNodeType.DAMAGE_FIRE, -1.0F);
-		setPathfindingMalus(PathNodeType.COCOA, -1.0F);
+		setPathfindingMalus(BlockPathTypes.DANGER_FIRE, -1.0F);
+		setPathfindingMalus(BlockPathTypes.DAMAGE_FIRE, -1.0F);
+		setPathfindingMalus(BlockPathTypes.COCOA, -1.0F);
 	}
 
-	public static AttributeModifierMap createAttributes(){
-		return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 6.0D).add(Attributes.FLYING_SPEED, 0.8F).add(Attributes.MOVEMENT_SPEED, 0.4F).build();
+	public static AttributeSupplier createAttributes(){
+		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 6.0D).add(Attributes.FLYING_SPEED, 0.8F).add(Attributes.MOVEMENT_SPEED, 0.4F).build();
 	}
 
 	@Override
-	protected PathNavigator createNavigation(World world){
-		FlyingPathNavigator flyingpathnavigator = new FlyingPathNavigator(this, world);
+	protected PathNavigation createNavigation(Level world){
+		FlyingPathNavigation flyingpathnavigator = new FlyingPathNavigation(this, world);
 		flyingpathnavigator.setCanOpenDoors(false);
 		flyingpathnavigator.setCanFloat(true);
 		flyingpathnavigator.setCanPassDoors(true);
@@ -116,13 +135,13 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements IFlyingAni
 		oFlap = flap;
 		oFlapSpeed = flapSpeed;
 		flapSpeed = (float) ((double) flapSpeed + (double) (!onGround && !isPassenger() ? 4 : -1) * 0.3D);
-		flapSpeed = MathHelper.clamp(flapSpeed, 0.0F, 1.0F);
+		flapSpeed = Mth.clamp(flapSpeed, 0.0F, 1.0F);
 		if(!onGround && flapping < 1.0F){
 			flapping = 1.0F;
 		}
 
 		flapping = (float) ((double) flapping * 0.9D);
-		Vector3d vector3d = getDeltaMovement();
+		Vec3 vector3d = getDeltaMovement();
 		if(!onGround && vector3d.y < 0.0D){
 			setDeltaMovement(vector3d.multiply(1.0D, 0.6D, 1.0D));
 		}
@@ -131,7 +150,7 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements IFlyingAni
 	}
 
 	@Override
-	public ActionResultType mobInteract(PlayerEntity player, Hand hand){
+	public InteractionResult mobInteract(Player player, InteractionHand hand){
 		//Based on parrots
 
 		ItemStack itemstack = player.getItemInHand(hand);
@@ -155,31 +174,31 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements IFlyingAni
 				}
 			}
 
-			return ActionResultType.sidedSuccess(level.isClientSide);
+			return InteractionResult.sidedSuccess(level.isClientSide);
 		}else if(!isFlying() && isTame() && isOwnedBy(player)){
 			if(!level.isClientSide){
 				setOrderedToSit(!isOrderedToSit());
 			}
 
-			return ActionResultType.sidedSuccess(level.isClientSide);
+			return InteractionResult.sidedSuccess(level.isClientSide);
 		}else{
 			return super.mobInteract(player, hand);
 		}
 	}
 
 	@Override
-	public IPacket<?> getAddEntityPacket(){
+	public Packet<?> getAddEntityPacket(){
 		return NetworkHooks.getEntitySpawningPacket(this);//Required for modded entities
 	}
 
 	@Override
-	public boolean canMate(AnimalEntity mate){
+	public boolean canMate(Animal mate){
 		return false;
 	}
 
 	@Nullable
 	@Override
-	public AgeableEntity getBreedOffspring(ServerWorld world, AgeableEntity partner){
+	public AgableMob getBreedOffspring(ServerLevel world, AgableMob partner){
 		return null;
 	}
 
@@ -195,9 +214,9 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements IFlyingAni
 	@Override
 	protected void registerGoals(){
 		goalSelector.addGoal(0, new PanicGoal(this, 1.25D));
-		goalSelector.addGoal(0, new SwimGoal(this));
+		goalSelector.addGoal(0, new FloatGoal(this));
 //		goalSelector.addGoal(1, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-		goalSelector.addGoal(1, new SitGoal(this));
+		goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
 		goalSelector.addGoal(2, new FollowOwnerGoal(this, 1.0D, 8.0F, 3.0F, true));
 		goalSelector.addGoal(3, new CollectItemGoal(this));
 		goalSelector.addGoal(4, new WaterAvoidingRandomFlyingGoal(this, 1.0D));
@@ -207,7 +226,7 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements IFlyingAni
 	private static class CollectItemGoal extends Goal{
 
 		private final EntityHopperHawk mob;
-		private final PathNavigator navigation;
+		private final PathNavigation navigation;
 		private static final float COLLECTION_RANGE_SMALL = 4;
 		private static final float COLLECTION_RANGE = 10;
 		private static final float COLLECTION_RANGE_SQR = COLLECTION_RANGE * COLLECTION_RANGE;
@@ -228,10 +247,10 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements IFlyingAni
 
 		private boolean isValidTarget(ItemEntity ent, boolean useCache){
 			LivingEntity owner = mob.getOwner();
-			return ent != null && ent.isAlive() && owner instanceof PlayerEntity && owner.distanceToSqr(ent) <= COLLECTION_RANGE_SQR && canFitTargetCached(ent, (PlayerEntity) owner, useCache);
+			return ent != null && ent.isAlive() && owner instanceof Player && owner.distanceToSqr(ent) <= COLLECTION_RANGE_SQR && canFitTargetCached(ent, (Player) owner, useCache);
 		}
 
-		private boolean canFitTargetCached(ItemEntity ent, PlayerEntity owner, boolean useCache){
+		private boolean canFitTargetCached(ItemEntity ent, Player owner, boolean useCache){
 			if(!useCache){
 				return canOwnerFitItem(ent, owner);
 			}
@@ -243,9 +262,9 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements IFlyingAni
 			return canFitTargetCache;
 		}
 
-		private boolean canOwnerFitItem(ItemEntity ent, PlayerEntity owner){
+		private boolean canOwnerFitItem(ItemEntity ent, Player owner){
 			//This call is somewhat expensive, so we cache the result and only re-verify based on time
-			PlayerInventory inv = owner.inventory;
+			Inventory inv = owner.inventory;
 			ItemStack stack = ent.getItem();
 			return inv.getFreeSlot() >= 0 || inv.getSlotWithRemainingSpace(stack) >= 0;
 		}
@@ -254,14 +273,14 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements IFlyingAni
 			//To prevent multiple hopper hawks always targeting the same items, items are selected in two rounds
 			//Pick the closest 'nearby' item
 			float range = COLLECTION_RANGE_SMALL;
-			List<ItemEntity> list = mob.level.getEntities(EntityType.ITEM, new AxisAlignedBB(mob.getX() - range, mob.getY() - range, mob.getZ() - range, mob.getX() + range, mob.getY() + range, mob.getZ() + range), (ItemEntity e) -> isValidTarget(e, false));
+			List<ItemEntity> list = mob.level.getEntities(EntityType.ITEM, new AABB(mob.getX() - range, mob.getY() - range, mob.getZ() - range, mob.getX() + range, mob.getY() + range, mob.getZ() + range), (ItemEntity e) -> isValidTarget(e, false));
 			if(!list.isEmpty()){
 				//Get the closest item in the list
 				return list.stream().min((e1, e2) -> (int) (e1.distanceToSqr(mob) - e2.distanceToSqr(mob))).orElse(null);
 			}
 			//If no items are 'nearby', use the larger range and select a target at random
 			range = COLLECTION_RANGE;
-			list = mob.level.getEntities(EntityType.ITEM, new AxisAlignedBB(mob.getX() - range, mob.getY() - range, mob.getZ() - range, mob.getX() + range, mob.getY() + range, mob.getZ() + range), (ItemEntity e) -> isValidTarget(e, false));
+			list = mob.level.getEntities(EntityType.ITEM, new AABB(mob.getX() - range, mob.getY() - range, mob.getZ() - range, mob.getX() + range, mob.getY() + range, mob.getZ() + range), (ItemEntity e) -> isValidTarget(e, false));
 			if(!list.isEmpty()){
 				return list.get(mob.level.random.nextInt(list.size()));
 			}
@@ -282,8 +301,8 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements IFlyingAni
 		public void start(){
 			super.start();
 			//Disable attempting to avoid water while collecting an item
-			oldWaterCost = mob.getPathfindingMalus(PathNodeType.WATER);
-			mob.setPathfindingMalus(PathNodeType.WATER, 0.0F);
+			oldWaterCost = mob.getPathfindingMalus(BlockPathTypes.WATER);
+			mob.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
 
 			targetEntity = findNewTarget();
 			canFitTargetCache = true;
@@ -297,7 +316,7 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements IFlyingAni
 			super.stop();
 			targetEntity = null;
 			navigation.stop();
-			mob.setPathfindingMalus(PathNodeType.WATER, oldWaterCost);
+			mob.setPathfindingMalus(BlockPathTypes.WATER, oldWaterCost);
 		}
 
 		@Override
@@ -312,8 +331,8 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements IFlyingAni
 
 				//Pick up the item if we're close to it
 				LivingEntity owner = mob.getOwner();
-				if(targetEntity.distanceToSqr(mob) <= 1F && owner instanceof PlayerEntity){
-					targetEntity.playerTouch((PlayerEntity) owner);
+				if(targetEntity.distanceToSqr(mob) <= 1F && owner instanceof Player){
+					targetEntity.playerTouch((Player) owner);
 				}
 			}
 		}

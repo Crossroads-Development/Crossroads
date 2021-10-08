@@ -2,16 +2,16 @@ package com.Da_Technomancer.crossroads.API.beams;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.World;
+import net.minecraft.tags.Tag;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.Level;
 
 public class BeamUtil{
 
@@ -19,7 +19,7 @@ public class BeamUtil{
 	public static final int BEAM_TIME = 4;
 	public static final int POWER_LIMIT = 64_000;
 
-	private static final ITag<Block> PASSABLE = BlockTags.bind(Crossroads.MODID + ":beam_passable");
+	private static final Tag<Block> PASSABLE = BlockTags.bind(Crossroads.MODID + ":beam_passable");
 	private static final VoxelShape[] COLLISION_MASK = new VoxelShape[3];
 
 	static{
@@ -37,7 +37,7 @@ public class BeamUtil{
 	 * @param power The beam power
 	 * @return Whether beams should collide with this block
 	 */
-	public static boolean solidToBeams(BlockState state, World world, BlockPos pos, Direction toDir, int power){
+	public static boolean solidToBeams(BlockState state, Level world, BlockPos pos, Direction toDir, int power){
 		if(state.isAir(world, pos) || PASSABLE.contains(state.getBlock())){
 			return false;
 		}
@@ -62,7 +62,7 @@ public class BeamUtil{
 		}else{
 			 mask = COLLISION_MASK[toDir.getAxis().ordinal()];
 		}
-		return VoxelShapes.joinIsNotEmpty(shape, mask, IBooleanFunction.AND);
+		return Shapes.joinIsNotEmpty(shape, mask, BooleanOp.AND);
 	}
 
 	/**

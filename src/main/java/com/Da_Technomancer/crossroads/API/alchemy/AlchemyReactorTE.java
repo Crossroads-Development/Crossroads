@@ -1,21 +1,21 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
 import com.Da_Technomancer.crossroads.crafting.recipes.AlchemyRec;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.server.level.ServerLevel;
 
 /**
  * Implementations must implement getCapability directly.
  */
 public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReactionChamber{
 
-	public AlchemyReactorTE(TileEntityType<? extends AlchemyReactorTE> type){
+	public AlchemyReactorTE(BlockEntityType<? extends AlchemyReactorTE> type){
 		super(type);
 	}
 
-	public AlchemyReactorTE(TileEntityType<? extends AlchemyReactorTE> type, boolean glass){
+	public AlchemyReactorTE(BlockEntityType<? extends AlchemyReactorTE> type, boolean glass){
 		super(type, glass);
 	}
 
@@ -30,10 +30,10 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 	}
 
 	@Override
-	public <T extends IParticleData> void addVisualEffect(T particleType, double speedX, double speedY, double speedZ){
+	public <T extends ParticleOptions> void addVisualEffect(T particleType, double speedX, double speedY, double speedZ){
 		if(!level.isClientSide){
-			Vector3d particlePos = getParticlePos();
-			((ServerWorld) level).sendParticles(particleType, particlePos.x, particlePos.y, particlePos.z, 0, speedX, speedY, speedZ, 1F);
+			Vec3 particlePos = getParticlePos();
+			((ServerLevel) level).sendParticles(particleType, particlePos.x, particlePos.y, particlePos.z, 0, speedX, speedY, speedZ, 1F);
 		}
 	}
 

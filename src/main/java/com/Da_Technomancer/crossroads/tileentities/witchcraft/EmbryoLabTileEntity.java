@@ -17,23 +17,23 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.witchcraft.BloodSample;
 import com.Da_Technomancer.essentials.packets.INBTReceiver;
 import com.Da_Technomancer.essentials.packets.SendNBTToClient;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.potion.Potions;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -45,18 +45,20 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
+
 @ObjectHolder(Crossroads.MODID)
 public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 
 	@ObjectHolder("embryo_lab")
-	public static TileEntityType<EmbryoLabTileEntity> type = null;
+	public static BlockEntityType<EmbryoLabTileEntity> type = null;
 
 	public EntityTemplate template = null;//Kept synced to the client
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		if(template == null){
-			chat.add(new TranslationTextComponent("tt.crossroads.embryo_lab.empty"));
+			chat.add(new TranslatableComponent("tt.crossroads.embryo_lab.empty"));
 		}else{
 			template.addTooltip(chat, 13);
 		}
@@ -69,7 +71,7 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 	}
 
 	private void syncTemplate(){
-		CompoundNBT nbt = new CompoundNBT();
+		CompoundTag nbt = new CompoundTag();
 		if(template != null){
 			nbt.put("template", template.serializeNBT());
 		}
@@ -131,14 +133,14 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 			if(potion != Potions.EMPTY){
 				//Add potion effects which can be made permanent and do not already exist on the template
 				boolean foundLegalEffect = false;
-				NextPotionEffect: for(EffectInstance potionEffect : potion.getEffects()){
+				NextPotionEffect: for(MobEffectInstance potionEffect : potion.getEffects()){
 					//Special case curative to remove all potion effects
 					if(potionEffect.getEffect() == CRPotions.CURATIVE_EFFECT){
 						foundLegalEffect = true;
 						template.getEffects().clear();
 					}else if(CRPotions.canBePermanentEffect(potionEffect)){
 						//Check that the effect isn't already part of the template
-						for(EffectInstance templateEffect : template.getEffects()){
+						for(MobEffectInstance templateEffect : template.getEffects()){
 							if(templateEffect.getEffect() == potionEffect.getEffect() && templateEffect.getAmplifier() >= potionEffect.getAmplifier()){
 								//This effect already exists in permanent form in an equal or stronger intensity
 								continue NextPotionEffect;
@@ -172,7 +174,7 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 	}
 
 	@Override
-	public void receiveNBT(CompoundNBT nbt, @Nullable ServerPlayerEntity player){
+	public void receiveNBT(CompoundTag nbt, @Nullable ServerPlayer player){
 		if(nbt.contains("template")){
 			template = new EntityTemplate();
 			template.deserializeNBT(nbt.getCompound("template"));
@@ -182,7 +184,7 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		if(nbt.contains("template")){
 			template = new EntityTemplate();
@@ -193,7 +195,7 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		if(template != null){
 			nbt.put("template", template.serializeNBT());
@@ -202,8 +204,8 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag(){
-		CompoundNBT nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(){
+		CompoundTag nbt = super.getUpdateTag();
 		if(template != null){
 			nbt.put("template", template.serializeNBT());
 		}
@@ -223,13 +225,13 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 	}
 
 	@Override
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.crossroads.embryo_lab");
+	public Component getDisplayName(){
+		return new TranslatableComponent("container.crossroads.embryo_lab");
 	}
 
 	@Nullable
 	@Override
-	public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity player){
+	public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player){
 		return new EmbryoLabContainer(id, playerInventory, createContainerBuf());
 	}
 

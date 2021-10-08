@@ -2,12 +2,12 @@ package com.Da_Technomancer.crossroads.API.technomancy;
 
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.DimensionType;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.DimensionSavedDataManager;
-import net.minecraft.world.storage.WorldSavedData;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.storage.DimensionDataStorage;
+import net.minecraft.world.level.saveddata.SavedData;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class GatewaySavedData extends WorldSavedData{
+public class GatewaySavedData extends SavedData{
 
 	/**
 	 * Determines a reserved address based on world seed that may not be assigned to new gateways
@@ -23,7 +23,7 @@ public class GatewaySavedData extends WorldSavedData{
 	 * @param w The world, to get the seed from
 	 * @return An address that can not be assigned to gateways
 	 */
-	public static GatewayAddress getReservedAddress(@Nonnull ServerWorld w){
+	public static GatewayAddress getReservedAddress(@Nonnull ServerLevel w){
 		EnumBeamAlignments[] address = new EnumBeamAlignments[4];
 		address[0] = EnumBeamAlignments.RIFT;//Fix the first alignment as rift
 		long seed = w.getSeed();
@@ -42,7 +42,7 @@ public class GatewaySavedData extends WorldSavedData{
 	 * @return The newly generated address, or null if generating an address was impossible
 	 */
 	@Nullable
-	public static GatewayAddress requestAddress(@Nonnull ServerWorld w, @Nonnull BlockPos pos){
+	public static GatewayAddress requestAddress(@Nonnull ServerLevel w, @Nonnull BlockPos pos){
 		GatewaySavedData data = get(w);
 		if(data.addressBook.size() + 1 >= (int) Math.pow(GatewayAddress.LEGAL_VALS.length, 4)){
 			Crossroads.logger.warn("Ran out of Technomancy Gateway Addresses! No new gateways can be built");
@@ -75,7 +75,7 @@ public class GatewaySavedData extends WorldSavedData{
 	 * @param w Any server world
 	 * @param address The address to unregister
 	 */
-	public static void releaseAddress(@Nonnull ServerWorld w, @Nullable GatewayAddress address){
+	public static void releaseAddress(@Nonnull ServerLevel w, @Nullable GatewayAddress address){
 		if(address != null){
 			GatewaySavedData data = get(w);
 			data.addressBook.remove(address);
@@ -90,15 +90,15 @@ public class GatewaySavedData extends WorldSavedData{
 	 * @return The mapped destination. Null if address was null or the address was not registered
 	 */
 	@Nullable
-	public static GatewayAddress.Location lookupAddress(@Nonnull ServerWorld w, @Nullable GatewayAddress address){
+	public static GatewayAddress.Location lookupAddress(@Nonnull ServerLevel w, @Nullable GatewayAddress address){
 		GatewaySavedData data = get(w);
 		return address == null ? null : data.addressBook.get(address);
 	}
 
-	private static GatewaySavedData get(ServerWorld world){
+	private static GatewaySavedData get(ServerLevel world){
 		//We want all dimensions to share the same saved data,
 		//So we always reference the overworld instance
-		DimensionSavedDataManager storage;
+		DimensionDataStorage storage;
 		if(world.dimension().location().equals(DimensionType.OVERWORLD_EFFECTS)){
 			storage = world.getDataStorage();
 		}else{
@@ -123,7 +123,7 @@ public class GatewaySavedData extends WorldSavedData{
 	}
 
 	@Override
-	public void load(CompoundNBT nbt){
+	public void load(CompoundTag nbt){
 		addressBook.clear();
 		int i = 0;
 		while(nbt.contains("key_" + i)){
@@ -134,7 +134,7 @@ public class GatewaySavedData extends WorldSavedData{
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		int i = 0;
 		for(Map.Entry<GatewayAddress, GatewayAddress.Location> entry : addressBook.entrySet()){
 			nbt.putInt("key_" + i, entry.getKey().serialize());

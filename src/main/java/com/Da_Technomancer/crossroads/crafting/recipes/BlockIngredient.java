@@ -5,15 +5,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.tags.Tag;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
@@ -47,9 +47,9 @@ public class BlockIngredient implements Predicate<BlockState>{
 		for(Object key : matched){
 			if(key instanceof IBlockList){
 				keys.add((IBlockList) key);
-			}else if(key instanceof ITag){
+			}else if(key instanceof Tag){
 				try{
-					ITag<Block> tag = (ITag<Block>) key;
+					Tag<Block> tag = (Tag<Block>) key;
 					keys.add(new TagList(tag));
 				}catch(ClassCastException e){
 					Crossroads.logger.error("An illegal tag type was added to a BlockIngredient. Report to mod author!", e);
@@ -86,7 +86,7 @@ public class BlockIngredient implements Predicate<BlockState>{
 		}
 	}
 
-	public void writeToBuffer(PacketBuffer buf){
+	public void writeToBuffer(FriendlyByteBuf buf){
 		updateCache();
 		buf.writeVarInt(matched.size());//Write how many Blocks this matches
 		for(Block b : matched){
@@ -94,7 +94,7 @@ public class BlockIngredient implements Predicate<BlockState>{
 		}
 	}
 
-	public static BlockIngredient readFromBuffer(PacketBuffer buf){
+	public static BlockIngredient readFromBuffer(FriendlyByteBuf buf){
 		int count = buf.readVarInt();
 		Block[] matched = new Block[count];
 		for(int i = 0; i < count; i++){
@@ -126,9 +126,9 @@ public class BlockIngredient implements Predicate<BlockState>{
 
 	private static IBlockList readIngr(JsonObject o){
 		if(o.has("tag")){
-			return new TagList(BlockTags.bind(JSONUtils.getAsString(o, "tag")));
+			return new TagList(BlockTags.bind(GsonHelper.getAsString(o, "tag")));
 		}else if(o.has("block")){
-			return new SingleList(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(JSONUtils.getAsString(o, "block"))));
+			return new SingleList(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(GsonHelper.getAsString(o, "block"))));
 		}else{
 			throw new JsonParseException("No value defined in BlockIngredient");
 		}
@@ -167,9 +167,9 @@ public class BlockIngredient implements Predicate<BlockState>{
 
 	private static class TagList implements IBlockList{
 
-		private final ITag<Block> tag;
+		private final Tag<Block> tag;
 
-		public TagList(ITag<Block> matched){
+		public TagList(Tag<Block> matched){
 			tag = matched;
 		}
 

@@ -1,11 +1,11 @@
 package com.Da_Technomancer.crossroads.API.witchcraft;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -16,7 +16,7 @@ public interface ICultivatable extends IPerishable{
 	public static final String FROZEN_KEY = "cr_was_frozen";
 
 	default boolean wasFrozen(ItemStack stack){
-		CompoundNBT nbt = stack.getOrCreateTag();
+		CompoundTag nbt = stack.getOrCreateTag();
 		//Correct broken stacks, by setting a spoil time for a fresh item
 		if(!nbt.contains(FROZEN_KEY)){
 			return false;
@@ -25,13 +25,13 @@ public interface ICultivatable extends IPerishable{
 	}
 
 	default ItemStack setWasFrozen(ItemStack stack, boolean frozen){
-		CompoundNBT nbt = stack.getOrCreateTag();
+		CompoundTag nbt = stack.getOrCreateTag();
 		nbt.putBoolean(FROZEN_KEY, frozen);
 		return stack;
 	}
 
 	@Override
-	default ItemStack freeze(ItemStack stack, World world, double temp, long duration){
+	default ItemStack freeze(ItemStack stack, Level world, double temp, long duration){
 		if(temp <= getFreezeTemperature()){
 			//Damage the item if applicable
 			stack = setWasFrozen(stack, true);
@@ -41,7 +41,7 @@ public interface ICultivatable extends IPerishable{
 		return stack;
 	}
 
-	default ItemStack cultivate(ItemStack stack, World world, long duration){
+	default ItemStack cultivate(ItemStack stack, Level world, long duration){
 		return setSpoilTime(stack, getSpoilTime(stack, world) + duration, 0);
 	}
 
@@ -52,19 +52,19 @@ public interface ICultivatable extends IPerishable{
 	 * @return The trade or recipe this item can perform, or null if none
 	 */
 	@Nullable
-	CultivationTrade getCultivationTrade(ItemStack self, World world);
+	CultivationTrade getCultivationTrade(ItemStack self, Level world);
 
-	public static void addTooltip(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip){
+	public static void addTooltip(ItemStack stack, @Nullable Level world, List<Component> tooltip){
 		Item item = stack.getItem();
 		if(item instanceof ICultivatable){
 			ICultivatable sItem = (ICultivatable) item;
 			long spoilTimestamp = sItem.getSpoilTime(stack, world);
 			if(spoilTimestamp < 0){
 				//Broken/new item; hasn't been configured properly
-				tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.spoilage.error"));
+				tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.spoilage.error"));
 			}else if(world != null){
 				if(sItem.isSpoiled(stack, world)){
-					tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.spoilage.spoiled"));
+					tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.spoilage.spoiled"));
 				}else{
 					spoilTimestamp -= world.getGameTime();
 					int days = (int) (spoilTimestamp / (20 * 60 * 60 * 24));
@@ -74,13 +74,13 @@ public interface ICultivatable extends IPerishable{
 					int minutes = (int) (spoilTimestamp / (20 * 60));
 					spoilTimestamp -= minutes * 20 * 60;
 					int seconds = (int) (spoilTimestamp / 20);
-					tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.spoilage.remain", days, hours, minutes, seconds));
+					tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.spoilage.remain", days, hours, minutes, seconds));
 				}
 			}
 			if(sItem.wasFrozen(stack)){
-				tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.spoilage.freezing.damaged", sItem.getFreezeTemperature()));//Freezing information
+				tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.spoilage.freezing.damaged", sItem.getFreezeTemperature()));//Freezing information
 			}else{
-				tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.spoilage.freezing", sItem.getFreezeTemperature()));//Freezing information
+				tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.spoilage.freezing", sItem.getFreezeTemperature()));//Freezing information
 			}
 		}
 	}
@@ -94,7 +94,7 @@ public interface ICultivatable extends IPerishable{
 	 * @param world The world
 	 * @return Whether the trade is plausible
 	 */
-	default boolean isTradeValid(ItemStack self, CultivationTrade trade, World world){
+	default boolean isTradeValid(ItemStack self, CultivationTrade trade, Level world){
 		boolean spoiled = isSpoiled(self, world);
 		return (trade == null) == spoiled;
 	}

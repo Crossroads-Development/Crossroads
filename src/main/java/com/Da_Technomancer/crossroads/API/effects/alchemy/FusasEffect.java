@@ -1,13 +1,13 @@
 package com.Da_Technomancer.crossroads.API.effects.alchemy;
 
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
 
 public class FusasEffect extends AetherEffect{
 
@@ -42,12 +42,12 @@ public class FusasEffect extends AetherEffect{
 	}
 
 	@Override
-	protected RegistryKey<Biome> biome(){
+	protected ResourceKey<Biome> biome(){
 		return Biomes.DEEP_OCEAN;
 	}
 
 	@Override
-	public ITextComponent getName(){
-		return new TranslationTextComponent("effect.terraform_ocean");
+	public Component getName(){
+		return new TranslatableComponent("effect.terraform_ocean");
 	}
 }

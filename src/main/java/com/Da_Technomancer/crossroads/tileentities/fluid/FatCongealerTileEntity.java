@@ -11,17 +11,17 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.EdibleBlob;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.tileentities.AbstractShifterTileEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -32,11 +32,14 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE.TankProperty;
+
 @ObjectHolder(Crossroads.MODID)
 public class FatCongealerTileEntity extends InventoryTE{
 
 	@ObjectHolder("fat_congealer")
-	private static TileEntityType<FatCongealerTileEntity> type = null;
+	private static BlockEntityType<FatCongealerTileEntity> type = null;
 
 	public static final double HUN_PER_SPD = 4D;
 	public static final double SAT_PER_SPD = 4D;
@@ -78,7 +81,7 @@ public class FatCongealerTileEntity extends InventoryTE{
 
 		//This machine can be disabled by a redstone signal
 		if(!level.hasNeighborSignal(worldPosition)){
-			TileEntity adjTE;
+			BlockEntity adjTE;
 			LazyOptional<IAxleHandler> otherOpt;
 			IAxleHandler topHandler = null;
 			IAxleHandler bottomHandler = null;
@@ -163,13 +166,13 @@ public class FatCongealerTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.fat_congealer");
+	public Component getDisplayName(){
+		return new TranslatableComponent("container.fat_congealer");
 	}
 
 	@Nullable
 	@Override
-	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
+	public AbstractContainerMenu createMenu(int id, Inventory playerInv, Player player){
 		return new FatCongealerContainer(id, playerInv, createContainerBuf());
 	}
 }

@@ -2,24 +2,31 @@ package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.UseAction;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.UseAnim;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.food.FoodData;
 
 public class EdibleBlob extends Item{
 
@@ -30,9 +37,9 @@ public class EdibleBlob extends Item{
 		CRItems.toRegister.add(this);
 	}
 
-	public static CompoundNBT createNBT(@Nullable CompoundNBT base, int hunger, int sat){
+	public static CompoundTag createNBT(@Nullable CompoundTag base, int hunger, int sat){
 		if(base == null){
-			base = new CompoundNBT();
+			base = new CompoundTag();
 		}
 		base.putInt("food", hunger);
 		base.putInt("sat", sat);
@@ -53,13 +60,13 @@ public class EdibleBlob extends Item{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
 		if(stack.hasTag()){
-			tooltip.add(new TranslationTextComponent("tt.crossroads.edible_blob.food", getHealAmount(stack)));
-			tooltip.add(new TranslationTextComponent("tt.crossroads.edible_blob.sat", getTrueSat(stack)));
-			tooltip.add(new TranslationTextComponent("tt.crossroads.edible_blob.quip").setStyle(MiscUtil.TT_QUIP));
+			tooltip.add(new TranslatableComponent("tt.crossroads.edible_blob.food", getHealAmount(stack)));
+			tooltip.add(new TranslatableComponent("tt.crossroads.edible_blob.sat", getTrueSat(stack)));
+			tooltip.add(new TranslatableComponent("tt.crossroads.edible_blob.quip").setStyle(MiscUtil.TT_QUIP));
 		}else{
-			tooltip.add(new TranslationTextComponent("tt.crossroads.edible_blob.error"));
+			tooltip.add(new TranslatableComponent("tt.crossroads.edible_blob.error"));
 		}
 	}
 
@@ -67,8 +74,8 @@ public class EdibleBlob extends Item{
 	 * returns the action that specifies what animation to play when the items is being used
 	 */
 	@Override
-	public UseAction getUseAnimation(ItemStack stack){
-		return UseAction.EAT;
+	public UseAnim getUseAnimation(ItemStack stack){
+		return UseAnim.EAT;
 	}
 
 	/**
@@ -84,13 +91,13 @@ public class EdibleBlob extends Item{
 	 * {@link #onItemUse}.
 	 */
 	@Override
-	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn){
+	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn){
 		ItemStack itemstack = playerIn.getItemInHand(handIn);
 		if(playerIn.canEat(false)){
 			playerIn.startUsingItem(handIn);
-			return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
+			return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
 		}else{
-			return new ActionResult<>(ActionResultType.FAIL, itemstack);
+			return new InteractionResultHolder<>(InteractionResult.FAIL, itemstack);
 		}
 	}
 
@@ -99,21 +106,21 @@ public class EdibleBlob extends Item{
 	 * the Item before the action is complete.
 	 */
 	@Override
-	public ItemStack finishUsingItem(ItemStack stack, World worldIn, LivingEntity entityLiving){
+	public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving){
 //		return this.isFood() ? entityLiving.onFoodEaten(worldIn, stack) : stack;
-		if(entityLiving instanceof PlayerEntity){
-			FoodStats stats = ((PlayerEntity) entityLiving).getFoodData();
+		if(entityLiving instanceof Player){
+			FoodData stats = ((Player) entityLiving).getFoodData();
 
-			MiscUtil.setPlayerFood((PlayerEntity) entityLiving, stats.getFoodLevel() + getHealAmount(stack), stats.getSaturationLevel() + getTrueSat(stack));
+			MiscUtil.setPlayerFood((Player) entityLiving, stats.getFoodLevel() + getHealAmount(stack), stats.getSaturationLevel() + getTrueSat(stack));
 
-			((PlayerEntity) entityLiving).awardStat(Stats.ITEM_USED.get(this));
-			worldIn.playSound(null, entityLiving.getX(), entityLiving.getY(), entityLiving.getZ(), SoundEvents.PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, worldIn.random.nextFloat() * 0.1F + 0.9F);
-			if(entityLiving instanceof ServerPlayerEntity){
-				CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayerEntity) entityLiving, stack);
+			((Player) entityLiving).awardStat(Stats.ITEM_USED.get(this));
+			worldIn.playSound(null, entityLiving.getX(), entityLiving.getY(), entityLiving.getZ(), SoundEvents.PLAYER_BURP, SoundSource.PLAYERS, 0.5F, worldIn.random.nextFloat() * 0.1F + 0.9F);
+			if(entityLiving instanceof ServerPlayer){
+				CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayer) entityLiving, stack);
 			}
 		}
 
-		worldIn.playSound(null, entityLiving.getX(), entityLiving.getY(), entityLiving.getZ(), entityLiving.getEatingSound(stack), SoundCategory.NEUTRAL, 1.0F, 1.0F + (worldIn.random.nextFloat() - worldIn.random.nextFloat()) * 0.4F);
+		worldIn.playSound(null, entityLiving.getX(), entityLiving.getY(), entityLiving.getZ(), entityLiving.getEatingSound(stack), SoundSource.NEUTRAL, 1.0F, 1.0F + (worldIn.random.nextFloat() - worldIn.random.nextFloat()) * 0.4F);
 		stack.shrink(1);
 
 		return stack;

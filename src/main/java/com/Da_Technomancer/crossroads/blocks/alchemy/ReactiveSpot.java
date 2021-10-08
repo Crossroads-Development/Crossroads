@@ -2,16 +2,18 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactiveSpotTileEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.material.Material;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
 
-public class ReactiveSpot extends ContainerBlock{
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
+public class ReactiveSpot extends BaseEntityBlock{
 
 	public ReactiveSpot(){
 		super(Properties.of(Material.SPONGE).strength(0).noCollission().noDrops());
@@ -22,12 +24,12 @@ public class ReactiveSpot extends ContainerBlock{
 	}
 
 	@Override
-	public TileEntity newBlockEntity(IBlockReader worldIn){
+	public BlockEntity newBlockEntity(BlockGetter worldIn){
 		return new ReactiveSpotTileEntity();
 	}
 
 	@Override
-	public VoxelShape getInteractionShape(BlockState state, IBlockReader worldIn, BlockPos pos){
-		return VoxelShapes.empty();
+	public VoxelShape getInteractionShape(BlockState state, BlockGetter worldIn, BlockPos pos){
+		return Shapes.empty();
 	}
 }

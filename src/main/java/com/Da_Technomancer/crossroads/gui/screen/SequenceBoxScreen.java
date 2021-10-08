@@ -7,21 +7,21 @@ import com.Da_Technomancer.crossroads.tileentities.technomancy.SequenceBoxTileEn
 import com.Da_Technomancer.essentials.Essentials;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import com.Da_Technomancer.essentials.packets.SendNBTToServer;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Predicate;
 
-public class SequenceBoxScreen extends ContainerScreen<SequenceBoxContainer>{
+public class SequenceBoxScreen extends AbstractContainerScreen<SequenceBoxContainer>{
 
 	private static final ResourceLocation SEARCH_BAR_TEXTURE = new ResourceLocation(Essentials.MODID, "textures/gui/search_bar.png");
 	private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/sequence_box_gui.png");
@@ -32,11 +32,11 @@ public class SequenceBoxScreen extends ContainerScreen<SequenceBoxContainer>{
 	//Scrolling up or down means moving all the text between the widgets, and doing all sorts of careful handling to prevent infinite loops
 	//Somehow this was simpler and less error-prone than doing it 'properly' (none of this stuff has MCP mappings, OK?)
 
-	private final TextFieldWidget[] inputBars = new TextFieldWidget[8];
+	private final EditBox[] inputBars = new EditBox[8];
 	private int topIndex = 0;//Index in the container input list corresponding to the text widget at the top of the UI
 	private boolean shiftingUI = false;//When true, all changes to the contents of the input bars is internal and not player input
 
-	public SequenceBoxScreen(SequenceBoxContainer container, PlayerInventory inv, ITextComponent name){
+	public SequenceBoxScreen(SequenceBoxContainer container, Inventory inv, Component name){
 		super(container, inv, name);
 		imageWidth = 176;
 		imageHeight = 166;
@@ -56,7 +56,7 @@ public class SequenceBoxScreen extends ContainerScreen<SequenceBoxContainer>{
 		};
 
 		for(int i = 0; i < inputBars.length; i++){
-			inputBars[i] = new TextFieldWidget(font, leftPos + 24, topPos + 24 + 18 * i, 144 - 4, 18, new StringTextComponent(""));
+			inputBars[i] = new EditBox(font, leftPos + 24, topPos + 24 + 18 * i, 144 - 4, 18, new TextComponent(""));
 			inputBars[i].setCanLoseFocus(true);
 			inputBars[i].setTextColor(-1);
 			inputBars[i].setTextColorUneditable(-1);
@@ -83,7 +83,7 @@ public class SequenceBoxScreen extends ContainerScreen<SequenceBoxContainer>{
 
 
 	@Override
-	protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
 		RenderSystem.color4f(1, 1, 1, 1);
 		Minecraft.getInstance().getTextureManager().bind(BACKGROUND_TEXTURE);
 
@@ -91,13 +91,13 @@ public class SequenceBoxScreen extends ContainerScreen<SequenceBoxContainer>{
 
 		//Text bars
 		minecraft.getTextureManager().bind(SEARCH_BAR_TEXTURE);
-		for(TextFieldWidget bar : inputBars){
+		for(EditBox bar : inputBars){
 			blit(matrix, bar.x - 2, bar.y - 8, 0, 0, bar.getWidth(), 18, 144, 18);
 		}
 	}
 
 	@Override
-	protected void renderLabels(MatrixStack matrix, int mouseX, int mouseY){
+	protected void renderLabels(PoseStack matrix, int mouseX, int mouseY){
 		font.draw(matrix, title, titleLabelX, titleLabelY, 0x404040);
 
 		for(int i = 0; i < inputBars.length; i++){
@@ -108,12 +108,12 @@ public class SequenceBoxScreen extends ContainerScreen<SequenceBoxContainer>{
 	}
 
 	@Override
-	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTicks){
+	public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks){
 		renderBackground(matrix);
 		super.render(matrix, mouseX, mouseY, partialTicks);
 		RenderSystem.disableLighting();
 		RenderSystem.disableBlend();
-		for(TextFieldWidget bar : inputBars){
+		for(EditBox bar : inputBars){
 			bar.render(matrix, mouseX, mouseY, partialTicks);
 		}
 	}
@@ -132,7 +132,7 @@ public class SequenceBoxScreen extends ContainerScreen<SequenceBoxContainer>{
 
 	private void setSelection(int index){
 		index = Math.min(index, SequenceBoxTileEntity.MAX_VALUES - 1);
-		for(TextFieldWidget widget : inputBars){
+		for(EditBox widget : inputBars){
 			if((index < 0 || widget != inputBars[index]) && widget.isFocused()){
 				widget.changeFocus(false);
 			}
@@ -190,7 +190,7 @@ public class SequenceBoxScreen extends ContainerScreen<SequenceBoxContainer>{
 			menu.outputIndex = Math.min(getSelection() + topIndex, menu.inputs.size() - 1);
 			updateTEWithPacket();
 		}else{
-			for(TextFieldWidget bar : inputBars){
+			for(EditBox bar : inputBars){
 				if(bar.keyPressed(keyCode, scanCode, modifiers) || bar.canConsumeInput()){
 					return true;
 				}
@@ -236,7 +236,7 @@ public class SequenceBoxScreen extends ContainerScreen<SequenceBoxContainer>{
 		if(menu.outputIndex < 0){
 			menu.outputIndex = 0;
 		}
-		CompoundNBT nbt = new CompoundNBT();
+		CompoundTag nbt = new CompoundTag();
 		nbt.putInt("output_index", menu.outputIndex);
 		for(int i = 0; i < menu.inputs.size(); i++){
 			nbt.putFloat(i + "_val", RedstoneUtil.interpretFormulaString(menu.inputs.get(i)));

@@ -12,25 +12,25 @@ import com.Da_Technomancer.crossroads.items.technomancy.StaffTechnomancy;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.essentials.packets.ILongReceiver;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.util.Mth;
+import com.mojang.math.Quaternion;
+import net.minecraft.world.phys.Vec3;
+import com.mojang.math.Vector3f;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -42,10 +42,10 @@ import java.awt.*;
 import java.util.ArrayList;
 
 @ObjectHolder(Crossroads.MODID)
-public class BeamCannonTileEntity extends TileEntity implements ITickableTileEntity, IInfoTE, ILongReceiver{
+public class BeamCannonTileEntity extends BlockEntity implements TickableBlockEntity, IInfoTE, ILongReceiver{
 
 	@ObjectHolder("beam_cannon")
-	public static TileEntityType<BeamCannonTileEntity> type = null;
+	public static BlockEntityType<BeamCannonTileEntity> type = null;
 
 	public static final double INERTIA = 0;
 	private static final float ROTATION_SPEED = (float) Math.PI / 40F;//Rate of convergence between angle and axle 'speed' in radians/tick. Yes, this terminology is confusing
@@ -75,17 +75,17 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		if(locked){
-			chat.add(new TranslationTextComponent("tt.crossroads.beam_cannon.base.angle.lock", MiscUtil.preciseRound(angle[0], 3)));
-			chat.add(new TranslationTextComponent("tt.crossroads.beam_cannon.side.angle.lock", MiscUtil.preciseRound(angle[1], 3)));
+			chat.add(new TranslatableComponent("tt.crossroads.beam_cannon.base.angle.lock", MiscUtil.preciseRound(angle[0], 3)));
+			chat.add(new TranslatableComponent("tt.crossroads.beam_cannon.side.angle.lock", MiscUtil.preciseRound(angle[1], 3)));
 		}else{
-			chat.add(new TranslationTextComponent("tt.crossroads.beam_cannon.base.angle", MiscUtil.preciseRound(angle[0], 3), MiscUtil.preciseRound(MiscUtil.clockModulus((float) baseAxleHandler.getSpeed(), (float) Math.PI * 2F), 3)));
-			chat.add(new TranslationTextComponent("tt.crossroads.beam_cannon.side.angle", MiscUtil.preciseRound(angle[1], 3), MiscUtil.preciseRound(MathHelper.clamp(sideAxleHandler.getSpeed(), -Math.PI / 2F, Math.PI / 2F), 3)));
+			chat.add(new TranslatableComponent("tt.crossroads.beam_cannon.base.angle", MiscUtil.preciseRound(angle[0], 3), MiscUtil.preciseRound(MiscUtil.clockModulus((float) baseAxleHandler.getSpeed(), (float) Math.PI * 2F), 3)));
+			chat.add(new TranslatableComponent("tt.crossroads.beam_cannon.side.angle", MiscUtil.preciseRound(angle[1], 3), MiscUtil.preciseRound(Mth.clamp(sideAxleHandler.getSpeed(), -Math.PI / 2F, Math.PI / 2F), 3)));
 		}
 		if(!readingBeam.isEmpty()){
 			EnumBeamAlignments.getAlignment(readingBeam).discover(player, true);
-			chat.add(new TranslationTextComponent("tt.crossroads.beam_cannon.beam", readingBeam.toString()));
+			chat.add(new TranslatableComponent("tt.crossroads.beam_cannon.beam", readingBeam.toString()));
 		}
 		RotaryUtil.addRotaryInfo(chat, baseAxleHandler, true);
 		RotaryUtil.addRotaryInfo(chat, sideAxleHandler, true);
@@ -132,7 +132,7 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 				float outLength = 0;
 
 				if(!out.isEmpty()){
-					Vector3d rayTraceSt = Vector3d.atCenterOf(worldPosition);
+					Vec3 rayTraceSt = Vec3.atCenterOf(worldPosition);
 					Direction facing = getBlockState().getValue(CRProperties.FACING);
 
 					//ray is a unit vector pointing in the aimed direction
@@ -147,18 +147,18 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 					upShift.transform(directionRotation);
 					rayTraceSt = rayTraceSt.add(upShift.x(), upShift.y(), upShift.z());
 
-					Triple<BlockPos, Vector3d, Direction> beamHitResult = StaffTechnomancy.rayTraceBeams(out, level, rayTraceSt, rayTraceSt, new Vector3d(ray), null, worldPosition, RANGE);
+					Triple<BlockPos, Vec3, Direction> beamHitResult = StaffTechnomancy.rayTraceBeams(out, level, rayTraceSt, rayTraceSt, new Vec3(ray), null, worldPosition, RANGE);
 					BlockPos endPos = beamHitResult.getLeft();
 					if(endPos != null){//Should always be true
 						outLength = (float) beamHitResult.getMiddle().distanceTo(rayTraceSt);
 						Direction effectDir = beamHitResult.getRight();
-						TileEntity te = level.getBlockEntity(endPos);
+						BlockEntity te = level.getBlockEntity(endPos);
 						LazyOptional<IBeamHandler> opt;
 						if(te != null && (opt = te.getCapability(Capabilities.BEAM_CAPABILITY, effectDir)).isPresent()){
 							opt.orElseThrow(NullPointerException::new).setBeam(out);
 						}else{
 							EnumBeamAlignments align = EnumBeamAlignments.getAlignment(out);
-							if(!World.isOutsideBuildHeight(endPos)){
+							if(!Level.isOutsideBuildHeight(endPos)){
 								align.getEffect().doBeamEffect(align, out.getVoid() != 0, Math.min(64, outPower), level, endPos, effectDir);
 							}
 						}
@@ -184,7 +184,7 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 					//Play a sound if ANY side is outputting a beam
 					if(beamSize > 0){
 						//The attenuation distance defined for this sound in sounds.json is significant, and makes the sound have a very short range
-						CRSounds.playSoundServer(level, worldPosition, CRSounds.BEAM_PASSIVE, SoundCategory.BLOCKS, 0.7F, 0.3F);
+						CRSounds.playSoundServer(level, worldPosition, CRSounds.BEAM_PASSIVE, SoundSource.BLOCKS, 0.7F, 0.3F);
 					}
 				}
 			}
@@ -248,18 +248,18 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 			target = Math.min(Math.max(target, -piHalf), piHalf);
 			angleChange = (target % pi2) - (current % pi2);
 		}
-		angleChange = MathHelper.clamp(angleChange, -ROTATION_SPEED, ROTATION_SPEED);
+		angleChange = Mth.clamp(angleChange, -ROTATION_SPEED, ROTATION_SPEED);
 		return angleChange;
 	}
 
-	public void updateLock(PlayerEntity player){
+	public void updateLock(Player player){
 		locked = !locked;
 		setChanged();
 		if(level.isClientSide){
 			if(locked){
-				MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.beam_cannon.lock"));
+				MiscUtil.chatMessage(player, new TranslatableComponent("tt.crossroads.beam_cannon.lock"));
 			}else{
-				MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.beam_cannon.unlock"));
+				MiscUtil.chatMessage(player, new TranslatableComponent("tt.crossroads.beam_cannon.unlock"));
 			}
 		}else{
 			//Send update packet to ensure this reaches all client
@@ -268,13 +268,13 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public AxisAlignedBB getRenderBoundingBox(){
+	public AABB getRenderBoundingBox(){
 		//Expand the render box to include all possible beams from this block
-		return new AxisAlignedBB(worldPosition.offset(-RANGE, -RANGE, -RANGE), worldPosition.offset(1 + RANGE, 1 + RANGE, 1 + RANGE));
+		return new AABB(worldPosition.offset(-RANGE, -RANGE, -RANGE), worldPosition.offset(1 + RANGE, 1 + RANGE, 1 + RANGE));
 	}
 
 	@Override
-	public void receiveLong(byte id, long value, @Nullable ServerPlayerEntity sender){
+	public void receiveLong(byte id, long value, @Nullable ServerPlayer sender){
 		if(id == 0 || id == 1){
 			clientAngle[id] = Float.intBitsToFloat((int) (value >>> 32L));
 			clientW[id] = Float.intBitsToFloat((int) (value & 0xFFFFFFFFL));
@@ -296,7 +296,7 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		for(int i = 0; i < 2; i++){
 			energy[i] = nbt.getDouble("energy_" + i);
@@ -314,7 +314,7 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		nbt = super.save(nbt);
 		for(int i = 0; i < 2; i++){
 			nbt.putDouble("energy_" + i, energy[i]);
@@ -332,7 +332,7 @@ public class BeamCannonTileEntity extends TileEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag(){
+	public CompoundTag getUpdateTag(){
 		return save(super.getUpdateTag());
 	}
 

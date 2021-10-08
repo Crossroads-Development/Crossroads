@@ -5,17 +5,24 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRNBTIngredient;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.potion.*;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.List;
+
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 
 public class CRPotions{
 
@@ -27,17 +34,17 @@ public class CRPotions{
 	public static final HealthPenalty HEALTH_PENALTY_EFFECT = new HealthPenalty();
 	public static final Transient TRANSIENT_EFFECT = new Transient();
 
-	public static final Potion POTION_SEDATION = new Potion("sedation", new EffectInstance(SEDATION_EFFECT, 3600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "sedation"));
-	public static final Potion POTION_SEDATION_LONG = new Potion("sedation", new EffectInstance(SEDATION_EFFECT, 9600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "long_sedation"));
-	public static final Potion POTION_CURATIVE = new Potion("curative", new EffectInstance(CURATIVE_EFFECT, 1)).setRegistryName(new ResourceLocation(Crossroads.MODID, "curative"));
-	public static final Potion POTION_NAUSEA = new Potion("nausea", new EffectInstance(Effects.CONFUSION, 3600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "nausea"));
-	public static final Potion POTION_NAUSEA_LONG = new Potion("nausea", new EffectInstance(Effects.CONFUSION, 9600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "long_nausea"));
-	public static final Potion POTION_BLINDNESS = new Potion("blindness", new EffectInstance(Effects.BLINDNESS, 3600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "blindness"));
-	public static final Potion POTION_BLINDNESS_LONG = new Potion("blindness", new EffectInstance(Effects.BLINDNESS, 9600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "long_blindness"));
-	public static final Potion POTION_TRANSIENT = new Potion("transient", new EffectInstance(TRANSIENT_EFFECT, 3600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "transient"));
-	public static final Potion POTION_TRANSIENT_LONG = new Potion("transient", new EffectInstance(TRANSIENT_EFFECT, 9600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "long_transient"));
+	public static final Potion POTION_SEDATION = new Potion("sedation", new MobEffectInstance(SEDATION_EFFECT, 3600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "sedation"));
+	public static final Potion POTION_SEDATION_LONG = new Potion("sedation", new MobEffectInstance(SEDATION_EFFECT, 9600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "long_sedation"));
+	public static final Potion POTION_CURATIVE = new Potion("curative", new MobEffectInstance(CURATIVE_EFFECT, 1)).setRegistryName(new ResourceLocation(Crossroads.MODID, "curative"));
+	public static final Potion POTION_NAUSEA = new Potion("nausea", new MobEffectInstance(MobEffects.CONFUSION, 3600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "nausea"));
+	public static final Potion POTION_NAUSEA_LONG = new Potion("nausea", new MobEffectInstance(MobEffects.CONFUSION, 9600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "long_nausea"));
+	public static final Potion POTION_BLINDNESS = new Potion("blindness", new MobEffectInstance(MobEffects.BLINDNESS, 3600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "blindness"));
+	public static final Potion POTION_BLINDNESS_LONG = new Potion("blindness", new MobEffectInstance(MobEffects.BLINDNESS, 9600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "long_blindness"));
+	public static final Potion POTION_TRANSIENT = new Potion("transient", new MobEffectInstance(TRANSIENT_EFFECT, 3600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "transient"));
+	public static final Potion POTION_TRANSIENT_LONG = new Potion("transient", new MobEffectInstance(TRANSIENT_EFFECT, 9600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "long_transient"));
 
-	public static void registerEffects(IForgeRegistry<Effect> reg){
+	public static void registerEffects(IForgeRegistry<MobEffect> reg){
 		reg.register(SEDATION_EFFECT);
 		reg.register(CURATIVE_EFFECT);
 		reg.register(HEALTH_PENALTY_EFFECT);
@@ -96,7 +103,7 @@ public class CRPotions{
 		BrewingRecipeRegistry.addRecipe(Ingredient.of(Items.GLASS_BOTTLE), Ingredient.of(Blocks.ICE), PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER));
 	}
 
-	public static boolean canBePermanentEffect(EffectInstance effect){
+	public static boolean canBePermanentEffect(MobEffectInstance effect){
 		if(!effect.getEffect().isInstantenous()){
 			//Confirm the effect isn't blacklisted
 			ResourceLocation effectRegistryName = effect.getEffect().getRegistryName();
@@ -113,9 +120,9 @@ public class CRPotions{
 	 * @param effect The effect to be applied
 	 * @return Whether a new application of the effect can be applied to the target
 	 */
-	public static boolean canBeAppliedPermanentlyToTarget(LivingEntity target, EffectInstance effect){
+	public static boolean canBeAppliedPermanentlyToTarget(LivingEntity target, MobEffectInstance effect){
 		if(canBePermanentEffect(effect)){
-			for(EffectInstance active : target.getActiveEffects()){
+			for(MobEffectInstance active : target.getActiveEffects()){
 				if(active.getEffect() == effect.getEffect() && active.getAmplifier() >= effect.getAmplifier() && active.getDuration() > PERM_EFFECT_CUTOFF){
 					return false;//This effect already exists in permanent form in an equal or stronger intensity
 				}
@@ -132,10 +139,10 @@ public class CRPotions{
 	 * @param toApply The effect to apply, but in a permanent form. The passed argument will not be modified
 	 * @return Whether this effect was applied
 	 */
-	public static boolean applyAsPermanent(LivingEntity target, EffectInstance toApply){
+	public static boolean applyAsPermanent(LivingEntity target, MobEffectInstance toApply){
 		if(canBeAppliedPermanentlyToTarget(target, toApply)){
 			//'Permanent' is actually maximum duration, which is ~3.4 years ingame
-			target.addEffect(new EffectInstance(toApply.getEffect(), Integer.MAX_VALUE, toApply.getAmplifier(), toApply.isAmbient(), toApply.isVisible(), toApply.showIcon()));
+			target.addEffect(new MobEffectInstance(toApply.getEffect(), Integer.MAX_VALUE, toApply.getAmplifier(), toApply.isAmbient(), toApply.isVisible(), toApply.showIcon()));
 			return true;
 		}
 		return false;

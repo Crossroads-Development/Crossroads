@@ -4,19 +4,19 @@ import com.Da_Technomancer.crossroads.API.AdvancementTracker;
 import com.Da_Technomancer.crossroads.API.EnumPath;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
 
-public class DetailedCrafterScreen extends ContainerScreen<DetailedCrafterContainer>{
+public class DetailedCrafterScreen extends AbstractContainerScreen<DetailedCrafterContainer>{
 
 	private static final ResourceLocation BACKGROUND = new ResourceLocation(Crossroads.MODID, "textures/gui/container/detailed_crafter.png");
 
-	public DetailedCrafterScreen(DetailedCrafterContainer cont, PlayerInventory playerInv, ITextComponent name){
+	public DetailedCrafterScreen(DetailedCrafterContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);
 		imageWidth = 176;
 		imageHeight = 166;
@@ -29,14 +29,14 @@ public class DetailedCrafterScreen extends ContainerScreen<DetailedCrafterContai
 	}
 
 	@Override
-	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTicks){
+	public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks){
 		renderBackground(matrix);
 		super.render(matrix, mouseX, mouseY, partialTicks);
 		renderTooltip(matrix, mouseX, mouseY);
 	}
 
 	@Override
-	protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
 		//Background
 		RenderSystem.color4f(1, 1, 1, 1);
 		Minecraft.getInstance().getTextureManager().bind(BACKGROUND);

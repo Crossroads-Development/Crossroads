@@ -12,18 +12,18 @@ import com.Da_Technomancer.crossroads.items.alchemy.*;
 import com.Da_Technomancer.crossroads.items.itemSets.*;
 import com.Da_Technomancer.crossroads.items.technomancy.*;
 import com.Da_Technomancer.crossroads.items.witchcraft.*;
-import net.minecraft.block.DispenserBlock;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.client.renderer.color.ItemColors;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.dispenser.IBlockSource;
-import net.minecraft.dispenser.IDispenseItemBehavior;
-import net.minecraft.dispenser.OptionalDispenseBehavior;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.client.color.item.ItemColors;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockSource;
+import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.item.*;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -32,23 +32,33 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.client.renderer.item.ItemPropertyFunction;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public final class CRItems{
 
-	public static final ItemGroup TAB_CROSSROADS = new ItemGroup(Crossroads.MODID){
+	public static final CreativeModeTab TAB_CROSSROADS = new CreativeModeTab(Crossroads.MODID){
 		@Override
 		public ItemStack makeIcon(){
 			return new ItemStack(omnimeter, 1);
 		}
 	};
 
-	public static final ItemGroup TAB_HEAT_CABLE = new ItemGroup("heat_cable"){
+	public static final CreativeModeTab TAB_HEAT_CABLE = new CreativeModeTab("heat_cable"){
 		@Override
 		public ItemStack makeIcon(){
 			return new ItemStack(HeatCableFactory.HEAT_CABLES.get(HeatInsulators.WOOL), 1);
 		}
 	};
 
-	public static final ItemGroup TAB_GEAR = new ItemGroup("gear"){
+	public static final CreativeModeTab TAB_GEAR = new CreativeModeTab("gear"){
 		@Override
 		public ItemStack makeIcon(){
 			return smallGear.withMaterial(GearFactory.findMaterial("copper"), 1);
@@ -273,7 +283,7 @@ public final class CRItems{
 		toRegister.add(mutagen = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("mutagen"));
 		villagerBrain = new VillagerBrain();
 		brainHarvester = new BrainHarvester();
-		toRegister.add(hopperHawkSpawnEgg = new SpawnEggItem(EntityHopperHawk.type, 0x555555, 0x999999, (new Item.Properties()).tab(ItemGroup.TAB_MISC)).setRegistryName("hopper_hawk_spawn_egg"));
+		toRegister.add(hopperHawkSpawnEgg = new SpawnEggItem(EntityHopperHawk.type, 0x555555, 0x999999, (new Item.Properties()).tab(CreativeModeTab.TAB_MISC)).setRegistryName("hopper_hawk_spawn_egg"));
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -284,7 +294,7 @@ public final class CRItems{
 		itemColor.register((ItemStack stack, int layer) -> layer == 0 ? AbstractGlassware.getColorRGB(stack) : -1, phialGlass, florenceFlaskGlass, shellGlass, phialCrystal, florenceFlaskCrystal, shellCrystal);
 
 		//Gears and ore processing dusts
-		IItemColor oreItemColoring = (ItemStack stack, int tintIndex) -> {
+		ItemColor oreItemColoring = (ItemStack stack, int tintIndex) -> {
 			if(tintIndex == 0){
 				return -1;
 			}
@@ -294,7 +304,7 @@ public final class CRItems{
 		itemColor.register(oreItemColoring, oreGravel, oreClump, axle, smallGear, largeGear, clutch, invClutch, toggleGear, invToggleGear, axleMount);
 
 		//Genetic spawn egg
-		IItemColor eggItemColoring = (ItemStack stack, int tintIndex) -> {
+		ItemColor eggItemColoring = (ItemStack stack, int tintIndex) -> {
 			//Lookup the mob's vanilla egg, copy the colors
 			//If it doesn't have an egg, fallback to defaults
 			if(stack.getItem() instanceof GeneticSpawnEgg){
@@ -315,7 +325,7 @@ public final class CRItems{
 
 		//Properties
 		//Whirligig rotation
-		ItemModelsProperties.register(whirligig, new ResourceLocation("angle"), (ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) -> {
+		ItemProperties.register(whirligig, new ResourceLocation("angle"), (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity) -> {
 			if(entity == null || entity.getUseItem() != stack){
 				return 0;
 			}
@@ -333,20 +343,20 @@ public final class CRItems{
 			return angle;
 		});
 		//Technomancy armor
-		IItemPropertyGetter technoArmorPropertyGetter = (ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) -> TechnomancyArmor.isReinforced(stack) ? TechnomancyArmor.hasDurability(stack) ? 2F : 1F : 0F;
-		ItemModelsProperties.register(armorGoggles, new ResourceLocation("protection"), technoArmorPropertyGetter);
-		ItemModelsProperties.register(propellerPack, new ResourceLocation("protection"), technoArmorPropertyGetter);
-		ItemModelsProperties.register(armorToolbelt, new ResourceLocation("protection"), technoArmorPropertyGetter);
-		ItemModelsProperties.register(armorEnviroBoots, new ResourceLocation("protection"), technoArmorPropertyGetter);
+		ItemPropertyFunction technoArmorPropertyGetter = (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity) -> TechnomancyArmor.isReinforced(stack) ? TechnomancyArmor.hasDurability(stack) ? 2F : 1F : 0F;
+		ItemProperties.register(armorGoggles, new ResourceLocation("protection"), technoArmorPropertyGetter);
+		ItemProperties.register(propellerPack, new ResourceLocation("protection"), technoArmorPropertyGetter);
+		ItemProperties.register(armorToolbelt, new ResourceLocation("protection"), technoArmorPropertyGetter);
+		ItemProperties.register(armorEnviroBoots, new ResourceLocation("protection"), technoArmorPropertyGetter);
 		//Rotting samples
-		IItemPropertyGetter rottingPropertyGetter = (ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) -> stack.getItem() instanceof IPerishable && ((IPerishable) stack.getItem()).isSpoiled(stack, world) ? 1F : 0F;
-		ItemModelsProperties.register(bloodSample, new ResourceLocation("spoiled"), rottingPropertyGetter);
-		ItemModelsProperties.register(separatedBloodSample, new ResourceLocation("spoiled"), rottingPropertyGetter);
-		ItemModelsProperties.register(potionExtension, new ResourceLocation("spoiled"), rottingPropertyGetter);
-		ItemModelsProperties.register(embryo, new ResourceLocation("spoiled"), rottingPropertyGetter);
+		ItemPropertyFunction rottingPropertyGetter = (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity) -> stack.getItem() instanceof IPerishable && ((IPerishable) stack.getItem()).isSpoiled(stack, world) ? 1F : 0F;
+		ItemProperties.register(bloodSample, new ResourceLocation("spoiled"), rottingPropertyGetter);
+		ItemProperties.register(separatedBloodSample, new ResourceLocation("spoiled"), rottingPropertyGetter);
+		ItemProperties.register(potionExtension, new ResourceLocation("spoiled"), rottingPropertyGetter);
+		ItemProperties.register(embryo, new ResourceLocation("spoiled"), rottingPropertyGetter);
 		//Syringe treatment
-		IItemPropertyGetter syringePropertyGetter = (ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) -> CRItems.syringe.isTreated(stack) ? 1 : 0;
-		ItemModelsProperties.register(syringe, new ResourceLocation("treated"), syringePropertyGetter);
+		ItemPropertyFunction syringePropertyGetter = (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity) -> CRItems.syringe.isTreated(stack) ? 1 : 0;
+		ItemProperties.register(syringe, new ResourceLocation("treated"), syringePropertyGetter);
 	}
 
 	/**
@@ -363,7 +373,7 @@ public final class CRItems{
 	 * @param overrideBehaviour The new behaviour to add to the item. If not successful when executed, the fallback behaviour will be used
 	 * @param items All items to override the dispenser behaviour for
 	 */
-	private static void registerDispenserOverride(OptionalDispenseBehavior overrideBehaviour, Item... items){
+	private static void registerDispenserOverride(OptionalDispenseItemBehavior overrideBehaviour, Item... items){
 		for(Item item : items){
 			DispenserBlock.registerBehavior(item, new FallbackDispenseBehaviour(overrideBehaviour, DispenserSubclass.INSTANCE.getDispenseMethod(new ItemStack(item))));
 		}
@@ -382,23 +392,23 @@ public final class CRItems{
 		}
 
 		@Override
-		public IDispenseItemBehavior getDispenseMethod(ItemStack stack){
+		public DispenseItemBehavior getDispenseMethod(ItemStack stack){
 			return super.getDispenseMethod(stack);
 		}
 	}
 
-	private static class FallbackDispenseBehaviour implements IDispenseItemBehavior{
+	private static class FallbackDispenseBehaviour implements DispenseItemBehavior{
 
-		private final OptionalDispenseBehavior overrideBehaviour;
-		private final IDispenseItemBehavior fallbackBehaviour;
+		private final OptionalDispenseItemBehavior overrideBehaviour;
+		private final DispenseItemBehavior fallbackBehaviour;
 
-		public FallbackDispenseBehaviour(@Nullable OptionalDispenseBehavior overrideBehaviour, @Nonnull IDispenseItemBehavior fallbackBehaviour){
+		public FallbackDispenseBehaviour(@Nullable OptionalDispenseItemBehavior overrideBehaviour, @Nonnull DispenseItemBehavior fallbackBehaviour){
 			this.overrideBehaviour = overrideBehaviour;
 			this.fallbackBehaviour = fallbackBehaviour;
 		}
 
 		@Override
-		public ItemStack dispense(IBlockSource source, ItemStack stack){
+		public ItemStack dispense(BlockSource source, ItemStack stack){
 			if(overrideBehaviour != null){
 				overrideBehaviour.setSuccess(false);
 				ItemStack result = overrideBehaviour.dispense(source, stack);

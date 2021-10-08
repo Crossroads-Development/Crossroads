@@ -7,20 +7,20 @@ import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoilTop;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import com.Da_Technomancer.essentials.tileentities.LinkHelper;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
@@ -30,10 +30,10 @@ import java.util.List;
 import java.util.Set;
 
 @ObjectHolder(Crossroads.MODID)
-public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILinkTE{
+public class TeslaCoilTopTileEntity extends BlockEntity implements IInfoTE, ILinkTE{
 
 	@ObjectHolder("tesla_coil_top")
-	public static TileEntityType<TeslaCoilTopTileEntity> type = null;
+	public static BlockEntityType<TeslaCoilTopTileEntity> type = null;
 
 	public static final int[] COLOR_CODES = {0xFFECCFFF, 0xFFFCDFFF, 0xFFFFFAFF};
 	private static final int[] ATTACK_COLOR_CODES = {0xFFFFCCCC, 0xFFFFFFCC, 0xFFFFFAFA};
@@ -61,7 +61,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 	}
 
 	@Override
-	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayer sendingPlayer){
 		linkHelper.handleIncomingPacket(identifier, message);
 	}
 
@@ -76,7 +76,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 			}
 
 			//ATTACK
-			List<LivingEntity> ents = level.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(worldPosition.getX() - range, worldPosition.getY() - range, worldPosition.getZ() - range, worldPosition.getX() + range, worldPosition.getY() + range, worldPosition.getZ() + range), EntityPredicates.ENTITY_STILL_ALIVE);
+			List<LivingEntity> ents = level.getEntitiesOfClass(LivingEntity.class, new AABB(worldPosition.getX() - range, worldPosition.getY() - range, worldPosition.getZ() - range, worldPosition.getX() + range, worldPosition.getY() + range, worldPosition.getZ() + range), EntitySelector.ENTITY_STILL_ALIVE);
 
 			if(!ents.isEmpty() && coilTE.getStored() >= joltQty){
 				LivingEntity ent = ents.get(level.random.nextInt(ents.size()));
@@ -91,11 +91,11 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 				if(level.isClientSide){
 					//Spawn the purely decorative bolts on the client side directly to reduce packet load
 					int count = level.random.nextInt(5) + 1;
-					Vector3d start = new Vector3d(worldPosition.getX() + 0.5F, worldPosition.getY() + 0.75F, worldPosition.getZ() + 0.5F);
+					Vec3 start = new Vec3(worldPosition.getX() + 0.5F, worldPosition.getY() + 0.75F, worldPosition.getZ() + 0.5F);
 					for(int i = 0; i < count; i++){
 						float angle = level.random.nextFloat() * 2F * (float) Math.PI;
 						float rad = level.random.nextFloat() * 2F + 3F;
-						Vector3d end = start.add(new Vector3d(rad * Math.cos(angle), level.random.nextFloat() * 2F - 1F, rad * Math.sin(angle)));
+						Vec3 end = start.add(new Vec3(rad * Math.cos(angle), level.random.nextFloat() * 2F - 1F, rad * Math.sin(angle)));
 						CRRenderUtil.addArc(level, start, end, 6, 0.6F, COLOR_CODES[level.random.nextInt(COLOR_CODES.length)]);
 					}
 				}else{
@@ -107,7 +107,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 			for(BlockPos linkPos : linkHelper.getLinksRelative()){
 				if(linkPos != null && coilTE.getStored() >= joltQty && linkPos.distSqr(0, 0, 0, false) <= range * range){
 					BlockPos actualPos = linkPos.offset(worldPosition.getX(), worldPosition.getY() - 1, worldPosition.getZ());
-					TileEntity te = level.getBlockEntity(actualPos);
+					BlockEntity te = level.getBlockEntity(actualPos);
 					if(te instanceof TeslaCoilTileEntity && level.getBlockEntity(actualPos.above()) instanceof TeslaCoilTopTileEntity){
 						TeslaCoilTileEntity tcTe = (TeslaCoilTileEntity) te;
 						if(tcTe.getCapacity() - tcTe.getStored() > joltQty * (double) variant.efficiency / 100D){
@@ -126,21 +126,21 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		for(BlockPos link : linkHelper.getLinksAbsolute()){
-			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.link", link.getX(), link.getY(), link.getZ()));
+			chat.add(new TranslatableComponent("tt.crossroads.boilerplate.link", link.getX(), link.getY(), link.getZ()));
 		}
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag(){
-		CompoundNBT nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(){
+		CompoundTag nbt = super.getUpdateTag();
 		linkHelper.writeNBT(nbt);
 		return nbt;
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		int i = 0;
 		while(nbt.contains("link" + i)){
@@ -153,7 +153,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		linkHelper.writeNBT(nbt);
 		return nbt;
@@ -175,7 +175,7 @@ public class TeslaCoilTopTileEntity extends TileEntity implements IInfoTE, ILink
 	}
 
 	@Override
-	public boolean createLinkSource(ILinkTE endpoint, @Nullable PlayerEntity player){
+	public boolean createLinkSource(ILinkTE endpoint, @Nullable Player player){
 		return linkHelper.addLink(endpoint, player);
 	}
 

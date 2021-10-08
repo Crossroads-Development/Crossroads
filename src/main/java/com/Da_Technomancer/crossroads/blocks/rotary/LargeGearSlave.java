@@ -6,28 +6,28 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearSlaveTileEntity;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LargeGearSlave extends ContainerBlock{
+public class LargeGearSlave extends BaseEntityBlock{
 
 	private static final VoxelShape[] SHAPES = new VoxelShape[6];
 	private static final VoxelShape[] COL_SHAPES = new VoxelShape[6];
@@ -59,44 +59,44 @@ public class LargeGearSlave extends ContainerBlock{
 	}
 
 	@Override
-	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
 		builder.add(ESProperties.FACING);
 	}
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+	public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context){
 		return COL_SHAPES[state.getValue(ESProperties.FACING).get3DDataValue()];
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context){
 		return SHAPES[state.getValue(ESProperties.FACING).get3DDataValue()];
 	}
 
 	@Override
-	public VoxelShape getOcclusionShape(BlockState state, IBlockReader worldIn, BlockPos pos){
-		return VoxelShapes.empty();
+	public VoxelShape getOcclusionShape(BlockState state, BlockGetter worldIn, BlockPos pos){
+		return Shapes.empty();
 	}
 	
 	@Override
-	public TileEntity newBlockEntity(IBlockReader worldIn){
+	public BlockEntity newBlockEntity(BlockGetter worldIn){
 		return new LargeGearSlaveTileEntity();
 	}
 
 	@Override
-	public BlockRenderType getRenderShape(BlockState state){
-		return BlockRenderType.INVISIBLE;
+	public RenderShape getRenderShape(BlockState state){
+		return RenderShape.INVISIBLE;
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
+	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
 		RotaryUtil.increaseMasterKey(true);
 		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
 	}
 
 	@Override
-	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player){
-		TileEntity te = world.getBlockEntity(pos);
+	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player){
+		BlockEntity te = world.getBlockEntity(pos);
 		if(te instanceof LargeGearSlaveTileEntity && ((LargeGearSlaveTileEntity) te).masterPos != null){
 			te = world.getBlockEntity(pos.offset(((LargeGearSlaveTileEntity) te).masterPos));
 			if(te instanceof LargeGearMasterTileEntity){
@@ -106,7 +106,7 @@ public class LargeGearSlave extends ContainerBlock{
 		return ItemStack.EMPTY;	}
 
 	@Override
-	public boolean removedByPlayer(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid){
+	public boolean removedByPlayer(BlockState state, Level worldIn, BlockPos pos, Player player, boolean willHarvest, FluidState fluid){
 		if(willHarvest && worldIn.getBlockEntity(pos) instanceof LargeGearSlaveTileEntity){
 			((LargeGearSlaveTileEntity) worldIn.getBlockEntity(pos)).passBreak(state.getValue(ESProperties.FACING), true);
 		}
@@ -114,7 +114,7 @@ public class LargeGearSlave extends ContainerBlock{
 	}
 
 	@Override
-	public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving){
+	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving){
 		if(worldIn.getBlockEntity(pos) instanceof LargeGearSlaveTileEntity){
 			((LargeGearSlaveTileEntity) worldIn.getBlockEntity(pos)).passBreak(state.getValue(ESProperties.FACING), false);
 		}

@@ -5,23 +5,23 @@ import com.Da_Technomancer.essentials.Essentials;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import com.Da_Technomancer.essentials.packets.EssentialsPackets;
 import com.Da_Technomancer.essentials.packets.SendNBTToServer;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
-public class HeatLimiterScreen extends ContainerScreen<HeatLimiterContainer>{
+public class HeatLimiterScreen extends AbstractContainerScreen<HeatLimiterContainer>{
 
 	private static final ResourceLocation SEARCH_BAR_TEXTURE = new ResourceLocation(Essentials.MODID, "textures/gui/search_bar.png");
-	private TextFieldWidget searchBar;
+	private EditBox searchBar;
 
-	public HeatLimiterScreen(HeatLimiterContainer cont, PlayerInventory playerInventory, ITextComponent text){
+	public HeatLimiterScreen(HeatLimiterContainer cont, Inventory playerInventory, Component text){
 		super(cont, playerInventory, text);
 		imageHeight = 18;
 		imageWidth = 144;
@@ -30,7 +30,7 @@ public class HeatLimiterScreen extends ContainerScreen<HeatLimiterContainer>{
 	@Override
 	protected void init(){
 		super.init();
-		searchBar = new TextFieldWidget(font, leftPos + 4, topPos + 8, 144 - 4, 18, new TranslationTextComponent("container.search_bar"));
+		searchBar = new EditBox(font, leftPos + 4, topPos + 8, 144 - 4, 18, new TranslatableComponent("container.search_bar"));
 		searchBar.setCanLoseFocus(false);
 		searchBar.setTextColor(-1);
 		searchBar.setTextColorUneditable(-1);
@@ -70,7 +70,7 @@ public class HeatLimiterScreen extends ContainerScreen<HeatLimiterContainer>{
 	}
 
 	@Override
-	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTicks){
+	public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks){
 		renderBackground(matrix);
 		super.render(matrix, mouseX, mouseY, partialTicks);
 		RenderSystem.disableLighting();
@@ -79,7 +79,7 @@ public class HeatLimiterScreen extends ContainerScreen<HeatLimiterContainer>{
 	}
 
 	@Override
-	protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
 		minecraft.getTextureManager().bind(SEARCH_BAR_TEXTURE);
 		blit(matrix, leftPos, topPos, 0, 0, imageWidth, 18, imageWidth, 18);
 	}
@@ -87,7 +87,7 @@ public class HeatLimiterScreen extends ContainerScreen<HeatLimiterContainer>{
 	private void entryChanged(String newFilter){
 		float output = RedstoneUtil.interpretFormulaString(newFilter);
 		menu.output = output;
-		CompoundNBT nbt = new CompoundNBT();
+		CompoundTag nbt = new CompoundTag();
 		nbt.putFloat("value", output);
 		nbt.putString("config", newFilter);
 		if(menu.pos != null){
@@ -97,7 +97,7 @@ public class HeatLimiterScreen extends ContainerScreen<HeatLimiterContainer>{
 
 	//MCP note: draw tooltip/foreground
 	@Override
-	protected void renderLabels(MatrixStack matrix, int p_230451_2_, int p_230451_3_){
+	protected void renderLabels(PoseStack matrix, int p_230451_2_, int p_230451_3_){
 		//Don't render text overlays
 	}
 }

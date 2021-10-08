@@ -5,10 +5,10 @@ import com.Da_Technomancer.crossroads.crafting.PredicateMap;
 import com.Da_Technomancer.crossroads.crafting.recipes.AlchemyRec;
 import com.Da_Technomancer.crossroads.crafting.recipes.FluidIngredient;
 import com.Da_Technomancer.crossroads.crafting.recipes.ReagentRec;
-import net.minecraft.item.Item;
-import net.minecraft.item.crafting.RecipeManager;
-import net.minecraft.tags.ITag;
-import net.minecraft.world.World;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -42,7 +42,7 @@ public final class ReagentManager{
 		return ITEM_TO_REAGENT;
 	}
 
-	public static List<AlchemyRec> getReactions(World world){
+	public static List<AlchemyRec> getReactions(Level world){
 		return world.getRecipeManager().getAllRecipesFor(CRRecipes.ALCHEMY_TYPE);
 	}
 
@@ -75,7 +75,7 @@ public final class ReagentManager{
 			}
 		}
 		//Now that everything is loaded and the tags are bound, we remove any reagent that no longer exists, and remove any mapping with an empty tag to speed things up in future
-		ITEM_TO_REAGENT.entrySet().removeIf(entry -> toRemove.contains(entry.getValue().getID()) || entry.getKey() instanceof ITag && ((ITag<?>) entry.getKey()).getValues().isEmpty());
+		ITEM_TO_REAGENT.entrySet().removeIf(entry -> toRemove.contains(entry.getValue().getID()) || entry.getKey() instanceof Tag && ((Tag<?>) entry.getKey()).getValues().isEmpty());
 	}
 
 	public static void updateFromServer(RecipeManager recManager){

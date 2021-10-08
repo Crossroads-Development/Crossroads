@@ -10,17 +10,17 @@ import com.Da_Technomancer.crossroads.gui.container.CultivatorVatContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -30,11 +30,14 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 
+import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE.TankProperty;
+
 @ObjectHolder(Crossroads.MODID)
 public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEntity{
 
 	@ObjectHolder("cultivator_vat")
-	public static TileEntityType<CultivatorVatTileEntity> type = null;
+	public static BlockEntityType<CultivatorVatTileEntity> type = null;
 	public static final int REQUIRED_PROGRESS = 100;
 	public static final int NUTRIENT_DRAIN = 1;
 
@@ -214,13 +217,13 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		progress = nbt.getInt("prog");
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putInt("prog", progress);
 		return nbt;
@@ -289,13 +292,13 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 	}
 
 	@Override
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.crossroads.cultivator_vat");
+	public Component getDisplayName(){
+		return new TranslatableComponent("container.crossroads.cultivator_vat");
 	}
 
 	@Nullable
 	@Override
-	public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity player){
+	public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player){
 		return new CultivatorVatContainer(id, playerInventory, createContainerBuf());
 	}
 }

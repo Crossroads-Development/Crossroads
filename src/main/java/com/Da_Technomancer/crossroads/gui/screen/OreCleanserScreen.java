@@ -4,17 +4,17 @@ import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.OreCleanserContainer;
 import com.Da_Technomancer.crossroads.tileentities.fluid.OreCleanserTileEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
 
 public class OreCleanserScreen extends MachineGUI<OreCleanserContainer, OreCleanserTileEntity>{
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/ore_cleanser_gui.png");
 
-	public OreCleanserScreen(OreCleanserContainer cont, PlayerInventory playerInv, ITextComponent name){
+	public OreCleanserScreen(OreCleanserContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);
 	}
 
@@ -27,7 +27,7 @@ public class OreCleanserScreen extends MachineGUI<OreCleanserContainer, OreClean
 
 
 	@Override
-	protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
 		Minecraft.getInstance().getTextureManager().bind(TEXTURE);
 
 		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);

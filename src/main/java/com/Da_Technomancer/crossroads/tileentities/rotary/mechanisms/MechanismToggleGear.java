@@ -9,17 +9,17 @@ import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.render.TESR.CRModels;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -40,7 +40,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 	@Override
 	public void onRedstoneChange(double prevValue, double newValue, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, double energy, double speed, MechanismTileEntity te){
 		if((newValue == 0) ^ (prevValue == 0)){
-			CRSounds.playSoundServer(te.getLevel(), te.getBlockPos(), SoundEvents.LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, (newValue != 0) ^ inverted ? 0.6F : 0.5F);
+			CRSounds.playSoundServer(te.getLevel(), te.getBlockPos(), SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, (newValue != 0) ^ inverted ? 0.6F : 0.5F);
 			RotaryUtil.increaseMasterKey(true);
 		}
 	}
@@ -78,7 +78,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 		handler.updateKey = key;
 
 
-		TileEntity sideTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(side));
+		BlockEntity sideTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(side));
 
 		//Don't connect via cogs if disabled
 		if((te.redstoneIn != 0) ^ inverted){
@@ -93,7 +93,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 				if(i != side.get3DDataValue() && i != side.getOpposite().get3DDataValue()){
 					Direction facing = Direction.from3DDataValue(i);
 					// Adjacent gears
-					TileEntity adjTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(facing));
+					BlockEntity adjTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(facing));
 					if(adjTE != null){
 						LazyOptional<ICogHandler> cogOpt;
 						if((cogOpt = adjTE.getCapability(Capabilities.COG_CAPABILITY, side)).isPresent()){
@@ -105,7 +105,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 					}
 
 					// Diagonal gears
-					TileEntity diagTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(facing).relative(side));
+					BlockEntity diagTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(facing).relative(side));
 					LazyOptional<ICogHandler> cogOpt;
 					if(diagTE != null && (cogOpt = diagTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())).isPresent() && RotaryUtil.canConnectThrough(te.getLevel(), te.getBlockPos().relative(facing), facing.getOpposite(), side)){
 						cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * handler.rotRatio, .5D, side.getOpposite(), handler.renderOffset);
@@ -148,13 +148,13 @@ public class MechanismToggleGear extends MechanismSmallGear{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void doRender(MechanismTileEntity te, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, float partialTicks, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis){
+	public void doRender(MechanismTileEntity te, PoseStack matrix, MultiBufferSource buffer, int combinedLight, float partialTicks, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis){
 		if(side == null){
 			return;
 		}
 
 		MechanismTileEntity.SidedAxleHandler handler = te.axleHandlers[side.get3DDataValue()];
-		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
+		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
 		
 		matrix.mulPose(side.getOpposite().getRotation());//Apply orientation
 		float angle = handler.getAngle(partialTicks);

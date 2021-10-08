@@ -4,21 +4,24 @@ import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.BloodCentrifugeTileEntity;
 import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.IntReferenceHolder;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.inventory.DataSlot;
 import net.minecraftforge.registries.ObjectHolder;
+
+import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.OutputSlot;
+import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.StrictSlot;
 
 @ObjectHolder(Crossroads.MODID)
 public class BloodCentrifugeContainer extends MachineContainer<BloodCentrifugeTileEntity>{
 
 	@ObjectHolder("blood_centrifuge")
-	private static ContainerType<BloodCentrifugeContainer> type = null;
+	private static MenuType<BloodCentrifugeContainer> type = null;
 
-	public IntReferenceHolder progRef;
+	public DataSlot progRef;
 
-	public BloodCentrifugeContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
+	public BloodCentrifugeContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
 		super(type, id, playerInv, buf);
 		progRef = new IntDeferredRef(te::getProgress, te.getLevel().isClientSide);
 		addDataSlot(progRef);

@@ -11,21 +11,21 @@ import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.render.TESR.CRModels;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -45,15 +45,15 @@ public class MechanismClutch extends MechanismAxle{
 
 	private static final VoxelShape[] SHAPES_CLUTCH = new VoxelShape[3];
 	static{
-		SHAPES_CLUTCH[0] = VoxelShapes.or(SHAPES[0], Block.box(8, 4, 4, 16, 12, 12));
-		SHAPES_CLUTCH[1] = VoxelShapes.or(SHAPES[1], Block.box(4, 8, 4, 12, 16, 4));
-		SHAPES_CLUTCH[2] = VoxelShapes.or(SHAPES[2], Block.box(4, 4, 8, 12, 12, 16));
+		SHAPES_CLUTCH[0] = Shapes.or(SHAPES[0], Block.box(8, 4, 4, 16, 12, 12));
+		SHAPES_CLUTCH[1] = Shapes.or(SHAPES[1], Block.box(4, 8, 4, 12, 16, 4));
+		SHAPES_CLUTCH[2] = Shapes.or(SHAPES[2], Block.box(4, 4, 8, 12, 12, 16));
 	}
 
 	@Override
 	public void onRedstoneChange(double prevValue, double newValue, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, double energy, double speed, MechanismTileEntity te){
 		if((newValue == 0) ^ (prevValue == 0)){
-			te.getLevel().playSound(null, te.getBlockPos(), SoundEvents.LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, (newValue != 0) ^ inverted ? 0.6F : 0.5F);
+			te.getLevel().playSound(null, te.getBlockPos(), SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, (newValue != 0) ^ inverted ? 0.6F : 0.5F);
 			RotaryUtil.increaseMasterKey(true);
 		}
 	}
@@ -112,7 +112,7 @@ public class MechanismClutch extends MechanismAxle{
 				}
 			}else{
 				//Connect externally
-				TileEntity endTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(endDir));
+				BlockEntity endTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(endDir));
 				Direction oEndDir = endDir.getOpposite();
 				if(endTE != null){
 					LazyOptional<IAxisHandler> axisOpt = endTE.getCapability(Capabilities.AXIS_CAPABILITY, oEndDir);
@@ -141,12 +141,12 @@ public class MechanismClutch extends MechanismAxle{
 
 	@Override
 	public VoxelShape getBoundingBox(@Nullable Direction side, @Nullable Direction.Axis axis){
-		return side != null || axis == null ? VoxelShapes.empty() : SHAPES_CLUTCH[axis.ordinal()];
+		return side != null || axis == null ? Shapes.empty() : SHAPES_CLUTCH[axis.ordinal()];
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void doRender(MechanismTileEntity te, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, float partialTicks, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis){
+	public void doRender(MechanismTileEntity te, PoseStack matrix, MultiBufferSource buffer, int combinedLight, float partialTicks, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis){
 		if(axis == null){
 			return;
 		}
@@ -162,7 +162,7 @@ public class MechanismClutch extends MechanismAxle{
 		//Clutch mechanism
 		TextureAtlasSprite endSprite = CRRenderUtil.getTextureSprite(CRRenderTypes.AXLE_ENDS_TEXTURE);
 		TextureAtlasSprite sideSprite = CRRenderUtil.getTextureSprite(inverted ? CRRenderTypes.CLUTCH_SIDE_INVERTED_TEXTURE : CRRenderTypes.CLUTCH_SIDE_TEXTURE);
-		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
+		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
 		float size = 0.25F;
 		float height = 0.5001F;
 

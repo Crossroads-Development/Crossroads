@@ -3,14 +3,14 @@ package com.Da_Technomancer.crossroads.API.technomancy;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerChunkProvider;
-import net.minecraft.world.server.TicketType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerChunkCache;
+import net.minecraft.server.level.TicketType;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -113,9 +113,9 @@ public class GatewayAddress{
 
 		public final BlockPos pos;
 		public final ResourceLocation dim;
-		private RegistryKey<World> cache;//Used to retrieve the associated world data more quickly
+		private ResourceKey<Level> cache;//Used to retrieve the associated world data more quickly
 
-		public Location(BlockPos pos, World world){
+		public Location(BlockPos pos, Level world){
 			this.pos = pos.immutable();
 			cache = world.dimension();
 			this.dim = cache.location();
@@ -127,7 +127,7 @@ public class GatewayAddress{
 		}
 
 		@Nullable
-		public World evalDim(MinecraftServer server){
+		public Level evalDim(MinecraftServer server){
 			try{
 				cache = MiscUtil.getWorldKey(dim, cache);
 				return MiscUtil.getWorld(cache, server);
@@ -138,14 +138,14 @@ public class GatewayAddress{
 
 		@Nullable
 		public IGateway evalTE(MinecraftServer server){
-			World w = evalDim(server);
+			Level w = evalDim(server);
 			if(w == null){
 				return null;
 			}
 			//Load the chunk
 			ChunkPos chunkPos = new ChunkPos(pos);
-			((ServerChunkProvider) (w.getChunkSource())).addRegionTicket(TicketType.PORTAL, chunkPos, 3, pos);
-			TileEntity te = w.getBlockEntity(pos);
+			((ServerChunkCache) (w.getChunkSource())).addRegionTicket(TicketType.PORTAL, chunkPos, 3, pos);
+			BlockEntity te = w.getBlockEntity(pos);
 			if(te instanceof IGateway){
 				return (IGateway) te;
 			}

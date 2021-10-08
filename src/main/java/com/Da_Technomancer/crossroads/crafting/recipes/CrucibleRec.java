@@ -4,22 +4,22 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.CraftingUtil;
 import com.google.gson.JsonObject;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 
-public class CrucibleRec implements IOptionalRecipe<IInventory>{
+public class CrucibleRec implements IOptionalRecipe<Container>{
 
 	private final ResourceLocation id;
 	private final String group;
@@ -46,7 +46,7 @@ public class CrucibleRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public boolean matches(IInventory inv, World worldIn){
+	public boolean matches(Container inv, Level worldIn){
 		return active && input.test(inv.getItem(0));
 	}
 
@@ -78,7 +78,7 @@ public class CrucibleRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer(){
+	public RecipeSerializer<?> getSerializer(){
 		return CRRecipes.CRUCIBLE_SERIAL;
 	}
 
@@ -88,16 +88,16 @@ public class CrucibleRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public IRecipeType<?> getType(){
+	public RecipeType<?> getType(){
 		return CRRecipes.CRUCIBLE_TYPE;
 	}
 
-	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CrucibleRec>{
+	public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<CrucibleRec>{
 
 		@Override
 		public CrucibleRec fromJson(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and ingredient
-			String s = JSONUtils.getAsString(json, "group", "");
+			String s = GsonHelper.getAsString(json, "group", "");
 
 			if(!CraftingUtil.isActiveJSON(json)){
 				return new CrucibleRec(recipeId, s, Ingredient.EMPTY, FluidStack.EMPTY, false);
@@ -110,7 +110,7 @@ public class CrucibleRec implements IOptionalRecipe<IInventory>{
 
 		@Nullable
 		@Override
-		public CrucibleRec fromNetwork(ResourceLocation recipeId, PacketBuffer buffer){
+		public CrucibleRec fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
 			String s = buffer.readUtf(Short.MAX_VALUE);
 			if(!buffer.readBoolean()){
 				return new CrucibleRec(recipeId, s, Ingredient.EMPTY, FluidStack.EMPTY, false);
@@ -121,7 +121,7 @@ public class CrucibleRec implements IOptionalRecipe<IInventory>{
 		}
 
 		@Override
-		public void toNetwork(PacketBuffer buffer, CrucibleRec recipe){
+		public void toNetwork(FriendlyByteBuf buffer, CrucibleRec recipe){
 			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
 			if(recipe.active){

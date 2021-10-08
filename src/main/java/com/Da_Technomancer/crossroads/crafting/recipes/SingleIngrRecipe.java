@@ -2,29 +2,29 @@ package com.Da_Technomancer.crossroads.crafting.recipes;
 
 import com.Da_Technomancer.crossroads.crafting.CraftingUtil;
 import com.google.gson.JsonObject;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public abstract class SingleIngrRecipe implements IOptionalRecipe<IInventory>{
+public abstract class SingleIngrRecipe implements IOptionalRecipe<Container>{
 	
 	protected final Ingredient ingredient;
 	protected final ItemStack result;
-	private final IRecipeType<?> type;
-	private final IRecipeSerializer<?> serializer;
+	private final RecipeType<?> type;
+	private final RecipeSerializer<?> serializer;
 	protected final ResourceLocation id;
 	protected final String group;
 	protected final boolean active;
 
-	public SingleIngrRecipe(IRecipeType<?> type, IRecipeSerializer<?> serializer, ResourceLocation id, String group, Ingredient ingredient, ItemStack result, boolean active){
+	public SingleIngrRecipe(RecipeType<?> type, RecipeSerializer<?> serializer, ResourceLocation id, String group, Ingredient ingredient, ItemStack result, boolean active){
 		this.type = type;
 		this.serializer = serializer;
 		this.id = id;
@@ -35,12 +35,12 @@ public abstract class SingleIngrRecipe implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return type;
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return serializer;
 	}
 
@@ -79,7 +79,7 @@ public abstract class SingleIngrRecipe implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public boolean matches(IInventory inv, World worldIn){
+	public boolean matches(Container inv, Level worldIn){
 		return isEnabled() && ingredient.test(inv.getItem(0));
 	}
 
@@ -91,7 +91,7 @@ public abstract class SingleIngrRecipe implements IOptionalRecipe<IInventory>{
 		return width != 0 && height != 0;
 	}
 
-	public static class SingleRecipeSerializer<T extends SingleIngrRecipe> extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<T>{
+	public static class SingleRecipeSerializer<T extends SingleIngrRecipe> extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<T>{
 
 		private final IRecipeFactory<T> factory;
 
@@ -101,7 +101,7 @@ public abstract class SingleIngrRecipe implements IOptionalRecipe<IInventory>{
 
 		@Override
 		public T fromJson(ResourceLocation recipeId, JsonObject json){
-			String s = JSONUtils.getAsString(json, "group", "");
+			String s = GsonHelper.getAsString(json, "group", "");
 			if(!CraftingUtil.isActiveJSON(json)){
 				return factory.create(recipeId, s, Ingredient.EMPTY, ItemStack.EMPTY, false);
 			}
@@ -112,7 +112,7 @@ public abstract class SingleIngrRecipe implements IOptionalRecipe<IInventory>{
 		}
 
 		@Override
-		public T fromNetwork(ResourceLocation recipeId, PacketBuffer buffer){
+		public T fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
 			String s = buffer.readUtf(Short.MAX_VALUE);
 			if(!buffer.readBoolean()){
 				return factory.create(recipeId, s, Ingredient.EMPTY, ItemStack.EMPTY, false);
@@ -123,7 +123,7 @@ public abstract class SingleIngrRecipe implements IOptionalRecipe<IInventory>{
 		}
 
 		@Override
-		public void toNetwork(PacketBuffer buffer, T recipe){
+		public void toNetwork(FriendlyByteBuf buffer, T recipe){
 			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.isEnabled());
 			if(recipe.active){

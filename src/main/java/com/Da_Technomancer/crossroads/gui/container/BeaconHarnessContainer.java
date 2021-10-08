@@ -3,29 +3,29 @@ package com.Da_Technomancer.crossroads.gui.container;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.BeaconHarnessTileEntity;
 import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder(Crossroads.MODID)
-public class BeaconHarnessContainer extends Container{
+public class BeaconHarnessContainer extends AbstractContainerMenu{
 
 	@ObjectHolder("beacon_harness")
-	private static ContainerType<BeaconHarnessContainer> type = null;
+	private static MenuType<BeaconHarnessContainer> type = null;
 
 	public final IntDeferredRef cycleRef;
 	public final BeaconHarnessTileEntity te;
 
-	public BeaconHarnessContainer(int id, PlayerInventory playerInv, PacketBuffer data){
+	public BeaconHarnessContainer(int id, Inventory playerInv, FriendlyByteBuf data){
 		super(type, id);
 
 		BlockPos pos = data.readBlockPos();
-		TileEntity rawTE = playerInv.player.level.getBlockEntity(pos);
+		BlockEntity rawTE = playerInv.player.level.getBlockEntity(pos);
 		if(rawTE instanceof BeaconHarnessTileEntity){
 			te = (BeaconHarnessTileEntity) rawTE;
 		}else{
@@ -43,7 +43,7 @@ public class BeaconHarnessContainer extends Container{
 	}
 
 	@Override
-	public boolean stillValid(PlayerEntity playerIn){
+	public boolean stillValid(Player playerIn){
 		return te.stillValid(playerIn);
 	}
 }

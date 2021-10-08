@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.API.effects.alchemy;
 
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class AquaRegiaAlchemyEffect extends AcidAlchemyEffect{
 
@@ -16,7 +16,7 @@ public class AquaRegiaAlchemyEffect extends AcidAlchemyEffect{
 	}
 
 	@Override
-	public ITextComponent getName(){
-		return new TranslationTextComponent("effect.acid_gold");
+	public Component getName(){
+		return new TranslatableComponent("effect.acid_gold");
 	}
 }

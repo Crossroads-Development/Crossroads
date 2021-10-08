@@ -3,18 +3,18 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import mezz.jei.api.ingredients.IIngredientRenderer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 	protected static final ReagentIngredientRenderer RENDERER = new ReagentIngredientRenderer();
 
 	@Override
-	public void render(MatrixStack matrix, int xPosition, int yPosition, ReagIngr ingredient){
+	public void render(PoseStack matrix, int xPosition, int yPosition, ReagIngr ingredient){
 		if(ingredient == null || ingredient.getReag() == null){
 			return;
 		}
@@ -39,23 +39,23 @@ public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 		matrix.pushPose();
 		matrix.translate(xPosition, yPosition, 0);
 
-		BufferBuilder buf = Tessellator.getInstance().getBuilder();
+		BufferBuilder buf = Tesselator.getInstance().getBuilder();
 
 		Minecraft.getInstance().textureManager.bind(PHIAL_TEXTURE);
-		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
+		buf.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
 		buf.vertex(matrix.last().pose(), 0, 16, 100).color(255, 255, 255, 255).uv(0, 1).endVertex();
 		buf.vertex(matrix.last().pose(), 16, 16, 100).color(255, 255, 255, 255).uv(1, 1).endVertex();
 		buf.vertex(matrix.last().pose(), 16, 0, 100).color(255, 255, 255, 255).uv(1, 0).endVertex();
 		buf.vertex(matrix.last().pose(), 0, 0, 100).color(255, 255, 255, 255).uv(0, 0).endVertex();
-		Tessellator.getInstance().end();
+		Tesselator.getInstance().end();
 
 		Minecraft.getInstance().textureManager.bind(INNER_TEXTURE);
-		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
+		buf.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
 		buf.vertex(matrix.last().pose(), 0, 16, 200).color(col[0], col[1], col[2], col[3]).uv(0, 1).endVertex();
 		buf.vertex(matrix.last().pose(), 16, 16, 200).color(col[0], col[1], col[2], col[3]).uv(1, 1).endVertex();
 		buf.vertex(matrix.last().pose(), 16, 0, 200).color(col[0], col[1], col[2], col[3]).uv(1, 0).endVertex();
 		buf.vertex(matrix.last().pose(), 0, 0, 200).color(col[0], col[1], col[2], col[3]).uv(0, 0).endVertex();
-		Tessellator.getInstance().end();
+		Tesselator.getInstance().end();
 
 		matrix.popPose();
 
@@ -65,18 +65,18 @@ public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 	}
 	
 	@Override
-	public List<ITextComponent> getTooltip(ReagIngr ingredient, ITooltipFlag tooltipFlag){
-		ArrayList<ITextComponent> tooltip = new ArrayList<>(3);
-		tooltip.add(new StringTextComponent(ingredient.getReag().getName()));
+	public List<Component> getTooltip(ReagIngr ingredient, TooltipFlag tooltipFlag){
+		ArrayList<Component> tooltip = new ArrayList<>(3);
+		tooltip.add(new TextComponent(ingredient.getReag().getName()));
 		if(ingredient.getParts() > 0){
 			if(ingredient.getParts() == 1){
-				tooltip.add(new TranslationTextComponent("tt.crossroads.jei.reag.amount.single", ingredient.getParts()));
+				tooltip.add(new TranslatableComponent("tt.crossroads.jei.reag.amount.single", ingredient.getParts()));
 			}else{
-				tooltip.add(new TranslationTextComponent("tt.crossroads.jei.reag.amount.plural", ingredient.getParts()));
+				tooltip.add(new TranslatableComponent("tt.crossroads.jei.reag.amount.plural", ingredient.getParts()));
 			}
 		}
 		if(tooltipFlag.isAdvanced()){
-			tooltip.add(new TranslationTextComponent("tt.crossroads.jei.reag.id", ingredient.getReag().getID()));
+			tooltip.add(new TranslatableComponent("tt.crossroads.jei.reag.id", ingredient.getReag().getID()));
 		}
 		return tooltip;
 	}

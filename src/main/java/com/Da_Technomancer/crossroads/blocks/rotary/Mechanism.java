@@ -8,31 +8,37 @@ import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.*;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeMod;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Mechanism extends ContainerBlock implements IReadable{
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+
+public class Mechanism extends BaseEntityBlock implements IReadable{
 
 //	private static final VoxelShape BREAK_ALL_BB = Block.makeCuboidShape(5, 5, 5, 11, 11, 11);
 
@@ -47,18 +53,18 @@ public class Mechanism extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public TileEntity newBlockEntity(IBlockReader worldIn){
+	public BlockEntity newBlockEntity(BlockGetter worldIn){
 		return new MechanismTileEntity();
 	}
 
 	@Override
-	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player){
-		TileEntity te = world.getBlockEntity(pos);
+	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player){
+		BlockEntity te = world.getBlockEntity(pos);
 		if(!(te instanceof MechanismTileEntity)){
 			return ItemStack.EMPTY;
 		}
 		MechanismTileEntity mte = (MechanismTileEntity) te;
-		Vector3d relVec = target.getLocation().subtract(pos.getX(), pos.getY(), pos.getZ());
+		Vec3 relVec = target.getLocation().subtract(pos.getX(), pos.getY(), pos.getZ());
 
 		for(int i = 0; i < 7; i++){
 			if(mte.boundingBoxes[i] != null && voxelContains(mte.boundingBoxes[i], relVec)){
@@ -70,9 +76,9 @@ public class Mechanism extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context){
 		//Used for selection. Adds break all cube if the axle slot is empty
-		TileEntity te = worldIn.getBlockEntity(pos);
+		BlockEntity te = worldIn.getBlockEntity(pos);
 		if(te instanceof MechanismTileEntity){
 //			MechanismTileEntity mte = (MechanismTileEntity) te;
 //			if(mte.members[6] != null){
@@ -81,35 +87,35 @@ public class Mechanism extends ContainerBlock implements IReadable{
 //				return VoxelShapes.or(getCollisionShape(state, worldIn, pos, context), BREAK_ALL_BB);
 //			}
 		}
-		return VoxelShapes.empty();
+		return Shapes.empty();
 //		return BREAK_ALL_BB;//Shouldn't happen unless network weirdness.
 	}
 
 	@Override
-	public VoxelShape getOcclusionShape(BlockState state, IBlockReader worldIn, BlockPos pos){
-		return VoxelShapes.empty();
+	public VoxelShape getOcclusionShape(BlockState state, BlockGetter worldIn, BlockPos pos){
+		return Shapes.empty();
 	}
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+	public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context){
 		//There's some sort of issue with this being cached on a per-state level, and all mechanisms use the same blockstate
 
-		TileEntity te = worldIn.getBlockEntity(pos);
+		BlockEntity te = worldIn.getBlockEntity(pos);
 		if(te instanceof MechanismTileEntity){
 			MechanismTileEntity mte = (MechanismTileEntity) te;
-			VoxelShape shape = VoxelShapes.empty();
+			VoxelShape shape = Shapes.empty();
 			for(VoxelShape s : mte.boundingBoxes){
 				if(s != null){
-					shape = VoxelShapes.or(shape, s);
+					shape = Shapes.or(shape, s);
 				}
 			}
 			return shape;
 		}
-		return VoxelShapes.empty();//Shouldn't happen unless network weirdness.
+		return Shapes.empty();//Shouldn't happen unless network weirdness.
 	}
 
 	@Override
-	public boolean removedByPlayer(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid){
+	public boolean removedByPlayer(BlockState state, Level worldIn, BlockPos pos, Player player, boolean willHarvest, FluidState fluid){
 		RotaryUtil.increaseMasterKey(false);
 		return super.removedByPlayer(state, worldIn, pos, player, willHarvest, fluid);
 	}
@@ -117,7 +123,7 @@ public class Mechanism extends ContainerBlock implements IReadable{
 	@Override
 	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder){
 		ArrayList<ItemStack> drops = new ArrayList<>();
-		TileEntity te = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
+		BlockEntity te = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
 		if(te instanceof MechanismTileEntity){
 			MechanismTileEntity mte = (MechanismTileEntity) te;
 			for(int i = 0; i < 7; i++){
@@ -136,11 +142,11 @@ public class Mechanism extends ContainerBlock implements IReadable{
 	 * @param end End vector, subtract position first
 	 * @return The index of the aimed component, -1 if none, 6 for axle
 	 */
-	private int getAimedSide(MechanismTileEntity te, Vector3d start, Vector3d end){
+	private int getAimedSide(MechanismTileEntity te, Vec3 start, Vec3 end){
 		double minDist = Float.MAX_VALUE;
 		int target = -1;
 		for(int i = 0; i < te.boundingBoxes.length; i++){
-			BlockRayTraceResult res;
+			BlockHitResult res;
 			if(te.boundingBoxes[i] != null && (res = te.boundingBoxes[i].clip(start, end, BlockPos.ZERO)) != null){
 				double dist = res.getLocation().subtract(start).lengthSqr();
 				if(dist < minDist){
@@ -161,19 +167,19 @@ public class Mechanism extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public void setPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
+	public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		neighborChanged(state, world, pos, this, pos, false);
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
+	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
 		RotaryUtil.increaseMasterKey(true);
 
 		if(worldIn.isClientSide){
 			return;
 		}
 
-		TileEntity rawTE = worldIn.getBlockEntity(pos);
+		BlockEntity rawTE = worldIn.getBlockEntity(pos);
 		if(!(rawTE instanceof MechanismTileEntity)){
 			return;
 		}
@@ -194,25 +200,25 @@ public class Mechanism extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public BlockRenderType getRenderShape(BlockState state){
-		return BlockRenderType.ENTITYBLOCK_ANIMATED;
+	public RenderShape getRenderShape(BlockState state){
+		return RenderShape.ENTITYBLOCK_ANIMATED;
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit){
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit){
 		if(ESConfig.isWrench(player.getItemInHand(hand))){
-			TileEntity te = worldIn.getBlockEntity(pos);
+			BlockEntity te = worldIn.getBlockEntity(pos);
 			if(te instanceof MechanismTileEntity){
 				MechanismTileEntity gear = (MechanismTileEntity) te;
 				double reDist = player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();//Player reach distance
-				Vector3d start = new Vector3d(player.xo, player.yo + (double) player.getEyeHeight(), player.zo).subtract(pos.getX(), pos.getY(), pos.getZ());
-				Vector3d end = start.add(player.getViewVector(0F).x * reDist, player.getViewVector(0F).y * reDist, player.getViewVector(0F).z * reDist);
+				Vec3 start = new Vec3(player.xo, player.yo + (double) player.getEyeHeight(), player.zo).subtract(pos.getX(), pos.getY(), pos.getZ());
+				Vec3 end = start.add(player.getViewVector(0F).x * reDist, player.getViewVector(0F).y * reDist, player.getViewVector(0F).z * reDist);
 
 				int out = getAimedSide(gear, start, end);
 
 				if(out == -1){
 					//Didn't actually hit
-					return ActionResultType.FAIL;
+					return InteractionResult.FAIL;
 				}
 
 //				Break-all cube (index 7, BB that could be targeted to remove entire block) was removed
@@ -245,7 +251,7 @@ public class Mechanism extends ContainerBlock implements IReadable{
 				}
 //				}
 				RotaryUtil.increaseMasterKey(!worldIn.isClientSide);
-				return ActionResultType.SUCCESS;
+				return InteractionResult.SUCCESS;
 			}
 
 
@@ -261,7 +267,7 @@ public class Mechanism extends ContainerBlock implements IReadable{
 //				}
 //			}
 		}
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 
 	@Override
@@ -270,13 +276,13 @@ public class Mechanism extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos){
+	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos){
 		return RedstoneUtil.clampToVanilla(read(worldIn, pos, blockState));
 	}
 
 	@Override
-	public float read(World world, BlockPos pos, BlockState blockState){
-		TileEntity te = world.getBlockEntity(pos);
+	public float read(Level world, BlockPos pos, BlockState blockState){
+		BlockEntity te = world.getBlockEntity(pos);
 		return te instanceof MechanismTileEntity ? ((MechanismTileEntity) te).getRedstone() : 0;
 	}
 
@@ -287,7 +293,7 @@ public class Mechanism extends ContainerBlock implements IReadable{
 	 * @param point The 3 dimensional point to check if is contained by the passed shape
 	 * @return Whether the passed VoxelShape contains the passed point
 	 */
-	public static boolean voxelContains(VoxelShape shape, Vector3d point){
+	public static boolean voxelContains(VoxelShape shape, Vec3 point){
 		//We use a size 1 array because lambdas aren't supposed to use non-final variables
 		final boolean[] contained = new boolean[1];
 		shape.forAllBoxes((double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) -> {

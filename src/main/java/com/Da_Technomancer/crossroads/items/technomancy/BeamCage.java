@@ -2,21 +2,23 @@ package com.Da_Technomancer.crossroads.items.technomancy;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class BeamCage extends Item{
 
@@ -31,7 +33,7 @@ public class BeamCage extends Item{
 
 	@Nonnull
 	public static BeamUnit getStored(ItemStack stack){
-		CompoundNBT nbt = stack.getTag();
+		CompoundTag nbt = stack.getTag();
 		if(nbt == null){
 			return BeamUnit.EMPTY;
 		}
@@ -40,9 +42,9 @@ public class BeamCage extends Item{
 	}
 
 	public static void storeBeam(ItemStack stack, @Nonnull BeamUnit toStore){
-		CompoundNBT nbt = stack.getTag();
+		CompoundTag nbt = stack.getTag();
 		if(nbt == null){
-			stack.setTag(new CompoundNBT());
+			stack.setTag(new CompoundTag());
 			nbt = stack.getTag();
 		}
 		if(toStore.getEnergy() > CAPACITY || toStore.getPotential() > CAPACITY || toStore.getStability() > CAPACITY || toStore.getVoid() > CAPACITY){
@@ -52,7 +54,7 @@ public class BeamCage extends Item{
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items){
+	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
 		if(allowdedIn(group)){
 			items.add(new ItemStack(this, 1));
 			ItemStack stack = new ItemStack(this, 1);
@@ -63,11 +65,11 @@ public class BeamCage extends Item{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag advanced){
 		BeamUnit stored = getStored(stack);
-		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_cage.energy", stored.getEnergy(), CAPACITY));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_cage.potential", stored.getPotential(), CAPACITY));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_cage.stability", stored.getStability(), CAPACITY));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.beam_cage.void", stored.getVoid(), CAPACITY));
+		tooltip.add(new TranslatableComponent("tt.crossroads.beam_cage.energy", stored.getEnergy(), CAPACITY));
+		tooltip.add(new TranslatableComponent("tt.crossroads.beam_cage.potential", stored.getPotential(), CAPACITY));
+		tooltip.add(new TranslatableComponent("tt.crossroads.beam_cage.stability", stored.getStability(), CAPACITY));
+		tooltip.add(new TranslatableComponent("tt.crossroads.beam_cage.void", stored.getVoid(), CAPACITY));
 	}
 }

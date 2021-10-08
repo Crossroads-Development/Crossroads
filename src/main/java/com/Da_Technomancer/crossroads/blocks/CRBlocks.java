@@ -13,22 +13,22 @@ import com.Da_Technomancer.crossroads.blocks.witchcraft.*;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.fluids.GenericFluid;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -171,16 +171,16 @@ public class CRBlocks{
 	public static BloodCentrifuge bloodCentrifuge;
 	public static EmbryoLab embryoLab;
 
-	public static AbstractBlock.Properties getRockProperty(){
-		return AbstractBlock.Properties.of(Material.STONE).strength(3).requiresCorrectToolForDrops().sound(SoundType.STONE);
+	public static BlockBehaviour.Properties getRockProperty(){
+		return BlockBehaviour.Properties.of(Material.STONE).strength(3).requiresCorrectToolForDrops().sound(SoundType.STONE);
 	}
 
-	public static AbstractBlock.Properties getMetalProperty(){
-		return AbstractBlock.Properties.of(Material.METAL).strength(3).requiresCorrectToolForDrops().sound(SoundType.METAL);
+	public static BlockBehaviour.Properties getMetalProperty(){
+		return BlockBehaviour.Properties.of(Material.METAL).strength(3).requiresCorrectToolForDrops().sound(SoundType.METAL);
 	}
 
-	public static AbstractBlock.Properties getGlassProperty(){
-		return AbstractBlock.Properties.of(Material.GLASS).strength(0.5F).sound(SoundType.GLASS);
+	public static BlockBehaviour.Properties getGlassProperty(){
+		return BlockBehaviour.Properties.of(Material.GLASS).strength(0.5F).sound(SoundType.GLASS);
 	}
 
 	/**
@@ -303,9 +303,9 @@ public class CRBlocks{
 		antiDensusPlate = new DensusPlate(true);
 		cavorite = new BasicBlock("block_cavorite", CRBlocks.getRockProperty()){
 			@Override
-			public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-				tooltip.add(new TranslationTextComponent("tt.crossroads.cavorite"));
-				tooltip.add(new TranslationTextComponent("tt.crossroads.decoration"));
+			public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
+				tooltip.add(new TranslatableComponent("tt.crossroads.cavorite"));
+				tooltip.add(new TranslatableComponent("tt.crossroads.decoration"));
 			}
 		};
 		chargingStand = new ChargingStand();
@@ -339,14 +339,14 @@ public class CRBlocks{
 			}
 
 			@Override
-			public int getSignal(BlockState state, IBlockReader world, BlockPos pos, Direction side) {
+			public int getSignal(BlockState state, BlockGetter world, BlockPos pos, Direction side) {
 				return 15;
 			}
 
 			@Override
-			public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-				tooltip.add(new TranslationTextComponent("tt.crossroads.redstone_crystal.drops"));
-				tooltip.add(new TranslationTextComponent("tt.crossroads.redstone_crystal.power"));
+			public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
+				tooltip.add(new TranslatableComponent("tt.crossroads.redstone_crystal.drops"));
+				tooltip.add(new TranslatableComponent("tt.crossroads.redstone_crystal.power"));
 			}
 		};
 		detailedAutoCrafter = new DetailedAutoCrafter();
@@ -382,14 +382,14 @@ public class CRBlocks{
 	private static void setCutout(Block... blocks){
 		RenderType cutout = RenderType.cutout();
 		for(Block block : blocks){
-			RenderTypeLookup.setRenderLayer(block, cutout);
+			ItemBlockRenderTypes.setRenderLayer(block, cutout);
 		}
 	}
 
 	private static void setTrans(Block... blocks){
 		RenderType type = RenderType.translucent();
 		for(Block block : blocks){
-			RenderTypeLookup.setRenderLayer(block, type);
+			ItemBlockRenderTypes.setRenderLayer(block, type);
 		}
 	}
 
@@ -397,8 +397,8 @@ public class CRBlocks{
 	private static void setFluidTrans(GenericFluid.FluidData...fluids){
 		RenderType type = RenderType.translucent();
 		for(GenericFluid.FluidData f : fluids){
-			RenderTypeLookup.setRenderLayer(f.still, type);
-			RenderTypeLookup.setRenderLayer(f.flowing, type);
+			ItemBlockRenderTypes.setRenderLayer(f.still, type);
+			ItemBlockRenderTypes.setRenderLayer(f.flowing, type);
 		}
 	}
 }

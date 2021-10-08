@@ -7,20 +7,20 @@ import com.Da_Technomancer.essentials.blocks.redstone.IRedstoneHandler;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import com.Da_Technomancer.essentials.packets.INBTReceiver;
 import io.netty.buffer.Unpooled;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -30,12 +30,12 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 @ObjectHolder(Crossroads.MODID)
-public class SequenceBoxTileEntity extends TileEntity implements INBTReceiver, INamedContainerProvider{
+public class SequenceBoxTileEntity extends BlockEntity implements INBTReceiver, MenuProvider{
 
 	public static final int MAX_VALUES = 99;
 
 	@ObjectHolder("sequence_box")
-	private static TileEntityType<SequenceBoxTileEntity> type = null;
+	private static BlockEntityType<SequenceBoxTileEntity> type = null;
 
 	private final ArrayList<Float> sequenceVal = new ArrayList<>();
 	private final ArrayList<String> sequenceStr = new ArrayList<>();
@@ -83,7 +83,7 @@ public class SequenceBoxTileEntity extends TileEntity implements INBTReceiver, I
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putBoolean("redstone", hadRedstoneSignal);
 		nbt.putInt("index", index);
@@ -95,7 +95,7 @@ public class SequenceBoxTileEntity extends TileEntity implements INBTReceiver, I
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		hadRedstoneSignal = nbt.getBoolean("redstone");
 		index = nbt.getInt("index");
@@ -111,8 +111,8 @@ public class SequenceBoxTileEntity extends TileEntity implements INBTReceiver, I
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag(){
-		CompoundNBT nbt =  super.getUpdateTag();
+	public CompoundTag getUpdateTag(){
+		CompoundTag nbt =  super.getUpdateTag();
 		nbt.putInt("index", index);
 		for(int i = 0; i < sequenceVal.size(); i++){
 			nbt.putFloat(i + "_val", sequenceVal.get(i));
@@ -142,7 +142,7 @@ public class SequenceBoxTileEntity extends TileEntity implements INBTReceiver, I
 
 	//UI stuff below
 
-	public void encodeBuf(PacketBuffer buf){
+	public void encodeBuf(FriendlyByteBuf buf){
 		buf.writeBlockPos(worldPosition);
 		buf.writeVarInt(index);
 		buf.writeVarInt(sequenceStr.size());
@@ -152,20 +152,20 @@ public class SequenceBoxTileEntity extends TileEntity implements INBTReceiver, I
 	}
 
 	@Override
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.sequence_box");
+	public Component getDisplayName(){
+		return new TranslatableComponent("container.sequence_box");
 	}
 
 	@Nullable
 	@Override
-	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
-		PacketBuffer buf = new PacketBuffer(Unpooled.buffer());
+	public AbstractContainerMenu createMenu(int id, Inventory playerInv, Player player){
+		FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
 		encodeBuf(buf);
 		return new SequenceBoxContainer(id, playerInv, buf);
 	}
 
 	@Override
-	public void receiveNBT(CompoundNBT nbt, @Nullable ServerPlayerEntity sender){
+	public void receiveNBT(CompoundTag nbt, @Nullable ServerPlayer sender){
 		sequenceVal.clear();
 		sequenceStr.clear();
 		int i = 0;

@@ -1,16 +1,16 @@
 package com.Da_Technomancer.crossroads.API.effects.goggles;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 
 public class DiamondGoggleEffect implements IGoggleEffect{
 
 	@Override
-	public void armorTick(World world, PlayerEntity player, ArrayList<ITextComponent> chat, BlockRayTraceResult ray){
+	public void armorTick(Level world, Player player, ArrayList<Component> chat, BlockHitResult ray){
 		//Effect in SendGoggleConfigureToServer
 	}
 }

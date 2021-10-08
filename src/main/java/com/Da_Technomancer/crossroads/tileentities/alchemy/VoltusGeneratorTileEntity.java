@@ -6,16 +6,16 @@ import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -25,10 +25,10 @@ import net.minecraftforge.registries.ObjectHolder;
 import java.util.ArrayList;
 
 @ObjectHolder(Crossroads.MODID)
-public class VoltusGeneratorTileEntity extends TileEntity implements ITickableTileEntity, IInfoTE{
+public class VoltusGeneratorTileEntity extends BlockEntity implements TickableBlockEntity, IInfoTE{
 
 	@ObjectHolder("voltus_generator")
-	private static TileEntityType<VoltusGeneratorTileEntity> type = null;
+	private static BlockEntityType<VoltusGeneratorTileEntity> type = null;
 
 	private static final int VOLTUS_CAPACITY = 100;
 	private static final int FE_CAPACITY = 100_000;
@@ -40,8 +40,8 @@ public class VoltusGeneratorTileEntity extends TileEntity implements ITickableTi
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		chat.add(new TranslationTextComponent("tt.crossroads.voltus_generator.read", voltusAmount, VOLTUS_CAPACITY));
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
+		chat.add(new TranslatableComponent("tt.crossroads.voltus_generator.read", voltusAmount, VOLTUS_CAPACITY));
 	}
 
 	public int getRedstone(){
@@ -61,7 +61,7 @@ public class VoltusGeneratorTileEntity extends TileEntity implements ITickableTi
 		}
 
 		for(Direction dir : Direction.values()){
-			TileEntity te = level.getBlockEntity(worldPosition.relative(dir));
+			BlockEntity te = level.getBlockEntity(worldPosition.relative(dir));
 			LazyOptional<IEnergyStorage> energyOpt;
 			if(te != null && (energyOpt = te.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite())).isPresent()){
 				IEnergyStorage storage = energyOpt.orElseThrow(NullPointerException::new);
@@ -75,14 +75,14 @@ public class VoltusGeneratorTileEntity extends TileEntity implements ITickableTi
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		voltusAmount = nbt.getInt("voltus");
 		fe = nbt.getInt("fe");
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putInt("voltus", voltusAmount);
 		nbt.putInt("fe", fe);

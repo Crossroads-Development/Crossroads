@@ -2,18 +2,18 @@ package com.Da_Technomancer.crossroads.API.effects.goggles;
 
 import com.Da_Technomancer.crossroads.API.beams.BeamUtil;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -24,16 +24,16 @@ public class RubyGoggleEffect implements IGoggleEffect{
 	private static final int RANGE = 32;
 
 	@Override
-	public void armorTick(World world, PlayerEntity player, ArrayList<ITextComponent> chat, BlockRayTraceResult ray){
+	public void armorTick(Level world, Player player, ArrayList<Component> chat, BlockHitResult ray){
 		if(world.getGameTime() % 5 == 0){
 			Entity entHit = null;
-			Vector3d start = new Vector3d(player.getX() - Math.cos(Math.toRadians(player.getYHeadRot())) * 0.18D, player.getY() + player.getEyeHeight() + 0.03D, player.getZ() - Math.sin(Math.toRadians(player.getYHeadRot())) * 0.18D);
-			Vector3d end = start;
-			Vector3d look = player.getLookAngle();
+			Vec3 start = new Vec3(player.getX() - Math.cos(Math.toRadians(player.getYHeadRot())) * 0.18D, player.getY() + player.getEyeHeight() + 0.03D, player.getZ() - Math.sin(Math.toRadians(player.getYHeadRot())) * 0.18D);
+			Vec3 end = start;
+			Vec3 look = player.getLookAngle();
 			Direction collisionDir = Direction.getNearest(look.x, look.y, look.z);
 			for(double d = 0; d < RANGE; d += 0.2D){
-				Vector3d tar = player.getEyePosition(0).add(0, 0.2D, 0).add(look.scale(d));
-				List<Entity> ents = world.getEntities(player, new AxisAlignedBB(tar.x - 0.1D, tar.y - 0.1D, tar.z - 0.1D, tar.x + 0.1D, tar.y + 0.1D, tar.z + 0.1D), EntityPredicates.ENTITY_STILL_ALIVE);
+				Vec3 tar = player.getEyePosition(0).add(0, 0.2D, 0).add(look.scale(d));
+				List<Entity> ents = world.getEntities(player, new AABB(tar.x - 0.1D, tar.y - 0.1D, tar.z - 0.1D, tar.x + 0.1D, tar.y + 0.1D, tar.z + 0.1D), EntitySelector.ENTITY_STILL_ALIVE);
 				if(!ents.isEmpty()){
 					entHit = ents.get((int) (Math.random() * ents.size()));
 					end = tar;

@@ -2,13 +2,13 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.DimensionType;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.DimensionSavedDataManager;
-import net.minecraft.world.storage.WorldSavedData;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.storage.DimensionDataStorage;
+import net.minecraft.world.level.saveddata.SavedData;
 
-public class AtmosChargeSavedData extends WorldSavedData{
+public class AtmosChargeSavedData extends SavedData{
 
 	public static final String ID = Crossroads.MODID + "_atmos";
 
@@ -20,11 +20,11 @@ public class AtmosChargeSavedData extends WorldSavedData{
 		super(ID);
 	}
 
-	public static int getCharge(ServerWorld w){
+	public static int getCharge(ServerLevel w){
 		return get(w).atmosCharge;
 	}
 
-	public static void setCharge(ServerWorld w, int newCharge){
+	public static void setCharge(ServerLevel w, int newCharge){
 		AtmosChargeSavedData data = get(w);
 		if(newCharge != data.atmosCharge){
 			data.atmosCharge = newCharge;
@@ -32,10 +32,10 @@ public class AtmosChargeSavedData extends WorldSavedData{
 		}
 	}
 
-	private static AtmosChargeSavedData get(ServerWorld world){
+	private static AtmosChargeSavedData get(ServerLevel world){
 		//We want all dimensions to share the same saved data,
 		//So we always reference the overworld instance
-		DimensionSavedDataManager storage;
+		DimensionDataStorage storage;
 		if(world.dimension().location().equals(DimensionType.OVERWORLD_EFFECTS)){
 			storage = world.getDataStorage();
 		}else{
@@ -54,12 +54,12 @@ public class AtmosChargeSavedData extends WorldSavedData{
 	private int atmosCharge;
 
 	@Override
-	public void load(CompoundNBT nbt){
+	public void load(CompoundTag nbt){
 		atmosCharge = nbt.getInt("atmos_charge");
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		nbt.putInt("atmos_charge", atmosCharge);
 		return nbt;
 	}

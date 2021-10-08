@@ -3,14 +3,14 @@ package com.Da_Technomancer.crossroads.API.technomancy;
 import com.Da_Technomancer.crossroads.API.effects.goggles.*;
 import com.Da_Technomancer.crossroads.Keys;
 import com.Da_Technomancer.crossroads.crafting.CRItemTags;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.IForgeKeybinding;
@@ -30,7 +30,7 @@ public enum EnumGoggleLenses{
 	QUARTZ(CRItemTags.GEMS_PURE_QUARTZ, "_quartz", new QuartzGoggleEffect(), null, false),
 	VOID(CRItemTags.GEMS_VOID, "", new VoidGoggleEffect(), () -> Keys.controlVoid, true);
 	
-	private final ITag<Item> item;
+	private final Tag<Item> item;
 	private final String texturePath;
 	private final IGoggleEffect effect;
 	//This is a supplier to allow lazy-loading the keys, which may not be registered at initialization time
@@ -38,7 +38,7 @@ public enum EnumGoggleLenses{
 	private final Supplier<IForgeKeybinding> key;
 	private final boolean requireEnable;
 
-	EnumGoggleLenses(ITag<Item> item, String texturePath, IGoggleEffect effect, @Nullable Supplier<IForgeKeybinding> toggleKey, boolean requireEnable){
+	EnumGoggleLenses(Tag<Item> item, String texturePath, IGoggleEffect effect, @Nullable Supplier<IForgeKeybinding> toggleKey, boolean requireEnable){
 		this.item = item;
 		this.texturePath = texturePath;
 		this.effect = effect;
@@ -56,7 +56,7 @@ public enum EnumGoggleLenses{
 
 	@Nullable
 	@OnlyIn(Dist.CLIENT)
-	public KeyBinding getKey(){
+	public KeyMapping getKey(){
 		if(key == null){
 			return null;
 		}
@@ -74,7 +74,7 @@ public enum EnumGoggleLenses{
 	/**
 	 * Call on the server side ONLY.
 	 */
-	public void doEffect(World world, PlayerEntity player, ArrayList<ITextComponent> chat, BlockRayTraceResult ray){
+	public void doEffect(Level world, Player player, ArrayList<Component> chat, BlockHitResult ray){
 		effect.armorTick(world, player, chat, ray);
 	}
 

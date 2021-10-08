@@ -3,27 +3,27 @@ package com.Da_Technomancer.crossroads.render.TESR;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ChronoHarnessTileEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import com.mojang.math.Vector3f;
 
 public class ChronoHarnessRenderer extends EntropyRenderer<ChronoHarnessTileEntity>{
 
-	protected ChronoHarnessRenderer(TileEntityRendererDispatcher dispatcher){
+	protected ChronoHarnessRenderer(BlockEntityRenderDispatcher dispatcher){
 		super(dispatcher);
 	}
 
 	@Override
-	public void render(ChronoHarnessTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
+	public void render(ChronoHarnessTileEntity te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		super.render(te, partialTicks, matrix, buffer, combinedLight, combinedOverlay);
 
 		float angle = te.getRenderAngle(partialTicks);
 		int medLight = CRRenderUtil.calcMediumLighting(combinedLight);
-		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
+		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
 
 		//Revolving rods
 		matrix.translate(0.5D, 0, 0.5D);
@@ -52,7 +52,7 @@ public class ChronoHarnessRenderer extends EntropyRenderer<ChronoHarnessTileEnti
 		addRod(builder, matrix, -largeOffset, -smallOffset, outerSprite, medLight);
 	}
 
-	private void addRod(IVertexBuilder builder, MatrixStack matrix, float x, float z, TextureAtlasSprite sprite, int light){
+	private void addRod(VertexConsumer builder, PoseStack matrix, float x, float z, TextureAtlasSprite sprite, int light){
 		float rad = 1F / 16F;
 		float minY = 2F / 16F;
 		float maxY = 14F / 16F;

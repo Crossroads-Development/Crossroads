@@ -2,15 +2,15 @@ package com.Da_Technomancer.crossroads.API.templates;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.chat.Component;
 
 public abstract class MachineGUI<T extends MachineContainer<U>, U extends InventoryTE> extends TileEntityGUI<T, U>{
 
 	protected U te;
 
-	protected MachineGUI(T container, PlayerInventory playerInventory, ITextComponent text){
+	protected MachineGUI(T container, Inventory playerInventory, Component text){
 		super(container, playerInventory, text);
 		this.te = container.te;
 	}
@@ -26,7 +26,7 @@ public abstract class MachineGUI<T extends MachineContainer<U>, U extends Invent
 	}
 
 	@Override
-	protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
 		super.renderBg(matrix, partialTicks, mouseX, mouseY);
 
 		for(FluidSlotManager manager : te.fluidManagers){
@@ -35,7 +35,7 @@ public abstract class MachineGUI<T extends MachineContainer<U>, U extends Invent
 	}
 
 	@Override
-	protected void renderLabels(MatrixStack matrix, int mouseX, int mouseY){
+	protected void renderLabels(PoseStack matrix, int mouseX, int mouseY){
 		super.renderLabels(matrix, mouseX, mouseY);
 
 		if(menu.heatRef != null){

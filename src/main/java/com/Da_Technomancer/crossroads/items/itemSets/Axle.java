@@ -4,14 +4,14 @@ import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.IMechanism;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public class Axle extends GearMatItem{
 
@@ -34,21 +34,21 @@ public class Axle extends GearMatItem{
 	}
 
 	@Override
-	public ActionResultType useOn(ItemUseContext context){
+	public InteractionResult useOn(UseOnContext context){
 		if(context.getLevel().isClientSide){
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 		GearFactory.GearMaterial type = getMaterial(context.getItemInHand());
 		if(type == null){
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 
 		//Attempt to add this axle to a pre-existing mechanism
-		World world = context.getLevel();
+		Level world = context.getLevel();
 		BlockPos pos = context.getClickedPos();
-		PlayerEntity playerIn = context.getPlayer();
+		Player playerIn = context.getPlayer();
 		Direction side = context.getClickedFace();
-		TileEntity te = world.getBlockEntity(pos);
+		BlockEntity te = world.getBlockEntity(pos);
 
 		if(te instanceof MechanismTileEntity){
 			MechanismTileEntity mte = (MechanismTileEntity) te;
@@ -58,7 +58,7 @@ public class Axle extends GearMatItem{
 				if(playerIn == null || !playerIn.isCreative()){
 					context.getItemInHand().shrink(1);
 				}
-				return ActionResultType.SUCCESS;
+				return InteractionResult.SUCCESS;
 			}
 		}
 
@@ -73,11 +73,11 @@ public class Axle extends GearMatItem{
 					context.getItemInHand().shrink(1);
 				}
 			}
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 
 		//Make a new mechanism block
-		if(world.getBlockState(pos.relative(side)).canBeReplaced(new BlockItemUseContext(context))){
+		if(world.getBlockState(pos.relative(side)).canBeReplaced(new BlockPlaceContext(context))){
 			if(playerIn == null || !playerIn.isCreative()){
 				context.getItemInHand().shrink(1);
 			}
@@ -90,6 +90,6 @@ public class Axle extends GearMatItem{
 			}
 		}
 
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 }

@@ -11,18 +11,18 @@ import com.Da_Technomancer.crossroads.blocks.alchemy.GlasswareHolder;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.Explosion;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Containers;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Explosion;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
 public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 
 	@ObjectHolder("glassware_holder")
-	private static TileEntityType<GlasswareHolderTileEntity> type = null;
+	private static BlockEntityType<GlasswareHolderTileEntity> type = null;
 
 	protected AbstractGlassware.GlasswareTypes glassType = null;
 
@@ -41,7 +41,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 		this(type);
 	}
 
-	protected GlasswareHolderTileEntity(TileEntityType<? extends GlasswareHolderTileEntity> type){
+	protected GlasswareHolderTileEntity(BlockEntityType<? extends GlasswareHolderTileEntity> type){
 		super(type);
 	}
 
@@ -106,7 +106,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	@Override
 	protected void destroyCarrier(float strength){
 		level.setBlockAndUpdate(worldPosition, getBlockState().setValue(CRProperties.CRYSTAL, false).setValue(CRProperties.CONTAINER_TYPE, AbstractGlassware.GlasswareTypes.NONE));
-		level.playSound(null, worldPosition, SoundType.GLASS.getBreakSound(), SoundCategory.BLOCKS, SoundType.GLASS.getVolume(), SoundType.GLASS.getPitch());
+		level.playSound(null, worldPosition, SoundType.GLASS.getBreakSound(), SoundSource.BLOCKS, SoundType.GLASS.getVolume(), SoundType.GLASS.getPitch());
 		//Invalidate the heat capability, as if we went from florence -> non florence, we stopped allowing cable connections
 		heatOpt.invalidate();
 		heatOpt = LazyOptional.of(HeatHandler::new);
@@ -115,7 +115,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 		AlchemyUtil.releaseChemical(level, worldPosition, contents);
 		contents = new ReagentMap();
 		if(strength > 0){
-			level.explode(null, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), strength, Explosion.Mode.BREAK);
+			level.explode(null, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), strength, Explosion.BlockInteraction.BREAK);
 		}
 	}
 
@@ -127,7 +127,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 			dirtyReag = true;
 			glassType = AbstractGlassware.GlasswareTypes.NONE;
 			setChanged();
-			InventoryHelper.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), out);
+			Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), out);
 		}
 	}
 
@@ -140,7 +140,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	 */
 	@Nonnull
 	@Override
-	public ItemStack rightClickWithItem(ItemStack stack, boolean sneaking, PlayerEntity player, Hand hand){
+	public ItemStack rightClickWithItem(ItemStack stack, boolean sneaking, Player player, InteractionHand hand){
 		BlockState state = getBlockState();
 
 		if(heldType() != AbstractGlassware.GlasswareTypes.NONE){
@@ -176,12 +176,12 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	protected Vector3d getParticlePos(){
+	protected Vec3 getParticlePos(){
 		BlockState state = getBlockState();
 		if(state.getBlock() == CRBlocks.glasswareHolder && state.getValue(CRProperties.CONTAINER_TYPE) == AbstractGlassware.GlasswareTypes.SHELL){
-			return Vector3d.atLowerCornerOf(worldPosition).add(0.5D, 0.7D, 0.5D);
+			return Vec3.atLowerCornerOf(worldPosition).add(0.5D, 0.7D, 0.5D);
 		}else{
-			return Vector3d.atLowerCornerOf(worldPosition).add(0.5D, 0.25D, 0.5D);
+			return Vec3.atLowerCornerOf(worldPosition).add(0.5D, 0.25D, 0.5D);
 		}
 	}
 
@@ -198,7 +198,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 		BlockState state = getBlockState();
 		if(state.getBlock() instanceof GlasswareHolder && heldType() != AbstractGlassware.GlasswareTypes.NONE){
 			Direction side = Direction.UP;
-			TileEntity te = level.getBlockEntity(worldPosition.relative(side));
+			BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
 			LazyOptional<IChemicalHandler> otherOpt;
 			if(contents.getTotalQty() == 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
 				return;

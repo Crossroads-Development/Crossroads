@@ -6,11 +6,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -39,10 +39,10 @@ public class CraftingUtil{
 	 * @return The defined fluidstack
 	 */
 	public static FluidStack getFluidStack(JsonObject json, String memberName){
-		JsonObject obj = JSONUtils.getAsJsonObject(json, memberName);
-		String name = JSONUtils.getAsString(obj, "fluid");
+		JsonObject obj = GsonHelper.getAsJsonObject(json, memberName);
+		String name = GsonHelper.getAsString(obj, "fluid");
 		Fluid f = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(name));
-		int qty = JSONUtils.getAsInt(obj, "amount");
+		int qty = GsonHelper.getAsInt(obj, "amount");
 		//Note: Does not currently support NBT
 		return f == null || qty <= 0 ? FluidStack.EMPTY : new FluidStack(f, qty);
 	}
@@ -155,7 +155,7 @@ public class CraftingUtil{
 		FluidIngredient ingr = getFluidIngredient(json, memberName, allowDirect);
 		int quantity = defaultQuantity;
 		if(json.isJsonObject()){
-			quantity = JSONUtils.getAsInt((JsonObject) json, "fluid_amount", defaultQuantity);
+			quantity = GsonHelper.getAsInt((JsonObject) json, "fluid_amount", defaultQuantity);
 		}
 		if(quantity <= 0){
 			throw new JsonParseException("No/invalid quantity specified for fluid ingredient");
@@ -165,14 +165,14 @@ public class CraftingUtil{
 	}
 
 	public static boolean isActiveJSON(JsonObject json){
-		return JSONUtils.getAsBoolean(json, "active", true);
+		return GsonHelper.getAsBoolean(json, "active", true);
 	}
 
 	public static Color getColor(JsonObject json, String memberName, @Nullable Color fallback){
 		if(!json.has(memberName)){
 			return fallback;
 		}
-		String colorCode = JSONUtils.getAsString(json, memberName);
+		String colorCode = GsonHelper.getAsString(json, memberName);
 		if(colorCode.length() != 6 && colorCode.length() != 8){
 			return fallback;
 		}

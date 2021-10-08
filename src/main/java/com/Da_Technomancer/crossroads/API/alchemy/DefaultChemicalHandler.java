@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 
 public class DefaultChemicalHandler implements IChemicalHandler{
 

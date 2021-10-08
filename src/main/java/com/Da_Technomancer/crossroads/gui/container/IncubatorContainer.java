@@ -4,21 +4,24 @@ import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.IncubatorTileEntity;
 import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.registries.ObjectHolder;
+
+import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.OutputSlot;
+import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.StrictSlot;
 
 @ObjectHolder(Crossroads.MODID)
 public class IncubatorContainer extends MachineContainer<IncubatorTileEntity>{
 
 	@ObjectHolder("incubator")
-	private static ContainerType<IncubatorContainer> type = null;
+	private static MenuType<IncubatorContainer> type = null;
 
 	public final IntDeferredRef progressRef;
 	public final IntDeferredRef targetRef;
 
-	public IncubatorContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
+	public IncubatorContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
 		super(type, id, playerInv, buf);
 		progressRef = new IntDeferredRef(te::getProgress, te.getLevel().isClientSide);
 		addDataSlot(progressRef);

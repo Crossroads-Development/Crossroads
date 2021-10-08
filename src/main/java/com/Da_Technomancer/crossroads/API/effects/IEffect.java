@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public interface IEffect{
 
@@ -11,6 +11,6 @@ public interface IEffect{
 	 *
 	 * This should only ever be called on the server side.
 	 */
-	void doEffect(World worldIn, BlockPos pos);
+	void doEffect(Level worldIn, BlockPos pos);
 
 }

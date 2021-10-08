@@ -22,22 +22,22 @@ import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.TESR.CRRendererRegistry;
 import com.Da_Technomancer.crossroads.tileentities.CRTileEntity;
 import com.Da_Technomancer.crossroads.world.CRWorldGen;
-import net.minecraft.block.Block;
-import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.entity.EntityType;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.Item;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.particles.ParticleType;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.Potion;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -158,8 +158,8 @@ public final class Crossroads{
 
 	@SuppressWarnings("unused")
 	@SubscribeEvent
-	public static void registerRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> e){
-		IForgeRegistry<IRecipeSerializer<?>> reg = e.getRegistry();
+	public static void registerRecipeSerializers(RegistryEvent.Register<RecipeSerializer<?>> e){
+		IForgeRegistry<RecipeSerializer<?>> reg = e.getRegistry();
 		reg.register(new SingleIngrRecipe.SingleRecipeSerializer<>(StampMillRec::new).setRegistryName("stamp_mill"));
 		reg.register(new MillRec.Serializer().setRegistryName("mill"));
 		reg.register(new SingleIngrRecipe.SingleRecipeSerializer<>(OreCleanserRec::new).setRegistryName("ore_cleanser"));
@@ -211,15 +211,15 @@ public final class Crossroads{
 
 	@SuppressWarnings("unused")
 	@SubscribeEvent
-	public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> e){
-		IForgeRegistry<TileEntityType<?>> reg = e.getRegistry();
+	public static void registerTileEntities(RegistryEvent.Register<BlockEntityType<?>> e){
+		IForgeRegistry<BlockEntityType<?>> reg = e.getRegistry();
 		CRTileEntity.init(reg);
 	}
 
 	@SuppressWarnings("unused")
 	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
-	public static void registerContainers(RegistryEvent.Register<ContainerType<?>> e){
+	public static void registerContainers(RegistryEvent.Register<MenuType<?>> e){
 		registerCon(FireboxContainer::new, FireboxScreen::new, "firebox", e);
 		registerCon(IceboxContainer::new, IceboxScreen::new, "icebox", e);
 		registerCon(FluidCoolerContainer::new, FluidCoolerScreen::new, "fluid_cooler", e);
@@ -265,7 +265,7 @@ public final class Crossroads{
 	@SuppressWarnings("unused")
 	@OnlyIn(Dist.DEDICATED_SERVER)
 	@SubscribeEvent
-	public static void registerContainerTypes(RegistryEvent.Register<ContainerType<?>> e){
+	public static void registerContainerTypes(RegistryEvent.Register<MenuType<?>> e){
 		registerConType(FireboxContainer::new, "firebox", e);
 		registerConType(IceboxContainer::new, "icebox", e);
 		registerConType(FluidCoolerContainer::new, "fluid_cooler", e);
@@ -316,8 +316,8 @@ public final class Crossroads{
 	 * @param <T> Container subclass
 	 * @return The newly created type
 	 */
-	private static <T extends Container> ContainerType<T> registerConType(IContainerFactory<T> cons, String id, RegistryEvent.Register<ContainerType<?>> reg){
-		ContainerType<T> contType = new ContainerType<>(cons);
+	private static <T extends AbstractContainerMenu> MenuType<T> registerConType(IContainerFactory<T> cons, String id, RegistryEvent.Register<MenuType<?>> reg){
+		MenuType<T> contType = new MenuType<>(cons);
 		contType.setRegistryName(new ResourceLocation(MODID, id));
 		reg.getRegistry().register(contType);
 		return contType;
@@ -332,9 +332,9 @@ public final class Crossroads{
 	 * @param <T> Container subclass
 	 */
 	@OnlyIn(Dist.CLIENT)
-	private static <T extends Container> void registerCon(IContainerFactory<T> cons, ScreenManager.IScreenFactory<T, ContainerScreen<T>> screenFactory, String id, RegistryEvent.Register<ContainerType<?>> reg){
-		ContainerType<T> contType = registerConType(cons, id, reg);
-		ScreenManager.register(contType, screenFactory);
+	private static <T extends AbstractContainerMenu> void registerCon(IContainerFactory<T> cons, MenuScreens.ScreenConstructor<T, AbstractContainerScreen<T>> screenFactory, String id, RegistryEvent.Register<MenuType<?>> reg){
+		MenuType<T> contType = registerConType(cons, id, reg);
+		MenuScreens.register(contType, screenFactory);
 	}
 
 	@SuppressWarnings("unused")
@@ -352,7 +352,7 @@ public final class Crossroads{
 
 	@SuppressWarnings("unused")
 	@SubscribeEvent
-	public static void registerMobEffects(RegistryEvent.Register<Effect> e){
+	public static void registerMobEffects(RegistryEvent.Register<MobEffect> e){
 		CRPotions.registerEffects(e.getRegistry());
 	}
 

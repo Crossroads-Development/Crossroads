@@ -4,20 +4,22 @@ import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.rotary.WindingTableTileEntity;
 import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.registries.ObjectHolder;
+
+import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.StrictSlot;
 
 @ObjectHolder(Crossroads.MODID)
 public class WindingTableContainer extends MachineContainer<WindingTableTileEntity>{
 
 	@ObjectHolder("winding_table")
-	private static ContainerType<WindingTableContainer> type = null;
+	private static MenuType<WindingTableContainer> type = null;
 
 	public final IntDeferredRef progRef;
 
-	public WindingTableContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
+	public WindingTableContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
 		super(type, id, playerInv, buf);
 		progRef = new IntDeferredRef(te::getProgress, te.getLevel().isClientSide);
 		addDataSlot(progRef);

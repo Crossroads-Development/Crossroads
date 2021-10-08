@@ -16,20 +16,20 @@ import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.packets.INBTReceiver;
 import com.Da_Technomancer.essentials.packets.SendNBTToClient;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.IInventoryChangedListener;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
+import net.minecraft.world.ContainerListener;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -41,14 +41,14 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 @ObjectHolder(Crossroads.MODID)
-public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, IIntReceiver, INBTReceiver, IInventoryChangedListener{
+public class LensFrameTileEntity extends BlockEntity implements IBeamRenderTE, IIntReceiver, INBTReceiver, ContainerListener{
 
 	@ObjectHolder("lens_frame")
-	public static TileEntityType<LensFrameTileEntity> type = null;
+	public static BlockEntityType<LensFrameTileEntity> type = null;
 
 	private int packetNeg;
 	private int packetPos;
-	private final Inventory inventoryWrapper = new Inventory(1);
+	private final SimpleContainer inventoryWrapper = new SimpleContainer(1);
 	private Direction.Axis axis = null;
 	private BeamUnit prevMag = BeamUnit.EMPTY;
 	private BeamLensRec currRec;
@@ -80,12 +80,12 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 		inventoryWrapper.setItem(0, lens);
 		if(level != null && !level.isClientSide){
 			//Update on the client
-			CRPackets.sendPacketAround(level, worldPosition, new SendNBTToClient(lens.save(new CompoundNBT()), worldPosition));
+			CRPackets.sendPacketAround(level, worldPosition, new SendNBTToClient(lens.save(new CompoundTag()), worldPosition));
 		}
 	}
 
 	@Override
-	public AxisAlignedBB getRenderBoundingBox(){
+	public AABB getRenderBoundingBox(){
 		return INFINITE_EXTENT_AABB;
 	}
 
@@ -154,7 +154,7 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 	private final BeamManager[] beamer = new BeamManager[2];//0: neg; 1: pos
 
 	@Override
-	public void receiveInt(byte identifier, int message, ServerPlayerEntity player){
+	public void receiveInt(byte identifier, int message, ServerPlayer player){
 		switch(identifier){
 			case 0:
 				packetNeg = message;
@@ -169,32 +169,32 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag(){
-		CompoundNBT nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(){
+		CompoundTag nbt = super.getUpdateTag();
 		nbt.putInt("beam_neg", packetNeg);
 		nbt.putInt("beam_pos", packetPos);
 		ItemStack lensItem = getLensItem();
 		if(!lensItem.isEmpty()){
-			nbt.put("inv", lensItem.save(new CompoundNBT()));
+			nbt.put("inv", lensItem.save(new CompoundTag()));
 		}
 		return nbt;
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putInt("beam_neg", packetNeg);
 		nbt.putInt("beam_pos", packetPos);
 		nbt.putInt("reds", lastRedstone);
 		ItemStack lensItem = getLensItem();
 		if(!lensItem.isEmpty()){
-			nbt.put("inv", lensItem.save(new CompoundNBT()));
+			nbt.put("inv", lensItem.save(new CompoundTag()));
 		}
 		return nbt;
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		packetPos = nbt.getInt("beam_pos");
 		packetNeg = nbt.getInt("beam_neg");
@@ -268,7 +268,7 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 	}
 
 	@Override
-	public void receiveNBT(CompoundNBT nbt, ServerPlayerEntity serverPlayer){
+	public void receiveNBT(CompoundTag nbt, ServerPlayer serverPlayer){
 		setLensItem(ItemStack.of(nbt));
 	}
 
@@ -279,7 +279,7 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 	}
 
 	@Override
-	public void containerChanged(IInventory changedInv){
+	public void containerChanged(Container changedInv){
 		setChanged();
 		recipeCheck = false;
 	}
@@ -380,7 +380,7 @@ public class LensFrameTileEntity extends TileEntity implements IBeamRenderTE, II
 
 		@Override
 		public boolean isItemValid(int slot, @Nonnull ItemStack stack){
-			return slot == 0 && getLevel().getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, new Inventory(stack), level).isPresent();
+			return slot == 0 && getLevel().getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, new SimpleContainer(stack), level).isPresent();
 		}
 	}
 }

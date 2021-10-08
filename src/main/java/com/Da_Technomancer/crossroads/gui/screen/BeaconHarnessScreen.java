@@ -5,34 +5,34 @@ import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.BeaconHarnessContainer;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.BeaconHarnessTileEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.resources.ResourceLocation;
+import com.mojang.math.Vector3f;
+import net.minecraft.network.chat.Component;
 
-public class BeaconHarnessScreen extends ContainerScreen<BeaconHarnessContainer>{
+public class BeaconHarnessScreen extends AbstractContainerScreen<BeaconHarnessContainer>{
 
 	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Crossroads.MODID, "textures/gui/container/beacon_harness_gui.png");
 
-	public BeaconHarnessScreen(BeaconHarnessContainer cont, PlayerInventory playerInv, ITextComponent name){
+	public BeaconHarnessScreen(BeaconHarnessContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);
 		imageWidth = 300;
 		imageHeight = 300;
 	}
 
 	@Override
-	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTicks){
+	public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks){
 		renderBackground(matrix);
 		super.render(matrix, mouseX, mouseY, partialTicks);
 		renderTooltip(matrix, mouseX, mouseY);
 	}
 
 	@Override
-	protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
 //		super.drawGuiContainerBackgroundLayer(matrix, partialTicks, mouseX, mouseY);
 
 		RenderSystem.color4f(1, 1, 1, 1);
@@ -54,7 +54,7 @@ public class BeaconHarnessScreen extends ContainerScreen<BeaconHarnessContainer>
 	}
 
 	@Override
-	protected void renderLabels(MatrixStack matrix, int mouseX, int mouseY){
+	protected void renderLabels(PoseStack matrix, int mouseX, int mouseY){
 		//Not rendering the inventory labels
 		//super.drawGuiContainerForegroundLayer(matrix, mouseX, mouseY);
 

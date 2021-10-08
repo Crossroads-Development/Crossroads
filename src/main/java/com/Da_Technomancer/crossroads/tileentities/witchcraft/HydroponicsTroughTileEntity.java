@@ -12,22 +12,22 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.block.*;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -43,10 +43,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
+import com.Da_Technomancer.crossroads.API.templates.ModuleTE.TankProperty;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.FlowerBlock;
+import net.minecraft.world.level.block.TallFlowerBlock;
+import net.minecraft.world.level.block.state.BlockState;
+
 public class HydroponicsTroughTileEntity extends InventoryTE{
 
 	@ObjectHolder(Crossroads.MODID + ":hydroponics_trough")
-	public static TileEntityType<HydroponicsTroughTileEntity> type = null;
+	public static BlockEntityType<HydroponicsTroughTileEntity> type = null;
 
 	private static final int CAPACITY = 8000;
 	public static final int SOLUTION_DRAIN = 1;
@@ -124,12 +132,12 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 		//Handle seeds for CropsBlock & FlowerBlock
 		if(item instanceof BlockItem){
 			Block block = ((BlockItem) item).getBlock();
-			if(block instanceof CropsBlock){
-				CropsBlock crop = (CropsBlock) block;
+			if(block instanceof CropBlock){
+				CropBlock crop = (CropBlock) block;
 				if(level.isClientSide()){
 					return Triple.of(true, crop.getMaxAge(), new ItemStack[0]);//We can't get the drops on the client, but we don't need to
 				}
-				List<ItemStack> drops = crop.getStateForAge(crop.getMaxAge()).getDrops(new LootContext.Builder((ServerWorld) level).withParameter(LootParameters.ORIGIN, Vector3d.atCenterOf(worldPosition)).withParameter(LootParameters.TOOL, new ItemStack(Items.IRON_HOE)));
+				List<ItemStack> drops = crop.getStateForAge(crop.getMaxAge()).getDrops(new LootContext.Builder((ServerLevel) level).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(worldPosition)).withParameter(LootContextParams.TOOL, new ItemStack(Items.IRON_HOE)));
 				return Triple.of(true, crop.getMaxAge(), drops.toArray(new ItemStack[0]));
 			}
 			if(block instanceof FlowerBlock){
@@ -236,13 +244,13 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		progress = nbt.getInt("progress");
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putInt("progress", progress);
 		return nbt;
@@ -285,13 +293,13 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.crossroads.hydroponics_trough");
+	public Component getDisplayName(){
+		return new TranslatableComponent("container.crossroads.hydroponics_trough");
 	}
 
 	@Nullable
 	@Override
-	public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity playerEntity){
+	public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player playerEntity){
 		return new HydroponicsTroughContainer(id, playerInventory, createContainerBuf());
 	}
 }

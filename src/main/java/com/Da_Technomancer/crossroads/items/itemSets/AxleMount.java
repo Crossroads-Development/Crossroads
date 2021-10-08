@@ -5,19 +5,19 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.IMechanism;
 import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -42,8 +42,8 @@ public class AxleMount extends GearMatItem{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.axle_mount.desc"));
+	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag advanced){
+		tooltip.add(new TranslatableComponent("tt.crossroads.axle_mount.desc"));
 	}
 
 	protected IMechanism mechanismToPlace(){
@@ -51,18 +51,18 @@ public class AxleMount extends GearMatItem{
 	}
 
 	@Override
-	public ActionResultType useOn(ItemUseContext context){
+	public InteractionResult useOn(UseOnContext context){
 		GearFactory.GearMaterial type = getMaterial(context.getItemInHand());
 		if(type == null){
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
-		World world = context.getLevel();
+		Level world = context.getLevel();
 		BlockPos pos = context.getClickedPos();//The position of the block clicked
 		Direction side = context.getClickedFace();
 		BlockPos placePos = pos.relative(side);//Where the gear will be placed
-		PlayerEntity playerIn = context.getPlayer();
+		Player playerIn = context.getPlayer();
 		BlockState stateAtPlacement = world.getBlockState(placePos);
-		TileEntity teAtPlacement = world.getBlockEntity(placePos);
+		BlockEntity teAtPlacement = world.getBlockEntity(placePos);
 
 		//Must be able to place against a solid surface
 		if(RotaryUtil.solidToGears(world, pos, side)){
@@ -72,7 +72,7 @@ public class AxleMount extends GearMatItem{
 				MechanismTileEntity mte = (MechanismTileEntity) teAtPlacement;
 				if(mte.members[mechInd] != null){
 					//This spot is already taken
-					return ActionResultType.SUCCESS;
+					return InteractionResult.SUCCESS;
 				}
 
 				mte.setMechanism(mechInd, mechanismToPlace(), type, null, false);
@@ -83,7 +83,7 @@ public class AxleMount extends GearMatItem{
 				}
 
 				RotaryUtil.increaseMasterKey(!world.isClientSide);
-			}else if(stateAtPlacement.canBeReplaced(new BlockItemUseContext(context))){
+			}else if(stateAtPlacement.canBeReplaced(new BlockPlaceContext(context))){
 				//No existing mechanism- we will create a new one
 				world.setBlock(placePos, CRBlocks.mechanism.defaultBlockState(), 3);
 
@@ -104,6 +104,6 @@ public class AxleMount extends GearMatItem{
 			}
 		}
 
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 }

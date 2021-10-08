@@ -6,30 +6,32 @@ import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
+import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink.Behaviour;
+
 @ObjectHolder(Crossroads.MODID)
 public class FluxSinkTileEntity extends IFluxLink.FluxHelper{
 
 	@ObjectHolder("flux_sink")
-	public static TileEntityType<FluxSinkTileEntity> type = null;
+	public static BlockEntityType<FluxSinkTileEntity> type = null;
 
 	private static final int CAPACITY = 256;
 
@@ -44,8 +46,8 @@ public class FluxSinkTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		chat.add(new TranslationTextComponent("tt.crossroads.flux_sink.desc"));
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
+		chat.add(new TranslatableComponent("tt.crossroads.flux_sink.desc"));
 		FluxUtil.addFluxInfo(chat, this, -1);
 	}
 
@@ -57,7 +59,7 @@ public class FluxSinkTileEntity extends IFluxLink.FluxHelper{
 			//By doing this on the individual clients, we avoid needing extra packets
 			if(level.getGameTime() % FluxUtil.FLUX_TIME == 0){
 				//Sound
-				CRSounds.playSoundClientLocal(level, worldPosition, CRSounds.FLUX_TRANSFER, SoundCategory.BLOCKS, 0.4F, 1F);
+				CRSounds.playSoundClientLocal(level, worldPosition, CRSounds.FLUX_TRANSFER, SoundSource.BLOCKS, 0.4F, 1F);
 				//Rendered arcs
 				if(level.getGameTime() % (FluxUtil.FLUX_TIME * 4) == 0){
 					if(getRunDuration() > STARTUP_TIME){
@@ -92,8 +94,8 @@ public class FluxSinkTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public AxisAlignedBB getRenderBoundingBox(){
-		return new AxisAlignedBB(worldPosition.offset(-3, -3, -3), worldPosition.offset(4, 4, 4));
+	public AABB getRenderBoundingBox(){
+		return new AABB(worldPosition.offset(-3, -3, -3), worldPosition.offset(4, 4, 4));
 	}
 
 	private boolean isRunning(){
@@ -102,7 +104,7 @@ public class FluxSinkTileEntity extends IFluxLink.FluxHelper{
 			boolean prevRunning = running;
 			running = false;
 			//expects a beacon below it, with any number of air gaps
-			BlockPos.Mutable mutPos = new BlockPos.Mutable(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
+			BlockPos.MutableBlockPos mutPos = new BlockPos.MutableBlockPos(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
 			do{
 				mutPos.move(Direction.DOWN);
 				BlockState state = level.getBlockState(mutPos);
@@ -129,7 +131,7 @@ public class FluxSinkTileEntity extends IFluxLink.FluxHelper{
 	 * @param pos The position of the state- not of the calling flux sink
 	 * @return Whether beacons can treat a block as air
 	 */
-	private static boolean canBeaconBeamPass(BlockState state, World world, BlockPos pos){
+	private static boolean canBeaconBeamPass(BlockState state, Level world, BlockPos pos){
 		//We don't actually know where the beacon is.
 		//pos.down() is an incorrect value, but all current implementations ignore it (and should have sanity checking anyway)
 		float[] colMult = state.getBeaconColorMultiplier(world, pos, pos.below());
@@ -137,14 +139,14 @@ public class FluxSinkTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		running = nbt.getBoolean("running");
 		runningStartTime = nbt.getLong("run_time");
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putBoolean("running", running);
 		nbt.putLong("run_time", runningStartTime);
@@ -152,8 +154,8 @@ public class FluxSinkTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag(){
-		CompoundNBT nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(){
+		CompoundTag nbt = super.getUpdateTag();
 		nbt.putBoolean("running", running);
 		nbt.putLong("run_time", runningStartTime);
 		return nbt;
@@ -165,7 +167,7 @@ public class FluxSinkTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayer sendingPlayer){
 		super.receiveLong(identifier, message, sendingPlayer);
 		//Receive running info
 		if(identifier == 1){

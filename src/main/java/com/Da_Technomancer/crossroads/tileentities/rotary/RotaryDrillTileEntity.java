@@ -8,19 +8,19 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.rotary.RotaryDrill;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
-import net.minecraft.util.EntityDamageSource;
-import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.core.Direction;
+import net.minecraft.world.damagesource.EntityDamageSource;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.FakePlayer;
@@ -34,7 +34,7 @@ import java.util.List;
 public class RotaryDrillTileEntity extends ModuleTE{
 
 	@ObjectHolder("rotary_drill")
-	public static TileEntityType<RotaryDrillTileEntity> type = null;
+	public static BlockEntityType<RotaryDrillTileEntity> type = null;
 
 	private static final DamageSource DRILL = new DamageSource("drill");
 
@@ -103,7 +103,7 @@ public class RotaryDrillTileEntity extends ModuleTE{
 				if(!targetState.isAir(level, targetPos)){
 					float hardness = targetState.getDestroySpeed(level, targetPos);
 					if(hardness >= 0 && Math.abs(axleHandler.getSpeed()) >= hardness * SPEED_PER_HARDNESS){
-						FakePlayer fakePlayer = PlaceEffect.getBlockFakePlayer((ServerWorld) level);
+						FakePlayer fakePlayer = PlaceEffect.getBlockFakePlayer((ServerLevel) level);
 						ItemStack tool;
 						ToolType toolType = targetState.getHarvestTool();
 						if(toolType == ToolType.PICKAXE){
@@ -130,30 +130,30 @@ public class RotaryDrillTileEntity extends ModuleTE{
 					}
 				}
 
-				List<LivingEntity> ents = level.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(worldPosition.relative(facing)), EntityPredicates.ENTITY_STILL_ALIVE);
+				List<LivingEntity> ents = level.getEntitiesOfClass(LivingEntity.class, new AABB(worldPosition.relative(facing)), EntitySelector.ENTITY_STILL_ALIVE);
 				for(LivingEntity ent : ents){
-					ent.hurt(golden ? new EntityDamageSource("drill", FakePlayerFactory.get((ServerWorld) level, new GameProfile(null, "drill_player_" + MiscUtil.getDimensionName(level)))) : DRILL, (float) Math.abs(axleHandler.getSpeed()) * DAMAGE_PER_SPEED);
+					ent.hurt(golden ? new EntityDamageSource("drill", FakePlayerFactory.get((ServerLevel) level, new GameProfile(null, "drill_player_" + MiscUtil.getDimensionName(level)))) : DRILL, (float) Math.abs(axleHandler.getSpeed()) * DAMAGE_PER_SPEED);
 				}
 			}
 		}
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putBoolean("gold", golden);
 		return nbt;
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		golden = nbt.getBoolean("gold");
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag(){
-		CompoundNBT nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(){
+		CompoundTag nbt = super.getUpdateTag();
 		nbt.putBoolean("gold", golden);
 		return nbt;
 	}

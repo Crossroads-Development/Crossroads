@@ -2,55 +2,55 @@ package com.Da_Technomancer.crossroads.entity;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.IRendersAsItem;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.ThrowableEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.IPacket;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.projectile.ItemSupplier;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.ThrowableProjectile;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.registries.ObjectHolder;
 
-@OnlyIn(value = Dist.CLIENT, _interface = IRendersAsItem.class)
+@OnlyIn(value = Dist.CLIENT, _interface = ItemSupplier.class)
 @ObjectHolder(Crossroads.MODID)
-public class EntityNitro extends ThrowableEntity implements IRendersAsItem{
+public class EntityNitro extends ThrowableProjectile implements ItemSupplier{
 
 	@ObjectHolder("nitro")
 	public static EntityType<EntityNitro> type = null;
 	private static final ItemStack RENDER_STACK = new ItemStack(CRItems.nitroglycerin);
 
-	public EntityNitro(EntityType<EntityNitro> type, World worldIn){
+	public EntityNitro(EntityType<EntityNitro> type, Level worldIn){
 		super(type, worldIn);
 	}
 
-	public EntityNitro(World worldIn, LivingEntity throwerIn){
+	public EntityNitro(Level worldIn, LivingEntity throwerIn){
 		super(type, throwerIn, worldIn);
 	}
 
 	@Override
 	public void setSecondsOnFire(int seconds){
 		if(seconds > 0){
-			onHit(new BlockRayTraceResult(new Vector3d(getX(), getY(), getZ()), Direction.UP, blockPosition(), true));
+			onHit(new BlockHitResult(new Vec3(getX(), getY(), getZ()), Direction.UP, blockPosition(), true));
 		}
 	}
 
 	@Override
-	protected void onHit(RayTraceResult result){
+	protected void onHit(HitResult result){
 		if(!level.isClientSide){
-			Vector3d vec = result.getLocation();
-			level.explode(null, vec.x, vec.y, vec.z, 5F, Explosion.Mode.BREAK);
-			level.playSound(null, getX(), getY(), getZ(), SoundEvents.GLASS_BREAK, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
-			level.playSound(null, getX(), getY(), getZ(), SoundEvents.GENERIC_EXPLODE, SoundCategory.NEUTRAL, 1F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+			Vec3 vec = result.getLocation();
+			level.explode(null, vec.x, vec.y, vec.z, 5F, Explosion.BlockInteraction.BREAK);
+			level.playSound(null, getX(), getY(), getZ(), SoundEvents.GLASS_BREAK, SoundSource.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+			level.playSound(null, getX(), getY(), getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.NEUTRAL, 1F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
 			level.broadcastEntityEvent(this, (byte) 3);
 			remove();
 		}
@@ -62,7 +62,7 @@ public class EntityNitro extends ThrowableEntity implements IRendersAsItem{
 	}
 
 	@Override
-	public IPacket<?> getAddEntityPacket(){
+	public Packet<?> getAddEntityPacket(){
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 

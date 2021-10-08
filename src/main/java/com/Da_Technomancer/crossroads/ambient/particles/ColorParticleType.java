@@ -2,8 +2,8 @@ package com.Da_Technomancer.crossroads.ambient.particles;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.mojang.serialization.Codec;
-import net.minecraft.particles.ParticleType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.resources.ResourceLocation;
 
 public class ColorParticleType extends ParticleType<ColorParticleData>{
 

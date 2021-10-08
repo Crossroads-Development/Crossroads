@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.recipes.BeamLensRec;
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -14,10 +14,10 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import com.mojang.math.Vector3f;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class BeamLensCategory implements IRecipeCategory<BeamLensRec>{
 
@@ -61,7 +61,7 @@ public class BeamLensCategory implements IRecipeCategory<BeamLensRec>{
 	}
 
 	@Override
-	public void draw(BeamLensRec recipe, MatrixStack matrix, double mouseX, double mouseY){
+	public void draw(BeamLensRec recipe, PoseStack matrix, double mouseX, double mouseY){
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
 		slot.draw(matrix, 20, 15);//Input
@@ -70,7 +70,7 @@ public class BeamLensCategory implements IRecipeCategory<BeamLensRec>{
 		// Draw relevant transmutation data
 		if(recipe.getTransmuteAlignment() != EnumBeamAlignments.NO_MATCH) {
 			String align = recipe.getTransmuteAlignment().getLocalName(recipe.isVoid());
-			Minecraft.getInstance().font.draw(matrix, new TranslationTextComponent("crossroads.jei.beam_trans.align", align), 2, 2, 0x404040);
+			Minecraft.getInstance().font.draw(matrix, new TranslatableComponent("crossroads.jei.beam_trans.align", align), 2, 2, 0x404040);
 			slot.draw(matrix, 20, 60);//Output
 
 			// Rotate arrow to point downwards
@@ -80,7 +80,7 @@ public class BeamLensCategory implements IRecipeCategory<BeamLensRec>{
 			arrowStatic.draw(matrix, 0, 0);
 			matrix.popPose();
 		} else {
-			Minecraft.getInstance().font.draw(matrix, new TranslationTextComponent("crossroads.jei.beam_lens.no_trans"), 2, 2, 0x404040);
+			Minecraft.getInstance().font.draw(matrix, new TranslatableComponent("crossroads.jei.beam_lens.no_trans"), 2, 2, 0x404040);
 		}
 
 		BeamMod output = recipe.getOutput();
@@ -95,25 +95,25 @@ public class BeamLensCategory implements IRecipeCategory<BeamLensRec>{
 		int ySpacing = 15;
 
 		if(output.isEmpty()) {
-			Minecraft.getInstance().font.draw(matrix, new TranslationTextComponent("crossroads.jei.beam_lens.no_change"), x, 37, 0x404040);
+			Minecraft.getInstance().font.draw(matrix, new TranslatableComponent("crossroads.jei.beam_lens.no_change"), x, 37, 0x404040);
 		} else {
 			// Display all primary colors if any of them is changed
 			if(energy != 100 || potential != 100 || stability != 100) {
-				Minecraft.getInstance().font.draw(matrix, new TranslationTextComponent("crossroads.jei.beam_lens.energy", energy), x, y, 0x404040);
+				Minecraft.getInstance().font.draw(matrix, new TranslatableComponent("crossroads.jei.beam_lens.energy", energy), x, y, 0x404040);
 				y += ySpacing;
-				Minecraft.getInstance().font.draw(matrix, new TranslationTextComponent("crossroads.jei.beam_lens.potential", potential), x, y, 0x404040);
+				Minecraft.getInstance().font.draw(matrix, new TranslatableComponent("crossroads.jei.beam_lens.potential", potential), x, y, 0x404040);
 				y += ySpacing;
-				Minecraft.getInstance().font.draw(matrix, new TranslationTextComponent("crossroads.jei.beam_lens.stability", stability), x, y, 0x404040);
+				Minecraft.getInstance().font.draw(matrix, new TranslatableComponent("crossroads.jei.beam_lens.stability", stability), x, y, 0x404040);
 				y += ySpacing;
 			}
 			// Display void if void is changed
 			if(voi != 100) {
-				Minecraft.getInstance().font.draw(matrix, new TranslationTextComponent("crossroads.jei.beam_lens.void", voi), x, y, 0x404040);
+				Minecraft.getInstance().font.draw(matrix, new TranslatableComponent("crossroads.jei.beam_lens.void", voi), x, y, 0x404040);
 				y += ySpacing;
 			}
 			// Display void conversion if conversion is taking place
 			if(voidConv != 0) {
-				Minecraft.getInstance().font.draw(matrix, new TranslationTextComponent("crossroads.jei.beam_lens.void_convert", voidConv), x, y, 0x404040);
+				Minecraft.getInstance().font.draw(matrix, new TranslatableComponent("crossroads.jei.beam_lens.void_convert", voidConv), x, y, 0x404040);
 			}
 		}
 

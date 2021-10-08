@@ -12,14 +12,14 @@ import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements IInfoTE{
 
 	@ObjectHolder("crystal_master_axis")
-	private static TileEntityType<CrystalMasterAxisTileEntity> type = null;
+	private static BlockEntityType<CrystalMasterAxisTileEntity> type = null;
 
 	private double lastSumEnergy;
 	private EnumBeamAlignments currentElement;
@@ -41,9 +41,9 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		//Known issue: the localization for alignment name happens on the server side
-		chat.add(new TranslationTextComponent("tt.crossroads.crystal_master_axis.info", currentElement == null ? MiscUtil.localize("alignment.none") : currentElement.getLocalName(time < 0), Math.abs(time)));
+		chat.add(new TranslatableComponent("tt.crossroads.crystal_master_axis.info", currentElement == null ? MiscUtil.localize("alignment.none") : currentElement.getLocalName(time < 0), Math.abs(time)));
 	}
 
 	public int getTime(){
@@ -93,7 +93,7 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putInt("time", time);
 		if(currentElement != null){
@@ -103,7 +103,7 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		time = nbt.getInt("time");
 		currentElement = nbt.contains("elem") ? EnumBeamAlignments.valueOf(nbt.getString("elem")) : null;

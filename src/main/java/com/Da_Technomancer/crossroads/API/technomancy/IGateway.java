@@ -3,17 +3,17 @@ package com.Da_Technomancer.crossroads.API.technomancy;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.server.TicketType;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.TicketType;
 
 import javax.annotation.Nullable;
 
@@ -72,23 +72,23 @@ public interface IGateway extends IInfoTE{
 	 * @param posZ The desired entity Z position
 	 * @param yawRotation The amount (in degrees) to rotate the yaw of this entity
 	 */
-	static void teleportEntityTo(Entity e, ServerWorld target, double posX, double posY, double posZ, float yawRotation){
+	static void teleportEntityTo(Entity e, ServerLevel target, double posX, double posY, double posZ, float yawRotation){
 		//Moves an entity to any position in any dimension
 
-		if(e instanceof ServerPlayerEntity){
+		if(e instanceof ServerPlayer){
 			//Based on TeleportCommand
 
 			//Load endpoint chunk
 			target.getChunkSource().addRegionTicket(TicketType.POST_TELEPORT, new ChunkPos(new BlockPos(posX, posY, posZ)), 1, e.getId());
 
 			e.stopRiding();
-			ServerPlayerEntity play = (ServerPlayerEntity) e;
+			ServerPlayer play = (ServerPlayer) e;
 			if(play.isSleeping()){
 				play.stopSleepInBed(true, true);
 			}
 
 			float prevHeadYaw = play.getYHeadRot();
-			Vector3d prevVelocity = play.getDeltaMovement();
+			Vec3 prevVelocity = play.getDeltaMovement();
 			if(target == e.level){
 				play.connection.teleport(posX, posY, posZ, play.getViewYRot(1) + yawRotation, play.getViewXRot(1));
 			}else{
@@ -97,7 +97,7 @@ public interface IGateway extends IInfoTE{
 			play.setYHeadRot(prevHeadYaw + yawRotation);
 			play.setDeltaMovement(prevVelocity.yRot(yawRotation));
 		}else{
-			Vector3d prevVelocity = e.getDeltaMovement();
+			Vec3 prevVelocity = e.getDeltaMovement();
 			if(target == e.level){
 				float prevHeadYaw = e.getYHeadRot();
 				e.moveTo(posX, posY, posZ, e.getViewYRot(1) + yawRotation, e.getViewXRot(1));
@@ -122,22 +122,22 @@ public interface IGateway extends IInfoTE{
 
 		//Add a timestamp of when this entity was teleported by a gateway
 		//Used to add a teleportation cooldown
-		CompoundNBT eNBT = e.getPersistentData();
+		CompoundTag eNBT = e.getPersistentData();
 		String dimName = MiscUtil.getDimensionName(target);
 		long worldTime = target.getGameTime();
 		eNBT.putString("cr_gateway_dim", dimName);
 		eNBT.putLong("cr_gateway_time", worldTime);
 	}
 
-	static boolean isAllowedToTeleport(Entity e, World sourceWorld){
+	static boolean isAllowedToTeleport(Entity e, Level sourceWorld){
 		if(!CRConfig.allowGateway.get()){
 			return false;
 		}
-		if(!(e instanceof PlayerEntity) && !CRConfig.allowGatewayEntities.get()){
+		if(!(e instanceof Player) && !CRConfig.allowGatewayEntities.get()){
 			return false;
 		}
 
-		CompoundNBT nbt = e.getPersistentData();
+		CompoundTag nbt = e.getPersistentData();
 		String dimName = MiscUtil.getDimensionName(sourceWorld);
 		long worldTime = sourceWorld.getGameTime();
 		//Effective teleportation cooldown of 20*3 ticks = 3 seconds

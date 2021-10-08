@@ -5,11 +5,11 @@ import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.IncubatorContainer;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.IncubatorTileEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
 
 import java.awt.*;
 
@@ -17,12 +17,12 @@ public class IncubatorScreen extends MachineGUI<IncubatorContainer, IncubatorTil
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/incubator_gui.png");
 
-	public IncubatorScreen(IncubatorContainer container, PlayerInventory playerInv, ITextComponent name){
+	public IncubatorScreen(IncubatorContainer container, Inventory playerInv, Component name){
 		super(container, playerInv, name);
 	}
 
 	@Override
-	protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
 		Minecraft.getInstance().getTextureManager().bind(TEXTURE);
 
 		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
@@ -33,7 +33,7 @@ public class IncubatorScreen extends MachineGUI<IncubatorContainer, IncubatorTil
 	}
 
 	@Override
-	protected void renderLabels(MatrixStack matrix, int mouseX, int mouseY){
+	protected void renderLabels(PoseStack matrix, int mouseX, int mouseY){
 		super.renderLabels(matrix, mouseX, mouseY);
 
 		//Changes color based on whether within target temperature

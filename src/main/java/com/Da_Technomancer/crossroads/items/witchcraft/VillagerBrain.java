@@ -2,22 +2,30 @@ package com.Da_Technomancer.crossroads.items.witchcraft;
 
 import com.Da_Technomancer.crossroads.API.witchcraft.ICultivatable;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.item.*;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import com.Da_Technomancer.crossroads.API.witchcraft.ICultivatable.CultivationTrade;
+import net.minecraft.world.item.EnchantedBookItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Item.Properties;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.item.trading.MerchantOffers;
 
 public class VillagerBrain extends Item implements ICultivatable{
 
@@ -51,7 +59,7 @@ public class VillagerBrain extends Item implements ICultivatable{
 	}
 
 	public MerchantOffer getCurrentOffer(ItemStack stack){
-		CompoundNBT nbt = stack.getOrCreateTag();
+		CompoundTag nbt = stack.getOrCreateTag();
 		int tradeIndex = nbt.getInt(CURRENT_TRADE);
 		MerchantOffers offers = getOffers(stack);
 		if(offers.size() == 0){
@@ -71,7 +79,7 @@ public class VillagerBrain extends Item implements ICultivatable{
 	}
 
 	public void incrementCurrentOffer(ItemStack stack){
-		CompoundNBT nbt = stack.getOrCreateTag();
+		CompoundTag nbt = stack.getOrCreateTag();
 		MerchantOffers offers = getOffers(stack);
 		if(offers.size() != 0){
 			int tradeIndex = nbt.getInt(CURRENT_TRADE);
@@ -81,47 +89,47 @@ public class VillagerBrain extends Item implements ICultivatable{
 	}
 
 	@Override
-	public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand){
+	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand){
 		ItemStack held = player.getItemInHand(hand);
 		incrementCurrentOffer(held);
-		return ActionResult.success(held);
+		return InteractionResultHolder.success(held);
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag){
+	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag){
 		MerchantOffer offer = getCurrentOffer(stack);
 		if(offer == null){
 			//No trades
-			tooltip.add(new TranslationTextComponent("tt.crossroads.villager_brain.trade.none"));
+			tooltip.add(new TranslatableComponent("tt.crossroads.villager_brain.trade.none"));
 		}else if(offer.getCostB().isEmpty()){
 			//Single input trade
-			tooltip.add(new TranslationTextComponent("tt.crossroads.villager_brain.trade.single", getDisplayParameter(offer.getCostA()), offer.getCostA().getCount(), getDisplayParameter(offer.getResult()), offer.getResult().getCount()));
+			tooltip.add(new TranslatableComponent("tt.crossroads.villager_brain.trade.single", getDisplayParameter(offer.getCostA()), offer.getCostA().getCount(), getDisplayParameter(offer.getResult()), offer.getResult().getCount()));
 		}else{
 			//Dual input trade
-			tooltip.add(new TranslationTextComponent("tt.crossroads.villager_brain.trade.dual", getDisplayParameter(offer.getCostA()), offer.getCostA().getCount(), getDisplayParameter(offer.getCostB()), offer.getCostB().getCount(), getDisplayParameter(offer.getResult()), offer.getResult().getCount()));
+			tooltip.add(new TranslatableComponent("tt.crossroads.villager_brain.trade.dual", getDisplayParameter(offer.getCostA()), offer.getCostA().getCount(), getDisplayParameter(offer.getCostB()), offer.getCostB().getCount(), getDisplayParameter(offer.getResult()), offer.getResult().getCount()));
 		}
 		ICultivatable.addTooltip(stack, world, tooltip);
-		tooltip.add(new TranslationTextComponent("tt.crossroads.village_brain.desc"));
+		tooltip.add(new TranslatableComponent("tt.crossroads.village_brain.desc"));
 	}
 
 	private static Object getDisplayParameter(ItemStack stack){
 		int totalEnchants = 0;
-		ITextComponent firstEnchantName = null;
+		Component firstEnchantName = null;
 
 		if(stack.isEnchanted()){
 			//Doesn't work on enchanted books
-			ListNBT enchantList = stack.getEnchantmentTags();
+			ListTag enchantList = stack.getEnchantmentTags();
 			totalEnchants = enchantList.size();
-			CompoundNBT compoundnbt = enchantList.getCompound(0);
+			CompoundTag compoundnbt = enchantList.getCompound(0);
 			Enchantment firstEnchant = Registry.ENCHANTMENT.get(ResourceLocation.tryParse(compoundnbt.getString("id")));
 			if(firstEnchant != null){
 				firstEnchantName = firstEnchant.getFullname(compoundnbt.getInt("lvl"));
 			}
 		}
 		if(stack.getItem() instanceof EnchantedBookItem){
-			ListNBT enchantList = EnchantedBookItem.getEnchantments(stack);
+			ListTag enchantList = EnchantedBookItem.getEnchantments(stack);
 			totalEnchants = enchantList.size();
-			CompoundNBT compoundnbt = enchantList.getCompound(0);
+			CompoundTag compoundnbt = enchantList.getCompound(0);
 			Enchantment firstEnchant = Registry.ENCHANTMENT.get(ResourceLocation.tryParse(compoundnbt.getString("id")));
 			if(firstEnchant != null){
 				firstEnchantName = firstEnchant.getFullname(compoundnbt.getInt("lvl"));
@@ -130,9 +138,9 @@ public class VillagerBrain extends Item implements ICultivatable{
 
 		if(firstEnchantName != null){
 			if(totalEnchants > 1){
-				return new TranslationTextComponent("tt.crossroads.villager_brain.item.enchant.multi", stack.getHoverName(), firstEnchantName, totalEnchants, totalEnchants - 1);
+				return new TranslatableComponent("tt.crossroads.villager_brain.item.enchant.multi", stack.getHoverName(), firstEnchantName, totalEnchants, totalEnchants - 1);
 			}else{
-				return new TranslationTextComponent("tt.crossroads.villager_brain.item.enchant", stack.getHoverName(), firstEnchantName);
+				return new TranslatableComponent("tt.crossroads.villager_brain.item.enchant", stack.getHoverName(), firstEnchantName);
 			}
 		}
 		return stack.getHoverName();
@@ -140,7 +148,7 @@ public class VillagerBrain extends Item implements ICultivatable{
 
 	@Nullable
 	@Override
-	public CultivationTrade getCultivationTrade(ItemStack self, World world){
+	public CultivationTrade getCultivationTrade(ItemStack self, Level world){
 		//Performs villager trades
 		if(isSpoiled(self, world)){
 			return null;

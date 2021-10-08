@@ -8,27 +8,27 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.rotary.WindTurbineTileEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.DyeColor;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.core.Direction;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntity>{
+public class WindTurbineRenderer extends BlockEntityRenderer<WindTurbineTileEntity>{
 
-	protected WindTurbineRenderer(TileEntityRendererDispatcher dispatcher){
+	protected WindTurbineRenderer(BlockEntityRenderDispatcher dispatcher){
 		super(dispatcher);
 	}
 
 	@Override
-	public void render(WindTurbineTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
+	public void render(WindTurbineTileEntity te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		BlockState state = te.getBlockState();
 		LazyOptional<IAxleHandler> axle = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
 
@@ -38,7 +38,7 @@ public class WindTurbineRenderer extends TileEntityRenderer<WindTurbineTileEntit
 
 		int[] bladeCols = te.bladeColors;
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.WINDMILL_TEXTURE);
-		IVertexBuilder builder = buffer.getBuffer(RenderType.cutout());
+		VertexConsumer builder = buffer.getBuffer(RenderType.cutout());
 		Direction facing = state.getValue(CRProperties.HORIZ_FACING);
 		int light = CRRenderUtil.getLightAtPos(te.getLevel(), te.getBlockPos().relative(facing));//Get light from the block in front
 

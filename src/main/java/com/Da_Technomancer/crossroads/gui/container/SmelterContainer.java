@@ -4,20 +4,23 @@ import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.heat.SmelterTileEntity;
 import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.registries.ObjectHolder;
+
+import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.OutputSlot;
+import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.StrictSlot;
 
 @ObjectHolder(Crossroads.MODID)
 public class SmelterContainer extends MachineContainer<SmelterTileEntity>{
 
 	@ObjectHolder("smelter")
-	private static ContainerType<SmelterContainer> type = null;
+	private static MenuType<SmelterContainer> type = null;
 
 	public final IntDeferredRef cookProg;
 
-	public SmelterContainer(int id, PlayerInventory playerInv, PacketBuffer data){
+	public SmelterContainer(int id, Inventory playerInv, FriendlyByteBuf data){
 		super(type, id, playerInv, data);
 		cookProg = new IntDeferredRef(te::getProgress, te.getLevel().isClientSide);
 		addDataSlot(cookProg);

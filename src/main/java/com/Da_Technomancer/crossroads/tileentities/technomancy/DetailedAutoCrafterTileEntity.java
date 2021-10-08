@@ -7,15 +7,15 @@ import com.Da_Technomancer.crossroads.gui.container.DetailedAutoCrafterContainer
 import com.Da_Technomancer.crossroads.items.PathSigil;
 import com.Da_Technomancer.essentials.gui.container.AutoCrafterContainer;
 import com.Da_Technomancer.essentials.tileentities.AutoCrafterTileEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
@@ -25,7 +25,7 @@ import java.util.Optional;
 public class DetailedAutoCrafterTileEntity extends AutoCrafterTileEntity{
 
 	@ObjectHolder("detailed_auto_crafter")
-	public static TileEntityType<DetailedAutoCrafterTileEntity> type = null;
+	public static BlockEntityType<DetailedAutoCrafterTileEntity> type = null;
 
 	public DetailedAutoCrafterTileEntity(){
 		super(type);
@@ -37,19 +37,19 @@ public class DetailedAutoCrafterTileEntity extends AutoCrafterTileEntity{
 	}
 
 	@Override
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.detailed_auto_crafter");
+	public Component getDisplayName(){
+		return new TranslatableComponent("container.detailed_auto_crafter");
 	}
 
 	@Nullable
 	@Override
-	public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity player){
+	public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player){
 		return new DetailedAutoCrafterContainer(id, playerInventory, iInv, worldPosition);
 	}
 
 	@Nullable
 	@Override
-	public IRecipe<CraftingInventory> validateRecipe(IRecipe<?> rec, @Nullable AutoCrafterContainer container){
+	public Recipe<CraftingContainer> validateRecipe(Recipe<?> rec, @Nullable AutoCrafterContainer container){
 		if(rec != null && rec.getType() == CRRecipes.DETAILED_TYPE && rec.canCraftInDimensions(3, 3)){
 			DetailedCrafterRec drec = (DetailedCrafterRec) rec;
 			ItemStack sigil = container == null ? inv[19] : container.getSlot(55).getItem();
@@ -62,10 +62,10 @@ public class DetailedAutoCrafterTileEntity extends AutoCrafterTileEntity{
 
 	@Override
 	@Nullable
-	public IRecipe<CraftingInventory> findRecipe(CraftingInventory fakeInv, @Nullable AutoCrafterContainer container){
+	public Recipe<CraftingContainer> findRecipe(CraftingContainer fakeInv, @Nullable AutoCrafterContainer container){
 		//Same as super version, except with different recipe type
 
-		IRecipe<CraftingInventory> iRecipe;
+		Recipe<CraftingContainer> iRecipe;
 
 		if(recipe == null){
 			//No recipe has been directly set via recipe book/JEI. Pick a recipe based on manually configured inputs, if applicable

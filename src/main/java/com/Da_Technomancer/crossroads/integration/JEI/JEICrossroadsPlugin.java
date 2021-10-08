@@ -20,11 +20,11 @@ import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
 import mezz.jei.api.registration.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.RecipeManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -105,7 +105,7 @@ public class JEICrossroadsPlugin implements IModPlugin{
 		registration.addRecipes(anvilRecipes, VanillaRecipeCategoryUid.ANVIL);
 	}
 
-	private static Collection<?> getRecipes(RecipeManager manage, IRecipeType<?> type){
+	private static Collection<?> getRecipes(RecipeManager manage, RecipeType<?> type){
 		//Filter to recipes of the passed type, and check that they're enabled if they're IOptionalRecipe
 		return manage.getRecipes().parallelStream().filter(rec -> rec.getType() == type && (!(rec instanceof IOptionalRecipe) || ((IOptionalRecipe<?>) rec).isEnabled())).collect(Collectors.toList());
 	}

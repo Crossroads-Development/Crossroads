@@ -4,22 +4,22 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.item.*;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.core.NonNullList;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -27,16 +27,24 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.ArmorMaterials;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item.Properties;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+
 public abstract class TechnomancyArmor extends ArmorItem{
 
-	private static final IArmorMaterial TECHNOMANCY_MAT = new TechnoMat();
-	private static final IArmorMaterial TECHNOMANCY_REINFORCED_MAT = new TechnoMatReinforced();
+	private static final ArmorMaterial TECHNOMANCY_MAT = new TechnoMat();
+	private static final ArmorMaterial TECHNOMANCY_REINFORCED_MAT = new TechnoMatReinforced();
 	//Duplicate of the private field in ArmorItem
 	protected static final UUID[] ARMOR_MODIFIERS = new UUID[]{UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
 
 	protected final Multimap<Attribute, AttributeModifier> reinforcedProperties;
 
-	public TechnomancyArmor(EquipmentSlotType slot){
+	public TechnomancyArmor(EquipmentSlot slot){
 		super(TECHNOMANCY_MAT, slot, new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1).fireResistant());
 
 		//Prepare reinforced properties map
@@ -84,7 +92,7 @@ public abstract class TechnomancyArmor extends ArmorItem{
 	}
 
 	@Override
-	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack){
+	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack){
 		Multimap<Attribute, AttributeModifier> baseMap = super.getAttributeModifiers(slot, stack);//The un-reinforced version with no protection
 		if(this.slot == slot && isReinforced(stack) && hasDurability(stack)){
 			return reinforcedProperties;
@@ -94,14 +102,14 @@ public abstract class TechnomancyArmor extends ArmorItem{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
 		if(isReinforced(stack)){
-			tooltip.add(new TranslationTextComponent("tt.crossroads.technomancy_armor.reinforced").setStyle(Style.EMPTY.applyFormat(TextFormatting.DARK_RED)));
+			tooltip.add(new TranslatableComponent("tt.crossroads.technomancy_armor.reinforced").setStyle(Style.EMPTY.applyFormat(ChatFormatting.DARK_RED)));
 		}
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items){
+	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
 		if(allowdedIn(group)){
 			items.add(new ItemStack(this, 1));
 			items.add(setReinforced(new ItemStack(this, 1), true));
@@ -109,29 +117,29 @@ public abstract class TechnomancyArmor extends ArmorItem{
 	}
 
 	@Override
-	public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type){
+	public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type){
 		//Switch to reinforced texture as applicable
 		if(isReinforced(stack)){
-			return slot == EquipmentSlotType.LEGS ? Crossroads.MODID + ":textures/models/armor/technomancy_reinforced_layer_2.png" : Crossroads.MODID + ":textures/models/armor/technomancy_reinforced_layer_1.png";
+			return slot == EquipmentSlot.LEGS ? Crossroads.MODID + ":textures/models/armor/technomancy_reinforced_layer_2.png" : Crossroads.MODID + ":textures/models/armor/technomancy_reinforced_layer_1.png";
 		}
-		return slot == EquipmentSlotType.LEGS ? Crossroads.MODID + ":textures/models/armor/technomancy_layer_2.png" : Crossroads.MODID + ":textures/models/armor/technomancy_layer_1.png";
+		return slot == EquipmentSlot.LEGS ? Crossroads.MODID + ":textures/models/armor/technomancy_layer_2.png" : Crossroads.MODID + ":textures/models/armor/technomancy_layer_1.png";
 	}
 
-	private static class TechnoMat implements IArmorMaterial{
+	private static class TechnoMat implements ArmorMaterial{
 
 		@Override
-		public int getDurabilityForSlot(EquipmentSlotType slotIn){
-			return ArmorMaterial.NETHERITE.getDurabilityForSlot(slotIn);
+		public int getDurabilityForSlot(EquipmentSlot slotIn){
+			return ArmorMaterials.NETHERITE.getDurabilityForSlot(slotIn);
 		}
 
 		@Override
-		public int getDefenseForSlot(EquipmentSlotType slotIn){
+		public int getDefenseForSlot(EquipmentSlot slotIn){
 			return 0;
 		}
 
 		@Override
 		public int getEnchantmentValue(){
-			return ArmorMaterial.NETHERITE.getEnchantmentValue();
+			return ArmorMaterials.NETHERITE.getEnchantmentValue();
 		}
 
 		@Override
@@ -160,26 +168,26 @@ public abstract class TechnomancyArmor extends ArmorItem{
 		}
 	}
 
-	private static class TechnoMatReinforced implements IArmorMaterial{
+	private static class TechnoMatReinforced implements ArmorMaterial{
 
 		@Override
-		public int getDurabilityForSlot(EquipmentSlotType slotIn){
-			return ArmorMaterial.NETHERITE.getDurabilityForSlot(slotIn);
+		public int getDurabilityForSlot(EquipmentSlot slotIn){
+			return ArmorMaterials.NETHERITE.getDurabilityForSlot(slotIn);
 		}
 
 		@Override
-		public int getDefenseForSlot(EquipmentSlotType slotIn){
-			return ArmorMaterial.NETHERITE.getDefenseForSlot(slotIn);
+		public int getDefenseForSlot(EquipmentSlot slotIn){
+			return ArmorMaterials.NETHERITE.getDefenseForSlot(slotIn);
 		}
 
 		@Override
 		public int getEnchantmentValue(){
-			return ArmorMaterial.NETHERITE.getEnchantmentValue();
+			return ArmorMaterials.NETHERITE.getEnchantmentValue();
 		}
 
 		@Override
 		public SoundEvent getEquipSound(){
-			return ArmorMaterial.IRON.getEquipSound();
+			return ArmorMaterials.IRON.getEquipSound();
 		}
 
 		@Override
@@ -194,12 +202,12 @@ public abstract class TechnomancyArmor extends ArmorItem{
 
 		@Override
 		public float getToughness(){
-			return ArmorMaterial.NETHERITE.getToughness();
+			return ArmorMaterials.NETHERITE.getToughness();
 		}
 
 		@Override
 		public float getKnockbackResistance(){
-			return ArmorMaterial.NETHERITE.getKnockbackResistance();
+			return ArmorMaterials.NETHERITE.getKnockbackResistance();
 		}
 	}
 }

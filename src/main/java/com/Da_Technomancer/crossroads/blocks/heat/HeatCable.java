@@ -8,33 +8,35 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.Property;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tags.ITag;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import com.Da_Technomancer.crossroads.API.templates.ConduitBlock.IConduitTE;
 
 public class HeatCable extends ConduitBlock<EnumTransferMode>{
 
@@ -67,7 +69,7 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 	}
 
 	@Override
-	protected EnumTransferMode getValueForPlacement(World world, BlockPos pos, Direction side, @Nullable TileEntity neighTE){
+	protected EnumTransferMode getValueForPlacement(Level world, BlockPos pos, Direction side, @Nullable BlockEntity neighTE){
 		return EnumTransferMode.BOTH;
 	}
 
@@ -87,7 +89,7 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 	}
 
 	@Override
-	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
 		super.createBlockStateDefinition(builder);
 		builder.add(CRProperties.CONDUCTOR);
 	}
@@ -98,7 +100,7 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(playerIn != null && hand != null){
 			if(!super.use(state, worldIn, pos, playerIn, hand, hit).shouldSwing()){
 				Conductors match = null;
@@ -113,21 +115,21 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 					if(!worldIn.isClientSide){
 						worldIn.setBlock(pos, state.setValue(CRProperties.CONDUCTOR, match), 2);
 					}
-					return ActionResultType.SUCCESS;
+					return InteractionResult.SUCCESS;
 				}
 			}else{
-				return ActionResultType.SUCCESS;
+				return InteractionResult.SUCCESS;
 			}
 		}
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 
 	@Override
-	protected void onAdjusted(World world, BlockPos pos, BlockState newState, Direction facing, EnumTransferMode newVal, @Nullable IConduitTE<EnumTransferMode> te){
+	protected void onAdjusted(Level world, BlockPos pos, BlockState newState, Direction facing, EnumTransferMode newVal, @Nullable IConduitTE<EnumTransferMode> te){
 		super.onAdjusted(world, pos, newState, facing, newVal, te);
 
 		//(un)lock the neighboring heat cable with this once, if applicable
-		TileEntity neighTE = world.getBlockEntity(pos.relative(facing));
+		BlockEntity neighTE = world.getBlockEntity(pos.relative(facing));
 		if(neighTE instanceof HeatCableTileEntity){
 			//Adjust the neighboring pipe alongside this one to have the same data
 			((HeatCableTileEntity) neighTE).setData(facing.getOpposite().get3DDataValue(), newVal.isConnection(), newVal);
@@ -135,27 +137,27 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 	}
 
 	@Override
-	public TileEntity newBlockEntity(IBlockReader worldIn){
+	public BlockEntity newBlockEntity(BlockGetter worldIn){
 		return new HeatCableTileEntity(insulator);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.heat_cable.loss", insulator.getRate()));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.heat_cable.melt", insulator.getLimit()));
+	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
+		tooltip.add(new TranslatableComponent("tt.crossroads.heat_cable.loss", insulator.getRate()));
+		tooltip.add(new TranslatableComponent("tt.crossroads.heat_cable.melt", insulator.getLimit()));
 	}
 
-	public enum Conductors implements IStringSerializable{
+	public enum Conductors implements StringRepresentable{
 
 		COPPER(CRItemTags.INGOTS_COPPER),
 		IRON(Tags.Items.INGOTS_IRON),
 		QUARTZ(Tags.Items.GEMS_QUARTZ),
 		DIAMOND(Tags.Items.GEMS_DIAMOND);
 
-		public final ITag<Item> tag;
+		public final Tag<Item> tag;
 
-		Conductors(ITag<Item> tag){
+		Conductors(Tag<Item> tag){
 			this.tag = tag;
 		}
 

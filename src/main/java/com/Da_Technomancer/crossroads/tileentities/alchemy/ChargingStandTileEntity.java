@@ -5,11 +5,11 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -20,7 +20,7 @@ import net.minecraftforge.registries.ObjectHolder;
 public class ChargingStandTileEntity extends GlasswareHolderTileEntity{
 
 	@ObjectHolder("charging_stand")
-	private static TileEntityType<ChargingStandTileEntity> type = null;
+	private static BlockEntityType<ChargingStandTileEntity> type = null;
 
 	private static final int ENERGY_CAPACITY = 100;
 	public static final int DRAIN = 10;
@@ -40,11 +40,11 @@ public class ChargingStandTileEntity extends GlasswareHolderTileEntity{
 			fe = Math.max(0, fe - DRAIN);
 			if(level.random.nextInt(10) == 0){
 				//Create an arc from one of the vertical metal pieces on the model to another, chosen at random
-				Vector3d startOffset = new Vector3d(-6.5D / 16D, level.random.nextFloat() * 12D / 16D + 2D / 16D, level.random.nextFloat() * 6D / 16D - 3D / 16D);
-				Vector3d endOffset = new Vector3d(6.5D / 16D, level.random.nextFloat() * 12D / 16D + 2D / 16D, level.random.nextFloat() * 6D / 16D - 3D / 16D);
-				Vector3d centeredPos = Vector3d.atBottomCenterOf(worldPosition);
-				Vector3d arcStart = level.random.nextBoolean() ? startOffset.add(centeredPos) : startOffset.yRot((float) Math.PI / 2F).add(centeredPos);
-				Vector3d arcEnd = level.random.nextBoolean() ? endOffset.add(centeredPos) : endOffset.yRot((float) Math.PI / 2F).add(centeredPos);
+				Vec3 startOffset = new Vec3(-6.5D / 16D, level.random.nextFloat() * 12D / 16D + 2D / 16D, level.random.nextFloat() * 6D / 16D - 3D / 16D);
+				Vec3 endOffset = new Vec3(6.5D / 16D, level.random.nextFloat() * 12D / 16D + 2D / 16D, level.random.nextFloat() * 6D / 16D - 3D / 16D);
+				Vec3 centeredPos = Vec3.atBottomCenterOf(worldPosition);
+				Vec3 arcStart = level.random.nextBoolean() ? startOffset.add(centeredPos) : startOffset.yRot((float) Math.PI / 2F).add(centeredPos);
+				Vec3 arcEnd = level.random.nextBoolean() ? endOffset.add(centeredPos) : endOffset.yRot((float) Math.PI / 2F).add(centeredPos);
 				CRRenderUtil.addArc(level, arcStart, arcEnd, 1, 0F, TeslaCoilTopTileEntity.COLOR_CODES[(int) (level.getGameTime() % 3)]);
 			}
 		}
@@ -57,13 +57,13 @@ public class ChargingStandTileEntity extends GlasswareHolderTileEntity{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		fe = nbt.getInt("fe");
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putInt("fe", fe);
 		return nbt;

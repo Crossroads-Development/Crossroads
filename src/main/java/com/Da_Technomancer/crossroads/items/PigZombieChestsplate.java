@@ -1,28 +1,30 @@
 package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class PigZombieChestsplate extends ArmorItem{
 
 	protected PigZombieChestsplate(){
-		super(ChickenBoots.BOBO_MATERIAL, EquipmentSlotType.CHEST, new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
+		super(ChickenBoots.BOBO_MATERIAL, EquipmentSlot.CHEST, new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "pig_zombie_chestplate";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
@@ -39,16 +41,16 @@ public class PigZombieChestsplate extends ArmorItem{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.pig_zombie_chestplate.quip").setStyle(MiscUtil.TT_QUIP));
+	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+		tooltip.add(new TranslatableComponent("tt.crossroads.pig_zombie_chestplate.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override
-	public void onArmorTick(ItemStack stack, World world, PlayerEntity player){
+	public void onArmorTick(ItemStack stack, Level world, Player player){
 		//Believe it or not, it is possible to die of fire while in lava without burning (if it is raining on the player). There is an isInLava check for this reason.
-		if(player.getEffect(Effects.FIRE_RESISTANCE) == null && (player.isOnFire() || player.isInLava())){
-			player.addEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 10, 0, false, false));
-			world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.PIGLIN_HURT, SoundCategory.PLAYERS, 2.5F, 1F);
+		if(player.getEffect(MobEffects.FIRE_RESISTANCE) == null && (player.isOnFire() || player.isInLava())){
+			player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 10, 0, false, false));
+			world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.PIGLIN_HURT, SoundSource.PLAYERS, 2.5F, 1F);
 		}
 	}
 }

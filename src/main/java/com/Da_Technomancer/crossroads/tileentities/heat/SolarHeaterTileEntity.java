@@ -4,11 +4,11 @@ import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -17,7 +17,7 @@ import net.minecraftforge.registries.ObjectHolder;
 public class SolarHeaterTileEntity extends ModuleTE{
 
 	@ObjectHolder("solar_heater")
-	private static TileEntityType<SolarHeaterTileEntity> type = null;
+	private static BlockEntityType<SolarHeaterTileEntity> type = null;
 
 	public static final double RATE = 5;
 	public static final double CAP = 325;
@@ -48,7 +48,7 @@ public class SolarHeaterTileEntity extends ModuleTE{
 		}
 
 		//This machine can share heat with other Solar Heaters in the same line, but only other Solar Heaters. Otherwise, a heat cable is needed like normal
-		TileEntity adjTE = level.getBlockEntity(worldPosition.relative(Direction.get(Direction.AxisDirection.NEGATIVE, level.getBlockState(worldPosition).getValue(CRProperties.HORIZ_AXIS))));
+		BlockEntity adjTE = level.getBlockEntity(worldPosition.relative(Direction.get(Direction.AxisDirection.NEGATIVE, level.getBlockState(worldPosition).getValue(CRProperties.HORIZ_AXIS))));
 		if(adjTE instanceof SolarHeaterTileEntity){
 			SolarHeaterTileEntity otherTE = (SolarHeaterTileEntity) adjTE;
 			temp += otherTE.temp;
@@ -65,13 +65,13 @@ public class SolarHeaterTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		running = nbt.getBoolean("running");
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putBoolean("running", running);
 		return nbt;

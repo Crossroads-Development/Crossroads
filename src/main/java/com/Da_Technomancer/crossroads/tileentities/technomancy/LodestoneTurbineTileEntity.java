@@ -4,8 +4,8 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 public class LodestoneTurbineTileEntity extends ModuleTE{
 
 	@ObjectHolder("lodestone_turbine")
-	private static TileEntityType<LodestoneTurbineTileEntity> type = null;
+	private static BlockEntityType<LodestoneTurbineTileEntity> type = null;
 
 	public static final double INERTIA = 300;
 	public static final double MAX_SPEED = 10;

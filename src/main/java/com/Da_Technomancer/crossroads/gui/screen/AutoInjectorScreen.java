@@ -5,24 +5,24 @@ import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.AutoInjectorContainer;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.AutoInjectorTileEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.potion.Effect;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
 
 public class AutoInjectorScreen extends MachineGUI<AutoInjectorContainer, AutoInjectorTileEntity>{
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/auto_injector_gui.png");
 
-	public AutoInjectorScreen(AutoInjectorContainer cont, PlayerInventory playerInv, ITextComponent name){
+	public AutoInjectorScreen(AutoInjectorContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);
 	}
 
 	@Override
-	protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
 		Minecraft.getInstance().getTextureManager().bind(TEXTURE);
 
 		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
@@ -31,10 +31,10 @@ public class AutoInjectorScreen extends MachineGUI<AutoInjectorContainer, AutoIn
 	}
 
 	@Override
-	protected void renderLabels(MatrixStack matrix, int mouseX, int mouseY){
+	protected void renderLabels(PoseStack matrix, int mouseX, int mouseY){
 		super.renderLabels(matrix, mouseX, mouseY);
 
-		Effect effect = Effect.byId(menu.effectRef.get());
+		MobEffect effect = MobEffect.byId(menu.effectRef.get());
 		String typeStr;
 		if(effect == null){
 			typeStr = MiscUtil.localize("container.crossroads.auto_injector.empty");

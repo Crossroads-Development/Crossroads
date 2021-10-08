@@ -15,10 +15,10 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTi
 import com.Da_Technomancer.crossroads.tileentities.technomancy.*;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.*;
 import com.mojang.datafixers.DSL;
-import net.minecraft.block.Block;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.function.Supplier;
@@ -27,7 +27,7 @@ import static com.Da_Technomancer.crossroads.blocks.CRBlocks.*;
 
 public class CRTileEntity{
 
-	public static void init(IForgeRegistry<TileEntityType<?>> reg){
+	public static void init(IForgeRegistry<BlockEntityType<?>> reg){
 		register(HeatCableTileEntity::new, "heat_cable", reg, HeatCableFactory.HEAT_CABLES.values().toArray(new HeatCable[0]));
 		register(MechanismTileEntity::new, "mechanism", reg, mechanism);
 		register(MasterAxisTileEntity::new, "master_axis", reg, masterAxis);
@@ -138,8 +138,8 @@ public class CRTileEntity{
 		register(EmbryoLabTileEntity::new, "embryo_lab", reg, embryoLab);
 	}
 
-	private static void register(Supplier<? extends TileEntity> cons, String id, IForgeRegistry<TileEntityType<?>> reg, Block... blocks){
-		TileEntityType<? extends TileEntity> teType = TileEntityType.Builder.of(cons, blocks).build(DSL.emptyPartType());
+	private static void register(Supplier<? extends BlockEntity> cons, String id, IForgeRegistry<BlockEntityType<?>> reg, Block... blocks){
+		BlockEntityType<? extends BlockEntity> teType = BlockEntityType.Builder.of(cons, blocks).build(DSL.emptyPartType());
 		teType.setRegistryName(new ResourceLocation(Crossroads.MODID, id));
 		reg.register(teType);
 	}

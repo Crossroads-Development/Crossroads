@@ -1,20 +1,20 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.monster.SlimeEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.Slime;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public class SlimeEffect implements IEffect{
 
 	@Override
-	public void doEffect(World worldIn, BlockPos pos){
+	public void doEffect(Level worldIn, BlockPos pos){
 		if(worldIn.isClientSide){
 			return;
 		}
 		worldIn.destroyBlock(pos, false);
 
-		SlimeEntity slime = EntityType.SLIME.create(worldIn);
+		Slime slime = EntityType.SLIME.create(worldIn);
 		slime.setPos(pos.getX(), pos.getY(), pos.getZ());
 		worldIn.addFreshEntity(slime);
 	}

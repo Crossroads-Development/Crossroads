@@ -3,14 +3,14 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SoundType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -19,11 +19,13 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 
+import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE.ItemHandler;
+
 @ObjectHolder(Crossroads.MODID)
 public class ReagentTankTileEntity extends AlchemyCarrierTE{
 
 	@ObjectHolder("reagent_tank")
-	private static TileEntityType<ReagentTankTileEntity> type = null;
+	private static BlockEntityType<ReagentTankTileEntity> type = null;
 
 	public static final int CAPACITY = 1_000;
 
@@ -48,7 +50,7 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 		return contents;
 	}
 
-	public void writeContentNBT(CompoundNBT nbt){
+	public void writeContentNBT(CompoundTag nbt){
 		contents = ReagentMap.readFromNBT(nbt);
 		dirtyReag = true;
 	}
@@ -69,7 +71,7 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 		for(int i = 0; i < 6; i++){
 			if(modes[i].isOutput()){
 				Direction side = Direction.from3DDataValue(i);
-				TileEntity te = level.getBlockEntity(worldPosition.relative(side));
+				BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
 				LazyOptional<IChemicalHandler> otherOpt;
 				if(contents.getTotalQty() <= 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
 					continue;
@@ -147,7 +149,7 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 			BlockState state = level.getBlockState(worldPosition);
 			level.setBlockAndUpdate(worldPosition, Blocks.AIR.defaultBlockState());
 			SoundType sound = state.getBlock().getSoundType(state, level, worldPosition, null);
-			level.playSound(null, worldPosition, sound.getBreakSound(), SoundCategory.BLOCKS, sound.getVolume(), sound.getPitch());
+			level.playSound(null, worldPosition, sound.getBreakSound(), SoundSource.BLOCKS, sound.getVolume(), sound.getPitch());
 			AlchemyUtil.releaseChemical(level, worldPosition, contents);
 		}
 	}

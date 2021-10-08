@@ -1,20 +1,20 @@
 package com.Da_Technomancer.crossroads.API.templates;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.gui.IGuiEventListener;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.text.ITextComponent;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 
-public abstract class TileEntityGUI<T extends TileEntityContainer<U>, U extends TileEntity & IInventory> extends ContainerScreen<T>{
+public abstract class TileEntityGUI<T extends TileEntityContainer<U>, U extends BlockEntity & Container> extends AbstractContainerScreen<T>{
 
-	protected ArrayList<ITextComponent> tooltip = new ArrayList<>();
+	protected ArrayList<Component> tooltip = new ArrayList<>();
 
-	protected TileEntityGUI(T container, PlayerInventory playerInventory, ITextComponent text){
+	protected TileEntityGUI(T container, Inventory playerInventory, Component text){
 		super(container, playerInventory, text);
 	}
 
@@ -26,7 +26,7 @@ public abstract class TileEntityGUI<T extends TileEntityContainer<U>, U extends 
 	}
 
 	@Override
-	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTicks){
+	public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks){
 		renderBackground(matrix);
 		super.render(matrix, mouseX, mouseY, partialTicks);
 		renderTooltip(matrix, mouseX, mouseY);
@@ -37,7 +37,7 @@ public abstract class TileEntityGUI<T extends TileEntityContainer<U>, U extends 
 	}
 
 	@Override
-	protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY){
+	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
 		//No-op
 		//Even though we don't need to implement this method, as this is an abstract class, having this here allows super calls in subclasses.
 		//While this currently does nothing, that could change, and allowing super calls in subclasses will make changes seamless
@@ -45,7 +45,7 @@ public abstract class TileEntityGUI<T extends TileEntityContainer<U>, U extends 
 
 	@Override
 	public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_){
-		for(IGuiEventListener gui : children){
+		for(GuiEventListener gui : children){
 			if(gui.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_)){
 				return true;
 			}
@@ -55,7 +55,7 @@ public abstract class TileEntityGUI<T extends TileEntityContainer<U>, U extends 
 
 	@Override
 	public boolean charTyped(char key, int keyCode){
-		for(IGuiEventListener gui : children){
+		for(GuiEventListener gui : children){
 			if(gui.charTyped(key, keyCode)){
 				return true;
 			}

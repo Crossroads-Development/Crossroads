@@ -5,24 +5,24 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.enchantment.FrostWalkerEnchantment;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeMod;
 
 import javax.annotation.Nullable;
@@ -36,7 +36,7 @@ public class ArmorEnviroBoots extends TechnomancyArmor{
 	private Multimap<Attribute, AttributeModifier> attributesReinf = null;
 
 	public ArmorEnviroBoots(){
-		super(EquipmentSlotType.FEET);
+		super(EquipmentSlot.FEET);
 		String name = "enviro_boots";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
@@ -48,21 +48,21 @@ public class ArmorEnviroBoots extends TechnomancyArmor{
 	//Soul speed: Done via onArmorTick()
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
 		super.appendHoverText(stack, worldIn, tooltip, flagIn);
-		tooltip.add(new TranslationTextComponent("tt.crossroads.enviro_boots.desc"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.enviro_boots.frost"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.enviro_boots.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslatableComponent("tt.crossroads.enviro_boots.desc"));
+		tooltip.add(new TranslatableComponent("tt.crossroads.enviro_boots.frost"));
+		tooltip.add(new TranslatableComponent("tt.crossroads.enviro_boots.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override
-	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack){
-		if(slot == EquipmentSlotType.FEET){
+	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack){
+		if(slot == EquipmentSlot.FEET){
 			if(isReinforced(stack)){
 				if(attributesReinf == null){
 					//We have to lazy-load this, as ForgeMod.SWIM_SPEED isn't populated at construct time
 					ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-					builder.putAll(super.getAttributeModifiers(EquipmentSlotType.FEET, stack));
+					builder.putAll(super.getAttributeModifiers(EquipmentSlot.FEET, stack));
 					builder.put(ForgeMod.SWIM_SPEED.get(), new AttributeModifier("depth_strider", CRConfig.enviroBootDepth.get(), AttributeModifier.Operation.ADDITION));
 					attributesReinf = builder.build();
 				}
@@ -71,7 +71,7 @@ public class ArmorEnviroBoots extends TechnomancyArmor{
 				if(attributes == null){
 					//We have to lazy-load this, as ForgeMod.SWIM_SPEED isn't populated at construct time
 					ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-					builder.putAll(super.getAttributeModifiers(EquipmentSlotType.FEET, stack));
+					builder.putAll(super.getAttributeModifiers(EquipmentSlot.FEET, stack));
 					builder.put(ForgeMod.SWIM_SPEED.get(), new AttributeModifier("depth_strider", CRConfig.enviroBootDepth.get(), AttributeModifier.Operation.ADDITION));
 					attributes = builder.build();
 				}
@@ -82,7 +82,7 @@ public class ArmorEnviroBoots extends TechnomancyArmor{
 	}
 
 	@Override
-	public void onArmorTick(ItemStack stack, World world, PlayerEntity player){
+	public void onArmorTick(ItemStack stack, Level world, Player player){
 		//Activate frost walker when sneaking
 		int frostWalkLevel = CRConfig.enviroBootFrostWalk.get();
 		if(player.isShiftKeyDown() && !world.isClientSide && frostWalkLevel > 0){
@@ -94,7 +94,7 @@ public class ArmorEnviroBoots extends TechnomancyArmor{
 		if(!belowState.isAir()){
 			int level = CRConfig.enviroBootSoulSpeed.get();
 			if(level > 0 && !player.abilities.flying && belowState.getBlock().is(BlockTags.SOUL_SPEED_BLOCKS)){//Re-implementation of player.onSoulSpeedBlock()
-				ModifiableAttributeInstance speedAttribute = player.getAttribute(Attributes.MOVEMENT_SPEED);
+				AttributeInstance speedAttribute = player.getAttribute(Attributes.MOVEMENT_SPEED);
 				if(speedAttribute != null && speedAttribute.getModifier(SOUL_SPEED_BOOT_ID) == null){
 					speedAttribute.addTransientModifier(new AttributeModifier(SOUL_SPEED_BOOT_ID, "Soul speed boost", (double) (0.03F * (1.0F + (float) level * 0.35F)), AttributeModifier.Operation.ADDITION));
 				}
@@ -105,10 +105,10 @@ public class ArmorEnviroBoots extends TechnomancyArmor{
 	private static BlockState getStateBelow(LivingEntity entity){
 		//Re-implementation of Entity::getStateBelow
 		BlockPos downPos;
-		Vector3d entityPositionVec = entity.position();
-		int i = MathHelper.floor(entityPositionVec.x);
-		int j = MathHelper.floor(entityPositionVec.y - (double) 0.2F);
-		int k = MathHelper.floor(entityPositionVec.z);
+		Vec3 entityPositionVec = entity.position();
+		int i = Mth.floor(entityPositionVec.x);
+		int j = Mth.floor(entityPositionVec.y - (double) 0.2F);
+		int k = Mth.floor(entityPositionVec.z);
 		BlockPos blockpos = new BlockPos(i, j, k);
 		if(entity.level.isEmptyBlock(blockpos)){
 			BlockPos blockpos1 = blockpos.below();

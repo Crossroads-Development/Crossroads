@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
 import com.Da_Technomancer.essentials.packets.ServerPacket;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,9 +37,9 @@ public class SendIntToServer extends ServerPacket{
 	}
 
 	@Override
-	protected void run(@Nullable ServerPlayerEntity serverPlayerEntity){
+	protected void run(@Nullable ServerPlayer serverPlayerEntity){
 		if(serverPlayerEntity != null){
-			TileEntity te = serverPlayerEntity.level.getBlockEntity(pos);
+			BlockEntity te = serverPlayerEntity.level.getBlockEntity(pos);
 
 			if(te instanceof IDoubleReceiver){
 				((IIntReceiver) te).receiveInt(identifier, message, serverPlayerEntity);

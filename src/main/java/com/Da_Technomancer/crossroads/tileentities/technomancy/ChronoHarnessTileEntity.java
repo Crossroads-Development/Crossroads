@@ -8,17 +8,17 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -28,11 +28,13 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
+import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink.Behaviour;
+
 @ObjectHolder(Crossroads.MODID)
 public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 
 	@ObjectHolder("chrono_harness")
-	public static TileEntityType<ChronoHarnessTileEntity> type = null;
+	public static BlockEntityType<ChronoHarnessTileEntity> type = null;
 
 	private static final int FE_CAPACITY = 20_000;
 	private static final float SPEED = (float) Math.PI / 20F / 400F;//Used for rendering
@@ -47,8 +49,8 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		chat.add(new TranslationTextComponent("tt.crossroads.chrono_harness.fe", fe, FE_CAPACITY, curPower));
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
+		chat.add(new TranslatableComponent("tt.crossroads.chrono_harness.fe", fe, FE_CAPACITY, curPower));
 		FluxUtil.addFluxInfo(chat, this, shouldRun() ? curPower / CRConfig.fePerEntropy.get() : 0);
 		super.addInfo(chat, player, hit);
 	}
@@ -58,9 +60,9 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public AxisAlignedBB getRenderBoundingBox(){
+	public AABB getRenderBoundingBox(){
 		//Increase render BB to include links
-		return new AxisAlignedBB(worldPosition).inflate(getRange());
+		return new AABB(worldPosition).inflate(getRange());
 	}
 
 	private boolean hasRedstone(){
@@ -99,7 +101,7 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 
 			if(fe != 0){
 				//Transfer FE to a machine above
-				TileEntity neighbor = level.getBlockEntity(worldPosition.relative(Direction.UP));
+				BlockEntity neighbor = level.getBlockEntity(worldPosition.relative(Direction.UP));
 				LazyOptional<IEnergyStorage>  otherOpt;
 				if(neighbor != null && (otherOpt = neighbor.getCapability(CapabilityEnergy.ENERGY, Direction.DOWN)).isPresent()){
 					IEnergyStorage storage = otherOpt.orElseThrow(NullPointerException::new);
@@ -122,7 +124,7 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		fe = nbt.getInt("fe");
 		curPower = nbt.getInt("pow");
@@ -130,14 +132,14 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag(){
-		CompoundNBT nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(){
+		CompoundTag nbt = super.getUpdateTag();
 		nbt.putInt("pow", curPower);
 		return nbt;
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putInt("fe", fe);
 		nbt.putInt("pow", curPower);
@@ -146,7 +148,7 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayer sendingPlayer){
 		if(identifier == 4){
 			clientCurPower = (int) message;//Just used as a way of sending power gen
 		}

@@ -3,17 +3,17 @@ package com.Da_Technomancer.crossroads.world;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.OreFeatureConfig;
-import net.minecraft.world.gen.feature.template.RuleTest;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
+import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -54,31 +54,31 @@ public class CRWorldGen{
 		reg.register(GEM_FEATURE.setRegistryName("single_gen"));
 //		reg.register(RUBY_FEATURE.setRegistryName("ruby_gen"));
 
-		Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(Crossroads.MODID, "ore_ruby_spot"), RUBY_ORE_SPOT);
+		Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new ResourceLocation(Crossroads.MODID, "ore_ruby_spot"), RUBY_ORE_SPOT);
 //		Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(Crossroads.MODID, "ore_quartz_nether_ruby"), RUBY_ORE);
 //		Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(Crossroads.MODID, "ore_quartz_deltas_ruby"), RUBY_ORE_BASALT);
-		Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(Crossroads.MODID, "ore_copper"), COPPER_ORE);
-		Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(Crossroads.MODID, "ore_tin"), TIN_ORE);
-		Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(Crossroads.MODID, "ore_void"), VOID_ORE);
+		Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new ResourceLocation(Crossroads.MODID, "ore_copper"), COPPER_ORE);
+		Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new ResourceLocation(Crossroads.MODID, "ore_tin"), TIN_ORE);
+		Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new ResourceLocation(Crossroads.MODID, "ore_void"), VOID_ORE);
 	}
 
 	public static void addWorldgen(BiomeLoadingEvent event){
 		if(isOverworld(event.getCategory())){
-			event.getGeneration().addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, COPPER_ORE);
-			event.getGeneration().addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, TIN_ORE);
-		}else if(event.getCategory() == Biome.Category.THEEND){
-			event.getGeneration().addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, VOID_ORE);
-		}else if(event.getCategory() == Biome.Category.NETHER){
-			event.getGeneration().addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, RUBY_ORE_SPOT);
+			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, COPPER_ORE);
+			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, TIN_ORE);
+		}else if(event.getCategory() == Biome.BiomeCategory.THEEND){
+			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, VOID_ORE);
+		}else if(event.getCategory() == Biome.BiomeCategory.NETHER){
+			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, RUBY_ORE_SPOT);
 		}
 	}
 
-	private static ConfiguredFeature<?, ?> configuredFeature(Feature<OreFeatureConfig> feature, RuleTest canOverwrite, BlockState ore, int veinSize, int maxHeight, int attemptsPerChunk){
+	private static ConfiguredFeature<?, ?> configuredFeature(Feature<OreConfiguration> feature, RuleTest canOverwrite, BlockState ore, int veinSize, int maxHeight, int attemptsPerChunk){
 		//MCP note: use whatever iron ore uses in the vanilla Features class
-		return feature.configured(new OreFeatureConfig(canOverwrite, ore, veinSize)).range(maxHeight).squared().count(attemptsPerChunk);
+		return feature.configured(new OreConfiguration(canOverwrite, ore, veinSize)).range(maxHeight).squared().count(attemptsPerChunk);
 	}
 
-	private static boolean isOverworld(Biome.Category cat){
-		return cat != Biome.Category.NETHER && cat != Biome.Category.THEEND && cat != Biome.Category.NONE;
+	private static boolean isOverworld(Biome.BiomeCategory cat){
+		return cat != Biome.BiomeCategory.NETHER && cat != Biome.BiomeCategory.THEEND && cat != Biome.BiomeCategory.NONE;
 	}
 }

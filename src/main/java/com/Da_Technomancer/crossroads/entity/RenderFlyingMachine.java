@@ -2,20 +2,20 @@ package com.Da_Technomancer.crossroads.entity;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.resources.ResourceLocation;
+import com.mojang.math.Vector3f;
 
 public class RenderFlyingMachine extends EntityRenderer<EntityFlyingMachine>{
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/entities/flying_machine.png");
 
-	protected RenderFlyingMachine(EntityRendererManager renderManager){
+	protected RenderFlyingMachine(EntityRenderDispatcher renderManager){
 		super(renderManager);
 	}
 
@@ -25,10 +25,10 @@ public class RenderFlyingMachine extends EntityRenderer<EntityFlyingMachine>{
 	}
 
 	@Override
-	public void render(EntityFlyingMachine entity, float entityYaw, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int light){
+	public void render(EntityFlyingMachine entity, float entityYaw, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int light){
 		matrix.mulPose(Vector3f.YP.rotationDegrees(-entityYaw));
 
-		IVertexBuilder builder = buffer.getBuffer(RenderType.entitySolid(getTextureLocation(entity)));
+		VertexConsumer builder = buffer.getBuffer(RenderType.entitySolid(getTextureLocation(entity)));
 
 		matrix.pushPose();
 		matrix.translate(0, 0.5D, 0);
@@ -227,7 +227,7 @@ public class RenderFlyingMachine extends EntityRenderer<EntityFlyingMachine>{
 		CRRenderUtil.addVertexEntity(builder, matrix, seatX, seatYEn, -seatZ, seatUSt, seatVEn, 1, 0, 0, light);
 	}
 
-	private static void renderSupport(IVertexBuilder builder, MatrixStack matrix, int light){
+	private static void renderSupport(VertexConsumer builder, PoseStack matrix, int light){
 		float supportXSt = 0.575F;
 		float supportXEn = 0.7F;
 		float supportYSt = 0.7F;
@@ -266,7 +266,7 @@ public class RenderFlyingMachine extends EntityRenderer<EntityFlyingMachine>{
 		CRRenderUtil.addVertexEntity(builder, matrix, -supportXSt, supportYEn, -supportZ, supportUSt, supportVEn, 1, 0, 0, light);
 	}
 
-	private static void renderLeg(IVertexBuilder builder, MatrixStack matrix, int light){
+	private static void renderLeg(VertexConsumer builder, PoseStack matrix, int light){
 		//Legs
 		float legXSt = 0.575F;
 		float legXEn = 0.7F;

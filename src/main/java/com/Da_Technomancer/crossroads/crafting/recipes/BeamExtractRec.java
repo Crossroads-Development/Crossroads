@@ -5,21 +5,21 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.CraftingUtil;
 import com.google.gson.JsonObject;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 
-public class BeamExtractRec implements IOptionalRecipe<IInventory>{
+public class BeamExtractRec implements IOptionalRecipe<Container>{
 
 	private final ResourceLocation id;
 	private final String group;
@@ -47,12 +47,12 @@ public class BeamExtractRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public boolean matches(IInventory inv, World worldIn){
+	public boolean matches(Container inv, Level worldIn){
 		return active && ingr.test(inv.getItem(0));
 	}
 
 	@Override
-	public ItemStack assemble(IInventory inv){
+	public ItemStack assemble(Container inv){
 		return getResultItem();
 	}
 
@@ -93,7 +93,7 @@ public class BeamExtractRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer(){
+	public RecipeSerializer<?> getSerializer(){
 		return CRRecipes.BEAM_EXTRACT_SERIAL;
 	}
 
@@ -103,16 +103,16 @@ public class BeamExtractRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public IRecipeType<?> getType(){
+	public RecipeType<?> getType(){
 		return CRRecipes.BEAM_EXTRACT_TYPE;
 	}
 
-	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<BeamExtractRec>{
+	public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<BeamExtractRec>{
 
 		@Override
 		public BeamExtractRec fromJson(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and ingredient
-			String s = JSONUtils.getAsString(json, "group", "");
+			String s = GsonHelper.getAsString(json, "group", "");
 			Ingredient ingredient = Ingredient.EMPTY;
 			boolean active = CraftingUtil.isActiveJSON(json);
 			if(active){
@@ -120,21 +120,21 @@ public class BeamExtractRec implements IOptionalRecipe<IInventory>{
 
 				//Output specified as 4 integer tags, all of which are optional and default to zero
 				int[] units = new int[4];
-				if(JSONUtils.isValidNode(json, "energy")){
-					units[0] = JSONUtils.getAsInt(json, "energy");
+				if(GsonHelper.isValidNode(json, "energy")){
+					units[0] = GsonHelper.getAsInt(json, "energy");
 				}
-				if(JSONUtils.isValidNode(json, "potential")){
-					units[1] = JSONUtils.getAsInt(json, "potential");
+				if(GsonHelper.isValidNode(json, "potential")){
+					units[1] = GsonHelper.getAsInt(json, "potential");
 				}
-				if(JSONUtils.isValidNode(json, "stability")){
-					units[2] = JSONUtils.getAsInt(json, "stability");
+				if(GsonHelper.isValidNode(json, "stability")){
+					units[2] = GsonHelper.getAsInt(json, "stability");
 				}
-				if(JSONUtils.isValidNode(json, "void")){
-					units[3] = JSONUtils.getAsInt(json, "void");
+				if(GsonHelper.isValidNode(json, "void")){
+					units[3] = GsonHelper.getAsInt(json, "void");
 				}
 
 				//Optional duration tag, for number of cycles an output lasts
-				int dur = JSONUtils.getAsInt(json, "duration", 1);
+				int dur = GsonHelper.getAsInt(json, "duration", 1);
 				return new BeamExtractRec(recipeId, s, ingredient, new BeamUnit(units), dur, true);
 			}
 			return new BeamExtractRec(recipeId, s, ingredient, BeamUnit.EMPTY, 0, false);
@@ -142,7 +142,7 @@ public class BeamExtractRec implements IOptionalRecipe<IInventory>{
 
 		@Nullable
 		@Override
-		public BeamExtractRec fromNetwork(ResourceLocation recipeId, PacketBuffer buffer){
+		public BeamExtractRec fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
 			String s = buffer.readUtf(Short.MAX_VALUE);
 			boolean active = buffer.readBoolean();
 
@@ -161,7 +161,7 @@ public class BeamExtractRec implements IOptionalRecipe<IInventory>{
 		}
 
 		@Override
-		public void toNetwork(PacketBuffer buffer, BeamExtractRec recipe){
+		public void toNetwork(FriendlyByteBuf buffer, BeamExtractRec recipe){
 			buffer.writeUtf(recipe.getGroup());
 			buffer.writeBoolean(recipe.active);
 			if(recipe.active){

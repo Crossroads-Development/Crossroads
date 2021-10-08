@@ -7,21 +7,21 @@ import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 
-public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, ITickableTileEntity, IIntReceiver{
+public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE, TickableBlockEntity, IIntReceiver{
 
 	protected int[] beamPackets = new int[6];
 	protected BeamManager[] beamer;
@@ -29,7 +29,7 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 	protected long activeCycle;//To prevent tick acceleration and deal with some chunk loading weirdness
 	protected BeamUnit[] prevMag = new BeamUnit[] {BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY};//Stores the last non-null beams sent for information readouts
 
-	public BeamRenderTE(TileEntityType<?> type){
+	public BeamRenderTE(BlockEntityType<?> type){
 		super(type);
 	}
 
@@ -48,9 +48,9 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 	}
 
 	@Override
-	public AxisAlignedBB getRenderBoundingBox(){
+	public AABB getRenderBoundingBox(){
 		//Expand the render box to include all possible beams from this block
-		return new AxisAlignedBB(worldPosition.offset(-BeamUtil.MAX_DISTANCE, -BeamUtil.MAX_DISTANCE, -BeamUtil.MAX_DISTANCE), worldPosition.offset(1 + BeamUtil.MAX_DISTANCE, 1 + BeamUtil.MAX_DISTANCE, 1 + BeamUtil.MAX_DISTANCE));
+		return new AABB(worldPosition.offset(-BeamUtil.MAX_DISTANCE, -BeamUtil.MAX_DISTANCE, -BeamUtil.MAX_DISTANCE), worldPosition.offset(1 + BeamUtil.MAX_DISTANCE, 1 + BeamUtil.MAX_DISTANCE, 1 + BeamUtil.MAX_DISTANCE));
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 			for(BeamManager beamManager : beamer){
 				if(beamManager != null && !beamManager.getLastSent().isEmpty()){
 					//The attenuation distance defined for this sound in sounds.json is significant, and makes the sound have a very short range
-					CRSounds.playSoundServer(level, worldPosition, CRSounds.BEAM_PASSIVE, SoundCategory.BLOCKS, 0.7F, 0.3F);
+					CRSounds.playSoundServer(level, worldPosition, CRSounds.BEAM_PASSIVE, SoundSource.BLOCKS, 0.7F, 0.3F);
 					break;
 				}
 			}
@@ -141,7 +141,7 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 	protected abstract void doEmit(@Nonnull BeamUnit toEmit);
 
 	@Override
-	public void receiveInt(byte identifier, int message, ServerPlayerEntity player){
+	public void receiveInt(byte identifier, int message, ServerPlayer player){
 		if(identifier < 6 && identifier >= 0){
 			beamPackets[identifier] = message;
 		}
@@ -156,8 +156,8 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag(){
-		CompoundNBT nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(){
+		CompoundTag nbt = super.getUpdateTag();
 		for(int i = 0; i < 6; i++){
 			if(beamPackets[i] != 0){
 				nbt.putInt(i + "_beam_packet", beamPackets[i]);
@@ -167,7 +167,7 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 
 		queued[0].writeToNBT("queue0", nbt);
@@ -184,7 +184,7 @@ public abstract class BeamRenderTE extends TileEntity implements IBeamRenderTE, 
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		queued[0] = BeamUnitStorage.readFromNBT("queue0", nbt);
 		queued[1] = BeamUnitStorage.readFromNBT("queue1", nbt);

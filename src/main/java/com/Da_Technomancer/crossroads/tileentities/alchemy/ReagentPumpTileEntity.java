@@ -7,9 +7,9 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumContainerType;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -18,7 +18,7 @@ import net.minecraftforge.registries.ObjectHolder;
 public class ReagentPumpTileEntity extends AlchemyCarrierTE{
 
 	@ObjectHolder("reagent_pump")
-	private static TileEntityType<ReagentPumpTileEntity> type = null;
+	private static BlockEntityType<ReagentPumpTileEntity> type = null;
 
 	@SuppressWarnings("unchecked")//Darn Java, not being able to verify arrays of parameterized types. Bah Humbug!
 	protected final LazyOptional<IChemicalHandler>[] neighCache = new LazyOptional[] {LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty()};
@@ -39,7 +39,7 @@ public class ReagentPumpTileEntity extends AlchemyCarrierTE{
 
 			LazyOptional<IChemicalHandler> otherOpt = neighCache[side.get3DDataValue()];
 			if(!neighCache[side.get3DDataValue()].isPresent()){
-				TileEntity te = level.getBlockEntity(worldPosition.relative(side));
+				BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
 				if(te != null){
 					otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite());
 					neighCache[side.get3DDataValue()] = otherOpt;

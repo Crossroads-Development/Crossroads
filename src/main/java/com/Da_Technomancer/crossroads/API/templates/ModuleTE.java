@@ -8,17 +8,17 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.essentials.packets.ILongReceiver;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -32,12 +32,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.Predicate;
 
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+
 /**
  * Most Crossroads machines extend this class, which provides the ability to enable highly configurable support for most things (fluids, heat, rotary) with only a few overrides
  * Machines that also use ItemStacks or UIs override the subclass, InventoryTE
  * I'd call this class boilerplate, except its 500+ lines
  */
-public abstract class ModuleTE extends TileEntity implements ITickableTileEntity, IInfoTE, ILongReceiver{
+public abstract class ModuleTE extends BlockEntity implements TickableBlockEntity, IInfoTE, ILongReceiver{
 
 	//Rotary
 	protected double energy = 0;
@@ -87,7 +89,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 		return new FluidHandler(-1);
 	}
 
-	public ModuleTE(TileEntityType<? extends ModuleTE> type){
+	public ModuleTE(BlockEntityType<? extends ModuleTE> type){
 		super(type);
 		if(useHeat()){
 			heatHandler = createHeatHandler();
@@ -121,7 +123,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		if(useHeat()){
 			HeatUtil.addHeatInfo(chat, temp, HeatUtil.convertBiomeTemp(level, worldPosition));
 		}
@@ -139,7 +141,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putDouble("mot_1", energy);
 
@@ -148,7 +150,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 
 		for(int i = 0; i < fluids.length; i++){
 			if(fluids[i] != null){
-				CompoundNBT fluidNBT = new CompoundNBT();
+				CompoundTag fluidNBT = new CompoundTag();
 				fluids[i].writeToNBT(fluidNBT);
 				nbt.put("fluid_" + i, fluidNBT);
 			}
@@ -157,7 +159,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		energy = nbt.getDouble("mot_1");
 
@@ -172,8 +174,8 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag(){
-		CompoundNBT nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(){
+		CompoundTag nbt = super.getUpdateTag();
 		//Placeholder for future use
 		return nbt;
 	}
@@ -193,7 +195,7 @@ public abstract class ModuleTE extends TileEntity implements ITickableTileEntity
 	}
 
 	@Override
-	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayer sendingPlayer){
 		if(identifier == 0){
 			//No-op (removed code)
 			//Reserving identifier 0 for future use

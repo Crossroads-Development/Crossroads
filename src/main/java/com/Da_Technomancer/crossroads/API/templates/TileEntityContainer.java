@@ -1,32 +1,32 @@
 package com.Da_Technomancer.crossroads.API.templates;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 
-public abstract class TileEntityContainer<U extends TileEntity & IInventory> extends Container{
+public abstract class TileEntityContainer<U extends BlockEntity & Container> extends AbstractContainerMenu{
 
-	protected final IInventory playerInv;
+	protected final Container playerInv;
 	protected final U te;
 
 	//The passed PacketBuffer must have the blockpos as the first encoded datum
 	@SuppressWarnings("unchecked")
-	public TileEntityContainer(ContainerType<? extends Container> type, int windowId, PlayerInventory playerInv, PacketBuffer data){
+	public TileEntityContainer(MenuType<? extends AbstractContainerMenu> type, int windowId, Inventory playerInv, FriendlyByteBuf data){
 		super(type, windowId);
 		this.playerInv = playerInv;
 		BlockPos pos = data.readBlockPos();
-		TileEntity rawTE = playerInv.player.level.getBlockEntity(pos);
+		BlockEntity rawTE = playerInv.player.level.getBlockEntity(pos);
 		U worldTe = null;
 		if(rawTE != null){
 			try{
@@ -92,7 +92,7 @@ public abstract class TileEntityContainer<U extends TileEntity & IInventory> ext
 	}
 
 	@Override
-	public ItemStack quickMoveStack(PlayerEntity playerIn, int fromSlot){
+	public ItemStack quickMoveStack(Player playerIn, int fromSlot){
 		ItemStack previous = ItemStack.EMPTY;
 		Slot slot = slots.get(fromSlot);
 
@@ -129,13 +129,13 @@ public abstract class TileEntityContainer<U extends TileEntity & IInventory> ext
 	}
 
 	@Override
-	public boolean stillValid(PlayerEntity playerIn){
+	public boolean stillValid(Player playerIn){
 		return te.stillValid(playerIn);
 	}
 
 	protected static class StrictSlot extends Slot{
 
-		public StrictSlot(IInventory te, int index, int x, int y){
+		public StrictSlot(Container te, int index, int x, int y){
 			super(te, index, x, y);
 		}
 
@@ -155,7 +155,7 @@ public abstract class TileEntityContainer<U extends TileEntity & IInventory> ext
 
 	protected static class OutputSlot extends Slot{
 
-		public OutputSlot(IInventory te, int index, int x, int y){
+		public OutputSlot(Container te, int index, int x, int y){
 			super(te, index, x, y);
 		}
 

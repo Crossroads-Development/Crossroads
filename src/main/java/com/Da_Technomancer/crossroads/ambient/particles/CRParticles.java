@@ -4,11 +4,11 @@ import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.CreateParticlesOnClient;
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.ParticleManager;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.client.particle.ParticleEngine;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ObjectHolder;
@@ -29,7 +29,7 @@ public class CRParticles{
 
 	@OnlyIn(Dist.CLIENT)
 	public static void clientInit(){
-		ParticleManager manager = Minecraft.getInstance().particleEngine;
+		ParticleEngine manager = Minecraft.getInstance().particleEngine;
 		manager.register(COLOR_FLAME, ParticleFlameColor.Factory::new);
 		manager.register(COLOR_GAS, ParticleBubbleColor.Factory::new);
 		manager.register(COLOR_LIQUID, ParticleDripColor.Factory::new);
@@ -58,10 +58,10 @@ public class CRParticles{
 	 * @param zVelocityDeviation Random deviation in the Z velocity of the summoned particles
 	 * @param gaussianDistribution If true, particle position and velocity will be randomized with a gaussian distribution about the median, with standard deviation of 'Deviation'. If false, a uniform distribution will be used, with maximum difference from the median of 'Deviation'
 	 */
-	public static void summonParticlesFromServer(ServerWorld world, IParticleData data, int count, double x, double y, double z, double xDeviation, double yDeviation, double zDeviation, double xVelocity, double yVelocity, double zVelocity, double xVelocityDeviation, double yVelocityDeviation, double zVelocityDeviation, boolean gaussianDistribution){
+	public static void summonParticlesFromServer(ServerLevel world, ParticleOptions data, int count, double x, double y, double z, double xDeviation, double yDeviation, double zDeviation, double xVelocity, double yVelocity, double zVelocity, double xVelocityDeviation, double yVelocityDeviation, double zVelocityDeviation, boolean gaussianDistribution){
 		CreateParticlesOnClient packet = new CreateParticlesOnClient(data, x, y, z, (float) xDeviation, (float) yDeviation, (float) zDeviation, (float) xVelocity, (float) yVelocity, (float) zVelocity, (float) xVelocityDeviation, (float) yVelocityDeviation, (float) zVelocityDeviation, count, gaussianDistribution);
-		for(ServerPlayerEntity target : world.players()){
-			if(target.getLevel() == world && target.blockPosition().closerThan(new Vector3d(x, y, z), 32.0D)){
+		for(ServerPlayer target : world.players()){
+			if(target.getLevel() == world && target.blockPosition().closerThan(new Vec3(x, y, z), 32.0D)){
 				CRPackets.sendPacketToPlayer(target, packet);
 			}
 		}

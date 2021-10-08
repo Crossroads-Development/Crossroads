@@ -11,36 +11,36 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactiveSpotTileEntity;
 import com.Da_Technomancer.essentials.ReflectionUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.FastRandom;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBiomeReader;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeContainer;
-import net.minecraft.world.biome.Biomes;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.util.LinearCongruentialGenerator;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.CommonLevelAccessor;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.chunk.ChunkBiomeContainer;
+import net.minecraft.world.level.biome.Biomes;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 
 public class AetherEffect implements IAlchEffect{
 
-	private static final ITag<Block> SOIL_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_soil");
-	private static final ITag<Block> ROCK_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_rock");
-	private static final ITag<Block> FLUD_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_fluid");//Was going to be named FLUID_GROUP, but the other two fields had the same name lengths and I couldn't resist
-	private static final ITag<Block> CRYS_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_crystal");
-	private static final ITag<Block> WOOD_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_wood");
-	private static final ITag<Block> FOLI_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_foliage");
+	private static final Tag<Block> SOIL_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_soil");
+	private static final Tag<Block> ROCK_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_rock");
+	private static final Tag<Block> FLUD_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_fluid");//Was going to be named FLUID_GROUP, but the other two fields had the same name lengths and I couldn't resist
+	private static final Tag<Block> CRYS_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_crystal");
+	private static final Tag<Block> WOOD_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_wood");
+	private static final Tag<Block> FOLI_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_foliage");
 	private static final Field biomeField = ReflectionUtil.reflectField(CRReflection.BIOME_ARRAY);
 
 	protected Block soilBlock(){
@@ -67,18 +67,18 @@ public class AetherEffect implements IAlchEffect{
 		return Blocks.OAK_LEAVES;
 	}
 
-	protected RegistryKey<Biome> biome(){
+	protected ResourceKey<Biome> biome(){
 		return Biomes.PLAINS;
 	}
 
 	@Nullable
-	public static Biome lookupBiome(RegistryKey<Biome> biomeKey, IBiomeReader world){
+	public static Biome lookupBiome(ResourceKey<Biome> biomeKey, CommonLevelAccessor world){
 		//Gets the biome associated with a key
 		return world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).get(biomeKey);
 	}
 
 	@Override
-	public void doEffect(World world, BlockPos pos, int amount, EnumMatterPhase phase, ReagentMap contents){
+	public void doEffect(Level world, BlockPos pos, int amount, EnumMatterPhase phase, ReagentMap contents){
 		BlockState oldState = world.getBlockState(pos);
 
 		//quicksilver makes it create a block instead of transmuting blocks
@@ -89,7 +89,7 @@ public class AetherEffect implements IAlchEffect{
 
 		//sulfur dioxide prevents biome changing
 		if(contents.getQty(EnumReagents.SULFUR_DIOXIDE.id()) == 0){
-			RegistryKey<Biome> biomeKey = biome();
+			ResourceKey<Biome> biomeKey = biome();
 			Biome biome = lookupBiome(biomeKey, world);
 			if(biome != null && world.getBiome(pos) != biome){
 				setBiomeAtPos(world, pos, biome);
@@ -109,7 +109,7 @@ public class AetherEffect implements IAlchEffect{
 		}else if(FLUD_GROUP.contains(oldState.getBlock())){
 			if(oldState != fluidBlock().defaultBlockState() && oldState.getBlock() != CRBlocks.reactiveSpot){
 				world.setBlockAndUpdate(pos, CRBlocks.reactiveSpot.defaultBlockState());
-				TileEntity te = world.getBlockEntity(pos);
+				BlockEntity te = world.getBlockEntity(pos);
 				if(te instanceof ReactiveSpotTileEntity){
 					((ReactiveSpotTileEntity) te).setTarget(fluidBlock().defaultBlockState());
 				}
@@ -140,8 +140,8 @@ public class AetherEffect implements IAlchEffect{
 	}
 
 	@Override
-	public ITextComponent getName(){
-		return new TranslationTextComponent("effect.terraform_plains");
+	public Component getName(){
+		return new TranslatableComponent("effect.terraform_plains");
 	}
 
 	/**
@@ -151,13 +151,13 @@ public class AetherEffect implements IAlchEffect{
 	 * @param pos The position to set the position of. Y-coord is irrelevant, will set the biome in an entire column
 	 * @param biome The biome to set it to
 	 */
-	public static void setBiomeAtPos(World world, BlockPos pos, Biome biome){
+	public static void setBiomeAtPos(Level world, BlockPos pos, Biome biome){
 		if(biome == null){
 			return;
 		}
 
 		//As of MC1.15, we have to reflect in as the biome array is private and the int array won't save to disk
-		BiomeContainer bc = world.getChunk(pos).getBiomes();
+		ChunkBiomeContainer bc = world.getChunk(pos).getBiomes();
 		if(biomeField != null && bc != null){
 			Object o;
 			try{
@@ -169,7 +169,7 @@ public class AetherEffect implements IAlchEffect{
 					do{
 						//We set the biome in a column from bedrock to world height
 						biomeArray[getBiomeIndex(pos.getX(), y, pos.getZ(), seed)] = biome;
-					}while(!World.isOutsideBuildHeight(++y));
+					}while(!Level.isOutsideBuildHeight(++y));
 				}else{
 					biomeArray[getBiomeIndex(pos.getX(), pos.getY(), pos.getZ(), seed)] = biome;
 				}
@@ -235,22 +235,22 @@ public class AetherEffect implements IAlchEffect{
 		int k3 = (k2 & 1) == 0 ? j1 : j1 + 1;
 
 		//Copied from BiomeContainer.getNoiseBiome(i3, j3, k3)
-		int arrayIndex = i3 & BiomeContainer.HORIZONTAL_MASK;//X
-		arrayIndex |= (k3 & BiomeContainer.HORIZONTAL_MASK) << WIDTH_BITS;//Z
-		return arrayIndex | MathHelper.clamp(j3, 0, BiomeContainer.VERTICAL_MASK) << WIDTH_BITS + WIDTH_BITS;//Y
+		int arrayIndex = i3 & ChunkBiomeContainer.HORIZONTAL_MASK;//X
+		arrayIndex |= (k3 & ChunkBiomeContainer.HORIZONTAL_MASK) << WIDTH_BITS;//Z
+		return arrayIndex | Mth.clamp(j3, 0, ChunkBiomeContainer.VERTICAL_MASK) << WIDTH_BITS + WIDTH_BITS;//Y
 	}
 
 	private static double getFiddledDistance(long p_226845_0_, int p_226845_2_, int p_226845_3_, int p_226845_4_, double p_226845_5_, double p_226845_7_, double p_226845_9_) {
-		long lvt_11_1_ = FastRandom.next(p_226845_0_, (long)p_226845_2_);
-		lvt_11_1_ = FastRandom.next(lvt_11_1_, (long)p_226845_3_);
-		lvt_11_1_ = FastRandom.next(lvt_11_1_, (long)p_226845_4_);
-		lvt_11_1_ = FastRandom.next(lvt_11_1_, (long)p_226845_2_);
-		lvt_11_1_ = FastRandom.next(lvt_11_1_, (long)p_226845_3_);
-		lvt_11_1_ = FastRandom.next(lvt_11_1_, (long)p_226845_4_);
+		long lvt_11_1_ = LinearCongruentialGenerator.next(p_226845_0_, (long)p_226845_2_);
+		lvt_11_1_ = LinearCongruentialGenerator.next(lvt_11_1_, (long)p_226845_3_);
+		lvt_11_1_ = LinearCongruentialGenerator.next(lvt_11_1_, (long)p_226845_4_);
+		lvt_11_1_ = LinearCongruentialGenerator.next(lvt_11_1_, (long)p_226845_2_);
+		lvt_11_1_ = LinearCongruentialGenerator.next(lvt_11_1_, (long)p_226845_3_);
+		lvt_11_1_ = LinearCongruentialGenerator.next(lvt_11_1_, (long)p_226845_4_);
 		double d0 = getFiddle(lvt_11_1_);
-		lvt_11_1_ = FastRandom.next(lvt_11_1_, p_226845_0_);
+		lvt_11_1_ = LinearCongruentialGenerator.next(lvt_11_1_, p_226845_0_);
 		double d1 = getFiddle(lvt_11_1_);
-		lvt_11_1_ = FastRandom.next(lvt_11_1_, p_226845_0_);
+		lvt_11_1_ = LinearCongruentialGenerator.next(lvt_11_1_, p_226845_0_);
 		double d2 = getFiddle(lvt_11_1_);
 		return sqr(p_226845_9_ + d2) + sqr(p_226845_7_ + d1) + sqr(p_226845_5_ + d0);
 	}

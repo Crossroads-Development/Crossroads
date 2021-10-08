@@ -4,25 +4,25 @@ import com.Da_Technomancer.crossroads.API.technomancy.GatewayAddress;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayControllerTileEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.core.Direction;
+import com.mojang.math.Quaternion;
+import net.minecraft.world.phys.Vec3;
+import com.mojang.math.Vector3f;
 
 public class GatewayControllerRenderer extends EntropyRenderer<GatewayControllerTileEntity>{
 
-	protected GatewayControllerRenderer(TileEntityRendererDispatcher dispatcher){
+	protected GatewayControllerRenderer(BlockEntityRenderDispatcher dispatcher){
 		super(dispatcher);
 	}
 
 	@Override
-	public void render(GatewayControllerTileEntity frame, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
+	public void render(GatewayControllerTileEntity frame, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		if(!frame.isActive()){
 			//Only do rendering if this is the top-center block of a formed multiblock (the core renders the entire gateway)
 			return;
@@ -117,7 +117,7 @@ public class GatewayControllerRenderer extends EntropyRenderer<GatewayController
 		//Because I can't be bothered to math out all 32 distinct vertex positions on an octagon ring
 
 		//The outer edge of the render is aligned with the outside of the block frame. The inside is not aligned with anything
-		IVertexBuilder builder = buffer.getBuffer(RenderType.cutout());
+		VertexConsumer builder = buffer.getBuffer(RenderType.cutout());
 		
 		//Fixed square ring
 		matrix.pushPose();
@@ -180,8 +180,8 @@ public class GatewayControllerRenderer extends EntropyRenderer<GatewayController
 
 
 		//Triangular sides have non-trivial normals
-		Vector3d normalA = CRRenderUtil.findNormal(new Vector3d(triLen, squareOut, triDepth), new Vector3d(0, squareIn, triDepth), new Vector3d(triLen, squareOut, sqDepth));
-		Vector3d normalB = CRRenderUtil.findNormal(new Vector3d(-triLen, squareOut, triDepth), new Vector3d(-triLen, squareOut, sqDepth), new Vector3d(0, squareIn, triDepth));
+		Vec3 normalA = CRRenderUtil.findNormal(new Vec3(triLen, squareOut, triDepth), new Vec3(0, squareIn, triDepth), new Vec3(triLen, squareOut, sqDepth));
+		Vec3 normalB = CRRenderUtil.findNormal(new Vec3(-triLen, squareOut, triDepth), new Vec3(-triLen, squareOut, sqDepth), new Vec3(0, squareIn, triDepth));
 
 		//Side
 		CRRenderUtil.addVertexBlock(builder, matrix, triLen, squareOut, triDepth, triEdgeUSt, triVSt, (float) normalA.x, (float) normalA.y, (float) normalA.z, combinedLight);

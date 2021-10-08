@@ -3,18 +3,20 @@ package com.Da_Technomancer.crossroads.gui.container;
 import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReagentFilterTileEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.registries.ObjectHolder;
+
+import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.StrictSlot;
 
 @ObjectHolder(Crossroads.MODID)
 public class ReagentFilterContainer extends TileEntityContainer<ReagentFilterTileEntity>{
 
 	@ObjectHolder("reagent_filter")
-	private static ContainerType<ReagentFilterContainer> type = null;
+	private static MenuType<ReagentFilterContainer> type = null;
 
-	public ReagentFilterContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
+	public ReagentFilterContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
 		super(type, id, playerInv, buf);
 	}
 

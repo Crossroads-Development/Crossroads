@@ -4,18 +4,24 @@ import com.Da_Technomancer.crossroads.crafting.CraftingUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.entity.monster.piglin.PiglinEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.monster.piglin.Piglin;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.loot.*;
-import net.minecraft.loot.conditions.ILootCondition;
-import net.minecraft.loot.functions.SetCount;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.common.loot.LootModifier;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.RandomValueBounds;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 
 public class PiglinBarterLootModifier extends LootModifier{
 
@@ -23,7 +29,7 @@ public class PiglinBarterLootModifier extends LootModifier{
 	private final LootPool pool;
 	private final float overrideChance;
 
-	private PiglinBarterLootModifier(ILootCondition[] conditions, boolean active, LootPool pool, float overrideChance){
+	private PiglinBarterLootModifier(LootItemCondition[] conditions, boolean active, LootPool pool, float overrideChance){
 		super(conditions);
 		this.active = active;
 		this.pool = pool;
@@ -42,7 +48,7 @@ public class PiglinBarterLootModifier extends LootModifier{
 	}
 
 	private static boolean isPiglinBarter(LootContext context){
-		return context.getParamOrNull(LootParameters.THIS_ENTITY) instanceof PiglinEntity && !context.hasParam(LootParameters.ORIGIN);
+		return context.getParamOrNull(LootContextParams.THIS_ENTITY) instanceof Piglin && !context.hasParam(LootContextParams.ORIGIN);
 	}
 
 	public static class Serializer extends GlobalLootModifierSerializer<PiglinBarterLootModifier>{
@@ -67,17 +73,17 @@ public class PiglinBarterLootModifier extends LootModifier{
 		 * ]
 		 */
 		@Override
-		public PiglinBarterLootModifier read(ResourceLocation name, JsonObject json, ILootCondition[] lootConditions){
+		public PiglinBarterLootModifier read(ResourceLocation name, JsonObject json, LootItemCondition[] lootConditions){
 			boolean active = CraftingUtil.isActiveJSON(json);//Can be disabled by having "active": false
 			if(!active){
 				return new PiglinBarterLootModifier(lootConditions, false, null, 0);
 			}
-			float overrideChance = JSONUtils.getAsFloat(json, "override_chance");//The chance [0-1] that this loot pool is used instead of the default piglin loot pool/previous pools
+			float overrideChance = GsonHelper.getAsFloat(json, "override_chance");//The chance [0-1] that this loot pool is used instead of the default piglin loot pool/previous pools
 			LootPool.Builder poolBuilder = new LootPool.Builder();
-			JsonArray entryArray = JSONUtils.getAsJsonArray(json, "results");
+			JsonArray entryArray = GsonHelper.getAsJsonArray(json, "results");
 			for(JsonElement o : entryArray){
 				JsonObject entry = o.getAsJsonObject();
-				poolBuilder.add(ItemLootEntry.lootTableItem(JSONUtils.getAsItem(entry, "name")).setWeight(JSONUtils.getAsInt(entry, "weight", 1)).apply(SetCount.setCount(RandomValueRange.between(JSONUtils.getAsInt(entry, "min", 1), JSONUtils.getAsInt(entry, "max", 1)))));
+				poolBuilder.add(LootItem.lootTableItem(GsonHelper.getAsItem(entry, "name")).setWeight(GsonHelper.getAsInt(entry, "weight", 1)).apply(SetItemCountFunction.setCount(RandomValueBounds.between(GsonHelper.getAsInt(entry, "min", 1), GsonHelper.getAsInt(entry, "max", 1)))));
 			}
 
 			return new PiglinBarterLootModifier(lootConditions, active, poolBuilder.build(), overrideChance);

@@ -8,17 +8,17 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.BloodCentrifugeContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.witchcraft.BloodSample;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -28,11 +28,13 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
+import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
+
 @ObjectHolder(Crossroads.MODID)
 public class BloodCentrifugeTileEntity extends InventoryTE{
 
 	@ObjectHolder("blood_centrifuge")
-	public static TileEntityType<BloodCentrifugeTileEntity> type = null;
+	public static BlockEntityType<BloodCentrifugeTileEntity> type = null;
 
 	public static final double LOW_SPEED = 0;
 	public static final double HIGH_SPEED = 20;
@@ -47,9 +49,9 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		chat.add(new TranslationTextComponent("tt.crossroads.blood_centrifuge.deviation", progress == 0 ? 0 : deviation / progress));
-		chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.progress", progress, REQUIRED));
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
+		chat.add(new TranslatableComponent("tt.crossroads.blood_centrifuge.deviation", progress == 0 ? 0 : deviation / progress));
+		chat.add(new TranslatableComponent("tt.crossroads.boilerplate.progress", progress, REQUIRED));
 		super.addInfo(chat, player, hit);
 	}
 
@@ -110,7 +112,7 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putInt("progress", progress);
 		nbt.putInt("deviation", deviation);
@@ -118,15 +120,15 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		progress = nbt.getInt("progress");
 		deviation = nbt.getInt("deviation");
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag(){
-		CompoundNBT nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(){
+		CompoundTag nbt = super.getUpdateTag();
 		nbt.putInt("progress", progress);
 		return nbt;
 	}
@@ -159,13 +161,13 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.crossroads.blood_centrifuge");
+	public Component getDisplayName(){
+		return new TranslatableComponent("container.crossroads.blood_centrifuge");
 	}
 
 	@Nullable
 	@Override
-	public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity playerEntity){
+	public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player playerEntity){
 		return new BloodCentrifugeContainer(id, playerInventory, createContainerBuf());
 	}
 

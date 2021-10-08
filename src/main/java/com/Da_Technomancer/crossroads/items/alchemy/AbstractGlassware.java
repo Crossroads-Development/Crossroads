@@ -4,14 +4,14 @@ import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -20,6 +20,8 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 import java.util.Locale;
+
+import net.minecraft.world.item.Item.Properties;
 
 public abstract class AbstractGlassware extends Item{
 
@@ -91,10 +93,10 @@ public abstract class AbstractGlassware extends Item{
 	 */
 	public void setReagents(ItemStack stack, ReagentMap reagents){
 		if(!stack.hasTag()){
-			stack.setTag(new CompoundNBT());
+			stack.setTag(new CompoundTag());
 		}
 
-		CompoundNBT nbt = new CompoundNBT();
+		CompoundTag nbt = new CompoundTag();
 		stack.getTag().put(TAG_NAME, nbt);
 
 		reagents.write(nbt);
@@ -102,8 +104,8 @@ public abstract class AbstractGlassware extends Item{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.alchemy_capacity", getCapacity()));
+	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.alchemy_capacity", getCapacity()));
 		if(!stack.hasTag()){
 			return;
 		}
@@ -112,7 +114,7 @@ public abstract class AbstractGlassware extends Item{
 		double temp = stored.getTempC();
 
 		if(stored.getTotalQty() == 0){
-			tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.alchemy_empty"));
+			tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.alchemy_empty"));
 		}else{
 			HeatUtil.addHeatInfo(tooltip, temp, Short.MIN_VALUE);
 			int total = 0;
@@ -120,15 +122,15 @@ public abstract class AbstractGlassware extends Item{
 				int qty = stored.getQty(type);
 				if(qty > 0){
 					total++;
-					if(total <= 4 || flagIn != ITooltipFlag.TooltipFlags.NORMAL){
-						tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.alchemy_content", type.getName(), qty));
+					if(total <= 4 || flagIn != TooltipFlag.Default.NORMAL){
+						tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.alchemy_content", type.getName(), qty));
 					}else{
 						break;
 					}
 				}
 			}
-			if(total > 4 && flagIn == ITooltipFlag.TooltipFlags.NORMAL){
-				tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.alchemy_excess", total - 4));
+			if(total > 4 && flagIn == TooltipFlag.Default.NORMAL){
+				tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.alchemy_excess", total - 4));
 			}
 		}
 	}
@@ -137,7 +139,7 @@ public abstract class AbstractGlassware extends Item{
 		return type;
 	}
 
-	public enum GlasswareTypes implements IStringSerializable{
+	public enum GlasswareTypes implements StringRepresentable{
 
 		NONE(0, false),
 		PHIAL(20, false),

@@ -8,24 +8,26 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
+import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink.Behaviour;
+
 @ObjectHolder(Crossroads.MODID)
 public class FluxNodeTileEntity extends IFluxLink.FluxHelper{
 
 	@ObjectHolder("flux_node")
-	public static TileEntityType<FluxNodeTileEntity> type = null;
+	public static BlockEntityType<FluxNodeTileEntity> type = null;
 
 	private static final float SPIN_RATE = 3.6F;//For rendering
 
@@ -53,9 +55,9 @@ public class FluxNodeTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public AxisAlignedBB getRenderBoundingBox(){
+	public AABB getRenderBoundingBox(){
 		//Increase render BB to include links
-		return new AxisAlignedBB(worldPosition).inflate(getRange());
+		return new AABB(worldPosition).inflate(getRange());
 	}
 
 	/**
@@ -88,28 +90,28 @@ public class FluxNodeTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putFloat("angle", angle);
 		return nbt;
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag(){
-		CompoundNBT nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(){
+		CompoundTag nbt = super.getUpdateTag();
 		nbt.putFloat("angle", angle);
 		return nbt;
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		angle = nbt.getFloat("angle");
 		entropyClient = getReadingFlux();
 	}
 
 	@Override
-	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity serverPlayerEntity){
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayer serverPlayerEntity){
 		super.receiveLong(identifier, message, serverPlayerEntity);
 		if(identifier == 0){
 			entropyClient = (int) message;
@@ -123,7 +125,7 @@ public class FluxNodeTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		FluxUtil.addFluxInfo(chat, this, -1);
 		super.addInfo(chat, player, hit);
 	}

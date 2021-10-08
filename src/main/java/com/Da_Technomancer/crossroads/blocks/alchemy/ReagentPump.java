@@ -7,29 +7,29 @@ import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReagentPumpTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class ReagentPump extends ContainerBlock{
+public class ReagentPump extends BaseEntityBlock{
 
 	private static final double SIZE = 5D;
 	private static final double CORE_SIZE = 4D;
@@ -48,7 +48,7 @@ public class ReagentPump extends ContainerBlock{
 			VoxelShape comp = core;
 			for(int j = 0; j < 4; j++){
 				if((i & (1 << j)) != 0){
-					comp = VoxelShapes.or(comp, pieces[j]);
+					comp = Shapes.or(comp, pieces[j]);
 				}
 			}
 			SHAPES[i] = comp;
@@ -67,24 +67,24 @@ public class ReagentPump extends ContainerBlock{
 	}
 
 	@Override
-	public TileEntity newBlockEntity(IBlockReader worldIn){
+	public BlockEntity newBlockEntity(BlockGetter worldIn){
 		return new ReagentPumpTileEntity(!crystal);
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
 			if(!worldIn.isClientSide){
 				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.ACTIVE));
 			}
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 
 	@Override
-	public BlockRenderType getRenderShape(BlockState state){
-		return BlockRenderType.MODEL;
+	public RenderShape getRenderShape(BlockState state){
+		return RenderShape.MODEL;
 	}
 
 //	@Override
@@ -94,12 +94,12 @@ public class ReagentPump extends ContainerBlock{
 //	}
 
 	@Override
-	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
 		builder.add(CRProperties.ACTIVE, CRProperties.HAS_MATCH_SIDES[2], CRProperties.HAS_MATCH_SIDES[3], CRProperties.HAS_MATCH_SIDES[4], CRProperties.HAS_MATCH_SIDES[5]);
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context){
 		int index = 0;
 		for(int i = 2; i < 5; i++){
 			index |= state.getValue(CRProperties.HAS_MATCH_SIDES[i]) ? 1 << i - 2 : 0;
@@ -109,11 +109,11 @@ public class ReagentPump extends ContainerBlock{
 
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context){
+	public BlockState getStateForPlacement(BlockPlaceContext context){
 		boolean[] connect = new boolean[6];
 		EnumContainerType contType = crystal ? EnumContainerType.CRYSTAL : EnumContainerType.GLASS;
 		for(int i = 2; i < 6; i++){
-			TileEntity te = context.getLevel().getBlockEntity(context.getClickedPos().relative(Direction.from3DDataValue(i)));
+			BlockEntity te = context.getLevel().getBlockEntity(context.getClickedPos().relative(Direction.from3DDataValue(i)));
 			LazyOptional<IChemicalHandler> otherOpt;
 			if(te != null && (otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, Direction.from3DDataValue(i).getOpposite())).isPresent() && otherOpt.orElseThrow(NullPointerException::new).getChannel(Direction.from3DDataValue(i)).connectsWith(contType)){
 				connect[i] = true;
@@ -123,9 +123,9 @@ public class ReagentPump extends ContainerBlock{
 	}
 
 	@Override
-	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos pos, BlockPos facingPos){
-		TileEntity te = worldIn.getBlockEntity(facingPos);
-		TileEntity thisTE = worldIn.getBlockEntity(pos);
+	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos pos, BlockPos facingPos){
+		BlockEntity te = worldIn.getBlockEntity(facingPos);
+		BlockEntity thisTE = worldIn.getBlockEntity(pos);
 		LazyOptional<IChemicalHandler> otherOpt;
 		boolean connect = thisTE instanceof ReagentPumpTileEntity && te != null && (otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, facing.getOpposite())).isPresent() && otherOpt.orElseThrow(NullPointerException::new).getChannel(facing).connectsWith(crystal ? EnumContainerType.CRYSTAL : EnumContainerType.GLASS);
 		if(facing.getAxis() != Direction.Axis.Y){

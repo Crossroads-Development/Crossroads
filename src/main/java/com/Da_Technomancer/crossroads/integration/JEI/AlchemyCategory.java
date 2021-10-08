@@ -7,7 +7,7 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.crafting.recipes.AlchemyRec;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
@@ -17,9 +17,9 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.Font;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +85,7 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 	}
 
 	@Override
-	public void draw(AlchemyRec recipe, MatrixStack matrix, double mouseX, double mouseY){
+	public void draw(AlchemyRec recipe, PoseStack matrix, double mouseX, double mouseY){
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
 		arrowStatic.draw(matrix, 78, 22);
@@ -93,7 +93,7 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 //		GlStateManager.disableBlend();
 //		GlStateManager.disableAlpha();
 
-		FontRenderer fontRenderer = Minecraft.getInstance().font;
+		Font fontRenderer = Minecraft.getInstance().font;
 		double maxTemp = recipe.maxTemp();
 		String line;
 		if(maxTemp <= Short.MAX_VALUE - 100){

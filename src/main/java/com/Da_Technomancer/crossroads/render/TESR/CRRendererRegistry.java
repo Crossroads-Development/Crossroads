@@ -22,6 +22,8 @@ import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+
 public class CRRendererRegistry{
 
 	public static void registerBlockRenderer(){
@@ -76,10 +78,10 @@ public class CRRendererRegistry{
 	public static void registerEntityLayerRenderers(){
 
 		//Add the technomancy armor elytra render layer to every entity that can render an elytra
-		EntityRendererManager manager = Minecraft.getInstance().getEntityRenderDispatcher();
+		EntityRenderDispatcher manager = Minecraft.getInstance().getEntityRenderDispatcher();
 		for(EntityRenderer<?> entityRenderer : manager.renderers.values()){
-			if(entityRenderer instanceof BipedRenderer || entityRenderer instanceof ArmorStandRenderer){
-				LivingRenderer<?, ?> livingRenderer = (LivingRenderer<?, ?>) entityRenderer;
+			if(entityRenderer instanceof HumanoidMobRenderer || entityRenderer instanceof ArmorStandRenderer){
+				LivingEntityRenderer<?, ?> livingRenderer = (LivingEntityRenderer<?, ?>) entityRenderer;
 				livingRenderer.addLayer(new TechnomancyElytraRenderer(livingRenderer));
 			}
 		}

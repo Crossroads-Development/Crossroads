@@ -4,15 +4,15 @@ import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder(Crossroads.MODID)
 public class BeamReflectorTileEntity extends BeamRenderTE{
 
 	@ObjectHolder("beam_reflector")
-	public static TileEntityType<BeamReflectorTileEntity> type = null;
+	public static BlockEntityType<BeamReflectorTileEntity> type = null;
 
 	public BeamReflectorTileEntity(){
 		super(type);

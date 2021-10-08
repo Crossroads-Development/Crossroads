@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.API.packets;
 
 import com.Da_Technomancer.essentials.packets.ClientPacket;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.world.World;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
@@ -11,7 +11,7 @@ import java.util.Random;
 @SuppressWarnings("serial")
 public class CreateParticlesOnClient extends ClientPacket{
 
-	public IParticleData particle;
+	public ParticleOptions particle;
 	public double x;
 	public double y;
 	public double z;
@@ -34,7 +34,7 @@ public class CreateParticlesOnClient extends ClientPacket{
 
 	}
 
-	public CreateParticlesOnClient(IParticleData particle, double x, double y, double z, float xDeviation, float yDeviation, float zDeviation, float xVel, float yVel, float zVel, float xVelDeviation, float yVelDeviation, float zVelDeviation, int count, boolean gaussian){
+	public CreateParticlesOnClient(ParticleOptions particle, double x, double y, double z, float xDeviation, float yDeviation, float zDeviation, float xVel, float yVel, float zVel, float xVelDeviation, float yVelDeviation, float zVelDeviation, int count, boolean gaussian){
 		this.particle = particle;
 		this.x = x;
 		this.y = y;
@@ -60,7 +60,7 @@ public class CreateParticlesOnClient extends ClientPacket{
 
 	@Override
 	protected void run(){
-		World world = SafeCallable.getClientWorld();
+		Level world = SafeCallable.getClientWorld();
 		if(world != null){
 			Random rand = world.getRandom();
 			for(int i = 0; i < count; i++){

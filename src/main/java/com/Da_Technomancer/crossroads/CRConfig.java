@@ -4,12 +4,12 @@ import com.Da_Technomancer.essentials.ESConfig;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import com.google.common.collect.Lists;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.tags.Tag;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
@@ -114,7 +114,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.IntValue degradationPenalty;
 	public static ForgeConfigSpec.ConfigValue<List<? extends String>> permanentEffectBlacklist;
 
-	private static final ITag<Block> destroyBlacklist = BlockTags.bind(Crossroads.MODID + ":destroy_blacklist");
+	private static final Tag<Block> destroyBlacklist = BlockTags.bind(Crossroads.MODID + ":destroy_blacklist");
 
 	private static ForgeConfigSpec clientSpec;
 	private static ForgeConfigSpec serverSpec;
@@ -273,7 +273,7 @@ public class CRConfig{
 	 * @param state The blockstate being destroyed/modified
 	 * @return Whether the block is protected via the config from destruction
 	 */
-	public static boolean isProtected(World world, BlockPos pos, BlockState state){
+	public static boolean isProtected(Level world, BlockPos pos, BlockState state){
 		return destroyBlacklist.contains(state.getBlock());
 	}
 

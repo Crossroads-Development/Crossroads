@@ -8,22 +8,22 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
-import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -36,13 +36,13 @@ import java.util.List;
 public class WindTurbineTileEntity extends ModuleTE{
 
 	@ObjectHolder("wind_turbine")
-	public static TileEntityType<WindTurbineTileEntity> type = null;
+	public static BlockEntityType<WindTurbineTileEntity> type = null;
 
 	public static final double MAX_SPEED = 2D;
 	public static final double INERTIA = 200;
 	public static final double LOW_POWER = 5D;
 	public static final double HIGH_POWER = 25D;
-	private static final AxisAlignedBB RENDER_BOX = new AxisAlignedBB(-1, -1, -1, 2, 2, 2);
+	private static final AABB RENDER_BOX = new AABB(-1, -1, -1, 2, 2, 2);
 
 	//Undocumented 'easter egg'. This person takes way more damage from windmills
 	//Don't ask.
@@ -50,7 +50,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 
 	private boolean newlyPlaced = true;
 	private boolean running = false;
-	private AxisAlignedBB targetBB = null;
+	private AABB targetBB = null;
 	public int[] bladeColors = new int[4];
 	private int lastColoredBlade = 3;//Index of the last blade dyed
 
@@ -72,7 +72,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 		return state.getValue(CRProperties.HORIZ_FACING);
 	}
 
-	private AxisAlignedBB getTargetBB(){
+	private AABB getTargetBB(){
 		if(targetBB == null){
 			Direction dir = getFacing();
 			Direction planeDir = dir.getClockWise();
@@ -81,9 +81,9 @@ public class WindTurbineTileEntity extends ModuleTE{
 			}
 			BlockPos center = worldPosition.relative(dir);
 			if(dir.getAxisDirection() == Direction.AxisDirection.POSITIVE){
-				targetBB = new AxisAlignedBB(center.relative(planeDir, -2).relative(Direction.DOWN, 2), center.relative(planeDir, 3).relative(Direction.UP, 3).relative(dir));
+				targetBB = new AABB(center.relative(planeDir, -2).relative(Direction.DOWN, 2), center.relative(planeDir, 3).relative(Direction.UP, 3).relative(dir));
 			}else{
-				targetBB = new AxisAlignedBB(center.relative(planeDir, -2).relative(Direction.DOWN, 2), center.relative(planeDir, 3).relative(Direction.UP, 3).relative(dir, -1));
+				targetBB = new AABB(center.relative(planeDir, -2).relative(Direction.DOWN, 2), center.relative(planeDir, 3).relative(Direction.UP, 3).relative(dir, -1));
 			}
 		}
 
@@ -125,8 +125,8 @@ public class WindTurbineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		chat.add(new TranslationTextComponent("tt.crossroads.wind_turbine.weather", CRConfig.formatVal(getPowerOutput())));
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
+		chat.add(new TranslatableComponent("tt.crossroads.wind_turbine.weather", CRConfig.formatVal(getPowerOutput())));
 		super.addInfo(chat, player, hit);
 	}
 
@@ -177,9 +177,9 @@ public class WindTurbineTileEntity extends ModuleTE{
 
 			//Damage entities in the blades while spinning at high speed
 			if(Math.abs(axleHandler.getSpeed()) >= 1.5D){
-				List<LivingEntity> ents = level.getEntitiesOfClass(LivingEntity.class, getTargetBB(), EntityPredicates.LIVING_ENTITY_STILL_ALIVE);
+				List<LivingEntity> ents = level.getEntitiesOfClass(LivingEntity.class, getTargetBB(), EntitySelector.LIVING_ENTITY_STILL_ALIVE);
 				for(LivingEntity ent : ents){
-					if(ent instanceof PlayerEntity && murderEasterEgg.equals(((PlayerEntity) ent).getGameProfile().getName())){
+					if(ent instanceof Player && murderEasterEgg.equals(((Player) ent).getGameProfile().getName())){
 						ent.hurt(DamageSource.FLY_INTO_WALL, 100);//This seems fair
 					}else{
 						ent.hurt(DamageSource.FLY_INTO_WALL, 1);
@@ -199,7 +199,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		running = nbt.getBoolean("running");
 		for(int i = 0; i < 4; i++){
@@ -208,7 +208,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putBoolean("running", running);
 		for(int i = 0; i < 4; i++){
@@ -218,8 +218,8 @@ public class WindTurbineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag(){
-		CompoundNBT nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(){
+		CompoundTag nbt = super.getUpdateTag();
 		for(int i = 0; i < 4; i++){
 			nbt.putByte("blade_col_" + i, (byte) bladeColors[i]);
 		}
@@ -227,7 +227,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayer sendingPlayer){
 		super.receiveLong(identifier, message, sendingPlayer);
 		if(identifier == 5){
 			for(int i = 0; i < bladeColors.length; i++){
@@ -237,7 +237,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public AxisAlignedBB getRenderBoundingBox(){
+	public AABB getRenderBoundingBox(){
 		return RENDER_BOX.move(worldPosition);
 	}
 

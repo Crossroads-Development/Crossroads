@@ -1,11 +1,11 @@
 package com.Da_Technomancer.crossroads.render;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.client.renderer.RenderState;
+import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import org.lwjgl.opengl.GL11;
 
@@ -50,15 +50,15 @@ public class CRRenderTypes extends RenderType{
 	public static final ResourceLocation FLUX_EXTRUSION_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/flux_extrusion.png");
 
 	//Types
-	public static final RenderType BEAM_TYPE = RenderType.create("cr_beam", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, false, true, RenderType.State.builder().setCullState(RenderState.NO_CULL).setTextureState(new RenderState.TextureState(BEAM_TEXTURE, false, false)).createCompositeState(false));
-	public static final RenderType FLUX_SINK_TYPE = RenderType.create("cr_flux_sink", DefaultVertexFormats.POSITION_COLOR_TEX_LIGHTMAP, GL11.GL_QUADS, 256, false, true, RenderType.State.builder().setCullState(RenderState.NO_CULL).setTextureState(new RenderState.TextureState(FLUX_SINK_TEXTURE, false, false)).setLightmapState(RenderState.LIGHTMAP).setTransparencyState(RenderState.TRANSLUCENT_TRANSPARENCY).createCompositeState(false));
-	public static final RenderType AREA_OVERLAY_TYPE = RenderType.create("cr_area_overlay", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, false, true, RenderType.State.builder().setCullState(RenderState.NO_CULL).setTextureState(new RenderState.TextureState(AREA_OVERLAY_TEXTURE, false, false)).setTransparencyState(RenderState.TRANSLUCENT_TRANSPARENCY).createCompositeState(false));
-	public static final RenderType ELECTRIC_ARC_TYPE = RenderType.create("cr_electric_arc", DefaultVertexFormats.POSITION_COLOR_LIGHTMAP, GL11.GL_QUADS, 256, false, true, RenderType.State.builder().setCullState(RenderState.NO_CULL).setLightmapState(RenderState.LIGHTMAP).createCompositeState(false));
-	public static final RenderType FLUX_TRANSFER_TYPE = RenderType.create("cr_flux_extrusion", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, false, true, RenderType.State.builder().setCullState(RenderState.NO_CULL).setTextureState(new RenderState.TextureState(FLUX_EXTRUSION_TEXTURE, false, false)).setTransparencyState(RenderState.TRANSLUCENT_TRANSPARENCY).createCompositeState(false));
+	public static final RenderType BEAM_TYPE = RenderType.create("cr_beam", DefaultVertexFormat.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, false, true, RenderType.CompositeState.builder().setCullState(RenderStateShard.NO_CULL).setTextureState(new RenderStateShard.TextureStateShard(BEAM_TEXTURE, false, false)).createCompositeState(false));
+	public static final RenderType FLUX_SINK_TYPE = RenderType.create("cr_flux_sink", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, GL11.GL_QUADS, 256, false, true, RenderType.CompositeState.builder().setCullState(RenderStateShard.NO_CULL).setTextureState(new RenderStateShard.TextureStateShard(FLUX_SINK_TEXTURE, false, false)).setLightmapState(RenderStateShard.LIGHTMAP).setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY).createCompositeState(false));
+	public static final RenderType AREA_OVERLAY_TYPE = RenderType.create("cr_area_overlay", DefaultVertexFormat.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, false, true, RenderType.CompositeState.builder().setCullState(RenderStateShard.NO_CULL).setTextureState(new RenderStateShard.TextureStateShard(AREA_OVERLAY_TEXTURE, false, false)).setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY).createCompositeState(false));
+	public static final RenderType ELECTRIC_ARC_TYPE = RenderType.create("cr_electric_arc", DefaultVertexFormat.POSITION_COLOR_LIGHTMAP, GL11.GL_QUADS, 256, false, true, RenderType.CompositeState.builder().setCullState(RenderStateShard.NO_CULL).setLightmapState(RenderStateShard.LIGHTMAP).createCompositeState(false));
+	public static final RenderType FLUX_TRANSFER_TYPE = RenderType.create("cr_flux_extrusion", DefaultVertexFormat.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, false, true, RenderType.CompositeState.builder().setCullState(RenderStateShard.NO_CULL).setTextureState(new RenderStateShard.TextureStateShard(FLUX_EXTRUSION_TEXTURE, false, false)).setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY).createCompositeState(false));
 
 	public static void stitchTextures(TextureStitchEvent.Pre event){
 		//We only need to register textures which are not already part of a block model
-		if(event.getMap().location().equals(AtlasTexture.LOCATION_BLOCKS)) {
+		if(event.getMap().location().equals(TextureAtlas.LOCATION_BLOCKS)) {
 			event.addSprite(WINDMILL_TEXTURE);
 			event.addSprite(NODE_GIMBAL_TEXTURE);
 			event.addSprite(AXLE_ENDS_TEXTURE);
@@ -81,7 +81,7 @@ public class CRRenderTypes extends RenderType{
 	//This is a dummy constructor- we need to be in a subclass to access the protected fields
 	//This constructor should never be called- everything is done statically
 	private CRRenderTypes(){
-		super("cr_dummy", DefaultVertexFormats.BLOCK, GL11.GL_QUADS, 256, false, false, () -> {}, () -> {});
+		super("cr_dummy", DefaultVertexFormat.BLOCK, GL11.GL_QUADS, 256, false, false, () -> {}, () -> {});
 		assert false;
 	}
 }

@@ -10,11 +10,11 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
 import com.Da_Technomancer.essentials.blocks.redstone.IRedstoneHandler;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -23,7 +23,7 @@ import net.minecraftforge.registries.ObjectHolder;
 public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 
 	@ObjectHolder("redstone_axis")
-	private static TileEntityType<RedstoneAxisTileEntity> type = null;
+	private static BlockEntityType<RedstoneAxisTileEntity> type = null;
 
 	public RedstoneAxisTileEntity(){
 		super(type);
@@ -52,7 +52,7 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 		double sumIRot = energyCalcResults[3];//Sum of every gear's moment of inertia time rotation ratio squared
 
 		double cost = sumIRot * Math.pow(targetBaseSpeed, 2) / 2D;//Total energy required to hold the output at the requested base speed
-		TileEntity backTE = level.getBlockEntity(worldPosition.relative(facing.getOpposite()));
+		BlockEntity backTE = level.getBlockEntity(worldPosition.relative(facing.getOpposite()));
 		LazyOptional<IAxleHandler> backOpt = backTE == null ? LazyOptional.empty() : backTE.getCapability(Capabilities.AXLE_CAPABILITY, facing);
 		IAxleHandler sourceAxle = backOpt.isPresent() ? backOpt.orElseThrow(NullPointerException::new) : null;
 		double availableEnergy = Math.abs(energyCalcResults[0]);
@@ -105,14 +105,14 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		redsHandler.write(nbt);
 		return nbt;
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		redsHandler.read(state, nbt);
 	}

@@ -2,23 +2,23 @@ package com.Da_Technomancer.crossroads.entity;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.client.GameSettings;
+import net.minecraft.client.Options;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.IndirectEntityDamageSource;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.IndirectEntityDamageSource;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -31,11 +31,11 @@ public class EntityFlyingMachine extends Entity{
 	public static EntityType<EntityFlyingMachine> type = null;
 
 	//In radians, 0 is down, pi/2 is forward
-	private static final DataParameter<Float> GRAV_PLATE_ANGLE = EntityDataManager.defineId(EntityFlyingMachine.class, DataSerializers.FLOAT);
+	private static final EntityDataAccessor<Float> GRAV_PLATE_ANGLE = SynchedEntityData.defineId(EntityFlyingMachine.class, EntityDataSerializers.FLOAT);
 	private static final float ACCEL = 0.12F;
 	private int damage = 0;
 
-	public EntityFlyingMachine(EntityType<EntityFlyingMachine> type, World worldIn){
+	public EntityFlyingMachine(EntityType<EntityFlyingMachine> type, Level worldIn){
 		super(type, worldIn);
 		blocksBuilding = true;
 	}
@@ -79,12 +79,12 @@ public class EntityFlyingMachine extends Entity{
 		//When there is a player riding, let the client control movement
 		//When there isn't a player, let the server control movement
 		//Never let both sides control movement
-		if(controller instanceof PlayerEntity){
+		if(controller instanceof Player){
 
 			//Do movement on the client ONLY. The wheel angle isn't correct on the server
 			if(level.isClientSide && controller == Minecraft.getInstance().player){
 				//Rotate the wheel based on player control
-				GameSettings settings = Minecraft.getInstance().options;
+				Options settings = Minecraft.getInstance().options;
 				if(settings.keyUp.isDown()){
 					setAngle(getAngle() - (float) Math.PI / 20F);
 				}else if(settings.keyDown.isDown()){
@@ -150,7 +150,7 @@ public class EntityFlyingMachine extends Entity{
 			}else{
 				damage += amount * 10F;
 				markHurt();
-				boolean flag = source.getEntity() instanceof PlayerEntity && ((PlayerEntity) source.getEntity()).isCreative();
+				boolean flag = source.getEntity() instanceof Player && ((Player) source.getEntity()).isCreative();
 
 				if(flag || damage > 40){
 					if(!flag && level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)){
@@ -169,14 +169,14 @@ public class EntityFlyingMachine extends Entity{
 		return false;
 	}
 
-	public ActionResultType interact(PlayerEntity player, Hand hand){
+	public InteractionResult interact(Player player, InteractionHand hand){
 		if(!player.isShiftKeyDown()){
 			if(!level.isClientSide){
 				player.startRiding(this);
 			}
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 
 	@Override
@@ -186,7 +186,7 @@ public class EntityFlyingMachine extends Entity{
 	}
 
 	@Override
-	public IPacket<?> getAddEntityPacket(){
+	public Packet<?> getAddEntityPacket(){
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
@@ -206,12 +206,12 @@ public class EntityFlyingMachine extends Entity{
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundNBT nbt){
+	public void readAdditionalSaveData(CompoundTag nbt){
 		damage = nbt.getInt("dam");
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundNBT nbt){
+	public void addAdditionalSaveData(CompoundTag nbt){
 		nbt.putInt("dam", damage);
 	}
 }

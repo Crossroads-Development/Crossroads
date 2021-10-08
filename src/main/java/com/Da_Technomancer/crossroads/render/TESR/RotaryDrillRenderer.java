@@ -8,26 +8,26 @@ import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.rotary.RotaryDrillTileEntity;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.core.Direction;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class RotaryDrillRenderer extends TileEntityRenderer<RotaryDrillTileEntity>{
+public class RotaryDrillRenderer extends BlockEntityRenderer<RotaryDrillTileEntity>{
 
-	protected RotaryDrillRenderer(TileEntityRendererDispatcher rendererDispatcherIn){
+	protected RotaryDrillRenderer(BlockEntityRenderDispatcher rendererDispatcherIn){
 		super(rendererDispatcherIn);
 	}
 
 	@Override
-	public void render(RotaryDrillTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
+	public void render(RotaryDrillTileEntity te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		BlockState state = te.getBlockState();
 		LazyOptional<IAxleHandler> axle = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
 
@@ -50,7 +50,7 @@ public class RotaryDrillRenderer extends TileEntityRenderer<RotaryDrillTileEntit
 		int[] col = {255, 255, te.isGolden() ? 38 : 255, 255};
 
 		//Render the te
-		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
+		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
 
 		//Grid aligned layers
 		renderLayer(builder, matrix, -8, 10, sprite, col, combinedLight);
@@ -63,7 +63,7 @@ public class RotaryDrillRenderer extends TileEntityRenderer<RotaryDrillTileEntit
 		renderLayer(builder, matrix, 1, 4, sprite, col, combinedLight);
 	}
 
-	private static void renderLayer(IVertexBuilder builder, MatrixStack matrix, float bottom, float width, TextureAtlasSprite sprite, int[] color, int light){
+	private static void renderLayer(VertexConsumer builder, PoseStack matrix, float bottom, float width, TextureAtlasSprite sprite, int[] color, int light){
 
 		bottom /= 16F;
 		float height = 3F / 16F;

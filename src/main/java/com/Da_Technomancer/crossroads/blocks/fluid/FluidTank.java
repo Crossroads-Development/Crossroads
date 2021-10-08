@@ -5,26 +5,26 @@ import com.Da_Technomancer.crossroads.tileentities.fluid.FluidTankTileEntity;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import com.google.common.collect.Lists;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
@@ -34,7 +34,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class FluidTank extends ContainerBlock implements IReadable{
+public class FluidTank extends BaseEntityBlock implements IReadable{
 
 	public FluidTank(){
 		super(CRBlocks.getMetalProperty());
@@ -45,22 +45,22 @@ public class FluidTank extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public TileEntity newBlockEntity(IBlockReader worldIn){
+	public BlockEntity newBlockEntity(BlockGetter worldIn){
 		return new FluidTankTileEntity();
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		FluidStack fStack = getFluidOnItem(stack);
 		if(!fStack.isEmpty()){
-			tooltip.add(new TranslationTextComponent("tt.crossroads.fluid_tank", fStack.getAmount(), fStack.getDisplayName().getString()));
+			tooltip.add(new TranslatableComponent("tt.crossroads.fluid_tank", fStack.getAmount(), fStack.getDisplayName().getString()));
 		}
 	}
 
 	@Override
 	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder){
-		TileEntity te = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
+		BlockEntity te = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
 		if(te instanceof FluidTankTileEntity){
 			ItemStack drop = new ItemStack(this.asItem(), 1);
 			((FluidTankTileEntity) te).getContent().writeToNBT(drop.getOrCreateTag());
@@ -78,7 +78,7 @@ public class FluidTank extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public void setPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
+	public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		if(stack.hasTag()){
 			FluidTankTileEntity te = (FluidTankTileEntity) world.getBlockEntity(pos);
 			te.setContent(getFluidOnItem(stack));
@@ -86,17 +86,17 @@ public class FluidTank extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(!worldIn.isClientSide){
-			TileEntity te;
-			if(FluidUtil.getFluidHandler(playerIn.getItemInHand(Hand.MAIN_HAND)).isPresent()){
+			BlockEntity te;
+			if(FluidUtil.getFluidHandler(playerIn.getItemInHand(InteractionHand.MAIN_HAND)).isPresent()){
 				//Tanks be clicked on with buckets/equivalent
-				return FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, null) ? ActionResultType.SUCCESS : ActionResultType.FAIL;
-			}else if((te = worldIn.getBlockEntity(pos)) instanceof INamedContainerProvider){
-				NetworkHooks.openGui((ServerPlayerEntity) playerIn, (INamedContainerProvider) te, pos);
+				return FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, null) ? InteractionResult.SUCCESS : InteractionResult.FAIL;
+			}else if((te = worldIn.getBlockEntity(pos)) instanceof MenuProvider){
+				NetworkHooks.openGui((ServerPlayer) playerIn, (MenuProvider) te, pos);
 			}
 		}
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
@@ -105,18 +105,18 @@ public class FluidTank extends ContainerBlock implements IReadable{
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos){
+	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos){
 		return RedstoneUtil.clampToVanilla(read(worldIn, pos, blockState));
 	}
 
 	@Override
-	public BlockRenderType getRenderShape(BlockState state){
-		return BlockRenderType.MODEL;
+	public RenderShape getRenderShape(BlockState state){
+		return RenderShape.MODEL;
 	}
 
 	@Override
-	public float read(World world, BlockPos pos, BlockState blockState){
-		TileEntity te = world.getBlockEntity(pos);
+	public float read(Level world, BlockPos pos, BlockState blockState){
+		BlockEntity te = world.getBlockEntity(pos);
 		if(te instanceof FluidTankTileEntity){
 			return ((FluidTankTileEntity) te).getContent().getAmount();
 		}

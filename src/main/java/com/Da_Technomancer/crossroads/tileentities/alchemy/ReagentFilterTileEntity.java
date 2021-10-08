@@ -8,20 +8,20 @@ import com.Da_Technomancer.crossroads.blocks.alchemy.ReagentFilter;
 import com.Da_Technomancer.crossroads.gui.container.ReagentFilterContainer;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import io.netty.buffer.Unpooled;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -30,10 +30,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @ObjectHolder(Crossroads.MODID)
-public class ReagentFilterTileEntity extends AlchemyCarrierTE implements INamedContainerProvider, IInventory{
+public class ReagentFilterTileEntity extends AlchemyCarrierTE implements MenuProvider, Container{
 
 	@ObjectHolder("reagent_filter")
-	private static TileEntityType<ReagentFilterTileEntity> type = null;
+	private static BlockEntityType<ReagentFilterTileEntity> type = null;
 
 	private Direction facing = null;
 	private ItemStack inventory = ItemStack.EMPTY;
@@ -69,16 +69,16 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements INamedC
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		inventory = nbt.contains("inv") ? ItemStack.of(nbt.getCompound("inv")) : ItemStack.EMPTY;
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		if(!inventory.isEmpty()){
-			nbt.put("inv", inventory.save(new CompoundNBT()));
+			nbt.put("inv", inventory.save(new CompoundTag()));
 		}
 		return nbt;
 	}
@@ -116,7 +116,7 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements INamedC
 	}
 
 	private boolean transfer(ReagentMap toTrans, Direction side){
-		TileEntity te = level.getBlockEntity(worldPosition.relative(side));
+		BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
 		LazyOptional<IChemicalHandler> chemOpt;
 		if(toTrans.getTotalQty() <= 0 || te == null || !(chemOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
 			return false;
@@ -196,7 +196,7 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements INamedC
 	}
 
 	@Override
-	public boolean stillValid(PlayerEntity player){
+	public boolean stillValid(Player player){
 		return level.getBlockEntity(worldPosition) == this && player.distanceToSqr(worldPosition.getX() + 0.5D, worldPosition.getY() + 0.5D, worldPosition.getZ() + 0.5F) <= 64;
 	}
 
@@ -212,13 +212,13 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements INamedC
 	}
 
 	@Override
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.reagent_filter");
+	public Component getDisplayName(){
+		return new TranslatableComponent("container.reagent_filter");
 	}
 
 	@Nullable
 	@Override
-	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
-		return new ReagentFilterContainer(id, playerInv, new PacketBuffer(Unpooled.buffer()).writeBlockPos(worldPosition));
+	public AbstractContainerMenu createMenu(int id, Inventory playerInv, Player player){
+		return new ReagentFilterContainer(id, playerInv, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(worldPosition));
 	}
 }

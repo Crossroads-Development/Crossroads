@@ -7,8 +7,8 @@ import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.heat.DefaultHeatHandler;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.API.rotary.*;
-import net.minecraft.nbt.INBT;
-import net.minecraft.util.Direction;
+import net.minecraft.nbt.Tag;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -54,17 +54,17 @@ public class Capabilities{
 	private static class DefaultStorage<T> implements Capability.IStorage<T>{
 
 		@Override
-		public INBT writeNBT(Capability<T> capability, T instance, Direction side){
+		public Tag writeNBT(Capability<T> capability, T instance, Direction side){
 			if(instance instanceof INBTSerializable){
-				return ((INBTSerializable<? extends INBT>) instance).serializeNBT();
+				return ((INBTSerializable<? extends Tag>) instance).serializeNBT();
 			}
 			return null;
 		}
 
 		@Override
-		public void readNBT(Capability<T> capability, T instance, Direction side, INBT nbt){
+		public void readNBT(Capability<T> capability, T instance, Direction side, Tag nbt){
 			if(nbt != null && instance instanceof INBTSerializable){
-				Class<? extends INBT> nbtClass = ((INBTSerializable<? extends INBT>) instance).serializeNBT().getClass();
+				Class<? extends Tag> nbtClass = ((INBTSerializable<? extends Tag>) instance).serializeNBT().getClass();
 
 				if(nbtClass.isInstance(nbt)){
 					((INBTSerializable) instance).deserializeNBT(nbtClass.cast(nbt));

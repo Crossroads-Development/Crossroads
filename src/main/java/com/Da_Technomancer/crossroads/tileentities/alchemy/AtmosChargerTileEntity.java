@@ -9,21 +9,21 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.alchemy.AtmosCharger;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -33,12 +33,12 @@ import net.minecraftforge.registries.ObjectHolder;
 import java.util.ArrayList;
 
 @ObjectHolder(Crossroads.MODID)
-public class AtmosChargerTileEntity extends TileEntity implements ITickableTileEntity, IInfoTE{
+public class AtmosChargerTileEntity extends BlockEntity implements TickableBlockEntity, IInfoTE{
 
 	@ObjectHolder("atmos_charger")
-	private static TileEntityType<AtmosChargerTileEntity> type = null;
+	private static BlockEntityType<AtmosChargerTileEntity> type = null;
 
-	private static final ITag<Block> ANTENNA_TAG = BlockTags.bind(Crossroads.MODID + ":atmos_antenna");
+	private static final Tag<Block> ANTENNA_TAG = BlockTags.bind(Crossroads.MODID + ":atmos_antenna");
 
 	private static final int FE_CAPACITY = 20_000;
 
@@ -69,10 +69,10 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
-		if(player.level instanceof ServerWorld){
-			int charge = AtmosChargeSavedData.getCharge((ServerWorld) player.level);
-			chat.add(new TranslationTextComponent("tt.crossroads.atmos_charger.reading", charge, AtmosChargeSavedData.getCapacity(), MiscUtil.preciseRound(100D * charge / AtmosChargeSavedData.getCapacity(), 1)));
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
+		if(player.level instanceof ServerLevel){
+			int charge = AtmosChargeSavedData.getCharge((ServerLevel) player.level);
+			chat.add(new TranslatableComponent("tt.crossroads.atmos_charger.reading", charge, AtmosChargeSavedData.getCapacity(), MiscUtil.preciseRound(100D * charge / AtmosChargeSavedData.getCapacity(), 1)));
 		}
 	}
 
@@ -96,14 +96,14 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 		}
 		renderTimer--;
 
-		int atmosCharge = AtmosChargeSavedData.getCharge((ServerWorld) level);
+		int atmosCharge = AtmosChargeSavedData.getCharge((ServerLevel) level);
 
 		if(isExtractMode()){
 			int op = Math.min((FE_CAPACITY - fe) / 1000, atmosCharge / 1000);
 			if(op != 0 && isValidStructure()){
 				fe += op * 1000;
 				atmosCharge -= op * 1000;
-				AtmosChargeSavedData.setCharge((ServerWorld) level, atmosCharge);
+				AtmosChargeSavedData.setCharge((ServerLevel) level, atmosCharge);
 				setChanged();
 				renderArc(false);
 			}
@@ -112,7 +112,7 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 			if(fe > 0){
 				for(int i = 0; i < 4; i++){
 					Direction side = Direction.from2DDataValue(i);
-					TileEntity te = level.getBlockEntity(worldPosition.relative(side));
+					BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
 					LazyOptional<IEnergyStorage> otherCap;
 					if(te != null && (otherCap = te.getCapability(CapabilityEnergy.ENERGY, side.getOpposite())).isPresent()){
 						int moved = otherCap.orElseThrow(NullPointerException::new).receiveEnergy(fe, false);
@@ -128,7 +128,7 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 			if(op != 0 && isValidStructure()){
 				fe -= op * 1000;
 				atmosCharge += op * 1000;
-				AtmosChargeSavedData.setCharge((ServerWorld) level, atmosCharge);
+				AtmosChargeSavedData.setCharge((ServerLevel) level, atmosCharge);
 				setChanged();
 				renderArc(true);
 			}
@@ -162,13 +162,13 @@ public class AtmosChargerTileEntity extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		fe = nbt.getInt("fe");
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putInt("fe", fe);
 		return nbt;

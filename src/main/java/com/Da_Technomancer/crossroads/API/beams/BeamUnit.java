@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.API.beams;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -124,11 +124,11 @@ public class BeamUnit{
 		return ((contents[0] & 0xFF) << 24) + ((contents[1] & 0xFF) << 16) + ((contents[2] & 0xFF) << 8) + (contents[3] & 0xFF);
 	}
 
-	public void writeToNBT(@Nonnull String key, CompoundNBT nbt){
+	public void writeToNBT(@Nonnull String key, CompoundTag nbt){
 		nbt.putIntArray(key, contents);
 	}
 
-	public static BeamUnit readFromNBT(@Nonnull String key, CompoundNBT nbt){
+	public static BeamUnit readFromNBT(@Nonnull String key, CompoundTag nbt){
 		if(nbt.contains(key)){
 			return new BeamUnit(nbt.getIntArray(key));
 		}

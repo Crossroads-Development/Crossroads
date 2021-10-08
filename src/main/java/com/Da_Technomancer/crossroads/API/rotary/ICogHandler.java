@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.rotary;
 
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 
 import javax.annotation.Nonnull;
 

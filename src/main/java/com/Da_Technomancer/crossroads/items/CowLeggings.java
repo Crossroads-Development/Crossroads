@@ -1,19 +1,21 @@
 package com.Da_Technomancer.crossroads.items;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class CowLeggings extends ArmorItem{
 
 	protected CowLeggings(){
-		super(ChickenBoots.BOBO_MATERIAL, EquipmentSlotType.LEGS, new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
+		super(ChickenBoots.BOBO_MATERIAL, EquipmentSlot.LEGS, new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "cow_leggings";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
@@ -25,19 +27,19 @@ public class CowLeggings extends ArmorItem{
 	}
 
 	@Override
-	public void onArmorTick(ItemStack stack, World world, PlayerEntity player){
-		if(player.getEffect(Effects.POISON) != null || player.getEffect(Effects.WITHER) != null || player.getEffect(Effects.CONFUSION) != null || player.getEffect(Effects.BLINDNESS) != null || player.getEffect(Effects.MOVEMENT_SLOWDOWN) != null || player.getEffect(Effects.WEAKNESS) != null || player.getEffect(Effects.HUNGER) != null){
-			player.removeEffect(Effects.POISON);
-			player.removeEffect(Effects.WITHER);
-			player.removeEffect(Effects.CONFUSION);
-			player.removeEffect(Effects.BLINDNESS);
-			player.removeEffect(Effects.MOVEMENT_SLOWDOWN);
-			player.removeEffect(Effects.WEAKNESS);
-			player.removeEffect(Effects.HUNGER);
-			player.removeEffect(Effects.DIG_SLOWDOWN);
-			player.removeEffect(Effects.UNLUCK);
-			player.removeEffect(Effects.BAD_OMEN);
-			world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.COW_HURT, SoundCategory.PLAYERS, 2.5F, 1F);
+	public void onArmorTick(ItemStack stack, Level world, Player player){
+		if(player.getEffect(MobEffects.POISON) != null || player.getEffect(MobEffects.WITHER) != null || player.getEffect(MobEffects.CONFUSION) != null || player.getEffect(MobEffects.BLINDNESS) != null || player.getEffect(MobEffects.MOVEMENT_SLOWDOWN) != null || player.getEffect(MobEffects.WEAKNESS) != null || player.getEffect(MobEffects.HUNGER) != null){
+			player.removeEffect(MobEffects.POISON);
+			player.removeEffect(MobEffects.WITHER);
+			player.removeEffect(MobEffects.CONFUSION);
+			player.removeEffect(MobEffects.BLINDNESS);
+			player.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
+			player.removeEffect(MobEffects.WEAKNESS);
+			player.removeEffect(MobEffects.HUNGER);
+			player.removeEffect(MobEffects.DIG_SLOWDOWN);
+			player.removeEffect(MobEffects.UNLUCK);
+			player.removeEffect(MobEffects.BAD_OMEN);
+			world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.COW_HURT, SoundSource.PLAYERS, 2.5F, 1F);
 		}
 	}
 }

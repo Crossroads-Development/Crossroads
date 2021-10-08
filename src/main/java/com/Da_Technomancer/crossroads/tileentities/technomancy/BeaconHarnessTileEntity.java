@@ -9,24 +9,24 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.BeaconHarnessContainer;
 import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import io.netty.buffer.Unpooled;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
@@ -34,11 +34,14 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Set;
 
+import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink.Behaviour;
+import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink.FluxHelper;
+
 @ObjectHolder(Crossroads.MODID)
-public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, IInventory, INamedContainerProvider{
+public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, Container, MenuProvider{
 
 	@ObjectHolder("beacon_harness")
-	public static TileEntityType<BeaconHarnessTileEntity> type = null;
+	public static BlockEntityType<BeaconHarnessTileEntity> type = null;
 
 	public static final int FLUX_GEN = 4;
 	public static final int LOOP_TIME = 120;//Time to make one full rotation around the color wheel in cycles. Must be a multiple of 3
@@ -56,7 +59,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		super.addInfo(chat, player, hit);
 		FluxUtil.addFluxInfo(chat, this, running ? FLUX_GEN : 0);
 		fluxHelper.addInfo(chat, player, hit);
@@ -109,7 +112,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 
 	//Requires beneath a beacon, and all blocks between this and the beacon are legal beacon bases
 	private boolean positionInvalid(){
-		BlockPos.Mutable checkPos = new BlockPos.Mutable(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
+		BlockPos.MutableBlockPos checkPos = new BlockPos.MutableBlockPos(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
 		for(int y = 0; y < 5; y++){
 			checkPos.move(Direction.UP);
 			BlockState state = level.getBlockState(checkPos);
@@ -130,15 +133,15 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag(){
-		CompoundNBT nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(){
+		CompoundTag nbt = super.getUpdateTag();
 //		nbt.putBoolean("run", running);
 		fluxHelper.writeData(nbt);
 		return nbt;
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putBoolean("run", running);
 		nbt.putInt("cycle", cycles);
@@ -147,7 +150,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		running = nbt.getBoolean("run");
 		cycles = nbt.getInt("cycle");
@@ -233,7 +236,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	}
 
 	@Override
-	public boolean createLinkSource(ILinkTE endpoint, @Nullable PlayerEntity player){
+	public boolean createLinkSource(ILinkTE endpoint, @Nullable Player player){
 		return fluxHelper.createLinkSource(endpoint, player);
 	}
 
@@ -248,12 +251,12 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	}
 
 	@Override
-	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity serverPlayerEntity){
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayer serverPlayerEntity){
 		fluxHelper.receiveLong(identifier, message, serverPlayerEntity);
 	}
 
 	@Override
-	public void receiveInts(byte context, int[] message, @Nullable ServerPlayerEntity sendingPlayer){
+	public void receiveInts(byte context, int[] message, @Nullable ServerPlayer sendingPlayer){
 		fluxHelper.receiveInts(context, message, sendingPlayer);
 	}
 
@@ -294,7 +297,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	}
 
 	@Override
-	public boolean stillValid(PlayerEntity player){
+	public boolean stillValid(Player player){
 		return level.getBlockEntity(worldPosition) == this && player.distanceToSqr(worldPosition.getX() + 0.5D, worldPosition.getY() + 0.5D, worldPosition.getZ() + 0.5D) <= 64;
 	}
 
@@ -306,13 +309,13 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	//INamedGuiProvides methods
 
 	@Override
-	public ITextComponent getDisplayName(){
-		return new TranslationTextComponent("container.beacon_harness");
+	public Component getDisplayName(){
+		return new TranslatableComponent("container.beacon_harness");
 	}
 
 	@Nullable
 	@Override
-	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
-		return new BeaconHarnessContainer(id, playerInv, new PacketBuffer(Unpooled.buffer()).writeBlockPos(worldPosition));
+	public AbstractContainerMenu createMenu(int id, Inventory playerInv, Player player){
+		return new BeaconHarnessContainer(id, playerInv, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(worldPosition));
 	}
 }

@@ -13,21 +13,21 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 import java.util.Locale;
 
-public class AlchemyRec implements IOptionalRecipe<IInventory>{
+public class AlchemyRec implements IOptionalRecipe<Container>{
 
 	private static final float MAX_BLAST = 8;
 
@@ -209,12 +209,12 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public boolean matches(IInventory inv, World worldIn){
+	public boolean matches(Container inv, Level worldIn){
 		return true;//Irrelevant
 	}
 
 	@Override
-	public ItemStack assemble(IInventory inv){
+	public ItemStack assemble(Container inv){
 		return getResultItem();//Irrelevant
 	}
 
@@ -239,7 +239,7 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer(){
+	public RecipeSerializer<?> getSerializer(){
 		return CRRecipes.ALCHEMY_SERIAL;
 	}
 
@@ -249,11 +249,11 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 	}
 
 	@Override
-	public IRecipeType<?> getType(){
+	public RecipeType<?> getType(){
 		return CRRecipes.ALCHEMY_TYPE;
 	}
 
-	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<AlchemyRec>{
+	public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<AlchemyRec>{
 
 		/* The following JSON format is used for Alchemy Recipes:
 		 * Anything prefaced by // is a comment, and should not be in a real JSON
@@ -307,56 +307,56 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 		@Override
 		public AlchemyRec fromJson(ResourceLocation recipeId, JsonObject json){
 			//Normal specification of recipe group and output
-			String group = JSONUtils.getAsString(json, "group", "");
+			String group = GsonHelper.getAsString(json, "group", "");
 
 			boolean real = CraftingUtil.isActiveJSON(json);
 			if(real){
 				//Only bother reading the whole file if this is a real recipe
-				Type type = Type.getType(JSONUtils.getAsString(json, "category", "normal"));
-				double minTemp = JSONUtils.getAsFloat(json, "min_temp", -300F);
-				double maxTemp = JSONUtils.getAsFloat(json, "max_temp", Short.MAX_VALUE);
-				double heatChange = JSONUtils.getAsFloat(json, "heat", 0);
-				String s = JSONUtils.getAsString(json, "catalyst", VOID_STR);
+				Type type = Type.getType(GsonHelper.getAsString(json, "category", "normal"));
+				double minTemp = GsonHelper.getAsFloat(json, "min_temp", -300F);
+				double maxTemp = GsonHelper.getAsFloat(json, "max_temp", Short.MAX_VALUE);
+				double heatChange = GsonHelper.getAsFloat(json, "heat", 0);
+				String s = GsonHelper.getAsString(json, "catalyst", VOID_STR);
 				String cat = s.equals(VOID_STR) ? null : s;
-				boolean charge = JSONUtils.getAsBoolean(json, "charged", false);
+				boolean charge = GsonHelper.getAsBoolean(json, "charged", false);
 
 				float data = 0;
 				EnumBeamAlignments alignment = EnumBeamAlignments.NO_MATCH;
 				if(type == Type.DESTRUCTIVE){
-					data = JSONUtils.getAsFloat(json, "data", 0);
+					data = GsonHelper.getAsFloat(json, "data", 0);
 				}else if(type == Type.ELEMENTAL){
-					alignment = EnumBeamAlignments.valueOf(JSONUtils.getAsString(json, "data", "no_match").toUpperCase(Locale.US));
+					alignment = EnumBeamAlignments.valueOf(GsonHelper.getAsString(json, "data", "no_match").toUpperCase(Locale.US));
 				}
 
 				JsonArray jsonR;
-				if(JSONUtils.isArrayNode(json, "reagents")){
-					jsonR = JSONUtils.getAsJsonArray(json, "reagents");
+				if(GsonHelper.isArrayNode(json, "reagents")){
+					jsonR = GsonHelper.getAsJsonArray(json, "reagents");
 				}else{
 					jsonR = new JsonArray();
-					jsonR.add(JSONUtils.getAsJsonObject(json, "reagents"));
+					jsonR.add(GsonHelper.getAsJsonObject(json, "reagents"));
 				}
 				ReagentStack[] reags = new ReagentStack[jsonR.size()];
 				for(int i = 0; i < reags.length; i++){
 					JsonElement elem = jsonR.get(i);
 					if(elem instanceof JsonObject){
 						JsonObject obj = (JsonObject) elem;
-						String reagent = JSONUtils.getAsString(obj, "type");
-						reags[i] = new ReagentStack(reagent, JSONUtils.getAsInt(obj, "qty", 1));
+						String reagent = GsonHelper.getAsString(obj, "type");
+						reags[i] = new ReagentStack(reagent, GsonHelper.getAsInt(obj, "qty", 1));
 					}
 				}
-				if(JSONUtils.isArrayNode(json, "products")){
-					jsonR = JSONUtils.getAsJsonArray(json, "products");
+				if(GsonHelper.isArrayNode(json, "products")){
+					jsonR = GsonHelper.getAsJsonArray(json, "products");
 				}else{
 					jsonR = new JsonArray();
-					jsonR.add(JSONUtils.getAsJsonObject(json, "products"));
+					jsonR.add(GsonHelper.getAsJsonObject(json, "products"));
 				}
 				ReagentStack[] prods = new ReagentStack[jsonR.size()];
 				for(int i = 0; i < prods.length; i++){
 					JsonElement elem = jsonR.get(i);
 					if(elem instanceof JsonObject){
 						JsonObject obj = (JsonObject) elem;
-						String reagent = JSONUtils.getAsString(obj, "type");
-						prods[i] = new ReagentStack(reagent, JSONUtils.getAsInt(obj, "qty", 1));
+						String reagent = GsonHelper.getAsString(obj, "type");
+						prods[i] = new ReagentStack(reagent, GsonHelper.getAsInt(obj, "qty", 1));
 					}
 				}
 
@@ -370,7 +370,7 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 
 		@Nullable
 		@Override
-		public AlchemyRec fromNetwork(ResourceLocation recipeId, PacketBuffer buffer){
+		public AlchemyRec fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
 			boolean real = buffer.readBoolean();
 			String group = buffer.readUtf(Short.MAX_VALUE);
 
@@ -400,7 +400,7 @@ public class AlchemyRec implements IOptionalRecipe<IInventory>{
 		}
 
 		@Override
-		public void toNetwork(PacketBuffer buffer, AlchemyRec recipe){
+		public void toNetwork(FriendlyByteBuf buffer, AlchemyRec recipe){
 			buffer.writeBoolean(recipe.real);
 			buffer.writeUtf(recipe.getGroup());//group
 			if(recipe.real){

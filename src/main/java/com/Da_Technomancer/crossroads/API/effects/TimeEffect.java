@@ -3,27 +3,27 @@ package com.Da_Technomancer.crossroads.API.effects;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
 import javax.annotation.Nullable;
 
 public class TimeEffect extends BeamEffect{
 
 	@Override
-	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, World worldIn, BlockPos pos, @Nullable Direction dir){
+	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, Level worldIn, BlockPos pos, @Nullable Direction dir){
 		if(!performTransmute(align, voi, power, worldIn, pos)){
 			if(voi){
 				FluxUtil.fluxEvent(worldIn, pos);
 			}else{
-				TileEntity te = worldIn.getBlockEntity(pos);
+				BlockEntity te = worldIn.getBlockEntity(pos);
 				if(worldIn.random.nextInt(64) < power){
-					if(te instanceof ITickableTileEntity){
+					if(te instanceof TickableBlockEntity){
 
 						//Don't do extra ticks to beam blocks
 						for(Direction side : Direction.values()){
@@ -31,12 +31,12 @@ public class TimeEffect extends BeamEffect{
 								return;
 							}
 						}
-						((ITickableTileEntity) te).tick();
+						((TickableBlockEntity) te).tick();
 					}
 
 					BlockState state = worldIn.getBlockState(pos);
 					if(state.isRandomlyTicking()){
-						state.randomTick((ServerWorld) worldIn, pos, worldIn.random);
+						state.randomTick((ServerLevel) worldIn, pos, worldIn.random);
 					}
 				}
 			}

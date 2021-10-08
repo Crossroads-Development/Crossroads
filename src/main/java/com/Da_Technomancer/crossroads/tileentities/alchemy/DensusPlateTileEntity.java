@@ -5,28 +5,28 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.List;
 
 @ObjectHolder(Crossroads.MODID)
-public class DensusPlateTileEntity extends TileEntity implements ITickableTileEntity{
+public class DensusPlateTileEntity extends BlockEntity implements TickableBlockEntity{
 
 	@ObjectHolder("densus_plate")
-	private static TileEntityType<DensusPlateTileEntity> type = null;
+	private static BlockEntityType<DensusPlateTileEntity> type = null;
 
-	private static final ITag<Block> gravityBlocking = BlockTags.bind(Crossroads.MODID + ":gravity_blocking");
+	private static final Tag<Block> gravityBlocking = BlockTags.bind(Crossroads.MODID + ":gravity_blocking");
 
 	private final int RANGE = CRConfig.gravRange.get();
 	private final double ACCEL = CRConfig.gravAccel.get();
@@ -69,7 +69,7 @@ public class DensusPlateTileEntity extends TileEntity implements ITickableTileEn
 
 		double acceleration = getBlockState().getValue(CRProperties.LAYERS) * ACCEL;
 
-		List<Entity> ents = level.getEntitiesOfClass(Entity.class, new AxisAlignedBB(worldPosition.getX() + (dir.getStepX() == 1 ? 1 : 0), worldPosition.getY() + (dir.getStepY() == 1 ? 1 : 0), worldPosition.getZ() + (dir.getStepZ() == 1 ? 1 : 0), worldPosition.getX() + (dir.getStepX() == -1 ? 0 : 1) + effectiveRange * dir.getStepX(), worldPosition.getY() + (dir.getStepY() == -1 ? 0 : 1) + effectiveRange * dir.getStepY(), worldPosition.getZ() + (dir.getStepZ() == -1 ? 0 : 1) + effectiveRange * dir.getStepZ()), EntityPredicates.ENTITY_NOT_BEING_RIDDEN);
+		List<Entity> ents = level.getEntitiesOfClass(Entity.class, new AABB(worldPosition.getX() + (dir.getStepX() == 1 ? 1 : 0), worldPosition.getY() + (dir.getStepY() == 1 ? 1 : 0), worldPosition.getZ() + (dir.getStepZ() == 1 ? 1 : 0), worldPosition.getX() + (dir.getStepX() == -1 ? 0 : 1) + effectiveRange * dir.getStepX(), worldPosition.getY() + (dir.getStepY() == -1 ? 0 : 1) + effectiveRange * dir.getStepY(), worldPosition.getZ() + (dir.getStepZ() == -1 ? 0 : 1) + effectiveRange * dir.getStepZ()), EntitySelector.ENTITY_NOT_BEING_RIDDEN);
 		for(Entity ent : ents){
 			if(ent.isShiftKeyDown() || ent.isSpectator()){
 				continue;

@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.ambient.particles;
 
 import net.minecraft.client.particle.*;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -10,15 +10,15 @@ import javax.annotation.Nullable;
 import java.awt.*;
 
 @OnlyIn(Dist.CLIENT)
-public class ParticleBubbleColor extends SpriteTexturedParticle{
+public class ParticleBubbleColor extends TextureSheetParticle{
 
-	private final IAnimatedSprite sprite;
+	private final SpriteSet sprite;
 
-	protected ParticleBubbleColor(ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, Color c, IAnimatedSprite s){
+	protected ParticleBubbleColor(ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, Color c, SpriteSet s){
 		super(worldIn, x, y, z);
 		this.sprite = s;
 		setSize(0.02F, 0.02F);
-		setBoundingBox(new AxisAlignedBB(x, y, z, x + bbWidth, y + bbHeight, z + bbWidth));
+		setBoundingBox(new AABB(x, y, z, x + bbWidth, y + bbHeight, z + bbWidth));
 		hasPhysics = false;
 		rCol = 1F;
 		gCol = 1F;
@@ -50,22 +50,22 @@ public class ParticleBubbleColor extends SpriteTexturedParticle{
 	}
 
 	@Override
-	public IParticleRenderType getRenderType(){
-		return IParticleRenderType.PARTICLE_SHEET_OPAQUE;
+	public ParticleRenderType getRenderType(){
+		return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public static class Factory implements IParticleFactory<ColorParticleData>{
+	public static class Factory implements ParticleProvider<ColorParticleData>{
 
-		private final IAnimatedSprite sprite;
+		private final SpriteSet sprite;
 
-		protected Factory(IAnimatedSprite spriteIn){
+		protected Factory(SpriteSet spriteIn){
 			sprite = spriteIn;
 		}
 
 		@Nullable
 		@Override
-		public Particle createParticle(ColorParticleData typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed){
+		public Particle createParticle(ColorParticleData typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed){
 			return new ParticleBubbleColor(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, typeIn.getColor(), sprite);
 		}
 	}

@@ -1,13 +1,13 @@
 package com.Da_Technomancer.crossroads.entity.mob_effects;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectType;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
 
-public class Transient extends Effect{
+public class Transient extends MobEffect{
 
 	public Transient(){
-		super(EffectType.HARMFUL, 0xB7FFF1);
+		super(MobEffectCategory.HARMFUL, 0xB7FFF1);
 		setRegistryName(Crossroads.MODID, "transient");
 	}
 }

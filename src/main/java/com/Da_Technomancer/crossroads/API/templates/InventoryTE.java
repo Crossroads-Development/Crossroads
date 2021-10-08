@@ -4,15 +4,15 @@ import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
 import com.Da_Technomancer.essentials.gui.container.IFluidSlotTE;
 import io.netty.buffer.Unpooled;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -20,12 +20,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
-public abstract class InventoryTE extends ModuleTE implements ISidedInventory, INamedContainerProvider, IFluidSlotTE{
+public abstract class InventoryTE extends ModuleTE implements WorldlyContainer, MenuProvider, IFluidSlotTE{
 
 	protected final ItemStack[] inventory;
 	public final FluidSlotManager[] fluidManagers = new FluidSlotManager[fluidTanks()];
 
-	public InventoryTE(TileEntityType<? extends InventoryTE> type, int invSize){
+	public InventoryTE(BlockEntityType<? extends InventoryTE> type, int invSize){
 		super(type);
 		inventory = new ItemStack[invSize];
 		for(int i = 0; i < invSize; i++){
@@ -65,11 +65,11 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		for(int i = 0; i < inventory.length; i++){
 			if(!inventory[i].isEmpty()){
-				CompoundNBT stackTag = new CompoundNBT();
+				CompoundTag stackTag = new CompoundTag();
 				inventory[i].save(stackTag);
 				nbt.put("inv_" + i, stackTag);
 			}
@@ -91,7 +91,7 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		for(int i = 0; i < inventory.length; i++){
 			if(nbt.contains("inv_" + i)){
@@ -106,7 +106,7 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 	}
 
 	@Override
-	public boolean stillValid(PlayerEntity player){
+	public boolean stillValid(Player player){
 		return level.getBlockEntity(worldPosition) == this && player.distanceToSqr(worldPosition.getX() + 0.5D, worldPosition.getY() + 0.5D, worldPosition.getZ() + 0.5D) <= 64;
 	}
 
@@ -208,8 +208,8 @@ public abstract class InventoryTE extends ModuleTE implements ISidedInventory, I
 	 * Purely a convenience method
 	 * @return A new PacketBuffer pre-formatted with standard InventoryContainer info
 	 */
-	protected PacketBuffer createContainerBuf(){
-		return new PacketBuffer(Unpooled.buffer()).writeBlockPos(worldPosition);
+	protected FriendlyByteBuf createContainerBuf(){
+		return new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(worldPosition);
 	}
 
 	protected class ItemHandler implements IItemHandlerModifiable{

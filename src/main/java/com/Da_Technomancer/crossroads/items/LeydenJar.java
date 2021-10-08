@@ -1,20 +1,22 @@
 package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class LeydenJar extends Item{
 
@@ -29,7 +31,7 @@ public class LeydenJar extends Item{
 	}
 	
 	public static int getCharge(ItemStack stack){
-		CompoundNBT nbt = stack.getTag();
+		CompoundTag nbt = stack.getTag();
 		if(stack.getItem() == CRItems.leydenJar && nbt != null){
 			return nbt.getInt("charge");
 		}else{
@@ -38,11 +40,11 @@ public class LeydenJar extends Item{
 	}
 	
 	public static void setCharge(ItemStack stack, int chargeIn){
-		CompoundNBT nbt = stack.getTag();
+		CompoundTag nbt = stack.getTag();
 		if(nbt != null){
 			nbt.putInt("charge", Math.min(chargeIn, MAX_CHARGE));
 		}else{
-			nbt = new CompoundNBT();
+			nbt = new CompoundTag();
 			nbt.putInt("charge", Math.min(chargeIn, MAX_CHARGE));
 			stack.setTag(nbt);
 		}
@@ -50,14 +52,14 @@ public class LeydenJar extends Item{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.leyden_jar.desc"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.leyden_jar.stats", getCharge(stack), MAX_CHARGE));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.leyden_jar.quip").setStyle(MiscUtil.TT_QUIP));
+	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+		tooltip.add(new TranslatableComponent("tt.crossroads.leyden_jar.desc"));
+		tooltip.add(new TranslatableComponent("tt.crossroads.leyden_jar.stats", getCharge(stack), MAX_CHARGE));
+		tooltip.add(new TranslatableComponent("tt.crossroads.leyden_jar.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items){
+	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
 		if(allowdedIn(group)){
 			items.add(new ItemStack(this, 1));
 			ItemStack stack = new ItemStack(this, 1);

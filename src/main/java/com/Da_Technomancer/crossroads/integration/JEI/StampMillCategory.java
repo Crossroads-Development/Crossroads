@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.recipes.StampMillRec;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -13,8 +13,8 @@ import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
 
 public class StampMillCategory implements IRecipeCategory<StampMillRec>{
 
@@ -59,7 +59,7 @@ public class StampMillCategory implements IRecipeCategory<StampMillRec>{
 	}
 
 	@Override
-	public void draw(StampMillRec recipe, MatrixStack matrix, double mouseX, double mouseY){
+	public void draw(StampMillRec recipe, PoseStack matrix, double mouseX, double mouseY){
 //		GlStateManager.enableAlpha();
 //		GlStateManager.enableBlend();
 		slot.draw(matrix, 54, 50);

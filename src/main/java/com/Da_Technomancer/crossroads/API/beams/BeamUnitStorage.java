@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.API.beams;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -62,7 +62,7 @@ public class BeamUnitStorage{
 		return isEmpty() ? BeamUnit.EMPTY : new BeamUnit(stored[0], stored[1], stored[2], stored[3]);
 	}
 
-	public void writeToNBT(@Nonnull String key, CompoundNBT nbt){
+	public void writeToNBT(@Nonnull String key, CompoundTag nbt){
 		if(!isEmpty()){
 			nbt.putIntArray(key, stored);
 		}
@@ -85,7 +85,7 @@ public class BeamUnitStorage{
 		return Arrays.hashCode(stored);
 	}
 
-	public static BeamUnitStorage readFromNBT(@Nonnull String key, CompoundNBT nbt){
+	public static BeamUnitStorage readFromNBT(@Nonnull String key, CompoundTag nbt){
 		BeamUnitStorage out = new BeamUnitStorage();
 		if(nbt.contains(key)){
 			out.stored = nbt.getIntArray(key);

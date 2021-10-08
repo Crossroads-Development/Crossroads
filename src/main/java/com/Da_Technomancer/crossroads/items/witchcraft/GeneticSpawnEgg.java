@@ -2,30 +2,30 @@ package com.Da_Technomancer.crossroads.items.witchcraft;
 
 import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.DispenserBlock;
-import net.minecraft.block.FlowingFluidBlock;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.dispenser.DefaultDispenseItemBehavior;
-import net.minecraft.dispenser.IBlockSource;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.core.BlockSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -43,9 +43,9 @@ public class GeneticSpawnEgg extends Item{
 		CRItems.toRegister.add(this);
 
 		DefaultDispenseItemBehavior dispenseBehavior = new DefaultDispenseItemBehavior(){
-			public ItemStack execute(IBlockSource source, ItemStack stack){
+			public ItemStack execute(BlockSource source, ItemStack stack){
 				Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
-				spawnMob(stack, null, source.getLevel(), source.getPos().relative(direction), SpawnReason.DISPENSER, direction != Direction.UP, false);
+				spawnMob(stack, null, source.getLevel(), source.getPos().relative(direction), MobSpawnType.DISPENSER, direction != Direction.UP, false);
 				stack.shrink(1);
 				return stack;
 			}
@@ -55,35 +55,35 @@ public class GeneticSpawnEgg extends Item{
 	}
 
 	public void withEntityTypeData(ItemStack stack, EntityTemplate template){
-		CompoundNBT nbt = stack.getOrCreateTag();
+		CompoundTag nbt = stack.getOrCreateTag();
 		nbt.put(KEY, template.serializeNBT());
 	}
 
 	public EntityTemplate getEntityTypeData(ItemStack stack){
-		CompoundNBT nbt = stack.getOrCreateTag();
+		CompoundTag nbt = stack.getOrCreateTag();
 		EntityTemplate template = new EntityTemplate();
 		template.deserializeNBT(nbt.getCompound(KEY));
 		return template;
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag){
+	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag){
 		EntityTemplate template = getEntityTypeData(stack);
 		template.addTooltip(tooltip, 4);
 	}
 
-	public boolean spawnMob(ItemStack stack, @Nullable PlayerEntity player, ServerWorld world, BlockPos pos, SpawnReason reason, boolean offset, boolean unmapped){
+	public boolean spawnMob(ItemStack stack, @Nullable Player player, ServerLevel world, BlockPos pos, MobSpawnType reason, boolean offset, boolean unmapped){
 		EntityTemplate template = getEntityTypeData(stack);
 		Entity created = EntityTemplate.spawnEntityFromTemplate(template, world, pos, reason, offset, unmapped, stack.hasCustomHoverName() ? stack.getHoverName() : null, player);
 		return created != null;
 	}
 
 	@Override
-	public ActionResultType useOn(ItemUseContext context){
+	public InteractionResult useOn(UseOnContext context){
 		//Based on the method in SpawnEggItem
-		World world = context.getLevel();
-		if(!(world instanceof ServerWorld)){
-			return ActionResultType.SUCCESS;
+		Level world = context.getLevel();
+		if(!(world instanceof ServerLevel)){
+			return InteractionResult.SUCCESS;
 		}else{
 			ItemStack itemstack = context.getItemInHand();
 			BlockPos blockpos = context.getClickedPos();
@@ -112,30 +112,30 @@ public class GeneticSpawnEgg extends Item{
 				blockpos1 = blockpos.relative(direction);
 			}
 
-			if(spawnMob(itemstack, context.getPlayer(), (ServerWorld) world, blockpos1, SpawnReason.SPAWN_EGG, true, !Objects.equals(blockpos, blockpos1) && direction == Direction.UP)){
+			if(spawnMob(itemstack, context.getPlayer(), (ServerLevel) world, blockpos1, MobSpawnType.SPAWN_EGG, true, !Objects.equals(blockpos, blockpos1) && direction == Direction.UP)){
 				itemstack.shrink(1);
 			}
 
-			return ActionResultType.CONSUME;
+			return InteractionResult.CONSUME;
 		}
 	}
 
 	@Override
-	public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand){
+	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand){
 		//Based on the method in SpawnEggItem
 		ItemStack itemstack = player.getItemInHand(hand);
-		BlockRayTraceResult raytraceresult = getPlayerPOVHitResult(world, player, RayTraceContext.FluidMode.SOURCE_ONLY);
-		if(raytraceresult.getType() != RayTraceResult.Type.BLOCK){
-			return ActionResult.pass(itemstack);
-		}else if(!(world instanceof ServerWorld)){
-			return ActionResult.success(itemstack);
+		BlockHitResult raytraceresult = getPlayerPOVHitResult(world, player, ClipContext.Fluid.SOURCE_ONLY);
+		if(raytraceresult.getType() != HitResult.Type.BLOCK){
+			return InteractionResultHolder.pass(itemstack);
+		}else if(!(world instanceof ServerLevel)){
+			return InteractionResultHolder.success(itemstack);
 		}else{
 			BlockPos blockpos = raytraceresult.getBlockPos();
-			if(!(world.getBlockState(blockpos).getBlock() instanceof FlowingFluidBlock)){
-				return ActionResult.pass(itemstack);
+			if(!(world.getBlockState(blockpos).getBlock() instanceof LiquidBlock)){
+				return InteractionResultHolder.pass(itemstack);
 			}else if(world.mayInteract(player, blockpos) && player.mayUseItemAt(blockpos, raytraceresult.getDirection(), itemstack)){
-				if(!spawnMob(itemstack, player, (ServerWorld) world, blockpos, SpawnReason.SPAWN_EGG, false, false)){
-					return ActionResult.pass(itemstack);
+				if(!spawnMob(itemstack, player, (ServerLevel) world, blockpos, MobSpawnType.SPAWN_EGG, false, false)){
+					return InteractionResultHolder.pass(itemstack);
 				}else{
 					if(!player.abilities.instabuild){
 						itemstack.shrink(1);
@@ -143,10 +143,10 @@ public class GeneticSpawnEgg extends Item{
 
 					//We've gotten this far without acknowledging stats as a mechanic, and we're not starting now
 //					player.awardStat(Stats.ITEM_USED.get(this));
-					return ActionResult.consume(itemstack);
+					return InteractionResultHolder.consume(itemstack);
 				}
 			}else{
-				return ActionResult.fail(itemstack);
+				return InteractionResultHolder.fail(itemstack);
 			}
 		}
 	}

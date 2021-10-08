@@ -8,18 +8,18 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearMaster;
 import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearSlave;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
@@ -39,19 +39,19 @@ public class RotaryUtil{
 	 * @param axle The axle being added to the info chat. This method does nothing if null
 	 * @param compact Whether to compact the output into one line of chat
 	 */
-	public static void addRotaryInfo(List<ITextComponent> chat, @Nullable IAxleHandler axle, boolean compact){
+	public static void addRotaryInfo(List<Component> chat, @Nullable IAxleHandler axle, boolean compact){
 		if(axle == null){
 			return;
 		}
 		if(compact){
 			//Print speed, energy, power, inertia, and rot ratio
-			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.compact", CRConfig.formatVal(axle.getSpeed()), CRConfig.formatVal(axle.getEnergy()), CRConfig.formatVal(axle.getMoInertia()), CRConfig.formatVal(axle.getRotationRatio())));
+			chat.add(new TranslatableComponent("tt.crossroads.boilerplate.rotary.compact", CRConfig.formatVal(axle.getSpeed()), CRConfig.formatVal(axle.getEnergy()), CRConfig.formatVal(axle.getMoInertia()), CRConfig.formatVal(axle.getRotationRatio())));
 		}else{
 			//Prints full data
 			double axleSpeed = axle.getSpeed();
-			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.speed", CRConfig.formatVal(axleSpeed), CRConfig.formatVal(axleSpeed * 60D / (Math.PI * 2D))));
-			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.energy", CRConfig.formatVal(axle.getEnergy())));
-			chat.add(new TranslationTextComponent("tt.crossroads.boilerplate.rotary.setup", CRConfig.formatVal(axle.getMoInertia()), CRConfig.formatVal(axle.getRotationRatio())));
+			chat.add(new TranslatableComponent("tt.crossroads.boilerplate.rotary.speed", CRConfig.formatVal(axleSpeed), CRConfig.formatVal(axleSpeed * 60D / (Math.PI * 2D))));
+			chat.add(new TranslatableComponent("tt.crossroads.boilerplate.rotary.energy", CRConfig.formatVal(axle.getEnergy())));
+			chat.add(new TranslatableComponent("tt.crossroads.boilerplate.rotary.setup", CRConfig.formatVal(axle.getMoInertia()), CRConfig.formatVal(axle.getRotationRatio())));
 		}
 	}
 
@@ -139,7 +139,7 @@ public class RotaryUtil{
 	 * @param toDir The direction from pos that the end point of the connection is located.
 	 * @return Whether a connection is allowed. Does not verify that the start/endpoints are valid.
 	 */
-	public static boolean canConnectThrough(World world, BlockPos pos, Direction fromDir, Direction toDir){
+	public static boolean canConnectThrough(Level world, BlockPos pos, Direction fromDir, Direction toDir){
 		BlockState state = world.getBlockState(pos);
 		return !state.isRedstoneConductor(world, pos) && state.getBlock() != CRBlocks.largeGearSlave && state.getBlock() != CRBlocks.largeGearMaster;
 	}
@@ -153,7 +153,7 @@ public class RotaryUtil{
 	 * @param side The side the gear will be placed against
 	 * @return Whether it should be solid to small gears
 	 */
-	public static boolean solidToGears(World world, BlockPos pos, Direction side){
+	public static boolean solidToGears(Level world, BlockPos pos, Direction side){
 		//The current definition of "solid":
 		//Block collision shape contains the 2x2 of pixels in the center of the face in side
 		//And block is not the back of a large gear or leaves
@@ -169,7 +169,7 @@ public class RotaryUtil{
 		//Projections remove all cuboids that don't touch the passed side, and extend those that remain into a full column from one side to the opposite (the project method is poorly named)
 		//Projections are cached by default, so this operation is fast
 		//We have a reference anchor shape, which should fit neatly inside the projected shape if this is a solid surface
-		return !VoxelShapes.joinIsNotEmpty(state.getCollisionShape(world, pos).getFaceShape(side), GEAR_ANCHOR_SHAPE, IBooleanFunction.ONLY_SECOND);
+		return !Shapes.joinIsNotEmpty(state.getCollisionShape(world, pos).getFaceShape(side), GEAR_ANCHOR_SHAPE, BooleanOp.ONLY_SECOND);
 	}
 
 	/**
@@ -210,7 +210,7 @@ public class RotaryUtil{
 	 * @param master The master axis being propagated
 	 * @param shouldRenderOffset Whether angles should be rendered with an offset
 	 */
-	public static void propagateAxially(@Nullable TileEntity te, Direction direction, IAxleHandler srcHandler, IAxisHandler master, byte key, boolean shouldRenderOffset){
+	public static void propagateAxially(@Nullable BlockEntity te, Direction direction, IAxleHandler srcHandler, IAxisHandler master, byte key, boolean shouldRenderOffset){
 		if(te != null){
 			LazyOptional<IAxisHandler> axisOpt = te.getCapability(Capabilities.AXIS_CAPABILITY, direction);
 			if(axisOpt.isPresent()){

@@ -2,14 +2,14 @@ package com.Da_Technomancer.crossroads.render.TESR;
 
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
+import com.mojang.math.Quaternion;
+import net.minecraft.world.phys.Vec3;
+import com.mojang.math.Vector3f;
 
 import java.awt.*;
 
@@ -28,7 +28,7 @@ public class CRModels{
 		sin24[4] = (float) (Math.sin(Math.toRadians(67.5)) * radius_24) + buffer_24;
 	}
 
-	private static void draw24Polygon(MatrixStack matrix, IVertexBuilder builder, int light, int[] col, TextureAtlasSprite sprite){
+	private static void draw24Polygon(PoseStack matrix, VertexConsumer builder, int light, int[] col, TextureAtlasSprite sprite){
 		//Commented numbers specify the order of vertices on the final polygon, increasing clockwise
 
 		float uSt0 = sprite.getU(8 - 16 * sin24[0]);
@@ -139,7 +139,7 @@ public class CRModels{
 	 * @param uZEn U end coordinate for the z and -z faces
 	 * @param vZEn V end coordinate for the z and -z faces
 	 */
-	public static void drawBox(MatrixStack matrix, IVertexBuilder builder, int light, int[] col, float xRad, float yRad, float zRad, float uTopSt, float vTopSt, float uTopEn, float vTopEn, float uXSt, float vXSt, float uXEn, float vXEn, float uZSt, float vZSt, float uZEn, float vZEn){
+	public static void drawBox(PoseStack matrix, VertexConsumer builder, int light, int[] col, float xRad, float yRad, float zRad, float uTopSt, float vTopSt, float uTopEn, float vTopEn, float uXSt, float vXSt, float uXEn, float vXEn, float uZSt, float vZSt, float uZEn, float vZEn){
 		//Top
 		CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, -zRad, uTopSt, vTopSt, 0, 1, 0, light, col);
 		CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, zRad, uTopSt, vTopEn, 0, 1, 0, light, col);
@@ -186,7 +186,7 @@ public class CRModels{
 	 * @param light The combined light value
 	 * @param color The color to shade this by
 	 */
-	public static void draw24Gear(MatrixStack matrix, IRenderTypeBuffer buffer, int light, Color color){
+	public static void draw24Gear(PoseStack matrix, MultiBufferSource buffer, int light, Color color){
 
 		float top = -0.375F;
 		float bottom = -.5F;
@@ -197,7 +197,7 @@ public class CRModels{
 		float widthProng = 1F / 48F;
 
 		int[] col = CRRenderUtil.convertColor(color);
-		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
+		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_24_TEXTURE);
 
 		//Top and bottom (sprite)
@@ -297,7 +297,7 @@ public class CRModels{
 	 * @param light The combined light value
 	 * @param sprite The sprite that will be mapped onto the octagon
 	 */
-	public static void drawOctagon(IVertexBuilder builder, MatrixStack matrix, int[] color, int light, TextureAtlasSprite sprite){
+	public static void drawOctagon(VertexConsumer builder, PoseStack matrix, int[] color, int light, TextureAtlasSprite sprite){
 		float lHalf = 0.5F;//Distance from center to side
 		//Texture coords
 		float lHalfT = 8F;
@@ -337,7 +337,7 @@ public class CRModels{
 	 * @param light The combined light value
 	 * @param sprite The sprite that will be mapped onto the octagon
 	 */
-	public static void draw8Core(IVertexBuilder builder, MatrixStack matrix, int[] color, int[] sideCol, int light, TextureAtlasSprite sprite){
+	public static void draw8Core(VertexConsumer builder, PoseStack matrix, int[] color, int[] sideCol, int light, TextureAtlasSprite sprite){
 		float top = 0.0625F;//Half of height
 		float lHalf = 0.5F;//Half the side length of the octagon
 		float sHalf8S = sHalf8;//Scaled version of sHalf8 for gears
@@ -429,7 +429,7 @@ public class CRModels{
 	 * @param light The combined light value
 	 * @param sprite The sprite that will be mapped onto the octagon
 	 */
-	public static void draw8Core(IVertexBuilder builder, MatrixStack matrix, int[] color, int light, TextureAtlasSprite sprite){
+	public static void draw8Core(VertexConsumer builder, PoseStack matrix, int[] color, int light, TextureAtlasSprite sprite){
 		draw8Core(builder, matrix, color, new int[] {Math.max(color[0] - 130, 0), Math.max(color[1] - 130, 0), Math.max(color[2] - 130, 0), color[3]}, light, sprite);
 	}
 
@@ -441,7 +441,7 @@ public class CRModels{
 	 * @param color The color to shade by, as a size 4 array
 	 * @param light The combined light value
 	 */
-	public static void draw8Gear(MatrixStack matrix, IVertexBuilder builder, int[] color, int light){
+	public static void draw8Gear(PoseStack matrix, VertexConsumer builder, int[] color, int light){
 		matrix.pushPose();
 
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_TEXTURE);
@@ -508,7 +508,7 @@ public class CRModels{
 	 * @param light The combined light value
 	 * @param color The color to shade this by
 	 */
-	public static void drawAxle(MatrixStack matrix, IRenderTypeBuffer buffer, int light, Color color){
+	public static void drawAxle(PoseStack matrix, MultiBufferSource buffer, int light, Color color){
 		TextureAtlasSprite sides = CRRenderUtil.getTextureSprite(CRRenderTypes.AXLE_SIDE_TEXTURE);
 		TextureAtlasSprite ends = CRRenderUtil.getTextureSprite(CRRenderTypes.AXLE_ENDS_TEXTURE);
 		float radius = 1F / 16F;
@@ -516,7 +516,7 @@ public class CRModels{
 		int[] col = {color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()};
 		float sideUEn = sides.getU(2);
 
-		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
+		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
 
 		//Ends
 		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, -radius, ends.getU0(), ends.getV0(), 0, -1, 0, light, col);
@@ -554,7 +554,7 @@ public class CRModels{
 	/**
 	 * Draws a vertical screw for pumps and turbines
 	 */
-	public static void renderScrew(MatrixStack matrix, IRenderTypeBuffer buffer, int light){
+	public static void renderScrew(PoseStack matrix, MultiBufferSource buffer, int light){
 		//Draw central axle
 		matrix.pushPose();
 		matrix.translate(0, 0.5D, 0);
@@ -563,7 +563,7 @@ public class CRModels{
 
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.CAST_IRON_TEXTURE);
 
-		IVertexBuilder vb = buffer.getBuffer(RenderType.solid());
+		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 
 		Quaternion rotation = Vector3f.YP.rotationDegrees(-90);
 		for(int i = 0; i < 8; i++){
@@ -581,7 +581,7 @@ public class CRModels{
 	 * @param light Combined light value
 	 * @param sprite The sprite to render with
 	 */
-	public static void drawTurbineBlade(IVertexBuilder builder, MatrixStack matrix, float height, int light, TextureAtlasSprite sprite){
+	public static void drawTurbineBlade(VertexConsumer builder, PoseStack matrix, float height, int light, TextureAtlasSprite sprite){
 		final float edgeIn = 1F / 16F;
 		final float edgeOut = 4F / 16F;
 		final float lenHalf = 3F / 16F;
@@ -597,7 +597,7 @@ public class CRModels{
 
 		final float vEnS = sprite.getV(2);
 		//Top and bottom have tilted normals
-		Vector3d normal = CRRenderUtil.findNormal(new Vector3d(-lenHalf, mid, edgeIn), new Vector3d(lenHalf, bottom, edgeIn), new Vector3d(-lenHalf, mid, edgeOut));
+		Vec3 normal = CRRenderUtil.findNormal(new Vec3(-lenHalf, mid, edgeIn), new Vec3(lenHalf, bottom, edgeIn), new Vec3(-lenHalf, mid, edgeOut));
 
 		//Bottom
 		CRRenderUtil.addVertexBlock(builder, matrix, -lenHalf, mid, edgeIn, uStT, vStT, (float) normal.x, (float) normal.y, (float) normal.z, light);

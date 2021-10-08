@@ -5,27 +5,29 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.tileentities.rotary.WindingTableTileEntity;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.UseAction;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class Whirligig extends Item implements WindingTableTileEntity.IWindableItem{
 
@@ -45,13 +47,13 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
 		double wind = getWindLevel(stack);
 		double maxWind = getMaxWind();
-		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(wind), CRConfig.formatVal(maxWind)));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.whirligig.desc"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.whirligig.elevate", CRConfig.whirligigHover.get()));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.whirligig.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(wind), CRConfig.formatVal(maxWind)));
+		tooltip.add(new TranslatableComponent("tt.crossroads.whirligig.desc"));
+		tooltip.add(new TranslatableComponent("tt.crossroads.whirligig.elevate", CRConfig.whirligigHover.get()));
+		tooltip.add(new TranslatableComponent("tt.crossroads.whirligig.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override
@@ -65,15 +67,15 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 	}
 
 	@Override
-	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn){
+	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn){
 		//Starts using the item if there is sufficient charge
 		ItemStack held = playerIn.getItemInHand(handIn);
 		double wind = getWindLevel(held);
 		if(wind > 0 || murderEasterEgg.equals(playerIn.getGameProfile().getName())){
 			playerIn.startUsingItem(handIn);
-			return ActionResult.success(held);
+			return InteractionResultHolder.success(held);
 		}
-		return ActionResult.fail(held);
+		return InteractionResultHolder.fail(held);
 	}
 
 	private static final String murderEasterEgg = "dinidini";
@@ -84,7 +86,7 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 		if(!player.level.isClientSide()){
 			double wind = getWindLevel(stack);
 
-			if(player instanceof PlayerEntity && murderEasterEgg.equals(((PlayerEntity) player).getGameProfile().getName()))
+			if(player instanceof Player && murderEasterEgg.equals(((Player) player).getGameProfile().getName()))
 				//Semi-apology for the easter egg that instakills a certain player if they touch a wind turbine where they still get windmill-murked, but also don't need to charge whirligigs
 				wind = Math.max(wind, 8);
 			if(wind > 0){
@@ -124,13 +126,13 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 	}
 
 	@Override
-	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack){
+	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack){
 		//Acts as a melee weapon
-		return slot == EquipmentSlotType.MAINHAND ? attributeModifiers : super.getAttributeModifiers(slot, stack);
+		return slot == EquipmentSlot.MAINHAND ? attributeModifiers : super.getAttributeModifiers(slot, stack);
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items){
+	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
 		if(allowdedIn(group)){
 			items.add(new ItemStack(this, 1));
 			ItemStack stack = new ItemStack(this, 1);
@@ -140,7 +142,7 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 	}
 
 	@Override
-	public UseAction getUseAnimation(ItemStack stack){
-		return UseAction.BLOCK;
+	public UseAnim getUseAnimation(ItemStack stack){
+		return UseAnim.BLOCK;
 	}
 }

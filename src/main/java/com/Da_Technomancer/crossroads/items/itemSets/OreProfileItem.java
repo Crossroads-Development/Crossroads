@@ -1,13 +1,13 @@
 package com.Da_Technomancer.crossroads.items.itemSets;
 
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -25,7 +25,7 @@ public class OreProfileItem extends Item{
 			mat = OreSetup.getDefaultMaterial();
 		}
 		ItemStack out = new ItemStack(this, count);
-		out.setTag(new CompoundNBT());
+		out.setTag(new CompoundTag());
 		out.getTag().putString(KEY, mat.getId());
 		return out;
 	}
@@ -59,20 +59,20 @@ public class OreProfileItem extends Item{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public ITextComponent getDescription(){
+	public Component getDescription(){
 		//Incorrectly displays the default material for all variants- we don't have access to an itemstack/nbt to differentiate
 		return getName(withMaterial(null, 1));
 	}
 
 	@Override
-	public ITextComponent getName(ItemStack stack){
+	public Component getName(ItemStack stack){
 		OreSetup.OreProfile mat = getProfile(stack);
 		//Note that we use the super of getTranslationKey to prevent an infinite loop
-		return new TranslationTextComponent(super.getDescriptionId(stack), mat == null ? "INVALID" : mat.getName());
+		return new TranslatableComponent(super.getDescriptionId(stack), mat == null ? "INVALID" : mat.getName());
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items){
+	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
 		if(allowdedIn(group)){
 			//Add every material variant of this item
 			for(OreSetup.OreProfile mat : OreSetup.getMaterials()){

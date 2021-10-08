@@ -5,14 +5,14 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearSlaveTileEntity;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public class LargeGear extends GearMatItem{
 
@@ -48,29 +48,29 @@ public class LargeGear extends GearMatItem{
 	}
 
 	@Override
-	public ActionResultType useOn(ItemUseContext context){
+	public InteractionResult useOn(UseOnContext context){
 //		if(context.getWorld().isRemote){
 //			return ActionResultType.SUCCESS;
 //		}
 		GearFactory.GearMaterial type = getMaterial(context.getItemInHand());
 		if(type == null){
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
-		World world = context.getLevel();
+		Level world = context.getLevel();
 		BlockPos pos = context.getClickedPos();
-		PlayerEntity playerIn = context.getPlayer();
+		Player playerIn = context.getPlayer();
 		Direction side = context.getClickedFace();
 		pos = pos.relative(side);
-		BlockItemUseContext blockContext = new BlockItemUseContext(context);
+		BlockPlaceContext blockContext = new BlockPlaceContext(context);
 
 		//Check we have space to place this
 		if(!world.getBlockState(pos).canBeReplaced(blockContext)){
-			return ActionResultType.FAIL;
+			return InteractionResult.FAIL;
 		}
 
 		for(BlockPos cPos : relSlavePos[side.getAxis().ordinal()]){
 			if(!world.getBlockState(pos.offset(cPos)).canBeReplaced(blockContext)){
-				return ActionResultType.FAIL;
+				return InteractionResult.FAIL;
 			}
 		}
 
@@ -81,14 +81,14 @@ public class LargeGear extends GearMatItem{
 
 		//Place the gear
 		world.setBlock(pos, CRBlocks.largeGearMaster.defaultBlockState().setValue(ESProperties.FACING, side.getOpposite()), 3);
-		TileEntity te = world.getBlockEntity(pos);
+		BlockEntity te = world.getBlockEntity(pos);
 		if(te instanceof LargeGearMasterTileEntity){
 			((LargeGearMasterTileEntity) te).initSetup(type);
 		}
 
 		for(BlockPos cPos : relSlavePos[side.getAxis().ordinal()]){
 			world.setBlock(pos.offset(cPos), CRBlocks.largeGearSlave.defaultBlockState().setValue(ESProperties.FACING, side.getOpposite()), 3);
-			TileEntity relTE = world.getBlockEntity(pos.offset(cPos));
+			BlockEntity relTE = world.getBlockEntity(pos.offset(cPos));
 			if(relTE instanceof LargeGearSlaveTileEntity){
 				((LargeGearSlaveTileEntity) relTE).setInitial(BlockPos.ZERO.subtract(cPos));
 			}
@@ -97,6 +97,6 @@ public class LargeGear extends GearMatItem{
 		//Notify the rotary system of a change
 		RotaryUtil.increaseMasterKey(false);
 
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 }

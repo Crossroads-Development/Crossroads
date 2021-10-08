@@ -4,25 +4,33 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.tileentities.rotary.WindingTableTileEntity;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.item.Item.Properties;
 
 public class RecallDevice extends Item implements WindingTableTileEntity.IWindableItem{
 
@@ -36,32 +44,32 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(getWindLevel(stack)), CRConfig.formatVal(getMaxWind())));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.recall_device.desc"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.recall_device.debuff"));
+	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(getWindLevel(stack)), CRConfig.formatVal(getMaxWind())));
+		tooltip.add(new TranslatableComponent("tt.crossroads.recall_device.desc"));
+		tooltip.add(new TranslatableComponent("tt.crossroads.recall_device.debuff"));
 		if(CRConfig.recallTimeLimit.get() == 0){
 			//Disabled
-			tooltip.add(new TranslationTextComponent("tt.crossroads.recall_device.config.disabled"));
+			tooltip.add(new TranslatableComponent("tt.crossroads.recall_device.config.disabled"));
 		}else{
 			int limit = CRConfig.recallTimeLimit.get();
 			if(limit < 0){
 				//Unlimited recall
-				tooltip.add(new TranslationTextComponent("tt.crossroads.recall_device.config.unlimited"));
+				tooltip.add(new TranslatableComponent("tt.crossroads.recall_device.config.unlimited"));
 			}else{
-				tooltip.add(new TranslationTextComponent("tt.crossroads.recall_device.config", limit));
+				tooltip.add(new TranslatableComponent("tt.crossroads.recall_device.config", limit));
 			}
-			CompoundNBT nbt = stack.getOrCreateTagElement("recall_data");
+			CompoundTag nbt = stack.getOrCreateTagElement("recall_data");
 			long timeElapsed;
 			if(nbt.contains("timestamp") && (timeElapsed = worldIn.getGameTime() - nbt.getLong("timestamp")) < limit * 20){
-				tooltip.add(new TranslationTextComponent("tt.crossroads.recall_device.current", (int) (timeElapsed / 20)));
+				tooltip.add(new TranslatableComponent("tt.crossroads.recall_device.current", (int) (timeElapsed / 20)));
 			}else{
-				tooltip.add(new TranslationTextComponent("tt.crossroads.recall_device.current.none"));
+				tooltip.add(new TranslatableComponent("tt.crossroads.recall_device.current.none"));
 			}
 		}
 	}
 
-	private static void storeData(CompoundNBT data, PlayerEntity player){
+	private static void storeData(CompoundTag data, Player player){
 		//Data to store is:
 		//Timestamp
 		//Player username
@@ -96,10 +104,10 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 		}
 	}
 
-	private void recall(CompoundNBT data, PlayerEntity player, ItemStack held){
+	private void recall(CompoundTag data, Player player, ItemStack held){
 		if(!data.contains("timestamp")){
 			if(player.level.isClientSide){
-				MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.recall_device.none"));
+				MiscUtil.chatMessage(player, new TranslatableComponent("tt.crossroads.recall_device.none"));
 			}
 			return;//No data stored
 		}
@@ -108,7 +116,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 		int limit = CRConfig.recallTimeLimit.get() * 20;//In ticks
 		if(limit >= 0 && delay > limit){
 			if(player.level.isClientSide){
-				MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.recall_device.expired"));
+				MiscUtil.chatMessage(player, new TranslatableComponent("tt.crossroads.recall_device.expired"));
 			}
 			return;//Too old- do nothing
 		}
@@ -117,7 +125,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 
 		if(wind < WIND_USE){
 			if(player.level.isClientSide){
-				MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.recall_device.not_wound"));
+				MiscUtil.chatMessage(player, new TranslatableComponent("tt.crossroads.recall_device.not_wound"));
 			}
 			return;//Insufficiently wound
 		}else{
@@ -127,7 +135,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 		String playerName = player.getGameProfile().getName();
 		if(playerName == null || !playerName.equals(data.getString("username"))){
 			if(player.level.isClientSide){
-				MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.recall_device.wrong_player"));
+				MiscUtil.chatMessage(player, new TranslatableComponent("tt.crossroads.recall_device.wrong_player"));
 			}
 			return;//Wrong player or null profile
 		}
@@ -139,11 +147,11 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 		}
 
 		if(!player.level.isClientSide){
-			ServerPlayerEntity playerServ = (ServerPlayerEntity) player;
+			ServerPlayer playerServ = (ServerPlayer) player;
 			ResourceLocation targetDimension = new ResourceLocation(data.getString("dimension"));
-			ServerWorld targetWorld;//World we are recalling to. Almost always the same as current dimension. Null if something went wrong
+			ServerLevel targetWorld;//World we are recalling to. Almost always the same as current dimension. Null if something went wrong
 			if(targetDimension.equals(player.level.dimension().location())){
-				targetWorld = (ServerWorld) player.level;
+				targetWorld = (ServerLevel) player.level;
 			}else{
 				try{
 					targetWorld = MiscUtil.getWorld(MiscUtil.getWorldKey(targetDimension, null), playerServ.server);
@@ -159,49 +167,49 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 		}
 
 		player.setYHeadRot(data.getFloat("yaw_head"));
-		player.setDeltaMovement(new Vector3d(data.getDouble("vel_x"), data.getDouble("vel_y"), data.getDouble("vel_z")));
+		player.setDeltaMovement(new Vec3(data.getDouble("vel_x"), data.getDouble("vel_y"), data.getDouble("vel_z")));
 
 		applySickness(player, delay, limit);
 	}
 
-	private static void applySickness(PlayerEntity player, long delay, long delayLimit){
+	private static void applySickness(Player player, long delay, long delayLimit){
 		//Penalty of nausea (time scaling with delay), and poison for very long delays
 		//Durations are in ticks
 		long poisonStTime = delayLimit / 2L;
-		player.addEffect(new EffectInstance(Effects.CONFUSION, (int) MathHelper.clampedLerp(20 * 5, 20 * 15, (float) delay / poisonStTime), 0));
+		player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, (int) Mth.clampedLerp(20 * 5, 20 * 15, (float) delay / poisonStTime), 0));
 		if(delay > poisonStTime){
 			//For unlimited delay config setting, a constant 10 second poison is applied instead of basing it on the portion of the delay limit expended
-			int poisonDuration = delayLimit < 0 ? 20 * 10 : (int) MathHelper.clampedLerp(20 * 5, 20 * 30, (float) (delay - poisonStTime) / (delayLimit - poisonStTime));
-			player.addEffect(new EffectInstance(Effects.POISON, poisonDuration, 0));
+			int poisonDuration = delayLimit < 0 ? 20 * 10 : (int) Mth.clampedLerp(20 * 5, 20 * 30, (float) (delay - poisonStTime) / (delayLimit - poisonStTime));
+			player.addEffect(new MobEffectInstance(MobEffects.POISON, poisonDuration, 0));
 		}
 
 		//Also plays sound
-		player.level.playSound(null, player.blockPosition(), SoundEvents.BELL_RESONATE, SoundCategory.PLAYERS, 1F, 1F);
+		player.level.playSound(null, player.blockPosition(), SoundEvents.BELL_RESONATE, SoundSource.PLAYERS, 1F, 1F);
 	}
 
 	@Override
-	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand hand){
+	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand hand){
 
 		//If shift right clicking, set current data
 		//If normal right clicking, revert to last save and set current position as data
 		//Apply sickness based on time between uses
 
 		ItemStack held = playerIn.getItemInHand(hand);
-		CompoundNBT nbt = held.getOrCreateTagElement("recall_data");
+		CompoundTag nbt = held.getOrCreateTagElement("recall_data");
 
-		CompoundNBT newStored = new CompoundNBT();
+		CompoundTag newStored = new CompoundTag();
 		storeData(newStored, playerIn);
 
 		if(!playerIn.isShiftKeyDown()){
 			//World sound for recalling
 			//Played at source and destination
-			worldIn.playSound(null, playerIn.blockPosition(), SoundEvents.BELL_RESONATE, SoundCategory.PLAYERS, 1F, 1F);
+			worldIn.playSound(null, playerIn.blockPosition(), SoundEvents.BELL_RESONATE, SoundSource.PLAYERS, 1F, 1F);
 			recall(nbt, playerIn, held);//Will do nothing if over time limit, wrong player, or no data stored
 		}
 
 		held.getTag().put("recall_data", newStored);
 
-		return ActionResult.success(held);
+		return InteractionResultHolder.success(held);
 	}
 
 	@Override
@@ -210,7 +218,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items){
+	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
 		if(allowdedIn(group)){
 			items.add(new ItemStack(this, 1));
 			ItemStack stack = new ItemStack(this, 1);

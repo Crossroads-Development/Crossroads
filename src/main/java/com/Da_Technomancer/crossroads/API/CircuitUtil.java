@@ -3,17 +3,17 @@ package com.Da_Technomancer.crossroads.API;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.Da_Technomancer.essentials.blocks.redstone.IRedstoneHandler;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.RedstoneDiodeBlock;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DiodeBlock;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -37,7 +37,7 @@ public class CircuitUtil extends RedstoneUtil{
 	 * @param slots The indices of the slots to take into account
 	 * @return A value in [0, 15], with decimals
 	 */
-	public static float getRedstoneFromSlots(@Nullable IInventory inv, int... slots){
+	public static float getRedstoneFromSlots(@Nullable Container inv, int... slots){
 		if(inv == null){
 			return 0;
 		}
@@ -55,17 +55,17 @@ public class CircuitUtil extends RedstoneUtil{
 		return f;
 	}
 
-	public static LazyOptional<IRedstoneHandler> makeBaseCircuitOptional(TileEntity te, InputCircHandler handler, float startingRedstone){
+	public static LazyOptional<IRedstoneHandler> makeBaseCircuitOptional(BlockEntity te, InputCircHandler handler, float startingRedstone){
 		return makeBaseCircuitOptional(te, handler, startingRedstone, null);
 	}
 
-	public static LazyOptional<IRedstoneHandler> makeBaseCircuitOptional(TileEntity te, InputCircHandler handler, float startingRedstone, @Nullable Listener changeListener){
+	public static LazyOptional<IRedstoneHandler> makeBaseCircuitOptional(BlockEntity te, InputCircHandler handler, float startingRedstone, @Nullable Listener changeListener){
 		LazyOptional<IRedstoneHandler> optional = LazyOptional.of(() -> handler);
 		handler.setup(optional, te, startingRedstone, changeListener == null ? te::setChanged : changeListener);
 		return optional;
 	}
 
-	public static LazyOptional<IRedstoneHandler> makeBaseCircuitOptional(TileEntity te, OutputCircHandler handler, Supplier<Float> outputSupplier){
+	public static LazyOptional<IRedstoneHandler> makeBaseCircuitOptional(BlockEntity te, OutputCircHandler handler, Supplier<Float> outputSupplier){
 		LazyOptional<IRedstoneHandler> optional = LazyOptional.of(() -> handler);
 		handler.setup(optional, te, outputSupplier);
 		return optional;
@@ -79,7 +79,7 @@ public class CircuitUtil extends RedstoneUtil{
 	public static void updateFromWorld(InputCircHandler handler, Block updatingBlock){
 		//Check for circuit input changes
 		//Simple optimization- if the block update is just signal strength changing, we don't need to rebuild connections
-		if(updatingBlock != Blocks.REDSTONE_WIRE && !(updatingBlock instanceof RedstoneDiodeBlock)){
+		if(updatingBlock != Blocks.REDSTONE_WIRE && !(updatingBlock instanceof DiodeBlock)){
 			handler.buildConnections();
 		}
 
@@ -95,7 +95,7 @@ public class CircuitUtil extends RedstoneUtil{
 	public static void updateFromWorld(OutputCircHandler handler, Block updatingBlock){
 		//Check for circuit configuration changes
 		//Simple optimization- if the block update is just signal strength changing, we don't need to rebuild connections
-		if(updatingBlock != Blocks.REDSTONE_WIRE && !(updatingBlock instanceof RedstoneDiodeBlock)){
+		if(updatingBlock != Blocks.REDSTONE_WIRE && !(updatingBlock instanceof DiodeBlock)){
 			handler.buildDependents();
 		}
 	}
@@ -110,10 +110,10 @@ public class CircuitUtil extends RedstoneUtil{
 		private WeakReference<LazyOptional<IRedstoneHandler>> redsRef;
 		private final ArrayList<WeakReference<LazyOptional<IRedstoneHandler>>> dependents = new ArrayList<>(1);
 		private Supplier<Float> outputSupplier;
-		private TileEntity te;
+		private BlockEntity te;
 		private boolean builtConnections = false;
 
-		private void setup(LazyOptional<IRedstoneHandler> circuitOpt, TileEntity te, Supplier<Float> outputSupplier){
+		private void setup(LazyOptional<IRedstoneHandler> circuitOpt, BlockEntity te, Supplier<Float> outputSupplier){
 			redsRef = new WeakReference<>(circuitOpt);
 			this.te = te;
 			this.outputSupplier = outputSupplier;
@@ -150,13 +150,13 @@ public class CircuitUtil extends RedstoneUtil{
 			builtConnections = true;
 			dependents.clear();//Wipe the old dependents list
 
-			World world;
+			Level world;
 			if(te != null && (world = te.getLevel()) != null && !world.isClientSide){
 				BlockPos pos = te.getBlockPos();
 
 				//Check in all 6 directions because this block outputs in every direction
 				for(Direction dir : Direction.values()){
-					TileEntity te = world.getBlockEntity(pos.relative(dir));
+					BlockEntity te = world.getBlockEntity(pos.relative(dir));
 					LazyOptional<IRedstoneHandler> otherOpt;
 					if(te != null && (otherOpt = te.getCapability(RedstoneUtil.REDSTONE_CAPABILITY, dir.getOpposite())).isPresent()){
 						IRedstoneHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
@@ -226,10 +226,10 @@ public class CircuitUtil extends RedstoneUtil{
 		private WeakReference<LazyOptional<IRedstoneHandler>> redsRef;
 		private float circRedstone;
 		private int worldRedstone;
-		private TileEntity te;
+		private BlockEntity te;
 		private Listener changeListener;
 
-		private void setup(LazyOptional<IRedstoneHandler> circuitOpt, TileEntity te, float initCircRedstone, Listener changeListener){
+		private void setup(LazyOptional<IRedstoneHandler> circuitOpt, BlockEntity te, float initCircRedstone, Listener changeListener){
 			redsRef = new WeakReference<>(circuitOpt);
 			circRedstone = initCircRedstone;
 			this.te = te;
@@ -248,7 +248,7 @@ public class CircuitUtil extends RedstoneUtil{
 		 * Loads from an NBT tag
 		 * @param nbt An NBT tag that this is saved to
 		 */
-		public void read(BlockState state, CompoundNBT nbt){
+		public void read(BlockState state, CompoundTag nbt){
 			circRedstone = nbt.getFloat("circ_reds");
 			worldRedstone = nbt.getInt("reds");
 		}
@@ -257,7 +257,7 @@ public class CircuitUtil extends RedstoneUtil{
 		 * Saves the state to an NBT tag
 		 * @param nbt An NBT tag to write to. Will be modified
 		 */
-		public void write(CompoundNBT nbt){
+		public void write(CompoundTag nbt){
 			nbt.putFloat("circ_reds", circRedstone);
 			nbt.putInt("reds", worldRedstone);
 		}
@@ -277,7 +277,7 @@ public class CircuitUtil extends RedstoneUtil{
 				}
 			}
 
-			World world = te.getLevel();
+			Level world = te.getLevel();
 			BlockPos pos = te.getBlockPos();
 			for(Direction dir : dirsToCheck){
 				if(dir != null && world != null){
@@ -293,7 +293,7 @@ public class CircuitUtil extends RedstoneUtil{
 
 		private void buildConnections() {
 			//Rebuild the sources list
-			World world;
+			Level world;
 			if(te != null && (world = te.getLevel()) != null && !world.isClientSide){
 				BlockPos pos = te.getBlockPos();
 				builtConnections = true;
@@ -303,7 +303,7 @@ public class CircuitUtil extends RedstoneUtil{
 				sources.clear();
 
 				for(Direction checkDir : Direction.values()){
-					TileEntity checkTE = world.getBlockEntity(pos.relative(checkDir));
+					BlockEntity checkTE = world.getBlockEntity(pos.relative(checkDir));
 					IRedstoneHandler otherHandler;
 					if(checkTE != null && (otherHandler = BlockUtil.get(checkTE.getCapability(RedstoneUtil.REDSTONE_CAPABILITY, checkDir.getOpposite()))) != null){
 						otherHandler.requestSrc(redsRef, 0, checkDir.getOpposite(), checkDir);

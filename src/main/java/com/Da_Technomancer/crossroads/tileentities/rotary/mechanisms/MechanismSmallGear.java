@@ -11,16 +11,16 @@ import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.render.TESR.CRModels;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -92,12 +92,12 @@ public class MechanismSmallGear implements IMechanism<GearFactory.GearMaterial>{
 			}
 		}
 
-		TileEntity sideTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(side));
+		BlockEntity sideTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(side));
 		for(int i = 0; i < 6; i++){
 			if(i != side.get3DDataValue() && i != side.getOpposite().get3DDataValue()){
 				Direction facing = Direction.from3DDataValue(i);
 				// Adjacent gears
-				TileEntity adjTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(facing));
+				BlockEntity adjTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(facing));
 				if(adjTE != null){
 					LazyOptional<ICogHandler> cogOpt;
 					if((cogOpt = adjTE.getCapability(Capabilities.COG_CAPABILITY, side)).isPresent()){
@@ -109,7 +109,7 @@ public class MechanismSmallGear implements IMechanism<GearFactory.GearMaterial>{
 				}
 
 				// Diagonal gears
-				TileEntity diagTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(facing).relative(side));
+				BlockEntity diagTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(facing).relative(side));
 				LazyOptional<ICogHandler> cogOpt;
 				if(diagTE != null && (cogOpt = diagTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())).isPresent() && RotaryUtil.canConnectThrough(te.getLevel(), te.getBlockPos().relative(facing), facing.getOpposite(), side)){
 					cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * handler.rotRatio, .5D, side.getOpposite(), handler.renderOffset);
@@ -152,12 +152,12 @@ public class MechanismSmallGear implements IMechanism<GearFactory.GearMaterial>{
 
 	@Override
 	public VoxelShape getBoundingBox(@Nullable Direction side, @Nullable Direction.Axis axis){
-		return side == null ? VoxelShapes.empty() : SHAPES[side.get3DDataValue()];
+		return side == null ? Shapes.empty() : SHAPES[side.get3DDataValue()];
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void doRender(MechanismTileEntity te, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, float partialTicks, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis){
+	public void doRender(MechanismTileEntity te, PoseStack matrix, MultiBufferSource buffer, int combinedLight, float partialTicks, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis){
 		if(side == null){
 			return;
 		}

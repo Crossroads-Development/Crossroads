@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.effects.BlockEffect;
 import com.Da_Technomancer.crossroads.API.effects.DirtEffect;
 import com.Da_Technomancer.crossroads.API.effects.IEffect;
 import com.Da_Technomancer.crossroads.API.effects.SlimeEffect;
-import net.minecraft.block.Blocks;
+import net.minecraft.world.level.block.Blocks;
 
 public enum HeatInsulators{
 

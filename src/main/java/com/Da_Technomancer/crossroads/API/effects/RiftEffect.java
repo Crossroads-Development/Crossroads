@@ -4,19 +4,19 @@ import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import net.minecraft.entity.*;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameterSets;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.loot.LootTable;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.MobSpawnInfo;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -24,18 +24,24 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.MobSpawnType;
+
 public class RiftEffect extends BeamEffect{
 
 	private static final Random RAND = new Random();
 
 	@Override
-	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, World worldIn, BlockPos pos, @Nullable Direction dir){
+	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, Level worldIn, BlockPos pos, @Nullable Direction dir){
 		if(!performTransmute(align, voi, power, worldIn, pos)){
 			if(voi){
 				//Place a marker to prevent mob spawns (via event handler)
 				EntityGhostMarker marker = new EntityGhostMarker(worldIn, EntityGhostMarker.EnumMarkerType.BLOCK_SPAWNING);
 				marker.setPos(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
-				CompoundNBT rangeData = new CompoundNBT();
+				CompoundTag rangeData = new CompoundTag();
 				rangeData.putInt("range", power);
 				marker.data = rangeData;
 				worldIn.addFreshEntity(marker);
@@ -52,18 +58,18 @@ public class RiftEffect extends BeamEffect{
 //				}
 //
 				//Spawn mobs
-				ServerWorld worldServ = (ServerWorld) worldIn;
+				ServerLevel worldServ = (ServerLevel) worldIn;
 				if(RAND.nextInt(256) < power){
 					boolean peaceful = worldServ.getDifficulty() == Difficulty.PEACEFUL || CRConfig.riftSpawnDrops.get();
 					try{
-						List<MobSpawnInfo.Spawners> list = worldServ.getChunkSource().generator.getMobsAt(worldIn.getBiome(pos), worldServ.structureFeatureManager(), EntityClassification.MONSTER, pos);
-						list = ForgeEventFactory.getPotentialSpawns(worldServ, EntityClassification.MONSTER, pos, list);
+						List<MobSpawnSettings.SpawnerData> list = worldServ.getChunkSource().generator.getMobsAt(worldIn.getBiome(pos), worldServ.structureFeatureManager(), MobCategory.MONSTER, pos);
+						list = ForgeEventFactory.getPotentialSpawns(worldServ, MobCategory.MONSTER, pos, list);
 						if(list != null && list.size() != 0){
 							//Vanilla style spawning would spawn a group of mobs at a time (with group size defined by the SpawnListEntry). We only want to spawn 1 mob at a time
-							MobSpawnInfo.Spawners entry = list.get(RAND.nextInt(list.size()));
+							MobSpawnSettings.SpawnerData entry = list.get(RAND.nextInt(list.size()));
 							Entity ent = entry.type.create(worldIn);
 							ent.setPos(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
-							Event.Result r = ent instanceof MobEntity ? ForgeEventFactory.canEntitySpawn((MobEntity) ent, worldServ, pos.getX(), pos.getY(), pos.getZ(), null, SpawnReason.SPAWNER) : Event.Result.DEFAULT;
+							Event.Result r = ent instanceof Mob ? ForgeEventFactory.canEntitySpawn((Mob) ent, worldServ, pos.getX(), pos.getY(), pos.getZ(), null, MobSpawnType.SPAWNER) : Event.Result.DEFAULT;
 							if(r == Event.Result.ALLOW || r == Event.Result.DEFAULT){
 								if(peaceful){//In peaceful, we spawn the mob drops instead of the entity
 									if(ent instanceof LivingEntity && worldServ.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)){
@@ -74,15 +80,15 @@ public class RiftEffect extends BeamEffect{
 										//LivingEntity::dropLoot
 										ResourceLocation resourcelocation = lEnt.getLootTable();
 										LootTable loottable = worldServ.getServer().getLootTables().get(resourcelocation);
-										LootContext.Builder lootcontext$builder = new LootContext.Builder(worldServ).withRandom(worldServ.random).withParameter(LootParameters.THIS_ENTITY, lEnt).withParameter(LootParameters.ORIGIN, lEnt.position()).withParameter(LootParameters.DAMAGE_SOURCE, GrowEffect.POTENTIAL_VOID).withOptionalParameter(LootParameters.KILLER_ENTITY, null).withOptionalParameter(LootParameters.DIRECT_KILLER_ENTITY, null);
-										LootContext ctx = lootcontext$builder.create(LootParameterSets.ENTITY);
+										LootContext.Builder lootcontext$builder = new LootContext.Builder(worldServ).withRandom(worldServ.random).withParameter(LootContextParams.THIS_ENTITY, lEnt).withParameter(LootContextParams.ORIGIN, lEnt.position()).withParameter(LootContextParams.DAMAGE_SOURCE, GrowEffect.POTENTIAL_VOID).withOptionalParameter(LootContextParams.KILLER_ENTITY, null).withOptionalParameter(LootContextParams.DIRECT_KILLER_ENTITY, null);
+										LootContext ctx = lootcontext$builder.create(LootContextParamSets.ENTITY);
 										loottable.getRandomItems(ctx).forEach(lEnt::spawnAtLocation);
 
 										//We don't implement/access LivingEntity::dropSpecialItems, because that is entity specific and usually irrelevant for newly spawned mobs
 									}
 								}else{
-									if(ent instanceof MobEntity){
-										((MobEntity) ent).finalizeSpawn(worldServ, worldServ.getCurrentDifficultyAt(pos), SpawnReason.SPAWNER, null, null);//Gives mobs weapons/armor, makes slimes not have glitched health, and other essential things
+									if(ent instanceof Mob){
+										((Mob) ent).finalizeSpawn(worldServ, worldServ.getCurrentDifficultyAt(pos), MobSpawnType.SPAWNER, null, null);//Gives mobs weapons/armor, makes slimes not have glitched health, and other essential things
 									}
 									worldServ.addFreshEntity(ent);
 								}

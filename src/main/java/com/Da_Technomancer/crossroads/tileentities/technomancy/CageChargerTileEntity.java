@@ -9,16 +9,16 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -29,10 +29,10 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 @ObjectHolder(Crossroads.MODID)
-public class CageChargerTileEntity extends TileEntity implements IInfoTE{
+public class CageChargerTileEntity extends BlockEntity implements IInfoTE{
 
 	@ObjectHolder("cage_charger")
-	private static TileEntityType<CageChargerTileEntity> type = null;
+	private static BlockEntityType<CageChargerTileEntity> type = null;
 	
 	private ItemStack cage = ItemStack.EMPTY;
 
@@ -41,15 +41,15 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 	}
 	
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		if(!cage.isEmpty()){
 			BeamUnit stored = BeamCage.getStored(cage);
-			chat.add(new TranslationTextComponent("tt.crossroads.beam_cage.energy", stored.getEnergy(), BeamCage.CAPACITY));
-			chat.add(new TranslationTextComponent("tt.crossroads.beam_cage.potential", stored.getPotential(), BeamCage.CAPACITY));
-			chat.add(new TranslationTextComponent("tt.crossroads.beam_cage.stability", stored.getStability(), BeamCage.CAPACITY));
-			chat.add(new TranslationTextComponent("tt.crossroads.beam_cage.void", stored.getVoid(), BeamCage.CAPACITY));
+			chat.add(new TranslatableComponent("tt.crossroads.beam_cage.energy", stored.getEnergy(), BeamCage.CAPACITY));
+			chat.add(new TranslatableComponent("tt.crossroads.beam_cage.potential", stored.getPotential(), BeamCage.CAPACITY));
+			chat.add(new TranslatableComponent("tt.crossroads.beam_cage.stability", stored.getStability(), BeamCage.CAPACITY));
+			chat.add(new TranslatableComponent("tt.crossroads.beam_cage.void", stored.getVoid(), BeamCage.CAPACITY));
 		}else{
-			chat.add(new TranslationTextComponent("tt.crossroads.cage_charger.empty"));
+			chat.add(new TranslatableComponent("tt.crossroads.cage_charger.empty"));
 		}
 	}
 	
@@ -94,16 +94,16 @@ public class CageChargerTileEntity extends TileEntity implements IInfoTE{
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		if(!cage.isEmpty()){
-			nbt.put("inv", cage.save(new CompoundNBT()));
+			nbt.put("inv", cage.save(new CompoundTag()));
 		}
 		return nbt;
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		cage = ItemStack.of(nbt.getCompound("inv"));
 	}

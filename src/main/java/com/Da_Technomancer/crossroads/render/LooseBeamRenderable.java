@@ -1,11 +1,11 @@
 package com.Da_Technomancer.crossroads.render;
 
 import com.Da_Technomancer.crossroads.render.TESR.BeamRenderer;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.world.World;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.nbt.CompoundTag;
+import com.mojang.math.Vector3f;
+import net.minecraft.world.level.Level;
 
 import java.awt.*;
 import java.util.Random;
@@ -34,12 +34,12 @@ public class LooseBeamRenderable implements IVisualEffect{
 		this.color = color;
 	}
 	
-	public static LooseBeamRenderable readFromNBT(World world, CompoundNBT nbt){
+	public static LooseBeamRenderable readFromNBT(Level world, CompoundTag nbt){
 		return new LooseBeamRenderable(nbt.getFloat("x"), nbt.getFloat("y"), nbt.getFloat("z"), nbt.getDouble("length"), nbt.getFloat("angle_x"), nbt.getFloat("angle_y"), nbt.getByte("width"), nbt.getInt("color"));
 	}
 
 	@Override
-	public boolean render(MatrixStack matrix, IRenderTypeBuffer buffer, long worldTime, float partialTicks, Random rand){
+	public boolean render(PoseStack matrix, MultiBufferSource buffer, long worldTime, float partialTicks, Random rand){
 		matrix.translate(x, y, z);
 		matrix.mulPose(Vector3f.YP.rotationDegrees(-angleY));
 		matrix.mulPose(Vector3f.XP.rotationDegrees(angleX + 90F));

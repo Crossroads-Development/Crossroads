@@ -8,27 +8,35 @@ import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.item.Item.Properties;
 
 public class TeslaRay extends Item{
 
@@ -52,40 +60,40 @@ public class TeslaRay extends Item{
 	}
 
 	@Override
-	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack){
-		return slot == EquipmentSlotType.MAINHAND ? attributeModifiers : super.getAttributeModifiers(slot, stack);
+	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack){
+		return slot == EquipmentSlot.MAINHAND ? attributeModifiers : super.getAttributeModifiers(slot, stack);
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_ray.desc"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_ray.leyden"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.tesla_ray.quip").setStyle(MiscUtil.TT_QUIP));
+	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+		tooltip.add(new TranslatableComponent("tt.crossroads.tesla_ray.desc"));
+		tooltip.add(new TranslatableComponent("tt.crossroads.tesla_ray.leyden"));
+		tooltip.add(new TranslatableComponent("tt.crossroads.tesla_ray.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override
-	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand hand){
+	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand hand){
 		float scale = playerIn.getAttackStrengthScale(0.5F);
 
 		if(worldIn.isClientSide){
 			playerIn.resetAttackStrengthTicker();
-			return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getItemInHand(hand));
+			return new InteractionResultHolder<>(InteractionResult.SUCCESS, playerIn.getItemInHand(hand));
 		}
 
 		ItemStack leyden = CurioHelper.getEquipped(CRItems.leydenJar, playerIn);
-		if(hand == Hand.MAIN_HAND && !leyden.isEmpty() && LeydenJar.getCharge(leyden) >= FE_USE){
+		if(hand == InteractionHand.MAIN_HAND && !leyden.isEmpty() && LeydenJar.getCharge(leyden) >= FE_USE){
 			//Stores attack targets, in order
 			ArrayList<LivingEntity> targets = new ArrayList<>(4);
 
 			//Populate and damage targets
 			//The first target is found in a conical area with the vertex at the player
-			List<LivingEntity> entities = worldIn.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(playerIn.getX(), playerIn.getY() + playerIn.getEyeHeight(), playerIn.getZ(), playerIn.getX(), playerIn.getY() + playerIn.getEyeHeight(), playerIn.getZ()).inflate(RANGE), EntityPredicates.ENTITY_STILL_ALIVE);
-			Predicate<LivingEntity> cannotTarget = (LivingEntity e) -> targets.contains(e) || e == playerIn || e instanceof ServerPlayerEntity && !playerIn.canHarmPlayer((PlayerEntity) e);
+			List<LivingEntity> entities = worldIn.getEntitiesOfClass(LivingEntity.class, new AABB(playerIn.getX(), playerIn.getY() + playerIn.getEyeHeight(), playerIn.getZ(), playerIn.getX(), playerIn.getY() + playerIn.getEyeHeight(), playerIn.getZ()).inflate(RANGE), EntitySelector.ENTITY_STILL_ALIVE);
+			Predicate<LivingEntity> cannotTarget = (LivingEntity e) -> targets.contains(e) || e == playerIn || e instanceof ServerPlayer && !playerIn.canHarmPlayer((Player) e);
 
 			//Removes entities from the list if they aren't in the conical region in the direction the player is looking, and checks PVP rules
-			Vector3d look = playerIn.getLookAngle();
-			Vector3d playPos = playerIn.getEyePosition(0);
-			entities.removeIf((LivingEntity e) -> {Vector3d ePos = e.position().subtract(playPos); return ePos.cross(look).lengthSqr() > RADIUS * RADIUS || ePos.dot(look) > RANGE || ePos.dot(look) < 0 || cannotTarget.test(e);});
+			Vec3 look = playerIn.getLookAngle();
+			Vec3 playPos = playerIn.getEyePosition(0);
+			entities.removeIf((LivingEntity e) -> {Vec3 ePos = e.position().subtract(playPos); return ePos.cross(look).lengthSqr() > RADIUS * RADIUS || ePos.dot(look) > RANGE || ePos.dot(look) < 0 || cannotTarget.test(e);});
 
 			double minDist = Integer.MAX_VALUE;
 			LivingEntity closest = null;
@@ -97,7 +105,7 @@ public class TeslaRay extends Item{
 			}
 
 			if(closest == null){
-				return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getItemInHand(hand));
+				return new InteractionResultHolder<>(InteractionResult.SUCCESS, playerIn.getItemInHand(hand));
 			}
 
 			LeydenJar.setCharge(leyden, LeydenJar.getCharge(leyden) - FE_USE);
@@ -110,7 +118,7 @@ public class TeslaRay extends Item{
 			if(scale >= 0.99F){//Check attack meter is charged
 				//An arbitrary limit of 32 targets exists to prevent glitchy infinite chaining behaviour- which could occur under exceptional circumstances
 				for(int i = 0; i < 32; i++){
-					entities = worldIn.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(targets.get(i).getX(), targets.get(i).getY(), targets.get(i).getZ(), targets.get(i).getX(), targets.get(i).getY(), targets.get(i).getZ()).inflate(RADIUS - i), EntityPredicates.ENTITY_STILL_ALIVE);
+					entities = worldIn.getEntitiesOfClass(LivingEntity.class, new AABB(targets.get(i).getX(), targets.get(i).getY(), targets.get(i).getZ(), targets.get(i).getX(), targets.get(i).getY(), targets.get(i).getZ()).inflate(RADIUS - i), EntitySelector.ENTITY_STILL_ALIVE);
 					entities.removeIf(cannotTarget);
 					if(entities.isEmpty()){
 						break;
@@ -124,19 +132,19 @@ public class TeslaRay extends Item{
 			//Render the electric arcs. The player is added to targets for simplification, despite not taking damage
 			targets.add(0, playerIn);
 			for(int i = 0; i < targets.size() - 1; i++){
-				Vector3d start = targets.get(i).position();
+				Vec3 start = targets.get(i).position();
 				if(i == 0){
-					double angleOffset = 30D * (playerIn.getMainArm() == HandSide.LEFT ? -1D : 1D);
+					double angleOffset = 30D * (playerIn.getMainArm() == HumanoidArm.LEFT ? -1D : 1D);
 					start = start.add(-Math.sin(Math.toRadians(playerIn.yRot + angleOffset)) * 0.4F, 0.8D, Math.cos(Math.toRadians(playerIn.yRot + angleOffset)) * 0.4F);
 				}
-				Vector3d end = targets.get(i + 1).getEyePosition(0);
+				Vec3 end = targets.get(i + 1).getEyePosition(0);
 
 				CRRenderUtil.addArc(playerIn.level, start, end, 1, 0, TeslaCoilTopTileEntity.COLOR_CODES[(int) (Math.random() * 3D)]);
 			}
 
-			return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getItemInHand(hand));
+			return new InteractionResultHolder<>(InteractionResult.SUCCESS, playerIn.getItemInHand(hand));
 		}else{
-			return new ActionResult<>(ActionResultType.FAIL, playerIn.getItemInHand(hand));
+			return new InteractionResultHolder<>(InteractionResult.FAIL, playerIn.getItemInHand(hand));
 		}
 	}
 

@@ -4,20 +4,22 @@ import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.heat.FluidCoolingChamberTileEntity;
 import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.registries.ObjectHolder;
 import org.apache.commons.lang3.tuple.Pair;
+
+import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.OutputSlot;
 
 @ObjectHolder(Crossroads.MODID)
 public class FluidCoolerContainer extends MachineContainer<FluidCoolingChamberTileEntity>{
 
 	@ObjectHolder("fluid_cooler")
-	private static ContainerType<FluidCoolerContainer> type = null;
+	private static MenuType<FluidCoolerContainer> type = null;
 
-	public FluidCoolerContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
+	public FluidCoolerContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
 		super(type, id, playerInv, buf);
 	}
 

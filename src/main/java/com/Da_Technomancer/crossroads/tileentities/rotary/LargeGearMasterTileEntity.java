@@ -15,20 +15,20 @@ import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.packets.ILongReceiver;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -37,10 +37,10 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 @ObjectHolder(Crossroads.MODID)
-public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiver, ITickableTileEntity, IInfoTE{
+public class LargeGearMasterTileEntity extends BlockEntity implements ILongReceiver, TickableBlockEntity, IInfoTE{
 
 	@ObjectHolder("large_gear_master")
-	public static TileEntityType<LargeGearMasterTileEntity> teType = null;
+	public static BlockEntityType<LargeGearMasterTileEntity> teType = null;
 
 	private GearFactory.GearMaterial type;
 	private boolean newTE = false;//Used when placing the gear, to signify that the type data needs to be sent to clients. Sending immediately after placement can cause a packet race condition if the packet arrives before the TE exists
@@ -74,7 +74,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		RotaryUtil.addRotaryInfo(chat, axleHandler, false);
 	}
 
@@ -92,10 +92,10 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 		return type == null ? GearFactory.getDefaultMaterial() : type;
 	}
 
-	private static final AxisAlignedBB RENDER_BOX = new AxisAlignedBB(-1, -1, -1, 2, 2, 2);
+	private static final AABB RENDER_BOX = new AABB(-1, -1, -1, 2, 2, 2);
 
 	@Override
-	public AxisAlignedBB getRenderBoundingBox(){
+	public AABB getRenderBoundingBox(){
 		return RENDER_BOX.move(worldPosition);
 	}
 
@@ -127,7 +127,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 
 		energy = nbt.getDouble("[1]mot");
@@ -141,7 +141,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 
 		// motionData
@@ -159,8 +159,8 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag(){
-		CompoundNBT nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(){
+		CompoundTag nbt = super.getUpdateTag();
 		if(type != null){
 			nbt.putString("type", type.getId());
 		}
@@ -171,7 +171,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 	}
 
 	@Override
-	public void receiveLong(byte identifier, long message, @Nullable ServerPlayerEntity sendingPlayer){
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayer sendingPlayer){
 		if(identifier == 0){
 			float angle = Float.intBitsToFloat((int) (message & 0xFFFFFFFFL));
 			angleW[0] = Math.abs(angle - angleW[0]) > 5F ? angle : angleW[0];
@@ -259,7 +259,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 				if(i != side.get3DDataValue() && i != side.getOpposite().get3DDataValue()){
 					Direction facing = Direction.from3DDataValue(i);
 					// Adjacent gears
-					TileEntity adjTE = level.getBlockEntity(worldPosition.relative(facing, 2));
+					BlockEntity adjTE = level.getBlockEntity(worldPosition.relative(facing, 2));
 					if(adjTE != null){
 						LazyOptional<ICogHandler> cogOpt;
 						if((cogOpt = adjTE.getCapability(Capabilities.COG_CAPABILITY, side)).isPresent()){
@@ -271,14 +271,14 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 					}
 
 					// Diagonal gears
-					TileEntity diagTE = level.getBlockEntity(worldPosition.relative(facing, 2).relative(side));
+					BlockEntity diagTE = level.getBlockEntity(worldPosition.relative(facing, 2).relative(side));
 					LazyOptional<ICogHandler> cogOpt;
 					if(diagTE != null && (cogOpt = diagTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())).isPresent() && RotaryUtil.canConnectThrough(level, worldPosition.relative(facing, 2), facing.getOpposite(), side)){
 						cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatio, 1.5D, side.getOpposite(), renderOffset);
 					}
 
 					//Underside gears
-					TileEntity undersideTE = level.getBlockEntity(worldPosition.relative(facing, 1).relative(side));
+					BlockEntity undersideTE = level.getBlockEntity(worldPosition.relative(facing, 1).relative(side));
 					if(undersideTE != null && (cogOpt = undersideTE.getCapability(Capabilities.COG_CAPABILITY, facing)).isPresent()){
 						cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatioIn, 1.5D, side.getOpposite(), renderOffset);
 					}
@@ -287,7 +287,7 @@ public class LargeGearMasterTileEntity extends TileEntity implements ILongReceiv
 
 			for(Direction.AxisDirection dir : Direction.AxisDirection.values()){
 				Direction axleDir = dir == Direction.AxisDirection.POSITIVE ? getFacing() : getFacing().getOpposite();
-				TileEntity connectTE = level.getBlockEntity(worldPosition.relative(axleDir));
+				BlockEntity connectTE = level.getBlockEntity(worldPosition.relative(axleDir));
 
 				if(connectTE != null){
 					LazyOptional<IAxisHandler> axisOpt;

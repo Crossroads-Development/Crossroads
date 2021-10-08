@@ -8,14 +8,14 @@ import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 
 	@ObjectHolder("quartz_stabilizer")
-	public static TileEntityType<QuartzStabilizerTileEntity> type = null;
+	public static BlockEntityType<QuartzStabilizerTileEntity> type = null;
 
 	private static final int CAPACITY = 1024;
 	private static final int[] RATES = new int[] {1, 2, 4, 8, 16, 32, 64};
@@ -56,7 +56,7 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		nbt.putInt("setting", setting);
 		storage.writeToNBT("stab_mag", nbt);
@@ -64,7 +64,7 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		setting = nbt.getInt("setting");
 		storage = BeamUnitStorage.readFromNBT("stab_mag", nbt);
@@ -111,9 +111,9 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 	}
 
 	@Override
-	public void addInfo(ArrayList<ITextComponent> chat, PlayerEntity player, BlockRayTraceResult hit){
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		super.addInfo(chat, player, hit);
-		chat.add(new TranslationTextComponent("tt.crossroads.quartz_stabilizer.output", RATES[setting]));
-		chat.add(new TranslationTextComponent("tt.crossroads.quartz_stabilizer.storage", storage.getOutput().toString()));
+		chat.add(new TranslatableComponent("tt.crossroads.quartz_stabilizer.output", RATES[setting]));
+		chat.add(new TranslatableComponent("tt.crossroads.quartz_stabilizer.storage", storage.getOutput().toString()));
 	}
 }

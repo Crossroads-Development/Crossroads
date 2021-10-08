@@ -3,22 +3,22 @@ package com.Da_Technomancer.crossroads.render.TESR;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxSinkTileEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.math.vector.Vector3f;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import com.mojang.math.Vector3f;
 import org.lwjgl.opengl.GL11;
 
 public class FluxSinkRenderer extends EntropyRenderer<FluxSinkTileEntity>{
 
-	protected FluxSinkRenderer(TileEntityRendererDispatcher dispatcher){
+	protected FluxSinkRenderer(BlockEntityRenderDispatcher dispatcher){
 		super(dispatcher);
 	}
 
 	@Override
-	public void render(FluxSinkTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
+	public void render(FluxSinkTileEntity te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		super.render(te, partialTicks, matrix, buffer, combinedLight, combinedOverlay);
 
 		float runtime = te.getRunDuration() + partialTicks;
@@ -30,7 +30,7 @@ public class FluxSinkRenderer extends EntropyRenderer<FluxSinkTileEntity>{
 
 		//Render entropy arcs to the plates
 		if(te.renderPortals[0] != -1){
-			IVertexBuilder entropyBuilder = buffer.getBuffer(CRRenderTypes.FLUX_TRANSFER_TYPE);
+			VertexConsumer entropyBuilder = buffer.getBuffer(CRRenderTypes.FLUX_TRANSFER_TYPE);
 			long worldTime = te.getLevel().getGameTime();
 			for(int portalIndex : te.renderPortals){
 				if(portalIndex == -1){
@@ -45,7 +45,7 @@ public class FluxSinkRenderer extends EntropyRenderer<FluxSinkTileEntity>{
 			}
 		}
 
-		IVertexBuilder builder = buffer.getBuffer(CRRenderTypes.FLUX_SINK_TYPE);
+		VertexConsumer builder = buffer.getBuffer(CRRenderTypes.FLUX_SINK_TYPE);
 
 		GlStateManager._blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
@@ -93,7 +93,7 @@ public class FluxSinkRenderer extends EntropyRenderer<FluxSinkTileEntity>{
 	private static final float symmetryAxisY = (float) Math.sin(Math.toRadians(symmetryAxisAngle));
 	private static final float goldRatio = (float) (1F + Math.sqrt(5)) / 2F;//The golden ratio
 
-	private static void drawIcos(IVertexBuilder builder, MatrixStack matrix, float scale, float cornerU, float cornerV, int[] col, int light){
+	private static void drawIcos(VertexConsumer builder, PoseStack matrix, float scale, float cornerU, float cornerV, int[] col, int light){
 		final float smallLen = scale / 2;
 		final float largeLen = goldRatio * smallLen;
 

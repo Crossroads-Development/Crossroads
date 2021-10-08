@@ -3,8 +3,8 @@ package com.Da_Technomancer.crossroads.API.beams;
 import com.Da_Technomancer.crossroads.API.AdvancementTracker;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.effects.*;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -98,7 +98,7 @@ public enum EnumBeamAlignments{
 	 * @param player The player to check
 	 * @return Whether the given player has unlocked this alignment
 	 */
-	public boolean isDiscovered(PlayerEntity player){
+	public boolean isDiscovered(Player player){
 		return AdvancementTracker.hasAdvancement(player, "progress/alignment/" + this.toString());
 	}
 
@@ -108,11 +108,11 @@ public enum EnumBeamAlignments{
 	 * @param player The player to (un)lock this path for
 	 * @param discover Whether this player should have this alignment unlocked. If false, relocks this path
 	 */
-	public void discover(PlayerEntity player, boolean discover){
+	public void discover(Player player, boolean discover){
 		if(player.level.isClientSide){
 			return;//We can't do this on the client side
 		}
-		AdvancementTracker.unlockAdvancement((ServerPlayerEntity) player, "progress/alignment/" + toString(), discover);
+		AdvancementTracker.unlockAdvancement((ServerPlayer) player, "progress/alignment/" + toString(), discover);
 //
 //		CompoundNBT nbt = StoreNBTToClient.getPlayerTag(player);
 //		if(!nbt.contains("alignments")){

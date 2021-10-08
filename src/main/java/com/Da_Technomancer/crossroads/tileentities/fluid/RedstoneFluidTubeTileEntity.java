@@ -2,15 +2,15 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
 import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder(Crossroads.MODID)
 public class RedstoneFluidTubeTileEntity extends FluidTubeTileEntity{
 
 	@ObjectHolder("redstone_fluid_tube")
-	private static TileEntityType<RedstoneFluidTubeTileEntity> type = null;
+	private static BlockEntityType<RedstoneFluidTubeTileEntity> type = null;
 
 	public RedstoneFluidTubeTileEntity(){
 		super(type);

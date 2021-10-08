@@ -3,34 +3,36 @@ package com.Da_Technomancer.crossroads.API.templates;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.ESConfig;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.Property;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
-public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlock{
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
+public abstract class ConduitBlock<T extends Comparable<T>> extends BaseEntityBlock{
 
 	/**
 	 * Generates an array of 64 possible shapes for this conduit based on size.
@@ -56,7 +58,7 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 			VoxelShape comp = core;
 			for(int j = 0; j < 6; j++){
 				if((i & (1 << j)) != 0){
-					comp = VoxelShapes.or(comp, pieces[j]);
+					comp = Shapes.or(comp, pieces[j]);
 				}
 			}
 			shapes[i] = comp;
@@ -98,7 +100,7 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 	 * @param neighTE The neighboring TE on that side
 	 * @return What the initial connection value should be
 	 */
-	protected abstract T getValueForPlacement(World world, BlockPos pos, Direction side, @Nullable TileEntity neighTE);
+	protected abstract T getValueForPlacement(Level world, BlockPos pos, Direction side, @Nullable BlockEntity neighTE);
 
 	/**
 	 * Gets the properties used for the conduit connections, in order of Direction indices
@@ -119,7 +121,7 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 	protected abstract boolean evaluate(T value, BlockState state, @Nullable IConduitTE<T> te);
 
 	@Override
-	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder){
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
 		builder.add(getSideProp());
 	}
 
@@ -133,11 +135,11 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos pos, BlockPos facingPos){
+	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos pos, BlockPos facingPos){
 		if(worldIn.isClientSide()){
 			return stateIn;
 		}
-		TileEntity te = worldIn.getBlockEntity(pos);
+		BlockEntity te = worldIn.getBlockEntity(pos);
 		try{
 			if(te instanceof IConduitTE){
 				int side = facing.get3DDataValue();
@@ -155,13 +157,13 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 	}
 
 	@Override
-	public void onPlace(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving){
+	public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving){
 		if(oldState.getBlock() == state.getBlock() || worldIn.isClientSide){
 			return;
 		}
 
 		//We want to allow conduits to choose their starting states based on surroundings
-		TileEntity te = worldIn.getBlockEntity(pos);
+		BlockEntity te = worldIn.getBlockEntity(pos);
 		if(te instanceof IConduitTE){
 			IConduitTE<T> cte = (IConduitTE<T>) te;
 			for(int i = 0; i < 6; i++){
@@ -173,9 +175,9 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context){
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context){
 		int index = 0;
-		TileEntity te = worldIn.getBlockEntity(pos);
+		BlockEntity te = worldIn.getBlockEntity(pos);
 		if(te instanceof IConduitTE){
 			IConduitTE<T> cte = (IConduitTE<T>) te;
 			for(int i = 0; i < 6; i++){
@@ -187,29 +189,29 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 	}
 
 	@Override
-	public BlockRenderType getRenderShape(BlockState state){
-		return BlockRenderType.MODEL;
+	public RenderShape getRenderShape(BlockState state){
+		return RenderShape.MODEL;
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit){
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		//Handle wrenching
 		if(playerIn != null && hand != null){
 			ItemStack held = playerIn.getItemInHand(hand);
 			if(held.isEmpty()){
-				return ActionResultType.PASS;
+				return InteractionResult.PASS;
 			}
-			TileEntity te = worldIn.getBlockEntity(pos);
+			BlockEntity te = worldIn.getBlockEntity(pos);
 			if(ESConfig.isWrench(held) && te instanceof IConduitTE){
 				if(worldIn.isClientSide){
-					return ActionResultType.SUCCESS;
+					return InteractionResult.SUCCESS;
 				}
 
 				final double SIZE = getSize();
 				IConduitTE<T> cte = (IConduitTE<T>) te;
 				int face;
 				final double margin = 0.005D;
-				Vector3d hitVec = hit.getLocation().subtract(pos.getX(), pos.getY(), pos.getZ());
+				Vec3 hitVec = hit.getLocation().subtract(pos.getX(), pos.getY(), pos.getZ());
 				if(hitVec.y < SIZE - margin){
 					face = 0;//Down
 				}else if(hitVec.y - margin > 1F - (float) SIZE){
@@ -230,13 +232,13 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 				T newVal = cycleMode(cte.getModes()[face]);
 				cte.setData(face, cte.hasMatch(face, newVal), newVal);
 				onAdjusted(worldIn, pos, state, Direction.from3DDataValue(face), newVal, cte);
-				return ActionResultType.SUCCESS;
+				return InteractionResult.SUCCESS;
 			}
 		}
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 
-	protected void onAdjusted(World world, BlockPos pos, BlockState newState, Direction facing, T newVal, @Nullable IConduitTE<T> te){
+	protected void onAdjusted(Level world, BlockPos pos, BlockState newState, Direction facing, T newVal, @Nullable IConduitTE<T> te){
 //		//Turns out vanilla behaviour already calls this
 //		if(te != null){
 //			te.updateContainingBlockInfo();
@@ -252,8 +254,8 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 		}
 
 		@Nonnull
-		default TileEntity getTE(){
-			return (TileEntity) this;
+		default BlockEntity getTE(){
+			return (BlockEntity) this;
 		}
 
 		/**
@@ -289,7 +291,7 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 				return;//No change
 			}
 
-			TileEntity te = getTE();
+			BlockEntity te = getTE();
 			BlockState prevState = te.getBlockState();
 			ConduitBlock<T> block = (ConduitBlock<T>) prevState.getBlock();
 			//Store previous value
@@ -311,7 +313,7 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 			return EnumTransferMode.fromString(name);
 		}
 
-		static <T extends Comparable<T>> void writeConduitNBT(CompoundNBT nbt, IConduitTE<T> te){
+		static <T extends Comparable<T>> void writeConduitNBT(CompoundTag nbt, IConduitTE<T> te){
 			boolean[] hasMatch = te.getHasMatch();
 			T[] modes = te.getModes();
 			for(int i = 0; i < 6; i++){
@@ -320,7 +322,7 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends ContainerBlo
 			}
 		}
 
-		static <T extends Comparable<T>> void readConduitNBT(CompoundNBT nbt, IConduitTE<T> te){
+		static <T extends Comparable<T>> void readConduitNBT(CompoundTag nbt, IConduitTE<T> te){
 			boolean[] hasMatch = te.getHasMatch();
 			T[] modes = te.getModes();
 			for(int i = 0; i < 6; i++){

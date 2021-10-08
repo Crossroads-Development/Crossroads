@@ -6,16 +6,16 @@ import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
 import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder(Crossroads.MODID)
 public class BeamRedirectorTileEntity extends BeamRenderTE{
 
 	@ObjectHolder("beam_redirector")
-	public static TileEntityType<BeamRedirectorTileEntity> type = null;
+	public static BlockEntityType<BeamRedirectorTileEntity> type = null;
 
 	private Direction dir = null;
 

@@ -8,17 +8,17 @@ import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
 import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder(Crossroads.MODID)
 public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 
 	@ObjectHolder("clock_stab")
-	public static TileEntityType<ClockworkStabilizerTileEntity> type = null;
+	public static BlockEntityType<ClockworkStabilizerTileEntity> type = null;
 
 	public static final double RATE = 0.2D;
 	private BeamUnitStorage storage = new BeamUnitStorage();
@@ -51,14 +51,14 @@ public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT nbt){
+	public CompoundTag save(CompoundTag nbt){
 		super.save(nbt);
 		storage.writeToNBT("stab_mag", nbt);
 		return nbt;
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT nbt){
+	public void load(BlockState state, CompoundTag nbt){
 		super.load(state, nbt);
 		storage = BeamUnitStorage.readFromNBT("stab_mag", nbt);
 	}

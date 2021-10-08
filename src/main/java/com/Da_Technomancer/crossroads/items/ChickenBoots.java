@@ -1,21 +1,23 @@
 package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class ChickenBoots extends ArmorItem{
 
-	protected static final IArmorMaterial BOBO_MATERIAL = new BoboMat();
+	protected static final ArmorMaterial BOBO_MATERIAL = new BoboMat();
 
 	protected ChickenBoots(){
-		super(BOBO_MATERIAL, EquipmentSlotType.FEET, new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
+		super(BOBO_MATERIAL, EquipmentSlot.FEET, new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "chicken_boots";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
@@ -26,15 +28,15 @@ public class ChickenBoots extends ArmorItem{
 		return CRItems.BOBO_RARITY;
 	}
 
-	private static class BoboMat implements IArmorMaterial{
+	private static class BoboMat implements ArmorMaterial{
 
 		@Override
-		public int getDurabilityForSlot(EquipmentSlotType slotIn){
+		public int getDurabilityForSlot(EquipmentSlot slotIn){
 			return 0;
 		}
 
 		@Override
-		public int getDefenseForSlot(EquipmentSlotType slotIn){
+		public int getDefenseForSlot(EquipmentSlot slotIn){
 			return 0;
 		}
 

@@ -3,8 +3,8 @@ package com.Da_Technomancer.crossroads.items.alchemy;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResultType;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.InteractionResult;
 
 public class Phial extends AbstractGlassware{
 
@@ -16,7 +16,7 @@ public class Phial extends AbstractGlassware{
 	}
 
 	@Override
-	public ActionResultType useOn(ItemUseContext context){
+	public InteractionResult useOn(UseOnContext context){
 		ReagentMap contents = getReagants(context.getItemInHand());
 		if(contents.getTotalQty() != 0){
 			if(!context.getLevel().isClientSide){
@@ -25,9 +25,9 @@ public class Phial extends AbstractGlassware{
 					setReagents(context.getItemInHand(), new ReagentMap());
 				}
 			}
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 }

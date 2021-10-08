@@ -5,17 +5,17 @@ import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.packets.ServerPacket;
 import io.netty.buffer.Unpooled;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
@@ -45,10 +45,10 @@ public class SendGoggleConfigureToServer extends ServerPacket{
 	}
 
 	@Override
-	protected void run(@Nullable ServerPlayerEntity player){
+	protected void run(@Nullable ServerPlayer player){
 		if(player != null){
-			ItemStack stack = player.getItemBySlot(EquipmentSlotType.HEAD);
-			CompoundNBT nbt = stack.getTag();
+			ItemStack stack = player.getItemBySlot(EquipmentSlot.HEAD);
+			CompoundTag nbt = stack.getTag();
 			if(stack.getItem() == CRItems.armorGoggles && nbt != null && nbt.contains(lensName)){
 				nbt.putBoolean(lensName, newSetting);
 
@@ -60,19 +60,19 @@ public class SendGoggleConfigureToServer extends ServerPacket{
 		}
 	}
 
-	private static class GoggleProvider implements INamedContainerProvider{
+	private static class GoggleProvider implements MenuProvider{
 
 		private static final GoggleProvider INSTANCE = new GoggleProvider();
 
 		@Override
-		public ITextComponent getDisplayName(){
-			return new TranslationTextComponent("container.goggle_crafting");
+		public Component getDisplayName(){
+			return new TranslatableComponent("container.goggle_crafting");
 		}
 
 		@Nullable
 		@Override
-		public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player){
-			PacketBuffer buf = new PacketBuffer(Unpooled.buffer());
+		public AbstractContainerMenu createMenu(int id, Inventory playerInv, Player player){
+			FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
 			buf.writeBoolean(true);//Encode that this is goggles
 			return new DetailedCrafterContainer(id, playerInv, buf);
 		}

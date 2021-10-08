@@ -5,22 +5,25 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.HydroponicsTroughTileEntity;
 import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
 import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.registries.ObjectHolder;
 import org.apache.commons.lang3.tuple.Pair;
+
+import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.OutputSlot;
+import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.StrictSlot;
 
 @ObjectHolder(Crossroads.MODID)
 public class HydroponicsTroughContainer extends MachineContainer<HydroponicsTroughTileEntity>{
 
 	@ObjectHolder("hydroponics_trough")
-	private static ContainerType<HydroponicsTroughContainer> type = null;
+	private static MenuType<HydroponicsTroughContainer> type = null;
 
 	public final IntDeferredRef progRef;
 
-	public HydroponicsTroughContainer(int id, PlayerInventory playerInv, PacketBuffer buf){
+	public HydroponicsTroughContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
 		super(type, id, playerInv, buf);
 		progRef = new IntDeferredRef(te::getProgressBar, te.getLevel().isClientSide);
 		addDataSlot(progRef);

@@ -1,18 +1,18 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -31,18 +31,18 @@ public class PermeableGlass extends Block{
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public float getShadeBrightness(BlockState state, IBlockReader world, BlockPos pos){
+	public float getShadeBrightness(BlockState state, BlockGetter world, BlockPos pos){
 		return 1.0F;
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(BlockState state, IBlockReader world, BlockPos pos){
+	public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos){
 		return true;
 	}
 
 	@Override
-	public VoxelShape getVisualShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext selection) {
-		return VoxelShapes.empty();
+	public VoxelShape getVisualShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext selection) {
+		return Shapes.empty();
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -52,8 +52,8 @@ public class PermeableGlass extends Block{
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable IBlockReader player, List<ITextComponent> tooltip, ITooltipFlag advanced){
-		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.beam_permeable"));
-		tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.decor"));
+	public void appendHoverText(ItemStack stack, @Nullable BlockGetter player, List<Component> tooltip, TooltipFlag advanced){
+		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.beam_permeable"));
+		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.decor"));
 	}
 }

@@ -2,12 +2,12 @@ package com.Da_Technomancer.crossroads.ambient.sounds;
 
 import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class CRSounds{
 	 * @param volume Volume multiplier, multiplied with event volume and clamped within [0, 1] after multiplying
 	 * @param pitch Pitch multiplier, multiplied with event pitch and clamped within [0.5, 2] after multiplying
 	 */
-	public static void playSoundServer(World world, BlockPos pos, SoundEvent sound, SoundCategory category, float volume, float pitch){
+	public static void playSoundServer(Level world, BlockPos pos, SoundEvent sound, SoundSource category, float volume, float pitch){
 		world.playSound(null, pos, sound, category, volume, pitch);
 	}
 
@@ -61,10 +61,10 @@ public class CRSounds{
 	 * @param volume Volume multiplier, multiplied with event volume and clamped within [0, 1] after multiplying
 	 * @param pitch Pitch multiplier, multiplied with event pitch and clamped within [0.5, 2] after multiplying
 	 */
-	public static void playSoundClientLocal(World world, BlockPos pos, SoundEvent sound, SoundCategory category, float volume, float pitch){
+	public static void playSoundClientLocal(Level world, BlockPos pos, SoundEvent sound, SoundSource category, float volume, float pitch){
 		if(world.isClientSide){
 			float distance = Math.max(1, volume) * 16F;
-			PlayerEntity player = SafeCallable.getClientPlayer();
+			Player player = SafeCallable.getClientPlayer();
 			if(player.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= distance * distance){
 				world.playSound(player, pos, sound, category, volume, pitch);
 			}

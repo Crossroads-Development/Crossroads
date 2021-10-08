@@ -1,11 +1,11 @@
 package com.Da_Technomancer.crossroads.API.witchcraft;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -23,7 +23,7 @@ public interface IPerishable{
 	 * @param world A world instance. Used to get the time
 	 * @return Whether the item is spoiled
 	 */
-	default boolean isSpoiled(ItemStack stack, World world){
+	default boolean isSpoiled(ItemStack stack, Level world){
 		if(world == null){
 			return false;
 		}
@@ -38,8 +38,8 @@ public interface IPerishable{
 	 * @param world A world instance. Used to get the time
 	 * @return The timestamp (in ticks, in the form of a gametime) when this will spoil; -1 if this has no spoiltime set and we couldn't set one
 	 */
-	default long getSpoilTime(ItemStack stack, @Nullable World world){
-		CompoundNBT nbt = stack.getOrCreateTag();
+	default long getSpoilTime(ItemStack stack, @Nullable Level world){
+		CompoundTag nbt = stack.getOrCreateTag();
 		//Correct broken stacks, by setting a spoil time for a fresh item
 		if(!nbt.contains(SPOIL_KEY)){
 			if(world != null && !world.isClientSide()){
@@ -59,7 +59,7 @@ public interface IPerishable{
 	 * @return The modified stack
 	 */
 	default ItemStack setSpoilTime(ItemStack stack, long spoilTime, long worldTime){
-		CompoundNBT nbt = stack.getOrCreateTag();
+		CompoundTag nbt = stack.getOrCreateTag();
 		nbt.putLong(SPOIL_KEY, spoilTime + worldTime);
 		return stack;
 	}
@@ -86,24 +86,24 @@ public interface IPerishable{
 	 * @param duration Duration to re-wind the clock by, in ticks
 	 * @return The modified stack
 	 */
-	default ItemStack freeze(ItemStack stack, World world, double temp, long duration){
+	default ItemStack freeze(ItemStack stack, Level world, double temp, long duration){
 		if(temp <= getFreezeTemperature()){
 			setSpoilTime(stack, getSpoilTime(stack, world) + duration, 0);
 		}
 		return stack;
 	}
 
-	public static void addTooltip(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip){
+	public static void addTooltip(ItemStack stack, @Nullable Level world, List<Component> tooltip){
 		Item item = stack.getItem();
 		if(item instanceof IPerishable){
 			IPerishable sItem = (IPerishable) item;
 			long spoilTimestamp = sItem.getSpoilTime(stack, world);
 			if(spoilTimestamp < 0){
 				//Broken/new item; hasn't been configured properly
-				tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.spoilage.error"));
+				tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.spoilage.error"));
 			}else if(world != null){
 				if(sItem.isSpoiled(stack, world)){
-					tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.spoilage.spoiled"));
+					tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.spoilage.spoiled"));
 				}else{
 					spoilTimestamp -= world.getGameTime();
 					int days = (int) (spoilTimestamp / (20 * 60 * 60 * 24));
@@ -113,10 +113,10 @@ public interface IPerishable{
 					int minutes = (int) (spoilTimestamp / (20 * 60));
 					spoilTimestamp -= minutes * 20 * 60;
 					int seconds = (int) (spoilTimestamp / 20);
-					tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.spoilage.remain", days, hours, minutes, seconds));
+					tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.spoilage.remain", days, hours, minutes, seconds));
 				}
 			}
-			tooltip.add(new TranslationTextComponent("tt.crossroads.boilerplate.spoilage.freezing", sItem.getFreezeTemperature()));//Freezing information
+			tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.spoilage.freezing", sItem.getFreezeTemperature()));//Freezing information
 		}
 	}
 }

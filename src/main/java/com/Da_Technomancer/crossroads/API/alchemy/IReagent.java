@@ -3,9 +3,9 @@ package com.Da_Technomancer.crossroads.API.alchemy;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.IAlchEffect;
 import com.Da_Technomancer.crossroads.crafting.recipes.FluidIngredient;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tags.ITag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.tags.Tag;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -87,7 +87,7 @@ public interface IReagent{
 	 * Used for JEI support. Do not use this for game logic.
 	 * @return A tag containing all items that can be converted into the solid form of this reagent
 	 */
-	ITag<Item> getJEISolids();
+	Tag<Item> getJEISolids();
 
 	/**
 	 * @param temp Current temperature in C. Optional, only used if phase hasn't been set yet to update the phase. If phase should already have been set, this can be left as 0.
