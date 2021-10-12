@@ -5,6 +5,10 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.templates.ConduitBlock;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.AlchemicalTubeTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.heat.FireboxTileEntity;
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -75,8 +79,14 @@ public class AlchemicalTube extends ConduitBlock<EnumTransferMode>{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new AlchemicalTubeTileEntity(!crystal);
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new AlchemicalTubeTileEntity(pos, state, !crystal);
+	}
+
+	@Nullable
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> type){
+		return ITickableTileEntity.createTicker(type, AlchemicalTubeTileEntity.TYPE);
 	}
 
 //	@Override

@@ -75,7 +75,7 @@ public class RedstoneHeatCable extends HeatCable implements IReadable{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
 		return new RedstoneHeatCableTileEntity(insulator);
 	}
 

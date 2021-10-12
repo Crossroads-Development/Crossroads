@@ -11,13 +11,14 @@ import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.crafting.recipes.FluidIngredient;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.Direction;
@@ -47,7 +48,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 /**
  * Implementations must implement getCapability directly.
  */
-public abstract class AlchemyCarrierTE extends BlockEntity implements TickableBlockEntity, IInfoTE{
+public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableTileEntity, IInfoTE{
 
 	protected boolean init = false;
 	protected double cableTemp = 0;
@@ -98,19 +99,19 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements TickableBl
 		}
 	}
 
-	protected AlchemyCarrierTE(BlockEntityType<? extends AlchemyCarrierTE> type){
-		super(type);
+	protected AlchemyCarrierTE(BlockEntityType<? extends AlchemyCarrierTE> type, BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
-	protected AlchemyCarrierTE(BlockEntityType<? extends AlchemyCarrierTE> type, boolean glass){
-		this(type);
+	protected AlchemyCarrierTE(BlockEntityType<? extends AlchemyCarrierTE> type, BlockPos pos, BlockState state, boolean glass){
+		this(type, pos, state);
 		this.glass = glass;
 	}
 
 	protected void destroyCarrier(float strength){
 		if(!broken){
 			broken = true;
-			BlockState state = level.getBlockState(worldPosition);
+			BlockState state = getBlockState();
 			level.setBlockAndUpdate(worldPosition, Blocks.AIR.defaultBlockState());
 			SoundType sound = state.getBlock().getSoundType(state, level, worldPosition, null);
 			CRSounds.playSoundServer(level, worldPosition, sound.getBreakSound(), SoundSource.BLOCKS, sound.getVolume(), sound.getPitch());
@@ -170,10 +171,8 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements TickableBl
 	}
 
 	@Override
-	public void tick(){
-		if(level.isClientSide){
-			return;
-		}
+	public void serverTick(){
+		ITickableTileEntity.super.serverTick();
 
 		if(!init && useCableHeat()){
 			cableTemp = HeatUtil.convertBiomeTemp(level, worldPosition);
@@ -419,8 +418,8 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements TickableBl
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		glass = nbt.getBoolean("glass");
 		contents = ReagentMap.readFromNBT(nbt);
 		cableTemp = nbt.getDouble("temp");

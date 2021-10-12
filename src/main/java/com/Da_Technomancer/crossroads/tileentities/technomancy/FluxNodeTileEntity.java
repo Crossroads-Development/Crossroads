@@ -34,7 +34,7 @@ public class FluxNodeTileEntity extends IFluxLink.FluxHelper{
 	private int entropyClient;//records what was last send to the client. Current value on the client side
 	private float angle;//for rendering
 
-	public FluxNodeTileEntity(){
+	public FluxNodeTileEntity(BlockPos pos, BlockState state){
 		super(type, null, Behaviour.NODE);
 	}
 
@@ -104,8 +104,8 @@ public class FluxNodeTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		angle = nbt.getFloat("angle");
 		entropyClient = getReadingFlux();
 	}

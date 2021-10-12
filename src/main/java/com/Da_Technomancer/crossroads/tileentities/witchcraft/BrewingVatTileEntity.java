@@ -41,7 +41,7 @@ public class BrewingVatTileEntity extends InventoryTE{
 	public static final int REQUIRED = 400;
 	private int progress = 0;
 
-	public BrewingVatTileEntity(){
+	public BrewingVatTileEntity(BlockPos pos, BlockState state){
 		super(type, 7);//Index 0: Ingredient; 1-3: Input potions; 4-6: Output potions
 	}
 
@@ -112,8 +112,8 @@ public class BrewingVatTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		progress = nbt.getInt("prog");
 	}
 

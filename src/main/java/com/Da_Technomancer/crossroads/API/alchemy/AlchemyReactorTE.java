@@ -1,8 +1,11 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.crafting.recipes.AlchemyRec;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.server.level.ServerLevel;
 
@@ -11,12 +14,12 @@ import net.minecraft.server.level.ServerLevel;
  */
 public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReactionChamber{
 
-	public AlchemyReactorTE(BlockEntityType<? extends AlchemyReactorTE> type){
-		super(type);
+	public AlchemyReactorTE(BlockEntityType<? extends AlchemyReactorTE> type, BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
-	public AlchemyReactorTE(BlockEntityType<? extends AlchemyReactorTE> type, boolean glass){
-		super(type, glass);
+	public AlchemyReactorTE(BlockEntityType<? extends AlchemyReactorTE> type, BlockPos pos, BlockState state, boolean glass){
+		super(type, pos, state, glass);
 	}
 
 	@Override
@@ -43,10 +46,14 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 	}
 
 	@Override
-	public void tick(){
-		if(level.isClientSide){
-			return;
+	public void serverTick(){
+		//Note that we do NOT have a super call
+
+		if(!init && useCableHeat()){
+			cableTemp = HeatUtil.convertBiomeTemp(level, worldPosition);
 		}
+		init = true;
+
 		if(dirtyReag){
 			correctReag();
 		}

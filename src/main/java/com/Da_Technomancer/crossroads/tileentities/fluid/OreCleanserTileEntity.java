@@ -45,7 +45,7 @@ public class OreCleanserTileEntity extends InventoryTE{
 
 	private int progress = 0;//Out of 50
 
-	public OreCleanserTileEntity(){
+	public OreCleanserTileEntity(BlockPos pos, BlockState state){
 		super(type, 2);
 		fluidProps[0] = new TankProperty(1_000, true, false, CRFluids.STEAM::contains);//Steam
 		fluidProps[1] = new TankProperty(1_000, false, true);//Dirty Water
@@ -110,8 +110,8 @@ public class OreCleanserTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		progress = nbt.getInt("prog");
 	}
 

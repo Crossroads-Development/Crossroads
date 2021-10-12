@@ -9,13 +9,13 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.alchemy.AtmosCharger;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.Direction;
@@ -33,10 +33,10 @@ import net.minecraftforge.registries.ObjectHolder;
 import java.util.ArrayList;
 
 @ObjectHolder(Crossroads.MODID)
-public class AtmosChargerTileEntity extends BlockEntity implements TickableBlockEntity, IInfoTE{
+public class AtmosChargerTileEntity extends BlockEntity implements ITickableTileEntity, IInfoTE{
 
 	@ObjectHolder("atmos_charger")
-	private static BlockEntityType<AtmosChargerTileEntity> type = null;
+	public static BlockEntityType<AtmosChargerTileEntity> TYPE = null;
 
 	private static final Tag<Block> ANTENNA_TAG = BlockTags.bind(Crossroads.MODID + ":atmos_antenna");
 
@@ -46,13 +46,13 @@ public class AtmosChargerTileEntity extends BlockEntity implements TickableBlock
 	private int renderTimer = 0;
 	private Boolean mode = null;
 
-	public AtmosChargerTileEntity(){
-		super(type);
+	public AtmosChargerTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
 	@Override
-	public void clearCache(){
-		super.clearCache();
+	public void setBlockState(BlockState state){
+		super.setBlockState(state);
 		mode = null;
 	}
 
@@ -60,7 +60,7 @@ public class AtmosChargerTileEntity extends BlockEntity implements TickableBlock
 		if(mode != null){
 			return mode;
 		}
-		BlockState state = level.getBlockState(worldPosition);
+		BlockState state = getBlockState();
 		if(state.getBlock() != CRBlocks.atmosCharger){
 			return false;
 		}
@@ -89,9 +89,10 @@ public class AtmosChargerTileEntity extends BlockEntity implements TickableBlock
 	}
 
 	@Override
-	public void tick(){
+	public void serverTick(){
+		ITickableTileEntity.super.serverTick();
 		BlockState state = getBlockState();
-		if(level.isClientSide || !(state.getBlock() instanceof AtmosCharger)){
+		if(!(state.getBlock() instanceof AtmosCharger)){
 			return;
 		}
 		renderTimer--;
@@ -162,8 +163,8 @@ public class AtmosChargerTileEntity extends BlockEntity implements TickableBlock
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		fe = nbt.getInt("fe");
 	}
 

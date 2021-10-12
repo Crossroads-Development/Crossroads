@@ -21,7 +21,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
+
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.Direction;
@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 @ObjectHolder(Crossroads.MODID)
-public class LargeGearMasterTileEntity extends BlockEntity implements ILongReceiver, TickableBlockEntity, IInfoTE{
+public class LargeGearMasterTileEntity extends BlockEntity implements ILongReceiver, ITickableTileEntity, IInfoTE{
 
 	@ObjectHolder("large_gear_master")
 	public static BlockEntityType<LargeGearMasterTileEntity> teType = null;
@@ -54,7 +54,7 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 	private final float[] angleW = new float[2];
 	private Direction facing = null;
 
-	public LargeGearMasterTileEntity(){
+	public LargeGearMasterTileEntity(BlockPos pos, BlockState state){
 		super(teType);
 	}
 	
@@ -127,8 +127,8 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 
 		energy = nbt.getDouble("[1]mot");
 		// member

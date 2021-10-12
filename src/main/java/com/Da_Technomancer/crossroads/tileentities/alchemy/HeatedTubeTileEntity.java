@@ -7,8 +7,10 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -17,14 +19,14 @@ import net.minecraftforge.registries.ObjectHolder;
 public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 
 	@ObjectHolder("heated_tube")
-	private static BlockEntityType<HeatedTubeTileEntity> type = null;
+	public static BlockEntityType<HeatedTubeTileEntity> TYPE = null;
 
-	public HeatedTubeTileEntity(){
-		super(type);
+	public HeatedTubeTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
-	public HeatedTubeTileEntity(boolean glass){
-		super(type, glass);
+	public HeatedTubeTileEntity(BlockPos pos, BlockState state, boolean glass){
+		super(TYPE, pos, state, glass);
 	}
 
 	@Override

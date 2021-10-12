@@ -50,8 +50,8 @@ public class LodestoneDynamo extends BaseEntityBlock{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new LodestoneDynamoTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new LodestoneDynamoTileEntity(pos, state);
 	}
 
 	@Override

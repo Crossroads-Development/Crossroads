@@ -11,7 +11,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
+
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.Direction;
@@ -41,7 +41,7 @@ public class ChunkAcceleratorTileEntity extends IFluxLink.FluxHelper{
 	private int infoIntensity = 0;
 	private long lastRunTick;//Used to prevent accelerators affecting each other
 
-	public ChunkAcceleratorTileEntity(){
+	public ChunkAcceleratorTileEntity(BlockPos pos, BlockState state){
 		super(type, null, Behaviour.SOURCE);
 	}
 
@@ -100,9 +100,9 @@ public class ChunkAcceleratorTileEntity extends IFluxLink.FluxHelper{
 			if(extraTicks > 0 && CRConfig.teTimeAccel.get() && !isShutDown()){
 				ChunkPos chunkPos = new ChunkPos(worldPosition);
 				//List of every tile entity in the chunk which is tickable
-				List<BlockEntity> tickables = level.tickableBlockEntities.stream().filter(te -> te instanceof TickableBlockEntity && te.getBlockPos().getX() >> 4 == chunkPos.x && te.getBlockPos().getZ() >> 4 == chunkPos.z).collect(Collectors.toList());
+				List<BlockEntity> tickables = level.tickableBlockEntities.stream().filter(te -> te instanceof ITickableTileEntity && te.getBlockPos().getX() >> 4 == chunkPos.x && te.getBlockPos().getZ() >> 4 == chunkPos.z).collect(Collectors.toList());
 				for(BlockEntity te : tickables){
-					TickableBlockEntity tte = (TickableBlockEntity) te;
+					ITickableTileEntity tte = (ITickableTileEntity) te;
 					for(int run = 0; run < extraTicks; run++){
 						tte.tick();
 					}
@@ -120,8 +120,8 @@ public class ChunkAcceleratorTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		intensity = nbt.getInt("intensity");
 		lastRunTick = nbt.getLong("last_run");
 	}

@@ -25,7 +25,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -43,8 +43,8 @@ public class RotaryPump extends BaseEntityBlock{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new RotaryPumpTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new RotaryPumpTileEntity(pos, state);
 	}
 
 	@Override

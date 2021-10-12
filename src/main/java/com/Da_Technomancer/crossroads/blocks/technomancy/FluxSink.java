@@ -41,8 +41,8 @@ public class FluxSink extends BaseEntityBlock{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new FluxSinkTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new FluxSinkTileEntity(pos, state);
 	}
 
 

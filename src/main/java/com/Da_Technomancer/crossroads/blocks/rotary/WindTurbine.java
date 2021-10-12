@@ -46,7 +46,7 @@ public class WindTurbine extends BaseEntityBlock implements IReadable{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
 		return new WindTurbineTileEntity(true);
 	}
 

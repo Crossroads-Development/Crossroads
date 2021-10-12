@@ -44,7 +44,7 @@ public class FatFeederTileEntity extends InventoryTE{
 	public static final int MIN_RANGE = 4;
 	public static final int MAX_RANGE = 16;
 
-	public FatFeederTileEntity(){
+	public FatFeederTileEntity(BlockPos pos, BlockState state){
 		super(type, 0);
 		fluidProps[0] = new TankProperty(10_000, true, true, CRFluids.LIQUID_FAT::contains);
 		initFluidManagers();

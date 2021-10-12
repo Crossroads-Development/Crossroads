@@ -102,8 +102,8 @@ public class TemporalAccelerator extends BaseEntityBlock{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new TemporalAcceleratorTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new TemporalAcceleratorTileEntity(pos, state);
 	}
 
 	@Override

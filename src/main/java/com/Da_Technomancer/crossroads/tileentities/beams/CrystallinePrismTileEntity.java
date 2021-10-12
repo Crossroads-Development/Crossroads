@@ -5,26 +5,27 @@ import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder(Crossroads.MODID)
 public class CrystallinePrismTileEntity extends BeamRenderTE{
 
 	@ObjectHolder("crystal_prism")
-	public static BlockEntityType<CrystallinePrismTileEntity> type = null;
+	public static BlockEntityType<CrystallinePrismTileEntity> TYPE = null;
 
 	private Direction dir = null;
 
-	public CrystallinePrismTileEntity(){
-		super(type);
+	public CrystallinePrismTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
 	private Direction getDir(){
 		if(dir == null){
-			BlockState state = level.getBlockState(worldPosition);
+			BlockState state = getBlockState();
 			if(state.getBlock() != CRBlocks.crystallinePrism){
 				return Direction.NORTH;
 			}
@@ -34,8 +35,8 @@ public class CrystallinePrismTileEntity extends BeamRenderTE{
 	}
 
 	@Override
-	public void clearCache(){
-		super.clearCache();
+	public void setBlockState(BlockState stateIn){
+		super.setBlockState(stateIn);
 		dir = null;
 	}
 

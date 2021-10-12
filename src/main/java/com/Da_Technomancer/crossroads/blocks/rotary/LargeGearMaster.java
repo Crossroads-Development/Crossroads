@@ -48,8 +48,8 @@ public class LargeGearMaster extends BaseEntityBlock{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new LargeGearMasterTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new LargeGearMasterTileEntity(pos, state);
 	}
 
 	@Override

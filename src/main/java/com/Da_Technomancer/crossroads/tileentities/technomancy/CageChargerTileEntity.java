@@ -36,8 +36,8 @@ public class CageChargerTileEntity extends BlockEntity implements IInfoTE{
 	
 	private ItemStack cage = ItemStack.EMPTY;
 
-	public CageChargerTileEntity(){
-		super(type);
+	public CageChargerTileEntity(BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 	
 	@Override
@@ -103,8 +103,8 @@ public class CageChargerTileEntity extends BlockEntity implements IInfoTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		cage = ItemStack.of(nbt.getCompound("inv"));
 	}
 

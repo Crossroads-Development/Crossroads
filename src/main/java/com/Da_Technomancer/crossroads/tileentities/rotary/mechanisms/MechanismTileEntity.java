@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
+
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.Direction;
@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 //@ObjectHolder(Crossroads.MODID)
-public class MechanismTileEntity extends BlockEntity implements TickableBlockEntity, ILongReceiver, IInfoTE{
+public class MechanismTileEntity extends BlockEntity implements ITickableTileEntity, ILongReceiver, IInfoTE{
 
 	@ObjectHolder(Crossroads.MODID + ":mechanism")
 	public static BlockEntityType<MechanismTileEntity> type = null;
@@ -47,8 +47,8 @@ public class MechanismTileEntity extends BlockEntity implements TickableBlockEnt
 		MECHANISMS.add(new MechanismFacade());//Index 7, facades
 	}
 
-	public MechanismTileEntity(){
-		super(type);
+	public MechanismTileEntity(BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
 	@Override
@@ -158,8 +158,8 @@ public class MechanismTileEntity extends BlockEntity implements TickableBlockEnt
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 
 		if(nbt.contains("[6]memb") && nbt.contains("[6]mat")){
 			axleAxis = Direction.Axis.values()[nbt.getInt("axis")];

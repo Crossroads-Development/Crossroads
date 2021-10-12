@@ -56,7 +56,7 @@ public class RotaryDrill extends BaseEntityBlock{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
 		return new RotaryDrillTileEntity(golden);
 	}
 

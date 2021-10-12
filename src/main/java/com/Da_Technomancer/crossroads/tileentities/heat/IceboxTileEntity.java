@@ -43,7 +43,7 @@ public class IceboxTileEntity extends InventoryTE{
 	private int burnTime;
 	private int maxBurnTime = 0;
 
-	public IceboxTileEntity(){
+	public IceboxTileEntity(BlockPos pos, BlockState state){
 		super(type, 1);
 	}
 
@@ -88,8 +88,8 @@ public class IceboxTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		burnTime = nbt.getInt("burn");
 		maxBurnTime = nbt.getInt("max_burn");
 	}

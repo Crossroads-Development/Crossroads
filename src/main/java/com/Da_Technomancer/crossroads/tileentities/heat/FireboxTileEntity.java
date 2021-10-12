@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.gui.container.FireboxContainer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
@@ -26,13 +27,11 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
-
 @ObjectHolder(Crossroads.MODID)
 public class FireboxTileEntity extends InventoryTE{
 
 	@ObjectHolder("firebox")
-	private static BlockEntityType<FireboxTileEntity> TYPE = null;
+	public static BlockEntityType<FireboxTileEntity> TYPE = null;
 
 	public static final int POWER = 10;
 	private static final int MAX_TEMP = 15_000;
@@ -40,8 +39,8 @@ public class FireboxTileEntity extends InventoryTE{
 	private int burnTime;
 	private int maxBurnTime = 0;
 
-	public FireboxTileEntity(){
-		super(TYPE, 1);
+	public FireboxTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state, 1);
 	}
 
 	@Override
@@ -54,12 +53,8 @@ public class FireboxTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
-		if(level.isClientSide){
-			return;
-		}
-
+	public void serverTick(){
+		super.serverTick();
 		if(burnTime != 0){
 			temp = Math.min(MAX_TEMP, temp + POWER);
 			if(--burnTime == 0){
@@ -69,7 +64,7 @@ public class FireboxTileEntity extends InventoryTE{
 		}
 
 		int fuelBurn;
-		if(burnTime == 0 && (fuelBurn = ForgeHooks.getBurnTime(inventory[0])) != 0){
+		if(burnTime == 0 && (fuelBurn = ForgeHooks.getBurnTime(inventory[0], null)) != 0){
 			int configLimit = CRConfig.fireboxCap.get();
 			if(configLimit >= 0){
 				fuelBurn = Math.min(fuelBurn, configLimit);
@@ -87,8 +82,8 @@ public class FireboxTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		burnTime = nbt.getInt("burn");
 		maxBurnTime = nbt.getInt("max_burn");
 	}
@@ -123,7 +118,7 @@ public class FireboxTileEntity extends InventoryTE{
 
 	@Override
 	public boolean canPlaceItem(int index, ItemStack stack){
-		return index == 0 && ForgeHooks.getBurnTime(stack) != 0;
+		return index == 0 && ForgeHooks.getBurnTime(stack, null) != 0;
 	}
 
 	@Override

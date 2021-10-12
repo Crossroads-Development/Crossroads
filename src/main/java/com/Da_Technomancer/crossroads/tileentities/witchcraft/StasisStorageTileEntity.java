@@ -37,7 +37,7 @@ public class StasisStorageTileEntity extends InventoryTE{
 
 	private long lastTick;
 
-	public StasisStorageTileEntity(){
+	public StasisStorageTileEntity(BlockPos pos, BlockState state){
 		super(type, 1);
 	}
 
@@ -90,8 +90,8 @@ public class StasisStorageTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		lastTick = nbt.getLong("last_tick");
 	}
 

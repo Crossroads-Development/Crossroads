@@ -5,10 +5,11 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -20,22 +21,19 @@ import net.minecraftforge.registries.ObjectHolder;
 public class ChargingStandTileEntity extends GlasswareHolderTileEntity{
 
 	@ObjectHolder("charging_stand")
-	private static BlockEntityType<ChargingStandTileEntity> type = null;
+	public static BlockEntityType<ChargingStandTileEntity> TYPE = null;
 
 	private static final int ENERGY_CAPACITY = 100;
 	public static final int DRAIN = 10;
 
 	private int fe = 0;
 
-	public ChargingStandTileEntity(){
-		super(type);
+	public ChargingStandTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
 	@Override
-	public void tick(){
-		if(level.isClientSide){
-			return;
-		}
+	public void serverTick(){
 		if(fe > 0){
 			fe = Math.max(0, fe - DRAIN);
 			if(level.random.nextInt(10) == 0){
@@ -57,8 +55,8 @@ public class ChargingStandTileEntity extends GlasswareHolderTileEntity{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		fe = nbt.getInt("fe");
 	}
 

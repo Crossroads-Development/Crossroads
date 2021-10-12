@@ -58,7 +58,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	private ResourceLocation activeText = null;
 	private Integer col = null;//Color applied to the liquid texture
 
-	public HeatingCrucibleTileEntity(){
+	public HeatingCrucibleTileEntity(BlockPos pos, BlockState state){
 		super(type, 1);
 		fluidProps[0] = new TankProperty(4_000, false, true);
 		initFluidManagers();
@@ -168,8 +168,8 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		String textStr = nbt.getString("act");
 		if(textStr.length() == 0){
 			activeText = null;

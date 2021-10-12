@@ -88,8 +88,8 @@ public class BeamCannon extends BaseEntityBlock{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new BeamCannonTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new BeamCannonTileEntity(pos, state);
 	}
 
 	@Override

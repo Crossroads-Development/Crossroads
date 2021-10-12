@@ -56,8 +56,8 @@ public class CageCharger extends BaseEntityBlock implements IReadable{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new CageChargerTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new CageChargerTileEntity(pos, state);
 	}
 
 	@Override

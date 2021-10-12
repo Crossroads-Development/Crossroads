@@ -49,7 +49,7 @@ public class RotaryPumpTileEntity extends InventoryTE{
 	private double progress = 0;
 	private float progChange = 0;//Last change in progress per tick sent to the client. On the client, used for animation
 
-	public RotaryPumpTileEntity(){
+	public RotaryPumpTileEntity(BlockPos pos, BlockState state){
 		super(type, 0);
 		fluidProps[0] = new TankProperty(CAPACITY, false, true);
 		initFluidManagers();
@@ -148,8 +148,8 @@ public class RotaryPumpTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		progress = nbt.getDouble("prog");
 		progChange = nbt.getFloat("prog_change");
 	}

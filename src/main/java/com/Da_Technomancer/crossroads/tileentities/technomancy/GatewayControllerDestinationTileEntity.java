@@ -17,7 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
+
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.Direction;
@@ -42,7 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ObjectHolder(Crossroads.MODID)
-public class GatewayControllerDestinationTileEntity extends BlockEntity implements IGateway, TickableBlockEntity, ILongReceiver{
+public class GatewayControllerDestinationTileEntity extends BlockEntity implements IGateway, ITickableTileEntity, ILongReceiver{
 
 	@ObjectHolder("gateway_controller_destination")
 	public static BlockEntityType<GatewayControllerDestinationTileEntity> type = null;
@@ -57,8 +57,8 @@ public class GatewayControllerDestinationTileEntity extends BlockEntity implemen
 	private int size = 0;//Diameter of the multiblock, from top center to bottom center
 	private Direction.Axis plane = null;//Legal values are null (unformed), x (for structure in x-y plane), and z (for structure in y-z plane). This should never by y
 
-	public GatewayControllerDestinationTileEntity(){
-		super(type);
+	public GatewayControllerDestinationTileEntity(BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
 	@Override
@@ -434,8 +434,8 @@ public class GatewayControllerDestinationTileEntity extends BlockEntity implemen
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		//Active only
 		address = nbt.contains("address") ? GatewayAddress.deserialize(nbt.getInt("address")) : null;
 		EnumBeamAlignments[] lastDialedChev = new EnumBeamAlignments[4];

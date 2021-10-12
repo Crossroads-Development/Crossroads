@@ -9,12 +9,13 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.alchemy.ReactionChamber;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -24,25 +25,23 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ObjectHolder;
 
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE.ItemHandler;
-
 @ObjectHolder(Crossroads.MODID)
 public class ReactionChamberTileEntity extends AlchemyReactorTE{
 
 	@ObjectHolder("reaction_chamber")
-	private static BlockEntityType<ReactionChamberTileEntity> type = null;
+	public static BlockEntityType<ReactionChamberTileEntity> TYPE = null;
 
 	private int energy = 0;
 	private static final int ENERGY_CAPACITY = 20;
 	public static final int DRAIN = 10;
 	public static final int CAPACITY = 200;
 
-	public ReactionChamberTileEntity(){
-		super(type);
+	public ReactionChamberTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
-	public ReactionChamberTileEntity(boolean glass){
-		super(type, glass);
+	public ReactionChamberTileEntity(BlockPos pos, BlockState state, boolean glass){
+		super(TYPE, pos, state, glass);
 	}
 
 	@Override
@@ -67,11 +66,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	public void tick(){
-		if(level.isClientSide){
-			return;
-		}
-
+	public void serverTick(){
 		if(energy >= DRAIN){
 			energy -= DRAIN;
 			//Spawn random electric arcs between the walls of the block
@@ -157,8 +152,8 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		energy = nbt.getInt("ener");
 	}
 

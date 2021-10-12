@@ -8,20 +8,21 @@ import com.Da_Technomancer.crossroads.blocks.alchemy.ReagentFilter;
 import com.Da_Technomancer.crossroads.gui.container.ReagentFilterContainer;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import io.netty.buffer.Unpooled;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.Container;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.Container;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -33,17 +34,17 @@ import javax.annotation.Nullable;
 public class ReagentFilterTileEntity extends AlchemyCarrierTE implements MenuProvider, Container{
 
 	@ObjectHolder("reagent_filter")
-	private static BlockEntityType<ReagentFilterTileEntity> type = null;
+	public static BlockEntityType<ReagentFilterTileEntity> TYPE = null;
 
 	private Direction facing = null;
 	private ItemStack inventory = ItemStack.EMPTY;
 
-	public ReagentFilterTileEntity(){
-		super(type);
+	public ReagentFilterTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
-	public ReagentFilterTileEntity(boolean crystal){
-		super(type, !crystal);
+	public ReagentFilterTileEntity(BlockPos pos, BlockState state, boolean crystal){
+		super(TYPE, pos, state, !crystal);
 	}
 
 	private Direction getFacing(){
@@ -61,16 +62,16 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements MenuPro
 	}
 
 	@Override
-	public void clearCache(){
-		super.clearCache();
+	public void setBlockState(BlockState stateIn){
+		super.setBlockState(stateIn);
 		facing = null;
 		chemOpt.invalidate();
 		chemOpt = LazyOptional.of(() -> handler);
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		inventory = nbt.contains("inv") ? ItemStack.of(nbt.getCompound("inv")) : ItemStack.EMPTY;
 	}
 

@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.CircuitUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.blocks.redstone.IRedstoneHandler;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -16,10 +17,10 @@ import net.minecraftforge.registries.ObjectHolder;
 public class HeatLimiterRedstoneTileEntity extends HeatLimiterBasicTileEntity{
 
 	@ObjectHolder("heat_limiter")
-	private static BlockEntityType<HeatLimiterRedstoneTileEntity> type = null;
+	public static BlockEntityType<HeatLimiterRedstoneTileEntity> TYPE = null;
 
-	public HeatLimiterRedstoneTileEntity(){
-		super(type);
+	public HeatLimiterRedstoneTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
 	@Override
@@ -36,9 +37,9 @@ public class HeatLimiterRedstoneTileEntity extends HeatLimiterBasicTileEntity{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
-		redsHandler.read(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
+		redsHandler.read(nbt);
 	}
 
 	@Override

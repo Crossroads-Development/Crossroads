@@ -138,7 +138,7 @@ public class CRTileEntity{
 		register(EmbryoLabTileEntity::new, "embryo_lab", reg, embryoLab);
 	}
 
-	private static void register(Supplier<? extends BlockEntity> cons, String id, IForgeRegistry<BlockEntityType<?>> reg, Block... blocks){
+	private static void register(BlockEntityType.BlockEntitySupplier<?> cons, String id, IForgeRegistry<BlockEntityType<?>> reg, Block... blocks){
 		BlockEntityType<? extends BlockEntity> teType = BlockEntityType.Builder.of(cons, blocks).build(DSL.emptyPartType());
 		teType.setRegistryName(new ResourceLocation(Crossroads.MODID, id));
 		reg.register(teType);

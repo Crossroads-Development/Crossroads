@@ -27,8 +27,8 @@ public class RedstoneFluidTube extends FluidTube{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new RedstoneFluidTubeTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new RedstoneFluidTubeTileEntity(pos, state);
 	}
 
 	@Override

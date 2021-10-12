@@ -16,6 +16,7 @@ import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.packets.INBTReceiver;
 import com.Da_Technomancer.essentials.packets.SendNBTToClient;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -44,7 +45,7 @@ import java.util.Optional;
 public class LensFrameTileEntity extends BlockEntity implements IBeamRenderTE, IIntReceiver, INBTReceiver, ContainerListener{
 
 	@ObjectHolder("lens_frame")
-	public static BlockEntityType<LensFrameTileEntity> type = null;
+	public static BlockEntityType<LensFrameTileEntity> TYPE = null;
 
 	private int packetNeg;
 	private int packetPos;
@@ -55,8 +56,8 @@ public class LensFrameTileEntity extends BlockEntity implements IBeamRenderTE, I
 	private boolean recipeCheck;
 	private int lastRedstone;
 
-	public LensFrameTileEntity(){
-		super(type);
+	public LensFrameTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 		inventoryWrapper.addListener(this);
 	}
 
@@ -90,8 +91,8 @@ public class LensFrameTileEntity extends BlockEntity implements IBeamRenderTE, I
 	}
 
 	@Override
-	public void clearCache(){
-		super.clearCache();
+	public void setBlockState(BlockState stateIn){
+		super.setBlockState(stateIn);
 		if(beamer[1] != null && level != null){
 			beamer[1].emit(BeamUnit.EMPTY, level);
 			refreshBeam(true);
@@ -107,7 +108,7 @@ public class LensFrameTileEntity extends BlockEntity implements IBeamRenderTE, I
 		magicOptNeg = LazyOptional.of(() -> new BeamHandler(AxisDirection.POSITIVE));
 
 		if(level != null && !level.isClientSide){
-			CRPackets.sendPacketAround(level, worldPosition, new SendIntToClient((byte)3, 0, worldPosition));
+			CRPackets.sendPacketAround(level, worldPosition, new SendIntToClient((byte) 3, 0, worldPosition));
 		}
 	}
 
@@ -194,8 +195,8 @@ public class LensFrameTileEntity extends BlockEntity implements IBeamRenderTE, I
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		packetPos = nbt.getInt("beam_pos");
 		packetNeg = nbt.getInt("beam_neg");
 		lastRedstone = nbt.getInt("reds");

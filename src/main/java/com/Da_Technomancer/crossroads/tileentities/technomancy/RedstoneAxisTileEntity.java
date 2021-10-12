@@ -25,8 +25,8 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 	@ObjectHolder("redstone_axis")
 	private static BlockEntityType<RedstoneAxisTileEntity> type = null;
 
-	public RedstoneAxisTileEntity(){
-		super(type);
+	public RedstoneAxisTileEntity(BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
 	/**
@@ -112,9 +112,9 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
-		redsHandler.read(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
+		redsHandler.read(nbt);
 	}
 
 	@Override

@@ -41,8 +41,8 @@ public class HeatReservoir extends BaseEntityBlock implements IReadable{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new HeatReservoirTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new HeatReservoirTileEntity(pos, state);
 	}
 
 	@Override

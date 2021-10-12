@@ -27,8 +27,8 @@ public class HeatSinkTileEntity extends ModuleTE{
 	public static final int[] MODES = {5, 10, 15, 20, 25};
 	private int mode = 0;
 
-	public HeatSinkTileEntity(){
-		super(type);
+	public HeatSinkTileEntity(BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
 	public int cycleMode(){
@@ -65,8 +65,8 @@ public class HeatSinkTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		mode = nbt.getInt("mode");
 	}
 

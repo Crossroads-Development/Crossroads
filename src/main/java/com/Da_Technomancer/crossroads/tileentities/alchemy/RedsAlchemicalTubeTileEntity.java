@@ -2,22 +2,24 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder(Crossroads.MODID)
 public class RedsAlchemicalTubeTileEntity extends AlchemicalTubeTileEntity{
 
 	@ObjectHolder("reds_alchemical_tube")
-	private static BlockEntityType<RedsAlchemicalTubeTileEntity> type = null;
+	public static BlockEntityType<RedsAlchemicalTubeTileEntity> TYPE = null;
 
-	public RedsAlchemicalTubeTileEntity(){
-		super(type);
+	public RedsAlchemicalTubeTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
-	public RedsAlchemicalTubeTileEntity(boolean glass){
-		super(type, glass);
+	public RedsAlchemicalTubeTileEntity(BlockPos pos, BlockState state, boolean glass){
+		super(TYPE, pos, state, glass);
 	}
 
 	private boolean isUnlocked(){

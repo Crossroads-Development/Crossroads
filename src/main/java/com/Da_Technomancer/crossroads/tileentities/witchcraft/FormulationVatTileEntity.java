@@ -46,7 +46,7 @@ public class FormulationVatTileEntity extends InventoryTE{
 	public static final int REQUIRED = 200;
 	private double progress = 0;
 
-	public FormulationVatTileEntity(){
+	public FormulationVatTileEntity(BlockPos pos, BlockState state){
 		super(type, 1);
 		fluidProps[0] = new TankProperty(4_000, true, false);
 		fluidProps[1] = new TankProperty(4_000, false, true);
@@ -127,8 +127,8 @@ public class FormulationVatTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		progress = nbt.getDouble("prog");
 	}
 

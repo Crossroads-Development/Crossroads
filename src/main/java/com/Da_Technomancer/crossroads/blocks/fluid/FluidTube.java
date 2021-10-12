@@ -74,8 +74,8 @@ public class FluidTube extends ConduitBlock<EnumTransferMode>{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new FluidTubeTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new FluidTubeTileEntity(pos, state);
 	}
 
 	@Override

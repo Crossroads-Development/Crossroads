@@ -40,7 +40,7 @@ public class WindingTableTileEntity extends InventoryTE{
 
 	private boolean redstone = false;//Whether this block was powered by redstone
 
-	public WindingTableTileEntity(){
+	public WindingTableTileEntity(BlockPos pos, BlockState state){
 		super(type, 1);
 	}
 
@@ -155,8 +155,8 @@ public class WindingTableTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		redstone = nbt.getBoolean("reds");
 	}
 

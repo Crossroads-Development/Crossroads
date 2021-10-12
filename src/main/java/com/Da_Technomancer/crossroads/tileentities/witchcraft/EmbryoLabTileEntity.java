@@ -65,7 +65,7 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 		super.addInfo(chat, player, hit);
 	}
 
-	public EmbryoLabTileEntity(){
+	public EmbryoLabTileEntity(BlockPos pos, BlockState state){
 		super(type, 1);
 		//Index 0: output
 	}
@@ -184,8 +184,8 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		if(nbt.contains("template")){
 			template = new EntityTemplate();
 			template.deserializeNBT(nbt.getCompound("template"));

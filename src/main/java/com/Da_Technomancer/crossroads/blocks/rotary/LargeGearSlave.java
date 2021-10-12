@@ -79,8 +79,8 @@ public class LargeGearSlave extends BaseEntityBlock{
 	}
 	
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new LargeGearSlaveTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new LargeGearSlaveTileEntity(pos, state);
 	}
 
 	@Override

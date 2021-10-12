@@ -24,8 +24,8 @@ public class DetailedAutoCrafter extends AutoCrafter{
 
 	@Nullable
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new DetailedAutoCrafterTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new DetailedAutoCrafterTileEntity(pos, state);
 	}
 
 	@Override

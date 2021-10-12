@@ -20,12 +20,12 @@ public class RedstoneHeatCableTileEntity extends HeatCableTileEntity{
 	@ObjectHolder("redstone_heat_cable")
 	private static BlockEntityType<RedstoneHeatCableTileEntity> type = null;
 
-	public RedstoneHeatCableTileEntity(){
+	public RedstoneHeatCableTileEntity(BlockPos pos, BlockState state){
 		this(HeatInsulators.WOOL);
 	}
 
 	public RedstoneHeatCableTileEntity(HeatInsulators insulator){
-		super(type);
+		super(type, pos, state);
 		this.insulator = insulator;
 	}
 

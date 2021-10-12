@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
@@ -19,22 +20,20 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE.ItemHandler;
-
 @ObjectHolder(Crossroads.MODID)
 public class ReagentTankTileEntity extends AlchemyCarrierTE{
 
 	@ObjectHolder("reagent_tank")
-	private static BlockEntityType<ReagentTankTileEntity> type = null;
+	public static BlockEntityType<ReagentTankTileEntity> TYPE = null;
 
 	public static final int CAPACITY = 1_000;
 
-	public ReagentTankTileEntity(){
-		super(type);
+	public ReagentTankTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
-	public ReagentTankTileEntity(boolean glass){
-		super(type, glass);
+	public ReagentTankTileEntity(BlockPos pos, BlockState state, boolean glass){
+		super(TYPE, pos, state, glass);
 	}
 
 	public float getReds(){

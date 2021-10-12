@@ -19,8 +19,8 @@ public class HeatReservoirTileEntity extends ModuleTE{
 	@ObjectHolder("heat_reservoir")
 	private static BlockEntityType<HeatReservoirTileEntity> type = null;
 
-	public HeatReservoirTileEntity(){
-		super(type);
+	public HeatReservoirTileEntity(BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
 	@Override

@@ -9,14 +9,15 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoilTop;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.LeydenJar;
-import net.minecraft.world.level.block.state.BlockState;
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -27,10 +28,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @ObjectHolder(Crossroads.MODID)
-public class TeslaCoilTileEntity extends BlockEntity implements TickableBlockEntity, IIntReceiver{
+public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEntity, IIntReceiver{
 
 	@ObjectHolder("tesla_coil")
-	private static BlockEntityType<TeslaCoilTileEntity> type = null;
+	public static BlockEntityType<TeslaCoilTileEntity> TYPE = null;
 
 	public static final int CAPACITY = 2000;
 
@@ -38,8 +39,8 @@ public class TeslaCoilTileEntity extends BlockEntity implements TickableBlockEnt
 	private Boolean hasJar = null;
 	public boolean redstone = false;
 
-	public TeslaCoilTileEntity(){
-		super(type);
+	public TeslaCoilTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
 	public float getRedstone(){
@@ -94,19 +95,22 @@ public class TeslaCoilTileEntity extends BlockEntity implements TickableBlockEnt
 
 	@Override
 	public void tick(){
+		//This is a common tick method
+		//Due to the use of RNG to generate the bolt on both sides, depending on the implementation of jolt(),
+		//the timing of jolts may differ on the client vs server sides
 		if(!redstone && level.random.nextInt(10) == 0 && stored > 0){
 			BlockEntity topTE = level.getBlockEntity(worldPosition.above());
 			if(topTE instanceof TeslaCoilTopTileEntity){
 				((TeslaCoilTopTileEntity) topTE).jolt(this);
 			}
 		}
+	}
 
-		if(level.isClientSide){
-			return;
-		}
-
+	@Override
+	public void serverTick(){
+		ITickableTileEntity.super.serverTick();
 		if(!redstone && stored > 0){
-			Direction facing = level.getBlockState(worldPosition).getValue(CRProperties.HORIZ_FACING);
+			Direction facing = getBlockState().getValue(CRProperties.HORIZ_FACING);
 			BlockEntity te = level.getBlockEntity(worldPosition.relative(facing));
 			LazyOptional<IEnergyStorage> energyOpt;
 			if(te != null && (energyOpt = te.getCapability(CapabilityEnergy.ENERGY, facing.getOpposite())).isPresent()){
@@ -135,8 +139,8 @@ public class TeslaCoilTileEntity extends BlockEntity implements TickableBlockEnt
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		stored = nbt.getInt("stored");
 		redstone = nbt.getBoolean("reds");
 	}

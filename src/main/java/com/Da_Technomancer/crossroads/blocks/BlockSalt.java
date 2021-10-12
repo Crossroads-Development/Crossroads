@@ -2,39 +2,31 @@ package com.Da_Technomancer.crossroads.blocks;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.essentials.blocks.FertileSoil;
-import net.minecraft.block.*;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.BushBlock;
-import net.minecraft.world.level.block.FallingBlock;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-import net.minecraft.world.level.block.state.BlockState;
 
 public class BlockSalt extends FallingBlock{
 
@@ -65,7 +57,7 @@ public class BlockSalt extends FallingBlock{
 	}
 	
 	protected BlockSalt(){
-		super(Properties.of(Material.SAND).harvestTool(ToolType.SHOVEL).harvestLevel(0).strength(.5F).sound(SoundType.SAND).randomTicks());
+		super(Properties.of(Material.SAND).strength(.5F).sound(SoundType.SAND).randomTicks());//Mine with shovel
 		String name = "block_salt";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
@@ -73,12 +65,12 @@ public class BlockSalt extends FallingBlock{
 	}
 
 	@Override
-	public void stepOn(Level worldIn, BlockPos pos, Entity entityIn){
+	public void stepOn(Level worldIn, BlockPos pos, BlockState state, Entity entityIn){
 		if(!worldIn.isClientSide && (entityIn instanceof Slime || entityIn instanceof Creeper)){
 			entityIn.hurt(SALT_DAMAGE, 20);
 		}
 
-		super.stepOn(worldIn, pos, entityIn);
+		super.stepOn(worldIn, pos, state, entityIn);
 	}
 	
 	public static boolean salinate(Level worldIn, BlockPos pos){
@@ -86,7 +78,7 @@ public class BlockSalt extends FallingBlock{
 		Block killBlock = killState.getBlock();
 		BlockState resultState = killState;
 		
-		if(killBlock.is(Tags.Blocks.DIRT) && killBlock != Blocks.COARSE_DIRT){
+		if(Tags.Blocks.DIRT.contains(killBlock) && killBlock != Blocks.COARSE_DIRT){
 			//Kill dirt, grass, etc
 			resultState = Blocks.COARSE_DIRT.defaultBlockState();
 		}else if(killBlock instanceof BushBlock){

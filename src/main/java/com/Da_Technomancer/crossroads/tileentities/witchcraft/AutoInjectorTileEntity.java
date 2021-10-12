@@ -56,7 +56,7 @@ public class AutoInjectorTileEntity extends InventoryTE{
 	private int intensity = 0;//There's an offset of 1 on this- 0 is intensity 1, 1 is intensity 2, etc
 	private int duration = 0;//In ticks
 
-	public AutoInjectorTileEntity(){
+	public AutoInjectorTileEntity(BlockPos pos, BlockState state){
 		super(type, 2);//Index 0: Input; Index 1: Output bottles
 	}
 
@@ -169,8 +169,8 @@ public class AutoInjectorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		int effectID = nbt.getInt("effect_id");
 		if(effectID <= 0){
 			storedEffect = null;

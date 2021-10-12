@@ -32,7 +32,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -64,8 +64,8 @@ public class HydroponicsTrough extends BaseEntityBlock implements IReadable, Bon
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new HydroponicsTroughTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new HydroponicsTroughTileEntity(pos, state);
 	}
 
 	@Override

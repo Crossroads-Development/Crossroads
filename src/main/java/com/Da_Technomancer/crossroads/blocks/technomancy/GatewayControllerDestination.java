@@ -40,8 +40,8 @@ public class GatewayControllerDestination extends BaseEntityBlock{
 
 	@Nullable
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new GatewayControllerDestinationTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new GatewayControllerDestinationTileEntity(pos, state);
 	}
 
 	@Override

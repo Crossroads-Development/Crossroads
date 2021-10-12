@@ -40,7 +40,7 @@ public class SteamBoilerTileEntity extends InventoryTE{
 	public static final int BATCH_SIZE = 100;
 	public static final int[] TIERS = {100, 200, 300, 400, 500};
 
-	public SteamBoilerTileEntity(){
+	public SteamBoilerTileEntity(BlockPos pos, BlockState state){
 		super(type, 1);//Salt
 		fluidProps[0] = new TankProperty(8_000, true, false, f -> f == Fluids.WATER || CRFluids.DISTILLED_WATER.contains(f));
 		fluidProps[1] = new TankProperty(8_000, false, true, fluid -> true);

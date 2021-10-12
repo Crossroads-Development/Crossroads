@@ -40,7 +40,7 @@ public class FatCollectorTileEntity extends InventoryTE{
 	public static final double[] EFFICIENCY = {0.8D, 1D, 1.2D, 1D, 0.8D, 0};
 	private static final double USE_PER_VALUE = 2D;
 
-	public FatCollectorTileEntity(){
+	public FatCollectorTileEntity(BlockPos pos, BlockState state){
 		super(type, 1);
 		fluidProps[0] = new TankProperty(8_000, false, true);
 		initFluidManagers();

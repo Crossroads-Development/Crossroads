@@ -8,17 +8,18 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.essentials.packets.ILongReceiver;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.material.Fluid;
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -32,14 +33,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.Predicate;
 
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-
 /**
  * Most Crossroads machines extend this class, which provides the ability to enable highly configurable support for most things (fluids, heat, rotary) with only a few overrides
  * Machines that also use ItemStacks or UIs override the subclass, InventoryTE
  * I'd call this class boilerplate, except its 500+ lines
  */
-public abstract class ModuleTE extends BlockEntity implements TickableBlockEntity, IInfoTE, ILongReceiver{
+public abstract class ModuleTE extends BlockEntity implements ITickableTileEntity, IInfoTE, ILongReceiver{
 
 	//Rotary
 	protected double energy = 0;
@@ -89,8 +88,8 @@ public abstract class ModuleTE extends BlockEntity implements TickableBlockEntit
 		return new FluidHandler(-1);
 	}
 
-	public ModuleTE(BlockEntityType<? extends ModuleTE> type){
-		super(type);
+	public ModuleTE(BlockEntityType<? extends ModuleTE> type, BlockPos pos, BlockState state){
+		super(type, pos, state);
 		if(useHeat()){
 			heatHandler = createHeatHandler();
 			heatOpt = LazyOptional.of(() -> heatHandler);
@@ -114,12 +113,11 @@ public abstract class ModuleTE extends BlockEntity implements TickableBlockEntit
 	}
 
 	@Override
-	public void tick(){
-		if(!level.isClientSide){
-			if(useHeat() && !initHeat){
-				heatHandler.init();
-			}
+	public void serverTick(){
+		if(useHeat() && !initHeat){
+			heatHandler.init();
 		}
+		ITickableTileEntity.super.serverTick();
 	}
 
 	@Override
@@ -159,8 +157,8 @@ public abstract class ModuleTE extends BlockEntity implements TickableBlockEntit
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		energy = nbt.getDouble("mot_1");
 
 		initHeat = nbt.getBoolean("init_heat");

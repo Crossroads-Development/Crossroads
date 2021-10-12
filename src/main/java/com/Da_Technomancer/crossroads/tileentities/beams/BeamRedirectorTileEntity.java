@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.Direction;
@@ -15,12 +16,12 @@ import net.minecraftforge.registries.ObjectHolder;
 public class BeamRedirectorTileEntity extends BeamRenderTE{
 
 	@ObjectHolder("beam_redirector")
-	public static BlockEntityType<BeamRedirectorTileEntity> type = null;
+	public static BlockEntityType<BeamRedirectorTileEntity> TYPE = null;
 
 	private Direction dir = null;
 
-	public BeamRedirectorTileEntity(){
-		super(type);
+	public BeamRedirectorTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
 	private Direction getDir(){
@@ -35,9 +36,9 @@ public class BeamRedirectorTileEntity extends BeamRenderTE{
 	}
 
 	@Override
-	public void clearCache(){
+	public void setBlockState(BlockState stateIn){
+		super.setBlockState(stateIn);
 		dir = null;
-		super.clearCache();
 	}
 
 	@Override

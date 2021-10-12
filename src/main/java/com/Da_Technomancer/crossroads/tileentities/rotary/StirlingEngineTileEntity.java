@@ -43,8 +43,8 @@ public class StirlingEngineTileEntity extends ModuleTE{
 	private double lastHeatIn = 0;
 	private double lastHeatOut = 0;
 
-	public StirlingEngineTileEntity(){
-		super(type);
+	public StirlingEngineTileEntity(BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
 	@Override
@@ -141,8 +141,8 @@ public class StirlingEngineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 
 		tempSide = nbt.getDouble("temp_side");
 		tempBottom = nbt.getDouble("temp_bottom");

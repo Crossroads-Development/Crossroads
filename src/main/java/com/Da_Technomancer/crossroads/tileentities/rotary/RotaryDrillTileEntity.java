@@ -38,12 +38,12 @@ public class RotaryDrillTileEntity extends ModuleTE{
 
 	private static final DamageSource DRILL = new DamageSource("drill");
 
-	public RotaryDrillTileEntity(){
-		super(type);
+	public RotaryDrillTileEntity(BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
 	public RotaryDrillTileEntity(boolean golden){
-		super(type);
+		super(type, pos, state);
 		this.golden = golden;
 	}
 
@@ -146,8 +146,8 @@ public class RotaryDrillTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		golden = nbt.getBoolean("gold");
 	}
 

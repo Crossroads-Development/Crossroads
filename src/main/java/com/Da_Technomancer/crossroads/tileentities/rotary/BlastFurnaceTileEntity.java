@@ -52,7 +52,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 	private int carbon = 0;
 	private int progress = 0;
 
-	public BlastFurnaceTileEntity(){
+	public BlastFurnaceTileEntity(BlockPos pos, BlockState state){
 		super(type, 3);//0: Input; 1: Carbon; 2: Slag
 		fluidProps[0] = new TankProperty(4_000, false, true);
 		initFluidManagers();
@@ -182,8 +182,8 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		progress = nbt.getInt("prog");
 		carbon = nbt.getInt("carbon");
 	}

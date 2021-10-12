@@ -51,8 +51,9 @@ public interface IBeamRenderTE extends IInfoTE{
 
 	/* Recommended override for subclasses
 	@Override
-	public AxisAlignedBB getRenderBoundingBox(){
-		return INFINITE_EXTENT_AABB;
+	public AABB getRenderBoundingBox(){
+		//Expand the render box to include all possible beams from this block
+		return new AABB(worldPosition.offset(-BeamUtil.MAX_DISTANCE, -BeamUtil.MAX_DISTANCE, -BeamUtil.MAX_DISTANCE), worldPosition.offset(1 + BeamUtil.MAX_DISTANCE, 1 + BeamUtil.MAX_DISTANCE, 1 + BeamUtil.MAX_DISTANCE));
 	}
 	 */
 }

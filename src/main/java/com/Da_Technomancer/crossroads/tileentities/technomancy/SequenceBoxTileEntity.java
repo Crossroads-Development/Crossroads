@@ -42,8 +42,8 @@ public class SequenceBoxTileEntity extends BlockEntity implements INBTReceiver, 
 	private int index = 0;
 	private boolean hadRedstoneSignal = false;//Whether this block is currently receiving a redstone signal- used for differenting pulses
 
-	public SequenceBoxTileEntity(){
-		super(type);
+	public SequenceBoxTileEntity(BlockPos pos, BlockState state){
+		super(type, pos, state);
 		sanitizeState();
 	}
 
@@ -95,8 +95,8 @@ public class SequenceBoxTileEntity extends BlockEntity implements INBTReceiver, 
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		hadRedstoneSignal = nbt.getBoolean("redstone");
 		index = nbt.getInt("index");
 		sequenceVal.clear();

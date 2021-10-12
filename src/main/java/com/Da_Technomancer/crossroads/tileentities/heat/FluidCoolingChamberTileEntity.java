@@ -41,7 +41,7 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 	public static final int HEATING_RATE = 40;
 	private double storedHeat = 0;//The buffered heat that will be added to the temperature over time at a constant rate
 
-	public FluidCoolingChamberTileEntity(){
+	public FluidCoolingChamberTileEntity(BlockPos pos, BlockState state){
 		super(type, 1);
 		fluidProps[0] = new TankProperty(4_000, true, false, o -> true);
 		initFluidManagers();
@@ -97,8 +97,8 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		storedHeat = nbt.getDouble("heat_stored");
 	}
 

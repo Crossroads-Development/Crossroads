@@ -54,8 +54,8 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	//Flux related fields
 	private final FluxHelper fluxHelper = new FluxHelper(type, this, Behaviour.SOURCE);
 
-	public BeaconHarnessTileEntity(){
-		super(type);
+	public BeaconHarnessTileEntity(BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
 	@Override
@@ -150,8 +150,8 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		running = nbt.getBoolean("run");
 		cycles = nbt.getInt("cycle");
 		fluxHelper.readData(nbt);

@@ -12,14 +12,15 @@ import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -30,14 +31,13 @@ import java.util.ArrayList;
 public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements IInfoTE{
 
 	@ObjectHolder("crystal_master_axis")
-	private static BlockEntityType<CrystalMasterAxisTileEntity> type = null;
+	public static BlockEntityType<CrystalMasterAxisTileEntity> TYPE = null;
 
-	private double lastSumEnergy;
 	private EnumBeamAlignments currentElement;
 	private int time;
 
-	public CrystalMasterAxisTileEntity(){
-		super(type);
+	public CrystalMasterAxisTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 			}
 		}else if(currentElement == EnumBeamAlignments.EQUILIBRIUM){
 			if(sumIRot > 0){
-				sumEnergy = (sumEnergy + 9D * lastSumEnergy) / 10D;
+				sumEnergy = (sumEnergy + 9D * prevSumEnergy) / 10D;
 				baseSpeed = Math.signum(sumEnergy) * Math.sqrt(Math.abs(sumEnergy) * 2D / sumIRot);
 			}
 		}
@@ -103,17 +103,17 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		time = nbt.getInt("time");
 		currentElement = nbt.contains("elem") ? EnumBeamAlignments.valueOf(nbt.getString("elem")) : null;
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
+	public void serverTick(){
+		super.serverTick();
 
-		if(!level.isClientSide && currentElement != null && time-- <= 0){
+		if(currentElement != null && time-- <= 0){
 			currentElement = null;
 			time = 0;
 		}

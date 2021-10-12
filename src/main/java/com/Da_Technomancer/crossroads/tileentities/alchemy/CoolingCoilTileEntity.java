@@ -6,8 +6,10 @@ import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -17,18 +19,18 @@ import net.minecraftforge.registries.ObjectHolder;
 public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 
 	@ObjectHolder("cooling_coil")
-	private static BlockEntityType<CoolingCoilTileEntity> type = null;
+	public static BlockEntityType<CoolingCoilTileEntity> TYPE = null;
 
 	//Cached biome temperature
 	private boolean init = false;
 	private double ambientTemp = 0;
 
-	public CoolingCoilTileEntity(){
-		super(type);
+	public CoolingCoilTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
-	public CoolingCoilTileEntity(boolean glass){
-		super(type, glass);
+	public CoolingCoilTileEntity(BlockPos pos, BlockState state, boolean glass){
+		super(TYPE, pos, state, glass);
 	}
 
 	private double calcAmbTemp(){

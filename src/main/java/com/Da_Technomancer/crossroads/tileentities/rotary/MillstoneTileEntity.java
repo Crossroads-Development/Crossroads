@@ -44,7 +44,7 @@ public class MillstoneTileEntity extends InventoryTE{
 	public static final double POWER = 10D;
 	public static final double INERTIA = 200D;
 
-	public MillstoneTileEntity(){
+	public MillstoneTileEntity(BlockPos pos, BlockState state){
 		super(type, 4);
 	}
 
@@ -198,8 +198,8 @@ public class MillstoneTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		progress = nbt.getDouble("prog");
 	}
 

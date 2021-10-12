@@ -9,20 +9,21 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.HeatLimiterContainer;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.packets.INBTReceiver;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -31,10 +32,10 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 @ObjectHolder(Crossroads.MODID)
-public class HeatLimiterBasicTileEntity extends BlockEntity implements TickableBlockEntity, IInfoTE, MenuProvider, INBTReceiver{
+public class HeatLimiterBasicTileEntity extends BlockEntity implements ITickableTileEntity, IInfoTE, MenuProvider, INBTReceiver{
 
 	@ObjectHolder("heat_limiter_basic")
-	private static BlockEntityType<HeatLimiterBasicTileEntity> type = null;
+	public static BlockEntityType<HeatLimiterBasicTileEntity> TYPE = null;
 
 	private double heatIn = 0;
 	private double heatOut = 0;
@@ -43,12 +44,12 @@ public class HeatLimiterBasicTileEntity extends BlockEntity implements TickableB
 	public float setting = 0;
 	public String expression = "0";
 
-	public HeatLimiterBasicTileEntity(){
-		super(type);
+	public HeatLimiterBasicTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
-	protected HeatLimiterBasicTileEntity(BlockEntityType<? extends HeatLimiterBasicTileEntity> type){
-		super(type);
+	protected HeatLimiterBasicTileEntity(BlockEntityType<? extends HeatLimiterBasicTileEntity> type, BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
 	@Override
@@ -63,11 +64,7 @@ public class HeatLimiterBasicTileEntity extends BlockEntity implements TickableB
 	}
 
 	@Override
-	public void tick(){
-		if(level.isClientSide){
-			return;
-		}
-
+	public void serverTick(){
 		if(!init){
 			init();
 		}
@@ -125,8 +122,8 @@ public class HeatLimiterBasicTileEntity extends BlockEntity implements TickableB
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		init = nbt.getBoolean("init_heat");
 		heatIn = nbt.getDouble("heat_in");
 		heatOut = nbt.getDouble("heat_out");
@@ -135,8 +132,8 @@ public class HeatLimiterBasicTileEntity extends BlockEntity implements TickableB
 	}
 
 	@Override
-	public void clearCache(){
-		super.clearCache();
+	public void setBlockState(BlockState stateIn){
+		super.setBlockState(stateIn);
 		heatInOpt.invalidate();
 		heatOutOpt.invalidate();
 		heatInOpt = LazyOptional.of(() -> new HeatHandler(true));

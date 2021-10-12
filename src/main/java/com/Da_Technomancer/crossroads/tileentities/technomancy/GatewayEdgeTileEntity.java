@@ -24,8 +24,8 @@ public class GatewayEdgeTileEntity extends BlockEntity implements IInfoTE{
 	//These fields will be correct for any portion of a formed multiblock
 	private BlockPos key = null;//The relative position of the top center of the multiblock. Null if this is not formedprivate Direction.Axis plane = null;//Legal values are null (unformed), x (for structure in x-y plane), and z (for structure in y-z plane). This should never by y
 
-	public GatewayEdgeTileEntity(){
-		super(type);
+	public GatewayEdgeTileEntity(BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
 	@Override
@@ -57,8 +57,8 @@ public class GatewayEdgeTileEntity extends BlockEntity implements IInfoTE{
 	//Multiblock management
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 
 		//Generic
 		key = nbt.contains("key") ? BlockPos.of(nbt.getLong("key")) : null;

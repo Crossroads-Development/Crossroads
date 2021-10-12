@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.blocks.redstone.IRedstoneHandler;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -22,12 +23,12 @@ import net.minecraftforge.registries.ObjectHolder;
 public class BeamSplitterTileEntity extends BeamRenderTE{
 
 	@ObjectHolder("beam_splitter")
-	public static BlockEntityType<BeamSplitterTileEntity> type = null;
+	public static BlockEntityType<BeamSplitterTileEntity> TYPE = null;
 
 	private Direction dir = null;
 
-	public BeamSplitterTileEntity(){
-		super(type);
+	public BeamSplitterTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
 	private Direction getDir(){
@@ -42,9 +43,9 @@ public class BeamSplitterTileEntity extends BeamRenderTE{
 	}
 
 	@Override
-	public void clearCache(){
+	public void setBlockState(BlockState stateIn){
+		super.setBlockState(stateIn);
 		dir = null;
-		super.clearCache();
 	}
 
 	public float getPowerMultiplier(){
@@ -59,9 +60,9 @@ public class BeamSplitterTileEntity extends BeamRenderTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
-		redsHandler.read(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
+		redsHandler.read(nbt);
 	}
 
 	@Override

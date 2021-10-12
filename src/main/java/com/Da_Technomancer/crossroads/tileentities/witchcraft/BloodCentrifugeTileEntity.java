@@ -44,7 +44,7 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 	private int progress = 0;
 	private int deviation = 0;
 
-	public BloodCentrifugeTileEntity(){
+	public BloodCentrifugeTileEntity(BlockPos pos, BlockState state){
 		super(type, 4);//Input: 0, 1; Output: 2, 3
 	}
 
@@ -120,8 +120,8 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		progress = nbt.getInt("progress");
 		deviation = nbt.getInt("deviation");
 	}

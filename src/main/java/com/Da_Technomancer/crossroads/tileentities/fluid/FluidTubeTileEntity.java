@@ -7,7 +7,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
+
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.Direction;
@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 @ObjectHolder(Crossroads.MODID)
-public class FluidTubeTileEntity extends BlockEntity implements TickableBlockEntity, ConduitBlock.IConduitTE<EnumTransferMode>{
+public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEntity, ConduitBlock.IConduitTE<EnumTransferMode>{
 
 	@ObjectHolder("fluid_tube")
 	private static BlockEntityType<FluidTubeTileEntity> type = null;
@@ -57,12 +57,12 @@ public class FluidTubeTileEntity extends BlockEntity implements TickableBlockEnt
 	@Nonnull
 	private FluidStack content = FluidStack.EMPTY;
 
-	public FluidTubeTileEntity(){
+	public FluidTubeTileEntity(BlockPos pos, BlockState state){
 		this(type);
 	}
 
-	protected FluidTubeTileEntity(BlockEntityType<? extends FluidTubeTileEntity> type){
-		super(type);
+	protected FluidTubeTileEntity(BlockEntityType<? extends FluidTubeTileEntity> type, BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
 	@Override
@@ -326,8 +326,8 @@ public class FluidTubeTileEntity extends BlockEntity implements TickableBlockEnt
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		ConduitBlock.IConduitTE.readConduitNBT(nbt, this);
 		content = FluidStack.loadFluidStackFromNBT(nbt);
 	}

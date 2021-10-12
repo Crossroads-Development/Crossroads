@@ -33,7 +33,7 @@ import java.util.Set;
 public class TeslaCoilTopTileEntity extends BlockEntity implements IInfoTE, ILinkTE{
 
 	@ObjectHolder("tesla_coil_top")
-	public static BlockEntityType<TeslaCoilTopTileEntity> type = null;
+	public static BlockEntityType<TeslaCoilTopTileEntity> TYPE = null;
 
 	public static final int[] COLOR_CODES = {0xFFECCFFF, 0xFFFCDFFF, 0xFFFFFAFF};
 	private static final int[] ATTACK_COLOR_CODES = {0xFFFFCCCC, 0xFFFFFFCC, 0xFFFFFAFA};
@@ -43,8 +43,8 @@ public class TeslaCoilTopTileEntity extends BlockEntity implements IInfoTE, ILin
 
 	private TeslaCoilTop.TeslaCoilVariants variant = null;
 
-	public TeslaCoilTopTileEntity(){
-		super(type);
+	public TeslaCoilTopTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
 	private TeslaCoilTop.TeslaCoilVariants getVariant(){
@@ -140,15 +140,8 @@ public class TeslaCoilTopTileEntity extends BlockEntity implements IInfoTE, ILin
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
-		int i = 0;
-		while(nbt.contains("link" + i)){
-			//TODO remove: backwards compatibility nbt format
-			//Convert from the pre-2.6.0 format used by tesla coils to the format used by LinkHelper
-			nbt.putLong("link_" + i, nbt.getLong("link" + i));
-			i++;
-		}
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		linkHelper.readNBT(nbt);
 	}
 

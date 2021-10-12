@@ -47,7 +47,7 @@ public class IncubatorTileEntity extends InventoryTE{
 	@ObjectHolder("incubator")
 	public static BlockEntityType<IncubatorTileEntity> type = null;
 
-	public IncubatorTileEntity(){
+	public IncubatorTileEntity(BlockPos pos, BlockState state){
 		super(type, 3);
 		//Index 0: mutator, index 1: eggs, index 2: output
 	}
@@ -153,8 +153,8 @@ public class IncubatorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		targetTemp = nbt.getInt("target");
 		progress = nbt.getDouble("progress");
 	}

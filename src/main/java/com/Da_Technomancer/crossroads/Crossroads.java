@@ -22,6 +22,7 @@ import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.TESR.CRRendererRegistry;
 import com.Da_Technomancer.crossroads.tileentities.CRTileEntity;
 import com.Da_Technomancer.crossroads.world.CRWorldGen;
+import com.Da_Technomancer.essentials.blocks.redstone.IRedstoneHandler;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -44,6 +45,7 @@ import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -86,7 +88,7 @@ public final class Crossroads{
 	private void commonInit(@SuppressWarnings("unused") FMLCommonSetupEvent e){
 		//Pre
 		CRPackets.preInit();
-		Capabilities.register();
+//		Capabilities.register();
 //		CrossroadsTileEntity.init();
 //		ModDimensions.init();
 		//Main
@@ -113,6 +115,12 @@ public final class Crossroads{
 
 	private void serverStarted(FMLDedicatedServerSetupEvent e){
 		MinecraftForge.EVENT_BUS.register(new EventHandlerServer());
+	}
+
+	@SuppressWarnings("unused")
+	@SubscribeEvent
+	public static void registerCapabilities(RegisterCapabilitiesEvent e){
+		Capabilities.register(e);
 	}
 
 	@SuppressWarnings("unused")

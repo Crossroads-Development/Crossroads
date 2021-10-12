@@ -248,7 +248,7 @@ public class CircuitUtil extends RedstoneUtil{
 		 * Loads from an NBT tag
 		 * @param nbt An NBT tag that this is saved to
 		 */
-		public void read(BlockState state, CompoundTag nbt){
+		public void read(CompoundTag nbt){
 			circRedstone = nbt.getFloat("circ_reds");
 			worldRedstone = nbt.getInt("reds");
 		}

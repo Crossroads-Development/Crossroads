@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.render.HopperHawkShoulderRenderer;
 import com.Da_Technomancer.crossroads.render.TechnomancyElytraRenderer;
 import com.Da_Technomancer.crossroads.tileentities.beams.*;
@@ -35,27 +34,27 @@ public class CRRendererRegistry{
 		ClientRegistry.bindTileEntityRenderer(SteamTurbineTileEntity.type, SteamTurbineRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(LargeGearMasterTileEntity.teType, LargeGearRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(RotaryDrillTileEntity.type, RotaryDrillRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(BeamExtractorTileEntity.type, BeamRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(QuartzStabilizerTileEntity.type, BeamRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(CrystallinePrismTileEntity.type, BeamRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(BeamReflectorTileEntity.type, BeamRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(LensFrameTileEntity.type, LensFrameRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(BeamSiphonTileEntity.type, BeamRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(BeamRedirectorTileEntity.type, BeamRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(BeamSplitterTileEntity.type, BeamRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(BeamExtractorTileEntity.TYPE, BeamRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(QuartzStabilizerTileEntity.TYPE, BeamRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(CrystallinePrismTileEntity.TYPE, BeamRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(BeamReflectorTileEntity.TYPE, BeamRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(LensFrameTileEntity.TYPE, LensFrameRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(BeamSiphonTileEntity.TYPE, BeamRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(BeamRedirectorTileEntity.TYPE, BeamRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(BeamSplitterTileEntity.TYPE, BeamRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(BeaconHarnessTileEntity.type, BeaconHarnessRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(HamsterWheelTileEntity.type, HamsterWheelRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(GatewayControllerTileEntity.type, GatewayControllerRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(GatewayControllerDestinationTileEntity.type, GatewayControllerDestinationRenderer::new);
 //		ClientRegistry.bindTileEntityRenderer(MechanicalArmTileEntity.type, MechanicalArmRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(HeatingCrucibleTileEntity.type, HeatingCrucibleRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(DynamoTileEntity.type, DynamoRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(DynamoTileEntity.TYPE, DynamoRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(LodestoneDynamoTileEntity.type, DynamoRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(ClockworkStabilizerTileEntity.type, BeamRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(WindTurbineTileEntity.type, WindTurbineRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(StampMillTileEntity.type, StampMillRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(FluxNodeTileEntity.type, FluxNodeRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(TeslaCoilTopTileEntity.type, LinkLineRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(TeslaCoilTopTileEntity.TYPE, LinkLineRenderer::new);
 //		ClientRegistry.bindTileEntityRenderer(RedstoneTransmitterTileEntity.type, LinkLineRenderer<RedstoneTransmitterTileEntity>::new);
 		//Flux machines (all have link lines)
 		ClientRegistry.bindTileEntityRenderer(ChronoHarnessTileEntity.type, ChronoHarnessRenderer::new);

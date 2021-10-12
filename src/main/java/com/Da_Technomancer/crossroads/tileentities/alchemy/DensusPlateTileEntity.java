@@ -5,34 +5,36 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.Entity;
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
-import net.minecraft.world.entity.EntitySelector;
+
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.List;
 
 @ObjectHolder(Crossroads.MODID)
-public class DensusPlateTileEntity extends BlockEntity implements TickableBlockEntity{
+public class DensusPlateTileEntity extends BlockEntity implements ITickableTileEntity{
 
 	@ObjectHolder("densus_plate")
-	private static BlockEntityType<DensusPlateTileEntity> type = null;
+	public static BlockEntityType<DensusPlateTileEntity> TYPE = null;
 
 	private static final Tag<Block> gravityBlocking = BlockTags.bind(Crossroads.MODID + ":gravity_blocking");
 
 	private final int RANGE = CRConfig.gravRange.get();
 	private final double ACCEL = CRConfig.gravAccel.get();
 
-	public DensusPlateTileEntity(){
-		super(type);
+	public DensusPlateTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
 	private Direction getFacing(){
@@ -49,11 +51,7 @@ public class DensusPlateTileEntity extends BlockEntity implements TickableBlockE
 	}
 	
 	@Override
-	public void tick(){
-		if(level.isClientSide){
-			return;
-		}
-		
+	public void serverTick(){
 		Direction dir = getFacing().getOpposite();
 		boolean inverse = isAnti();
 		int effectiveRange = RANGE;

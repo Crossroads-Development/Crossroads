@@ -28,8 +28,8 @@ public class LodestoneDynamoTileEntity extends ModuleTE{
 
 	private int fe = 0;
 
-	public LodestoneDynamoTileEntity(){
-		super(type);
+	public LodestoneDynamoTileEntity(BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
 	@Override
@@ -65,8 +65,8 @@ public class LodestoneDynamoTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		fe = nbt.getInt("charge");
 	}
 

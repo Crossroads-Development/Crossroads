@@ -12,8 +12,8 @@ public class RedstoneFluidTubeTileEntity extends FluidTubeTileEntity{
 	@ObjectHolder("redstone_fluid_tube")
 	private static BlockEntityType<RedstoneFluidTubeTileEntity> type = null;
 
-	public RedstoneFluidTubeTileEntity(){
-		super(type);
+	public RedstoneFluidTubeTileEntity(BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
 	@Override

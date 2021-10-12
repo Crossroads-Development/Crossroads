@@ -5,11 +5,12 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -20,7 +21,7 @@ import net.minecraftforge.registries.ObjectHolder;
 public class DynamoTileEntity extends ModuleTE{
 
 	@ObjectHolder("dynamo")
-	public static BlockEntityType<DynamoTileEntity> type = null;
+	public static BlockEntityType<DynamoTileEntity> TYPE = null;
 
 	private static final int CHARGE_CAPACITY = 8_000;
 	public static final int INERTIA = 200;
@@ -28,8 +29,8 @@ public class DynamoTileEntity extends ModuleTE{
 
 	private int fe = 0;
 
-	public DynamoTileEntity(){
-		super(type);
+	public DynamoTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
 	@Override
@@ -43,8 +44,8 @@ public class DynamoTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
+	public void serverTick(){
+		super.serverTick();
 
 		int operations = (int) Math.min(Math.abs(energy), POWER_MULT * Math.abs(axleHandler.getSpeed()));
 		if(operations > 0){
@@ -68,8 +69,8 @@ public class DynamoTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void clearCache(){
-		super.clearCache();
+	public void setBlockState(BlockState stateIn){
+		super.setBlockState(stateIn);
 		axleOpt.invalidate();
 		axleOpt = LazyOptional.of(() -> axleHandler);
 		feOpt.invalidate();
@@ -77,8 +78,8 @@ public class DynamoTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		fe = nbt.getInt("charge");
 	}
 

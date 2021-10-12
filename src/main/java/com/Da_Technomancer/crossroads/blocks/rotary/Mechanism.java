@@ -53,8 +53,8 @@ public class Mechanism extends BaseEntityBlock implements IReadable{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new MechanismTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new MechanismTileEntity(pos, state);
 	}
 
 	@Override

@@ -8,19 +8,19 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.essentials.packets.ILongReceiver;
 import com.Da_Technomancer.essentials.tileentities.ILinkTE;
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
 import com.Da_Technomancer.essentials.tileentities.LinkHelper;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
@@ -110,7 +110,7 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 	 * Can be used as either a superclass (extenders should pass null/themselves and their type to the constructor), or as an instantiated helper (instantiators should pass any non-null type and themselves to the constructor)
 	 * When used as a helper, calls to the IFluxLink & tick methods should be passed to this class, and read() & write() should call readData() and writeData()
 	 */
-	class FluxHelper extends BlockEntity implements TickableBlockEntity, IFluxLink{
+	class FluxHelper extends BlockEntity implements ITickableTileEntity, IFluxLink{
 
 		private static final byte RENDER_ID = 6;
 
@@ -125,12 +125,12 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 		private boolean shutDown = false;//Only used if safe mode is enabled in the config
 		private int[] rendered = new int[0];
 
-		public FluxHelper(BlockEntityType<?> type, @Nullable BlockEntity owner, Behaviour behaviour){
-			this(type, owner, behaviour, null);
+		public FluxHelper(BlockEntityType<?> type, BlockPos pos, BlockState state, @Nullable BlockEntity owner, Behaviour behaviour){
+			this(type, pos, state, owner, behaviour, null);
 		}
 
-		public FluxHelper(BlockEntityType<?> type, @Nullable BlockEntity owner, Behaviour behaviour, @Nullable Consumer<Integer> fluxTransferHandler){
-			super(type);
+		public FluxHelper(BlockEntityType<?> type, BlockPos pos, BlockState state, @Nullable BlockEntity owner, Behaviour behaviour, @Nullable Consumer<Integer> fluxTransferHandler){
+			super(type, pos, state);
 			this.owner = owner == null ? this : owner;
 			this.behaviour = behaviour;
 			linkHelper = new LinkHelper((ILinkTE) this.owner);
@@ -138,8 +138,8 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 		}
 
 		@Override
-		public void load(BlockState state, CompoundTag nbt){
-			super.load(state, nbt);
+		public void load(CompoundTag nbt){
+			super.load(nbt);
 			readData(nbt);
 		}
 
@@ -158,11 +158,6 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 		}
 
 		public void readData(CompoundTag nbt){
-			if(nbt.contains("link")){
-				//TODO remove: backwards compatibility nbt format
-				//Convert from the pre-2.6.0 format used by several flux machines to the format used by LinkHelper
-				nbt.putLong("link_0", nbt.getLong("link"));
-			}
 			linkHelper.readNBT(nbt);
 			lastTick = nbt.getLong("last_tick");
 			flux = nbt.getInt("flux");
@@ -184,18 +179,12 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 
 		/**
 		 * Ticks the flux handler
-		 * Should be called every tick
+		 * Should be called every tick on the virtual server side
 		 */
 		@Override
-		public void tick(){
+		public void serverTick(){
+			ITickableTileEntity.super.serverTick();
 			Level world = owner.getLevel();
-			if(world.isClientSide()){
-				//Play sounds
-				if(rendered.length != 0 && world.getGameTime() % FluxUtil.FLUX_TIME == 0 && CRConfig.fluxSounds.get()){
-					CRSounds.playSoundClientLocal(world, owner.getBlockPos(), CRSounds.FLUX_TRANSFER, SoundSource.BLOCKS, 0.4F, 1F);
-				}
-				return;
-			}
 			long worldTime = world.getGameTime();
 			if(worldTime != lastTick){
 				lastTick = worldTime;
@@ -217,6 +206,20 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 					owner.setChanged();
 					shutDown = FluxUtil.checkFluxOverload(this);
 				}
+			}
+		}
+
+		/**
+		 * Ticks the flux handler
+		 * Should be called every tick on the virtual client side
+		 */
+		@Override
+		public void clientTick(){
+			ITickableTileEntity.super.clientTick();
+			//Play sounds
+			Level world = owner.getLevel();
+			if(rendered.length != 0 && world.getGameTime() % FluxUtil.FLUX_TIME == 0 && CRConfig.fluxSounds.get()){
+				CRSounds.playSoundClientLocal(world, owner.getBlockPos(), CRSounds.FLUX_TRANSFER, SoundSource.BLOCKS, 0.4F, 1F);
 			}
 		}
 

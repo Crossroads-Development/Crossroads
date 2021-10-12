@@ -36,7 +36,7 @@ public class ColdStorageTileEntity extends InventoryTE{
 
 	private long lastTick;
 
-	public ColdStorageTileEntity(){
+	public ColdStorageTileEntity(BlockPos pos, BlockState state){
 		super(type, 18);
 	}
 
@@ -98,8 +98,8 @@ public class ColdStorageTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		lastTick = nbt.getLong("last_tick");
 	}
 

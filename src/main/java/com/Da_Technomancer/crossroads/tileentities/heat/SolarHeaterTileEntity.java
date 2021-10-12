@@ -25,8 +25,8 @@ public class SolarHeaterTileEntity extends ModuleTE{
 	private boolean newlyPlaced = true;//Used to immediately generate the cache to reduce the latency for the player with a new heater
 	private boolean running = false;
 
-	public SolarHeaterTileEntity(){
-		super(type);
+	public SolarHeaterTileEntity(BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
 	@Override
@@ -65,8 +65,8 @@ public class SolarHeaterTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		running = nbt.getBoolean("running");
 	}
 

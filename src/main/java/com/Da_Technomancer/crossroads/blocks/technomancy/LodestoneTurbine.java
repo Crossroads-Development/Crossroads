@@ -29,8 +29,8 @@ public class LodestoneTurbine extends BaseEntityBlock{
 
 	@Nullable
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new LodestoneTurbineTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new LodestoneTurbineTileEntity(pos, state);
 	}
 
 	@Override

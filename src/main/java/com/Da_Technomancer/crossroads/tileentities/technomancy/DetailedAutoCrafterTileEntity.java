@@ -27,8 +27,8 @@ public class DetailedAutoCrafterTileEntity extends AutoCrafterTileEntity{
 	@ObjectHolder("detailed_auto_crafter")
 	public static BlockEntityType<DetailedAutoCrafterTileEntity> type = null;
 
-	public DetailedAutoCrafterTileEntity(){
-		super(type);
+	public DetailedAutoCrafterTileEntity(BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
 	@Override

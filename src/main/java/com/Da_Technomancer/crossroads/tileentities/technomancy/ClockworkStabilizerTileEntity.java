@@ -24,8 +24,8 @@ public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 	private BeamUnitStorage storage = new BeamUnitStorage();
 	private Direction dir = null;
 
-	public ClockworkStabilizerTileEntity(){
-		super(type);
+	public ClockworkStabilizerTileEntity(BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
 	@Override
@@ -58,8 +58,8 @@ public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		storage = BeamUnitStorage.readFromNBT("stab_mag", nbt);
 	}
 

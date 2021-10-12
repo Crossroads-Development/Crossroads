@@ -33,8 +33,8 @@ public class StirlingEngine extends BaseEntityBlock{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new StirlingEngineTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new StirlingEngineTileEntity(pos, state);
 	}
 
 	@Override

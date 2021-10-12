@@ -31,8 +31,8 @@ public class LargeGearSlaveTileEntity extends BlockEntity implements IInfoTE{
 	@ObjectHolder("large_gear_slave")
 	private static BlockEntityType<LargeGearSlaveTileEntity> type = null;
 
-	public LargeGearSlaveTileEntity(){
-		super(type);
+	public LargeGearSlaveTileEntity(BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
 	public BlockPos masterPos;//Defined relative to this block's position
@@ -88,8 +88,8 @@ public class LargeGearSlaveTileEntity extends BlockEntity implements IInfoTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		this.masterPos = BlockPos.of(nbt.getLong("mast"));
 	}
 

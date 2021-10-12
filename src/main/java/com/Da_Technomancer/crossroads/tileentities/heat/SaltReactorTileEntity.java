@@ -44,7 +44,7 @@ public class SaltReactorTileEntity extends InventoryTE{
 
 	private int fuelTime = 0;
 
-	public SaltReactorTileEntity(){
+	public SaltReactorTileEntity(BlockPos pos, BlockState state){
 		super(type, 1);
 		fluidProps[0] = new TankProperty(20 * WATER_USE, true, false, CRFluids.DISTILLED_WATER::contains);//Distilled water
 		fluidProps[1] = new TankProperty(20 * WATER_USE, false, true);//Water
@@ -90,8 +90,8 @@ public class SaltReactorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		fuelTime = nbt.getInt("fuel_time");
 	}
 

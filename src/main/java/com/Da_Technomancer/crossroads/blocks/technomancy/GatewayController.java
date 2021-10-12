@@ -44,8 +44,8 @@ public class GatewayController extends BaseEntityBlock implements IReadable{
 
 	@Nullable
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new GatewayControllerTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new GatewayControllerTileEntity(pos, state);
 	}
 
 	@Override

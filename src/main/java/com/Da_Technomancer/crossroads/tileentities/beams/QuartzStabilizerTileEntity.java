@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.nbt.CompoundTag;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 
 	@ObjectHolder("quartz_stabilizer")
-	public static BlockEntityType<QuartzStabilizerTileEntity> type = null;
+	public static BlockEntityType<QuartzStabilizerTileEntity> TYPE = null;
 
 	private static final int CAPACITY = 1024;
 	private static final int[] RATES = new int[] {1, 2, 4, 8, 16, 32, 64};
@@ -32,8 +33,8 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 	private int setting = 0;
 	private BeamUnitStorage storage = new BeamUnitStorage();
 
-	public QuartzStabilizerTileEntity(){
-		super(type);
+	public QuartzStabilizerTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
 	private Direction getDir(){
@@ -64,8 +65,8 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		setting = nbt.getInt("setting");
 		storage = BeamUnitStorage.readFromNBT("stab_mag", nbt);
 	}

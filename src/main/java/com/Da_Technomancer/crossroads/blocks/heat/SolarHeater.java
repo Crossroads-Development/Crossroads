@@ -46,8 +46,8 @@ public class SolarHeater extends BaseEntityBlock{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new SolarHeaterTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new SolarHeaterTileEntity(pos, state);
 	}
 
 	@Override

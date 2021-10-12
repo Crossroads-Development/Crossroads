@@ -37,8 +37,8 @@ public class GatewayFrameEdge extends BaseEntityBlock implements IReadable{
 
 	@Nullable
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new GatewayEdgeTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new GatewayEdgeTileEntity(pos, state);
 	}
 
 	@Override

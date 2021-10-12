@@ -40,7 +40,7 @@ public class FluxSinkTileEntity extends IFluxLink.FluxHelper{
 	public static final float STARTUP_TIME = 60;//Used for rendering
 	public final int[] renderPortals = new int[] {-1, -1};//Used for rendering; indices of the floating portals to render an entropy transfer into, -1 means no transfer
 
-	public FluxSinkTileEntity(){
+	public FluxSinkTileEntity(BlockPos pos, BlockState state){
 		super(type, null, Behaviour.SINK, null);
 		this.fluxTransferHandler = this::consumeFlux;
 	}
@@ -139,8 +139,8 @@ public class FluxSinkTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		running = nbt.getBoolean("running");
 		runningStartTime = nbt.getLong("run_time");
 	}

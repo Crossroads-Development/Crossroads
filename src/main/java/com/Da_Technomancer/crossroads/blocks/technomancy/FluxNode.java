@@ -51,8 +51,8 @@ public class FluxNode extends BaseEntityBlock implements IReadable{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new FluxNodeTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new FluxNodeTileEntity(pos, state);
 	}
 
 	@Override

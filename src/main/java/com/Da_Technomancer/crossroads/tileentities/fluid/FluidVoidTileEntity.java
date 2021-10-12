@@ -22,8 +22,8 @@ public class FluidVoidTileEntity extends BlockEntity{
 	@ObjectHolder("fluid_void")
 	private static BlockEntityType<FluidVoidTileEntity> type = null;
 
-	public FluidVoidTileEntity(){
-		super(type);
+	public FluidVoidTileEntity(BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
 	@SuppressWarnings("unchecked")

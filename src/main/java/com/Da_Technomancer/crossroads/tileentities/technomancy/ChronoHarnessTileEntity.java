@@ -44,7 +44,7 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 	private int clientCurPower = 0;//Current power gen on the client; used for rendering. On the server side, tracks last sent value
 	private float angle = 0;//Used for rendering. Client side only
 
-	public ChronoHarnessTileEntity(){
+	public ChronoHarnessTileEntity(BlockPos pos, BlockState state){
 		super(type, null, Behaviour.SOURCE);
 	}
 
@@ -124,8 +124,8 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		fe = nbt.getInt("fe");
 		curPower = nbt.getInt("pow");
 		clientCurPower = curPower;

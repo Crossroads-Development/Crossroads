@@ -4,8 +4,10 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.AlchemyCarrierTE;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -16,14 +18,14 @@ import net.minecraftforge.registries.ObjectHolder;
 public class FluidInjectorTileEntity extends AlchemyCarrierTE{
 
 	@ObjectHolder("fluid_injector")
-	private static BlockEntityType<FluidInjectorTileEntity> type = null;
+	public static BlockEntityType<FluidInjectorTileEntity> TYPE = null;
 
-	public FluidInjectorTileEntity(){
-		super(type);
+	public FluidInjectorTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
-	public FluidInjectorTileEntity(boolean glass){
-		super(type, glass);
+	public FluidInjectorTileEntity(BlockPos pos, BlockState state, boolean glass){
+		super(TYPE, pos, state, glass);
 	}
 
 	@Override

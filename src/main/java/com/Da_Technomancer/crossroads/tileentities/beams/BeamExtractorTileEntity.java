@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import io.netty.buffer.Unpooled;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
@@ -38,7 +39,7 @@ import java.util.Optional;
 public class BeamExtractorTileEntity extends BeamRenderTE implements Container, MenuProvider{
 
 	@ObjectHolder("beam_extractor")
-	public static BlockEntityType<BeamExtractorTileEntity> type = null;
+	public static BlockEntityType<BeamExtractorTileEntity> TYPE = null;
 
 	private ItemStack inv = ItemStack.EMPTY;
 	private Direction facing = null;
@@ -49,8 +50,8 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements Container, 
 	private int timeRemaining = 0;//Ticks remaining, including this one, to emit fuel
 	private int timeLimit = 0;//Used for UI, total number of cycles on fuel type
 
-	public BeamExtractorTileEntity(){
-		super(type);
+	public BeamExtractorTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
 	private Direction getFacing(){
@@ -88,8 +89,8 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements Container, 
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		inv = nbt.contains("inv") ? ItemStack.of(nbt.getCompound("inv")) : ItemStack.EMPTY;
 		output = BeamUnit.readFromNBT("output", nbt);
 		timeRemaining = nbt.getInt("remain");
@@ -103,8 +104,8 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements Container, 
 	}
 
 	@Override
-	public void clearCache(){
-		super.clearCache();
+	public void setBlockState(BlockState stateIn){
+		super.setBlockState(stateIn);
 		facing = null;
 		itemOpt.invalidate();
 		itemOpt = LazyOptional.of(ItemHandler::new);

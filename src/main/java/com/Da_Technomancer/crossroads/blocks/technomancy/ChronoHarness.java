@@ -46,8 +46,8 @@ public class ChronoHarness extends BaseEntityBlock{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new ChronoHarnessTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new ChronoHarnessTileEntity(pos, state);
 	}
 
 	@Override

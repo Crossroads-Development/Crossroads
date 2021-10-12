@@ -57,7 +57,7 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 	 */
 	private ICultivatable.CultivationTrade targetTrade = null;
 
-	public CultivatorVatTileEntity(){
+	public CultivatorVatTileEntity(BlockPos pos, BlockState state){
 		super(type, 4, new int[] {0}, 0);
 		//Index 0: Target, also an input for ICultivatable items
 		//Index 1: Input 1
@@ -217,8 +217,8 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		progress = nbt.getInt("prog");
 	}
 

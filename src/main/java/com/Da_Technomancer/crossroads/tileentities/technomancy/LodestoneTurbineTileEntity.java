@@ -22,8 +22,8 @@ public class LodestoneTurbineTileEntity extends ModuleTE{
 	public static final double INERTIA = 300;
 	public static final double MAX_SPEED = 10;
 
-	public LodestoneTurbineTileEntity(){
-		super(type);
+	public LodestoneTurbineTileEntity(BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
 	@Override

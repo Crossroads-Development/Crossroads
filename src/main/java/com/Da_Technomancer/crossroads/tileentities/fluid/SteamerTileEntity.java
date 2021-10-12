@@ -42,7 +42,7 @@ public class SteamerTileEntity extends InventoryTE{
 
 	private int progress = 0;
 
-	public SteamerTileEntity(){
+	public SteamerTileEntity(BlockPos pos, BlockState state){
 		super(type, 2);
 		fluidProps[0] = new TankProperty(10_000, true, false, CRFluids.STEAM::contains);
 		fluidProps[1] = new TankProperty(10_000, false, true);

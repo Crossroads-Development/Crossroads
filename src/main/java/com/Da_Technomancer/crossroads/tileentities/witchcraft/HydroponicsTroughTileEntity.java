@@ -91,7 +91,7 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 
 	private int progress = 0;
 
-	public HydroponicsTroughTileEntity(){
+	public HydroponicsTroughTileEntity(BlockPos pos, BlockState state){
 		super(type, 5);//Slot 0 is the seed; 1, 2, 3, 4 are output
 		fluidProps[0] = new TankProperty(CAPACITY, true, false, f -> f == CRFluids.fertilizerSolution.still);
 		initFluidManagers();
@@ -244,8 +244,8 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		progress = nbt.getInt("progress");
 	}
 

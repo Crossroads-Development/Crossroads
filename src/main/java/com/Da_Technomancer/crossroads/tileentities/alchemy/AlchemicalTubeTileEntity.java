@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
 import com.Da_Technomancer.crossroads.API.templates.ConduitBlock;
 import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -22,30 +23,30 @@ import javax.annotation.Nonnull;
 public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements ConduitBlock.IConduitTE<EnumTransferMode>{
 
 	@ObjectHolder("alchemical_tube")
-	private static BlockEntityType<AlchemicalTubeTileEntity> type = null;
+	public static BlockEntityType<AlchemicalTubeTileEntity> TYPE = null;
 
 	protected boolean[] matches = new boolean[6];
 	protected EnumTransferMode[] modes = ConduitBlock.IConduitTE.genModeArray(EnumTransferMode.INPUT);
 
-	public AlchemicalTubeTileEntity(){
-		this(type);
+	public AlchemicalTubeTileEntity(BlockPos pos, BlockState state){
+		this(TYPE, pos, state);
 	}
 
-	protected AlchemicalTubeTileEntity(BlockEntityType<? extends AlchemicalTubeTileEntity> type){
-		super(type);
+	protected AlchemicalTubeTileEntity(BlockEntityType<? extends AlchemicalTubeTileEntity> type, BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
-	public AlchemicalTubeTileEntity(boolean glass){
-		this(type, glass);
+	public AlchemicalTubeTileEntity(BlockPos pos, BlockState state, boolean glass){
+		this(TYPE, pos, state, glass);
 	}
 
-	protected AlchemicalTubeTileEntity(BlockEntityType<? extends AlchemicalTubeTileEntity> type, boolean glass){
-		super(type, glass);
+	protected AlchemicalTubeTileEntity(BlockEntityType<? extends AlchemicalTubeTileEntity> type, BlockPos pos, BlockState state, boolean glass){
+		super(type, pos, state, glass);
 	}
 
 	@Override
-	public void clearCache(){
-		super.clearCache();
+	public void setBlockState(BlockState state){
+		super.setBlockState(state);
 		//When adjusting a side to lock, we need to invalidate the optional in case a side was disconnected
 		chemOpt.invalidate();
 		chemOpt = LazyOptional.of(() -> handler);
@@ -116,8 +117,8 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements Condui
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		ConduitBlock.IConduitTE.readConduitNBT(nbt, this);
 	}
 

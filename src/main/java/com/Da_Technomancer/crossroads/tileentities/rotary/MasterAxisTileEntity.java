@@ -11,10 +11,12 @@ import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
+
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.Direction;
@@ -26,10 +28,10 @@ import java.util.ArrayList;
 import java.util.Random;
 
 @ObjectHolder(Crossroads.MODID)
-public class MasterAxisTileEntity extends BlockEntity implements TickableBlockEntity, ITaylorReceiver{
+public class MasterAxisTileEntity extends BlockEntity implements ITickableTileEntity, ITaylorReceiver{
 
 	@ObjectHolder("master_axis")
-	private static BlockEntityType<MasterAxisTileEntity> type = null;
+	public static BlockEntityType<MasterAxisTileEntity> TYPE = null;
 
 	protected static final Random RAND = new Random();
 
@@ -80,12 +82,12 @@ public class MasterAxisTileEntity extends BlockEntity implements TickableBlockEn
 //	private static final float ANGLE_MARGIN = CRConfig.speedPrecision.get().floatValue();
 	protected static final int UPDATE_TIME = CRConfig.gearResetTime.get();
 
-	public MasterAxisTileEntity(){
-		this(type);
+	public MasterAxisTileEntity(BlockPos pos, BlockState state){
+		this(TYPE, pos, state);
 	}
 
-	protected MasterAxisTileEntity(BlockEntityType<? extends MasterAxisTileEntity> typeIn){
-		super(typeIn);
+	protected MasterAxisTileEntity(BlockEntityType<? extends MasterAxisTileEntity> typeIn, BlockPos pos, BlockState state){
+		super(typeIn, pos, state);
 	}
 
 	protected Direction getFacing(){
@@ -111,8 +113,8 @@ public class MasterAxisTileEntity extends BlockEntity implements TickableBlockEn
 	}
 
 	@Override
-	public void clearCache(){
-		super.clearCache();
+	public void setBlockState(BlockState stateIn){
+		super.setBlockState(stateIn);
 		disconnect();
 		axisOpt.invalidate();
 		axisOpt = LazyOptional.of(() -> handler);
@@ -274,6 +276,8 @@ public class MasterAxisTileEntity extends BlockEntity implements TickableBlockEn
 
 	@Override
 	public void tick(){
+		//Calculations are mirrored on the client to cut down on packets
+
 		ticksExisted++;
 		setChanged();
 
@@ -294,8 +298,8 @@ public class MasterAxisTileEntity extends BlockEntity implements TickableBlockEn
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		ticksExisted = nbt.getLong("life");
 		for(int i = 0; i < 4; i++){
 			prevAngles[i] = nbt.getFloat("prev_" + i);

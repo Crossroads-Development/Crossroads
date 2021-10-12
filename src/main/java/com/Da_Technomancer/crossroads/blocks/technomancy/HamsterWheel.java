@@ -57,8 +57,8 @@ public class HamsterWheel extends BaseEntityBlock{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new HamsterWheelTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new HamsterWheelTileEntity(pos, state);
 	}
 
 	@Override

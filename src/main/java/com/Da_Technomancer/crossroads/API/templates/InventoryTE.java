@@ -4,6 +4,7 @@ import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
 import com.Da_Technomancer.essentials.gui.container.IFluidSlotTE;
 import io.netty.buffer.Unpooled;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.WorldlyContainer;
@@ -25,8 +26,8 @@ public abstract class InventoryTE extends ModuleTE implements WorldlyContainer, 
 	protected final ItemStack[] inventory;
 	public final FluidSlotManager[] fluidManagers = new FluidSlotManager[fluidTanks()];
 
-	public InventoryTE(BlockEntityType<? extends InventoryTE> type, int invSize){
-		super(type);
+	public InventoryTE(BlockEntityType<? extends InventoryTE> type, BlockPos pos, BlockState state, int invSize){
+		super(type, pos, state);
 		inventory = new ItemStack[invSize];
 		for(int i = 0; i < invSize; i++){
 			inventory[i] = ItemStack.EMPTY;
@@ -91,8 +92,8 @@ public abstract class InventoryTE extends ModuleTE implements WorldlyContainer, 
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		for(int i = 0; i < inventory.length; i++){
 			if(nbt.contains("inv_" + i)){
 				inventory[i] = ItemStack.of(nbt.getCompound("inv_" + i));

@@ -1,11 +1,13 @@
 package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
+
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.resources.ResourceLocation;
@@ -13,16 +15,16 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder(Crossroads.MODID)
-public class ReactiveSpotTileEntity extends BlockEntity implements TickableBlockEntity{
+public class ReactiveSpotTileEntity extends BlockEntity implements ITickableTileEntity{
 
 	@ObjectHolder("reactive_spot")
-	private static BlockEntityType<ReactiveSpotTileEntity> type = null;
+	public static BlockEntityType<ReactiveSpotTileEntity> TYPE = null;
 
 	private BlockState target;
 	private int lifespan = 0;
 
-	public ReactiveSpotTileEntity(){
-		super(type);
+	public ReactiveSpotTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
 	public void setTarget(BlockState targetIn){
@@ -43,8 +45,8 @@ public class ReactiveSpotTileEntity extends BlockEntity implements TickableBlock
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		lifespan = nbt.getInt("lif");
 		Block b = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(nbt.getString("tar")));
 		if(b == null){

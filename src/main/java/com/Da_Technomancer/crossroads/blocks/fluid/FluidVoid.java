@@ -36,8 +36,8 @@ public class FluidVoid extends BaseEntityBlock{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new FluidVoidTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new FluidVoidTileEntity(pos, state);
 	}
 
 	@Override

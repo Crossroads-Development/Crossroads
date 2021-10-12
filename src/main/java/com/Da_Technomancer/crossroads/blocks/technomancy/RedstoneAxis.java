@@ -76,8 +76,8 @@ public class RedstoneAxis extends BaseEntityBlock implements IWireConnect{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new RedstoneAxisTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new RedstoneAxisTileEntity(pos, state);
 
 	}
 

@@ -137,7 +137,7 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
 		return new HeatCableTileEntity(insulator);
 	}
 

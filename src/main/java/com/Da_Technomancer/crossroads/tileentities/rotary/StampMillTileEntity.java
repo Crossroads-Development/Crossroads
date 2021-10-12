@@ -53,7 +53,7 @@ public class StampMillTileEntity extends InventoryTE{
 	private double progress = 0;
 	private int timer = 0;
 
-	public StampMillTileEntity(){
+	public StampMillTileEntity(BlockPos pos, BlockState state){
 		super(type, 2);
 	}
 
@@ -140,8 +140,8 @@ public class StampMillTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		progress = nbt.getDouble("prog");
 		timer = nbt.getInt("timer");
 	}

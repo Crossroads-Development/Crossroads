@@ -33,7 +33,7 @@ public class RadiatorTileEntity extends InventoryTE{
 
 	public static final int FLUID_USE = 100;
 
-	public RadiatorTileEntity(){
+	public RadiatorTileEntity(BlockPos pos, BlockState state){
 		super(type, 0);
 		fluidProps[0] = new TankProperty(10_000, true, false, CRFluids.STEAM::contains);
 		fluidProps[1] = new TankProperty(10_000, false, true);

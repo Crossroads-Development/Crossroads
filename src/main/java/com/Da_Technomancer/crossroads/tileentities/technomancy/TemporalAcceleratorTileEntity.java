@@ -18,7 +18,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
+
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.Direction;
@@ -53,7 +53,7 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 	private Direction facing;
 	private TemporalAccelerator.Mode mode;
 
-	public TemporalAcceleratorTileEntity(){
+	public TemporalAcceleratorTileEntity(BlockPos pos, BlockState state){
 		super(type, null, Behaviour.SOURCE);
 	}
 
@@ -198,9 +198,9 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 								//Perform tile entity effect
 								if(actOnTe){
 									BlockEntity te = level.getBlockEntity(effectPos);
-									if(te instanceof TickableBlockEntity){
+									if(te instanceof ITickableTileEntity){
 										for(int run = 0; run < extraTicks; run++){
-											((TickableBlockEntity) te).tick();
+											((ITickableTileEntity) te).tick();
 										}
 									}
 								}
@@ -257,8 +257,8 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		intensity = nbt.getInt("intensity");
 		lastRunTick = nbt.getLong("last_run");
 	}

@@ -31,7 +31,7 @@ public class FluidTankTileEntity extends InventoryTE{
 
 	public static final int CAPACITY = 16_000;
 
-	public FluidTankTileEntity(){
+	public FluidTankTileEntity(BlockPos pos, BlockState state){
 		super(type, 0);
 		fluidProps[0] = new TankProperty(CAPACITY, true, true);
 		initFluidManagers();

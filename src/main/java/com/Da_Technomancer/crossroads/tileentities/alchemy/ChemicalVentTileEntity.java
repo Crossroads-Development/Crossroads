@@ -4,12 +4,13 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.world.level.block.state.BlockState;
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -17,10 +18,10 @@ import net.minecraftforge.registries.ObjectHolder;
 import java.util.HashSet;
 
 @ObjectHolder(Crossroads.MODID)
-public class ChemicalVentTileEntity extends BlockEntity implements TickableBlockEntity{
+public class ChemicalVentTileEntity extends BlockEntity implements ITickableTileEntity{
 
 	@ObjectHolder("chemical_vent")
-	private static BlockEntityType<ChemicalVentTileEntity> type = null;
+	public static BlockEntityType<ChemicalVentTileEntity> TYPE = null;
 
 	/*
 	 * In order to make behaviour more consistent when venting large quantities or mixes (expecially phelostogen + anything else),
@@ -34,12 +35,12 @@ public class ChemicalVentTileEntity extends BlockEntity implements TickableBlock
 	private ReagentMap reags = new ReagentMap();
 	private static final int CYCLES = 10;//The number of cycles of input to combine
 
-	public ChemicalVentTileEntity(){
-		super(type);
+	public ChemicalVentTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
 	@Override
-	public void tick(){
+	public void serverTick(){
 		if(!reags.isEmpty() && (level.getGameTime() - lastInputTime) >= (CYCLES - 1) * AlchemyUtil.ALCHEMY_TIME){
 			AlchemyUtil.releaseChemical(level, worldPosition, reags);
 			reags = new ReagentMap();
@@ -47,8 +48,8 @@ public class ChemicalVentTileEntity extends BlockEntity implements TickableBlock
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		lastInputTime = nbt.getLong("last_input");
 		reags = ReagentMap.readFromNBT(nbt);
 	}

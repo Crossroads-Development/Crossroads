@@ -44,8 +44,8 @@ public class ClockworkStabilizer extends BeamBlock implements IReadable{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new ClockworkStabilizerTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new ClockworkStabilizerTileEntity(pos, state);
 	}
 
 	@Override

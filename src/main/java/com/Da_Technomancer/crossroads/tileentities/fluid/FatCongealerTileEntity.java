@@ -44,7 +44,7 @@ public class FatCongealerTileEntity extends InventoryTE{
 	public static final double HUN_PER_SPD = 4D;
 	public static final double SAT_PER_SPD = 4D;
 
-	public FatCongealerTileEntity(){
+	public FatCongealerTileEntity(BlockPos pos, BlockState state){
 		super(type, 1);
 		fluidProps[0] = new TankProperty(10_000, true, false, CRFluids.LIQUID_FAT::contains);
 		initFluidManagers();

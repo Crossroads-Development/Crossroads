@@ -53,8 +53,8 @@ public class ChunkAccelerator extends BaseEntityBlock{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new ChunkAcceleratorTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new ChunkAcceleratorTileEntity(pos, state);
 	}
 
 	@Override

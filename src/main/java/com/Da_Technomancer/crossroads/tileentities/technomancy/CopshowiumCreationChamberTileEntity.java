@@ -57,7 +57,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 
 	private final FluxHelper fluxHelper = new FluxHelper(type, this, Behaviour.SOURCE);
 
-	public CopshowiumCreationChamberTileEntity(){
+	public CopshowiumCreationChamberTileEntity(BlockPos pos, BlockState state){
 		super(type, 0);
 		fluidProps[0] = new TankProperty(CAPACITY, true, true, f -> f != null && f.getFluid() != CRFluids.moltenCopshowium.still);//Input
 		fluidProps[1] = new TankProperty(CAPACITY, false, true);//Copshowium
@@ -106,8 +106,8 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		fluxHelper.readData(nbt);
 	}
 

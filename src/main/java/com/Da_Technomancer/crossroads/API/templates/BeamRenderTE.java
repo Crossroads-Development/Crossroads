@@ -7,21 +7,22 @@ import com.Da_Technomancer.crossroads.API.packets.IIntReceiver;
 import com.Da_Technomancer.crossroads.API.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.server.level.ServerPlayer;
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 
-public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE, TickableBlockEntity, IIntReceiver{
+public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE, ITickableTileEntity, IIntReceiver{
 
 	protected int[] beamPackets = new int[6];
 	protected BeamManager[] beamer;
@@ -29,8 +30,8 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 	protected long activeCycle;//To prevent tick acceleration and deal with some chunk loading weirdness
 	protected BeamUnit[] prevMag = new BeamUnit[] {BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY};//Stores the last non-null beams sent for information readouts
 
-	public BeamRenderTE(BlockEntityType<?> type){
-		super(type);
+	public BeamRenderTE(BlockEntityType<?> type, BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
 	/**
@@ -54,8 +55,8 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 	}
 
 	@Override
-	public void clearCache(){
-		super.clearCache();
+	public void setBlockState(BlockState stateIn){
+		super.setBlockState(stateIn);
 		beamer = null;
 		beamPackets = new int[6];
 		for(int i = 0; i < 6; i++){
@@ -97,11 +98,8 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 	}
 
 	@Override
-	public void tick(){
-		if(level.isClientSide){
-			return;
-		}
-		
+	public void serverTick(){
+		ITickableTileEntity.super.serverTick();
 		if(level.getGameTime() % BeamUtil.BEAM_TIME == 0 && activeCycle != level.getGameTime()){
 			if(beamer == null){
 				beamer = new BeamManager[6];
@@ -184,8 +182,8 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		queued[0] = BeamUnitStorage.readFromNBT("queue0", nbt);
 		queued[1] = BeamUnitStorage.readFromNBT("queue1", nbt);
 		activeCycle = nbt.getLong("cyc");

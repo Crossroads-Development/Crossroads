@@ -11,6 +11,7 @@ import com.Da_Technomancer.crossroads.blocks.alchemy.GlasswareHolder;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.entity.player.Player;
@@ -33,16 +34,16 @@ import javax.annotation.Nonnull;
 public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 
 	@ObjectHolder("glassware_holder")
-	private static BlockEntityType<GlasswareHolderTileEntity> type = null;
+	public static BlockEntityType<GlasswareHolderTileEntity> TYPE = null;
 
 	protected AbstractGlassware.GlasswareTypes glassType = null;
 
-	public GlasswareHolderTileEntity(){
-		this(type);
+	public GlasswareHolderTileEntity(BlockPos pos, BlockState state){
+		this(TYPE, pos, state);
 	}
 
-	protected GlasswareHolderTileEntity(BlockEntityType<? extends GlasswareHolderTileEntity> type){
-		super(type);
+	protected GlasswareHolderTileEntity(BlockEntityType<? extends GlasswareHolderTileEntity> type, BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
 	private AbstractGlassware.GlasswareTypes heldType(){

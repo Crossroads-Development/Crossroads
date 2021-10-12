@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
+
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
@@ -23,7 +23,7 @@ public class TimeEffect extends BeamEffect{
 			}else{
 				BlockEntity te = worldIn.getBlockEntity(pos);
 				if(worldIn.random.nextInt(64) < power){
-					if(te instanceof TickableBlockEntity){
+					if(te instanceof ITickableTileEntity){
 
 						//Don't do extra ticks to beam blocks
 						for(Direction side : Direction.values()){
@@ -31,7 +31,7 @@ public class TimeEffect extends BeamEffect{
 								return;
 							}
 						}
-						((TickableBlockEntity) te).tick();
+						((ITickableTileEntity) te).tick();
 					}
 
 					BlockState state = worldIn.getBlockState(pos);

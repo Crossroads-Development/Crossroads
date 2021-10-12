@@ -37,17 +37,17 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 	protected boolean[] matches = new boolean[6];
 	protected EnumTransferMode[] modes = ConduitBlock.IConduitTE.genModeArray(EnumTransferMode.BOTH);
 
-	public HeatCableTileEntity(){
+	public HeatCableTileEntity(BlockPos pos, BlockState state){
 		this(HeatInsulators.WOOL);
 	}
 
 	public HeatCableTileEntity(HeatInsulators insulator){
-		super(type);
+		super(type, pos, state);
 		this.insulator = insulator;
 	}
 
-	protected HeatCableTileEntity(BlockEntityType<? extends HeatCableTileEntity> type){
-		super(type);
+	protected HeatCableTileEntity(BlockEntityType<? extends HeatCableTileEntity> type, BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
 	@Override
@@ -137,8 +137,8 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		ConduitBlock.IConduitTE.readConduitNBT(nbt, this);
 		insulator = nbt.contains("insul") ? HeatInsulators.valueOf(nbt.getString("insul")) : HeatInsulators.WOOL;
 	}

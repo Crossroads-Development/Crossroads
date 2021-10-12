@@ -4,10 +4,14 @@ import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.CircuitUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.HeatLimiterRedstoneTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.heat.FireboxTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.item.TooltipFlag;
@@ -40,8 +44,14 @@ public class HeatLimiterRedstone extends BaseEntityBlock{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new HeatLimiterRedstoneTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new HeatLimiterRedstoneTileEntity(pos, state);
+	}
+
+	@Nullable
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> type){
+		return ITickableTileEntity.createTicker(type, HeatLimiterRedstoneTileEntity.TYPE);
 	}
 
 	@Override
@@ -58,8 +68,7 @@ public class HeatLimiterRedstone extends BaseEntityBlock{
 	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
 		BlockEntity te = worldIn.getBlockEntity(pos);
 
-		if(te instanceof HeatLimiterRedstoneTileEntity){
-			HeatLimiterRedstoneTileEntity bte = (HeatLimiterRedstoneTileEntity) te;
+		if(te instanceof HeatLimiterRedstoneTileEntity bte){
 			CircuitUtil.updateFromWorld(bte.redsHandler, blockIn);
 		}
 	}

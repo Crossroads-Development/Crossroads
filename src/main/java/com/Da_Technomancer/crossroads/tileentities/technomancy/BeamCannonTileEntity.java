@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
+
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.Direction;
@@ -42,7 +42,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 @ObjectHolder(Crossroads.MODID)
-public class BeamCannonTileEntity extends BlockEntity implements TickableBlockEntity, IInfoTE, ILongReceiver{
+public class BeamCannonTileEntity extends BlockEntity implements ITickableTileEntity, IInfoTE, ILongReceiver{
 
 	@ObjectHolder("beam_cannon")
 	public static BlockEntityType<BeamCannonTileEntity> type = null;
@@ -70,8 +70,8 @@ public class BeamCannonTileEntity extends BlockEntity implements TickableBlockEn
 	//Whether the angle of this beam cannon is locked with a wrench
 	private boolean locked = false;
 
-	public BeamCannonTileEntity(){
-		super(type);
+	public BeamCannonTileEntity(BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
 	@Override
@@ -296,8 +296,8 @@ public class BeamCannonTileEntity extends BlockEntity implements TickableBlockEn
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		for(int i = 0; i < 2; i++){
 			energy[i] = nbt.getDouble("energy_" + i);
 			angle[i] = nbt.getFloat("angle_" + i);

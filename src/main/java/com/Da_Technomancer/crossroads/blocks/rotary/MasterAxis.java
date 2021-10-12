@@ -56,8 +56,8 @@ public class MasterAxis extends BaseEntityBlock{
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockGetter worldIn){
-		return new MasterAxisTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new MasterAxisTileEntity(pos, state);
 
 	}
 

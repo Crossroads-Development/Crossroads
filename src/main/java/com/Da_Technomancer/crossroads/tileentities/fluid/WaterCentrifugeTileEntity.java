@@ -42,7 +42,7 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 //	private static final int BATCH_SIZE = 250;
 	private boolean neg;
 
-	public WaterCentrifugeTileEntity(){
+	public WaterCentrifugeTileEntity(BlockPos pos, BlockState state){
 		super(type, 1);
 		fluidProps[0] = new TankProperty(10_000, true, false);
 		fluidProps[1] = new TankProperty(10_000, false, true);
@@ -113,8 +113,8 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		neg = nbt.getBoolean("neg");
 	}
 

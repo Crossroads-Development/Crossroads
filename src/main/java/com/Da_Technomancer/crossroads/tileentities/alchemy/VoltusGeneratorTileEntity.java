@@ -6,16 +6,17 @@ import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -25,18 +26,18 @@ import net.minecraftforge.registries.ObjectHolder;
 import java.util.ArrayList;
 
 @ObjectHolder(Crossroads.MODID)
-public class VoltusGeneratorTileEntity extends BlockEntity implements TickableBlockEntity, IInfoTE{
+public class VoltusGeneratorTileEntity extends BlockEntity implements ITickableTileEntity, IInfoTE{
 
 	@ObjectHolder("voltus_generator")
-	private static BlockEntityType<VoltusGeneratorTileEntity> type = null;
+	public static BlockEntityType<VoltusGeneratorTileEntity> TYPE = null;
 
 	private static final int VOLTUS_CAPACITY = 100;
 	private static final int FE_CAPACITY = 100_000;
 	private int voltusAmount = 0;
 	private int fe = 0;
 
-	public VoltusGeneratorTileEntity(){
-		super(type);
+	public VoltusGeneratorTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
 	@Override
@@ -49,11 +50,7 @@ public class VoltusGeneratorTileEntity extends BlockEntity implements TickableBl
 	}
 
 	@Override
-	public void tick(){
-		if(level.isClientSide){
-			return;
-		}
-
+	public void serverTick(){
 		if(voltusAmount != 0 && FE_CAPACITY - fe >= CRConfig.voltusValue.get()){
 			voltusAmount -= 1;
 			fe += CRConfig.voltusValue.get();
@@ -75,8 +72,8 @@ public class VoltusGeneratorTileEntity extends BlockEntity implements TickableBl
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		voltusAmount = nbt.getInt("voltus");
 		fe = nbt.getInt("fe");
 	}

@@ -35,7 +35,7 @@ public class SteamTurbineTileEntity extends InventoryTE{
 	private static final int CAPACITY = 10_000;
 	public static final int LIMIT = 5;
 
-	public SteamTurbineTileEntity(){
+	public SteamTurbineTileEntity(BlockPos pos, BlockState state){
 		super(type, 0);
 		fluidProps[0] = new TankProperty(CAPACITY, false, true);
 		fluidProps[1] = new TankProperty(CAPACITY, true, false, CRFluids.STEAM::contains);

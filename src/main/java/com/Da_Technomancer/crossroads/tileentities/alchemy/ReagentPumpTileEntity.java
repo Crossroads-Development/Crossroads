@@ -7,9 +7,11 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumContainerType;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.alchemy.IChemicalHandler;
 import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -18,17 +20,17 @@ import net.minecraftforge.registries.ObjectHolder;
 public class ReagentPumpTileEntity extends AlchemyCarrierTE{
 
 	@ObjectHolder("reagent_pump")
-	private static BlockEntityType<ReagentPumpTileEntity> type = null;
+	public static BlockEntityType<ReagentPumpTileEntity> TYPE = null;
 
 	@SuppressWarnings("unchecked")//Darn Java, not being able to verify arrays of parameterized types. Bah Humbug!
 	protected final LazyOptional<IChemicalHandler>[] neighCache = new LazyOptional[] {LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty()};
 
-	public ReagentPumpTileEntity(){
-		super(type);
+	public ReagentPumpTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
-	public ReagentPumpTileEntity(boolean glass){
-		super(type, glass);
+	public ReagentPumpTileEntity(BlockPos pos, BlockState state, boolean glass){
+		super(TYPE, pos, state, glass);
 	}
 
 	@Override
@@ -76,7 +78,7 @@ public class ReagentPumpTileEntity extends AlchemyCarrierTE{
 	@Override
 	protected EnumTransferMode[] getModes(){
 		EnumTransferMode[] output = {EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.INPUT, EnumTransferMode.INPUT, EnumTransferMode.INPUT, EnumTransferMode.INPUT};
-		boolean outUp = level.getBlockState(worldPosition).getValue(CRProperties.ACTIVE);
+		boolean outUp = getBlockState().getValue(CRProperties.ACTIVE);
 		if(outUp){
 			output[Direction.UP.get3DDataValue()] = EnumTransferMode.OUTPUT;
 			output[Direction.DOWN.get3DDataValue()] = EnumTransferMode.INPUT;

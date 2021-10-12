@@ -54,8 +54,8 @@ public class WindTurbineTileEntity extends ModuleTE{
 	public int[] bladeColors = new int[4];
 	private int lastColoredBlade = 3;//Index of the last blade dyed
 
-	public WindTurbineTileEntity(){
-		super(type);
+	public WindTurbineTileEntity(BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
 	public WindTurbineTileEntity(boolean newlyPlaced){
@@ -199,8 +199,8 @@ public class WindTurbineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		running = nbt.getBoolean("running");
 		for(int i = 0; i < 4; i++){
 			bladeColors[i] = nbt.getByte("blade_col_" + i);

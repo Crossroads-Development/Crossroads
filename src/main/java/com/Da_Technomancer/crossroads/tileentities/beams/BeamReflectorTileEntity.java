@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.ObjectHolder;
@@ -12,15 +13,15 @@ import net.minecraftforge.registries.ObjectHolder;
 public class BeamReflectorTileEntity extends BeamRenderTE{
 
 	@ObjectHolder("beam_reflector")
-	public static BlockEntityType<BeamReflectorTileEntity> type = null;
+	public static BlockEntityType<BeamReflectorTileEntity> TYPE = null;
 
-	public BeamReflectorTileEntity(){
-		super(type);
+	public BeamReflectorTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
 	@Override
-	public void clearCache(){
-		super.clearCache();
+	public void setBlockState(BlockState stateIn){
+		super.setBlockState(stateIn);
 		facing = -1;
 	}
 

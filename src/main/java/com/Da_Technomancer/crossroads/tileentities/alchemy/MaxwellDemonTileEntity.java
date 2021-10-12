@@ -6,16 +6,17 @@ import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -24,10 +25,10 @@ import java.util.ArrayList;
 
 //We can't use ModuleTE because this has 2 internal temperatures
 @ObjectHolder(Crossroads.MODID)
-public class MaxwellDemonTileEntity extends BlockEntity implements TickableBlockEntity, IInfoTE{
+public class MaxwellDemonTileEntity extends BlockEntity implements ITickableTileEntity, IInfoTE{
 
 	@ObjectHolder("maxwell_demon")
-	private static BlockEntityType<MaxwellDemonTileEntity> type = null;
+	public static BlockEntityType<MaxwellDemonTileEntity> TYPE = null;
 
 	public static final double MAX_TEMP = 2500;
 	public static final double MIN_TEMP = -200;
@@ -37,8 +38,8 @@ public class MaxwellDemonTileEntity extends BlockEntity implements TickableBlock
 	private boolean init = false;
 	private double rate = -1;//Not saved/loaded to NBT, as we want this to regenerate on reload with the config
 
-	public MaxwellDemonTileEntity(){
-		super(type);
+	public MaxwellDemonTileEntity(BlockPos pos, BlockState state){
+		super(TYPE, pos, state);
 	}
 
 	@Override
@@ -60,11 +61,7 @@ public class MaxwellDemonTileEntity extends BlockEntity implements TickableBlock
 	}
 
 	@Override
-	public void tick(){
-		if(level.isClientSide){
-			return;
-		}
-
+	public void serverTick(){
 		init();
 
 		if(tempUp < MAX_TEMP){
@@ -113,8 +110,8 @@ public class MaxwellDemonTileEntity extends BlockEntity implements TickableBlock
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt){
-		super.load(state, nbt);
+	public void load(CompoundTag nbt){
+		super.load(nbt);
 		init = nbt.getBoolean("init_heat");
 		tempUp = nbt.getDouble("temp_u");
 		tempDown = nbt.getDouble("temp_d");
