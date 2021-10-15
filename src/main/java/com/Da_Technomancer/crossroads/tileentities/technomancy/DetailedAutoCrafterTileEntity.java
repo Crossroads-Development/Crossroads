@@ -7,15 +7,17 @@ import com.Da_Technomancer.crossroads.gui.container.DetailedAutoCrafterContainer
 import com.Da_Technomancer.crossroads.items.PathSigil;
 import com.Da_Technomancer.essentials.gui.container.AutoCrafterContainer;
 import com.Da_Technomancer.essentials.tileentities.AutoCrafterTileEntity;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
@@ -25,10 +27,10 @@ import java.util.Optional;
 public class DetailedAutoCrafterTileEntity extends AutoCrafterTileEntity{
 
 	@ObjectHolder("detailed_auto_crafter")
-	public static BlockEntityType<DetailedAutoCrafterTileEntity> type = null;
+	public static BlockEntityType<DetailedAutoCrafterTileEntity> TYPE = null;
 
 	public DetailedAutoCrafterTileEntity(BlockPos pos, BlockState state){
-		super(type, pos, state);
+		super(TYPE, pos, state);
 	}
 
 	@Override

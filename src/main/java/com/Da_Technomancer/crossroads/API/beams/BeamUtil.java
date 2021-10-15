@@ -38,7 +38,7 @@ public class BeamUtil{
 	 * @return Whether beams should collide with this block
 	 */
 	public static boolean solidToBeams(BlockState state, Level world, BlockPos pos, Direction toDir, int power){
-		if(state.isAir(world, pos) || PASSABLE.contains(state.getBlock())){
+		if(state.isAir() || PASSABLE.contains(state.getBlock())){
 			return false;
 		}
 

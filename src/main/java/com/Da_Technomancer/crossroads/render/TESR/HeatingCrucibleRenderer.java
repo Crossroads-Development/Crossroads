@@ -8,14 +8,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
-public class HeatingCrucibleRenderer extends BlockEntityRenderer<HeatingCrucibleTileEntity>{
+public class HeatingCrucibleRenderer implements BlockEntityRenderer<HeatingCrucibleTileEntity>{
 
-	protected HeatingCrucibleRenderer(BlockEntityRenderDispatcher dispatcher){
-		super(dispatcher);
+	protected HeatingCrucibleRenderer(BlockEntityRendererProvider.Context dispatcher){
+		super();
 	}
 
 	@Override

@@ -3,17 +3,17 @@ package com.Da_Technomancer.crossroads.render.TESR;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxSinkTileEntity;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import com.mojang.math.Vector3f;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import org.lwjgl.opengl.GL11;
 
 public class FluxSinkRenderer extends EntropyRenderer<FluxSinkTileEntity>{
 
-	protected FluxSinkRenderer(BlockEntityRenderDispatcher dispatcher){
+	protected FluxSinkRenderer(BlockEntityRendererProvider.Context dispatcher){
 		super(dispatcher);
 	}
 

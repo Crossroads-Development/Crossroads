@@ -7,19 +7,19 @@ import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.BeaconHarnessTileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.*;
 
 public class BeaconHarnessRenderer extends EntropyRenderer<BeaconHarnessTileEntity>{
 
-	protected BeaconHarnessRenderer(BlockEntityRenderDispatcher dispatcher){
+	protected BeaconHarnessRenderer(BlockEntityRendererProvider.Context dispatcher){
 		super(dispatcher);
 	}
 

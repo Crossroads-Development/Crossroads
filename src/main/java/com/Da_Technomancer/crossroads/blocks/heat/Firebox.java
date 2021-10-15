@@ -57,8 +57,9 @@ public class Firebox extends BaseEntityBlock implements IReadable{
 
 	@Override
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving){
-		if(newState.getBlock() != this){
-			Containers.dropContents(world, pos, (Container) world.getBlockEntity(pos));
+		BlockEntity te = world.getBlockEntity(pos);
+		if(te instanceof Container cont && newState.getBlock() != state.getBlock()){
+			Containers.dropContents(world, pos, cont);
 		}
 		super.onRemove(state, world, pos, newState, isMoving);
 	}

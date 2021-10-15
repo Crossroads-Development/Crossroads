@@ -1,28 +1,26 @@
 package com.Da_Technomancer.crossroads.entity;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public final class CREntities{
 
 	@OnlyIn(Dist.CLIENT)
 	public static void clientInit(){
-//		RenderingRegistry.registerEntityRenderingHandler(EntityBullet.class, (EntityRendererManager manager) -> (new SpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer())));
-//		RenderingRegistry.registerEntityRenderingHandler(EntityArmRidable.class, RenderEmpty::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityShell.type, (EntityRenderDispatcher manager) -> (new ThrownItemRenderer<>(manager, Minecraft.getInstance().getItemRenderer())));
-		RenderingRegistry.registerEntityRenderingHandler(EntityNitro.type, (EntityRenderDispatcher manager) -> (new ThrownItemRenderer<>(manager, Minecraft.getInstance().getItemRenderer())));
-		RenderingRegistry.registerEntityRenderingHandler(EntityFlyingMachine.type, RenderFlyingMachine::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityFlameCore.type, RenderFlameCoreEntity::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityGhostMarker.type, RenderEmpty::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityHopperHawk.type, RenderHopperHawk::new);
+//		EntityRenderers.register(EntityBullet.class, (EntityRendererManager manager) -> (new SpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer())));
+//		EntityRenderers.register(EntityArmRidable.class, RenderEmpty::new);
+		EntityRenderers.register(EntityShell.type, ThrownItemRenderer::new);
+		EntityRenderers.register(EntityNitro.type, ThrownItemRenderer::new);
+		EntityRenderers.register(EntityFlyingMachine.type, RenderFlyingMachine::new);
+		EntityRenderers.register(EntityFlameCore.type, RenderFlameCoreEntity::new);
+		EntityRenderers.register(EntityGhostMarker.type, RenderEmpty::new);
+		EntityRenderers.register(EntityHopperHawk.type, RenderHopperHawk::new);
 	}
 
 	public static void init(IForgeRegistry<EntityType<?>> reg){

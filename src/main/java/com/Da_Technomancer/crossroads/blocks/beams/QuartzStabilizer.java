@@ -6,7 +6,6 @@ import com.Da_Technomancer.crossroads.tileentities.beams.QuartzStabilizerTileEnt
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -87,16 +86,6 @@ public class QuartzStabilizer extends BeamBlock implements IReadable{
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(new TranslatableComponent("tt.crossroads.quartz_stabilizer.desc"));
 		tooltip.add(new TranslatableComponent("tt.crossroads.quartz_stabilizer.wrench"));
-	}
-
-	@Override
-	public boolean hasAnalogOutputSignal(BlockState state){
-		return true;
-	}
-
-	@Override
-	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos){
-		return RedstoneUtil.clampToVanilla(read(worldIn, pos, blockState));
 	}
 
 	@Override

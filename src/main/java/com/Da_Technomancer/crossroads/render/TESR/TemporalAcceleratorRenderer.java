@@ -9,20 +9,20 @@ import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.world.level.block.state.BlockState;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
-import com.mojang.math.Vector3f;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TemporalAcceleratorRenderer extends EntropyRenderer<TemporalAcceleratorTileEntity>{
 
 
-	protected TemporalAcceleratorRenderer(BlockEntityRenderDispatcher dispatcher){
+	protected TemporalAcceleratorRenderer(BlockEntityRendererProvider.Context dispatcher){
 		super(dispatcher);
 	}
 

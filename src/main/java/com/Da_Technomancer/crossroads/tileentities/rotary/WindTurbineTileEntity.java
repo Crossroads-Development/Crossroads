@@ -8,22 +8,22 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.core.Direction;
-import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -36,7 +36,7 @@ import java.util.List;
 public class WindTurbineTileEntity extends ModuleTE{
 
 	@ObjectHolder("wind_turbine")
-	public static BlockEntityType<WindTurbineTileEntity> type = null;
+	public static BlockEntityType<WindTurbineTileEntity> TYPE = null;
 
 	public static final double MAX_SPEED = 2D;
 	public static final double INERTIA = 200;
@@ -55,11 +55,11 @@ public class WindTurbineTileEntity extends ModuleTE{
 	private int lastColoredBlade = 3;//Index of the last blade dyed
 
 	public WindTurbineTileEntity(BlockPos pos, BlockState state){
-		super(type, pos, state);
+		super(TYPE, pos, state);
 	}
 
-	public WindTurbineTileEntity(boolean newlyPlaced){
-		this();
+	public WindTurbineTileEntity(BlockPos pos, BlockState state, boolean newlyPlaced){
+		this(pos, state);
 		this.newlyPlaced = newlyPlaced;
 	}
 
@@ -111,8 +111,8 @@ public class WindTurbineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void clearCache(){
-		super.clearCache();
+	public void setBlockState(BlockState stateIn){
+		super.setBlockState(stateIn);
 		axleOpt.invalidate();
 		axleOpt = LazyOptional.of(() -> axleHandler);
 		newlyPlaced = true;
@@ -147,54 +147,52 @@ public class WindTurbineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
+	public void serverTick(){
+		super.serverTick();
 
-		if(!level.isClientSide){
-			//Every 30 seconds check whether the placement requirements are valid, and cache the result
-			if(newlyPlaced || level.getGameTime() % 600 == 0){
-				newlyPlaced = false;
-				running = false;
-				Direction facing = getFacing();
-				BlockPos offsetPos = worldPosition.relative(facing);
-				if(level.canSeeSkyFromBelowWater(offsetPos)){
-					running = true;
-					outer:
-					for(int i = -2; i <= 2; i++){
-						for(int j = -2; j <= 2; j++){
-							BlockPos checkPos = offsetPos.offset(facing.getStepZ() * i, j, facing.getStepX() * i);
-							BlockState checkState = level.getBlockState(checkPos);
-							if(!checkState.getBlock().isAir(checkState, level, checkPos)){
-								running = false;
-								break outer;
-							}
+		//Every 30 seconds check whether the placement requirements are valid, and cache the result
+		if(newlyPlaced || level.getGameTime() % 600 == 0){
+			newlyPlaced = false;
+			running = false;
+			Direction facing = getFacing();
+			BlockPos offsetPos = worldPosition.relative(facing);
+			if(level.canSeeSkyFromBelowWater(offsetPos)){
+				running = true;
+				outer:
+				for(int i = -2; i <= 2; i++){
+					for(int j = -2; j <= 2; j++){
+						BlockPos checkPos = offsetPos.offset(facing.getStepZ() * i, j, facing.getStepX() * i);
+						BlockState checkState = level.getBlockState(checkPos);
+						if(!checkState.isAir()){
+							running = false;
+							break outer;
 						}
 					}
 				}
-
-				setChanged();
 			}
 
-			//Damage entities in the blades while spinning at high speed
-			if(Math.abs(axleHandler.getSpeed()) >= 1.5D){
-				List<LivingEntity> ents = level.getEntitiesOfClass(LivingEntity.class, getTargetBB(), EntitySelector.LIVING_ENTITY_STILL_ALIVE);
-				for(LivingEntity ent : ents){
-					if(ent instanceof Player && murderEasterEgg.equals(((Player) ent).getGameProfile().getName())){
-						ent.hurt(DamageSource.FLY_INTO_WALL, 100);//This seems fair
-					}else{
-						ent.hurt(DamageSource.FLY_INTO_WALL, 1);
-					}
+			setChanged();
+		}
+
+		//Damage entities in the blades while spinning at high speed
+		if(Math.abs(axleHandler.getSpeed()) >= 1.5D){
+			List<LivingEntity> ents = level.getEntitiesOfClass(LivingEntity.class, getTargetBB(), EntitySelector.LIVING_ENTITY_STILL_ALIVE);
+			for(LivingEntity ent : ents){
+				if(ent instanceof Player && murderEasterEgg.equals(((Player) ent).getGameProfile().getName())){
+					ent.hurt(DamageSource.FLY_INTO_WALL, 100);//This seems fair
+				}else{
+					ent.hurt(DamageSource.FLY_INTO_WALL, 1);
 				}
 			}
+		}
 
-			if(running && axleHandler.axis != null){
-				double power = getPowerOutput();
-				if(axleHandler.getSpeed() * Math.signum(power) < MAX_SPEED){//Stop producing power above MAX_SPEED
-					axleHandler.addEnergy(power, true);
-				}
-
-				setChanged();
+		if(running && axleHandler.axis != null){
+			double power = getPowerOutput();
+			if(axleHandler.getSpeed() * Math.signum(power) < MAX_SPEED){//Stop producing power above MAX_SPEED
+				axleHandler.addEnergy(power, true);
 			}
+
+			setChanged();
 		}
 	}
 

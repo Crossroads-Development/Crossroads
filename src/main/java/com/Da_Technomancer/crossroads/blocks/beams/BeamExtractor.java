@@ -44,14 +44,6 @@ public class BeamExtractor extends BeamBlock{
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving){
-		if(newState.getBlock() != this){
-			Containers.dropContents(world, pos, (Container) world.getBlockEntity(pos));
-		}
-		super.onRemove(state, world, pos, newState, isMoving);
-	}
-
-	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(!super.use(state, worldIn, pos, playerIn, hand, hit).shouldSwing() && !worldIn.isClientSide){
 			BlockEntity te = worldIn.getBlockEntity(pos);
@@ -61,7 +53,6 @@ public class BeamExtractor extends BeamBlock{
 		}
 		return InteractionResult.SUCCESS;
 	}
-
 
 	@Override
 	@OnlyIn(Dist.CLIENT)

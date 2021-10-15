@@ -6,18 +6,18 @@ import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayControllerTileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.core.Direction;
-import com.mojang.math.Quaternion;
 import net.minecraft.world.phys.Vec3;
-import com.mojang.math.Vector3f;
 
 public class GatewayControllerRenderer extends EntropyRenderer<GatewayControllerTileEntity>{
 
-	protected GatewayControllerRenderer(BlockEntityRenderDispatcher dispatcher){
+	protected GatewayControllerRenderer(BlockEntityRendererProvider.Context dispatcher){
 		super(dispatcher);
 	}
 
@@ -362,5 +362,10 @@ public class GatewayControllerRenderer extends EntropyRenderer<GatewayController
 	@Override
 	public boolean shouldRenderOffScreen(GatewayControllerTileEntity te){
 		return te.isActive();
+	}
+
+	@Override
+	public int getViewDistance(){
+		return 256;//Same value as beacon
 	}
 }

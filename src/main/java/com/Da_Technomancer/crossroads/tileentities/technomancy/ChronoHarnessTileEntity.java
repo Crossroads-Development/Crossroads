@@ -8,17 +8,18 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -28,13 +29,11 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink.Behaviour;
-
 @ObjectHolder(Crossroads.MODID)
 public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 
 	@ObjectHolder("chrono_harness")
-	public static BlockEntityType<ChronoHarnessTileEntity> type = null;
+	public static BlockEntityType<ChronoHarnessTileEntity> TYPE = null;
 
 	private static final int FE_CAPACITY = 20_000;
 	private static final float SPEED = (float) Math.PI / 20F / 400F;//Used for rendering
@@ -45,7 +44,7 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 	private float angle = 0;//Used for rendering. Client side only
 
 	public ChronoHarnessTileEntity(BlockPos pos, BlockState state){
-		super(type, null, Behaviour.SOURCE);
+		super(TYPE, pos, state, null, Behaviour.SOURCE);
 	}
 
 	@Override
@@ -79,45 +78,46 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();//Handle flux
+	public void clientTick(){
+		super.clientTick();
+		angle += clientCurPower * SPEED;
+	}
 
-		if(level.isClientSide){
-			angle += clientCurPower * SPEED;
-		}else{
-			if(shouldRun()){
-				curPower = FE_CAPACITY - fe;
-				if(curPower > 0){
-					fe += curPower;
-					addFlux(Math.round((float) curPower / CRConfig.fePerEntropy.get()));
+	@Override
+	public void serverTick(){
+		super.serverTick();
+		if(shouldRun()){
+			curPower = FE_CAPACITY - fe;
+			if(curPower > 0){
+				fe += curPower;
+				addFlux(Math.round((float) curPower / CRConfig.fePerEntropy.get()));
+				setChanged();
+			}
+		}
+
+		if(((curPower == 0) ^ (clientCurPower == 0)) || Math.abs(curPower - clientCurPower) >= 10){
+			clientCurPower = curPower;
+			CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient((byte) 4, clientCurPower, worldPosition));
+		}
+
+		if(fe != 0){
+			//Transfer FE to a machine above
+			BlockEntity neighbor = level.getBlockEntity(worldPosition.relative(Direction.UP));
+			LazyOptional<IEnergyStorage>  otherOpt;
+			if(neighbor != null && (otherOpt = neighbor.getCapability(CapabilityEnergy.ENERGY, Direction.DOWN)).isPresent()){
+				IEnergyStorage storage = otherOpt.orElseThrow(NullPointerException::new);
+				if(storage.canReceive()){
+					fe -= storage.receiveEnergy(fe, false);
 					setChanged();
 				}
 			}
-
-			if(((curPower == 0) ^ (clientCurPower == 0)) || Math.abs(curPower - clientCurPower) >= 10){
-				clientCurPower = curPower;
-				CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient((byte) 4, clientCurPower, worldPosition));
-			}
-
-			if(fe != 0){
-				//Transfer FE to a machine above
-				BlockEntity neighbor = level.getBlockEntity(worldPosition.relative(Direction.UP));
-				LazyOptional<IEnergyStorage>  otherOpt;
-				if(neighbor != null && (otherOpt = neighbor.getCapability(CapabilityEnergy.ENERGY, Direction.DOWN)).isPresent()){
-					IEnergyStorage storage = otherOpt.orElseThrow(NullPointerException::new);
-					if(storage.canReceive()){
-						fe -= storage.receiveEnergy(fe, false);
-						setChanged();
-					}
-				}
-				//Transfer FE to a machine below
-				neighbor = level.getBlockEntity(worldPosition.relative(Direction.DOWN));
-				if(neighbor != null && (otherOpt = neighbor.getCapability(CapabilityEnergy.ENERGY, Direction.UP)).isPresent()){
-					IEnergyStorage storage = otherOpt.orElseThrow(NullPointerException::new);
-					if(storage.canReceive()){
-						fe -= storage.receiveEnergy(fe, false);
-						setChanged();
-					}
+			//Transfer FE to a machine below
+			neighbor = level.getBlockEntity(worldPosition.relative(Direction.DOWN));
+			if(neighbor != null && (otherOpt = neighbor.getCapability(CapabilityEnergy.ENERGY, Direction.UP)).isPresent()){
+				IEnergyStorage storage = otherOpt.orElseThrow(NullPointerException::new);
+				if(storage.canReceive()){
+					fe -= storage.receiveEnergy(fe, false);
+					setChanged();
 				}
 			}
 		}

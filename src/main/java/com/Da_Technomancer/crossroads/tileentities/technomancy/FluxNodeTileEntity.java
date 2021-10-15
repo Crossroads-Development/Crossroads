@@ -8,26 +8,25 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.network.chat.Component;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink.Behaviour;
-
 @ObjectHolder(Crossroads.MODID)
 public class FluxNodeTileEntity extends IFluxLink.FluxHelper{
 
 	@ObjectHolder("flux_node")
-	public static BlockEntityType<FluxNodeTileEntity> type = null;
+	public static BlockEntityType<FluxNodeTileEntity> TYPE = null;
 
 	private static final float SPIN_RATE = 3.6F;//For rendering
 
@@ -35,7 +34,7 @@ public class FluxNodeTileEntity extends IFluxLink.FluxHelper{
 	private float angle;//for rendering
 
 	public FluxNodeTileEntity(BlockPos pos, BlockState state){
-		super(type, null, Behaviour.NODE);
+		super(TYPE, pos, state, null, Behaviour.NODE);
 	}
 
 	private void syncFlux(){
@@ -69,24 +68,27 @@ public class FluxNodeTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void tick(){
-		if(level.isClientSide){
-			super.tick();
-			angle += entropyClient * SPIN_RATE / 20F;
-			//This 5 is the lifetime of the render
-			if(level.getGameTime() % 5 == 0 && overSafeLimit()){
-				CRRenderUtil.addArc(level, worldPosition.getX() + 0.5F, worldPosition.getY() + 0.5F, worldPosition.getZ() + 0.5F, worldPosition.getX() + 0.5F + (float) Math.random(), worldPosition.getY() + 0.5F + (float) Math.random(), worldPosition.getZ() + 0.5F + (float) Math.random(), 3, 1F, FluxUtil.COLOR_CODES[(int) (level.getGameTime() % 3)]);
-			}
-		}else{
-			if(lastTick != level.getGameTime() && level.getGameTime() % FluxUtil.FLUX_TIME == 0 && !isShutDown()){
-				if(flux > 0){
-					flux += CRConfig.fluxNodeGain.get();
-				}
-			}
-			super.tick();
-			syncFlux();
-			setChanged();
+	public void clientTick(){
+		super.clientTick();
+		super.tick();
+		angle += entropyClient * SPIN_RATE / 20F;
+		//This 5 is the lifetime of the render
+		if(level.getGameTime() % 5 == 0 && overSafeLimit()){
+			CRRenderUtil.addArc(level, worldPosition.getX() + 0.5F, worldPosition.getY() + 0.5F, worldPosition.getZ() + 0.5F, worldPosition.getX() + 0.5F + (float) Math.random(), worldPosition.getY() + 0.5F + (float) Math.random(), worldPosition.getZ() + 0.5F + (float) Math.random(), 3, 1F, FluxUtil.COLOR_CODES[(int) (level.getGameTime() % 3)]);
 		}
+	}
+
+	@Override
+	public void serverTick(){
+		super.serverTick();
+		if(lastTick != level.getGameTime() && level.getGameTime() % FluxUtil.FLUX_TIME == 0 && !isShutDown()){
+			if(flux > 0){
+				flux += CRConfig.fluxNodeGain.get();
+			}
+		}
+		super.tick();
+		syncFlux();
+		setChanged();
 	}
 
 	@Override

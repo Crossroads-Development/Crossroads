@@ -2,17 +2,17 @@ package com.Da_Technomancer.crossroads;
 
 import net.minecraft.client.KeyMapping;
 import com.mojang.blaze3d.platform.InputConstants;
-import net.minecraftforge.client.extensions.IForgeKeybinding;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.client.extensions.IForgeKeyMapping;
+import net.minecraftforge.fmlclient.registry.ClientRegistry;
 
 public class Keys{
 
-	//Stored as IForgeKeybinding instead of KeyBinding as KeyBinding is a client-side-only class.
-	public static IForgeKeybinding controlEnergy;
-	public static IForgeKeybinding controlPotential;
-	public static IForgeKeybinding controlStability;
-	public static IForgeKeybinding controlVoid;
-	public static IForgeKeybinding boost;
+	//Stored as IForgeKeyMapping instead of KeyBinding as KeyBinding is a client-side-only class.
+	public static IForgeKeyMapping controlEnergy;
+	public static IForgeKeyMapping controlPotential;
+	public static IForgeKeyMapping controlStability;
+	public static IForgeKeyMapping controlVoid;
+	public static IForgeKeyMapping boost;
 
 	public static boolean keysInitialized = false;
 

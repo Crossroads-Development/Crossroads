@@ -4,8 +4,10 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -17,13 +19,13 @@ import javax.annotation.Nullable;
 public class LodestoneTurbineTileEntity extends ModuleTE{
 
 	@ObjectHolder("lodestone_turbine")
-	private static BlockEntityType<LodestoneTurbineTileEntity> type = null;
+	public static BlockEntityType<LodestoneTurbineTileEntity> TYPE = null;
 
 	public static final double INERTIA = 300;
 	public static final double MAX_SPEED = 10;
 
 	public LodestoneTurbineTileEntity(BlockPos pos, BlockState state){
-		super(type, pos, state);
+		super(TYPE, pos, state);
 	}
 
 	@Override
@@ -37,9 +39,9 @@ public class LodestoneTurbineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
-		if(!level.isClientSide && axleHandler.axis != null && validDimension() && axleHandler.getSpeed() < MAX_SPEED){
+	public void serverTick(){
+		super.serverTick();
+		if(axleHandler.axis != null && validDimension() && axleHandler.getSpeed() < MAX_SPEED){
 			axleHandler.addEnergy(CRConfig.lodestoneTurbinePower.get(), true);
 			setChanged();
 		}

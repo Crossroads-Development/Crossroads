@@ -7,14 +7,14 @@ import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.*;
@@ -22,10 +22,10 @@ import java.awt.*;
 /**
  * All blocks using BeamRenderer MUST return false to isOpaqueCube 
  */
-public class BeamRenderer<T extends BlockEntity & IBeamRenderTE> extends BlockEntityRenderer<T>{
+public class BeamRenderer<T extends BlockEntity & IBeamRenderTE> implements BlockEntityRenderer<T>{
 
-	public BeamRenderer(BlockEntityRenderDispatcher dispatcher){
-		super(dispatcher);
+	public BeamRenderer(BlockEntityRendererProvider.Context dispatcher){
+		super();
 	}
 
 	/**

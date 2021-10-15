@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.FluidTankContainer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -11,6 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -20,19 +22,16 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE.FluidTankHandler;
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE.TankProperty;
-
 @ObjectHolder(Crossroads.MODID)
 public class FluidTankTileEntity extends InventoryTE{
 
 	@ObjectHolder("fluid_tank")
-	private static BlockEntityType<FluidTankTileEntity> type = null;
+	public static BlockEntityType<FluidTankTileEntity> TYPE = null;
 
 	public static final int CAPACITY = 16_000;
 
 	public FluidTankTileEntity(BlockPos pos, BlockState state){
-		super(type, 0);
+		super(TYPE, pos, state, 0);
 		fluidProps[0] = new TankProperty(CAPACITY, true, true);
 		initFluidManagers();
 	}

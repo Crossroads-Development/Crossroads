@@ -15,20 +15,21 @@ import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.packets.ILongReceiver;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.nbt.CompoundTag;
-
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -40,7 +41,7 @@ import java.util.ArrayList;
 public class LargeGearMasterTileEntity extends BlockEntity implements ILongReceiver, ITickableTileEntity, IInfoTE{
 
 	@ObjectHolder("large_gear_master")
-	public static BlockEntityType<LargeGearMasterTileEntity> teType = null;
+	public static BlockEntityType<LargeGearMasterTileEntity> TYPE = null;
 
 	private GearFactory.GearMaterial type;
 	private boolean newTE = false;//Used when placing the gear, to signify that the type data needs to be sent to clients. Sending immediately after placement can cause a packet race condition if the packet arrives before the TE exists
@@ -55,7 +56,7 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 	private Direction facing = null;
 
 	public LargeGearMasterTileEntity(BlockPos pos, BlockState state){
-		super(teType);
+		super(TYPE, pos, state);
 	}
 	
 	public Direction getFacing(){
@@ -115,10 +116,15 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 	}
 
 	@Override
-	public void tick(){
-		if(level.isClientSide){
-			angleW[0] += angleW[1] * 9D / Math.PI;
-		}else if(newTE){
+	public void clientTick(){
+		ITickableTileEntity.super.clientTick();
+		angleW[0] += angleW[1] * 9D / Math.PI;
+	}
+
+	@Override
+	public void serverTick(){
+		ITickableTileEntity.super.serverTick();
+		if(newTE){
 			newTE = false;
 			//This is newly placed. Lazy-load send (lazy send? lazy network?) the type data to any clients.
 			//This is unnecessary for the client that placed this, but needed in MP for other clients

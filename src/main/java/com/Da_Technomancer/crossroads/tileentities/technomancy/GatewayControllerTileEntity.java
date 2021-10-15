@@ -15,29 +15,27 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
-import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.level.Level;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -47,13 +45,11 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink.Behaviour;
-
 @ObjectHolder(Crossroads.MODID)
 public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements IGateway{
 
 	@ObjectHolder("gateway_frame")
-	public static BlockEntityType<GatewayControllerTileEntity> type = null;
+	public static BlockEntityType<GatewayControllerTileEntity> TYPE = null;
 	public static final int INERTIA = 0;//Moment of inertia
 	public static final int FLUX_PER_CYCLE = 4;
 	private static final float ROTATION_SPEED = (float) Math.PI / 40F;//Rate of convergence between angle and axle 'speed' in radians/tick. Yes, this terminology is confusing
@@ -78,7 +74,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 	private Direction.Axis plane = null;//Legal values are null (unformed), x (for structure in x-y plane), and z (for structure in y-z plane). This should never by y
 
 	public GatewayControllerTileEntity(BlockPos pos, BlockState state){
-		super(type, null, Behaviour.SOURCE);
+		super(TYPE, pos, state, null, Behaviour.SOURCE);
 	}
 
 	@Override
@@ -262,8 +258,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 						level.setBlockAndUpdate(mutPos, otherState.setValue(CRProperties.ACTIVE, false));
 					}
 					BlockEntity te = level.getBlockEntity(mutPos);
-					if(te instanceof GatewayEdgeTileEntity){
-						GatewayEdgeTileEntity otherTE = (GatewayEdgeTileEntity) te;
+					if(te instanceof GatewayEdgeTileEntity otherTE){
 						otherTE.reset();
 					}
 					mutPos.move(horiz, 1);
@@ -284,7 +279,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 			address = null;
 			origin = false;
 			setChanged();
-			clearCache();
+//			clearCache();
 		}
 	}
 
@@ -317,7 +312,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 				}else{
 					foundThickness++;
 				}
-//			}else if(!state.isAir(world, mutPos)){
+//			}else if(!state.isAir()){
 //				return false;//There is an obstruction
 			}else{
 				foundAir = true;
@@ -357,7 +352,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 					}
 				}
 				//Removed hollow requirement
-//				else if(!otherState.isAir(world, mutPos)){
+//				else if(!otherState.isAir()){
 //					return false;//We are on the inside, and expect air
 //				}
 
@@ -388,10 +383,9 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 					//We are on the edges
 					level.setBlockAndUpdate(mutPos, otherState.setValue(CRProperties.ACTIVE, true));
 					BlockEntity te = level.getBlockEntity(mutPos);
-					if(te instanceof GatewayEdgeTileEntity){
-						GatewayEdgeTileEntity otherTE = (GatewayEdgeTileEntity) te;
+					if(te instanceof GatewayEdgeTileEntity otherTE){
 						otherTE.setKey(worldPosition.subtract(mutPos));
-						otherTE.clearCache();
+//						otherTE.clearCache();
 					}
 				}
 
@@ -403,10 +397,10 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 
 		//Update this block
 		level.setBlockAndUpdate(worldPosition, getBlockState().setValue(CRProperties.ACTIVE, true));
-		clearCache();
+//		clearCache();
 
 		//Send a packet to the client with the size and orientation info
-		CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(5, plane.ordinal() | (size << 2), worldPosition));
+		CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(5, plane.ordinal() | ((long) size << 2), worldPosition));
 
 		return true;
 	}
@@ -416,58 +410,61 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 	}
 
 	@Override
-	public void tick(){
+	public void clientTick(){
+		//This TE only ticks if it is active
 		if(isActive()){
-			//This TE only ticks if it is active
-
 			//Perform angle movement on the client, and track what the client is probably doing on the server
 			clientAngle += calcAngleChange(clientW, clientAngle);
+			super.clientTick();
+		}
+	}
 
-			super.tick();
+	@Override
+	public void serverTick(){
+		//This TE only ticks if it is active
+		if(isActive()){
+			genOptionals();
 
-			if(!level.isClientSide){
-				genOptionals();
-				//Perform angle movement on the server
-				float angleTarget = (float) axleHandler.getSpeed() - referenceSpeed;
-				angle += calcAngleChange(angleTarget, angle);
+			//Perform angle movement on the server
+			float angleTarget = (float) axleHandler.getSpeed() - referenceSpeed;
+			angle += calcAngleChange(angleTarget, angle);
 
-				//Check for resyncing angle data to client
-				final double errorMargin = Math.PI / 32D;
-				if(Math.abs(clientAngle - angle) >= errorMargin || Math.abs(clientW - angleTarget) >= errorMargin / 2D){
-					//Resync the speed and angle to the client
-					resyncToClient();
-				}
+			//Check for resyncing angle data to client
+			final double errorMargin = Math.PI / 32D;
+			if(Math.abs(clientAngle - angle) >= errorMargin || Math.abs(clientW - angleTarget) >= errorMargin / 2D){
+				//Resync the speed and angle to the client
+				resyncToClient();
+			}
 
-				//Teleportation
-				if(chevrons[3] != null && plane != null && !isShutDown()){
-					Direction horiz = Direction.get(Direction.AxisDirection.POSITIVE, plane);
-					AABB area = new AABB(worldPosition.below(size).relative(horiz, -size / 2), worldPosition.relative(horiz, size / 2 + 1));
-					//We use the timeUntilPortal field in Entity to not spam TP entities between two portals
-					//This is both not what it's for, and exactly what it's for
-					List<Entity> entities = level.getEntitiesOfClass(Entity.class, area, EntitySelector.ENTITY_STILL_ALIVE.and(e -> IGateway.isAllowedToTeleport(e, level)));
-					if(!entities.isEmpty()){
-						GatewayAddress.Location loc = GatewaySavedData.lookupAddress((ServerLevel) level, new GatewayAddress(chevrons));
-						IGateway otherTE;
-						if(loc != null && (otherTE = loc.evalTE(level.getServer())) != null){
-							Vec3 centerPos = new Vec3(worldPosition.getX() + 0.5D, worldPosition.getY() - size / 2D + 0.5D, worldPosition.getZ() + 0.5D);
-							float scalingRadius = (size - 2) / 2F;
-							for(Entity e : entities){
-								float relPosH = Mth.clamp(plane == Direction.Axis.X ? ((float) (e.getX() - centerPos.x) / scalingRadius) : ((float) (e.getZ() - centerPos.z) / scalingRadius), -1, 1);
-								float relPosV = Mth.clamp((float) (e.getY() - centerPos.y) / scalingRadius, -1, 1);
-								playTPEffect(level, e.getX(), e.getY(), e.getZ());//Play effects at the start position
-								otherTE.teleportEntity(e, relPosH, relPosV, plane);
-							}
+			//Teleportation
+			if(chevrons[3] != null && plane != null && !isShutDown()){
+				Direction horiz = Direction.get(Direction.AxisDirection.POSITIVE, plane);
+				AABB area = new AABB(worldPosition.below(size).relative(horiz, -size / 2), worldPosition.relative(horiz, size / 2 + 1));
+				//We use the timeUntilPortal field in Entity to not spam TP entities between two portals
+				//This is both not what it's for, and exactly what it's for
+				List<Entity> entities = level.getEntitiesOfClass(Entity.class, area, EntitySelector.ENTITY_STILL_ALIVE.and(e -> IGateway.isAllowedToTeleport(e, level)));
+				if(!entities.isEmpty()){
+					GatewayAddress.Location loc = GatewaySavedData.lookupAddress((ServerLevel) level, new GatewayAddress(chevrons));
+					IGateway otherTE;
+					if(loc != null && (otherTE = loc.evalTE(level.getServer())) != null){
+						Vec3 centerPos = new Vec3(worldPosition.getX() + 0.5D, worldPosition.getY() - size / 2D + 0.5D, worldPosition.getZ() + 0.5D);
+						float scalingRadius = (size - 2) / 2F;
+						for(Entity e : entities){
+							float relPosH = Mth.clamp(plane == Direction.Axis.X ? ((float) (e.getX() - centerPos.x) / scalingRadius) : ((float) (e.getZ() - centerPos.z) / scalingRadius), -1, 1);
+							float relPosV = Mth.clamp((float) (e.getY() - centerPos.y) / scalingRadius, -1, 1);
+							playTPEffect(level, e.getX(), e.getY(), e.getZ());//Play effects at the start position
+							otherTE.teleportEntity(e, relPosH, relPosV, plane);
 						}
 					}
 				}
-
-				//Handle flux
-				if(level.getGameTime() % FluxUtil.FLUX_TIME == 0 && origin && lastTick != level.getGameTime() && !isShutDown()){
-					addFlux(FLUX_PER_CYCLE);
-				}
 			}
 
-			super.tick();//We call the super method last, as we use lastTick to prevent time acceleration in the code above, and lastTick is updated in the super method
+			//Handle flux
+			if(level.getGameTime() % FluxUtil.FLUX_TIME == 0 && origin && lastTick != level.getGameTime() && !isShutDown()){
+				addFlux(FLUX_PER_CYCLE);
+			}
+
+			super.serverTick();//We call the super method last, as we use lastTick to prevent time acceleration in the code above, and lastTick is updated in the super method
 		}
 	}
 
@@ -638,12 +635,6 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 				size = (int) (message >>> 2);
 				break;
 		}
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public double getViewDistance(){
-		return 65536;//Same as beacon
 	}
 
 	private class AxleHandler implements IAxleHandler{

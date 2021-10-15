@@ -11,6 +11,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.StampMillRec;
 import com.Da_Technomancer.crossroads.gui.container.StampMillContainer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
@@ -37,14 +38,11 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE.AxleHandler;
-
 @ObjectHolder(Crossroads.MODID)
 public class StampMillTileEntity extends InventoryTE{
 
 	@ObjectHolder("stamp_mill")
-	public static BlockEntityType<StampMillTileEntity> type = null;
+	public static BlockEntityType<StampMillTileEntity> TYPE = null;
 
 	public static final int TIME_LIMIT = 100;
 	public static final int INERTIA = 200;
@@ -54,7 +52,7 @@ public class StampMillTileEntity extends InventoryTE{
 	private int timer = 0;
 
 	public StampMillTileEntity(BlockPos pos, BlockState state){
-		super(type, 2);
+		super(TYPE, pos, state, 2);
 	}
 
 	public int getProgress(){
@@ -89,45 +87,43 @@ public class StampMillTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
-		if(!level.isClientSide){
-			BlockState state = getBlockState();
+	public void serverTick(){
+		super.serverTick();
+		BlockState state = getBlockState();
 
-			if(state.getBlock() != CRBlocks.stampMill){
-				return;
-			}
+		if(state.getBlock() != CRBlocks.stampMill){
+			return;
+		}
 
-			double progChange = Math.min(Math.abs(energy), Math.min(REQUIRED - progress, PROGRESS_PER_RADIAN * Math.abs(axleHandler.getSpeed()) / 20D));
-			axleHandler.addEnergy(-progChange, false);
-			if(inventory[1].isEmpty() && !inventory[0].isEmpty()){
-				progress += progChange;
-				if(++timer >= TIME_LIMIT || progress >= REQUIRED){
-					timer = 0;
-					if(progress >= REQUIRED){
-						progress = 0;
-						level.playLocalSound(worldPosition.getX() + 0.5, worldPosition.getY() + 1, worldPosition.getZ() + 0.5, SoundEvents.ANVIL_PLACE, SoundSource.BLOCKS, 1, level.random.nextFloat(), true);
-						Optional<StampMillRec> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.STAMP_MILL_TYPE, this, level);
-						ItemStack produced;
-						if(recOpt.isPresent()){
-							produced = recOpt.get().getResultItem();
-							produced = produced.copy();
-						}else{
-							produced = inventory[0].copy();
-							produced.setCount(1);
-						}
-						inventory[0].shrink(1);
-						inventory[1] = produced;
+		double progChange = Math.min(Math.abs(energy), Math.min(REQUIRED - progress, PROGRESS_PER_RADIAN * Math.abs(axleHandler.getSpeed()) / 20D));
+		axleHandler.addEnergy(-progChange, false);
+		if(inventory[1].isEmpty() && !inventory[0].isEmpty()){
+			progress += progChange;
+			if(++timer >= TIME_LIMIT || progress >= REQUIRED){
+				timer = 0;
+				if(progress >= REQUIRED){
+					progress = 0;
+					level.playLocalSound(worldPosition.getX() + 0.5, worldPosition.getY() + 1, worldPosition.getZ() + 0.5, SoundEvents.ANVIL_PLACE, SoundSource.BLOCKS, 1, level.random.nextFloat(), true);
+					Optional<StampMillRec> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.STAMP_MILL_TYPE, this, level);
+					ItemStack produced;
+					if(recOpt.isPresent()){
+						produced = recOpt.get().getResultItem();
+						produced = produced.copy();
 					}else{
-						inventory[1] = inventory[0].split(1);
-						progress -= REQUIRED * CRConfig.stampMillDamping.get() / 100;//By default, stamp mill damping is zero
-						if(progress < 0){
-							progress = 0;
-						}
+						produced = inventory[0].copy();
+						produced.setCount(1);
+					}
+					inventory[0].shrink(1);
+					inventory[1] = produced;
+				}else{
+					inventory[1] = inventory[0].split(1);
+					progress -= REQUIRED * CRConfig.stampMillDamping.get() / 100;//By default, stamp mill damping is zero
+					if(progress < 0){
+						progress = 0;
 					}
 				}
-				setChanged();
 			}
+			setChanged();
 		}
 	}
 
@@ -153,8 +149,8 @@ public class StampMillTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void clearCache(){
-		super.clearCache();
+	public void setBlockState(BlockState stateIn){
+		super.setBlockState(stateIn);
 		axleOpt.invalidate();
 		axleOpt = LazyOptional.of(() -> axleHandler);
 	}

@@ -6,22 +6,27 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.AutoInjectorContainer;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.potion.*;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
-import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -32,18 +37,11 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.alchemy.Potions;
-
 @ObjectHolder(Crossroads.MODID)
 public class AutoInjectorTileEntity extends InventoryTE{
 
 	@ObjectHolder("auto_injector")
-	public static BlockEntityType<AutoInjectorTileEntity> type = null;
+	public static BlockEntityType<AutoInjectorTileEntity> TYPE = null;
 
 	public static final int DURATION_CAPACITY = 20 * 60 * 20;//In ticks
 	public static final int[] SETTINGS = {10 * 20, 30 * 20, 60 * 20, 2 * 60 * 20, 5 * 60 * 20, 10 * 60 * 20};//In ticks
@@ -57,7 +55,7 @@ public class AutoInjectorTileEntity extends InventoryTE{
 	private int duration = 0;//In ticks
 
 	public AutoInjectorTileEntity(BlockPos pos, BlockState state){
-		super(type, 2);//Index 0: Input; Index 1: Output bottles
+		super(TYPE, pos, state, 2);//Index 0: Input; Index 1: Output bottles
 	}
 
 	@Override
@@ -94,12 +92,8 @@ public class AutoInjectorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
-
-		if(level.isClientSide){
-			return;
-		}
+	public void serverTick(){
+		super.serverTick();
 
 		//Only run every few ticks to reduce lag
 		int runPeriod = 10;

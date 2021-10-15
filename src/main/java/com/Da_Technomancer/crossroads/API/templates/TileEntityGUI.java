@@ -45,7 +45,7 @@ public abstract class TileEntityGUI<T extends TileEntityContainer<U>, U extends 
 
 	@Override
 	public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_){
-		for(GuiEventListener gui : children){
+		for(GuiEventListener gui : children()){
 			if(gui.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_)){
 				return true;
 			}
@@ -55,7 +55,7 @@ public abstract class TileEntityGUI<T extends TileEntityContainer<U>, U extends 
 
 	@Override
 	public boolean charTyped(char key, int keyCode){
-		for(GuiEventListener gui : children){
+		for(GuiEventListener gui : children()){
 			if(gui.charTyped(key, keyCode)){
 				return true;
 			}

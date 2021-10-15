@@ -2,30 +2,26 @@ package com.Da_Technomancer.crossroads.items.witchcraft;
 
 import com.Da_Technomancer.crossroads.API.witchcraft.ICultivatable;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.item.*;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.EnchantedBookItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
-import com.Da_Technomancer.crossroads.API.witchcraft.ICultivatable.CultivationTrade;
-import net.minecraft.world.item.EnchantedBookItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Item.Properties;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.trading.MerchantOffer;
-import net.minecraft.world.item.trading.MerchantOffers;
 
 public class VillagerBrain extends Item implements ICultivatable{
 
@@ -34,7 +30,7 @@ public class VillagerBrain extends Item implements ICultivatable{
 	private static final String CURRENT_TRADE = "cr_current_trade";
 
 	public VillagerBrain(){
-		super(new Properties().stacksTo(1));//Not added to any creative tab
+		super(new Properties().stacksTo(1).rarity(CRItems.BOBO_RARITY));//Not added to any creative tab
 		String name = "villager_brain";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);

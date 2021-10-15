@@ -3,8 +3,12 @@ package com.Da_Technomancer.crossroads.blocks.heat;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.tileentities.heat.FireboxTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.heat.SaltReactorTileEntity;
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.item.TooltipFlag;
@@ -42,6 +46,12 @@ public class SaltReactor extends BaseEntityBlock{
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
 		return new SaltReactorTileEntity(pos, state);
+	}
+
+	@Nullable
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> type){
+		return ITickableTileEntity.createTicker(type, SaltReactorTileEntity.TYPE);
 	}
 
 	@Override

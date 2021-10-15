@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
@@ -43,8 +44,8 @@ public abstract class TileEntityContainer<U extends BlockEntity & Container> ext
 		if(worldTe == null){
 			//Just in case one of the two things that should never happen happens, we create a fake instance of type U
 			//The UI will be basically non-functional, but we prevent a hard crash
-			worldTe = generateEmptyTE();
-			worldTe.setLevelAndPosition(playerInv.player.level, pos);
+			worldTe = generateEmptyTE(pos, playerInv.player.level.getBlockState(pos));
+			worldTe.setLevel(playerInv.player.level);
 			Crossroads.logger.error("Null world tile entity! Generating dummy TE. Report to mod author; type=%1$s", type.toString());
 		}
 		this.te = worldTe;
@@ -65,14 +66,14 @@ public abstract class TileEntityContainer<U extends BlockEntity & Container> ext
 		}
 	}
 
-	protected U generateEmptyTE(){
+	protected U generateEmptyTE(BlockPos pos, BlockState state){
 		//Uses reflection to get the class for type U (illegal in normal Java due to type scrubbing).
-		//Uses reflection to instantiate a new instance of type U with a no-args constructor
-		//If no no-args constructor exists, we hard crash because either Crossroads or an addon added a subclass without a default constructor and didn't override this method in its MachineContainer subclass
+		//Uses reflection to instantiate a new instance of type U with a generic (BlockPos, BlockState) constructor
+		//If no such generic constructor exists, we hard crash because either Crossroads or an addon added a subclass without a default constructor and didn't override this method in its MachineContainer subclass
 		U created;
 		try{
 			Class<U> clazz = (Class<U>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-			created = clazz.getConstructor().newInstance();
+			created = clazz.getConstructor(BlockPos.class, BlockState.class).newInstance(pos, state);
 		}catch(NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e){
 			throw new NullPointerException("Could not instantiate fake TileEntity for TileEntityContainer! Report to mod author!");
 		}

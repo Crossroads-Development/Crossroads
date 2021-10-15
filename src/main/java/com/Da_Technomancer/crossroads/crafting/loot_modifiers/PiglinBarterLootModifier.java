@@ -4,24 +4,22 @@ import com.Da_Technomancer.crossroads.crafting.CraftingUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.monster.piglin.Piglin;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.loot.*;
-import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.common.loot.LootModifier;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-
-import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.LootPool;
-import net.minecraft.world.level.storage.loot.RandomValueBounds;
-import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 
 public class PiglinBarterLootModifier extends LootModifier{
 
@@ -83,7 +81,7 @@ public class PiglinBarterLootModifier extends LootModifier{
 			JsonArray entryArray = GsonHelper.getAsJsonArray(json, "results");
 			for(JsonElement o : entryArray){
 				JsonObject entry = o.getAsJsonObject();
-				poolBuilder.add(LootItem.lootTableItem(GsonHelper.getAsItem(entry, "name")).setWeight(GsonHelper.getAsInt(entry, "weight", 1)).apply(SetItemCountFunction.setCount(RandomValueBounds.between(GsonHelper.getAsInt(entry, "min", 1), GsonHelper.getAsInt(entry, "max", 1)))));
+				poolBuilder.add(LootItem.lootTableItem(GsonHelper.getAsItem(entry, "name")).setWeight(GsonHelper.getAsInt(entry, "weight", 1)).apply(SetItemCountFunction.setCount(UniformGenerator.between(GsonHelper.getAsInt(entry, "min", 1), GsonHelper.getAsInt(entry, "max", 1)))));
 			}
 
 			return new PiglinBarterLootModifier(lootConditions, active, poolBuilder.build(), overrideChance);

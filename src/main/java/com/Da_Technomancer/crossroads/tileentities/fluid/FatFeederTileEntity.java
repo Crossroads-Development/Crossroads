@@ -5,22 +5,24 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.FatFeederContainer;
-import net.minecraft.world.entity.AgableMob;
-import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.food.FoodData;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.core.Vec3i;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodData;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -31,21 +33,18 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE.FluidTankHandler;
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE.TankProperty;
-
 @ObjectHolder(Crossroads.MODID)
 public class FatFeederTileEntity extends InventoryTE{
 
 	@ObjectHolder("fat_feeder")
-	private static BlockEntityType<FatFeederTileEntity> type = null;
+	public static BlockEntityType<FatFeederTileEntity> TYPE = null;
 
 	private static final int BREED_AMOUNT = 200;
 	public static final int MIN_RANGE = 4;
 	public static final int MAX_RANGE = 16;
 
 	public FatFeederTileEntity(BlockPos pos, BlockState state){
-		super(type, 0);
+		super(TYPE, pos, state, 0);
 		fluidProps[0] = new TankProperty(10_000, true, true, CRFluids.LIQUID_FAT::contains);
 		initFluidManagers();
 	}
@@ -56,10 +55,8 @@ public class FatFeederTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void tick(){
-		if(level.isClientSide){
-			return;
-		}
+	public void serverTick(){
+		super.serverTick();
 
 		//Player feeding
 		float range = (float) Math.abs(fluids[0].getAmount() - fluidProps[0].capacity / 2) / (float) (fluidProps[0].capacity / 2);
@@ -88,7 +85,7 @@ public class FatFeederTileEntity extends InventoryTE{
 			return;
 		}
 
-		List<AgableMob> animals = level.getEntitiesOfClass(AgableMob.class, new AABB(worldPosition.subtract(new Vec3i(range, range, range)), worldPosition.offset(new Vec3i(range, range, range))), EntitySelector.ENTITY_STILL_ALIVE);
+		List<AgeableMob> animals = level.getEntitiesOfClass(AgeableMob.class, new AABB(worldPosition.subtract(new Vec3i(range, range, range)), worldPosition.offset(new Vec3i(range, range, range))), EntitySelector.ENTITY_STILL_ALIVE);
 
 		//Cap out animal feeding at 64, to prevent flooding the world with animals
 		if(animals.size() >= 64){
@@ -98,17 +95,14 @@ public class FatFeederTileEntity extends InventoryTE{
 		//Bobo feature: If this is placed on an Emerald Block, it can feed villagers to make them willing to breed without feeding/trading.
 		boolean canBreedVillagers = Tags.Blocks.STORAGE_BLOCKS_EMERALD.contains(level.getBlockState(worldPosition.below()).getBlock());
 
-		for(AgableMob ent : animals){
-			if(ent instanceof Animal){
-				Animal anim = (Animal) ent;
+		for(AgeableMob ent : animals){
+			if(ent instanceof Animal anim){
 				if(fluids[0].getAmount() >= BREED_AMOUNT && anim.getAge() == 0 && !anim.isInLove()){
 					anim.setInLove(null);
 					fluids[0].shrink(BREED_AMOUNT);
 					setChanged();
 				}
-			}else if(ent instanceof Villager && canBreedVillagers){
-				Villager vill = (Villager) ent;
-
+			}else if(ent instanceof Villager vill && canBreedVillagers){
 				//Vanilla villager bread reqs. as of MC1.14:
 				//Must have foodLevel >= 12, growing age == 0
 				if(fluids[0].getAmount() >= BREED_AMOUNT && vill.getAge() == 0 && vill.getAge() == 0 && !vill.canBreed()){

@@ -8,21 +8,24 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.RotaryPumpContainer;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.BucketPickup;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BucketPickup;
+import net.minecraft.world.level.block.PowderSnowBlock;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidAttributes;
@@ -32,13 +35,11 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE.TankProperty;
-
 @ObjectHolder(Crossroads.MODID)
 public class RotaryPumpTileEntity extends InventoryTE{
 
 	@ObjectHolder("rotary_pump")
-	public static BlockEntityType<RotaryPumpTileEntity> type = null;
+	public static BlockEntityType<RotaryPumpTileEntity> TYPE = null;
 
 	public static final int INERTIA = 80;
 	public static final double MAX_POWER = 5;
@@ -50,7 +51,7 @@ public class RotaryPumpTileEntity extends InventoryTE{
 	private float progChange = 0;//Last change in progress per tick sent to the client. On the client, used for animation
 
 	public RotaryPumpTileEntity(BlockPos pos, BlockState state){
-		super(type, 0);
+		super(TYPE, pos, state, 0);
 		fluidProps[0] = new TankProperty(CAPACITY, false, true);
 		initFluidManagers();
 	}
@@ -71,14 +72,15 @@ public class RotaryPumpTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
+	public void clientTick(){
+		super.clientTick();
+		progress += progChange;
+		progress %= REQUIRED;
+	}
 
-		if(level.isClientSide){
-			progress += progChange;
-			progress %= REQUIRED;
-			return;
-		}
+	@Override
+	public void serverTick(){
+		super.serverTick();
 
 		if(CAPACITY - fluids[0].getAmount() < FluidAttributes.BUCKET_VOLUME){
 			return;
@@ -94,13 +96,22 @@ public class RotaryPumpTileEntity extends InventoryTE{
 
 			if(progress >= REQUIRED){
 				progress = 0;
-				BlockState state = level.getBlockState(worldPosition.below());
+				BlockPos targetPos = worldPosition.below();
+				BlockState state = level.getBlockState(targetPos);
 				Block block = state.getBlock();
-				if(block instanceof BucketPickup){
-					Fluid fl = ((BucketPickup) block).takeLiquid(level, worldPosition.below(), state);
-					fluids[0] = new FluidStack(fl, 1000 + fluids[0].getAmount());
-				}else{
-					Crossroads.logger.info("Pump attempted to drain a non-traditional fluid at pos: " + worldPosition.below().toString());
+				if(block instanceof BucketPickup bp && !(bp instanceof PowderSnowBlock)){
+					//As of MC1.17, not all instances of BucketPickup represent fluids
+					//We blacklist in code any non-fluid examples
+					//And verify the result, reverting any change if it gave a non-fluid output
+
+					ItemStack resultStack = bp.pickupBlock(level, targetPos, state);
+					if(resultStack.getItem() instanceof BucketItem bItem){
+						Fluid fl = bItem.getFluid();
+						fluids[0] = new FluidStack(fl, 1000 + fluids[0].getAmount());
+					}else{
+						//Invalid block, revert any change by setting the blockstate to the original value
+						level.setBlock(targetPos, state, 2);
+					}
 				}
 			}
 		}else{

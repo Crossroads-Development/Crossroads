@@ -8,17 +8,18 @@ import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.nbt.CompoundTag;
-
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.level.ChunkPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -27,13 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink.Behaviour;
-
 @ObjectHolder(Crossroads.MODID)
 public class ChunkAcceleratorTileEntity extends IFluxLink.FluxHelper{
 
 	@ObjectHolder("chunk_accelerator")
-	public static BlockEntityType<ChunkAcceleratorTileEntity> type = null;
+	public static BlockEntityType<ChunkAcceleratorTileEntity> TYPE = null;
 
 	public static final int FLUX_MULT = 8;
 
@@ -42,10 +41,12 @@ public class ChunkAcceleratorTileEntity extends IFluxLink.FluxHelper{
 	private long lastRunTick;//Used to prevent accelerators affecting each other
 
 	public ChunkAcceleratorTileEntity(BlockPos pos, BlockState state){
-		super(type, null, Behaviour.SOURCE);
+		super(TYPE, pos, state, null, Behaviour.SOURCE);
 	}
 
-	public void resetCache(){
+	@Override
+	public void setBlockState(BlockState stateIn){
+		super.setBlockState(stateIn);
 		beamOpt.invalidate();
 		beamOpt = LazyOptional.of(BeamHandler::new);
 	}
@@ -80,11 +81,11 @@ public class ChunkAcceleratorTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void tick(){
+	public void serverTick(){
 		//Handle flux
-		super.tick();
+		super.serverTick();
 
-		if(!level.isClientSide && level.getGameTime() != lastRunTick){
+		if(level.getGameTime() != lastRunTick){
 			//Prevent time acceleration of this block
 			lastRunTick = level.getGameTime();
 			int extraTicks = extraTicks(intensity);

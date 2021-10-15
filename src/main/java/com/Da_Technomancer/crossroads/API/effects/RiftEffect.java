@@ -3,32 +3,26 @@ package com.Da_Technomancer.crossroads.API.effects;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
-import net.minecraft.util.random.WeightedRandomList;
-import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.MobSpawnSettings;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.eventbus.api.Event;
 
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Random;
-
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.MobSpawnType;
 
 public class RiftEffect extends BeamEffect{
 
@@ -63,18 +57,16 @@ public class RiftEffect extends BeamEffect{
 					boolean peaceful = worldServ.getDifficulty() == Difficulty.PEACEFUL || CRConfig.riftSpawnDrops.get();
 					try{
 						WeightedRandomList<MobSpawnSettings.SpawnerData> list = worldServ.getChunkSource().generator.getMobsAt(worldIn.getBiome(pos), worldServ.structureFeatureManager(), MobCategory.MONSTER, pos);
-						list = ForgeEventFactory.getPotentialSpawns(worldServ, MobCategory.MONSTER, pos, list);
-						if(list != null && list.size() != 0){
+//						list = ForgeEventFactory.getPotentialSpawns(worldServ, MobCategory.MONSTER, pos, list);
+						if(!list.isEmpty()){
 							//Vanilla style spawning would spawn a group of mobs at a time (with group size defined by the SpawnListEntry). We only want to spawn 1 mob at a time
-							MobSpawnSettings.SpawnerData entry = list.get(RAND.nextInt(list.size()));
+							MobSpawnSettings.SpawnerData entry = list.getRandom(RAND).orElseThrow();
 							Entity ent = entry.type.create(worldIn);
 							ent.setPos(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
 							Event.Result r = ent instanceof Mob ? ForgeEventFactory.canEntitySpawn((Mob) ent, worldServ, pos.getX(), pos.getY(), pos.getZ(), null, MobSpawnType.SPAWNER) : Event.Result.DEFAULT;
 							if(r == Event.Result.ALLOW || r == Event.Result.DEFAULT){
 								if(peaceful){//In peaceful, we spawn the mob drops instead of the entity
-									if(ent instanceof LivingEntity && worldServ.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)){
-										LivingEntity lEnt = (LivingEntity) ent;
-
+									if(ent instanceof LivingEntity lEnt && worldServ.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)){
 										//All the methods for this are protected, so we re-implement them here
 
 										//LivingEntity::dropLoot

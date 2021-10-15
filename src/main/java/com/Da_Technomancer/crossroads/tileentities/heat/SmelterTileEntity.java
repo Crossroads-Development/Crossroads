@@ -5,20 +5,21 @@ import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.SmelterContainer;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.SmeltingRecipe;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -29,13 +30,11 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
-
 @ObjectHolder(Crossroads.MODID)
 public class SmelterTileEntity extends InventoryTE{
 
 	@ObjectHolder("smelter")
-	private static BlockEntityType<SmelterTileEntity> type = null;
+	public static BlockEntityType<SmelterTileEntity> TYPE = null;
 
 	public static final int REQUIRED = 500;
 	public static final int[] TEMP_TIERS = {200, 300};
@@ -44,7 +43,7 @@ public class SmelterTileEntity extends InventoryTE{
 	private int progress = 0;
 
 	public SmelterTileEntity(BlockPos pos, BlockState state){
-		super(type, 2);// 0 = Input, 1 = Output
+		super(TYPE, pos, state, 2);// 0 = Input, 1 = Output
 	}
 
 	public int getProgress(){
@@ -63,11 +62,8 @@ public class SmelterTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
-		if(level.isClientSide){
-			return;
-		}
+	public void serverTick(){
+		super.serverTick();
 
 		int tier = HeatUtil.getHeatTier(temp, TEMP_TIERS);
 		if(tier != -1){

@@ -29,10 +29,10 @@ import java.util.ArrayList;
 public class LargeGearSlaveTileEntity extends BlockEntity implements IInfoTE{
 
 	@ObjectHolder("large_gear_slave")
-	private static BlockEntityType<LargeGearSlaveTileEntity> type = null;
+	public static BlockEntityType<LargeGearSlaveTileEntity> TYPE = null;
 
 	public LargeGearSlaveTileEntity(BlockPos pos, BlockState state){
-		super(type, pos, state);
+		super(TYPE, pos, state);
 	}
 
 	public BlockPos masterPos;//Defined relative to this block's position
@@ -40,7 +40,7 @@ public class LargeGearSlaveTileEntity extends BlockEntity implements IInfoTE{
 
 	protected Direction getFacing(){
 		if(facing == null){
-			BlockState state = level.getBlockState(worldPosition);
+			BlockState state = getBlockState();
 			if(state.getBlock() != CRBlocks.largeGearSlave){
 				setRemoved();
 				return Direction.NORTH;

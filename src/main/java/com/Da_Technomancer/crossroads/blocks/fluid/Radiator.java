@@ -3,7 +3,11 @@ package com.Da_Technomancer.crossroads.blocks.fluid;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RadiatorTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.heat.FireboxTileEntity;
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.item.TooltipFlag;
@@ -40,6 +44,12 @@ public class Radiator extends BaseEntityBlock{
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
 		return new RadiatorTileEntity(pos, state);
+	}
+
+	@Nullable
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> type){
+		return ITickableTileEntity.createTicker(type, RadiatorTileEntity.TYPE);
 	}
 
 	@Override

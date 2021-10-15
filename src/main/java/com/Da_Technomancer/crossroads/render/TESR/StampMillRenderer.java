@@ -7,21 +7,21 @@ import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.rotary.StampMillTileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.world.level.block.state.BlockState;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import com.mojang.math.Vector3f;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.awt.*;
 
-public class StampMillRenderer extends BlockEntityRenderer<StampMillTileEntity>{
+public class StampMillRenderer implements BlockEntityRenderer<StampMillTileEntity>{
 
-	protected StampMillRenderer(BlockEntityRenderDispatcher dispatcher){
-		super(dispatcher);
+	protected StampMillRenderer(BlockEntityRendererProvider.Context dispatcher){
+		super();
 	}
 
 	@Override

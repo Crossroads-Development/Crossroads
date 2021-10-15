@@ -11,37 +11,30 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.util.*;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.LazyOptional;
 import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
-
-import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.item.Item.Properties;
 
 public class StaffTechnomancy extends BeamUsingItem{
 
@@ -86,7 +79,7 @@ public class StaffTechnomancy extends BeamUsingItem{
 
 				//Calculate the start and end point of the fired beam
 				double heldOffset = .22D * (player.getUsedItemHand() == InteractionHand.MAIN_HAND ^ player.getMainArm() == HumanoidArm.LEFT ? 1D : -1D);
-				Vec3 start = new Vec3(player.getX() - (heldOffset * Math.cos(Math.toRadians(player.yRot))), player.getY() + player.getEyeHeight() + 0.4D, player.getZ() - (heldOffset * Math.sin(Math.toRadians(player.yRot))));
+				Vec3 start = new Vec3(player.getX() - (heldOffset * Math.cos(Math.toRadians(player.getYRot()))), player.getY() + player.getEyeHeight() + 0.4D, player.getZ() - (heldOffset * Math.sin(Math.toRadians(player.getYRot()))));
 
 				Triple<BlockPos, Vec3, Direction> beamHitResult = rayTraceBeams(mag, player.level, start, player.getEyePosition(1), player.getLookAngle(), player, null, MAX_RANGE);
 				BlockPos endPos = beamHitResult.getLeft();
@@ -144,7 +137,7 @@ public class StaffTechnomancy extends BeamUsingItem{
 						opt.orElseThrow(NullPointerException::new).setBeam(mag);
 					}else{
 						EnumBeamAlignments align = EnumBeamAlignments.getAlignment(mag);
-						if(!Level.isOutsideBuildHeight(endPos)){
+						if(!player.level.isOutsideBuildHeight(endPos)){
 							align.getEffect().doBeamEffect(align, mag.getVoid() != 0, Math.min(64, mag.getPower()), player.level, endPos, effectDir);
 						}
 					}
@@ -184,7 +177,7 @@ public class StaffTechnomancy extends BeamUsingItem{
 
 			BlockPos newEndPos = new BlockPos(end[0], end[1], end[2]);
 			//Speed things up a bit by not rechecking blocks
-			if(newEndPos.equals(endPos) || Level.isOutsideBuildHeight(newEndPos) || newEndPos.equals(ignorePos)){
+			if(newEndPos.equals(endPos) || world.isOutsideBuildHeight(newEndPos) || newEndPos.equals(ignorePos)){
 				continue;
 			}
 			endPos = newEndPos;

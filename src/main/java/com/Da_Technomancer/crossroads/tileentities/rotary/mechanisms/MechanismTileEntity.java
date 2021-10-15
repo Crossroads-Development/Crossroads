@@ -9,18 +9,19 @@ import com.Da_Technomancer.crossroads.blocks.rotary.Mechanism;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import com.Da_Technomancer.essentials.packets.ILongReceiver;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.network.chat.Component;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -32,7 +33,7 @@ import java.util.ArrayList;
 public class MechanismTileEntity extends BlockEntity implements ITickableTileEntity, ILongReceiver, IInfoTE{
 
 	@ObjectHolder(Crossroads.MODID + ":mechanism")
-	public static BlockEntityType<MechanismTileEntity> type = null;
+	public static BlockEntityType<MechanismTileEntity> TYPE = null;
 
 	public static final ArrayList<IMechanism<?>> MECHANISMS = new ArrayList<>(8);//This is a list instead of an array to allow expansion by addons
 
@@ -48,7 +49,7 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 	}
 
 	public MechanismTileEntity(BlockPos pos, BlockState state){
-		super(type, pos, state);
+		super(TYPE, pos, state);
 	}
 
 	@Override
@@ -212,16 +213,10 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public void tick(){
-		//functionality moved to master-axis
-//		if(world.isRemote){
-//			for(int i = 0; i < 7; i++){
-//				// it's 9 / PI instead of 180 / PI because 20 ticks/second
-//				angle[i] += clientW[i] * 9D / Math.PI;
-//			}
-//		}
+	public void serverTick(){
+		ITickableTileEntity.super.serverTick();
 
-		if(updateMembers && !level.isClientSide){
+		if(updateMembers){
 			CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(14, getAxleAxis() == null ? -1 : getAxleAxis().ordinal(), worldPosition));
 			for(int i = 0; i < 7; i++){
 				axleHandlers[i].updateStates(true);
@@ -320,7 +315,7 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 	 * Careful when using this- any situation where the blockstate might change makes this unacceptable
 	 */
 	private void markDirtyLight(){
-		level.blockEntityChanged(this.worldPosition, this);
+		level.blockEntityChanged(worldPosition);
 	}
 
 	protected class SidedAxleHandler implements IAxleHandler{

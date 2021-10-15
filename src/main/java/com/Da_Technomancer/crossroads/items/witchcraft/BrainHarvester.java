@@ -4,28 +4,26 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
-import net.minecraft.world.item.Item.Properties;
 
 public class BrainHarvester extends Item{
 
 	private final Multimap<Attribute, AttributeModifier> attributeModifiers;
 
 	public BrainHarvester(){
-		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
+		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1).rarity(CRItems.BOBO_RARITY));
 		String name = "brain_harvester";
 		setRegistryName(name);
 		CRItems.toRegister.add(this);

@@ -8,15 +8,17 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.FatCollectorContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -27,21 +29,18 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE.TankProperty;
-
 @ObjectHolder(Crossroads.MODID)
 public class FatCollectorTileEntity extends InventoryTE{
 
 	@ObjectHolder("fat_collector")
-	private static BlockEntityType<FatCollectorTileEntity> type = null;
+	public static BlockEntityType<FatCollectorTileEntity> TYPE = null;
 
 	public static final int[] TIERS = {100, 120, 140, 160, 180, 200};
 	public static final double[] EFFICIENCY = {0.8D, 1D, 1.2D, 1D, 0.8D, 0};
 	private static final double USE_PER_VALUE = 2D;
 
 	public FatCollectorTileEntity(BlockPos pos, BlockState state){
-		super(type, 1);
+		super(TYPE, pos, state, 1);
 		fluidProps[0] = new TankProperty(8_000, false, true);
 		initFluidManagers();
 	}
@@ -57,8 +56,8 @@ public class FatCollectorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
+	public void serverTick(){
+		super.serverTick();
 
 		int tier = HeatUtil.getHeatTier(temp, TIERS);
 

@@ -15,13 +15,11 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTi
 import com.Da_Technomancer.crossroads.tileentities.technomancy.*;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.*;
 import com.mojang.datafixers.DSL;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistry;
-
-import java.util.function.Supplier;
 
 import static com.Da_Technomancer.crossroads.blocks.CRBlocks.*;
 

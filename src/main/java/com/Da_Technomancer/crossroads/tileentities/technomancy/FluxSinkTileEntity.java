@@ -6,32 +6,30 @@ import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink.Behaviour;
-
 @ObjectHolder(Crossroads.MODID)
 public class FluxSinkTileEntity extends IFluxLink.FluxHelper{
 
 	@ObjectHolder("flux_sink")
-	public static BlockEntityType<FluxSinkTileEntity> type = null;
+	public static BlockEntityType<FluxSinkTileEntity> TYPE = null;
 
 	private static final int CAPACITY = 256;
 
@@ -41,7 +39,7 @@ public class FluxSinkTileEntity extends IFluxLink.FluxHelper{
 	public final int[] renderPortals = new int[] {-1, -1};//Used for rendering; indices of the floating portals to render an entropy transfer into, -1 means no transfer
 
 	public FluxSinkTileEntity(BlockPos pos, BlockState state){
-		super(type, null, Behaviour.SINK, null);
+		super(TYPE, pos, state, null, Behaviour.SINK, null);
 		this.fluxTransferHandler = this::consumeFlux;
 	}
 
@@ -52,25 +50,23 @@ public class FluxSinkTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
-		if(level.isClientSide){
-			//Create client-side entropy effects
-			//By doing this on the individual clients, we avoid needing extra packets
-			if(level.getGameTime() % FluxUtil.FLUX_TIME == 0){
-				//Sound
-				CRSounds.playSoundClientLocal(level, worldPosition, CRSounds.FLUX_TRANSFER, SoundSource.BLOCKS, 0.4F, 1F);
-				//Rendered arcs
-				if(level.getGameTime() % (FluxUtil.FLUX_TIME * 4) == 0){
-					if(getRunDuration() > STARTUP_TIME){
-						renderPortals[0] = level.random.nextInt(8);
-						renderPortals[1] = level.random.nextInt(8);
-						if(renderPortals[0] == renderPortals[1]){
-							renderPortals[1] = (renderPortals[0] + 1) % 8;
-						}
-					}else{
-						renderPortals[0] = renderPortals[1] = -1;
+	public void clientTick(){
+		super.clientTick();
+		//Create client-side entropy effects
+		//By doing this on the individual clients, we avoid needing extra packets
+		if(level.getGameTime() % FluxUtil.FLUX_TIME == 0){
+			//Sound
+			CRSounds.playSoundClientLocal(level, worldPosition, CRSounds.FLUX_TRANSFER, SoundSource.BLOCKS, 0.4F, 1F);
+			//Rendered arcs
+			if(level.getGameTime() % (FluxUtil.FLUX_TIME * 4) == 0){
+				if(getRunDuration() > STARTUP_TIME){
+					renderPortals[0] = level.random.nextInt(8);
+					renderPortals[1] = level.random.nextInt(8);
+					if(renderPortals[0] == renderPortals[1]){
+						renderPortals[1] = (renderPortals[0] + 1) % 8;
 					}
+				}else{
+					renderPortals[0] = renderPortals[1] = -1;
 				}
 			}
 		}

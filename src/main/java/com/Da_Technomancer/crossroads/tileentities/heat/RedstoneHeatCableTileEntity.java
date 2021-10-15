@@ -4,10 +4,13 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.heat.HeatCable;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -18,15 +21,14 @@ import javax.annotation.Nullable;
 public class RedstoneHeatCableTileEntity extends HeatCableTileEntity{
 
 	@ObjectHolder("redstone_heat_cable")
-	private static BlockEntityType<RedstoneHeatCableTileEntity> type = null;
+	public static BlockEntityType<RedstoneHeatCableTileEntity> TYPE = null;
 
 	public RedstoneHeatCableTileEntity(BlockPos pos, BlockState state){
-		this(HeatInsulators.WOOL);
+		this(pos, state, state.getBlock() instanceof HeatCable hc ? hc.insulator : HeatInsulators.WOOL);
 	}
 
-	public RedstoneHeatCableTileEntity(HeatInsulators insulator){
-		super(type, pos, state);
-		this.insulator = insulator;
+	public RedstoneHeatCableTileEntity(BlockPos pos, BlockState state, HeatInsulators insulator){
+		super(TYPE, pos, state, insulator);
 	}
 
 	private boolean isUnlocked(){
@@ -34,9 +36,9 @@ public class RedstoneHeatCableTileEntity extends HeatCableTileEntity{
 	}
 
 	@Override
-	public void tick(){
+	public void serverTick(){
 		if(isUnlocked()){
-			super.tick();
+			super.serverTick();
 		}else{
 			//Energy loss
 			double prevTemp = temp;

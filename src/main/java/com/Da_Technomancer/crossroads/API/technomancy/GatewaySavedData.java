@@ -104,14 +104,7 @@ public class GatewaySavedData extends SavedData{
 		}else{
 			storage = world.getServer().overworld().getDataStorage();//MCP note: getOverworld
 		}
-		GatewaySavedData data;
-		try{
-			data = storage.computeIfAbsent(GatewaySavedData::new, ID);
-		}catch(NullPointerException e){
-			Crossroads.logger.error("Failed GatewaySavedData get due to null DimensionSavedDataManager", e);
-			return new GatewaySavedData();//Blank storage that prevents actual read/write, but avoids a crash
-		}
-		return data;
+		return storage.computeIfAbsent(GatewaySavedData::load, GatewaySavedData::new, ID);
 	}
 
 	public static final String ID = Crossroads.MODID + "_gateways";
@@ -119,18 +112,19 @@ public class GatewaySavedData extends SavedData{
 	private final Map<GatewayAddress, GatewayAddress.Location> addressBook = new HashMap<>();
 
 	private GatewaySavedData(){
-		super(ID);
+		super();
 	}
 
-	@Override
-	public void load(CompoundTag nbt){
-		addressBook.clear();
+	public static GatewaySavedData load(CompoundTag nbt){
+		GatewaySavedData data = new GatewaySavedData();
+		data.addressBook.clear();
 		int i = 0;
 		while(nbt.contains("key_" + i)){
-			addressBook.put(GatewayAddress.deserialize(nbt.getInt("key_" + i)), new GatewayAddress.Location(nbt.getLong("pos_" + i), nbt.getString("dim_" + i)));
+			data.addressBook.put(GatewayAddress.deserialize(nbt.getInt("key_" + i)), new GatewayAddress.Location(nbt.getLong("pos_" + i), nbt.getString("dim_" + i)));
 			i++;
 		}
 		nbt.getInt("atmos_charge");
+		return data;
 	}
 
 	@Override

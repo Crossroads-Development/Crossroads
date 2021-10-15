@@ -5,15 +5,15 @@ import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.essentials.render.LinkLineRenderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class EntropyRenderer<T extends BlockEntity & IFluxLink> extends LinkLineRenderer<T>{
 
-	public EntropyRenderer(BlockEntityRenderDispatcher rendererDispatcherIn){
+	public EntropyRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn){
 		super(rendererDispatcherIn);
 	}
 

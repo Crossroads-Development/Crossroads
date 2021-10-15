@@ -14,58 +14,55 @@ import com.Da_Technomancer.crossroads.tileentities.witchcraft.AutoInjectorTileEn
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.BloodCentrifugeTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.CultivatorVatTileEntity;
 import com.Da_Technomancer.essentials.render.LinkLineRenderer;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.*;
-import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.world.entity.player.Player;
 
 public class CRRendererRegistry{
 
 	public static void registerBlockRenderer(){
 
-		ClientRegistry.bindTileEntityRenderer(MechanismTileEntity.type, MechanismRenderer::new);
+		BlockEntityRenderers.register(MechanismTileEntity.TYPE, MechanismRenderer::new);
 //		reg(CRBlocks.rotaryPump);
-		ClientRegistry.bindTileEntityRenderer(RotaryPumpTileEntity.type, RotaryPumpRenderer::new);
+		BlockEntityRenderers.register(RotaryPumpTileEntity.TYPE, RotaryPumpRenderer::new);
 //		reg(CRBlocks.steamTurbine);
-		ClientRegistry.bindTileEntityRenderer(SteamTurbineTileEntity.type, SteamTurbineRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(LargeGearMasterTileEntity.teType, LargeGearRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(RotaryDrillTileEntity.type, RotaryDrillRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(BeamExtractorTileEntity.TYPE, BeamRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(QuartzStabilizerTileEntity.TYPE, BeamRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(CrystallinePrismTileEntity.TYPE, BeamRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(BeamReflectorTileEntity.TYPE, BeamRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(LensFrameTileEntity.TYPE, LensFrameRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(BeamSiphonTileEntity.TYPE, BeamRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(BeamRedirectorTileEntity.TYPE, BeamRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(BeamSplitterTileEntity.TYPE, BeamRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(BeaconHarnessTileEntity.type, BeaconHarnessRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(HamsterWheelTileEntity.type, HamsterWheelRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(GatewayControllerTileEntity.type, GatewayControllerRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(GatewayControllerDestinationTileEntity.type, GatewayControllerDestinationRenderer::new);
-//		ClientRegistry.bindTileEntityRenderer(MechanicalArmTileEntity.type, MechanicalArmRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(HeatingCrucibleTileEntity.type, HeatingCrucibleRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(DynamoTileEntity.TYPE, DynamoRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(LodestoneDynamoTileEntity.type, DynamoRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(ClockworkStabilizerTileEntity.type, BeamRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(WindTurbineTileEntity.type, WindTurbineRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(StampMillTileEntity.type, StampMillRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(FluxNodeTileEntity.type, FluxNodeRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(TeslaCoilTopTileEntity.TYPE, LinkLineRenderer::new);
-//		ClientRegistry.bindTileEntityRenderer(RedstoneTransmitterTileEntity.type, LinkLineRenderer<RedstoneTransmitterTileEntity>::new);
+		BlockEntityRenderers.register(SteamTurbineTileEntity.TYPE, SteamTurbineRenderer::new);
+		BlockEntityRenderers.register(LargeGearMasterTileEntity.TYPE, LargeGearRenderer::new);
+		BlockEntityRenderers.register(RotaryDrillTileEntity.TYPE, RotaryDrillRenderer::new);
+		BlockEntityRenderers.register(BeamExtractorTileEntity.TYPE, BeamRenderer::new);
+		BlockEntityRenderers.register(QuartzStabilizerTileEntity.TYPE, BeamRenderer::new);
+		BlockEntityRenderers.register(CrystallinePrismTileEntity.TYPE, BeamRenderer::new);
+		BlockEntityRenderers.register(BeamReflectorTileEntity.TYPE, BeamRenderer::new);
+		BlockEntityRenderers.register(LensFrameTileEntity.TYPE, LensFrameRenderer::new);
+		BlockEntityRenderers.register(BeamSiphonTileEntity.TYPE, BeamRenderer::new);
+		BlockEntityRenderers.register(BeamRedirectorTileEntity.TYPE, BeamRenderer::new);
+		BlockEntityRenderers.register(BeamSplitterTileEntity.TYPE, BeamRenderer::new);
+		BlockEntityRenderers.register(BeaconHarnessTileEntity.TYPE, BeaconHarnessRenderer::new);
+		BlockEntityRenderers.register(HamsterWheelTileEntity.TYPE, HamsterWheelRenderer::new);
+		BlockEntityRenderers.register(GatewayControllerTileEntity.TYPE, GatewayControllerRenderer::new);
+		BlockEntityRenderers.register(GatewayControllerDestinationTileEntity.TYPE, GatewayControllerDestinationRenderer::new);
+//		BlockEntityRenderers.register(MechanicalArmTileEntity.type, MechanicalArmRenderer::new);
+		BlockEntityRenderers.register(HeatingCrucibleTileEntity.TYPE, HeatingCrucibleRenderer::new);
+		BlockEntityRenderers.register(DynamoTileEntity.TYPE, DynamoRenderer::new);
+		BlockEntityRenderers.register(LodestoneDynamoTileEntity.TYPE, DynamoRenderer::new);
+		BlockEntityRenderers.register(ClockworkStabilizerTileEntity.TYPE, BeamRenderer::new);
+		BlockEntityRenderers.register(WindTurbineTileEntity.TYPE, WindTurbineRenderer::new);
+		BlockEntityRenderers.register(StampMillTileEntity.TYPE, StampMillRenderer::new);
+		BlockEntityRenderers.register(FluxNodeTileEntity.TYPE, FluxNodeRenderer::new);
+		BlockEntityRenderers.register(TeslaCoilTopTileEntity.TYPE, LinkLineRenderer::new);
+//		BlockEntityRenderers.register(RedstoneTransmitterTileEntity.type, LinkLineRenderer<RedstoneTransmitterTileEntity>::new);
 		//Flux machines (all have link lines)
-		ClientRegistry.bindTileEntityRenderer(ChronoHarnessTileEntity.type, ChronoHarnessRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(TemporalAcceleratorTileEntity.type, TemporalAcceleratorRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(ChunkAcceleratorTileEntity.type, ChunkAcceleratorRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(CopshowiumCreationChamberTileEntity.type, EntropyRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(FluxSinkTileEntity.type, FluxSinkRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(BeamCannonTileEntity.type, BeamCannonRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(AutoInjectorTileEntity.type, AutoInjectorRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(CultivatorVatTileEntity.type, CultivatorVatRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(BloodCentrifugeTileEntity.type, BloodCentrifugeRenderer::new);
+		BlockEntityRenderers.register(ChronoHarnessTileEntity.TYPE, ChronoHarnessRenderer::new);
+		BlockEntityRenderers.register(TemporalAcceleratorTileEntity.TYPE, TemporalAcceleratorRenderer::new);
+		BlockEntityRenderers.register(ChunkAcceleratorTileEntity.TYPE, ChunkAcceleratorRenderer::new);
+		BlockEntityRenderers.register(CopshowiumCreationChamberTileEntity.TYPE, EntropyRenderer::new);
+		BlockEntityRenderers.register(FluxSinkTileEntity.TYPE, FluxSinkRenderer::new);
+		BlockEntityRenderers.register(BeamCannonTileEntity.TYPE, BeamCannonRenderer::new);
+		BlockEntityRenderers.register(AutoInjectorTileEntity.TYPE, AutoInjectorRenderer::new);
+		BlockEntityRenderers.register(CultivatorVatTileEntity.TYPE, CultivatorVatRenderer::new);
+		BlockEntityRenderers.register(BloodCentrifugeTileEntity.TYPE, BloodCentrifugeRenderer::new);
 	}
 
 //	This doesn't work anymore, and any existing blocks were switched to JSON models for the item form
@@ -85,9 +82,11 @@ public class CRRendererRegistry{
 			}
 		}
 		//Player renderers are stored separately from the main renderer map
-		for(PlayerRenderer playerRenderer : manager.getSkinMap().values()){
-			playerRenderer.addLayer(new TechnomancyElytraRenderer<>(playerRenderer));
-			playerRenderer.addLayer(new HopperHawkShoulderRenderer<>(playerRenderer));
+		for(EntityRenderer<? extends Player> skinRenderer : manager.getSkinMap().values()){
+			if(skinRenderer instanceof PlayerRenderer playerRenderer){
+				playerRenderer.addLayer(new TechnomancyElytraRenderer<>(playerRenderer));
+				playerRenderer.addLayer(new HopperHawkShoulderRenderer<>(playerRenderer));
+			}
 		}
 	}
 }

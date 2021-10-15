@@ -10,20 +10,20 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.RotaryDrillTileEntity;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.world.level.block.state.BlockState;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import com.mojang.math.Vector3f;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class RotaryDrillRenderer extends BlockEntityRenderer<RotaryDrillTileEntity>{
+public class RotaryDrillRenderer implements BlockEntityRenderer<RotaryDrillTileEntity>{
 
-	protected RotaryDrillRenderer(BlockEntityRenderDispatcher rendererDispatcherIn){
-		super(rendererDispatcherIn);
+	protected RotaryDrillRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn){
+		super();
 	}
 
 	@Override

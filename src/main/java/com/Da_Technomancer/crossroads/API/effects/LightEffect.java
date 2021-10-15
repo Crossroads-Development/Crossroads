@@ -32,12 +32,12 @@ public class LightEffect extends BeamEffect{
 			}else{
 				//Spawn light clusters
 				BlockState state = worldIn.getBlockState(pos);
-				if(state.isAir(worldIn, pos)){
+				if(state.isAir()){
 					worldIn.setBlockAndUpdate(pos, CRBlocks.lightCluster.defaultBlockState());
 				}else if(dir != null && state.getBlock() != CRBlocks.lightCluster && state.getLightEmission() == 0 && state.isSolidRender(worldIn, pos)){//Don't spawn clusters against other light sources
 					BlockPos offsetPos = pos.relative(dir);
 					state = worldIn.getBlockState(offsetPos);
-					if(state.isAir(worldIn, offsetPos)){
+					if(state.isAir()){
 						worldIn.setBlockAndUpdate(offsetPos, CRBlocks.lightCluster.defaultBlockState());
 					}
 				}

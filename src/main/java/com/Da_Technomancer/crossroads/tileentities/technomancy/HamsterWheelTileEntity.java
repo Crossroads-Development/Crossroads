@@ -7,9 +7,12 @@ import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -17,13 +20,13 @@ import net.minecraftforge.registries.ObjectHolder;
 public class HamsterWheelTileEntity extends BlockEntity implements ITickableTileEntity{
 
 	@ObjectHolder("hamster_wheel")
-	public static BlockEntityType<HamsterWheelTileEntity> type = null;
+	public static BlockEntityType<HamsterWheelTileEntity> TYPE = null;
 
 	public float angle = 0;
 	public float nextAngle = 0;
 
 	public HamsterWheelTileEntity(BlockPos pos, BlockState state){
-		super(type, pos, state);
+		super(TYPE, pos, state);
 	}
 
 	@Override

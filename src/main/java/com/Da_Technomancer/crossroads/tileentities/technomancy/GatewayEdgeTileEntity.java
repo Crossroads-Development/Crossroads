@@ -19,13 +19,13 @@ import java.util.ArrayList;
 public class GatewayEdgeTileEntity extends BlockEntity implements IInfoTE{
 
 	@ObjectHolder("gateway_edge")
-	private static BlockEntityType<GatewayEdgeTileEntity> type = null;
+	public static BlockEntityType<GatewayEdgeTileEntity> TYPE = null;
 
 	//These fields will be correct for any portion of a formed multiblock
 	private BlockPos key = null;//The relative position of the top center of the multiblock. Null if this is not formedprivate Direction.Axis plane = null;//Legal values are null (unformed), x (for structure in x-y plane), and z (for structure in y-z plane). This should never by y
 
 	public GatewayEdgeTileEntity(BlockPos pos, BlockState state){
-		super(type, pos, state);
+		super(TYPE, pos, state);
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class GatewayEdgeTileEntity extends BlockEntity implements IInfoTE{
 	public void reset(){
 		key = null;
 		setChanged();
-		clearCache();
+//		clearCache();
 	}
 
 	public BlockPos getKey(){

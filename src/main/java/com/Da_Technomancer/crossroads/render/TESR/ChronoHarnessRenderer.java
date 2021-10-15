@@ -5,15 +5,15 @@ import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ChronoHarnessTileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import com.mojang.math.Vector3f;
 
 public class ChronoHarnessRenderer extends EntropyRenderer<ChronoHarnessTileEntity>{
 
-	protected ChronoHarnessRenderer(BlockEntityRenderDispatcher dispatcher){
+	protected ChronoHarnessRenderer(BlockEntityRendererProvider.Context dispatcher){
 		super(dispatcher);
 	}
 

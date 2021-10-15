@@ -7,16 +7,17 @@ import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.FluidCoolingRec;
 import com.Da_Technomancer.crossroads.gui.container.FluidCoolerContainer;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -29,20 +30,17 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE.TankProperty;
-
 @ObjectHolder(Crossroads.MODID)
 public class FluidCoolingChamberTileEntity extends InventoryTE{
 
 	@ObjectHolder("fluid_cooling_chamber")
-	private static BlockEntityType<FluidCoolingChamberTileEntity> type = null;
+	public static BlockEntityType<FluidCoolingChamberTileEntity> TYPE = null;
 
 	public static final int HEATING_RATE = 40;
 	private double storedHeat = 0;//The buffered heat that will be added to the temperature over time at a constant rate
 
 	public FluidCoolingChamberTileEntity(BlockPos pos, BlockState state){
-		super(type, 1);
+		super(TYPE, pos, state, 1);
 		fluidProps[0] = new TankProperty(4_000, true, false, o -> true);
 		initFluidManagers();
 	}
@@ -62,12 +60,8 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
-
-		if(level.isClientSide){
-			return;
-		}
+	public void serverTick(){
+		super.serverTick();
 
 		double moved = Math.min(storedHeat, HEATING_RATE);
 		if(moved > 0){

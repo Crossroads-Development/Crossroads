@@ -13,6 +13,7 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.technomancy.TemporalAccelerator;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -35,13 +36,11 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 
-import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink.Behaviour;
-
 @ObjectHolder(Crossroads.MODID)
 public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 
 	@ObjectHolder("temporal_accelerator")
-	public static BlockEntityType<TemporalAcceleratorTileEntity> type = null;
+	public static BlockEntityType<TemporalAcceleratorTileEntity> TYPE = null;
 
 	public static final int FLUX_MULT = 2;
 	public static final int SIZE = 5;
@@ -54,7 +53,7 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 	private TemporalAccelerator.Mode mode;
 
 	public TemporalAcceleratorTileEntity(BlockPos pos, BlockState state){
-		super(type, null, Behaviour.SOURCE);
+		super(TYPE, pos, state, null, Behaviour.SOURCE);
 	}
 
 	@Override
@@ -121,11 +120,11 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void tick(){
+	public void serverTick(){
 		//Handle flux
-		super.tick();
+		super.serverTick();
 
-		if(!level.isClientSide && level.getGameTime() != lastRunTick){
+		if(level.getGameTime() != lastRunTick){
 			//Prevent time acceleration of this block
 			lastRunTick = level.getGameTime();
 			int extraTicks = extraTicks(intensity);
@@ -197,10 +196,11 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 
 								//Perform tile entity effect
 								if(actOnTe){
+									//TODO This needs to be reworked to work on non-Crossroads/Essentials tile entities
 									BlockEntity te = level.getBlockEntity(effectPos);
 									if(te instanceof ITickableTileEntity){
 										for(int run = 0; run < extraTicks; run++){
-											((ITickableTileEntity) te).tick();
+											((ITickableTileEntity) te).serverTick();
 										}
 									}
 								}
@@ -222,8 +222,8 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void clearCache(){
-		super.clearCache();
+	public void setBlockState(BlockState stateIn){
+		super.setBlockState(stateIn);
 		facing = null;
 		mode = null;
 		beamOpt.invalidate();

@@ -1,58 +1,42 @@
 package com.Da_Technomancer.crossroads.entity;
 
 import com.Da_Technomancer.essentials.blocks.ESBlocks;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.entity.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.animal.ShoulderRidingEntity;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
-import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
-import net.minecraft.util.*;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.List;
-
-//@ObjectHolder(Crossroads.MODID)
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AgableMob;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
-import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.ai.goal.Goal.Flag;
-import net.minecraft.world.entity.ai.goal.LandOnOwnersShoulderGoal;
-import net.minecraft.world.entity.ai.goal.PanicGoal;
-import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomFlyingGoal;
 
 public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnimal{
 
@@ -71,6 +55,7 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnim
 	protected float oFlapSpeed;
 	protected float oFlap;
 	private float flapping = 1.0F;
+	private float nextFlap = 1.0F;
 
 	public EntityHopperHawk(EntityType<EntityHopperHawk> type, Level worldIn){
 		super(type, worldIn);
@@ -95,7 +80,7 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnim
 	}
 
 	@Override
-	public boolean causeFallDamage(float p_225503_1_, float p_225503_2_){
+	public boolean causeFallDamage(float p_225503_1_, float p_225503_2_, DamageSource source){
 		return false;
 	}
 
@@ -105,9 +90,14 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnim
 	}
 
 	@Override
-	protected float playFlySound(float p_191954_1_){
+	protected boolean isFlapping(){
+		return flyDist > nextFlap;
+	}
+
+	@Override
+	protected void onFlap() {
 		playSound(SoundEvents.PARROT_FLY, 0.15F, 1.0F);
-		return p_191954_1_ + this.flapSpeed / 2.0F;
+		nextFlap = this.flyDist + this.flapSpeed / 2.0F;
 	}
 
 	@Override
@@ -156,7 +146,7 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnim
 		ItemStack itemstack = player.getItemInHand(hand);
 		//Try taming
 		if(!isTame() && FOOD_INGREDIENT.test(itemstack)){
-			if(!player.abilities.instabuild){
+			if(!player.getAbilities().instabuild){
 				itemstack.shrink(1);
 			}
 
@@ -198,7 +188,7 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnim
 
 	@Nullable
 	@Override
-	public AgableMob getBreedOffspring(ServerLevel world, AgableMob partner){
+	public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob partner){
 		return null;
 	}
 
@@ -264,7 +254,7 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnim
 
 		private boolean canOwnerFitItem(ItemEntity ent, Player owner){
 			//This call is somewhat expensive, so we cache the result and only re-verify based on time
-			Inventory inv = owner.inventory;
+			Inventory inv = owner.getInventory();
 			ItemStack stack = ent.getItem();
 			return inv.getFreeSlot() >= 0 || inv.getSlotWithRemainingSpace(stack) >= 0;
 		}

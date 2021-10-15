@@ -5,19 +5,20 @@ import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.WindingTableContainer;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -27,13 +28,11 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
-
 @ObjectHolder(Crossroads.MODID)
 public class WindingTableTileEntity extends InventoryTE{
 
 	@ObjectHolder("winding_table")
-	private static BlockEntityType<WindingTableTileEntity> type = null;
+	public static BlockEntityType<WindingTableTileEntity> TYPE = null;
 
 	public static final double INERTIA = 50;
 	public static final double INCREMENT = 0.2;
@@ -41,13 +40,12 @@ public class WindingTableTileEntity extends InventoryTE{
 	private boolean redstone = false;//Whether this block was powered by redstone
 
 	public WindingTableTileEntity(BlockPos pos, BlockState state){
-		super(type, 1);
+		super(TYPE, pos, state, 1);
 	}
 
 	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
-		if(inventory[0].getItem() instanceof IWindableItem){
-			IWindableItem item = (IWindableItem) inventory[0].getItem();
+		if(inventory[0].getItem() instanceof IWindableItem item){
 			double speed = item.getWindLevel(inventory[0]);
 			double maxSpeed = item.getMaxWind();
 			chat.add(new TranslatableComponent("tt.crossroads.winding_table.winding", CRConfig.formatVal(speed), CRConfig.formatVal(maxSpeed)));
@@ -68,8 +66,7 @@ public class WindingTableTileEntity extends InventoryTE{
 	public void redstoneTrigger(boolean reds){
 		if(reds != redstone){
 			redstone = reds;
-			if(reds && inventory[0].getItem() instanceof IWindableItem){
-				IWindableItem item = (IWindableItem) inventory[0].getItem();
+			if(reds && inventory[0].getItem() instanceof IWindableItem item){
 				double itemSpeed = item.getWindLevel(inventory[0]);
 
 				if(itemSpeed < item.getMaxWind()){
@@ -95,8 +92,7 @@ public class WindingTableTileEntity extends InventoryTE{
 
 	public int getProgress(){
 		//Server side only, used for UI rendering, percentage of winding level
-		if(inventory[0].getItem() instanceof IWindableItem){
-			IWindableItem item = (IWindableItem) inventory[0].getItem();
+		if(inventory[0].getItem() instanceof IWindableItem item){
 			double speed = item.getWindLevel(inventory[0]);
 			double maxSpeed = item.getMaxWind();
 			return (int) Math.round(speed / maxSpeed * 100);
@@ -111,14 +107,13 @@ public class WindingTableTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
+	public void serverTick(){
+		super.serverTick();
 
-		if(level.isClientSide || !(inventory[0].getItem() instanceof IWindableItem)){
+		if(!(inventory[0].getItem() instanceof IWindableItem item)){
 			return;
 		}
 
-		IWindableItem item = (IWindableItem) inventory[0].getItem();
 		double itemSpeed = item.getWindLevel(inventory[0]);
 		if(itemSpeed > axleHandler.getSpeed()){
 			//Machine speed too slow

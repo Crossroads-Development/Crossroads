@@ -4,16 +4,16 @@ import com.Da_Technomancer.crossroads.API.effects.goggles.*;
 import com.Da_Technomancer.crossroads.Keys;
 import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.network.chat.Component;
+import net.minecraft.tags.Tag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.tags.Tag;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.extensions.IForgeKeybinding;
+import net.minecraftforge.client.extensions.IForgeKeyMapping;
 import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
@@ -35,10 +35,10 @@ public enum EnumGoggleLenses{
 	private final IGoggleEffect effect;
 	//This is a supplier to allow lazy-loading the keys, which may not be registered at initialization time
 	@Nullable
-	private final Supplier<IForgeKeybinding> key;
+	private final Supplier<IForgeKeyMapping> key;
 	private final boolean requireEnable;
 
-	EnumGoggleLenses(Tag<Item> item, String texturePath, IGoggleEffect effect, @Nullable Supplier<IForgeKeybinding> toggleKey, boolean requireEnable){
+	EnumGoggleLenses(Tag<Item> item, String texturePath, IGoggleEffect effect, @Nullable Supplier<IForgeKeyMapping> toggleKey, boolean requireEnable){
 		this.item = item;
 		this.texturePath = texturePath;
 		this.effect = effect;
@@ -60,11 +60,11 @@ public enum EnumGoggleLenses{
 		if(key == null){
 			return null;
 		}
-		IForgeKeybinding keybinding = key.get();
-		if(keybinding == null){
-			return null;
+		IForgeKeyMapping keybinding = key.get();
+		if(keybinding instanceof KeyMapping key){
+			return key;
 		}
-		return keybinding.getKeyBinding();
+		return null;
 	}
 
 	public boolean useKey(){

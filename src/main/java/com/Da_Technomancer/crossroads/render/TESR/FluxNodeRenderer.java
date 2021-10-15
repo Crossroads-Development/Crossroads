@@ -5,15 +5,15 @@ import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxNodeTileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import com.mojang.math.Vector3f;
 
 public class FluxNodeRenderer extends EntropyRenderer<FluxNodeTileEntity>{
 
-	protected FluxNodeRenderer(BlockEntityRenderDispatcher dispatcher){
+	protected FluxNodeRenderer(BlockEntityRendererProvider.Context dispatcher){
 		super(dispatcher);
 	}
 

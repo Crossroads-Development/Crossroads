@@ -10,8 +10,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.inventory.DataSlot;
 import net.minecraftforge.registries.ObjectHolder;
 
-import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.OutputSlot;
-import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.StrictSlot;
+
 
 @ObjectHolder(Crossroads.MODID)
 public class BloodCentrifugeContainer extends MachineContainer<BloodCentrifugeTileEntity>{

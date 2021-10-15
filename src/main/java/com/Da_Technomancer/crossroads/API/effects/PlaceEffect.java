@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.mojang.authlib.GameProfile;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -60,7 +61,7 @@ public class PlaceEffect extends BeamEffect{
 								worldIn.playSound(null, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 								stack.shrink(1);
 								if(stack.getCount() <= 0){
-									ent.remove();
+									ent.remove(Entity.RemovalReason.DISCARDED);
 								}
 							}
 						}

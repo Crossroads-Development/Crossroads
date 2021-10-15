@@ -6,15 +6,16 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.SteamTurbineContainer;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -23,20 +24,18 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE.TankProperty;
-
 @ObjectHolder(Crossroads.MODID)
 public class SteamTurbineTileEntity extends InventoryTE{
 
 	@ObjectHolder("steam_turbine")
-	public static BlockEntityType<SteamTurbineTileEntity> type = null;
+	public static BlockEntityType<SteamTurbineTileEntity> TYPE = null;
 
 	public static final double INERTIA = 80D;
 	private static final int CAPACITY = 10_000;
 	public static final int LIMIT = 5;
 
 	public SteamTurbineTileEntity(BlockPos pos, BlockState state){
-		super(type, 0);
+		super(TYPE, pos, state, 0);
 		fluidProps[0] = new TankProperty(CAPACITY, false, true);
 		fluidProps[1] = new TankProperty(CAPACITY, true, false, CRFluids.STEAM::contains);
 		initFluidManagers();
@@ -58,12 +57,8 @@ public class SteamTurbineTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
-		
-		if(level.isClientSide){
-			return;
-		}
+	public void serverTick(){
+		super.serverTick();
 
 		if(!fluids[1].isEmpty()){
 			int limit = fluids[1].getAmount() / 100;

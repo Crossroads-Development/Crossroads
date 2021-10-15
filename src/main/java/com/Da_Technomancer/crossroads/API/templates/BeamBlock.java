@@ -9,9 +9,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -19,7 +17,7 @@ import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nullable;
 
-public abstract class BeamBlock extends BaseEntityBlock{
+public abstract class BeamBlock extends TEBlock{
 
 	public BeamBlock(String name, BlockBehaviour.Properties prop){
 		super(prop);
@@ -41,11 +39,6 @@ public abstract class BeamBlock extends BaseEntityBlock{
 			return InteractionResult.SUCCESS;
 		}
 		return InteractionResult.PASS;
-	}
-
-	@Override
-	public RenderShape getRenderShape(BlockState state){
-		return RenderShape.MODEL;
 	}
 
 	@Nullable

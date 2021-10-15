@@ -17,6 +17,7 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.witchcraft.BloodSample;
 import com.Da_Technomancer.essentials.packets.INBTReceiver;
 import com.Da_Technomancer.essentials.packets.SendNBTToClient;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
@@ -45,13 +46,11 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
-
 @ObjectHolder(Crossroads.MODID)
 public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 
 	@ObjectHolder("embryo_lab")
-	public static BlockEntityType<EmbryoLabTileEntity> type = null;
+	public static BlockEntityType<EmbryoLabTileEntity> TYPE = null;
 
 	public EntityTemplate template = null;//Kept synced to the client
 
@@ -66,7 +65,7 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 	}
 
 	public EmbryoLabTileEntity(BlockPos pos, BlockState state){
-		super(type, 1);
+		super(TYPE, pos, state, 1);
 		//Index 0: output
 	}
 

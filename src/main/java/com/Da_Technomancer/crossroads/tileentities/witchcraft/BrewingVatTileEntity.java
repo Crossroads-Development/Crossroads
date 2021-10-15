@@ -6,17 +6,18 @@ import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.BrewingVatContainer;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -27,13 +28,11 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
-
 @ObjectHolder(Crossroads.MODID)
 public class BrewingVatTileEntity extends InventoryTE{
 
 	@ObjectHolder("brewing_vat")
-	public static BlockEntityType<BrewingVatTileEntity> type = null;
+	public static BlockEntityType<BrewingVatTileEntity> TYPE = null;
 
 	public static final int[] TEMP_TIERS = {75, 90, 100};
 	public static final int[] SPEED_MULT = {1, 2, 0};
@@ -42,7 +41,7 @@ public class BrewingVatTileEntity extends InventoryTE{
 	private int progress = 0;
 
 	public BrewingVatTileEntity(BlockPos pos, BlockState state){
-		super(type, 7);//Index 0: Ingredient; 1-3: Input potions; 4-6: Output potions
+		super(TYPE, pos, state, 7);//Index 0: Ingredient; 1-3: Input potions; 4-6: Output potions
 	}
 
 	@Override
@@ -61,12 +60,8 @@ public class BrewingVatTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
-
-		if(level.isClientSide){
-			return;
-		}
+	public void serverTick(){
+		super.serverTick();
 
 		ItemStack created = ItemStack.EMPTY;
 

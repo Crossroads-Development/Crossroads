@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.API.effects;
 
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.CRConfig;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -92,7 +93,7 @@ public class EnchantEffect extends BeamEffect{
 						Containers.dropItemStack(worldIn, ent.getX(), ent.getY(), ent.getZ(), created);
 						ent.getItem().shrink(1);
 						if(ent.getItem().isEmpty()){
-							ent.remove();
+							ent.remove(Entity.RemovalReason.DISCARDED);
 						}
 						return;//Only enchant 1 item
 					}

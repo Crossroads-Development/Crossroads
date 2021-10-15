@@ -8,29 +8,28 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.items.technomancy.StaffTechnomancy;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
+import com.Da_Technomancer.crossroads.items.technomancy.StaffTechnomancy;
 import com.Da_Technomancer.essentials.packets.ILongReceiver;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.nbt.CompoundTag;
-
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.util.Mth;
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
 import com.mojang.math.Quaternion;
-import net.minecraft.world.phys.Vec3;
 import com.mojang.math.Vector3f;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -45,7 +44,7 @@ import java.util.ArrayList;
 public class BeamCannonTileEntity extends BlockEntity implements ITickableTileEntity, IInfoTE, ILongReceiver{
 
 	@ObjectHolder("beam_cannon")
-	public static BlockEntityType<BeamCannonTileEntity> type = null;
+	public static BlockEntityType<BeamCannonTileEntity> TYPE = null;
 
 	public static final double INERTIA = 0;
 	private static final float ROTATION_SPEED = (float) Math.PI / 40F;//Rate of convergence between angle and axle 'speed' in radians/tick. Yes, this terminology is confusing
@@ -71,7 +70,7 @@ public class BeamCannonTileEntity extends BlockEntity implements ITickableTileEn
 	private boolean locked = false;
 
 	public BeamCannonTileEntity(BlockPos pos, BlockState state){
-		super(type, pos, state);
+		super(TYPE, pos, state);
 	}
 
 	@Override
@@ -92,103 +91,106 @@ public class BeamCannonTileEntity extends BlockEntity implements ITickableTileEn
 	}
 
 	@Override
+	public void serverTick(){
+		ITickableTileEntity.super.serverTick();
+
+		//Perform angle movement on the server
+		if(!locked){
+			float angleTarget0 = (float) baseAxleHandler.getSpeed();
+			float angleTarget1 = (float) sideAxleHandler.getSpeed();
+			if(angleTarget0 != angle[0] || angleTarget1 != angle[1]){
+				angle[0] += calcAngleChange(angleTarget0, angle[0], true);
+				angle[1] += calcAngleChange(angleTarget1, angle[1], false);
+				//Check for resyncing angle data to client
+				final double errorMargin = Math.PI / 32D;
+				if(Math.abs(clientAngle[0] - angle[0]) >= errorMargin || Math.abs(clientW[0] - angleTarget0) >= errorMargin / 2D || Math.abs(clientAngle[1] - angle[1]) >= errorMargin || Math.abs(clientW[1] - angleTarget1) >= errorMargin / 2D){
+					//Resync the speed and angle to the client
+					updateMotionToClient();
+				}
+			}
+		}
+
+		//Output beam
+		if(level.getGameTime() % BeamUtil.BEAM_TIME == 0){
+			BeamUnit out = queued[0].getOutput();
+			queued[0].clear();
+			queued[0].addBeam(queued[1]);
+			queued[1].clear();
+			activeCycle = level.getGameTime();
+			readingBeam = out;
+			setChanged();
+			if(out.getPower() > BeamUtil.POWER_LIMIT){
+				out = out.mult((float) BeamUtil.POWER_LIMIT / (float) out.getPower(), true);
+			}
+
+			Color outCol = out.getRGB();
+			int outPower = out.getPower();
+			float outLength = 0;
+
+			if(!out.isEmpty()){
+				Vec3 rayTraceSt = Vec3.atCenterOf(worldPosition);
+				Direction facing = getBlockState().getValue(CRProperties.FACING);
+
+				//ray is a unit vector pointing in the aimed direction
+				//Done via several multiplied rotation matrices simplified into a single multiplied quaternion for facing and a single vector
+				float sinPhi = (float) Math.sin(angle[1]);
+				Vector3f ray = new Vector3f(-(float) Math.sin(angle[0]) * sinPhi, (float) Math.cos(angle[1]), (float) Math.cos(angle[0]) * sinPhi);
+				Quaternion directionRotation = getRotationFromDirection(facing).toQuaternion();
+				ray.transform(directionRotation);
+
+				//rayTraceSt is offset 'up' by 3.5/16 blocks to match the render, which has to be rotated by the facing
+				Vector3f upShift = new Vector3f(0, 3.5F / 16F, 0);
+				upShift.transform(directionRotation);
+				rayTraceSt = rayTraceSt.add(upShift.x(), upShift.y(), upShift.z());
+
+				Triple<BlockPos, Vec3, Direction> beamHitResult = StaffTechnomancy.rayTraceBeams(out, level, rayTraceSt, rayTraceSt, new Vec3(ray), null, worldPosition, RANGE);
+				BlockPos endPos = beamHitResult.getLeft();
+				if(endPos != null){//Should always be true
+					outLength = (float) beamHitResult.getMiddle().distanceTo(rayTraceSt);
+					Direction effectDir = beamHitResult.getRight();
+					BlockEntity te = level.getBlockEntity(endPos);
+					LazyOptional<IBeamHandler> opt;
+					if(te != null && (opt = te.getCapability(Capabilities.BEAM_CAPABILITY, effectDir)).isPresent()){
+						opt.orElseThrow(NullPointerException::new).setBeam(out);
+					}else{
+						EnumBeamAlignments align = EnumBeamAlignments.getAlignment(out);
+						if(!level.isOutsideBuildHeight(endPos)){
+							align.getEffect().doBeamEffect(align, out.getVoid() != 0, Math.min(64, outPower), level, endPos, effectDir);
+						}
+					}
+				}
+			}
+
+			if(!outCol.equals(beamCol) || BeamUtil.getBeamRadius(outPower) != beamSize || Math.abs(beamLength - outLength) >= 0.5F){
+				beamCol = outCol;
+				beamSize = BeamUtil.getBeamRadius(outPower);
+				beamLength = Math.round(outLength);
+				long packet = 0;
+				if(outPower != 0){
+					packet |= beamCol.getRGB() & 0xFFFFFF;//Encode color, Remove the alpha bits
+					packet |= ((beamSize - 1) & 0xF) << 24;//Encode beam radius
+					packet |= ((beamLength - 1) & 0xFFL) << 28L;
+				}
+				CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(3, packet, worldPosition));
+			}
+
+			//Play sounds
+			//Can be called on both the virtual server and client side, but only actually does anything on the server side as the passed player is null
+			if(CRConfig.beamSounds.get() && level.getGameTime() % 60 == 0){
+				//Play a sound if ANY side is outputting a beam
+				if(beamSize > 0){
+					//The attenuation distance defined for this sound in sounds.json is significant, and makes the sound have a very short range
+					CRSounds.playSoundServer(level, worldPosition, CRSounds.BEAM_PASSIVE, SoundSource.BLOCKS, 0.7F, 0.3F);
+				}
+			}
+		}
+	}
+
+	@Override
 	public void tick(){
 		//Perform angle movement on the client, and track what the client is probably doing on the server
 		clientAngle[0] += calcAngleChange(clientW[0], clientAngle[0], true);
 		clientAngle[1] += calcAngleChange(clientW[1], clientAngle[1], false);
-
-		if(!level.isClientSide){
-			//Perform angle movement on the server
-			if(!locked){
-				float angleTarget0 = (float) baseAxleHandler.getSpeed();
-				float angleTarget1 = (float) sideAxleHandler.getSpeed();
-				if(angleTarget0 != angle[0] || angleTarget1 != angle[1]){
-					angle[0] += calcAngleChange(angleTarget0, angle[0], true);
-					angle[1] += calcAngleChange(angleTarget1, angle[1], false);
-					//Check for resyncing angle data to client
-					final double errorMargin = Math.PI / 32D;
-					if(Math.abs(clientAngle[0] - angle[0]) >= errorMargin || Math.abs(clientW[0] - angleTarget0) >= errorMargin / 2D || Math.abs(clientAngle[1] - angle[1]) >= errorMargin || Math.abs(clientW[1] - angleTarget1) >= errorMargin / 2D){
-						//Resync the speed and angle to the client
-						updateMotionToClient();
-					}
-				}
-			}
-
-			//Output beam
-			if(level.getGameTime() % BeamUtil.BEAM_TIME == 0){
-				BeamUnit out = queued[0].getOutput();
-				queued[0].clear();
-				queued[0].addBeam(queued[1]);
-				queued[1].clear();
-				activeCycle = level.getGameTime();
-				readingBeam = out;
-				setChanged();
-				if(out.getPower() > BeamUtil.POWER_LIMIT){
-					out = out.mult((float) BeamUtil.POWER_LIMIT / (float) out.getPower(), true);
-				}
-
-				Color outCol = out.getRGB();
-				int outPower = out.getPower();
-				float outLength = 0;
-
-				if(!out.isEmpty()){
-					Vec3 rayTraceSt = Vec3.atCenterOf(worldPosition);
-					Direction facing = getBlockState().getValue(CRProperties.FACING);
-
-					//ray is a unit vector pointing in the aimed direction
-					//Done via several multiplied rotation matrices simplified into a single multiplied quaternion for facing and a single vector
-					float sinPhi = (float) Math.sin(angle[1]);
-					Vector3f ray = new Vector3f(-(float) Math.sin(angle[0]) * sinPhi, (float) Math.cos(angle[1]), (float) Math.cos(angle[0]) * sinPhi);
-					Quaternion directionRotation = getRotationFromDirection(facing).toQuaternion();
-					ray.transform(directionRotation);
-
-					//rayTraceSt is offset 'up' by 3.5/16 blocks to match the render, which has to be rotated by the facing
-					Vector3f upShift = new Vector3f(0, 3.5F / 16F, 0);
-					upShift.transform(directionRotation);
-					rayTraceSt = rayTraceSt.add(upShift.x(), upShift.y(), upShift.z());
-
-					Triple<BlockPos, Vec3, Direction> beamHitResult = StaffTechnomancy.rayTraceBeams(out, level, rayTraceSt, rayTraceSt, new Vec3(ray), null, worldPosition, RANGE);
-					BlockPos endPos = beamHitResult.getLeft();
-					if(endPos != null){//Should always be true
-						outLength = (float) beamHitResult.getMiddle().distanceTo(rayTraceSt);
-						Direction effectDir = beamHitResult.getRight();
-						BlockEntity te = level.getBlockEntity(endPos);
-						LazyOptional<IBeamHandler> opt;
-						if(te != null && (opt = te.getCapability(Capabilities.BEAM_CAPABILITY, effectDir)).isPresent()){
-							opt.orElseThrow(NullPointerException::new).setBeam(out);
-						}else{
-							EnumBeamAlignments align = EnumBeamAlignments.getAlignment(out);
-							if(!Level.isOutsideBuildHeight(endPos)){
-								align.getEffect().doBeamEffect(align, out.getVoid() != 0, Math.min(64, outPower), level, endPos, effectDir);
-							}
-						}
-					}
-				}
-
-				if(!outCol.equals(beamCol) || BeamUtil.getBeamRadius(outPower) != beamSize || Math.abs(beamLength - outLength) >= 0.5F){
-					beamCol = outCol;
-					beamSize = BeamUtil.getBeamRadius(outPower);
-					beamLength = Math.round(outLength);
-					long packet = 0;
-					if(outPower != 0){
-						packet |= beamCol.getRGB() & 0xFFFFFF;//Encode color, Remove the alpha bits
-						packet |= ((beamSize - 1) & 0xF) << 24;//Encode beam radius
-						packet |= ((beamLength - 1) & 0xFFL) << 28L;
-					}
-					CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(3, packet, worldPosition));
-				}
-
-				//Play sounds
-				//Can be called on both the virtual server and client side, but only actually does anything on the server side as the passed player is null
-				if(CRConfig.beamSounds.get() && level.getGameTime() % 60 == 0){
-					//Play a sound if ANY side is outputting a beam
-					if(beamSize > 0){
-						//The attenuation distance defined for this sound in sounds.json is significant, and makes the sound have a very short range
-						CRSounds.playSoundServer(level, worldPosition, CRSounds.BEAM_PASSIVE, SoundSource.BLOCKS, 0.7F, 0.3F);
-					}
-				}
-			}
-		}
 	}
 
 	private ServerQuaternion getRotationFromDirection(Direction dir){
@@ -337,8 +339,8 @@ public class BeamCannonTileEntity extends BlockEntity implements ITickableTileEn
 	}
 
 	@Override
-	public void clearCache(){
-		super.clearCache();
+	public void setBlockState(BlockState stateIn){
+		super.setBlockState(stateIn);
 		baseAxleOpt.invalidate();
 		sideAxleOpt.invalidate();
 		sideAxleAltOpt.invalidate();

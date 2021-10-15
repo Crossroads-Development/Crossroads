@@ -7,17 +7,17 @@ import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.ChunkAcceleratorTileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.world.level.block.state.BlockState;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import com.mojang.math.Vector3f;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class ChunkAcceleratorRenderer extends EntropyRenderer<ChunkAcceleratorTileEntity>{
 
 
-	protected ChunkAcceleratorRenderer(BlockEntityRenderDispatcher dispatcher){
+	protected ChunkAcceleratorRenderer(BlockEntityRendererProvider.Context dispatcher){
 		super(dispatcher);
 	}
 

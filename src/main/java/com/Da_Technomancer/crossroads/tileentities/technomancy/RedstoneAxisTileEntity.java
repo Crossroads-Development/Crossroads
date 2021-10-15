@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisTileEntity;
 import com.Da_Technomancer.essentials.blocks.redstone.IRedstoneHandler;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -23,10 +24,10 @@ import net.minecraftforge.registries.ObjectHolder;
 public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 
 	@ObjectHolder("redstone_axis")
-	private static BlockEntityType<RedstoneAxisTileEntity> type = null;
+	public static BlockEntityType<RedstoneAxisTileEntity> TYPE = null;
 
 	public RedstoneAxisTileEntity(BlockPos pos, BlockState state){
-		super(type, pos, state);
+		super(TYPE, pos, state);
 	}
 
 	/**

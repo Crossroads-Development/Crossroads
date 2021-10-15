@@ -33,14 +33,14 @@ public class EnergizeEffect extends BeamEffect{
 					//Effect in crystal master axis
 				}else{
 					BlockState state = worldIn.getBlockState(pos);
-					if(state.getBlock().isAir(state, worldIn, pos)){
+					if(state.isAir()){
 						//Set fires
 						worldIn.setBlockAndUpdate(pos, Blocks.FIRE.defaultBlockState());
 					}else if(dir != null){
 						//Set a fire w/ offset
 						BlockPos offsetPos = pos.relative(dir);
 						state = worldIn.getBlockState(offsetPos);
-						if(state.getBlock().isAir(state, worldIn, offsetPos)){
+						if(state.isAir()){
 							worldIn.setBlockAndUpdate(offsetPos, Blocks.FIRE.defaultBlockState());
 						}
 					}

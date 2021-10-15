@@ -4,14 +4,15 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -22,13 +23,13 @@ import java.util.ArrayList;
 public class HeatSinkTileEntity extends ModuleTE{
 
 	@ObjectHolder("heat_sink")
-	private static BlockEntityType<HeatSinkTileEntity> type = null;
+	public static BlockEntityType<HeatSinkTileEntity> TYPE = null;
 
 	public static final int[] MODES = {5, 10, 15, 20, 25};
 	private int mode = 0;
 
 	public HeatSinkTileEntity(BlockPos pos, BlockState state){
-		super(type, pos, state);
+		super(TYPE, pos, state);
 	}
 
 	public int cycleMode(){
@@ -49,12 +50,8 @@ public class HeatSinkTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
-
-		if(level.isClientSide){
-			return;
-		}
+	public void serverTick(){
+		super.serverTick();
 
 		double prevTemp = temp;
 		double biomeTemp = HeatUtil.convertBiomeTemp(level, worldPosition);

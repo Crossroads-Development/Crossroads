@@ -4,16 +4,16 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.tileentities.rotary.SteamTurbineTileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import com.mojang.math.Vector3f;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class SteamTurbineRenderer extends BlockEntityRenderer<SteamTurbineTileEntity>{
+public class SteamTurbineRenderer implements BlockEntityRenderer<SteamTurbineTileEntity>{
 
-	protected SteamTurbineRenderer(BlockEntityRenderDispatcher dispatch){
-		super(dispatch);
+	protected SteamTurbineRenderer(BlockEntityRendererProvider.Context dispatch){
+		super();
 	}
 
 	@Override

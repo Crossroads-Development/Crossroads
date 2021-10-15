@@ -11,17 +11,17 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.EdibleBlob;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.tileentities.AbstractShifterTileEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.fluid.Fluid;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -32,20 +32,17 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE.TankProperty;
-
 @ObjectHolder(Crossroads.MODID)
 public class FatCongealerTileEntity extends InventoryTE{
 
 	@ObjectHolder("fat_congealer")
-	private static BlockEntityType<FatCongealerTileEntity> type = null;
+	public static BlockEntityType<FatCongealerTileEntity> TYPE = null;
 
 	public static final double HUN_PER_SPD = 4D;
 	public static final double SAT_PER_SPD = 4D;
 
 	public FatCongealerTileEntity(BlockPos pos, BlockState state){
-		super(type, 1);
+		super(TYPE, pos, state, 1);
 		fluidProps[0] = new TankProperty(10_000, true, false, CRFluids.LIQUID_FAT::contains);
 		initFluidManagers();
 	}
@@ -65,11 +62,8 @@ public class FatCongealerTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
-		if(level.isClientSide){
-			return;
-		}
+	public void serverTick(){
+		super.serverTick();
 
 		//Eject inventory either into the world or into an inventory.
 		//Despite using the method from ItemShifters, this block can't go through transport chutes
@@ -134,8 +128,8 @@ public class FatCongealerTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void clearCache(){
-		super.clearCache();
+	public void setBlockState(BlockState stateIn){
+		super.setBlockState(stateIn);
 		itemOpt.invalidate();
 		itemOpt = LazyOptional.of(ItemHandler::new);
 	}

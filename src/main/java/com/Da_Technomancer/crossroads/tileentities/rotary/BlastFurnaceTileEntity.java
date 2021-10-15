@@ -10,19 +10,20 @@ import com.Da_Technomancer.crossroads.crafting.recipes.BlastFurnaceRec;
 import com.Da_Technomancer.crossroads.gui.container.BlastFurnaceContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -34,14 +35,11 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE.TankProperty;
-
 @ObjectHolder(Crossroads.MODID)
 public class BlastFurnaceTileEntity extends InventoryTE{
 
 	@ObjectHolder("ind_blast_furnace")
-	private static BlockEntityType<BlastFurnaceTileEntity> type = null;
+	public static BlockEntityType<BlastFurnaceTileEntity> TYPE = null;
 
 	public static final int CARBON_LIMIT = 32;
 	public static final double POWER = 5;
@@ -53,7 +51,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 	private int progress = 0;
 
 	public BlastFurnaceTileEntity(BlockPos pos, BlockState state){
-		super(type, 3);//0: Input; 1: Carbon; 2: Slag
+		super(TYPE, pos, state, 3);//0: Input; 1: Carbon; 2: Slag
 		fluidProps[0] = new TankProperty(4_000, false, true);
 		initFluidManagers();
 	}
@@ -98,12 +96,8 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
-
-		if(level.isClientSide){
-			return;
-		}
+	public void serverTick(){
+		super.serverTick();
 
 		int carbonAvailable = getCarbonValue(inventory[1]);
 		if(carbon < CARBON_LIMIT && carbonAvailable != 0 && carbonAvailable + carbon <= CARBON_LIMIT){

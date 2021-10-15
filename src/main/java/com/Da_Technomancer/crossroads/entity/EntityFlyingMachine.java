@@ -2,21 +2,21 @@ package com.Da_Technomancer.crossroads.entity;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.client.Options;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.client.Options;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.IndirectEntityDamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
@@ -94,9 +94,9 @@ public class EntityFlyingMachine extends Entity{
 				float angle = 0;
 				//Apply acceleration based on wheel angle. Total acceleration is ACCEL, in direction of wheel
 				angle = -getAngle();
-				yRot = controller.getYHeadRot();
+				float yRot = controller.getYHeadRot();
+				setYRot(yRot);
 				controller.hurtMarked = true;
-
 				vel[0] += Math.sin(angle) * Math.sin(-Math.toRadians(yRot) - Math.PI) * ACCEL;
 				vel[1] += -Math.cos(angle) * ACCEL;
 				vel[2] += Math.sin(angle) * Math.cos(-Math.toRadians(yRot) - Math.PI) * ACCEL;
@@ -157,7 +157,7 @@ public class EntityFlyingMachine extends Entity{
 						spawnAtLocation(CRItems.flyingMachine);
 					}
 
-					remove();
+					remove(RemovalReason.KILLED);
 				}
 			}
 		}
@@ -165,8 +165,8 @@ public class EntityFlyingMachine extends Entity{
 	}
 
 	@Override
-	protected boolean isMovementNoisy(){
-		return false;
+	protected MovementEmission getMovementEmission(){
+		return MovementEmission.EVENTS;
 	}
 
 	public InteractionResult interact(Player player, InteractionHand hand){

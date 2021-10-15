@@ -4,13 +4,13 @@ import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTi
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 
-public class MechanismRenderer extends BlockEntityRenderer<MechanismTileEntity>{
+public class MechanismRenderer implements BlockEntityRenderer<MechanismTileEntity>{
 
-	protected MechanismRenderer(BlockEntityRenderDispatcher dispatcher){
-		super(dispatcher);
+	protected MechanismRenderer(BlockEntityRendererProvider.Context dispatcher){
+		super();
 	}
 
 	@Override

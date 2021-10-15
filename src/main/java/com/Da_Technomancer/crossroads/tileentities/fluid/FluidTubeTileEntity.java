@@ -5,12 +5,13 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.templates.ConduitBlock;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
-import net.minecraft.world.level.block.state.BlockState;
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
@@ -23,13 +24,11 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-
 @ObjectHolder(Crossroads.MODID)
 public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEntity, ConduitBlock.IConduitTE<EnumTransferMode>{
 
 	@ObjectHolder("fluid_tube")
-	private static BlockEntityType<FluidTubeTileEntity> type = null;
+	public static BlockEntityType<FluidTubeTileEntity> TYPE = null;
 
 	protected static final int CAPACITY = 2000;
 
@@ -58,7 +57,7 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 	private FluidStack content = FluidStack.EMPTY;
 
 	public FluidTubeTileEntity(BlockPos pos, BlockState state){
-		this(type);
+		this(TYPE, pos, state);
 	}
 
 	protected FluidTubeTileEntity(BlockEntityType<? extends FluidTubeTileEntity> type, BlockPos pos, BlockState state){
@@ -66,8 +65,8 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public void clearCache(){
-		super.clearCache();
+	public void setBlockState(BlockState stateIn){
+		super.setBlockState(stateIn);
 		//Invalidate and regenerate all the optionals
 		for(LazyOptional<IFluidHandler> internalOpt : internalOpts){
 			internalOpt.invalidate();
@@ -91,12 +90,9 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 	 *
 	 * Neighboring handlers are cached through their LazyOptionals
 	 */
-
 	@Override
-	public void tick(){
-		if(level.isClientSide){
-			return;
-		}
+	public void serverTick(){
+		ITickableTileEntity.super.serverTick();
 
 		//First, we collect all available fluid handlers, and tabulate transfer data for later transfers
 		FluidStack origStack = content.copy();
@@ -367,16 +363,12 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 			if(side == null){
 				return (LazyOptional<T>) internalOpts[3];//Inner handler
 			}else if(canConnect(side)){
-				switch(modes[side.get3DDataValue()]){
-					case INPUT:
-						return (LazyOptional<T>) internalOpts[1];
-					case OUTPUT:
-						return (LazyOptional<T>) internalOpts[2];
-					case BOTH:
-						return (LazyOptional<T>) internalOpts[0];
-					case NONE:
-						return LazyOptional.empty();
-				}
+				return switch(modes[side.get3DDataValue()]){
+					case INPUT -> (LazyOptional<T>) internalOpts[1];
+					case OUTPUT -> (LazyOptional<T>) internalOpts[2];
+					case BOTH -> (LazyOptional<T>) internalOpts[0];
+					case NONE -> LazyOptional.empty();
+				};
 			}
 		}
 

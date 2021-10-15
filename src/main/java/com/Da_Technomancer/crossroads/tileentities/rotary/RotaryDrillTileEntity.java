@@ -5,23 +5,22 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.effects.PlaceEffect;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.rotary.RotaryDrill;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.EntityDamageSource;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.core.Direction;
-import net.minecraft.world.damagesource.EntityDamageSource;
-import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
@@ -34,21 +33,15 @@ import java.util.List;
 public class RotaryDrillTileEntity extends ModuleTE{
 
 	@ObjectHolder("rotary_drill")
-	public static BlockEntityType<RotaryDrillTileEntity> type = null;
+	public static BlockEntityType<RotaryDrillTileEntity> TYPE = null;
 
 	private static final DamageSource DRILL = new DamageSource("drill");
 
 	public RotaryDrillTileEntity(BlockPos pos, BlockState state){
-		super(type, pos, state);
-	}
-
-	public RotaryDrillTileEntity(boolean golden){
-		super(type, pos, state);
-		this.golden = golden;
+		super(TYPE, pos, state);
 	}
 
 	private int ticksExisted = 0;
-	private boolean golden;
 	public static final double ENERGY_USE_IRON = 3D;
 	public static final double ENERGY_USE_GOLD = 5D;
 	private static final double SPEED_PER_HARDNESS = .2D;
@@ -56,7 +49,7 @@ public class RotaryDrillTileEntity extends ModuleTE{
 	public static final double[] INERTIA = {50, 100};
 
 	public boolean isGolden(){
-		return golden;
+		return getBlockState().getBlock() == CRBlocks.rotaryDrillGold;
 	}
 
 	@Override
@@ -66,7 +59,7 @@ public class RotaryDrillTileEntity extends ModuleTE{
 
 	@Override
 	protected double getMoInertia(){
-		return INERTIA[golden ? 1 : 0];
+		return INERTIA[isGolden() ? 1 : 0];
 	}
 
 	private Direction getFacing(){
@@ -79,46 +72,32 @@ public class RotaryDrillTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void clearCache(){
-		super.clearCache();
+	public void setBlockState(BlockState stateIn){
+		super.setBlockState(stateIn);
 		axleOpt.invalidate();
 		axleOpt = LazyOptional.of(() -> axleHandler);
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
+	public void serverTick(){
+		super.serverTick();
 
-		if(level.isClientSide){
-			return;
-		}
-
-		double powerDrain = golden ? ENERGY_USE_GOLD : ENERGY_USE_IRON;
+		double powerDrain = isGolden() ? ENERGY_USE_GOLD : ENERGY_USE_IRON;
 		if(Math.abs(energy) >= powerDrain && Math.abs(axleHandler.getSpeed()) >= 0.05D){
 			axleHandler.addEnergy(-powerDrain, false);
 			if(++ticksExisted % 2 == 0){//Activate once every redstone tick
 				Direction facing = getFacing();
 				BlockPos targetPos = worldPosition.relative(facing);
 				BlockState targetState = level.getBlockState(targetPos);
-				if(!targetState.isAir(level, targetPos)){
+				if(!targetState.isAir()){
 					float hardness = targetState.getDestroySpeed(level, targetPos);
 					if(hardness >= 0 && Math.abs(axleHandler.getSpeed()) >= hardness * SPEED_PER_HARDNESS){
 						FakePlayer fakePlayer = PlaceEffect.getBlockFakePlayer((ServerLevel) level);
-						ItemStack tool;
-						ToolType toolType = targetState.getHarvestTool();
-						if(toolType == ToolType.PICKAXE){
-							tool = new ItemStack(Items.DIAMOND_PICKAXE);
-						}else if(toolType == ToolType.SHOVEL){
-							tool = new ItemStack(Items.DIAMOND_SHOVEL);
-						}else if(toolType == ToolType.AXE){
-							tool = new ItemStack(Items.DIAMOND_AXE);
-						}else if(toolType == ToolType.HOE){
-							tool = new ItemStack(Items.DIAMOND_HOE);
-						}else{
-							tool = ItemStack.EMPTY;
-						}
+						ItemStack tool = new ItemStack(Items.IRON_PICKAXE);//This shouldn't make a difference as we call the drops method directly, but some blocks may add a tool requirement in the loot table
 						level.destroyBlock(targetPos, false);//Don't drop items; we do that separately on the next line
-						targetState.getBlock().playerDestroy(level, fakePlayer, targetPos, targetState, null, tool);//Make sure to call harvestBlock so we can get tool-specific (like snow layers for shovels) and multiblock-specific drops
+						//Make sure to call through this method, as it is often overriden with extra effects
+						//By calling directly, we shortcut any tool requirement that isn't explicitly in the loot table
+						targetState.getBlock().playerDestroy(level, fakePlayer, targetPos, targetState, null, tool);
 
 //						boolean isSnow = targetState.getBlock() == Blocks.SNOW;
 //						//Snow layers have an unusual loot table that requires it to be broken by an entity holding a shovel
@@ -132,30 +111,10 @@ public class RotaryDrillTileEntity extends ModuleTE{
 
 				List<LivingEntity> ents = level.getEntitiesOfClass(LivingEntity.class, new AABB(worldPosition.relative(facing)), EntitySelector.ENTITY_STILL_ALIVE);
 				for(LivingEntity ent : ents){
-					ent.hurt(golden ? new EntityDamageSource("drill", FakePlayerFactory.get((ServerLevel) level, new GameProfile(null, "drill_player_" + MiscUtil.getDimensionName(level)))) : DRILL, (float) Math.abs(axleHandler.getSpeed()) * DAMAGE_PER_SPEED);
+					ent.hurt(isGolden() ? new EntityDamageSource("drill", FakePlayerFactory.get((ServerLevel) level, new GameProfile(null, "drill_player_" + MiscUtil.getDimensionName(level)))) : DRILL, (float) Math.abs(axleHandler.getSpeed()) * DAMAGE_PER_SPEED);
 				}
 			}
 		}
-	}
-
-	@Override
-	public CompoundTag save(CompoundTag nbt){
-		super.save(nbt);
-		nbt.putBoolean("gold", golden);
-		return nbt;
-	}
-
-	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
-		golden = nbt.getBoolean("gold");
-	}
-
-	@Override
-	public CompoundTag getUpdateTag(){
-		CompoundTag nbt = super.getUpdateTag();
-		nbt.putBoolean("gold", golden);
-		return nbt;
 	}
 
 	@SuppressWarnings("unchecked")

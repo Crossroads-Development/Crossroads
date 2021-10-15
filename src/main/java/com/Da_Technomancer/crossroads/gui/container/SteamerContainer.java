@@ -12,8 +12,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.registries.ObjectHolder;
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.OutputSlot;
-import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.StrictSlot;
+
 
 @ObjectHolder(Crossroads.MODID)
 public class SteamerContainer extends MachineContainer<SteamerTileEntity>{

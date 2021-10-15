@@ -264,7 +264,7 @@ public final class EventHandlerClient{
 
 		ItemStack helmet = play.getItemBySlot(EquipmentSlot.HEAD);
 		if(!play.getMainHandItem().isEmpty()){
-			int key = Keys.controlEnergy.getKeyBinding().matches(e.getKey(), e.getScanCode()) ? 0 : Keys.controlPotential.getKeyBinding().matches(e.getKey(), e.getScanCode()) ? 1 : Keys.controlStability.getKeyBinding().matches(e.getKey(), e.getScanCode()) ? 2 : Keys.controlVoid.getKeyBinding().matches(e.getKey(), e.getScanCode()) ? 3 : -1;
+			int key = Keys.controlEnergy.getKeyMapping().matches(e.getKey(), e.getScanCode()) ? 0 : Keys.controlPotential.getKeyBinding().matches(e.getKey(), e.getScanCode()) ? 1 : Keys.controlStability.getKeyBinding().matches(e.getKey(), e.getScanCode()) ? 2 : Keys.controlVoid.getKeyBinding().matches(e.getKey(), e.getScanCode()) ? 3 : -1;
 			ItemStack stack = play.getMainHandItem();
 			if(key != -1 && stack.getItem() instanceof BeamUsingItem){
 				((BeamUsingItem) stack.getItem()).adjustSetting(Minecraft.getInstance().player, stack, key, !play.isShiftKeyDown());

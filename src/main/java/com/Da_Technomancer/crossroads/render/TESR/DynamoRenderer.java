@@ -10,20 +10,20 @@ import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.world.level.block.Block;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import com.mojang.math.Vector3f;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class DynamoRenderer extends BlockEntityRenderer<ModuleTE>{
+public class DynamoRenderer implements BlockEntityRenderer<ModuleTE>{
 
-	protected DynamoRenderer(BlockEntityRenderDispatcher dispatcher){
-		super(dispatcher);
+	protected DynamoRenderer(BlockEntityRendererProvider.Context dispatcher){
+		super();
 	}
 
 	@Override

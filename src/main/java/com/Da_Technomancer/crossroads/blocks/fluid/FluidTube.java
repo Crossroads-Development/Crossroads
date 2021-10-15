@@ -5,18 +5,18 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.API.templates.ConduitBlock;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.fluid.FluidTubeTileEntity;
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
-
-import com.Da_Technomancer.crossroads.API.templates.ConduitBlock.IConduitTE;
 
 public class FluidTube extends ConduitBlock<EnumTransferMode>{
 
@@ -78,21 +78,23 @@ public class FluidTube extends ConduitBlock<EnumTransferMode>{
 		return new FluidTubeTileEntity(pos, state);
 	}
 
+	@Nullable
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> type){
+		return ITickableTileEntity.createTicker(type, FluidTubeTileEntity.TYPE);
+	}
+
 	@Override
 	protected EnumTransferMode getValueForPlacement(Level world, BlockPos pos, Direction side, @Nullable BlockEntity neighTE){
 		//If adjacent to another pipe, set the initial mode based on the other pipe for continuous flow
 		if(neighTE instanceof FluidTubeTileEntity){
 			EnumTransferMode otherMode = ((FluidTubeTileEntity) neighTE).getModes()[side.getOpposite().get3DDataValue()];
-			switch(otherMode){
-				case INPUT:
-					return EnumTransferMode.OUTPUT;
-				case OUTPUT:
-					return EnumTransferMode.INPUT;
-				case BOTH:
-					return EnumTransferMode.BOTH;
-				case NONE:
-					return EnumTransferMode.NONE;
-			}
+			return switch(otherMode){
+				case INPUT -> EnumTransferMode.OUTPUT;
+				case OUTPUT -> EnumTransferMode.INPUT;
+				case BOTH -> EnumTransferMode.BOTH;
+				case NONE -> EnumTransferMode.NONE;
+			};
 		}
 		return EnumTransferMode.INPUT;
 	}

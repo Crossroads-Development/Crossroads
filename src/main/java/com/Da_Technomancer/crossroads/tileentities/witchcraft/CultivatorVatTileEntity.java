@@ -10,17 +10,18 @@ import com.Da_Technomancer.crossroads.gui.container.CultivatorVatContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -30,14 +31,11 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE.TankProperty;
-
 @ObjectHolder(Crossroads.MODID)
 public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEntity{
 
 	@ObjectHolder("cultivator_vat")
-	public static BlockEntityType<CultivatorVatTileEntity> type = null;
+	public static BlockEntityType<CultivatorVatTileEntity> TYPE = null;
 	public static final int REQUIRED_PROGRESS = 100;
 	public static final int NUTRIENT_DRAIN = 1;
 
@@ -58,7 +56,7 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 	private ICultivatable.CultivationTrade targetTrade = null;
 
 	public CultivatorVatTileEntity(BlockPos pos, BlockState state){
-		super(type, 4, new int[] {0}, 0);
+		super(TYPE, pos, state, 4, new int[] {0}, 0);
 		//Index 0: Target, also an input for ICultivatable items
 		//Index 1: Input 1
 		//Index 2: Input 2
@@ -74,12 +72,8 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
-
-		if(level.isClientSide){
-			return;
-		}
+	public void serverTick(){
+		super.serverTick();
 
 		updateBlockstate();
 

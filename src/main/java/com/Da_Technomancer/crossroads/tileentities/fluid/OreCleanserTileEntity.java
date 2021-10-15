@@ -7,18 +7,18 @@ import com.Da_Technomancer.crossroads.crafting.recipes.OreCleanserRec;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.OreCleanserContainer;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -31,22 +31,18 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE.FluidHandler;
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE.TankProperty;
-
 @ObjectHolder(Crossroads.MODID)
 public class OreCleanserTileEntity extends InventoryTE{
 
 	@ObjectHolder("ore_cleanser")
-	private static BlockEntityType<OreCleanserTileEntity> type = null;
+	public static BlockEntityType<OreCleanserTileEntity> TYPE = null;
 
 	public static final int WATER_USE = 250;
 
 	private int progress = 0;//Out of 50
 
 	public OreCleanserTileEntity(BlockPos pos, BlockState state){
-		super(type, 2);
+		super(TYPE, pos, state, 2);
 		fluidProps[0] = new TankProperty(1_000, true, false, CRFluids.STEAM::contains);//Steam
 		fluidProps[1] = new TankProperty(1_000, false, true);//Dirty Water
 		initFluidManagers();
@@ -62,12 +58,8 @@ public class OreCleanserTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
-
-		if(level.isClientSide){
-			return;
-		}
+	public void serverTick(){
+		super.serverTick();
 
 		if(fluids[0].getAmount() >= WATER_USE && fluidProps[1].capacity - fluids[1].getAmount() >= WATER_USE && !inventory[0].isEmpty()){
 			Optional<OreCleanserRec> rec = level.getRecipeManager().getRecipeFor(CRRecipes.ORE_CLEANSER_TYPE, this, level);

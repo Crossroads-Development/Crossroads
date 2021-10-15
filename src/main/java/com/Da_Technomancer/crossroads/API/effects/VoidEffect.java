@@ -18,7 +18,7 @@ public class VoidEffect extends BeamEffect{
 	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, Level worldIn, BlockPos pos, @Nullable Direction dir){
 		if(!performTransmute(align, voi, power, worldIn, pos)){
 			BlockState prev = worldIn.getBlockState(pos);
-			if(prev.isAir(worldIn, pos)){
+			if(prev.isAir()){
 				return;
 			}
 

@@ -11,30 +11,28 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.packets.ILongReceiver;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.particles.ParticleTypes;
-
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
-import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.phys.AABB;
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.level.Level;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
@@ -45,7 +43,7 @@ import java.util.List;
 public class GatewayControllerDestinationTileEntity extends BlockEntity implements IGateway, ITickableTileEntity, ILongReceiver{
 
 	@ObjectHolder("gateway_controller_destination")
-	public static BlockEntityType<GatewayControllerDestinationTileEntity> type = null;
+	public static BlockEntityType<GatewayControllerDestinationTileEntity> TYPE = null;
 
 	//These fields are only correct for the top center block of the multiblock (isActive() returns true)
 	//They will not necessarily be null/empty/0 if this inactive- always check isActive()
@@ -58,7 +56,7 @@ public class GatewayControllerDestinationTileEntity extends BlockEntity implemen
 	private Direction.Axis plane = null;//Legal values are null (unformed), x (for structure in x-y plane), and z (for structure in y-z plane). This should never by y
 
 	public GatewayControllerDestinationTileEntity(BlockPos pos, BlockState state){
-		super(type, pos, state);
+		super(TYPE, pos, state);
 	}
 
 	@Override
@@ -250,8 +248,7 @@ public class GatewayControllerDestinationTileEntity extends BlockEntity implemen
 						level.setBlockAndUpdate(mutPos, otherState.setValue(CRProperties.ACTIVE, false));
 					}
 					BlockEntity te = level.getBlockEntity(mutPos);
-					if(te instanceof GatewayEdgeTileEntity){
-						GatewayEdgeTileEntity otherTE = (GatewayEdgeTileEntity) te;
+					if(te instanceof GatewayEdgeTileEntity otherTE){
 						otherTE.reset();
 					}
 					mutPos.move(horiz, 1);
@@ -269,7 +266,7 @@ public class GatewayControllerDestinationTileEntity extends BlockEntity implemen
 			plane = null;
 			address = null;
 			setChanged();
-			clearCache();
+//			clearCache();
 		}
 	}
 
@@ -302,7 +299,7 @@ public class GatewayControllerDestinationTileEntity extends BlockEntity implemen
 				}else{
 					foundThickness++;
 				}
-//			}else if(!state.isAir(world, mutPos)){
+//			}else if(!state.isAir()){
 //				return false;//There is an obstruction
 			}else{
 				foundAir = true;
@@ -342,7 +339,7 @@ public class GatewayControllerDestinationTileEntity extends BlockEntity implemen
 					}
 				}
 				//Removed hollow requirement
-//				else if(!otherState.isAir(world, mutPos)){
+//				else if(!otherState.isAir()){
 //					return false;//We are on the inside, and expect air
 //				}
 
@@ -370,10 +367,9 @@ public class GatewayControllerDestinationTileEntity extends BlockEntity implemen
 					//We are on the edges
 					level.setBlockAndUpdate(mutPos, otherState.setValue(CRProperties.ACTIVE, true));
 					BlockEntity te = level.getBlockEntity(mutPos);
-					if(te instanceof GatewayEdgeTileEntity){
-						GatewayEdgeTileEntity otherTE = (GatewayEdgeTileEntity) te;
+					if(te instanceof GatewayEdgeTileEntity otherTE){
 						otherTE.setKey(worldPosition.subtract(mutPos));
-						otherTE.clearCache();
+//						otherTE.clearCache();
 					}
 				}
 
@@ -385,7 +381,7 @@ public class GatewayControllerDestinationTileEntity extends BlockEntity implemen
 
 		//Update this block
 		level.setBlockAndUpdate(worldPosition, getBlockState().setValue(CRProperties.ACTIVE, true));
-		clearCache();
+//		clearCache();
 
 		//Send a packet to the client with the size and orientation info
 		CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(5, plane.ordinal() | (size << 2), worldPosition));
@@ -398,9 +394,11 @@ public class GatewayControllerDestinationTileEntity extends BlockEntity implemen
 	}
 
 	@Override
-	public void tick(){
+	public void serverTick(){
 		//This TE only ticks if it is active
-		if(!level.isClientSide && isActive() && chevrons[3] != null && plane != null){
+		if(isActive() && chevrons[3] != null && plane != null){
+			ITickableTileEntity.super.serverTick();
+
 			//Teleportation
 			Direction horiz = Direction.get(Direction.AxisDirection.POSITIVE, plane);
 			AABB area = new AABB(worldPosition.below(size).relative(horiz, -size / 2), worldPosition.relative(horiz, size / 2 + 1));
@@ -505,11 +503,5 @@ public class GatewayControllerDestinationTileEntity extends BlockEntity implemen
 				size = (int) (message >>> 2);
 				break;
 		}
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public double getViewDistance(){
-		return 65536;//Same as beacon
 	}
 }

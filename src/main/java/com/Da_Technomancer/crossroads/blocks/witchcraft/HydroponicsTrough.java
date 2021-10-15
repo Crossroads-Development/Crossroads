@@ -2,34 +2,38 @@ package com.Da_Technomancer.crossroads.blocks.witchcraft;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.CircuitUtil;
+import com.Da_Technomancer.crossroads.API.templates.TEBlock;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.HydroponicsTroughTileEntity;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import net.minecraft.block.*;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.Container;
-import net.minecraft.world.Containers;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
+import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.util.Mth;
-import net.minecraft.world.phys.shapes.BooleanOp;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.Container;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
@@ -38,13 +42,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.state.BlockState;
-
-public class HydroponicsTrough extends BaseEntityBlock implements IReadable, BonemealableBlock{
+public class HydroponicsTrough extends TEBlock implements IReadable, BonemealableBlock{
 
 	private static final VoxelShape SHAPE = Shapes.join(box(0, 0, 0, 16, 12, 16), box(2, 2, 2, 14, 16, 14), BooleanOp.ONLY_FIRST);
 	private static final VoxelShape SHAPE_OPEN = Shapes.join(box(0, 0, 0, 16, 12, 16), box(2, 0, 2, 14, 16, 14), BooleanOp.ONLY_FIRST);
@@ -68,6 +66,12 @@ public class HydroponicsTrough extends BaseEntityBlock implements IReadable, Bon
 		return new HydroponicsTroughTileEntity(pos, state);
 	}
 
+	@Nullable
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> type){
+		return ITickableTileEntity.createTicker(type, HydroponicsTroughTileEntity.TYPE);
+	}
+
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context){
 		return state.getValue(CRProperties.FULLNESS) == 3 ? SHAPE_OPEN : SHAPE;
@@ -83,35 +87,12 @@ public class HydroponicsTrough extends BaseEntityBlock implements IReadable, Bon
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving){
-		if(newState.getBlock() != this){
-			Containers.dropContents(world, pos, (Container) world.getBlockEntity(pos));
-		}
-		super.onRemove(state, world, pos, newState, isMoving);
-	}
-
-	@Override
-	public RenderShape getRenderShape(BlockState state){
-		return RenderShape.MODEL;
-	}
-
-	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(new TranslatableComponent("tt.crossroads.hydroponic_trough.desc"));
 		tooltip.add(new TranslatableComponent("tt.crossroads.hydroponic_trough.output"));
 		tooltip.add(new TranslatableComponent("tt.crossroads.hydroponic_trough.drain", HydroponicsTroughTileEntity.SOLUTION_DRAIN));
 		tooltip.add(new TranslatableComponent("tt.crossroads.hydroponic_trough.circuit"));
-	}
-
-	@Override
-	public boolean hasAnalogOutputSignal(BlockState p_149740_1_){
-		return true;
-	}
-
-	@Override
-	public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos){
-		return RedstoneUtil.clampToVanilla(read(world, pos, state));
 	}
 
 	@Override

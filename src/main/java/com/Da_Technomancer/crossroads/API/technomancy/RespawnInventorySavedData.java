@@ -1,12 +1,12 @@
 package com.Da_Technomancer.crossroads.API.technomancy;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.storage.DimensionDataStorage;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.storage.DimensionDataStorage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +22,7 @@ public class RespawnInventorySavedData extends SavedData{
 	public static final String ID = Crossroads.MODID + "_spawn_inv";
 
 	private RespawnInventorySavedData(){
-		super(ID);
+		super();
 	}
 
 	public static HashMap<UUID, ItemStack[]> getMap(ServerLevel w){
@@ -43,21 +43,14 @@ public class RespawnInventorySavedData extends SavedData{
 		}else{
 			storage = world.getServer().overworld().getDataStorage();
 		}
-		RespawnInventorySavedData data;
-		try{
-			data = storage.computeIfAbsent(RespawnInventorySavedData::new, ID);
-		}catch(NullPointerException e){
-			Crossroads.logger.error("Failed RespawnInventorySavedData get due to null DimensionSavedDataManager", e);
-			return new RespawnInventorySavedData();//Blank storage that prevents actual read/write, but avoids a crash
-		}
-		return data;
+		return storage.computeIfAbsent(RespawnInventorySavedData::load, RespawnInventorySavedData::new, ID);
 	}
 
 	private final HashMap<UUID, ItemStack[]> savedInventories = new HashMap<>(1);
 
-	@Override
-	public void load(CompoundTag nbt){
-		savedInventories.clear();
+	public static RespawnInventorySavedData load(CompoundTag nbt){
+		RespawnInventorySavedData data = new RespawnInventorySavedData();
+		data.savedInventories.clear();
 		int i = 0;
 		while(nbt.contains("key_low_" + i)){
 			UUID id = new UUID(nbt.getLong("key_high_" + i), nbt.getLong("key_low_" + i));
@@ -65,9 +58,10 @@ public class RespawnInventorySavedData extends SavedData{
 			for(int j = 0; j < hotbar.length; j++){
 				hotbar[j] = ItemStack.of(nbt.getCompound("item_" + i + "_" + j));
 			}
-			savedInventories.put(id, hotbar);
+			data.savedInventories.put(id, hotbar);
 			i++;
 		}
+		return data;
 	}
 
 	@Override

@@ -8,18 +8,19 @@ import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.MillRec;
 import com.Da_Technomancer.crossroads.gui.container.MillstoneContainer;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -30,13 +31,11 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
-
 @ObjectHolder(Crossroads.MODID)
 public class MillstoneTileEntity extends InventoryTE{
 
 	@ObjectHolder("millstone")
-	private static BlockEntityType<MillstoneTileEntity> type = null;
+	public static BlockEntityType<MillstoneTileEntity> TYPE = null;
 
 	private double progress = 0;
 	public static final double REQUIRED = 400;
@@ -45,7 +44,7 @@ public class MillstoneTileEntity extends InventoryTE{
 	public static final double INERTIA = 200D;
 
 	public MillstoneTileEntity(BlockPos pos, BlockState state){
-		super(type, 4);
+		super(TYPE, pos, state, 4);
 	}
 
 	@Override
@@ -131,25 +130,23 @@ public class MillstoneTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
-		if(!level.isClientSide){
-			if(inventory[0].isEmpty()){
-				progress = 0;
-			}else{
-				Optional<MillRec> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.MILL_TYPE, this, level);
-				if(recOpt.isPresent()){
-					double used = POWER * RotaryUtil.findEfficiency(axleHandler.getSpeed(), 0.2D, PEAK_SPEED);
-					progress += used;
-					axleHandler.addEnergy(-used, false);
+	public void serverTick(){
+		super.serverTick();
+		if(inventory[0].isEmpty()){
+			progress = 0;
+		}else{
+			Optional<MillRec> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.MILL_TYPE, this, level);
+			if(recOpt.isPresent()){
+				double used = POWER * RotaryUtil.findEfficiency(axleHandler.getSpeed(), 0.2D, PEAK_SPEED);
+				progress += used;
+				axleHandler.addEnergy(-used, false);
 
-					if(progress >= REQUIRED){
-						createOutput(recOpt.get().getOutputs());
-						progress = 0;
-					}
-				}else{
+				if(progress >= REQUIRED){
+					createOutput(recOpt.get().getOutputs());
 					progress = 0;
 				}
+			}else{
+				progress = 0;
 			}
 		}
 	}

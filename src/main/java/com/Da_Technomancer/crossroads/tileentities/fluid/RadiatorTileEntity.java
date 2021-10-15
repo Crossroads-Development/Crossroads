@@ -6,15 +6,16 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.RadiatorContainer;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -23,18 +24,16 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE.TankProperty;
-
 @ObjectHolder(Crossroads.MODID)
 public class RadiatorTileEntity extends InventoryTE{
 
 	@ObjectHolder("radiator")
-	private static BlockEntityType<RadiatorTileEntity> type = null;
+	public static BlockEntityType<RadiatorTileEntity> TYPE = null;
 
 	public static final int FLUID_USE = 100;
 
 	public RadiatorTileEntity(BlockPos pos, BlockState state){
-		super(type, 0);
+		super(TYPE, pos, state, 0);
 		fluidProps[0] = new TankProperty(10_000, true, false, CRFluids.STEAM::contains);
 		fluidProps[1] = new TankProperty(10_000, false, true);
 		initFluidManagers();
@@ -51,10 +50,10 @@ public class RadiatorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
+	public void serverTick(){
+		super.serverTick();
 
-		if(!level.isClientSide && fluids[0].getAmount() >= FLUID_USE && fluidProps[1].capacity - fluids[1].getAmount() >= FLUID_USE){
+		if(fluids[0].getAmount() >= FLUID_USE && fluidProps[1].capacity - fluids[1].getAmount() >= FLUID_USE){
 			temp += FLUID_USE * (double) CRConfig.steamWorth.get() / 1000;
 			if(fluids[1].isEmpty()){
 				fluids[1] = new FluidStack(CRFluids.distilledWater.still, FLUID_USE);

@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.IceboxRec;
 import com.Da_Technomancer.crossroads.gui.container.IceboxContainer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
@@ -29,13 +30,11 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
-
 @ObjectHolder(Crossroads.MODID)
 public class IceboxTileEntity extends InventoryTE{
 
 	@ObjectHolder("icebox")
-	private static BlockEntityType<IceboxTileEntity> type = null;
+	public static BlockEntityType<IceboxTileEntity> TYPE = null;
 
 	public static final int RATE = 10;
 	public static final int MIN_TEMP = -20;
@@ -44,7 +43,7 @@ public class IceboxTileEntity extends InventoryTE{
 	private int maxBurnTime = 0;
 
 	public IceboxTileEntity(BlockPos pos, BlockState state){
-		super(type, 1);
+		super(TYPE, pos, state, 1);
 	}
 
 	public int getCoolProg(){
@@ -57,11 +56,8 @@ public class IceboxTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
-		if(level.isClientSide){
-			return;
-		}
+	public void serverTick(){
+		super.serverTick();
 
 		if(burnTime != 0){
 			if(temp > MIN_TEMP){

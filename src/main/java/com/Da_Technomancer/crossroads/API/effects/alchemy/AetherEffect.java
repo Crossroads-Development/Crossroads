@@ -11,24 +11,24 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactiveSpotTileEntity;
 import com.Da_Technomancer.essentials.ReflectionUtil;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.util.LinearCongruentialGenerator;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
+import net.minecraft.core.QuartPos;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.Tag;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.CommonLevelAccessor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.chunk.ChunkBiomeContainer;
 import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkBiomeContainer;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
@@ -82,7 +82,7 @@ public class AetherEffect implements IAlchEffect{
 		BlockState oldState = world.getBlockState(pos);
 
 		//quicksilver makes it create a block instead of transmuting blocks
-		if(contents.getQty(EnumReagents.QUICKSILVER.id()) != 0 && oldState.getBlock().isAir(oldState, world, pos)){
+		if(contents.getQty(EnumReagents.QUICKSILVER.id()) != 0 && oldState.isAir()){
 			world.setBlockAndUpdate(pos, soilBlock().defaultBlockState());
 			return;
 		}
@@ -98,7 +98,7 @@ public class AetherEffect implements IAlchEffect{
 		}
 
 		//cavorite prevents block transmutation
-		if(oldState.isAir(world, pos) || oldState.getDestroySpeed(world, pos) < 0 || contents.getQty(EnumReagents.CAVORITE.id()) != 0){
+		if(oldState.isAir() || oldState.getDestroySpeed(world, pos) < 0 || contents.getQty(EnumReagents.CAVORITE.id()) != 0){
 			return;
 		}
 
@@ -121,7 +121,7 @@ public class AetherEffect implements IAlchEffect{
 		}else if(SOIL_GROUP.contains(oldState.getBlock())){
 			//Special case for grass vs dirt
 			BlockPos upPos = pos.above();
-			if((soilBlock() == Blocks.GRASS_BLOCK || soilBlock() == Blocks.MYCELIUM) && !world.getBlockState(upPos).isAir(world, upPos)){
+			if((soilBlock() == Blocks.GRASS_BLOCK || soilBlock() == Blocks.MYCELIUM) && !world.getBlockState(upPos).isAir()){
 				if(oldState != Blocks.DIRT.defaultBlockState()){
 					world.setBlockAndUpdate(pos, Blocks.DIRT.defaultBlockState());
 				}
@@ -163,15 +163,14 @@ public class AetherEffect implements IAlchEffect{
 			try{
 				o = biomeField.get(bc);
 				Biome[] biomeArray = (Biome[]) o;
-				long seed = 0L;//TODO don't know how to get seed on the client
 				if(CRConfig.verticalBiomes.get()){
 					int y = 0;
 					do{
 						//We set the biome in a column from bedrock to world height
-						biomeArray[getBiomeIndex(pos.getX(), y, pos.getZ(), seed)] = biome;
-					}while(!Level.isOutsideBuildHeight(++y));
+						biomeArray[getBiomeIndex(world, pos.getX(), y, pos.getZ())] = biome;
+					}while(!world.isOutsideBuildHeight(++y));
 				}else{
-					biomeArray[getBiomeIndex(pos.getX(), pos.getY(), pos.getZ(), seed)] = biome;
+					biomeArray[getBiomeIndex(world, pos.getX(), pos.getY(), pos.getZ())] = biome;
 				}
 			}catch(IllegalAccessException | NullPointerException | IndexOutOfBoundsException e){
 				e.printStackTrace();
@@ -184,83 +183,26 @@ public class AetherEffect implements IAlchEffect{
 	private static final int WIDTH_BITS = (int)Math.round(Math.log(16.0D) / Math.log(2.0D)) - 2;
 
 	/**
-	 * Vanilla biomes are packed in an elaborate format involving biomes being stored in 4x4x4 segments
+	 * Vanilla biomes are packed into a one-dimensional array which stores all biome information for a chunk
 	 * This method gets the index corresponding to a world position in the chunk's biome array
 	 * Multiple positions will share an index
 	 * @param x The x position
 	 * @param y The y position- does actually matter
 	 * @param z The z position
-	 * @param seed The world seed
 	 * @return The biome index at this position
 	 */
-	private static int getBiomeIndex(int x, int y, int z, long seed){
-		//This incredibly elaborate formula (and associated methods) were copied from FuzzedBiomeMagnifier and BiomeContainer.
-		//If this ever breaks, we're doomed
-		int i = x - 2;
-		int j = y - 2;
-		int k = z - 2;
-		int l = i >> 2;
-		int i1 = j >> 2;
-		int j1 = k >> 2;
-		double d0 = (double)(i & 3) / 4.0D;
-		double d1 = (double)(j & 3) / 4.0D;
-		double d2 = (double)(k & 3) / 4.0D;
-		double[] adouble = new double[8];
+	private static int getBiomeIndex(Level world, int x, int y, int z){
+		//Based off of ChunkBiomeContainer::getNoiseBiome
+		final int HORIZONTAL_MASK = (1 << WIDTH_BITS) - 1;
+		final int quartMinY = QuartPos.fromBlock(world.getMinBuildHeight());
+		final int quartHeight = QuartPos.fromBlock(world.getHeight()) - 1;
 
-		for(int k1 = 0; k1 < 8; ++k1) {
-			boolean flag = (k1 & 4) == 0;
-			boolean flag1 = (k1 & 2) == 0;
-			boolean flag2 = (k1 & 1) == 0;
-			int l1 = flag ? l : l + 1;
-			int i2 = flag1 ? i1 : i1 + 1;
-			int j2 = flag2 ? j1 : j1 + 1;
-			double d3 = flag ? d0 : d0 - 1.0D;
-			double d4 = flag1 ? d1 : d1 - 1.0D;
-			double d5 = flag2 ? d2 : d2 - 1.0D;
-			adouble[k1] = getFiddledDistance(seed, l1, i2, j2, d3, d4, d5);
-		}
-
-		int k2 = 0;
-		double d6 = adouble[0];
-
-		for(int l2 = 1; l2 < 8; ++l2) {
-			if (d6 > adouble[l2]) {
-				k2 = l2;
-				d6 = adouble[l2];
-			}
-		}
-
-		int i3 = (k2 & 4) == 0 ? l : l + 1;
-		int j3 = (k2 & 2) == 0 ? i1 : i1 + 1;
-		int k3 = (k2 & 1) == 0 ? j1 : j1 + 1;
-
-		//Copied from BiomeContainer.getNoiseBiome(i3, j3, k3)
-		int arrayIndex = i3 & ChunkBiomeContainer.HORIZONTAL_MASK;//X
-		arrayIndex |= (k3 & ChunkBiomeContainer.HORIZONTAL_MASK) << WIDTH_BITS;//Z
-		return arrayIndex | Mth.clamp(j3, 0, ChunkBiomeContainer.VERTICAL_MASK) << WIDTH_BITS + WIDTH_BITS;//Y
-	}
-
-	private static double getFiddledDistance(long p_226845_0_, int p_226845_2_, int p_226845_3_, int p_226845_4_, double p_226845_5_, double p_226845_7_, double p_226845_9_) {
-		long lvt_11_1_ = LinearCongruentialGenerator.next(p_226845_0_, (long)p_226845_2_);
-		lvt_11_1_ = LinearCongruentialGenerator.next(lvt_11_1_, (long)p_226845_3_);
-		lvt_11_1_ = LinearCongruentialGenerator.next(lvt_11_1_, (long)p_226845_4_);
-		lvt_11_1_ = LinearCongruentialGenerator.next(lvt_11_1_, (long)p_226845_2_);
-		lvt_11_1_ = LinearCongruentialGenerator.next(lvt_11_1_, (long)p_226845_3_);
-		lvt_11_1_ = LinearCongruentialGenerator.next(lvt_11_1_, (long)p_226845_4_);
-		double d0 = getFiddle(lvt_11_1_);
-		lvt_11_1_ = LinearCongruentialGenerator.next(lvt_11_1_, p_226845_0_);
-		double d1 = getFiddle(lvt_11_1_);
-		lvt_11_1_ = LinearCongruentialGenerator.next(lvt_11_1_, p_226845_0_);
-		double d2 = getFiddle(lvt_11_1_);
-		return sqr(p_226845_9_ + d2) + sqr(p_226845_7_ + d1) + sqr(p_226845_5_ + d0);
-	}
-
-	private static double getFiddle(long p_226844_0_) {
-		double d0 = (double)((int)Math.floorMod(p_226844_0_ >> 24, 1024L)) / 1024.0D;
-		return (d0 - 0.5D) * 0.9D;
-	}
-
-	private static double sqr(double p_226843_0_) {
-		return p_226843_0_ * p_226843_0_;
+		int pX = QuartPos.fromBlock(x);
+		int pY = QuartPos.fromBlock(y);
+		int pZ = QuartPos.fromBlock(z);
+		int i = pX & HORIZONTAL_MASK;
+		int j = Mth.clamp(pY - quartMinY, 0, quartHeight);
+		int k = pZ & HORIZONTAL_MASK;
+		return j << WIDTH_BITS + WIDTH_BITS | k << WIDTH_BITS | i;
 	}
 }

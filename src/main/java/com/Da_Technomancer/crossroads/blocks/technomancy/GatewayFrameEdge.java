@@ -6,20 +6,20 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayEdgeTileEntity;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.material.PushReaction;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -41,6 +41,13 @@ public class GatewayFrameEdge extends BaseEntityBlock implements IReadable{
 		return new GatewayEdgeTileEntity(pos, state);
 	}
 
+//	Non-ticking tile entity
+//	@Nullable
+//	@Override
+//	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> type){
+//		return ITickableTileEntity.createTicker(type, GatewayEdgeTileEntity.TYPE);
+//	}
+
 	@Override
 	public RenderShape getRenderShape(BlockState state){
 		return RenderShape.MODEL;
@@ -54,14 +61,14 @@ public class GatewayFrameEdge extends BaseEntityBlock implements IReadable{
 	@Override
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving){
 		BlockEntity te = world.getBlockEntity(pos);
-		if(newState.getBlock() != state.getBlock() && te instanceof GatewayEdgeTileEntity){
+		if(newState.getBlock() != state.getBlock() && te instanceof GatewayEdgeTileEntity edgeTE){
 			//Shutdown the multiblock
 			BlockPos keyPos;
-			if((keyPos = ((GatewayEdgeTileEntity) te).getKey()) != null){
+			if((keyPos = edgeTE.getKey()) != null){
 				//The rest of the multiblock asks the head to dismantle
 				BlockEntity controllerTe = world.getBlockEntity(pos.offset(keyPos));
-				if(controllerTe instanceof IGateway){
-					((IGateway) controllerTe).dismantle();
+				if(controllerTe instanceof IGateway gateway){
+					gateway.dismantle();
 				}
 			}
 		}

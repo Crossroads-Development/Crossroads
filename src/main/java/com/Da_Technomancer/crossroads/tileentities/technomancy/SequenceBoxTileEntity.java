@@ -7,6 +7,7 @@ import com.Da_Technomancer.essentials.blocks.redstone.IRedstoneHandler;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import com.Da_Technomancer.essentials.packets.INBTReceiver;
 import io.netty.buffer.Unpooled;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
@@ -35,7 +36,7 @@ public class SequenceBoxTileEntity extends BlockEntity implements INBTReceiver, 
 	public static final int MAX_VALUES = 99;
 
 	@ObjectHolder("sequence_box")
-	private static BlockEntityType<SequenceBoxTileEntity> type = null;
+	public static BlockEntityType<SequenceBoxTileEntity> TYPE = null;
 
 	private final ArrayList<Float> sequenceVal = new ArrayList<>();
 	private final ArrayList<String> sequenceStr = new ArrayList<>();
@@ -43,7 +44,7 @@ public class SequenceBoxTileEntity extends BlockEntity implements INBTReceiver, 
 	private boolean hadRedstoneSignal = false;//Whether this block is currently receiving a redstone signal- used for differenting pulses
 
 	public SequenceBoxTileEntity(BlockPos pos, BlockState state){
-		super(type, pos, state);
+		super(TYPE, pos, state);
 		sanitizeState();
 	}
 

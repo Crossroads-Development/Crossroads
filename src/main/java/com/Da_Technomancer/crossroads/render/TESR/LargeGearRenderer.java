@@ -5,17 +5,17 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
-import com.mojang.math.Vector3f;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class LargeGearRenderer extends BlockEntityRenderer<LargeGearMasterTileEntity>{
+public class LargeGearRenderer implements BlockEntityRenderer<LargeGearMasterTileEntity>{
 
-	protected LargeGearRenderer(BlockEntityRenderDispatcher dispatcher){
-		super(dispatcher);
+	protected LargeGearRenderer(BlockEntityRendererProvider.Context dispatcher){
+		super();
 	}
 
 	@Override

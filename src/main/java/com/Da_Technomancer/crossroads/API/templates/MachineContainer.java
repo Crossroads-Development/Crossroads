@@ -73,7 +73,7 @@ public abstract class MachineContainer<U extends InventoryTE> extends TileEntity
 			if(playerIn.isAlive() && !(playerIn instanceof ServerPlayer && ((ServerPlayer) playerIn).hasDisconnected())){
 				for(Slot s : slots){
 					if(s.container instanceof FluidSlotManager.FakeInventory){
-						playerIn.inventory.placeItemBackInInventory(te.getLevel(), s.getItem());
+						playerIn.getInventory().placeItemBackInInventory(s.getItem());
 					}
 				}
 			}else{

@@ -4,19 +4,19 @@ import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.IAlchEffect;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
@@ -142,7 +142,7 @@ public class EntityFlameCore extends Entity{
 				}
 			}
 			if(amount <= 0){
-				remove();
+				remove(RemovalReason.DISCARDED);
 				return;
 			}
 
@@ -190,7 +190,7 @@ public class EntityFlameCore extends Entity{
 			}
 
 			if(lastAction){
-				remove();
+				remove(RemovalReason.DISCARDED);
 			}
 		}
 	}
@@ -216,7 +216,7 @@ public class EntityFlameCore extends Entity{
 	}
 
 	@Override
-	public boolean isMovementNoisy(){
-		return false;
+	protected MovementEmission getMovementEmission(){
+		return MovementEmission.NONE;
 	}
 }

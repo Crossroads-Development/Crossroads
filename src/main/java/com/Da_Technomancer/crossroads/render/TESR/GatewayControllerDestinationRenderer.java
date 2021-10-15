@@ -6,19 +6,19 @@ import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayControllerDestinationTileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.core.Direction;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.Direction;
 
-public class GatewayControllerDestinationRenderer extends BlockEntityRenderer<GatewayControllerDestinationTileEntity>{
+public class GatewayControllerDestinationRenderer implements BlockEntityRenderer<GatewayControllerDestinationTileEntity>{
 
-	protected GatewayControllerDestinationRenderer(BlockEntityRenderDispatcher dispatcher){
-		super(dispatcher);
+	protected GatewayControllerDestinationRenderer(BlockEntityRendererProvider.Context dispatcher){
+		super();
 	}
 
 	@Override
@@ -231,5 +231,10 @@ public class GatewayControllerDestinationRenderer extends BlockEntityRenderer<Ga
 	@Override
 	public boolean shouldRenderOffScreen(GatewayControllerDestinationTileEntity te){
 		return te.isActive();
+	}
+
+	@Override
+	public int getViewDistance(){
+		return 256;//Same value as beacon
 	}
 }

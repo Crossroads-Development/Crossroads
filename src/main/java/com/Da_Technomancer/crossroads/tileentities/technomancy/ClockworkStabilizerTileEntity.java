@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -18,14 +19,14 @@ import net.minecraftforge.registries.ObjectHolder;
 public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 
 	@ObjectHolder("clock_stab")
-	public static BlockEntityType<ClockworkStabilizerTileEntity> type = null;
+	public static BlockEntityType<ClockworkStabilizerTileEntity> TYPE = null;
 
 	public static final double RATE = 0.2D;
 	private BeamUnitStorage storage = new BeamUnitStorage();
 	private Direction dir = null;
 
 	public ClockworkStabilizerTileEntity(BlockPos pos, BlockState state){
-		super(type, pos, state);
+		super(TYPE, pos, state);
 	}
 
 	@Override
@@ -45,8 +46,8 @@ public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 	}
 
 	@Override
-	public void clearCache(){
-		super.clearCache();
+	public void setBlockState(BlockState stateIn){
+		super.setBlockState(stateIn);
 		dir = null;
 	}
 

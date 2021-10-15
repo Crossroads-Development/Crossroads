@@ -112,8 +112,7 @@ public class BeamUnit{
 
 	@Override
 	public boolean equals(Object other){
-		if(other instanceof BeamUnit){
-			BeamUnit o = (BeamUnit) other;
+		if(other instanceof BeamUnit o){
 			return o == this || o.contents[0] == contents[0] && o.contents[1] == contents[1] && o.contents[2] == contents[2] && o.contents[3] == contents[3];
 		}
 		return false;

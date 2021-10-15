@@ -9,24 +9,24 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.BeaconHarnessContainer;
 import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import io.netty.buffer.Unpooled;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.Container;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.Container;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
@@ -34,14 +34,11 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Set;
 
-import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink.Behaviour;
-import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink.FluxHelper;
-
 @ObjectHolder(Crossroads.MODID)
 public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, Container, MenuProvider{
 
 	@ObjectHolder("beacon_harness")
-	public static BlockEntityType<BeaconHarnessTileEntity> type = null;
+	public static BlockEntityType<BeaconHarnessTileEntity> TYPE = null;
 
 	public static final int FLUX_GEN = 4;
 	public static final int LOOP_TIME = 120;//Time to make one full rotation around the color wheel in cycles. Must be a multiple of 3
@@ -52,10 +49,11 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	private int loadSafetyTime = 0;
 
 	//Flux related fields
-	private final FluxHelper fluxHelper = new FluxHelper(type, this, Behaviour.SOURCE);
+	private final FluxHelper fluxHelper;
 
 	public BeaconHarnessTileEntity(BlockPos pos, BlockState state){
-		super(type, pos, state);
+		super(TYPE, pos, state);
+		fluxHelper = new FluxHelper(TYPE, pos, state, this, Behaviour.SOURCE);
 	}
 
 	@Override
@@ -70,20 +68,22 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
-		fluxHelper.tick();
-
+	public void serverTick(){
+		super.serverTick();
+		fluxHelper.serverTick();
 		// Actual beam production is in the emit() method
+	}
 
-		if(level.isClientSide){
-			//For the server side,
-			//decreasing loadSafetyTime happens in emit(), which is a consistent and reliable way of doing this
-			//For the client side, emit() is never called, so we decrement it here
-			//On the client side, this is only used for the UI, and does not need to be perfectly accurate
-			if(--loadSafetyTime < 0){
-				loadSafetyTime = 0;
-			}
+	@Override
+	public void clientTick(){
+		super.clientTick();
+		fluxHelper.clientTick();
+		//For the server side,
+		//decreasing loadSafetyTime happens in emit(), which is a consistent and reliable way of doing this
+		//For the client side, emit() is never called, so we decrement it here
+		//On the client side, this is only used for the UI, and does not need to be perfectly accurate
+		if(--loadSafetyTime < 0){
+			loadSafetyTime = 0;
 		}
 	}
 
@@ -119,7 +119,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 			if(state.getBlock() == Blocks.BEACON){
 				return false;
 			}
-			if(!state.getBlock().is(BlockTags.BEACON_BASE_BLOCKS)){
+			if(!BlockTags.BEACON_BASE_BLOCKS.contains(state.getBlock())){
 				return true;
 			}
 		}

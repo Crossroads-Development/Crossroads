@@ -4,11 +4,12 @@ import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.API.witchcraft.ICultivatable;
 import com.Da_Technomancer.crossroads.API.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class AbstractNutrientEnvironmentTileEntity extends InventoryTE{
 
@@ -16,8 +17,8 @@ public abstract class AbstractNutrientEnvironmentTileEntity extends InventoryTE{
 	private final int nutrientTankIndex;
 	protected long lastTick;
 
-	public AbstractNutrientEnvironmentTileEntity(BlockEntityType<? extends InventoryTE> type, int invSize, int[] cultivatedSlots, int nutrientTankIndex){
-		super(type, invSize);
+	public AbstractNutrientEnvironmentTileEntity(BlockEntityType<? extends InventoryTE> type, BlockPos pos, BlockState state, int invSize, int[] cultivatedSlots, int nutrientTankIndex){
+		super(type, pos, state, invSize);
 		this.cultivatedSlots = cultivatedSlots;
 		this.nutrientTankIndex = nutrientTankIndex;
 	}
@@ -56,27 +57,24 @@ public abstract class AbstractNutrientEnvironmentTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
-		if(!level.isClientSide){
-			long gameTime = level.getGameTime();
-			if(gameTime > lastTick && canCultivate()){
-				for(int cultivated : cultivatedSlots){
-					ItemStack stack = inventory[cultivated];
-					if(stack.getItem() instanceof ICultivatable){
-						ICultivatable item = (ICultivatable) stack.getItem();
-						//Drain liquid
-						if(!fluids[nutrientTankIndex].isEmpty()){
-							fluids[nutrientTankIndex].shrink(getPassiveNutrientDrain());
-						}
-						//Update the item
-						item.cultivate(stack, level, 1);
+	public void serverTick(){
+		super.serverTick();
+		long gameTime = level.getGameTime();
+		if(gameTime > lastTick && canCultivate()){
+			for(int cultivated : cultivatedSlots){
+				ItemStack stack = inventory[cultivated];
+				if(stack.getItem() instanceof ICultivatable item){
+					//Drain liquid
+					if(!fluids[nutrientTankIndex].isEmpty()){
+						fluids[nutrientTankIndex].shrink(getPassiveNutrientDrain());
 					}
+					//Update the item
+					item.cultivate(stack, level, 1);
 				}
 			}
-			lastTick = gameTime;
-			setChanged();
 		}
+		lastTick = gameTime;
+		setChanged();
 	}
 
 	protected abstract int getPassiveNutrientDrain();

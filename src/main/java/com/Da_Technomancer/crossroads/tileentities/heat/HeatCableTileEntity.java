@@ -9,12 +9,14 @@ import com.Da_Technomancer.crossroads.API.templates.ConduitBlock;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
+import com.Da_Technomancer.crossroads.blocks.heat.HeatCable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -23,13 +25,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE.HeatHandler;
-
 @ObjectHolder(Crossroads.MODID)
 public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.IConduitTE<EnumTransferMode>{
 
 	@ObjectHolder("heat_cable")
-	private static BlockEntityType<HeatCableTileEntity> type = null;
+	public static BlockEntityType<HeatCableTileEntity> TYPE = null;
 
 	@SuppressWarnings("unchecked")//Darn Java, not being able to verify arrays of parameterized types. Bah Humbug!
 	protected final LazyOptional<IHeatHandler>[] neighCache = new LazyOptional[] {LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty()};
@@ -38,21 +38,22 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 	protected EnumTransferMode[] modes = ConduitBlock.IConduitTE.genModeArray(EnumTransferMode.BOTH);
 
 	public HeatCableTileEntity(BlockPos pos, BlockState state){
-		this(HeatInsulators.WOOL);
+		this(pos, state, state.getBlock() instanceof HeatCable hc ? hc.insulator : HeatInsulators.WOOL);
 	}
 
-	public HeatCableTileEntity(HeatInsulators insulator){
+	public HeatCableTileEntity(BlockPos pos, BlockState state, HeatInsulators insulator){
+		super(TYPE, pos, state);
+		this.insulator = insulator;
+	}
+
+	protected HeatCableTileEntity(BlockEntityType<? extends HeatCableTileEntity> type, BlockPos pos, BlockState state, HeatInsulators insulator){
 		super(type, pos, state);
 		this.insulator = insulator;
 	}
 
-	protected HeatCableTileEntity(BlockEntityType<? extends HeatCableTileEntity> type, BlockPos pos, BlockState state){
-		super(type, pos, state);
-	}
-
 	@Override
-	public void clearCache(){
-		super.clearCache();
+	public void setBlockState(BlockState stateIn){
+		super.setBlockState(stateIn);
 		//When adjusting a side to lock, we need to invalidate the optional in case a side was disconnected
 		heatOpt.invalidate();
 		heatOpt = LazyOptional.of(this::createHeatHandler);
@@ -73,12 +74,8 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
-
-		if(level.isClientSide){
-			return;
-		}
+	public void serverTick(){
+		super.serverTick();
 
 		double prevTemp = temp;
 

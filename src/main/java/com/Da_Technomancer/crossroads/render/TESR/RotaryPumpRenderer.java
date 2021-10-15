@@ -6,24 +6,24 @@ import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RotaryPumpTileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.world.level.material.FluidState;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.BlockPos;
-import com.mojang.math.Vector3f;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.common.util.LazyOptional;
 
 import java.awt.*;
 
-public class RotaryPumpRenderer extends BlockEntityRenderer<RotaryPumpTileEntity>{
+public class RotaryPumpRenderer implements BlockEntityRenderer<RotaryPumpTileEntity>{
 
-	protected RotaryPumpRenderer(BlockEntityRenderDispatcher dispatcher){
-		super(dispatcher);
+	protected RotaryPumpRenderer(BlockEntityRendererProvider.Context dispatcher){
+		super();
 	}
 
 	@Override

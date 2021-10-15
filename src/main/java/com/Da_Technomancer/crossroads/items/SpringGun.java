@@ -3,13 +3,16 @@ package com.Da_Technomancer.crossroads.items;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.tileentities.rotary.WindingTableTileEntity;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.item.*;
-import net.minecraft.util.*;
+import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -17,19 +20,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Predicate;
-
-import net.minecraft.core.NonNullList;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.item.ArrowItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item.Properties;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.ProjectileWeaponItem;
-import net.minecraft.world.item.UseAnim;
 
 public class SpringGun extends ProjectileWeaponItem implements WindingTableTileEntity.IWindableItem{
 
@@ -60,7 +50,7 @@ public class SpringGun extends ProjectileWeaponItem implements WindingTableTileE
 				//Shoot
 				AbstractArrow arrow = ((ArrowItem) ammo.getItem()).createArrow(worldIn, ammo, playerIn);
 				float speed = (float) wind * 0.5F;
-				arrow.shootFromRotation(playerIn, playerIn.xRot, playerIn.yRot, 0.0F, speed, 0.2F);
+				arrow.shootFromRotation(playerIn, playerIn.getXRot(), playerIn.getYRot(), 0.0F, speed, 0.2F);
 				//Despite the method being named setDamage, it actually sets a damage multiplier
 				//The actual damage dealt of an arrow is (damage * speed)
 				float damageMult = calcDamage(wind) / speed;
@@ -74,7 +64,7 @@ public class SpringGun extends ProjectileWeaponItem implements WindingTableTileE
 				worldIn.addFreshEntity(arrow);
 
 				//Consume ammo
-				if(!playerIn.abilities.instabuild){
+				if(!playerIn.getAbilities().instabuild){
 					ammo.shrink(1);
 				}
 
@@ -82,7 +72,7 @@ public class SpringGun extends ProjectileWeaponItem implements WindingTableTileE
 			}
 
 			playerIn.playNotifySound(SoundEvents.CROSSBOW_SHOOT, SoundSource.PLAYERS, 1F, 1F);//Play sound on the client
-			if(!playerIn.abilities.instabuild){
+			if(!playerIn.getAbilities().instabuild){
 				//Return the discharged weapon
 				setWindLevel(held, 0);
 			}

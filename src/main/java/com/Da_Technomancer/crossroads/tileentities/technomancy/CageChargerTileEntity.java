@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -32,12 +33,12 @@ import java.util.ArrayList;
 public class CageChargerTileEntity extends BlockEntity implements IInfoTE{
 
 	@ObjectHolder("cage_charger")
-	private static BlockEntityType<CageChargerTileEntity> type = null;
+	public static BlockEntityType<CageChargerTileEntity> TYPE = null;
 	
 	private ItemStack cage = ItemStack.EMPTY;
 
 	public CageChargerTileEntity(BlockPos pos, BlockState state){
-		super(type, pos, state);
+		super(TYPE, pos, state);
 	}
 	
 	@Override

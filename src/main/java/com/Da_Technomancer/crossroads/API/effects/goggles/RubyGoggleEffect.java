@@ -50,11 +50,11 @@ public class RubyGoggleEffect implements IGoggleEffect{
 			BlockPos endPos = new BlockPos(end);
 			if(entHit != null){
 				entHit.setSecondsOnFire(3);
-			}else if(world.getBlockState(endPos).isAir(world, endPos)){
+			}else if(world.getBlockState(endPos).isAir()){
 				world.setBlockAndUpdate(endPos, Blocks.FIRE.defaultBlockState());
 			}
 
-			CRRenderUtil.addBeam(world, start.x, start.y, start.z, (int) Math.sqrt(end.distanceToSqr(start)), player.xRot, player.yHeadRot, (byte) 1, Color.RED.getRGB());
+			CRRenderUtil.addBeam(world, start.x, start.y, start.z, (int) Math.sqrt(end.distanceToSqr(start)), player.getXRot(), player.yHeadRot, (byte) 1, Color.RED.getRGB());
 		}
 	}
 }

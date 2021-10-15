@@ -4,11 +4,12 @@ import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -17,7 +18,7 @@ import net.minecraftforge.registries.ObjectHolder;
 public class SolarHeaterTileEntity extends ModuleTE{
 
 	@ObjectHolder("solar_heater")
-	private static BlockEntityType<SolarHeaterTileEntity> type = null;
+	public static BlockEntityType<SolarHeaterTileEntity> TYPE = null;
 
 	public static final double RATE = 5;
 	public static final double CAP = 325;
@@ -26,7 +27,7 @@ public class SolarHeaterTileEntity extends ModuleTE{
 	private boolean running = false;
 
 	public SolarHeaterTileEntity(BlockPos pos, BlockState state){
-		super(type, pos, state);
+		super(TYPE, pos, state);
 	}
 
 	@Override
@@ -35,11 +36,8 @@ public class SolarHeaterTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
-		if(level.isClientSide){
-			return;
-		}
+	public void serverTick(){
+		super.serverTick();
 
 		//Every 30 seconds, check if we still have sky view and cache the result
 		if(newlyPlaced || level.getGameTime() % 600 == 0){
@@ -49,8 +47,7 @@ public class SolarHeaterTileEntity extends ModuleTE{
 
 		//This machine can share heat with other Solar Heaters in the same line, but only other Solar Heaters. Otherwise, a heat cable is needed like normal
 		BlockEntity adjTE = level.getBlockEntity(worldPosition.relative(Direction.get(Direction.AxisDirection.NEGATIVE, level.getBlockState(worldPosition).getValue(CRProperties.HORIZ_AXIS))));
-		if(adjTE instanceof SolarHeaterTileEntity){
-			SolarHeaterTileEntity otherTE = (SolarHeaterTileEntity) adjTE;
+		if(adjTE instanceof SolarHeaterTileEntity otherTE){
 			temp += otherTE.temp;
 			temp /= 2;
 			otherTE.temp = temp;

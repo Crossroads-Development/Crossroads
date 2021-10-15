@@ -14,20 +14,20 @@ import com.Da_Technomancer.crossroads.crafting.recipes.CopshowiumRec;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.CopshowiumMakerContainer;
 import com.Da_Technomancer.essentials.tileentities.ILinkTE;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -40,26 +40,21 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Set;
 
-import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink.Behaviour;
-import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink.FluxHelper;
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE.FluidHandler;
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE.FluidTankHandler;
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE.TankProperty;
-
 @ObjectHolder(Crossroads.MODID)
 public class CopshowiumCreationChamberTileEntity extends InventoryTE implements IFluxLink{
 
 	@ObjectHolder("copshowium_creation_chamber")
-	public static BlockEntityType<CopshowiumCreationChamberTileEntity> type = null;
+	public static BlockEntityType<CopshowiumCreationChamberTileEntity> TYPE = null;
 
 	public static final int CAPACITY = 1_440;
 	public static final int FLUX_PER_INGOT = 4;
 
-	private final FluxHelper fluxHelper = new FluxHelper(type, this, Behaviour.SOURCE);
+	private final FluxHelper fluxHelper;
 
 	public CopshowiumCreationChamberTileEntity(BlockPos pos, BlockState state){
-		super(type, 0);
-		fluidProps[0] = new TankProperty(CAPACITY, true, true, f -> f != null && f.getFluid() != CRFluids.moltenCopshowium.still);//Input
+		super(TYPE, pos, state, 0);
+		fluxHelper = new FluxHelper(TYPE, pos, state, this, Behaviour.SOURCE);
+		fluidProps[0] = new TankProperty(CAPACITY, true, true, f -> f != null && f != CRFluids.moltenCopshowium.still);//Input
 		fluidProps[1] = new TankProperty(CAPACITY, false, true);//Copshowium
 		initFluidManagers();
 	}
@@ -91,11 +86,15 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
+	public void serverTick(){
+		super.serverTick();
+		fluxHelper.serverTick();
+	}
 
-		//Handle flux
-		fluxHelper.tick();
+	@Override
+	public void clientTick(){
+		super.clientTick();
+		fluxHelper.clientTick();
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.gui.container.IncubatorContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
@@ -30,8 +31,6 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
-
 @ObjectHolder(Crossroads.MODID)
 public class IncubatorTileEntity extends InventoryTE{
 
@@ -45,10 +44,10 @@ public class IncubatorTileEntity extends InventoryTE{
 	private int targetTemp = 0;//Target temperature will be between (MIN_TEMP + MARGIN) and (MAX_TEMP - MARGIN), inclusive, once initialized
 
 	@ObjectHolder("incubator")
-	public static BlockEntityType<IncubatorTileEntity> type = null;
+	public static BlockEntityType<IncubatorTileEntity> TYPE = null;
 
 	public IncubatorTileEntity(BlockPos pos, BlockState state){
-		super(type, 3);
+		super(TYPE, pos, state, 3);
 		//Index 0: mutator, index 1: eggs, index 2: output
 	}
 
@@ -83,49 +82,47 @@ public class IncubatorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
+	public void serverTick(){
+		super.serverTick();
 
-		if(!level.isClientSide){
-			boolean validRecipe = false;
-			if(isValidMutator(inventory[0], level)){
-				ItemStack toCreate = getCreatedItem(inventory[0], level);
-				//Check that we have the other ingredient, and that there is space for the output
-				if(!inventory[1].isEmpty() && (inventory[2].isEmpty() || BlockUtil.sameItem(inventory[2], toCreate) && toCreate.getCount() + inventory[2].getCount() <= toCreate.getMaxStackSize())){
-					validRecipe = true;
+		boolean validRecipe = false;
+		if(isValidMutator(inventory[0], level)){
+			ItemStack toCreate = getCreatedItem(inventory[0], level);
+			//Check that we have the other ingredient, and that there is space for the output
+			if(!inventory[1].isEmpty() && (inventory[2].isEmpty() || BlockUtil.sameItem(inventory[2], toCreate) && toCreate.getCount() + inventory[2].getCount() <= toCreate.getMaxStackSize())){
+				validRecipe = true;
 
-					//Increase progress
-					if(temp <= MAX_TEMP && temp >= MIN_TEMP){
-						if(withinTarget(temp, getTargetTemp())){
-							progress += 1D;
-						}else{
-							progress += SLOW_MULT;
-						}
-						if(progress >= REQUIRED){
-							progress = 0;
-							targetTemp = 0;//Reset the target temp, to be re-randomized
-							if(inventory[2].isEmpty()){
-								inventory[2] = toCreate;
-							}else{
-								inventory[2].grow(toCreate.getCount());
-							}
-							inventory[0].shrink(1);
-							inventory[1].shrink(1);
-						}
-						setChanged();
+				//Increase progress
+				if(temp <= MAX_TEMP && temp >= MIN_TEMP){
+					if(withinTarget(temp, getTargetTemp())){
+						progress += 1D;
+					}else{
+						progress += SLOW_MULT;
 					}
+					if(progress >= REQUIRED){
+						progress = 0;
+						targetTemp = 0;//Reset the target temp, to be re-randomized
+						if(inventory[2].isEmpty()){
+							inventory[2] = toCreate;
+						}else{
+							inventory[2].grow(toCreate.getCount());
+						}
+						inventory[0].shrink(1);
+						inventory[1].shrink(1);
+					}
+					setChanged();
 				}
-			}else if(inventory[2].isEmpty()){
-				//Eject the invalid input item, including spoiled embryos
-				inventory[2] = inventory[0];
-				inventory[0] = ItemStack.EMPTY;
-				setChanged();
 			}
+		}else if(inventory[2].isEmpty()){
+			//Eject the invalid input item, including spoiled embryos
+			inventory[2] = inventory[0];
+			inventory[0] = ItemStack.EMPTY;
+			setChanged();
+		}
 
-			if(!validRecipe){
-				//Reset any accumulated progress
-				progress = 0;
-			}
+		if(!validRecipe){
+			//Reset any accumulated progress
+			progress = 0;
 		}
 	}
 

@@ -8,14 +8,15 @@ import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.rotary.StirlingEngine;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 public class StirlingEngineTileEntity extends ModuleTE{
 
 	@ObjectHolder("stirling_engine")
-	private static BlockEntityType<StirlingEngineTileEntity> type = null;
+	public static BlockEntityType<StirlingEngineTileEntity> TYPE = null;
 
 	public static final double INERTIA = 200;
 	public static final double HEAT_INTERVAL = 20;
@@ -44,7 +45,7 @@ public class StirlingEngineTileEntity extends ModuleTE{
 	private double lastHeatOut = 0;
 
 	public StirlingEngineTileEntity(BlockPos pos, BlockState state){
-		super(type, pos, state);
+		super(TYPE, pos, state);
 	}
 
 	@Override
@@ -100,12 +101,9 @@ public class StirlingEngineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
+	public void serverTick(){
+		super.serverTick();
 
-		if(level.isClientSide){
-			return;
-		}
 		init();
 
 		//Ok, to summarize what is going on here:

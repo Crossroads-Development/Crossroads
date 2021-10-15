@@ -11,7 +11,8 @@ import com.Da_Technomancer.crossroads.gui.container.HydroponicsTroughContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import net.minecraft.block.*;
+
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -43,8 +44,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
-import com.Da_Technomancer.crossroads.API.templates.ModuleTE.TankProperty;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.FlowerBlock;
@@ -54,7 +53,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class HydroponicsTroughTileEntity extends InventoryTE{
 
 	@ObjectHolder(Crossroads.MODID + ":hydroponics_trough")
-	public static BlockEntityType<HydroponicsTroughTileEntity> type = null;
+	public static BlockEntityType<HydroponicsTroughTileEntity> TYPE = null;
 
 	private static final int CAPACITY = 8000;
 	public static final int SOLUTION_DRAIN = 1;
@@ -92,7 +91,7 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 	private int progress = 0;
 
 	public HydroponicsTroughTileEntity(BlockPos pos, BlockState state){
-		super(type, 5);//Slot 0 is the seed; 1, 2, 3, 4 are output
+		super(TYPE, pos, state, 5);//Slot 0 is the seed; 1, 2, 3, 4 are output
 		fluidProps[0] = new TankProperty(CAPACITY, true, false, f -> f == CRFluids.fertilizerSolution.still);
 		initFluidManagers();
 	}
@@ -132,8 +131,7 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 		//Handle seeds for CropsBlock & FlowerBlock
 		if(item instanceof BlockItem){
 			Block block = ((BlockItem) item).getBlock();
-			if(block instanceof CropBlock){
-				CropBlock crop = (CropBlock) block;
+			if(block instanceof CropBlock crop){
 				if(level.isClientSide()){
 					return Triple.of(true, crop.getMaxAge(), new ItemStack[0]);//We can't get the drops on the client, but we don't need to
 				}
@@ -151,21 +149,19 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
+	public void serverTick(){
+		super.serverTick();
 
-		if(!level.isClientSide()){
-			if(isVenting()){
-				fluids[0] = FluidStack.EMPTY;
+		if(isVenting()){
+			fluids[0] = FluidStack.EMPTY;
+			setChanged();
+		}else{
+			if(!inventory[0].isEmpty() && !fluids[0].isEmpty()){
+				fluids[0].shrink(SOLUTION_DRAIN);
 				setChanged();
-			}else{
-				if(!inventory[0].isEmpty() && !fluids[0].isEmpty()){
-					fluids[0].shrink(SOLUTION_DRAIN);
-					setChanged();
-				}
 			}
-			updateBlockstate();
 		}
+		updateBlockstate();
 	}
 
 	public int getProgressBar(){

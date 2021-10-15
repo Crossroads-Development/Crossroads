@@ -31,10 +31,10 @@ public class SaltAlchemyEffect implements IAlchEffect{
 		float range = 0.5F;
 		for(Mob e : world.getEntitiesOfClass(Mob.class, new AABB(pos.getX() + 0.5F - range, pos.getY() + 0.5F - range, pos.getZ() + 0.5F - range, pos.getX() + 0.5F + range, pos.getY() + 0.5F + range, pos.getZ() + 0.5F + range), FILTER)){
 			if(e instanceof Slime){
-				e.remove();
+				e.remove(Entity.RemovalReason.KILLED);
 				Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.SLIME_BALL, ((Slime) e).getSize() + 1));
 			}else{
-				e.remove();
+				e.remove(Entity.RemovalReason.KILLED);
 				Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Blocks.DEAD_BUSH, 1));
 			}
 		}

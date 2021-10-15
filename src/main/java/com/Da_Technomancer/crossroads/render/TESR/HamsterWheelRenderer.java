@@ -8,20 +8,20 @@ import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.technomancy.HamsterWheelTileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import com.mojang.math.Vector3f;
 
 import java.awt.*;
 
-public class HamsterWheelRenderer extends BlockEntityRenderer<HamsterWheelTileEntity>{
+public class HamsterWheelRenderer implements BlockEntityRenderer<HamsterWheelTileEntity>{
 
-	protected HamsterWheelRenderer(BlockEntityRenderDispatcher dispatcher){
-		super(dispatcher);
+	protected HamsterWheelRenderer(BlockEntityRendererProvider.Context dispatcher){
+		super();
 	}
 
 	@Override

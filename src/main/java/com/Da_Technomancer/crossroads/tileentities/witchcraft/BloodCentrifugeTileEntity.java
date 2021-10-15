@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.BloodCentrifugeContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.witchcraft.BloodSample;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
@@ -28,13 +29,11 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-import com.Da_Technomancer.crossroads.API.templates.InventoryTE.ItemHandler;
-
 @ObjectHolder(Crossroads.MODID)
 public class BloodCentrifugeTileEntity extends InventoryTE{
 
 	@ObjectHolder("blood_centrifuge")
-	public static BlockEntityType<BloodCentrifugeTileEntity> type = null;
+	public static BlockEntityType<BloodCentrifugeTileEntity> TYPE = null;
 
 	public static final double LOW_SPEED = 0;
 	public static final double HIGH_SPEED = 20;
@@ -45,7 +44,7 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 	private int deviation = 0;
 
 	public BloodCentrifugeTileEntity(BlockPos pos, BlockState state){
-		super(type, 4);//Input: 0, 1; Output: 2, 3
+		super(TYPE, pos, state, 4);//Input: 0, 1; Output: 2, 3
 	}
 
 	@Override
@@ -78,36 +77,34 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
+	public void serverTick(){
+		super.serverTick();
 
-		if(!level.isClientSide){
-			if((!inventory[0].isEmpty() || !inventory[1].isEmpty()) && (inventory[0].isEmpty() || inventory[2].isEmpty()) && (inventory[1].isEmpty() || inventory[3].isEmpty())){
-				//Check we have an input and all relevant output slots are empty
-				double targetSpeed = getTargetSpeed();
-				//Add difference between target and actual speed magnitude, rounded down
-				deviation += (int) Math.abs(Math.abs(axleHandler.getSpeed()) - targetSpeed);
-				progress++;
-				if(progress >= REQUIRED){
-					int degradation = deviation / REQUIRED;//Average value of deviation increment
-					for(int i = 0; i < 2; i++){
-						if(!inventory[i].isEmpty()){
-							EntityTemplate template = BloodSample.getEntityTypeData(inventory[i]);
-							//Increase degradation based on deviation
-							template.setDegradation(template.getDegradation() + degradation);
-							//Sets the output to a copy of the input with the item as a separated blood sample instead of normal blood sample
-							//Has to copy spoil time and template
-							inventory[2 + i] = CRItems.separatedBloodSample.setSpoilTime(CRItems.separatedBloodSample.withEntityData(new ItemStack(CRItems.separatedBloodSample, 1), template), CRItems.bloodSample.getSpoilTime(inventory[i], level), 0);
-							inventory[i] = ItemStack.EMPTY;
-						}
+		if((!inventory[0].isEmpty() || !inventory[1].isEmpty()) && (inventory[0].isEmpty() || inventory[2].isEmpty()) && (inventory[1].isEmpty() || inventory[3].isEmpty())){
+			//Check we have an input and all relevant output slots are empty
+			double targetSpeed = getTargetSpeed();
+			//Add difference between target and actual speed magnitude, rounded down
+			deviation += (int) Math.abs(Math.abs(axleHandler.getSpeed()) - targetSpeed);
+			progress++;
+			if(progress >= REQUIRED){
+				int degradation = deviation / REQUIRED;//Average value of deviation increment
+				for(int i = 0; i < 2; i++){
+					if(!inventory[i].isEmpty()){
+						EntityTemplate template = BloodSample.getEntityTypeData(inventory[i]);
+						//Increase degradation based on deviation
+						template.setDegradation(template.getDegradation() + degradation);
+						//Sets the output to a copy of the input with the item as a separated blood sample instead of normal blood sample
+						//Has to copy spoil time and template
+						inventory[2 + i] = CRItems.separatedBloodSample.setSpoilTime(CRItems.separatedBloodSample.withEntityData(new ItemStack(CRItems.separatedBloodSample, 1), template), CRItems.bloodSample.getSpoilTime(inventory[i], level), 0);
+						inventory[i] = ItemStack.EMPTY;
 					}
 				}
-				setChanged();
-			}else if(progress != 0){
-				progress = 0;
-				deviation = 0;
-				setChanged();
 			}
+			setChanged();
+		}else if(progress != 0){
+			progress = 0;
+			deviation = 0;
+			setChanged();
 		}
 	}
 

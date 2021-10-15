@@ -75,14 +75,13 @@ public interface IGateway extends IInfoTE{
 	static void teleportEntityTo(Entity e, ServerLevel target, double posX, double posY, double posZ, float yawRotation){
 		//Moves an entity to any position in any dimension
 
-		if(e instanceof ServerPlayer){
+		if(e instanceof ServerPlayer play){
 			//Based on TeleportCommand
 
 			//Load endpoint chunk
 			target.getChunkSource().addRegionTicket(TicketType.POST_TELEPORT, new ChunkPos(new BlockPos(posX, posY, posZ)), 1, e.getId());
 
 			e.stopRiding();
-			ServerPlayer play = (ServerPlayer) e;
 			if(play.isSleeping()){
 				play.stopSleepInBed(true, true);
 			}
@@ -114,8 +113,8 @@ public interface IGateway extends IInfoTE{
 				e.restoreFrom(entity);
 				e.moveTo(posX, posY, posZ, entity.getViewYRot(1) + yawRotation, entity.getViewXRot(1));
 				e.setYHeadRot(entity.getYHeadRot() + yawRotation);
-				target.addFromAnotherDimension(e);
-				entity.remove();//Remove the copy in the source dimension
+				target.addDuringTeleport(e);
+				entity.remove(Entity.RemovalReason.CHANGED_DIMENSION);//Remove the copy in the source dimension
 			}
 			e.setDeltaMovement(prevVelocity.yRot(yawRotation));
 		}

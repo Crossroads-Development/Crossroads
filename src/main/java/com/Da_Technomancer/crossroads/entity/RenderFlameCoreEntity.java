@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 
 import java.awt.*;
@@ -17,8 +17,8 @@ public class RenderFlameCoreEntity extends EntityRenderer<EntityFlameCore>{
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/entities/flame.png");
 
-	protected RenderFlameCoreEntity(EntityRenderDispatcher renderManager){
-		super(renderManager);
+	protected RenderFlameCoreEntity(EntityRendererProvider.Context context){
+		super(context);
 	}
 
 	@Override

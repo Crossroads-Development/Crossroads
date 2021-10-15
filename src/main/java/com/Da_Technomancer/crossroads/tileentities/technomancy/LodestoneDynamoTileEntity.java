@@ -7,10 +7,11 @@ import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.electric.DynamoTileEntity;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -21,7 +22,7 @@ import net.minecraftforge.registries.ObjectHolder;
 public class LodestoneDynamoTileEntity extends ModuleTE{
 
 	@ObjectHolder("lodestone_dynamo")
-	public static BlockEntityType<LodestoneDynamoTileEntity> type = null;
+	public static BlockEntityType<LodestoneDynamoTileEntity> TYPE = null;
 
 	public static final double INERTIA = DynamoTileEntity.INERTIA;
 	private static final int CHARGE_CAPACITY = 8_000;
@@ -29,7 +30,7 @@ public class LodestoneDynamoTileEntity extends ModuleTE{
 	private int fe = 0;
 
 	public LodestoneDynamoTileEntity(BlockPos pos, BlockState state){
-		super(type, pos, state);
+		super(TYPE, pos, state);
 	}
 
 	@Override
@@ -43,12 +44,12 @@ public class LodestoneDynamoTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void tick(){
-		super.tick();
+	public void serverTick(){
+		super.serverTick();
 
 		int power = CRConfig.lodestoneDynamo.get();
 		int feCost = power * CRConfig.electPerJoule.get();
-		if(!level.isClientSide && axleHandler.axis != null && power > 0 && fe >= feCost){
+		if(axleHandler.axis != null && power > 0 && fe >= feCost){
 			fe -= feCost;
 			axleHandler.addEnergy(power * RotaryUtil.getCCWSign(getBlockState().getValue(CRProperties.HORIZ_FACING)), true);
 			setChanged();
@@ -56,8 +57,8 @@ public class LodestoneDynamoTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void clearCache(){
-		super.clearCache();
+	public void setBlockState(BlockState stateIn){
+		super.setBlockState(stateIn);
 		axleOpt.invalidate();
 		axleOpt = LazyOptional.of(this::createAxleHandler);
 		feOpt.invalidate();
