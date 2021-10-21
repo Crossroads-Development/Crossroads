@@ -15,6 +15,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.ResourceLocation;
 
@@ -49,8 +50,8 @@ public class HeatingCrucibleCategory implements IRecipeCategory<CrucibleRec>{
 	}
 
 	@Override
-	public String getTitle(){
-		return CRBlocks.heatingCrucible.getName().getString();
+	public Component getTitle(){
+		return CRBlocks.heatingCrucible.getName();
 	}
 
 	@Override

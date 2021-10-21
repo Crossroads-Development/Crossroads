@@ -5,11 +5,12 @@ import com.mojang.datafixers.Products;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Registry;
+import net.minecraft.tags.SerializationTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagCollection;
-import net.minecraft.tags.SerializationTags;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTestType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.TagMatchTest;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -81,7 +82,7 @@ public class ConfigTagRuleTest extends TagMatchTest{
 
 		@Override
 		public TagCollection<Block> get(){
-			return SerializationTags.getInstance().getBlocks();
+			return SerializationTags.getInstance().getOrEmpty(Registry.BLOCK_REGISTRY);
 		}
 	}
 

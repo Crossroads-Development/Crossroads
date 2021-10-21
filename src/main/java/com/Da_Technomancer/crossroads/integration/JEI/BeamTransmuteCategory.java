@@ -12,6 +12,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -43,8 +44,8 @@ public class BeamTransmuteCategory implements IRecipeCategory<BeamTransmuteRec>{
 	}
 
 	@Override
-	public String getTitle(){
-		return "Beam Transmutation";
+	public Component getTitle(){
+		return new TranslatableComponent("crossroads.jei.beam_transmute.cat_name");
 	}
 
 	@Override

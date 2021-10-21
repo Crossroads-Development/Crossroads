@@ -7,16 +7,16 @@ import com.Da_Technomancer.crossroads.tileentities.technomancy.SequenceBoxTileEn
 import com.Da_Technomancer.essentials.Essentials;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import com.Da_Technomancer.essentials.packets.SendNBTToServer;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Predicate;
@@ -65,7 +65,7 @@ public class SequenceBoxScreen extends AbstractContainerScreen<SequenceBoxContai
 			inputBars[i].setValue(menu.inputs.size() > i ? menu.inputs.get(i) : "");
 			inputBars[i].setResponder(this::entryChanged);
 			inputBars[i].setFilter(validator);
-			children.add(inputBars[i]);
+			addWidget(inputBars[i]);
 		}
 	}
 
@@ -84,13 +84,13 @@ public class SequenceBoxScreen extends AbstractContainerScreen<SequenceBoxContai
 
 	@Override
 	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
-		RenderSystem.color4f(1, 1, 1, 1);
-		Minecraft.getInstance().getTextureManager().bind(BACKGROUND_TEXTURE);
+		RenderSystem.setShaderColor(1, 1, 1, 1);
+		RenderSystem.setShaderTexture(0, BACKGROUND_TEXTURE);
 
 		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
 		//Text bars
-		minecraft.getTextureManager().bind(SEARCH_BAR_TEXTURE);
+		RenderSystem.setShaderTexture(0, SEARCH_BAR_TEXTURE);
 		for(EditBox bar : inputBars){
 			blit(matrix, bar.x - 2, bar.y - 8, 0, 0, bar.getWidth(), 18, 144, 18);
 		}
@@ -111,7 +111,7 @@ public class SequenceBoxScreen extends AbstractContainerScreen<SequenceBoxContai
 	public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks){
 		renderBackground(matrix);
 		super.render(matrix, mouseX, mouseY, partialTicks);
-		RenderSystem.disableLighting();
+//		RenderSystem.disableLighting();
 		RenderSystem.disableBlend();
 		for(EditBox bar : inputBars){
 			bar.render(matrix, mouseX, mouseY, partialTicks);
@@ -214,7 +214,7 @@ public class SequenceBoxScreen extends AbstractContainerScreen<SequenceBoxContai
 				}
 				String barContents = inputBars[barIndex].getValue();
 				boolean hasContents = !barContents.trim().isEmpty();
-				float barValue = RedstoneUtil.interpretFormulaString(barContents);
+//				float barValue = RedstoneUtil.interpretFormulaString(barContents);
 				if(hasContents){
 					while(menu.inputs.size() <= inputIndex){
 						menu.inputs.add("");//Pad the inputs list with empty strings to reach this index

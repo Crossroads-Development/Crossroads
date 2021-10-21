@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
+import com.Da_Technomancer.crossroads.API.effects.TimeEffect;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendPlayerTickCountToClient;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
@@ -14,22 +15,21 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.technomancy.TemporalAccelerator;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.nbt.CompoundTag;
-
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.TickingBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
@@ -196,9 +196,8 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 
 								//Perform tile entity effect
 								if(actOnTe){
-									//TODO This needs to be reworked to work on non-Crossroads/Essentials tile entities
-									BlockEntity te = level.getBlockEntity(effectPos);
-									if(te instanceof ITickableTileEntity){
+									TickingBlockEntity te = TimeEffect.getTicker(level, effectPos);
+									if(te != null){
 										for(int run = 0; run < extraTicks; run++){
 											((ITickableTileEntity) te).serverTick();
 										}

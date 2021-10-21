@@ -6,19 +6,21 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.BasicBlock;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
+import java.util.*;
 
 public final class OreSetup{
 
@@ -27,9 +29,12 @@ public final class OreSetup{
 	public static BasicBlock blockTin;
 	public static BasicBlock oreTin;
 
+	@Deprecated
 	public static Item ingotCopper;
 	public static Item nuggetCopper;
+	@Deprecated
 	public static BasicBlock blockCopper;
+	@Deprecated
 	public static BasicBlock oreCopper;
 
 	public static Item ingotBronze;
@@ -81,10 +86,22 @@ public final class OreSetup{
 
 		ingotCopper = new Item(new Item.Properties().tab(CRItems.TAB_CROSSROADS)).setRegistryName("ingot_copper");
 		CRItems.toRegister.add(ingotCopper);
-		blockCopper = new BasicBlock("block_copper", CRBlocks.getMetalProperty());
+		blockCopper = new BasicBlock("block_copper", CRBlocks.getMetalProperty().randomTicks()){
+			@Override
+			public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRandom){
+				//Slowly convert to vanilla copper over time
+				pLevel.setBlockAndUpdate(pPos, Blocks.COPPER_BLOCK.defaultBlockState());
+			}
+		};
 		nuggetCopper = new Item(new Item.Properties().tab(CRItems.TAB_CROSSROADS)).setRegistryName("nugget_copper");
 		CRItems.toRegister.add(nuggetCopper);
-		oreCopper = new BasicBlock("ore_copper", CRBlocks.getRockProperty().strength(3));
+		oreCopper = new BasicBlock("ore_copper", CRBlocks.getRockProperty().strength(3)){
+			@Override
+			public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRandom){
+				//Slowly convert to vanilla copper over time
+				pLevel.setBlockAndUpdate(pPos, Blocks.COPPER_ORE.defaultBlockState());
+			}
+		};
 
 		ingotBronze = new Item(new Item.Properties().tab(CRItems.TAB_CROSSROADS)).setRegistryName("ingot_bronze");
 		CRItems.toRegister.add(ingotBronze);
@@ -95,7 +112,7 @@ public final class OreSetup{
 		gemRuby = new Item(new Item.Properties().tab(CRItems.TAB_CROSSROADS)).setRegistryName("gem_ruby");
 		CRItems.toRegister.add(gemRuby);
 		blockRuby = new BasicBlock("block_ruby", CRBlocks.getRockProperty());
-		oreRuby = new BasicBlock("ore_ruby", CRBlocks.getRockProperty().harvestLevel(2).strength(3));
+		oreRuby = new BasicBlock("ore_ruby", CRBlocks.getRockProperty().strength(3));//TODO iron tool required
 
 		ingotCopshowium = new Item(new Item.Properties().tab(CRItems.TAB_CROSSROADS)){
 			@Override
@@ -110,7 +127,7 @@ public final class OreSetup{
 
 		voidCrystal = new Item(new Item.Properties().tab(CRItems.TAB_CROSSROADS)).setRegistryName("void_crystal");
 		CRItems.toRegister.add(voidCrystal);
-		oreVoid = new BasicBlock("ore_void", CRBlocks.getRockProperty().strength(3, 9).harvestLevel(2));
+		oreVoid = new BasicBlock("ore_void", CRBlocks.getRockProperty().strength(3, 9));//TODO iron tool required
 		
 		loadConfig();
 	}

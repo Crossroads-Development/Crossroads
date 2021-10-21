@@ -18,6 +18,7 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -51,8 +52,8 @@ public class ReagInfoCategory implements IRecipeCategory<IReagent>{
 	}
 
 	@Override
-	public String getTitle(){
-		return "Reagent Info";
+	public Component getTitle(){
+		return new TranslatableComponent("crossroads.jei.reag_info.cat_name");
 	}
 
 	@Override

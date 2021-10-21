@@ -8,35 +8,32 @@ import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.util.*;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.level.Level;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Predicate;
-
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.item.Item.Properties;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
 
 public class TeslaRay extends Item{
 
@@ -135,7 +132,7 @@ public class TeslaRay extends Item{
 				Vec3 start = targets.get(i).position();
 				if(i == 0){
 					double angleOffset = 30D * (playerIn.getMainArm() == HumanoidArm.LEFT ? -1D : 1D);
-					start = start.add(-Math.sin(Math.toRadians(playerIn.yRot + angleOffset)) * 0.4F, 0.8D, Math.cos(Math.toRadians(playerIn.yRot + angleOffset)) * 0.4F);
+					start = start.add(-Math.sin(Math.toRadians(playerIn.getYRot() + angleOffset)) * 0.4F, 0.8D, Math.cos(Math.toRadians(playerIn.getYRot() + angleOffset)) * 0.4F);
 				}
 				Vec3 end = targets.get(i + 1).getEyePosition(0);
 

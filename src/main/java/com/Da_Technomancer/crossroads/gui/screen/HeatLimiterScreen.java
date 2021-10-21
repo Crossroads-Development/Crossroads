@@ -5,16 +5,16 @@ import com.Da_Technomancer.essentials.Essentials;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import com.Da_Technomancer.essentials.packets.EssentialsPackets;
 import com.Da_Technomancer.essentials.packets.SendNBTToServer;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 
 public class HeatLimiterScreen extends AbstractContainerScreen<HeatLimiterContainer>{
 
@@ -47,7 +47,7 @@ public class HeatLimiterScreen extends AbstractContainerScreen<HeatLimiterContai
 
 			return true;
 		});
-		children.add(searchBar);
+		addWidget(searchBar);
 		setInitialFocus(searchBar);
 
 		searchBar.setValue(menu.conf);
@@ -73,14 +73,14 @@ public class HeatLimiterScreen extends AbstractContainerScreen<HeatLimiterContai
 	public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks){
 		renderBackground(matrix);
 		super.render(matrix, mouseX, mouseY, partialTicks);
-		RenderSystem.disableLighting();
+//		RenderSystem.disableLighting();
 		RenderSystem.disableBlend();
 		searchBar.render(matrix, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
 	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
-		minecraft.getTextureManager().bind(SEARCH_BAR_TEXTURE);
+		RenderSystem.setShaderTexture(0, SEARCH_BAR_TEXTURE);
 		blit(matrix, leftPos, topPos, 0, 0, imageWidth, 18, imageWidth, 18);
 	}
 

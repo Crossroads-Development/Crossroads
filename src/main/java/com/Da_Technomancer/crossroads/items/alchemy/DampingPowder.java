@@ -46,7 +46,7 @@ public class DampingPowder extends Item{
 			stack.shrink(1);
 			List<Entity> ents = source.getLevel().getEntities((Entity) null, new AABB(source.getPos()).inflate(RANGE), FLAME_PREDICATE);
 			for(Entity ent : ents){
-				ent.remove();
+				ent.remove(Entity.RemovalReason.KILLED);
 			}
 			if(!ents.isEmpty()){
 				source.getLevel().playSound(null, source.getPos(), SoundEvents.TOTEM_USE, SoundSource.BLOCKS, 1, 0);
@@ -82,7 +82,7 @@ public class DampingPowder extends Item{
 		held.shrink(1);
 		List<Entity> ents = worldIn.getEntities(playerIn, new AABB(playerIn.getX(), playerIn.getY(), playerIn.getZ(), playerIn.getX() + 1, playerIn.getY() + 1, playerIn.getZ() + 1).inflate(RANGE), FLAME_PREDICATE);
 		for(Entity ent : ents){
-			ent.remove();
+			ent.remove(Entity.RemovalReason.KILLED);
 		}
 		Vec3 partPos = playerIn.getEyePosition(1).add(playerIn.getLookAngle().scale(0.5));
 		worldIn.addParticle(ParticleTypes.END_ROD, partPos.x, partPos.y, partPos.z, 0, 0, 0);

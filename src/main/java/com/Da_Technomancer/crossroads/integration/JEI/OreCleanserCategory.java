@@ -16,8 +16,9 @@ import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 public class OreCleanserCategory implements IRecipeCategory<OreCleanserRec>{
@@ -50,8 +51,8 @@ public class OreCleanserCategory implements IRecipeCategory<OreCleanserRec>{
 	}
 
 	@Override
-	public String getTitle(){
-		return CRBlocks.oreCleanser.getName().getString();
+	public Component getTitle(){
+		return CRBlocks.oreCleanser.getName();
 	}
 
 	@Override

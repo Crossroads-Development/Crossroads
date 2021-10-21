@@ -137,7 +137,7 @@ public class GeneticSpawnEgg extends Item{
 				if(!spawnMob(itemstack, player, (ServerLevel) world, blockpos, MobSpawnType.SPAWN_EGG, false, false)){
 					return InteractionResultHolder.pass(itemstack);
 				}else{
-					if(!player.abilities.instabuild){
+					if(!player.getAbilities().instabuild){
 						itemstack.shrink(1);
 					}
 

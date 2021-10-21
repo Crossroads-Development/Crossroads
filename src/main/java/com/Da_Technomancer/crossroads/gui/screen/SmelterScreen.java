@@ -21,8 +21,8 @@ public class SmelterScreen extends MachineGUI<SmelterContainer, SmelterTileEntit
 
 	@Override
 	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
-		RenderSystem.color4f(1, 1, 1, 1);
-		Minecraft.getInstance().getTextureManager().bind(GUI_TEXTURES);
+		RenderSystem.setShaderColor(1, 1, 1, 1);
+		RenderSystem.setShaderTexture(0, GUI_TEXTURES);
 
 		blit(matrix, (this.width - this.imageWidth) / 2, (this.height - this.imageHeight) / 2, 0, 0, imageWidth, imageHeight);
 

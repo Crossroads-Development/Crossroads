@@ -4,11 +4,11 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
+import com.Da_Technomancer.crossroads.API.effects.TimeEffect;
 import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -16,8 +16,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.TickingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
@@ -25,8 +25,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @ObjectHolder(Crossroads.MODID)
 public class ChunkAcceleratorTileEntity extends IFluxLink.FluxHelper{
@@ -101,11 +100,10 @@ public class ChunkAcceleratorTileEntity extends IFluxLink.FluxHelper{
 			if(extraTicks > 0 && CRConfig.teTimeAccel.get() && !isShutDown()){
 				ChunkPos chunkPos = new ChunkPos(worldPosition);
 				//List of every tile entity in the chunk which is tickable
-				List<BlockEntity> tickables = level.tickableBlockEntities.stream().filter(te -> te instanceof ITickableTileEntity && te.getBlockPos().getX() >> 4 == chunkPos.x && te.getBlockPos().getZ() >> 4 == chunkPos.z).collect(Collectors.toList());
-				for(BlockEntity te : tickables){
-					ITickableTileEntity tte = (ITickableTileEntity) te;
+				Map<BlockPos, ? extends TickingBlockEntity> tickables = TimeEffect.getChunkTickers(level, chunkPos);
+				for(TickingBlockEntity te : tickables.values()){
 					for(int run = 0; run < extraTicks; run++){
-						tte.tick();
+						te.tick();
 					}
 				}
 			}

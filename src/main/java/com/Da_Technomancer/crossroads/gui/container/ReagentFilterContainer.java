@@ -8,8 +8,6 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.registries.ObjectHolder;
 
-import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.StrictSlot;
-
 @ObjectHolder(Crossroads.MODID)
 public class ReagentFilterContainer extends TileEntityContainer<ReagentFilterTileEntity>{
 

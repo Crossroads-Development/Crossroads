@@ -11,8 +11,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.registries.ObjectHolder;
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.StrictSlot;
-
 @ObjectHolder(Crossroads.MODID)
 public class FatCongealerContainer extends MachineContainer<FatCongealerTileEntity>{
 

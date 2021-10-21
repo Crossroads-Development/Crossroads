@@ -21,8 +21,8 @@ public class StasisStorageScreen extends MachineGUI<StasisStorageContainer, Stas
 
 	@Override
 	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
-		RenderSystem.color4f(1, 1, 1, 1);
-		Minecraft.getInstance().getTextureManager().bind(GUI_TEXTURES);
+		RenderSystem.setShaderColor(1, 1, 1, 1);
+		RenderSystem.setShaderTexture(0, GUI_TEXTURES);
 		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 	}
 }

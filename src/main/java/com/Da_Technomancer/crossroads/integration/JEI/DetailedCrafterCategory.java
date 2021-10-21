@@ -13,6 +13,7 @@ import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.ResourceLocation;
 
@@ -49,8 +50,8 @@ public class DetailedCrafterCategory implements IRecipeCategory<DetailedCrafterR
 	}
 
 	@Override
-	public String getTitle(){
-		return CRBlocks.detailedCrafter.getName().getString();
+	public Component getTitle(){
+		return CRBlocks.detailedCrafter.getName();
 	}
 
 	@Override

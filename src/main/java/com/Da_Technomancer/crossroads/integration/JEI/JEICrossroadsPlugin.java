@@ -16,15 +16,16 @@ import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
+import mezz.jei.api.ingredients.subtypes.IIngredientSubtypeInterpreter;
+import mezz.jei.api.ingredients.subtypes.UidContext;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
 import mezz.jei.api.registration.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeType;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -143,9 +144,9 @@ public class JEICrossroadsPlugin implements IModPlugin{
 	public void registerItemSubtypes(ISubtypeRegistration registration){
 		//Register item types with a finite number of variants based on NBT
 
-		final ISubtypeInterpreter oreProfileInterpreter = (ItemStack stack) -> {
+		final IIngredientSubtypeInterpreter<ItemStack> oreProfileInterpreter = (ItemStack stack, UidContext context) -> {
 			OreSetup.OreProfile mat = OreProfileItem.getProfile(stack);
-			return mat == null ? ISubtypeInterpreter.NONE : mat.getName();
+			return mat == null ? IIngredientSubtypeInterpreter.NONE : mat.getName();
 		};
 
 		registration.registerSubtypeInterpreter(CRItems.oreClump, oreProfileInterpreter);

@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.API.technomancy;
 import com.Da_Technomancer.crossroads.API.effects.goggles.*;
 import com.Da_Technomancer.crossroads.Keys;
 import com.Da_Technomancer.crossroads.crafting.CRItemTags;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.Tag;
 import net.minecraft.world.entity.player.Player;
@@ -56,15 +55,11 @@ public enum EnumGoggleLenses{
 
 	@Nullable
 	@OnlyIn(Dist.CLIENT)
-	public KeyMapping getKey(){
+	public IForgeKeyMapping getKey(){
 		if(key == null){
 			return null;
 		}
-		IForgeKeyMapping keybinding = key.get();
-		if(keybinding instanceof KeyMapping key){
-			return key;
-		}
-		return null;
+		return key.get();
 	}
 
 	public boolean useKey(){

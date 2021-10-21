@@ -3,19 +3,14 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
 import mezz.jei.api.ingredients.IIngredientRenderer;
-import net.minecraft.client.Minecraft;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.TooltipFlag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,22 +30,22 @@ public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 		int[] col = CRRenderUtil.convertColor(ingredient.getReag().getColor(EnumMatterPhase.SOLID));
 
 		RenderSystem.enableBlend();
-		RenderSystem.enableAlphaTest();
+//		RenderSystem.enableAlphaTest();
 		matrix.pushPose();
 		matrix.translate(xPosition, yPosition, 0);
 
 		BufferBuilder buf = Tesselator.getInstance().getBuilder();
 
-		Minecraft.getInstance().textureManager.bind(PHIAL_TEXTURE);
-		buf.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+		RenderSystem.setShaderTexture(0, PHIAL_TEXTURE);
+		buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
 		buf.vertex(matrix.last().pose(), 0, 16, 100).color(255, 255, 255, 255).uv(0, 1).endVertex();
 		buf.vertex(matrix.last().pose(), 16, 16, 100).color(255, 255, 255, 255).uv(1, 1).endVertex();
 		buf.vertex(matrix.last().pose(), 16, 0, 100).color(255, 255, 255, 255).uv(1, 0).endVertex();
 		buf.vertex(matrix.last().pose(), 0, 0, 100).color(255, 255, 255, 255).uv(0, 0).endVertex();
 		Tesselator.getInstance().end();
 
-		Minecraft.getInstance().textureManager.bind(INNER_TEXTURE);
-		buf.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+		RenderSystem.setShaderTexture(0, INNER_TEXTURE);
+		buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
 		buf.vertex(matrix.last().pose(), 0, 16, 200).color(col[0], col[1], col[2], col[3]).uv(0, 1).endVertex();
 		buf.vertex(matrix.last().pose(), 16, 16, 200).color(col[0], col[1], col[2], col[3]).uv(1, 1).endVertex();
 		buf.vertex(matrix.last().pose(), 16, 0, 200).color(col[0], col[1], col[2], col[3]).uv(1, 0).endVertex();
@@ -60,7 +55,7 @@ public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 		matrix.popPose();
 
 //		RenderHelper.disableStandardItemLighting();
-		RenderSystem.disableAlphaTest();
+//		RenderSystem.disableAlphaTest();
 		RenderSystem.disableBlend();
 	}
 	

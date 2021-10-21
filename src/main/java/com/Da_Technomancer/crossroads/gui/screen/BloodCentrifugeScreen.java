@@ -22,8 +22,8 @@ public class BloodCentrifugeScreen extends MachineGUI<BloodCentrifugeContainer, 
 
 	@Override
 	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
-		RenderSystem.color4f(1, 1, 1, 1);
-		Minecraft.getInstance().getTextureManager().bind(BACKGROUND);
+		RenderSystem.setShaderColor(1, 1, 1, 1);
+		RenderSystem.setShaderTexture(0, BACKGROUND);
 		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
 		blit(matrix, leftPos + 50, topPos + 48, 176, 0, Math.min(66, menu.progRef.get() * 66 / BloodCentrifugeTileEntity.REQUIRED), 9);

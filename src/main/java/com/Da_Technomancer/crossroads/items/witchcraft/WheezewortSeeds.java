@@ -26,7 +26,7 @@ public class WheezewortSeeds extends ItemNameBlockItem{
 				BlockPos plantPos = source.getPos().relative(dispenserState.getValue(DispenserBlock.FACING));
 				BlockPos groundPos = plantPos.below();
 				Level world = source.getLevel();
-				if(world.getBlockState(plantPos).canBeReplacedByLeaves(world, plantPos) && CRBlocks.wheezewort.canSustainPlant(world.getBlockState(groundPos), world, groundPos, Direction.UP, CRBlocks.wheezewort)){
+				if(world.getBlockState(plantPos).isAir() && CRBlocks.wheezewort.canSustainPlant(world.getBlockState(groundPos), world, groundPos, Direction.UP, CRBlocks.wheezewort)){
 					world.setBlockAndUpdate(plantPos, CRBlocks.wheezewort.defaultBlockState());
 					stack.shrink(1);
 					return stack;

@@ -6,27 +6,25 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.DetailedCrafterRec;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.inventory.ResultContainer;
-import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.Container;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.ResultSlot;
-import net.minecraft.world.inventory.RecipeBookMenu;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.item.crafting.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
-import net.minecraft.tags.Tag;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.core.NonNullList;
-import net.minecraft.sounds.SoundSource;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.inventory.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -37,12 +35,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static net.minecraftforge.common.ForgeHooks.setCraftingPlayer;
-
-import net.minecraft.world.entity.player.StackedContents;
-import net.minecraft.world.inventory.RecipeBookType;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeType;
 
 @ObjectHolder(Crossroads.MODID)
 public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
@@ -131,7 +123,7 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 	@Override
 	public void removed(Player playerIn){
 		super.removed(playerIn);
-		clearContainer(playerIn, world, inInv);
+		clearContainer(playerIn, inInv);
 	}
 
 	@Override
@@ -179,9 +171,9 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 				return ItemStack.EMPTY;
 			}
 
-			ItemStack itemstack2 = slot.onTake(playerIn, itemstack1);
+			slot.onTake(playerIn, itemstack1);
 			if(index == 0){
-				playerIn.drop(itemstack2, false);
+				playerIn.drop(itemstack1, false);
 			}
 		}
 
@@ -221,6 +213,11 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 	@Override
 	public RecipeBookType getRecipeBookType(){
 		return RecipeBookType.CRAFTING;
+	}
+
+	@Override
+	public boolean shouldMoveToInventory(int slotIndex){
+		return slotIndex != getResultSlotIndex();
 	}
 
 	/**
@@ -266,7 +263,7 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 				}
 			}
 			outInv.setItem(0, itemstack);
-			serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(containerId, 0, itemstack));
+			serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(containerId, incrementStateId(), 0, itemstack));
 		}
 	}
 
@@ -299,7 +296,7 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 		}
 
 		@Override
-		public ItemStack onTake(Player thePlayer, ItemStack stack){
+		public void onTake(Player thePlayer, ItemStack stack){
 			checkTakeAchievements(stack);
 			setCraftingPlayer(thePlayer);
 			List<DetailedCrafterRec> recipes = thePlayer.level.getRecipeManager().getRecipesFor(CRRecipes.DETAILED_TYPE, craftMatrix, thePlayer.level);
@@ -322,14 +319,14 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 						}else if(BlockUtil.sameItem(invStack, remainStack)){
 							invStack.grow(remainStack.getCount());//Try stacking it into the crafting slot
 							craftMatrix.setItem(i, invStack);
-						}else if(!thePlayer.inventory.add(remainStack)){//Try returning it to the player inventory
+						}else if(!thePlayer.getInventory().add(remainStack)){//Try returning it to the player inventory
 							thePlayer.drop(remainStack, false);//Drop it as an item into the world
 						}
 					}
 				}
 			}
 
-			return stack;
+//			return stack;
 		}
 	}
 }

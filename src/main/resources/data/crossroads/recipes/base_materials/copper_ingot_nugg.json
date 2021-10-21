@@ -1,7 +1,7 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"result": {
-		"item": "crossroads:ingot_copper",
+		"item": "minecraft:copper_ingot",
 		"count": 1
 	},
 	"pattern": [

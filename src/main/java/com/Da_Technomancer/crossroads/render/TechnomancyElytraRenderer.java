@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.render;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.CRItems;
+import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.client.model.EntityModel;
@@ -13,8 +14,8 @@ public class TechnomancyElytraRenderer<T extends LivingEntity, M extends EntityM
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/entities/techno_elytra.png");
 
-	public TechnomancyElytraRenderer(RenderLayerParent<T, M> rendererIn){
-		super(rendererIn);
+	public TechnomancyElytraRenderer(RenderLayerParent<T, M> rendererIn, EntityModelSet modelSet){
+		super(rendererIn, modelSet);
 	}
 
 	@Override

@@ -15,38 +15,33 @@ import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.crossroads.items.technomancy.TechnomancyArmor;
 import com.Da_Technomancer.crossroads.world.CRWorldGen;
 import com.Da_Technomancer.essentials.ReflectionUtil;
-import net.minecraft.world.entity.MobType;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.LightningBolt;
-import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.trading.Merchant;
-import net.minecraft.world.entity.npc.AbstractVillager;
-import net.minecraft.world.entity.monster.Creeper;
-import net.minecraft.world.entity.animal.horse.SkeletonHorse;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.Containers;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ChunkHolder;
+import net.minecraft.server.level.ServerChunkCache;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Containers;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.animal.horse.SkeletonHorse;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.trading.Merchant;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.server.level.ChunkHolder;
-import net.minecraft.server.level.ServerChunkCache;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.*;
@@ -57,6 +52,7 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -72,8 +68,7 @@ public final class EventHandlerCommon{
 	@SubscribeEvent
 	@SuppressWarnings({"unused", "unchecked"})
 	public void onEntitySpawn(LivingSpawnEvent.CheckSpawn e){
-		if(entityList != null && e.getWorld() instanceof ServerLevel){
-			ServerLevel world = (ServerLevel) e.getWorld();
+		if(entityList != null && e.getWorld() instanceof ServerLevel world){
 			world.getProfiler().push(Crossroads.MODNAME + ": Ghost marker spawn prevention");
 			Map<UUID, Entity> entities;
 			try{
@@ -84,8 +79,7 @@ public final class EventHandlerCommon{
 				return;
 			}
 			for(Entity ent : entities.values()){
-				if(ent instanceof EntityGhostMarker){
-					EntityGhostMarker mark = (EntityGhostMarker) ent;
+				if(ent instanceof EntityGhostMarker mark){
 					if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.BLOCK_SPAWNING && mark.data != null && mark.position().subtract(e.getEntity().position()).length() <= mark.data.getInt("range")){
 						e.setResult(Event.Result.DENY);
 						world.getProfiler().pop();
@@ -272,18 +266,17 @@ public final class EventHandlerCommon{
 				return;
 			}
 
-			if(ent instanceof Player){
+			if(ent instanceof Player player){
 				//Players who take damage with certain tag-defined items in their inventory explode
-				Player player = (Player) ent;
 				boolean foundExplosion = false;
-				if(player.inventory.offhand.get(0).getItem().is(CRItemTags.EXPLODE_IF_KNOCKED)){
-					player.inventory.offhand.set(0, ItemStack.EMPTY);
+				if(CRItemTags.EXPLODE_IF_KNOCKED.contains(player.getInventory().offhand.get(0).getItem())){
+					player.getInventory().offhand.set(0, ItemStack.EMPTY);
 					foundExplosion = true;
 				}
 
-				for(int i = 0; i < player.inventory.items.size(); i++){
-					if(player.inventory.items.get(i).getItem().is(CRItemTags.EXPLODE_IF_KNOCKED)){
-						player.inventory.items.set(i, ItemStack.EMPTY);
+				for(int i = 0; i < player.getInventory().items.size(); i++){
+					if(CRItemTags.EXPLODE_IF_KNOCKED.contains(player.getInventory().items.get(i).getItem())){
+						player.getInventory().items.set(i, ItemStack.EMPTY);
 						foundExplosion = true;
 					}
 				}
@@ -311,11 +304,10 @@ public final class EventHandlerCommon{
 	@SubscribeEvent
 	@SuppressWarnings("unused")
 	public void modifyExplosion(ExplosionEvent.Start e){
-		if(entityList == null || !(e.getWorld() instanceof ServerLevel)){
+		if(entityList == null || !(e.getWorld() instanceof ServerLevel world)){
 			return;
 		}
 
-		ServerLevel world = (ServerLevel) e.getWorld();
 		world.getProfiler().push(Crossroads.MODNAME + ": Explosion modification");
 		Map<UUID, Entity> entities;
 		try{
@@ -327,8 +319,7 @@ public final class EventHandlerCommon{
 		}
 		boolean perpetuate = false;
 		for(Entity ent : entities.values()){
-			if(ent instanceof EntityGhostMarker){
-				EntityGhostMarker mark = (EntityGhostMarker) ent;
+			if(ent instanceof EntityGhostMarker mark){
 				if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.EQUILIBRIUM && mark.data != null && mark.position().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInt("range")){
 					e.setCanceled(true);//Equilibrium beams cancel explosions
 					world.getProfiler().pop();
@@ -358,7 +349,7 @@ public final class EventHandlerCommon{
 
 	@SubscribeEvent
 	@SuppressWarnings("unused")
-	public void rebuildConfigData(ModConfig.Reloading e){
+	public void rebuildConfigData(ModConfigEvent.Reloading e){
 		if(e.getConfig().getModId().equals(Crossroads.MODID) && e.getConfig().getType() == ModConfig.Type.SERVER){
 			GearFactory.init();
 			OreSetup.loadConfig();
@@ -376,17 +367,16 @@ public final class EventHandlerCommon{
 	public void savePlayerHotbar(LivingDeathEvent e){
 		try{
 			LivingEntity ent = e.getEntityLiving();
-			if(ent instanceof Player && !ent.getCommandSenderWorld().isClientSide && ent.getItemBySlot(EquipmentSlot.LEGS).getItem() == CRItems.armorToolbelt && !ent.getCommandSenderWorld().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)){
-				Player player = (Player) ent;
+			if(ent instanceof Player player && !ent.getCommandSenderWorld().isClientSide && ent.getItemBySlot(EquipmentSlot.LEGS).getItem() == CRItems.armorToolbelt && !ent.getCommandSenderWorld().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)){
 				ItemStack[] savedInv = new ItemStack[10];
 				//Hotbar
 				for(int i = 0; i < 9; i++){
-					savedInv[i] = player.inventory.items.get(i);
-					player.inventory.items.set(i, ItemStack.EMPTY);
+					savedInv[i] = player.getInventory().items.get(i);
+					player.getInventory().items.set(i, ItemStack.EMPTY);
 				}
 				//Offhand
-				savedInv[9] = player.inventory.offhand.get(0);
-				player.inventory.offhand.set(0, ItemStack.EMPTY);
+				savedInv[9] = player.getInventory().offhand.get(0);
+				player.getInventory().offhand.set(0, ItemStack.EMPTY);
 
 				ServerLevel world = (ServerLevel) player.getCommandSenderWorld();
 				HashMap<UUID, ItemStack[]> savedMap = RespawnInventorySavedData.getMap(world);
@@ -425,13 +415,13 @@ public final class EventHandlerCommon{
 					//For each item, try to return it to the original slot, or add it generically otherwise
 					//Hotbar
 					for(int i = 0; i < 9; i++){
-						player.inventory.add(i, savedItems[i]);
+						player.getInventory().add(i, savedItems[i]);
 					}
 
 					//Offhand
 					if(!savedItems[9].isEmpty()){
-						if(player.inventory.offhand.get(0).isEmpty()){
-							player.inventory.offhand.set(0, savedItems[9]);
+						if(player.getInventory().offhand.get(0).isEmpty()){
+							player.getInventory().offhand.set(0, savedItems[9]);
 						}else{
 							player.drop(savedItems[9], false);
 						}

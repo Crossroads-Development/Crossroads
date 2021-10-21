@@ -52,7 +52,7 @@ public class EntityNitro extends ThrowableProjectile implements ItemSupplier{
 			level.playSound(null, getX(), getY(), getZ(), SoundEvents.GLASS_BREAK, SoundSource.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
 			level.playSound(null, getX(), getY(), getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.NEUTRAL, 1F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
 			level.broadcastEntityEvent(this, (byte) 3);
-			remove();
+			remove(RemovalReason.KILLED);
 		}
 	}
 

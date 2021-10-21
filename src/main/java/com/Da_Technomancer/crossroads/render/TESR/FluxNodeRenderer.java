@@ -62,7 +62,7 @@ public class FluxNodeRenderer extends EntropyRenderer<FluxNodeTileEntity>{
 //		Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE_COP);
 		matrix.scale(7F / 8F * 5F / 7F, 7F / 8F * 5F / 7F, 7F / 8F * 5F / 7F);
 //		GlStateManager.scalef(7F / 8F * 5F / 7F, 7F / 8F * 5F / 7F, 7F / 8F * 5F / 7F);
-//		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+//		buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormats.POSITION_TEX);
 
 		//Copshowium cube
 
@@ -136,7 +136,7 @@ public class FluxNodeRenderer extends EntropyRenderer<FluxNodeTileEntity>{
 		float edgeEnd = 16;
 		float innerTex = 2F;
 
-//		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+//		buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormats.POSITION_TEX);
 
 		builder.vertex(matrix.last().pose(), outer, outer, edge).color(255, 255, 255, 255).uv(sprite.getU(texWidth), sprite.getV(0)).uv2(light).normal(matrix.last().normal(), 0, 0, 1).endVertex();
 		builder.vertex(matrix.last().pose(), -outer, outer, edge).color(255, 255, 255, 255).uv(sprite.getU(0), sprite.getV(0)).uv2(light).normal(matrix.last().normal(), 0, 0, 1).endVertex();

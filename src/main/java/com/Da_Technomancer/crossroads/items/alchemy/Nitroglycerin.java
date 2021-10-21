@@ -3,32 +3,29 @@ package com.Da_Technomancer.crossroads.items.alchemy;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.entity.EntityNitro;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.world.level.block.DispenserBlock;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.BlockSource;
+import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.util.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-
-import javax.annotation.Nullable;
-import java.util.List;
-
-import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.item.Item.Properties;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class Nitroglycerin extends Item{
 
@@ -64,12 +61,12 @@ public class Nitroglycerin extends Item{
 			held.shrink(1);
 		}
 
-		worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+		worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (worldIn.random.nextFloat() * 0.4F + 0.8F));
 
 		if(!worldIn.isClientSide){
 			EntityNitro nitroEntity = new EntityNitro(worldIn, playerIn);
 			//MCP note: Use the method in SnowballItem::onItemRightClick; it is NOT ProjectileEntity::shoot (currently)
-			nitroEntity.shootFromRotation(playerIn, playerIn.xRot, playerIn.yRot, 0F, 1.5F, 1.0F);
+			nitroEntity.shootFromRotation(playerIn, playerIn.getXRot(), playerIn.getYRot(), 0F, 1.5F, 1.0F);
 			worldIn.addFreshEntity(nitroEntity);
 		}
 		return new InteractionResultHolder<>(InteractionResult.SUCCESS, held);

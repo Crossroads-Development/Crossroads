@@ -1,17 +1,15 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-
-import net.minecraft.world.item.Item.Properties;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
 public class PhilStone extends Item{
 
@@ -37,7 +35,7 @@ public class PhilStone extends Item{
 	private static void clearBlock(Level world, BlockPos pos){
 		BlockState state = world.getBlockState(pos);
 		//Able to break any non-indestructible block, and also bedrock
-		if(!state.getBlock().isAir() && (state.getDestroySpeed(world, pos) >= 0 || state.getBlock() == Blocks.BEDROCK)){
+		if(!state.isAir() && (state.getDestroySpeed(world, pos) >= 0 || state.getBlock() == Blocks.BEDROCK)){
 			world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 			world.addParticle(ParticleTypes.SMOKE, pos.getX() + world.random.nextDouble(), pos.getY() + world.random.nextDouble(), pos.getZ() + world.random.nextDouble(), 0, 0, 0);
 		}

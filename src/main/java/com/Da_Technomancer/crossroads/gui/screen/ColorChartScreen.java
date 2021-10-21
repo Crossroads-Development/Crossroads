@@ -4,17 +4,16 @@ import com.Da_Technomancer.crossroads.API.AdvancementTracker;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.ColorChartContainer;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.Minecraft;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -58,7 +57,7 @@ public class ColorChartScreen extends AbstractContainerScreen<ColorChartContaine
 			}
 			return true;
 		});
-		children.add(searchBar);
+		addWidget(searchBar);
 		setInitialFocus(searchBar);
 	}
 
@@ -76,7 +75,7 @@ public class ColorChartScreen extends AbstractContainerScreen<ColorChartContaine
 			Color col = getColor(mouseX - leftPos, mouseY - topPos);
 			EnumBeamAlignments elem = EnumBeamAlignments.getAlignment(col);
 			ArrayList<Component> tooltip = new ArrayList<>(2);
-			if(elem.isDiscovered(inventory.player)){
+			if(elem.isDiscovered(minecraft.player)){
 				tooltip.add(new TextComponent(elem.getLocalName(false)));
 			}else{
 				tooltip.add(new TextComponent("???"));
@@ -84,25 +83,23 @@ public class ColorChartScreen extends AbstractContainerScreen<ColorChartContaine
 			tooltip.add(new TextComponent("R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue()));
 			renderComponentTooltip(matrix, tooltip, mouseX, mouseY);//MCP note: renderTooltip
 		}
-
-		searchBar.render(matrix, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
 	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
-		RenderSystem.color4f(1, 1, 1, 1);
-		Minecraft.getInstance().getTextureManager().bind(BACKGROUND);
+		RenderSystem.setShaderColor(1, 1, 1, 1);
+		RenderSystem.setShaderTexture(0, BACKGROUND);
 		int i = leftPos;
 		int j = topPos;
 		blit(matrix, i, j, 300, 0, imageWidth, imageHeight, 1200, 1200);
 
 		String search = searchBar.getValue().toUpperCase();
 
-		Minecraft.getInstance().getTextureManager().bind(BACKGROUND);
+		RenderSystem.setShaderTexture(0, BACKGROUND);
 //		final int spotLength = RESOLUTIONS[CRConfig.colorChartResolution.get() - 1];
 
 		for(EnumBeamAlignments elem : EnumBeamAlignments.values()){
-			if(elem.isDiscovered(inventory.player) && (search.isEmpty() || elem.getLocalName(false).toLowerCase(Locale.US).startsWith(search.toLowerCase(Locale.US)))){
+			if(elem.isDiscovered(minecraft.player) && (search.isEmpty() || elem.getLocalName(false).toLowerCase(Locale.US).startsWith(search.toLowerCase(Locale.US)))){
 				//Render the colored overlay that alignment over the B&W base
 				int imageIndex = elem.ordinal() + 2;
 				blit(matrix, leftPos, topPos, imageWidth * (imageIndex % 4), imageWidth * (int) (imageIndex / 4), imageWidth, imageHeight, 1200, 1200);
@@ -126,7 +123,7 @@ public class ColorChartScreen extends AbstractContainerScreen<ColorChartContaine
 
 	@Override
 	public boolean charTyped(char key, int keyCode){
-		for(GuiEventListener gui : children){
+		for(GuiEventListener gui : children()){
 			if(gui.charTyped(key, keyCode)){
 				return true;
 			}

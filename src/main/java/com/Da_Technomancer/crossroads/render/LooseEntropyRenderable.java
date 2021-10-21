@@ -13,6 +13,10 @@ import net.minecraft.world.level.Level;
 
 import java.util.Random;
 
+/**
+ * @deprecated Due to the main usecase being blocks, and it generally being inefficient for blocks to send packets to render entropy from the server instead of handling rendering on the client
+ * Use EntropyRenderer::renderArc from the client side instead
+ */
 @Deprecated
 public class LooseEntropyRenderable implements IVisualEffect{
 

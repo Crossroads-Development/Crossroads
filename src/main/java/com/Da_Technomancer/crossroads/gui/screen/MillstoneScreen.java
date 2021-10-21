@@ -21,8 +21,8 @@ public class MillstoneScreen extends MachineGUI<MillstoneContainer, MillstoneTil
 
 	@Override
 	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
-		RenderSystem.color4f(1, 1, 1, 1);
-		Minecraft.getInstance().getTextureManager().bind(BACKGROUND);
+		RenderSystem.setShaderColor(1, 1, 1, 1);
+		RenderSystem.setShaderTexture(0, BACKGROUND);
 		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 		blit(matrix, leftPos + 66, topPos + 35, 176, 0, 44, (int) Math.ceil(menu.progRef.get() * 17 / MillstoneTileEntity.REQUIRED));
 	}

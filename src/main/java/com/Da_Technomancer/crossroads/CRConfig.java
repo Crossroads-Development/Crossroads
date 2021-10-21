@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 public class CRConfig{
 
-	public static ForgeConfigSpec.BooleanValue genCopperOre;
+//	public static ForgeConfigSpec.BooleanValue genCopperOre;
 	public static ForgeConfigSpec.BooleanValue genTinOre;
 	public static ForgeConfigSpec.BooleanValue genRubyOre;
 	public static ForgeConfigSpec.BooleanValue genVoidOre;
@@ -156,7 +156,7 @@ public class CRConfig{
 		beamRaytraceStep = serverBuilder.comment("The size of the raytracing interval used by the beam staff and beam cannon", "Larger numbers cause less lag when using those devices, but are less precise").defineInRange("beam_raytrace_step", 0.25F, 0.1F, 1F);
 		serverBuilder.pop();
 		serverBuilder.push(CAT_ORES);
-		genCopperOre = serverBuilder.comment("Generate Copper Ore?").define("copper", true);
+//		genCopperOre = serverBuilder.comment("Generate Copper Ore?").define("copper", true);
 		genTinOre = serverBuilder.comment("Generate Tin Ore?").define("tin", true);
 		genRubyOre = serverBuilder.comment("Generate Ruby Ore?").define("ruby", true);
 		genVoidOre = serverBuilder.comment("Generate Void Crystal Ore?").define("void", true);

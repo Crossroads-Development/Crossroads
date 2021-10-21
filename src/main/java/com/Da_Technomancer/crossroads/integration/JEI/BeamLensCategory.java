@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.recipes.BeamLensRec;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -14,10 +15,10 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
-import com.mojang.math.Vector3f;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 public class BeamLensCategory implements IRecipeCategory<BeamLensRec>{
 
@@ -46,8 +47,8 @@ public class BeamLensCategory implements IRecipeCategory<BeamLensRec>{
 	}
 
 	@Override
-	public String getTitle(){
-		return "Lens Frame Interaction";
+	public Component getTitle(){
+		return new TranslatableComponent("crossroads.jei.beam_lens.cat_name");
 	}
 
 	@Override

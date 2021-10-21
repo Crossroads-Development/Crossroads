@@ -8,12 +8,15 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.chunk.ChunkBiomeContainer;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.chunk.LevelChunk;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 public enum CRReflection implements ReflectionUtil.IReflectionKey{
+
+	//TODO review
 
 	SET_CHAT(CRReflection::getChatClass, "func_238493_a_", "addMessage", "Update the chat log without spamming it"),
 	CURE_ZOMBIE(ZombieVillager.class, "func_191991_a", "startConverting", "Cure zombie villagers with SO2"),
@@ -26,7 +29,8 @@ public enum CRReflection implements ReflectionUtil.IReflectionKey{
 	LIGHTNING_POS(ServerLevel.class, "func_175736_a", "findLightingTargetAround", "Target lightning at high atmospheric charge"),
 	SPAWN_RADIUS(ChunkMap.class, "func_219243_d", "noPlayersCloseForSpawning", "Spawn lightning at high atmospheric charge"),
 	BIOME_ARRAY(ChunkBiomeContainer.class, "field_227054_f_", "biomes", "Terraforming alchemy reagents changing the biome"),
-	OFFSPRING_SPAWN_EGG(Mob.class, "func_213406_a", "onOffspringSpawnedFromEgg", "Imprinting on cloned foxes");
+	OFFSPRING_SPAWN_EGG(Mob.class, "func_213406_a", "onOffspringSpawnedFromEgg", "Imprinting on cloned foxes"),
+	CHUNK_TICKER_MAP(LevelChunk.class, "f_156362_", "tickersInLevel", "Tick accelerating tile entities");
 
 
 	private Class<?> clazz;

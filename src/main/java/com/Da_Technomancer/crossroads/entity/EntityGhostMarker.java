@@ -4,22 +4,22 @@ import com.Da_Technomancer.crossroads.API.beams.BeamUtil;
 import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -66,7 +66,7 @@ public class EntityGhostMarker extends Entity{
 			return EnumMarkerType.valueOf(typeName);
 		}catch(IllegalArgumentException e){
 			Crossroads.logger.warn("Missing ghost marker type: " + typeName);
-			remove();
+			remove(RemovalReason.DISCARDED);
 			return EnumMarkerType.NONE;
 		}
 	}
@@ -117,7 +117,7 @@ public class EntityGhostMarker extends Entity{
 					if(markType.expireEffect != null){
 						markType.expireEffect.accept(this);
 					}
-					remove();
+					remove(RemovalReason.DISCARDED);
 				}
 			}else if(markType.particleSupplier != null && time % 2 == 0){
 				//Client side, particles

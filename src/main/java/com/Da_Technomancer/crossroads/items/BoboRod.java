@@ -4,38 +4,36 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.BoboRec;
-import net.minecraft.world.level.block.DispenserBlock;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.Containers;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.tags.Tag;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
-
-import net.minecraft.world.item.Item.Properties;
 
 public class BoboRod extends Item{
 
@@ -84,7 +82,7 @@ public class BoboRod extends Item{
 			if(hasOffering){
 				Optional<BoboRec> rec = world.getRecipeManager().getRecipeFor(CRRecipes.BOBO_TYPE, inv, world);
 				if(rec.isPresent()){
-					items.forEach(Entity::remove);
+					items.forEach(Entity::kill);
 					Containers.dropItemStack(world, hitVec.x, hitVec.y, hitVec.z, rec.get().assemble(inv));
 
 					//Spawn some particles and sound

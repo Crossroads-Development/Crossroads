@@ -12,18 +12,20 @@ import com.Da_Technomancer.crossroads.items.alchemy.*;
 import com.Da_Technomancer.crossroads.items.itemSets.*;
 import com.Da_Technomancer.crossroads.items.technomancy.*;
 import com.Da_Technomancer.crossroads.items.witchcraft.*;
-import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.item.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -31,16 +33,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
-
-import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.client.renderer.item.ItemPropertyFunction;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.SpawnEggItem;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public final class CRItems{
 
@@ -325,7 +317,7 @@ public final class CRItems{
 
 		//Properties
 		//Whirligig rotation
-		ItemProperties.register(whirligig, new ResourceLocation("angle"), (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity) -> {
+		ItemProperties.register(whirligig, new ResourceLocation("angle"), (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int unmapped) -> {
 			if(entity == null || entity.getUseItem() != stack){
 				return 0;
 			}
@@ -343,19 +335,19 @@ public final class CRItems{
 			return angle;
 		});
 		//Technomancy armor
-		ItemPropertyFunction technoArmorPropertyGetter = (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity) -> TechnomancyArmor.isReinforced(stack) ? TechnomancyArmor.hasDurability(stack) ? 2F : 1F : 0F;
+		ItemPropertyFunction technoArmorPropertyGetter = (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int unmapped) -> TechnomancyArmor.isReinforced(stack) ? TechnomancyArmor.hasDurability(stack) ? 2F : 1F : 0F;
 		ItemProperties.register(armorGoggles, new ResourceLocation("protection"), technoArmorPropertyGetter);
 		ItemProperties.register(propellerPack, new ResourceLocation("protection"), technoArmorPropertyGetter);
 		ItemProperties.register(armorToolbelt, new ResourceLocation("protection"), technoArmorPropertyGetter);
 		ItemProperties.register(armorEnviroBoots, new ResourceLocation("protection"), technoArmorPropertyGetter);
 		//Rotting samples
-		ItemPropertyFunction rottingPropertyGetter = (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity) -> stack.getItem() instanceof IPerishable && ((IPerishable) stack.getItem()).isSpoiled(stack, world) ? 1F : 0F;
+		ItemPropertyFunction rottingPropertyGetter = (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int unmapped) -> stack.getItem() instanceof IPerishable && ((IPerishable) stack.getItem()).isSpoiled(stack, world) ? 1F : 0F;
 		ItemProperties.register(bloodSample, new ResourceLocation("spoiled"), rottingPropertyGetter);
 		ItemProperties.register(separatedBloodSample, new ResourceLocation("spoiled"), rottingPropertyGetter);
 		ItemProperties.register(potionExtension, new ResourceLocation("spoiled"), rottingPropertyGetter);
 		ItemProperties.register(embryo, new ResourceLocation("spoiled"), rottingPropertyGetter);
 		//Syringe treatment
-		ItemPropertyFunction syringePropertyGetter = (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity) -> CRItems.syringe.isTreated(stack) ? 1 : 0;
+		ItemPropertyFunction syringePropertyGetter = (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int unmapped) -> CRItems.syringe.isTreated(stack) ? 1 : 0;
 		ItemProperties.register(syringe, new ResourceLocation("treated"), syringePropertyGetter);
 	}
 

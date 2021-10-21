@@ -2,31 +2,24 @@ package com.Da_Technomancer.crossroads.items.alchemy;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.item.*;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.stats.Stats;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Item.Properties;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.UseAnim;
 
 public class PoisonVodka extends Item{
 
@@ -78,7 +71,7 @@ public class PoisonVodka extends Item{
 				if(stack.isEmpty()){
 					return new ItemStack(Items.GLASS_BOTTLE);
 				}
-				player.inventory.add(new ItemStack(Items.GLASS_BOTTLE));
+				player.getInventory().add(new ItemStack(Items.GLASS_BOTTLE));
 			}
 		}
 
@@ -86,7 +79,7 @@ public class PoisonVodka extends Item{
 	}
 
 	@Override
-	public int getBurnTime(ItemStack itemStack){
+	public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType){
 		return 72000;
 	}
 

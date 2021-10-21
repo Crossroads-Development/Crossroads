@@ -8,8 +8,6 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.registries.ObjectHolder;
 
-import com.Da_Technomancer.crossroads.API.templates.TileEntityContainer.OutputSlot;
-
 @ObjectHolder(Crossroads.MODID)
 public class EmbryoLabContainer extends MachineContainer<EmbryoLabTileEntity>{
 

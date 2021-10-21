@@ -9,23 +9,21 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.technomancy.ArmorPropellerPack;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamUsingItem;
+import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.render.IVisualEffect;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.Minecraft;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import net.minecraft.client.renderer.MultiBufferSource;
 import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
@@ -35,7 +33,6 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -103,126 +100,167 @@ public final class EventHandlerClient{
 
 				//The NBT shenanigans is to prevent this purely client side glowing effect from interfering with server-side glowing effects (such as being hit with the glowing arrow) when disabled
 				if(!entNBT.contains("cr_glow")){
-					ent.setGlowing(false);
+					ent.setGlowingTag(false);
 				}else{
 					entNBT.remove("cr_glow");
 				}
 
 				if(doGlowing){
-					if(ent.isGlowing()){
+					if(ent.hasGlowingTag()){
 						entNBT.putBoolean("cr_glow", true);
 					}else{
-						ent.setGlowing(true);
+						ent.setGlowingTag(true);
 					}
 				}
 			}
 		}
 	}
 
-	private static final ResourceLocation MAGIC_BAR_BACKGROUND = new ResourceLocation(Crossroads.MODID, "textures/gui/magic_info_back.png");
-	private static final ResourceLocation MAGIC_BAR_FOREGROUND = new ResourceLocation(Crossroads.MODID, "textures/gui/magic_info_front.png");
-	private static final ResourceLocation COLOR_SHEET = new ResourceLocation(Crossroads.MODID, "textures/block/color_sheet.png");
+//	private static final ResourceLocation MAGIC_BAR_BACKGROUND = new ResourceLocation(Crossroads.MODID, "textures/gui/magic_info_back.png");
+//	private static final ResourceLocation MAGIC_BAR_FOREGROUND = new ResourceLocation(Crossroads.MODID, "textures/gui/magic_info_front.png");
+//	private static final ResourceLocation COLOR_SHEET = new ResourceLocation(Crossroads.MODID, "textures/block/color_sheet.png");
 
 	@SubscribeEvent
 	@SuppressWarnings("unused")
-	public void magicUsingItemOverlay(RenderGameOverlayEvent e){
-		if(e.getType() == ElementType.HOTBAR){
+	public void magicUsingItemOverlay(RenderGameOverlayEvent.Post e){
+		//TODO definitely need to test this
+		if(e.getType() == ElementType.LAYER){
 			Player player = Minecraft.getInstance().player;
 
 			//Beam cage overlay
 			ItemStack cageStack = CurioHelper.getEquipped(CRItems.beamCage, player);
 			ItemStack mainStack = player.getItemInHand(InteractionHand.MAIN_HAND);
 
-			if(!cageStack.isEmpty() && (CRConfig.cageMeterOverlay.get() || mainStack.getItem() instanceof BeamUsingItem)){
-				BeamUnit stored = BeamCage.getStored(cageStack);
-				RenderSystem.pushMatrix();
-				RenderSystem.pushLightingAttributes();
-				RenderSystem.enableBlend();
-				Minecraft.getInstance().getTextureManager().bind(MAGIC_BAR_BACKGROUND);
-				Tesselator tes = Tesselator.getInstance();
-				BufferBuilder buf = tes.getBuilder();
-				buf.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX);
-				buf.vertex(0, 120, -3).uv(0, 1).endVertex();
-				buf.vertex(117, 120, -3).uv(1, 1).endVertex();
-				buf.vertex(117, 60, -3).uv(1, 0).endVertex();
-				buf.vertex(0, 60, -3).uv(0, 0).endVertex();
-				tes.end();
+			boolean renderToolOverlay = mainStack.getItem() instanceof BeamUsingItem;
+			boolean renderCageOverlay = !cageStack.isEmpty() && (CRConfig.cageMeterOverlay.get() || renderToolOverlay);
 
-				Minecraft.getInstance().getTextureManager().bind(COLOR_SHEET);
-				buf.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-				for(int i = 0; i < 4; i++){
-					int extension = 72 * stored.getValues()[i] / BeamCage.CAPACITY;
-					int[] col = new int[4];
-					col[3] = 255;
-					col[i] = 255;//For void, overrides the alpha. Conveniently not an issue
-					buf.vertex(24, 84 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.25F + (((float) i) * .0625F), .0625F).endVertex();
-					buf.vertex(24 + extension, 84 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.3125F + (((float) i) * .0625F), .0625F).endVertex();
-					buf.vertex(24 + extension, 78 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.3125F + (((float) i) * .0625F), 0).endVertex();
-					buf.vertex(24, 78 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.25F + (((float) i) * .0625F), 0).endVertex();
+			if(renderCageOverlay || renderToolOverlay){
+				//Use the batched renderer instead of the Tesselator
+				MultiBufferSource.BufferSource buffer = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+				VertexConsumer builder = buffer.getBuffer(CRRenderTypes.BEAM_INFO_TYPE);
+				PoseStack matrix = e.getMatrixStack();
+
+				float barUSt = 8F/39F;
+				float barUEn = 31F/39F;
+				float barVSt = 26F/40F;
+				float barVWid = 2F/40F;
+
+				if(renderCageOverlay){
+					BeamUnit stored = BeamCage.getStored(cageStack);
+//					RenderSystem.pushMatrix();
+//					RenderSystem.pushLightingAttributes();
+//					RenderSystem.enableBlend();
+//					RenderSystem.setShaderTexture(0, MAGIC_BAR_BACKGROUND);
+//					Tesselator tes = Tesselator.getInstance();
+//					BufferBuilder buf = tes.getBuilder();
+//					buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+					builder.vertex(matrix.last().pose(), 0, 120, -3).uv(0, 0.5F).endVertex();
+					builder.vertex(matrix.last().pose(), 117, 120, -3).uv(1, 0.5F).endVertex();
+					builder.vertex(matrix.last().pose(), 117, 60, -3).uv(1, 0).endVertex();
+					builder.vertex(matrix.last().pose(), 0, 60, -3).uv(0, 0).endVertex();
+//					buf.vertex(0, 120, -3).uv(0, 1).endVertex();
+//					buf.vertex(117, 120, -3).uv(1, 1).endVertex();
+//					buf.vertex(117, 60, -3).uv(1, 0).endVertex();
+//					buf.vertex(0, 60, -3).uv(0, 0).endVertex();
+//					tes.end();
+
+//					RenderSystem.setShaderTexture(0, COLOR_SHEET);
+//					buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+					for(int i = 0; i < 4; i++){
+						float fullness = (float) stored.getValues()[i] / BeamCage.CAPACITY;
+						int extension = (int) (72 * fullness);
+						builder.vertex(matrix.last().pose(), 24, 84 + (9 * i), -2).uv(barUSt, barVSt + barVWid * (i + 1)).endVertex();
+						builder.vertex(matrix.last().pose(), 24 + extension, 84 + (9 * i), -2).uv(barUSt + (barUEn - barUSt) * fullness, barVSt + barVWid * (i + 1)).endVertex();
+						builder.vertex(matrix.last().pose(), 24 + extension, 78 + (9 * i), -2).uv(barUSt + (barUEn - barUSt) * fullness, barVSt + barVWid * i).endVertex();
+						builder.vertex(matrix.last().pose(), 24, 78 + (9 * i), -2).uv(barUSt, barVSt + barVWid * i).endVertex();
+//						int[] col = new int[4];
+//						col[3] = 255;
+//						col[i] = 255;//For void, overrides the alpha. Conveniently not an issue
+//						buf.vertex(24, 84 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.25F + (((float) i) * .0625F), .0625F).endVertex();
+//						buf.vertex(24 + extension, 84 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.3125F + (((float) i) * .0625F), .0625F).endVertex();
+//						buf.vertex(24 + extension, 78 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.3125F + (((float) i) * .0625F), 0).endVertex();
+//						buf.vertex(24, 78 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.25F + (((float) i) * .0625F), 0).endVertex();
+					}
+//					tes.end();
+
+//					RenderSystem.setShaderTexture(0, MAGIC_BAR_FOREGROUND);
+//					buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+//					buf.vertex(0, 120, -1).uv(0, 1).endVertex();
+//					buf.vertex(117, 120, -1).uv(1, 1).endVertex();
+//					buf.vertex(117, 60, -1).uv(1, 0).endVertex();
+//					buf.vertex(0, 60, -1).uv(0, 0).endVertex();
+//					tes.end();
+
+					//As this is an unbatched environment, we need to manually force the buffer to render before drawing fonts
+					buffer.endBatch();
+
+					Minecraft.getInstance().font.draw(e.getMatrixStack(), cageStack.getHoverName().getString(), 16, 65, Color.DARK_GRAY.getRGB());
+//					RenderSystem.setShaderColor(1, 1, 1, 1);
+//					RenderSystem.disableAlphaTest();
+//					RenderSystem.disableBlend();
+//					RenderSystem.popAttributes();
+//					RenderSystem.popMatrix();
 				}
-				tes.end();
 
-				Minecraft.getInstance().getTextureManager().bind(MAGIC_BAR_FOREGROUND);
-				buf.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX);
-				buf.vertex(0, 120, -1).uv(0, 1).endVertex();
-				buf.vertex(117, 120, -1).uv(1, 1).endVertex();
-				buf.vertex(117, 60, -1).uv(1, 0).endVertex();
-				buf.vertex(0, 60, -1).uv(0, 0).endVertex();
-				tes.end();
+				//Beam using item overlay
+				if(renderToolOverlay){
+//					RenderSystem.pushMatrix();
+//					RenderSystem.pushLightingAttributes();
+//					RenderSystem.enableBlend();
+//					RenderSystem.setShaderTexture(0, MAGIC_BAR_BACKGROUND);
+//					Tesselator tes = Tesselator.getInstance();
+//					BufferBuilder buf = tes.getBuilder();
+					builder.vertex(matrix.last().pose(), 0, 60, -3).uv(0, 0.5F).endVertex();
+					builder.vertex(matrix.last().pose(), 117, 60, -3).uv(1, 0.5F).endVertex();
+					builder.vertex(matrix.last().pose(), 117, 0, -3).uv(1, 0).endVertex();
+					builder.vertex(matrix.last().pose(), 0, 0, -3).uv(0, 0).endVertex();
+//					buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+//					buf.vertex(0, 60, -3).uv(0, 1).endVertex();
+//					buf.vertex(117, 60, -3).uv(1, 1).endVertex();
+//					buf.vertex(117, 0, -3).uv(1, 0).endVertex();
+//					buf.vertex(0, 0, -3).uv(0, 0).endVertex();
+//					tes.end();
 
-				Minecraft.getInstance().font.draw(e.getMatrixStack(), cageStack.getHoverName().getString(), 16, 65, Color.DARK_GRAY.getRGB());
-				RenderSystem.color4f(1, 1, 1, 1);
-				RenderSystem.disableAlphaTest();
-				RenderSystem.disableBlend();
-				RenderSystem.popAttributes();
-				RenderSystem.popMatrix();
-			}
+//					RenderSystem.setShaderTexture(0, COLOR_SHEET);
+//					buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+					byte[] settings = BeamUsingItem.getSetting(mainStack);
+					for(int i = 0; i < 4; i++){
+						float fullness = (float) settings[i] / 8;
+						int extension = (int) (72 * fullness);
+						builder.vertex(matrix.last().pose(), 24, 24 + (9 * i), -2).uv(barUSt, barVSt + barVWid * (i + 1)).endVertex();
+						builder.vertex(matrix.last().pose(), 24 + extension, 24 + (9 * i), -2).uv(barUSt + (barUEn - barUSt) * fullness, barVSt + barVWid * (i + 1)).endVertex();
+						builder.vertex(matrix.last().pose(), 24 + extension, 18 + (9 * i), -2).uv(barUSt + (barUEn - barUSt) * fullness, barVSt + barVWid * i).endVertex();
+						builder.vertex(matrix.last().pose(), 24, 18 + (9 * i), -2).uv(barUSt, barVSt + barVWid * i).endVertex();
+//						int[] col = new int[4];
+//						col[3] = 255;
+//						col[i] = 255;//For void, overrides the alpha. Conveniently not an issue
+//						int extension = 9 * settings[i];
+//						buf.vertex(24, 24 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.25F + (((float) i) * .0625F), .0625F).endVertex();
+//						buf.vertex(24 + extension, 24 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.3125F + (((float) i) * .0625F), .0625F).endVertex();
+//						buf.vertex(24 + extension, 18 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.3125F + (((float) i) * .0625F), 0).endVertex();
+//						buf.vertex(24, 18 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.25F + (((float) i) * .0625F), 0).endVertex();
+					}
+//					tes.end();
 
-			//Beam using item overlay
-			if(mainStack.getItem() instanceof BeamUsingItem){
-				RenderSystem.pushMatrix();
-				RenderSystem.pushLightingAttributes();
-				RenderSystem.enableBlend();
-				Minecraft.getInstance().getTextureManager().bind(MAGIC_BAR_BACKGROUND);
-				Tesselator tes = Tesselator.getInstance();
-				BufferBuilder buf = tes.getBuilder();
-				buf.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX);
-				buf.vertex(0, 60, -3).uv(0, 1).endVertex();
-				buf.vertex(117, 60, -3).uv(1, 1).endVertex();
-				buf.vertex(117, 0, -3).uv(1, 0).endVertex();
-				buf.vertex(0, 0, -3).uv(0, 0).endVertex();
-				tes.end();
+//					RenderSystem.setShaderTexture(0, MAGIC_BAR_FOREGROUND);
+//					buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+//					buf.vertex(0, 60, -1).uv(0, 1).endVertex();
+//					buf.vertex(117, 60, -1).uv(1, 1).endVertex();
+//					buf.vertex(117, 0, -1).uv(1, 0).endVertex();
+//					buf.vertex(0, 0, -1).uv(0, 0).endVertex();
+//					tes.end();
 
-				Minecraft.getInstance().getTextureManager().bind(COLOR_SHEET);
-				buf.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-				byte[] settings = BeamUsingItem.getSetting(mainStack);
-				for(int i = 0; i < 4; i++){
-					int[] col = new int[4];
-					col[3] = 255;
-					col[i] = 255;//For void, overrides the alpha. Conveniently not an issue
-					int extension = 9 * settings[i];
-					buf.vertex(24, 24 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.25F + (((float) i) * .0625F), .0625F).endVertex();
-					buf.vertex(24 + extension, 24 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.3125F + (((float) i) * .0625F), .0625F).endVertex();
-					buf.vertex(24 + extension, 18 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.3125F + (((float) i) * .0625F), 0).endVertex();
-					buf.vertex(24, 18 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.25F + (((float) i) * .0625F), 0).endVertex();
+					//As this is an unbatched environment, we need to manually force the buffer to render before drawing fonts
+					buffer.endBatch();
+
+					Minecraft.getInstance().font.draw(e.getMatrixStack(), mainStack.getHoverName().getString(), 16, 5, Color.DARK_GRAY.getRGB());
+
+//					RenderSystem.disableAlphaTest();
+//					RenderSystem.setShaderColor(1, 1, 1, 1);
+//					RenderSystem.disableBlend();
+//					RenderSystem.popAttributes();
+//					RenderSystem.popMatrix();
 				}
-				tes.end();
-
-				Minecraft.getInstance().getTextureManager().bind(MAGIC_BAR_FOREGROUND);
-				buf.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX);
-				buf.vertex(0, 60, -1).uv(0, 1).endVertex();
-				buf.vertex(117, 60, -1).uv(1, 1).endVertex();
-				buf.vertex(117, 0, -1).uv(1, 0).endVertex();
-				buf.vertex(0, 0, -1).uv(0, 0).endVertex();
-				tes.end();
-
-				Minecraft.getInstance().font.draw(e.getMatrixStack(), mainStack.getHoverName().getString(), 16, 5, Color.DARK_GRAY.getRGB());
-
-				RenderSystem.disableAlphaTest();
-				RenderSystem.color4f(1, 1, 1, 1);
-				RenderSystem.disableBlend();
-				RenderSystem.popAttributes();
-				RenderSystem.popMatrix();
 			}
 		}
 	}
@@ -264,7 +302,7 @@ public final class EventHandlerClient{
 
 		ItemStack helmet = play.getItemBySlot(EquipmentSlot.HEAD);
 		if(!play.getMainHandItem().isEmpty()){
-			int key = Keys.controlEnergy.getKeyMapping().matches(e.getKey(), e.getScanCode()) ? 0 : Keys.controlPotential.getKeyBinding().matches(e.getKey(), e.getScanCode()) ? 1 : Keys.controlStability.getKeyBinding().matches(e.getKey(), e.getScanCode()) ? 2 : Keys.controlVoid.getKeyBinding().matches(e.getKey(), e.getScanCode()) ? 3 : -1;
+			int key = Keys.isKeyActiveAndMatch(Keys.controlEnergy, e.getKey(), e.getScanCode()) ? 0 : Keys.isKeyActiveAndMatch(Keys.controlPotential, e.getKey(), e.getScanCode()) ? 1 : Keys.isKeyActiveAndMatch(Keys.controlStability, e.getKey(), e.getScanCode()) ? 2 : Keys.isKeyActiveAndMatch(Keys.controlVoid, e.getKey(), e.getScanCode()) ? 3 : -1;
 			ItemStack stack = play.getMainHandItem();
 			if(key != -1 && stack.getItem() instanceof BeamUsingItem){
 				((BeamUsingItem) stack.getItem()).adjustSetting(Minecraft.getInstance().player, stack, key, !play.isShiftKeyDown());
@@ -273,7 +311,7 @@ public final class EventHandlerClient{
 		}else if(helmet.getItem() == CRItems.armorGoggles && helmet.hasTag()){
 			CompoundTag nbt = helmet.getTag();
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
-				KeyMapping key = lens.getKey();
+				KeyMapping key = Keys.asKeyMapping(lens.getKey());
 				if(key != null && key.consumeClick() && key.isDown() && nbt.contains(lens.toString())){
 					CRPackets.channel.sendToServer(new SendGoggleConfigureToServer(lens, !nbt.getBoolean(lens.toString())));
 					return;
@@ -282,7 +320,8 @@ public final class EventHandlerClient{
 		}
 
 		//Trigger propeller pack boost when jumping
-		if(Keys.boost.getKeyBinding().consumeClick()){
+		KeyMapping boostKey = Keys.asKeyMapping(Keys.boost);
+		if(boostKey != null && boostKey.consumeClick()){
 			ItemStack chestplate = play.getItemBySlot(EquipmentSlot.CHEST);
 			if(play.isFallFlying() && chestplate.getItem() == CRItems.propellerPack && CRItems.propellerPack.getWindLevel(chestplate) > 0){
 				CRPackets.sendPacketToServer(new SendElytraBoostToServer());

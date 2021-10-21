@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.BlastFurnaceContainer;
 import com.Da_Technomancer.crossroads.tileentities.rotary.BlastFurnaceTileEntity;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Inventory;
@@ -26,7 +27,7 @@ public class BlastFurnaceScreen extends MachineGUI<BlastFurnaceContainer, BlastF
 
 	@Override
 	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
-		Minecraft.getInstance().getTextureManager().bind(TEXTURE);
+		RenderSystem.setShaderTexture(0, TEXTURE);
 
 		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 		blit(matrix, leftPos + 25, topPos + 38, 176, 0, 38 * menu.progRef.get() / BlastFurnaceTileEntity.REQUIRED_PRG, 14);

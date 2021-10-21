@@ -5,6 +5,8 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraftforge.client.extensions.IForgeKeyMapping;
 import net.minecraftforge.fmlclient.registry.ClientRegistry;
 
+import javax.annotation.Nullable;
+
 public class Keys{
 
 	//Stored as IForgeKeyMapping instead of KeyBinding as KeyBinding is a client-side-only class.
@@ -32,5 +34,18 @@ public class Keys{
 		ClientRegistry.registerKeyBinding((KeyMapping) controlStability);
 		ClientRegistry.registerKeyBinding((KeyMapping) controlVoid);
 		ClientRegistry.registerKeyBinding((KeyMapping) boost);
+	}
+
+	public static boolean isKeyActiveAndMatch(IForgeKeyMapping key, int activeKeyCode, int scanCode){
+		InputConstants.Key input = InputConstants.getKey(activeKeyCode, scanCode);
+		return key.isActiveAndMatches(input);
+	}
+
+	@Nullable
+	public static KeyMapping asKeyMapping(IForgeKeyMapping key){
+		if(key instanceof KeyMapping mapping){
+			return mapping;
+		}
+		return null;
 	}
 }

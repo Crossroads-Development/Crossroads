@@ -18,6 +18,8 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.ResourceLocation;
 
@@ -56,8 +58,8 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 	}
 
 	@Override
-	public String getTitle(){
-		return "Alchemical Reaction";
+	public Component getTitle(){
+		return new TranslatableComponent("crossroads.jei.alchemy.cat_name");
 	}
 
 	@Override

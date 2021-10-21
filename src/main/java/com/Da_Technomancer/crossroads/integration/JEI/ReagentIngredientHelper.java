@@ -5,6 +5,8 @@ import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import mezz.jei.api.ingredients.IIngredientHelper;
+import mezz.jei.api.ingredients.IIngredientType;
+import mezz.jei.api.ingredients.subtypes.UidContext;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.HashSet;
@@ -26,7 +28,12 @@ public class ReagentIngredientHelper implements IIngredientHelper<ReagIngr>{
 	}
 
 	@Override
-	public ReagIngr getMatch(Iterable<ReagIngr> ingredients, ReagIngr ingredientToMatch){
+	public IIngredientType<ReagIngr> getIngredientType(){
+		return ReagIngr.REAG;
+	}
+
+	@Override
+	public ReagIngr getMatch(Iterable<ReagIngr> ingredients, ReagIngr ingredientToMatch, UidContext context){
 		for(ReagIngr r : ingredients){
 			if(r.getReag() == ingredientToMatch.getReag()){
 				return r;
@@ -41,13 +48,8 @@ public class ReagentIngredientHelper implements IIngredientHelper<ReagIngr>{
 	}
 
 	@Override
-	public String getUniqueId(ReagIngr ingredient){
+	public String getUniqueId(ReagIngr ingredient, UidContext context){
 		return Crossroads.MODID + ":" + ingredient.getID();
-	}
-
-	@Override
-	public String getWildcardId(ReagIngr ingredient){
-		return getUniqueId(ingredient);
 	}
 
 	@Override
