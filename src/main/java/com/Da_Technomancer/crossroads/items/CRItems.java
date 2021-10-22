@@ -28,6 +28,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ForgeSpawnEggItem;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -275,7 +276,7 @@ public final class CRItems{
 		toRegister.add(mutagen = new Item(new Item.Properties().tab(TAB_CROSSROADS)).setRegistryName("mutagen"));
 		villagerBrain = new VillagerBrain();
 		brainHarvester = new BrainHarvester();
-		toRegister.add(hopperHawkSpawnEgg = new SpawnEggItem(EntityHopperHawk.type, 0x555555, 0x999999, (new Item.Properties()).tab(CreativeModeTab.TAB_MISC)).setRegistryName("hopper_hawk_spawn_egg"));
+		toRegister.add(hopperHawkSpawnEgg = new ForgeSpawnEggItem(() -> EntityHopperHawk.type, 0x555555, 0x999999, (new Item.Properties()).tab(CreativeModeTab.TAB_MISC)).setRegistryName("hopper_hawk_spawn_egg"));
 	}
 
 	@OnlyIn(Dist.CLIENT)

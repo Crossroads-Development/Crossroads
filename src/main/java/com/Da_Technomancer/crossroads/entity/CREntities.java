@@ -35,7 +35,7 @@ public final class CREntities{
 		registerEnt(reg, EntityType.Builder.<EntityNitro>of(EntityNitro::new, MobCategory.MISC).setTrackingRange(64).setUpdateInterval(5), "nitro");
 		registerEnt(reg, EntityType.Builder.<EntityGhostMarker>of(EntityGhostMarker::new, MobCategory.MISC).noSummon().setTrackingRange(64).setUpdateInterval(20).fireImmune().setShouldReceiveVelocityUpdates(false), "ghost_marker");
 		registerEnt(reg, EntityType.Builder.of(EntityFlyingMachine::new, MobCategory.MISC).sized(1F, 1.3F).setTrackingRange(64).setUpdateInterval(1), "flying_machine");
-		reg.register(EntityHopperHawk.type);
+		registerEnt(reg, EntityType.Builder.of(EntityHopperHawk::new, MobCategory.CREATURE).sized(0.5F, 0.9F).clientTrackingRange(8), "hopper_hawk");
 	}
 
 	public static <T extends Entity> EntityType<T> createType(EntityType.Builder<T> builder, String name){
@@ -54,6 +54,7 @@ public final class CREntities{
 		e.registerLayerDefinition(RenderHopperHawk.HOPPER_HAWK_MODEL_LAYER, ModelHopperHawk::createBodyLayer);
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	public static void attachLayerRenderers(EntityRenderersEvent.AddLayers e){
 		EntityModelSet modelSet = e.getEntityModels();
 

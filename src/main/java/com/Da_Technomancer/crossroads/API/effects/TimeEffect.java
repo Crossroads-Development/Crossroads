@@ -22,7 +22,6 @@ import java.util.Map;
 
 public class TimeEffect extends BeamEffect{
 
-	//TODO test
 	private static final Field chunkTickerField = ReflectionUtil.reflectField(CRReflection.CHUNK_TICKER_MAP);
 
 	@Override

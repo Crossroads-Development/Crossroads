@@ -46,9 +46,9 @@ public class ReagentPump extends BaseEntityBlock{
 		VoxelShape core = box(CORE_SIZE, 0, CORE_SIZE, 16 - CORE_SIZE, 16, 16 - CORE_SIZE);
 		VoxelShape[] pieces = new VoxelShape[4];
 		pieces[0] = box(SIZE, SIZE, 0, sizeN, sizeN, SIZE);
-		pieces[1] = box(SIZE, SIZE, 16, sizeN, sizeN, sizeN);
+		pieces[1] = box(SIZE, SIZE, sizeN, sizeN, sizeN, 16);
 		pieces[2] = box(0, SIZE, SIZE, SIZE, sizeN, sizeN);
-		pieces[3] = box(16, SIZE, SIZE, sizeN, sizeN, sizeN);
+		pieces[3] = box(sizeN, SIZE, SIZE, 16, sizeN, sizeN);
 		for(int i = 0; i < 16; i++){
 			VoxelShape comp = core;
 			for(int j = 0; j < 4; j++){

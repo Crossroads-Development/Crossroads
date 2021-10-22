@@ -16,8 +16,7 @@ import java.util.function.Supplier;
 
 public enum CRReflection implements ReflectionUtil.IReflectionKey{
 
-	//TODO the obf name for SET_CHAT is wrong
-	SET_CHAT(CRReflection::getChatClass, "func_238493_a_", "addMessage", "Update the chat log without spamming it"),
+	SET_CHAT(CRReflection::getChatClass, "m_93790_", "addMessage", "Update the chat log without spamming it"),
 	CURE_ZOMBIE(ZombieVillager.class, "m_34383_", "startConverting", "Cure zombie villagers with SO2"),
 	EXPLOSION_POWER(Explosion.class, "f_46017_", "radius", "Perpetuate explosions with Collapse beams (1)"),
 	EXPLOSION_SMOKE(Explosion.class, "f_46009_", "fire", "Perpetuate explosions with Collapse beams (2)"),

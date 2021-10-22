@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
+import com.Da_Technomancer.crossroads.API.beams.BeamToolOverlay;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.ambient.particles.ColorParticleType;
@@ -44,6 +45,7 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
@@ -110,6 +112,7 @@ public final class Crossroads{
 //		CRRendererRegistry.registerEntityLayerRenderers();
 		Keys.init();
 //		CRParticles.clientInit();
+		OverlayRegistry.registerOverlayTop("crossroad_beam_tool_overlay", new BeamToolOverlay());
 		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
 	}
 

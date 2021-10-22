@@ -49,11 +49,11 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends BaseEntityBl
 		VoxelShape core = box(size16, size16, size16, size16N, size16N, size16N);
 		VoxelShape[] pieces = new VoxelShape[6];
 		pieces[0] = box(size16, 0, size16, size16N, size16, size16N);
-		pieces[1] = box(size16, 16, size16, size16N, size16N, size16N);
+		pieces[1] = box(size16, size16N, size16, size16N, 16, size16N);
 		pieces[2] = box(size16, size16, 0, size16N, size16N, size16);
-		pieces[3] = box(size16, size16, 16, size16N, size16N, size16N);
+		pieces[3] = box(size16, size16, size16N, size16N, size16N, 16);
 		pieces[4] = box(0, size16, size16, size16, size16N, size16N);
-		pieces[5] = box(16, size16, size16, size16N, size16N, size16N);
+		pieces[5] = box(size16N, size16, size16, 16, size16N, size16N);
 		for(int i = 0; i < 64; i++){
 			VoxelShape comp = core;
 			for(int j = 0; j < 6; j++){

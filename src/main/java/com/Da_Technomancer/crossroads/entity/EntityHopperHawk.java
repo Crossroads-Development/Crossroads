@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.entity;
 
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.blocks.ESBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.Packet;
@@ -10,7 +11,10 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
@@ -33,21 +37,18 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
+import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.List;
 
+@ObjectHolder(Crossroads.MODID)
 public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnimal{
 
 	private static final Ingredient FOOD_INGREDIENT = Ingredient.of(Items.HOPPER, ESBlocks.sortingHopper, ESBlocks.speedHopper);
 
-	static{
-		//We have to create the type early so we can use it for the spawn egg
-		type = CREntities.createType(EntityType.Builder.of(EntityHopperHawk::new, MobCategory.CREATURE).sized(0.5F, 0.9F).clientTrackingRange(8), "hopper_hawk");
-	}
-
-	//	@ObjectHolder("hopper_hawk")
+	@ObjectHolder("hopper_hawk")
 	public static EntityType<EntityHopperHawk> type;
 
 	protected float flap;

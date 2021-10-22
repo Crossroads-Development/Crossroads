@@ -54,11 +54,12 @@ public class MillstoneTileEntity extends InventoryTE{
 	}
 
 	public int getProgress(){
-		return (int) progress;
+		return (int) Math.min(REQUIRED, progress);
 	}
 
 	private void createOutput(ItemStack[] outputs){
 		if(canFit(outputs)){
+			progress = 0;
 			inventory[0].shrink(1);
 
 			for(ItemStack stack : outputs){
@@ -143,7 +144,6 @@ public class MillstoneTileEntity extends InventoryTE{
 
 				if(progress >= REQUIRED){
 					createOutput(recOpt.get().getOutputs());
-					progress = 0;
 				}
 			}else{
 				progress = 0;

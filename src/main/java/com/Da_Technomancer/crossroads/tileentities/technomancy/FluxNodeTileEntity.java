@@ -5,7 +5,6 @@ import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
 import net.minecraft.core.BlockPos;
@@ -59,23 +58,15 @@ public class FluxNodeTileEntity extends IFluxLink.FluxHelper{
 		return new AABB(worldPosition).inflate(getRange());
 	}
 
-	/**
-	 * For rendering
-	 * @return Whether this node should render effects for being near the failure point
-	 */
-	private boolean overSafeLimit(){
-		return entropyClient * 1.5F >= getMaxFlux();
+	@Override
+	public boolean renderFluxWarning(){
+		return entropyClient + CRConfig.fluxNodeGain.get() * 4 >= getMaxFlux();
 	}
 
 	@Override
 	public void clientTick(){
 		super.clientTick();
-		super.tick();
 		angle += entropyClient * SPIN_RATE / 20F;
-		//This 5 is the lifetime of the render
-		if(level.getGameTime() % 5 == 0 && overSafeLimit()){
-			CRRenderUtil.addArc(level, worldPosition.getX() + 0.5F, worldPosition.getY() + 0.5F, worldPosition.getZ() + 0.5F, worldPosition.getX() + 0.5F + (float) Math.random(), worldPosition.getY() + 0.5F + (float) Math.random(), worldPosition.getZ() + 0.5F + (float) Math.random(), 3, 1F, FluxUtil.COLOR_CODES[(int) (level.getGameTime() % 3)]);
-		}
 	}
 
 	@Override
@@ -101,7 +92,8 @@ public class FluxNodeTileEntity extends IFluxLink.FluxHelper{
 	@Override
 	public CompoundTag getUpdateTag(){
 		CompoundTag nbt = super.getUpdateTag();
-		nbt.putFloat("angle", angle);
+		save(nbt);//We need the ability to getReadingFlux() on the client when loading
+//		nbt.putFloat("angle", angle);
 		return nbt;
 	}
 

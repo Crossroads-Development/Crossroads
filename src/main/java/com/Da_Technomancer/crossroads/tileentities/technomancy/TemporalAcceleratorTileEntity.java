@@ -14,7 +14,6 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.technomancy.TemporalAccelerator;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -199,7 +198,7 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 									TickingBlockEntity te = TimeEffect.getTicker(level, effectPos);
 									if(te != null){
 										for(int run = 0; run < extraTicks; run++){
-											((ITickableTileEntity) te).serverTick();
+											te.tick();
 										}
 									}
 								}

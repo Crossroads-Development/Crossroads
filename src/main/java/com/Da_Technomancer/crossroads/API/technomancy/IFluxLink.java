@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.API.packets.IIntArrayReceiver;
 import com.Da_Technomancer.crossroads.API.packets.SendIntArrayToClient;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
+import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.essentials.packets.ILongReceiver;
 import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
@@ -89,6 +90,15 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 	 * @return An array of ints representing all transferred entropy to be rendered
 	 */
 	int[] getRenderedArcs();
+
+	/**
+	 * For rendering
+	 * Only called on the virtual client side
+	 * @return Whether this block should render effects for being near the failure point
+	 */
+	default boolean renderFluxWarning(){
+		return false;
+	}
 
 	enum Behaviour{
 
@@ -220,6 +230,11 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 			Level world = owner.getLevel();
 			if(rendered.length != 0 && world.getGameTime() % FluxUtil.FLUX_TIME == 0 && CRConfig.fluxSounds.get()){
 				CRSounds.playSoundClientLocal(world, owner.getBlockPos(), CRSounds.FLUX_TRANSFER, SoundSource.BLOCKS, 0.4F, 1F);
+			}
+
+			//This 5 is the lifetime of the render
+			if(level.getGameTime() % 5 == 0 && renderFluxWarning()){
+				CRRenderUtil.addArc(level, worldPosition.getX() + 0.5F, worldPosition.getY() + 0.5F, worldPosition.getZ() + 0.5F, worldPosition.getX() + 0.5F + 2.5F * (float) (Math.random() - 0.5F), worldPosition.getY() + 0.5F + 2.5F * (float) (Math.random() - 0.5F), worldPosition.getZ() + 0.5F + 2.5F * (float) (Math.random() - 0.5F), 3, 1F, FluxUtil.COLOR_CODES[(int) (level.getGameTime() % 3)]);
 			}
 		}
 

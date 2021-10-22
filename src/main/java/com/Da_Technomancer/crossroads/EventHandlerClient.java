@@ -120,150 +120,153 @@ public final class EventHandlerClient{
 //	private static final ResourceLocation MAGIC_BAR_FOREGROUND = new ResourceLocation(Crossroads.MODID, "textures/gui/magic_info_front.png");
 //	private static final ResourceLocation COLOR_SHEET = new ResourceLocation(Crossroads.MODID, "textures/block/color_sheet.png");
 
-	@SubscribeEvent
-	@SuppressWarnings("unused")
-	public void magicUsingItemOverlay(RenderGameOverlayEvent.Post e){
-		//TODO definitely need to test this
-		if(e.getType() == ElementType.LAYER){
-			Player player = Minecraft.getInstance().player;
-
-			//Beam cage overlay
-			ItemStack cageStack = CurioHelper.getEquipped(CRItems.beamCage, player);
-			ItemStack mainStack = player.getItemInHand(InteractionHand.MAIN_HAND);
-
-			boolean renderToolOverlay = mainStack.getItem() instanceof BeamUsingItem;
-			boolean renderCageOverlay = !cageStack.isEmpty() && (CRConfig.cageMeterOverlay.get() || renderToolOverlay);
-
-			if(renderCageOverlay || renderToolOverlay){
-				//Use the batched renderer instead of the Tesselator
-				MultiBufferSource.BufferSource buffer = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-				VertexConsumer builder = buffer.getBuffer(CRRenderTypes.BEAM_INFO_TYPE);
-				PoseStack matrix = e.getMatrixStack();
-
-				float barUSt = 8F/39F;
-				float barUEn = 31F/39F;
-				float barVSt = 26F/40F;
-				float barVWid = 2F/40F;
-
-				if(renderCageOverlay){
-					BeamUnit stored = BeamCage.getStored(cageStack);
-//					RenderSystem.pushMatrix();
-//					RenderSystem.pushLightingAttributes();
-//					RenderSystem.enableBlend();
-//					RenderSystem.setShaderTexture(0, MAGIC_BAR_BACKGROUND);
-//					Tesselator tes = Tesselator.getInstance();
-//					BufferBuilder buf = tes.getBuilder();
-//					buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-					builder.vertex(matrix.last().pose(), 0, 120, -3).uv(0, 0.5F).endVertex();
-					builder.vertex(matrix.last().pose(), 117, 120, -3).uv(1, 0.5F).endVertex();
-					builder.vertex(matrix.last().pose(), 117, 60, -3).uv(1, 0).endVertex();
-					builder.vertex(matrix.last().pose(), 0, 60, -3).uv(0, 0).endVertex();
-//					buf.vertex(0, 120, -3).uv(0, 1).endVertex();
-//					buf.vertex(117, 120, -3).uv(1, 1).endVertex();
-//					buf.vertex(117, 60, -3).uv(1, 0).endVertex();
-//					buf.vertex(0, 60, -3).uv(0, 0).endVertex();
-//					tes.end();
-
-//					RenderSystem.setShaderTexture(0, COLOR_SHEET);
-//					buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-					for(int i = 0; i < 4; i++){
-						float fullness = (float) stored.getValues()[i] / BeamCage.CAPACITY;
-						int extension = (int) (72 * fullness);
-						builder.vertex(matrix.last().pose(), 24, 84 + (9 * i), -2).uv(barUSt, barVSt + barVWid * (i + 1)).endVertex();
-						builder.vertex(matrix.last().pose(), 24 + extension, 84 + (9 * i), -2).uv(barUSt + (barUEn - barUSt) * fullness, barVSt + barVWid * (i + 1)).endVertex();
-						builder.vertex(matrix.last().pose(), 24 + extension, 78 + (9 * i), -2).uv(barUSt + (barUEn - barUSt) * fullness, barVSt + barVWid * i).endVertex();
-						builder.vertex(matrix.last().pose(), 24, 78 + (9 * i), -2).uv(barUSt, barVSt + barVWid * i).endVertex();
-//						int[] col = new int[4];
-//						col[3] = 255;
-//						col[i] = 255;//For void, overrides the alpha. Conveniently not an issue
-//						buf.vertex(24, 84 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.25F + (((float) i) * .0625F), .0625F).endVertex();
-//						buf.vertex(24 + extension, 84 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.3125F + (((float) i) * .0625F), .0625F).endVertex();
-//						buf.vertex(24 + extension, 78 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.3125F + (((float) i) * .0625F), 0).endVertex();
-//						buf.vertex(24, 78 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.25F + (((float) i) * .0625F), 0).endVertex();
-					}
-//					tes.end();
-
-//					RenderSystem.setShaderTexture(0, MAGIC_BAR_FOREGROUND);
-//					buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-//					buf.vertex(0, 120, -1).uv(0, 1).endVertex();
-//					buf.vertex(117, 120, -1).uv(1, 1).endVertex();
-//					buf.vertex(117, 60, -1).uv(1, 0).endVertex();
-//					buf.vertex(0, 60, -1).uv(0, 0).endVertex();
-//					tes.end();
-
-					//As this is an unbatched environment, we need to manually force the buffer to render before drawing fonts
-					buffer.endBatch();
-
-					Minecraft.getInstance().font.draw(e.getMatrixStack(), cageStack.getHoverName().getString(), 16, 65, Color.DARK_GRAY.getRGB());
-//					RenderSystem.setShaderColor(1, 1, 1, 1);
-//					RenderSystem.disableAlphaTest();
-//					RenderSystem.disableBlend();
-//					RenderSystem.popAttributes();
-//					RenderSystem.popMatrix();
-				}
-
-				//Beam using item overlay
-				if(renderToolOverlay){
-//					RenderSystem.pushMatrix();
-//					RenderSystem.pushLightingAttributes();
-//					RenderSystem.enableBlend();
-//					RenderSystem.setShaderTexture(0, MAGIC_BAR_BACKGROUND);
-//					Tesselator tes = Tesselator.getInstance();
-//					BufferBuilder buf = tes.getBuilder();
-					builder.vertex(matrix.last().pose(), 0, 60, -3).uv(0, 0.5F).endVertex();
-					builder.vertex(matrix.last().pose(), 117, 60, -3).uv(1, 0.5F).endVertex();
-					builder.vertex(matrix.last().pose(), 117, 0, -3).uv(1, 0).endVertex();
-					builder.vertex(matrix.last().pose(), 0, 0, -3).uv(0, 0).endVertex();
-//					buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-//					buf.vertex(0, 60, -3).uv(0, 1).endVertex();
-//					buf.vertex(117, 60, -3).uv(1, 1).endVertex();
-//					buf.vertex(117, 0, -3).uv(1, 0).endVertex();
-//					buf.vertex(0, 0, -3).uv(0, 0).endVertex();
-//					tes.end();
-
-//					RenderSystem.setShaderTexture(0, COLOR_SHEET);
-//					buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-					byte[] settings = BeamUsingItem.getSetting(mainStack);
-					for(int i = 0; i < 4; i++){
-						float fullness = (float) settings[i] / 8;
-						int extension = (int) (72 * fullness);
-						builder.vertex(matrix.last().pose(), 24, 24 + (9 * i), -2).uv(barUSt, barVSt + barVWid * (i + 1)).endVertex();
-						builder.vertex(matrix.last().pose(), 24 + extension, 24 + (9 * i), -2).uv(barUSt + (barUEn - barUSt) * fullness, barVSt + barVWid * (i + 1)).endVertex();
-						builder.vertex(matrix.last().pose(), 24 + extension, 18 + (9 * i), -2).uv(barUSt + (barUEn - barUSt) * fullness, barVSt + barVWid * i).endVertex();
-						builder.vertex(matrix.last().pose(), 24, 18 + (9 * i), -2).uv(barUSt, barVSt + barVWid * i).endVertex();
-//						int[] col = new int[4];
-//						col[3] = 255;
-//						col[i] = 255;//For void, overrides the alpha. Conveniently not an issue
-//						int extension = 9 * settings[i];
-//						buf.vertex(24, 24 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.25F + (((float) i) * .0625F), .0625F).endVertex();
-//						buf.vertex(24 + extension, 24 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.3125F + (((float) i) * .0625F), .0625F).endVertex();
-//						buf.vertex(24 + extension, 18 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.3125F + (((float) i) * .0625F), 0).endVertex();
-//						buf.vertex(24, 18 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.25F + (((float) i) * .0625F), 0).endVertex();
-					}
-//					tes.end();
-
-//					RenderSystem.setShaderTexture(0, MAGIC_BAR_FOREGROUND);
-//					buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-//					buf.vertex(0, 60, -1).uv(0, 1).endVertex();
-//					buf.vertex(117, 60, -1).uv(1, 1).endVertex();
-//					buf.vertex(117, 0, -1).uv(1, 0).endVertex();
-//					buf.vertex(0, 0, -1).uv(0, 0).endVertex();
-//					tes.end();
-
-					//As this is an unbatched environment, we need to manually force the buffer to render before drawing fonts
-					buffer.endBatch();
-
-					Minecraft.getInstance().font.draw(e.getMatrixStack(), mainStack.getHoverName().getString(), 16, 5, Color.DARK_GRAY.getRGB());
-
-//					RenderSystem.disableAlphaTest();
-//					RenderSystem.setShaderColor(1, 1, 1, 1);
-//					RenderSystem.disableBlend();
-//					RenderSystem.popAttributes();
-//					RenderSystem.popMatrix();
-				}
-			}
-		}
-	}
+//	@SubscribeEvent
+//	@SuppressWarnings("unused")
+//	public void magicUsingItemOverlay(RenderGameOverlayEvent.PostLayer e){
+//		//TODO definitely need to test this
+//		if(e.getType() == ElementType.LAYER){
+//			Player player = Minecraft.getInstance().player;
+//
+//			//Beam cage overlay
+//			ItemStack cageStack = CurioHelper.getEquipped(CRItems.beamCage, player);
+//			ItemStack mainStack = player.getItemInHand(InteractionHand.MAIN_HAND);
+//
+//			boolean renderToolOverlay = mainStack.getItem() instanceof BeamUsingItem;
+//			boolean renderCageOverlay = !cageStack.isEmpty() && (CRConfig.cageMeterOverlay.get() || renderToolOverlay);
+//
+//			if(renderCageOverlay || renderToolOverlay){
+//				//Use the batched renderer instead of the Tesselator
+//				MultiBufferSource.BufferSource buffer = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+//				PoseStack matrix = e.getMatrixStack();
+//
+//				float barUSt = 8F/39F;
+//				float barUEn = 31F/39F;
+//				float barVSt = 26F/40F;
+//				float barVWid = 2F/40F;
+//
+//				if(renderCageOverlay){
+//					VertexConsumer builder = buffer.getBuffer(CRRenderTypes.BEAM_INFO_TYPE);
+//
+//					BeamUnit stored = BeamCage.getStored(cageStack);
+////					RenderSystem.pushMatrix();
+////					RenderSystem.pushLightingAttributes();
+////					RenderSystem.enableBlend();
+////					RenderSystem.setShaderTexture(0, MAGIC_BAR_BACKGROUND);
+////					Tesselator tes = Tesselator.getInstance();
+////					BufferBuilder buf = tes.getBuilder();
+////					buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+//					builder.vertex(matrix.last().pose(), 0, 120, -3).uv(0, 0.5F).endVertex();
+//					builder.vertex(matrix.last().pose(), 117, 120, -3).uv(1, 0.5F).endVertex();
+//					builder.vertex(matrix.last().pose(), 117, 60, -3).uv(1, 0).endVertex();
+//					builder.vertex(matrix.last().pose(), 0, 60, -3).uv(0, 0).endVertex();
+////					buf.vertex(0, 120, -3).uv(0, 1).endVertex();
+////					buf.vertex(117, 120, -3).uv(1, 1).endVertex();
+////					buf.vertex(117, 60, -3).uv(1, 0).endVertex();
+////					buf.vertex(0, 60, -3).uv(0, 0).endVertex();
+////					tes.end();
+//
+////					RenderSystem.setShaderTexture(0, COLOR_SHEET);
+////					buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+//					for(int i = 0; i < 4; i++){
+//						float fullness = (float) stored.getValues()[i] / BeamCage.CAPACITY;
+//						int extension = (int) (72 * fullness);
+//						builder.vertex(matrix.last().pose(), 24, 84 + (9 * i), -2).uv(barUSt, barVSt + barVWid * (i + 1)).endVertex();
+//						builder.vertex(matrix.last().pose(), 24 + extension, 84 + (9 * i), -2).uv(barUSt + (barUEn - barUSt) * fullness, barVSt + barVWid * (i + 1)).endVertex();
+//						builder.vertex(matrix.last().pose(), 24 + extension, 78 + (9 * i), -2).uv(barUSt + (barUEn - barUSt) * fullness, barVSt + barVWid * i).endVertex();
+//						builder.vertex(matrix.last().pose(), 24, 78 + (9 * i), -2).uv(barUSt, barVSt + barVWid * i).endVertex();
+////						int[] col = new int[4];
+////						col[3] = 255;
+////						col[i] = 255;//For void, overrides the alpha. Conveniently not an issue
+////						buf.vertex(24, 84 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.25F + (((float) i) * .0625F), .0625F).endVertex();
+////						buf.vertex(24 + extension, 84 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.3125F + (((float) i) * .0625F), .0625F).endVertex();
+////						buf.vertex(24 + extension, 78 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.3125F + (((float) i) * .0625F), 0).endVertex();
+////						buf.vertex(24, 78 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.25F + (((float) i) * .0625F), 0).endVertex();
+//					}
+////					tes.end();
+//
+////					RenderSystem.setShaderTexture(0, MAGIC_BAR_FOREGROUND);
+////					buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+////					buf.vertex(0, 120, -1).uv(0, 1).endVertex();
+////					buf.vertex(117, 120, -1).uv(1, 1).endVertex();
+////					buf.vertex(117, 60, -1).uv(1, 0).endVertex();
+////					buf.vertex(0, 60, -1).uv(0, 0).endVertex();
+////					tes.end();
+//
+//					//As this is an unbatched environment, we need to manually force the buffer to render before drawing fonts
+//					buffer.endBatch();
+//
+//					Minecraft.getInstance().font.draw(e.getMatrixStack(), cageStack.getHoverName().getString(), 16, 65, Color.DARK_GRAY.getRGB());
+////					RenderSystem.setShaderColor(1, 1, 1, 1);
+////					RenderSystem.disableAlphaTest();
+////					RenderSystem.disableBlend();
+////					RenderSystem.popAttributes();
+////					RenderSystem.popMatrix();
+//				}
+//
+//				//Beam using item overlay
+//				if(renderToolOverlay){
+//					VertexConsumer builder = buffer.getBuffer(CRRenderTypes.BEAM_INFO_TYPE);
+//
+////					RenderSystem.pushMatrix();
+////					RenderSystem.pushLightingAttributes();
+////					RenderSystem.enableBlend();
+////					RenderSystem.setShaderTexture(0, MAGIC_BAR_BACKGROUND);
+////					Tesselator tes = Tesselator.getInstance();
+////					BufferBuilder buf = tes.getBuilder();
+//					builder.vertex(matrix.last().pose(), 0, 60, -3).uv(0, 0.5F).endVertex();
+//					builder.vertex(matrix.last().pose(), 117, 60, -3).uv(1, 0.5F).endVertex();
+//					builder.vertex(matrix.last().pose(), 117, 0, -3).uv(1, 0).endVertex();
+//					builder.vertex(matrix.last().pose(), 0, 0, -3).uv(0, 0).endVertex();
+////					buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+////					buf.vertex(0, 60, -3).uv(0, 1).endVertex();
+////					buf.vertex(117, 60, -3).uv(1, 1).endVertex();
+////					buf.vertex(117, 0, -3).uv(1, 0).endVertex();
+////					buf.vertex(0, 0, -3).uv(0, 0).endVertex();
+////					tes.end();
+//
+////					RenderSystem.setShaderTexture(0, COLOR_SHEET);
+////					buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+//					byte[] settings = BeamUsingItem.getSetting(mainStack);
+//					for(int i = 0; i < 4; i++){
+//						float fullness = (float) settings[i] / 8;
+//						int extension = (int) (72 * fullness);
+//						builder.vertex(matrix.last().pose(), 24, 24 + (9 * i), -2).uv(barUSt, barVSt + barVWid * (i + 1)).endVertex();
+//						builder.vertex(matrix.last().pose(), 24 + extension, 24 + (9 * i), -2).uv(barUSt + (barUEn - barUSt) * fullness, barVSt + barVWid * (i + 1)).endVertex();
+//						builder.vertex(matrix.last().pose(), 24 + extension, 18 + (9 * i), -2).uv(barUSt + (barUEn - barUSt) * fullness, barVSt + barVWid * i).endVertex();
+//						builder.vertex(matrix.last().pose(), 24, 18 + (9 * i), -2).uv(barUSt, barVSt + barVWid * i).endVertex();
+////						int[] col = new int[4];
+////						col[3] = 255;
+////						col[i] = 255;//For void, overrides the alpha. Conveniently not an issue
+////						int extension = 9 * settings[i];
+////						buf.vertex(24, 24 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.25F + (((float) i) * .0625F), .0625F).endVertex();
+////						buf.vertex(24 + extension, 24 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.3125F + (((float) i) * .0625F), .0625F).endVertex();
+////						buf.vertex(24 + extension, 18 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.3125F + (((float) i) * .0625F), 0).endVertex();
+////						buf.vertex(24, 18 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.25F + (((float) i) * .0625F), 0).endVertex();
+//					}
+////					tes.end();
+//
+////					RenderSystem.setShaderTexture(0, MAGIC_BAR_FOREGROUND);
+////					buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+////					buf.vertex(0, 60, -1).uv(0, 1).endVertex();
+////					buf.vertex(117, 60, -1).uv(1, 1).endVertex();
+////					buf.vertex(117, 0, -1).uv(1, 0).endVertex();
+////					buf.vertex(0, 0, -1).uv(0, 0).endVertex();
+////					tes.end();
+//
+//					//As this is an unbatched environment, we need to manually force the buffer to render before drawing fonts
+//					buffer.endBatch();
+//
+//					Minecraft.getInstance().font.draw(e.getMatrixStack(), mainStack.getHoverName().getString(), 16, 5, Color.DARK_GRAY.getRGB());
+//
+////					RenderSystem.disableAlphaTest();
+////					RenderSystem.setShaderColor(1, 1, 1, 1);
+////					RenderSystem.disableBlend();
+////					RenderSystem.popAttributes();
+////					RenderSystem.popMatrix();
+//				}
+//			}
+//		}
+//	}
 
 	@SubscribeEvent
 	@SuppressWarnings("unused")
