@@ -5,24 +5,26 @@ import com.Da_Technomancer.crossroads.entity.ModelHopperHawk;
 import com.Da_Technomancer.crossroads.entity.RenderHopperHawk;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class HopperHawkShoulderRenderer<T extends Player> extends RenderLayer<T, PlayerModel<T>>{
 
-	private final ModelHopperHawk model = new ModelHopperHawk();
+	private final ModelHopperHawk model;
 
-	public HopperHawkShoulderRenderer(RenderLayerParent<T, PlayerModel<T>> p_i50929_1_){
+	public HopperHawkShoulderRenderer(RenderLayerParent<T, PlayerModel<T>> p_i50929_1_, EntityModelSet modelSet){
 		super(p_i50929_1_);
+		model = new ModelHopperHawk(modelSet.bakeLayer(RenderHopperHawk.HOPPER_HAWK_MODEL_LAYER));
 	}
 
 	@Override

@@ -1,26 +1,32 @@
 package com.Da_Technomancer.crossroads.entity;
 
-import net.minecraft.client.renderer.entity.EntityRenderers;
-import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import com.Da_Technomancer.crossroads.render.HopperHawkShoulderRenderer;
+import com.Da_Technomancer.crossroads.render.TechnomancyElytraRenderer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.geom.EntityModelSet;
+import net.minecraft.client.renderer.entity.*;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public final class CREntities{
 
 	@OnlyIn(Dist.CLIENT)
-	public static void clientInit(){
-//		EntityRenderers.register(EntityBullet.class, (EntityRendererManager manager) -> (new SpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer())));
-//		EntityRenderers.register(EntityArmRidable.class, RenderEmpty::new);
-		EntityRenderers.register(EntityShell.type, ThrownItemRenderer::new);
-		EntityRenderers.register(EntityNitro.type, ThrownItemRenderer::new);
-		EntityRenderers.register(EntityFlyingMachine.type, RenderFlyingMachine::new);
-		EntityRenderers.register(EntityFlameCore.type, RenderFlameCoreEntity::new);
-		EntityRenderers.register(EntityGhostMarker.type, RenderEmpty::new);
-		EntityRenderers.register(EntityHopperHawk.type, RenderHopperHawk::new);
+	public static void clientInit(EntityRenderersEvent.RegisterRenderers e){
+//		e.registerEntityRenderer(EntityBullet.class, (EntityRendererManager manager) -> (new SpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer())));
+//		e.registerEntityRenderer(EntityArmRidable.class, RenderEmpty::new);
+		e.registerEntityRenderer(EntityShell.type, ThrownItemRenderer::new);
+		e.registerEntityRenderer(EntityNitro.type, ThrownItemRenderer::new);
+		e.registerEntityRenderer(EntityFlyingMachine.type, RenderFlyingMachine::new);
+		e.registerEntityRenderer(EntityFlameCore.type, RenderFlameCoreEntity::new);
+		e.registerEntityRenderer(EntityGhostMarker.type, RenderEmpty::new);
+		e.registerEntityRenderer(EntityHopperHawk.type, RenderHopperHawk::new);
 	}
 
 	public static void init(IForgeRegistry<EntityType<?>> reg){
@@ -41,5 +47,30 @@ public final class CREntities{
 	private static <T extends Entity> void registerEnt(IForgeRegistry<EntityType<?>> reg, EntityType.Builder<T> builder, String name){
 		EntityType<T> type = createType(builder, name);
 		reg.register(type);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions e){
+		e.registerLayerDefinition(RenderHopperHawk.HOPPER_HAWK_MODEL_LAYER, ModelHopperHawk::createBodyLayer);
+	}
+
+	public static void attachLayerRenderers(EntityRenderersEvent.AddLayers e){
+		EntityModelSet modelSet = e.getEntityModels();
+
+		//Add the technomancy armor elytra render layer to every entity that can render an elytra
+		EntityRenderDispatcher manager = Minecraft.getInstance().getEntityRenderDispatcher();
+		for(EntityRenderer<?> entityRenderer : manager.renderers.values()){
+			if(entityRenderer instanceof HumanoidMobRenderer || entityRenderer instanceof ArmorStandRenderer){
+				LivingEntityRenderer<?, ?> livingRenderer = (LivingEntityRenderer<?, ?>) entityRenderer;
+				livingRenderer.addLayer(new TechnomancyElytraRenderer(livingRenderer, modelSet));
+			}
+		}
+		//Player renderers are stored separately from the main renderer map
+		for(EntityRenderer<? extends Player> skinRenderer : manager.getSkinMap().values()){
+			if(skinRenderer instanceof PlayerRenderer playerRenderer){
+				playerRenderer.addLayer(new TechnomancyElytraRenderer<>(playerRenderer, modelSet));
+				playerRenderer.addLayer(new HopperHawkShoulderRenderer<>(playerRenderer, modelSet));
+			}
+		}
 	}
 }

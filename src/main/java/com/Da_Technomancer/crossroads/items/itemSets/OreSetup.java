@@ -112,7 +112,7 @@ public final class OreSetup{
 		gemRuby = new Item(new Item.Properties().tab(CRItems.TAB_CROSSROADS)).setRegistryName("gem_ruby");
 		CRItems.toRegister.add(gemRuby);
 		blockRuby = new BasicBlock("block_ruby", CRBlocks.getRockProperty());
-		oreRuby = new BasicBlock("ore_ruby", CRBlocks.getRockProperty().strength(3));//TODO iron tool required
+		oreRuby = new BasicBlock("ore_ruby", CRBlocks.getRockProperty().strength(3));
 
 		ingotCopshowium = new Item(new Item.Properties().tab(CRItems.TAB_CROSSROADS)){
 			@Override
@@ -127,7 +127,7 @@ public final class OreSetup{
 
 		voidCrystal = new Item(new Item.Properties().tab(CRItems.TAB_CROSSROADS)).setRegistryName("void_crystal");
 		CRItems.toRegister.add(voidCrystal);
-		oreVoid = new BasicBlock("ore_void", CRBlocks.getRockProperty().strength(3, 9));//TODO iron tool required
+		oreVoid = new BasicBlock("ore_void", CRBlocks.getRockProperty().strength(3, 9));
 		
 		loadConfig();
 	}

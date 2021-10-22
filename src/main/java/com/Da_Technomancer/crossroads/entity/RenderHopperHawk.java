@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.entity;
 
 import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -12,9 +13,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class RenderHopperHawk extends MobRenderer<EntityHopperHawk, ModelHopperHawk>{
 
 	public static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/entities/hopper_hawk.png");
+	public static final ModelLayerLocation HOPPER_HAWK_MODEL_LAYER =new ModelLayerLocation(new ResourceLocation(Crossroads.MODID, "hopper_hawk"), "main");
 
 	protected RenderHopperHawk(EntityRendererProvider.Context context){
-		super(context, new ModelHopperHawk(), 0.3F);
+		super(context, new ModelHopperHawk(context.bakeLayer(HOPPER_HAWK_MODEL_LAYER)), 0.3F);
 	}
 
 	@Override

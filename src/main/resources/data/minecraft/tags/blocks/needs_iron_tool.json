@@ -1,0 +1,8 @@
+{
+	"replace": false,
+	"values": [
+		"crossroads:ore_ruby",
+		"crossroads:ore_void",
+		"crossroads:block_ruby"
+	]
+}

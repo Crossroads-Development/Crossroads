@@ -1,0 +1,9 @@
+{
+	"replace": false,
+	"values": [
+		"crossroads:ore_tin",
+		"crossroads:block_tin",
+		"crossroads:block_bronze",
+		"crossroads:block_copshowium"
+	]
+}

@@ -1,0 +1,11 @@
+{
+	"replace": false,
+	"values": [
+		"crossroads:petrol_cactus",
+		"crossroads:medicinal_mushroom",
+		"crossroads:wheezewort",
+		"crossroads:permeable_glass",
+		"crossroads:reactive_spot",
+		"crossroads:redstone_crystal"
+	]
+}

@@ -16,20 +16,19 @@ import java.util.function.Supplier;
 
 public enum CRReflection implements ReflectionUtil.IReflectionKey{
 
-	//TODO review
-
+	//TODO the obf name for SET_CHAT is wrong
 	SET_CHAT(CRReflection::getChatClass, "func_238493_a_", "addMessage", "Update the chat log without spamming it"),
-	CURE_ZOMBIE(ZombieVillager.class, "func_191991_a", "startConverting", "Cure zombie villagers with SO2"),
-	EXPLOSION_POWER(Explosion.class, "field_77280_f", "radius", "Perpetuate explosions with Collapse beams (1)"),
-	EXPLOSION_SMOKE(Explosion.class, "field_77286_a", "fire", "Perpetuate explosions with Collapse beams (2)"),
-	EXPLOSION_MODE(Explosion.class, "field_222260_b", "blockInteraction", "Perpetuate explosions with Collapse beams (3)"),
+	CURE_ZOMBIE(ZombieVillager.class, "m_34383_", "startConverting", "Cure zombie villagers with SO2"),
+	EXPLOSION_POWER(Explosion.class, "f_46017_", "radius", "Perpetuate explosions with Collapse beams (1)"),
+	EXPLOSION_SMOKE(Explosion.class, "f_46009_", "fire", "Perpetuate explosions with Collapse beams (2)"),
+	EXPLOSION_MODE(Explosion.class, "f_46010_", "blockInteraction", "Perpetuate explosions with Collapse beams (3)"),
 //	SWING_TIME(LivingEntity.class, "field_184617_aD", "attackStrengthTicker", "Mechanical Arm attacking"),
-	ENTITY_LIST(ServerLevel.class, "field_175741_N", "entitiesByUuid", "Prevent mob spawning with Closure beams, modify explosions with Collapse/Equilibrium beams"),
-	LOADED_CHUNKS(ChunkMap.class, "func_223491_f ", "getChunks ", "Spawn lightning at high atmospheric charge"),
-	LIGHTNING_POS(ServerLevel.class, "func_175736_a", "findLightingTargetAround", "Target lightning at high atmospheric charge"),
-	SPAWN_RADIUS(ChunkMap.class, "func_219243_d", "noPlayersCloseForSpawning", "Spawn lightning at high atmospheric charge"),
-	BIOME_ARRAY(ChunkBiomeContainer.class, "field_227054_f_", "biomes", "Terraforming alchemy reagents changing the biome"),
-	OFFSPRING_SPAWN_EGG(Mob.class, "func_213406_a", "onOffspringSpawnedFromEgg", "Imprinting on cloned foxes"),
+//	ENTITY_LIST(ServerLevel.class, "field_175741_N", "entitiesByUuid", "Prevent mob spawning with Closure beams, modify explosions with Collapse/Equilibrium beams"),
+	LOADED_CHUNKS(ChunkMap.class, "m_140416_", "getChunks", "Spawn lightning at high atmospheric charge"),
+	LIGHTNING_POS(ServerLevel.class, "m_143288_", "findLightningTargetAround", "Target lightning at high atmospheric charge"),
+	SPAWN_RADIUS(ChunkMap.class, "m_140397_", "noPlayersCloseForSpawning", "Spawn lightning at high atmospheric charge"),
+	BIOME_ARRAY(ChunkBiomeContainer.class, "f_62112_", "biomes", "Terraforming alchemy reagents changing the biome"),
+	OFFSPRING_SPAWN_EGG(Mob.class, "m_5502_", "onOffspringSpawnedFromEgg", "Imprinting on cloned foxes"),
 	CHUNK_TICKER_MAP(LevelChunk.class, "f_156362_", "tickersInLevel", "Tick accelerating tile entities");
 
 

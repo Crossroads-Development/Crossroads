@@ -40,6 +40,7 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -105,8 +106,8 @@ public final class Crossroads{
 //		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
 //		ModelLoaderRegistry.registerLoader(new BakedModelLoader());
 		CRItems.clientInit();
-		CRRendererRegistry.registerBlockRenderer();
-		CRRendererRegistry.registerEntityLayerRenderers();
+//		CRRendererRegistry.registerBlockRenderer();
+//		CRRendererRegistry.registerEntityLayerRenderers();
 		Keys.init();
 //		CRParticles.clientInit();
 		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
@@ -126,7 +127,7 @@ public final class Crossroads{
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent e){
 		CRBlocks.clientInit();
-		CREntities.clientInit();
+//		CREntities.clientInit();
 	}
 
 	@SuppressWarnings("unused")
@@ -380,5 +381,27 @@ public final class Crossroads{
 
 	private void registerEntityAttributes(EntityAttributeCreationEvent e){
 		e.put(EntityHopperHawk.type, EntityHopperHawk.createAttributes());
+	}
+
+	@SuppressWarnings("unused")
+	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
+	public static void registerRenderers(EntityRenderersEvent.RegisterRenderers e){
+		CRRendererRegistry.registerBlockRenderer(e);
+		CREntities.clientInit(e);
+	}
+
+	@SuppressWarnings("unused")
+	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
+	public static void registerEntityRenderingLayers(EntityRenderersEvent.AddLayers e){
+		CREntities.attachLayerRenderers(e);
+	}
+
+	@SuppressWarnings("unused")
+	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
+	public static void registerLayerLocation(EntityRenderersEvent.RegisterLayerDefinitions e){
+		CREntities.registerLayers(e);
 	}
 }

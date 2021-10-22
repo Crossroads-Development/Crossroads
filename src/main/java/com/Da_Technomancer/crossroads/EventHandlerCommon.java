@@ -57,28 +57,27 @@ import net.minecraftforge.fml.event.config.ModConfigEvent;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 public final class EventHandlerCommon{
 
-	private static final Field entityList = ReflectionUtil.reflectField(CRReflection.ENTITY_LIST);
+//	private static final Field entityList = ReflectionUtil.reflectField(CRReflection.ENTITY_LIST);
 
 	@SubscribeEvent
 	@SuppressWarnings({"unused", "unchecked"})
 	public void onEntitySpawn(LivingSpawnEvent.CheckSpawn e){
-		if(entityList != null && e.getWorld() instanceof ServerLevel world){
+		if(e.getWorld() instanceof ServerLevel world){
 			world.getProfiler().push(Crossroads.MODNAME + ": Ghost marker spawn prevention");
-			Map<UUID, Entity> entities;
-			try{
-				entities = (Map<UUID, Entity>) entityList.get(world);
-			}catch(IllegalAccessException | ClassCastException ex){
-				Crossroads.logger.error(ex);
-				world.getProfiler().pop();
-				return;
-			}
-			for(Entity ent : entities.values()){
+//			Map<UUID, Entity> entities;
+//			try{
+//				entities = (Map<UUID, Entity>) entityList.get(world);
+//			}catch(IllegalAccessException | ClassCastException ex){
+//				Crossroads.logger.error(ex);
+//				world.getProfiler().pop();
+//				return;
+//			}
+			for(Entity ent : world.getAllEntities()){
 				if(ent instanceof EntityGhostMarker mark){
 					if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.BLOCK_SPAWNING && mark.data != null && mark.position().subtract(e.getEntity().position()).length() <= mark.data.getInt("range")){
 						e.setResult(Event.Result.DENY);
@@ -304,21 +303,21 @@ public final class EventHandlerCommon{
 	@SubscribeEvent
 	@SuppressWarnings("unused")
 	public void modifyExplosion(ExplosionEvent.Start e){
-		if(entityList == null || !(e.getWorld() instanceof ServerLevel world)){
+		if(!(e.getWorld() instanceof ServerLevel world)){
 			return;
 		}
 
 		world.getProfiler().push(Crossroads.MODNAME + ": Explosion modification");
-		Map<UUID, Entity> entities;
-		try{
-			entities = (Map<UUID, Entity>) entityList.get(e.getWorld());
-		}catch(IllegalAccessException ex){
-			Crossroads.logger.error(ex);
-			world.getProfiler().pop();
-			return;
-		}
+//		Map<UUID, Entity> entities;
+//		try{
+//			entities = (Map<UUID, Entity>) entityList.get(e.getWorld());
+//		}catch(IllegalAccessException ex){
+//			Crossroads.logger.error(ex);
+//			world.getProfiler().pop();
+//			return;
+//		}
 		boolean perpetuate = false;
-		for(Entity ent : entities.values()){
+		for(Entity ent : world.getAllEntities()){
 			if(ent instanceof EntityGhostMarker mark){
 				if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.EQUILIBRIUM && mark.data != null && mark.position().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInt("range")){
 					e.setCanceled(true);//Equilibrium beams cancel explosions
