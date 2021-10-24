@@ -71,14 +71,12 @@ public class GatewaySavedData extends WorldSavedData{
 		// Loop until the address is not already taken. If it is, use an offset of progressively larger
         // squares and try again.
         do{
-            quadraticOffset = attempts * attempts;
-
             // Gateway address space is 2^12; split the offset up into groups of 3 bits
             // representing offset for each part of the address
-            offsetComponents[0] = (quadraticOffset & 0xe00) >> 9;
-            offsetComponents[1] = (quadraticOffset & 0x1c0) >> 6;
-            offsetComponents[2] = (quadraticOffset & 0x38) >> 3;
-            offsetComponents[3] = (quadraticOffset & 0x7);
+            offsetComponents[0] = (attempts & 0xe00) >> 9;
+            offsetComponents[1] = (attempts & 0x1c0) >> 6;
+            offsetComponents[2] = (attempts & 0x38) >> 3;
+            offsetComponents[3] = (attempts & 0x7);
 			for(int i = 0; i < 4; i++){
 				address[i] = GatewayAddress.getLegalEntry(initial[i] + offsetComponents[i]);
 			}
