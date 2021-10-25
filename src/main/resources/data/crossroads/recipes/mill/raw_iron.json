@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"tag": "forge:raw_materials/iron"
+	},
+	"output": [
+		{
+			"item": "crossroads:dust_iron",
+			"count": 2
+		}
+	]
+}

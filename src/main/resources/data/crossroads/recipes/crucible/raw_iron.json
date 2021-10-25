@@ -1,10 +1,10 @@
 {
 	"type": "crossroads:crucible",
 	"input": {
-		"tag": "forge:ores/copper"
+		"tag": "forge:raw_materials/iron"
 	},
 	"output": {
-		"fluid": "crossroads:molten_copper",
+		"fluid": "crossroads:molten_iron",
 		"amount": 288
 	}
 }

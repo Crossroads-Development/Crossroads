@@ -5,8 +5,8 @@
 	},
 	"output": [
 		{
-			"item": "crossroads:dust_copper",
-			"count": 2
+			"item": "minecraft:raw_copper",
+			"count": 5
 		},
 		{
 			"item": "sand",

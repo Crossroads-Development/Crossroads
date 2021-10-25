@@ -8,6 +8,6 @@
 		}
 	},
 	"ingredient": {
-		"tag": "forge:ores/iron"
+		"tag": "forge:raw_materials/iron"
 	}
 }

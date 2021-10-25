@@ -5,7 +5,7 @@
 	},
 	"output": [
 		{
-			"item": "crossroads:dust_gold",
+			"item": "minecraft:raw_gold",
 			"count": 2
 		},
 		{

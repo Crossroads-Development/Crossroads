@@ -1,0 +1,8 @@
+{
+	"type": "crossroads:reagents",
+	"id": "amethyst",
+	"melting": 1700,
+	"boiling": 2300,
+	"item": "forge:gems/amethyst",
+	"color": "B38DF5"
+}

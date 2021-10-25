@@ -26,6 +26,7 @@ public final class OreSetup{
 
 	public static Item ingotTin;
 	public static Item nuggetTin;
+	public static Item rawTin;
 	public static BasicBlock blockTin;
 	public static BasicBlock oreTin;
 
@@ -82,6 +83,8 @@ public final class OreSetup{
 		blockTin = new BasicBlock("block_tin", CRBlocks.getMetalProperty());
 		nuggetTin = new Item(new Item.Properties().tab(CRItems.TAB_CROSSROADS)).setRegistryName("nugget_tin");
 		CRItems.toRegister.add(nuggetTin);
+		rawTin = new Item(new Item.Properties().tab(CRItems.TAB_CROSSROADS)).setRegistryName("raw_tin");
+		CRItems.toRegister.add(rawTin);
 		oreTin = new BasicBlock("ore_tin", CRBlocks.getRockProperty().strength(3));
 
 		ingotCopper = new Item(new Item.Properties().tab(CRItems.TAB_CROSSROADS)).setRegistryName("ingot_copper");

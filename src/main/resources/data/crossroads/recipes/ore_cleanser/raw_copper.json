@@ -4,12 +4,12 @@
 		"item": "crossroads:ore_clump",
 		"count": 2,
 		"nbt": {
-			"material": "iron"
+			"material": "copper"
 		}
 	},
 	"ingredient": [
 		{
-			"tag": "forge:ores/iron"
+			"tag": "forge:raw_materials/copper"
 		}
 	]
 }

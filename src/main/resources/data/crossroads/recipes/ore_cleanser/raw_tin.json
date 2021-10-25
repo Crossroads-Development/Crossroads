@@ -4,12 +4,12 @@
 		"item": "crossroads:ore_clump",
 		"count": 2,
 		"nbt": {
-			"material": "copper"
+			"material": "tin"
 		}
 	},
 	"ingredient": [
 		{
-			"tag": "forge:ores/copper"
+			"tag": "forge:raw_materials/tin"
 		}
 	]
 }

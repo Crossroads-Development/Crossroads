@@ -10,13 +10,13 @@
 			"qty": 2
 		},
 		{
-			"type": "vanadium",
+			"type": "iron",
 			"qty": 1
 		}
 	],
 	"products": [
 		{
-			"type": "emerald",
+			"type": "amethyst",
 			"qty": 2
 		}
 	]

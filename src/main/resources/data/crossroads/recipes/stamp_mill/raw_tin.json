@@ -8,6 +8,6 @@
 		}
 	},
 	"ingredient": {
-		"tag": "forge:ores/tin"
+		"tag": "forge:raw_materials/tin"
 	}
 }

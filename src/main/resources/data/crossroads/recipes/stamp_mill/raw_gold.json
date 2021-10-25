@@ -4,10 +4,10 @@
 		"item": "crossroads:ore_gravel",
 		"count": 3,
 		"nbt": {
-			"material": "copper"
+			"material": "gold"
 		}
 	},
 	"ingredient": {
-		"tag": "forge:ores/copper"
+		"tag": "forge:raw_materials/gold"
 	}
 }

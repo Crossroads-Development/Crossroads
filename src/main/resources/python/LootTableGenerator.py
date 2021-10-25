@@ -12,6 +12,10 @@ def writeGem(file, blockName, gemName):
 	file.write("\"\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t]\n\t\t}\n\t]\n}")
 
 
+def writeMetalOre(file, blockName, rawName):
+	writeGem(file, blockName, rawName)
+
+
 blockstates = os.listdir("../assets/crossroads/blockstates/")
 
 # Note these have a .json suffix
@@ -64,6 +68,8 @@ with open(pickaxeTagPath, "w+") as pickaxeTagFile:
 			if name.startswith("stamp_mill_top") or name.startswith("light_cluster") or name.startswith("stamp_mill_top") or "large_gear_" in name or "mechanism" in name or "reactive_spot" in name:
 				# Stamp mill tops and light clusters drop nothing; gear drops handled by TE
 				f.write("{\n\t\"type\": \"minecraft:block\",\n\t\"pools\": [\n\t\t{\n\t\t\t\"rolls\": 1,\n\t\t\t\"entries\": [\n\t\t\t\t\n\t\t\t],\n\t\t\t\"conditions\": [\n\t\t\t\t{\n\t\t\t\t\t\"condition\": \"minecraft:survives_explosion\"\n\t\t\t\t}\n\t\t\t]\n\t\t}\n\t]\n}")
+			elif name.startswith("ore_tin"):
+				writeMetalOre(f, "crossroads:ore_tin", "crossroads:raw_tin")
 			elif name.startswith("ore_void"):
 				writeGem(f, "crossroads:ore_void", "crossroads:void_crystal")
 			elif name.startswith("ore_ruby"):

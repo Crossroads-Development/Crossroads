@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:crucible",
 	"input": {
-		"tag": "forge:ores/gold"
+		"tag": "forge:raw_materials/gold"
 	},
 	"output": {
 		"fluid": "crossroads:molten_gold",
