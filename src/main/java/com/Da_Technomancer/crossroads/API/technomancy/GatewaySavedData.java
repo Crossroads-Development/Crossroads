@@ -51,18 +51,39 @@ public class GatewaySavedData extends WorldSavedData{
 		}
 
 		//Generate a unique new address
-		//TODO: Optimize this for a large number of taken addresses
 		EnumBeamAlignments[] address = new EnumBeamAlignments[4];
 		GatewayAddress reserved = getReservedAddress(w);
 		GatewayAddress gateAdd;
 		Random rand = new Random(pos.asLong());//We use the position as a seed, so that if a controller is broken and replaced/reformed at the same spot, it will have the same address unless it is already taken
+
+		// set up the initial gateway address. Will be used if there are no collisions
+		int[] initial = new int[4];
+		for(int i = 0; i < 4; i++){
+			initial[i] = rand.nextInt(8);
+		}
+
+		// number of attempts made to pick a new address
+		int attempts = 0;
+
+		int quadraticOffset;
+		int[] offsetComponents = new int[4];
+
+		// Loop until the address is not already taken. If it is, use an offset of progressively larger
+		// squares and try again.
 		do{
+			// Gateway address space is 2^12; split the offset up into groups of 3 bits
+			// representing offset for each part of the address
+			offsetComponents[0] = (attempts & 0xe00) >> 9;
+			offsetComponents[1] = (attempts & 0x1c0) >> 6;
+			offsetComponents[2] = (attempts & 0x38) >> 3;
+			offsetComponents[3] = (attempts & 0x7);
 			for(int i = 0; i < 4; i++){
-				address[i] = GatewayAddress.getLegalEntry(rand.nextInt(GatewayAddress.LEGAL_VALS.length));
+				address[i] = GatewayAddress.getLegalEntry(initial[i] + offsetComponents[i]);
 			}
 			gateAdd = new GatewayAddress(address);
+			attempts += 1;
 		}while(data.addressBook.containsKey(gateAdd) || gateAdd.equals(reserved));//Generate a new address every time the generated address is already in use
-		
+
 		//Register this new address in the addressBook
 		data.addressBook.put(gateAdd, new GatewayAddress.Location(pos, w));
 		data.setDirty();
