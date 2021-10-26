@@ -1,10 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.witchcraft;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
-import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
@@ -18,30 +14,29 @@ import com.Da_Technomancer.crossroads.items.witchcraft.BloodSample;
 import com.Da_Technomancer.essentials.packets.INBTReceiver;
 import com.Da_Technomancer.essentials.packets.SendNBTToClient;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ObjectHolder;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -235,7 +230,6 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 	}
 
 	private final LazyOptional<IItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
-	private final LazyOptional<BeamHandler> beamOpt = LazyOptional.of(BeamHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -243,27 +237,7 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
 			return (LazyOptional<T>) itemOpt;
 		}
-		if(capability == Capabilities.BEAM_CAPABILITY){
-			return (LazyOptional<T>) beamOpt;
-		}
 
 		return super.getCapability(capability, facing);
-	}
-
-	/*
-	 * TODO
-	 *  This is a temporary mechanic for finalizing the crafting
-	 * 	The intended mechanic will involve being struck by lightning
-	 * 	It will be implemented once Crossroads is in MC1.17+ and the lightning rod block is available
-	 */
-	private class BeamHandler implements IBeamHandler{
-
-		@Override
-		public void setBeam(@Nonnull BeamUnit mag){
-			//Finalize the craft when receiving a charge beam
-			if(EnumBeamAlignments.getAlignment(mag) == EnumBeamAlignments.CHARGE){
-				createOutput();
-			}
-		}
 	}
 }

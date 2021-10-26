@@ -23,7 +23,9 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.LightningRodBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -126,5 +128,19 @@ public class EmbryoLab extends TEBlock implements IReadable{
 	@Override
 	public float read(Level world, BlockPos pos, BlockState blockState){
 		return blockState.getValue(CRProperties.ACTIVE) ? 1 : 0;
+	}
+
+	@Override
+	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block fromBlock, BlockPos fromPos, boolean isMoving){
+		if(fromBlock == Blocks.LIGHTNING_ROD && fromPos.equals(pos.above())){
+			BlockState fromState = world.getBlockState(fromPos);
+			if(fromState.getBlock() == fromBlock && fromState.getValue(LightningRodBlock.POWERED)){
+				//This block finalizes a craft when a lightning rod on top is struck by lightning
+				BlockEntity te = world.getBlockEntity(pos);
+				if(te instanceof EmbryoLabTileEntity ete){
+					ete.createOutput();
+				}
+			}
+		}
 	}
 }

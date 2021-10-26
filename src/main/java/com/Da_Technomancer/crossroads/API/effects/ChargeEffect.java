@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.CRConfig;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
@@ -35,7 +36,7 @@ public class ChargeEffect extends BeamEffect{
 
 				if(power >= 16 && CRConfig.chargeSpawnLightning.get() && (CRConfig.undergroundLightning.get() || worldIn.canSeeSky(pos.above()))){
 					LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(worldIn);
-					lightning.moveTo(Vec3.atBottomCenterOf(pos));
+					lightning.moveTo(Vec3.atBottomCenterOf(pos.above()));
 					worldIn.addFreshEntity(lightning);
 				}
 			}
