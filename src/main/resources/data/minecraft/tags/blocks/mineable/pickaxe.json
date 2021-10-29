@@ -140,7 +140,6 @@
 		"crossroads:tesla_coil_top_normal",
 		"crossroads:voltus_generator",
 		"crossroads:water_centrifuge",
-		"crossroads:winding_table",
-		"crossroads:wind_turbine"
+		"crossroads:winding_table"
 	]
 }

@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.RotaryPumpContainer;
+import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.Da_Technomancer.essentials.packets.SendLongToClient;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,21 +18,20 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.BucketPickup;
-import net.minecraft.world.level.block.PowderSnowBlock;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.registries.ObjectHolder;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 
@@ -82,12 +82,10 @@ public class RotaryPumpTileEntity extends InventoryTE{
 	public void serverTick(){
 		super.serverTick();
 
-		if(CAPACITY - fluids[0].getAmount() < FluidAttributes.BUCKET_VOLUME){
-			return;
-		}
-
-		FluidState fstate = level.getFluidState(worldPosition.below());
-		if(fstate.isSource()){
+		BlockPos targetPos = worldPosition.below();
+		BlockState state = level.getBlockState(targetPos);
+		Pair<FluidStack, BlockState> targetResult = getFluidFromBlock(state, level, targetPos);
+		if(targetResult != null && (fluids[0].isEmpty() || BlockUtil.sameFluid(fluids[0], targetResult.getLeft()) && CAPACITY - fluids[0].getAmount() >= targetResult.getLeft().getAmount())){
 			//Only gain progress if spinning in positive direction
 			double powerDrained = energy < 0 ? 0 : MAX_POWER * RotaryUtil.findEfficiency(axleHandler.getSpeed(), 0, MAX_SPEED);
 			progress += powerDrained;
@@ -96,23 +94,10 @@ public class RotaryPumpTileEntity extends InventoryTE{
 
 			if(progress >= REQUIRED){
 				progress = 0;
-				BlockPos targetPos = worldPosition.below();
-				BlockState state = level.getBlockState(targetPos);
-				Block block = state.getBlock();
-				if(block instanceof BucketPickup bp && !(bp instanceof PowderSnowBlock)){
-					//As of MC1.17, not all instances of BucketPickup represent fluids
-					//We blacklist in code any non-fluid examples
-					//And verify the result, reverting any change if it gave a non-fluid output
-
-					ItemStack resultStack = bp.pickupBlock(level, targetPos, state);
-					if(resultStack.getItem() instanceof BucketItem bItem){
-						Fluid fl = bItem.getFluid();
-						fluids[0] = new FluidStack(fl, 1000 + fluids[0].getAmount());
-					}else{
-						//Invalid block, revert any change by setting the blockstate to the original value
-						level.setBlock(targetPos, state, 2);
-					}
-				}
+				level.setBlockAndUpdate(targetPos, targetResult.getRight());
+				int prevAmount = fluids[0].getAmount();
+				fluids[0] = targetResult.getLeft().copy();
+				fluids[0].grow(prevAmount);
 			}
 		}else{
 			updateProgressToClients(0);
@@ -134,6 +119,26 @@ public class RotaryPumpTileEntity extends InventoryTE{
 			progress = 0;
 		}
 		*/
+	}
+
+	@Nullable
+	private static Pair<FluidStack, BlockState> getFluidFromBlock(BlockState state, Level world, BlockPos targetPos){
+		Block block = state.getBlock();
+		if(block == Blocks.WATER_CAULDRON && state.getValue(LayeredCauldronBlock.LEVEL) == 3){
+			//Pumps can generate water from a filled water cauldron, without consuming the fluid.
+			//This is a special case- they do consume fluid from lava cauldrons
+			return Pair.of(new FluidStack(Fluids.WATER, 1000), state);
+		}else if(block == Blocks.LAVA_CAULDRON && state.getValue(LayeredCauldronBlock.LEVEL) == 3){
+			return Pair.of(new FluidStack(Fluids.LAVA, 1000), Blocks.CAULDRON.defaultBlockState());
+		}else if(block instanceof LiquidBlock lblock){
+			//Normal fluids
+			Fluid fluid = lblock.getFluid().getSource();
+			return Pair.of(new FluidStack(fluid, 1000), Blocks.AIR.defaultBlockState());
+		}else if(block instanceof SimpleWaterloggedBlock wlblock && state.hasProperty(BlockStateProperties.WATERLOGGED) && state.getValue(BlockStateProperties.WATERLOGGED)){
+			//Waterlogged blocks
+			return Pair.of(new FluidStack(Fluids.WATER, 1000), state.setValue(BlockStateProperties.WATERLOGGED, false));
+		}
+		return null;
 	}
 
 	private void updateProgressToClients(double progressChange){

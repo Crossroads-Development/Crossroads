@@ -1,0 +1,14 @@
+{
+	"type": "minecraft:smelting",
+	"result": "crossroads:dust_salt",
+	"experience": 0.2,
+	"ingredient": [
+		{
+			"type": "forge:nbt",
+			"item": "minecraft:potion",
+			"nbt": {
+				"Potion": "water"
+			}
+		}
+	]
+}

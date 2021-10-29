@@ -65,6 +65,7 @@ public class JEICrossroadsPlugin implements IModPlugin{
 
 		//Add relevant crossroads machines to vanilla recipe types
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.smelter, 1), VanillaRecipeCategoryUid.FURNACE);
+		registry.addRecipeCatalyst(new ItemStack(CRBlocks.firebox, 1), VanillaRecipeCategoryUid.FUEL);
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.steamer, 1), VanillaRecipeCategoryUid.SMOKING);
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.brewingVat, 1), VanillaRecipeCategoryUid.BREWING);
 	}

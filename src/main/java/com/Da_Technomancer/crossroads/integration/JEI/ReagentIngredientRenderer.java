@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import mezz.jei.api.ingredients.IIngredientRenderer;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -35,7 +36,7 @@ public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 		matrix.translate(xPosition, yPosition, 0);
 
 		BufferBuilder buf = Tesselator.getInstance().getBuilder();
-
+		RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
 		RenderSystem.setShaderTexture(0, PHIAL_TEXTURE);
 		buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
 		buf.vertex(matrix.last().pose(), 0, 16, 100).color(255, 255, 255, 255).uv(0, 1).endVertex();
