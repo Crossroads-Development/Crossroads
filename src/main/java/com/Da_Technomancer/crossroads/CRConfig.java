@@ -113,6 +113,8 @@ public class CRConfig{
 	public static ForgeConfigSpec.IntValue respawnPenaltyDuration;
 	public static ForgeConfigSpec.IntValue degradationPenalty;
 	public static ForgeConfigSpec.ConfigValue<List<? extends String>> permanentEffectBlacklist;
+	public static ForgeConfigSpec.IntValue beamHeatMult;
+	public static ForgeConfigSpec.IntValue fireboxFuelMult;
 
 	private static final Tag<Block> destroyBlacklist = BlockTags.bind(Crossroads.MODID + ":destroy_blacklist");
 
@@ -182,7 +184,9 @@ public class CRConfig{
 		lodestoneTurbinePower = serverBuilder.comment("The power produced by the Lodestone Turbine (in J/t)").defineInRange("lodestone_power", 15D, 0D, 100D);
 		hamsterPower = serverBuilder.comment("The power produced by the Hamster Wheel (in J/t)").defineInRange("hamster_power", 5D, 0D, 100D);
 		demonPower = serverBuilder.comment("The power produced by the Maxwell's Demon (both hot and cold, in degrees C/t)").defineInRange("demon_power", 5D, 0D, 100D);
-		fireboxCap = serverBuilder.comment("Maximum fuel burn time in the Firebox. Set to -1 to remove the limit").defineInRange("firebox_cap", 4000, -1, Integer.MAX_VALUE);
+		fireboxCap = serverBuilder.comment("Maximum fuel burn time in the Firebox. Set to -1 to remove the limit").defineInRange("firebox_cap", 64_000, -1, Integer.MAX_VALUE);
+		fireboxFuelMult = serverBuilder.comment("Multiplier on fuel burn time for a Firebox compared to a furnace").defineInRange("firebox_fuel_mult", 4, 1, 100);
+		beamHeatMult = serverBuilder.comment("Temperature change from energy and cold beams, per unit power, applied every 4 ticks").defineInRange("beam_heat_mult", 100, 0, 1000);
 		serverBuilder.pop();
 		serverBuilder.push(CAT_MISC);
 		heatEffects = serverBuilder.comment("Enable overheat effects?", "If false, all heat cable overheating effects are replaced with burning").define("cable_effects", true);

@@ -10,11 +10,11 @@
 			"type": "spotlight",
 			"title": "Firebox",
 			"item": "crossroads:firebox",
-			"text": "The <item>Firebox/$ is the simplest way to produce heat by burning fuel. Any furnace fuel can be used to produce heat at a constant rate.$(br2)Fuels will burn for the same time as in a furnace, capped at 4000 ticks (enough for coal or a kelp block, less than a coal block; "
+			"text": "The <item>Firebox/$ is the simplest way to produce heat by burning fuel. Any furnace fuel can be used to produce heat at a constant rate.$(br2)Fuels will burn for 4x longer than in a furnace (config controlled- trust the tooltip), capped at 64000 ticks burntime total per "
 		},
 		{
 			"type": "text",
-			"text": "config controlled).$(br2)It connects to a <item>$(l:crossroads:heat/cable)cable/$ on the top. <thing>$(l:essentials/circuits#reader)Reader circuits/$ measure the fullness of the input.$(br2)"
+			"text": "item (enough for a coal block or a kelp block, less than a lava bucket; config controlled).$(br2)It connects to a <item>$(l:crossroads:heat/cable)cable/$ on the top. <thing>$(l:essentials/circuits#reader)Reader circuits/$ measure the fullness of the input.$(br2)"
 		}
 	]
 }

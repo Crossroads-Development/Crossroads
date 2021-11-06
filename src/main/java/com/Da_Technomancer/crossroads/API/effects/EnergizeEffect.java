@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
+import com.Da_Technomancer.crossroads.CRConfig;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -16,20 +17,20 @@ import javax.annotation.Nullable;
 
 public class EnergizeEffect extends BeamEffect{
 
-	private static final double MULT = 100;
-
 	@Override
 	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, Level worldIn, BlockPos pos, @Nullable Direction dir){
 		if(!performTransmute(align, voi, power, worldIn, pos)){
 			IHeatHandler hitHandler = getHitHandler(worldIn, pos, dir);
 			if(voi){
 				if(hitHandler != null){
-					hitHandler.addHeat(-Math.min(MULT * power, hitHandler.getTemp() - HeatUtil.ABSOLUTE_ZERO));
+					int mult = CRConfig.beamHeatMult.get();
+					hitHandler.addHeat(-Math.min(mult * power, hitHandler.getTemp() - HeatUtil.ABSOLUTE_ZERO));
 					//Effect in crystal master axis
 				}
 			}else{
 				if(hitHandler != null){
-					hitHandler.addHeat(Math.min(MULT * power, HeatUtil.MAX_TEMP - hitHandler.getTemp()));
+					int mult = CRConfig.beamHeatMult.get();
+					hitHandler.addHeat(Math.min(mult * power, HeatUtil.MAX_TEMP - hitHandler.getTemp()));
 					//Effect in crystal master axis
 				}else{
 					BlockState state = worldIn.getBlockState(pos);

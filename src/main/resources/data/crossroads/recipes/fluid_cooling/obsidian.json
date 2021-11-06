@@ -4,5 +4,5 @@
 	"fluid_amount": 1000,
 	"item": "obsidian",
 	"max_temp": 2250,
-	"temp_change": 1500
+	"temp_change": 1250
 }

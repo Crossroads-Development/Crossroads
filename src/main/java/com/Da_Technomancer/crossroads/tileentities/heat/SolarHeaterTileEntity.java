@@ -20,7 +20,7 @@ public class SolarHeaterTileEntity extends ModuleTE{
 	@ObjectHolder("solar_heater")
 	public static BlockEntityType<SolarHeaterTileEntity> TYPE = null;
 
-	public static final double RATE = 5;
+	public static final double RATE = 10;
 	public static final double CAP = 325;
 
 	private boolean newlyPlaced = true;//Used to immediately generate the cache to reduce the latency for the player with a new heater

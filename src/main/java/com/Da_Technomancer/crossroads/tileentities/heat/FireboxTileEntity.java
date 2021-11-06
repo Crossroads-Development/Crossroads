@@ -65,6 +65,7 @@ public class FireboxTileEntity extends InventoryTE{
 
 		int fuelBurn;
 		if(burnTime == 0 && (fuelBurn = ForgeHooks.getBurnTime(inventory[0], null)) != 0){
+			fuelBurn *= CRConfig.fireboxFuelMult.get();
 			int configLimit = CRConfig.fireboxCap.get();
 			if(configLimit >= 0){
 				fuelBurn = Math.min(fuelBurn, configLimit);

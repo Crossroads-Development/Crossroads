@@ -1,5 +1,5 @@
 Firebox
 crossroads:firebox
 The <item>Firebox/$ is the simplest way to produce heat by burning fuel. Any furnace fuel can be used to produce heat at a constant rate.
-Fuels will burn for the same time as in a furnace, capped at 4000 ticks (enough for coal or a kelp block, less than a coal block; config controlled).
+Fuels will burn for 4x longer than in a furnace (config controlled- trust the tooltip), capped at 64000 ticks burntime total per item (enough for a coal block or a kelp block, less than a lava bucket; config controlled).
 It connects to a <item><link:crossroads:heat/cable>cable/$ on the top. <thing><link:essentials/circuits#reader>Reader circuits/$ measure the fullness of the input.

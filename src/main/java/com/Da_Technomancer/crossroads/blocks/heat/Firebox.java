@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.heat;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.CircuitUtil;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.heat.FireboxTileEntity;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
@@ -87,6 +88,7 @@ public class Firebox extends BaseEntityBlock implements IReadable{
 	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(new TranslatableComponent("tt.crossroads.firebox", FireboxTileEntity.POWER));
+		tooltip.add(new TranslatableComponent("tt.crossroads.firebox.duration", CRConfig.fireboxFuelMult.get()));
 	}
 
 	@Override
