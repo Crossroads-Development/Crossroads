@@ -31,7 +31,6 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.registries.ObjectHolder;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 
@@ -84,8 +83,8 @@ public class RotaryPumpTileEntity extends InventoryTE{
 
 		BlockPos targetPos = worldPosition.below();
 		BlockState state = level.getBlockState(targetPos);
-		Pair<FluidStack, BlockState> targetResult = getFluidFromBlock(state, level, targetPos);
-		if(targetResult != null && (fluids[0].isEmpty() || BlockUtil.sameFluid(fluids[0], targetResult.getLeft()) && CAPACITY - fluids[0].getAmount() >= targetResult.getLeft().getAmount())){
+		FluidStack pumpedFluid = getFluidFromBlock(state, level, targetPos);
+		if(!pumpedFluid.isEmpty() && (fluids[0].isEmpty() || BlockUtil.sameFluid(fluids[0], pumpedFluid) && CAPACITY - fluids[0].getAmount() >= pumpedFluid.getAmount())){
 			//Only gain progress if spinning in positive direction
 			double powerDrained = energy < 0 ? 0 : MAX_POWER * RotaryUtil.findEfficiency(axleHandler.getSpeed(), 0, MAX_SPEED);
 			progress += powerDrained;
@@ -94,9 +93,9 @@ public class RotaryPumpTileEntity extends InventoryTE{
 
 			if(progress >= REQUIRED){
 				progress = 0;
-				level.setBlockAndUpdate(targetPos, targetResult.getRight());
+				level.setBlockAndUpdate(targetPos, getPumpedBlockState(state, level, targetPos));
 				int prevAmount = fluids[0].getAmount();
-				fluids[0] = targetResult.getLeft().copy();
+				fluids[0] = pumpedFluid.copy();
 				fluids[0].grow(prevAmount);
 			}
 		}else{
@@ -121,24 +120,41 @@ public class RotaryPumpTileEntity extends InventoryTE{
 		*/
 	}
 
-	@Nullable
-	private static Pair<FluidStack, BlockState> getFluidFromBlock(BlockState state, Level world, BlockPos targetPos){
+	public static BlockState getPumpedBlockState(BlockState state, Level world, BlockPos targetPos){
 		Block block = state.getBlock();
 		if(block == Blocks.WATER_CAULDRON && state.getValue(LayeredCauldronBlock.LEVEL) == 3){
 			//Pumps can generate water from a filled water cauldron, without consuming the fluid.
 			//This is a special case- they do consume fluid from lava cauldrons
-			return Pair.of(new FluidStack(Fluids.WATER, 1000), state);
+			return state;
 		}else if(block == Blocks.LAVA_CAULDRON && state.getValue(LayeredCauldronBlock.LEVEL) == 3){
-			return Pair.of(new FluidStack(Fluids.LAVA, 1000), Blocks.CAULDRON.defaultBlockState());
-		}else if(block instanceof LiquidBlock lblock){
+			return Blocks.CAULDRON.defaultBlockState();
+		}else if(block instanceof LiquidBlock lblock && lblock.getFluid().isSource(world.getFluidState(targetPos))){
+			//Normal fluids
+			return Blocks.AIR.defaultBlockState();
+		}else if(block instanceof SimpleWaterloggedBlock && state.hasProperty(BlockStateProperties.WATERLOGGED) && state.getValue(BlockStateProperties.WATERLOGGED)){
+			//Waterlogged blocks
+			return state.setValue(BlockStateProperties.WATERLOGGED, false);
+		}
+		return state;
+	}
+
+	public static FluidStack getFluidFromBlock(BlockState state, Level world, BlockPos targetPos){
+		Block block = state.getBlock();
+		if(block == Blocks.WATER_CAULDRON && state.getValue(LayeredCauldronBlock.LEVEL) == 3){
+			//Pumps can generate water from a filled water cauldron, without consuming the fluid.
+			//This is a special case- they do consume fluid from lava cauldrons
+			return new FluidStack(Fluids.WATER, 1000);
+		}else if(block == Blocks.LAVA_CAULDRON && state.getValue(LayeredCauldronBlock.LEVEL) == 3){
+			return new FluidStack(Fluids.LAVA, 1000);
+		}else if(block instanceof LiquidBlock lblock && lblock.getFluid().isSource(world.getFluidState(targetPos))){
 			//Normal fluids
 			Fluid fluid = lblock.getFluid().getSource();
-			return Pair.of(new FluidStack(fluid, 1000), Blocks.AIR.defaultBlockState());
-		}else if(block instanceof SimpleWaterloggedBlock wlblock && state.hasProperty(BlockStateProperties.WATERLOGGED) && state.getValue(BlockStateProperties.WATERLOGGED)){
+			return new FluidStack(fluid, 1000);
+		}else if(block instanceof SimpleWaterloggedBlock && state.hasProperty(BlockStateProperties.WATERLOGGED) && state.getValue(BlockStateProperties.WATERLOGGED)){
 			//Waterlogged blocks
-			return Pair.of(new FluidStack(Fluids.WATER, 1000), state.setValue(BlockStateProperties.WATERLOGGED, false));
+			return new FluidStack(Fluids.WATER, 1000);
 		}
-		return null;
+		return FluidStack.EMPTY;
 	}
 
 	private void updateProgressToClients(double progressChange){

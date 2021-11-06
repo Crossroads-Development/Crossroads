@@ -39,10 +39,10 @@ public class WindTurbineTileEntity extends ModuleTE{
 	public static BlockEntityType<WindTurbineTileEntity> TYPE = null;
 
 	public static final double MAX_SPEED = 2D;
-	public static final double INERTIA = 200;
+	public static final double INERTIA = 1200;
 	public static final double LOW_POWER = 5D;
 	public static final double HIGH_POWER = 25D;
-	private static final AABB RENDER_BOX = new AABB(-1, -1, -1, 2, 2, 2);
+	private static final AABB RENDER_BOX = new AABB(-2, -2, -2, 3, 3, 3);
 
 	//Undocumented 'easter egg'. This person takes way more damage from windmills
 	//Don't ask.

@@ -26,6 +26,7 @@ public class CRWorldGen{
 
 //	private static ConfiguredFeature<?, ?> COPPER_ORE;
 	private static ConfiguredFeature<?, ?> TIN_ORE;
+	private static ConfiguredFeature<?, ?> TIN_ORE_DEEP;
 	private static ConfiguredFeature<?, ?> VOID_ORE;
 	private static ConfiguredFeature<?, ?> RUBY_ORE_SPOT;//Ruby is currently generating as single block ores scattered randomly in netherrack
 //	private static final ConfiguredFeature<?, ?> RUBY_ORE = RUBY_FEATURE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NETHERRACK, Blocks.NETHER_QUARTZ_ORE.getDefaultState(), 14)).withPlacement(Features.Placements.RANGE_10_20_ROOFED).squared().count(16);//Normal nether quartz vein version
@@ -43,7 +44,8 @@ public class CRWorldGen{
 		//Construct our configured features
 //		COPPER_ORE = configuredFeature(Feature.ORE, new ConfigTagRuleTest(BlockTags.BASE_STONE_OVERWORLD, "cr_copper"), OreSetup.oreCopper.defaultBlockState(), 13, 32, 3);
 		//TODO rebalance these numbers (especially height) in MC1.18
-		TIN_ORE = configuredFeature(GEM_FEATURE, new ConfigTagRuleTest(BlockTags.BASE_STONE_OVERWORLD, "cr_tin"), OreSetup.oreTin.defaultBlockState(), 1, 32, 20);
+		TIN_ORE = configuredFeature(GEM_FEATURE, new ConfigTagRuleTest(BlockTags.STONE_ORE_REPLACEABLES, "cr_tin"), OreSetup.oreTin.defaultBlockState(), 1, 32, 30);
+		TIN_ORE_DEEP = configuredFeature(GEM_FEATURE, new ConfigTagRuleTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES, "cr_tin"), OreSetup.oreTinDeep.defaultBlockState(), 1, 32, 30);
 		VOID_ORE = configuredFeature(GEM_FEATURE, new ConfigTagRuleTest(Tags.Blocks.END_STONES, "cr_void"), OreSetup.oreVoid.defaultBlockState(), 1, 80, 10);
 		RUBY_ORE_SPOT = configuredFeature(GEM_FEATURE, new ConfigTagRuleTest(BlockTags.bind(Crossroads.MODID + ":netherrack"), "cr_ruby"), OreSetup.oreRuby.defaultBlockState(), 1, 117, 20);
 	}
@@ -68,6 +70,7 @@ public class CRWorldGen{
 		if(isOverworld(event.getCategory())){
 //			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, COPPER_ORE);
 			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, TIN_ORE);
+			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, TIN_ORE_DEEP);
 		}else if(event.getCategory() == Biome.BiomeCategory.THEEND){
 			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, VOID_ORE);
 		}else if(event.getCategory() == Biome.BiomeCategory.NETHER){

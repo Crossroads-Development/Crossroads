@@ -29,6 +29,7 @@ public final class OreSetup{
 	public static Item rawTin;
 	public static BasicBlock blockTin;
 	public static BasicBlock oreTin;
+	public static BasicBlock oreTinDeep;
 
 	@Deprecated
 	public static Item ingotCopper;
@@ -86,6 +87,7 @@ public final class OreSetup{
 		rawTin = new Item(new Item.Properties().tab(CRItems.TAB_CROSSROADS)).setRegistryName("raw_tin");
 		CRItems.toRegister.add(rawTin);
 		oreTin = new BasicBlock("ore_tin", CRBlocks.getRockProperty().strength(3));
+		oreTinDeep = new BasicBlock("ore_tin_deep", CRBlocks.getRockProperty().strength(4.5F, 3));
 
 		ingotCopper = new Item(new Item.Properties().tab(CRItems.TAB_CROSSROADS)).setRegistryName("ingot_copper");
 		CRItems.toRegister.add(ingotCopper);

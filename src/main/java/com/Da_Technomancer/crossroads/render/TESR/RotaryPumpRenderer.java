@@ -15,8 +15,8 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.awt.*;
 
@@ -41,13 +41,13 @@ public class RotaryPumpRenderer implements BlockEntityRenderer<RotaryPumpTileEnt
 		//Render the liquid
 		if(te.getCompletion() != 0){
 			BlockPos fPos = te.getBlockPos().relative(Direction.DOWN);
-			FluidState state = te.getLevel().getFluidState(fPos);
+			FluidStack pumpedFluid = RotaryPumpTileEntity.getFluidFromBlock(te.getLevel().getBlockState(fPos), te.getLevel(), fPos);
 			TextureAtlasSprite lText;
 			Color fCol;
-			if(!state.isEmpty() && state.isSource()){
-				ResourceLocation textLoc = state.getType().getAttributes().getStillTexture();
+			if(!pumpedFluid.isEmpty()){
+				ResourceLocation textLoc = pumpedFluid.getFluid().getAttributes().getStillTexture();
 				lText = CRRenderUtil.getTextureSprite(textLoc);
-				fCol = new Color(state.getType().getAttributes().getColor(te.getLevel(), fPos));
+				fCol = new Color(pumpedFluid.getFluid().getAttributes().getColor(te.getLevel(), fPos));
 			}else{
 				return;
 			}
