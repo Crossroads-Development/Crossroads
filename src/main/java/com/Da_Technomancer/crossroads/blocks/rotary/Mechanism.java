@@ -108,8 +108,7 @@ public class Mechanism extends BaseEntityBlock implements IReadable{
 		//There's some sort of issue with this being cached on a per-state level, and all mechanisms use the same blockstate
 
 		BlockEntity te = worldIn.getBlockEntity(pos);
-		if(te instanceof MechanismTileEntity){
-			MechanismTileEntity mte = (MechanismTileEntity) te;
+		if(te instanceof MechanismTileEntity mte){
 			VoxelShape shape = Shapes.empty();
 			for(VoxelShape s : mte.boundingBoxes){
 				if(s != null){
@@ -187,10 +186,9 @@ public class Mechanism extends BaseEntityBlock implements IReadable{
 		}
 
 		BlockEntity rawTE = worldIn.getBlockEntity(pos);
-		if(!(rawTE instanceof MechanismTileEntity)){
+		if(!(rawTE instanceof MechanismTileEntity te)){
 			return;
 		}
-		MechanismTileEntity te = (MechanismTileEntity) rawTE;
 
 		for(Direction side : Direction.values()){
 			IMechanism<?> mechanism = te.members[side.get3DDataValue()];
@@ -215,8 +213,7 @@ public class Mechanism extends BaseEntityBlock implements IReadable{
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit){
 		if(ESConfig.isWrench(player.getItemInHand(hand))){
 			BlockEntity te = worldIn.getBlockEntity(pos);
-			if(te instanceof MechanismTileEntity){
-				MechanismTileEntity gear = (MechanismTileEntity) te;
+			if(te instanceof MechanismTileEntity gear){
 				double reDist = player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();//Player reach distance
 				Vec3 start = new Vec3(player.xo, player.yo + (double) player.getEyeHeight(), player.zo).subtract(pos.getX(), pos.getY(), pos.getZ());
 				Vec3 end = start.add(player.getViewVector(0F).x * reDist, player.getViewVector(0F).y * reDist, player.getViewVector(0F).z * reDist);
@@ -228,20 +225,6 @@ public class Mechanism extends BaseEntityBlock implements IReadable{
 					return InteractionResult.FAIL;
 				}
 
-//				Break-all cube (index 7, BB that could be targeted to remove entire block) was removed
-//				if(out == 7){
-//					//Player hit the "break all cube" in the center
-//					//Spawn drops, as applicable
-//					for(int i = 0; i < 7; i++){
-//						if(gear.members[i] != null){
-//							spawnAsEntity(worldIn, pos, gear.members[i].getDrop(gear.mats[i]));
-//						}
-//					}
-//
-//					//Destroy the TE
-//					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
-//				}else{
-
 				if(!worldIn.isClientSide){
 					//Don't remove on the client side. If the client and server have slightly different player data (common occurrence when removing several quickly), removing on the client could lead to an invisible, solid mechanism that exists on the server
 
@@ -251,12 +234,13 @@ public class Mechanism extends BaseEntityBlock implements IReadable{
 					}
 
 					gear.setMechanism(out, null, null, null, false);//Delete the destroyed mechanism
+					//Block update on self, to check if any members are missing block support
+					neighborChanged(state, worldIn, pos, this, pos, false);
 					if(gear.members[0] == null && gear.members[1] == null && gear.members[2] == null && gear.members[3] == null && gear.members[4] == null && gear.members[5] == null && gear.members[6] == null){
 						//If the mechanism is now empty, set it to air
 						worldIn.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 					}
 				}
-//				}
 				RotaryUtil.increaseMasterKey(!worldIn.isClientSide);
 				return InteractionResult.SUCCESS;
 			}

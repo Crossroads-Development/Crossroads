@@ -115,6 +115,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.ConfigValue<List<? extends String>> permanentEffectBlacklist;
 	public static ForgeConfigSpec.IntValue beamHeatMult;
 	public static ForgeConfigSpec.IntValue fireboxFuelMult;
+	public static ForgeConfigSpec.DoubleValue solarRate;
 
 	private static final Tag<Block> destroyBlacklist = BlockTags.bind(Crossroads.MODID + ":destroy_blacklist");
 
@@ -187,6 +188,7 @@ public class CRConfig{
 		fireboxCap = serverBuilder.comment("Maximum fuel burn time in the Firebox. Set to -1 to remove the limit").defineInRange("firebox_cap", 64_000, -1, Integer.MAX_VALUE);
 		fireboxFuelMult = serverBuilder.comment("Multiplier on fuel burn time for a Firebox compared to a furnace").defineInRange("firebox_fuel_mult", 4, 1, 100);
 		beamHeatMult = serverBuilder.comment("Temperature change from energy and cold beams, per unit power, applied every 4 ticks").defineInRange("beam_heat_mult", 100, 0, 1000);
+		solarRate = serverBuilder.comment("The rate at which the Solar Heater makes heat, in deg/t").defineInRange("solar_rate", 7.5, 0, 100);
 		serverBuilder.pop();
 		serverBuilder.push(CAT_MISC);
 		heatEffects = serverBuilder.comment("Enable overheat effects?", "If false, all heat cable overheating effects are replaced with burning").define("cable_effects", true);

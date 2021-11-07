@@ -93,7 +93,7 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 		return type == null ? GearFactory.getDefaultMaterial() : type;
 	}
 
-	private static final AABB RENDER_BOX = new AABB(-1, -1, -1, 2, 2, 2);
+	private static final AABB RENDER_BOX = new AABB(-1.5, -1.5, -1.5, 2.5, 2.5, 2.5);
 
 	@Override
 	public AABB getRenderBoundingBox(){

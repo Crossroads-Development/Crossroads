@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
 import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.heat.SolarHeaterTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
@@ -94,7 +95,7 @@ public class SolarHeater extends BaseEntityBlock{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.solar_heater.desc", SolarHeaterTileEntity.RATE));
+		tooltip.add(new TranslatableComponent("tt.crossroads.solar_heater.desc", CRConfig.solarRate.get()));
 		tooltip.add(new TranslatableComponent("tt.crossroads.solar_heater.limit", SolarHeaterTileEntity.CAP));
 	}
 }

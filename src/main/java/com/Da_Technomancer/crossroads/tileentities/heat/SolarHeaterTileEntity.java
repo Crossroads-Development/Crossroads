@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.heat;
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.ModuleTE;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,7 +21,6 @@ public class SolarHeaterTileEntity extends ModuleTE{
 	@ObjectHolder("solar_heater")
 	public static BlockEntityType<SolarHeaterTileEntity> TYPE = null;
 
-	public static final double RATE = 10;
 	public static final double CAP = 325;
 
 	private boolean newlyPlaced = true;//Used to immediately generate the cache to reduce the latency for the player with a new heater
@@ -56,7 +56,7 @@ public class SolarHeaterTileEntity extends ModuleTE{
 		}
 
 		if(running && temp < CAP && level.isDay() && !level.isRaining()){
-			temp = Math.min(CAP, temp + RATE);
+			temp = Math.min(CAP, temp + CRConfig.solarRate.get());
 			setChanged();
 		}
 	}
