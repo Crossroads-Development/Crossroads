@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"item": "snow_block"
+	},
+	"output": {
+		"item": "snowball",
+		"count": 4
+	}
+}

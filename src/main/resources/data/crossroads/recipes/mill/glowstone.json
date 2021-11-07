@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"item": "glowstone"
+	},
+	"output": {
+		"item": "glowstone_dust",
+		"count": 4
+	}
+}

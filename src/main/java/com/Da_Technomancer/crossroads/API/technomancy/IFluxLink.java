@@ -228,13 +228,14 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 			ITickableTileEntity.super.clientTick();
 			//Play sounds
 			Level world = owner.getLevel();
+			BlockPos pos = owner.getBlockPos();
 			if(rendered.length != 0 && world.getGameTime() % FluxUtil.FLUX_TIME == 0 && CRConfig.fluxSounds.get()){
-				CRSounds.playSoundClientLocal(world, owner.getBlockPos(), CRSounds.FLUX_TRANSFER, SoundSource.BLOCKS, 0.4F, 1F);
+				CRSounds.playSoundClientLocal(world, pos, CRSounds.FLUX_TRANSFER, SoundSource.BLOCKS, 0.4F, 1F);
 			}
 
 			//This 5 is the lifetime of the render
-			if(level.getGameTime() % 5 == 0 && renderFluxWarning()){
-				CRRenderUtil.addArc(level, worldPosition.getX() + 0.5F, worldPosition.getY() + 0.5F, worldPosition.getZ() + 0.5F, worldPosition.getX() + 0.5F + 2.5F * (float) (Math.random() - 0.5F), worldPosition.getY() + 0.5F + 2.5F * (float) (Math.random() - 0.5F), worldPosition.getZ() + 0.5F + 2.5F * (float) (Math.random() - 0.5F), 3, 1F, FluxUtil.COLOR_CODES[(int) (level.getGameTime() % 3)]);
+			if(world.getGameTime() % 5 == 0 && renderFluxWarning()){
+				CRRenderUtil.addArc(world, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, pos.getX() + 0.5F + 2.5F * (float) (Math.random() - 0.5F), pos.getY() + 0.5F + 2.5F * (float) (Math.random() - 0.5F), pos.getZ() + 0.5F + 2.5F * (float) (Math.random() - 0.5F), 3, 1F, FluxUtil.COLOR_CODES[(int) (world.getGameTime() % 3)]);
 			}
 		}
 
