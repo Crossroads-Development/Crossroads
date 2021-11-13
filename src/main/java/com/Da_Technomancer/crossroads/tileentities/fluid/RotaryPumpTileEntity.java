@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
-import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
@@ -41,10 +40,9 @@ public class RotaryPumpTileEntity extends InventoryTE{
 	public static BlockEntityType<RotaryPumpTileEntity> TYPE = null;
 
 	public static final int INERTIA = 80;
-	public static final double MAX_POWER = 5;
-	public static final double MAX_SPEED = 2.5;
+	public static final double POWER_PER_SPEED = 2;
+	public static final double REQUIRED = 100;
 	private static final int CAPACITY = 4_000;
-	private static final double REQUIRED = 100;
 
 	private double progress = 0;
 	private float progChange = 0;//Last change in progress per tick sent to the client. On the client, used for animation
@@ -86,7 +84,8 @@ public class RotaryPumpTileEntity extends InventoryTE{
 		FluidStack pumpedFluid = getFluidFromBlock(state, level, targetPos);
 		if(!pumpedFluid.isEmpty() && (fluids[0].isEmpty() || BlockUtil.sameFluid(fluids[0], pumpedFluid) && CAPACITY - fluids[0].getAmount() >= pumpedFluid.getAmount())){
 			//Only gain progress if spinning in positive direction
-			double powerDrained = energy < 0 ? 0 : MAX_POWER * RotaryUtil.findEfficiency(axleHandler.getSpeed(), 0, MAX_SPEED);
+			double powerDrained = energy < 0 ? 0 : POWER_PER_SPEED * Math.abs(axleHandler.getSpeed());
+			powerDrained = Math.min(Math.abs(axleHandler.getEnergy()), Math.min(REQUIRED - progress, powerDrained));
 			progress += powerDrained;
 			axleHandler.addEnergy(-powerDrained, false);
 			updateProgressToClients(powerDrained);

@@ -83,6 +83,9 @@ public class ColorChartScreen extends AbstractContainerScreen<ColorChartContaine
 			tooltip.add(new TextComponent("R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue()));
 			renderComponentTooltip(matrix, tooltip, mouseX, mouseY);//MCP note: renderTooltip
 		}
+
+		RenderSystem.disableBlend();
+		searchBar.render(matrix, mouseX, mouseY, partialTicks);
 	}
 
 	@Override

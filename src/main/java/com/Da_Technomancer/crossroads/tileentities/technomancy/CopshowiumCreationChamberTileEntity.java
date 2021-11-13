@@ -256,7 +256,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 					//Check for overflowing
 					if(fluids[1].getAmount() > CAPACITY){
 						if(CRConfig.allowOverflow.get()){
-							level.setBlockAndUpdate(worldPosition, CRFluids.moltenCopshowium.still.defaultFluidState().createLegacyBlock());
+							level.setBlockAndUpdate(worldPosition, CRFluids.moltenCopshowium.block.defaultBlockState());
 						}else{
 							fluids[1].setAmount(CAPACITY);//The config is disabled- just delete any excess fluid
 						}

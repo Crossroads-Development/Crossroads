@@ -195,7 +195,7 @@ public class CRConfig{
 		whirligigHover = serverBuilder.comment("Minimum spring speed to hover with the Whirligig", "If set at or above 10, gaining elevation with a Whirligig is disabled").defineInRange("whirligig_hover", 6D, 1D, 100D);
 		whirligigSafe = serverBuilder.comment("Minimum spring speed to eliminate fall damage with the Whirligig", "If set at or above 10, gaining the Whirligig can not eliminate fall damage, but can reduce it").defineInRange("whirligig_safe", 4D, 1D, 100D);
 		chargeSpawnLightning = serverBuilder.comment("Whether the charge alignment can summon lightning").define("charge_lightning", true);
-		stampMillDamping = serverBuilder.comment("Percentage of Stamp Mill progress to be lost on failure", "Effectively nerfs ore-tripling").defineInRange("mill_damping", 0, 0, 100);
+		stampMillDamping = serverBuilder.comment("Percentage to reduce success rate of Stamp Mill by when not reaching 100% progress", "Effectively nerfs ore-tripling").defineInRange("mill_damping", 0, 0, 100);
 		enchantDestruction = serverBuilder.comment("Whether Enchantment beams have a chance to destroy items").define("enchant_destroy", true);
 		fatPerValue = serverBuilder.comment("Amount of liquid fat equivalent to 1 hunger or saturation (in millibuckets)").defineInRange("fat_cost", 100, 1, 10_000);
 		hellTemperature = serverBuilder.comment("Minimum temperature of nether biomes (in degrees C)").defineInRange("nether_temp", 60, 0, 1_000D);

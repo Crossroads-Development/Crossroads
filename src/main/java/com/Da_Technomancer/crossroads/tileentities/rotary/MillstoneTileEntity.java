@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.tileentities.rotary;
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
@@ -39,8 +38,7 @@ public class MillstoneTileEntity extends InventoryTE{
 
 	private double progress = 0;
 	public static final double REQUIRED = 400;
-	public static final double PEAK_SPEED = 5D;
-	public static final double POWER = 10D;
+	public static final double POWER_PER_SPEED = 2;
 	public static final double INERTIA = 200D;
 
 	public MillstoneTileEntity(BlockPos pos, BlockState state){
@@ -138,7 +136,8 @@ public class MillstoneTileEntity extends InventoryTE{
 		}else{
 			Optional<MillRec> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.MILL_TYPE, this, level);
 			if(recOpt.isPresent()){
-				double used = POWER * RotaryUtil.findEfficiency(axleHandler.getSpeed(), 0.2D, PEAK_SPEED);
+				double used = POWER_PER_SPEED * Math.abs(axleHandler.getSpeed());
+				used = Math.min(Math.abs(axleHandler.getEnergy()), Math.min(REQUIRED - progress, used));
 				progress += used;
 				axleHandler.addEnergy(-used, false);
 

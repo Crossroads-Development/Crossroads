@@ -3,6 +3,7 @@
 	"values": [
 		"crossroads:stamp_mill",
 		"crossroads:stamp_mill_top",
-		"crossroads:wind_turbine"
+		"crossroads:wind_turbine",
+		"crossroads:color_chart"
 	]
 }

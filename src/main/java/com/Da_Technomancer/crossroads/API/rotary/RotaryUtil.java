@@ -59,11 +59,6 @@ public class RotaryUtil{
 		return -getCCWSign(oldGearFacing) * getCCWSign(newGearFacing);
 	}
 
-	public static double findEfficiency(double speedIn, double lowerLimit, double upperLimit){
-		speedIn = Math.abs(speedIn);
-		return speedIn < lowerLimit ? 0 : (speedIn >= upperLimit ? 1 : (speedIn - lowerLimit) / (upperLimit - lowerLimit));
-	}
-
 	/**
 	 * Returns the total energy, adjusted for energy loss, of the passed IAxleHandlers
 	 * @param axles A list of IAxleHandlers to have their energies summed and adjusted

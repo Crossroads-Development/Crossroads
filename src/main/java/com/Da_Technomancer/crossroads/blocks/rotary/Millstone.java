@@ -74,8 +74,8 @@ public class Millstone extends BaseEntityBlock implements IReadable{
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.millstone.power", MillstoneTileEntity.POWER));
-		tooltip.add(new TranslatableComponent("tt.crossroads.millstone.speed", MillstoneTileEntity.PEAK_SPEED));
+		tooltip.add(new TranslatableComponent("tt.crossroads.millstone.power", MillstoneTileEntity.POWER_PER_SPEED));
+		tooltip.add(new TranslatableComponent("tt.crossroads.millstone.energy", MillstoneTileEntity.REQUIRED));
 		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.inertia", MillstoneTileEntity.INERTIA));
 	}
 

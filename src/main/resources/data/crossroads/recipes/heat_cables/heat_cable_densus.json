@@ -2,7 +2,7 @@
 	"type": "minecraft:crafting_shaped",
 	"result": {
 		"item": "crossroads:heat_cable_densus",
-		"count": 4
+		"count": 6
 	},
 	"pattern": [
 		"III",

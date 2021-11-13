@@ -99,32 +99,52 @@ public class StampMillTileEntity extends InventoryTE{
 		axleHandler.addEnergy(-progChange, false);
 		if(inventory[1].isEmpty() && !inventory[0].isEmpty()){
 			progress += progChange;
+
+			if(progress >= REQUIRED){
+				successCraft();
+			}else if(++timer >= TIME_LIMIT){
+				//By default, stamp mill damping is zero
+				if(level.random.nextDouble() < (progress / REQUIRED) * (1D - CRConfig.stampMillDamping.get() / 100D)){
+					successCraft();
+				}else{
+					failCraft();
+				}
+			}
+
 			if(++timer >= TIME_LIMIT || progress >= REQUIRED){
 				timer = 0;
 				if(progress >= REQUIRED){
 					progress = 0;
-					level.playLocalSound(worldPosition.getX() + 0.5, worldPosition.getY() + 1, worldPosition.getZ() + 0.5, SoundEvents.ANVIL_PLACE, SoundSource.BLOCKS, 1, level.random.nextFloat(), true);
-					Optional<StampMillRec> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.STAMP_MILL_TYPE, this, level);
-					ItemStack produced;
-					if(recOpt.isPresent()){
-						produced = recOpt.get().getResultItem();
-						produced = produced.copy();
-					}else{
-						produced = inventory[0].copy();
-						produced.setCount(1);
-					}
-					inventory[0].shrink(1);
-					inventory[1] = produced;
+					successCraft();
 				}else{
-					inventory[1] = inventory[0].split(1);
-					progress -= REQUIRED * CRConfig.stampMillDamping.get() / 100;//By default, stamp mill damping is zero
-					if(progress < 0){
-						progress = 0;
-					}
+					failCraft();
 				}
 			}
 			setChanged();
 		}
+	}
+
+	private void successCraft(){
+		progress = 0;
+		timer = 0;
+		level.playLocalSound(worldPosition.getX() + 0.5, worldPosition.getY() + 1, worldPosition.getZ() + 0.5, SoundEvents.ANVIL_PLACE, SoundSource.BLOCKS, 1, level.random.nextFloat(), true);
+		Optional<StampMillRec> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.STAMP_MILL_TYPE, this, level);
+		ItemStack produced;
+		if(recOpt.isPresent()){
+			produced = recOpt.get().getResultItem();
+			produced = produced.copy();
+		}else{
+			produced = inventory[0].copy();
+			produced.setCount(1);
+		}
+		inventory[0].shrink(1);
+		inventory[1] = produced;
+	}
+
+	private void failCraft(){
+		progress = 0;
+		timer = 0;
+		inventory[1] = inventory[0].split(1);
 	}
 
 	@Override
