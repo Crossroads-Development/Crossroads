@@ -141,8 +141,7 @@ public class EntityGhostMarker extends Entity{
 			if(marker.data != null && !marker.level.isClientSide){
 				template.deserializeNBT(marker.data);
 				Entity created = EntityTemplate.spawnEntityFromTemplate(template, (ServerLevel) marker.level, marker.blockPosition(), MobSpawnType.COMMAND, false, false, null, null);
-				if(created instanceof LivingEntity){
-					LivingEntity entity = (LivingEntity) created;
+				if(created instanceof LivingEntity entity){
 					entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, penaltyTime));
 					entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, penaltyTime));
 					entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, penaltyTime));

@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.BloodCentrifugeContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
@@ -36,7 +37,7 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 	public static BlockEntityType<BloodCentrifugeTileEntity> TYPE = null;
 
 	public static final double LOW_SPEED = 0;
-	public static final double HIGH_SPEED = 20;
+	public static final double HIGH_SPEED = 10;
 	public static final int REQUIRED = 100;
 	public static final int INERTIA = 100;
 
@@ -87,7 +88,7 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 			deviation += (int) Math.abs(Math.abs(axleHandler.getSpeed()) - targetSpeed);
 			progress++;
 			if(progress >= REQUIRED){
-				int degradation = deviation / REQUIRED;//Average value of deviation increment
+				int degradation = (int) Math.round(CRConfig.bloodCentrifugeMult.get() * (double) deviation / REQUIRED);//Average value of deviation increment
 				for(int i = 0; i < 2; i++){
 					if(!inventory[i].isEmpty()){
 						EntityTemplate template = BloodSample.getEntityTypeData(inventory[i]);

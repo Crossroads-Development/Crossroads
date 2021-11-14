@@ -26,7 +26,7 @@ public class SoulCluster extends Item{
 
 	@Override
 	public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType){
-		return large ? 1600 : 200;
+		return large ? 1600 : 400;
 	}
 
 	@Override

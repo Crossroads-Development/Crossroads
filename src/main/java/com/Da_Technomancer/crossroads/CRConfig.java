@@ -4,12 +4,12 @@ import com.Da_Technomancer.essentials.ESConfig;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import com.google.common.collect.Lists;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
@@ -106,6 +106,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.DoubleValue beamRaytraceStep;
 	public static ForgeConfigSpec.ConfigValue<List<? extends String>> sedationBlacklist;
 	public static ForgeConfigSpec.ConfigValue<List<? extends String>> cloningBlacklist;
+	public static ForgeConfigSpec.DoubleValue bloodCentrifugeMult;
 	public static ForgeConfigSpec.DoubleValue injectionEfficiency;
 	public static ForgeConfigSpec.IntValue injectionPermaPenalty;
 	public static ForgeConfigSpec.IntValue hydroponicsMult;
@@ -116,6 +117,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.IntValue beamHeatMult;
 	public static ForgeConfigSpec.IntValue fireboxFuelMult;
 	public static ForgeConfigSpec.DoubleValue solarRate;
+	public static ForgeConfigSpec.DoubleValue medicinalMushroomSpread;
 
 	private static final Tag<Block> destroyBlacklist = BlockTags.bind(Crossroads.MODID + ":destroy_blacklist");
 
@@ -252,6 +254,8 @@ public class CRConfig{
 		hydroponicsMult = serverBuilder.comment("Production/growth speed multiplier for the Hydroponics Trough compared to normal crop growth", "Setting to 0 will effectively disable the machine").defineInRange("hydroponics_mult", 16, 0, 100);
 		respawnDelay = serverBuilder.comment("Time in seconds for genetically modified entities to respawn", "Set to 0 or a negative value to disable respawning").defineInRange("respawn_delay", 30, -1, Short.MAX_VALUE);
 		respawnPenaltyDuration = serverBuilder.comment("Time in seconds for the debuffs on respawned entities", "Also controls the vulnerability period. Cannot be disabled").defineInRange("respawn_penalty_duration", 30, 1, Short.MAX_VALUE);
+		medicinalMushroomSpread = serverBuilder.comment("Chance for a medicinal mushroom to attempt to spread on a random tick", "Value out of 1. Set to 0 to disable spread").defineInRange("medicinal_mushroom_spread", 1D, 0D, 1D);
+		bloodCentrifugeMult = serverBuilder.comment("Multiplier for the degradation added by the blood centrifuge").defineInRange("blood_centrifuge_degradation_mult", 1.25D, 0D, 4D);
 		serverBuilder.pop();
 		serverBuilder.pop();
 

@@ -19,7 +19,7 @@
 		},
 		{
 			"type": "text",
-			"text": "speed starts at 0rad/s, and increases linearly while running up to 20rad/s, so the target speed being aimed for changes during the crafting operation. The spin direction doesn't matter (positive and negative speed are both fine).$(br2)The <thing>$(l:crossroads:intro/rotary)rotary speed/$ doesn't need to be perfect, but the better it is, the less <thing>$(l:crossroads:witchcraft/cloning#degradation)degradation/$. It is possible to "
+			"text": "speed starts at 0rad/s, and increases linearly while running up to 10rad/s, so the target speed being aimed for changes during the crafting operation. The spin direction doesn't matter (positive and negative speed are both fine).$(br2)The <thing>$(l:crossroads:intro/rotary)rotary speed/$ doesn't need to be perfect, but the better it is, the less <thing>$(l:crossroads:witchcraft/cloning#degradation)degradation/$. It is possible to "
 		},
 		{
 			"type": "text",

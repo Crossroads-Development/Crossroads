@@ -43,6 +43,11 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 	private boolean respawning;
 	private ArrayList<MobEffectInstance> effects;//Durations of these effects are ignored when applying
 	private int degradation;
+	/**
+	 * This field is currently unused.
+	 */
+	@Nullable
+	private CompoundTag additionalSaveData;
 
 	//Cache generated based on entity name
 	private EntityType<?> entityType;
@@ -58,14 +63,7 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 		this.respawning = template.respawning;
 		this.effects = template.effects;
 		this.degradation = template.degradation;
-	}
-
-	public EntityTemplate(ResourceLocation entityName, boolean loyal, boolean respawning, ArrayList<MobEffectInstance> effects, int degradation){
-		this.entityName = entityName;
-		this.loyal = loyal;
-		this.respawning = respawning;
-		this.effects = effects;
-		this.degradation = degradation;
+		this.additionalSaveData = template.additionalSaveData;
 	}
 
 	public ResourceLocation getEntityName(){
@@ -122,6 +120,15 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 		this.degradation = degradation;
 	}
 
+	@Nullable
+	public CompoundTag getAdditionalSaveData(){
+		return additionalSaveData;
+	}
+
+	public void setAdditionalSaveData(@Nullable CompoundTag additionalSaveData){
+		this.additionalSaveData = additionalSaveData;
+	}
+
 	@Override
 	public CompoundTag serializeNBT(){
 		CompoundTag nbt = new CompoundTag();
@@ -136,6 +143,9 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 		}
 		nbt.put("potions", potions);
 		nbt.putInt("degradation", degradation);
+		if(additionalSaveData != null){
+			nbt.put("additional_data", additionalSaveData);
+		}
 		return nbt;
 	}
 
@@ -151,6 +161,11 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 			effects.add(MobEffectInstance.load(potions.getCompound(i)));
 		}
 		degradation = nbt.getInt("degradation");
+		if(nbt.contains("additional_data")){
+			additionalSaveData = nbt.getCompound("additional_data");
+		}else{
+			additionalSaveData = null;
+		}
 	}
 
 	@Override
@@ -162,16 +177,12 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 			return false;
 		}
 		EntityTemplate that = (EntityTemplate) o;
-		return loyal == that.loyal &&
-				respawning == that.respawning &&
-				degradation == that.degradation &&
-				Objects.equals(entityName, that.entityName) &&
-				Objects.equals(effects, that.effects);
+		return loyal == that.loyal && respawning == that.respawning && degradation == that.degradation && entityName.equals(that.entityName) && effects.equals(that.effects) && Objects.equals(additionalSaveData, that.additionalSaveData);
 	}
 
 	@Override
 	public int hashCode(){
-		return Objects.hash(entityName, loyal, respawning, effects, degradation);
+		return Objects.hash(entityName, loyal, respawning, effects, degradation, additionalSaveData);
 	}
 
 	/**
@@ -251,7 +262,6 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 		//That parameter is designed for the vanilla spawn egg NBT structure, which we don't use
 		//We have to adjust the mob manually after spawning as a result
 		Entity created = type.spawn(world, null, customName, player, pos, reason, offset, unmapped);
-		LivingEntity entity;
 		if(created == null){
 			return null;
 		}
@@ -261,9 +271,7 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 		nbt.putBoolean(EntityTemplate.LOYAL_KEY, template.isLoyal());
 		nbt.putBoolean(EntityTemplate.RESPAWNING_KEY, template.isRespawning());
 
-		if(created instanceof LivingEntity){
-			entity = (LivingEntity) created;
-
+		if(created instanceof LivingEntity entity){
 			//Degradation
 			int degradeConfig = CRConfig.degradationPenalty.get();
 			if(template.getDegradation() > 0 && degradeConfig > 0){
@@ -329,6 +337,9 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 		}
 		template.setDegradation(degrade);
 		template.setEffects(permanentEffects);
+		CompoundTag additional = new CompoundTag();
+		source.addAdditionalSaveData(additional);
+		template.setAdditionalSaveData(additional);
 
 		return template;
 	}

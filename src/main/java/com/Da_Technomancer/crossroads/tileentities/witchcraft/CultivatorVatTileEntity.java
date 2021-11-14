@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.witchcraft;
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.witchcraft.ICultivatable;
 import com.Da_Technomancer.crossroads.API.witchcraft.IPerishable;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.witchcraft.CultivatorVat;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
@@ -37,7 +38,7 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 	@ObjectHolder("cultivator_vat")
 	public static BlockEntityType<CultivatorVatTileEntity> TYPE = null;
 	public static final int REQUIRED_PROGRESS = 100;
-	public static final int NUTRIENT_DRAIN = 1;
+	public static final int NUTRIENT_DRAIN_INTERVAL = 4;//1 mB is drained every (interval) ticks
 
 	private int progress = 0;
 	/**
@@ -114,8 +115,8 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 	}
 
 	@Override
-	protected int getPassiveNutrientDrain(){
-		return NUTRIENT_DRAIN;
+	protected int getPassiveNutrientDrainInterval(){
+		return NUTRIENT_DRAIN_INTERVAL;
 	}
 
 	private void consumeIngredient(ItemStack ingredient){

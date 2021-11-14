@@ -1,7 +1,7 @@
 Nutrition Vat
 crossroads:cultivator_vat|crossroads:progress/path/witchcraft
 The <item>nutrition vat/$ has two purposes: It can preserve items which can <thing><link:crossroads:witchcraft/spoilage>spoil/$ but are damaged by freezing and it can duplicate <item><link:crossroads:witchcraft/cloning#process>embryos/$, making it part of the <thing><link:crossroads:witchcraft/cloning>cloning process/$.
-It stores a single <thing><link:crossroads:witchcraft/spoilage>perishable/$ item, draining 1mb/t of Nutrient Solution but preventing the item from <thing><link:crossroads:witchcraft/spoilage>spoiling/$. It can't store items which can be safely frozen without penalty.
+It stores a single <thing><link:crossroads:witchcraft/spoilage>perishable/$ item, draining Nutrient Solution but preventing the item from <thing><link:crossroads:witchcraft/spoilage>spoiling/$. It can't store items which can be safely frozen without penalty.
 While it has nutrient solution, it will also create <thing><link:crossroads:witchcraft/spoilage>fresh/$ copies of the stored <item><link:crossroads:witchcraft/cloning#process>embryo/$.
 Cloning <item><link:crossroads:witchcraft/cloning#process>embryos/$ is free, unless the <item><link:crossroads:witchcraft/cloning#process>embryo/$ has special <thing><link:crossroads:witchcraft/cloning#traits>traits/$. Each permanent potion effect requires 1 <item>mutagen/$, and <thing><link:crossroads:witchcraft/cloning#traits>respawning/$ requires 1 <item><link:crossroads:witchcraft/souls>soul cluster/$. <link:crossroads:witchcraft/cloning#traits>Imprinting/$ is free.
 <page|text|bobo>

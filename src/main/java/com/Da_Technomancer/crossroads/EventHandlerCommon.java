@@ -450,7 +450,8 @@ public final class EventHandlerCommon{
 			int delay = CRConfig.respawnDelay.get();
 			delay *= 20;//Convert from seconds to ticks
 			//Ensure it doesn't have the marker effect and this is enabled in config
-			if(!entity.hasEffect(EntityTemplate.getRespawnMarkerEffect()) && delay > 0){
+			//Or, if non-viable (max health less than or equal to 0), don't let it respawn
+			if(!entity.hasEffect(EntityTemplate.getRespawnMarkerEffect()) && delay > 0 && entity.getMaxHealth() > 0){
 				EntityGhostMarker marker = new EntityGhostMarker(entity.level, EntityGhostMarker.EnumMarkerType.RESPAWNING, delay);
 				marker.setPos(entity.getX(), entity.getY(), entity.getZ());
 				marker.data = template.serializeNBT();
@@ -476,7 +477,7 @@ public final class EventHandlerCommon{
 				}else if(ent.getMobType() == MobType.UNDEAD){
 					soulCount = 1;//Undead give 1
 				}else if(ent instanceof AbstractVillager || ent.getMobType() == MobType.ILLAGER){
-					soulCount = 8;//'People' type creatures give a full soul cluster worth
+					soulCount = 4;//'People' type creatures give a full soul cluster worth
 				}else{
 					soulCount = 2;//Most things give 2
 				}

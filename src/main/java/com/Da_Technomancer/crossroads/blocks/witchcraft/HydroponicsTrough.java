@@ -91,7 +91,7 @@ public class HydroponicsTrough extends TEBlock implements IReadable, Bonemealabl
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(new TranslatableComponent("tt.crossroads.hydroponic_trough.desc"));
 		tooltip.add(new TranslatableComponent("tt.crossroads.hydroponic_trough.output"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.hydroponic_trough.drain", HydroponicsTroughTileEntity.SOLUTION_DRAIN));
+		tooltip.add(new TranslatableComponent("tt.crossroads.hydroponic_trough.drain", 20 / HydroponicsTroughTileEntity.SOLUTION_DRAIN_INTERVAL));
 		tooltip.add(new TranslatableComponent("tt.crossroads.hydroponic_trough.circuit"));
 	}
 

@@ -110,6 +110,7 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 			if(stack.getItem() == Items.NAME_TAG && !template.isLoyal()){
 				//Apply the imprinting trait and consume the item
 				template.setLoyal(true);
+				stack = stack.copy();
 				stack.shrink(1);
 				setChanged();
 				syncTemplate();
@@ -118,6 +119,7 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 			if(stack.getItem() == CRItems.soulCluster && !template.isRespawning()){
 				//Apply the respawning trait and consume the item
 				template.setRespawning(true);
+				stack = stack.copy();
 				stack.shrink(1);
 				setChanged();
 				syncTemplate();
@@ -157,6 +159,7 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 			for(EmbryoLabMorphRec rec : recipes){
 				if(rec.isEnabled() && rec.getInputMob().equals(template.getEntityName()) && rec.getIngr().test(stack)){
 					template.setEntityName(rec.getOutputMob());
+					template.setAdditionalSaveData(null);//Reset any mob-type-specific save data
 					stack.shrink(1);
 					setChanged();
 					syncTemplate();

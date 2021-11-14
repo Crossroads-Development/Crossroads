@@ -3,12 +3,12 @@
 	"input_fluid": {
 		"fluid": "water"
 	},
-	"fluid_amount": 25,
+	"fluid_amount": 50,
 	"input_item": {
 		"item": "crossroads:soul_shard"
 	},
 	"output": {
 		"fluid": "crossroads:soul_essence",
-		"amount": 25
+		"amount": 50
 	}
 }

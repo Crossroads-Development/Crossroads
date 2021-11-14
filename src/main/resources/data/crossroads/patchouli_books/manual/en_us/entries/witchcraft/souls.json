@@ -11,7 +11,7 @@
 			"type": "spotlight",
 			"title": "Souls",
 			"item": "crossroads:soul_cluster",
-			"text": "<item>Soul Clusters/$ and <item>Soul Shards/$ are ingredients in several recipes. There are eight <item>soul shards/$ in a <item>soul cluster/$.$(br2)Both <item>soul shards/$ and <item>soul clusters/$ are effective fuels, $(l:crossroads:heat/icebox)cold fuels/$ and $(l:crossroads:beam/extractor)beam fuels/$.$(br2)<item>Soul shards/$ can be "
+			"text": "<item>Soul Clusters/$ and <item>Soul Shards/$ are ingredients in several recipes. There are four <item>soul shards/$ in a <item>soul cluster/$.$(br2)Both <item>soul shards/$ and <item>soul clusters/$ are effective fuels, $(l:crossroads:heat/icebox)cold fuels/$ and $(l:crossroads:beam/extractor)beam fuels/$.$(br2)<item>Soul shards/$ can be "
 		},
 		{
 			"type": "text",
@@ -21,7 +21,7 @@
 			"type": "spotlight",
 			"anchor": "transient",
 			"item": "minecraft:potion{Potion:\"crossroads:transient\"}",
-			"text": "<thing>Soul Transience/$ potions are cause mobs to drop <item>soul shards/$ on death, if they die with the potion effect.$(br2)Villagers and Illagers drop 8 <item>soul shards/$ (one full <item>soul cluster/$ worth), living mobs will drop 2 <item>soul shards/$, and undead will drop 1 <item>soul shard/$. Players "
+			"text": "<thing>Soul Transience/$ potions are cause mobs to drop <item>soul shards/$ on death, if they die with the potion effect.$(br2)Villagers and Illagers drop 4 <item>soul shards/$ (one full <item>soul cluster/$ worth), living mobs will drop 2 <item>soul shards/$, and undead will drop 1 <item>soul shard/$. Players "
 		},
 		{
 			"type": "text",

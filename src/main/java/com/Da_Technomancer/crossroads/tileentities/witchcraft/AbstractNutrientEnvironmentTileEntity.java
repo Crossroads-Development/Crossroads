@@ -65,8 +65,9 @@ public abstract class AbstractNutrientEnvironmentTileEntity extends InventoryTE{
 				ItemStack stack = inventory[cultivated];
 				if(stack.getItem() instanceof ICultivatable item){
 					//Drain liquid
-					if(!fluids[nutrientTankIndex].isEmpty()){
-						fluids[nutrientTankIndex].shrink(getPassiveNutrientDrain());
+					if(!fluids[nutrientTankIndex].isEmpty() && gameTime % getPassiveNutrientDrainInterval() == 0){
+						//Liquid drain is 1mB every (nutrient drain interval) ticks
+						fluids[nutrientTankIndex].shrink(1);
 					}
 					//Update the item
 					item.cultivate(stack, level, 1);
@@ -77,7 +78,7 @@ public abstract class AbstractNutrientEnvironmentTileEntity extends InventoryTE{
 		setChanged();
 	}
 
-	protected abstract int getPassiveNutrientDrain();
+	protected abstract int getPassiveNutrientDrainInterval();
 
 	@Override
 	public void onLoad(){

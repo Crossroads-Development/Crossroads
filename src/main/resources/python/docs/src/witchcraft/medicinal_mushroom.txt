@@ -1,6 +1,6 @@
 Medicinal Mushrooms
 crossroads:medicinal_mushroom|crossroads:progress/path/witchcraft
-<item>Medicinal Mushrooms/$ are a farmable crop which has uses in brewing. They require darkness or mycelium, and spread to adjacent blocks like normal mushrooms. They can not be grown into a giant mushroom.
+<item>Medicinal Mushrooms/$ are a farmable crop which has uses in brewing. They require darkness or mycelium, and spread to adjacent blocks like normal mushrooms. They spread <em>much faster/$ than normal mushrooms, and don't stop spreading when there's too many nearby (they can spread infinitely). They can not be grown into a giant mushroom.
 There are four potion types which can be made with either the <item>medicinal mushroom/$ or <item>medicinal mushroom powder/$. Nausea, Blindness, Sedation, and Neutralization.
 <page|spotlight|sedation|minecraft:potion{Potion:\"crossroads:sedation\"}>
 <thing>Sedation/$ potions disable the AI of any mob it is applied to. Sedated mobs will not move on their own, fight back, attack, or otherwise react to their environment. It can be used for transporting mobs or keeping them for display.

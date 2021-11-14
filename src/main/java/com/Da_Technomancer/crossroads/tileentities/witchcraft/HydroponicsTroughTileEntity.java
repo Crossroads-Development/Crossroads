@@ -56,7 +56,7 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 	public static BlockEntityType<HydroponicsTroughTileEntity> TYPE = null;
 
 	private static final int CAPACITY = 8000;
-	public static final int SOLUTION_DRAIN = 1;
+	public static final int SOLUTION_DRAIN_INTERVAL = 4;
 
 	/**
 	 * Stores all the crop types that can be made in the Hydroponics Trough
@@ -110,7 +110,7 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 	}
 
 	private int getGrowthMult(){
-		if(fluids[0].getAmount() < SOLUTION_DRAIN){
+		if(fluids[0].isEmpty()){
 			return 0;
 		}
 		Triple<Boolean, Integer, ItemStack[]> crop = getCrop(inventory[0]);
@@ -156,8 +156,9 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 			fluids[0] = FluidStack.EMPTY;
 			setChanged();
 		}else{
-			if(!inventory[0].isEmpty() && !fluids[0].isEmpty()){
-				fluids[0].shrink(SOLUTION_DRAIN);
+			if(!inventory[0].isEmpty() && !fluids[0].isEmpty() && level.getGameTime() % SOLUTION_DRAIN_INTERVAL == 0){
+				//Drains 1mB every (drain interval) ticks
+				fluids[0].shrink(1);
 				setChanged();
 			}
 		}
