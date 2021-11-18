@@ -1,12 +1,12 @@
 Acids & Aqua Regia
 crossroads:solid_regia|crossroads:progress/path/alchemy
 <thing>Alchemy/$ adds four different reagents that are acids: <item>Vitriol Salt (Sulfuric Acid)/$, <item>Muriatic Salt (Hydrochloric Acid)/$, <item>Aziotic Salt (Nitric Acid)/$, and <item>Regia Salt (Aqua Regia)/$. Three of these (Sulfuric, Muriatic, and Aziotic) act identically. <item>Aqua Regia/$ is more powerful than the other three, and allows <em>breaking bedrock/$ and getting <item>Bedrock Dust/$.
-The three normal acids have the same <thing><link:crossroads:alchemy/effect>effect/$: They deal 8 damage to any entity they hit, and will break metal blocks other than gold.
+The three normal acids have the same <thing><link:essentials:alchemy/effect>effect/$: They deal 8 damage to any entity they hit, and will break metal blocks other than gold.
 
 <item>Aqua Regia/$ will do 12 damage to hit entities, and will break metal blocks (including gold). Much more importantly, any bedrock that <item>aqua regia/$ hits will be broken, dropping 1 <item>Bedrock Dust/$, an important reagent.
-As <thing>aqua regia/$ can be expensive and you will need a lot of <item>bedrock dust/$, it suggested to mix it with a cheap liquid (like water) to splash the <thing><link:crossroads:alchemy/effect>effect/$ over a large area. See the <thing><link:crossroads:alchemy/effect>effects/$ page for full details.
+As <thing>aqua regia/$ can be expensive and you will need a lot of <item>bedrock dust/$, it suggested to mix it with a cheap liquid (like water) to splash the <thing><link:essentials:alchemy/effect>effect/$ over a large area. See the <thing><link:essentials:alchemy/effect>effects/$ page for full details.
 
-<bobo><link:crossroads:intro/welcome#bobo>iz BOBO!/$<bobo> KABANG! KABOOM! KABLOOEY! (bles U)
+<bobo><link:essentials:intro/welcome#bobo>iz BOBO!/$<bobo> KABANG! KABOOM! KABLOOEY! (bles U)
 I HAZ BANG BOTTEL! bUTtt b33 KaRE_UN_EMTPY!! eLES U g0->> bUUM!
 y3LLOW dUST! fRRRESH BAkCC0ON!! und bUTT:E for SHOP-AGGE!
 bOBO AWAY!/$

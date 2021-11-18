@@ -1,16 +1,16 @@
 Stirling Engine
 crossroads:stirling_engine
-The <item>Stirling Engine/$ is a way of producing <thing><link:crossroads:intro/rotary>rotary power/$ from <thing><link:crossroads:intro/heat>heat/$. Or more specifically, from a temperature difference.
+The <item>Stirling Engine/$ is a way of producing <thing><link:essentials:intro/rotary>rotary power/$ from <thing><link:essentials:intro/heat>heat/$. Or more specifically, from a temperature difference.
 The <item>stirling engine/$ has two separate heat connections- one on bottom and one on the sides. The greater the difference in temperature between the two inputs, the more power is produced, and the more efficient the <item>stirling engine/$ is. There must be a minimum 20°C difference to produce any power. Heat will be exchanged between the two inputs- the higher the temperature difference, the faster heat is consumed (-1°C/t per 20°C difference at the hot side).
 The <item>stirling engine/$ will stop producing any power above speeds of 2rad/s [config controlled- trust the tooltip]. The <item>stirling engine/$ also has <em>no minimum temperature/$, only a minimum temperature difference.
 Heat is consumed on the hot side, and produced on the cold side. However, more heat is consumed than is produced- the lost heat is mostly converted to rotary power. The bigger the temperature difference, the more efficient this is.
-By default (trust the tooltip), below 500°C temperature difference, <thing><link:crossroads:intro/fluid>steam power/$ is more efficient per degree heat consumed. Above 500°C, the <item>stirling engine/$ is more efficient, and gets better the higher the temperature difference (capped at 2000°C).
+By default (trust the tooltip), below 500°C temperature difference, <thing><link:essentials:intro/fluid>steam power/$ is more efficient per degree heat consumed. Above 500°C, the <item>stirling engine/$ is more efficient, and gets better the higher the temperature difference (capped at 2000°C).
 <page>
 Tips:
--This machine is a really efficient but more complicated way to make a LOT of rotary power. For lower powers, (below 500°C temperature difference), use <thing><link:crossroads:intro/fluid>steam power/$ instead.
--Because the speed is capped at 2rad/s, you'll probably want <item><link:crossroads:rotary/gear_large>gearing/$ to get higher speeds.
+-This machine is a really efficient but more complicated way to make a LOT of rotary power. For lower powers, (below 500°C temperature difference), use <thing><link:essentials:intro/fluid>steam power/$ instead.
+-Because the speed is capped at 2rad/s, you'll probably want <item><link:essentials:rotary/gear_large>gearing/$ to get higher speeds.
 -If one side is room temperature, and the other side is extremely cold, this can also produce power. You can generate power from cooling instead of heating if you want.
--You can use the heat generated on the cold side to run machines, power another <item>stirling engine/$ for extra efficiency (but the gain is tiny), or just <item><link:crossroads:heat/sink>vent it/$.
+-You can use the heat generated on the cold side to run machines, power another <item>stirling engine/$ for extra efficiency (but the gain is tiny), or just <item><link:essentials:heat/sink>vent it/$.
 <page>
 Formulas (for nerds and min-maxers):
 ΔT: Temperature difference

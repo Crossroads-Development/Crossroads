@@ -1,8 +1,8 @@
 Potion Brewing Still
 crossroads:brewing_vat|crossroads:progress/path/witchcraft
-The <item>Potion Brewing Still/$ is a machine for brewing potions, as an alternative to the normal brewing stand. It doesn't require blaze powder to brew potions, but uses <thing><link:crossroads:intro/crossroads>heat/$ instead.
+The <item>Potion Brewing Still/$ is a machine for brewing potions, as an alternative to the normal brewing stand. It doesn't require blaze powder to brew potions, but uses <thing><link:essentials:intro/crossroads>heat/$ instead.
 Like a brewing stand, it can brew three potions at once using 1 item ingredient. It can be much faster than a normal brewing stand.
-It uses <thing><link:crossroads:intro/heat>heat/$, and runs faster the closer it is to 100°C. If the temperature exceeds 100°C at all, it totally stops working but still consumes heat, so ideally it should be kept at just slightly below 100°C.
+It uses <thing><link:essentials:intro/heat>heat/$, and runs faster the closer it is to 100°C. If the temperature exceeds 100°C at all, it totally stops working but still consumes heat, so ideally it should be kept at just slightly below 100°C.
 <thing><link:essentials/circuits>Circuits/$ measure the fullness of the three potion input slots, as a value from 0 to 15.
 
 It is useful to note that <thing>Crossroads/$ adds a recipe to fill empty bottles with water by brewing them with ice, as an alternative option to normal bottle filling.

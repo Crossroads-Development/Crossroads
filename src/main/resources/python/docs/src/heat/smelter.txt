@@ -2,4 +2,4 @@ Smelter
 crossroads:heating_chamber
 The <item>Smelter/$ is a heat powered furnace, with a minimum temperature of 200°C. It has a constant heat drain while above 200°C, regardless of whether it is running.
 It smelts faster at higher temperatures, but has a higher heat drain. The efficiency does not change. Even at the lowest working temperature, it is faster than a furnace.
-<item><link:crossroads:heat/cable>Heat cables/$ connect on the top. <thing><link:essentials/circuits>Circuits/$ measure the fullness of the item input, as a value from 0 to 15.
+<item><link:essentials:heat/cable>Heat cables/$ connect on the top. <thing><link:essentials/circuits>Circuits/$ measure the fullness of the item input, as a value from 0 to 15.

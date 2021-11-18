@@ -1,6 +1,6 @@
 Intro to Rotary2
 crossroads:gear_base
-<thing>Rotary/$ is one of the basic energy systems in Crossroads, and usually the first or second one you'll use (alongside <thing><link:crossroads:intro/heat>Heat/$) Rotary is the transfer of mechanical energy using <item>gears/$ and <item>axles/$.
+<thing>Rotary/$ is one of the basic energy systems in Crossroads, and usually the first or second one you'll use (alongside <thing><link:essentials:intro/heat>Heat/$) Rotary is the transfer of mechanical energy using <item>gears/$ and <item>axles/$.
 Rotary can seem complicated at first when reading about it, but is actually pretty simple in practice.
 Every gear, axle, or other spinning device has a few basic values.
 The <thing>Moment of Inertia/$ is written as 'I', usually in tooltips. The I value can be thought of as the 'weight' of the gear- things with higher I values are heavier and are harder to spin quickly.
@@ -11,6 +11,6 @@ The <thing>Power/$, measured in 'J/s' or 'Joules/second', is the rate of change 
 Gears will also have a small amount of <thing>power loss/$ proportional to the <thing>speed/$. A system will lose <thing>energy/$ every tick- so you have to keep producing power. The amount of <thing>power loss/$ <em>does not/$ increase with the number of gears in a system. By default, a system loses -ω² J/tm where ω is the average gear <thing>speed/$. [Note: The formula, rate, and even whether it scales with number of gears might be changed in the config]
 
 Usually, a machine will consume a certain amount of <thing>energy/$ per operation, but have a minimum <thing>speed/$ to work. Most machines will work faster at higher <thing>speeds/$.
-<item><link:crossroads:rotary/gear_base>Gears and axles/$ can be connected together to transfer energy. Placing a <item><link:crossroads:rotary/gear_base>small gear/$ next to a <item><link:crossroads:rotary/gear_large>large gear/$ will cause the larger gear to spin slower than the small one- as you'ld expect.
+<item><link:essentials:rotary/gear_base>Gears and axles/$ can be connected together to transfer energy. Placing a <item><link:essentials:rotary/gear_base>small gear/$ next to a <item><link:essentials:rotary/gear_large>large gear/$ will cause the larger gear to spin slower than the small one- as you'ld expect.
 
-All networks of gears/axles/whatever <em>MUST HAVE/$ a <item><link:crossroads:rotary/axis>Master Axis/$ connected somewhere in the network- otherwise nothing will work!
+All networks of gears/axles/whatever <em>MUST HAVE/$ a <item><link:essentials:rotary/axis>Master Axis/$ connected somewhere in the network- otherwise nothing will work!

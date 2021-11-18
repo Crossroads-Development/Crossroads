@@ -1,5 +1,5 @@
 Alignment: Light-1
 crossroads:pure_quartz|crossroads:progress/alignment/light
-<thing>Light/$ (white) will create <item><link:crossroads:beam/permeable>light clusters/$ when it hits blocks. It also can convert (cobble)stone into glowstone.
+<thing>Light/$ (white) will create <item><link:essentials:beam/permeable>light clusters/$ when it hits blocks. It also can convert (cobble)stone into glowstone.
 
 <thing>Void-Light/$ AKA <thing>Darkness/$ will break light sources within range- where the radius is sqrt(<thing>power/$) / 2 blocks (maximum 4 blocks).

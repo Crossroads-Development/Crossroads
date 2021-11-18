@@ -1,10 +1,10 @@
 Ore Cleanser
 crossroads:ore_cleanser
-The <item>Ore Cleanser/$ is an <em>optional/$ processing stage for ore tripling. It uses <thing><link:crossroads:intro/fluid>steam/$ to convert <item>metal gravel/$ from a <item><link:crossroads:rotary/stamp>stamp mill/$ to produce <item>metal clumps/$ and <thing><link:crossroads:intro/fluid>dirty water/$ as a byproduct. By doing this, less coal/charcoal is consumed by the <item><link:crossroads:rotary/blast>blast furnace/$ to triple ores.
-There is a fluid output on the top, and fluid inputs on the sides. Each operation consumes 250mB of <thing><link:crossroads:intro/fluid>steam/$ and produces 250mB of <thing><link:crossroads:intro/fluid>dirty water/$. This <thing><link:crossroads:intro/fluid>dirty water/$ can be reprocessed in an <item><link:crossroads:fluid/centrifuge>water centrifuge/$.
+The <item>Ore Cleanser/$ is an <em>optional/$ processing stage for ore tripling. It uses <thing><link:essentials:intro/fluid>steam/$ to convert <item>metal gravel/$ from a <item><link:essentials:rotary/stamp>stamp mill/$ to produce <item>metal clumps/$ and <thing><link:essentials:intro/fluid>dirty water/$ as a byproduct. By doing this, less coal/charcoal is consumed by the <item><link:essentials:rotary/blast>blast furnace/$ to triple ores.
+There is a fluid output on the top, and fluid inputs on the sides. Each operation consumes 250mB of <thing><link:essentials:intro/fluid>steam/$ and produces 250mB of <thing><link:essentials:intro/fluid>dirty water/$. This <thing><link:essentials:intro/fluid>dirty water/$ can be reprocessed in an <item><link:essentials:fluid/centrifuge>water centrifuge/$.
 <thing><link:essentials/circuits#reader>Reader circuits/$ measure the fullness of the input.
 
-<bobo>Bobojour! Glüten tag! Comichiewa! iT's <link:crossroads:intro/welcome#bobo>BOBO/$<bobo> tIME!
+<bobo>Bobojour! Glüten tag! Comichiewa! iT's <link:essentials:intro/welcome#bobo>BOBO/$<bobo> tIME!
 i haz plumping tiP!!
 black shiny rock, plumbinG, spoonge!
 boqr AWAY/$

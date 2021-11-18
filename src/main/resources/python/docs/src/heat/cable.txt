@@ -6,6 +6,6 @@ Cables can be disconnected from each other via wrench. Cables can also be reskin
 
 There are also <item>Redstone Heat Cables/$. They only connect to other cables and machines when they have a redstone signal. <link:essentials/circuits#reader>Circuits/$ can read the temperature in Celcius.
 
-<bobo><link:crossroads:intro/welcome#bobo>b0b0 hInT tIME!/$<bobo>
+<bobo><link:essentials:intro/welcome#bobo>b0b0 hInT tIME!/$<bobo>
 w00l-shhmool! uSE dA l00tbok$ hoTPipe coAt!! MUD! dIRT! s0ILE! gROUND!
 mEltY MellTY to wIN @ PRIZE!/$

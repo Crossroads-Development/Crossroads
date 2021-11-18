@@ -98,9 +98,8 @@ dependencies {
 	runtimeOnly(fg.deobf("mezz.jei:jei-$jei_mc_version:$jei_version"))//JEI
 	runtimeOnly(fg.deobf("top.theillusivec4.curios:curios-forge:$curios_version"))//Curios
 
-//	Disabled until Patchouli updates to MC1.17 Forge
-//	compileOnly(fg.deobf("vazkii.patchouli:Patchouli:$patchouli_version"))
-//	runtimeOnly(fg.deobf("vazkii.patchouli:Patchouli:$patchouli_version"))
+	compileOnly(fg.deobf("vazkii.patchouli:Patchouli:$patchouli_version"))
+	runtimeOnly(fg.deobf("vazkii.patchouli:Patchouli:$patchouli_version"))
 
 	//No special CR integration for hwayla- only used for testing, so no compile inclusion needed
 //	runtimeOnly(fg.deobf("mcp.mobius.waila:Hwyla:$hwyla_version"))

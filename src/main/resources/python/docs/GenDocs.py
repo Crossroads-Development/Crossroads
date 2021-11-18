@@ -25,7 +25,8 @@ import os
 
 
 def run():
-	outputPath = "../../data/crossroads/patchouli_books/manual/en_us/entries/"
+	outputPath = "../../assets/essentials/patchouli_books/manual/en_us/entries/"
+	modNamespace = 'essentials'
 	srcPath = "../docs/src/"
 	templatePath = "../docs/template.txt"
 	advTemplatePath = "../docs/template_adv.txt"
@@ -56,7 +57,7 @@ def run():
 		os.makedirs(outDir, exist_ok=True)
 
 		# Assume category is the same as the folder, including folder structure starting at generated
-		category = inDir[inDir.rfind("src/") + 4:-1]
+		category = modNamespace + ':' + inDir[inDir.rfind("src/") + 4:-1]
 
 		# Perform conversion for each .txt file
 		for file in fileList:
@@ -187,7 +188,7 @@ def writeTextPage(output: str, text: str, lineSt: str, data: [str, ...]) -> str:
 	if len(output) > 0:
 		output += ',\n'
 	output += lineSt + '{\n'
-	output += lineSt + '\t"type": ' + '"text",\n'
+	output += lineSt + '\t"type": ' + '"patchouli:text",\n'
 	if len(data) != 0 and len(data[0]) != 0:
 		output += lineSt + '\t"anchor": "' + data[0] + '",\n'
 	output += lineSt + '\t"text": "' + text.replace('"', '\\"') + '"\n'
@@ -207,7 +208,7 @@ def writeSpotlightPage(output: str, text: str, lineSt: str, data: [str, ...]) ->
 	if len(output) > 0:
 		output += ',\n'
 	output += lineSt + '{\n'
-	output += lineSt + '\t"type": ' + '"spotlight",\n'
+	output += lineSt + '\t"type": ' + '"patchouli:spotlight",\n'
 	if len(data) != 0 and len(data[0]) != 0:
 		output += lineSt + '\t"anchor": "' + data[0] + '",\n'
 	if len(data) > 2 and len(data[2]) != 0:
@@ -230,7 +231,7 @@ def writeImagePage(output: str, text: str, lineSt: str, data: [str, ...]) -> str
 	if len(output) > 0:
 		output += ',\n'
 	output += lineSt + '{\n'
-	output += lineSt + '\t"type": ' + '"image",\n'
+	output += lineSt + '\t"type": ' + '"patchouli:image",\n'
 	if len(data) != 0 and len(data[0]) != 0:
 		output += lineSt + '\t"anchor": "' + data[0] + '",\n'
 	output += lineSt + '\t"border": "true",\n'
@@ -258,7 +259,7 @@ def writeEntityPage(output: str, text: str, lineSt: str, data: [str, ...]) -> st
 	if len(output) > 0:
 		output += ',\n'
 	output += lineSt + '{\n'
-	output += lineSt + '\t"type": ' + '"entity",\n'
+	output += lineSt + '\t"type": ' + '"patchouli:entity",\n'
 	if len(data) != 0 and len(data[0]) != 0:
 		output += lineSt + '\t"anchor": "' + data[0] + '",\n'
 	if len(data) > 1:

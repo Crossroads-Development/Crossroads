@@ -1,15 +1,15 @@
 Lens Frame
 crossroads:lens_frame
-The <item>Lens Frame/$ is a utility device for manipulating <thing><link:crossroads:intro/beam>beams/$, and has many uses. Beams can travel through it along the axis with the giant hole, and the <item>lens frame/$ <em>will not delay the beam at all/$, even if it is performing an effect.
+The <item>Lens Frame/$ is a utility device for manipulating <thing><link:essentials:intro/beam>beams/$, and has many uses. Beams can travel through it along the axis with the giant hole, and the <item>lens frame/$ <em>will not delay the beam at all/$, even if it is performing an effect.
 
 Several different items can be used as a 'lens' by right-clicking it into the <item>frame/$. Only one lens per <item>frame/$ at a time (but multiple <item>frames/$ can be used in a row).
 Lenses filter out different parts of the beam, wasting some of the beam power but being a cheap and easy way to adjust the color of the output. Some lenses don't act as a filter for the beam, but instead transmute the item used as the lens when a specific beam <thing>alignment/$ passes through.
 <thing><link:essentials/circuits#reader>Circuits/$ will read the <thing>power/$ of the beam currently going through the <item>lens frame/$.
 
 The most important lenses are:
-<link:crossroads:intro/ores>Ruby/$ will delete anything from the beam that isn't <thing>energy/$.
+<link:essentials:intro/ores>Ruby/$ will delete anything from the beam that isn't <thing>energy/$.
 Emerald will delete anything from the beam that isn't <thing>potential/$.
 Diamond will delete anything from the beam that isn't <thing>stability/$.
-<link:crossroads:intro/ores>Void crystal/$ will convert the entire beam to <thing><link:crossroads:beam/void>void/$ instead of filtering it.
-<link:crossroads:fluid/ingr>Pure quartz/$ with a <thing>light alignment/$ beam will convert the <link:crossroads:fluid/ingr>pure quartz/$ to bright quartz. This is a cheap way to make bright quartz, as it doesn't consume the beam.
+<link:essentials:intro/ores>Void crystal/$ will convert the entire beam to <thing><link:essentials:beam/void>void/$ instead of filtering it.
+<link:essentials:fluid/ingr>Pure quartz/$ with a <thing>light alignment/$ beam will convert the <link:essentials:fluid/ingr>pure quartz/$ to bright quartz. This is a cheap way to make bright quartz, as it doesn't consume the beam.
 All lenses (including some not listed here) are in JEI, under uses for the <item>lens frame/$.
