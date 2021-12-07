@@ -192,8 +192,8 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag nbt){
-		super.save(nbt);
+	public CompoundTag m_6945_(CompoundTag nbt){
+		super.m_6945_(nbt);
 		if(template != null){
 			nbt.put("template", template.serializeNBT());
 		}

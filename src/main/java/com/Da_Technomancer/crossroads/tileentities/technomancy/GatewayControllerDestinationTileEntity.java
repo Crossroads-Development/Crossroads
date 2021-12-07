@@ -448,8 +448,8 @@ public class GatewayControllerDestinationTileEntity extends BlockEntity implemen
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag nbt){
-		super.save(nbt);
+	public CompoundTag m_6945_(CompoundTag nbt){
+		super.m_6945_(nbt);
 		//Active only
 		if(address != null){
 			nbt.putInt("address", address.serialize());

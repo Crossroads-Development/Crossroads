@@ -165,8 +165,8 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag nbt){
-		super.save(nbt);
+	public CompoundTag m_6945_(CompoundTag nbt){
+		super.m_6945_(nbt);
 
 		queued[0].writeToNBT("queue0", nbt);
 		queued[1].writeToNBT("queue1", nbt);

@@ -2,9 +2,9 @@ package com.Da_Technomancer.crossroads.render;
 
 import com.Da_Technomancer.crossroads.render.TESR.BeamRenderer;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.nbt.CompoundTag;
-import com.mojang.math.Vector3f;
 import net.minecraft.world.level.Level;
 
 import java.awt.*;

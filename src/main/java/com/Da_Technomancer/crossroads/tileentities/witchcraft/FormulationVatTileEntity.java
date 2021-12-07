@@ -127,8 +127,8 @@ public class FormulationVatTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag nbt){
-		super.save(nbt);
+	public CompoundTag m_6945_(CompoundTag nbt){
+		super.m_6945_(nbt);
 		nbt.putDouble("prog", progress);
 		return nbt;
 	}

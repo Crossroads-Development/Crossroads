@@ -2,12 +2,12 @@ package com.Da_Technomancer.crossroads.API;
 
 import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
 import com.Da_Technomancer.essentials.ReflectionUtil;
+import net.minecraft.server.level.ChunkMap;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.chunk.ChunkBiomeContainer;
-import net.minecraft.server.level.ChunkMap;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.chunk.LevelChunk;
 
 import javax.annotation.Nonnull;
@@ -16,19 +16,19 @@ import java.util.function.Supplier;
 
 public enum CRReflection implements ReflectionUtil.IReflectionKey{
 
-	SET_CHAT(CRReflection::getChatClass, "m_93790_", "addMessage", "Update the chat log without spamming it"),
-	CURE_ZOMBIE(ZombieVillager.class, "m_34383_", "startConverting", "Cure zombie villagers with SO2"),
-	EXPLOSION_POWER(Explosion.class, "f_46017_", "radius", "Perpetuate explosions with Collapse beams (1)"),
-	EXPLOSION_SMOKE(Explosion.class, "f_46009_", "fire", "Perpetuate explosions with Collapse beams (2)"),
-	EXPLOSION_MODE(Explosion.class, "f_46010_", "blockInteraction", "Perpetuate explosions with Collapse beams (3)"),
+	SET_CHAT(CRReflection::getChatClass, "addMessage", "addMessage", "Update the chat log without spamming it"),
+	CURE_ZOMBIE(ZombieVillager.class, "startConverting", "startConverting", "Cure zombie villagers with SO2"),
+	EXPLOSION_POWER(Explosion.class, "radius", "radius", "Perpetuate explosions with Collapse beams (1)"),
+	EXPLOSION_SMOKE(Explosion.class, "fire", "fire", "Perpetuate explosions with Collapse beams (2)"),
+	EXPLOSION_MODE(Explosion.class, "blockInteraction", "blockInteraction", "Perpetuate explosions with Collapse beams (3)"),
 //	SWING_TIME(LivingEntity.class, "field_184617_aD", "attackStrengthTicker", "Mechanical Arm attacking"),
 //	ENTITY_LIST(ServerLevel.class, "field_175741_N", "entitiesByUuid", "Prevent mob spawning with Closure beams, modify explosions with Collapse/Equilibrium beams"),
-	LOADED_CHUNKS(ChunkMap.class, "m_140416_", "getChunks", "Spawn lightning at high atmospheric charge"),
-	LIGHTNING_POS(ServerLevel.class, "m_143288_", "findLightningTargetAround", "Target lightning at high atmospheric charge"),
+	LOADED_CHUNKS(ChunkMap.class, "getChunks", "getChunks", "Spawn lightning at high atmospheric charge"),
+	LIGHTNING_POS(ServerLevel.class, "findLightningTargetAround", "findLightningTargetAround", "Target lightning at high atmospheric charge"),
 	SPAWN_RADIUS(ChunkMap.class, "m_140397_", "noPlayersCloseForSpawning", "Spawn lightning at high atmospheric charge"),
 	BIOME_ARRAY(ChunkBiomeContainer.class, "f_62112_", "biomes", "Terraforming alchemy reagents changing the biome"),
-	OFFSPRING_SPAWN_EGG(Mob.class, "m_5502_", "onOffspringSpawnedFromEgg", "Imprinting on cloned foxes"),
-	CHUNK_TICKER_MAP(LevelChunk.class, "f_156362_", "tickersInLevel", "Tick accelerating tile entities");
+	OFFSPRING_SPAWN_EGG(Mob.class, "onOffspringSpawnedFromEgg", "onOffspringSpawnedFromEgg", "Imprinting on cloned foxes"),
+	CHUNK_TICKER_MAP(LevelChunk.class, "tickersInLevel", "tickersInLevel", "Tick accelerating tile entities");
 
 
 	private Class<?> clazz;

@@ -142,8 +142,8 @@ public class FluxSinkTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag nbt){
-		super.save(nbt);
+	public CompoundTag m_6945_(CompoundTag nbt){
+		super.m_6945_(nbt);
 		nbt.putBoolean("running", running);
 		nbt.putLong("run_time", runningStartTime);
 		return nbt;

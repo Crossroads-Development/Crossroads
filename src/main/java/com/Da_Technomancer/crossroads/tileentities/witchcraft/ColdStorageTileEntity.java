@@ -99,8 +99,8 @@ public class ColdStorageTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag nbt){
-		nbt = super.save(nbt);
+	public CompoundTag m_6945_(CompoundTag nbt){
+		nbt = super.m_6945_(nbt);
 		nbt.putLong("last_tick", lastTick);
 		return nbt;
 	}

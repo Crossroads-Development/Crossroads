@@ -3,9 +3,9 @@ package com.Da_Technomancer.crossroads.gui.screen;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.gui.AutoCrafterScreen;
 import com.Da_Technomancer.essentials.gui.container.AutoCrafterContainer;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 
 public class DetailedAutoCrafterScreen extends AutoCrafterScreen{
 

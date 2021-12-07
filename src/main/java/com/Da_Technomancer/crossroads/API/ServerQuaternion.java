@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.API;
 
-import net.minecraft.util.Mth;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
+import net.minecraft.util.Mth;
 
 /**
  * Stripped down re-implementation of net.minecraft.util.math.vector.Quaternion that is server-side safe

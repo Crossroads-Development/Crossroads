@@ -68,8 +68,8 @@ public class HeatSinkTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag nbt){
-		super.save(nbt);
+	public CompoundTag m_6945_(CompoundTag nbt){
+		super.m_6945_(nbt);
 		nbt.putInt("mode", mode);
 		return nbt;
 	}

@@ -2,12 +2,12 @@ package com.Da_Technomancer.crossroads.API.templates;
 
 import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
 import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.network.FriendlyByteBuf;
 import org.apache.commons.lang3.tuple.Pair;
 
 public abstract class MachineContainer<U extends InventoryTE> extends TileEntityContainer<U>{

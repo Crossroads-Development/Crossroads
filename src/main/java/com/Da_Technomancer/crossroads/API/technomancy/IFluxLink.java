@@ -154,8 +154,8 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 		}
 
 		@Override
-		public CompoundTag save(CompoundTag nbt){
-			nbt = super.save(nbt);
+		public CompoundTag m_6945_(CompoundTag nbt){
+			nbt = super.m_6945_(nbt);
 			writeData(nbt);
 			return nbt;
 		}

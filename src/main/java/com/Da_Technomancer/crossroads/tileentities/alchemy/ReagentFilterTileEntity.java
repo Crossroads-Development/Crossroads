@@ -76,8 +76,8 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements MenuPro
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag nbt){
-		super.save(nbt);
+	public CompoundTag m_6945_(CompoundTag nbt){
+		super.m_6945_(nbt);
 		if(!inventory.isEmpty()){
 			nbt.put("inv", inventory.save(new CompoundTag()));
 		}

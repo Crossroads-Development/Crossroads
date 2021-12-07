@@ -1,7 +1,5 @@
 package com.Da_Technomancer.crossroads.render.TESR;
 
-import com.Da_Technomancer.crossroads.render.HopperHawkShoulderRenderer;
-import com.Da_Technomancer.crossroads.render.TechnomancyElytraRenderer;
 import com.Da_Technomancer.crossroads.tileentities.beams.*;
 import com.Da_Technomancer.crossroads.tileentities.electric.DynamoTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
@@ -14,11 +12,6 @@ import com.Da_Technomancer.crossroads.tileentities.witchcraft.AutoInjectorTileEn
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.BloodCentrifugeTileEntity;
 import com.Da_Technomancer.crossroads.tileentities.witchcraft.CultivatorVatTileEntity;
 import com.Da_Technomancer.essentials.render.LinkLineRenderer;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.entity.*;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 
 public class CRRendererRegistry{

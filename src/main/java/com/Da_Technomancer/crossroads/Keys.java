@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads;
 
-import net.minecraft.client.KeyMapping;
 import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.KeyMapping;
+import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.client.extensions.IForgeKeyMapping;
-import net.minecraftforge.fmlclient.registry.ClientRegistry;
 
 import javax.annotation.Nullable;
 

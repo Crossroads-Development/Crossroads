@@ -175,8 +175,8 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag nbt){
-		super.save(nbt);
+	public CompoundTag m_6945_(CompoundTag nbt){
+		super.m_6945_(nbt);
 		nbt.putString("act", activeText == null ? "" : activeText.toString());
 		if(col != null){
 			nbt.putInt("col", col);

@@ -3,8 +3,8 @@ package com.Da_Technomancer.crossroads.API.packets;
 import com.Da_Technomancer.essentials.packets.ClientPacket;
 import com.Da_Technomancer.essentials.packets.INBTReceiver;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.Entity;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;

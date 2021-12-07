@@ -116,8 +116,8 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag nbt){
-		super.save(nbt);
+	public CompoundTag m_6945_(CompoundTag nbt){
+		super.m_6945_(nbt);
 
 		// members
 		for(int i = 0; i < 7; i++){

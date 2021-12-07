@@ -141,8 +141,8 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag nbt){
-		super.save(nbt);
+	public CompoundTag m_6945_(CompoundTag nbt){
+		super.m_6945_(nbt);
 		ConduitBlock.IConduitTE.writeConduitNBT(nbt, this);
 		nbt.putString("insul", insulator.name());
 		return nbt;
@@ -150,7 +150,7 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 
 	@Override
 	public CompoundTag getUpdateTag(){
-		return save(super.getUpdateTag());
+		return m_6945_(super.getUpdateTag());
 	}
 
 	@SuppressWarnings("unchecked")

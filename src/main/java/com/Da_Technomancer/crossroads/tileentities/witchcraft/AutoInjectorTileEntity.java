@@ -176,8 +176,8 @@ public class AutoInjectorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag nbt){
-		super.save(nbt);
+	public CompoundTag m_6945_(CompoundTag nbt){
+		super.m_6945_(nbt);
 		if(storedEffect == null){
 			nbt.putInt("effect_id", 0);
 		}else{

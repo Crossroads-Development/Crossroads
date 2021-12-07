@@ -157,7 +157,7 @@ public class AetherEffect implements IAlchEffect{
 		}
 
 		//As of MC1.15, we have to reflect in as the biome array is private and the int array won't save to disk
-		ChunkBiomeContainer bc = world.getChunk(pos).getBiomes();
+		ChunkBiomeContainer bc = world.getChunk(pos).m_6221_();
 		if(biomeField != null && bc != null){
 			Object o;
 			try{

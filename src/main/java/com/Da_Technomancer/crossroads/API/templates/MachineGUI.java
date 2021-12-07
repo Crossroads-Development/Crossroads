@@ -3,8 +3,8 @@ package com.Da_Technomancer.crossroads.API.templates;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 
 public abstract class MachineGUI<T extends MachineContainer<U>, U extends InventoryTE> extends TileEntityGUI<T, U>{
 

@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.API.effects;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Slime;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
 public class SlimeEffect implements IEffect{

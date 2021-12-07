@@ -69,18 +69,18 @@ public class CRWorldGen{
 	public static void addWorldgen(BiomeLoadingEvent event){
 		if(isOverworld(event.getCategory())){
 //			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, COPPER_ORE);
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, TIN_ORE);
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, TIN_ORE_DEEP);
+			event.getGeneration().m_47842_(GenerationStep.Decoration.UNDERGROUND_ORES, TIN_ORE);
+			event.getGeneration().m_47842_(GenerationStep.Decoration.UNDERGROUND_ORES, TIN_ORE_DEEP);
 		}else if(event.getCategory() == Biome.BiomeCategory.THEEND){
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, VOID_ORE);
+			event.getGeneration().m_47842_(GenerationStep.Decoration.UNDERGROUND_ORES, VOID_ORE);
 		}else if(event.getCategory() == Biome.BiomeCategory.NETHER){
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, RUBY_ORE_SPOT);
+			event.getGeneration().m_47842_(GenerationStep.Decoration.UNDERGROUND_DECORATION, RUBY_ORE_SPOT);
 		}
 	}
 
 	private static ConfiguredFeature<?, ?> configuredFeature(Feature<OreConfiguration> feature, RuleTest canOverwrite, BlockState ore, int veinSize, int maxHeight, int attemptsPerChunk){
 		//MCP note: use whatever iron ore uses in the vanilla Features class
-		return feature.configured(new OreConfiguration(canOverwrite, ore, veinSize)).rangeUniform(VerticalAnchor.bottom(), VerticalAnchor.absolute(maxHeight)).squared().count(attemptsPerChunk);
+		return feature.configured(new OreConfiguration(canOverwrite, ore, veinSize)).m_158245_(VerticalAnchor.bottom(), VerticalAnchor.absolute(maxHeight)).m_64152_().m_64158_(attemptsPerChunk);
 	}
 
 	private static boolean isOverworld(Biome.BiomeCategory cat){

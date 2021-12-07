@@ -316,8 +316,8 @@ public class BeamCannonTileEntity extends BlockEntity implements ITickableTileEn
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag nbt){
-		nbt = super.save(nbt);
+	public CompoundTag m_6945_(CompoundTag nbt){
+		nbt = super.m_6945_(nbt);
 		for(int i = 0; i < 2; i++){
 			nbt.putDouble("energy_" + i, energy[i]);
 			nbt.putFloat("angle_" + i, angle[i]);
@@ -335,7 +335,7 @@ public class BeamCannonTileEntity extends BlockEntity implements ITickableTileEn
 
 	@Override
 	public CompoundTag getUpdateTag(){
-		return save(super.getUpdateTag());
+		return m_6945_(super.getUpdateTag());
 	}
 
 	@Override

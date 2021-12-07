@@ -83,8 +83,8 @@ public class FluxNodeTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag nbt){
-		super.save(nbt);
+	public CompoundTag m_6945_(CompoundTag nbt){
+		super.m_6945_(nbt);
 		nbt.putFloat("angle", angle);
 		return nbt;
 	}
@@ -92,7 +92,7 @@ public class FluxNodeTileEntity extends IFluxLink.FluxHelper{
 	@Override
 	public CompoundTag getUpdateTag(){
 		CompoundTag nbt = super.getUpdateTag();
-		save(nbt);//We need the ability to getReadingFlux() on the client when loading
+		m_6945_(nbt);//We need the ability to getReadingFlux() on the client when loading
 //		nbt.putFloat("angle", angle);
 		return nbt;
 	}

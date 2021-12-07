@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.fluids;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.Tag;
+import net.minecraft.world.level.material.Fluid;
 
 import java.util.ArrayList;
 
