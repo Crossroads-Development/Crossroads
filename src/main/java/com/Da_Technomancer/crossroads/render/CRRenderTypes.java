@@ -62,7 +62,7 @@ public class CRRenderTypes extends RenderType{
 
 	public static void stitchTextures(TextureStitchEvent.Pre event){
 		//We only need to register textures which are not already part of a block model
-		if(event.getMap().location().equals(TextureAtlas.LOCATION_BLOCKS)) {
+		if(event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {
 			event.addSprite(WINDMILL_TEXTURE);
 			event.addSprite(NODE_GIMBAL_TEXTURE);
 			event.addSprite(AXLE_ENDS_TEXTURE);

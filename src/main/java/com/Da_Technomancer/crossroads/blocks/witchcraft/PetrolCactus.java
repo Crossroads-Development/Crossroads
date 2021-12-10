@@ -64,7 +64,7 @@ public class PetrolCactus extends CactusBlock{
 	}
 
 	@Override
-	public void catchFire(BlockState state, Level world, BlockPos pos, @Nullable Direction face, @Nullable LivingEntity igniter){
+	public void onCaughtFire(BlockState state, Level world, BlockPos pos, @Nullable Direction face, @Nullable LivingEntity igniter){
 		detonate(world, pos);
 	}
 

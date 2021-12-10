@@ -7,28 +7,23 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.rotary.ICogHandler;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 
 public class Capabilities{
 
-	@CapabilityInject(IHeatHandler.class)
-	public static Capability<IHeatHandler> HEAT_CAPABILITY = null;
+	public static Capability<IHeatHandler> HEAT_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
-	@CapabilityInject(IAxleHandler.class)
-	public static Capability<IAxleHandler> AXLE_CAPABILITY = null;
+	public static Capability<IAxleHandler> AXLE_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 	
-	@CapabilityInject(ICogHandler.class)
-	public static Capability<ICogHandler> COG_CAPABILITY = null;
+	public static Capability<ICogHandler> COG_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 	
-	@CapabilityInject(IBeamHandler.class)
-	public static Capability<IBeamHandler> BEAM_CAPABILITY = null;
+	public static Capability<IBeamHandler> BEAM_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 	
-	@CapabilityInject(IAxisHandler.class)
-	public static Capability<IAxisHandler> AXIS_CAPABILITY = null;
-	
-	@CapabilityInject(IChemicalHandler.class)
-	public static Capability<IChemicalHandler> CHEMICAL_CAPABILITY = null;
+	public static Capability<IAxisHandler> AXIS_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
+
+	public static Capability<IChemicalHandler> CHEMICAL_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
 	public static void register(RegisterCapabilitiesEvent e){
 		e.register(IHeatHandler.class);

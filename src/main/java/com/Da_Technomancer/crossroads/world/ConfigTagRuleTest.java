@@ -39,7 +39,7 @@ public class ConfigTagRuleTest extends TagMatchTest{
 	public static final Codec<ConfigTagRuleTest> CONFIG_CODEC = RecordCodecBuilder.create(new CodecApplyFunction());
 
 	public static final RuleTestType<ConfigTagRuleTest> TYPE = RuleTestType.register("tag_and_config_match", CONFIG_CODEC);
-	public static final HashMap<String, ForgeConfigSpec.BooleanValue> configMap = new HashMap<>(4);
+	public static final HashMap<String, ForgeConfigSpec.BooleanValue> configMap = new HashMap<>(3);
 
 	public static void registerConfig(String configName, ForgeConfigSpec.BooleanValue controllingConfig){
 		configMap.put(configName, controllingConfig);

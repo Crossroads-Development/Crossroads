@@ -1,65 +1,18 @@
 package com.Da_Technomancer.crossroads;
 
-import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.beams.BeamToolOverlay;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
-import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
-import com.Da_Technomancer.crossroads.ambient.particles.ColorParticleType;
-import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
-import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.crafting.loot_modifiers.PiglinBarterLootModifier;
-import com.Da_Technomancer.crossroads.crafting.recipes.*;
-import com.Da_Technomancer.crossroads.entity.CREntities;
-import com.Da_Technomancer.crossroads.entity.EntityHopperHawk;
-import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
-import com.Da_Technomancer.crossroads.fluids.CRFluids;
-import com.Da_Technomancer.crossroads.gui.container.*;
-import com.Da_Technomancer.crossroads.gui.screen.*;
 import com.Da_Technomancer.crossroads.integration.CRIntegration;
 import com.Da_Technomancer.crossroads.integration.curios.CurioHelper;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.items.itemSets.ItemSets;
-import com.Da_Technomancer.crossroads.render.CRRenderTypes;
-import com.Da_Technomancer.crossroads.render.TESR.CRRendererRegistry;
-import com.Da_Technomancer.crossroads.tileentities.CRTileEntity;
-import com.Da_Technomancer.crossroads.world.CRWorldGen;
-import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.core.particles.ParticleType;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.network.IContainerFactory;
-import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -77,8 +30,7 @@ public final class Crossroads{
 		final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		bus.addListener(this::commonInit);
 		bus.addListener(this::clientInit);
-		bus.addListener(this::serverStarted);
-		bus.addListener(this::registerEntityAttributes);
+		bus.addListener(this::serverInit);
 
 		CRConfig.init();
 
@@ -90,321 +42,21 @@ public final class Crossroads{
 	private void commonInit(@SuppressWarnings("unused") FMLCommonSetupEvent e){
 		//Pre
 		CRPackets.preInit();
-//		Capabilities.register();
-//		CrossroadsTileEntity.init();
-//		ModDimensions.init();
 		//Main
 		MinecraftForge.EVENT_BUS.register(new EventHandlerCommon());
-		//NetworkRegistry.INSTANCE.registerGuiHandler(Crossroads.instance, new GuiHandler());
 		CRItems.registerDispenserOverrides();
 		CRIntegration.init();
 		CurioHelper.initIntegration();
-//		CrossroadsConfig.config.save();
-//		ModIntegration.preInit();
 	}
 
 	private void clientInit(@SuppressWarnings("unused") FMLClientSetupEvent e){
-//		TESRRegistry.init();
-//		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
-//		ModelLoaderRegistry.registerLoader(new BakedModelLoader());
 		CRItems.clientInit();
-//		CRRendererRegistry.registerBlockRenderer();
-//		CRRendererRegistry.registerEntityLayerRenderers();
 		Keys.init();
-//		CRParticles.clientInit();
 		OverlayRegistry.registerOverlayTop("crossroad_beam_tool_overlay", new BeamToolOverlay());
 		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
 	}
 
-	private void serverStarted(FMLDedicatedServerSetupEvent e){
+	private void serverInit(FMLDedicatedServerSetupEvent e){
 		MinecraftForge.EVENT_BUS.register(new EventHandlerServer());
-	}
-
-	@SuppressWarnings("unused")
-	@SubscribeEvent
-	public static void registerCapabilities(RegisterCapabilitiesEvent e){
-		Capabilities.register(e);
-	}
-
-	@SuppressWarnings("unused")
-	@SubscribeEvent
-	public static void registerModels(ModelRegistryEvent e){
-		CRBlocks.clientInit();
-//		CREntities.clientInit();
-	}
-
-	@SuppressWarnings("unused")
-	@SubscribeEvent
-	public static void registerBlocks(RegistryEvent.Register<Block> e){
-		IForgeRegistry<Block> registry = e.getRegistry();
-		CRBlocks.init();
-		ItemSets.init();
-		CRFluids.init();
-		for(Block block : CRBlocks.toRegister){
-			registry.register(block);
-		}
-		CRBlocks.toRegister.clear();
-	}
-
-	@SuppressWarnings("unused")
-	@SubscribeEvent
-	public static void registerItems(RegistryEvent.Register<Item> e){
-		IForgeRegistry<Item> registry = e.getRegistry();
-		CRItems.init();
-		for(Item item : CRItems.toRegister){
-			registry.register(item);
-		}
-		CRItems.toRegister.clear();
-	}
-
-	@SuppressWarnings("unused")
-	@SubscribeEvent
-	public static void registerFluids(RegistryEvent.Register<Fluid> e){
-		IForgeRegistry<Fluid> registry = e.getRegistry();
-		for(Fluid f : CRFluids.toRegister){
-			registry.register(f);
-		}
-		CRFluids.toRegister.clear();
-	}
-
-	@SuppressWarnings("unused")
-	@SubscribeEvent
-	public static void registerRecipeSerializers(RegistryEvent.Register<RecipeSerializer<?>> e){
-		IForgeRegistry<RecipeSerializer<?>> reg = e.getRegistry();
-		reg.register(new SingleIngrRecipe.SingleRecipeSerializer<>(StampMillRec::new).setRegistryName("stamp_mill"));
-		reg.register(new MillRec.Serializer().setRegistryName("mill"));
-		reg.register(new SingleIngrRecipe.SingleRecipeSerializer<>(OreCleanserRec::new).setRegistryName("ore_cleanser"));
-		reg.register(new BeamExtractRec.Serializer().setRegistryName("beam_extract"));
-		reg.register(new IceboxRec.Serializer().setRegistryName("cooling"));
-		reg.register(new CentrifugeRec.Serializer().setRegistryName("centrifuge"));
-		reg.register(new AlchemyRec.Serializer().setRegistryName("alchemy"));
-		reg.register(new BlastFurnaceRec.Serializer().setRegistryName("cr_blast_furnace"));
-		reg.register(new FluidCoolingRec.Serializer().setRegistryName("fluid_cooling"));
-		reg.register(new CrucibleRec.Serializer().setRegistryName("crucible"));
-		reg.register(new DetailedCrafterRec.Serializer().setRegistryName("detailed_crafter"));
-		reg.register(new BeamTransmuteRec.Serializer().setRegistryName("beam_transmute"));
-		reg.register(new BoboRec.Serializer().setRegistryName("bobo"));
-		reg.register(new CopshowiumRec.Serializer().setRegistryName("copshowium"));
-		reg.register(new ReagentRec.Serializer().setRegistryName("reagents"));
-		reg.register(new FormulationVatRec.Serializer().setRegistryName("formulation_vat"));
-		reg.register(new BeamLensRec.Serializer().setRegistryName(("beam_lens")));
-		reg.register(new EmbryoLabMorphRec.Serializer().setRegistryName("embryo_lab_morph"));
-	}
-
-	@SuppressWarnings("unused")
-	@SubscribeEvent
-	public static void registerLootModifierSerializers(RegistryEvent.Register<GlobalLootModifierSerializer<?>> e){
-		e.getRegistry().register(new PiglinBarterLootModifier.Serializer().setRegistryName(new ResourceLocation(MODID, "piglin_barter")));
-	}
-
-	@SuppressWarnings("unused")
-	@SubscribeEvent
-	public static void registerEnts(RegistryEvent.Register<EntityType<?>> e){
-		IForgeRegistry<EntityType<?>> reg = e.getRegistry();
-		CREntities.init(reg);
-	}
-
-	@SuppressWarnings("unused")
-	@SubscribeEvent
-	public static void registerParticles(RegistryEvent.Register<ParticleType<?>> e){
-		IForgeRegistry<ParticleType<?>> registry = e.getRegistry();
-		registry.register(new ColorParticleType("color_flame", false));
-		registry.register(new ColorParticleType("color_gas", false));
-		registry.register(new ColorParticleType("color_liquid", false));
-		registry.register(new ColorParticleType("color_solid", false));
-		registry.register(new ColorParticleType("color_splash", false));
-	}
-
-	@SuppressWarnings("unused")
-	@SubscribeEvent
-	public static void registerParticleFactories(ParticleFactoryRegisterEvent e){
-		CRParticles.clientInit();
-	}
-
-	@SuppressWarnings("unused")
-	@SubscribeEvent
-	public static void registerTileEntities(RegistryEvent.Register<BlockEntityType<?>> e){
-		IForgeRegistry<BlockEntityType<?>> reg = e.getRegistry();
-		CRTileEntity.init(reg);
-	}
-
-	@SuppressWarnings("unused")
-	@OnlyIn(Dist.CLIENT)
-	@SubscribeEvent
-	public static void registerContainers(RegistryEvent.Register<MenuType<?>> e){
-		registerCon(FireboxContainer::new, FireboxScreen::new, "firebox", e);
-		registerCon(IceboxContainer::new, IceboxScreen::new, "icebox", e);
-		registerCon(FluidCoolerContainer::new, FluidCoolerScreen::new, "fluid_cooler", e);
-		registerCon(CrucibleContainer::new, CrucibleScreen::new, "crucible", e);
-		registerCon(SaltReactorContainer::new, SaltReactorScreen::new, "salt_reactor", e);
-		registerCon(SmelterContainer::new, SmelterScreen::new, "smelter", e);
-		registerCon(BlastFurnaceContainer::new, BlastFurnaceScreen::new, "ind_blast_furnace", e);
-		registerCon(MillstoneContainer::new, MillstoneScreen::new, "millstone", e);
-		registerCon(StampMillContainer::new, StampMillScreen::new, "stamp_mill", e);
-		registerCon(FatCollectorContainer::new, FatCollectorScreen::new, "fat_collector", e);
-		registerCon(FatCongealerContainer::new, FatCongealerScreen::new, "fat_congealer", e);
-		registerCon(FatFeederContainer::new, FatFeederScreen::new, "fat_feeder", e);
-		registerCon(FluidTankContainer::new, FluidTankScreen::new, "fluid_tank", e);
-		registerCon(OreCleanserContainer::new, OreCleanserScreen::new, "ore_cleanser", e);
-		registerCon(RadiatorContainer::new, RadiatorScreen::new, "radiator", e);
-		registerCon(SteamBoilerContainer::new, SteamBoilerScreen::new, "steam_boiler", e);
-		registerCon(WaterCentrifugeContainer::new, WaterCentrifugeScreen::new, "water_centrifuge", e);
-		registerCon(ColorChartContainer::new, ColorChartScreen::new, "color_chart", e);
-		registerCon(BeamExtractorContainer::new, BeamExtractorScreen::new, "beam_extractor", e);
-		registerCon(HeatLimiterContainer::new, HeatLimiterScreen::new, "heat_limiter", e);
-		registerCon(RotaryPumpContainer::new, RotaryPumpScreen::new, "rotary_pump", e);
-		registerCon(DetailedCrafterContainer::new, DetailedCrafterScreen::new, "detailed_crafter", e);
-		registerCon(ReagentFilterContainer::new, ReagentFilterScreen::new, "reagent_filter", e);
-		registerCon(CopshowiumMakerContainer::new, CopshowiumMakerScreen::new, "copshowium_maker", e);
-		registerCon(SteamerContainer::new, SteamerScreen::new, "steamer", e);
-		registerCon(WindingTableContainer::new, WindingTableScreen::new, "winding_table", e);
-		registerCon(DetailedAutoCrafterContainer::new, DetailedAutoCrafterScreen::new, "detailed_auto_crafter", e);
-		registerCon(SequenceBoxContainer::new, SequenceBoxScreen::new, "sequence_box", e);
-		registerCon(SteamTurbineContainer::new, SteamTurbineScreen::new, "steam_turbine", e);
-		registerCon(BeaconHarnessContainer::new, BeaconHarnessScreen::new, "beacon_harness", e);
-		registerCon(FormulationVatContainer::new, FormulationVatScreen::new, "formulation_vat", e);
-		registerCon(BrewingVatContainer::new, BrewingVatScreen::new, "brewing_vat", e);
-		registerCon(AutoInjectorContainer::new, AutoInjectorScreen::new, "auto_injector", e);
-		registerCon(ColdStorageContainer::new, ColdStorageScreen::new, "cold_storage", e);
-		registerCon(HydroponicsTroughContainer::new, HydroponicsTroughScreen::new, "hydroponics_trough", e);
-		registerCon(StasisStorageContainer::new, StasisStorageScreen::new, "stasis_storage", e);
-		registerCon(CultivatorVatContainer::new, CultivatorVatScreen::new, "cultivator_vat", e);
-		registerCon(IncubatorContainer::new, IncubatorScreen::new, "incubator", e);
-		registerCon(BloodCentrifugeContainer::new, BloodCentrifugeScreen::new, "blood_centrifuge", e);
-		registerCon(EmbryoLabContainer::new, EmbryoLabScreen::new, "embryo_lab", e);
-	}
-
-	@SuppressWarnings("unused")
-	@OnlyIn(Dist.DEDICATED_SERVER)
-	@SubscribeEvent
-	public static void registerContainerTypes(RegistryEvent.Register<MenuType<?>> e){
-		registerConType(FireboxContainer::new, "firebox", e);
-		registerConType(IceboxContainer::new, "icebox", e);
-		registerConType(FluidCoolerContainer::new, "fluid_cooler", e);
-		registerConType(CrucibleContainer::new, "crucible", e);
-		registerConType(SaltReactorContainer::new, "salt_reactor", e);
-		registerConType(SmelterContainer::new, "smelter", e);
-		registerConType(BlastFurnaceContainer::new, "ind_blast_furnace", e);
-		registerConType(MillstoneContainer::new, "millstone", e);
-		registerConType(StampMillContainer::new, "stamp_mill", e);
-		registerConType(FatCollectorContainer::new, "fat_collector", e);
-		registerConType(FatCongealerContainer::new, "fat_congealer", e);
-		registerConType(FatFeederContainer::new, "fat_feeder", e);
-		registerConType(FluidTankContainer::new, "fluid_tank", e);
-		registerConType(OreCleanserContainer::new, "ore_cleanser", e);
-		registerConType(RadiatorContainer::new, "radiator", e);
-		registerConType(SteamBoilerContainer::new, "steam_boiler", e);
-		registerConType(WaterCentrifugeContainer::new, "water_centrifuge", e);
-		registerConType(ColorChartContainer::new, "color_chart", e);
-		registerConType(BeamExtractorContainer::new, "beam_extractor", e);
-		registerConType(HeatLimiterContainer::new, "heat_limiter", e);
-		registerConType(RotaryPumpContainer::new, "rotary_pump", e);
-		registerConType(DetailedCrafterContainer::new, "detailed_crafter", e);
-		registerConType(ReagentFilterContainer::new, "reagent_filter", e);
-		registerConType(CopshowiumMakerContainer::new, "copshowium_maker", e);
-		registerConType(SteamerContainer::new, "steamer", e);
-		registerConType(WindingTableContainer::new, "winding_table", e);
-		registerConType(DetailedAutoCrafterContainer::new, "detailed_auto_crafter", e);
-		registerConType(SequenceBoxContainer::new, "sequence_box", e);
-		registerConType(SteamTurbineContainer::new, "steam_turbine", e);
-		registerConType(BeaconHarnessContainer::new, "beacon_harness", e);
-		registerConType(FormulationVatContainer::new, "formulation_vat", e);
-		registerConType(BrewingVatContainer::new, "brewing_vat", e);
-		registerConType(AutoInjectorContainer::new, "auto_injector", e);
-		registerConType(ColdStorageContainer::new, "cold_storage", e);
-		registerConType(HydroponicsTroughContainer::new, "hydroponics_trough", e);
-		registerConType(StasisStorageContainer::new, "stasis_storage", e);
-		registerConType(CultivatorVatContainer::new, "cultivator_vat", e);
-		registerConType(IncubatorContainer::new, "incubator", e);
-		registerConType(BloodCentrifugeContainer::new, "blood_centrifuge", e);
-		registerConType(EmbryoLabContainer::new, "embryo_lab", e);
-	}
-
-	/**
-	 * Creates and registers a container type
-	 * @param cons Container factory
-	 * @param id The ID to use
-	 * @param reg Registry event
-	 * @param <T> Container subclass
-	 * @return The newly created type
-	 */
-	private static <T extends AbstractContainerMenu> MenuType<T> registerConType(IContainerFactory<T> cons, String id, RegistryEvent.Register<MenuType<?>> reg){
-		MenuType<T> contType = new MenuType<>(cons);
-		contType.setRegistryName(new ResourceLocation(MODID, id));
-		reg.getRegistry().register(contType);
-		return contType;
-	}
-
-	/**
-	 * Creates and registers both a container type and a screen factory. Not usable on the physical server due to screen factory.
-	 * @param cons Container factory
-	 * @param screenFactory The screen factory to be linked to the type
-	 * @param id The ID to use
-	 * @param reg Registry event
-	 * @param <T> Container subclass
-	 */
-	@OnlyIn(Dist.CLIENT)
-	private static <T extends AbstractContainerMenu> void registerCon(IContainerFactory<T> cons, MenuScreens.ScreenConstructor<T, AbstractContainerScreen<T>> screenFactory, String id, RegistryEvent.Register<MenuType<?>> reg){
-		MenuType<T> contType = registerConType(cons, id, reg);
-		MenuScreens.register(contType, screenFactory);
-	}
-
-	@SuppressWarnings("unused")
-	@SubscribeEvent
-	public static void registerWorldgen(RegistryEvent.Register<Feature<?>> e){
-		CRWorldGen.init();
-		CRWorldGen.register(e.getRegistry());
-	}
-
-	@SuppressWarnings("unused")
-	@SubscribeEvent
-	public static void registerSounds(RegistryEvent.Register<SoundEvent> e){
-		CRSounds.register(e.getRegistry());
-	}
-
-	@SuppressWarnings("unused")
-	@SubscribeEvent
-	public static void registerMobEffects(RegistryEvent.Register<MobEffect> e){
-		CRPotions.registerEffects(e.getRegistry());
-	}
-
-	@SuppressWarnings("unused")
-	@SubscribeEvent
-	public static void registerPotions(RegistryEvent.Register<Potion> e){
-		CRPotions.registerPotions(e.getRegistry());
-	}
-
-	@SubscribeEvent
-	@SuppressWarnings("unused")
-	@OnlyIn(Dist.CLIENT)
-	public static void onTextureStitch(TextureStitchEvent.Pre event){
-		//Add textures used in TESRs
-		CRRenderTypes.stitchTextures(event);
-	}
-
-	private void registerEntityAttributes(EntityAttributeCreationEvent e){
-		e.put(EntityHopperHawk.type, EntityHopperHawk.createAttributes());
-	}
-
-	@SuppressWarnings("unused")
-	@SubscribeEvent
-	@OnlyIn(Dist.CLIENT)
-	public static void registerRenderers(EntityRenderersEvent.RegisterRenderers e){
-		CRRendererRegistry.registerBlockRenderer(e);
-		CREntities.clientInit(e);
-	}
-
-	@SuppressWarnings("unused")
-	@SubscribeEvent
-	@OnlyIn(Dist.CLIENT)
-	public static void registerEntityRenderingLayers(EntityRenderersEvent.AddLayers e){
-		CREntities.attachLayerRenderers(e);
-	}
-
-	@SuppressWarnings("unused")
-	@SubscribeEvent
-	@OnlyIn(Dist.CLIENT)
-	public static void registerLayerLocation(EntityRenderersEvent.RegisterLayerDefinitions e){
-		CREntities.registerLayers(e);
 	}
 }

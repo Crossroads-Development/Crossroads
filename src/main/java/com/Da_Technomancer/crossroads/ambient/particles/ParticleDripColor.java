@@ -2,13 +2,10 @@ package com.Da_Technomancer.crossroads.ambient.particles;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.awt.*;
 
-@OnlyIn(Dist.CLIENT)
 public class ParticleDripColor extends TextureSheetParticle{
 
 	private final SpriteSet sprite;
@@ -49,7 +46,6 @@ public class ParticleDripColor extends TextureSheetParticle{
 		return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public static class Factory implements ParticleProvider<ColorParticleData>{
 
 		private final SpriteSet sprite;

@@ -3,13 +3,10 @@ package com.Da_Technomancer.crossroads.ambient.particles;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.awt.*;
 
-@OnlyIn(Dist.CLIENT)
 public class ParticleBubbleColor extends TextureSheetParticle{
 
 	private final SpriteSet sprite;
@@ -54,7 +51,6 @@ public class ParticleBubbleColor extends TextureSheetParticle{
 		return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public static class Factory implements ParticleProvider<ColorParticleData>{
 
 		private final SpriteSet sprite;

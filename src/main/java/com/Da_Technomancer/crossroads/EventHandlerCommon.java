@@ -1,31 +1,47 @@
 package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.API.CRReflection;
+import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.API.technomancy.RespawnInventorySavedData;
 import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
+import com.Da_Technomancer.crossroads.ambient.particles.ColorParticleType;
+import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRItemTags;
+import com.Da_Technomancer.crossroads.crafting.loot_modifiers.PiglinBarterLootModifier;
+import com.Da_Technomancer.crossroads.crafting.recipes.*;
+import com.Da_Technomancer.crossroads.entity.CREntities;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
+import com.Da_Technomancer.crossroads.entity.EntityHopperHawk;
 import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
+import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.GearFactory;
+import com.Da_Technomancer.crossroads.items.itemSets.ItemSets;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.crossroads.items.technomancy.TechnomancyArmor;
+import com.Da_Technomancer.crossroads.tileentities.CRTileEntity;
 import com.Da_Technomancer.crossroads.world.CRWorldGen;
+import com.Da_Technomancer.essentials.Essentials;
 import com.Da_Technomancer.essentials.ReflectionUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.horse.SkeletonHorse;
 import net.minecraft.world.entity.decoration.ArmorStand;
@@ -33,17 +49,30 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.trading.Merchant;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.AnvilUpdateEvent;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -51,8 +80,11 @@ import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.minecraftforge.network.IContainerFactory;
+import net.minecraftforge.registries.IForgeRegistry;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -60,7 +92,152 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;
 
-public final class EventHandlerCommon{
+public class EventHandlerCommon{
+
+	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = Essentials.MODID)
+	public static class CRModEventsCommon{
+
+		@SuppressWarnings("unused")
+		@SubscribeEvent
+		public static void registerCapabilities(RegisterCapabilitiesEvent e){
+			Capabilities.register(e);
+		}
+
+		@SuppressWarnings("unused")
+		@SubscribeEvent
+		public static void registerBlocks(RegistryEvent.Register<Block> e){
+			IForgeRegistry<Block> registry = e.getRegistry();
+			CRBlocks.init();
+			ItemSets.init();
+			CRFluids.init();
+			for(Block block : CRBlocks.toRegister){
+				registry.register(block);
+			}
+			CRBlocks.toRegister.clear();
+		}
+
+		@SuppressWarnings("unused")
+		@SubscribeEvent
+		public static void registerItems(RegistryEvent.Register<Item> e){
+			IForgeRegistry<Item> registry = e.getRegistry();
+			CRItems.init();
+			for(Item item : CRItems.toRegister){
+				registry.register(item);
+			}
+			CRItems.toRegister.clear();
+		}
+
+		@SuppressWarnings("unused")
+		@SubscribeEvent
+		public static void registerFluids(RegistryEvent.Register<Fluid> e){
+			IForgeRegistry<Fluid> registry = e.getRegistry();
+			for(Fluid f : CRFluids.toRegister){
+				registry.register(f);
+			}
+			CRFluids.toRegister.clear();
+		}
+
+		@SuppressWarnings("unused")
+		@SubscribeEvent
+		public static void registerLootModifierSerializers(RegistryEvent.Register<GlobalLootModifierSerializer<?>> e){
+			e.getRegistry().register(new PiglinBarterLootModifier.Serializer().setRegistryName(new ResourceLocation(Crossroads.MODID, "piglin_barter")));
+		}
+
+		@SuppressWarnings("unused")
+		@SubscribeEvent
+		public static void registerEnts(RegistryEvent.Register<EntityType<?>> e){
+			IForgeRegistry<EntityType<?>> reg = e.getRegistry();
+			CREntities.init(reg);
+		}
+
+		@SuppressWarnings("unused")
+		@SubscribeEvent
+		public static void registerTileEntities(RegistryEvent.Register<BlockEntityType<?>> e){
+			IForgeRegistry<BlockEntityType<?>> reg = e.getRegistry();
+			CRTileEntity.init(reg);
+		}
+
+		@SuppressWarnings("unused")
+		@SubscribeEvent
+		public static void registerRecipeSerializers(RegistryEvent.Register<RecipeSerializer<?>> e){
+			IForgeRegistry<RecipeSerializer<?>> reg = e.getRegistry();
+			reg.register(new SingleIngrRecipe.SingleRecipeSerializer<>(StampMillRec::new).setRegistryName("stamp_mill"));
+			reg.register(new MillRec.Serializer().setRegistryName("mill"));
+			reg.register(new SingleIngrRecipe.SingleRecipeSerializer<>(OreCleanserRec::new).setRegistryName("ore_cleanser"));
+			reg.register(new BeamExtractRec.Serializer().setRegistryName("beam_extract"));
+			reg.register(new IceboxRec.Serializer().setRegistryName("cooling"));
+			reg.register(new CentrifugeRec.Serializer().setRegistryName("centrifuge"));
+			reg.register(new AlchemyRec.Serializer().setRegistryName("alchemy"));
+			reg.register(new BlastFurnaceRec.Serializer().setRegistryName("cr_blast_furnace"));
+			reg.register(new FluidCoolingRec.Serializer().setRegistryName("fluid_cooling"));
+			reg.register(new CrucibleRec.Serializer().setRegistryName("crucible"));
+			reg.register(new DetailedCrafterRec.Serializer().setRegistryName("detailed_crafter"));
+			reg.register(new BeamTransmuteRec.Serializer().setRegistryName("beam_transmute"));
+			reg.register(new BoboRec.Serializer().setRegistryName("bobo"));
+			reg.register(new CopshowiumRec.Serializer().setRegistryName("copshowium"));
+			reg.register(new ReagentRec.Serializer().setRegistryName("reagents"));
+			reg.register(new FormulationVatRec.Serializer().setRegistryName("formulation_vat"));
+			reg.register(new BeamLensRec.Serializer().setRegistryName(("beam_lens")));
+			reg.register(new EmbryoLabMorphRec.Serializer().setRegistryName("embryo_lab_morph"));
+		}
+
+		@SuppressWarnings("unused")
+		@SubscribeEvent
+		public static void registerWorldgen(RegistryEvent.Register<Feature<?>> e){
+			CRWorldGen.init();
+			CRWorldGen.register(e.getRegistry());
+		}
+
+		@SuppressWarnings("unused")
+		@SubscribeEvent
+		public static void registerSounds(RegistryEvent.Register<SoundEvent> e){
+			CRSounds.register(e.getRegistry());
+		}
+
+		@SuppressWarnings("unused")
+		@SubscribeEvent
+		public static void registerMobEffects(RegistryEvent.Register<MobEffect> e){
+			CRPotions.registerEffects(e.getRegistry());
+		}
+
+		@SuppressWarnings("unused")
+		@SubscribeEvent
+		public static void registerPotions(RegistryEvent.Register<Potion> e){
+			CRPotions.registerPotions(e.getRegistry());
+		}
+
+		@SuppressWarnings("unused")
+		@SubscribeEvent
+		public static void registerParticles(RegistryEvent.Register<ParticleType<?>> e){
+			IForgeRegistry<ParticleType<?>> registry = e.getRegistry();
+			registry.register(new ColorParticleType("color_flame", false));
+			registry.register(new ColorParticleType("color_gas", false));
+			registry.register(new ColorParticleType("color_liquid", false));
+			registry.register(new ColorParticleType("color_solid", false));
+			registry.register(new ColorParticleType("color_splash", false));
+		}
+
+		@SuppressWarnings("unused")
+		@SubscribeEvent
+		public static void registerEntityAttributes(EntityAttributeCreationEvent e){
+			e.put(EntityHopperHawk.type, EntityHopperHawk.createAttributes());
+		}
+
+		/**
+		 * Creates and registers a container type
+		 * @param cons Container factory
+		 * @param id The ID to use
+		 * @param reg Registry event
+		 * @param <T> Container subclass
+		 * @return The newly created type
+		 */
+		public static <T extends AbstractContainerMenu> MenuType<T> registerConType(IContainerFactory<T> cons, String id, RegistryEvent.Register<MenuType<?>> reg){
+			MenuType<T> contType = new MenuType<>(cons);
+			contType.setRegistryName(new ResourceLocation(Crossroads.MODID, id));
+			reg.getRegistry().register(contType);
+			return contType;
+		}
+	}
 
 //	private static final Field entityList = ReflectionUtil.reflectField(CRReflection.ENTITY_LIST);
 

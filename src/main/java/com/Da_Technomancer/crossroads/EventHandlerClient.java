@@ -3,38 +3,153 @@ package com.Da_Technomancer.crossroads;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentManager;
 import com.Da_Technomancer.crossroads.API.packets.*;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
+import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.entity.CREntities;
+import com.Da_Technomancer.crossroads.gui.container.*;
+import com.Da_Technomancer.crossroads.gui.screen.*;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.technomancy.ArmorPropellerPack;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamUsingItem;
+import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.render.IVisualEffect;
+import com.Da_Technomancer.crossroads.render.TESR.CRRendererRegistry;
+import com.Da_Technomancer.essentials.Essentials;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.RecipesUpdatedEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.*;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.IContainerFactory;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-public final class EventHandlerClient{
+public class EventHandlerClient{
+
+	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = Essentials.MODID, value = Dist.CLIENT)
+	public static class CRModEventsClient{
+
+		@SuppressWarnings("unused")
+		@SubscribeEvent
+		public static void registerModels(ModelRegistryEvent e){
+			CRBlocks.clientInit();
+		}
+
+		@SuppressWarnings("unused")
+		@SubscribeEvent
+		public static void registerRenderers(EntityRenderersEvent.RegisterRenderers e){
+			CRRendererRegistry.registerBlockRenderer(e);
+			CREntities.clientInit(e);
+		}
+
+		@SuppressWarnings("unused")
+		@SubscribeEvent
+		public static void registerEntityRenderingLayers(EntityRenderersEvent.AddLayers e){
+			CREntities.attachLayerRenderers(e);
+		}
+
+		@SuppressWarnings("unused")
+		@SubscribeEvent
+		public static void registerLayerLocation(EntityRenderersEvent.RegisterLayerDefinitions e){
+			CREntities.registerLayers(e);
+		}
+
+
+		@SubscribeEvent
+		@SuppressWarnings("unused")
+		public static void onTextureStitch(TextureStitchEvent.Pre event){
+			//Add textures used in TESRs
+			CRRenderTypes.stitchTextures(event);
+		}
+
+		@SuppressWarnings("unused")
+		@SubscribeEvent
+		public static void registerParticleFactories(ParticleFactoryRegisterEvent e){
+			CRParticles.clientInit();
+		}
+
+		@SuppressWarnings("unused")
+		@SubscribeEvent
+		public static void registerContainers(RegistryEvent.Register<MenuType<?>> e){
+			registerCon(FireboxContainer::new, FireboxScreen::new, "firebox", e);
+			registerCon(IceboxContainer::new, IceboxScreen::new, "icebox", e);
+			registerCon(FluidCoolerContainer::new, FluidCoolerScreen::new, "fluid_cooler", e);
+			registerCon(CrucibleContainer::new, CrucibleScreen::new, "crucible", e);
+			registerCon(SaltReactorContainer::new, SaltReactorScreen::new, "salt_reactor", e);
+			registerCon(SmelterContainer::new, SmelterScreen::new, "smelter", e);
+			registerCon(BlastFurnaceContainer::new, BlastFurnaceScreen::new, "ind_blast_furnace", e);
+			registerCon(MillstoneContainer::new, MillstoneScreen::new, "millstone", e);
+			registerCon(StampMillContainer::new, StampMillScreen::new, "stamp_mill", e);
+			registerCon(FatCollectorContainer::new, FatCollectorScreen::new, "fat_collector", e);
+			registerCon(FatCongealerContainer::new, FatCongealerScreen::new, "fat_congealer", e);
+			registerCon(FatFeederContainer::new, FatFeederScreen::new, "fat_feeder", e);
+			registerCon(FluidTankContainer::new, FluidTankScreen::new, "fluid_tank", e);
+			registerCon(OreCleanserContainer::new, OreCleanserScreen::new, "ore_cleanser", e);
+			registerCon(RadiatorContainer::new, RadiatorScreen::new, "radiator", e);
+			registerCon(SteamBoilerContainer::new, SteamBoilerScreen::new, "steam_boiler", e);
+			registerCon(WaterCentrifugeContainer::new, WaterCentrifugeScreen::new, "water_centrifuge", e);
+			registerCon(ColorChartContainer::new, ColorChartScreen::new, "color_chart", e);
+			registerCon(BeamExtractorContainer::new, BeamExtractorScreen::new, "beam_extractor", e);
+			registerCon(HeatLimiterContainer::new, HeatLimiterScreen::new, "heat_limiter", e);
+			registerCon(RotaryPumpContainer::new, RotaryPumpScreen::new, "rotary_pump", e);
+			registerCon(DetailedCrafterContainer::new, DetailedCrafterScreen::new, "detailed_crafter", e);
+			registerCon(ReagentFilterContainer::new, ReagentFilterScreen::new, "reagent_filter", e);
+			registerCon(CopshowiumMakerContainer::new, CopshowiumMakerScreen::new, "copshowium_maker", e);
+			registerCon(SteamerContainer::new, SteamerScreen::new, "steamer", e);
+			registerCon(WindingTableContainer::new, WindingTableScreen::new, "winding_table", e);
+			registerCon(DetailedAutoCrafterContainer::new, DetailedAutoCrafterScreen::new, "detailed_auto_crafter", e);
+			registerCon(SequenceBoxContainer::new, SequenceBoxScreen::new, "sequence_box", e);
+			registerCon(SteamTurbineContainer::new, SteamTurbineScreen::new, "steam_turbine", e);
+			registerCon(BeaconHarnessContainer::new, BeaconHarnessScreen::new, "beacon_harness", e);
+			registerCon(FormulationVatContainer::new, FormulationVatScreen::new, "formulation_vat", e);
+			registerCon(BrewingVatContainer::new, BrewingVatScreen::new, "brewing_vat", e);
+			registerCon(AutoInjectorContainer::new, AutoInjectorScreen::new, "auto_injector", e);
+			registerCon(ColdStorageContainer::new, ColdStorageScreen::new, "cold_storage", e);
+			registerCon(HydroponicsTroughContainer::new, HydroponicsTroughScreen::new, "hydroponics_trough", e);
+			registerCon(StasisStorageContainer::new, StasisStorageScreen::new, "stasis_storage", e);
+			registerCon(CultivatorVatContainer::new, CultivatorVatScreen::new, "cultivator_vat", e);
+			registerCon(IncubatorContainer::new, IncubatorScreen::new, "incubator", e);
+			registerCon(BloodCentrifugeContainer::new, BloodCentrifugeScreen::new, "blood_centrifuge", e);
+			registerCon(EmbryoLabContainer::new, EmbryoLabScreen::new, "embryo_lab", e);
+		}
+
+		/**
+		 * Creates and registers both a container type and a screen factory. Not usable on the physical server due to screen factory.
+		 * @param cons Container factory
+		 * @param screenFactory The screen factory to be linked to the type
+		 * @param id The ID to use
+		 * @param reg Registery event
+		 * @param <T> Container subclass
+		 */
+		private static <T extends AbstractContainerMenu> void registerCon(IContainerFactory<T> cons, MenuScreens.ScreenConstructor<T, AbstractContainerScreen<T>> screenFactory, String id, RegistryEvent.Register<MenuType<?>> reg){
+			MenuType<T> contType = EventHandlerCommon.CRModEventsCommon.registerConType(cons, id, reg);
+			MenuScreens.register(contType, screenFactory);
+		}
+	}
 
 	private static final Random RAND = new Random();
 
 	@SubscribeEvent
 	@SuppressWarnings("unused")
-	public void drawFieldsAndBeams(RenderWorldLastEvent e){
+	public void drawFieldsAndBeams(RenderLevelLastEvent e){
 		Minecraft game = Minecraft.getInstance();
 
 //		//Goggle entity glowing (Moved to tick event handler)
@@ -46,7 +161,7 @@ public final class EventHandlerClient{
 		if(!AddVisualToClient.effectsToRender.isEmpty()){
 			game.getProfiler().push(Crossroads.MODNAME + ": Visual Effects Draw");
 
-			PoseStack matrix = e.getMatrixStack();
+			PoseStack matrix = e.getPoseStack();
 
 			matrix.pushPose();
 			Vec3 cameraPos = CRRenderUtil.getCameraPos();
@@ -55,7 +170,7 @@ public final class EventHandlerClient{
 			ArrayList<IVisualEffect> toRemove = new ArrayList<>();
 			MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
 			long worldTime = game.level.getGameTime();
-			float partialTicks = e.getPartialTicks();
+			float partialTicks = e.getPartialTick();
 
 			for(IVisualEffect effect : AddVisualToClient.effectsToRender){
 				matrix.pushPose();

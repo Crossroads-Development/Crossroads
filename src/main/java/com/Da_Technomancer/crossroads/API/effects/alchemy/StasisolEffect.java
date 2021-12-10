@@ -42,7 +42,7 @@ public class StasisolEffect extends AetherEffect{
 
 	@Override
 	protected ResourceKey<Biome> biome(){
-		return Biomes.f_48213_;
+		return Biomes.SNOWY_PLAINS;
 	}
 
 	@Override

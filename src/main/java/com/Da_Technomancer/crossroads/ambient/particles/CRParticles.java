@@ -27,7 +27,6 @@ public class CRParticles{
 	@ObjectHolder("color_splash")
 	public static ColorParticleType COLOR_SPLASH = null;
 
-	@OnlyIn(Dist.CLIENT)
 	public static void clientInit(){
 		ParticleEngine manager = Minecraft.getInstance().particleEngine;
 		manager.register(COLOR_FLAME, ParticleFlameColor.Factory::new);
@@ -61,7 +60,7 @@ public class CRParticles{
 	public static void summonParticlesFromServer(ServerLevel world, ParticleOptions data, int count, double x, double y, double z, double xDeviation, double yDeviation, double zDeviation, double xVelocity, double yVelocity, double zVelocity, double xVelocityDeviation, double yVelocityDeviation, double zVelocityDeviation, boolean gaussianDistribution){
 		CreateParticlesOnClient packet = new CreateParticlesOnClient(data, x, y, z, (float) xDeviation, (float) yDeviation, (float) zDeviation, (float) xVelocity, (float) yVelocity, (float) zVelocity, (float) xVelocityDeviation, (float) yVelocityDeviation, (float) zVelocityDeviation, count, gaussianDistribution);
 		for(ServerPlayer target : world.players()){
-			if(target.m_9236_() == world && target.blockPosition().closerThan(new Vec3(x, y, z), 32.0D)){
+			if(target.getLevel() == world && target.blockPosition().closerThan(new Vec3(x, y, z), 32.0D)){
 				CRPackets.sendPacketToPlayer(target, packet);
 			}
 		}
