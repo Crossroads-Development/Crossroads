@@ -66,8 +66,8 @@ public abstract class InventoryTE extends ModuleTE implements WorldlyContainer, 
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		for(int i = 0; i < inventory.length; i++){
 			if(!inventory[i].isEmpty()){
 				CompoundTag stackTag = new CompoundTag();
@@ -76,7 +76,6 @@ public abstract class InventoryTE extends ModuleTE implements WorldlyContainer, 
 			}
 		}
 		nbt.putBoolean("server", true);
-		return nbt;
 	}
 
 	@Override

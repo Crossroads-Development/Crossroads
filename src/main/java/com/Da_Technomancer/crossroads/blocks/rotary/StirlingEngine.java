@@ -20,8 +20,6 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -59,7 +57,6 @@ public class StirlingEngine extends BaseEntityBlock{
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(new TranslatableComponent("tt.crossroads.stirling_engine.desc", CRConfig.jouleWorth.get() * StirlingEngineTileEntity.MAX_TEMPERATURE_DIFFERANCE / CRConfig.stirlingConversion.get() / StirlingEngineTileEntity.EFFICIENCY_MULTIPLIER));
 		tooltip.add(new TranslatableComponent("tt.crossroads.stirling_engine.rate", StirlingEngineTileEntity.HEAT_INTERVAL));

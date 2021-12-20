@@ -94,12 +94,11 @@ public class LargeGearSlaveTileEntity extends BlockEntity implements IInfoTE{
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		if(masterPos != null){
 			nbt.putLong("mast", masterPos.asLong());
 		}
-		return nbt;
 	}
 
 	@Override

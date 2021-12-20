@@ -131,11 +131,10 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		nbt.putInt("stored", stored);
 		nbt.putBoolean("reds", redstone);
-		return nbt;
 	}
 
 	@Override

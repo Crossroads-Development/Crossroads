@@ -139,12 +139,11 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		nbt.putInt("fe", fe);
 		nbt.putInt("pow", curPower);
 
-		return nbt;
 	}
 
 	@Override

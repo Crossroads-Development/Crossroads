@@ -245,10 +245,9 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		nbt.putInt("progress", progress);
-		return nbt;
 	}
 
 	@Override

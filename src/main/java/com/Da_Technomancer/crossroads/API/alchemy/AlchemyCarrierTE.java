@@ -71,6 +71,15 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 
 	}
 
+	private Double biomeTempCache = null;
+
+	protected double getBiomeTemp(){
+		if(biomeTempCache == null){
+			biomeTempCache = HeatUtil.convertBiomeTemp(level, worldPosition);
+		}
+		return biomeTempCache;
+	}
+
 	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		double temp = correctTemp();
@@ -173,7 +182,7 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 		ITickableTileEntity.super.serverTick();
 
 		if(!init && useCableHeat()){
-			cableTemp = HeatUtil.convertBiomeTemp(level, worldPosition);
+			cableTemp = getBiomeTemp();
 		}
 		init = true;
 
@@ -355,7 +364,7 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 			IReagent typeProduced = ReagentManager.getItemToReagent().get(stack.getItem());
 			if(typeProduced != null && contents.getTotalQty() < transferCapacity()){
 				double itemTemp;
-				double biomeTemp = HeatUtil.convertBiomeTemp(level, worldPosition);
+				double biomeTemp = getBiomeTemp();
 				if(biomeTemp < typeProduced.getMeltingPoint()){
 					itemTemp = biomeTemp;
 				}else{
@@ -427,14 +436,12 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		nbt.putBoolean("glass", glass);
 		contents.write(nbt);
 		nbt.putDouble("temp", cableTemp);
 		nbt.putBoolean("initHeat", init);
-
-		return nbt;
 	}
 
 	protected EnumContainerType getChannel(){
@@ -612,7 +619,7 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 				return temp;
 			}
 			//Check biome temperature
-			temp = HeatUtil.convertBiomeTemp(level, worldPosition);
+			temp = getBiomeTemp();
 			if(legal.test(temp)){
 				return temp;
 			}
@@ -720,7 +727,7 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 					testStack.setCount(1);
 					int trans = Math.min(stack.getCount(), transferCapacity() - contents.getTotalQty());
 					if(!simulate){
-						double itemTemp = HeatUtil.convertBiomeTemp(level, worldPosition);
+						double itemTemp = getBiomeTemp();
 						if(itemTemp >= reag.getMeltingPoint()){
 							itemTemp = Math.min(HeatUtil.ABSOLUTE_ZERO, reag.getMeltingPoint() - 100D);
 						}

@@ -110,10 +110,9 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements Condui
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		ConduitBlock.IConduitTE.writeConduitNBT(nbt, this);
-		return nbt;
 	}
 
 	@Override

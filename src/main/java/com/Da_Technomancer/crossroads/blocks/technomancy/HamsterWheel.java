@@ -32,8 +32,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -101,7 +99,6 @@ public class HamsterWheel extends BaseEntityBlock{
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(new TranslatableComponent("tt.crossroads.hamster_wheel.desc", CRConfig.hamsterPower.get()));
 		tooltip.add(new TranslatableComponent("tt.crossroads.hamster_wheel.quip").setStyle(MiscUtil.TT_QUIP));

@@ -29,8 +29,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
@@ -95,7 +93,6 @@ public class WindTurbine extends BaseEntityBlock implements IReadable{
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(new TranslatableComponent("tt.crossroads.wind_turbine.desc"));
 		tooltip.add(new TranslatableComponent("tt.crossroads.wind_turbine.power", WindTurbineTileEntity.LOW_POWER, WindTurbineTileEntity.HIGH_POWER, (WindTurbineTileEntity.LOW_POWER + WindTurbineTileEntity.HIGH_POWER) / 2D));

@@ -63,7 +63,7 @@ public class LargeGearMaster extends BaseEntityBlock{
 	}
 
 	@Override
-	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player){
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player){
 		BlockEntity te = world.getBlockEntity(pos);
 		if(te instanceof LargeGearMasterTileEntity){
 			return CRItems.largeGear.withMaterial(((LargeGearMasterTileEntity) te).getMember(), 1);
@@ -97,11 +97,11 @@ public class LargeGearMaster extends BaseEntityBlock{
 	}
 
 	@Override
-	public boolean removedByPlayer(BlockState state, Level worldIn, BlockPos pos, Player player, boolean willHarvest, FluidState fluid){
+	public boolean onDestroyedByPlayer(BlockState state, Level worldIn, BlockPos pos, Player player, boolean willHarvest, FluidState fluid){
 		if(willHarvest && worldIn.getBlockEntity(pos) instanceof LargeGearMasterTileEntity){
 			((LargeGearMasterTileEntity) worldIn.getBlockEntity(pos)).breakGroup(state.getValue(ESProperties.FACING), true);
 		}
-		return super.removedByPlayer(state, worldIn, pos, player, willHarvest, fluid);
+		return super.onDestroyedByPlayer(state, worldIn, pos, player, willHarvest, fluid);
 	}
 
 	@Override

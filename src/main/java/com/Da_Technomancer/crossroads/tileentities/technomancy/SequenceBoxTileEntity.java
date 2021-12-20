@@ -84,15 +84,14 @@ public class SequenceBoxTileEntity extends BlockEntity implements INBTReceiver, 
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		nbt.putBoolean("redstone", hadRedstoneSignal);
 		nbt.putInt("index", index);
 		for(int i = 0; i < sequenceVal.size(); i++){
 			nbt.putFloat(i + "_val", sequenceVal.get(i));
 			nbt.putString(i + "_str", sequenceStr.get(i));
 		}
-		return nbt;
 	}
 
 	@Override

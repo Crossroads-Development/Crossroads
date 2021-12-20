@@ -19,8 +19,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -68,7 +66,7 @@ public abstract class TechnomancyArmor extends ArmorItem{
 	}
 
 	@Override
-	public boolean showDurabilityBar(ItemStack stack){
+	public boolean isBarVisible(ItemStack stack){
 		return isReinforced(stack) && isDamaged(stack);
 	}
 
@@ -92,7 +90,6 @@ public abstract class TechnomancyArmor extends ArmorItem{
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
 		if(isReinforced(stack)){
 			tooltip.add(new TranslatableComponent("tt.crossroads.technomancy_armor.reinforced").setStyle(Style.EMPTY.applyFormat(ChatFormatting.DARK_RED)));

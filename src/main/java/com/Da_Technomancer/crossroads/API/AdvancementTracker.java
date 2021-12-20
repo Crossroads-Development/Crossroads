@@ -75,7 +75,7 @@ public class AdvancementTracker{
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private static class Listener implements  ClientAdvancements.Listener{
+	private static class Listener implements ClientAdvancements.Listener{
 
 		private static final Listener INSTANCE = new Listener();
 

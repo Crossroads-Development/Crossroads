@@ -156,10 +156,9 @@ public class WindingTableTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		nbt.putBoolean("reds", redstone);
-		return nbt;
 	}
 
 	private final LazyOptional<IItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);

@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.API.EnumPath;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
-import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.API.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -12,9 +11,6 @@ import com.Da_Technomancer.crossroads.items.alchemy.*;
 import com.Da_Technomancer.crossroads.items.itemSets.*;
 import com.Da_Technomancer.crossroads.items.technomancy.*;
 import com.Da_Technomancer.crossroads.items.witchcraft.*;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.color.item.ItemColor;
-import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
@@ -22,7 +18,6 @@ import net.minecraft.core.BlockSource;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.DispenserBlock;
@@ -32,7 +27,6 @@ import net.minecraftforge.common.ForgeSpawnEggItem;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.*;
 import java.util.ArrayList;
 
 public final class CRItems{
@@ -277,45 +271,12 @@ public final class CRItems{
 		villagerBrain = new VillagerBrain();
 		brainHarvester = new BrainHarvester();
 		toRegister.add(hopperHawkSpawnEgg = new ForgeSpawnEggItem(() -> EntityHopperHawk.type, 0x555555, 0x999999, (new Item.Properties()).tab(CreativeModeTab.TAB_MISC)).setRegistryName("hopper_hawk_spawn_egg"));
+
+		registerDispenserOverrides();
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static void clientInit(){
-		//Coloring
-		ItemColors itemColor = Minecraft.getInstance().getItemColors();
-		//Alchemy containers
-		itemColor.register((ItemStack stack, int layer) -> layer == 0 ? AbstractGlassware.getColorRGB(stack) : -1, phialGlass, florenceFlaskGlass, shellGlass, phialCrystal, florenceFlaskCrystal, shellCrystal);
-
-		//Gears and ore processing dusts
-		ItemColor oreItemColoring = (ItemStack stack, int tintIndex) -> {
-			if(tintIndex == 0){
-				return -1;
-			}
-			OreSetup.OreProfile mat = OreProfileItem.getProfile(stack);
-			return mat == null ? -1 : mat.getColor().getRGB();
-		};
-		itemColor.register(oreItemColoring, oreGravel, oreClump, axle, smallGear, largeGear, clutch, invClutch, toggleGear, invToggleGear, axleMount);
-
-		//Genetic spawn egg
-		ItemColor eggItemColoring = (ItemStack stack, int tintIndex) -> {
-			//Lookup the mob's vanilla egg, copy the colors
-			//If it doesn't have an egg, fallback to defaults
-			if(stack.getItem() instanceof GeneticSpawnEgg){
-				EntityTemplate template = ((GeneticSpawnEgg) stack.getItem()).getEntityTypeData(stack);
-				EntityType<?> type = template.getEntityType();
-				if(type != null){
-					SpawnEggItem vanillaEgg = SpawnEggItem.byId(type);
-					if(vanillaEgg != null){
-						return vanillaEgg.getColor(tintIndex);
-					}
-				}
-			}
-			//Fallback to defaults
-			//Which are hideous, but that's what you get for not registering spawn eggs
-			return tintIndex == 0 ? Color.CYAN.getRGB() : Color.GREEN.getRGB();
-		};
-		itemColor.register(eggItemColoring, geneticSpawnEgg);
-
 		//Properties
 		//Whirligig rotation
 		ItemProperties.register(whirligig, new ResourceLocation("angle"), (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int unmapped) -> {

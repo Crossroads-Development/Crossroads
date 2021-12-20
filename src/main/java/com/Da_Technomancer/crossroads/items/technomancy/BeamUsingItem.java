@@ -78,7 +78,6 @@ public abstract class BeamUsingItem extends Item{
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag advanced){
 		byte[] settings = getSetting(stack);
 		tooltip.add(new TranslatableComponent("tt.crossroads.beam_item.energy", settings[0], maxSetting()));

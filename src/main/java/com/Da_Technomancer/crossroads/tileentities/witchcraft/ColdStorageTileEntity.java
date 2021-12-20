@@ -49,6 +49,15 @@ public class ColdStorageTileEntity extends InventoryTE{
 		return AbstractNutrientEnvironmentTileEntity.getAverageLifetime(level, inventory) / 20F;
 	}
 
+	private Double biomeTempCache = null;
+
+	private double getBiomeTemp(){
+		if(biomeTempCache == null){
+			biomeTempCache = HeatUtil.convertBiomeTemp(level, worldPosition);
+		}
+		return biomeTempCache;
+	}
+
 	@Override
 	public void serverTick(){
 		super.serverTick();
@@ -56,7 +65,7 @@ public class ColdStorageTileEntity extends InventoryTE{
 		long gameTime = level.getGameTime();
 
 		double preTemp = temp;
-		double biomeTemp = HeatUtil.convertBiomeTemp(level, worldPosition);
+		double biomeTemp = getBiomeTemp();
 
 		for(ItemStack stack : inventory){
 			if(stack.getItem() instanceof IPerishable){
@@ -99,10 +108,9 @@ public class ColdStorageTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		nbt = super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		nbt.putLong("last_tick", lastTick);
-		return nbt;
 	}
 
 	@Override

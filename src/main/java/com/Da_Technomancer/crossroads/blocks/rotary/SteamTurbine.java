@@ -26,8 +26,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
@@ -82,7 +80,6 @@ public class SteamTurbine extends BaseEntityBlock{
 //	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(new TranslatableComponent("tt.crossroads.steam_turbine.input", 100 * SteamTurbineTileEntity.LIMIT));
 		tooltip.add(new TranslatableComponent("tt.crossroads.steam_turbine.output", ((double) SteamTurbineTileEntity.LIMIT) * 0.1D * (double) CRConfig.steamWorth.get() * CRConfig.jouleWorth.get()));

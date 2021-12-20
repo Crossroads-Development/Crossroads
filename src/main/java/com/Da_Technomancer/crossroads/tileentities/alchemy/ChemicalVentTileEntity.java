@@ -55,11 +55,10 @@ public class ChemicalVentTileEntity extends BlockEntity implements ITickableTile
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		nbt.putLong("last_input", lastInputTime);
 		reags.write(nbt);
-		return nbt;
 	}
 
 	@Override

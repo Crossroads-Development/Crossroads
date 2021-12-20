@@ -93,13 +93,12 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		nbt.putInt("time", time);
 		if(currentElement != null){
 			nbt.putString("elem", currentElement.name());
 		}
-		return nbt;
 	}
 
 	@Override

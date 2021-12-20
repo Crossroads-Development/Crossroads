@@ -79,11 +79,10 @@ public class VoltusGeneratorTileEntity extends BlockEntity implements ITickableT
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		nbt.putInt("voltus", voltusAmount);
 		nbt.putInt("fe", fe);
-		return nbt;
 	}
 
 	@Override

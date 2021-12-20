@@ -176,8 +176,8 @@ public class AutoInjectorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		if(storedEffect == null){
 			nbt.putInt("effect_id", 0);
 		}else{
@@ -186,7 +186,6 @@ public class AutoInjectorTileEntity extends InventoryTE{
 		}
 		nbt.putInt("intensity", intensity);
 		nbt.putInt("duration", duration);
-		return nbt;
 	}
 
 	@Override

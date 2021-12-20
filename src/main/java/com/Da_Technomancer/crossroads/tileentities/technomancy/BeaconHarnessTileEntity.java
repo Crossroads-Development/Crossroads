@@ -141,12 +141,11 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		nbt.putBoolean("run", running);
 		nbt.putInt("cycle", cycles);
 		fluxHelper.writeData(nbt);
-		return nbt;
 	}
 
 	@Override

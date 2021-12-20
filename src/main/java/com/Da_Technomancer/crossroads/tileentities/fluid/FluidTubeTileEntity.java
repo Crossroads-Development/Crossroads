@@ -329,14 +329,13 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		ConduitBlock.IConduitTE.writeConduitNBT(nbt, this);
 		if(!content.isEmpty()){
 			content.writeToNBT(nbt);
 		}
 
-		return nbt;
 	}
 
 	@Override

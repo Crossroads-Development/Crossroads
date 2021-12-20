@@ -146,10 +146,9 @@ public class TeslaCoilTopTileEntity extends BlockEntity implements IInfoTE, ILin
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		linkHelper.writeNBT(nbt);
-		return nbt;
 	}
 
 	@Override

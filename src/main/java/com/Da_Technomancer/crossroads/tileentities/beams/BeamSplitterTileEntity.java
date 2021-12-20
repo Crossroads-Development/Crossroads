@@ -53,10 +53,9 @@ public class BeamSplitterTileEntity extends BeamRenderTE{
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		redsHandler.write(nbt);
-		return nbt;
 	}
 
 	@Override

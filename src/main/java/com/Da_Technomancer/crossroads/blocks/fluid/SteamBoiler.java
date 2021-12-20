@@ -21,8 +21,6 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
@@ -70,7 +68,6 @@ public class SteamBoiler extends BaseEntityBlock{
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		for(int i = 0; i < SteamBoilerTileEntity.TIERS.length; i++){
 			tooltip.add(new TranslatableComponent("tt.crossroads.steam_boiler.tier", SteamBoilerTileEntity.TIERS[i], (i + 1) * SteamBoilerTileEntity.BATCH_SIZE, (int) (SteamBoilerTileEntity.BATCH_SIZE * (i + 1) * (double) CRConfig.steamWorth.get() / 1000)));

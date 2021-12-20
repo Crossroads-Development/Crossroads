@@ -13,8 +13,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -30,7 +28,6 @@ public class PermeableGlass extends Block{
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public float getShadeBrightness(BlockState state, BlockGetter world, BlockPos pos){
 		return 1.0F;
 	}
@@ -45,12 +42,11 @@ public class PermeableGlass extends Block{
 		return Shapes.empty();
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Override
 	public boolean skipRendering(BlockState state, BlockState otherState, Direction dir) {
 		return otherState.getBlock() == this || super.skipRendering(state, otherState, dir);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter player, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.beam_permeable"));

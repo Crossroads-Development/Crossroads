@@ -520,8 +520,8 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		//Active only
 		if(address != null){
 			nbt.putInt("address", address.serialize());
@@ -543,7 +543,6 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 			nbt.putInt("plane", plane.ordinal());
 		}
 
-		return nbt;
 	}
 
 	@Override

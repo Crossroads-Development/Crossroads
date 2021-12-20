@@ -74,7 +74,6 @@ public class CRConfig{
 	public static ForgeConfigSpec.DoubleValue windingResist;
 	public static ForgeConfigSpec.DoubleValue whirligigHover;
 	public static ForgeConfigSpec.DoubleValue whirligigSafe;
-	public static ForgeConfigSpec.BooleanValue verticalBiomes;
 	public static ForgeConfigSpec.BooleanValue forgetPaths;
 	public static ForgeConfigSpec.DoubleValue lodestoneTurbinePower;
 	public static ForgeConfigSpec.DoubleValue hamsterPower;
@@ -241,7 +240,6 @@ public class CRConfig{
 		voltusValue = serverBuilder.comment("FE produced by one Voltus").defineInRange("voltus_power", 2_000, 0, 100_000);
 		gravRange = serverBuilder.comment("Range of Density Plates").defineInRange("grav_range", 64, 0, 128);
 		gravAccel = serverBuilder.comment("Acceleration of Density Plates", "In blocks/tick/tick, where normal gravity ~0.08").defineInRange("grav_accel", 0.15D, 0, 10D);
-		verticalBiomes = serverBuilder.comment("Whether to change biomes in columns", "If true, biomes are transmuted in a column from bedrock to worldheight", "If false, biomes are transmitted only within the vertical bounds of the effect").define("vertical_biomes", true);
 		riftSpawnDrops = serverBuilder.comment("If true, rift beams will spawn mob drops instead of actual mobs", "Rift beams do this regardless of config setting in peaceful mode").define("rift_drops", false);
 		serverBuilder.pop();
 		serverBuilder.push(CAT_WITCHCRAFT);
@@ -272,9 +270,7 @@ public class CRConfig{
 
 	private static Predicate<Object> compileRegex(String regex){
 		Pattern p = Pattern.compile(regex);
-		return (Object o) -> {
-			return o instanceof String && p.matcher((String) o).matches();
-		};
+		return (Object o) -> o instanceof String && p.matcher((String) o).matches();
 	}
 
 	/**

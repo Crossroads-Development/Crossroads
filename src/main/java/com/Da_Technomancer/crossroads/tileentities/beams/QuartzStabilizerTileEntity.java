@@ -57,11 +57,10 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		nbt.putInt("setting", setting);
 		storage.writeToNBT("stab_mag", nbt);
-		return nbt;
 	}
 
 	@Override

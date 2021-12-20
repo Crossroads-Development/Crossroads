@@ -3,35 +3,44 @@ package com.Da_Technomancer.crossroads;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentManager;
 import com.Da_Technomancer.crossroads.API.packets.*;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
+import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.entity.CREntities;
 import com.Da_Technomancer.crossroads.gui.container.*;
 import com.Da_Technomancer.crossroads.gui.screen.*;
 import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
+import com.Da_Technomancer.crossroads.items.itemSets.OreProfileItem;
+import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.crossroads.items.technomancy.ArmorPropellerPack;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamUsingItem;
+import com.Da_Technomancer.crossroads.items.witchcraft.GeneticSpawnEgg;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.render.IVisualEffect;
 import com.Da_Technomancer.crossroads.render.TESR.CRRendererRegistry;
-import com.Da_Technomancer.essentials.Essentials;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
+import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -39,18 +48,20 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.IContainerFactory;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class EventHandlerClient{
 
-	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = Essentials.MODID, value = Dist.CLIENT)
+	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = Crossroads.MODID, value = Dist.CLIENT)
 	public static class CRModEventsClient{
 
 		@SuppressWarnings("unused")
 		@SubscribeEvent
 		public static void registerModels(ModelRegistryEvent e){
 			CRBlocks.clientInit();
+			CRItems.clientInit();
 		}
 
 		@SuppressWarnings("unused")
@@ -142,6 +153,45 @@ public class EventHandlerClient{
 		private static <T extends AbstractContainerMenu> void registerCon(IContainerFactory<T> cons, MenuScreens.ScreenConstructor<T, AbstractContainerScreen<T>> screenFactory, String id, RegistryEvent.Register<MenuType<?>> reg){
 			MenuType<T> contType = EventHandlerCommon.CRModEventsCommon.registerConType(cons, id, reg);
 			MenuScreens.register(contType, screenFactory);
+		}
+
+		@SuppressWarnings("unused")
+		@SubscribeEvent
+		public static void registerItemColoration(ColorHandlerEvent.Item e){
+			//Coloring
+			ItemColors itemColor = e.getItemColors();
+			//Alchemy containers
+			itemColor.register((ItemStack stack, int layer) -> layer == 0 ? AbstractGlassware.getColorRGB(stack) : -1, CRItems.phialGlass, CRItems.florenceFlaskGlass, CRItems.shellGlass, CRItems.phialCrystal, CRItems.florenceFlaskCrystal, CRItems.shellCrystal);
+
+			//Gears and ore processing dusts
+			ItemColor oreItemColoring = (ItemStack stack, int tintIndex) -> {
+				if(tintIndex == 0){
+					return -1;
+				}
+				OreSetup.OreProfile mat = OreProfileItem.getProfile(stack);
+				return mat == null ? -1 : mat.getColor().getRGB();
+			};
+			itemColor.register(oreItemColoring, CRItems.oreGravel, CRItems.oreClump, CRItems.axle, CRItems.smallGear, CRItems.largeGear, CRItems.clutch, CRItems.invClutch, CRItems.toggleGear, CRItems.invToggleGear, CRItems.axleMount);
+
+			//Genetic spawn egg
+			ItemColor eggItemColoring = (ItemStack stack, int tintIndex) -> {
+				//Lookup the mob's vanilla egg, copy the colors
+				//If it doesn't have an egg, fallback to defaults
+				if(stack.getItem() instanceof GeneticSpawnEgg){
+					EntityTemplate template = ((GeneticSpawnEgg) stack.getItem()).getEntityTypeData(stack);
+					EntityType<?> type = template.getEntityType();
+					if(type != null){
+						SpawnEggItem vanillaEgg = ForgeSpawnEggItem.fromEntityType(type);
+						if(vanillaEgg != null){
+							return vanillaEgg.getColor(tintIndex);
+						}
+					}
+				}
+				//Fallback to defaults
+				//Which are hideous, but that's what you get for not registering spawn eggs
+				return tintIndex == 0 ? Color.CYAN.getRGB() : Color.GREEN.getRGB();
+			};
+			itemColor.register(eggItemColoring, CRItems.geneticSpawnEgg);
 		}
 	}
 

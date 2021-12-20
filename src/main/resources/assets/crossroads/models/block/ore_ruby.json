@@ -1,6 +1,7 @@
 {
-	"parent": "block/cube_all",
+	"parent": "block/cube_column",
 	"textures": {
-		"all": "crossroads:block/ore_ruby"
+		"side": "crossroads:block/ore_ruby_side",
+		"end": "crossroads:block/ore_ruby_top"
 	}
 }

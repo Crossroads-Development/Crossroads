@@ -76,8 +76,8 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements Container, 
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		if(!inv.isEmpty()){
 			nbt.put("inv", inv.save(new CompoundTag()));
 		}
@@ -85,7 +85,6 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements Container, 
 		nbt.putInt("remain", timeRemaining);
 		nbt.putInt("time_limit", timeLimit);
 
-		return nbt;
 	}
 
 	@Override

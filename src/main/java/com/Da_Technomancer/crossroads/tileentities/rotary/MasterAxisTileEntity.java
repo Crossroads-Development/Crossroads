@@ -320,8 +320,8 @@ public class MasterAxisTileEntity extends BlockEntity implements ITickableTileEn
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		nbt.putLong("life", ticksExisted);
 		for(int i = 0; i < 4; i++){
 			nbt.putFloat("prev_" + i, prevAngles[i]);
@@ -336,13 +336,13 @@ public class MasterAxisTileEntity extends BlockEntity implements ITickableTileEn
 		nbt.putDouble("base_speed", baseSpeed);
 		nbt.putDouble("energy_change", energyChange);
 		nbt.putDouble("energy_change_loss", energyLossChange);
-		return nbt;
 	}
 
 	@Override
 	public CompoundTag getUpdateTag(){
 		CompoundTag nbt = super.getUpdateTag();
-		return m_6945_(nbt);
+		saveAdditional(nbt);
+		return nbt;
 	}
 
 	/**

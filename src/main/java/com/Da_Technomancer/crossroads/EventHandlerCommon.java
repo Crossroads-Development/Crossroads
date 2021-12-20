@@ -25,7 +25,6 @@ import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import com.Da_Technomancer.crossroads.items.technomancy.TechnomancyArmor;
 import com.Da_Technomancer.crossroads.tileentities.CRTileEntity;
 import com.Da_Technomancer.crossroads.world.CRWorldGen;
-import com.Da_Technomancer.essentials.Essentials;
 import com.Da_Technomancer.essentials.ReflectionUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleType;
@@ -94,7 +93,7 @@ import java.util.UUID;
 
 public class EventHandlerCommon{
 
-	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = Essentials.MODID)
+	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = Crossroads.MODID)
 	public static class CRModEventsCommon{
 
 		@SuppressWarnings("unused")
@@ -282,7 +281,6 @@ public class EventHandlerCommon{
 //	protected static final String MAIN_KEY = "cr_pause";
 //	protected static final String SUB_KEY = "cr_pause_prior";
 	private static final Method getLoadedChunks = ReflectionUtil.reflectMethod(CRReflection.LOADED_CHUNKS);
-	private static final Method spawnRadius = ReflectionUtil.reflectMethod(CRReflection.SPAWN_RADIUS);
 	private static final Method adjustPosForLightning = ReflectionUtil.reflectMethod(CRReflection.LIGHTNING_POS);
 
 	@SubscribeEvent
@@ -334,7 +332,7 @@ public class EventHandlerCommon{
 		if(!e.world.isClientSide && (CRConfig.atmosEffect.get() & 1) == 1){
 			e.world.getProfiler().push(Crossroads.MODNAME + ": Overcharge lightning effects");
 			float chargeLevel = (float) AtmosChargeSavedData.getCharge((ServerLevel) e.world) / (float) AtmosChargeSavedData.getCapacity();
-			if(chargeLevel > 0.5F && getLoadedChunks != null && spawnRadius != null){
+			if(chargeLevel > 0.5F && getLoadedChunks != null){
 				//1.14
 				//Very similar to vanilla logic in ServerWorld::tickEnvironment as called by ServerChunkProvider::tickChunks
 				//Re-implemented due to the vanilla methods doing far more than just lightning
@@ -344,7 +342,7 @@ public class EventHandlerCommon{
 						Optional<LevelChunk> opt = holder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left();
 						if(opt.isPresent()){
 							ChunkPos chunkPos = opt.get().getPos();
-							if(!(boolean) spawnRadius.invoke(((ServerChunkCache) e.world.getChunkSource()).chunkMap, chunkPos)){
+							if(!((ServerChunkCache) e.world.getChunkSource()).chunkMap.getPlayersCloseForSpawning(chunkPos).isEmpty()){
 								int i = chunkPos.getMinBlockX();
 								int j = chunkPos.getMinBlockZ();
 								if(e.world.random.nextInt(350_000 - (int) (300_000F * chargeLevel)) == 0){//The vanilla default is 1/100_000; atmos charging ranges from 1/200_000 to 1/50_000

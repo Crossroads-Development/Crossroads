@@ -20,12 +20,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ObjectHolder;
 
-@OnlyIn(value = Dist.CLIENT, _interface = ItemSupplier.class)
 @ObjectHolder(Crossroads.MODID)
 public class EntityShell extends ThrowableProjectile implements ItemSupplier{
 
@@ -89,7 +86,6 @@ public class EntityShell extends ThrowableProjectile implements ItemSupplier{
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public ItemStack getItem(){
 		return entityData.get(item);
 	}

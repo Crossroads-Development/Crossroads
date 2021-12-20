@@ -182,8 +182,8 @@ public class LensFrameTileEntity extends BlockEntity implements IBeamRenderTE, I
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		nbt.putInt("beam_neg", packetNeg);
 		nbt.putInt("beam_pos", packetPos);
 		nbt.putInt("reds", lastRedstone);
@@ -191,7 +191,6 @@ public class LensFrameTileEntity extends BlockEntity implements IBeamRenderTE, I
 		if(!lensItem.isEmpty()){
 			nbt.put("inv", lensItem.save(new CompoundTag()));
 		}
-		return nbt;
 	}
 
 	@Override

@@ -50,7 +50,7 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 		//Note that we do NOT have a super call
 
 		if(!init && useCableHeat()){
-			cableTemp = HeatUtil.convertBiomeTemp(level, worldPosition);
+			cableTemp = getBiomeTemp();
 		}
 		init = true;
 

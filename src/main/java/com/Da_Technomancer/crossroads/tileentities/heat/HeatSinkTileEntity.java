@@ -38,6 +38,15 @@ public class HeatSinkTileEntity extends ModuleTE{
 		return mode;
 	}
 
+	private Double biomeTempCache = null;
+
+	private double getBiomeTemp(){
+		if(biomeTempCache == null){
+			biomeTempCache = HeatUtil.convertBiomeTemp(level, worldPosition);
+		}
+		return biomeTempCache;
+	}
+
 	@Override
 	protected boolean useHeat(){
 		return true;
@@ -54,7 +63,7 @@ public class HeatSinkTileEntity extends ModuleTE{
 		super.serverTick();
 
 		double prevTemp = temp;
-		double biomeTemp = HeatUtil.convertBiomeTemp(level, worldPosition);
+		double biomeTemp = getBiomeTemp();
 		temp += Math.min(MODES[mode], Math.abs(temp - biomeTemp)) * Math.signum(biomeTemp - temp);
 		if(temp != prevTemp){
 			setChanged();
@@ -68,10 +77,9 @@ public class HeatSinkTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		nbt.putInt("mode", mode);
-		return nbt;
 	}
 
 	@SuppressWarnings("unchecked")

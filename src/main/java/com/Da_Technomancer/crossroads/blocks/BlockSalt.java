@@ -18,8 +18,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
@@ -118,14 +116,12 @@ public class BlockSalt extends FallingBlock{
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	@Override
 	public int getDustColor(BlockState state, BlockGetter world, BlockPos pos){
 		return Color.WHITE.getRGB();
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(new TranslatableComponent("tt.crossroads.salt_block"));
 		tooltip.add(new TranslatableComponent("tt.crossroads.salt_block.quip").setStyle(MiscUtil.TT_QUIP));

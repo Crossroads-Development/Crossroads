@@ -247,11 +247,10 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		nbt.putInt("intensity", intensity);
 		nbt.putLong("last_run", lastRunTick);
-		return nbt;
 	}
 
 	@Override

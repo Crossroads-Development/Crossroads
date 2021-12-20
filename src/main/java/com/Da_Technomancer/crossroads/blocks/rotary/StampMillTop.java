@@ -26,8 +26,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
 
 public class StampMillTop extends Block{
@@ -73,8 +71,7 @@ public class StampMillTop extends Block{
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player){
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player){
 		return new ItemStack(CRBlocks.stampMill, 1);
 	}
 

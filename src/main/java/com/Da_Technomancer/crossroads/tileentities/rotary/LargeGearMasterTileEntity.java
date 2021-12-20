@@ -147,8 +147,8 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 
 		// motionData
 		nbt.putDouble("[1]mot", energy);
@@ -161,7 +161,6 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 		nbt.putBoolean("new", true);
 		nbt.putFloat("angle", angleW[0]);
 		nbt.putFloat("cl_w", angleW[1]);
-		return nbt;
 	}
 
 	@Override

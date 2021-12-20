@@ -97,10 +97,9 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		nbt.putDouble("heat_stored", storedHeat);
-		return nbt;
 	}
 
 	private final LazyOptional<ItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);

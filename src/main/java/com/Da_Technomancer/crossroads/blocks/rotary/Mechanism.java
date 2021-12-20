@@ -66,7 +66,7 @@ public class Mechanism extends BaseEntityBlock implements IReadable{
 	}
 
 	@Override
-	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player){
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player){
 		BlockEntity te = world.getBlockEntity(pos);
 		if(!(te instanceof MechanismTileEntity mte)){
 			return ItemStack.EMPTY;
@@ -121,9 +121,9 @@ public class Mechanism extends BaseEntityBlock implements IReadable{
 	}
 
 	@Override
-	public boolean removedByPlayer(BlockState state, Level worldIn, BlockPos pos, Player player, boolean willHarvest, FluidState fluid){
+	public boolean onDestroyedByPlayer(BlockState state, Level worldIn, BlockPos pos, Player player, boolean willHarvest, FluidState fluid){
 		RotaryUtil.increaseMasterKey(false);
-		return super.removedByPlayer(state, worldIn, pos, player, willHarvest, fluid);
+		return super.onDestroyedByPlayer(state, worldIn, pos, player, willHarvest, fluid);
 	}
 
 	@Override

@@ -48,7 +48,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	protected void initHeat(){
 		if(!init){
 			init = true;
-			cableTemp = HeatUtil.convertBiomeTemp(level, worldPosition);
+			cableTemp = getBiomeTemp();
 		}
 	}
 
@@ -158,10 +158,9 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		nbt.putInt("ener", energy);
-		return nbt;
 	}
 
 	@Override

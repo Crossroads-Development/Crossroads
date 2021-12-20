@@ -32,8 +32,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
@@ -147,7 +145,6 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(new TranslatableComponent("tt.crossroads.heat_cable.loss", insulator.getRate()));
 		tooltip.add(new TranslatableComponent("tt.crossroads.heat_cable.melt", insulator.getLimit()));

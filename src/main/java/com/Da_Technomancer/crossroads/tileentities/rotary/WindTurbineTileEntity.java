@@ -206,13 +206,12 @@ public class WindTurbineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		nbt.putBoolean("running", running);
 		for(int i = 0; i < 4; i++){
 			nbt.putByte("blade_col_" + i, (byte) bladeColors[i]);
 		}
-		return nbt;
 	}
 
 	@Override

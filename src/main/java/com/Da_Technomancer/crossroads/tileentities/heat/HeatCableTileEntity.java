@@ -51,6 +51,15 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 		this.insulator = insulator;
 	}
 
+	private Double biomeTempCache = null;
+
+	protected double getBiomeTemp(){
+		if(biomeTempCache == null){
+			biomeTempCache = HeatUtil.convertBiomeTemp(level, worldPosition);
+		}
+		return biomeTempCache;
+	}
+
 	@Override
 	public void setBlockState(BlockState stateIn){
 		super.setBlockState(stateIn);
@@ -129,7 +138,7 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 	protected double runLoss(){
 		//Does not change the temperature- only does the calculation
 		//Energy loss
-		double biomeTemp = HeatUtil.convertBiomeTemp(level, worldPosition);
+		double biomeTemp = getBiomeTemp();
 		return temp + Math.min(insulator.getRate(), Math.abs(temp - biomeTemp)) * Math.signum(biomeTemp - temp);
 	}
 
@@ -141,16 +150,17 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		ConduitBlock.IConduitTE.writeConduitNBT(nbt, this);
 		nbt.putString("insul", insulator.name());
-		return nbt;
 	}
 
 	@Override
 	public CompoundTag getUpdateTag(){
-		return m_6945_(super.getUpdateTag());
+		CompoundTag nbt = super.getUpdateTag();
+		saveAdditional(nbt);
+		return nbt;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -195,7 +205,7 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 				if(insulator == HeatInsulators.ICE){
 					temp = -10;
 				}else{
-					temp = HeatUtil.convertBiomeTemp(level, worldPosition);
+					temp = getBiomeTemp();
 				}
 				initHeat = true;
 				setChanged();

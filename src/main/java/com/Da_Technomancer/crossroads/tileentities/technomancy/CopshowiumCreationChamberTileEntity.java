@@ -98,10 +98,9 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		fluxHelper.writeData(nbt);
-		return nbt;
 	}
 
 	@Override

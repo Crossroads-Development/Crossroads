@@ -111,14 +111,13 @@ public class HeatLimiterBasicTileEntity extends BlockEntity implements ITickable
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		nbt.putBoolean("init_heat", init);
 		nbt.putDouble("heat_in", heatIn);
 		nbt.putDouble("heat_out", heatOut);
 		nbt.putFloat("setting", setting);
 		nbt.putString("expression", expression);
-		return nbt;
 	}
 
 	@Override

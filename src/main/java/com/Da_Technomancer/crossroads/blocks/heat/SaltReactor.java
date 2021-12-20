@@ -25,8 +25,6 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
@@ -76,7 +74,6 @@ public class SaltReactor extends BaseEntityBlock{
 	}
 	
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(new TranslatableComponent("tt.crossroads.salt_reactor.desc"));
 		tooltip.add(new TranslatableComponent("tt.crossroads.salt_reactor.fuel", SaltReactorTileEntity.WATER_USE, SaltReactorTileEntity.FUEL_DURATION));

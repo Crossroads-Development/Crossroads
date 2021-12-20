@@ -217,10 +217,9 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		nbt.putInt("prog", progress);
-		return nbt;
 	}
 
 	@Override

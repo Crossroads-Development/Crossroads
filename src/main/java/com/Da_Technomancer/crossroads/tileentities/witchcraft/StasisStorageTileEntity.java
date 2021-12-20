@@ -89,10 +89,9 @@ public class StasisStorageTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		nbt = super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		nbt.putLong("last_tick", lastTick);
-		return nbt;
 	}
 
 	@Override

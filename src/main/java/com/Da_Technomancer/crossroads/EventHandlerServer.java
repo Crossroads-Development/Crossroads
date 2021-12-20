@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.Mod;
 
 public class EventHandlerServer{
 
-	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = Essentials.MODID, value = Dist.DEDICATED_SERVER)
+	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = Crossroads.MODID, value = Dist.DEDICATED_SERVER)
 	public static class CRModEventsServer{
 
 		@SuppressWarnings("unused")

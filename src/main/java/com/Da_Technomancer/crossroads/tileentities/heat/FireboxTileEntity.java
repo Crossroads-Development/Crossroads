@@ -90,11 +90,10 @@ public class FireboxTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		nbt.putInt("burn", burnTime);
 		nbt.putInt("max_burn", maxBurnTime);
-		return nbt;
 	}
 
 	private LazyOptional<ItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);

@@ -102,7 +102,7 @@ public class LargeGearSlave extends BaseEntityBlock{
 	}
 
 	@Override
-	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player){
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player){
 		BlockEntity te = world.getBlockEntity(pos);
 		if(te instanceof LargeGearSlaveTileEntity && ((LargeGearSlaveTileEntity) te).masterPos != null){
 			te = world.getBlockEntity(pos.offset(((LargeGearSlaveTileEntity) te).masterPos));
@@ -110,14 +110,15 @@ public class LargeGearSlave extends BaseEntityBlock{
 				return CRItems.largeGear.withMaterial(((LargeGearMasterTileEntity) (te)).getMember(), 1);
 			}
 		}
-		return ItemStack.EMPTY;	}
+		return ItemStack.EMPTY;
+	}
 
 	@Override
-	public boolean removedByPlayer(BlockState state, Level worldIn, BlockPos pos, Player player, boolean willHarvest, FluidState fluid){
+	public boolean onDestroyedByPlayer(BlockState state, Level worldIn, BlockPos pos, Player player, boolean willHarvest, FluidState fluid){
 		if(willHarvest && worldIn.getBlockEntity(pos) instanceof LargeGearSlaveTileEntity){
 			((LargeGearSlaveTileEntity) worldIn.getBlockEntity(pos)).passBreak(state.getValue(ESProperties.FACING), true);
 		}
-		return super.removedByPlayer(state, worldIn, pos, player, willHarvest, fluid);
+		return super.onDestroyedByPlayer(state, worldIn, pos, player, willHarvest, fluid);
 	}
 
 	@Override

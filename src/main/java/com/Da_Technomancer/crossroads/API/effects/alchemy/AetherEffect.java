@@ -6,7 +6,6 @@ import com.Da_Technomancer.crossroads.API.alchemy.EnumReagents;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.API.packets.SendBiomeUpdateToClient;
-import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactiveSpotTileEntity;
@@ -19,6 +18,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
+import net.minecraft.util.LinearCongruentialGenerator;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.CommonLevelAccessor;
 import net.minecraft.world.level.Level;
@@ -28,7 +28,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.ChunkBiomeContainer;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.LevelChunkSection;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
@@ -41,7 +42,6 @@ public class AetherEffect implements IAlchEffect{
 	private static final Tag<Block> CRYS_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_crystal");
 	private static final Tag<Block> WOOD_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_wood");
 	private static final Tag<Block> FOLI_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_foliage");
-	private static final Field biomeField = ReflectionUtil.reflectField(CRReflection.BIOME_ARRAY);
 
 	protected Block soilBlock(){
 		return Blocks.GRASS_BLOCK;
@@ -81,12 +81,6 @@ public class AetherEffect implements IAlchEffect{
 	public void doEffect(Level world, BlockPos pos, int amount, EnumMatterPhase phase, ReagentMap contents){
 		BlockState oldState = world.getBlockState(pos);
 
-		//quicksilver makes it create a block instead of transmuting blocks
-		if(contents.getQty(EnumReagents.QUICKSILVER.id()) != 0 && oldState.isAir()){
-			world.setBlockAndUpdate(pos, soilBlock().defaultBlockState());
-			return;
-		}
-
 		//sulfur dioxide prevents biome changing
 		if(contents.getQty(EnumReagents.SULFUR_DIOXIDE.id()) == 0){
 			ResourceKey<Biome> biomeKey = biome();
@@ -95,6 +89,12 @@ public class AetherEffect implements IAlchEffect{
 				setBiomeAtPos(world, pos, biome);
 				CRPackets.sendPacketToDimension(world, new SendBiomeUpdateToClient(pos, biomeKey.location()));
 			}
+		}
+
+		//quicksilver makes it create a block instead of transmuting blocks
+		if(contents.getQty(EnumReagents.QUICKSILVER.id()) != 0 && oldState.isAir()){
+			world.setBlockAndUpdate(pos, soilBlock().defaultBlockState());
+			return;
 		}
 
 		//cavorite prevents block transmutation
@@ -147,8 +147,9 @@ public class AetherEffect implements IAlchEffect{
 	/**
 	 * Sets the biome at a position in a way that will be saved to disk
 	 * Does not handle packets, should be called on both sides
+	 *
 	 * @param world The world
-	 * @param pos The position to set the position of. Y-coord is irrelevant, will set the biome in an entire column
+	 * @param pos The world position to set the biome at
 	 * @param biome The biome to set it to
 	 */
 	public static void setBiomeAtPos(Level world, BlockPos pos, Biome biome){
@@ -156,53 +157,96 @@ public class AetherEffect implements IAlchEffect{
 			return;
 		}
 
-		//As of MC1.15, we have to reflect in as the biome array is private and the int array won't save to disk
-		ChunkBiomeContainer bc = world.getChunk(pos).m_6221_();
-		if(biomeField != null && bc != null){
-			Object o;
-			try{
-				o = biomeField.get(bc);
-				Biome[] biomeArray = (Biome[]) o;
-				if(CRConfig.verticalBiomes.get()){
-					int y = 0;
-					do{
-						//We set the biome in a column from bedrock to world height
-						biomeArray[getBiomeIndex(world, pos.getX(), y, pos.getZ())] = biome;
-					}while(!world.isOutsideBuildHeight(++y));
-				}else{
-					biomeArray[getBiomeIndex(world, pos.getX(), pos.getY(), pos.getZ())] = biome;
-				}
-			}catch(IllegalAccessException | NullPointerException | IndexOutOfBoundsException e){
-				e.printStackTrace();
-				Crossroads.logger.error(String.format("Failed to set biome at pos: %s; to biome: %s", pos, biome), e);
-			}
+		try{
+			ChunkAccess chunk = world.getChunk(pos);
+			int[] noisePos = noiseBiomeCoords(world, chunk, pos.getX(), pos.getY(), pos.getZ());
+			LevelChunkSection chunkSection = chunk.getSection(noisePos[3]);
+			chunkSection.getBiomes().set(noisePos[0], noisePos[1], noisePos[2], biome);
+		}catch(Exception e){
+			e.printStackTrace();
+			Crossroads.logger.error(String.format("Failed to set biome at pos: %s; to biome: %s", pos, biome), e);
 		}
 	}
 
-	//Copied from BiomeContainer to copy its biome array ordering
-	private static final int WIDTH_BITS = (int)Math.round(Math.log(16.0D) / Math.log(2.0D)) - 2;
+	private static final Field BIOME_SEED = ReflectionUtil.reflectField(CRReflection.BIOME_SEED);
 
-	/**
-	 * Vanilla biomes are packed into a one-dimensional array which stores all biome information for a chunk
-	 * This method gets the index corresponding to a world position in the chunk's biome array
-	 * Multiple positions will share an index
-	 * @param x The x position
-	 * @param y The y position- does actually matter
-	 * @param z The z position
-	 * @return The biome index at this position
-	 */
-	private static int getBiomeIndex(Level world, int x, int y, int z){
-		//Based off of ChunkBiomeContainer::getNoiseBiome
-		final int HORIZONTAL_MASK = (1 << WIDTH_BITS) - 1;
-		final int quartMinY = QuartPos.fromBlock(world.getMinBuildHeight());
-		final int quartHeight = QuartPos.fromBlock(world.getHeight()) - 1;
+	private static int[] noiseBiomeCoords(Level world, ChunkAccess chunk, int x, int y, int z){
+		//Return values are: biome x, biome y, biome z, section index
+		//There's a weird formula to convert between world coordinates and the coordinates used to store biomes
+		//Based on BiomeManager::getBiome
 
-		int pX = QuartPos.fromBlock(x);
-		int pY = QuartPos.fromBlock(y);
-		int pZ = QuartPos.fromBlock(z);
-		int i = pX & HORIZONTAL_MASK;
-		int j = Mth.clamp(pY - quartMinY, 0, quartHeight);
-		int k = pZ & HORIZONTAL_MASK;
-		return j << WIDTH_BITS + WIDTH_BITS | k << WIDTH_BITS | i;
+		long biomeZoomSeed = 0;
+		if(BIOME_SEED != null){
+			try{
+				biomeZoomSeed = (long) BIOME_SEED.get(world.getBiomeManager());
+			}catch(IllegalAccessException | ClassCastException e){
+				e.printStackTrace();
+				//We can proceed without the seed- however, all biome placement positions will be slightly inaccurate
+			}
+		}
+
+		int i = x - 2;
+		int j = y - 2;
+		int k = z - 2;
+		int l = i >> 2;
+		int i1 = j >> 2;
+		int j1 = k >> 2;
+		double d0 = (double) (i & 3) / 4.0D;
+		double d1 = (double) (j & 3) / 4.0D;
+		double d2 = (double) (k & 3) / 4.0D;
+		int k1 = 0;
+		double d3 = Double.POSITIVE_INFINITY;
+
+		for(int l1 = 0; l1 < 8; ++l1){
+			boolean flag = (l1 & 4) == 0;
+			boolean flag1 = (l1 & 2) == 0;
+			boolean flag2 = (l1 & 1) == 0;
+			int i2 = flag ? l : l + 1;
+			int j2 = flag1 ? i1 : i1 + 1;
+			int k2 = flag2 ? j1 : j1 + 1;
+			double d4 = flag ? d0 : d0 - 1.0D;
+			double d5 = flag1 ? d1 : d1 - 1.0D;
+			double d6 = flag2 ? d2 : d2 - 1.0D;
+			double d7 = getFiddledDistance(biomeZoomSeed, i2, j2, k2, d4, d5, d6);
+			if(d3 > d7){
+				k1 = l1;
+				d3 = d7;
+			}
+		}
+
+		int adjustedX = (k1 & 4) == 0 ? l : l + 1;
+		int adjustedY = (k1 & 2) == 0 ? i1 : i1 + 1;
+		int adjustedZ = (k1 & 1) == 0 ? j1 : j1 + 1;
+
+		//This last set of operations is based on ChunkAccess::getNoiseBiome
+
+		int lowerClamp = QuartPos.fromBlock(chunk.getMinBuildHeight());
+		int upperClamp = lowerClamp + QuartPos.fromBlock(chunk.getHeight()) - 1;
+		int biomeY = Mth.clamp(adjustedY, lowerClamp, upperClamp);
+		int sectionIndex = chunk.getSectionIndex(QuartPos.toBlock(biomeY));
+
+		return new int[] {adjustedX & 3, biomeY & 3, adjustedZ & 3, sectionIndex};
+	}
+
+	private static double getFiddledDistance(long p_186680_, int p_186681_, int p_186682_, int p_186683_, double p_186684_, double p_186685_, double p_186686_){
+		//Copied from BiomeManager (original is private)
+		long $$7 = LinearCongruentialGenerator.next(p_186680_, (long) p_186681_);
+		$$7 = LinearCongruentialGenerator.next($$7, (long) p_186682_);
+		$$7 = LinearCongruentialGenerator.next($$7, (long) p_186683_);
+		$$7 = LinearCongruentialGenerator.next($$7, (long) p_186681_);
+		$$7 = LinearCongruentialGenerator.next($$7, (long) p_186682_);
+		$$7 = LinearCongruentialGenerator.next($$7, (long) p_186683_);
+		double d0 = getFiddle($$7);
+		$$7 = LinearCongruentialGenerator.next($$7, p_186680_);
+		double d1 = getFiddle($$7);
+		$$7 = LinearCongruentialGenerator.next($$7, p_186680_);
+		double d2 = getFiddle($$7);
+		return Mth.square(p_186686_ + d2) + Mth.square(p_186685_ + d1) + Mth.square(p_186684_ + d0);
+	}
+
+	private static double getFiddle(long p_186690_){
+		//Copied from BiomeManager (original is private)
+		double d0 = (double) Math.floorMod(p_186690_ >> 24, 1024) / 1024.0D;
+		return (d0 - 0.5D) * 0.9D;
 	}
 }

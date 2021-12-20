@@ -1,16 +1,23 @@
 package com.Da_Technomancer.crossroads.API.heat;
 
+import com.Da_Technomancer.crossroads.API.CRReflection;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.essentials.ReflectionUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class HeatUtil{
+
+	private static final Method GET_BIOME_TEMPERATURE_NO_CACHE = ReflectionUtil.reflectMethod(CRReflection.BIOME_TEMPERATURE_NO_CACHE);
 
 	/**
 	 * Absolute zero in degrees C
@@ -61,6 +68,7 @@ public class HeatUtil{
 
 	/**
 	 * Calculates the biome temperature at a location
+	 * Cache the result if possible
 	 * @param world The world (client or server)
 	 * @param pos The position to find the temperature at
 	 * @return The biome temperature, in degrees C
@@ -70,10 +78,22 @@ public class HeatUtil{
 			return ABSOLUTE_ZERO;
 		}
 		Biome biome = world.getBiome(pos);
-		double rawTemp = biome.getTemperature(pos);
+
+		double rawTemp;
+		if(GET_BIOME_TEMPERATURE_NO_CACHE != null){
+			try{
+				rawTemp = (float) GET_BIOME_TEMPERATURE_NO_CACHE.invoke(biome, pos);
+			}catch(IllegalAccessException | InvocationTargetException | ClassCastException e){
+				Crossroads.logger.catching(e);
+				rawTemp = biome.getBaseTemperature();
+			}
+		}else{
+			rawTemp = biome.getBaseTemperature();
+		}
+
 		//This formula was derived with the power of wikipedia and excel spreadsheets to compare biome temperatures to actual real world temperatures.
 		//Most people probably wouldn't care if I'd just pulled it out of my *rse, but I made an effort and I want someone to know this. Appreciate it. Please?
-		double outTemp = rawTemp * 17.5D - 2.5D;
+		double outTemp = rawTemp * 16D - 3D;
 		if(biome.getBiomeCategory() == Biome.BiomeCategory.NETHER){
 			outTemp = Math.max(outTemp, CRConfig.hellTemperature.get());
 		}

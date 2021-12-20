@@ -38,7 +38,7 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 	protected void initHeat(){
 		if(!init){
 			init = true;
-			cableTemp = HeatUtil.convertBiomeTemp(level, worldPosition);
+			cableTemp = getBiomeTemp();
 		}
 	}
 

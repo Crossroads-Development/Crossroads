@@ -101,12 +101,11 @@ public class MaxwellDemonTileEntity extends BlockEntity implements ITickableTile
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		nbt.putBoolean("init_heat", init);
 		nbt.putDouble("temp_u", tempUp);
 		nbt.putDouble("temp_d", tempDown);
-		return nbt;
 	}
 
 	@Override

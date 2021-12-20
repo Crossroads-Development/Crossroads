@@ -139,8 +139,8 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		nbt.putDouble("mot_1", energy);
 
 		nbt.putBoolean("init_heat", initHeat);
@@ -153,7 +153,6 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 				nbt.put("fluid_" + i, fluidNBT);
 			}
 		}
-		return nbt;
 	}
 
 	@Override

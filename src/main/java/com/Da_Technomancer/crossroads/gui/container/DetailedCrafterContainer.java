@@ -26,8 +26,6 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
@@ -205,7 +203,6 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public int getSize(){
 		return 10;
 	}

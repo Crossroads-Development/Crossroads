@@ -20,8 +20,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -57,7 +55,6 @@ public class EdibleBlob extends Item{
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
 		if(stack.hasTag()){
 			tooltip.add(new TranslatableComponent("tt.crossroads.edible_blob.food", getHealAmount(stack)));
@@ -84,10 +81,6 @@ public class EdibleBlob extends Item{
 		return 32;
 	}
 
-	/**
-	 * Called to trigger the item's "innate" right click behavior. To handle when this item is used on a Block, see
-	 * {@link #onItemUse}.
-	 */
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn){
 		ItemStack itemstack = playerIn.getItemInHand(handIn);

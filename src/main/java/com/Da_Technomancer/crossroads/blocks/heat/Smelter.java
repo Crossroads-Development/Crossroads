@@ -75,7 +75,6 @@ public class Smelter extends BaseEntityBlock implements IReadable{
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(new TranslatableComponent("tt.crossroads.smelter.desc"));
 		for(int i = 0; i < SmelterTileEntity.TEMP_TIERS.length; i++){

@@ -72,11 +72,10 @@ public class LodestoneDynamoTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public CompoundTag m_6945_(CompoundTag nbt){
-		super.m_6945_(nbt);
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
 		nbt.putInt("charge", fe);
 
-		return nbt;
 	}
 
 	@Override

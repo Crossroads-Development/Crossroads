@@ -44,13 +44,12 @@ public final class Crossroads{
 		CRPackets.preInit();
 		//Main
 		MinecraftForge.EVENT_BUS.register(new EventHandlerCommon());
-		CRItems.registerDispenserOverrides();
+
 		CRIntegration.init();
 		CurioHelper.initIntegration();
 	}
 
 	private void clientInit(@SuppressWarnings("unused") FMLClientSetupEvent e){
-		CRItems.clientInit();
 		Keys.init();
 		OverlayRegistry.registerOverlayTop("crossroad_beam_tool_overlay", new BeamToolOverlay());
 		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());

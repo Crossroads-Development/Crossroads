@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
-import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.fluid.WaterCentrifugeTileEntity;
@@ -16,16 +15,12 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
@@ -67,12 +62,6 @@ public class WaterCentrifuge extends BaseEntityBlock{
 	}
 
 	@Override
-	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
-		//TODO remove, left in for backwards compatibility
-		builder.add(CRProperties.HORIZ_AXIS);
-	}
-
-	@Override
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving){
 		BlockEntity te = world.getBlockEntity(pos);
 		if(te instanceof Container && newState.getBlock() != state.getBlock()){
@@ -96,7 +85,6 @@ public class WaterCentrifuge extends BaseEntityBlock{
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(new TranslatableComponent("tt.crossroads.water_centrifuge.desc"));
 		tooltip.add(new TranslatableComponent("tt.crossroads.water_centrifuge.spin", WaterCentrifugeTileEntity.TIP_POINT));
