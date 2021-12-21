@@ -24,11 +24,15 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "of times other than that. They always give mob drops, even if they respawn- making them ideal for farming.$(br2)<em>Imprinting:/$ Imprinting clones will never despawn naturally. Also, if they're a tamable mob (ex. wolves or horses), they will spawn pre-tamed to the player who spawned them. If they were spawned by a machine (ex. dispenser), they won't "
+			"text": "of times other than that. They always give mob drops, even if they respawn- making them ideal for farming.$(br2)<em>Imprinting:/$ Imprinting clones will never despawn naturally. Also, if they're a tamable mob (ex. wolves or horses), they will spawn pre-tamed; they can either be designed to be pre-tamed by a specific player, or to whichever player "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "be pre-tamed, but still won't despawn.$(br2)<em>Potions:/$ Clones can have permanent potion effects that will never expire, such as fire resistance or regeneration. This can include debuffs if you want to make them easier to kill.$(br2)"
+			"text": "spawns them. If they were spawned by a machine (ex. dispenser) and were designed to tame to the player who spawned them, they won't be pre-tamed, but still won't despawn.$(br2)<em>Potions:/$ Clones can have permanent potion effects that will never expire, such as fire resistance or regeneration. This can include debuffs if you want to make them easier "
+		},
+		{
+			"type": "patchouli:text",
+			"text": "to kill.$(br2)"
 		},
 		{
 			"type": "patchouli:text",

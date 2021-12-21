@@ -34,8 +34,8 @@ import java.util.ArrayList;
 @ObjectHolder(Crossroads.MODID)
 public class IncubatorTileEntity extends InventoryTE{
 
-	public static final int REQUIRED = 2 * 60 * 20;//Total required progress for one operation, 2min
-	public static final double SLOW_MULT = 0.1D;//Speed compared to full speed when in the operating temp range, but not near the target temp
+	public static final int REQUIRED = 60 * 20;//Total required progress for one operation, 1min
+	public static final double SLOW_MULT = 0.05D;//Speed compared to full speed when in the operating temp range, but not near the target temp
 	public static final int MIN_TEMP = 25;//Minimum operating temp
 	public static final int MAX_TEMP = 150;//Maximum operating temp
 	public static final int MARGIN = 10;//Considered near the target temp if within MARGIN of targetTemp

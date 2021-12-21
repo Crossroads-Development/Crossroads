@@ -1,6 +1,7 @@
 {
 	"replace": false,
 	"values": [
-		"crossroads:ore_tin"
+		"crossroads:ore_tin",
+		"crossroads:ore_tin_deep"
 	]
 }

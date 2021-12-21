@@ -134,6 +134,9 @@ public class LargeGearSlaveTileEntity extends BlockEntity implements IInfoTE{
 
 		@Override
 		public IAxleHandler getAxle(){
+			if(masterPos == null){
+				return null;
+			}
 			BlockEntity te = level.getBlockEntity(worldPosition.offset(masterPos));
 			if(te instanceof LargeGearMasterTileEntity){
 				LazyOptional<IAxleHandler> axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, getFacing());

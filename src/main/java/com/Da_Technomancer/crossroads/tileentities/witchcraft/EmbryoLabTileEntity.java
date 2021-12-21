@@ -20,6 +20,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -116,6 +117,17 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 				syncTemplate();
 				return stack;
 			}
+			if(stack.getItem() == CRItems.bloodSample && !template.isLoyal()){
+				//Blood sample from a player can act to set imprinting, targeting the specific player
+				EntityTemplate imprintingBloodTemplate = BloodSample.getEntityTypeData(stack);
+				if(imprintingBloodTemplate.getOriginatingUUID() != null && imprintingBloodTemplate.getEntityType() == EntityType.PLAYER){
+					template.setLoyal(true);
+					template.setImprintingPlayer(imprintingBloodTemplate.getOriginatingUUID());
+					setChanged();
+					syncTemplate();
+					return new ItemStack(CRItems.bloodSampleEmpty);
+				}
+			}
 			if(stack.getItem() == CRItems.soulCluster && !template.isRespawning()){
 				//Apply the respawning trait and consume the item
 				template.setRespawning(true);
@@ -159,7 +171,6 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 			for(EmbryoLabMorphRec rec : recipes){
 				if(rec.isEnabled() && rec.getInputMob().equals(template.getEntityName()) && rec.getIngr().test(stack)){
 					template.setEntityName(rec.getOutputMob());
-					template.setAdditionalSaveData(null);//Reset any mob-type-specific save data
 					stack.shrink(1);
 					setChanged();
 					syncTemplate();

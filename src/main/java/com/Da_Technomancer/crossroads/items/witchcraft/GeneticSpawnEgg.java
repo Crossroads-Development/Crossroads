@@ -57,6 +57,9 @@ public class GeneticSpawnEgg extends Item{
 	public void withEntityTypeData(ItemStack stack, EntityTemplate template){
 		CompoundTag nbt = stack.getOrCreateTag();
 		nbt.put(KEY, template.serializeNBT());
+		if(template.getCustomName() != null){
+			stack.setHoverName(template.getCustomName());//Copy any custom name on the template onto the spawn egg
+		}
 	}
 
 	public EntityTemplate getEntityTypeData(ItemStack stack){

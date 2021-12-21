@@ -317,7 +317,7 @@ public final class CRItems{
 	 * Registers dispenser behaviours for any item where the behaviour isn't being registered by the item itself for whatever reason
 	 */
 	public static void registerDispenserOverrides(){
-		registerDispenserOverride(EmbryoLab.DISPENSE_ONTO_EMBRYO_LAB, CRItems.separatedBloodSample, Items.NAME_TAG, CRItems.soulCluster, Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION);
+		registerDispenserOverride(EmbryoLab.DISPENSE_ONTO_EMBRYO_LAB, CRItems.separatedBloodSample, CRItems.bloodSample, Items.NAME_TAG, CRItems.soulCluster, Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION);
 	}
 
 	/**

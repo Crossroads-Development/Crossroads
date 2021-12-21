@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"item": "minecraft:deepslate"
+	},
+	"output": [
+		{
+			"item": "gravel",
+			"count": 1
+		}
+	]
+}

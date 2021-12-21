@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
 import com.Da_Technomancer.essentials.ReflectionUtil;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -19,6 +20,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -26,28 +28,27 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class EntityTemplate implements INBTSerializable<CompoundTag>{
 
 	public static final String RESPAWNING_KEY = "cr_respawning";
 	public static final String LOYAL_KEY = "cr_loyal";
+	public static final String OWNER_KEY = "cr_owner";
 
 	private static final Method OFFSPRING_SPAWNING_METHOD = ReflectionUtil.reflectMethod(CRReflection.OFFSPRING_SPAWN_EGG);
 
 	private ResourceLocation entityName;
+	@Nullable
+	private Component customName;
 	private boolean loyal;
 	private boolean respawning;
 	private ArrayList<MobEffectInstance> effects;//Durations of these effects are ignored when applying
 	private int degradation;
-	/**
-	 * This field is currently unused.
-	 */
 	@Nullable
-	private CompoundTag additionalSaveData;
+	private UUID imprintingPlayer;
+	@Nullable
+	private UUID originatingUUID;//UUID of the entity that created this template; data is usually dropped after processing
 
 	//Cache generated based on entity name
 	private EntityType<?> entityType;
@@ -63,7 +64,9 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 		this.respawning = template.respawning;
 		this.effects = template.effects;
 		this.degradation = template.degradation;
-		this.additionalSaveData = template.additionalSaveData;
+		this.originatingUUID = template.originatingUUID;
+		this.customName = template.customName;
+		this.imprintingPlayer = template.imprintingPlayer;
 	}
 
 	public ResourceLocation getEntityName(){
@@ -100,6 +103,24 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 		this.respawning = respawning;
 	}
 
+	@Nullable
+	public Component getCustomName(){
+		return customName;
+	}
+
+	public void setCustomName(@Nullable Component customName){
+		this.customName = customName;
+	}
+
+	@Nullable
+	public UUID getImprintingPlayer(){
+		return imprintingPlayer;
+	}
+
+	public void setImprintingPlayer(@Nullable UUID imprintingPlayer){
+		this.imprintingPlayer = imprintingPlayer;
+	}
+
 	@Nonnull
 	public ArrayList<MobEffectInstance> getEffects(){
 		if(effects == null){
@@ -121,12 +142,12 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 	}
 
 	@Nullable
-	public CompoundTag getAdditionalSaveData(){
-		return additionalSaveData;
+	public UUID getOriginatingUUID(){
+		return originatingUUID;
 	}
 
-	public void setAdditionalSaveData(@Nullable CompoundTag additionalSaveData){
-		this.additionalSaveData = additionalSaveData;
+	public void setOriginatingUUID(@Nullable UUID originatingUUID){
+		this.originatingUUID = originatingUUID;
 	}
 
 	@Override
@@ -143,8 +164,14 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 		}
 		nbt.put("potions", potions);
 		nbt.putInt("degradation", degradation);
-		if(additionalSaveData != null){
-			nbt.put("additional_data", additionalSaveData);
+		if(customName != null){
+			nbt.putString("custom_name", Component.Serializer.toJson(customName));
+		}
+		if(imprintingPlayer != null){
+			nbt.putUUID("imprinting_player", imprintingPlayer);
+		}
+		if(originatingUUID != null){
+			nbt.putUUID("originating_uuid", originatingUUID);
 		}
 		return nbt;
 	}
@@ -161,10 +188,14 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 			effects.add(MobEffectInstance.load(potions.getCompound(i)));
 		}
 		degradation = nbt.getInt("degradation");
-		if(nbt.contains("additional_data")){
-			additionalSaveData = nbt.getCompound("additional_data");
-		}else{
-			additionalSaveData = null;
+		if(nbt.contains("custom_name")){
+			customName = Component.Serializer.fromJson(nbt.getString("custom_name"));
+		}
+		if(nbt.contains("imprinting_player")){
+			imprintingPlayer = nbt.getUUID("imprinting_player");
+		}
+		if(nbt.contains("originating_uuid")){
+			originatingUUID = nbt.getUUID("originating_uuid");
 		}
 	}
 
@@ -177,12 +208,12 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 			return false;
 		}
 		EntityTemplate that = (EntityTemplate) o;
-		return loyal == that.loyal && respawning == that.respawning && degradation == that.degradation && entityName.equals(that.entityName) && effects.equals(that.effects) && Objects.equals(additionalSaveData, that.additionalSaveData);
+		return loyal == that.loyal && respawning == that.respawning && degradation == that.degradation && entityName.equals(that.entityName) && Objects.equals(customName, that.customName) && Objects.equals(effects, that.effects) && Objects.equals(imprintingPlayer, that.imprintingPlayer) && Objects.equals(originatingUUID, that.originatingUUID);
 	}
 
 	@Override
 	public int hashCode(){
-		return Objects.hash(entityName, loyal, respawning, effects, degradation, additionalSaveData);
+		return Objects.hash(entityName, customName, loyal, respawning, effects, degradation, imprintingPlayer, originatingUUID);
 	}
 
 	/**
@@ -207,7 +238,11 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 				BaseComponent detailsCompon = new TranslatableComponent("tt.crossroads.boilerplate.entity_template.degradation", degradation);
 				if(loyal){
 					detailsCompon.append(new TranslatableComponent("tt.crossroads.boilerplate.entity_template.separator"));
-					detailsCompon.append(new TranslatableComponent("tt.crossroads.boilerplate.entity_template.loyal"));
+					if(imprintingPlayer != null){
+						detailsCompon.append(new TranslatableComponent("tt.crossroads.boilerplate.entity_template.loyal.preset"));
+					}else{
+						detailsCompon.append(new TranslatableComponent("tt.crossroads.boilerplate.entity_template.loyal"));
+					}
 				}
 				if(respawning){
 					detailsCompon.append(new TranslatableComponent("tt.crossroads.boilerplate.entity_template.separator"));
@@ -216,11 +251,15 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 				tooltips.add(detailsCompon);
 				linesUsed += 1;
 			}else{
-				//Degredation, loyalty, and respawning all get separate lines
+				//Degradation, loyalty, and respawning all get separate lines
 				tooltips.add(new TranslatableComponent("tt.crossroads.boilerplate.entity_template.degradation", degradation));
 				linesUsed += 1;
 				if(loyal){
-					tooltips.add(new TranslatableComponent("tt.crossroads.boilerplate.entity_template.loyal"));
+					if(imprintingPlayer != null){
+						tooltips.add(new TranslatableComponent("tt.crossroads.boilerplate.entity_template.loyal.preset"));
+					}else{
+						tooltips.add(new TranslatableComponent("tt.crossroads.boilerplate.entity_template.loyal"));
+					}
 					linesUsed += 1;
 				}
 				if(respawning){
@@ -261,7 +300,8 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 		//Don't pass the itemstack to the spawn method
 		//That parameter is designed for the vanilla spawn egg NBT structure, which we don't use
 		//We have to adjust the mob manually after spawning as a result
-		Entity created = type.spawn(world, null, customName, player, pos, reason, offset, unmapped);
+		//The custom name parameter is used preferentially, with a custom name on the template as a fallback
+		Entity created = type.spawn(world, null, customName == null ? template.customName : customName, player, pos, reason, offset, unmapped);
 		if(created == null){
 			return null;
 		}
@@ -269,6 +309,9 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 		//NBT traits
 		CompoundTag nbt = created.getPersistentData();
 		nbt.putBoolean(EntityTemplate.LOYAL_KEY, template.isLoyal());
+		if(template.getImprintingPlayer() != null){
+			nbt.putUUID(EntityTemplate.OWNER_KEY, template.getImprintingPlayer());
+		}
 		nbt.putBoolean(EntityTemplate.RESPAWNING_KEY, template.isRespawning());
 
 		if(created instanceof LivingEntity entity){
@@ -291,18 +334,32 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 					((Mob) created).setPersistenceRequired();
 				}
 
+				Player tamingPlayer = null;
+				//If a target taming player is already set, use that for imprinting
+				//Otherwise, fallback to the player who placed the mob
+				if(template.getImprintingPlayer() != null){
+					tamingPlayer = world.getPlayerByUUID(template.getImprintingPlayer());
+					if(tamingPlayer == null){
+						//Will be null if the player isn't currently online in the world; a fake player is used as a substitute
+						tamingPlayer = FakePlayerFactory.get(world, new GameProfile(template.getImprintingPlayer(), null));
+					}
+				}
+				if(tamingPlayer == null){
+					tamingPlayer = player;
+				}
+
 				//Auto-tame it to the player who spawned it
-				if(player != null){
+				if(tamingPlayer != null){
 					//There isn't a single method for this. The correct way to set something as tamed varies based on the mob
 					//New vanilla tamable mobs may require changes here, and modded tameable mobs are unlikely to work
 					if(created instanceof TamableAnimal){
-						((TamableAnimal) created).tame(player);
+						((TamableAnimal) created).tame(tamingPlayer);
 					}else if(created instanceof AbstractHorse){
-						((AbstractHorse) created).tameWithName(player);
+						((AbstractHorse) created).tameWithName(tamingPlayer);
 					}else if(created instanceof Mob && OFFSPRING_SPAWNING_METHOD != null){
 						//As of vanilla MC1.16.5, this is literally only applicable to foxes
 						try{
-							OFFSPRING_SPAWNING_METHOD.invoke(created, player, created);
+							OFFSPRING_SPAWNING_METHOD.invoke(created, tamingPlayer, created);
 						}catch(IllegalAccessException | InvocationTargetException e){
 							Crossroads.logger.catching(e);
 						}
@@ -323,6 +380,13 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 		template.setEntityName(source.getType().getRegistryName());
 		template.setRespawning(source.getPersistentData().getBoolean(RESPAWNING_KEY));
 		template.setLoyal(source.getPersistentData().getBoolean(LOYAL_KEY));
+		if(source.getPersistentData().contains(OWNER_KEY)){
+			template.setImprintingPlayer(source.getPersistentData().getUUID(OWNER_KEY));
+		}
+
+		if(source.getCustomName() != null){
+			template.setCustomName(source.getCustomName());
+		}
 
 		Collection<MobEffectInstance> effects = source.getActiveEffects();
 		int degrade = 0;
@@ -337,9 +401,7 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 		}
 		template.setDegradation(degrade);
 		template.setEffects(permanentEffects);
-		CompoundTag additional = new CompoundTag();
-		source.addAdditionalSaveData(additional);
-		template.setAdditionalSaveData(additional);
+		template.setOriginatingUUID(source.getUUID());
 
 		return template;
 	}
