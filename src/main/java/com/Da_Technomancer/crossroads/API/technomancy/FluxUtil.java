@@ -183,21 +183,21 @@ public class FluxUtil{
 			}else if(selector < 65){
 				//Alchemy phelostogen/voltus/salt cloud
 				ReagentMap map = new ReagentMap();
-				map.addReagent(EnumReagents.PHELOSTOGEN.id(), 32, 100);
-				map.addReagent(EnumReagents.ALCHEMICAL_SALT.id(), 10, 100);
-				map.addReagent(EnumReagents.ELEM_CHARGE.id(), 10, 100);
+				map.addReagent(EnumReagents.PHELOSTOGEN.id(), 16, 100);
+				map.addReagent(EnumReagents.ALCHEMICAL_SALT.id(), 4, 100);
+				map.addReagent(EnumReagents.ELEM_CHARGE.id(), 4, 100);
 				AlchemyUtil.releaseChemical(worldIn, pos, map);
 			}else if(selector < 72){
 				//Alchemy phelostogen/aether/salt cloud
 				ReagentMap map = new ReagentMap();
-				map.addReagent(EnumReagents.PHELOSTOGEN.id(), 32, 100);
-				map.addReagent(EnumReagents.ALCHEMICAL_SALT.id(), 10, 100);
-				map.addReagent(EnumReagents.AETHER.id(), 10, 100);
+				map.addReagent(EnumReagents.PHELOSTOGEN.id(), 10, 100);
+				map.addReagent(EnumReagents.ALCHEMICAL_SALT.id(), 4, 100);
+				map.addReagent(EnumReagents.AETHER.id(), 4, 100);
 				AlchemyUtil.releaseChemical(worldIn, pos, map);
 			}else if(selector < 75){
 				//Alchemy pure-phelostogen cloud
 				ReagentMap map = new ReagentMap();
-				map.addReagent(EnumReagents.PHELOSTOGEN.id(), 32, 100);
+				map.addReagent(EnumReagents.PHELOSTOGEN.id(), 6, 100);
 				AlchemyUtil.releaseChemical(worldIn, pos, map);
 			}else{
 				//potential-void area of effect

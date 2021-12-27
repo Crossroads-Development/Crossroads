@@ -100,7 +100,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 			}
 		}
 
-		super.tick();
+		super.serverTick();
 	}
 
 	@Override

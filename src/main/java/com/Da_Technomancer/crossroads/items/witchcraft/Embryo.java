@@ -70,7 +70,7 @@ public class Embryo extends Item implements ICultivatable{
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag){
 		EntityTemplate template = getEntityTypeData(stack);
-		template.addTooltip(tooltip, 2);
+		template.addTooltip(tooltip, 4);
 		ICultivatable.addTooltip(stack, world, tooltip);
 	}
 
