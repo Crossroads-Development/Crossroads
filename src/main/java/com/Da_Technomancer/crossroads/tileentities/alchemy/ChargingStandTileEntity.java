@@ -46,7 +46,7 @@ public class ChargingStandTileEntity extends GlasswareHolderTileEntity{
 				CRRenderUtil.addArc(level, arcStart, arcEnd, 1, 0F, TeslaCoilTopTileEntity.COLOR_CODES[(int) (level.getGameTime() % 3)]);
 			}
 		}
-		super.tick();
+		super.serverTick();
 	}
 
 	@Override

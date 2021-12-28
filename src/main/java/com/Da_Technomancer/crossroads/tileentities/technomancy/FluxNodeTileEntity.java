@@ -77,7 +77,6 @@ public class FluxNodeTileEntity extends IFluxLink.FluxHelper{
 				flux += CRConfig.fluxNodeGain.get();
 			}
 		}
-		super.tick();
 		syncFlux();
 		setChanged();
 	}
