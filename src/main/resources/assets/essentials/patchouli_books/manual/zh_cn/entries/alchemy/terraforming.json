@@ -39,7 +39,19 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "蓝冰，把树变成云杉树，并把液体变成冰。<item>$(l:crossroads:alchemy/stones)静滞素/$基本是雪地转换器。当与<item>汞/$混合，还会让空气填满雪。$(br2)"
+			"text": "蓝冰，把树变成云杉树，并把液体变成冰。<item>$(l:crossroads:alchemy/stones)静滞素/$基本是雪地转换器。当与<item>汞/$混合，还会让空气填满雪。$(br2)<item>$(l:essentials:alchemy/stones)膨胀素：/$会把群系设为繁花森林，把土壤类方块变成草方块，"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "石质方块变成石头，把“水晶”方块变成蜂蜜块，把树变成橡树，并把液体变成水。<item>$(l:essentials:alchemy/stones)膨胀素/$基本是一个普通的繁花森林转换器。当与<item>汞/$混合，还会让空气填满泥土。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "如果释放的混合物中有任意<item>汞/$，地形改造的<thing>$(l:essentials:alchemy/effect)效果/$就会改变——除了改变群系并嬗变方块外，空气中还会填满特定方块，非常适于进行大范围填充。$(br2)如果混合物里有任意的<item>二氧化硫/$，则只会嬗变方块，不改变群系。"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "如果混合物中出现了<item>凯沃物质/$，则方块不会被嬗变，只有群系会改变。$(br2)"
 		},
 		{
 			"type": "patchouli:text",
