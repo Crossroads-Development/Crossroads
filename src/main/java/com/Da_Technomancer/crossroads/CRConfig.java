@@ -153,7 +153,7 @@ public class CRConfig{
 		speedPrecision = serverBuilder.comment("Lower values increase network lag but increases gear speed synchronization").defineInRange("predict_speed", 0.20F, 0.05F, 10F);
 		gearResetTime = serverBuilder.comment("Interval in ticks between gear network checks").defineInRange("network_time", 300, 100, 2400);
 //		wipeInvalidMappings = serverBuilder.worldRestart().comment("Wipe internal per player dimension mappings on failure?", "Only change this if you know what you're doing").define("wipe_dim_map", false);
-		mbPerIngot = serverBuilder.comment("Number of millibuckets of molten metal per ingot", "Does not change recipes").defineInRange("ingot_mb", 144, 1, 10_000);
+		mbPerIngot = serverBuilder.comment("Number of millibuckets of molten metal per ingot", "Does not change recipes").defineInRange("ingot_mb", 90, 1, 10_000);
 		effectPacketDistance = serverBuilder.comment("Distance in blocks that players can see various effects from (electric arcs, beams from staffs, etc)", "Lower values will decrease the amount of packets sent").defineInRange("effect_distance", 512, 1, 512);
 		beamPowerCollision = serverBuilder.comment("Whether beams decide what they can pass through based on beam power", "If true, low power beams require a smaller hole, and high power beams require a larger empty space in blocks to pass through").define("beam_collision_use_power", false);
 		beaconHarnessLoadSafety = serverBuilder.comment("If enabled, the beacon harness will have an extra 'safety period' for a full color loop when the chunk is loaded", "Used to stop beacon harnesses shutting off when loading across several chunks").define("beacon_harness_load_safety", false);

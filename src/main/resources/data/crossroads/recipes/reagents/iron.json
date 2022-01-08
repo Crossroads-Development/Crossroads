@@ -7,7 +7,7 @@
 	"fluid": {
 		"tag": "forge:molten_iron"
 	},
-	"fluid_amount": 16,
+	"fluid_amount": 10,
 	"color": {
 		"base": "FFFF00",
 		"solid": "808080"

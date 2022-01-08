@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:fluid_cooling",
 	"tag": "forge:molten_copshowium",
-	"fluid_amount": 144,
+	"fluid_amount": 90,
 	"item": "crossroads:ingot_copshowium",
 	"max_temp": 1500,
 	"temp_change": 100

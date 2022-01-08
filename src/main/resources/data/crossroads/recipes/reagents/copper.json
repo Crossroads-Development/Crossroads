@@ -7,6 +7,6 @@
 	"fluid": {
 		"tag": "forge:molten_copper"
 	},
-	"fluid_amount": 16,
+	"fluid_amount": 10,
 	"color": "FFC800"
 }

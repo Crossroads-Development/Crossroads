@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:fluid_cooling",
 	"tag": "forge:molten_copper",
-	"fluid_amount": 144,
+	"fluid_amount": 90,
 	"item": "minecraft:copper_ingot",
 	"max_temp": 1500,
 	"temp_change": 100

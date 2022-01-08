@@ -2,7 +2,7 @@
 	"type": "crossroads:cr_blast_furnace",
 	"output": {
 		"fluid": "crossroads:molten_tin",
-		"amount": 144
+		"amount": 90
 	},
 	"slag": 2,
 	"ingredient": [

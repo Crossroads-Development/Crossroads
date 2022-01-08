@@ -46,7 +46,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	@ObjectHolder("copshowium_creation_chamber")
 	public static BlockEntityType<CopshowiumCreationChamberTileEntity> TYPE = null;
 
-	public static final int CAPACITY = 1_440;
+	public static final int CAPACITY = 1_000;
 	public static final int FLUX_PER_INGOT = 4;
 
 	private final FluxHelper fluxHelper;

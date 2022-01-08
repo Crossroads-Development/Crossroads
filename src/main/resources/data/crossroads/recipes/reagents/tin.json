@@ -7,6 +7,6 @@
 	"fluid": {
 		"tag": "forge:molten_tin"
 	},
-	"fluid_amount": 16,
+	"fluid_amount": 10,
 	"color": "C0C0C0"
 }
