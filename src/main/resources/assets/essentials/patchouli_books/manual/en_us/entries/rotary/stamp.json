@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "be processed further in an <item>$(l:essentials:rotary/blast)industrial blast furnace/$ or in an <item>$(l:essentials:fluid/cleanser)ore cleanser/$.$(br2)Unlike most other machines, the <item>stamp mill/$ <em>will sometimes output unprocessed ore/$ instead. The <item>stamp mill/$ has <em>two/$ progress bars- a time based one, and a <thing>speed/$ based one. If the progress bar finishes first, the machine processes the ore properly and resets the timer. "
+			"text": "be processed further in an <item>$(l:essentials:rotary/blast)industrial blast furnace/$ or in an <item>$(l:essentials:fluid/cleanser)ore cleanser/$.$(br2)Unlike most other machines, the <item>stamp mill/$ <em>will sometimes output unprocessed ore/$ instead. The <item>stamp mill/$ has <em>two/$ progress bars: a time based one, and a <thing>speed/$ based one. If the progress bar finishes first, the machine processes the ore properly and resets the timer. "
 		},
 		{
 			"type": "patchouli:text",
