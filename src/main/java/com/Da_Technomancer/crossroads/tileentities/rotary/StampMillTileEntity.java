@@ -111,15 +111,6 @@ public class StampMillTileEntity extends InventoryTE{
 				}
 			}
 
-			if(++timer >= TIME_LIMIT || progress >= REQUIRED){
-				timer = 0;
-				if(progress >= REQUIRED){
-					progress = 0;
-					successCraft();
-				}else{
-					failCraft();
-				}
-			}
 			setChanged();
 		}
 	}
