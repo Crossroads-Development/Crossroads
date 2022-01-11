@@ -75,7 +75,7 @@ public class CRWorldGen{
 		Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new ResourceLocation(Crossroads.MODID, "ore_void"), VOID_ORE);
 
 		Registry.register(BuiltinRegistries.PLACED_FEATURE, new ResourceLocation(Crossroads.MODID, "ore_tin_triangle"), TIN_ORE_PLACED_TRIANGLE);
-		Registry.register(BuiltinRegistries.PLACED_FEATURE, new ResourceLocation(Crossroads.MODID, "ore_tin_triangle"), TIN_ORE_PLACED_LOWER);
+		Registry.register(BuiltinRegistries.PLACED_FEATURE, new ResourceLocation(Crossroads.MODID, "ore_tin_lower"), TIN_ORE_PLACED_LOWER);
 		Registry.register(BuiltinRegistries.PLACED_FEATURE, new ResourceLocation(Crossroads.MODID, "ore_void"), VOID_ORE_PLACED);
 		Registry.register(BuiltinRegistries.PLACED_FEATURE, new ResourceLocation(Crossroads.MODID, "ore_ruby"), RUBY_ORE_PLACED);
 	}

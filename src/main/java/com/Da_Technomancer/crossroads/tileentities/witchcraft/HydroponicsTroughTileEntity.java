@@ -220,11 +220,12 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 	private void updateBlockstate(){
 		int itemState = 0;//0-3 inclusive
 		int fluidState = 0;//0-3 inclusive
-		for(int i = 1; i < 5; i++){//Skip the first slot, which holds seeds
+		for(int i = 1; i < inventory.length; i++){//Skip the first slot, which holds seeds
 			if(!inventory[i].isEmpty()){
 				itemState += 1;
 			}
 		}
+		itemState = itemState > 2 ? itemState - 1 : itemState;
 		if(isVenting()){
 			fluidState = 3;//We reserve fullness 3 for venting; when venting, the actual fluid level must be empty
 		}else{
