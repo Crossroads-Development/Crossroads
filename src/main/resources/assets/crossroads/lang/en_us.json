@@ -940,6 +940,7 @@
 	"reagent.emerald": "Emerald",
 	"reagent.diamond": "Diamond",
 	"reagent.quartz": "Nether Quartz",
+	"reagent.amethyst": "Amethyst",
 	"reagent.vanadium": "Vanadium Oxide",
 	"reagent.densus": "Densus",
 	"reagent.anti_densus": "Anti-Densus",
@@ -952,6 +953,7 @@
 	"reagent.elem_charge": "Voltus",
 	"reagent.elem_enchantment": "Magicae",
 	"reagent.elem_time": "Copshowium",
+	"reagent.elem_expansion": "Expandus",
 
 
 	"effect.none": "None",
