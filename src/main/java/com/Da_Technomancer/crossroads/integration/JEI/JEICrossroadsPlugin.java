@@ -74,6 +74,7 @@ public class JEICrossroadsPlugin implements IModPlugin{
 	public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration){
 		registration.addRecipeTransferHandler(DetailedCrafterContainer.class, DetailedCrafterCategory.ID, 1, 9, 10, 36);
 		registration.addRecipeTransferHandler(DetailedCrafterContainer.class, VanillaRecipeCategoryUid.CRAFTING, 1, 9, 10, 36);
+		registration.addRecipeTransferHandler(new DetailedAutoCrafterTransfers.DetailedRecipeTransfer(registration.getTransferHelper()), DetailedCrafterCategory.ID);
 	}
 
 	@Override

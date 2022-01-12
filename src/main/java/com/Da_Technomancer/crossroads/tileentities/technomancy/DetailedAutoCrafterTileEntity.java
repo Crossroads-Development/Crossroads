@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
-import java.util.Optional;
+import java.util.List;
 
 @ObjectHolder(Crossroads.MODID)
 public class DetailedAutoCrafterTileEntity extends AutoCrafterTileEntity{
@@ -72,8 +72,16 @@ public class DetailedAutoCrafterTileEntity extends AutoCrafterTileEntity{
 		if(recipe == null){
 			//No recipe has been directly set via recipe book/JEI. Pick a recipe based on manually configured inputs, if applicable
 			//Use the recipe manager to find a recipe matching the inputs
-			Optional<DetailedCrafterRec> recipeOptional = getRecipeManager().getRecipeFor(CRRecipes.DETAILED_TYPE, fakeInv, level);
-			iRecipe = validateRecipe(recipeOptional.orElse(null), container);
+			List<DetailedCrafterRec> recipeList = getRecipeManager().getRecipesFor(CRRecipes.DETAILED_TYPE, fakeInv, level);
+			iRecipe = null;
+			//There may be several recipes with the same inputs, but different path. Check to find one for the current path
+			for(DetailedCrafterRec rec : recipeList){
+				Recipe<CraftingContainer> validatedRec;
+				if((validatedRec = validateRecipe(rec, container)) != null){
+					iRecipe = validatedRec;
+					break;
+				}
+			}
 		}else{
 			//Recipe set via recipe book/JEI
 			iRecipe = validateRecipe(lookupRecipe(getRecipeManager(), recipe), container);
