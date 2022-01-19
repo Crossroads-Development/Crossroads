@@ -1,0 +1,8 @@
+{
+	"type": "crossroads:reagents",
+	"id": "lapis",
+	"melting": 1400,
+	"boiling": 2200,
+	"item": "forge:gems/lapis",
+	"color": "0059FF"
+}

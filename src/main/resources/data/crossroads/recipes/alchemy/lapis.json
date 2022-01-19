@@ -10,14 +10,14 @@
 			"qty": 2
 		},
 		{
-			"type": "copper",
+			"type": "sulfur",
 			"qty": 1
 		}
 	],
 	"products": [
 		{
-			"type": "ruby",
-			"qty": 1
+			"type": "lapis",
+			"qty": 2
 		}
 	]
 }
