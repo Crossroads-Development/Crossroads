@@ -75,8 +75,8 @@ public class BlockSalt extends FallingBlock{
 		BlockState killState = worldIn.getBlockState(pos);
 		Block killBlock = killState.getBlock();
 		BlockState resultState = killState;
-		
-		if(Tags.Blocks.DIRT.contains(killBlock) && killBlock != Blocks.COARSE_DIRT){
+
+		if(BlockTags.DIRT.contains(killBlock) && killBlock != Blocks.COARSE_DIRT){
 			//Kill dirt, grass, etc
 			resultState = Blocks.COARSE_DIRT.defaultBlockState();
 		}else if(killBlock instanceof BushBlock){

@@ -1,7 +1,6 @@
 {
 	"replace": false,
 	"values": [
-		"#forge:ores/copper",
 		"#forge:ores/tin",
 		"#forge:ores/ruby",
 		"#crossroads:ores/void"

@@ -1,7 +1,6 @@
 {
 	"replace": false,
 	"values": [
-		"crossroads:block_copper",
 		"crossroads:block_tin",
 		"crossroads:block_bronze",
 		"crossroads:block_ruby",

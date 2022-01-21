@@ -1,6 +1,6 @@
 {
 	"replace": false,
 	"values": [
-		"minecraft:raw_copper"
+		"#forge:raw_materials/tin"
 	]
 }
