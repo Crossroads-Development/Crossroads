@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"item": "crossroads:block_raw_tin",
+		"count": 1
+	},
+	"pattern": [
+		"***",
+		"***",
+		"***"
+	],
+	"key": {
+		"*": {
+			"tag": "forge:raw_materials/tin"
+		}
+	}
+}
