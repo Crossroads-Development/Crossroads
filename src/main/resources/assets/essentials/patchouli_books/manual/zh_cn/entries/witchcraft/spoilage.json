@@ -21,7 +21,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "温度会以2°C/t增加，尝试靠近环境温度。$(br2)特定物品（比如<item>胚胎/$）在被冻结后会受到伤害，冻结防止它们<thing>腐坏/$，但在其他方面让它们更糟了。这些物品可以使用<item>$(l:essentials:witchcraft/spoilage#cultivator_vat)营养缸/$来保存。$(br2)"
+			"text": "温度会以2℃/t增加，尝试靠近环境温度。$(br2)特定物品（比如<item>胚胎/$）在被冻结后会受到伤害，冻结防止它们<thing>腐坏/$，但在其他方面让它们更糟了。这些物品可以使用<item>$(l:essentials:witchcraft/spoilage#cultivator_vat)营养缸/$来保存。$(br2)"
 		},
 		{
 			"type": "patchouli:text",

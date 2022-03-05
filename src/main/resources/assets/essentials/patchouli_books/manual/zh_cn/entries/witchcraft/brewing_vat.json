@@ -15,7 +15,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "酿造釜的速度可以比普通酿造台快得多。$(br2)它使用<thing>$(l:essentials:intro/heat)热能/$，温度越接近100°C，工作速度越快。不过如果超过了100°C，机器就会停止工作，但仍会消耗热量，所以理想情况下温度应该保持为略低于100°C。$(br2)<thing>$(l:essentials/circuits)电路/$可测量三个药水输入槽的充满程度，范围0到15。$(br2)"
+			"text": "酿造釜的速度可以比普通酿造台快得多。$(br2)它使用<thing>$(l:essentials:intro/heat)热能/$，温度越接近100℃，工作速度越快。不过如果超过了100℃，机器就会停止工作，但仍会消耗热量，所以理想情况下温度应该保持为略低于100℃。$(br2)<thing>$(l:essentials/circuits)电路/$可测量三个药水输入槽的充满程度，范围0到15。$(br2)"
 		},
 		{
 			"type": "patchouli:text",
