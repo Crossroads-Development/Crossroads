@@ -1,6 +1,6 @@
 {
 	"category": "essentials:witchcraft",
-	"name": "米勒-尤里仓",
+	"name": "米勒-尤里实验仓",
 	"icon": "crossroads:embryo_lab",
 	"sortnum": 0,
 	"priority": false,
@@ -9,9 +9,9 @@
 	"pages": [
 		{
 			"type": "patchouli:spotlight",
-			"title": "米勒-尤里仓",
+			"title": "米勒-尤里实验仓",
 			"item": "crossroads:embryo_lab",
-			"text": "作为<thing>$(l:essentials:witchcraft/cloning)克隆过程/$的一部分，<item>米勒-尤里仓/$能用<item>$(l:essentials:witchcraft/blood_centrifuge)离心过的血液袋/$制造<item>$(l:essentials:witchcraft/cloning#process)胚胎/$。$(br2)原料必须通过<item>$(l:essentials:witchcraft/syringe#embryo_lab)注射器/$或者发射器注入<item>米勒-尤里仓/$。要用<item>$(l:essentials:witchcraft/syringe#embryo_lab)注射器/$添加物品，先将其放在主手，"
+			"text": "作为<thing>$(l:essentials:witchcraft/cloning)克隆过程/$的一部分，<item>米勒-尤里实验仓/$能用<item>$(l:essentials:witchcraft/blood_centrifuge)离心过的血液袋/$制造<item>$(l:essentials:witchcraft/cloning#process)胚胎/$。$(br2)原料必须通过<item>$(l:essentials:witchcraft/syringe#embryo_lab)注射器/$或者发射器注入<item>米勒-尤里实验仓/$。要用<item>$(l:essentials:witchcraft/syringe#embryo_lab)注射器/$添加物品，先将其放在主手，"
 		},
 		{
 			"type": "patchouli:text",
@@ -19,7 +19,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "会添加<thing>$(l:essentials:witchcraft/cloning#traits)印记/$，添加<item>$(l:essentials:witchcraft/souls)灵魂簇/$会添加<thing>$(l:essentials:witchcraft/cloning#traits)重生/$。添加玩家的未离心<item>血样/$也可以添加<thing>印记/$，这时印记的目标就会指向提供血样的玩家，而不是使用刷怪蛋的玩家。$(br2)要结束合成，<item>米勒-尤里仓/$上的避雷针（原版方块）"
+			"text": "会添加<thing>$(l:essentials:witchcraft/cloning#traits)印记/$，添加<item>$(l:essentials:witchcraft/souls)灵魂簇/$会添加<thing>$(l:essentials:witchcraft/cloning#traits)重生/$。添加玩家的未离心<item>血样/$也可以添加<thing>印记/$，这时印记的目标就会指向提供血样的玩家，而不是使用刷怪蛋的玩家。$(br2)要结束合成，<item>米勒-尤里实验仓/$上的避雷针（原版方块）"
 		},
 		{
 			"type": "patchouli:text",

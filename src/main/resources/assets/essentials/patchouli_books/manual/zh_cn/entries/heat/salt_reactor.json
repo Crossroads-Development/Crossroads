@@ -10,7 +10,7 @@
 			"type": "patchouli:spotlight",
 			"title": "盐反应器",
 			"item": "crossroads:salt_reactor",
-			"text": "<item>盐反应器/$是一种产生$(l:crossroads:heat/icebox)超过 -20 °C /$低温的方法。它消耗<thing>$(l:crossroads:fluid/centrifuge)盐和蒸馏水/$。每次工作中，反应器会消耗 200 mB 蒸馏水和一份盐，并产生 200 mB 普通水。每份盐作为燃料可维持反应器工作 20 tick（10 红石 tick，1 秒）。$(br2)"
+			"text": "<item>盐反应器/$是一种产生$(l:crossroads:heat/icebox)超过 -20 ℃ /$低温的方法。它消耗<thing>$(l:crossroads:fluid/centrifuge)盐和蒸馏水/$。每次工作中，反应器会消耗 200 mB 蒸馏水和一份盐，并产生 200 mB 普通水。每份盐作为燃料可维持反应器工作 20 tick（10 红石 tick，1 秒）。$(br2)"
 		},
 		{
 			"type": "patchouli:text",

@@ -10,7 +10,7 @@
 			"type": "patchouli:spotlight",
 			"title": "冰箱",
 			"item": "crossroads:icebox",
-			"text": "<item>冰箱/$是最简单的制冷（移除热量）方法。它是<item>$(l:crossroads:heat/firebox)燃烧室/$的制冷版，会消耗寒冷物品并以恒定速率制冷。冰箱不能降到 -20 °C 以下。$(br2)冰箱顶部有一个<item>$(l:crossroads:heat/cable)热导管/$连接口。$(br2)"
+			"text": "<item>冰箱/$是最简单的制冷（移除热量）方法。它是<item>$(l:crossroads:heat/firebox)燃烧室/$的制冷版，会消耗寒冷物品并以恒定速率制冷。冰箱不能降到 -20 ℃ 以下。$(br2)冰箱顶部有一个<item>$(l:crossroads:heat/cable)热导管/$连接口。$(br2)"
 		},
 		{
 			"type": "patchouli:text",

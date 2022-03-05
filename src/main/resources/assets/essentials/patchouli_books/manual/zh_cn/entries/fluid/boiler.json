@@ -10,7 +10,7 @@
 			"type": "patchouli:spotlight",
 			"title": "蒸汽锅炉",
 			"item": "crossroads:steam_boiler",
-			"text": "<item>蒸汽锅炉/$能够使用<thing>$(l:crossroads:intro/heat)热能/$和水产出<thing>$(l:crossroads:intro/fluid)蒸汽/$。它也可以产出副产物<item>盐/$，但这是不使用<thing>$(l:crossroads:intro/fluid)蒸馏水/$而使用水时发生的事。$(br2)它的最低工作温度是 100 °C，但温度越高产生蒸汽的速度越快。不过转换率"
+			"text": "<item>蒸汽锅炉/$能够使用<thing>$(l:crossroads:intro/heat)热能/$和水产出<thing>$(l:crossroads:intro/fluid)蒸汽/$。它也可以产出副产物<item>盐/$，但这是不使用<thing>$(l:crossroads:intro/fluid)蒸馏水/$而使用水时发生的事。$(br2)它的最低工作温度是 100 ℃，但温度越高产生蒸汽的速度越快。不过转换率"
 		},
 		{
 			"type": "patchouli:text",
