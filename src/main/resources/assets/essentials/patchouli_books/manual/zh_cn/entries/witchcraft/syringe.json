@@ -44,7 +44,7 @@
 		{
 			"type": "patchouli:text",
 			"anchor": "embryo_lab",
-			"text": "<item>注射器/$也能用于与<item>$(l:essentials:witchcraft/embryo_lab)米勒-尤里仓/$互动。请参阅其条目了解更多信息。$(br2)"
+			"text": "<item>注射器/$也能用于与<item>$(l:essentials:witchcraft/embryo_lab)米勒-尤里实验仓/$互动。请参阅其条目了解更多信息。$(br2)"
 		}
 	]
 }

@@ -19,11 +19,11 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "机器可以在任意面连接到<thing>$(l:essentials:intro/heat)热导管/$。$(br2)<item>孵化器/$不使用热能，但其温度应该被保持在目标<thing>$(l:essentials:intro/heat)温度/$的10°C以内。在这个范围内，孵化只需要1分钟。在这个范围外，孵化的速度只有20分之1。目标<thing>$(l:essentials:intro/heat)温度/$会在每次<item>孵化器/$完成合成后随机变动，"
+			"text": "机器可以在任意面连接到<thing>$(l:essentials:intro/heat)热导管/$。$(br2)<item>孵化器/$不使用热能，但其温度应该被保持在目标<thing>$(l:essentials:intro/heat)温度/$的10℃以内。在这个范围内，孵化只需要1分钟。在这个范围外，孵化的速度只有20分之1。目标<thing>$(l:essentials:intro/heat)温度/$会在每次<item>孵化器/$完成合成后随机变动，"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "但总是位于35到140°C之间。$(br2)<thing>$(l:essentials/circuits)电路/$可以读取当前目标<thing>$(l:essentials:intro/heat)温度/$，单位为摄氏度。$(br2)"
+			"text": "但总是位于35到140℃之间。$(br2)<thing>$(l:essentials/circuits)电路/$可以读取当前目标<thing>$(l:essentials:intro/heat)温度/$，单位为摄氏度。$(br2)"
 		}
 	]
 }
