@@ -1,20 +1,24 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
 import com.Da_Technomancer.crossroads.API.effects.alchemy.IAlchEffect;
+import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.ambient.particles.ColorParticleData;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.entity.EntityFlameCore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 public class AlchemyUtil{
 
@@ -171,6 +175,54 @@ public class AlchemyUtil{
 				}
 			}
 		}
+	}
+
+	/**
+	 * For an item being converted into a reagent, calculates the temperature the newly created reagent should be considered to be
+	 * @param reagent The reagent being added
+	 * @param biomeTemp Ambient biome temperature, in Celcius
+	 * @return Reagent temperature, in Celcius
+	 */
+	public static double getInputItemTemp(IReagent reagent, double biomeTemp){
+		double melting = reagent.getMeltingPoint();
+		if(biomeTemp < melting){
+			return biomeTemp;
+		}else{
+			return Math.max(melting - 100D, HeatUtil.ABSOLUTE_ZERO);
+		}
+	}
+
+	/**
+	 * For a (forge-style) fluid converted into a reagent, calculates the temperature the newly created reagent should be considered to be
+	 * @param biomeTemp Ambient biome temperature, in Celcius
+	 * @return Reagent temperature, in Celcius
+	 */
+	public static double getInputFluidTemp(IReagent reagent, double biomeTemp){
+		Predicate<Double> legal = (temp) -> temp >= reagent.getMeltingPoint() && temp < reagent.getBoilingPoint();
+		//Try the fluid's modder-defined temperature
+		Fluid reagentFluid = CRItemTags.getPreferredEntry(reagent.getFluid().getMatchedFluids());
+		if(reagentFluid == null){
+			//Why are we checking fluid temperature for a reagent with no fluid?
+			Crossroads.logger.warn("Reagent fluid temperature queried for invalid reagent: " + reagent.getID());
+			return biomeTemp;
+		}
+
+		double temp = reagentFluid.getAttributes().getTemperature();
+		if(legal.test(temp)){
+			return temp;
+		}
+		//Check biome temperature
+		temp = biomeTemp;
+		if(legal.test(temp)){
+			return temp;
+		}
+		//100*C above the melting point
+		temp = Math.min(HeatUtil.ABSOLUTE_ZERO, reagent.getMeltingPoint()) + 100;
+		if(legal.test(temp)){
+			return temp;
+		}
+		//The exact melting point
+		return Math.min(HeatUtil.ABSOLUTE_ZERO, reagent.getMeltingPoint());
 	}
 
 	private static class QueuedEffect{

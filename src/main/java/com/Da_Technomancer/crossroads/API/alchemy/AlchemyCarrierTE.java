@@ -41,7 +41,6 @@ import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.function.Predicate;
 
 /**
  * Implementations must implement getCapability directly.
@@ -363,16 +362,8 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 			//Move solids from hand into carrier
 			IReagent typeProduced = ReagentManager.getItemToReagent().get(stack.getItem());
 			if(typeProduced != null && contents.getTotalQty() < transferCapacity()){
-				double itemTemp;
-				double biomeTemp = getBiomeTemp();
-				if(biomeTemp < typeProduced.getMeltingPoint()){
-					itemTemp = biomeTemp;
-				}else{
-					itemTemp = Math.max(typeProduced.getMeltingPoint() - 100D, HeatUtil.ABSOLUTE_ZERO);
-				}
-
 				out.shrink(1);
-				contents.addReagent(typeProduced, 1, itemTemp);
+				contents.addReagent(typeProduced, 1, AlchemyUtil.getInputItemTemp(typeProduced, getBiomeTemp()));
 			}
 		}
 
@@ -599,37 +590,13 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 						return 0;
 					}
 					if(action.execute()){
-						contents.addReagent(id, toFillReag, calcInputTemp(reag));
+						contents.addReagent(id, toFillReag, AlchemyUtil.getInputFluidTemp(reag, getBiomeTemp()));
 						setChanged();
 					}
 					return toFillReag * reag.getFluidQty();
 				}
 			}
 			return 0;
-		}
-
-		private double calcInputTemp(IReagent reag){
-			//Calculates the effective input temperature (in C) for the reagents derived from a fluid piped in
-			//Returns a value which is reagent and location dependent but state independent
-
-			Predicate<Double> legal = (temp) -> temp >= reag.getMeltingPoint() && temp < reag.getBoilingPoint();
-			//Try the fluid's modder-defined temperature
-			double temp = CRItemTags.getPreferredEntry(reag.getFluid().getMatchedFluids()).getAttributes().getTemperature();
-			if(legal.test(temp)){
-				return temp;
-			}
-			//Check biome temperature
-			temp = getBiomeTemp();
-			if(legal.test(temp)){
-				return temp;
-			}
-			//100*C above the melting point
-			temp = Math.min(HeatUtil.ABSOLUTE_ZERO, reag.getMeltingPoint()) + 100;
-			if(legal.test(temp)){
-				return temp;
-			}
-			//The exact melting point
-			return Math.min(HeatUtil.ABSOLUTE_ZERO, reag.getMeltingPoint());
 		}
 
 		@Nonnull
@@ -725,13 +692,9 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 					}
 					ItemStack testStack = stack.copy();
 					testStack.setCount(1);
-					int trans = Math.min(stack.getCount(), transferCapacity() - contents.getTotalQty());
+					int trans = Math.max(0, Math.min(stack.getCount(), transferCapacity() - contents.getTotalQty()));
 					if(!simulate){
-						double itemTemp = getBiomeTemp();
-						if(itemTemp >= reag.getMeltingPoint()){
-							itemTemp = Math.min(HeatUtil.ABSOLUTE_ZERO, reag.getMeltingPoint() - 100D);
-						}
-						contents.addReagent(reag, trans, itemTemp);
+						contents.addReagent(reag, trans, AlchemyUtil.getInputItemTemp(reag, getBiomeTemp()));
 						dirtyReag = true;
 						setChanged();
 					}
