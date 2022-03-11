@@ -17,4 +17,15 @@ public interface IOptionalRecipe<T extends Container> extends Recipe<T>{
 	 * @return Whether this recipe is active
 	 */
 	boolean isEnabled();
+
+	/**
+	 * Whether this recipe is either a custom recipe category or has special behavior
+	 * Disables recipe book support; however the recipe book doesn't work for custom recipe categories anyway
+	 * If this is false and a custom recipe, the recipe book logs errors at startup
+	 * @return Whether this recipe is either a custom recipe category or has special behavior
+	 */
+	@Override
+	default boolean isSpecial(){
+		return true;
+	}
 }
