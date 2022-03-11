@@ -82,7 +82,7 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		double temp = correctTemp();
-		if(contents.getTotalQty() != 0 || temp != HeatUtil.ABSOLUTE_ZERO){
+		if(contents.getTotalQty() != 0 || temp != HeatUtil.ABSOLUTE_ZERO || useCableHeat()){
 			HeatUtil.addHeatInfo(chat, temp, Short.MIN_VALUE);
 		}else{
 			chat.add(new TranslatableComponent("tt.crossroads.boilerplate.alchemy_empty"));
