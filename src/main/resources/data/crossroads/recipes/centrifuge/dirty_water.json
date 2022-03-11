@@ -10,34 +10,39 @@
 	},
 	"output": [
 		{
-			"item": "crossroads:dust_salt",
+			"item": "sand",
 			"count": 1,
-			"weight": 25
-		},
-		{
-			"item": "bone_meal",
-			"count": 1,
-			"weight": 5
+			"weight": 10
 		},
 		{
 			"item": "dirt",
+			"count": 1,
+			"weight": 10
+		},
+		{
+			"item": "crossroads:dust_salt",
+			"count": 1,
+			"weight": 10
+		},
+		{
+			"item": "crossroads:slag",
 			"count": 1,
 			"weight": 5
 		},
 		{
 			"item": "gunpowder",
 			"count": 1,
-			"weight": 5
+			"weight": 4
+		},
+		{
+			"item": "bone_meal",
+			"count": 1,
+			"weight": 4
 		},
 		{
 			"item": "redstone",
 			"count": 1,
 			"weight": 1
-		},
-		{
-			"item": "sand",
-			"count": 1,
-			"weight": 10
 		}
 	]
 }
