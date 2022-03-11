@@ -2,7 +2,7 @@
 	"ambientocclusion": false,
 	"textures": {
 		"iron": "crossroads:block/block_cast_iron",
-		"prop": "crossroads:item/whirligig_vert"
+		"prop": "crossroads:item/whirligig_horz"
 	},
 	"elements": [
 		{

@@ -283,18 +283,41 @@ public final class CRItems{
 			if(entity == null || entity.getUseItem() != stack){
 				return 0;
 			}
+			//Take 3: Just using animated textures and switching frametime based on discrete speed levels
+			float currSpeed = (float) whirligig.getWindLevel(stack);//rad/s
+			return currSpeed >= 7 ? 2 : currSpeed >= 5 ? 3 : currSpeed >= 3 ? 4 : currSpeed >= 1 ? 6 : currSpeed > 0 ? 10 : 0;
+			/*
+			//We use item properties for animation, which you're really not supposed to do
+			//While a proper continuous angle function is more accurate on paper, due to the nature of how this method is called,
+			//it is better to use a discrete piecewise linear function, which doesn't run the risk of rounding issues or 'skipping' frames
+
+			int useTime = entity.getTicksUsingItem();//Method is poorly MCP mapped- actually gives number of ticks since started using
+			float currSpeed = (float) whirligig.getWindLevel(stack);//rad/s
+			float deaccel = (float) Whirligig.WIND_USE_RATE / 20F;//rad/s/t
+			float startSpeed = currSpeed + useTime * deaccel;//speed when started using, rad/s
+			int[] speedTicks = new int[5];//ticks at speed where each position advancements requires 2, 3, 4, 6, 10 ticks
+			int[] speedCutoffs = {7, 5, 3, 1, 0};
+			speedTicks[0] = Math.max(0, (int) Math.min(useTime, ((startSpeed)-speedCutoffs[0]) / deaccel));
+			speedTicks[1] = Math.max(0, (int) Math.min(useTime-speedTicks[0], (Math.min(startSpeed, speedCutoffs[0])-speedCutoffs[1]) / deaccel));
+			speedTicks[2] = Math.max(0, (int) Math.min(useTime-speedTicks[0]-speedTicks[1], (Math.min(startSpeed, speedCutoffs[1])-speedCutoffs[2]) / deaccel));
+			speedTicks[3] = Math.max(0, (int) Math.min(useTime-speedTicks[0]-speedTicks[1]-speedTicks[2], (Math.min(startSpeed, speedCutoffs[2])-speedCutoffs[2]) / deaccel));
+			speedTicks[4] = Math.max(0, (int) Math.min(useTime-speedTicks[0]-speedTicks[1]-speedTicks[2]-speedTicks[3], (Math.min(startSpeed, speedCutoffs[3])-speedCutoffs[2]) / deaccel));
+			int totalPosition = speedTicks[0] / 2 + speedTicks[1] / 3 + speedTicks[2] / 4 + speedTicks[3] / 6 + speedTicks[4] / 10;
+			return (45 * totalPosition) % 360;
+			*/
+			/*
 			//The following gets the angle in degrees of the blades based on:
 			//Ticks since started rotating
 			//Speed (wind level) at current time
 			//Assumption that speed decreased since start at -WIND_USE_RATE/tick
 			//Assumption that angle started at 0
-			//TODO re-work this formula, make it more reliable, cap at wind = 0
 			int useTime = entity.getTicksUsingItem();//Method is poorly MCP mapped- actually gives number of ticks since started using
 			float currSpeed = (float) whirligig.getWindLevel(stack) / 20F;//Converted to rad/t
 			float deaccel = (float) Whirligig.WIND_USE_RATE / 20F;//Converted to rad/t/t
 			float angle = (currSpeed * useTime + deaccel * useTime * useTime / 2F) % (2F * (float) Math.PI);
 			angle = (float) Math.toDegrees(angle);
 			return angle;
+			*/
 		});
 		//Technomancy armor
 		ItemPropertyFunction technoArmorPropertyGetter = (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int unmapped) -> TechnomancyArmor.isReinforced(stack) ? TechnomancyArmor.hasDurability(stack) ? 2F : 1F : 0F;

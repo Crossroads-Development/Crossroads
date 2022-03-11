@@ -2,7 +2,7 @@
 	"ambientocclusion": false,
 	"textures": {
 		"iron": "crossroads:block/block_cast_iron",
-		"prop": "crossroads:item/whirligig_vert"
+		"prop": "crossroads:item/whirligig_horz"
 	},
 	"elements": [
 		{
@@ -71,45 +71,33 @@
 		},
 		{
 			"predicate": {
-				"angle": 45
-			},
-			"model": "crossroads:item/whirligig_1"
-		},
-		{
-			"predicate": {
-				"angle": 90
+				"angle": 2
 			},
 			"model": "crossroads:item/whirligig_2"
 		},
 		{
 			"predicate": {
-				"angle": 135
+				"angle": 3
 			},
 			"model": "crossroads:item/whirligig_3"
 		},
 		{
 			"predicate": {
-				"angle": 180
+				"angle": 4
 			},
-			"model": "crossroads:item/whirligig_0"
+			"model": "crossroads:item/whirligig_4"
 		},
 		{
 			"predicate": {
-				"angle": 225
+				"angle": 6
 			},
-			"model": "crossroads:item/whirligig_1"
+			"model": "crossroads:item/whirligig_6"
 		},
 		{
 			"predicate": {
-				"angle": 270
+				"angle": 10
 			},
-			"model": "crossroads:item/whirligig_2"
-		},
-		{
-			"predicate": {
-				"angle": 315
-			},
-			"model": "crossroads:item/whirligig_3"
+			"model": "crossroads:item/whirligig_10"
 		}
 	]
 }

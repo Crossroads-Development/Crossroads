@@ -2,7 +2,7 @@
 	"ambientocclusion": false,
 	"textures": {
 		"iron": "crossroads:block/block_cast_iron",
-		"prop": "crossroads:item/whirligig_vert"
+		"prop": "crossroads:item/whirligig_10"
 	},
 	"elements": [
 		{
@@ -19,11 +19,6 @@
 		{
 			"from": [ 0.0, 16.0, 0.0 ],
 			"to": [ 16.0, 16.01, 16.0 ],
-			"rotation": {
-				"origin": [8, 8, 8],
-				"axis": "y",
-				"angle": -45
-			},
 			"faces": {
 				"up": { "texture": "#prop", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
 				"down": { "texture": "#prop", "uv": [ 16.0, 0.0, 0.0, 16.0 ] }

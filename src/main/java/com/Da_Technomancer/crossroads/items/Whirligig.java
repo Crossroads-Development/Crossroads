@@ -102,7 +102,7 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 				}
 
 				//Upward thrust
-				if(player.getY() < 250){//Safety limit to prevent ridiculous heights being attained
+				if(player.getY() < player.level.getMaxBuildHeight() + 10){//Safety limit to prevent ridiculous heights being attained
 					//Vanilla gravity is applied as constant change in y-velocity every tick
 					final double gravity = 0.08;
 					double thrust = gravity * (wind / HOVER_WIND);
