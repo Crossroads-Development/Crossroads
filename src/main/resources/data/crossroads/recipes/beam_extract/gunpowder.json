@@ -3,5 +3,6 @@
 	"input": {
 		"tag": "forge:gunpowder"
 	},
-	"energy": 24
+	"energy": 24,
+	"duration": 2
 }

@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:beam_extract",
+	"input": {
+		"tag": "forge:gems/lapis"
+	},
+	"energy": 3,
+	"potential": 3,
+	"stability": 2,
+	"duration": 1
+}

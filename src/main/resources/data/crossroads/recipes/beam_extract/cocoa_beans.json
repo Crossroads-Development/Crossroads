@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:beam_extract",
+	"input": {
+		"item": "cocoa_beans"
+	},
+	"energy": 6,
+	"potential": 4,
+	"stability": 6,
+	"duration": 1
+}

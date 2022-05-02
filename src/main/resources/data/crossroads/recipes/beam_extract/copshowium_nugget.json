@@ -1,0 +1,9 @@
+{
+	"type": "crossroads:beam_extract",
+	"input": {
+		"tag": "crossroads:nuggets/copshowium"
+	},
+	"energy": 5,
+	"potential": 2,
+	"duration": 1
+}
