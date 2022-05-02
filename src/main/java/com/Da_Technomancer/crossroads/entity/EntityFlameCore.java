@@ -107,6 +107,10 @@ public class EntityFlameCore extends Entity{
 		nbt.putInt("life", ticksExisted);
 	}
 
+	public int getRadius(){
+		return Math.round(FLAME_VEL * (float) ticksExisted);
+	}
+
 	@Override
 	public void tick(){
 		super.tick();
@@ -150,8 +154,9 @@ public class EntityFlameCore extends Entity{
 			entityData.set(COLOR, col.getRGB());
 		}
 
+		//TODO this could be distributed to do 1/8 the block changes every tick, instead of all of them every 8 ticks
 		if(ticksExisted % 8 == 0){
-			int radius = Math.round(FLAME_VEL * (float) ticksExisted);
+			int radius = getRadius();
 			BlockPos pos = new BlockPos(getX(), getY(), getZ());
 			boolean lastAction = maxRadius <= radius;
 

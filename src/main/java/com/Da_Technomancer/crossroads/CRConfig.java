@@ -280,7 +280,7 @@ public class CRConfig{
 	 * @return Whether the block is protected via the config from destruction
 	 */
 	public static boolean isProtected(Level world, BlockPos pos, BlockState state){
-		return destroyBlacklist.contains(state.getBlock());
+		return destroyBlacklist.contains(state.getBlock()) || state.getBlock().defaultDestroyTime() < 0;
 	}
 
 	protected static void load(){
