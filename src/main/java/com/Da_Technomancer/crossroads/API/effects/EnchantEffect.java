@@ -46,57 +46,55 @@ public class EnchantEffect extends BeamEffect{
 						}
 					}
 				}
-			}else{
-				if(items.size() != 0){
-					for(ItemEntity ent : items){
-						ItemStack stack = ent.getItem();
+			}else if(items.size() != 0){
+				for(ItemEntity ent : items){
+					ItemStack stack = ent.getItem();
 
-						if(stack.isEnchanted()){
-							continue;
-						}
+					if(stack.isEnchanted()){
+						continue;
+					}
 
-						List<EnchantmentInstance> ench = EnchantmentHelper.selectEnchantment(RAND, stack, Math.min(power, 45), power >= 64);
+					List<EnchantmentInstance> ench = EnchantmentHelper.selectEnchantment(RAND, stack, Math.min(power, 45), power >= 64);
 
-						if(ench.isEmpty()){
-							//Non-enchantable items should be skipped
-							continue;
-						}
+					if(ench.isEmpty()){
+						//Non-enchantable items should be skipped
+						continue;
+					}
 
 //						for(int i = 0; i < stack.getCount(); i++){
-						ItemStack created;
+					ItemStack created;
 
-						if(CRConfig.enchantDestruction.get() && RAND.nextInt(100) < power){
-							//Destroy the item
-							created = ItemStack.EMPTY;
-							worldIn.addParticle(ParticleTypes.SMOKE, ent.getX(), ent.getY(), ent.getZ(), 0, 0, 0);
-							worldIn.playSound(null, ent.getX(), ent.getY(), ent.getZ(), SoundEvents.REDSTONE_TORCH_BURNOUT, SoundSource.BLOCKS, 1, 1);
+					if(CRConfig.enchantDestruction.get() && RAND.nextInt(100) < power){
+						//Destroy the item
+						created = ItemStack.EMPTY;
+						worldIn.addParticle(ParticleTypes.SMOKE, ent.getX(), ent.getY(), ent.getZ(), 0, 0, 0);
+						worldIn.playSound(null, ent.getX(), ent.getY(), ent.getZ(), SoundEvents.REDSTONE_TORCH_BURNOUT, SoundSource.BLOCKS, 1, 1);
+					}else{
+						if(stack.getItem() == Items.BOOK){
+							created = new ItemStack(Items.ENCHANTED_BOOK, 1);
+							if(ench.size() > 1){
+								ench.remove(0);//Vanilla behavior when enchanting books is to put on 1 fewer enchantments
+							}
 						}else{
-							if(stack.getItem() == Items.BOOK){
-								created = new ItemStack(Items.ENCHANTED_BOOK, 1);
-								if(ench.size() > 1){
-									ench.remove(0);//Vanilla behavior when enchanting books is to put on 1 fewer enchantments
-								}
+							created = stack.copy();
+							created.setCount(1);
+						}
+
+						for(EnchantmentInstance datum : ench){
+							if(created.getItem() == Items.ENCHANTED_BOOK){
+								EnchantedBookItem.addEnchantment(created, datum);
 							}else{
-								created = stack.copy();
-								created.setCount(1);
-							}
-
-							for(EnchantmentInstance datum : ench){
-								if(created.getItem() == Items.ENCHANTED_BOOK){
-									EnchantedBookItem.addEnchantment(created, datum);
-								}else{
-									created.enchant(datum.enchantment, datum.level);
-								}
+								created.enchant(datum.enchantment, datum.level);
 							}
 						}
-
-						Containers.dropItemStack(worldIn, ent.getX(), ent.getY(), ent.getZ(), created);
-						ent.getItem().shrink(1);
-						if(ent.getItem().isEmpty()){
-							ent.remove(Entity.RemovalReason.DISCARDED);
-						}
-						return;//Only enchant 1 item
 					}
+
+					Containers.dropItemStack(worldIn, ent.getX(), ent.getY(), ent.getZ(), created);
+					ent.getItem().shrink(1);
+					if(ent.getItem().isEmpty()){
+						ent.remove(Entity.RemovalReason.DISCARDED);
+					}
+					return;//Only enchant 1 item
 				}
 			}
 		}

@@ -210,7 +210,7 @@ public class FluidIngredient implements Predicate<FluidStack>{
 
 		@Override
 		public boolean isEmpty(){
-			return false;
+			return false;//We do not check the tag contents, to enable lazyloading
 		}
 	}
 
