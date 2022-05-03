@@ -68,7 +68,7 @@ public class ReagentIngredientHelper implements IIngredientHelper<ReagIngr>{
 
 	@Override
 	public String getResourceId(ReagIngr ingredient){
-		return ingredient.getReag().getName();
+		return ingredient.getReag().getID();
 	}
 
 	@Override

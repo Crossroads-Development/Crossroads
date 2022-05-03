@@ -9,7 +9,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -66,29 +65,7 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 
 	@Override
 	protected void performTransfer(){
-		EnumTransferMode[] modes = getModes();
-		for(int i = 0; i < 6; i++){
-			if(modes[i].isOutput()){
-				Direction side = Direction.from3DDataValue(i);
-				BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
-				LazyOptional<IChemicalHandler> otherOpt;
-				if(contents.getTotalQty() <= 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
-					continue;
-				}
-
-				IChemicalHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
-				if(otherHandler.getMode(side.getOpposite()) == EnumTransferMode.BOTH && modes[i] == EnumTransferMode.BOTH){
-					continue;
-				}
-
-				if(contents.getTotalQty() != 0){
-					if(otherHandler.insertReagents(contents, side.getOpposite(), handler)){
-						correctReag();
-						setChanged();
-					}
-				}
-			}
-		}
+		vesselTransfer(this);
 	}
 
 	@Override

@@ -40,6 +40,7 @@ import org.apache.logging.log4j.Level;
 import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -360,7 +361,7 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 			out = player.getItemInHand(hand);
 		}else{
 			//Move solids from hand into carrier
-			IReagent typeProduced = ReagentManager.getItemToReagent().get(stack.getItem());
+			IReagent typeProduced = ReagentManager.findReagentForItem(stack.getItem());
 			if(typeProduced != null && contents.getTotalQty() < transferCapacity()){
 				out.shrink(1);
 				contents.addReagent(typeProduced, 1, AlchemyUtil.getInputItemTemp(typeProduced, getBiomeTemp()));
@@ -410,6 +411,36 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 				if(otherHandler.insertReagents(contents, side.getOpposite(), handler)){
 					correctReag();
 					setChanged();
+				}
+			}
+		}
+	}
+
+	/**
+	 * Common implementation for performTransfer() used by multiple subclasses (vessel-type blocks)
+	 * @param self The instance calling this method
+	 */
+	protected static void vesselTransfer(AlchemyCarrierTE self){
+		EnumTransferMode[] modes = self.getModes();
+		for(int i = 0; i < 6; i++){
+			if(modes[i].isOutput()){
+				Direction side = Direction.from3DDataValue(i);
+				BlockEntity te = self.level.getBlockEntity(self.worldPosition.relative(side));
+				LazyOptional<IChemicalHandler> otherOpt;
+				if(self.contents.getTotalQty() <= 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
+					continue;
+				}
+
+				IChemicalHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
+				if(otherHandler.getMode(side.getOpposite()) == EnumTransferMode.BOTH && modes[i] == EnumTransferMode.BOTH){
+					continue;
+				}
+
+				if(self.contents.getTotalQty() != 0){
+					if(otherHandler.insertReagents(self.contents, side.getOpposite(), self.handler)){
+						self.correctReag();
+						self.setChanged();
+					}
 				}
 			}
 		}
@@ -484,7 +515,7 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 				double callerTemp = reag.getTempC();
 				boolean changed = false;
 
-				//Map the moveable reags to an int array of quantities so we can use the relevant MiscUtil method
+				//Map the movable reags to an int array of quantities so we can use the relevant MiscUtil method
 				IReagent[] mapping = new IReagent[reag.size()];
 				int[] preQty = new int[mapping.length];
 				int index = 0;
@@ -653,27 +684,26 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 
 	protected class ItemHandler implements IItemHandler{
 
-		private ItemStack[] fakeInventory = new ItemStack[ReagentManager.getItemToReagent().size()];
+		private final ItemStack[] fakeInventory = new ItemStack[ReagentManager.getRegisteredReags().size()];
 
 		public ItemHandler(){
 
 		}
 
 		private void updateFakeInv(){
-			fakeInventory = new ItemStack[ReagentManager.getItemToReagent().size()];
+			Arrays.fill(fakeInventory, ItemStack.EMPTY);
 			int index = 0;
 			double endTemp = handler.getTemp();
-			for(IReagent reag : ReagentManager.getItemToReagent().values()){
-				int qty = contents.getQty(reag);
+			for(IReagent reag : contents.keySetReag()){
 				ReagentStack rStack = contents.getStack(reag);
-				fakeInventory[index] = qty != 0 && reag.getPhase(endTemp) == EnumMatterPhase.SOLID ? reag.getStackFromReagent(rStack) : ItemStack.EMPTY;
+				fakeInventory[index] = !rStack.isEmpty() && reag.getPhase(endTemp) == EnumMatterPhase.SOLID ? reag.getStackFromReagent(rStack) : ItemStack.EMPTY;
 				index++;
 			}
 		}
 
 		@Override
 		public int getSlots(){
-			return ReagentManager.getItemToReagent().size();
+			return fakeInventory.length;
 		}
 
 		@Override
@@ -684,22 +714,23 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
-			if(!stack.isEmpty()){
-				IReagent reag = ReagentManager.getItemToReagent().get(stack.getItem());
+			if(!stack.isEmpty() && slot == 0){
+				//Force to only accept into slot 0.
+				//Otherwise, machines that simulate several slots before performing any transfers (ex. hoppers) won't realize that moving items into one slot will decrease capacity in the others.
+				IReagent reag = ReagentManager.findReagentForItem(stack.getItem());
 				if(reag != null){
 					if(dirtyReag){
 						correctReag();
 					}
-					ItemStack testStack = stack.copy();
-					testStack.setCount(1);
 					int trans = Math.max(0, Math.min(stack.getCount(), transferCapacity() - contents.getTotalQty()));
 					if(!simulate){
 						contents.addReagent(reag, trans, AlchemyUtil.getInputItemTemp(reag, getBiomeTemp()));
 						dirtyReag = true;
 						setChanged();
 					}
-					testStack.setCount(stack.getCount() - trans);
-					return testStack;
+					ItemStack rejected = stack.copy();
+					rejected.setCount(stack.getCount() - trans);
+					return rejected;
 				}
 			}
 			return stack;
@@ -714,7 +745,7 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 					ItemStack outStack = fakeInventory[slot].copy();
 					outStack.setCount(canExtract);
 					if(!simulate){
-						IReagent reag = ReagentManager.getItemToReagent().get(fakeInventory[slot].getItem());
+						IReagent reag = ReagentManager.findReagentForItem(fakeInventory[slot].getItem());
 						contents.removeReagent(reag, canExtract);
 						dirtyReag = true;
 						setChanged();
@@ -730,12 +761,12 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 
 		@Override
 		public int getSlotLimit(int slot){
-			return 10;
+			return transferCapacity();
 		}
 
 		@Override
 		public boolean isItemValid(int slot, @Nonnull ItemStack stack){
-			return ReagentManager.getItemToReagent().get(stack.getItem()) != null;
+			return ReagentManager.findReagentForItem(stack.getItem()) != null;
 		}
 	}
 }

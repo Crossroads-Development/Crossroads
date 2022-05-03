@@ -1,23 +1,24 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
-import com.Da_Technomancer.crossroads.crafting.PredicateMap;
 import com.Da_Technomancer.crossroads.crafting.recipes.AlchemyRec;
 import com.Da_Technomancer.crossroads.crafting.recipes.FluidIngredient;
 import com.Da_Technomancer.crossroads.crafting.recipes.ReagentRec;
 import net.minecraft.tags.Tag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public final class ReagentManager{
 
 	private static final HashMap<String, IReagent> REAGENTS = new HashMap<>(EnumReagents.values().length);
-	private static final PredicateMap<Item, IReagent> ITEM_TO_REAGENT = new PredicateMap<>();
+	private static final HashMap<IReagent, Predicate<Item>> REAGENT_FROM_ITEM = new HashMap<>();
 	private static final ArrayList<String> REAGENT_WITH_FLUID = new ArrayList<>(6);
 
 	@Nullable
@@ -37,8 +38,16 @@ public final class ReagentManager{
 		return REAGENT_WITH_FLUID;
 	}
 
-	public static PredicateMap<Item, IReagent> getItemToReagent(){
-		return ITEM_TO_REAGENT;
+	/**
+	 * Finds a reagent which has a given item as the solid form, or null if none.
+	 * Runs in linear time against list of all reagents with items
+	 * @param item An item (or itemlike, ex. block) to query reagents for
+	 * @return Any one reagent with the given item associated with the solid form, or null if none.
+	 */
+	public static IReagent findReagentForItem(ItemLike item){
+		Item it = item.asItem();
+		Optional<Map.Entry<IReagent, Predicate<Item>>> foundResult = REAGENT_FROM_ITEM.entrySet().parallelStream().filter(entry -> entry.getValue().test(it)).findAny();
+		return foundResult.map(Map.Entry::getKey).orElse(null);
 	}
 
 	public static List<AlchemyRec> getReactions(Level world){
@@ -56,8 +65,8 @@ public final class ReagentManager{
 			REAGENT_WITH_FLUID.add(changedReag.getID());
 		}
 
-		ITEM_TO_REAGENT.values().removeIf(val -> val.getID().equals(changedReag.getID()));
-		ITEM_TO_REAGENT.put(changedReag.getSolid()::contains, changedReag);
+		REAGENT_FROM_ITEM.keySet().removeIf(key -> key.getID().equals(changedReag.getID()));
+		REAGENT_FROM_ITEM.put(changedReag, changedReag.getSolid()::contains);
 	}
 
 	private static void trimReagents(List<String> validReagents){
@@ -74,7 +83,7 @@ public final class ReagentManager{
 			}
 		}
 		//Now that everything is loaded and the tags are bound, we remove any reagent that no longer exists, and remove any mapping with an empty tag to speed things up in future
-		ITEM_TO_REAGENT.entrySet().removeIf(entry -> toRemove.contains(entry.getValue().getID()) || entry.getKey() instanceof Tag && ((Tag<?>) entry.getKey()).getValues().isEmpty());
+		REAGENT_FROM_ITEM.entrySet().removeIf(entry -> toRemove.contains(entry.getKey().getID()) || entry.getValue() instanceof Tag && ((Tag<?>) entry.getValue()).getValues().isEmpty());
 	}
 
 	public static void updateFromServer(RecipeManager recManager){

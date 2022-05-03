@@ -2,7 +2,9 @@ package com.Da_Technomancer.crossroads.tileentities.alchemy;
 
 
 import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.alchemy.*;
+import com.Da_Technomancer.crossroads.API.alchemy.AlchemyReactorTE;
+import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
+import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.Crossroads;
@@ -13,7 +15,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -125,30 +126,7 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 
 	@Override
 	protected void performTransfer(){
-		EnumTransferMode[] modes = getModes();
-		for(int i = 0; i < 6; i++){
-			if(modes[i].isOutput()){
-				Direction side = Direction.from3DDataValue(i);
-				BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
-				LazyOptional<IChemicalHandler> otherOpt;
-				if(contents.getTotalQty() <= 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
-					continue;
-				}
-
-				IChemicalHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
-				EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
-				if(otherHandler.getMode(side.getOpposite()) == EnumTransferMode.BOTH && modes[i] == EnumTransferMode.BOTH){
-					continue;
-				}
-
-				if(contents.getTotalQty() != 0){
-					if(otherHandler.insertReagents(contents, side.getOpposite(), handler)){
-						correctReag();
-						setChanged();
-					}
-				}
-			}
-		}
+		vesselTransfer(this);
 	}
 
 	@Override

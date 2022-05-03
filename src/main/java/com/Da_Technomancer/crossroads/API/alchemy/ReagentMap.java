@@ -15,6 +15,7 @@ public class ReagentMap extends HashMap<String, Integer>{
 
 	private double heat;
 	private int totalQty;
+	private Set<IReagent> keySetCache;
 
 	public ReagentMap(){
 		super(ReagentManager.getRegisteredReags().size());
@@ -69,6 +70,7 @@ public class ReagentMap extends HashMap<String, Integer>{
 			heat = 0;
 			totalQty = 0;
 		}
+		keySetCache = null;
 		return current;
 	}
 
@@ -103,6 +105,7 @@ public class ReagentMap extends HashMap<String, Integer>{
 		}
 		totalQty -= getQty(key);
 		totalQty += value;
+		keySetCache = null;
 		return super.put(key, value);
 	}
 
@@ -120,6 +123,7 @@ public class ReagentMap extends HashMap<String, Integer>{
 			heat -= getTempK() * qty;
 			totalQty -= qty;
 		}
+		keySetCache = null;
 		return qty;
 	}
 
@@ -127,6 +131,7 @@ public class ReagentMap extends HashMap<String, Integer>{
 	public void clear(){
 		totalQty = 0;
 		heat = 0;
+		keySetCache = null;
 		super.clear();
 	}
 
@@ -162,6 +167,7 @@ public class ReagentMap extends HashMap<String, Integer>{
 
 	public void refresh(){
 		totalQty = 0;
+		keySetCache = null;
 		for(Integer qty : values()){
 			totalQty += qty;
 		}
@@ -171,7 +177,7 @@ public class ReagentMap extends HashMap<String, Integer>{
 		nbt.putDouble("he", heat);
 		for(String key : keySet()){
 			int qty = get(key);
-			if(qty > 0){
+			if(qty > 0){//No point saving the empty entries
 				nbt.putInt("qty_" + key, qty);
 			}
 		}
@@ -202,6 +208,10 @@ public class ReagentMap extends HashMap<String, Integer>{
 
 	@Deprecated
 	public Set<IReagent> keySetReag(){
-		return keySet().stream().map(ReagentManager::getReagent).filter(Objects::nonNull).collect(Collectors.toSet());
+		if(keySetCache != null){
+			return keySetCache;
+		}
+		keySetCache = keySet().stream().map(ReagentManager::getReagent).filter(Objects::nonNull).collect(Collectors.toSet());
+		return keySetCache;
 	}
 }
