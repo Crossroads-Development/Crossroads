@@ -6,10 +6,10 @@
 	},
 	"input_a": [
 		{
-			"tag": "crossroads:dusts/bedrock"
+			"tag": "crossroads:storage_blocks/cavorite"
 		},
 		{
-			"item": "minecraft:bedrock"
+			"tag": "crossroads:gems/cavorite"
 		}
 	],
 	"input_b": [

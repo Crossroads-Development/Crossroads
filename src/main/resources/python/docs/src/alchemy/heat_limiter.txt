@@ -8,8 +8,3 @@ In red mode, heat will be moved from the input to the output up to the target <t
 In blue mode, heat will be moved from the output to the input down to the target <thing><link:essentials:intro/heat>temperature/$, but no colder. It can not cool the front lower than the back. In effect, it cools the output down to a set <thing><link:essentials:intro/heat>temperature/$.
 
 There are two variants of the <item>temperature regulator/$: The <item>Temperature Regulator/$ has the target <thing><link:essentials:intro/heat>temperature/$ in Celcius set via a UI, while the <item>Redstone Temperature Regulator/$ has the target <thing><link:essentials:intro/heat>temperature/$ in Celcius set to the current <thing><link:essentials/circuit>circuit/$ input.
-
-<bobo><link:essentials:intro/welcome#bobo>eye IZ bOqr!!/$<bobo> me hAs !!!!iMPOrtANT tINg~~~! mUcH heAT! mUCH c01D! dEFY hot/cold-o-dyanmics! 4 FREEE!!!
-reD METAL baAR!
-uNBREAKABLE bloK DAT n0 li3k ACID!
-aND dA haRD BIT! yUM nuGGET sTACK iN ONE ITEM! dA STACK NUBMER oN 1 ITeM!/$
