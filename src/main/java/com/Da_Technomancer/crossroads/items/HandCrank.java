@@ -9,6 +9,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -21,11 +22,11 @@ import java.util.List;
 public class HandCrank extends Item{
 
 	protected HandCrank(){
-		this("hand_crank");
+		this("hand_crank", Rarity.COMMON);
 	}
 
-	protected HandCrank(String name){
-		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
+	protected HandCrank(String name, Rarity rarity){
+		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1).rarity(rarity));
 		setRegistryName(name);
 		CRItems.toRegister.add(this);
 	}

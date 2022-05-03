@@ -5,8 +5,8 @@
 		"count": 1
 	},
 	"pattern": [
-		"***",
-		"* *",
+		"CCC",
+		"C C",
 		"*A*"
 	],
 	"key": {
@@ -15,6 +15,9 @@
 		},
 		"A": {
 			"item": "crossroads:axle"
+		},
+		"C": {
+			"tag": "forge:cobblestone"
 		}
 	}
 }

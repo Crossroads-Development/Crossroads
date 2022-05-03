@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.gui.container.*;
-import com.Da_Technomancer.essentials.Essentials;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.RegistryEvent;
@@ -56,6 +55,9 @@ public class EventHandlerServer{
 			EventHandlerCommon.CRModEventsCommon.registerConType(IncubatorContainer::new, "incubator", e);
 			EventHandlerCommon.CRModEventsCommon.registerConType(BloodCentrifugeContainer::new, "blood_centrifuge", e);
 			EventHandlerCommon.CRModEventsCommon.registerConType(EmbryoLabContainer::new, "embryo_lab", e);
+			EventHandlerCommon.CRModEventsCommon.registerConType(HeatReservoirCreativeContainer::new, "heat_reservoir_creative", e);
+			EventHandlerCommon.CRModEventsCommon.registerConType(MasterAxisCreativeContainer::new, "master_axis_creative", e);
+			EventHandlerCommon.CRModEventsCommon.registerConType(BeamExtractorCreativeContainer::new, "beam_extractor_creative", e);
 		}
 	}
 }

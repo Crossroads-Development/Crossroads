@@ -134,6 +134,9 @@ public class CRTileEntity{
 		register(IncubatorTileEntity::new, "incubator", reg, incubator);
 		register(BloodCentrifugeTileEntity::new, "blood_centrifuge", reg, bloodCentrifuge);
 		register(EmbryoLabTileEntity::new, "embryo_lab", reg, embryoLab);
+		register(HeatReservoirCreativeTileEntity::new, "heat_reservoir_creative", reg, heatReservoirCreative);
+		register(MasterAxisCreativeTileEntity::new, "master_axis_creative", reg, masterAxisCreative);
+		register(BeamExtractorCreativeTileEntity::new, "beam_extractor_creative", reg, beamExtractorCreative);
 	}
 
 	private static void register(BlockEntityType.BlockEntitySupplier<?> cons, String id, IForgeRegistry<BlockEntityType<?>> reg, Block... blocks){

@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"facing=north": { "model": "crossroads:block/beam_extractor_creative"},
+		"facing=south": { "model": "crossroads:block/beam_extractor_creative", "y": 180 },
+		"facing=east": { "model": "crossroads:block/beam_extractor_creative", "y": 90 },
+		"facing=west": { "model": "crossroads:block/beam_extractor_creative", "y": 270 },
+		"facing=up": { "model": "crossroads:block/beam_extractor_creative", "x": 270 },
+		"facing=down": { "model": "crossroads:block/beam_extractor_creative", "x": 90 }
+	}
+}

@@ -12,7 +12,7 @@ import java.util.List;
 public class CheatWandRotary extends HandCrank{
 
 	protected CheatWandRotary(){
-		super("cheat_wand_rotary");
+		super("cheat_wand_rotary", CRItems.CREATIVE_RARITY);
 	}
 
 	@Override

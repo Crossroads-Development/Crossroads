@@ -140,6 +140,9 @@ public class EventHandlerClient{
 			registerCon(IncubatorContainer::new, IncubatorScreen::new, "incubator", e);
 			registerCon(BloodCentrifugeContainer::new, BloodCentrifugeScreen::new, "blood_centrifuge", e);
 			registerCon(EmbryoLabContainer::new, EmbryoLabScreen::new, "embryo_lab", e);
+			registerCon(HeatReservoirCreativeContainer::new, HeatReservoirCreativeScreen::new, "heat_reservoir_creative", e);
+			registerCon(MasterAxisCreativeContainer::new, MasterAxisCreativeScreen::new, "master_axis_creative", e);
+			registerCon(BeamExtractorCreativeContainer::new, BeamExtractorCreativeScreen::new, "beam_extractor_creative", e);
 		}
 
 		/**

@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"north": "crossroads:block/master_axis_front",
+		"south": "crossroads:block/master_axis_creative",
+		"east": "crossroads:block/master_axis_creative",
+		"west": "crossroads:block/master_axis_creative",
+		"up": "crossroads:block/master_axis_creative",
+		"down": "crossroads:block/master_axis_creative",
+		"particle": "crossroads:block/master_axis_creative"
+	}
+}

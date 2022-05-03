@@ -224,7 +224,6 @@
 	"item.crossroads.solid_cavorite": "Cavorite Chunk",
 	"block.crossroads.block_cavorite": "Block of Cavorite",
 	"item.crossroads.dust_bedrock": "Bedrock Dust",
-	"block.crossroads.math_axis": "Mathematical Master Axis",
 	"block.crossroads.flux_node": "Entropy Node",
 	"item.crossroads.linking_tool": "Linking Tool",
 	"block.crossroads.temporal_accelerator": "Temporal Accelerator",
@@ -288,6 +287,9 @@
 	"item.crossroads.villager_brain": "Villager Brain",
 	"item.crossroads.brain_harvester": "Surgical Battleaxe",
 	"item.crossroads.hopper_hawk_spawn_egg": "Hopper Hawk Spawn Egg",
+	"block.crossroads.heat_reservoir_creative": "Creative Heat Reservoir",
+	"block.crossroads.master_axis_creative": "Creative Master Axis",
+	"block.crossroads.beam_extractor_creative": "Creative Resonance Extractor",
 
 	"item.crossroads.distilled_water_bucket": "Distilled Water Bucket",
 	"item.crossroads.dirty_water_bucket": "Dirty Water Bucket",
@@ -806,6 +808,11 @@
 	"tt.crossroads.villager_brain.item.enchant.multi": "%1$s[%2$s... and %4$d more]",
 	"tt.crossroads.brain_harvester.desc": "Harvests the brains of villagers very surgically",
 	"tt.crossroads.brain_harvester.quip": "ARE YOU THE BRAIN SPECIALIST?",
+	"tt.crossroads.heat_reservoir_creative.desc": "Holds constant at a set temperature",
+	"tt.crossroads.heat_reservoir_creative.reds": "Circuits measure the temperature",
+	"tt.crossroads.master_axis_creative.desc": "A Master Axis that holds speed steady at the set value",
+	"tt.crossroads.beam_extractor_creative.desc": "Creates a constant beam with set values",
+	"tt.crossroads.beam_extractor_creative.redstone": "Disabled by redstone",
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
 	"container.crossroads.boilerplate.speed": "%1$f rad/s",
@@ -823,6 +830,8 @@
 	"container.crossroads.auto_injector.qty": "%1$d/%2$d seconds",
 	"container.crossroads.auto_injector.dose_qty": "Dose size: %1$d sec.",
 	"container.crossroads.incubator.target": "Target: %1$d°C",
+	"container.crossroads.heat_reservoir_creative": "Creative Heat Reservoir",
+	"container.crossroads.master_axis_creative": "Creative Master Axis",
 
 	"container.smelter": "Smelter",
 	"container.firebox": "Firebox",
@@ -867,7 +876,12 @@
 	"container.crossroads.blood_centrifuge.target": "Target: %1$f rad/s",
 	"container.crossroads.embryo_lab": "Miller–Urey Capsule",
 	"container.crossroads.embryo_lab.empty": "Empty - Add Centrifuged Blood",
-
+	"container.crossroads.master_axis_creative.text_input": "Speed in rad/s",
+	"container.crossroads.beam_extractor_creative": "Creative Resonance Extractor",
+	"container.crossroads.beam_extractor_creative.energy": "En:",
+	"container.crossroads.beam_extractor_creative.potential": "Po:",
+	"container.crossroads.beam_extractor_creative.stability": "St:",
+	"container.crossroads.beam_extractor_creative.void": "Vo:",
 
 	"subtitle.crossroads.beam_passive": "Beam emitted",
 	"subtitle.crossroads.beam_transmute": "Beam transmuted block",

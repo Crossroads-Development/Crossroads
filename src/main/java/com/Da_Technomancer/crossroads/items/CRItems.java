@@ -53,6 +53,7 @@ public final class CRItems{
 	};
 
 	public static final Rarity BOBO_RARITY = Rarity.EPIC;
+	public static final Rarity CREATIVE_RARITY = Rarity.RARE;
 
 	public static CheatWandRotary debugGearWriter;
 	public static CheatWandHeat debugHeatWriter;

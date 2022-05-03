@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
 import com.Da_Technomancer.crossroads.API.CircuitUtil;
-import com.Da_Technomancer.crossroads.gui.container.HeatLimiterContainer;
+import com.Da_Technomancer.crossroads.gui.container.MasterAxisCreativeContainer;
 import com.Da_Technomancer.essentials.Essentials;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import com.Da_Technomancer.essentials.packets.EssentialsPackets;
@@ -17,12 +17,12 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class HeatLimiterScreen extends AbstractContainerScreen<HeatLimiterContainer>{
+public class MasterAxisCreativeScreen extends AbstractContainerScreen<MasterAxisCreativeContainer>{
 
 	private static final ResourceLocation SEARCH_BAR_TEXTURE = new ResourceLocation(Essentials.MODID, "textures/gui/search_bar.png");
 	private EditBox searchBar;
 
-	public HeatLimiterScreen(HeatLimiterContainer cont, Inventory playerInventory, Component text){
+	public MasterAxisCreativeScreen(MasterAxisCreativeContainer cont, Inventory playerInventory, Component text){
 		super(cont, playerInventory, text);
 		imageHeight = 18;
 		imageWidth = 144;
@@ -31,7 +31,7 @@ public class HeatLimiterScreen extends AbstractContainerScreen<HeatLimiterContai
 	@Override
 	protected void init(){
 		super.init();
-		searchBar = CircuitUtil.createFormulaInputUIComponent(this, font, 4, 8, new TranslatableComponent("container.search_bar"), this::entryChanged, menu.conf);
+		searchBar = CircuitUtil.createFormulaInputUIComponent(this, font, 4,8, new TranslatableComponent("container.crossroads.master_axis_creative.text_input"), this::entryChanged, menu.conf);
 		addWidget(searchBar);
 		setInitialFocus(searchBar);
 	}

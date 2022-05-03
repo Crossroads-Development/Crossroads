@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
 import com.Da_Technomancer.crossroads.API.CircuitUtil;
-import com.Da_Technomancer.crossroads.gui.container.HeatLimiterContainer;
+import com.Da_Technomancer.crossroads.gui.container.HeatReservoirCreativeContainer;
 import com.Da_Technomancer.essentials.Essentials;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import com.Da_Technomancer.essentials.packets.EssentialsPackets;
@@ -17,12 +17,12 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class HeatLimiterScreen extends AbstractContainerScreen<HeatLimiterContainer>{
+public class HeatReservoirCreativeScreen extends AbstractContainerScreen<HeatReservoirCreativeContainer>{
 
 	private static final ResourceLocation SEARCH_BAR_TEXTURE = new ResourceLocation(Essentials.MODID, "textures/gui/search_bar.png");
 	private EditBox searchBar;
 
-	public HeatLimiterScreen(HeatLimiterContainer cont, Inventory playerInventory, Component text){
+	public HeatReservoirCreativeScreen(HeatReservoirCreativeContainer cont, Inventory playerInventory, Component text){
 		super(cont, playerInventory, text);
 		imageHeight = 18;
 		imageWidth = 144;

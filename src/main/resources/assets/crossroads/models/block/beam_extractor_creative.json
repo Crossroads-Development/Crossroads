@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"north": "crossroads:block/beam_extractor_out",
+		"south": "crossroads:block/beam_extractor_creative_side",
+		"east": "crossroads:block/beam_extractor_creative_side",
+		"west": "crossroads:block/beam_extractor_creative_side",
+		"up": "block/obsidian",
+		"down": "block/obsidian",
+		"particle": "crossroads:block/beam_extractor_creative_side"
+	}
+}

@@ -1,0 +1,5 @@
+{
+	"variants": {
+		"": { "model": "crossroads:block/heat_reservoir_creative" }
+	}
+}

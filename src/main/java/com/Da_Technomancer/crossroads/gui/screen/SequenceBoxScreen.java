@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
+import com.Da_Technomancer.crossroads.API.CircuitUtil;
 import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.SequenceBoxContainer;
@@ -18,8 +19,6 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import org.lwjgl.glfw.GLFW;
-
-import java.util.function.Predicate;
 
 public class SequenceBoxScreen extends AbstractContainerScreen<SequenceBoxContainer>{
 
@@ -45,28 +44,14 @@ public class SequenceBoxScreen extends AbstractContainerScreen<SequenceBoxContai
 	@Override
 	protected void init(){
 		super.init();
-		final Predicate<String> validator = s -> {
-			final String whitelist = "0123456789 xX*/+-^piPIeE().";
-			for(int i = 0; i < s.length(); i++){
-				if(!whitelist.contains(s.substring(i, i + 1))){
-					return false;
-				}
-			}
-			return true;
-		};
 
+		shiftingUI = true;
 		for(int i = 0; i < inputBars.length; i++){
-			inputBars[i] = new EditBox(font, leftPos + 24, topPos + 24 + 18 * i, 144 - 4, 18, new TextComponent(""));
+			inputBars[i] = CircuitUtil.createFormulaInputUIComponent(this, font, 24, 24 + 18 * i, new TextComponent(""), this::entryChanged, menu.inputs.size() > i ? menu.inputs.get(i) : "");
 			inputBars[i].setCanLoseFocus(true);
-			inputBars[i].setTextColor(-1);
-			inputBars[i].setTextColorUneditable(-1);
-			inputBars[i].setBordered(false);
-			inputBars[i].setMaxLength(20);
-			inputBars[i].setValue(menu.inputs.size() > i ? menu.inputs.get(i) : "");
-			inputBars[i].setResponder(this::entryChanged);
-			inputBars[i].setFilter(validator);
 			addWidget(inputBars[i]);
 		}
+		shiftingUI = false;
 	}
 
 	@Override

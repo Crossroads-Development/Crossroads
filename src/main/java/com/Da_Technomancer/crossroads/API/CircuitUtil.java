@@ -3,9 +3,13 @@ package com.Da_Technomancer.crossroads.API;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import com.Da_Technomancer.essentials.blocks.redstone.IRedstoneHandler;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -13,15 +17,56 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DiodeBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class CircuitUtil extends RedstoneUtil{
+
+	public static final Predicate<String> MATH_EXPRESSION_WHITELIST = s -> {
+		final String whitelist = "0123456789 xX*/+-^piPIeE().";
+		for(int i = 0; i < s.length(); i++){
+			if(!whitelist.contains(s.substring(i, i + 1))){
+				return false;
+			}
+		}
+
+		return true;
+	};
+
+	/**
+	 * This is used to create a UI element that is a text input bar that accepts mathematical expressions. Values designed to be interpreted with RedstoneUtil::interpretFormulaString
+	 * This method does not add the returned object to the UI itself.
+	 * @param screen The screen it will be part of
+	 * @param font The font
+	 * @param pixelsFromLeft Pixels from the left side of the UI to left edge of text bar
+	 * @param pixelsFromTop Pixels from the top of the UI to the top of the text bar
+	 * @param defaultText Text that would be displayed in the bar when empty. Not currently used.
+	 * @param responder A function that will be called whenever the contents of the bar changes. Will be passed the new value.
+	 * @param initValue The starting value of the text bar.
+	 * @return The created text bar, mutable. Still needs to be added to the UI.
+	 */
+	@OnlyIn(Dist.CLIENT)
+	public static EditBox createFormulaInputUIComponent(AbstractContainerScreen<?> screen, Font font, int pixelsFromLeft, int pixelsFromTop, Component defaultText, Consumer<String> responder, String initValue){
+		EditBox searchBar = new EditBox(font, screen.getGuiLeft() + pixelsFromLeft, screen.getGuiTop() + pixelsFromTop, 144 - 4, 18, defaultText);
+		searchBar.setCanLoseFocus(false);
+		searchBar.setTextColor(-1);
+		searchBar.setTextColorUneditable(-1);
+		searchBar.setBordered(false);
+		searchBar.setMaxLength(20);
+		searchBar.setFilter(CircuitUtil.MATH_EXPRESSION_WHITELIST);
+		searchBar.setValue(initValue);
+		searchBar.setResponder(responder);
+		return searchBar;
+	}
 
 	public static float combineRedsSources(InputCircHandler handler){
 		if(!handler.builtConnections){

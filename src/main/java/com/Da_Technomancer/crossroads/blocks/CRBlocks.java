@@ -170,6 +170,9 @@ public class CRBlocks{
 	public static Incubator incubator;
 	public static BloodCentrifuge bloodCentrifuge;
 	public static EmbryoLab embryoLab;
+	public static HeatReservoirCreative heatReservoirCreative;
+	public static MasterAxisCreative masterAxisCreative;
+	public static BeamExtractorCreative beamExtractorCreative;
 
 	public static BlockBehaviour.Properties getRockProperty(){
 		return BlockBehaviour.Properties.of(Material.STONE).strength(3).requiresCorrectToolForDrops().sound(SoundType.STONE);
@@ -369,6 +372,9 @@ public class CRBlocks{
 		incubator = new Incubator();
 		bloodCentrifuge = new BloodCentrifuge();
 		embryoLab = new EmbryoLab();
+		heatReservoirCreative = new HeatReservoirCreative();
+		masterAxisCreative = new MasterAxisCreative();
+		beamExtractorCreative = new BeamExtractorCreative();
 	}
 
 	@OnlyIn(Dist.CLIENT)

@@ -19,15 +19,20 @@ import javax.annotation.Nullable;
 
 public abstract class BeamBlock extends TEBlock{
 
+	/**
+	 * Note: This constructor does NOT register the itemblock
+	 * @param name Registry name (without domain)
+	 * @param prop Block properties, passed to super constructor
+	 */
 	public BeamBlock(String name, BlockBehaviour.Properties prop){
 		super(prop);
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
 	}
 
 	public BeamBlock(String name){
 		this(name, CRBlocks.getRockProperty());
+		CRBlocks.blockAddQue(this);
 	}
 
 	@Override
