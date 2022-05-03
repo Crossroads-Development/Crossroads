@@ -1,6 +1,8 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.container.RadiatorContainer;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RadiatorTileEntity;
@@ -25,7 +27,6 @@ public class RadiatorScreen extends MachineGUI<RadiatorContainer, RadiatorTileEn
 		initFluidManager(1, 70, 70);
 	}
 
-
 	@Override
 	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
 		RenderSystem.setShaderTexture(0, TEXTURE);
@@ -33,5 +34,16 @@ public class RadiatorScreen extends MachineGUI<RadiatorContainer, RadiatorTileEn
 		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
 		super.renderBg(matrix, partialTicks, mouseX, mouseY);
+	}
+
+	@Override
+	protected void renderLabels(PoseStack matrix, int mouseX, int mouseY){
+		super.renderLabels(matrix, mouseX, mouseY);
+
+		//Render a label for heat production rate
+		if(menu.mode != null){
+			String s = MiscUtil.localize("tt.crossroads.radiator.yield", RadiatorTileEntity.TIERS[menu.mode.get()] * CRConfig.steamWorth.get() / 1000);
+			font.draw(matrix, s, imageWidth - 8 - font.width(s), 16, 0x404040);
+		}
 	}
 }

@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.gui.container.SteamerContainer;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.SimpleContainer;
@@ -93,6 +94,18 @@ public class SteamerTileEntity extends InventoryTE{
 		}else{
 			progress = 0;
 		}
+	}
+
+	@Override
+	public void load(CompoundTag nbt){
+		super.load(nbt);
+		progress = nbt.getInt("progress");
+	}
+
+	@Override
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
+		nbt.putInt("progress", progress);
 	}
 
 	@Override

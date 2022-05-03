@@ -1,8 +1,10 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
+import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RadiatorTileEntity;
+import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -10,7 +12,6 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -56,9 +57,13 @@ public class Radiator extends BaseEntityBlock{
 
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
-		BlockEntity te;
-		if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) instanceof MenuProvider){
-			NetworkHooks.openGui((ServerPlayer) playerIn, (MenuProvider) te, pos);
+		if(!worldIn.isClientSide && worldIn.getBlockEntity(pos) instanceof RadiatorTileEntity rte){
+			if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
+				int mode = rte.cycleMode();
+				MiscUtil.chatMessage(playerIn, new TranslatableComponent("tt.crossroads.radiator.setting", RadiatorTileEntity.TIERS[mode] * CRConfig.steamWorth.get() / 1000));
+			}else{
+				NetworkHooks.openGui((ServerPlayer) playerIn, rte, pos);
+			}
 		}
 		return InteractionResult.SUCCESS;
 	}
@@ -66,8 +71,8 @@ public class Radiator extends BaseEntityBlock{
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(new TranslatableComponent("tt.crossroads.radiator.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.radiator.heat", RadiatorTileEntity.FLUID_USE * (double) CRConfig.steamWorth.get() / 1000));
-		tooltip.add(new TranslatableComponent("tt.crossroads.radiator.water", RadiatorTileEntity.FLUID_USE));
-		tooltip.add(new TranslatableComponent("tt.crossroads.radiator.steam", RadiatorTileEntity.FLUID_USE));
+		for(int i = 0; i < RadiatorTileEntity.TIERS.length; i++){
+			tooltip.add(new TranslatableComponent("tt.crossroads.radiator.tier", RadiatorTileEntity.TIERS[i] * (double) CRConfig.steamWorth.get() / 1000, RadiatorTileEntity.TIERS[i]));
+		}
 	}
 }

@@ -1,6 +1,6 @@
 Radiator
 crossroads:radiator
 The <item>Radiator/$ is a way of producing heat using <thing><link:essentials:fluid/steam>steam/$. <thing><link:essentials:fluid/steam>Steam/$ can be input and <thing>distilled water/$ can be output on the top and bottom, and <item><link:essentials:heat/cable>cables/$ connect to the sides.
-<thing>Distilled water/$ is produced in equal quantity of <thing><link:essentials:fluid/steam>steam/$ consumed. The <thing>radiator/$ has no maximum temperature.
+<thing>Distilled water/$ is produced in equal quantity of <thing><link:essentials:fluid/steam>steam/$ consumed. The <thing>radiator/$ has no maximum temperature. The rate of heat production and steam consumption can be adjusted by right clicking with a <link:essentials/wrench>wrench/$.
 
 The because <thing><link:essentials:fluid/steam>steam/$ is usually made <em>using/$ <thing>heat/$ in the same ratio as the <item>radiator/$ produces, the <item>radiator/$ is mainly useful for moving heat long distances, or for increasing the maximum reachable temperature- as <thing><link:essentials:fluid/steam>steam/$ can be produced at as cold as 100°C, while the <item>radiator/$ has no maximum temperature.

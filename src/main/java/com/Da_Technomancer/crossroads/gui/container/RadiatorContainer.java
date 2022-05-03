@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.tileentities.fluid.RadiatorTileEntity;
 import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
+import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
@@ -17,8 +18,12 @@ public class RadiatorContainer extends MachineContainer<RadiatorTileEntity>{
 	@ObjectHolder("radiator")
 	private static MenuType<RadiatorContainer> type = null;
 
+	public final IntDeferredRef mode;
+
 	public RadiatorContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
 		super(type, id, playerInv, buf);
+		mode = new IntDeferredRef(te::getMode, te.getLevel().isClientSide);
+		addDataSlot(mode);
 	}
 
 	@Override

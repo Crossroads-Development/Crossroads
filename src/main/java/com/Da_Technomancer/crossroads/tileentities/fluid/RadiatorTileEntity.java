@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.RadiatorContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
@@ -30,7 +31,8 @@ public class RadiatorTileEntity extends InventoryTE{
 	@ObjectHolder("radiator")
 	public static BlockEntityType<RadiatorTileEntity> TYPE = null;
 
-	public static final int FLUID_USE = 100;
+	public static final int[] TIERS = new int[] {100, 200, 300, 400, 500};//Steam use per tick
+	private int mode = 0;
 
 	public RadiatorTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 0);
@@ -49,19 +51,29 @@ public class RadiatorTileEntity extends InventoryTE{
 		return true;
 	}
 
+	public int getMode(){
+		return mode;
+	}
+
+	public int cycleMode(){
+		mode = (mode + 1) % TIERS.length;
+		setChanged();
+		return mode;
+	}
+
 	@Override
 	public void serverTick(){
 		super.serverTick();
 
-		if(fluids[0].getAmount() >= FLUID_USE && fluidProps[1].capacity - fluids[1].getAmount() >= FLUID_USE){
-			temp += FLUID_USE * (double) CRConfig.steamWorth.get() / 1000;
+		if(fluids[0].getAmount() >= TIERS[mode] && fluidProps[1].capacity - fluids[1].getAmount() >= TIERS[mode]){
+			temp += TIERS[mode] * (double) CRConfig.steamWorth.get() / 1000;
 			if(fluids[1].isEmpty()){
-				fluids[1] = new FluidStack(CRFluids.distilledWater.still, FLUID_USE);
+				fluids[1] = new FluidStack(CRFluids.distilledWater.still, TIERS[mode]);
 			}else{
-				fluids[1].grow(FLUID_USE);
+				fluids[1].grow(TIERS[mode]);
 			}
 
-			fluids[0].shrink(FLUID_USE);
+			fluids[0].shrink(TIERS[mode]);
 			setChanged();
 		}
 	}
@@ -102,5 +114,17 @@ public class RadiatorTileEntity extends InventoryTE{
 	@Override
 	public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player playerEntity){
 		return new RadiatorContainer(id, playerInventory, createContainerBuf());
+	}
+
+	@Override
+	public void load(CompoundTag nbt){
+		super.load(nbt);
+		mode = nbt.getInt("mode");
+	}
+
+	@Override
+	public void saveAdditional(CompoundTag nbt){
+		super.saveAdditional(nbt);
+		nbt.putInt("mode", mode);
 	}
 }
