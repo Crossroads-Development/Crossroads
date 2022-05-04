@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.fluids;
 
 import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.world.level.material.Fluid;
@@ -25,9 +26,9 @@ public final class CRFluids{
 //	public static GenericFluid.FluidData blood;
 	public static GenericFluid.FluidData soulEssence;
 
-	public static final Tag<Fluid> STEAM = FluidTags.bind("forge:steam");
-	public static final Tag<Fluid> DISTILLED_WATER = FluidTags.bind(Crossroads.MODID + ":distilled_water");
-	public static final Tag<Fluid> LIQUID_FAT = FluidTags.bind(Crossroads.MODID + ":liquid_fat");
+	public static final Tag<Fluid> STEAM = FluidTags.createOptional(new ResourceLocation("forge:steam"));
+	public static final Tag<Fluid> DISTILLED_WATER = FluidTags.createOptional(new ResourceLocation(Crossroads.MODID, "distilled_water"));
+	public static final Tag<Fluid> LIQUID_FAT = FluidTags.createOptional(new ResourceLocation(Crossroads.MODID, "liquid_fat"));
 
 	public static ArrayList<Fluid> toRegister = new ArrayList<>();
 

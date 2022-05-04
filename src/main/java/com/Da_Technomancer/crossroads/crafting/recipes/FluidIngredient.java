@@ -143,7 +143,7 @@ public class FluidIngredient implements Predicate<FluidStack>{
 
 	private static IFluidList readIngr(JsonObject o){
 		if(o.has("tag")){
-			return new TagList(FluidTags.bind(GsonHelper.getAsString(o, "tag")));
+			return new TagList(FluidTags.createOptional(new ResourceLocation(GsonHelper.getAsString(o, "tag"))));
 		}else if(o.has("fluid")){
 			return new SingleList(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(GsonHelper.getAsString(o, "fluid"))));
 		}else{

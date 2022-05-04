@@ -126,7 +126,7 @@ public class BlockIngredient implements Predicate<BlockState>{
 
 	private static IBlockList readIngr(JsonObject o){
 		if(o.has("tag")){
-			return new TagList(BlockTags.bind(GsonHelper.getAsString(o, "tag")));
+			return new TagList(BlockTags.createOptional(new ResourceLocation(GsonHelper.getAsString(o, "tag"))));
 		}else if(o.has("block")){
 			return new SingleList(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(GsonHelper.getAsString(o, "block"))));
 		}else{

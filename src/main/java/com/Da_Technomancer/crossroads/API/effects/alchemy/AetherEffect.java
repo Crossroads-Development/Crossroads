@@ -16,6 +16,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.LinearCongruentialGenerator;
@@ -36,12 +37,12 @@ import java.lang.reflect.Field;
 
 public class AetherEffect implements IAlchEffect{
 
-	private static final Tag<Block> SOIL_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_soil");
-	private static final Tag<Block> ROCK_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_rock");
-	private static final Tag<Block> FLUD_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_fluid");//Was going to be named FLUID_GROUP, but the other two fields had the same name lengths and I couldn't resist
-	private static final Tag<Block> CRYS_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_crystal");
-	private static final Tag<Block> WOOD_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_wood");
-	private static final Tag<Block> FOLI_GROUP = BlockTags.bind(Crossroads.MODID + ":alchemy_foliage");
+	private static final Tag<Block> SOIL_GROUP = BlockTags.createOptional(new ResourceLocation(Crossroads.MODID, "alchemy_soil"));
+	private static final Tag<Block> ROCK_GROUP = BlockTags.createOptional(new ResourceLocation(Crossroads.MODID, "alchemy_rock"));
+	private static final Tag<Block> FLUD_GROUP = BlockTags.createOptional(new ResourceLocation(Crossroads.MODID, "alchemy_fluid"));//Was going to be named FLUID_GROUP, but the other two fields had the same name lengths and I couldn't resist
+	private static final Tag<Block> CRYS_GROUP = BlockTags.createOptional(new ResourceLocation(Crossroads.MODID, "alchemy_crystal"));
+	private static final Tag<Block> WOOD_GROUP = BlockTags.createOptional(new ResourceLocation(Crossroads.MODID, "alchemy_wood"));
+	private static final Tag<Block> FOLI_GROUP = BlockTags.createOptional(new ResourceLocation(Crossroads.MODID, "alchemy_foliage"));
 
 	protected Block soilBlock(){
 		return Blocks.GRASS_BLOCK;

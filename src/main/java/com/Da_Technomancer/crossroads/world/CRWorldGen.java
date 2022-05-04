@@ -52,7 +52,7 @@ public class CRWorldGen{
 		//Size 1 vein
 		VOID_ORE = GEM_FEATURE.configured(new OreConfiguration(new ConfigTagRuleTest(Tags.Blocks.END_STONES, "cr_void"), OreSetup.oreVoid.defaultBlockState(), 1));
 		//Size 1 vein
-		RUBY_ORE = GEM_FEATURE.configured(new OreConfiguration(new ConfigTagRuleTest(BlockTags.bind(Crossroads.MODID + ":blackstone"), "cr_ruby"), OreSetup.oreRuby.defaultBlockState(), 1));
+		RUBY_ORE = GEM_FEATURE.configured(new OreConfiguration(new ConfigTagRuleTest(BlockTags.createOptional(new ResourceLocation(Crossroads.MODID, "blackstone")), "cr_ruby"), OreSetup.oreRuby.defaultBlockState(), 1));
 
 		//Placement construction
 		TIN_ORE_PLACED_TRIANGLE = TIN_ORE_BURIED.placed(commonOrePlacement(24, HeightRangePlacement.triangle(VerticalAnchor.absolute(-64), VerticalAnchor.absolute(32))));

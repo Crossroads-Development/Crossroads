@@ -5,6 +5,7 @@ import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.world.level.Level;
@@ -118,7 +119,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.DoubleValue solarRate;
 	public static ForgeConfigSpec.DoubleValue medicinalMushroomSpread;
 
-	private static final Tag<Block> destroyBlacklist = BlockTags.bind(Crossroads.MODID + ":destroy_blacklist");
+	private static final Tag<Block> destroyBlacklist = BlockTags.createOptional(new ResourceLocation(Crossroads.MODID, "destroy_blacklist"));
 
 	private static ForgeConfigSpec clientSpec;
 	private static ForgeConfigSpec serverSpec;

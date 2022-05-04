@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.world.level.Level;
@@ -19,7 +20,7 @@ public class BeamUtil{
 	public static final int BEAM_TIME = 4;
 	public static final int POWER_LIMIT = 64_000;
 
-	private static final Tag<Block> PASSABLE = BlockTags.bind(Crossroads.MODID + ":beam_passable");
+	private static final Tag<Block> PASSABLE = BlockTags.createOptional(new ResourceLocation(Crossroads.MODID, "beam_passable"));
 	private static final VoxelShape[] COLLISION_MASK = new VoxelShape[3];
 
 	static{

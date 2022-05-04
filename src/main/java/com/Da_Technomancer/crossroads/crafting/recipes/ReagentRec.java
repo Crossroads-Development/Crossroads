@@ -242,7 +242,7 @@ public class ReagentRec implements Recipe<Container>, IReagent{
 			if(melting > boiling){
 				boiling = melting;//Equal melting and boiling point would cause sublimation, skipping liquid
 			}
-			Tag.Named<Item> item = ItemTags.bind(GsonHelper.getAsString(json, "item", "crossroads:empty"));
+			Tag.Named<Item> item = ItemTags.createOptional(new ResourceLocation(GsonHelper.getAsString(json, "item", "crossroads:empty")));
 			//Fluid definition is optional, but must have a quantity and be specified in a subelement if present
 			Pair<FluidIngredient, Integer> fluid = json.has("fluid") ? CraftingUtil.getFluidIngredientAndQuantity(json, "fluid", false, -1) : null;
 			ContainRequirements vessel = containTypeMap.getOrDefault(GsonHelper.getAsString(json, "vessel", "none"), ContainRequirements.NONE);
@@ -283,7 +283,7 @@ public class ReagentRec implements Recipe<Container>, IReagent{
 			double melting = buffer.readDouble();
 			double boiling = buffer.readDouble();
 			boolean flame = buffer.readBoolean();
-			Tag.Named<Item> solid = ItemTags.bind(buffer.readUtf());
+			Tag.Named<Item> solid = ItemTags.createOptional(new ResourceLocation(buffer.readUtf()));
 			FluidIngredient fl = FluidIngredient.readFromBuffer(buffer);
 			int flQty = buffer.readVarInt();
 			ContainRequirements vessel = ContainRequirements.values()[buffer.readVarInt()];

@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.BlockSalt;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
@@ -24,7 +25,7 @@ import java.util.List;
 public class GrowEffect extends BeamEffect{
 
 	//Crop types can be blacklisted from growth through the beam using the grow_blacklist tag. Intended for things like magical crops
-	private static final Tag<Block> growBlacklist = BlockTags.bind(Crossroads.MODID + ":grow_blacklist");
+	private static final Tag<Block> growBlacklist = BlockTags.createOptional(new ResourceLocation(Crossroads.MODID, "grow_blacklist"));
 	protected static final DamageSource POTENTIAL_VOID = new DamageSource("potentialvoid").setMagic().bypassArmor();
 	protected static final DamageSource POTENTIAL_VOID_ABSOLUTE = new DamageSource("potentialvoid").setMagic().bypassArmor().bypassMagic();
 

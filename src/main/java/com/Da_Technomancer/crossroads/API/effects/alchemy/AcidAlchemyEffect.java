@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.world.Containers;
@@ -26,9 +27,9 @@ public class AcidAlchemyEffect implements IAlchEffect{
 
 	public static final DamageSource ACID_DAMAGE = new DamageSource("chemical");
 
-	private static final Tag<Block> copperBlock = BlockTags.bind("forge:storage_blocks/copper");
-	private static final Tag<Block> tinBlock = BlockTags.bind("forge:storage_blocks/tin");
-	private static final Tag<Block> bronzeBlock = BlockTags.bind("forge:storage_blocks/bronze");
+	private static final Tag<Block> copperBlock = BlockTags.createOptional(new ResourceLocation("forge", "storage_blocks/copper"));
+	private static final Tag<Block> tinBlock = BlockTags.createOptional(new ResourceLocation("forge", "storage_blocks/tin"));
+	private static final Tag<Block> bronzeBlock = BlockTags.createOptional(new ResourceLocation("forge", "storage_blocks/bronze"));
 
 	protected int getDamage(){
 		return 8;

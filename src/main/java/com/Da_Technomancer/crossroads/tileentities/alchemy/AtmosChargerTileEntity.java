@@ -15,6 +15,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
@@ -38,7 +39,7 @@ public class AtmosChargerTileEntity extends BlockEntity implements ITickableTile
 	@ObjectHolder("atmos_charger")
 	public static BlockEntityType<AtmosChargerTileEntity> TYPE = null;
 
-	private static final Tag<Block> ANTENNA_TAG = BlockTags.bind(Crossroads.MODID + ":atmos_antenna");
+	private static final Tag<Block> ANTENNA_TAG = BlockTags.createOptional(new ResourceLocation(Crossroads.MODID, "atmos_antenna"));
 
 	private static final int FE_CAPACITY = 20_000;
 

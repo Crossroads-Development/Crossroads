@@ -11,6 +11,7 @@ import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
@@ -48,7 +49,7 @@ public class BoboRod extends Item{
 	};
 
 	//Items that are considered valid offerings
-	private static final Tag<Item> offering = ItemTags.bind(Crossroads.MODID + ":bobo_unlock_key");
+	private static final Tag<Item> offering = ItemTags.createOptional(new ResourceLocation(Crossroads.MODID, "bobo_unlock_key"));
 
 	protected BoboRod(){
 		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));

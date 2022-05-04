@@ -10,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -42,12 +43,12 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 
 	@SuppressWarnings("unchecked")
 	private static final Tag<Item>[] unlockKeys = new Tag[3];
-	private static final Tag<Item> fillerMats = ItemTags.bind(Crossroads.MODID + ":path_unlock_filler");
+	private static final Tag<Item> fillerMats = ItemTags.createOptional(new ResourceLocation(Crossroads.MODID, "path_unlock_filler"));
 
 	static{
-		unlockKeys[0] = ItemTags.bind(Crossroads.MODID + ":technomancy_unlock_key");
-		unlockKeys[1] = ItemTags.bind(Crossroads.MODID + ":alchemy_unlock_key");
-		unlockKeys[2] = ItemTags.bind(Crossroads.MODID + ":witchcraft_unlock_key");
+		unlockKeys[0] = ItemTags.createOptional(new ResourceLocation(Crossroads.MODID, "technomancy_unlock_key"));
+		unlockKeys[1] = ItemTags.createOptional(new ResourceLocation(Crossroads.MODID, "alchemy_unlock_key"));
+		unlockKeys[2] = ItemTags.createOptional(new ResourceLocation(Crossroads.MODID, "witchcraft_unlock_key"));
 	}
 
 	private final CraftingContainer inInv = new CraftingContainer(this, 3, 3);

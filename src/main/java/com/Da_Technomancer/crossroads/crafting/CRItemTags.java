@@ -24,7 +24,7 @@ public class CRItemTags{
 //	public static final ITag<Item> ALC_SALT = ItemTags.makeWrapperTag(CR + ":dusts/alchemy_salt");
 //	public static final ITag<Item> VANADIUM = ItemTags.makeWrapperTag(CR + ":dusts/vanadium");
 //	public static final ITag<Item> MERCURY = ItemTags.makeWrapperTag(FORGE + ":gems/mercury");
-	public static final Tag<Item> DENSUS = ItemTags.bind(CR + ":gems/densus");
+//	public static final Tag<Item> DENSUS = ItemTags.bind(CR + ":gems/densus");
 //	public static final ITag<Item> ANTI_DENSUS = ItemTags.makeWrapperTag(CR + ":gems/anti_densus");
 //	public static final ITag<Item> CAVORITE = ItemTags.makeWrapperTag(CR + ":gems/cavorite");
 //	public static final ITag<Item> ALCH_CRYSTAL = ItemTags.makeWrapperTag(CR + ":gems/alch_cryst");
@@ -39,22 +39,22 @@ public class CRItemTags{
 //	public static final ITag<Item> ALKAHEST = ItemTags.makeWrapperTag(CR + ":alkahest");
 //	public static final ITag<Item> ANTI_ALKAHEST = ItemTags.makeWrapperTag(CR + ":anti_alkahest");
 
-	public static final Tag<Item> PURE_ICE = ItemTags.bind(CR + ":pure_ice");
+//	public static final Tag<Item> PURE_ICE = ItemTags.bind(CR + ":pure_ice");
 //	public static final ITag<Item> RAW_ICE = ItemTags.makeWrapperTag(CR + ":raw_ice");
 
-	public static final Tag<Item> INGOTS_COPPER = ItemTags.bind(FORGE + ":ingots/copper");
+	public static final Tag<Item> INGOTS_COPPER = ItemTags.createOptional(new ResourceLocation(FORGE, "ingots/copper"));
 //	public static final ITag<Item> INGOTS_TIN = ItemTags.makeWrapperTag(FORGE + ":ingots/tin");
 //	public static final ITag<Item> NUGGETS_COPPER = ItemTags.makeWrapperTag(FORGE + ":nuggets/copper");
 //	public static final ITag<Item> NUGGETS_TIN = ItemTags.makeWrapperTag(FORGE + ":nuggets/tin");
 
-	public static final Tag<Item> GEMS_PURE_QUARTZ = ItemTags.bind(CR + ":gems/pure_quartz");
-	public static final Tag<Item> GEMS_RUBY = ItemTags.bind(FORGE + ":gems/ruby");
-	public static final Tag<Item> GEMS_VOID = ItemTags.bind(CR + ":gems/void");
+	public static final Tag<Item> GEMS_PURE_QUARTZ = ItemTags.createOptional(new ResourceLocation(CR, "gems/pure_quartz"));
+	public static final Tag<Item> GEMS_RUBY = ItemTags.createOptional(new ResourceLocation(FORGE, "gems/ruby"));
+	public static final Tag<Item> GEMS_VOID = ItemTags.createOptional(new ResourceLocation(CR, "gems/void"));
 
-	public static final Tag<Item> EXPLODE_IF_KNOCKED = ItemTags.bind(CR + ":explode_on_hit");
-	public static final Tag<Item> SALT_REACTOR_COOLANT = ItemTags.bind(CR + ":salt_reactor_coolant");
+	public static final Tag<Item> EXPLODE_IF_KNOCKED = ItemTags.createOptional(new ResourceLocation(CR, "explode_on_hit"));
+	public static final Tag<Item> SALT_REACTOR_COOLANT = ItemTags.createOptional(new ResourceLocation(CR, "salt_reactor_coolant"));
 
-	public static final Tag<Item> INCUBATOR_EGG = ItemTags.bind(CR + ":incubator_egg");
+	public static final Tag<Item> INCUBATOR_EGG = ItemTags.createOptional(new ResourceLocation(CR, "incubator_egg"));
 
 	/**
 	 * Returns an entry from the Tag
