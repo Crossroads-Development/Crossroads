@@ -24,10 +24,6 @@
 		{
 			"type": "patchouli:text",
 			"text": "<item>温度调节器/$有两种变体：普通<item>温度调节器/$，通过UI设置目标温度；<item>红石温度调节器/$，通过<thing>$(l:essentials/circuit)电路/$设置目标<thing>$(l:crossroads:intro/heat)温度/$。$(br2)"
-		},
-		{
-			"type": "patchouli:text",
-			"text": "<bobo>$(l:crossroads:intro/welcome#bobo)渥肆bOqr！！/$<bobo>渥友！！！！重药咚西~~~！超热！钞冷！订义热/冷栋力学！免费费费费！！！$(br2)<bobo>红金属定！$(br2)<bobo>酸搞得打不坏芳快！$(br2)<bobo>燃后是坠难的！好次粒叠在1物品！1雾品堆叠数！/$$(br2)"
 		}
 	]
 }

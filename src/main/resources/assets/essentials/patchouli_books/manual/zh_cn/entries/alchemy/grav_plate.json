@@ -20,6 +20,10 @@
 		{
 			"type": "patchouli:text",
 			"text": "一个<item>凯沃物质块/$即可阻挡<item>密素板/$的引力。活塞可以移动<item>凯沃物质块/$。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<bobo>$(l:crossroads:intro/welcome#bobo)渥肆bOqr！！/$<bobo>渥友！！！！重药咚西~~~！超热！钞冷！订义热/冷栋力学！免费费费费！！！$(br2)<bobo>红金属定！$(br2)<bobo>重利布能过！$(br2)<bobo>燃后是坠难的！好次粒叠在1物品！1雾品堆叠数！/$$(br2)"
 		}
 	]
 }

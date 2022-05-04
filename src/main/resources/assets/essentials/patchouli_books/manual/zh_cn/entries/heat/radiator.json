@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": ""
+			"text": "产热和消耗蒸汽的速率可以通过使用$(l:essentials/wrench)扳手/$右击调节。$(br2)"
 		},
 		{
 			"type": "patchouli:text",
