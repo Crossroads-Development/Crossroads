@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.SteamTurbineContainer;
 import net.minecraft.core.BlockPos;
@@ -37,7 +38,7 @@ public class SteamTurbineTileEntity extends InventoryTE{
 	public SteamTurbineTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 0);
 		fluidProps[0] = new TankProperty(CAPACITY, false, true);
-		fluidProps[1] = new TankProperty(CAPACITY, true, false, CRFluids.STEAM::contains);
+		fluidProps[1] = new TankProperty(CAPACITY, true, false, f -> CRItemTags.tagContains(CRFluids.STEAM, f));
 		initFluidManagers();
 	}
 

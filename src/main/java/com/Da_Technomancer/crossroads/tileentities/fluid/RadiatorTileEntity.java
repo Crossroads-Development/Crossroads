@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.RadiatorContainer;
 import net.minecraft.core.BlockPos;
@@ -36,7 +37,7 @@ public class RadiatorTileEntity extends InventoryTE{
 
 	public RadiatorTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 0);
-		fluidProps[0] = new TankProperty(10_000, true, false, CRFluids.STEAM::contains);
+		fluidProps[0] = new TankProperty(10_000, true, false, f -> CRItemTags.tagContains(CRFluids.STEAM, f));
 		fluidProps[1] = new TankProperty(10_000, false, true);
 		initFluidManagers();
 	}

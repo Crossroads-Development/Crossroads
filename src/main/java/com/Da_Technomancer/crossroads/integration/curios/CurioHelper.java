@@ -5,7 +5,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.commons.lang3.tuple.ImmutableTriple;
+import top.theillusivec4.curios.api.SlotResult;
 
 import java.util.Optional;
 
@@ -45,9 +45,9 @@ public class CurioHelper{
 
 		//Check curios, if applicable
 		if(foundCurios){
-			Optional<ImmutableTriple<String, Integer, ItemStack>> result = CurioCRCore.getEquippedCurio(item, player);
+			Optional<SlotResult> result = CurioCRCore.findFirstCurio(item, player);
 			if(result.isPresent()){
-				return result.get().getRight();
+				return result.get().stack();
 			}
 		}
 

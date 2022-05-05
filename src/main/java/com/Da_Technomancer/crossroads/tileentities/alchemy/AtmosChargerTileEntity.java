@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.alchemy.AtmosCharger;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
 import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
@@ -19,6 +20,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -29,6 +31,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
@@ -39,7 +42,7 @@ public class AtmosChargerTileEntity extends BlockEntity implements ITickableTile
 	@ObjectHolder("atmos_charger")
 	public static BlockEntityType<AtmosChargerTileEntity> TYPE = null;
 
-	private static final Tag<Block> ANTENNA_TAG = BlockTags.createOptional(new ResourceLocation(Crossroads.MODID, "atmos_antenna"));
+	private static final TagKey<Block> ANTENNA_TAG = CRItemTags.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation(Crossroads.MODID, "atmos_antenna"));
 
 	private static final int FE_CAPACITY = 20_000;
 

@@ -2,14 +2,14 @@ package com.Da_Technomancer.crossroads.API.effects.alchemy;
 
 import com.Da_Technomancer.crossroads.API.alchemy.EnumMatterPhase;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.Containers;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntitySelector;
@@ -22,14 +22,15 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class AcidAlchemyEffect implements IAlchEffect{
 
 	public static final DamageSource ACID_DAMAGE = new DamageSource("chemical");
 
-	private static final Tag<Block> copperBlock = BlockTags.createOptional(new ResourceLocation("forge", "storage_blocks/copper"));
-	private static final Tag<Block> tinBlock = BlockTags.createOptional(new ResourceLocation("forge", "storage_blocks/tin"));
-	private static final Tag<Block> bronzeBlock = BlockTags.createOptional(new ResourceLocation("forge", "storage_blocks/bronze"));
+	private static final TagKey<Block> copperBlock = CRItemTags.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation("forge", "storage_blocks/copper"));
+	private static final TagKey<Block> tinBlock = CRItemTags.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation("forge", "storage_blocks/tin"));
+	private static final TagKey<Block> bronzeBlock = CRItemTags.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation("forge", "storage_blocks/bronze"));
 
 	protected int getDamage(){
 		return 8;
@@ -58,29 +59,29 @@ public class AcidAlchemyEffect implements IAlchEffect{
 		}
 
 		Block block = state.getBlock();
-		if(Tags.Blocks.STORAGE_BLOCKS_IRON.contains(block)){
+		if(CRItemTags.tagContains(Tags.Blocks.STORAGE_BLOCKS_IRON, block)){
 			Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.IRON_INGOT, world.random.nextInt(9) + 1));
 			world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 			return;
 		}
-		if(Tags.Blocks.STORAGE_BLOCKS_GOLD.contains(block)){
+		if(CRItemTags.tagContains(Tags.Blocks.STORAGE_BLOCKS_GOLD, block)){
 			if(isRegia()){
 				Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.GOLD_INGOT, world.random.nextInt(9) + 1));
 				world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 			}
 			return;
 		}
-		if(copperBlock.contains(block)){
-			Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(OreSetup.ingotCopper, world.random.nextInt(9) + 1));
+		if(CRItemTags.tagContains(copperBlock, block)){
+			Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.COPPER_INGOT, world.random.nextInt(9) + 1));
 			world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 			return;
 		}
-		if(tinBlock.contains(block)){
+		if(CRItemTags.tagContains(tinBlock, block)){
 			Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(OreSetup.ingotTin, world.random.nextInt(9) + 1));
 			world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 			return;
 		}
-		if(bronzeBlock.contains(block)){
+		if(CRItemTags.tagContains(bronzeBlock, block)){
 			Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(OreSetup.ingotBronze, world.random.nextInt(9) + 1));
 			world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 		}

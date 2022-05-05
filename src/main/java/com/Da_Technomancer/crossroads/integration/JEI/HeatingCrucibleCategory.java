@@ -6,22 +6,24 @@ import com.Da_Technomancer.crossroads.crafting.recipes.CrucibleRec;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
-import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 public class HeatingCrucibleCategory implements IRecipeCategory<CrucibleRec>{
 
-	public static final ResourceLocation ID = new ResourceLocation(Crossroads.MODID, "heating_crucible");
+	public static final RecipeType<CrucibleRec> TYPE = RecipeType.create(Crossroads.MODID, "heating_crucible", CrucibleRec.class);
 	private final IDrawable back;
 	private final IDrawable slot;
 	private final IDrawableAnimated arrow;
@@ -35,18 +37,23 @@ public class HeatingCrucibleCategory implements IRecipeCategory<CrucibleRec>{
 
 		arrowStatic = guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 79, 35, 24, 17);
 		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 176, 14, 24, 17), 40, IDrawableAnimated.StartDirection.LEFT, false);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(CRBlocks.heatingCrucible, 1));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(CRBlocks.heatingCrucible, 1));
 		fluidOverlay = JEICrossroadsPlugin.createFluidOverlay(guiHelper);//guiHelper.createDrawable(new ResourceLocation(Crossroads.MODID, "textures/gui/rectangle_fluid_overlay.png"), 0, 0, 16, 64);
 	}
 
 	@Override
 	public ResourceLocation getUid(){
-		return ID;
+		return TYPE.getUid();
 	}
 
 	@Override
 	public Class<? extends CrucibleRec> getRecipeClass(){
-		return CrucibleRec.class;
+		return TYPE.getRecipeClass();
+	}
+
+	@Override
+	public RecipeType<CrucibleRec> getRecipeType(){
+		return TYPE;
 	}
 
 	@Override
@@ -60,41 +67,22 @@ public class HeatingCrucibleCategory implements IRecipeCategory<CrucibleRec>{
 	}
 
 	@Override
-	public void draw(CrucibleRec recipe, PoseStack matrix, double mouseX, double mouseY){
-//		GlStateManager.enableAlpha();
-//		GlStateManager.enableBlend();
-		Minecraft.getInstance().font.draw(matrix, "When above 1000°C", 10, 10, 0x404040);
-		Minecraft.getInstance().font.draw(matrix, String.format("Total Heat Consumed: %1$d°C", HeatingCrucibleTileEntity.REQUIRED), 10, 20, 0x404040);
+	public void draw(CrucibleRec recipe, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY){
+		Minecraft.getInstance().font.draw(matrix, new TranslatableComponent("crossroads.jei.crucible.min_temp", HeatingCrucibleTileEntity.TEMP_TIERS[0]), 10, 10, 0x404040);
+		Minecraft.getInstance().font.draw(matrix, new TranslatableComponent("crossroads.jei.crucible.required", HeatingCrucibleTileEntity.REQUIRED), 10, 20, 0x404040);
 		slot.draw(matrix, 40, 50);
 		arrowStatic.draw(matrix, 62, 50);
 		arrow.draw(matrix, 62, 50);
-//		GlStateManager.disableBlend();
-//		GlStateManager.disableAlpha();
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout layout, CrucibleRec recipe, IIngredients ingredients){
-		IGuiItemStackGroup itemGroup = layout.getItemStacks();
-		IGuiFluidStackGroup fluidGroup = layout.getFluidStacks();
-
-//		List<FluidStack> fluids = ingredients.getOutputs(VanillaTypes.FLUID).get(0);
-		fluidGroup.init(0, false, 90, 30, 16, 64, 2_000, true, fluidOverlay);
-//		fluidGroup.set(0, recipe.getOutput());
-		itemGroup.init(0, true, 40, 50);
-//		itemGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
-
-		itemGroup.set(ingredients);
-		fluidGroup.set(ingredients);
+	public void setRecipe(IRecipeLayoutBuilder builder, CrucibleRec recipe, IFocusGroup focuses){
+		builder.addSlot(RecipeIngredientRole.INPUT, 41, 51).addIngredients(recipe.getIngredient());
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 91, 31).addIngredient(VanillaTypes.FLUID, recipe.getOutput()).setFluidRenderer(2000, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
 	}
 
 	@Override
 	public IDrawable getIcon(){
 		return icon;
-	}
-
-	@Override
-	public void setIngredients(CrucibleRec recipe, IIngredients ingredients){
-		ingredients.setInputIngredients(recipe.getIngredients());
-		ingredients.setOutput(VanillaTypes.FLUID, recipe.getOutput());
 	}
 }

@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import com.Da_Technomancer.essentials.tileentities.LinkHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -105,7 +106,7 @@ public class TeslaCoilTopTileEntity extends BlockEntity implements IInfoTE, ILin
 		}else if(!level.isClientSide){
 			//TRANSFER
 			for(BlockPos linkPos : linkHelper.getLinksRelative()){
-				if(linkPos != null && coilTE.getStored() >= joltQty && linkPos.distSqr(0, 0, 0, false) <= range * range){
+				if(linkPos != null && coilTE.getStored() >= joltQty && linkPos.distSqr(Vec3i.ZERO) <= range * range){
 					BlockPos actualPos = linkPos.offset(worldPosition.getX(), worldPosition.getY() - 1, worldPosition.getZ());
 					BlockEntity te = level.getBlockEntity(actualPos);
 					if(te instanceof TeslaCoilTileEntity && level.getBlockEntity(actualPos.above()) instanceof TeslaCoilTopTileEntity){

@@ -14,6 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -104,7 +105,7 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 			Conductors match = null;
 			Item item = playerIn.getItemInHand(hand).getItem();
 			for(Conductors c : Conductors.values()){
-				if(c.tag.contains(item)){
+				if(CRItemTags.tagContains(c.tag, item)){
 					match = c;
 					break;
 				}
@@ -157,9 +158,9 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 		QUARTZ(Tags.Items.GEMS_QUARTZ),
 		DIAMOND(Tags.Items.GEMS_DIAMOND);
 
-		public final Tag<Item> tag;
+		public final TagKey<Item> tag;
 
-		Conductors(Tag<Item> tag){
+		Conductors(TagKey<Item> tag){
 			this.tag = tag;
 		}
 

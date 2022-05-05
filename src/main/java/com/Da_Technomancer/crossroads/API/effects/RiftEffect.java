@@ -56,7 +56,7 @@ public class RiftEffect extends BeamEffect{
 				if(RAND.nextInt(256) < power){
 					boolean peaceful = worldServ.getDifficulty() == Difficulty.PEACEFUL || CRConfig.riftSpawnDrops.get();
 					try{
-						WeightedRandomList<MobSpawnSettings.SpawnerData> list = worldServ.getBiome(pos).getMobSettings().getMobs(MobCategory.MONSTER);
+						WeightedRandomList<MobSpawnSettings.SpawnerData> list = worldServ.getBiome(pos).value().getMobSettings().getMobs(MobCategory.MONSTER);
 //						list = ForgeEventFactory.getPotentialSpawns(worldServ, MobCategory.MONSTER, pos, list);
 						if(!list.isEmpty()){
 							//Vanilla style spawning would spawn a group of mobs at a time (with group size defined by the SpawnListEntry). We only want to spawn 1 mob at a time

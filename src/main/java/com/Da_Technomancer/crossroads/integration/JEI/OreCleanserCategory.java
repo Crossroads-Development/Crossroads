@@ -7,14 +7,15 @@ import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.tileentities.fluid.OreCleanserTileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
-import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -23,7 +24,8 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class OreCleanserCategory implements IRecipeCategory<OreCleanserRec>{
 
-	public static final ResourceLocation ID = new ResourceLocation(Crossroads.MODID, "ore_cleanser");
+	public static final RecipeType<OreCleanserRec> TYPE = RecipeType.create(Crossroads.MODID, "ore_cleanser", OreCleanserRec.class);
+
 	private final IDrawable back;
 	private final IDrawable slot;
 	private final IDrawableAnimated arrow;
@@ -37,17 +39,22 @@ public class OreCleanserCategory implements IRecipeCategory<OreCleanserRec>{
 		arrowStatic = guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 79, 35, 24, 17);
 		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 176, 14, 24, 17), 40, IDrawableAnimated.StartDirection.LEFT, false);
 		fluidOverlay = JEICrossroadsPlugin.createFluidOverlay(guiHelper);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(CRBlocks.oreCleanser, 1));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(CRBlocks.oreCleanser, 1));
 	}
 
 	@Override
 	public ResourceLocation getUid(){
-		return ID;
+		return TYPE.getUid();
 	}
 
 	@Override
 	public Class<? extends OreCleanserRec> getRecipeClass(){
-		return OreCleanserRec.class;
+		return TYPE.getRecipeClass();
+	}
+
+	@Override
+	public RecipeType<OreCleanserRec> getRecipeType(){
+		return TYPE;
 	}
 
 	@Override
@@ -66,43 +73,18 @@ public class OreCleanserCategory implements IRecipeCategory<OreCleanserRec>{
 	}
 
 	@Override
-	public void draw(OreCleanserRec recipe, PoseStack matrix, double mouseX, double mouseY){
-//		GlStateManager.enableAlpha();
-//		GlStateManager.enableBlend();
+	public void draw(OreCleanserRec recipe, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY){
 		slot.draw(matrix, 54, 50);
 		slot.draw(matrix, 110, 50);
 		arrowStatic.draw(matrix, 78, 50);
 		arrow.draw(matrix, 78, 50);
-//		GlStateManager.disableBlend();
-//		GlStateManager.disableAlpha();
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout layout, OreCleanserRec recipe, IIngredients ingredients){
-		IGuiItemStackGroup itemGroup = layout.getItemStacks();
-		IGuiFluidStackGroup fluidGroup = layout.getFluidStacks();
-
-		itemGroup.init(0, true, 54, 50);
-//		itemGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
-
-		itemGroup.init(1, false, 110, 50);
-//		itemGroup.set(1, recipe.getResultItem());
-
-		fluidGroup.init(0, true, 34, 30, 16, 64, 1_000, true, fluidOverlay);
-//		fluidGroup.set(0, new FluidStack(CRFluids.steam.still, OreCleanserTileEntity.WATER_USE));
-
-		fluidGroup.init(1, false, 130, 30, 16, 64, 1_000, true, fluidOverlay);
-//		fluidGroup.set(1, new FluidStack(CRFluids.dirtyWater.still, OreCleanserTileEntity.WATER_USE));
-
-		itemGroup.set(ingredients);
-		fluidGroup.set(ingredients);
-	}
-
-	@Override
-	public void setIngredients(OreCleanserRec recipe, IIngredients ingredients){
-		ingredients.setInputIngredients(recipe.getIngredients());
-		ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
-		ingredients.setInput(VanillaTypes.FLUID, new FluidStack(CRFluids.steam.still, OreCleanserTileEntity.WATER_USE));
-		ingredients.setOutput(VanillaTypes.FLUID, new FluidStack(CRFluids.dirtyWater.still, OreCleanserTileEntity.WATER_USE));
+	public void setRecipe(IRecipeLayoutBuilder builder, OreCleanserRec recipe, IFocusGroup focuses){
+		builder.addSlot(RecipeIngredientRole.INPUT, 55, 51).addIngredients(recipe.getIngredient());
+		builder.addSlot(RecipeIngredientRole.INPUT, 35, 31).addIngredient(VanillaTypes.FLUID, new FluidStack(CRFluids.steam.still, OreCleanserTileEntity.WATER_USE)).setFluidRenderer(1000, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 111, 51).addItemStack(recipe.getResultItem());
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 131, 31).addIngredient(VanillaTypes.FLUID, new FluidStack(CRFluids.dirtyWater.still, OreCleanserTileEntity.WATER_USE)).setFluidRenderer(1000, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
 	}
 }

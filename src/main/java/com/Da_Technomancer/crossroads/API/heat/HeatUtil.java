@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.ReflectionUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.Level;
@@ -77,8 +78,8 @@ public class HeatUtil{
 		if(world == null || pos == null){
 			return ABSOLUTE_ZERO;
 		}
-		Biome biome = world.getBiome(pos);
-
+		Holder<Biome> biomeHolder = world.getBiome(pos);
+		Biome biome = biomeHolder.value();
 		double rawTemp;
 		if(GET_BIOME_TEMPERATURE_NO_CACHE != null){
 			try{
@@ -94,7 +95,7 @@ public class HeatUtil{
 		//This formula was derived with the power of wikipedia and excel spreadsheets to compare biome temperatures to actual real world temperatures.
 		//Most people probably wouldn't care if I'd just pulled it out of my *rse, but I made an effort and I want someone to know this. Appreciate it. Please?
 		double outTemp = rawTemp * 16D - 3D;
-		if(biome.getBiomeCategory() == Biome.BiomeCategory.NETHER){
+		if(Biome.getBiomeCategory(biomeHolder) == Biome.BiomeCategory.NETHER){
 			outTemp = Math.max(outTemp, CRConfig.hellTemperature.get());
 		}
 		return MiscUtil.preciseRound(outTemp, 3);

@@ -71,6 +71,10 @@ public abstract class SingleIngrRecipe implements IOptionalRecipe<Container>{
 		return result;
 	}
 
+	public Ingredient getIngredient(){
+		return ingredient;
+	}
+
 	@Override
 	public NonNullList<Ingredient> getIngredients() {
 		NonNullList<Ingredient> nonnulllist = NonNullList.create();

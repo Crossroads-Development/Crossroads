@@ -62,6 +62,10 @@ public class FormulationVatRec implements IOptionalRecipe<Container>{
 		return nonnulllist;
 	}
 
+	public Ingredient getIngredient(){
+		return itemInput;
+	}
+
 	public FluidStack getOutput(){
 		return output;
 	}

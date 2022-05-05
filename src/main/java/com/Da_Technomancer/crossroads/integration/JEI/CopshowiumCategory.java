@@ -5,16 +5,17 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.recipes.CopshowiumRec;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
-import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -24,7 +25,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class CopshowiumCategory implements IRecipeCategory<CopshowiumRec>{
 
-	public static final ResourceLocation ID = new ResourceLocation(Crossroads.MODID, "copshowium");
+	public static final RecipeType<CopshowiumRec> TYPE = RecipeType.create(Crossroads.MODID, "copshowium", CopshowiumRec.class);
 	private final IDrawable back;
 	private final IDrawable icon;
 	private final IDrawableAnimated arrow;
@@ -33,7 +34,7 @@ public class CopshowiumCategory implements IRecipeCategory<CopshowiumRec>{
 
 	protected CopshowiumCategory(IGuiHelper guiHelper){
 		back = guiHelper.createBlankDrawable(180, 100);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(CRBlocks.copshowiumCreationChamber, 1));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(CRBlocks.copshowiumCreationChamber, 1));
 		arrowStatic = guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 79, 35, 24, 17);
 		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 176, 14, 24, 17), 40, IDrawableAnimated.StartDirection.LEFT, false);
 		fluidOverlay = JEICrossroadsPlugin.createFluidOverlay(guiHelper);
@@ -41,12 +42,17 @@ public class CopshowiumCategory implements IRecipeCategory<CopshowiumRec>{
 
 	@Override
 	public ResourceLocation getUid(){
-		return ID;
+		return TYPE.getUid();
 	}
 
 	@Override
 	public Class<? extends CopshowiumRec> getRecipeClass(){
-		return CopshowiumRec.class;
+		return TYPE.getRecipeClass();
+	}
+
+	@Override
+	public RecipeType<CopshowiumRec> getRecipeType(){
+		return TYPE;
 	}
 
 	@Override
@@ -60,39 +66,23 @@ public class CopshowiumCategory implements IRecipeCategory<CopshowiumRec>{
 	}
 
 	@Override
-	public void draw(CopshowiumRec rec, PoseStack matrix, double mouseX, double mouseY){
+	public void draw(CopshowiumRec rec, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY){
 		if(rec.isFlux()){
 			Minecraft.getInstance().font.draw(matrix, MiscUtil.localize("crossroads.jei.copshowium.flux"), 10, 10, 4210752);
 		}
-//		GlStateManager.enableAlpha();
-//		GlStateManager.enableBlend();
 		arrowStatic.draw(matrix, 75, 56);
 		arrow.draw(matrix, 75, 56);
-//		GlStateManager.disableBlend();
-//		GlStateManager.disableAlpha();
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, CopshowiumRec recipe, IIngredients ingredients){
-		IGuiFluidStackGroup fluidGroup = recipeLayout.getFluidStacks();
-
-		fluidGroup.init(0, true, 50, 30, 16, 64, 4000, true, fluidOverlay);
-//		fluidGroup.set(0, recipe.getInput());
-		fluidGroup.init(1, false, 110, 30, 16, 64, 4000, true, fluidOverlay);
-//		fluidGroup.set(1, ingredients.getOutputs(VanillaTypes.FLUID).get(0));
-
-		fluidGroup.set(ingredients);
+	public void setRecipe(IRecipeLayoutBuilder builder, CopshowiumRec recipe, IFocusGroup focuses){
+		int displaySize = 1000;
+		builder.addSlot(RecipeIngredientRole.INPUT, 51, 31).addIngredients(VanillaTypes.FLUID, recipe.getInput().getMatchedFluidStacks(displaySize)).setFluidRenderer(4000, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 111, 31).addIngredient(VanillaTypes.FLUID, new FluidStack(CRFluids.moltenCopshowium.still, (int) (displaySize * recipe.getMult()))).setFluidRenderer(4000, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
 	}
 
 	@Override
 	public IDrawable getIcon(){
 		return icon;
-	}
-
-	@Override
-	public void setIngredients(CopshowiumRec recipe, IIngredients ingredients){
-		int displaySize = 1000;
-		ingredients.setInputLists(VanillaTypes.FLUID, ImmutableList.of(recipe.getInput().getMatchedFluidStacks(displaySize)));
-		ingredients.setOutput(VanillaTypes.FLUID, new FluidStack(CRFluids.moltenCopshowium.still, (int) (displaySize * recipe.getMult())));
 	}
 }

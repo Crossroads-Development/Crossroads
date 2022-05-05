@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.API.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.gui.container.BeaconHarnessContainer;
 import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import io.netty.buffer.Unpooled;
@@ -119,7 +120,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 			if(state.getBlock() == Blocks.BEACON){
 				return false;
 			}
-			if(!BlockTags.BEACON_BASE_BLOCKS.contains(state.getBlock())){
+			if(!CRItemTags.tagContains(BlockTags.BEACON_BASE_BLOCKS, state.getBlock())){
 				return true;
 			}
 		}

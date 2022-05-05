@@ -1,14 +1,14 @@
 package com.Da_Technomancer.crossroads.crafting.recipes;
 
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -47,9 +47,9 @@ public class BlockIngredient implements Predicate<BlockState>{
 		for(Object key : matched){
 			if(key instanceof IBlockList){
 				keys.add((IBlockList) key);
-			}else if(key instanceof Tag){
+			}else if(key instanceof TagKey){
 				try{
-					Tag<Block> tag = (Tag<Block>) key;
+					TagKey<Block> tag = (TagKey<Block>) key;
 					keys.add(new TagList(tag));
 				}catch(ClassCastException e){
 					Crossroads.logger.error("An illegal tag type was added to a BlockIngredient. Report to mod author!", e);
@@ -126,7 +126,7 @@ public class BlockIngredient implements Predicate<BlockState>{
 
 	private static IBlockList readIngr(JsonObject o){
 		if(o.has("tag")){
-			return new TagList(BlockTags.createOptional(new ResourceLocation(GsonHelper.getAsString(o, "tag"))));
+			return new TagList(CRItemTags.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation(GsonHelper.getAsString(o, "tag"))));
 		}else if(o.has("block")){
 			return new SingleList(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(GsonHelper.getAsString(o, "block"))));
 		}else{
@@ -167,15 +167,15 @@ public class BlockIngredient implements Predicate<BlockState>{
 
 	private static class TagList implements IBlockList{
 
-		private final Tag<Block> tag;
+		private final TagKey<Block> tag;
 
-		public TagList(Tag<Block> matched){
+		public TagList(TagKey<Block> matched){
 			tag = matched;
 		}
 
 		@Override
 		public Collection<Block> getMatched(){
-			return tag.getValues();
+			return CRItemTags.getTagManagerForKey(tag).getTag(tag).stream().collect(Collectors.toUnmodifiableSet());
 		}
 	}
 

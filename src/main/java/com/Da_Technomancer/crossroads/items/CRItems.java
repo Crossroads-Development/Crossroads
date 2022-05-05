@@ -1,16 +1,17 @@
 package com.Da_Technomancer.crossroads.items;
 
+import com.Da_Technomancer.crossroads.API.CRReflection;
 import com.Da_Technomancer.crossroads.API.EnumPath;
 import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.API.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.witchcraft.EmbryoLab;
 import com.Da_Technomancer.crossroads.entity.EntityHopperHawk;
 import com.Da_Technomancer.crossroads.items.alchemy.*;
 import com.Da_Technomancer.crossroads.items.itemSets.*;
 import com.Da_Technomancer.crossroads.items.technomancy.*;
 import com.Da_Technomancer.crossroads.items.witchcraft.*;
+import com.Da_Technomancer.essentials.ReflectionUtil;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
@@ -24,10 +25,14 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeSpawnEggItem;
+import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class CRItems{
 
@@ -352,26 +357,20 @@ public final class CRItems{
 	 * @param items All items to override the dispenser behaviour for
 	 */
 	private static void registerDispenserOverride(OptionalDispenseItemBehavior overrideBehaviour, Item... items){
+		final Field DISPENSER_MAP = ReflectionUtil.reflectField(CRReflection.DISPENSER_BEHAVIOR_MAP);
+		Map<Item, DispenseItemBehavior> DISPENSER_REGISTRY;
+		if(DISPENSER_MAP != null){
+			try{
+				DISPENSER_REGISTRY = (Map<Item, DispenseItemBehavior>) DISPENSER_MAP.get(null);
+			}catch(IllegalAccessException | ClassCastException e){
+				DISPENSER_REGISTRY = new HashMap<>(0);
+				Crossroads.logger.log(Level.ERROR, "Failed to register a dispenser override", e);
+			}
+		}else{
+			DISPENSER_REGISTRY = new HashMap<>(0);
+		}
 		for(Item item : items){
-			DispenserBlock.registerBehavior(item, new FallbackDispenseBehaviour(overrideBehaviour, DispenserSubclass.INSTANCE.getDispenseMethod(new ItemStack(item))));
-		}
-	}
-
-	private static class DispenserSubclass extends DispenserBlock{
-
-		/**
-		 * This class solely exists to get access to the private static dispense behaviour map
-		 * There is a protected non-static accessor we create an instance of this subclass to access
-		 */
-		public static final DispenserSubclass INSTANCE = new DispenserSubclass(CRBlocks.getRockProperty());
-
-		private DispenserSubclass(Properties dummyProp){
-			super(dummyProp);
-		}
-
-		@Override
-		public DispenseItemBehavior getDispenseMethod(ItemStack stack){
-			return super.getDispenseMethod(stack);
+			DispenserBlock.registerBehavior(item, new FallbackDispenseBehaviour(overrideBehaviour, DISPENSER_REGISTRY.get(item)));
 		}
 	}
 

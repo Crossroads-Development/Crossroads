@@ -6,11 +6,14 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.recipes.IceboxRec;
 import com.Da_Technomancer.crossroads.tileentities.heat.IceboxTileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -20,7 +23,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class IceboxFuelCategory implements IRecipeCategory<IceboxRec>{
 
-	public static final ResourceLocation ID = new ResourceLocation(Crossroads.MODID, "icebox");
+	public static final RecipeType<IceboxRec> TYPE = RecipeType.create(Crossroads.MODID, "icebox", IceboxRec.class);
 	private final IDrawable back;
 	private final IDrawable slot;
 	private final IDrawable icon;
@@ -28,17 +31,22 @@ public class IceboxFuelCategory implements IRecipeCategory<IceboxRec>{
 	protected IceboxFuelCategory(IGuiHelper guiHelper){
 		back = guiHelper.createBlankDrawable(180, 100);
 		slot = guiHelper.getSlotDrawable();
-		icon = guiHelper.createDrawableIngredient(new ItemStack(CRBlocks.icebox, 1));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(CRBlocks.icebox, 1));
 	}
 
 	@Override
 	public ResourceLocation getUid(){
-		return ID;
+		return TYPE.getUid();
 	}
 
 	@Override
 	public Class<? extends IceboxRec> getRecipeClass(){
-		return IceboxRec.class;
+		return TYPE.getRecipeClass();
+	}
+
+	@Override
+	public RecipeType<IceboxRec> getRecipeType(){
+		return TYPE;
 	}
 
 	@Override
@@ -57,17 +65,8 @@ public class IceboxFuelCategory implements IRecipeCategory<IceboxRec>{
 	}
 
 	@Override
-	public void setIngredients(IceboxRec recipe, IIngredients ingredients){
-		ingredients.setInputIngredients(recipe.getIngredients());
-	}
-
-	@Override
-	public void draw(IceboxRec rec, PoseStack matrix, double mouseX, double mouseY){
-//		GlStateManager.enableAlpha();
-//		GlStateManager.enableBlend();
+	public void draw(IceboxRec rec, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY){
 		slot.draw(matrix, 20, 50);
-//		GlStateManager.disableBlend();
-//		GlStateManager.disableAlpha();
 
 		int coolTime = Math.round(rec.getCooling());
 		Minecraft minecraft = Minecraft.getInstance();
@@ -76,10 +75,7 @@ public class IceboxFuelCategory implements IRecipeCategory<IceboxRec>{
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout layout, IceboxRec recipe, IIngredients ingredients){
-		IGuiItemStackGroup itemGroup = layout.getItemStacks();
-		itemGroup.init(0, true, 20, 50);
-//		itemGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
-		itemGroup.set(ingredients);
+	public void setRecipe(IRecipeLayoutBuilder builder, IceboxRec recipe, IFocusGroup focuses){
+		builder.addSlot(RecipeIngredientRole.INPUT, 21, 51).addIngredients(recipe.getIngredient());
 	}
 }

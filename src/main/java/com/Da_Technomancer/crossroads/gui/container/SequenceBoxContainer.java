@@ -41,6 +41,6 @@ public class SequenceBoxContainer extends AbstractContainerMenu{
 
 	@Override
 	public boolean stillValid(Player playerIn){
-		return pos != null && pos.distSqr(playerIn.position(), true) <= 64;
+		return pos != null && pos.distSqr(playerIn.blockPosition()) <= 64;
 	}
 }

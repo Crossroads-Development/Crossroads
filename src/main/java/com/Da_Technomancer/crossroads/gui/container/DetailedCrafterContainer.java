@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.gui.container;
 import com.Da_Technomancer.crossroads.API.EnumPath;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.DetailedCrafterRec;
 import com.Da_Technomancer.essentials.blocks.BlockUtil;
@@ -14,8 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -27,6 +27,7 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
@@ -42,13 +43,13 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 	private static MenuType<DetailedCrafterContainer> type = null;
 
 	@SuppressWarnings("unchecked")
-	private static final Tag<Item>[] unlockKeys = new Tag[3];
-	private static final Tag<Item> fillerMats = ItemTags.createOptional(new ResourceLocation(Crossroads.MODID, "path_unlock_filler"));
+	private static final TagKey<Item>[] unlockKeys = new TagKey[3];
+	private static final TagKey<Item> fillerMats = CRItemTags.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(Crossroads.MODID, "path_unlock_filler"));
 
 	static{
-		unlockKeys[0] = ItemTags.createOptional(new ResourceLocation(Crossroads.MODID, "technomancy_unlock_key"));
-		unlockKeys[1] = ItemTags.createOptional(new ResourceLocation(Crossroads.MODID, "alchemy_unlock_key"));
-		unlockKeys[2] = ItemTags.createOptional(new ResourceLocation(Crossroads.MODID, "witchcraft_unlock_key"));
+		unlockKeys[0] = CRItemTags.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(Crossroads.MODID, "technomancy_unlock_key"));
+		unlockKeys[1] = CRItemTags.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(Crossroads.MODID, "alchemy_unlock_key"));
+		unlockKeys[2] = CRItemTags.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(Crossroads.MODID, "witchcraft_unlock_key"));
 	}
 
 	private final CraftingContainer inInv = new CraftingContainer(this, 3, 3);
@@ -272,11 +273,11 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 	 */
 	private boolean unlockRecipe(EnumPath path){
 		for(int i = 0; i < 9; i++){
-			if(i != 4 && !fillerMats.contains(inInv.getItem(i).getItem())){
+			if(i != 4 && !CRItemTags.tagContains(fillerMats, inInv.getItem(i).getItem())){
 				return false;
 			}
 		}
-		return unlockKeys[path.getIndex()].contains(inInv.getItem(4).getItem());
+		return CRItemTags.tagContains(unlockKeys[path.getIndex()], inInv.getItem(4).getItem());
 	}
 
 	private void playUnlockSound(){

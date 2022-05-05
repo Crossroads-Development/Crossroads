@@ -58,6 +58,10 @@ public class MillRec implements IOptionalRecipe<Container>{
 		return nonnulllist;
 	}
 
+	public Ingredient getIngredient(){
+		return ingr;
+	}
+
 	@Override
 	public boolean matches(Container inv, Level worldIn){
 		return ingr.test(inv.getItem(0));

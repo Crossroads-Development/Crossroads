@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.SteamBoilerContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
@@ -12,13 +13,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -41,7 +42,7 @@ public class SteamBoilerTileEntity extends InventoryTE{
 
 	public SteamBoilerTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 1);//Salt
-		fluidProps[0] = new TankProperty(8_000, true, false, f -> f == Fluids.WATER || CRFluids.DISTILLED_WATER.contains(f));
+		fluidProps[0] = new TankProperty(8_000, true, false, f -> CRItemTags.tagContains(FluidTags.WATER, f) || CRItemTags.tagContains(CRFluids.DISTILLED_WATER, f));
 		fluidProps[1] = new TankProperty(8_000, false, true, fluid -> true);
 		initFluidManagers();
 	}
@@ -73,7 +74,7 @@ public class SteamBoilerTileEntity extends InventoryTE{
 			int fluidCap = fluidProps[0].capacity;
 			
 			if(fluids[0].getAmount() >= BATCH_SIZE && fluidCap - fluids[1].getAmount() >= BATCH_SIZE && inventory[0].getCount() < 64){
-				boolean salty = fluids[0].getFluid() == Fluids.WATER;
+				boolean salty = CRItemTags.tagContains(FluidTags.WATER, fluids[0].getFluid());
 
 				int batches = Math.min(tier + 1, fluids[0].getAmount() / BATCH_SIZE);
 				batches = Math.min(batches, (fluidCap - fluids[1].getAmount()) / BATCH_SIZE);

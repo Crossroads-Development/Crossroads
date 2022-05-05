@@ -5,20 +5,17 @@ import com.mojang.datafixers.Products;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.Registry;
-import net.minecraft.tags.SerializationTags;
-import net.minecraft.tags.Tag;
-import net.minecraft.tags.TagCollection;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTestType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.TagMatchTest;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashMap;
 import java.util.Random;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * Similar to a TagMatchRuleTest for worldgen, except each instance has a config value specified, and worldgen will only be allowed while the config is true.
@@ -47,9 +44,9 @@ public class ConfigTagRuleTest extends TagMatchTest{
 
 	private final String configName;
 	private final ForgeConfigSpec.BooleanValue config;
-	private final Tag<Block> tag;//private in the superclass
+	private final TagKey<Block> tag;//private in the superclass
 
-	public ConfigTagRuleTest(Tag<Block> tag, String configName){
+	public ConfigTagRuleTest(TagKey<Block> tag, String configName){
 		super(tag);
 		this.tag = tag;
 		this.configName = configName;
@@ -60,7 +57,7 @@ public class ConfigTagRuleTest extends TagMatchTest{
 		}
 	}
 
-	public Tag<Block> getTag(){
+	public TagKey<Block> getTag(){
 		return tag;
 	}
 
@@ -78,22 +75,12 @@ public class ConfigTagRuleTest extends TagMatchTest{
 		return TYPE;
 	}
 
-	private static class CodecTagCollection implements Supplier<TagCollection<Block>>{
+	private static class CodecGroupFunction implements Function<RecordCodecBuilder.Instance<ConfigTagRuleTest>, Products.P2<RecordCodecBuilder.Mu<ConfigTagRuleTest>, TagKey<Block>, String>>{
 
 		@Override
-		public TagCollection<Block> get(){
-			return SerializationTags.getInstance().getOrEmpty(Registry.BLOCK_REGISTRY);
-		}
-	}
-
-	private static class CodecGroupFunction implements Function<RecordCodecBuilder.Instance<ConfigTagRuleTest>, Products.P2<RecordCodecBuilder.Mu<ConfigTagRuleTest>, Tag<Block>, String>>{
-
-		private static final CodecTagCollection supplier = new CodecTagCollection();
-
-		@Override
-		public Products.P2<RecordCodecBuilder.Mu<ConfigTagRuleTest>, Tag<Block>, String> apply(RecordCodecBuilder.Instance<ConfigTagRuleTest> instance){
+		public Products.P2<RecordCodecBuilder.Mu<ConfigTagRuleTest>, TagKey<Block>, String> apply(RecordCodecBuilder.Instance<ConfigTagRuleTest> instance){
 			return instance.group(
-					Tag.codec(supplier).fieldOf("tag").forGetter(ConfigTagRuleTest::getTag),
+					TagKey.codec(ForgeRegistries.BLOCKS.getRegistryKey()).fieldOf("tag").forGetter(ConfigTagRuleTest::getTag),
 					Codec.STRING.fieldOf("config_name").forGetter(ConfigTagRuleTest::getConfigName)
 			);
 		}

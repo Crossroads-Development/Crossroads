@@ -14,8 +14,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
@@ -24,6 +23,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -42,7 +42,7 @@ public class ReagentRec implements Recipe<Container>, IReagent{
 	private final double melting;
 	private final double boiling;
 	private final boolean flame;
-	private final Tag.Named<Item> solid;
+	private final TagKey<Item> solid;
 	private final FluidIngredient fluid;
 	private final int fluidQty;
 	private final ContainRequirements containment;
@@ -54,7 +54,7 @@ public class ReagentRec implements Recipe<Container>, IReagent{
 	private final String flameName;//Used for serialization
 	private final Function<Integer, Integer> flameFunction;
 
-	public ReagentRec(ResourceLocation location, String group, String id, double melting, double boiling, boolean flame, Tag.Named<Item> solid, FluidIngredient fluid, int fluidQty, ContainRequirements containment, int[] colMap, Function<EnumMatterPhase, Color> colorFunc, String effectName, @Nonnull IAlchEffect effect, String flameName, Function<Integer, Integer> flameFunction){
+	public ReagentRec(ResourceLocation location, String group, String id, double melting, double boiling, boolean flame, TagKey<Item> solid, FluidIngredient fluid, int fluidQty, ContainRequirements containment, int[] colMap, Function<EnumMatterPhase, Color> colorFunc, String effectName, @Nonnull IAlchEffect effect, String flameName, Function<Integer, Integer> flameFunction){
 		this.location = location;
 		this.group = group;
 		this.id = id;
@@ -160,7 +160,7 @@ public class ReagentRec implements Recipe<Container>, IReagent{
 		return flame;
 	}
 
-	public Tag<Item> getSolid(){
+	public TagKey<Item> getSolid(){
 		return solid;
 	}
 
@@ -176,7 +176,7 @@ public class ReagentRec implements Recipe<Container>, IReagent{
 	}
 
 	@Override
-	public Tag<Item> getJEISolids(){
+	public TagKey<Item> getJEISolids(){
 		return solid;
 	}
 
@@ -242,7 +242,7 @@ public class ReagentRec implements Recipe<Container>, IReagent{
 			if(melting > boiling){
 				boiling = melting;//Equal melting and boiling point would cause sublimation, skipping liquid
 			}
-			Tag.Named<Item> item = ItemTags.createOptional(new ResourceLocation(GsonHelper.getAsString(json, "item", "crossroads:empty")));
+			TagKey<Item> item = CRItemTags.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(GsonHelper.getAsString(json, "item", "crossroads:empty")));
 			//Fluid definition is optional, but must have a quantity and be specified in a subelement if present
 			Pair<FluidIngredient, Integer> fluid = json.has("fluid") ? CraftingUtil.getFluidIngredientAndQuantity(json, "fluid", false, -1) : null;
 			ContainRequirements vessel = containTypeMap.getOrDefault(GsonHelper.getAsString(json, "vessel", "none"), ContainRequirements.NONE);
@@ -283,7 +283,7 @@ public class ReagentRec implements Recipe<Container>, IReagent{
 			double melting = buffer.readDouble();
 			double boiling = buffer.readDouble();
 			boolean flame = buffer.readBoolean();
-			Tag.Named<Item> solid = ItemTags.createOptional(new ResourceLocation(buffer.readUtf()));
+			TagKey<Item> solid = CRItemTags.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(buffer.readUtf()));
 			FluidIngredient fl = FluidIngredient.readFromBuffer(buffer);
 			int flQty = buffer.readVarInt();
 			ContainRequirements vessel = ContainRequirements.values()[buffer.readVarInt()];
@@ -307,7 +307,7 @@ public class ReagentRec implements Recipe<Container>, IReagent{
 			buffer.writeDouble(recipe.melting);
 			buffer.writeDouble(recipe.boiling);
 			buffer.writeBoolean(recipe.flame);
-			buffer.writeUtf(recipe.solid.getName().toString());
+			buffer.writeUtf(recipe.solid.location().toString());
 			recipe.fluid.writeToBuffer(buffer);
 			buffer.writeVarInt(recipe.fluidQty);
 			buffer.writeVarInt(recipe.containment.ordinal());

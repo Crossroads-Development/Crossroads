@@ -1058,6 +1058,8 @@
 	"tt.crossroads.jei.reag.id": "ID: %1$s",
 	"crossroads.jei.icebox.total": "Total cooling: %1$d°C",
 	"crossroads.jei.icebox.duration": "Cooling time: %1$d ticks",
+	"crossroads.jei.crucible.min_temp": "When above %1$d°C",
+	"crossroads.jei.crucible.required": "Total Heat Consumed: %1$d°C",
 
 
 	"crossroads.advancement.root": "Crossroads",

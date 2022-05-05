@@ -2,17 +2,18 @@ package com.Da_Technomancer.crossroads.API.beams;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class BeamUtil{
 
@@ -20,7 +21,7 @@ public class BeamUtil{
 	public static final int BEAM_TIME = 4;
 	public static final int POWER_LIMIT = 64_000;
 
-	private static final Tag<Block> PASSABLE = BlockTags.createOptional(new ResourceLocation(Crossroads.MODID, "beam_passable"));
+	private static final TagKey<Block> PASSABLE = CRItemTags.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation(Crossroads.MODID, "beam_passable"));
 	private static final VoxelShape[] COLLISION_MASK = new VoxelShape[3];
 
 	static{
@@ -39,7 +40,7 @@ public class BeamUtil{
 	 * @return Whether beams should collide with this block
 	 */
 	public static boolean solidToBeams(BlockState state, Level world, BlockPos pos, Direction toDir, int power){
-		if(state.isAir() || PASSABLE.contains(state.getBlock())){
+		if(state.isAir() || CRItemTags.tagContains(PASSABLE, state.getBlock())){
 			return false;
 		}
 
@@ -48,18 +49,11 @@ public class BeamUtil{
 		VoxelShape mask;
 		if(CRConfig.beamPowerCollision.get()){
 			int radius = getBeamRadius(power);
-			switch(toDir.getAxis()){
-				case X:
-					mask = Block.box(0, 8 - radius, 8 - radius, 16, 8 + radius, 8 + radius);
-					break;
-				case Y:
-					mask = Block.box(8 - radius, 0, 8 - radius, 8 + radius, 16, 8 + radius);
-					break;
-				case Z:
-				default:
-					mask = Block.box(8 - radius, 8 - radius, 0, 8 + radius, 8 + radius, 16);
-					break;
-			}
+			mask = switch(toDir.getAxis()){
+				case X -> Block.box(0, 8 - radius, 8 - radius, 16, 8 + radius, 8 + radius);
+				case Y -> Block.box(8 - radius, 0, 8 - radius, 8 + radius, 16, 8 + radius);
+				case Z -> Block.box(8 - radius, 8 - radius, 0, 8 + radius, 8 + radius, 16);
+			};
 		}else{
 			 mask = COLLISION_MASK[toDir.getAxis().ordinal()];
 		}

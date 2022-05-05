@@ -443,13 +443,13 @@ public class EventHandlerCommon{
 			if(ent instanceof Player player){
 				//Players who take damage with certain tag-defined items in their inventory explode
 				boolean foundExplosion = false;
-				if(CRItemTags.EXPLODE_IF_KNOCKED.contains(player.getInventory().offhand.get(0).getItem())){
+				if(CRItemTags.tagContains(CRItemTags.EXPLODE_IF_KNOCKED, player.getInventory().offhand.get(0).getItem())){
 					player.getInventory().offhand.set(0, ItemStack.EMPTY);
 					foundExplosion = true;
 				}
 
 				for(int i = 0; i < player.getInventory().items.size(); i++){
-					if(CRItemTags.EXPLODE_IF_KNOCKED.contains(player.getInventory().items.get(i).getItem())){
+					if(CRItemTags.tagContains(CRItemTags.EXPLODE_IF_KNOCKED, player.getInventory().items.get(i).getItem())){
 						player.getInventory().items.set(i, ItemStack.EMPTY);
 						foundExplosion = true;
 					}

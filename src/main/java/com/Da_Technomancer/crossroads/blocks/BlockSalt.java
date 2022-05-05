@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.essentials.blocks.FertileSoil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -18,7 +19,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
-import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -76,7 +76,7 @@ public class BlockSalt extends FallingBlock{
 		Block killBlock = killState.getBlock();
 		BlockState resultState = killState;
 
-		if(BlockTags.DIRT.contains(killBlock) && killBlock != Blocks.COARSE_DIRT){
+		if(CRItemTags.tagContains(BlockTags.DIRT, killBlock) && killBlock != Blocks.COARSE_DIRT){
 			//Kill dirt, grass, etc
 			resultState = Blocks.COARSE_DIRT.defaultBlockState();
 		}else if(killBlock instanceof BushBlock){

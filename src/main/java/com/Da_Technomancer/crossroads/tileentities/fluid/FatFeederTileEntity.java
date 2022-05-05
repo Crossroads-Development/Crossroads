@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.FatFeederContainer;
 import net.minecraft.core.BlockPos;
@@ -45,7 +46,7 @@ public class FatFeederTileEntity extends InventoryTE{
 
 	public FatFeederTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 0);
-		fluidProps[0] = new TankProperty(10_000, true, true, CRFluids.LIQUID_FAT::contains);
+		fluidProps[0] = new TankProperty(10_000, true, true, f -> CRItemTags.tagContains(CRFluids.LIQUID_FAT, f));
 		initFluidManagers();
 	}
 
@@ -93,7 +94,7 @@ public class FatFeederTileEntity extends InventoryTE{
 		}
 
 		//Bobo feature: If this is placed on an Emerald Block, it can feed villagers to make them willing to breed without feeding/trading.
-		boolean canBreedVillagers = Tags.Blocks.STORAGE_BLOCKS_EMERALD.contains(level.getBlockState(worldPosition.below()).getBlock());
+		boolean canBreedVillagers = CRItemTags.tagContains(Tags.Blocks.STORAGE_BLOCKS_EMERALD, level.getBlockState(worldPosition.below()).getBlock());
 
 		for(AgeableMob ent : animals){
 			if(ent instanceof Animal anim){

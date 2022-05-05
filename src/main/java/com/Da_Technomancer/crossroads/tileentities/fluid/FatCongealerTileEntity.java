@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.FatCongealerContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
@@ -43,7 +44,7 @@ public class FatCongealerTileEntity extends InventoryTE{
 
 	public FatCongealerTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 1);
-		fluidProps[0] = new TankProperty(10_000, true, false, CRFluids.LIQUID_FAT::contains);
+		fluidProps[0] = new TankProperty(10_000, true, false, f -> CRItemTags.tagContains(CRFluids.LIQUID_FAT, f));
 		initFluidManagers();
 	}
 

@@ -1,13 +1,13 @@
 package com.Da_Technomancer.crossroads;
 
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -15,6 +15,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -119,7 +120,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.DoubleValue solarRate;
 	public static ForgeConfigSpec.DoubleValue medicinalMushroomSpread;
 
-	private static final Tag<Block> destroyBlacklist = BlockTags.createOptional(new ResourceLocation(Crossroads.MODID, "destroy_blacklist"));
+	private static final TagKey<Block> destroyBlacklist = CRItemTags.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation(Crossroads.MODID, "destroy_blacklist"));
 
 	private static ForgeConfigSpec clientSpec;
 	private static ForgeConfigSpec serverSpec;
@@ -281,7 +282,7 @@ public class CRConfig{
 	 * @return Whether the block is protected via the config from destruction
 	 */
 	public static boolean isProtected(Level world, BlockPos pos, BlockState state){
-		return destroyBlacklist.contains(state.getBlock()) || state.getBlock().defaultDestroyTime() < 0;
+		return CRItemTags.tagContains(destroyBlacklist, state.getBlock()) || state.getBlock().defaultDestroyTime() < 0;
 	}
 
 	protected static void load(){

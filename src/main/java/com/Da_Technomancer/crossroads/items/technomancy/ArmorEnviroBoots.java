@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.items.technomancy;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
@@ -93,7 +94,7 @@ public class ArmorEnviroBoots extends TechnomancyArmor{
 		BlockState belowState = getStateBelow(player);
 		if(!belowState.isAir()){
 			int level = CRConfig.enviroBootSoulSpeed.get();
-			if(level > 0 && !player.getAbilities().flying && BlockTags.SOUL_SPEED_BLOCKS.contains(belowState.getBlock())){//Re-implementation of player.onSoulSpeedBlock()
+			if(level > 0 && !player.getAbilities().flying && CRItemTags.tagContains(BlockTags.SOUL_SPEED_BLOCKS, belowState.getBlock())){//Re-implementation of player.onSoulSpeedBlock()
 				AttributeInstance speedAttribute = player.getAttribute(Attributes.MOVEMENT_SPEED);
 				if(speedAttribute != null && speedAttribute.getModifier(SOUL_SPEED_BOOT_ID) == null){
 					speedAttribute.addTransientModifier(new AttributeModifier(SOUL_SPEED_BOOT_ID, "Soul speed boost", (double) (0.03F * (1.0F + (float) level * 0.35F)), AttributeModifier.Operation.ADDITION));

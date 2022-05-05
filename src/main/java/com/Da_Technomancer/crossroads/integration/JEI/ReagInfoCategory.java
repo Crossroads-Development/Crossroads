@@ -4,17 +4,17 @@ import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IGuiIngredientGroup;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -22,7 +22,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -32,23 +32,28 @@ import java.util.List;
 
 public class ReagInfoCategory implements IRecipeCategory<IReagent>{
 
-	public static final ResourceLocation ID = new ResourceLocation(Crossroads.MODID, "reag_info");
+	public static final RecipeType<IReagent> TYPE = RecipeType.create(Crossroads.MODID, "reag_info", IReagent.class);
 	private final IDrawable back;
 	private final IDrawable icon;
 
 	protected ReagInfoCategory(IGuiHelper guiHelper){
 		back = guiHelper.createBlankDrawable(180, 100);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(CRItems.phialGlass, 1));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(CRItems.phialGlass, 1));
 	}
 
 	@Override
 	public ResourceLocation getUid(){
-		return ID;
+		return TYPE.getUid();
 	}
 
 	@Override
 	public Class<? extends IReagent> getRecipeClass(){
-		return IReagent.class;
+		return TYPE.getRecipeClass();
+	}
+
+	@Override
+	public RecipeType<IReagent> getRecipeType(){
+		return TYPE;
 	}
 
 	@Override
@@ -57,7 +62,7 @@ public class ReagInfoCategory implements IRecipeCategory<IReagent>{
 	}
 
 	@Override
-	public List<Component> getTooltipStrings(IReagent recipe, double mouseX, double mouseY){
+	public List<Component> getTooltipStrings(IReagent recipe, IRecipeSlotsView view, double mouseX, double mouseY){
 		if(mouseX >= 2 && mouseX <= 18 && mouseY >= 2 && mouseY <= 18){
 			return ImmutableList.of(new TextComponent(recipe.getName()));
 		}
@@ -65,7 +70,7 @@ public class ReagInfoCategory implements IRecipeCategory<IReagent>{
 	}
 
 	@Override
-	public void draw(IReagent recipe, PoseStack matrix, double mouseX, double mouseY){
+	public void draw(IReagent recipe, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY){
 		Font fontRenderer = Minecraft.getInstance().font;
 		double melt = recipe.getMeltingPoint();
 		double boil = recipe.getBoilingPoint();
@@ -94,41 +99,21 @@ public class ReagInfoCategory implements IRecipeCategory<IReagent>{
 	}
 
 	@Override
-	public void setIngredients(IReagent recipe, IIngredients ingredients){
+	public void setRecipe(IRecipeLayoutBuilder builder, IReagent recipe, IFocusGroup focuses){
 		ReagIngr reagIngr = new ReagIngr(recipe, 1);
-		ingredients.setInput(ReagIngr.REAG, reagIngr);
-		ingredients.setOutput(ReagIngr.REAG, reagIngr);
-
+		//We add as both input and output to enable the lookup in both directions
+		builder.addSlot(RecipeIngredientRole.INPUT, 3, 3).addIngredient(ReagIngr.REAG, reagIngr);
+		builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT).addIngredient(ReagIngr.REAG, reagIngr);
 		//In the event that items fail to load into JEI because the tag hasn't been initialized yet, the try-catch lets the recipe load without the item form
 		try{
-//			List<ItemStack> solid = recipe.getJEISolids().getValues().stream().map(ItemStack::new).collect(Collectors.toList());
-//			List<List<ItemStack>> solidLists = ImmutableList.of(solid);
-			Tag<Item> jeiSolids = recipe.getJEISolids();
-			if(!jeiSolids.getValues().isEmpty()){
-				Ingredient itemForm = Ingredient.of(jeiSolids);
-				ingredients.setInputIngredients(ImmutableList.of(itemForm));
-//				ingredients.setInputLists(VanillaTypes.ITEM, solidLists);
-//				ingredients.setOutputLists(VanillaTypes.ITEM, solidLists);
-				ingredients.setOutput(VanillaTypes.ITEM, new ItemStack(CRItemTags.getTagEntry(jeiSolids)));
+			TagKey<Item> jeiSolids = recipe.getJEISolids();
+			Ingredient itemForm = Ingredient.of(jeiSolids);
+			if(!itemForm.isEmpty()){
+				builder.addSlot(RecipeIngredientRole.INPUT, 21, 3).addIngredients(itemForm);
+				builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT).addIngredients(itemForm);
 			}
 		}catch(Exception e){
 			Crossroads.logger.error(String.format("Failed to load item form of reagent %1$s for JEI integration", recipe.getName()));
 		}
-	}
-
-	@Override
-	public void setRecipe(IRecipeLayout layout, IReagent recipe, IIngredients ingredients){
-//		List<ReagIngr> reag = ingredients.getInputs(ReagIngr.REAG).get(0);
-		IGuiIngredientGroup<ReagIngr> reagGroup = layout.getIngredientsGroup(ReagIngr.REAG);
-		IGuiItemStackGroup itemGroup = layout.getItemStacks();
-
-		reagGroup.init(0, true, 2, 2);
-//		reagGroup.set(0, ingredients.getInputs(ReagIngr.REAG).get(0));
-
-		itemGroup.init(0, true, 20, 2);
-//		itemGroup.set(0, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
-
-		reagGroup.set(ingredients);
-		itemGroup.set(ingredients);
 	}
 }

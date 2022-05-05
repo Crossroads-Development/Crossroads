@@ -75,6 +75,10 @@ public class BeamExtractRec implements IOptionalRecipe<Container>{
 		return active;
 	}
 
+	public Ingredient getIngredient(){
+		return ingr;
+	}
+
 	@Override
 	public NonNullList<Ingredient> getIngredients(){
 		NonNullList<Ingredient> nonnulllist = NonNullList.create();

@@ -43,7 +43,7 @@ public class SaltReactorTileEntity extends InventoryTE{
 
 	public SaltReactorTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 1);
-		fluidProps[0] = new TankProperty(20 * WATER_USE, true, false, CRFluids.DISTILLED_WATER::contains);//Distilled water
+		fluidProps[0] = new TankProperty(20 * WATER_USE, true, false, f -> CRItemTags.tagContains(CRFluids.DISTILLED_WATER, f));//Distilled water
 		fluidProps[1] = new TankProperty(20 * WATER_USE, false, true);//Water
 		initFluidManagers();
 	}
@@ -127,7 +127,7 @@ public class SaltReactorTileEntity extends InventoryTE{
 
 	@Override
 	public boolean canPlaceItem(int index, ItemStack stack){
-		return index == 0 && CRItemTags.SALT_REACTOR_COOLANT.contains(stack.getItem());
+		return index == 0 && CRItemTags.tagContains(CRItemTags.SALT_REACTOR_COOLANT, stack.getItem());
 	}
 
 	@Override

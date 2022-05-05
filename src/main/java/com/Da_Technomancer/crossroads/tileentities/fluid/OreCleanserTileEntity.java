@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.tileentities.fluid;
 
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.OreCleanserRec;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
@@ -43,7 +44,7 @@ public class OreCleanserTileEntity extends InventoryTE{
 
 	public OreCleanserTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 2);
-		fluidProps[0] = new TankProperty(1_000, true, false, CRFluids.STEAM::contains);//Steam
+		fluidProps[0] = new TankProperty(1_000, true, false, f -> CRItemTags.tagContains(CRFluids.STEAM, f));//Steam
 		fluidProps[1] = new TankProperty(1_000, false, true);//Dirty Water
 		initFluidManagers();
 	}

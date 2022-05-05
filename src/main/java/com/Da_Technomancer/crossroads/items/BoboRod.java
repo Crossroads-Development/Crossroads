@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.BoboRec;
 import net.minecraft.core.BlockPos;
@@ -14,8 +15,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleContainer;
@@ -31,6 +31,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -49,7 +50,7 @@ public class BoboRod extends Item{
 	};
 
 	//Items that are considered valid offerings
-	private static final Tag<Item> offering = ItemTags.createOptional(new ResourceLocation(Crossroads.MODID, "bobo_unlock_key"));
+	private static final TagKey<Item> offering = CRItemTags.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(Crossroads.MODID, "bobo_unlock_key"));
 
 	protected BoboRod(){
 		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
@@ -74,7 +75,7 @@ public class BoboRod extends Item{
 					world.playSound(player, pos, SoundEvents.REDSTONE_TORCH_BURNOUT, SoundSource.PLAYERS, 1F, (float) Math.random());
 					return false;
 				}
-				if(!hasOffering && offering.contains(ent.getItem().getItem())){
+				if(!hasOffering && CRItemTags.tagContains(offering, ent.getItem().getItem())){
 					hasOffering = true;
 				}else{
 					inv.addItem(ent.getItem());

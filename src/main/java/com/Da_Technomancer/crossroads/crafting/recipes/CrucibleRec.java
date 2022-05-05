@@ -72,6 +72,10 @@ public class CrucibleRec implements IOptionalRecipe<Container>{
 		return nonnulllist;
 	}
 
+	public Ingredient getIngredient(){
+		return input;
+	}
+
 	@Override
 	public ResourceLocation getId(){
 		return id;

@@ -60,6 +60,10 @@ public class BlastFurnaceRec implements IOptionalRecipe<Container>{
 		return nonnulllist;
 	}
 
+	public Ingredient getIngredient(){
+		return ingr;
+	}
+
 	@Override
 	public ItemStack assemble(Container inv){
 		return getResultItem().copy();

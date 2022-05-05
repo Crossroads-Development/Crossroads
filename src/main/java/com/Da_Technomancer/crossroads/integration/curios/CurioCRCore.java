@@ -2,12 +2,11 @@ package com.Da_Technomancer.crossroads.integration.curios;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import org.apache.commons.lang3.tuple.ImmutableTriple;
 import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.SlotResult;
 import top.theillusivec4.curios.api.SlotTypeMessage;
 
 import javax.annotation.Nonnull;
@@ -18,7 +17,7 @@ import java.util.Optional;
  * This class requires the Curios mod to be loaded to not crash
  * DO NOT interact directly- go through CurioHelper instead
  */
-public final class CurioCRCore{
+final class CurioCRCore{
 
 	@SubscribeEvent
 	@SuppressWarnings("unused")
@@ -30,7 +29,7 @@ public final class CurioCRCore{
 
 	//Just calls the method in CuriosAPI.
 	//This exists to add an additional layer between the class which may not exist at runtime, and Crossroads
-	protected static Optional<ImmutableTriple<String, Integer, ItemStack>> getEquippedCurio(Item item, @Nonnull LivingEntity livingEntity){
-		return CuriosApi.getCuriosHelper().findEquippedCurio(item, livingEntity);
+	static Optional<SlotResult> findFirstCurio(Item item, @Nonnull LivingEntity livingEntity){
+		return CuriosApi.getCuriosHelper().findFirstCurio(livingEntity, item);
 	}
 }

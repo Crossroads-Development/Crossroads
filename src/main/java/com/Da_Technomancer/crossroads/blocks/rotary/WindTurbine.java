@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.tileentities.rotary.WindTurbineTileEntity;
 import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
@@ -64,7 +65,7 @@ public class WindTurbine extends BaseEntityBlock implements IReadable{
 				RotaryUtil.increaseMasterKey(true);
 			}
 			return InteractionResult.SUCCESS;
-		}else if(Tags.Items.DYES.contains(heldItem.getItem())){
+		}else if(CRItemTags.tagContains(Tags.Items.DYES, heldItem.getItem())){
 			BlockEntity te = worldIn.getBlockEntity(pos);
 			if(te instanceof WindTurbineTileEntity){
 				if(!worldIn.isClientSide){

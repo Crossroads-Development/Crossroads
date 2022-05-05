@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.API.alchemy;
 
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.AlchemyRec;
 import com.Da_Technomancer.crossroads.crafting.recipes.FluidIngredient;
@@ -66,7 +67,7 @@ public final class ReagentManager{
 		}
 
 		REAGENT_FROM_ITEM.keySet().removeIf(key -> key.getID().equals(changedReag.getID()));
-		REAGENT_FROM_ITEM.put(changedReag, changedReag.getSolid()::contains);
+		REAGENT_FROM_ITEM.put(changedReag, item -> CRItemTags.tagContains(changedReag.getSolid(), item));
 	}
 
 	private static void trimReagents(List<String> validReagents){

@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.recipes.BlastFurnaceRec;
 import com.Da_Technomancer.crossroads.gui.container.BlastFurnaceContainer;
@@ -15,11 +16,13 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.tags.ItemTags;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,6 +32,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
@@ -46,6 +50,8 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 	public static final double REQUIRED_SPD = 2.5;
 	public static final int REQUIRED_PRG = 40;
 	public static final double INERTIA = 200;
+
+	private static final TagKey<Item> CARBON_SOURCES = CRItemTags.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(Crossroads.MODID, "blast_furnace_carbon"));
 
 	private int carbon = 0;
 	private int progress = 0;
@@ -150,7 +156,7 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 	}
 
 	private static int getCarbonValue(ItemStack stack){
-		if(!stack.isEmpty() && ItemTags.COALS.contains(stack.getItem())){
+		if(!stack.isEmpty() && CRItemTags.tagContains(CARBON_SOURCES, stack.getItem())){
 			return 16;
 		}
 

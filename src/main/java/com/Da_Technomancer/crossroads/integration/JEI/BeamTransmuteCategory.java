@@ -3,13 +3,15 @@ package com.Da_Technomancer.crossroads.integration.JEI;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.recipes.BeamTransmuteRec;
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -19,7 +21,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class BeamTransmuteCategory implements IRecipeCategory<BeamTransmuteRec>{
 
-	public static final ResourceLocation ID = new ResourceLocation(Crossroads.MODID, "transmute_beam");
+	public static final RecipeType<BeamTransmuteRec> TYPE = RecipeType.create(Crossroads.MODID, "transmute_beam", BeamTransmuteRec.class);
 	private final IDrawable back;
 	private final IDrawable slot;
 	private final IDrawable arrowStatic;
@@ -28,19 +30,24 @@ public class BeamTransmuteCategory implements IRecipeCategory<BeamTransmuteRec>{
 	protected BeamTransmuteCategory(IGuiHelper guiHelper){
 		back = guiHelper.createBlankDrawable(180, 80);
 		slot = guiHelper.getSlotDrawable();
-		icon = guiHelper.createDrawableIngredient(new ItemStack(CRBlocks.beamReflector, 1));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(CRBlocks.beamReflector, 1));
 
 		arrowStatic = guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 79, 35, 24, 17);
 	}
 
 	@Override
 	public ResourceLocation getUid(){
-		return ID;
+		return TYPE.getUid();
 	}
 
 	@Override
 	public Class<? extends BeamTransmuteRec> getRecipeClass(){
-		return BeamTransmuteRec.class;
+		return TYPE.getRecipeClass();
+	}
+
+	@Override
+	public RecipeType<BeamTransmuteRec> getRecipeType(){
+		return TYPE;
 	}
 
 	@Override
@@ -59,34 +66,20 @@ public class BeamTransmuteCategory implements IRecipeCategory<BeamTransmuteRec>{
 	}
 
 	@Override
-	public void draw(BeamTransmuteRec recipe, PoseStack matrix, double mouseX, double mouseY){
-//		GlStateManager.enableAlpha();
-//		GlStateManager.enableBlend();
+	public void draw(BeamTransmuteRec recipe, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY){
 		slot.draw(matrix, 40, 40);//Input
 		slot.draw(matrix, 120, 40);//Output
 		arrowStatic.draw(matrix, 78, 40);
 		//Render without shadow
 		Minecraft.getInstance().font.draw(matrix, new TranslatableComponent("crossroads.jei.beam_trans.align", recipe.getAlign().getLocalName(recipe.isVoid())), 40, 10, 0x404040);
 		Minecraft.getInstance().font.draw(matrix, new TranslatableComponent("crossroads.jei.beam_trans.power", recipe.getPower()), 40, 25, 0x404040);
-//		GlStateManager.disableBlend();
-//		GlStateManager.disableAlpha();
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, BeamTransmuteRec recipe, IIngredients ingredients){
-		recipeLayout.getItemStacks().init(0, true, 40, 40);
-//		recipeLayout.getItemStacks().set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
-		recipeLayout.getItemStacks().init(1, false, 120, 40);
-//		recipeLayout.getItemStacks().set(1, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
-
-		recipeLayout.getItemStacks().set(ingredients);
-	}
-
-	@Override
-	public void setIngredients(BeamTransmuteRec recipe, IIngredients ingredients){
+	public void setRecipe(IRecipeLayoutBuilder builder, BeamTransmuteRec recipe, IFocusGroup focuses){
 		//Strictly speaking, the 'correct' way to do this is to register a new ingredient type of block, but meh
 		//TODO this really should be done the correct way- lots of blocks don't map to items cleanly
-		ingredients.setInputLists(VanillaTypes.ITEM, ImmutableList.of(recipe.getIngr().getMatchedItemForm()));
-		ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
+		builder.addSlot(RecipeIngredientRole.INPUT, 41, 41).addItemStacks(recipe.getIngr().getMatchedItemForm());
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 121, 41).addItemStack(recipe.getResultItem());
 	}
 }

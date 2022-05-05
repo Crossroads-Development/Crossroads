@@ -4,12 +4,12 @@ import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.BlockSalt;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -25,7 +26,7 @@ import java.util.List;
 public class GrowEffect extends BeamEffect{
 
 	//Crop types can be blacklisted from growth through the beam using the grow_blacklist tag. Intended for things like magical crops
-	private static final Tag<Block> growBlacklist = BlockTags.createOptional(new ResourceLocation(Crossroads.MODID, "grow_blacklist"));
+	private static final TagKey<Block> growBlacklist = CRItemTags.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation(Crossroads.MODID, "grow_blacklist"));
 	protected static final DamageSource POTENTIAL_VOID = new DamageSource("potentialvoid").setMagic().bypassArmor();
 	protected static final DamageSource POTENTIAL_VOID_ABSOLUTE = new DamageSource("potentialvoid").setMagic().bypassArmor().bypassMagic();
 
@@ -79,7 +80,7 @@ public class GrowEffect extends BeamEffect{
 						return;
 					}
 
-					if(growBlacklist.contains(state.getBlock())){
+					if(CRItemTags.tagContains(growBlacklist, state.getBlock())){
 						return;
 					}
 					BonemealableBlock growable = (BonemealableBlock) state.getBlock();

@@ -5,12 +5,10 @@ import com.Da_Technomancer.crossroads.API.packets.CreateParticlesOnClient;
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleEngine;
+import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder(Crossroads.MODID)
@@ -60,7 +58,7 @@ public class CRParticles{
 	public static void summonParticlesFromServer(ServerLevel world, ParticleOptions data, int count, double x, double y, double z, double xDeviation, double yDeviation, double zDeviation, double xVelocity, double yVelocity, double zVelocity, double xVelocityDeviation, double yVelocityDeviation, double zVelocityDeviation, boolean gaussianDistribution){
 		CreateParticlesOnClient packet = new CreateParticlesOnClient(data, x, y, z, (float) xDeviation, (float) yDeviation, (float) zDeviation, (float) xVelocity, (float) yVelocity, (float) zVelocity, (float) xVelocityDeviation, (float) yVelocityDeviation, (float) zVelocityDeviation, count, gaussianDistribution);
 		for(ServerPlayer target : world.players()){
-			if(target.getLevel() == world && target.blockPosition().closerThan(new Vec3(x, y, z), 32.0D)){
+			if(target.getLevel() == world && target.blockPosition().closerThan(new Vec3i(x, y, z), 32.0D)){
 				CRPackets.sendPacketToPlayer(target, packet);
 			}
 		}

@@ -6,12 +6,13 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.recipes.DetailedCrafterRec;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.ICraftingGridHelper;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -21,7 +22,7 @@ import java.util.List;
 
 public class DetailedCrafterCategory implements IRecipeCategory<DetailedCrafterRec>{
 
-	public static final ResourceLocation ID = new ResourceLocation(Crossroads.MODID, "detailed_crafter");
+	public static final RecipeType<DetailedCrafterRec> TYPE = RecipeType.create(Crossroads.MODID, "detailed_crafter", DetailedCrafterRec.class);
 	private final IDrawable back;
 	private final IDrawable icon;
 	private final IDrawable gear;
@@ -32,7 +33,7 @@ public class DetailedCrafterCategory implements IRecipeCategory<DetailedCrafterR
 	protected DetailedCrafterCategory(IGuiHelper guiHelper){
 		ResourceLocation location = new ResourceLocation(Crossroads.MODID, "textures/gui/container/detailed_crafter.png");
 		back = guiHelper.createDrawable(location, 29, 16, 129, 62);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(CRBlocks.detailedCrafter, 1));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(CRBlocks.detailedCrafter, 1));
 		gear = guiHelper.createDrawable(location, 176, 0, 16, 16);
 		flask = guiHelper.createDrawable(location, 176, 16, 16, 16);
 		leaf = guiHelper.createDrawable(location, 176, 32, 16, 16);
@@ -41,12 +42,17 @@ public class DetailedCrafterCategory implements IRecipeCategory<DetailedCrafterR
 
 	@Override
 	public ResourceLocation getUid(){
-		return ID;
+		return TYPE.getUid();
 	}
 
 	@Override
 	public Class<? extends DetailedCrafterRec> getRecipeClass(){
-		return DetailedCrafterRec.class;
+		return TYPE.getRecipeClass();
+	}
+
+	@Override
+	public RecipeType<DetailedCrafterRec> getRecipeType(){
+		return TYPE;
 	}
 
 	@Override
@@ -60,35 +66,7 @@ public class DetailedCrafterCategory implements IRecipeCategory<DetailedCrafterR
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout layout, DetailedCrafterRec recipe, IIngredients ingredients){
-		//Based on (read: shameless copied from) the JEI implementation of vanilla crafting recipes
-
-		IGuiItemStackGroup guiItemStacks = layout.getItemStacks();
-		guiItemStacks.init(0, false, 94, 18);
-
-		for(int y = 0; y < 3; ++y){
-			for(int x = 0; x < 3; ++x){
-				int index = 1 + x + y * 3;
-				guiItemStacks.init(index, true, x * 18, y * 18);
-			}
-		}
-
-		List<List<ItemStack>> inputs = ingredients.getInputs(VanillaTypes.ITEM);
-		List<List<ItemStack>> outputs = ingredients.getOutputs(VanillaTypes.ITEM);
-		int width = recipe.getWidth();
-		int height = recipe.getHeight();
-		if(width > 0 && height > 0){
-			gridHelper.setInputs(guiItemStacks, inputs, width, height);
-		}else{
-			gridHelper.setInputs(guiItemStacks, inputs);
-			layout.setShapeless();
-		}
-
-		guiItemStacks.set(0, outputs.get(0));
-	}
-
-	@Override
-	public void draw(DetailedCrafterRec recipe, PoseStack matrix, double mouseX, double mouseY){
+	public void draw(DetailedCrafterRec recipe, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY){
 		//Minecraft.getInstance().fontRenderer.drawString("Shapeless", 60, 5, 0x404040);
 		switch(recipe.getPath()){
 			case TECHNOMANCY:
@@ -109,8 +87,16 @@ public class DetailedCrafterCategory implements IRecipeCategory<DetailedCrafterR
 	}
 
 	@Override
-	public void setIngredients(DetailedCrafterRec recipe, IIngredients ingredients){
-		ingredients.setInputIngredients(recipe.getIngredients());
-		ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
+	public void setRecipe(IRecipeLayoutBuilder builder, DetailedCrafterRec recipe, IFocusGroup focuses){
+		//Based on (read: shamelessly copied from) the JEI implementation of vanilla crafting recipes
+		List<List<ItemStack>> inputs = recipe.getIngredients().stream()
+				.map(ingredient -> List.of(ingredient.getItems()))
+				.toList();
+		ItemStack resultItem = recipe.getResultItem();
+
+		int width = recipe.getWidth();
+		int height = recipe.getHeight();
+		gridHelper.setOutputs(builder, VanillaTypes.ITEM, List.of(resultItem));
+		gridHelper.setInputs(builder, VanillaTypes.ITEM, inputs, width, height);
 	}
 }

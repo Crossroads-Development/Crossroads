@@ -8,6 +8,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.common.BiomeManager;
 
@@ -29,7 +30,8 @@ public enum CRReflection implements ReflectionUtil.IReflectionKey{
 	OFFSPRING_SPAWN_EGG(Mob.class, "m_5502_", "onOffspringSpawnedFromEgg", "Imprinting on cloned foxes"),
 	CHUNK_TICKER_MAP(LevelChunk.class, "f_156362_", "tickersInLevel", "Tick accelerating tile entities"),
 	BIOME_SEED(BiomeManager.class, "f_47863_", "biomeZoomSeed", "Terraforming alchemy reagents changing the biome at precise positions"),
-	BIOME_TEMPERATURE_NO_CACHE(Biome.class, "m_47528_", "getHeightAdjustedTemperature", "Getting the biome temperature");
+	BIOME_TEMPERATURE_NO_CACHE(Biome.class, "m_47528_", "getHeightAdjustedTemperature", "Getting the biome temperature"),
+	DISPENSER_BEHAVIOR_MAP(DispenserBlock.class, "f_52661_", "DISPENSER_REGISTRY", "Letting dispensers place items in embryo labs");
 
 
 	private Class<?> clazz;

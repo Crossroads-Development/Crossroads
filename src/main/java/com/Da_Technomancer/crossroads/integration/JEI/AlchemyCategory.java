@@ -1,20 +1,22 @@
 package com.Da_Technomancer.crossroads.integration.JEI;
 
 import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.alchemy.ReagentStack;
 import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.crafting.recipes.AlchemyRec;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.mojang.blaze3d.vertex.PoseStack;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
-import mezz.jei.api.gui.ingredient.IGuiIngredientGroup;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -23,12 +25,9 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 
-	public static final ResourceLocation ID = new ResourceLocation(Crossroads.MODID, "reaction");
+	public static final RecipeType<AlchemyRec> TYPE = RecipeType.create(Crossroads.MODID, "reaction", AlchemyRec.class);
 	protected static final ResourceLocation ICONS = new ResourceLocation(Crossroads.MODID, "textures/gui/icons.png");
 
 	private final IDrawable back;
@@ -42,19 +41,24 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 		back = guiHelper.createBlankDrawable(180, 100);
 		arrowStatic = guiHelper.createDrawable(ICONS, 32, 0, 24, 16);
 		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(ICONS, 32, 16, 24, 16), 40, IDrawableAnimated.StartDirection.LEFT, false);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(CRItems.florenceFlaskCrystal, 1));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(CRItems.florenceFlaskCrystal, 1));
 		bolt = guiHelper.createDrawable(AlchemyCategory.ICONS, 16, 0, 16, 16);
 		blast = guiHelper.createDrawable(AlchemyCategory.ICONS, 64, 0, 16, 16);
 	}
 
 	@Override
 	public ResourceLocation getUid(){
-		return ID;
+		return TYPE.getUid();
 	}
 
 	@Override
 	public Class<? extends AlchemyRec> getRecipeClass(){
-		return AlchemyRec.class;
+		return TYPE.getRecipeClass();
+	}
+
+	@Override
+	public RecipeType<AlchemyRec> getRecipeType(){
+		return TYPE;
 	}
 
 	@Override
@@ -68,32 +72,9 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 	}
 
 	@Override
-	public void setIngredients(AlchemyRec recipe, IIngredients ingredients){
-		List<ReagIngr> reagents = new ArrayList<>(recipe.getReagents().length);
-		for(ReagentStack reag : recipe.getReagents()){
-			reagents.add(new ReagIngr(reag));
-		}
-
-		if(recipe.getCatalyst() != null){
-			reagents.add(new ReagIngr(recipe.getCatalyst(), 0));
-		}
-
-		List<ReagIngr> products = new ArrayList<>(recipe.getProducts().length);
-		for(ReagentStack prod : recipe.getProducts()){
-			products.add(new ReagIngr(prod));
-		}
-		ingredients.setInputs(ReagIngr.REAG, reagents);
-		ingredients.setOutputs(ReagIngr.REAG, products);
-	}
-
-	@Override
-	public void draw(AlchemyRec recipe, PoseStack matrix, double mouseX, double mouseY){
-//		GlStateManager.enableAlpha();
-//		GlStateManager.enableBlend();
+	public void draw(AlchemyRec recipe, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY){
 		arrowStatic.draw(matrix, 78, 22);
 		arrow.draw(matrix, 78, 22);
-//		GlStateManager.disableBlend();
-//		GlStateManager.disableAlpha();
 
 		Font fontRenderer = Minecraft.getInstance().font;
 		double maxTemp = recipe.maxTemp();
@@ -108,19 +89,12 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 		fontRenderer.draw(matrix, line, 90 - fontRenderer.width(line) / 2F, 62, 0x404040);
 
 		if(recipe.charged()){
-//			GlStateManager.color(1, 1, 1);
 			bolt.draw(matrix, 66, 2);
 		}
 
 		if(recipe.isDestructive()){
-//			GlStateManager.color(1, 1, 1);
 			blast.draw(matrix, 98, 2);
 		}
-
-//		if(recipe.getCatalyst() != null){
-//			GlStateManager.color(1, 1, 1);
-//			ReagentIngredientRenderer.RENDERER.render(matrix, 82, 2, new ReagIngr(recipe.getCatalyst(), 0));
-//		}
 	}
 
 	@Override
@@ -129,39 +103,20 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout layout, AlchemyRec recipe, IIngredients ingredients){
-		IGuiIngredientGroup<ReagIngr> reagGroup = layout.getIngredientsGroup(ReagIngr.REAG);
+	public void setRecipe(IRecipeLayoutBuilder builder, AlchemyRec recipe, IFocusGroup focuses){
+		//Inputs
+		for(int i = 0; i < recipe.getReagents().length; i++){
+			builder.addSlot(RecipeIngredientRole.INPUT, 61 - i * 20, 21).addIngredient(ReagIngr.REAG, new ReagIngr(recipe.getReagents()[i]));
+		}
 
-		int inCount = recipe.getReagents().length;
-//		List<List<ReagIngr>> reags = ingredients.getInputs(ReagIngr.REAG);
-		for(int i = 0; i < inCount; i++){
-			reagGroup.init(i, true, 60 - i * 20, 20);
-//			reagGroup.set(i, reags.get(i));
+		//Outputs
+		for(int i = 0; i < recipe.getProducts().length; i++ ){
+			builder.addSlot(RecipeIngredientRole.OUTPUT, 106 + i * 20, 21).addIngredient(ReagIngr.REAG, new ReagIngr(recipe.getProducts()[i]));
 		}
 
 		//Catalyst
 		if(recipe.getCatalyst() != null){//A catalyst was set in setIngredients
-			reagGroup.init(inCount, true, 82, 2);
-//			reagGroup.set(inCount, reags.get(inCount));
-			inCount += 1;
+			builder.addSlot(RecipeIngredientRole.CATALYST, 83, 3).addIngredient(ReagIngr.REAG, new ReagIngr(recipe.getCatalyst(), 0));
 		}
-
-		int outCount = recipe.getProducts().length;
-//		List<List<ReagIngr>> prods = ingredients.getOutputs(ReagIngr.REAG);
-		for(int i = 0; i < outCount; i++ ){
-			reagGroup.init(i + inCount, false, 105 + i * 20, 20);
-//			reagGroup.set(i + inCount, prods.get(i));
-		}
-
-		reagGroup.set(ingredients);
 	}
-
-//	@Override
-//	public List<ITextComponent> getTooltipStrings(AlchemyRec recipe, double mouseX, double mouseY){
-//		IReagent catalyst = ReagentManager.getReagent(recipe.getCatalyst());
-//		if(catalyst != null && mouseX >= 82 && mouseX <= 98 && mouseY >= 2 && mouseY <= 18){
-//			return ImmutableList.of(new StringTextComponent(catalyst.getName()));
-//		}
-//		return Collections.emptyList();
-//	}
 }

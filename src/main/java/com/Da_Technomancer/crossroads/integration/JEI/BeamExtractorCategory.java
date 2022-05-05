@@ -5,11 +5,14 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.recipes.BeamExtractRec;
 import com.mojang.blaze3d.vertex.PoseStack;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -21,7 +24,7 @@ import java.util.ArrayList;
 
 public class BeamExtractorCategory implements IRecipeCategory<BeamExtractRec>{
 
-	public static final ResourceLocation ID = new ResourceLocation(Crossroads.MODID, "beam_extractor");
+	public static final RecipeType<BeamExtractRec> TYPE = RecipeType.create(Crossroads.MODID, "beam_extractor", BeamExtractRec.class);
 	private final IDrawable back;
 	private final IDrawable slot;
 	private final IDrawable arrowStatic;
@@ -30,18 +33,23 @@ public class BeamExtractorCategory implements IRecipeCategory<BeamExtractRec>{
 	protected BeamExtractorCategory(IGuiHelper guiHelper){
 		back = guiHelper.createBlankDrawable(180, 100);
 		slot = guiHelper.getSlotDrawable();
-		icon = guiHelper.createDrawableIngredient(new ItemStack(CRBlocks.beamExtractor, 1));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(CRBlocks.beamExtractor, 1));
 		arrowStatic = guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 79, 35, 24, 17);
 	}
 
 	@Override
 	public ResourceLocation getUid(){
-		return ID;
+		return TYPE.getUid();
 	}
 
 	@Override
 	public Class<? extends BeamExtractRec> getRecipeClass(){
-		return BeamExtractRec.class;
+		return TYPE.getRecipeClass();
+	}
+
+	@Override
+	public RecipeType<BeamExtractRec> getRecipeType(){
+		return TYPE;
 	}
 
 	@Override
@@ -60,18 +68,9 @@ public class BeamExtractorCategory implements IRecipeCategory<BeamExtractRec>{
 	}
 
 	@Override
-	public void setIngredients(BeamExtractRec recipe, IIngredients ingredients){
-		ingredients.setInputIngredients(recipe.getIngredients());
-	}
-
-	@Override
-	public void draw(BeamExtractRec rec, PoseStack matrix, double mouseX, double mouseY){
-//		GlStateManager.enableAlpha();
-//		GlStateManager.enableBlend();
+	public void draw(BeamExtractRec rec, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY){
 		slot.draw(matrix, 20, 50);
 		arrowStatic.draw(matrix, 46, 50);
-//		GlStateManager.disableBlend();
-//		GlStateManager.disableAlpha();
 
 		Minecraft minecraft = Minecraft.getInstance();
 		ArrayList<String> tt = new ArrayList<>(4);
@@ -108,10 +107,7 @@ public class BeamExtractorCategory implements IRecipeCategory<BeamExtractRec>{
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout layout, BeamExtractRec recipe, IIngredients ingredients){
-		IGuiItemStackGroup itemGroup = layout.getItemStacks();
-		itemGroup.init(0, true, 20, 50);
-//		itemGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
-		itemGroup.set(ingredients);
+	public void setRecipe(IRecipeLayoutBuilder builder, BeamExtractRec recipe, IFocusGroup focuses){
+		builder.addSlot(RecipeIngredientRole.INPUT, 21, 51).addIngredients(recipe.getIngredient());
 	}
 }

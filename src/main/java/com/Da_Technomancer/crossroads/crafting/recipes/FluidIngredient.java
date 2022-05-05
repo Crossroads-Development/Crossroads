@@ -1,14 +1,14 @@
 package com.Da_Technomancer.crossroads.crafting.recipes;
 
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
@@ -48,9 +48,9 @@ public class FluidIngredient implements Predicate<FluidStack>{
 		for(Object key : matched){
 			if(key instanceof IFluidList){
 				keys.add((IFluidList) key);
-			}else if(key instanceof Tag){
+			}else if(key instanceof TagKey){
 				try{
-					Tag<Fluid> tag = (Tag<Fluid>) key;
+					TagKey<Fluid> tag = (TagKey<Fluid>) key;
 					keys.add(new TagList(tag));
 				}catch(ClassCastException e){
 					Crossroads.logger.error("An illegal tag type was added to a FluidIngredient. Report to mod author!", e);
@@ -143,7 +143,7 @@ public class FluidIngredient implements Predicate<FluidStack>{
 
 	private static IFluidList readIngr(JsonObject o){
 		if(o.has("tag")){
-			return new TagList(FluidTags.createOptional(new ResourceLocation(GsonHelper.getAsString(o, "tag"))));
+			return new TagList(CRItemTags.getTagKey(ForgeRegistries.Keys.FLUIDS, new ResourceLocation(GsonHelper.getAsString(o, "tag"))));
 		}else if(o.has("fluid")){
 			return new SingleList(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(GsonHelper.getAsString(o, "fluid"))));
 		}else{
@@ -194,9 +194,9 @@ public class FluidIngredient implements Predicate<FluidStack>{
 
 	private static class TagList implements IFluidList{
 
-		private final Tag<Fluid> tag;
+		private final TagKey<Fluid> tag;
 
-		public TagList(Tag<Fluid> matched){
+		public TagList(TagKey<Fluid> matched){
 			tag = matched;
 			if(tag == null){
 				throw new JsonParseException("No defined tag in FluidIngredient");
@@ -205,7 +205,7 @@ public class FluidIngredient implements Predicate<FluidStack>{
 
 		@Override
 		public Collection<Fluid> getMatched(){
-			return tag.getValues();
+			return CRItemTags.getTagManagerForKey(tag).getTag(tag).stream().collect(Collectors.toUnmodifiableSet());
 		}
 
 		@Override

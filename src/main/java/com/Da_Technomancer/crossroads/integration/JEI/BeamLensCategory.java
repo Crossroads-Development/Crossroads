@@ -5,14 +5,16 @@ import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.recipes.BeamLensRec;
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -22,7 +24,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class BeamLensCategory implements IRecipeCategory<BeamLensRec>{
 
-	public static final ResourceLocation ID = new ResourceLocation(Crossroads.MODID, "lens_beam");
+	public static final RecipeType<BeamLensRec> TYPE = RecipeType.create(Crossroads.MODID, "lens_beam", BeamLensRec.class);
 	private final IDrawable back;
 	private final IDrawable slot;
 	private final IDrawable arrowStatic;
@@ -31,19 +33,24 @@ public class BeamLensCategory implements IRecipeCategory<BeamLensRec>{
 	protected BeamLensCategory(IGuiHelper guiHelper){
 		back = guiHelper.createBlankDrawable(180, 80);
 		slot = guiHelper.getSlotDrawable();
-		icon = guiHelper.createDrawableIngredient(new ItemStack(CRBlocks.lensFrame, 1));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(CRBlocks.lensFrame, 1));
 
 		arrowStatic = guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 79, 35, 24, 17);
 	}
 
 	@Override
 	public ResourceLocation getUid(){
-		return ID;
+		return TYPE.getUid();
 	}
 
 	@Override
 	public Class<? extends BeamLensRec> getRecipeClass(){
-		return BeamLensRec.class;
+		return TYPE.getRecipeClass();
+	}
+
+	@Override
+	public RecipeType<BeamLensRec> getRecipeType(){
+		return TYPE;
 	}
 
 	@Override
@@ -62,9 +69,7 @@ public class BeamLensCategory implements IRecipeCategory<BeamLensRec>{
 	}
 
 	@Override
-	public void draw(BeamLensRec recipe, PoseStack matrix, double mouseX, double mouseY){
-//		GlStateManager.enableAlpha();
-//		GlStateManager.enableBlend();
+	public void draw(BeamLensRec recipe, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY){
 		slot.draw(matrix, 20, 15);//Input
 		//Render without shadow
 
@@ -117,27 +122,14 @@ public class BeamLensCategory implements IRecipeCategory<BeamLensRec>{
 				Minecraft.getInstance().font.draw(matrix, new TranslatableComponent("crossroads.jei.beam_lens.void_convert", voidConv), x, y, 0x404040);
 			}
 		}
-
-//		GlStateManager.disableBlend();
-//		GlStateManager.disableAlpha();
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, BeamLensRec recipe, IIngredients ingredients){
-		recipeLayout.getItemStacks().init(0, true, 20, 15);
-		recipeLayout.getItemStacks().set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
+	public void setRecipe(IRecipeLayoutBuilder builder, BeamLensRec recipe, IFocusGroup focuses){
+		builder.addSlot(RecipeIngredientRole.INPUT, 21, 16).addIngredients(recipe.getIngr());
 		// Don't draw the second item if there is no valid transmutation
 		if(recipe.getTransmuteAlignment() != EnumBeamAlignments.NO_MATCH) {
-			recipeLayout.getItemStacks().init(1, false, 20, 60);
-			recipeLayout.getItemStacks().set(1, recipe.getResultItem());
-		}
-	}
-
-	@Override
-	public void setIngredients(BeamLensRec recipe, IIngredients ingredients){
-		ingredients.setInputIngredients(ImmutableList.of(recipe.getIngr()));
-		if(recipe.getTransmuteAlignment() != EnumBeamAlignments.NO_MATCH) {
-			ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
+			builder.addSlot(RecipeIngredientRole.OUTPUT, 21, 61).addItemStack(recipe.getResultItem());
 		}
 	}
 }

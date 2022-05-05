@@ -7,14 +7,15 @@ import com.Da_Technomancer.crossroads.crafting.recipes.BlastFurnaceRec;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
-import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -23,7 +24,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class BlastFurnaceCategory implements IRecipeCategory<BlastFurnaceRec>{
 
-	public static final ResourceLocation ID = new ResourceLocation(Crossroads.MODID, "blast_furnace");
+	public static final RecipeType<BlastFurnaceRec> TYPE = RecipeType.create(Crossroads.MODID, "blast_furnace", BlastFurnaceRec.class);
 	private final IDrawable back;
 	private final IDrawable slot;
 	private final IDrawableAnimated arrow;
@@ -37,17 +38,22 @@ public class BlastFurnaceCategory implements IRecipeCategory<BlastFurnaceRec>{
 		arrowStatic = guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 79, 35, 24, 17);
 		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 176, 14, 24, 17), 40, IDrawableAnimated.StartDirection.LEFT, false);
 		fluidOverlay = JEICrossroadsPlugin.createFluidOverlay(guiHelper);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(CRBlocks.blastFurnace, 1));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(CRBlocks.blastFurnace, 1));
 	}
 
 	@Override
 	public ResourceLocation getUid(){
-		return ID;
+		return TYPE.getUid();
 	}
 
 	@Override
 	public Class<? extends BlastFurnaceRec> getRecipeClass(){
-		return BlastFurnaceRec.class;
+		return TYPE.getRecipeClass();
+	}
+
+	@Override
+	public RecipeType<BlastFurnaceRec> getRecipeType(){
+		return TYPE;
 	}
 
 	@Override
@@ -61,43 +67,23 @@ public class BlastFurnaceCategory implements IRecipeCategory<BlastFurnaceRec>{
 	}
 
 	@Override
-	public void draw(BlastFurnaceRec recipe, PoseStack matrix, double mouseX, double mouseY){
-//		GlStateManager.enableAlpha();
-//		GlStateManager.enableBlend();
+	public void draw(BlastFurnaceRec recipe, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY){
 		slot.draw(matrix, 54, 55);//Input
 		slot.draw(matrix, 130, 55);//Slag
 		arrowStatic.draw(matrix, 78, 55);
 		arrow.draw(matrix, 78, 55);
-//		GlStateManager.disableBlend();
-//		GlStateManager.disableAlpha();
 		Minecraft.getInstance().font.draw(matrix, MiscUtil.localize("crossroads.jei.blast_furnace.carbon", recipe.getSlag()), 10, 10, 0x404040);
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout layout, BlastFurnaceRec recipe, IIngredients ingredients){
-		IGuiItemStackGroup itemGroup = layout.getItemStacks();
-		IGuiFluidStackGroup fluidGroup = layout.getFluidStacks();
-
-		itemGroup.init(0, true, 54, 55);
-//		itemGroup.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
-		itemGroup.init(1, false, 130, 55);
-//		itemGroup.set(1, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
-		fluidGroup.init(0, false, 110, 22, 16, 64, 1_000, true, fluidOverlay);
-//		fluidGroup.set(0, ingredients.getOutputs(VanillaTypes.FLUID).get(0));
-
-		itemGroup.set(ingredients);
-		fluidGroup.set(ingredients);
+	public void setRecipe(IRecipeLayoutBuilder builder, BlastFurnaceRec recipe, IFocusGroup focuses){
+		builder.addSlot(RecipeIngredientRole.INPUT, 55, 56).addIngredients(recipe.getIngredient());
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 131, 56).addItemStack(new ItemStack(CRItems.slag, recipe.getSlag()));
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 111, 23).addIngredient(VanillaTypes.FLUID, recipe.getOutput()).setFluidRenderer(1000, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
 	}
 
 	@Override
 	public IDrawable getIcon(){
 		return icon;
-	}
-
-	@Override
-	public void setIngredients(BlastFurnaceRec recipe, IIngredients ingredients){
-		ingredients.setInputIngredients(recipe.getIngredients());
-		ingredients.setOutput(VanillaTypes.FLUID, recipe.getOutput());
-		ingredients.setOutput(VanillaTypes.ITEM, new ItemStack(CRItems.slag, recipe.getSlag()));
 	}
 }

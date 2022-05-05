@@ -4,13 +4,13 @@ import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.essentials.blocks.ESProperties;
 import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.level.block.Block;
@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class DensusPlateTileEntity extends BlockEntity implements ITickableTileE
 	@ObjectHolder("densus_plate")
 	public static BlockEntityType<DensusPlateTileEntity> TYPE = null;
 
-	private static final Tag<Block> gravityBlocking = BlockTags.createOptional(new ResourceLocation(Crossroads.MODID, "gravity_blocking"));
+	private static final TagKey<Block> gravityBlocking = CRItemTags.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation(Crossroads.MODID, "gravity_blocking"));
 
 	private final int RANGE = CRConfig.gravRange.get();
 	private final double ACCEL = CRConfig.gravAccel.get();
@@ -59,7 +60,7 @@ public class DensusPlateTileEntity extends BlockEntity implements ITickableTileE
 		//Check for cavorite shortening the range
 		for(int i = 1; i <= RANGE; i++){
 			BlockState state = level.getBlockState(worldPosition.relative(dir, i));
-			if(gravityBlocking.contains(state.getBlock())){
+			if(CRItemTags.tagContains(gravityBlocking, state.getBlock())){
 				effectiveRange = i;
 				break;
 			}

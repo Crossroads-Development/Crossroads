@@ -165,7 +165,7 @@ public class IncubatorTileEntity extends InventoryTE{
 
 	@Override
 	public boolean canPlaceItem(int index, ItemStack stack){
-		return index == 0 && isValidMutator(stack, level) || index == 1 && CRItemTags.INCUBATOR_EGG.contains(stack.getItem());
+		return index == 0 && isValidMutator(stack, level) || index == 1 && CRItemTags.tagContains(CRItemTags.INCUBATOR_EGG, stack.getItem());
 	}
 
 	@Override
