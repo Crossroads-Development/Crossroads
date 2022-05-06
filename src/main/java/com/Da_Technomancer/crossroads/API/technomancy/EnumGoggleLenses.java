@@ -25,9 +25,10 @@ public enum EnumGoggleLenses{
 	//Don't reorder these unless you want to rename all the goggle texture files.
 	RUBY(CRItemTags.GEMS_RUBY, "_ruby", new RubyGoggleEffect(), () -> Keys.controlEnergy, true),
 	EMERALD(Tags.Items.GEMS_EMERALD, "_emerald", new EmeraldGoggleEffect(), () -> Keys.controlPotential, true),
-	DIAMOND(Tags.Items.GEMS_DIAMOND, "_diamond", new DiamondGoggleEffect(), () -> Keys.controlStability, false),
+	DIAMOND(Tags.Items.GEMS_DIAMOND, "_diamond", IGoggleEffect.EMPTY, () -> Keys.controlStability, false),//Effect in SendGoggleConfigureToServer
 	QUARTZ(CRItemTags.GEMS_PURE_QUARTZ, "_quartz", new QuartzGoggleEffect(), null, false),
-	VOID(CRItemTags.GEMS_VOID, "", new VoidGoggleEffect(), () -> Keys.controlVoid, true);
+	AMETHYST(Tags.Items.GEMS_AMETHYST, "", IGoggleEffect.EMPTY, () -> Keys.controlZoom, true),//Empty effect, the actual effect is done through EventHandlerClient::viewZoom
+	VOID(CRItemTags.GEMS_VOID, "", IGoggleEffect.EMPTY, () -> Keys.controlVoid, true);//Empty effect, the actual effect is done through EventHandlers that check for the void lens.
 	
 	private final TagKey<Item> item;
 	private final String texturePath;

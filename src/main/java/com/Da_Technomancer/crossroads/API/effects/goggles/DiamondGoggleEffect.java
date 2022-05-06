@@ -11,6 +11,6 @@ public class DiamondGoggleEffect implements IGoggleEffect{
 
 	@Override
 	public void armorTick(Level world, Player player, ArrayList<Component> chat, BlockHitResult ray){
-		//Effect in SendGoggleConfigureToServer
+
 	}
 }

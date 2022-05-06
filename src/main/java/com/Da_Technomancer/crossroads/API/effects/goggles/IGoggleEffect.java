@@ -9,7 +9,9 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 public interface IGoggleEffect{
-	
+
+	public static final IGoggleEffect EMPTY = (world, player, chat, ray) -> {};
+
 	/**
 	 * Called every tick on the server side while goggles with the correct lens are worn.
 	 * Instead of printing chat directly (except in special cases like element discovery),

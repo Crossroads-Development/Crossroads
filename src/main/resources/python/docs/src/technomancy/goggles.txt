@@ -11,6 +11,7 @@ A <link:essentials:intro/ores>ruby/$ lens will add a toggle-able fire laser that
 An emerald lens will add toggle-able night vision for the wearer. It is toggled with the 'potential control key' with an empty hand.
 A diamond lens will allow opening a <item><link:essentials:intro/path>detailed crafter/$ crafting UI anywhere by pressing the 'stability control key' with an empty hand.
 A <link:essentials:fluid/ingr>pure quartz/$ lens will act as a permanent <item><link:essentials:intro/omnimeter>omnimeter/$ which provides full information on any machine you look at (with a large range). This is very handy to have.
+An amethyst lens will allow zooming in like with a spyglass. It is toggled with the 'toggle zoom key' with an empty hand.
 <page|spotlight|propeller_plate|crossroads:propeller_pack>
 The <item>Propelled Wingpack/$ acts like an Elytra with a built-in rocket boost. To use the boost, it needs to be wound in a <item><link:essentials:rotary/winding_table>Spring-Winding Stand/$.
 While <em>holding/$ the boost key (default control), the wearer gets a speed boost in the direction they're looking and the <thing><link:essentials:rotary/winding_table>spring speed/$ will be slowly drained.

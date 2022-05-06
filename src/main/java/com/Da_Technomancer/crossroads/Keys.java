@@ -14,6 +14,7 @@ public class Keys{
 	public static IForgeKeyMapping controlPotential;
 	public static IForgeKeyMapping controlStability;
 	public static IForgeKeyMapping controlVoid;
+	public static IForgeKeyMapping controlZoom;
 	public static IForgeKeyMapping boost;
 
 	public static boolean keysInitialized = false;
@@ -24,6 +25,7 @@ public class Keys{
 			controlPotential = new KeyMapping("key.control_potential", InputConstants.UNKNOWN.getValue(), Crossroads.MODID);
 			controlStability = new KeyMapping("key.control_stability", InputConstants.UNKNOWN.getValue(), Crossroads.MODID);
 			controlVoid = new KeyMapping("key.control_void", InputConstants.UNKNOWN.getValue(), Crossroads.MODID);
+			controlZoom = new KeyMapping("key.crossroads.control_zoom", InputConstants.UNKNOWN.getValue(), Crossroads.MODID);
 			boost = new KeyMapping("key.prop_pack_boost", 341, Crossroads.MODID);//341 is Control
 			keysInitialized = true;
 		}catch(RuntimeException e){
@@ -33,6 +35,7 @@ public class Keys{
 		ClientRegistry.registerKeyBinding((KeyMapping) controlPotential);
 		ClientRegistry.registerKeyBinding((KeyMapping) controlStability);
 		ClientRegistry.registerKeyBinding((KeyMapping) controlVoid);
+		ClientRegistry.registerKeyBinding((KeyMapping) controlZoom);
 		ClientRegistry.registerKeyBinding((KeyMapping) boost);
 	}
 

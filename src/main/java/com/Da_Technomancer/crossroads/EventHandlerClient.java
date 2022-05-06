@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.API.packets.*;
 import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
+import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.entity.CREntities;
 import com.Da_Technomancer.crossroads.gui.container.*;
@@ -29,6 +30,9 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -473,7 +477,9 @@ public class EventHandlerClient{
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				KeyMapping key = Keys.asKeyMapping(lens.getKey());
 				if(key != null && key.consumeClick() && key.isDown() && nbt.contains(lens.toString())){
-					CRPackets.channel.sendToServer(new SendGoggleConfigureToServer(lens, !nbt.getBoolean(lens.toString())));
+					boolean wasEnabled = nbt.getBoolean(lens.toString());
+					CRSounds.playSoundClientLocal(play.level, play.eyeBlockPosition(), SoundEvents.SPYGLASS_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
+					CRPackets.channel.sendToServer(new SendGoggleConfigureToServer(lens, !wasEnabled));
 					return;
 				}
 			}
@@ -494,5 +500,19 @@ public class EventHandlerClient{
 	@SuppressWarnings("unused")
 	public void refreshAlchemy(RecipesUpdatedEvent e){
 		ReagentManager.updateFromServer(e.getRecipeManager());
+	}
+
+	@SubscribeEvent
+	@SuppressWarnings("unused")
+	public void viewZoom(FOVModifierEvent e){
+		//Zooms in the view to spyglass levels when the player is wearing goggles with the amethyst lens enabled
+		if(Minecraft.getInstance().options.getCameraType().isFirstPerson()){
+			ItemStack helmet = Minecraft.getInstance().player.getItemBySlot(EquipmentSlot.HEAD);
+			boolean doGoggleZoom = helmet.getItem() == CRItems.armorGoggles && helmet.hasTag() && helmet.getTag().getBoolean(EnumGoggleLenses.AMETHYST.toString());
+			if(doGoggleZoom){
+				final float scopingFOV = 0.1F;
+				e.setNewfov(Mth.lerp(Minecraft.getInstance().options.fovEffectScale, 1.0F, scopingFOV));//TODO
+			}
+		}
 	}
 }
