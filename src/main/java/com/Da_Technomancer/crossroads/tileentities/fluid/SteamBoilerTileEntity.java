@@ -74,7 +74,7 @@ public class SteamBoilerTileEntity extends InventoryTE{
 			int fluidCap = fluidProps[0].capacity;
 			
 			if(fluids[0].getAmount() >= BATCH_SIZE && fluidCap - fluids[1].getAmount() >= BATCH_SIZE && inventory[0].getCount() < 64){
-				boolean salty = CRItemTags.tagContains(FluidTags.WATER, fluids[0].getFluid());
+				boolean salty = !CRItemTags.tagContains(CRFluids.DISTILLED_WATER, fluids[0].getFluid());
 
 				int batches = Math.min(tier + 1, fluids[0].getAmount() / BATCH_SIZE);
 				batches = Math.min(batches, (fluidCap - fluids[1].getAmount()) / BATCH_SIZE);
