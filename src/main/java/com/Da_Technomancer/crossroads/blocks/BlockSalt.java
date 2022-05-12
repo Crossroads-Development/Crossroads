@@ -94,6 +94,9 @@ public class BlockSalt extends FallingBlock{
 		}else if(killBlock instanceof FertileSoil){
 			//Ruin fertile soil
 			resultState = Blocks.COARSE_DIRT.defaultBlockState();
+		}else if(CRItemTags.tagContains(BlockTags.LEAVES, killBlock)){
+			//Destroy leaves without dropping look
+			resultState = Blocks.AIR.defaultBlockState();
 		}
 		
 		if(killState != resultState){
