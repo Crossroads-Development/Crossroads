@@ -36,10 +36,10 @@ public class BloodCentrifugeRenderer implements BlockEntityRenderer<BloodCentrif
 	@Override
 	public void render(BloodCentrifugeTileEntity te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		BlockState state = te.getBlockState();
-		if(state.getBlock() != CRBlocks.bloodCentrifuge){
+		LazyOptional<IAxleHandler> axle = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
+		if(state.getBlock() != CRBlocks.bloodCentrifuge || !axle.isPresent()){
 			return;
 		}
-		LazyOptional<IAxleHandler> axle = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
 		int sampleCount = state.getValue(CRProperties.CONTENTS);
 		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
 
