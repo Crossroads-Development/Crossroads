@@ -32,7 +32,7 @@ public abstract class BeamUsingItem extends Item{
 
 	public static byte[] getSetting(ItemStack stack){
 		CompoundTag nbt = stack.getTag();
-		if(nbt == null){
+		if(nbt == null || !nbt.contains(NBT_KEY)){
 			return new byte[4];
 		}
 		return nbt.getByteArray(NBT_KEY);
