@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:beam_extract",
+	"input": {
+		"tag": "crossroads:dusts/elem_expansion"
+	},
+	"energy": 0,
+	"potential": 32,
+	"stability": 32,
+	"duration": 5
+}
