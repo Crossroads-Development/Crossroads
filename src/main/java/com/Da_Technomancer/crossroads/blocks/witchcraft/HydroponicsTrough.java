@@ -46,7 +46,7 @@ public class HydroponicsTrough extends TEBlock implements IReadable, Bonemealabl
 	private static final VoxelShape SHAPE_OPEN = Shapes.join(box(0, 0, 0, 16, 12, 16), box(2, 0, 2, 14, 16, 14), BooleanOp.ONLY_FIRST);
 
 	public HydroponicsTrough(){
-		super(CRBlocks.getMetalProperty().randomTicks());
+		super(CRBlocks.getMetalProperty().randomTicks().noOcclusion());
 		String name = "hydroponics_trough";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
