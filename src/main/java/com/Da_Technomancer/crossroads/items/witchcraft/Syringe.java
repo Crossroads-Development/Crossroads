@@ -51,6 +51,7 @@ public class Syringe extends Item{
 		if(offhand.getItem() == CRItems.potionExtension && !CRItems.potionExtension.isSpoiled(offhand, self.level)){
 			offhand.shrink(1);
 			stack.getOrCreateTag().putBoolean("extension_treated", true);
+			self.setItemInHand(InteractionHand.MAIN_HAND, stack);
 			return InteractionResult.SUCCESS;
 		}
 		//Take a blood sample
@@ -65,6 +66,7 @@ public class Syringe extends Item{
 			boolean treated = isTreated(stack);
 			//Use up any treatment on the syringe
 			stack.getOrCreateTag().putBoolean("extension_treated", false);
+			self.setItemInHand(InteractionHand.MAIN_HAND, stack);
 			self.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(Items.GLASS_BOTTLE, 1));
 			double multiplier = CRConfig.injectionEfficiency.get();
 			if(treated){
@@ -86,7 +88,8 @@ public class Syringe extends Item{
 				for(MobEffectInstance effect : potion.getEffects()){
 					if(effect.getEffect().isInstantenous()){
 						//Multiply intensity
-						target.addEffect(new MobEffectInstance(effect.getEffect(), effect.getDuration(), (int) Math.round(effect.getAmplifier() * multiplier), effect.isAmbient(), effect.isVisible(), effect.showIcon()));
+						effect.getEffect().applyInstantenousEffect(self, self, target, (int) Math.round(effect.getAmplifier() * multiplier), 1);
+//						target.addEffect(new MobEffectInstance(effect.getEffect(), effect.getDuration(), (int) Math.round(effect.getAmplifier() * multiplier), effect.isAmbient(), effect.isVisible(), effect.showIcon()));
 					}else{
 						//Multiply duration
 						target.addEffect(new MobEffectInstance(effect.getEffect(), (int) Math.round(effect.getDuration() * multiplier), effect.getAmplifier(), effect.isAmbient(), effect.isVisible(), effect.showIcon()));
