@@ -302,7 +302,6 @@
 	"item.crossroads.molten_copshowium_bucket": "Molten Copshowium Bucket",
 	"item.crossroads.nutrient_solution_bucket": "Nutrient Solution Bucket",
 	"item.crossroads.fertilizer_solution_bucket": "Fertilizer Solution Bucket",
-	"item.crossroads.blood_bucket": "Blood Bucket",
 	"item.crossroads.soul_essence_bucket": "Soul Essence Bucket",
 
 	"item.minecraft.potion.effect.sedation": "Potion of Sedation",
@@ -359,8 +358,6 @@
 	"fluid.crossroads.flowing_nutrient_solution":"Nutrient Solution",
 	"fluid.crossroads.fertilizer_solution":"Fertilizer Solution",
 	"fluid.crossroads.fertilizer_nutrient_solution":"Fertilizer Solution",
-	"fluid.crossroads.blood":"Blood",
-	"fluid.crossroads.flowing_blood":"Blood",
 	"fluid.crossroads.soul_essence":"Soul Essence",
 	"fluid.crossroads.flowing_soul_essence":"Soul Essence",
 
@@ -752,6 +749,7 @@
 	"tt.crossroads.potion_extension.penalty": "Each permanent potion effect reduces maximum health by %1$d",
 	"tt.crossroads.potion_extension.quip": "We're out of Pfizer, is AstraZeneca OK?",
 	"tt.crossroads.blood_sample.craft": "Needs processing in a Blood Centrifuge",
+	"tt.crossroads.blood_sample_empty.desc": "Can be filled with blood with a syringe or dispenser",
 	"tt.crossroads.boilerplate.entity_template.type": "",
 	"tt.crossroads.boilerplate.entity_template.type.missing": "Missing data",
 	"tt.crossroads.boilerplate.entity_template.degradation": "Deterioration: %1$d",

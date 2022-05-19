@@ -43,7 +43,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<item>Pouches/$ will $(l:essentials:witchcraft/spoilage)spoil/$ after 2 hours.$(br2)"
+			"text": "<item>Pouches/$ will $(l:essentials:witchcraft/spoilage)spoil/$ after 2 hours. <item>Empty Blood Pouches/$ can also be used by a dispenser to fill them from an entity.$(br2)"
 		},
 		{
 			"type": "patchouli:text",

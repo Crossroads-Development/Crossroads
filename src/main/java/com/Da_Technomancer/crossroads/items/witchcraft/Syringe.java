@@ -38,7 +38,10 @@ public class Syringe extends Item{
 		return stack.getOrCreateTag().getBoolean("extension_treated");
 	}
 
-	private DamageSource syringeAttackSource(Player player){
+	private static DamageSource syringeAttackSource(Player player){
+		if(player == null){
+			return new DamageSource("cr_syringe");
+		}
 		return new EntityDamageSource("cr_syringe", player);
 	}
 
@@ -56,8 +59,7 @@ public class Syringe extends Item{
 		}
 		//Take a blood sample
 		if(offhand.getItem() == CRItems.bloodSampleEmpty){
-			self.setItemInHand(InteractionHand.OFF_HAND, CRItems.bloodSample.withEntityData(CRItems.bloodSample.setSpoilTime(new ItemStack(CRItems.bloodSample, 1), CRItems.bloodSample.getLifetime(), self.level.getGameTime()), target));
-			target.hurt(syringeAttackSource(self), 1);
+			self.setItemInHand(InteractionHand.OFF_HAND, drawBlood(offhand, target, self));
 			return InteractionResult.SUCCESS;
 		}
 		//Apply an injection
@@ -100,6 +102,19 @@ public class Syringe extends Item{
 			return InteractionResult.SUCCESS;
 		}
 		return InteractionResult.PASS;
+	}
+
+	/**
+	 * Attempts to draw blood from an entity
+	 * @param samplePouch The original empty pouch item. Will not be modified
+	 * @param target The entity having its blood drawn
+	 * @param attacker The player drawing blood. Can be null.
+	 * @return The filled blood sample pouch
+	 */
+	public static ItemStack drawBlood(ItemStack samplePouch, LivingEntity target, @Nullable Player attacker){
+		ItemStack result = CRItems.bloodSample.withEntityData(CRItems.bloodSample.setSpoilTime(new ItemStack(CRItems.bloodSample, 1), CRItems.bloodSample.getLifetime(), target.level.getGameTime()), target);
+		target.hurt(syringeAttackSource(attacker), 1);
+		return result;
 	}
 
 	@Override

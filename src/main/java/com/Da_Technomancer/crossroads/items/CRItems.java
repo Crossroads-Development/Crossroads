@@ -262,7 +262,7 @@ public final class CRItems{
 		propellerPack = new ArmorPropellerPack();
 		armorEnviroBoots = new ArmorEnviroBoots();
 		armorToolbelt = new ArmorToolbelt();
-		toRegister.add(bloodSampleEmpty = new Item(new Item.Properties().stacksTo(1).tab(TAB_CROSSROADS)).setRegistryName("blood_sample_empty"));
+		bloodSampleEmpty = new BloodSampleEmpty();
 		bloodSample = new BloodSample();
 		separatedBloodSample = new BloodSample("separated_blood_sample");
 		potionExtension = new PotionExtension();
