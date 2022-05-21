@@ -64,8 +64,7 @@ public class BeamSiphon extends BeamBlock implements IWireConnect{
 	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
 		BlockEntity te = worldIn.getBlockEntity(pos);
 
-		if(te instanceof BeamSiphonTileEntity){
-			BeamSiphonTileEntity bte = (BeamSiphonTileEntity) te;
+		if(te instanceof BeamSiphonTileEntity bte){
 			CircuitUtil.updateFromWorld(bte.redsHandler, blockIn);
 		}
 	}

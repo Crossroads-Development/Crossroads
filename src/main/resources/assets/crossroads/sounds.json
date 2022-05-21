@@ -54,5 +54,14 @@
 				"name": "crossroads:steam_release"
 			}
 		]
+	},
+	"item_cannon": {
+		"category": "block",
+		"subtitle": "subtitle.crossroads.item_cannon",
+		"sounds": [
+			{
+				"name": "crossroads:item_cannon"
+			}
+		]
 	}
 }

@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.ambient.sounds;
 
 import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
 import com.Da_Technomancer.crossroads.Crossroads;
+import net.minecraft.client.resources.sounds.Sound;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 
 public class CRSounds{
 
-	private static final ArrayList<SoundEvent> soundsToRegister = new ArrayList<>(6);
+	private static final ArrayList<SoundEvent> soundsToRegister = new ArrayList<>(7);
 
 	public static final SoundEvent BEAM_PASSIVE = createEvent("beam_passive");
 	public static final SoundEvent BEAM_TRANSMUTE = createEvent("beam_transmute");
@@ -22,6 +23,7 @@ public class CRSounds{
 	public static final SoundEvent ELECTRIC_ARC = createEvent("electric_arc");
 	public static final SoundEvent FLUX_TRANSFER = createEvent("entropy_transfer");
 	public static final SoundEvent STEAM_RELEASE = createEvent("steam_release");
+	public static final SoundEvent ITEM_CANNON = createEvent("item_cannon");
 
 	public static void register(IForgeRegistry<SoundEvent> reg){
 		for(SoundEvent e : soundsToRegister){

@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.API.technomancy;
 import com.Da_Technomancer.crossroads.API.IInfoTE;
 import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -132,7 +133,7 @@ public interface IGateway extends IInfoTE{
 		if(!CRConfig.allowGateway.get()){
 			return false;
 		}
-		if(!(e instanceof Player) && !CRConfig.allowGatewayEntities.get()){
+		if(!(e instanceof Player) && !CRConfig.allowGatewayEntities.get() || e instanceof EntityGhostMarker){
 			return false;
 		}
 

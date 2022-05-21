@@ -137,6 +137,7 @@ public class CRTileEntity{
 		register(HeatReservoirCreativeTileEntity::new, "heat_reservoir_creative", reg, heatReservoirCreative);
 		register(MasterAxisCreativeTileEntity::new, "master_axis_creative", reg, masterAxisCreative);
 		register(BeamExtractorCreativeTileEntity::new, "beam_extractor_creative", reg, beamExtractorCreative);
+		register(ItemCannonTileEntity::new, "item_cannon", reg, itemCannon);
 	}
 
 	private static void register(BlockEntityType.BlockEntitySupplier<?> cons, String id, IForgeRegistry<BlockEntityType<?>> reg, Block... blocks){

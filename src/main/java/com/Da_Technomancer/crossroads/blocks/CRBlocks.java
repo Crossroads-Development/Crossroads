@@ -173,6 +173,7 @@ public class CRBlocks{
 	public static HeatReservoirCreative heatReservoirCreative;
 	public static MasterAxisCreative masterAxisCreative;
 	public static BeamExtractorCreative beamExtractorCreative;
+	public static ItemCannon itemCannon;
 
 	public static BlockBehaviour.Properties getRockProperty(){
 		return BlockBehaviour.Properties.of(Material.STONE).strength(3).requiresCorrectToolForDrops().sound(SoundType.STONE);
@@ -375,6 +376,7 @@ public class CRBlocks{
 		heatReservoirCreative = new HeatReservoirCreative();
 		masterAxisCreative = new MasterAxisCreative();
 		beamExtractorCreative = new BeamExtractorCreative();
+		itemCannon = new ItemCannon();
 	}
 
 	@OnlyIn(Dist.CLIENT)

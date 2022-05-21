@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"item": "crossroads:item_cannon",
+		"count": 1
+	},
+	"pattern": [
+		" C ",
+		"ICI",
+		"ISI"
+	],
+	"key": {
+		"I": {
+			"tag": "forge:ingots/iron"
+		},
+		"S": {
+			"item": "essentials:item_shifter"
+		},
+		"C": {
+			"item": "essentials:item_chute"
+		}
+	}
+}

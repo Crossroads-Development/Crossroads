@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.API.beams.BeamUtil;
 import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.API.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import com.Da_Technomancer.crossroads.integration.curios.CurioHelper;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
@@ -164,7 +165,7 @@ public class StaffTechnomancy extends BeamUsingItem{
 			end[1] += ray.y;
 			end[2] += ray.z;
 			//Look for entities along the firing path to collide with
-			List<Entity> ents = world.getEntities(excludedEntity, new AABB(end[0] - halfStep, end[1] - halfStep, end[2] - halfStep, end[0] + halfStep, end[1] + halfStep, end[2] + halfStep), EntitySelector.ENTITY_STILL_ALIVE);
+			List<Entity> ents = world.getEntities(excludedEntity, new AABB(end[0] - halfStep, end[1] - halfStep, end[2] - halfStep, end[0] + halfStep, end[1] + halfStep, end[2] + halfStep), EntitySelector.ENTITY_STILL_ALIVE.and(ent -> !(ent instanceof EntityGhostMarker)));
 			if(!ents.isEmpty()){
 				Optional<Vec3> res = ents.get(0).getBoundingBox().clip(startPos, new Vec3(end[0], end[1], end[2]));
 				if(res.isPresent()){

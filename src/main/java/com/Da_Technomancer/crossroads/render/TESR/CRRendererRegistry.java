@@ -57,6 +57,7 @@ public class CRRendererRegistry{
 		e.registerBlockEntityRenderer(CultivatorVatTileEntity.TYPE, CultivatorVatRenderer::new);
 		e.registerBlockEntityRenderer(BloodCentrifugeTileEntity.TYPE, BloodCentrifugeRenderer::new);
 		e.registerBlockEntityRenderer(BeamExtractorCreativeTileEntity.TYPE, BeamRenderer::new);
+		e.registerBlockEntityRenderer(ItemCannonTileEntity.TYPE, ItemCannonRenderer::new);
 	}
 
 //	This doesn't work anymore, and any existing blocks were switched to JSON models for the item form
