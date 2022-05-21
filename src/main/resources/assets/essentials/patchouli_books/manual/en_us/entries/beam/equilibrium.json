@@ -15,7 +15,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "and will be completely stopped.$(br2)"
+			"text": "and will be completely stopped.$(br2)NOTE: This effect will change in an upcoming version. Switch to using the <thing>Stability/$ beam effect instead.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
@@ -23,7 +23,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<thing>/$ beam explosions.$(br2)If a <thing>Cataclysm/$ and <thing>Equilibrium/$ beam apply to the same explosion, the <thing>Equilibrium/$ beam wins.$(br2)It is difficult to overstate how devastating and power a non-stop massive <thing>Chaos/$ explosion can be.$(br2)"
+			"text": "<thing>/$ beam explosions.$(br2)If a <thing>Cataclysm/$ and <thing>Equilibrium/$ beam apply to the same explosion, the <thing>Equilibrium/$ beam wins.$(br2)NOTE: This effect will change in an upcoming version. Switch to using the <thing>Chaos/$ (void-stability) beam effect instead.$(br2)"
 		}
 	]
 }

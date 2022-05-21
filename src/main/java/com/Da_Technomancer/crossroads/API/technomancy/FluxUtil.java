@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.API.alchemy.AlchemyUtil;
 import com.Da_Technomancer.crossroads.API.alchemy.EnumReagents;
 import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.API.beams.BeamUtil;
-import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
+import com.Da_Technomancer.crossroads.API.effects.GrowEffect;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.essentials.tileentities.ILinkTE;
 import com.Da_Technomancer.essentials.tileentities.LinkHelper;
@@ -200,8 +200,8 @@ public class FluxUtil{
 				map.addReagent(EnumReagents.PHELOSTOGEN.id(), 6, 100);
 				AlchemyUtil.releaseChemical(worldIn, pos, map);
 			}else{
-				//potential-void area of effect
-				EnumBeamAlignments.POTENTIAL.getEffect().doBeamEffect(EnumBeamAlignments.POTENTIAL, true, 64, worldIn, pos, null);
+				//potential-void kill area of effect
+				GrowEffect.aoeKill(64, worldIn, pos);
 			}
 		}else{
 			//small explode (everything else disabled in config)

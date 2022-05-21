@@ -137,13 +137,14 @@ public class BeamCannonTileEntity extends BlockEntity implements ITickableTileEn
 				Vector3f ray = new Vector3f(-(float) Math.sin(angle[0]) * sinPhi, (float) Math.cos(angle[1]), (float) Math.cos(angle[0]) * sinPhi);
 				Quaternion directionRotation = getRotationFromDirection(facing).toQuaternion();
 				ray.transform(directionRotation);
+				Vec3 rayVec3 = new Vec3(ray);
 
 				//rayTraceSt is offset 'up' by 3.5/16 blocks to match the render, which has to be rotated by the facing
 				Vector3f upShift = new Vector3f(0, 3.5F / 16F, 0);
 				upShift.transform(directionRotation);
 				rayTraceSt = rayTraceSt.add(upShift.x(), upShift.y(), upShift.z());
 
-				Triple<BlockPos, Vec3, Direction> beamHitResult = StaffTechnomancy.rayTraceBeams(out, level, rayTraceSt, rayTraceSt, new Vec3(ray), null, worldPosition, RANGE);
+				Triple<BlockPos, Vec3, Direction> beamHitResult = StaffTechnomancy.rayTraceBeams(out, level, rayTraceSt, rayTraceSt, rayVec3, null, worldPosition, RANGE);
 				BlockPos endPos = beamHitResult.getLeft();
 				if(endPos != null){//Should always be true
 					outLength = (float) beamHitResult.getMiddle().distanceTo(rayTraceSt);
@@ -155,7 +156,7 @@ public class BeamCannonTileEntity extends BlockEntity implements ITickableTileEn
 					}else{
 						EnumBeamAlignments align = EnumBeamAlignments.getAlignment(out);
 						if(!level.isOutsideBuildHeight(endPos)){
-							align.getEffect().doBeamEffect(align, out.getVoid() != 0, Math.min(64, outPower), level, endPos, effectDir);
+							align.getEffect().doBeamEffect(align, out.getVoid() != 0, Math.min(64, outPower), level, endPos, effectDir, rayVec3);
 						}
 					}
 				}

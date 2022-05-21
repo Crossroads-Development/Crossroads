@@ -30,11 +30,9 @@ public class GrowEffect extends BeamEffect{
 	protected static final DamageSource POTENTIAL_VOID = new DamageSource("potentialvoid").setMagic().bypassArmor();
 	protected static final DamageSource POTENTIAL_VOID_ABSOLUTE = new DamageSource("potentialvoid").setMagic().bypassArmor().bypassMagic();
 
-
 	@Override
 	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, Level worldIn, BlockPos pos, @Nullable Direction dir){
 		if(!performTransmute(align, voi, power, worldIn, pos)){
-			double range = Math.sqrt(power) / 2D;
 			if(voi){
 				//Kill plants
 				if(!BlockSalt.salinate(worldIn, pos)){
@@ -42,16 +40,9 @@ public class GrowEffect extends BeamEffect{
 					BlockSalt.salinate(worldIn, pos.above());
 				}
 
-				List<LivingEntity> ents = worldIn.getEntitiesOfClass(LivingEntity.class, new AABB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range + 1, pos.getY() + range + 1, pos.getZ() + range + 1), EntitySelector.ENTITY_STILL_ALIVE);
-				boolean absoluteDamage = CRConfig.beamDamageAbsolute.get();
-				for(LivingEntity ent : ents){
-					if(ent.isInvertedHealAndHarm()){
-						ent.heal(power * 3F / 4F);
-					}else{
-						ent.hurt(absoluteDamage ? POTENTIAL_VOID_ABSOLUTE : POTENTIAL_VOID, power * 3F / 4F);
-					}
-				}
+				aoeKill(power, worldIn, pos);
 			}else{
+				double range = calcRange(power);
 				List<LivingEntity> ents = worldIn.getEntitiesOfClass(LivingEntity.class, new AABB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range, pos.getY() + range, pos.getZ() + range), EntitySelector.ENTITY_STILL_ALIVE);
 				boolean absoluteDamage = CRConfig.beamDamageAbsolute.get();
 				for(LivingEntity ent : ents){
@@ -76,20 +67,36 @@ public class GrowEffect extends BeamEffect{
 				}
 
 				for(int i = 0; i < power; i++){
-					if(!(state.getBlock() instanceof BonemealableBlock)){
+					if(!(state.getBlock() instanceof BonemealableBlock growable)){
 						return;
 					}
 
 					if(CRItemTags.tagContains(growBlacklist, state.getBlock())){
 						return;
 					}
-					BonemealableBlock growable = (BonemealableBlock) state.getBlock();
 					if(growable.isValidBonemealTarget(worldIn, pos, state, false)){
 						growable.performBonemeal((ServerLevel) worldIn, worldIn.random, pos, state);
 					}
-					//The state must be quarried every loop because some plants could break themselves upon growing
+					//The state must be queried every loop because some plants could break themselves upon growing
 					state = worldIn.getBlockState(pos);
 				}
+			}
+		}
+	}
+
+	private static double calcRange(int power){
+		return Math.sqrt(power) / 2D;
+	}
+
+	public static void aoeKill(int power, Level worldIn, BlockPos pos){
+		double range = calcRange(power);
+		List<LivingEntity> ents = worldIn.getEntitiesOfClass(LivingEntity.class, new AABB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range + 1, pos.getY() + range + 1, pos.getZ() + range + 1), EntitySelector.ENTITY_STILL_ALIVE);
+		boolean absoluteDamage = CRConfig.beamDamageAbsolute.get();
+		for(LivingEntity ent : ents){
+			if(ent.isInvertedHealAndHarm()){
+				ent.heal(power * 3F / 4F);
+			}else{
+				ent.hurt(absoluteDamage ? POTENTIAL_VOID_ABSOLUTE : POTENTIAL_VOID, power * 3F / 4F);
 			}
 		}
 	}

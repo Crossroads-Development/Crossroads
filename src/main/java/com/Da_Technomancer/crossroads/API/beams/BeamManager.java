@@ -47,7 +47,7 @@ public class BeamManager{
 				if(!mag.isEmpty()){
 					EnumBeamAlignments align = EnumBeamAlignments.getAlignment(mag);
 					BeamEffect e = align.getEffect();
-					e.doBeamEffect(align, mag.getVoid() != 0, Math.min(64, mag.getPower()), world, pos.relative(dir, i), dir.getOpposite());
+					e.doBeamEffect(align, mag.getVoid() != 0, Math.min(64, mag.getPower()), world, pos.relative(dir, i), dir.getOpposite(), null);
 				}
 				if(dist != i || !mag.equals(lastSent)){
 					dist = i;

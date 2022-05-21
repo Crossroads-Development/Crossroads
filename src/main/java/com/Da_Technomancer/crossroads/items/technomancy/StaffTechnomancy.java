@@ -81,7 +81,8 @@ public class StaffTechnomancy extends BeamUsingItem{
 				double heldOffset = .22D * (player.getUsedItemHand() == InteractionHand.MAIN_HAND ^ player.getMainArm() == HumanoidArm.LEFT ? 1D : -1D);
 				Vec3 start = new Vec3(player.getX() - (heldOffset * Math.cos(Math.toRadians(player.getYRot()))), player.getY() + player.getEyeHeight() + 0.4D, player.getZ() - (heldOffset * Math.sin(Math.toRadians(player.getYRot()))));
 
-				Triple<BlockPos, Vec3, Direction> beamHitResult = rayTraceBeams(mag, player.level, start, player.getEyePosition(1), player.getLookAngle(), player, null, MAX_RANGE);
+				Vec3 ray = player.getLookAngle();
+				Triple<BlockPos, Vec3, Direction> beamHitResult = rayTraceBeams(mag, player.level, start, player.getEyePosition(1), ray, player, null, MAX_RANGE);
 				BlockPos endPos = beamHitResult.getLeft();
 				Direction effectDir = beamHitResult.getRight();
 
@@ -138,7 +139,7 @@ public class StaffTechnomancy extends BeamUsingItem{
 					}else{
 						EnumBeamAlignments align = EnumBeamAlignments.getAlignment(mag);
 						if(!player.level.isOutsideBuildHeight(endPos)){
-							align.getEffect().doBeamEffect(align, mag.getVoid() != 0, Math.min(64, mag.getPower()), player.level, endPos, effectDir);
+							align.getEffect().doBeamEffect(align, mag.getVoid() != 0, Math.min(64, mag.getPower()), player.level, endPos, effectDir, ray);
 						}
 					}
 				}
@@ -152,8 +153,8 @@ public class StaffTechnomancy extends BeamUsingItem{
 	public static Triple<BlockPos, Vec3, Direction> rayTraceBeams(BeamUnit beam, Level world, Vec3 startPos, Vec3 endSourcePos, Vec3 ray, @Nullable Entity excludedEntity, @Nullable BlockPos ignorePos, double maxRange){
 		final double stepSize = CRConfig.beamRaytraceStep.get();
 		final double halfStep = stepSize / 2D;
-		ray = ray.scale(stepSize);
 		Direction collisionDir = Direction.getNearest(ray.x, ray.y, ray.z);//Used for beam collision detection
+		ray = ray.scale(stepSize);
 		Direction effectDir = null;
 		BlockPos endPos = null;
 		double[] end = new double[] {endSourcePos.x, endSourcePos.y, endSourcePos.z};

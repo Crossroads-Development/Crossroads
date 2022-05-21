@@ -25,7 +25,7 @@ public enum EnumBeamAlignments{
 	LIGHT(new LightEffect(), new Color(255, 255, 255), 128),
 	
 	//These MUST be declared last so they have bottom priority.
-	STABILITY(new ExplodeEffect(), new Color(0, 0, 255), 254),
+	STABILITY(new ExplosionEffect(), new Color(0, 0, 255), 254),
 	POTENTIAL(new GrowEffect(), new Color(0, 255, 0), 254),
 	ENERGY(new EnergizeEffect(), new Color(255, 0, 0), 254),
 	VOID(new VoidEffect(), new Color(0, 0, 0), 0),
