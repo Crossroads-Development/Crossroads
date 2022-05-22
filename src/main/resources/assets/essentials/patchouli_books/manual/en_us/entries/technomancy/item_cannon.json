@@ -11,23 +11,23 @@
 			"type": "patchouli:spotlight",
 			"title": "Item Cannon",
 			"item": "crossroads:item_cannon",
-			"text": "The <item>Item Cannon/$ launches items at almost any angle, and can send them huge distances (100+ blocks possible). The angle can be controlled and changed using <thing>$(l:essentials:intro/rotary)rotary input/$.$(br2)There are two <thing>$(l:essentials:intro/rotary)rotary inputs/$- one on the back, and one on the sides (any side other than "
+			"text": "The <item>Item Cannon/$ launches items at almost any angle and can send them huge distances (100+ blocks possible). The angle can be controlled and changed using <thing>$(l:essentials:intro/rotary)rotary input/$.$(br2)While the <item>item cannon/$ has a redstone signal, it will launch any items in its inventory in "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "the front or back). The back input controls the 'yaw' of the <item>beam cannon/$ (overall rotation firing angle), and the side input controls the 'pitch' of the <item>beam cannon/$ (firing angle from straight up/forward).$(br2)The pitch (firing angle from forward/up, in rad) will be the <thing>$(l:essentials:intro/rotary)speed/$ (in rad/s) of the side $(l:essentials:intro/rotary)<thing>rotary/$ input, with 0 being straight forward. "
+			"text": "the direction aimed. It can launch up to a full stack at once. The launch speed is the redstone signal strength (<thing>$(l:essentials/circuits)circuit/$ signals work) in blocks/tick, capped at 4 blocks/tick (80 blocks/second). A redstone pulse can be used to only fire once instead of running continuously.$(br2)If the <item>item cannon/$ launches a <item>shell/$ (from <thing>$(l:essentials:intro/alchemy)Alchemy/$), it will be "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "The pitch is capped at ±π/2 rad (±90°) from straight. The yaw (overall rotation of the cannon in rad) will be the <thing>$(l:essentials:intro/rotary)speed/$ (in rad/s) of the back $(l:essentials:intro/rotary)<thing>rotary/$ input.$(br2)The pitch and yaw can be [un]locked by shift-right-clicking with a wrench, which will hold the pitch and yaw permanently constant at the current value, even if all the $(l:essentials:intro/rotary)<thing>rotary/$ attachments "
+			"text": "launched as a projectile and burst on impact, releasing the contents.$(br2)There are two <thing>$(l:essentials:intro/rotary)rotary inputs/$- one on the back, and one on the sides (any side other than the front or back). The back input controls the 'yaw' (overall rotation firing angle), and the side input controls the 'pitch' (firing angle from straight up/forward).$(br2)"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "are removed. The pitch and yaw do not immediately change with the <thing>$(l:essentials:intro/rotary)speed/$- they re-orient into the new position, fairly quickly but not instantly.$(br2)While the <item>item cannon/$ has a redstone signal, it will launch any items in its inventory in the direction aimed. It can launch up to a full stack at once. The launch speed is the redstone signal "
+			"text": "The pitch (firing angle from forward/up, in rad) will be the <thing>$(l:essentials:intro/rotary)speed/$ (in rad/s) of the side $(l:essentials:intro/rotary)<thing>rotary/$ input, with 0 being straight forward. The pitch is capped at ±π/2 rad (±90°) from straight. The yaw (overall rotation of the cannon in rad) will be the <thing>$(l:essentials:intro/rotary)speed/$ (in rad/s) of the back $(l:essentials:intro/rotary)<thing>rotary/$ input.$(br2)The pitch and yaw can be [un]locked by shift-right-clicking "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "strength (<thing>$(l:essentials/circuits)circuit/$ signals work) in blocks/tick, capped at 4 blocks/tick (equal to 80 blocks/second). A redstone pulse can be used to only fire once instead of running continuously.$(br2)"
+			"text": "with a wrench, which will hold the pitch and yaw permanently constant at the current value, even if all the $(l:essentials:intro/rotary)<thing>rotary/$ attachments are removed. The pitch and yaw do not immediately change with the <thing>$(l:essentials:intro/rotary)speed/$- they re-orient into the new position, fairly quickly but not instantly.$(br2)"
 		}
 	]
 }

@@ -1,8 +1,11 @@
 package com.Da_Technomancer.crossroads.tileentities.technomancy;
 
 import com.Da_Technomancer.crossroads.API.CircuitUtil;
+import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
+import com.Da_Technomancer.crossroads.entity.EntityShell;
+import com.Da_Technomancer.crossroads.items.alchemy.Shell;
 import com.Da_Technomancer.essentials.blocks.redstone.IRedstoneHandler;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
@@ -68,9 +71,18 @@ public class ItemCannonTileEntity extends AbstractCannonTileEntity{
 				Vec3 itemPos = Vec3.atCenterOf(worldPosition);
 				Vec3 aimed = getAimedVec();
 				itemPos = itemPos.add(aimed.scale(2));//Offset the item start position to ensure it clears the base
-				ItemEntity ent = new ItemEntity(level, itemPos.x, itemPos.y, itemPos.z, inventory);
-				ent.setDeltaMovement(aimed.scale(force));
-				level.addFreshEntity(ent);
+
+				if(inventory.getItem() instanceof Shell shellItem){
+					ReagentMap contents = shellItem.getReagants(inventory);
+					EntityShell shellEnt = new EntityShell(level, contents, inventory);
+					shellEnt.setPos(itemPos.x, itemPos.y, itemPos.z);
+					shellEnt.setDeltaMovement(aimed.scale(force));
+					level.addFreshEntity(shellEnt);
+				}else{
+					ItemEntity ent = new ItemEntity(level, itemPos.x, itemPos.y, itemPos.z, inventory);
+					ent.setDeltaMovement(aimed.scale(force));
+					level.addFreshEntity(ent);
+				}
 				inventory = ItemStack.EMPTY;
 				//Play sound
 				CRSounds.playSoundServer(level, worldPosition, CRSounds.ITEM_CANNON, SoundSource.BLOCKS, 1F, 1F);

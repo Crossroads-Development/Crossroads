@@ -32,7 +32,7 @@ public class Shell extends AbstractGlassware{
 				Level world = source.getLevel();
 				EntityShell shellEnt = new EntityShell(world, contents, stack);
 				shellEnt.setPos(source.x() + dir.getStepX() + 0.5D, source.y() + dir.getStepY() + 0.5D, source.z() + dir.getStepZ() + 0.5D);
-				shellEnt.shoot(dir.getStepX(), dir.getStepY(), dir.getStepZ(), 1.5F, 1.0F);
+				shellEnt.shoot(dir.getStepX(), dir.getStepY(), dir.getStepZ(), 0.8F, 1.0F);
 				world.addFreshEntity(shellEnt);
 				stack.shrink(1);
 			}
@@ -65,7 +65,7 @@ public class Shell extends AbstractGlassware{
 
 			if(!worldIn.isClientSide){
 				EntityShell shellEnt = new EntityShell(worldIn, playerIn, contents, held);
-				shellEnt.shootFromRotation(playerIn, playerIn.getXRot(), playerIn.getYRot(), 0, 1.5F, 1.0F);
+				shellEnt.shootFromRotation(playerIn, playerIn.getXRot(), playerIn.getYRot(), 0, 0.8F, 1.0F);
 				worldIn.addFreshEntity(shellEnt);
 			}
 
