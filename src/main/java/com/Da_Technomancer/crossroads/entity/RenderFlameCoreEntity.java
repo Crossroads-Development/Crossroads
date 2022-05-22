@@ -1,11 +1,10 @@
 package com.Da_Technomancer.crossroads.entity;
 
-import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -15,55 +14,58 @@ import java.awt.*;
 
 public class RenderFlameCoreEntity extends EntityRenderer<EntityFlameCore>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/entities/flame.png");
-
 	protected RenderFlameCoreEntity(EntityRendererProvider.Context context){
 		super(context);
 	}
 
 	@Override
 	public ResourceLocation getTextureLocation(EntityFlameCore entity){
-		return TEXTURE;
+		return CRRenderTypes.FLAME_CORE_TEXTURE;//Not actually used, as we render from a separate texture atlas
 	}
 
 	@Override
 	public void render(EntityFlameCore entity, float entityYaw, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int packedLight){
 
 		Color color = new Color(entity.getEntityData().get(EntityFlameCore.COLOR), true);
-		int[] col = new int[] {color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()};
+		//Note that we tweak the alpha value
+		int[] col = new int[] {color.getRed(), color.getGreen(), color.getBlue(), Math.max(150, Math.min(240, 80 + color.getAlpha()))};
 		float scale = EntityFlameCore.FLAME_VEL * (float) entity.getEntityData().get(EntityFlameCore.TIME_EXISTED);
+		float minU = -scale;
+		float minV = minU;
+		float maxU = minU + scale * 2;
+		float maxV = maxU;
 
-		VertexConsumer builder = buffer.getBuffer(RenderType.entityTranslucent(getTextureLocation(entity)));
+		VertexConsumer builder = buffer.getBuffer(CRRenderTypes.FLAME_CORE_TYPE);
 
-		CRRenderUtil.addVertexEntity(builder, matrix, -scale, -scale, -scale, 0, 0, 0, 0, -1, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexEntity(builder, matrix, scale, -scale, -scale, 1, 0, 0, 0, -1, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexEntity(builder, matrix, scale, scale, -scale, 1, 1, 0, 0, -1, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexEntity(builder, matrix, -scale, scale, -scale, 0, 1, 0, 0, -1, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexPosColTex(builder, matrix, -scale, -scale, -scale, minU, minV, col);
+		CRRenderUtil.addVertexPosColTex(builder, matrix, scale, -scale, -scale, maxU, minV, col);
+		CRRenderUtil.addVertexPosColTex(builder, matrix, scale, scale, -scale, maxU, maxV, col);
+		CRRenderUtil.addVertexPosColTex(builder, matrix, -scale, scale, -scale, minU, maxV, col);
 
-		CRRenderUtil.addVertexEntity(builder, matrix, -scale, -scale, -scale, 0, 0, 0, -1, 0, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexEntity(builder, matrix, scale, -scale, -scale, 1, 0, 0, -1, 0, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexEntity(builder, matrix, scale, -scale, scale, 1, 1, 0, -1, 0, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexEntity(builder, matrix, -scale, -scale, scale, 0, 1, 0, -1, 0, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexPosColTex(builder, matrix, -scale, -scale, -scale, minU, minV, col);
+		CRRenderUtil.addVertexPosColTex(builder, matrix, scale, -scale, -scale, maxU, minV, col);
+		CRRenderUtil.addVertexPosColTex(builder, matrix, scale, -scale, scale, maxU, maxV, col);
+		CRRenderUtil.addVertexPosColTex(builder, matrix, -scale, -scale, scale, minU, maxV, col);
 
-		CRRenderUtil.addVertexEntity(builder, matrix, -scale, -scale, -scale, 0, 0, -1, 0, 0, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexEntity(builder, matrix, -scale, -scale, scale, 1, 0, -1, 0, 0, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexEntity(builder, matrix, -scale, scale, scale, 1, 1, -1, 0, 0, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexEntity(builder, matrix, -scale, scale, -scale, 0, 1, -1, 0, 0, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexPosColTex(builder, matrix, -scale, -scale, -scale, minU, minV, col);
+		CRRenderUtil.addVertexPosColTex(builder, matrix, -scale, -scale, scale, maxU, minV, col);
+		CRRenderUtil.addVertexPosColTex(builder, matrix, -scale, scale, scale, maxU, maxV, col);
+		CRRenderUtil.addVertexPosColTex(builder, matrix, -scale, scale, -scale, minU, maxV, col);
 
-		CRRenderUtil.addVertexEntity(builder, matrix, -scale, -scale, scale, 0, 0, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexEntity(builder, matrix, scale, -scale, scale, 1, 0, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexEntity(builder, matrix, scale, scale, scale, 1, 1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexEntity(builder, matrix, -scale, scale, scale, 0, 1, 0, 0, 1, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexPosColTex(builder, matrix, -scale, -scale, scale, minU, minV, col);
+		CRRenderUtil.addVertexPosColTex(builder, matrix, scale, -scale, scale, maxU, minV, col);
+		CRRenderUtil.addVertexPosColTex(builder, matrix, scale, scale, scale, maxU, maxV, col);
+		CRRenderUtil.addVertexPosColTex(builder, matrix, -scale, scale, scale, minU, maxV, col);
 
-		CRRenderUtil.addVertexEntity(builder, matrix, -scale, scale, -scale, 0, 0, 0, 1, 0, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexEntity(builder, matrix, scale, scale, -scale, 1, 0, 0, 1, 0, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexEntity(builder, matrix, scale, scale, scale, 1, 1, 0, 1, 0, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexEntity(builder, matrix, -scale, scale, scale, 0, 1, 0, 1, 0, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexPosColTex(builder, matrix, -scale, scale, -scale, minU, minV, col);
+		CRRenderUtil.addVertexPosColTex(builder, matrix, scale, scale, -scale, maxU, minV, col);
+		CRRenderUtil.addVertexPosColTex(builder, matrix, scale, scale, scale, maxU, maxV, col);
+		CRRenderUtil.addVertexPosColTex(builder, matrix, -scale, scale, scale, minU, maxV, col);
 
-		CRRenderUtil.addVertexEntity(builder, matrix, scale, -scale, -scale, 0, 0, 1, 0, 0, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexEntity(builder, matrix, scale, -scale, scale, 1, 0, 1, 0, 0, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexEntity(builder, matrix, scale, scale, scale, 1, 1, 1, 0, 0, CRRenderUtil.BRIGHT_LIGHT, col);
-		CRRenderUtil.addVertexEntity(builder, matrix, scale, scale, -scale, 0, 1, 1, 0, 0, CRRenderUtil.BRIGHT_LIGHT, col);
+		CRRenderUtil.addVertexPosColTex(builder, matrix, scale, -scale, -scale, minU, minV, col);
+		CRRenderUtil.addVertexPosColTex(builder, matrix, scale, -scale, scale, maxU, minV, col);
+		CRRenderUtil.addVertexPosColTex(builder, matrix, scale, scale, scale, maxU, maxV, col);
+		CRRenderUtil.addVertexPosColTex(builder, matrix, scale, scale, -scale, minU, maxV, col);
 
 		super.render(entity, entityYaw, partialTicks, matrix, buffer, packedLight);
 	}

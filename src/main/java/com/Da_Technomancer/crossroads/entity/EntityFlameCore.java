@@ -4,14 +4,19 @@ import com.Da_Technomancer.crossroads.API.alchemy.*;
 import com.Da_Technomancer.crossroads.API.effects.alchemy.IAlchEffect;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -24,6 +29,7 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @ObjectHolder(Crossroads.MODID)
 public class EntityFlameCore extends Entity{
@@ -33,7 +39,7 @@ public class EntityFlameCore extends Entity{
 
 	protected static final EntityDataAccessor<Integer> TIME_EXISTED = SynchedEntityData.defineId(EntityFlameCore.class, EntityDataSerializers.INT);
 	protected static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(EntityFlameCore.class, EntityDataSerializers.INT);
-	protected static final float FLAME_VEL = 0.1F;//Flame interface speed, blocks per tick
+	protected static final float FLAME_VEL = 0.08F;//Flame interface speed, blocks per tick
 
 	/**
 	 * In order to avoid iterating over a large ReagentStack[] that is mostly empty several times a tick, this list is created to store all non-null reagent stacks
@@ -48,12 +54,16 @@ public class EntityFlameCore extends Entity{
 		setNoGravity(true);
 		noPhysics = true;
 		noCulling = true;
+		if(worldIn instanceof ServerLevel world){
+			//Flame cores need to be registered
+			FlameCoresSavedData.addFlameCore(world, this);
+		}
 	}
-
 
 	public void setInitialValues(ReagentMap reags, int radius){
 		this.reags = reags == null ? new ReagentMap() : reags;
 		maxRadius = radius;
+		CRSounds.playSoundServer(level, blockPosition(), CRSounds.FIRE_SWELL, SoundSource.BLOCKS, 2F, 1F);
 	}
 
 	private ReagentMap reags = null;
@@ -82,10 +92,8 @@ public class EntityFlameCore extends Entity{
 
 	@Override
 	public void readAdditionalSaveData(CompoundTag nbt){
-		reags = new ReagentMap();
 		maxRadius = nbt.getInt("rad");
 		reags = ReagentMap.readFromNBT(nbt);
-		setInitialValues(reags, maxRadius);
 		ticksExisted = nbt.getInt("life");
 		entityData.set(TIME_EXISTED, ticksExisted);
 		if(nbt.contains("color")){
@@ -108,6 +116,10 @@ public class EntityFlameCore extends Entity{
 	}
 
 	public int getRadius(){
+		return getRadius(ticksExisted);
+	}
+
+	private static int getRadius(int ticksExisted){
 		return Math.round(FLAME_VEL * (float) ticksExisted);
 	}
 
@@ -154,59 +166,64 @@ public class EntityFlameCore extends Entity{
 			entityData.set(COLOR, col.getRGB());
 		}
 
-		//TODO this could be distributed to do 1/8 the block changes every tick, instead of all of them every 8 ticks
-		if(ticksExisted % 8 == 0){
-			int radius = getRadius();
-			BlockPos pos = new BlockPos(getX(), getY(), getZ());
-			boolean lastAction = maxRadius <= radius;
+		final int distributedTime = 8;//Action is distributed to do 1/8 the block changes every tick instead of all of them every 8 ticks
+		int tickMod = ticksExisted % distributedTime;
+		int radius = getRadius(ticksExisted - tickMod);
+		BlockPos pos = new BlockPos(getX(), getY(), getZ());
+		boolean lastAction = maxRadius <= radius && tickMod == (distributedTime - 1);
 
-			double temp = reags.getTempC();
+		double temp = reags.getTempC();
 
-			for(int i = 0; i <= radius; i++){
-				for(int j = 0; j <= radius; j++){
-					//x-z plane
-					act(reagList, reags, temp, level, pos.offset(i, -radius, j), lastAction);
-					act(reagList, reags, temp, level, pos.offset(i - radius, -radius, j), lastAction);
-					act(reagList, reags, temp, level, pos.offset(i, -radius, j - radius), lastAction);
-					act(reagList, reags, temp, level, pos.offset(i - radius, -radius, j - radius), lastAction);
-					act(reagList, reags, temp, level, pos.offset(i, radius, j), lastAction);
-					act(reagList, reags, temp, level, pos.offset(i - radius, radius, j), lastAction);
-					act(reagList, reags, temp, level, pos.offset(i, radius, j - radius), lastAction);
-					act(reagList, reags, temp, level, pos.offset(i - radius, radius, j - radius), lastAction);
-					//x-y plane
-					act(reagList, reags, temp, level, pos.offset(i, j, -radius), lastAction);
-					act(reagList, reags, temp, level, pos.offset(i - radius, j, -radius), lastAction);
-					act(reagList, reags, temp, level, pos.offset(i, j - radius, -radius), lastAction);
-					act(reagList, reags, temp, level, pos.offset(i - radius, j - radius, -radius), lastAction);
-					act(reagList, reags, temp, level, pos.offset(i, j, radius), lastAction);
-					act(reagList, reags, temp, level, pos.offset(i - radius, j, radius), lastAction);
-					act(reagList, reags, temp, level, pos.offset(i, j - radius, radius), lastAction);
-					act(reagList, reags, temp, level, pos.offset(i - radius, j - radius, radius), lastAction);
-					//y-z plane
-					act(reagList, reags, temp, level, pos.offset(-radius, i, j), lastAction);
-					act(reagList, reags, temp, level, pos.offset(-radius, i - radius, j), lastAction);
-					act(reagList, reags, temp, level, pos.offset(-radius, i, j - radius), lastAction);
-					act(reagList, reags, temp, level, pos.offset(-radius, i - radius, j - radius), lastAction);
-					act(reagList, reags, temp, level, pos.offset(radius, i, j), lastAction);
-					act(reagList, reags, temp, level, pos.offset(radius, i - radius, j), lastAction);
-					act(reagList, reags, temp, level, pos.offset(radius, i, j - radius), lastAction);
-					act(reagList, reags, temp, level, pos.offset(radius, i - radius, j - radius), lastAction);
-				}
+		for(int i = tickMod; i <= radius; i += distributedTime){
+			for(int j = 0; j <= radius; j++){
+				//x-z plane
+				act(reagList, reags, temp, level, pos.offset(i, -radius, j), lastAction);
+				act(reagList, reags, temp, level, pos.offset(i - radius, -radius, j), lastAction);
+				act(reagList, reags, temp, level, pos.offset(i, -radius, j - radius), lastAction);
+				act(reagList, reags, temp, level, pos.offset(i - radius, -radius, j - radius), lastAction);
+				act(reagList, reags, temp, level, pos.offset(i, radius, j), lastAction);
+				act(reagList, reags, temp, level, pos.offset(i - radius, radius, j), lastAction);
+				act(reagList, reags, temp, level, pos.offset(i, radius, j - radius), lastAction);
+				act(reagList, reags, temp, level, pos.offset(i - radius, radius, j - radius), lastAction);
+				//x-y plane
+				act(reagList, reags, temp, level, pos.offset(i, j, -radius), lastAction);
+				act(reagList, reags, temp, level, pos.offset(i - radius, j, -radius), lastAction);
+				act(reagList, reags, temp, level, pos.offset(i, j - radius, -radius), lastAction);
+				act(reagList, reags, temp, level, pos.offset(i - radius, j - radius, -radius), lastAction);
+				act(reagList, reags, temp, level, pos.offset(i, j, radius), lastAction);
+				act(reagList, reags, temp, level, pos.offset(i - radius, j, radius), lastAction);
+				act(reagList, reags, temp, level, pos.offset(i, j - radius, radius), lastAction);
+				act(reagList, reags, temp, level, pos.offset(i - radius, j - radius, radius), lastAction);
+				//y-z plane
+				act(reagList, reags, temp, level, pos.offset(-radius, i, j), lastAction);
+				act(reagList, reags, temp, level, pos.offset(-radius, i - radius, j), lastAction);
+				act(reagList, reags, temp, level, pos.offset(-radius, i, j - radius), lastAction);
+				act(reagList, reags, temp, level, pos.offset(-radius, i - radius, j - radius), lastAction);
+				act(reagList, reags, temp, level, pos.offset(radius, i, j), lastAction);
+				act(reagList, reags, temp, level, pos.offset(radius, i - radius, j), lastAction);
+				act(reagList, reags, temp, level, pos.offset(radius, i, j - radius), lastAction);
+				act(reagList, reags, temp, level, pos.offset(radius, i - radius, j - radius), lastAction);
 			}
+		}
 
-			if(lastAction){
-				remove(RemovalReason.DISCARDED);
-			}
+		if(lastAction){
+			remove(RemovalReason.DISCARDED);
 		}
 	}
 
 	private static void act(ArrayList<ReagentStack> reagList, ReagentMap reags, double temp, Level world, BlockPos pos, boolean lastAction){
-		//Block destruction is disabled by alchemical salt
+		//Block destruction and ignition is disabled by alchemical salt
 		if(reags.getQty(EnumReagents.ALCHEMICAL_SALT.id()) == 0){
 			BlockState state = world.getBlockState(pos);
 
 			if(!CRConfig.isProtected(world, pos, state) && state.getDestroySpeed(world, pos) >= 0){
 				world.setBlock(pos, lastAction && Math.random() > 0.75D && Blocks.FIRE.defaultBlockState().canSurvive(world, pos) ? Blocks.FIRE.defaultBlockState() : Blocks.AIR.defaultBlockState(), lastAction ? 3 : 18);
+			}
+
+			//Set entities on fire
+			List<LivingEntity> ents = world.getEntitiesOfClass(LivingEntity.class, new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1), EntitySelector.ENTITY_STILL_ALIVE);
+			for(LivingEntity ent : ents){
+				ent.setSecondsOnFire(15);
 			}
 		}
 

@@ -47,7 +47,7 @@ public class FluxSinkRenderer extends EntropyRenderer<FluxSinkTileEntity>{
 
 		VertexConsumer builder = buffer.getBuffer(CRRenderTypes.FLUX_SINK_TYPE);
 
-		GlStateManager._blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+//		GlStateManager._blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 		//Render an icosahedron
 

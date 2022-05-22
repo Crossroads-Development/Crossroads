@@ -55,7 +55,7 @@ public class ItemCannon extends AbstractCannon{
 	@Nullable
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> type){
-		return ITickableTileEntity.createTicker(type, ItemCannonTileEntity.TYPE);//TODO
+		return ITickableTileEntity.createTicker(type, ItemCannonTileEntity.TYPE);
 	}
 
 	@Override

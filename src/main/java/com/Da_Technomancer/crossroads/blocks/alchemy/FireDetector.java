@@ -1,8 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.VoltusGeneratorTileEntity;
+import com.Da_Technomancer.crossroads.tileentities.alchemy.FireDetectorTileEntity;
 import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
 import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
 import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
@@ -23,26 +22,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class VoltusGenerator extends BaseEntityBlock implements IReadable{
+public class FireDetector extends BaseEntityBlock implements IReadable{
 
-	public VoltusGenerator(){
+	public FireDetector(){
 		super(CRBlocks.getMetalProperty());
-		String name = "voltus_generator";
+		String name = "fire_detector";
 		setRegistryName(name);
 		CRBlocks.toRegister.add(this);
 		CRBlocks.blockAddQue(this);
-	}
-
-	@Nullable
-	@Override
-	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
-		return new VoltusGeneratorTileEntity(pos, state);
-	}
-
-	@Nullable
-	@Override
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> type){
-		return ITickableTileEntity.createTicker(type, VoltusGeneratorTileEntity.TYPE);
 	}
 
 	@Override
@@ -51,10 +38,21 @@ public class VoltusGenerator extends BaseEntityBlock implements IReadable{
 	}
 
 	@Override
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new FireDetectorTileEntity(pos, state);
+	}
+
+	@Nullable
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> type){
+		return ITickableTileEntity.createTicker(type, FireDetectorTileEntity.TYPE);
+	}
+
+	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.voltus_generator.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.voltus_generator.eff", CRConfig.voltusValue.get()));
-		tooltip.add(new TranslatableComponent("tt.crossroads.voltus_generator.rate"));
+		tooltip.add(new TranslatableComponent("tt.crossroads.fire_detector.desc"));
+		tooltip.add(new TranslatableComponent("tt.crossroads.fire_detector.circuit", FireDetectorTileEntity.RANGE));
+		tooltip.add(new TranslatableComponent("tt.crossroads.fire_detector.range", FireDetectorTileEntity.RANGE));
 	}
 
 	@Override
@@ -70,8 +68,8 @@ public class VoltusGenerator extends BaseEntityBlock implements IReadable{
 	@Override
 	public float read(Level world, BlockPos pos, BlockState state){
 		BlockEntity te = world.getBlockEntity(pos);
-		if(te instanceof VoltusGeneratorTileEntity vte){
-			return vte.getRedstone();
+		if(te instanceof FireDetectorTileEntity fte){
+			return fte.getRedstone();
 		}else{
 			return 0;
 		}

@@ -291,6 +291,7 @@
 	"block.crossroads.heat_reservoir_creative": "Creative Heat Reservoir",
 	"block.crossroads.master_axis_creative": "Creative Master Axis",
 	"block.crossroads.beam_extractor_creative": "Creative Resonance Extractor",
+	"block.crossroads.fire_detector": "Fire Detector",
 
 	"item.crossroads.distilled_water_bucket": "Distilled Water Bucket",
 	"item.crossroads.dirty_water_bucket": "Dirty Water Bucket",
@@ -816,6 +817,11 @@
 	"tt.crossroads.master_axis_creative.desc": "A Master Axis that holds speed steady at the set value",
 	"tt.crossroads.beam_extractor_creative.desc": "Creates a constant beam with set values",
 	"tt.crossroads.beam_extractor_creative.redstone": "Disabled by redstone",
+	"tt.crossroads.fire_detector.status.no": "Flame not detected. Output: %1$d",
+	"tt.crossroads.fire_detector.status.yes": "Flame is detected. Output: %1$d",
+	"tt.crossroads.fire_detector.desc": "Detects nearby flame clouds. Doesn't detect normal fire.",
+	"tt.crossroads.fire_detector.circuit": "Circuits read distance to nearest flame cloud, negative if inside a cloud, or %1$d if none nearby",
+	"tt.crossroads.fire_detector.range": "Maximum range is %1$d blocks",
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
 	"container.crossroads.boilerplate.speed": "%1$f rad/s",
@@ -893,6 +899,7 @@
 	"subtitle.crossroads.entropy_trans": "Temporal entropy transfer",
 	"subtitle.crossroads.steam_release": "High pressure gas release",
 	"subtitle.crossroads.item_cannon": "Item launched",
+	"subtitle.crossroads.fire_swell": "Bursting cloud of flame",
 
 	"material.iron": "Iron",
 	"material.gold": "Gold",

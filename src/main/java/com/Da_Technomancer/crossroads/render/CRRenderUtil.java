@@ -188,6 +188,22 @@ public class CRRenderUtil extends RenderUtil{
 	}
 
 	/**
+	 * Adds a vertex to the builder using the POSITION_COLOR_TEX vertex format
+	 * @param builder The active builder
+	 * @param matrix The reference matrix
+	 * @param x The x position of this vertex
+	 * @param y The y position of this vertex
+	 * @param z The z position of this vertex
+	 * @param u The u coord of this vertex texture mapping
+	 * @param v The v coord of this vertex texture mapping
+	 * @param col A size 4 array (r, g, b, a) defining the color, scale [0, 255]
+	 */
+	@OnlyIn(Dist.CLIENT)
+	public static void addVertexPosColTex(VertexConsumer builder, PoseStack matrix, float x, float y, float z, float u, float v, int[] col){
+		builder.vertex(matrix.last().pose(), x, y, z).color(col[0], col[1], col[2], col[3]).uv(u, v).endVertex();
+	}
+
+	/**
 	 * Gets the time to be used for rendering animations
 	 * @param partialTicks The partial ticks [0, 1]
 	 * @param world Any world reference

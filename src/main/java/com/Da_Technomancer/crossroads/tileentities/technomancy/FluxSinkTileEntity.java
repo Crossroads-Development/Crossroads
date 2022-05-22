@@ -109,7 +109,7 @@ public class FluxSinkTileEntity extends IFluxLink.FluxHelper{
 				}else if(!canBeaconBeamPass(state, level, mutPos)){
 					return false;
 				}
-			}while(!running && mutPos.getY() > 1);
+			}while(!running && mutPos.getY() > level.getMinBuildHeight());
 			if(prevRunning != running){
 				//Notify the clients
 				CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(1, running ? level.getGameTime() : 0, worldPosition));

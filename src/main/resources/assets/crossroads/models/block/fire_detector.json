@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"north": "crossroads:block/fire_detector_side",
+		"south": "crossroads:block/fire_detector_side",
+		"east": "crossroads:block/fire_detector_side",
+		"west": "crossroads:block/fire_detector_side",
+		"up": "minecraft:block/bricks",
+		"down": "crossroads:block/block_cast_iron",
+		"particle": "crossroads:block/fire_detector_side"
+	}
+}

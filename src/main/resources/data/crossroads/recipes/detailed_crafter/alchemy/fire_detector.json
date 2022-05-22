@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "alchemy",
+	"result": {
+		"item": "crossroads:fire_detector",
+		"count": 1
+	},
+	"pattern": [
+		"BBB",
+		"BPB",
+		"III"
+	],
+	"key": {
+		"P": {
+			"item": "crossroads:damping_powder"
+		},
+		"I": {
+			"tag": "forge:ingots/iron"
+		},
+		"B": {
+			"item": "minecraft:bricks"
+		}
+	}
+}

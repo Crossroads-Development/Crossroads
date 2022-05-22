@@ -174,6 +174,7 @@ public class CRBlocks{
 	public static MasterAxisCreative masterAxisCreative;
 	public static BeamExtractorCreative beamExtractorCreative;
 	public static ItemCannon itemCannon;
+	public static FireDetector fireDetector;
 
 	public static BlockBehaviour.Properties getRockProperty(){
 		return BlockBehaviour.Properties.of(Material.STONE).strength(3).requiresCorrectToolForDrops().sound(SoundType.STONE);
@@ -377,6 +378,7 @@ public class CRBlocks{
 		masterAxisCreative = new MasterAxisCreative();
 		beamExtractorCreative = new BeamExtractorCreative();
 		itemCannon = new ItemCannon();
+		fireDetector = new FireDetector();
 	}
 
 	@OnlyIn(Dist.CLIENT)

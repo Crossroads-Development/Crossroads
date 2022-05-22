@@ -63,5 +63,14 @@
 				"name": "crossroads:item_cannon"
 			}
 		]
+	},
+	"fire_swell": {
+		"category": "block",
+		"subtitle": "subtitle.crossroads.fire_swell",
+		"sounds": [
+			{
+				"name": "crossroads:fire_swell"
+			}
+		]
 	}
 }

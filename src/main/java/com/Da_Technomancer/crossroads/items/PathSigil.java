@@ -55,27 +55,27 @@ public class PathSigil extends Item{
 		if(playerIn.isShiftKeyDown()){
 			if(CRConfig.forgetPaths.get()){
 				if(path.isUnlocked(playerIn)){
-					if(worldIn.isClientSide()){
+					if(!worldIn.isClientSide()){
 						MiscUtil.chatMessage(playerIn, new TranslatableComponent("tt.crossroads.path_sigil.forget", path.getLocalName()));
 					}
 					path.setUnlocked(playerIn, false);
 					held.shrink(1);
 					return InteractionResultHolder.success(held);
 				}else{
-					if(worldIn.isClientSide()){
+					if(!worldIn.isClientSide()){
 						MiscUtil.chatMessage(playerIn, new TranslatableComponent("tt.crossroads.path_sigil.forget.fail"));
 					}
 					return InteractionResultHolder.fail(held);
 				}
 			}else{
-				if(worldIn.isClientSide()){
+				if(!worldIn.isClientSide()){
 					MiscUtil.chatMessage(playerIn, new TranslatableComponent("tt.crossroads.path_sigil.forget.fail.config"));
 				}
 				return InteractionResultHolder.fail(held);
 			}
 		}else if(EnumPath.canUnlockNewPath(playerIn)){
 			if(path.isUnlocked(playerIn)){
-				if(worldIn.isClientSide()){
+				if(!worldIn.isClientSide()){
 					MiscUtil.chatMessage(playerIn, new TranslatableComponent("tt.crossroads.path_sigil.taken"));
 				}
 				return InteractionResultHolder.fail(held);
@@ -85,7 +85,7 @@ public class PathSigil extends Item{
 				return InteractionResultHolder.success(held);
 			}
 		}else{
-			if(worldIn.isClientSide()){
+			if(!worldIn.isClientSide()){
 				MiscUtil.chatMessage(playerIn, new TranslatableComponent("tt.crossroads.path_sigil.fail"));
 			}
 			return InteractionResultHolder.fail(held);

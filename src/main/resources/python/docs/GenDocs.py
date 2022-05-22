@@ -13,6 +13,9 @@
 # The body will be auto-divided into pages
 # A new line will be represented as a new paragraph or a new page
 # A full empty line will force a new page; it can have <page|TYPE|data0|data1|...> to have a special type for the next page of TYPE, with data parameters passed. The parameters depend on the page- see specific functions below
+# For text: <page|text|anchor (opt)>
+# For image: <page|image|anchor (opt)|title|image link>
+# For spotlight: <page|spotlight|anchor (opt)|item, can have nbt>
 # This script will recognize and maintain (incl between pages) the following formatting codes ONLY:
 # /$: Clear formatting
 # <item> -> Item formatting

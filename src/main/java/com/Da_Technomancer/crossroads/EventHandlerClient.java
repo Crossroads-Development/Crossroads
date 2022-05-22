@@ -511,7 +511,7 @@ public class EventHandlerClient{
 			boolean doGoggleZoom = helmet.getItem() == CRItems.armorGoggles && helmet.hasTag() && helmet.getTag().getBoolean(EnumGoggleLenses.AMETHYST.toString());
 			if(doGoggleZoom){
 				final float scopingFOV = 0.1F;
-				e.setNewfov(Mth.lerp(Minecraft.getInstance().options.fovEffectScale, 1.0F, scopingFOV));//TODO
+				e.setNewfov(Mth.lerp(Minecraft.getInstance().options.fovEffectScale, 1.0F, scopingFOV));
 			}
 		}
 	}

@@ -50,8 +50,12 @@ public class CRRenderTypes extends RenderType{
 	//Stitched to flux transfer type
 	public static final ResourceLocation FLUX_EXTRUSION_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/flux_extrusion.png");
 
-	//Stiched to beam info overlay atlas
+	//Stitched to beam info overlay atlas
 	public static final ResourceLocation BEAM_INFO_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/beam_info.png");
+
+	//Stitched to the flame core atlas
+	public static final ResourceLocation FLAME_CORE_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/entities/flame.png");
+
 
 	//Types
 	public static final RenderType BEAM_TYPE = RenderType.create("cr_beam", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER).setCullState(RenderStateShard.NO_CULL).setTextureState(new RenderStateShard.TextureStateShard(BEAM_TEXTURE, false, false)).createCompositeState(false));
@@ -60,6 +64,7 @@ public class CRRenderTypes extends RenderType{
 	public static final RenderType ELECTRIC_ARC_TYPE = RenderType.create("cr_electric_arc", DefaultVertexFormat.POSITION_COLOR_LIGHTMAP, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RenderStateShard.POSITION_COLOR_LIGHTMAP_SHADER).setCullState(RenderStateShard.NO_CULL).setLightmapState(RenderStateShard.LIGHTMAP).createCompositeState(false));
 	public static final RenderType FLUX_TRANSFER_TYPE = RenderType.create("cr_flux_extrusion", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER).setCullState(RenderStateShard.NO_CULL).setTextureState(new RenderStateShard.TextureStateShard(FLUX_EXTRUSION_TEXTURE, false, false)).setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY).createCompositeState(false));
 	public static final RenderType BEAM_INFO_TYPE = RenderType.create("cr_beam_info", DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RenderStateShard.POSITION_TEX_SHADER).setCullState(RenderStateShard.NO_CULL).setTextureState(new RenderStateShard.TextureStateShard(BEAM_INFO_TEXTURE, false, false)).createCompositeState(false));
+	public static final RenderType FLAME_CORE_TYPE = RenderType.create("cr_flame_core", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER).setCullState(RenderStateShard.NO_CULL).setTextureState(new RenderStateShard.TextureStateShard(FLAME_CORE_TEXTURE, false, false)).setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY).createCompositeState(false));
 
 	public static void stitchTextures(TextureStitchEvent.Pre event){
 		//We only need to register textures which are not already part of a block model

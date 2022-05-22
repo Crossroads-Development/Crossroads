@@ -130,7 +130,9 @@ public class EntityGhostMarker extends Entity{
 
 		NONE(1, null, null),//Used for errors
 		EQUILIBRIUM(BeamUtil.BEAM_TIME + 1, null, null),
+		@Deprecated
 		VOID_EQUILIBRIUM(BeamUtil.BEAM_TIME + 1, null, null),
+		@Deprecated
 		DELAYED_EXPLOSION(BeamUtil.BEAM_TIME, (EntityGhostMarker marker) -> {if(marker.data != null && marker.data.contains("power")) marker.level.explode(marker, marker.getX(), marker.getY(), marker.getZ(), marker.data.getFloat("power"), marker.data.getBoolean("flaming"), Explosion.BlockInteraction.valueOf(marker.data.getString("blast_type")));}, null),
 		BLOCK_SPAWNING(BeamUtil.BEAM_TIME + 1, null, null),
 		RESPAWNING(30 * 60, (EntityGhostMarker marker) -> {

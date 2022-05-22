@@ -1,5 +1,8 @@
-Damping Powder
+Flame Cloud Suppression
 crossroads:damping_powder|crossroads:progress/path/alchemy
-<item>Damping Powder/$ is an emergency way of stopping <link:essentials:alchemy/effect>flame clouds/$. When used (by right clicking with the item), it will consume a <item>powder/$ and stop any <link:essentials:alchemy/effect>flame clouds/$ within 32 blocks.
+<item>Damping Powder/$ is an emergency way of stopping <link:essentials:alchemy/effect>flame clouds/$. When used (by right clicking with the item), it will consume a <item>powder/$ and stop any <link:essentials:alchemy/effect>flame clouds/$ that have approached within 10 blocks. The item is consumed even if there are no flame clouds in range.
 As <link:essentials:alchemy/effect>flame clouds/$ could be caused by a lab accident, and they have the capacity to destroy a massive chunk of your base, it is <em>strongly recommended/$ to keep some on hand in your <link:essentials:intro/alchemy>alchemy/$ lab before getting a <item><link:essentials:alchemy/stones>philosopher's stone/$.
 <item>Damping Powder/$ can also be used by dispensers.
+<page|spotlight|detector|crossroads:fire_detector>
+The <item>Fire Detector/$ detects flame clouds (not regular vanilla fire) within 100 blocks. <thing><link:essentials/circuits#reader>Circuits/$ read distance to the nearest flame cloud, or the maximum value (100) if there are none in range (100 blocks).
+If the <item>Fire Detector/$ is inside the flame cloud, it reads a negative value based on how deep inside the flame cloud it is.
