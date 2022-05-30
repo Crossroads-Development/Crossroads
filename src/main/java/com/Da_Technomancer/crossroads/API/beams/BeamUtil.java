@@ -3,10 +3,13 @@ package com.Da_Technomancer.crossroads.API.beams;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.crafting.CRItemTags;
+import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -15,11 +18,15 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.function.Predicate;
+
 public class BeamUtil{
 
 	public static final int MAX_DISTANCE = 16;
 	public static final int BEAM_TIME = 4;
 	public static final int POWER_LIMIT = 64_000;
+
+	public static final Predicate<Entity> BEAM_COLLIDE_ENTITY = EntitySelector.ENTITY_STILL_ALIVE.and(ent -> !(ent instanceof EntityGhostMarker));
 
 	private static final TagKey<Block> PASSABLE = CRItemTags.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation(Crossroads.MODID, "beam_passable"));
 	private static final VoxelShape[] COLLISION_MASK = new VoxelShape[3];

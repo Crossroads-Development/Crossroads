@@ -6,7 +6,6 @@ import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.ZombieVillager;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -20,9 +19,6 @@ public enum CRReflection implements ReflectionUtil.IReflectionKey{
 
 	SET_CHAT(CRReflection::getChatClass, "m_93790_", "addMessage", "Update the chat log without spamming it"),
 	CURE_ZOMBIE(ZombieVillager.class, "m_34383_", "startConverting", "Cure zombie villagers with SO2"),
-	EXPLOSION_POWER(Explosion.class, "f_46017_", "radius", "Perpetuate explosions with Collapse beams (1)"),
-	EXPLOSION_SMOKE(Explosion.class, "f_46009_", "fire", "Perpetuate explosions with Collapse beams (2)"),
-	EXPLOSION_MODE(Explosion.class, "f_46010_", "blockInteraction", "Perpetuate explosions with Collapse beams (3)"),
 //	SWING_TIME(LivingEntity.class, "field_184617_aD", "attackStrengthTicker", "Mechanical Arm attacking"),
 //	ENTITY_LIST(ServerLevel.class, "field_175741_N", "entitiesByUuid", "Prevent mob spawning with Closure beams, modify explosions with Collapse/Equilibrium beams"),
 	LOADED_CHUNKS(ChunkMap.class, "m_140416_", "getChunks", "Spawn lightning at high atmospheric charge"),

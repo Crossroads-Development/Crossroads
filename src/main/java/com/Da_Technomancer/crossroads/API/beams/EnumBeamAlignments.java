@@ -17,7 +17,7 @@ public enum EnumBeamAlignments{
 
 	TIME(new TimeEffect(), new Color(255, 100, 0), 16),
 	ENCHANTMENT(new EnchantEffect(), new Color(251, 255, 184), 16),
-	EQUILIBRIUM(new EqualibriumEffect(), new Color(255, 132, 255), 40),
+	EQUILIBRIUM(new EquilibriumEffect(), new Color(255, 132, 255), 40),
 	RIFT(new RiftEffect(), new Color(255, 0, 255), 96),
 	CHARGE(new ChargeEffect(), new Color(255, 255, 0), 128),
 	EXPANSION(new PlaceEffect(), new Color(0, 255, 255), 72),

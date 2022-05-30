@@ -27,7 +27,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ObjectHolder;
-import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -97,11 +96,11 @@ public class BeamCannonTileEntity extends AbstractCannonTileEntity{
 				upShift.mul(3.5F / 16F);
 				Vec3 rayTraceSt = Vec3.atCenterOf(worldPosition).add(upShift.x(), upShift.y(), upShift.z());
 
-				Triple<BlockPos, Vec3, Direction> beamHitResult = StaffTechnomancy.rayTraceBeams(out, level, rayTraceSt, rayTraceSt, rayVec3, null, worldPosition, RANGE);
-				BlockPos endPos = beamHitResult.getLeft();
+				BeamHit beamHitResult = StaffTechnomancy.rayTraceBeams(out, level, rayTraceSt, rayTraceSt, rayVec3, null, worldPosition, RANGE);
+				BlockPos endPos = beamHitResult.getPos();
 				if(endPos != null){//Should always be true
-					outLength = (float) beamHitResult.getMiddle().distanceTo(rayTraceSt);
-					Direction effectDir = beamHitResult.getRight();
+					outLength = (float) beamHitResult.getHitPos().distanceTo(rayTraceSt);
+					Direction effectDir = beamHitResult.getDirection();
 					BlockEntity te = level.getBlockEntity(endPos);
 					LazyOptional<IBeamHandler> opt;
 					if(te != null && (opt = te.getCapability(Capabilities.BEAM_CAPABILITY, effectDir)).isPresent()){
@@ -109,7 +108,7 @@ public class BeamCannonTileEntity extends AbstractCannonTileEntity{
 					}else{
 						EnumBeamAlignments align = EnumBeamAlignments.getAlignment(out);
 						if(!level.isOutsideBuildHeight(endPos)){
-							align.getEffect().doBeamEffect(align, out.getVoid() != 0, Math.min(64, outPower), level, endPos, effectDir, rayVec3);
+							align.getEffect().doBeamEffect(align, out.getVoid() != 0, Math.min(64, outPower), beamHitResult);
 						}
 					}
 				}

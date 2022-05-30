@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.API.Capabilities;
 import com.Da_Technomancer.crossroads.API.effects.BeamEffect;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -44,10 +45,10 @@ public class BeamManager{
 
 			BlockState checkState = world.getBlockState(pos.relative(dir, i));
 			if(i == BeamUtil.MAX_DISTANCE || BeamUtil.solidToBeams(checkState, world, pos.relative(dir, i), dir, mag.getPower())){
-				if(!mag.isEmpty()){
+				if(!mag.isEmpty() && !world.isClientSide){
 					EnumBeamAlignments align = EnumBeamAlignments.getAlignment(mag);
 					BeamEffect e = align.getEffect();
-					e.doBeamEffect(align, mag.getVoid() != 0, Math.min(64, mag.getPower()), world, pos.relative(dir, i), dir.getOpposite(), null);
+					e.doBeamEffect(align, mag.getVoid() != 0, Math.min(64, mag.getPower()), new BeamHit((ServerLevel) world, pos.relative(dir, i), dir.getOpposite(), checkState));
 				}
 				if(dist != i || !mag.equals(lastSent)){
 					dist = i;

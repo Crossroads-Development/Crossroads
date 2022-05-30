@@ -26,11 +26,11 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<thing>Charge/$ will add energy to the system every tick, in the positive direction (even if the system is moving in the negative direction). (Amount controlled by config, default 100J/t)$(br2)<thing>Equilibrium/$ will reduce the change in the system's total energy each tick by a factor of 10. If a machine was going to consume 100J in a tick, only 10J would "
+			"text": "<thing>Charge/$ will add energy to the system every tick, in the positive direction (even if the system is moving in the negative direction). (Amount controlled by config, default 100J/t)$(br2)<thing>Force/$ will reduce the change in the system's total energy each tick by a factor of 10. If a machine was going to consume 100J in a tick, only 10J would actually "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "actually be consumed. On the other hand, if a turbine was going to make 100J, it would only make 10J. This has the effect of helping hold speeds steady and reducing fluctuations from the equilibrium speed.$(br2)"
+			"text": "be consumed. On the other hand, if a turbine was going to make 100J, it would only make 10J. This has the effect of helping hold speeds steady and reducing fluctuations from the equilibrium speed.$(br2)"
 		}
 	]
 }

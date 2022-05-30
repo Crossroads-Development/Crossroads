@@ -31,11 +31,11 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<thing>reagent/$ is associated with a <thing>$(l:essentials:intro/beam)beam alignment/$; <item>eldrine/$ is <thing>rift/$; <item>fusas/$ is <thing>fusion/$; <item>lumen/$ is <thing>light/$; <item>stasisol/$ is <thing>equilibrium/$; <item>magicae/$ is enchantment; <item>voltus/$ is <thing>charge/$.$(br2)If <item>phelostogen/$ is considered <thing>energy/$, <item>aether/$ is considered <thing>potential/$, and <item>adamant/$ is <thing>stability/$, combine the three in a ratio such that it would make the <thing>beam alignment/$ that goes "
+			"text": "<thing>reagent/$ is associated with a <thing>$(l:essentials:intro/beam)beam alignment/$; <item>eldrine/$ is <thing>rift/$; <item>fusas/$ is <thing>fusion/$; <item>lumen/$ is <thing>light/$; <item>stasisol/$ is <thing>force/$; <item>magicae/$ is enchantment; <item>voltus/$ is <thing>charge/$.$(br2)If <item>phelostogen/$ is considered <thing>energy/$, <item>aether/$ is considered <thing>potential/$, and <item>adamant/$ is <thing>stability/$, combine the three in a ratio such that it would make the <thing>beam alignment/$ that goes with "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "with the <thing>elemental reagent/$ you want.$(br2)For example, 1:1:0 of <item>phelostogen/$:<item>aether/$:<item>adamant/$ will make <item>voltus/$, but so will 4:3:0.$(br2)"
+			"text": "the <thing>elemental reagent/$ you want.$(br2)For example, 1:1:0 of <item>phelostogen/$:<item>aether/$:<item>adamant/$ will make <item>voltus/$, but so will 4:3:0.$(br2)"
 		},
 		{
 			"type": "patchouli:text",

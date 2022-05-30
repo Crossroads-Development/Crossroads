@@ -470,11 +470,6 @@ public class EventHandlerCommon{
 		}
 	}
 
-
-	private static final Field explosionPower = ReflectionUtil.reflectField(CRReflection.EXPLOSION_POWER);
-	private static final Field explosionSmoking = ReflectionUtil.reflectField(CRReflection.EXPLOSION_SMOKE);
-	private static final Field explosionMode = ReflectionUtil.reflectField(CRReflection.EXPLOSION_MODE);
-
 	@SubscribeEvent
 	@SuppressWarnings("unused")
 	public void modifyExplosion(ExplosionEvent.Start e){
@@ -491,32 +486,14 @@ public class EventHandlerCommon{
 //			world.getProfiler().pop();
 //			return;
 //		}
-		boolean perpetuate = false;
 		for(Entity ent : world.getAllEntities()){
 			if(ent instanceof EntityGhostMarker mark){
 				if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.EQUILIBRIUM && mark.data != null && mark.position().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInt("range")){
 					e.setCanceled(true);//Equilibrium beams cancel explosions
 					world.getProfiler().pop();
 					return;
-				}else if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.VOID_EQUILIBRIUM && mark.data != null && mark.position().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInt("range")){
-					perpetuate = true;//Void-equilibrium beams cause explosions to repeat, by spawning a marker that recreates the explosion 5 ticks later
 				}
 			}
-		}
-
-		if(perpetuate && explosionPower != null && explosionSmoking != null && explosionMode != null){
-			EntityGhostMarker marker = new EntityGhostMarker(e.getWorld(), EntityGhostMarker.EnumMarkerType.DELAYED_EXPLOSION, 5);
-			marker.setPos(e.getExplosion().getPosition().x, e.getExplosion().getPosition().y, e.getExplosion().getPosition().z);
-			CompoundTag data = new CompoundTag();
-			try{
-				data.putFloat("power", explosionPower.getFloat(e.getExplosion()));
-				data.putBoolean("flaming", explosionSmoking.getBoolean(e.getExplosion()));
-				data.putString("blast_type", ((Explosion.BlockInteraction) explosionMode.get(e.getExplosion())).name());
-			}catch(IllegalAccessException ex){
-				Crossroads.logger.error("Failed to perpetuate explosion. Dim: " + MiscUtil.getDimensionName(e.getWorld()) + "; Pos: " + e.getExplosion().getPosition());
-			}
-			marker.data = data;
-			world.addFreshEntity(marker);
 		}
 		world.getProfiler().pop();
 	}
