@@ -1,0 +1,8 @@
+{
+	"type": "crossroads:beam_extract",
+	"input": {
+		"item": "crossroads:poison_vodka"
+	},
+	"energy": 24,
+	"duration": 50
+}

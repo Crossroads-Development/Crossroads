@@ -8,6 +8,8 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,7 +23,9 @@ import java.util.List;
 
 public class PoisonVodka extends Item{
 
-	private static final int DURATION = 3600;
+	private static final int BASE_DURATION = 20 * 60 * 3;
+	private static final int BASE_DAMAGE = 8;
+	private static final DamageSource VODKA_DAMAGE = new DamageSource("vodka");
 
 	public PoisonVodka(){
 		super(new Properties().tab(CRItems.TAB_CROSSROADS));
@@ -45,31 +49,43 @@ public class PoisonVodka extends Item{
 		return new InteractionResultHolder<>(InteractionResult.SUCCESS, playerIn.getItemInHand(handIn));
 	}
 
-	public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving){
-		Player player = entityLiving instanceof Player ? (Player) entityLiving : null;
-
-		if(!worldIn.isClientSide){
-			entityLiving.addEffect(new MobEffectInstance(MobEffects.WITHER, DURATION, 0));
-			entityLiving.addEffect(new MobEffectInstance(MobEffects.CONFUSION, DURATION, 0));
-			entityLiving.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, DURATION, 3));
-			entityLiving.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, DURATION, 2));
-			entityLiving.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, DURATION, 2));
-		}
-
-		if(player == null){
-			stack.shrink(1);
-			if(stack.isEmpty()){
-				return new ItemStack(Items.GLASS_BOTTLE);
+	public static void applyToEntity(Level world, LivingEntity target, LivingEntity source, float multiplier){
+		if(!world.isClientSide){
+			if(target == source || source == null){
+				target.hurt(VODKA_DAMAGE, BASE_DAMAGE * multiplier);
+			}else{
+				target.hurt(new EntityDamageSource("vodka", source), BASE_DAMAGE * multiplier);
 			}
-		}else{
+
+			int duration = (int) (BASE_DURATION * multiplier);
+			target.addEffect(new MobEffectInstance(MobEffects.CONFUSION, duration, 0));
+			target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, duration, 3));
+			target.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, duration, 2));
+			target.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, duration, 2));
+		}
+	}
+
+	public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving){
+
+		applyToEntity(worldIn, entityLiving, entityLiving, 1F);
+
+		if(entityLiving instanceof Player player){
 			player.awardStat(Stats.ITEM_USED.get(this));
 
 			if(!player.isCreative()){
 				stack.shrink(1);
 				if(stack.isEmpty()){
 					return new ItemStack(Items.GLASS_BOTTLE);
+				}else{
+					if(!player.getInventory().add(new ItemStack(Items.GLASS_BOTTLE))){
+						player.drop(new ItemStack(Items.GLASS_BOTTLE), false);
+					}
 				}
-				player.getInventory().add(new ItemStack(Items.GLASS_BOTTLE));
+			}
+		}else{
+			stack.shrink(1);
+			if(stack.isEmpty()){
+				return new ItemStack(Items.GLASS_BOTTLE);
 			}
 		}
 
@@ -88,6 +104,7 @@ public class PoisonVodka extends Item{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+		tooltip.add(new TranslatableComponent("tt.crossroads.poison_vodka.info"));
 		tooltip.add(new TranslatableComponent("tt.crossroads.poison_vodka.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

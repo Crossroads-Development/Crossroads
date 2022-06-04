@@ -11,11 +11,11 @@
 			"type": "patchouli:spotlight",
 			"title": "Syringe",
 			"item": "crossroads:syringe",
-			"text": "The <item>Syringe/$ can be used to apply potion effects more efficiently (or even make potions <em>permanent/$). It can also take blood samples.$(br2)To use the <item>syringe/$, it is held in the main hand while the item being used with it is held in the offhand. To target the entity "
+			"text": "The <item>Syringe/$ can be used to apply potion effects more efficiently (or even make potions <em>permanent/$). It can also take blood samples.$(br2)To use the <item>syringe/$, it is held in the main hand while the item being used with it is held in the offhand. Right clicking or shift-right-clicking "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "you're looking at, shift-right-click. To target yourself, right-click.$(br2)Using a <item>syringe/$ does one point of damage to the target.$(br2)"
+			"text": "will target the entity you're looking at if there is one, otherwise it targets you.$(br2)Using a <item>syringe/$ does one point of damage to the target.$(br2)"
 		},
 		{
 			"type": "patchouli:spotlight",

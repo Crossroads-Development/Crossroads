@@ -1,7 +1,7 @@
 Syringe
 crossroads:syringe|crossroads:progress/path/witchcraft
 The <item>Syringe/$ can be used to apply potion effects more efficiently (or even make potions <em>permanent/$). It can also take blood samples.
-To use the <item>syringe/$, it is held in the main hand while the item being used with it is held in the offhand. To target the entity you're looking at, shift-right-click. To target yourself, right-click.
+To use the <item>syringe/$, it is held in the main hand while the item being used with it is held in the offhand. Right clicking or shift-right-clicking will target the entity you're looking at if there is one, otherwise it targets you.
 Using a <item>syringe/$ does one point of damage to the target.
 <page|spotlight|potions|crossroads:potion_extension>
 Potions injected with a <item>syringe/$ are twice (by default; configurable) as effective. For potions with a duration, they last twice as long as it says on the bottle. For instant potions (ex. instant healing), they act as twice the normal level. As examples, Poison 1 for 30s will act as Poison 1 for 60s, and Instant Damage 2 will act as Instant Damage 4.
