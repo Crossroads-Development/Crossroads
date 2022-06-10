@@ -5,7 +5,7 @@
 	"power": 1,
 	"input": [
 		{
-			"tag": "forge:dirt"
+			"tag": "minecraft:dirt"
 		}
 	],
 	"output": "minecraft:clay"
