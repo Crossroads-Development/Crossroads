@@ -7,7 +7,7 @@
 			"type": "forge:nbt",
 			"item": "minecraft:potion",
 			"nbt": {
-				"Potion": "water"
+				"Potion": "minecraft:water"
 			}
 		}
 	]
