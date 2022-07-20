@@ -11,7 +11,7 @@
 			"type": "patchouli:spotlight",
 			"title": "色域：稳定",
 			"item": "minecraft:diamond",
-			"text": "<thing>稳定/$（蓝色）是基础<thing>色域/$之一——纯<thing>稳定/$光束的<thing>色域/$。$(br2)纯<thing>稳定/$什么都不做，不会产生效果。$(br2)"
+			"text": "<thing>稳定/$（蓝色）是基础<thing>色域/$之一——纯<thing>稳定/$光束的<thing>色域/$。$(br2)<thing>稳定/$光束能阻止范围内的任何爆炸。该范围等于光束<thing>功率/$。能阻止的爆炸包括凋灵爆炸、来自<thing>混沌/$光束的爆炸，等等。$(br2)被阻止的爆炸不会造成伤害、不会破坏方块，被完全停止。$(br2)"
 		},
 		{
 			"type": "patchouli:text",
