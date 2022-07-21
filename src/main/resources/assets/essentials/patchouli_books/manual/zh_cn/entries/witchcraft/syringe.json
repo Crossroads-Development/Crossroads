@@ -15,7 +15,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "需要按下shift右击；对自己使用则只需右击。$(br2)使用<item>注射器/$会对目标造成1点伤害。$(br2)"
+			"text": "需要按下右击或shift右击；对自己使用则需在未看向实体时右击。$(br2)使用<item>注射器/$会对目标造成1点伤害。$(br2)"
 		},
 		{
 			"type": "patchouli:spotlight",
@@ -39,7 +39,7 @@
 			"type": "patchouli:spotlight",
 			"anchor": "blood",
 			"item": "crossroads:blood_sample_empty",
-			"text": "<item>注射器/$也能用于采集<item>血样/$。在副手拿着<item>空血液袋/$时使用注射器会得到装备目标血的<item>血液袋/$。血样会带有目标的永久效果、特质或者衰退。$(br2)装满的<item>血液袋/$会在两小时后$(l:essentials:witchcraft/spoilage)腐坏/$。"
+			"text": "<item>注射器/$也能用于采集<item>血样/$。在副手拿着<item>空血液袋/$时使用注射器会得到装备目标血的<item>血液袋/$。血样会带有目标的永久效果、特质或者衰退。$(br2)装满的<item>血液袋/$会在两小时后$(l:essentials:witchcraft/spoilage)腐坏/$。<item>空血液袋/$也可以通过发射器使用。"
 		},
 		{
 			"type": "patchouli:text",
